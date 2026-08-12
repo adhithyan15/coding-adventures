@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 73,
-  "title": "Las --- The Plural Article That Behaves",
+  "title": "La Comida --- A Noun You Can Build",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:6728ccfa4d5978e3",
+  "sourceHash": "fnv1a64:5e420e662b409a46",
   "lessons": [
     {
-      "id": "ES-C44-las",
-      "sequence": 1195,
-      "title": "las casas — \"the houses\"",
-      "headword": "las casas",
-      "romanization": "las casas",
-      "gloss": "\"the houses\" — the plural article, which does exactly what the noun does",
+      "id": "ES-C43-comida",
+      "sequence": 1193,
+      "title": "la comida — \"food,\" built from a verb you have",
+      "headword": "la comida",
+      "romanization": "la comida",
+      "gloss": "food, a meal — a noun you can build yourself out of a verb you already own",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:05616be8f8d1cd6e",
+      "sourceHash": "fnv1a64:e757e6aa0e96ff99",
       "notice": null,
       "blocks": [
         {
@@ -35,35 +35,88 @@
             },
             {
               "kind": "speech",
-              "text": "You learned this in your first chapter: a noun ending in a vowel adds -s. So what is \"houses\"? (Casas.) Now — what is \"the houses\"?"
+              "text": "Say \"to eat.\" (Comer.) Keep it in mind — this chapter's noun is made out of it, in front of you."
             }
           ]
         },
         {
           "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: the article does what the noun does",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "las — the, for more than one feminine thing."
-            },
-            {
-              "kind": "speech",
-              "text": "la casa becomes las casas — the houses. la comida becomes las comidas — the meals."
-            },
-            {
-              "kind": "speech",
-              "text": "The -s lands on both words. That is not two rules; it is one rule applied where it belongs. You have already seen Spanish do this — buenas noches is buena copying noche's number — and it is the same instinct throughout the language: the words around a noun agree with it, so when the noun goes plural, they follow."
-            },
-            {
-              "kind": "speech",
-              "text": "So las is not a word to memorise. It is la obeying the rule you already hold."
+              "text": "d-soft — the d between vowels is soft, close to the th in English this: ko-MEE-thah, not a hard d."
             }
           ]
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la comida — food, and also a meal."
+            },
+            {
+              "kind": "speech",
+              "text": "Take comer, drop the ending, add -ida:"
+            },
+            {
+              "kind": "speech",
+              "text": "comer becomes comida — literally the eaten thing."
+            },
+            {
+              "kind": "speech",
+              "text": "That ending is not decoration. It is a working tool: it takes a verb and hands you back a noun for the result of that verb. You will meet it again and recognise it when you do."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the first Spanish noun you did not have to be given. You could have built it. That is a different kind of possession from memorising a list, and it is the reason the ending is worth more here than the word."
+            },
+            {
+              "kind": "speech",
+              "text": "Comer itself comes from Latin comedere — ed- is \"eat,\" the same ancient root as English eat, with com- (\"thoroughly\") in front. So comida is, at the bottom, \"the thoroughly-eaten thing.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: -ida nouns are feminine",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Nouns built this way end in -a and are feminine, every time. So the ending gives you two things at once: the word, and its gender."
+            },
+            {
+              "kind": "speech",
+              "text": "la comida — the food. Hago la comida. — I make the meal."
+            },
+            {
+              "kind": "speech",
+              "text": "Set your three nouns side by side and the pattern is doing all the work:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "noun",
+                "gender",
+                "article"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "noun: libro. gender: masculine. article: el.",
+                "noun: casa. gender: feminine. article: la.",
+                "noun: comida. gender: feminine. article: la."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -76,83 +129,82 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"la casa\" then \"las casas\" — hear the -s twice",
+              "instruction": "\"comer\" then \"comida\" — hear the verb inside the noun",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"la casa\" then \"las casas\" — hear the *-s* twice]"
+              "source": "[YOU SAY: \"comer\" then \"comida\" — hear the verb inside the noun]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"las comidas\"",
+              "instruction": "\"Hago la comida\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"las comidas\"]"
+              "source": "[YOU SAY: \"Hago la comida\"]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C44-las-houses",
-              "prompt": "Say the houses.",
+              "id": "ES-C43-comida-build",
+              "prompt": "Build the noun for food from the verb comer.",
               "assesses": [
-                "ES-GRAMMAR-DEFINITE-PLURAL-FEMININE",
-                "ES-LEX-CASA"
+                "ES-GRAMMAR-NOUN-FROM-VERB-IDA",
+                "ES-LEX-COMER"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "las casas",
-                "las casa s"
+                "comida",
+                "la comida"
               ],
               "feedback": {
-                "correct": "Both words take the -s.",
-                "incorrect": "Las casas — the article follows the noun."
+                "correct": "Comer plus -ida: the eaten thing.",
+                "incorrect": "Comida — drop the -er, add -ida."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C44-las-meals",
-              "prompt": "Say the meals.",
+              "id": "ES-C43-comida-make",
+              "prompt": "Say I make the meal.",
               "assesses": [
-                "ES-GRAMMAR-DEFINITE-PLURAL-FEMININE",
+                "ES-GRAMMAR-HACER-PRESENT-SINGULAR",
                 "ES-LEX-COMIDA"
               ],
-              "responseSeconds": 8,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "las comidas",
-                "comidas"
+                "hago la comida",
+                "yo hago la comida"
               ],
               "feedback": {
-                "correct": "Las comidas.",
-                "incorrect": "Las comidas."
+                "correct": "Hago la comida.",
+                "incorrect": "Hago la comida — feminine, so la."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C44-las-rule",
-              "prompt": "How many new rules did this lesson add?",
+              "id": "ES-C43-comida-gender",
+              "prompt": "What gender is any noun built with -ida?",
               "assesses": [
-                "ES-GRAMMAR-AGREEMENT-FEMININE-PLURAL",
-                "ES-GRAMMAR-NOUN-NUMBER"
+                "ES-GRAMMAR-NOUN-FROM-VERB-IDA",
+                "ES-GRAMMAR-NOUN-GENDER"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "none",
-                "zero",
-                "0"
+                "feminine",
+                "always feminine"
               ],
               "feedback": {
-                "correct": "None — the noun rule simply also applies to the article.",
-                "incorrect": "None. The -s rule you learned in chapter one covers this."
+                "correct": "Always — the ending settles it.",
+                "incorrect": "Feminine, every time."
               }
             }
           ]
         },
         {
-          "index": 3,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -164,7 +216,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"The houses\"? (Las casas.) Where did the -s go? (Both words.) Next: the masculine one, which does not do the obvious thing — and the reason will be familiar."
+              "text": "What verb is hiding inside comida? (Comer.) What does the -ida ending give you besides the word? (Its gender — always feminine.) Next: what happens to these three nouns, and to their articles, when there is more than one of something."
             }
           ]
         }

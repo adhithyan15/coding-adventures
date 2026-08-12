@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C16-ir-imperfecto
 spine_node: SPINE-TALK-ABOUT-PAST
 sequence: 1370
-chapter: 104
+chapter: 105
 type: grammar
 headword: iba
 gloss: the singular imperfect of ir — iba, ibas, iba

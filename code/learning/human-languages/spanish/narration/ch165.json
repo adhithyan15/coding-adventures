@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 165,
-  "title": "Jugar --- Playing Was Joking",
+  "title": "Conseguir --- Getting Is Following Until You Have It",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:01616d02affb7e15",
+  "sourceHash": "fnv1a64:23fbf16dab73d3fb",
   "lessons": [
     {
-      "id": "ES-C39-jugar",
-      "sequence": 2110,
-      "title": "jugar — \"to play\", and the only verb of its kind",
-      "headword": "jugar",
-      "romanization": "jugar",
-      "gloss": "to play — from Latin's word for joking, and the only verb in the language that breaks u to ue",
+      "id": "ES-C39-conseguir",
+      "sequence": 2100,
+      "title": "conseguir — \"to get\", by following a thing until you have it",
+      "headword": "conseguir",
+      "romanization": "conseguir",
+      "gloss": "to get, to obtain — getting as following a thing until you have it",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d6edd20e03d89414",
+      "sourceHash": "fnv1a64:3809aa8b35221c88",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Consigo cracked its e to i. Here is a verb that cracks a vowel no other verb in Spanish cracks — and it started life as a joke."
+              "text": "Traigo carries a thing that is already yours. Coger grabs what is in front of you. This verb is for the getting that took some work."
             }
           ]
         },
@@ -46,48 +46,37 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "j-jota — the j is scraped at the back of the throat: khoo-GAR."
+              "text": "g-hard — the gu in conseguir is one hard g; the u is silent."
             },
             {
               "kind": "speech",
-              "text": "diphthong-ue — juego is three beats, KHWE-go."
+              "text": "s-clear — a clean hissing s: con-se-GEER."
             }
           ]
         },
         {
           "index": 2,
           "type": "etymology",
-          "title": "The word, taken apart: jugar",
+          "title": "The word, taken apart: conseguir",
           "segments": [
             {
               "kind": "speech",
-              "text": "jugar (\"to play\") from Latin iocārī, \"to joke, to jest\", built on the noun iocus, \"a joke\". Playing and joking were one word, and Spanish kept the joking one for both."
+              "text": "conseguir (\"to get, to obtain, to manage to\") from Latin cōnsequī: com- (\"along with\") + sequī, \"to follow\". You got a thing by following it until it was yours."
             },
             {
               "kind": "speech",
-              "text": "English holds iocus in several shapes: joke; through French jocular; juggler, from ioculātor, an entertainer; and jeopardy, from Old French jeu parti, \"an evenly divided game\" — a position so balanced that either side might lose. The Spanish family stays close: el juego, a game; el juguete, a toy."
+              "text": "Sequī is one of Latin's great English suppliers: sequence, sequel, consequence, subsequent, consecutive; second, from secundus, \"the one following\"; execute and prosecute; obsequious, following someone about; and through French, pursue, ensue and suit."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish also keeps the formal partner obtener from obtinēre, \"to hold onto\" — English obtain. It behaves exactly like tener, so its yo-form is obtengo. Conseguir is the everyday one."
             }
           ]
         },
         {
           "index": 3,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way: the play-verb Spanish let go",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Latin's ordinary word for playing was lūdere, and Spanish dropped it exactly as it dropped claudere for shutting doors. English kept the whole family instead: illusion, allude, elude, delude, collude, prelude, interlude, ludicrous."
-            },
-            {
-              "kind": "speech",
-              "text": "Claudere and lūdere tell one story: the large English family belongs to the Latin verb Spanish walked away from."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "grammar",
-          "title": "Grammar Lens: the fourth crack, with one member",
+          "title": "Grammar Lens: the third crack, and a silent u that leaves",
           "segments": [
             {
               "kind": "table",
@@ -98,25 +87,25 @@
               "columns": 2,
               "rowCount": 5,
               "utterances": [
-                "person: yo. form: juego.",
-                "person: tú. form: juegas.",
-                "person: él/ella/usted. form: juega.",
-                "person: nosotros. form: jugamos.",
-                "person: ellos/ustedes. form: juegan."
+                "person: yo. form: consigo.",
+                "person: tú. form: consigues.",
+                "person: él/ella/usted. form: consigue.",
+                "person: nosotros. form: conseguimos.",
+                "person: ellos/ustedes. form: consiguen."
               ]
             },
             {
               "kind": "speech",
-              "text": "Dormir breaks o becomes ue. Jugar breaks u becomes ue, and it is the only verb in Spanish that does: the o of iocārī had already slid irregularly to u, so the crack landed on a vowel no other verb offers. Jugamos stays plain, because the stress moves to the ending."
+              "text": "You have met dormir breaking o becomes ue and pido quietly breaking e becomes i. Here is that third pattern in full: stress on the stem turns e into i, and conseguimos stays plain because the stress moved to the ending."
             },
             {
               "kind": "speech",
-              "text": "One more habit: Spanish plays at a thing rather than simply playing it. El fútbol is football, and you say juego al fútbol, with a + el fused into al. With a companion rather than a game it is con: juego con el perro, I play with the dog."
+              "text": "Now the spelling. Spanish writes gu only to keep a g hard in front of e and i. Once the e becomes i, there is nothing in front to guard against, so the u has no job and goes: consigo, not consiguo. Two changes, one form, and only one of them is a sound."
             }
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -129,43 +118,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"juego, juegas, juega, jugamos, juegan\"",
+              "instruction": "\"consigo, consigues, consigue, conseguimos, consiguen\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"juego, juegas, juega, jugamos, juegan\"]"
+              "source": "[YOU SAY: \"consigo, consigues, consigue, conseguimos, consiguen\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Juego con el perro\"",
+              "instruction": "\"Traigo el café\" then \"Consigo el café\" — carried, then obtained",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Juego con el perro\"]"
+              "source": "[YOU SAY: \"Traigo el café\" then \"Consigo el café\" — carried, then obtained]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"duermo\" then \"juego\" — o to ue, then u to ue",
+              "instruction": "\"sequī, sequence, second\" then \"conseguir\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"duermo\" then \"juego\" — o to ue, then u to ue]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"iocus, joke, jocular, juggler\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"iocus, joke, jocular, juggler\"]"
+              "source": "[YOU SAY: \"sequī, sequence, second\" then \"conseguir\"]"
             }
           ]
         },
         {
-          "index": 6,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -177,7 +157,7 @@
             },
             {
               "kind": "speech",
-              "text": "What did iocārī mean, and which English words carry it? (To joke; joke, jocular, juggler, jeopardy.) What is unusual about juego among Spanish verbs? (U becomes ue, and no other verb does it.) Which two Latin verbs did Spanish drop while English kept their families? (Claudere and lūdere.) And which vowel does conseguir break? (E to i.)"
+              "text": "What did sequī mean, and name two English words from it. (To follow; sequence, second, consequence, pursue.) Why is it consigo and not consiguo? (The u only guards a hard g before e and i.) Name the three stem cracks you now have, with a verb for each. (Cerrar e becomes ie, dormir o becomes ue, conseguir e becomes i.) And which Latin verb is behind traer? (Trahere.)"
             }
           ]
         }

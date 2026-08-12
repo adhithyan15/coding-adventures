@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C49-repaso-perfecto
 spine_node: SPINE-TALK-ABOUT-PAST
 sequence: 1389
-chapter: 115
+chapter: 116
 type: practice-mix
 headword: (review)
 gloss: review — a whole tense assembled from two pieces, neither of which changes with the other

@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 178,
-  "title": "Como Se Dice --- The Sentence That Unlocks the Rest",
+  "title": "Se Compran Libros --- The Verb Tells On Itself",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:a975ef3cb2cc1b67",
+  "sourceHash": "fnv1a64:ae73748cc5746617",
   "lessons": [
     {
-      "id": "ES-C52-como-se-dice",
-      "sequence": 2198,
-      "title": "¿cómo se dice? — the sentence that unlocks the rest",
-      "headword": "¿cómo se dice?",
-      "romanization": "¿cómo se dice?",
-      "gloss": "the single most useful sentence a learner owns — and it is this chapter's grammar, doing exactly what the chapter said",
+      "id": "ES-C52-se-venden",
+      "sequence": 2197,
+      "title": "se compran libros — the verb tells on itself",
+      "headword": "se compran libros",
+      "romanization": "se compran libros",
+      "gloss": "the verb agrees with the thing — which is the clue to where this whole construction came from",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4bc8115ab951fb1e",
+      "sourceHash": "fnv1a64:9d519e6ebd87b5fe",
       "notice": null,
       "blocks": [
         {
@@ -35,39 +35,62 @@
             },
             {
               "kind": "speech",
-              "text": "You know cómo. You know the impersonal se. Put them in front of dice and you have the sentence that will teach you more Spanish than this book will."
+              "text": "Se habla español — one thing, singular verb. Now guess what happens with more than one thing."
             }
           ]
         },
         {
           "index": 1,
-          "type": "input",
-          "title": "The two words",
+          "type": "grammar",
+          "title": "Grammar Lens: it agrees, and that is strange",
           "segments": [
             {
               "kind": "speech",
-              "text": "¿Cómo se dice? — How do you say it? / How is it said?"
+              "text": "Se compra el libro. — The book is bought. Se compran libros. — Books are bought."
             },
             {
               "kind": "speech",
-              "text": "Take it apart with what this chapter gave you. Se dice is the impersonal: it asks how a thing gets said, without asking who says it. Not how do you say it, though that is the natural English — Spanish is not pointing at the person you are talking to. It is asking about the language itself."
+              "text": "The verb changed. Compra for one book, compran for several — the verb is agreeing with the thing being bought."
             },
             {
               "kind": "speech",
-              "text": "Which is exactly right, because you are not asking for their personal opinion. You are asking what the word is."
+              "text": "Stop and notice how odd that is. In se habla español there is nobody doing the speaking, so what is the verb agreeing with? If this were simply \"one buys books,\" the verb would stay singular, because one is one person. It does not stay singular."
             },
             {
               "kind": "speech",
-              "text": "¿Cómo se dice \"book\" en español? — How do you say \"book\" in Spanish? ¿Cómo se dice, por favor?"
-            },
-            {
-              "kind": "speech",
-              "text": "This is the most valuable sentence in the book, and it is worth saying why. Every other sentence you have learned lets you say something you already know. This one gets you the thing you do not know, from the person in front of you, mid-conversation. A learner with this sentence and some patience out-learns one with twice the vocabulary and no way to ask."
+              "text": "The thing is behaving like the subject. And that is the clue to where this construction came from."
             }
           ]
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read se compran libros with the se meaning what it meant in se llama:"
+            },
+            {
+              "kind": "speech",
+              "text": "Books buy themselves."
+            },
+            {
+              "kind": "speech",
+              "text": "That is nonsense as a description of the world, and it is exactly the sentence Spanish is using. The reflexive was stretched: first the door closes itself (true enough of doors), then the books sell themselves, and finally any verb at all with the doer quietly dropped."
+            },
+            {
+              "kind": "speech",
+              "text": "Once you see that, the agreement stops being strange. Libros is the subject of se compran in the same way él is the subject of se llama. The verb has been agreeing with its subject all along; it is just that the subject is a thing, and the thing is not really doing anything."
+            },
+            {
+              "kind": "speech",
+              "text": "So this se is the reflexive se — grown, not borrowed. Unlike the se of se lo digo, which only looks like it."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -80,94 +103,74 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"¿Cómo se dice?\" until it is one word",
+              "instruction": "\"Se compra el libro\" then \"Se compran libros\" — hear the verb follow the thing",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"¿Cómo se dice?\" until it is one word]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"¿Cómo se dice en español, por favor?\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"¿Cómo se dice en español, por favor?\"]"
-            },
-            {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "This is the one to over-practise."
+              "source": "[YOU SAY: \"Se compra el libro\" then \"Se compran libros\" — hear the verb follow the thing]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C52-como-se-dice-ask",
-              "prompt": "Ask how something is said.",
+              "id": "ES-C52-se-venden-plural",
+              "prompt": "Say books are bought.",
               "assesses": [
-                "ES-LEX-COMO-SE-DICE",
-                "ES-LEX-COMO"
+                "ES-GRAMMAR-SE-PASSIVE-AGREEMENT",
+                "ES-LEX-COMPRAR-07",
+                "ES-LEX-LIBRO"
               ],
-              "responseSeconds": 8,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "como se dice",
-                "¿cómo se dice?",
-                "¿como se dice?"
+                "se compran libros",
+                "se compran los libros"
               ],
               "feedback": {
-                "correct": "The sentence that repairs every conversation.",
-                "incorrect": "¿Como se dice?"
+                "correct": "Plural thing, plural verb.",
+                "incorrect": "Se compran libros."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C52-como-se-dice-full",
-              "prompt": "Ask how something is said in Spanish, politely.",
+              "id": "ES-C52-se-venden-agree",
+              "prompt": "What is the verb agreeing with in se compran libros?",
               "assesses": [
-                "ES-LEX-COMO-SE-DICE",
-                "ES-LEX-ESPANOL",
-                "ES-LEX-POR-FAVOR"
+                "ES-GRAMMAR-SE-PASSIVE-AGREEMENT"
               ],
-              "responseSeconds": 12,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "como se dice en espanol, por favor",
-                "¿cómo se dice en español, por favor?"
+                "the books",
+                "the thing being bought",
+                "libros"
               ],
               "feedback": {
-                "correct": "Ask this all day and the day will teach you.",
-                "incorrect": "¿Como se dice en espanol, por favor?"
+                "correct": "The thing is behaving like the subject.",
+                "incorrect": "With libros — the thing, not any doer."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C52-como-se-dice-why",
-              "prompt": "Why is it se dice rather than a form aimed at the person you are asking?",
+              "id": "ES-C52-se-venden-origin",
+              "prompt": "Read se compran libros as if se still meant themselves. What does it say?",
               "assesses": [
-                "ES-GRAMMAR-SE-IMPERSONAL",
-                "ES-GRAMMAR-DECIR-PRESENT-SINGULAR"
+                "ES-GRAMMAR-REFLEXIVE-THIRD-PERSON",
+                "ES-GRAMMAR-SE-PASSIVE-AGREEMENT"
               ],
               "responseSeconds": 12,
               "acceptedResponses": [
-                "you are asking about the language, not about them",
-                "it is impersonal",
-                "nobody is being named"
+                "books buy themselves",
+                "the books buy themselves"
               ],
               "feedback": {
-                "correct": "Not their opinion — what the word is.",
-                "incorrect": "Because you are asking how the thing gets said, not what they personally would say."
+                "correct": "Nonsense about the world, and exactly the sentence Spanish is using.",
+                "incorrect": "Books buy themselves — which is where the construction came from."
               }
             }
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -179,7 +182,7 @@
             },
             {
               "kind": "speech",
-              "text": "Ask how something is said. (¿Cómo se dice?) Which se is that? (The impersonal one — asking about the language, not the person.) Next: the three ses, side by side, for the first time."
+              "text": "Why does the verb go plural? (Because it agrees with the thing.) And why does it agree with the thing? (Because underneath, the thing is doing it to itself.) Next: the one you will use every day."
             }
           ]
         }

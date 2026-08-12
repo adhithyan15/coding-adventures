@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 78,
-  "title": "Lo --- Saying It Without Naming It",
+  "title": "Synthesis --- More Than One",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:03eb366f4c8d531d",
+  "sourceHash": "fnv1a64:22cde97d81552a79",
   "lessons": [
     {
-      "id": "ES-C42-lo",
-      "sequence": 1215,
-      "title": "lo — \"it\"",
-      "headword": "lo",
-      "romanization": "lo",
-      "gloss": "\"it\" — a word you have been saying since your fourth chapter, in a job you have not met yet",
+      "id": "ES-C44-sintesis-mas-de-uno",
+      "sequence": 1203,
+      "title": "Synthesis — more than one",
+      "headword": "(synthesis)",
+      "romanization": "(synthesis)",
+      "gloss": "synthesis — talking about more than one, and the article that disappears instead of pluralising",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0ed6dc28cf7d166c",
+      "sourceHash": "fnv1a64:11fa0776458cd79d",
       "notice": null,
       "blocks": [
         {
@@ -35,69 +35,57 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"my name is\" in Spanish. (Me llamo.) Where does that little me sit — before the verb, or after it?"
+              "text": "Say \"I have a book.\" (Tengo un libro.) Now say \"I have books,\" and notice where you hesitate."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: a slot you have been using all along",
+          "title": "Grammar Lens: the article that leaves",
           "segments": [
             {
               "kind": "speech",
-              "text": "Before the verb. You have known that since your fourth chapter, and you have been doing it every time you say your name."
+              "text": "The hesitation is the right instinct. The pluralised neatly — el became los. A cannot, because \"a\" and \"more than one\" disagree by definition."
             },
             {
               "kind": "speech",
-              "text": "Here is a second word for that same slot."
+              "text": "English solves this by swapping in another word: a book becomes some books, or just books. Spanish takes the shorter road:"
             },
             {
               "kind": "speech",
-              "text": "lo — it, standing in for something masculine."
+              "text": "Tengo un libro. — I have a book. Tengo libros. — I have books."
             },
             {
               "kind": "speech",
-              "text": "Watch what it does:"
+              "text": "The article simply goes. Not replaced, not pluralised — dropped. A bare plural noun is a complete, ordinary Spanish phrase."
             },
             {
               "kind": "speech",
-              "text": "Tengo el libro. — I have the book. Lo tengo. — I have it."
-            },
-            {
-              "kind": "speech",
-              "text": "The noun leaves; lo takes its place; and it goes where me goes — in front of the verb. Not one new rule. One new word for a slot you already own."
-            },
-            {
-              "kind": "speech",
-              "text": "Notice that this only became possible last chapter. A pronoun replaces a noun, so it needs a noun to replace — which is why these three ordinary words came first."
+              "text": "This is the mirror image of everything you have been doing. For fifty chapters Spanish has made you say more than English: two genders, four articles, six verb endings. Here, for once, it says less."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
+          "type": "input",
+          "title": "The exchange",
           "segments": [
             {
               "kind": "speech",
-              "text": "Lo should look faintly familiar, and it should also look wrong. It is almost el, but not quite. That is not a coincidence, and the near-miss has a cause."
+              "text": "Read this aloud and watch the two plurals doing different jobs."
             },
             {
               "kind": "speech",
-              "text": "Latin ille, \"that one,\" changed shape depending on the job it was doing. As the object of a verb it was illum. Spanish got both its article and its object pronoun out of that one word — and then wore it down twice, differently, because the two jobs put the stress in different places:"
+              "text": "— ¿Tienes libros? — Sí, tengo libros. — ¿Y los libros de la casa? — Los libros de la casa, no."
             },
             {
               "kind": "speech",
-              "text": "Leaning on a noun, unstressed, it lost its vowel: illum becomes elo becomes el."
+              "text": "Bare libros means \"books, some books, books in general.\" Los libros means \"the books\" — particular ones, already known to both of you."
             },
             {
               "kind": "speech",
-              "text": "Standing alone in the verb's slot, it kept the vowel: illum becomes lo."
-            },
-            {
-              "kind": "speech",
-              "text": "So el and lo are the same ancient word, split by the work it was asked to do. English did something similar with he and him: one word, two shapes, and the shape tells you the job."
+              "text": "That is the same distinction English makes and never explains: do you have books? is a different question from do you have the books? You have simply never had to choose it deliberately before."
             }
           ]
         },
@@ -115,77 +103,99 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Tengo el libro\" then \"Lo tengo\" — hear the noun disappear",
+              "instruction": "\"Tengo un libro\" then \"Tengo libros\" — hear the article vanish",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Tengo el libro\" then \"Lo tengo\" — hear the noun disappear]"
+              "source": "[YOU SAY: \"Tengo un libro\" then \"Tengo libros\" — hear the article vanish]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"me llamo\" then \"lo tengo\" — the same slot, twice",
+              "instruction": "\"libros\" then \"los libros\", twice, until the two feel like different questions",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"me llamo\" then \"lo tengo\" — the same slot, twice]"
+              "source": "[YOU SAY: \"libros\" then \"los libros\", twice, until the two feel like different questions]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C42-lo-replace",
-              "prompt": "Say I have it, replacing el libro.",
+              "id": "ES-C44-sintesis-mas-de-uno-bare",
+              "prompt": "Say I have books.",
               "assesses": [
-                "ES-GRAMMAR-DIRECT-OBJECT-LO",
-                "ES-LEX-LO-OBJECT"
+                "ES-GRAMMAR-BARE-PLURAL-NOUN",
+                "ES-LEX-LIBRO",
+                "ES-GRAMMAR-TENER-PRESENT-SINGULAR"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "lo tengo",
-                "yo lo tengo"
+                "tengo libros",
+                "yo tengo libros"
               ],
               "feedback": {
-                "correct": "Yes — and note the order: the little word comes first.",
-                "incorrect": "Lo tengo. The pronoun goes in front of the verb, exactly where me goes."
+                "correct": "No article at all — that is the whole trick.",
+                "incorrect": "Tengo libros. The indefinite article is dropped, not pluralised."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C42-lo-place",
-              "prompt": "Does the pronoun go before or after the conjugated verb?",
+              "id": "ES-C44-sintesis-mas-de-uno-definite",
+              "prompt": "Now say I have the books.",
               "assesses": [
-                "ES-GRAMMAR-OBJECT-PRONOUN"
+                "ES-GRAMMAR-DEFINITE-PLURAL-MASCULINE",
+                "ES-LEX-LIBRO"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "before",
-                "in front of it",
-                "before the verb"
+                "tengo los libros",
+                "yo tengo los libros"
               ],
               "feedback": {
-                "correct": "Before — the same slot me has always taken.",
-                "incorrect": "Before the verb, just like the me in me llamo."
+                "correct": "Los libros — particular ones.",
+                "incorrect": "Tengo los libros. The definite article does pluralise."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C42-lo-origin",
-              "prompt": "Which everyday Spanish word comes from the same Latin word as lo?",
+              "id": "ES-C44-sintesis-mas-de-uno-meals",
+              "prompt": "Say I make meals, meaning meals in general.",
               "assesses": [
-                "ES-ETYMON-ILLE-ILLA",
-                "ES-GRAMMAR-DEFINITE-ARTICLES"
+                "ES-GRAMMAR-BARE-PLURAL-NOUN",
+                "ES-LEX-COMIDA",
+                "ES-GRAMMAR-HACER-PRESENT-SINGULAR"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "el",
-                "the article el",
-                "el, the article"
+                "hago comidas",
+                "yo hago comidas"
               ],
               "feedback": {
-                "correct": "Right — one Latin word, worn down two different ways.",
-                "incorrect": "El. Both descend from illum; the article lost the vowel and the pronoun kept it."
+                "correct": "Bare plural, no article.",
+                "incorrect": "Hago comidas — nothing in front of it."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C44-sintesis-mas-de-uno-contrast",
+              "prompt": "What is the difference in meaning between casas and las casas?",
+              "assesses": [
+                "ES-GRAMMAR-BARE-PLURAL-NOUN",
+                "ES-GRAMMAR-DEFINITE-PLURAL-FEMININE",
+                "ES-LEX-CASA"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "houses in general versus particular known ones",
+                "one is indefinite and one is definite",
+                "las casas means the houses"
+              ],
+              "feedback": {
+                "correct": "The same choice English makes without noticing.",
+                "incorrect": "Casas is houses in general; las casas is the houses, ones you both already have in mind."
               }
             }
           ]
@@ -203,7 +213,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does lo mean? (It — for something masculine.) Where does it go? (Before the verb.) Next: the same job, done by a word that never changed its shape at all."
+              "text": "\"I have books\"? (Tengo libros — no article.) \"I have the books\"? (Tengo los libros.) Which article pluralises and which one leaves? (The pluralises; a leaves.) Next: the small words that let you stop naming a thing you have already named."
             }
           ]
         }

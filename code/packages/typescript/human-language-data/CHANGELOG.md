@@ -4,6 +4,15 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
 
 ## [Unreleased]
 
+### Added - the -ncia friend ending (HL-C88, HL10 §6.7)
+
+- Add Spanish chapter 62: `-ncia` is English `-nce`, from Latin `-entia`.
+- Compose rather than accumulate: every `-ncia` word is a feminine noun, so it
+  lands on the article and gender rules, and `una diferencia grande` combines it
+  with the adjective arc placed just before.
+- Teach the near miss: `ciencia` is science, not "cience" — trust the ending and
+  check the root.
+
 ### Fixed - the adjective arc had no nouns to describe (HL-C112)
 
 - Move `la casa` and `el libro` from chapters 70-71 to 56-57, ahead of the

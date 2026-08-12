@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 79,
-  "title": "La --- The Pronoun Carries What Left",
+  "title": "Lo --- Saying It Without Naming It",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:b06040fb3115ccb4",
+  "sourceHash": "fnv1a64:4810ca8b62fca4f1",
   "lessons": [
     {
-      "id": "ES-C42-la",
-      "sequence": 1217,
-      "title": "la — \"it,\" for a feminine noun",
-      "headword": "la",
-      "romanization": "la",
-      "gloss": "\"it\" for something feminine — the one word in this pair that never had to change",
+      "id": "ES-C42-lo",
+      "sequence": 1215,
+      "title": "lo — \"it\"",
+      "headword": "lo",
+      "romanization": "lo",
+      "gloss": "\"it\" — a word you have been saying since your fourth chapter, in a job you have not met yet",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b844e939142dc773",
+      "sourceHash": "fnv1a64:bd8d1d60ddc64eab",
       "notice": null,
       "blocks": [
         {
@@ -35,34 +35,42 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"I have it,\" about the book. (Lo tengo.) Now guess the feminine version before you read on."
+              "text": "Say \"my name is\" in Spanish. (Me llamo.) Where does that little me sit — before the verb, or after it?"
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: the form you probably guessed",
+          "title": "Grammar Lens: a slot you have been using all along",
           "segments": [
             {
               "kind": "speech",
-              "text": "la — it, standing in for something feminine."
+              "text": "Before the verb. You have known that since your fourth chapter, and you have been doing it every time you say your name."
             },
             {
               "kind": "speech",
-              "text": "Hago la comida. — I make the meal. La hago. — I make it."
+              "text": "Here is a second word for that same slot."
             },
             {
               "kind": "speech",
-              "text": "If you guessed la, you were not lucky. You were doing what the shape of Spanish invites you to do: el and la mark the two genders everywhere else, so the object pronouns mark them the same way."
+              "text": "lo — it, standing in for something masculine."
             },
             {
               "kind": "speech",
-              "text": "The pronoun agrees with the noun it replaces — not with you, and not with the verb. El libro is masculine, so lo. La comida and la casa are feminine, so la."
+              "text": "Watch what it does:"
             },
             {
               "kind": "speech",
-              "text": "That last point is worth pausing on. La here is not agreeing with anything present in the sentence. The noun is gone; the pronoun is carrying its gender on its behalf. This is the first time in Spanish that a word has had to remember something that is no longer being said."
+              "text": "Tengo el libro. — I have the book. Lo tengo. — I have it."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun leaves; lo takes its place; and it goes where me goes — in front of the verb. Not one new rule. One new word for a slot you already own."
+            },
+            {
+              "kind": "speech",
+              "text": "Notice that this only became possible last chapter. A pronoun replaces a noun, so it needs a noun to replace — which is why these three ordinary words came first."
             }
           ]
         },
@@ -73,15 +81,23 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Last chapter had a small mystery: why lo and not el, when both come from the same Latin word? Here that mystery quietly disappears."
+              "text": "Lo should look faintly familiar, and it should also look wrong. It is almost el, but not quite. That is not a coincidence, and the near-miss has a cause."
             },
             {
               "kind": "speech",
-              "text": "The feminine object form in Latin was illam. Worn down as an article it gave la. Worn down as a pronoun it gave — la. Both routes arrived at the same place, because the vowel that got lost on the masculine side (elo becomes el) was never at risk on the feminine side."
+              "text": "Latin ille, \"that one,\" changed shape depending on the job it was doing. As the object of a verb it was illum. Spanish got both its article and its object pronoun out of that one word — and then wore it down twice, differently, because the two jobs put the stress in different places:"
             },
             {
               "kind": "speech",
-              "text": "So the masculine pair split into two shapes and the feminine pair did not. Not an exception to memorise: a single sound change that happened to bite one word and not the other."
+              "text": "Leaning on a noun, unstressed, it lost its vowel: illum becomes elo becomes el."
+            },
+            {
+              "kind": "speech",
+              "text": "Standing alone in the verb's slot, it kept the vowel: illum becomes lo."
+            },
+            {
+              "kind": "speech",
+              "text": "So el and lo are the same ancient word, split by the work it was asked to do. English did something similar with he and him: one word, two shapes, and the shape tells you the job."
             }
           ]
         },
@@ -99,79 +115,77 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Hago la comida\" then \"La hago\"",
+              "instruction": "\"Tengo el libro\" then \"Lo tengo\" — hear the noun disappear",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Hago la comida\" then \"La hago\"]"
+              "source": "[YOU SAY: \"Tengo el libro\" then \"Lo tengo\" — hear the noun disappear]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"lo tengo\" then \"la hago\" — one syllable carries the whole difference",
+              "instruction": "\"me llamo\" then \"lo tengo\" — the same slot, twice",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"lo tengo\" then \"la hago\" — one syllable carries the whole difference]"
+              "source": "[YOU SAY: \"me llamo\" then \"lo tengo\" — the same slot, twice]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C42-la-form",
-              "prompt": "Say I make it, about la comida.",
+              "id": "ES-C42-lo-replace",
+              "prompt": "Say I have it, replacing el libro.",
               "assesses": [
-                "ES-GRAMMAR-DIRECT-OBJECT-LA",
-                "ES-LEX-LA-OBJECT",
-                "ES-GRAMMAR-HACER-PRESENT-SINGULAR"
+                "ES-GRAMMAR-DIRECT-OBJECT-LO",
+                "ES-LEX-LO-OBJECT"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "la hago",
-                "yo la hago"
+                "lo tengo",
+                "yo lo tengo"
               ],
               "feedback": {
-                "correct": "Yes — feminine noun, feminine pronoun.",
-                "incorrect": "La hago. The pronoun takes the gender of the noun it replaces."
+                "correct": "Yes — and note the order: the little word comes first.",
+                "incorrect": "Lo tengo. The pronoun goes in front of the verb, exactly where me goes."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C42-la-agree",
-              "prompt": "What decides whether you say lo or la?",
+              "id": "ES-C42-lo-place",
+              "prompt": "Does the pronoun go before or after the conjugated verb?",
               "assesses": [
-                "ES-GRAMMAR-NOUN-GENDER",
-                "ES-GRAMMAR-DIRECT-OBJECT-LO",
-                "ES-LEX-CASA"
+                "ES-GRAMMAR-OBJECT-PRONOUN"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "before",
+                "in front of it",
+                "before the verb"
+              ],
+              "feedback": {
+                "correct": "Before — the same slot me has always taken.",
+                "incorrect": "Before the verb, just like the me in me llamo."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C42-lo-origin",
+              "prompt": "Which everyday Spanish word comes from the same Latin word as lo?",
+              "assesses": [
+                "ES-ETYMON-ILLE-ILLA",
+                "ES-GRAMMAR-DEFINITE-ARTICLES"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "the gender of the noun it replaces",
-                "the noun's gender",
-                "whether the noun is masculine or feminine"
+                "el",
+                "the article el",
+                "el, the article"
               ],
               "feedback": {
-                "correct": "Right — the noun decides, not the speaker and not the verb.",
-                "incorrect": "The gender of the noun being replaced."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C42-la-why",
-              "prompt": "Why does the feminine article match its pronoun exactly, when the masculine pair does not?",
-              "assesses": [
-                "ES-ETYMON-ILLE-ILLA"
-              ],
-              "responseSeconds": 12,
-              "acceptedResponses": [
-                "the masculine lost a vowel and the feminine had none to lose",
-                "only the masculine wore down",
-                "the sound change only hit the masculine"
-              ],
-              "feedback": {
-                "correct": "Exactly — one sound change, one victim.",
-                "incorrect": "Both come from illam unchanged; the masculine elo lost its vowel and became el."
+                "correct": "Right — one Latin word, worn down two different ways.",
+                "incorrect": "El. Both descend from illum; the article lost the vowel and the pronoun kept it."
               }
             }
           ]
@@ -189,7 +203,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which pronoun replaces a feminine noun? (La.) What decides it — you, the verb, or the noun? (The noun, even though it is no longer there.) Next: the same slot, for the two people actually talking."
+              "text": "What does lo mean? (It — for something masculine.) Where does it go? (Before the verb.) Next: the same job, done by a word that never changed its shape at all."
             }
           ]
         }

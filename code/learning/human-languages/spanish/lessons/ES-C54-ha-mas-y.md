@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C54-ha-mas-y
 spine_node: SPINE-ASK-LOCATION
 sequence: 2207
-chapter: 187
+chapter: 188
 type: etymology
 headword: ha + y
 gloss: the fossil inside hay — a word for "there" that exists nowhere else in Spanish, and survives whole in French

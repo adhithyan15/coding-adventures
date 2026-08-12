@@ -1,43 +1,44 @@
-Spanish, chapter 180: Synthesis --- Reading the Window.
+Spanish, chapter 180: Review --- The Three Se's.
 1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-Synthesis — reading the window.
+Review — the three se's.
 
 Warm-up.
 [pause 2 seconds]
-Almost nobody will say se habla español to you. It will be written, on a window, and you will be walking past it.
+Nothing new. Say se llama, then se habla español, then se lo digo. Three sentences, three ses, learned about a hundred chapters apart.
 
-The exchange.
-Four things on four windows, in one street:
-SE HABLA ESPAÑOL SE COMPRAN LIBROS AQUÍ SE COME BIEN SE PROHÍBE FUMAR.
-Three you can read completely. The fourth has words you have never met — and you can still read its shape: something is forbidden, by nobody in particular.
-That is what this rung buys. Not producing these sentences, but reading them off the world, and knowing the missing person is missing on purpose.
-And for the two unknown words, you already have the tool:
-¿Cómo se dice "fumar", por favor?
-Which is itself the same construction, asked out loud.
+What you've built.
+[a table of 3 rows, read aloud]
+reflexive. example: se llama. what the se is: himself.
+impersonal. example: se habla español. what the se is: nobody named.
+the impostor. example: se lo digo. what the se is: le, in disguise.
+And here is the fact that makes this a review rather than a fourth thing to learn:
+The first two are the same word. The third is not.
+The impersonal grew out of the reflexive — the books sell themselves becoming books are sold — which is why the verb still agrees with the thing. Same word, stretched.
+The third only looks like them. It is Latin illī — the le you already know — which arrived at this spelling by an accident of medieval pronunciation, as you saw when gelo became se lo.
+So Spanish does not have three ses. It has two, and a coincidence.
 
-Grammar Lens: what it means that nobody is named.
-A sentence with nobody in it is not just vague — it is doing something with the vagueness. Se prohíbe fumar does not say who forbids it, and that is what gives a sign its authority: nobody is claiming anything, so there is nobody to argue with. English does the same when a report says mistakes were made.
-So when you meet a se with no doer, ask who is being left out. Sometimes the answer is interesting.
+Grammar Lens: how to tell them apart in the wild.
+You will not have to work this out consciously for long, but while you do:
+Is there a lo, la, los or las right after it? Then it is the impostor: se lo, se la. It means to him / to her / to them.
+Otherwise, is anybody named as the doer? If not, it is the impersonal: se habla, se dice, se come bien.
+Otherwise it is the reflexive, pointing back at whoever the sentence is about: se llama, se levanta.
+The first test is nearly free, because that direct object pronoun is sitting right there in the open.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: the four signs aloud as if walking past them]
-[pause 8 seconds for the answer]
-[your turn — say: "¿Cómo se dice, por favor?" — the way out of any of them]
+[your turn — say: "se llama", "se habla español", "se lo digo" — two of these are relatives]
 [pause 8 seconds for the answer]
 [repeat that twice]
+[question — say your answer, then pause 12 seconds]
+Of the three se's, which two are really one word?
 [question — say your answer, then pause 10 seconds]
-What does the sign SE COMPRAN LIBROS tell you?
+What single thing right after se tells you it is the impostor?
 [question — say your answer, then pause 10 seconds]
-A sign has a word you do not know. Ask somebody, politely.
-[question — say your answer, then pause 10 seconds]
-Say the food is good here, the way a sign would.
-[question — say your answer, then pause 14 seconds]
-Why does leaving the person out give a sign its authority?
+Which se is in como se dice?
 
 Wrap-up Recall.
 [pause 3 seconds]
-Where does this grammar mostly live? (Written on things.) What does the missing person buy a sign? (Authority — nobody to argue with.) And what do you say when a sign has a word you do not have? (¿Cómo se dice, por favor?)
+How many ses does Spanish really have? (Two, and a coincidence.) Which one is the impostor? (The one in se lo — it is le.) Next: all of it in a place you would actually meet it.

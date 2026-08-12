@@ -1,44 +1,41 @@
-Spanish, chapter 167: Review --- All Four Stem Changes.
+Spanish, chapter 167: Conocer --- Coming to Know.
 1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-Review — the four stem changes, all of them.
+conocer — "to meet", because knowing has a first moment.
 
 Warm-up.
 [pause 2 seconds]
-Nothing new in this chapter. Say a verb whose stem breaks under stress — any one you have met.
+Juego — the one u becomes ue in the language. Now the chapter's last verb, and its oddity is not in the vowel but in what the word means.
 
-What you've built.
-Something finished in the last two chapters and it is worth stopping for.
-Spanish has four stem-change patterns. Not five, not a dozen — four. You met the first two long ago with querer and poder, and the last two in the chapters you have just finished. That is the whole system, and you now hold all of it:
-[a table of 4 rows, read aloud]
-the change: e becomes ie. the verb that taught it: querer. what breaks: becomes quiero.
-the change: o becomes ue. the verb that taught it: poder. what breaks: becomes puedo.
-the change: e becomes i. the verb that taught it: conseguir. what breaks: becomes consigo.
-the change: u becomes ue. the verb that taught it: jugar. what breaks: becomes juego.
-This table is allowed here because every row in it is something you can already do. It is a picture of the ground you hold, not a list to memorise.
+Sounds you'll need.
+soft-c — conoces has a soft second c: a th in Spain, an s elsewhere.
+k-hard — but conozco is ko-NOTH-ko, soft then hard, back to back.
 
-Grammar Lens: the pattern with one member.
-The fourth row is strange, and worth knowing precisely.
-u becomes ue happens in exactly one verb in the entire language: jugar.
-Not "mostly one." One. Every other Spanish verb with a u in its stem leaves it alone. So you are not learning a pattern here so much as a single fact with a pattern's shape — which is easier, not harder, and is the kind of thing a course should tell you instead of letting you brace for more.
+The word, taken apart: conocer.
+conocer from Latin cognōscere, com- + (g)nōscere. Its -sc- is Latin's "begin to" marker, so nōscere was never "to know" — it was "to come to know". Latin said nōvī, "I have come to know", for actually knowing a thing.
+Spanish built its verb from the beginning half. That is the whole lesson: conocer a alguien is to meet someone, and Spanish puts a small a before a person who is the object — conozco a María.
+The root fills English: cognition, recognize, incognito, and through French notice, notion, notorious and noble, "the knowable one". English know and ken are its Germanic siblings — the same standing that padre has beside English father, neither one borrowed from the other.
+
+Grammar Lens: conocer and saber.
+[a table of 2 rows, read aloud]
+what you know: a person, a city, a book. verb: conocer.
+what you know: a fact, or how to do something. verb: saber.
+English says know for both. Spanish will not: conocer is being acquainted — you have met the thing. Saber is having the information. Conozco Madrid means I have been there; sé dónde está means I have the fact.
+The yo-form keeps a hard cluster the rest lost: conozco, conoces, conoce, conocemos, conocen. Every -cer verb after a vowel does the same, and it is a third kind of odd yo-form beside traigo and oigo.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: one verb from each of the four rows]
+[your turn — say: "conozco, conoces, conoce, conocemos, conocen"]
 [pause 8 seconds for the answer]
-[your turn — say: the four changes themselves, as sounds — e-ie, o-ue, e-i, u-ue]
+[your turn — say: "Conozco a María" then "Conozco Madrid"]
 [pause 8 seconds for the answer]
-[repeat that twice]
-Until naming the pattern is faster than working it out.
-[question — say your answer, then pause 8 seconds]
-How many stem-change patterns does Spanish have in total?
-[question — say your answer, then pause 10 seconds]
-Which pattern belongs to exactly one verb, and which verb?
-[question — say your answer, then pause 8 seconds]
-Which change does conseguir make?
+[your turn — say: "traigo, consigo, juego, conozco" — the chapter's four yo-forms]
+[pause 8 seconds for the answer]
+[your turn — say: "padre, father" then "conocer, know" — siblings, not borrowings]
+[pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-How many stem-change patterns are there? (Four — and that is all of them.) Which one has a single member? (u becomes ue, only jugar.) Next chapter is not about forms at all — it is about three places where English gives you one word and Spanish makes you choose.
+Say the chapter's four verbs in the yo, then say what each one does to itself. (Traigo grows a hard g; consigo breaks e becomes i and loses a silent u; juego breaks u becomes ue, alone in the language; conozco keeps a hard cluster.) Name their four Latin roots and what each meant. (Trahere to drag, cōnsequī to follow, iocārī to joke, cognōscere to begin to know.) Which verb do you use for a person, and which for a fact? (Conocer; saber.) And which of the four moves a thing toward you? (Traer — llevar goes away.)

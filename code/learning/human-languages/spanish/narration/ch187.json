@@ -2,32 +2,25 @@
   "version": 1,
   "language": "spanish",
   "chapter": 187,
-  "title": "Ha + Y --- The Fossil in a Three-Letter Word",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:0ea094915f29c04f",
+  "title": "Hay --- There Is, There Are, Same Word",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:d413f97a101c286b",
   "lessons": [
     {
-      "id": "ES-C54-ha-mas-y",
-      "sequence": 2207,
-      "title": "ha + y — the fossil in a three-letter word",
-      "headword": "ha + y",
-      "romanization": "ha + y",
-      "gloss": "the fossil inside hay — a word for \"there\" that exists nowhere else in Spanish, and survives whole in French",
+      "id": "ES-C54-hay",
+      "sequence": 2206,
+      "title": "hay — \"there is,\" \"there are,\" same word",
+      "headword": "hay",
+      "romanization": "hay",
+      "gloss": "\"there is\" and \"there are\" — one word for both, which no other Spanish verb form manages",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:22d65adc8a8f0384",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:3d6a6b9a193fdf40",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -42,51 +35,50 @@
             },
             {
               "kind": "speech",
-              "text": "Hay looks like nothing. Say the haber form for he/she. (Ha.) Now look at hay again with that in mind."
+              "text": "Say \"I have eaten.\" (He comido.) You met haber as the verb with no meaning left. It kept one more job, and this is it."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "Hay is two words fused:"
-            },
-            {
-              "kind": "speech",
-              "text": "ha + y."
-            },
-            {
-              "kind": "speech",
-              "text": "The ha you already hold: it is haber, third person. The y is the interesting half. It is Latin ibi, meaning \"there\" — and Spanish otherwise lost that word completely."
-            },
-            {
-              "kind": "speech",
-              "text": "There is no y meaning \"there\" anywhere else in modern Spanish. It survives in exactly one place, welded to the front of a verb, because words that get glued to something else stop being available to be replaced. Hay is a museum case with one object in it."
-            },
-            {
-              "kind": "speech",
-              "text": "So the literal reading is: \"it has there.\" Which is a strange way to say something exists, until you notice that the neighbours do the same:"
-            },
-            {
-              "kind": "speech",
-              "text": "French: il y a — \"it there has.\" Same haber verb, same ibi, same order, three words instead of one. French kept its y separate, so its fossil is still visible on the surface."
-            },
-            {
-              "kind": "speech",
-              "text": "English: there is — which also starts with a place-word doing a job that has nothing to do with place. Nobody is pointing anywhere when they say there is a problem."
-            },
-            {
-              "kind": "speech",
-              "text": "Three languages, three different verbs, and all of them reached for a word meaning \"there\" to announce that something exists. That is not borrowing; it is the same instinct arriving three times."
+              "text": "diphthong-ai — hay is one syllable, rhyming with English eye. The h is silent, as always."
             }
           ]
         },
         {
           "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: one form, and it does not count",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "hay — there is, and there are."
+            },
+            {
+              "kind": "speech",
+              "text": "Hay una casa. — There is a house. Hay libros. — There are books. Hay una casa aquí. — There's a house here."
+            },
+            {
+              "kind": "speech",
+              "text": "Read those twice. One book or a hundred, hay does not move."
+            },
+            {
+              "kind": "speech",
+              "text": "That is remarkable, and you are now in a position to see why. Every verb form in this book has agreed with something: with the person speaking, with the thing being replaced, with the noun being described. In the impersonal se chapter, even a sentence with nobody in it still made the verb agree with the thing — se compran libros."
+            },
+            {
+              "kind": "speech",
+              "text": "Hay does not. It is the one common Spanish verb form that counts nothing at all, and it is a small gift: no decision to make, ever."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -99,82 +91,74 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ha\" then \"hay\" — hear the extra piece",
+              "instruction": "\"Hay una casa\" then \"Hay libros\" — the same word, twice",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ha\" then \"hay\" — hear the extra piece]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"hay\", \"il y a\", \"there is\" — three languages, one instinct",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"hay\", \"il y a\", \"there is\" — three languages, one instinct]"
+              "source": "[YOU SAY: \"Hay una casa\" then \"Hay libros\" — the same word, twice]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C54-ha-mas-y-parts",
-              "prompt": "What two pieces make up hay?",
+              "id": "ES-C54-hay-one",
+              "prompt": "Say there is a house.",
               "assesses": [
-                "ES-ETYMON-HAY-IBI",
-                "ES-LEX-HABER"
+                "ES-LEX-HAY",
+                "ES-LEX-CASA"
               ],
-              "responseSeconds": 10,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "ha and y",
-                "ha plus y",
-                "ha + y"
+                "hay una casa",
+                "hay una casa."
               ],
               "feedback": {
-                "correct": "The haber you know, plus a word for there.",
-                "incorrect": "Ha, from haber, plus y."
+                "correct": "Hay una casa.",
+                "incorrect": "Hay una casa."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C54-ha-mas-y-fossil",
-              "prompt": "Where else in modern Spanish does that y meaning there appear?",
+              "id": "ES-C54-hay-many",
+              "prompt": "Say there are books.",
               "assesses": [
-                "ES-ETYMON-HAY-IBI"
+                "ES-GRAMMAR-HAY-NO-AGREEMENT",
+                "ES-LEX-LIBRO",
+                "ES-GRAMMAR-BARE-PLURAL-NOUN"
               ],
-              "responseSeconds": 10,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "nowhere",
-                "nowhere else",
-                "only in hay"
+                "hay libros",
+                "hay libros."
               ],
               "feedback": {
-                "correct": "A museum case with one object in it.",
-                "incorrect": "Nowhere else. It survived only because it was glued to a verb."
+                "correct": "The same hay — it never goes plural.",
+                "incorrect": "Hay libros. Hay does not change."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C54-ha-mas-y-french",
-              "prompt": "Which French phrase is the same three pieces, kept separate?",
+              "id": "ES-C54-hay-unique",
+              "prompt": "What does hay agree with?",
               "assesses": [
-                "ES-ETYMON-HAY-IBI"
+                "ES-GRAMMAR-HAY-NO-AGREEMENT"
               ],
-              "responseSeconds": 10,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "il y a",
-                "il y a — it there has"
+                "nothing",
+                "nothing at all",
+                "it never changes"
               ],
               "feedback": {
-                "correct": "French left its fossil on the surface.",
-                "incorrect": "Il y a — literally it there has."
+                "correct": "The one common verb form in Spanish that counts nothing.",
+                "incorrect": "Nothing. Not the number, not the person."
               }
             }
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -186,7 +170,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is hay made of? (Ha + y.) What does the y mean, and where else is it? (\"There\" — and nowhere else in Spanish.) What did French do with the same pieces? (Kept them apart: il y a.) Next: hay with a verb after it."
+              "text": "\"There is a house\"? (Hay una casa.) \"There are books\"? (Hay libros — the same word.) What does hay agree with? (Nothing.) Next: what it is actually made of, and the fossil hiding in it."
             }
           ]
         }

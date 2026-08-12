@@ -2,25 +2,32 @@
   "version": 1,
   "language": "spanish",
   "chapter": 128,
-  "title": "No Hables --- Telling Somebody Not To",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f1f6448b56575f96",
+  "title": "Di, Haz, Ve, Pon, Ten, Sal, Se, Ven",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:e4e0c88b44f40a80",
   "lessons": [
     {
-      "id": "ES-C50-no-hables",
-      "sequence": 1499,
-      "title": "no hables — telling somebody not to",
-      "headword": "no hables",
-      "romanization": "no hables",
-      "gloss": "telling somebody NOT to do something — and Spanish reaches for the subjunctive, which is exactly the right place to reach",
+      "id": "ES-C50-ocho-cortos",
+      "sequence": 1498,
+      "title": "di, haz, ve, pon, ten, sal, sé, ven",
+      "headword": "di · haz · ve · pon · ten · sal · sé · ven",
+      "romanization": "di · haz · ve · pon · ten · sal · sé · ven",
+      "gloss": "the eight irregular commands — and every one of them is a single syllable, for a reason",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "sight-cue"
       ],
-      "sourceHash": "fnv1a64:9fdb4b3dacd254d1",
-      "notice": null,
+      "sourceHash": "fnv1a64:bb3678d169c24ded",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -35,66 +42,51 @@
             },
             {
               "kind": "speech",
-              "text": "\"Speak\" is habla. So \"don't speak\" should be no habla. Say it, and then be told it is wrong."
+              "text": "By last chapter's rule, \"say it\" should be dice. It is not. There are exactly eight of these, and once you see them together you will not need to memorise the list."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: the form you already learned for wanting",
+          "title": "Grammar Lens: eight, all one syllable",
           "segments": [
             {
-              "kind": "speech",
-              "text": "A negative command uses the subjunctive."
+              "kind": "table",
+              "headers": [
+                "verb",
+                "command",
+                ""
+              ],
+              "columns": 3,
+              "rowCount": 8,
+              "utterances": [
+                "verb: decir. command: di, say.",
+                "verb: hacer. command: haz, do, make.",
+                "verb: ir. command: ve, go.",
+                "verb: poner. command: pon, put.",
+                "verb: tener. command: ten, have, hold.",
+                "verb: salir. command: sal, leave.",
+                "verb: ser. command: sé, be.",
+                "verb: venir. command: ven, come."
+              ]
             },
             {
               "kind": "speech",
-              "text": "no hables — don't speak. no comas — don't eat."
+              "text": "Read the middle column down. Every single one is one syllable, and most are two or three letters. No other set of forms in Spanish is this short."
             },
             {
               "kind": "speech",
-              "text": "Those are not new forms. You built them chapters ago, when you learned to say quiero que hables — \"I want you to speak.\""
+              "text": "That is the fact worth carrying, and it has a cause. A command is the sentence you shout, the sentence you say in a hurry, the sentence you interrupt somebody with. Words used that way get worn down harder than words used calmly — and these eight are the commonest verbs in the language, so they had the most use to be worn by."
             },
             {
               "kind": "speech",
-              "text": "And the connection is not an accident of grammar. Think about what the subjunctive was for: the form for something not asserted — wanted, feared, hoped for, but not claimed to be happening."
-            },
-            {
-              "kind": "speech",
-              "text": "A negative command is exactly that. No hables does not describe any speaking. There is no speaking; the whole point of the sentence is that you want there to be none. Spanish reaches for the non-asserting form because nothing is being asserted."
-            },
-            {
-              "kind": "speech",
-              "text": "So this is not \"the negative command borrows the subjunctive.\" It is the subjunctive doing the thing it has always done."
+              "text": "So the list is not eight arbitrary exceptions. It is what the eight most-shouted verbs look like after two thousand years of being shouted."
             }
           ]
         },
         {
           "index": 2,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "There is a lopsidedness here worth naming, because it looks like untidiness and is not."
-            },
-            {
-              "kind": "speech",
-              "text": "habla — an ordinary present form. no hables — a subjunctive form."
-            },
-            {
-              "kind": "speech",
-              "text": "Two different shapes for one verb, depending only on whether there is a no in front. Most languages would use one form for both."
-            },
-            {
-              "kind": "speech",
-              "text": "The reason Spanish does not is that the two sentences are doing genuinely different things. Habla points at an action and hands it to you. No hables points at an action and refuses it — and the refusal, not the action, is the sentence's content. The form follows the content, as it did in every subjunctive sentence you have already met."
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -107,83 +99,90 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"habla\" then \"no hables\" — hear the form change with the no",
+              "instruction": "all eight in one breath — \"di, haz, ve, pon, ten, sal, sé, ven\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"habla\" then \"no hables\" — hear the form change with the no]"
+              "source": "[YOU SAY: all eight in one breath — \"di, haz, ve, pon, ten, sal, sé, ven\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"quiero que hables\" then \"no hables\" — the same form, twice",
+              "instruction": "each one as if calling across a room",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"quiero que hables\" then \"no hables\" — the same form, twice]"
+              "source": "[YOU SAY: each one as if calling across a room]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "Until the list is a rhythm rather than eight facts."
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C50-no-hables-say",
-              "prompt": "Tell somebody not to speak.",
+              "id": "ES-C50-ocho-cortos-list",
+              "prompt": "Give the eight irregular tu commands.",
               "assesses": [
-                "ES-GRAMMAR-COMMAND-NEGATIVE",
-                "ES-LEX-HABLAR"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "no hables",
-                "¡no hables!"
-              ],
-              "feedback": {
-                "correct": "The subjunctive, doing what it always does.",
-                "incorrect": "No hables — subjunctive, not no habla."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C50-no-hables-eat",
-              "prompt": "Tell somebody not to eat.",
-              "assesses": [
-                "ES-GRAMMAR-COMMAND-NEGATIVE",
-                "ES-LEX-COMER"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "no comas",
-                "¡no comas!"
-              ],
-              "feedback": {
-                "correct": "No comas.",
-                "incorrect": "No comas."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C50-no-hables-why",
-              "prompt": "Why does a negative command take the subjunctive?",
-              "assesses": [
-                "ES-GRAMMAR-SUBJUNCTIVE-WANTED-NONASSERTED",
-                "ES-GRAMMAR-COMMAND-NEGATIVE"
+                "ES-GRAMMAR-COMMAND-IRREGULAR-EIGHT"
               ],
               "responseSeconds": 14,
               "acceptedResponses": [
-                "because nothing is being asserted",
-                "there is no speaking to describe",
-                "the subjunctive is the non-asserting form"
+                "di, haz, ve, pon, ten, sal, se, ven",
+                "di haz ve pon ten sal sé ven"
               ],
               "feedback": {
-                "correct": "The subjunctive doing the thing it has always done.",
-                "incorrect": "Nothing is asserted — no hables describes no speaking at all."
+                "correct": "Eight, and every one a single syllable.",
+                "incorrect": "di, haz, ve, pon, ten, sal, se, ven."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C50-ocho-cortos-come",
+              "prompt": "Tell somebody to come.",
+              "assesses": [
+                "ES-GRAMMAR-COMMAND-IRREGULAR-EIGHT",
+                "ES-LEX-VENIR"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "ven",
+                "¡ven!"
+              ],
+              "feedback": {
+                "correct": "Ven.",
+                "incorrect": "Ven — from venir."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C50-ocho-cortos-why",
+              "prompt": "Why are these eight so much shorter than every other verb form?",
+              "assesses": [
+                "ES-GRAMMAR-COMMAND-IRREGULAR-EIGHT"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "commands are shouted and hurried, so they wore down most",
+                "because they are the most used and most shouted",
+                "frequency and hurry"
+              ],
+              "feedback": {
+                "correct": "What the most-shouted verbs look like after two thousand years.",
+                "incorrect": "A command is shouted and hurried, and these are the commonest verbs — the most use, so the most wear."
               }
             }
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -195,7 +194,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"Don't speak\"? (No hables.) Which form is that? (The subjunctive — the one for what is not asserted.) Next: the same form again, this time for politeness rather than negation."
+              "text": "How many irregular tú commands are there? (Eight.) What do they all have in common besides being irregular? (One syllable each.) Next: how to tell somebody not to do something — and you already have that form too."
             }
           ]
         }

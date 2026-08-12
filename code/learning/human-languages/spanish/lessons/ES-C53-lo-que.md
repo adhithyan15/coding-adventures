@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C53-lo-que
 spine_node: SPINE-GIVE-REASONS
 sequence: 2203
-chapter: 183
+chapter: 184
 type: grammar
 headword: lo que
 gloss: "what" — two words you already own, put together to name a thing you cannot name

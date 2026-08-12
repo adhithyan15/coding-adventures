@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C45-nos
 spine_node: SPINE-DEFINITE-REFERENCE
 sequence: 1226
-chapter: 83
+chapter: 84
 type: word
 headword: nos
 gloss: "us" — and the word hiding inside the verb ending you have used since hablamos

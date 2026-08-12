@@ -1,42 +1,42 @@
-Spanish, chapter 112: He Hablado --- A Verb With No Meaning Left.
-1 lesson. All 1 can be done entirely by ear.
+Spanish, chapter 112: Hablado, Comido, Vivido --- The Participle.
+1 lesson. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
 Lesson 1 of 1.
-he hablado — "I have spoken".
+hablado, comido, vivido — the participle.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
 
 Warm-up.
 [pause 2 seconds]
-You have hablado, and it cannot stand alone — it names no person and no time. It needs a word in front of it. Here is that word.
+Your three verb families, once more: hablar, comer, vivir. This chapter gives each of them one new form, and two of the three get the same one.
 
-Sounds you'll need.
-silent-h — the h in he is silent, as every Spanish h is. It is one sound: eh.
-
-Grammar Lens: the emptied verb.
-he + participle — I have done something.
-He hablado español. — I have spoken Spanish.
-Two words, and the work is split cleanly between them. He carries the person and the tense. Hablado carries the meaning. Neither does the other's job, and that division is why the participle never had to agree with anybody.
-He is a form of haber — and here is the thing worth the chapter: haber does not mean anything here. It is not "I hold spoken." You cannot translate it on its own. It is a word whose entire remaining purpose is to hold a participle in place.
+Grammar Lens: two endings, not three.
+hablar becomes hablado, comer becomes comido, vivir becomes vivido.
+-ar verbs take -ado.
+-er and -ir verbs both take -ido.
+You have seen those two families collapse into one before: in the preterite, where comí and viví have identical endings. It happens here for the same reason it happened there — the difference between -er and -ir was never deep, and outside the present tense it mostly stops existing.
+So this is one new ending and one you can predict.
+The word itself does not change for who is speaking. Hablado is hablado whether you, I, or a hundred people did the speaking. That is unusual enough to notice: every other verb form you hold has been carrying a person on its back.
 
 The word, taken apart.
-Haber comes from Latin habēre, "to hold, to have" — a completely ordinary verb with a completely ordinary meaning.
-Then Spanish did something drastic. It handed the meaning to tener (which had been the narrower "hold, grip"), and kept haber for this one grammatical job. The verb was hollowed out: the meaning left, the machinery stayed.
-English did exactly the same thing to have, and you never noticed. When you say I have eaten, nobody is holding anything. Two languages, independently, took their word for "hold" and wore it down into a tense marker — because the step from I have a thing that is done to I have done a thing is a very short one, and everybody takes it eventually.
-So when haber feels meaningless, that is not a gap in your understanding. It is an accurate perception of what happened to the word.
+Grammarians call this a participle, from Latin participium — "the form that takes part." It was named for doing two jobs at once: it is built from a verb, and it behaves like an adjective.
+You can see the adjective half immediately. Cansado ("tired") is the participle of cansar, and it agrees like any adjective: cansada, cansados. The same shape, doing adjective work.
+Next chapter puts it to its verb work instead — and there, held in place by another word, it stops agreeing with anything at all.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "He hablado español"]
+[your turn — say: "hablado, comido, vivido" — one ending, then the shared one]
 [pause 8 seconds for the answer]
-[your turn — say: "I have eaten" in English, and notice that nothing is being held]
+[your turn — say: "comí, viví" then "comido, vivido" — the same merger, twice]
 [pause 8 seconds for the answer]
+[question — say your answer, then pause 8 seconds]
+Give the participle of hablar.
 [question — say your answer, then pause 10 seconds]
-Say I have spoken Spanish.
-[question — say your answer, then pause 12 seconds]
-What does haber mean in he hablado?
-[question — say your answer, then pause 10 seconds]
-Which English verb was hollowed out the same way?
+Give the participles of comer and vivir.
+[question — say your answer, then pause 8 seconds]
+Does the participle change for who is speaking?
 
 Wrap-up Recall.
 [pause 3 seconds]
-"I have spoken"? (He hablado.) Which word carries the meaning? (Hablado.) And what does haber contribute? (A person and a tense — and no meaning at all.) Next: the rest of it.
+Participle of hablar? (Hablado.) Of comer and vivir? (Comido, vivido — the same ending.) What does participium mean? (The form that takes part — verb and adjective at once.) Next: the word that turns it into a tense.

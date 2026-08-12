@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 129,
-  "title": "Hable Usted --- The Polite Command",
+  "title": "No Hables --- Telling Somebody Not To",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:d31a1c89b6a29ff5",
+  "sourceHash": "fnv1a64:b10b995ff1f3b6fb",
   "lessons": [
     {
-      "id": "ES-C50-hable-usted",
-      "sequence": 1500,
-      "title": "hable usted — the polite command",
-      "headword": "hable usted",
-      "romanization": "hable usted",
-      "gloss": "the formal command — the subjunctive again, and the reason it is the polite one is worth knowing",
+      "id": "ES-C50-no-hables",
+      "sequence": 1499,
+      "title": "no hables — telling somebody not to",
+      "headword": "no hables",
+      "romanization": "no hables",
+      "gloss": "telling somebody NOT to do something — and Spanish reaches for the subjunctive, which is exactly the right place to reach",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6db9d7993bbee90a",
+      "sourceHash": "fnv1a64:52e5d315b49bbec6",
       "notice": null,
       "blocks": [
         {
@@ -35,44 +35,38 @@
             },
             {
               "kind": "speech",
-              "text": "Usted takes the he/she form of every verb. You have known that since you learned it. Watch what that does to a command."
+              "text": "\"Speak\" is habla. So \"don't speak\" should be no habla. Say it, and then be told it is wrong."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: the subjunctive, a third time",
+          "title": "Grammar Lens: the form you already learned for wanting",
           "segments": [
             {
               "kind": "speech",
-              "text": "A command to usted — positive or negative — uses the subjunctive."
+              "text": "A negative command uses the subjunctive."
             },
             {
               "kind": "speech",
-              "text": "Hable, por favor. — Speak, please. Coma, por favor. — Eat, please. No hable. — Don't speak."
+              "text": "no hables — don't speak. no comas — don't eat."
             },
             {
               "kind": "speech",
-              "text": "So the subjunctive now covers three of the four boxes:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "",
-                "tú",
-                "usted"
-              ],
-              "columns": 3,
-              "rowCount": 2,
-              "utterances": [
-                "do it. tú: habla — ordinary present. usted: hable — subjunctive.",
-                "don't. tú: no hables — subjunctive. usted: no hable — subjunctive."
-              ]
+              "text": "Those are not new forms. You built them chapters ago, when you learned to say quiero que hables — \"I want you to speak.\""
             },
             {
               "kind": "speech",
-              "text": "One box out of four uses an ordinary form, and it is the informal, positive one. Everything else reaches for the subjunctive."
+              "text": "And the connection is not an accident of grammar. Think about what the subjunctive was for: the form for something not asserted — wanted, feared, hoped for, but not claimed to be happening."
+            },
+            {
+              "kind": "speech",
+              "text": "A negative command is exactly that. No hables does not describe any speaking. There is no speaking; the whole point of the sentence is that you want there to be none. Spanish reaches for the non-asserting form because nothing is being asserted."
+            },
+            {
+              "kind": "speech",
+              "text": "So this is not \"the negative command borrows the subjunctive.\" It is the subjunctive doing the thing it has always done."
             }
           ]
         },
@@ -83,19 +77,19 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Here is why the formal command is the polite one, and it is not because the subjunctive is a fancy form."
+              "text": "There is a lopsidedness here worth naming, because it looks like untidiness and is not."
             },
             {
               "kind": "speech",
-              "text": "Remember what usted is: a worn-down vuestra merced, \"your grace\" — a title, and titles are third person. That is why usted takes he/she endings. So a command to usted is not grammatically aimed at the person in front of you at all. It is aimed at your grace, spoken about rather than to."
+              "text": "habla — an ordinary present form. no hables — a subjunctive form."
             },
             {
               "kind": "speech",
-              "text": "That indirectness is the politeness. Every polite language does some version of it: you soften an order by not pointing it straight at somebody. English does it with extra words — could you possibly, would you mind — where Spanish does it with a verb form and a fossil of a title."
+              "text": "Two different shapes for one verb, depending only on whether there is a no in front. Most languages would use one form for both."
             },
             {
               "kind": "speech",
-              "text": "Which means that if the usted command ever feels stiff to you, you are hearing it correctly. It is supposed to hold somebody at a small distance."
+              "text": "The reason Spanish does not is that the two sentences are doing genuinely different things. Habla points at an action and hands it to you. No hables points at an action and refuses it — and the refusal, not the action, is the sentence's content. The form follows the content, as it did in every subjunctive sentence you have already met."
             }
           ]
         },
@@ -113,80 +107,77 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Habla\" then \"Hable, por favor\" — hear the distance open up",
+              "instruction": "\"habla\" then \"no hables\" — hear the form change with the no",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Habla\" then \"Hable, por favor\" — hear the distance open up]"
+              "source": "[YOU SAY: \"habla\" then \"no hables\" — hear the form change with the no]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "all four boxes: \"habla, no hables, hable, no hable\"",
+              "instruction": "\"quiero que hables\" then \"no hables\" — the same form, twice",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: all four boxes: \"habla, no hables, hable, no hable\"]"
+              "source": "[YOU SAY: \"quiero que hables\" then \"no hables\" — the same form, twice]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C50-hable-usted-say",
-              "prompt": "Politely ask somebody you address as usted to speak.",
+              "id": "ES-C50-no-hables-say",
+              "prompt": "Tell somebody not to speak.",
               "assesses": [
-                "ES-GRAMMAR-COMMAND-USTED",
-                "ES-LEX-HABLAR",
-                "ES-LEX-POR-FAVOR"
+                "ES-GRAMMAR-COMMAND-NEGATIVE",
+                "ES-LEX-HABLAR"
               ],
-              "responseSeconds": 10,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "hable, por favor",
-                "hable por favor",
-                "hable usted por favor"
+                "no hables",
+                "¡no hables!"
               ],
               "feedback": {
-                "correct": "The subjunctive, plus please.",
-                "incorrect": "Hable, por favor."
+                "correct": "The subjunctive, doing what it always does.",
+                "incorrect": "No hables — subjunctive, not no habla."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C50-hable-usted-grid",
-              "prompt": "Of the four command boxes, how many use the subjunctive?",
+              "id": "ES-C50-no-hables-eat",
+              "prompt": "Tell somebody not to eat.",
               "assesses": [
-                "ES-GRAMMAR-COMMAND-USTED",
+                "ES-GRAMMAR-COMMAND-NEGATIVE",
+                "ES-LEX-COMER"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "no comas",
+                "¡no comas!"
+              ],
+              "feedback": {
+                "correct": "No comas.",
+                "incorrect": "No comas."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C50-no-hables-why",
+              "prompt": "Why does a negative command take the subjunctive?",
+              "assesses": [
+                "ES-GRAMMAR-SUBJUNCTIVE-WANTED-NONASSERTED",
                 "ES-GRAMMAR-COMMAND-NEGATIVE"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "three",
-                "3",
-                "all but the informal positive"
-              ],
-              "feedback": {
-                "correct": "Only the informal positive escapes it.",
-                "incorrect": "Three. Only the tu positive uses an ordinary present form."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C50-hable-usted-why",
-              "prompt": "Why is the usted command the polite one?",
-              "assesses": [
-                "ES-GRAMMAR-USTED-THIRD-PERSON",
-                "ES-LEX-USTED"
               ],
               "responseSeconds": 14,
               "acceptedResponses": [
-                "it is aimed at a title, not at the person",
-                "usted is third person, so the order is indirect",
-                "because it is not pointed straight at them"
+                "because nothing is being asserted",
+                "there is no speaking to describe",
+                "the subjunctive is the non-asserting form"
               ],
               "feedback": {
-                "correct": "Indirectness is what politeness is made of.",
-                "incorrect": "Usted is vuestra merced, a title. The command is spoken about your grace rather than to you."
+                "correct": "The subjunctive doing the thing it has always done.",
+                "incorrect": "Nothing is asserted — no hables describes no speaking at all."
               }
             }
           ]
@@ -204,7 +195,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"Speak, please,\" to usted? (Hable, por favor.) Which form? (The subjunctive again.) Why is it polite? (Because usted is a title — the order is aimed past the person, not at them.) Next: all four in one place."
+              "text": "\"Don't speak\"? (No hables.) Which form is that? (The subjunctive — the one for what is not asserted.) Next: the same form again, this time for politeness rather than negation."
             }
           ]
         }
