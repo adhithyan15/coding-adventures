@@ -5365,7 +5365,24 @@ impl HtmlParser {
         }
 
         if !in_foreign_content && name == "hr" && self.has_open_element("select") {
-            self.close_open_element_if(|name| name == "option");
+            if let Some(select_index) = self.open_html_element_in_scope_index("select") {
+                self.generate_implied_end_tags_above(select_index);
+                let has_open_select_group =
+                    self.open_elements[select_index + 1..].iter().any(|path| {
+                        element_at_path(&self.document, path)
+                            .is_some_and(|name| matches!(name, "option" | "optgroup"))
+                    });
+                if has_open_select_group {
+                    self.diagnostics.push(ParserDiagnostic::new(
+                        "unexpected-hr-start-tag-in-select",
+                        "start tag `<hr>` left an option or optgroup in select scope after implied-end-tag generation",
+                    ));
+                    self.append_node(Node::element(name, attributes));
+                    return;
+                }
+            } else {
+                self.close_open_element_if(|name| name == "option");
+            }
             if self.insert_node_under_last_open_element(
                 "select",
                 Node::element(name.clone(), attributes.clone()),
@@ -36374,6 +36391,56 @@ mod tests {
                         | "unexpected-optgroup-start-tag-in-select"
                 )
             }));
+        }
+    }
+
+    #[test]
+    fn reports_hr_starts_blocked_by_select_option_or_group_scope() {
+        for source in [
+            "<!doctype html><select><option><span>one<hr>two",
+            "<!doctype html><select><optgroup><div>one<hr>two",
+            "<!doctype html><select><optgroup><option><span>one<hr>two",
+            "<!doctype html><table><tr><td><select><optgroup><option><span>one<hr>two",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output.parser_diagnostics.contains(&ParserDiagnostic::new(
+                "unexpected-hr-start-tag-in-select",
+                "start tag `<hr>` left an option or optgroup in select scope after implied-end-tag generation",
+            )));
+
+            let wrapper = find_first_element_in_nodes(&output.document.children, "span")
+                .or_else(|| find_first_element_in_nodes(&output.document.children, "div"))
+                .unwrap();
+            assert!(matches!(wrapper.children.last(), Some(Node::Text(text)) if text.data == "two"));
+            assert!(wrapper
+                .children
+                .iter()
+                .any(|child| matches!(child, Node::Element(element) if element.name == "hr")));
+        }
+
+        let fragment =
+            parse_html_fragment_for_context_with_diagnostics("<option>one<hr>two", "select")
+                .unwrap();
+        assert!(fragment
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "unexpected-hr-start-tag-in-select"));
+
+        for source in [
+            "<!doctype html><select><hr>",
+            "<!doctype html><hr>",
+            "<!doctype html><select><option><hr>",
+            "<!doctype html><select><optgroup><hr>",
+            "<!doctype html><select><optgroup><option><hr>",
+            "<!doctype html><select><option></option><hr>",
+            "<!doctype html><table><tr><td><select><hr>",
+            "<!doctype html><svg><select><option><hr></hr></option></select></svg>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != "unexpected-hr-start-tag-in-select"));
         }
     }
 
