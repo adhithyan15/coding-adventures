@@ -105,6 +105,7 @@ import { bookHashStatus, whenBookHashesReady } from "./bookhashes.ts";
 // on it.
 import { practiseAll } from "./atommastery.ts";
 import { type ReviewPick, refreshesOf, reviewPicks } from "./atomschedule.ts";
+import { type SynthesisDrill, piecesUsed, synthesisDrill } from "./synthesisdrill.ts";
 import { browserStorage as masteryStorage, loadMastery, saveMastery } from "./masterystore.ts";
 import { parseFont, boundsOf, type Font } from "./truetype.ts";
 import {
@@ -1361,6 +1362,89 @@ function renderFrontierEncounter(
   return card;
 }
 
+// Which drill the learner is on. A counter rather than a clock, so the drill
+// does not change under them mid-answer and "another one" is a deliberate act.
+/**
+ * How many tracked atoms before a drill is worth loading the full corpus for.
+ *
+ * Low enough that a learner who has done a handful of lessons gets drills, high
+ * enough that a brand-new visitor never pays for a corpus they cannot use. Six
+ * is roughly three completed lessons.
+ */
+const DRILL_CORPUS_THRESHOLD = 6;
+
+let drillSeed = 0;
+let drillAnswer: { seed: number; used: string[]; total: number } | null = null;
+
+/**
+ * A synthesis drill: pieces held, combination unseen.
+ *
+ * The check is honest about its own limits. It can tell you whether each piece
+ * appeared, which is exactly what the drill claims to test; it cannot tell you
+ * whether the sentence around them is good Spanish, and it does not pretend to.
+ */
+function renderSynthesisDrill(drill: SynthesisDrill): HTMLElement {
+  const section = el("section", "drill");
+  const heading = el("h2", "learn__concept");
+  heading.textContent = "Put it together";
+  section.appendChild(heading);
+  const prompt = el("p", "drill__prompt");
+  prompt.textContent = drill.prompt;
+  section.appendChild(prompt);
+
+  const list = el("ul", "drill__pieces");
+  for (const piece of drill.pieces) {
+    const item = el("li", "drill__piece");
+    item.textContent = `${piece.headword} — ${piece.gloss} (${piece.domain})`;
+    list.appendChild(item);
+  }
+  section.appendChild(list);
+
+  const shown = drillAnswer?.seed === drillSeed ? drillAnswer : null;
+  if (shown) {
+    const verdict = el("p", shown.used.length === shown.total ? "drill__verdict yes" : "drill__verdict");
+    verdict.textContent =
+      shown.used.length === shown.total
+        ? `All ${shown.total} pieces used. Whether the sentence around them is good Spanish is not something this check can judge — say it aloud and see if it sounds like something a person would say.`
+        : `Used ${shown.used.length} of ${shown.total}. Missing: ${drill.pieces
+            .filter((piece) => !shown.used.includes(piece.headword))
+            .map((piece) => piece.headword)
+            .join(", ")}.`;
+    section.appendChild(verdict);
+  }
+
+  const form = el("form", "drill__form") as HTMLFormElement;
+  const input = document.createElement("input");
+  input.className = "drill__input";
+  input.type = "text";
+  input.autocomplete = "off";
+  input.setAttribute("aria-label", "Your sentence");
+  const submit = el("button", "next") as HTMLButtonElement;
+  submit.type = "submit";
+  submit.textContent = "Check my sentence";
+  form.append(input, submit);
+  form.onsubmit = (event) => {
+    event.preventDefault();
+    drillAnswer = {
+      seed: drillSeed,
+      used: piecesUsed(input.value, drill.pieces).map((piece) => piece.headword),
+      total: drill.pieces.length,
+    };
+    render();
+  };
+  section.appendChild(form);
+
+  const another = el("button", "opt") as HTMLButtonElement;
+  another.textContent = "Another combination";
+  another.onclick = () => {
+    drillSeed += 1;
+    drillAnswer = null;
+    render();
+  };
+  section.appendChild(another);
+  return section;
+}
+
 /** Every lesson id the learner has passed, across all selected paths. */
 function completedLessonIds(): Set<string> {
   const done = new Set<string>();
@@ -1446,6 +1530,30 @@ function renderLearn(): HTMLElement {
     Date.now(),
   );
   if (duePicks.length > 0) wrap.appendChild(renderDueReview(duePicks));
+
+  // Synthesis drills (HL10 §10.3). Practice the course could not have authored:
+  // pieces the learner holds, in a combination no lesson ever showed. Offered
+  // AFTER review, because refreshing something you are losing beats stretching
+  // something you have.
+  //
+  // A drill needs the WHOLE corpus, not the learn frontier. Learn mode keeps
+  // only the frontier and the completed lessons in memory -- two Spanish
+  // lessons for a beginner -- and a drill built from those can never find two
+  // different domains to combine. So the first time a learner holds enough to
+  // be drilled, pull the rest of the corpus in the background; until it lands,
+  // no drill is offered rather than a wrong one.
+  if (MASTERY.size >= DRILL_CORPUS_THRESHOLD && !fullCorpusLoaded && !corpusLoading) {
+    void refreshCorpus(loadFullCorpus);
+  }
+  const drill = fullCorpusLoaded
+    ? synthesisDrill(
+      MASTERY,
+      LESSONS.filter((lesson) => selectedLanguages.includes(lesson.language)),
+      Date.now(),
+      drillSeed,
+    )
+    : null;
+  if (drill) wrap.appendChild(renderSynthesisDrill(drill));
 
   const frontier = mixedCurriculumFrontier(selectedLanguages, learnCompletion);
   const activeAttempt = focusedAttempt && frontier.steps.some((step) => step.lessonId === focusedAttempt!.lessonId);

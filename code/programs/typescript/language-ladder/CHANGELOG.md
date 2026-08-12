@@ -18,6 +18,22 @@
   six pen lifts, and component order.
 - Reduce Chinese's remaining verified-ductus inventory to 14 entries.
 
+### Added — synthesis drills generated from held atoms (HL-C87, HL10 §10.3)
+
+- Add `synthesisdrill.ts`: 2–4 pieces the learner holds, drawn from different
+  domains, with an instruction to combine them. The pieces have been practised;
+  the combination has not.
+- Gate on mastery — the forward-reference rule run backwards: no drill uses an
+  atom the learner does not currently hold.
+- Derive domains from the corpus's own `concept_tag` prefixes, and exclude
+  grammar-only tags, because "use a rule in a sentence" is not an instruction.
+- Check honestly: report which pieces the answer contained, and say plainly
+  that whether the surrounding sentence is good Spanish is not something the
+  check can judge.
+- Load the full corpus in the background before offering a drill. Learn mode
+  holds only the frontier and completed lessons — two Spanish lessons for a
+  beginner — so a drill built from those can never find two domains.
+
 ### Added — cited Chinese 宀 ductus (HL-C09CH)
 
 - Render **宀** in four source-aligned frames: draw its top dot, restart for the
