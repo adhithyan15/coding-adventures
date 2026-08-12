@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.60.0
+
+- Preserve modern and legacy state diagram titles in graph semantic IR.
+
 ## 0.59.0
 
 - Preserve composite state IDs as transition endpoints without synthetic nodes.

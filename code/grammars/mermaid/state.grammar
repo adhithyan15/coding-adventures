@@ -1,9 +1,10 @@
-# @version 14
+# @version 15
 # Mermaid 11.16.1 state diagram grammar: initial graph-compatible slice.
 
 document = { terminator } HEADER body EOF ;
 body = { terminator | statement } ;
-statement = accessibility_stmt | direction_stmt | composite_state_stmt | concurrent_stmt | state_stmt | style_stmt | class_def_stmt | class_stmt | click_stmt | note_stmt | description_stmt | transition_stmt | styled_state_stmt ;
+statement = title_stmt | accessibility_stmt | direction_stmt | composite_state_stmt | concurrent_stmt | state_stmt | style_stmt | class_def_stmt | class_stmt | click_stmt | note_stmt | description_stmt | transition_stmt | styled_state_stmt ;
+title_stmt = "title" [ COLON ] text ;
 
 accessibility_stmt = ACC_TITLE text | ACC_DESCR text | ACC_DESCR_START NEWLINE multiline_accessibility_text RBRACE ;
 multiline_accessibility_text = text { NEWLINE text } { NEWLINE } ;
@@ -30,5 +31,5 @@ endpoint = EDGE_STATE | state_ref ;
 styled_endpoint = endpoint [ STYLE_SEPARATOR state_ref ] ;
 state_ref = ID | WORD ;
 text = text_atom { text_atom } ;
-text_atom = ID | WORD | STRING | EDGE_STATE | DIRECTION | HASH_COLOR | COMMA | "state" | "style" | "classDef" | "class" | "click" | "href" | "note" | "left" | "right" | "of" | "direction" | "as" ;
+text_atom = ID | WORD | STRING | EDGE_STATE | DIRECTION | HASH_COLOR | COMMA | "title" | "state" | "style" | "classDef" | "class" | "click" | "href" | "note" | "left" | "right" | "of" | "direction" | "as" ;
 terminator = NEWLINE | SEMICOLON ;

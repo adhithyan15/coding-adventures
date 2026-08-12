@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.59.0";
+pub const VERSION: &str = "0.60.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -1058,6 +1058,7 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
     cursor.skip_terminators();
 
     let mut direction = DiagramDirection::Tb;
+    let mut title = None;
     let mut accessibility_title = None;
     let mut accessibility_description = None;
     let mut nodes = Vec::new();
@@ -1112,6 +1113,10 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
             group.regions.push(Vec::new());
             cursor.skip_terminators();
             continue;
+        } else if cursor.current().value.eq_ignore_ascii_case("title") {
+            cursor.advance();
+            cursor.consume_if("COLON");
+            title = Some(take_state_text(&mut cursor));
         } else if token_name(cursor.current()) == "ACC_TITLE" {
             cursor.advance();
             accessibility_title = Some(take_state_text(&mut cursor));
@@ -1463,7 +1468,7 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
 
     Ok(GraphDiagram {
         direction,
-        title: None,
+        title,
         accessibility_title,
         accessibility_description,
         links,
@@ -4610,6 +4615,17 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     }
 
     #[test]
+    fn state_preserves_modern_and_legacy_titles() {
+        let modern = parse_state_diagram("stateDiagram-v2\ntitle Native lifecycle\nA --> B\n")
+            .expect("modern state title");
+        let legacy = parse_state_diagram("stateDiagram-v2\ntitle: Legacy lifecycle\nA --> B\n")
+            .expect("legacy state title");
+
+        assert_eq!(modern.title.as_deref(), Some("Native lifecycle"));
+        assert_eq!(legacy.title.as_deref(), Some("Legacy lifecycle"));
+    }
+
+    #[test]
     fn sequence_parses_case_insensitive_keywords() {
         let diagram = parse_any_mermaid(
             "SeQuEnCeDiAgRaM\nPaRtIcIpAnT A As Alice\nA->>B: Hello\nAcTiVaTe B\nNoTe RiGhT Of B: WRAP: Ready\nDeAcTiVaTe B\n",
@@ -5380,7 +5396,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.59.0");
+        assert_eq!(crate::VERSION, "0.60.0");
     }
 
     #[test]

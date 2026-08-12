@@ -1,4 +1,4 @@
-# @version 12
+# @version 13
 # @case_insensitive true
 # Mermaid 11.16.1 state diagram token grammar, derived from stateDiagram.jison.
 
@@ -32,6 +32,7 @@ ID           = /[A-Za-z_][A-Za-z0-9_-]*/
 WORD         = /[^ \t\r\n;:,]+/
 
 keywords:
+  title
   state
   style
   classDef
