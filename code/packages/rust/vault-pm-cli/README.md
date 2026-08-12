@@ -5,8 +5,8 @@ manager. It owns strict parsing, stable exit classes, redacted rendering, and
 the bounded `init`, locked `status`/`doctor`, authenticated `audit enable` and
 `audit verify`, explicit `audit list`/`audit show TRACE`, and opt-in full
 `doctor --unlock` workflows. It now also owns the first usable item vertical:
-authenticated login, secure-note, payment-card, API-key, and static
-database-credential creation plus durable redacted list/show. The same one-shot
+authenticated login, secure-note, payment-card, API-key, static
+database-credential, and TOTP creation plus durable redacted list/show. The same one-shot
 boundary now supports revision-safe login
 replacement. The
 newest-first `history list ITEM` projection exposes canonical revision
@@ -121,10 +121,17 @@ and publishes validation failures before returning. Show receives only the
 redacted domain projection: label, engine, host, port, optional database,
 username, absent lease/expiry, and a password omission marker. Password access
 requires `item reveal ITEM database-password`.
+`item add totp` completes the first-party record set through the same audited
+create boundary. It accepts one hidden canonical unpadded Base32 seed and
+closed SHA1/SHA256/SHA512, 6-or-8 digit, and 1–3600 second metadata. Show
+receives only label, optional issuer, algorithm, digits, period, and a secret
+omission marker. `item reveal ITEM totp-secret` publishes the access event
+before encoding the selected raw bytes into a wipe-on-drop canonical Base32
+buffer for direct terminal delivery.
 `item list` and `item show ITEM` reopen in separate one-shot sessions and
 render only escaped redacted projections; login passwords, note bodies, PANs,
-CVVs, postal values, API-key tokens, and database passwords are never available
-to the renderer. In an active
+CVVs, postal values, API-key tokens, database passwords, and TOTP seeds are
+never available to the renderer. In an active
 epoch, both commands first make their exact signed access outcome durable.
 
 `item edit ITEM` asks the application for an opaque edit preparation that owns
@@ -170,13 +177,14 @@ atomic all-current-parent resolution event before its closed outcome. It emits
 only the resolved item selector and never deletes losing immutable history.
 
 `item reveal ITEM FIELD` requires an active audit epoch and accepts only closed
-schema-specific UTF-8 selectors. It reserves time and audit entropy before
+schema-specific selectors. It reserves time and audit entropy before
 unlock, then requires exact `yes` through a fixed controlling-terminal prompt.
 Refusal and prompt failure publish `Denied`; missing, conflicted, or
 wrong-schema selections publish `Failed`; success binds the exact current
 revision before returning a non-printable wipe-on-drop secret. The native host
 writes a quoted, control-escaped `Secret: "..."` line directly to `/dev/tty` or
-the attached console. The secret never enters cloneable/debuggable `CliOutput`,
+the attached console. TOTP seed bytes are first rendered as canonical Base32 in
+a wipe-on-drop buffer. The secret never enters cloneable/debuggable `CliOutput`,
 process stdout/stderr, arguments, stdin, configuration, or audit metadata.
 
 `export FILE` reserves export and audit entropy before unlock, collects and

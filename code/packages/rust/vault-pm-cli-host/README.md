@@ -38,12 +38,12 @@ running is outside an in-process library's guarantees.
 
 Accepted passphrases, login passwords, secure-note bodies, card numbers, card
 verification codes, and API-key tokens are non-empty and at most 1,024 bytes.
-Database passwords use the same bound. Echoed login, secure-note,
-payment-card, API-key, and database metadata have fixed per-field bounds up to
-2,048 UTF-8 bytes and reject control characters; only username, URL, billing
-postal code, scopes, API-key expiry, and database name may be empty. PAN, CVV,
-API-key token, and database password use the same hidden wipe-on-drop input
-path as other secrets. Prompt strings and every public error are fixed and
+Database passwords and TOTP Base32 seeds use the same bound. Echoed login,
+secure-note, payment-card, API-key, database, and TOTP metadata have fixed
+per-field bounds up to 2,048 UTF-8 bytes and reject control characters; only
+username, URL, billing postal code, scopes, API-key expiry, database name, and
+TOTP issuer may be empty. PAN, CVV, API-key token, database password, and TOTP
+seed use the same hidden wipe-on-drop input path as other secrets. Prompt strings and every public error are fixed and
 contain no secret, OS error, terminal path, user name, or caller payload.
 This crate deliberately does not parse commands, choose vault storage, persist
 configuration, calibrate Argon2id, or prepare vault bytes.

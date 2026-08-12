@@ -128,6 +128,16 @@ pub enum TextPrompt {
     DatabaseName,
     /// Required database username.
     DatabaseUsername,
+    /// Required TOTP display label.
+    TotpLabel,
+    /// Optional TOTP issuer.
+    TotpIssuer,
+    /// Required TOTP HMAC algorithm.
+    TotpAlgorithm,
+    /// Required TOTP output digit count.
+    TotpDigits,
+    /// Required TOTP period in seconds.
+    TotpPeriod,
     /// Optional login username or account handle.
     LoginUsername,
     /// Optional primary login URL.
@@ -154,6 +164,11 @@ impl TextPrompt {
             Self::DatabasePort => "Port: ",
             Self::DatabaseName => "Database (optional): ",
             Self::DatabaseUsername => "Username: ",
+            Self::TotpLabel => "Label: ",
+            Self::TotpIssuer => "Issuer (optional): ",
+            Self::TotpAlgorithm => "Algorithm (SHA1/SHA256/SHA512): ",
+            Self::TotpDigits => "Digits (6 or 8): ",
+            Self::TotpPeriod => "Period seconds (1-3600): ",
             Self::LoginUsername => "Username: ",
             Self::LoginUrl => "URL (optional): ",
             Self::SecretRevealConfirmation => {
@@ -175,7 +190,12 @@ impl TextPrompt {
             | Self::DatabaseEngine
             | Self::DatabaseHost
             | Self::DatabaseName
-            | Self::DatabaseUsername => 256,
+            | Self::DatabaseUsername
+            | Self::TotpLabel
+            | Self::TotpIssuer => 256,
+            Self::TotpAlgorithm => 6,
+            Self::TotpDigits => 1,
+            Self::TotpPeriod => 4,
             Self::ApiKeyScopes => MAX_TEXT_BYTES,
             Self::ApiKeyExpiry => 20,
             Self::DatabasePort => 5,
@@ -196,6 +216,7 @@ impl TextPrompt {
                 | Self::ApiKeyScopes
                 | Self::ApiKeyExpiry
                 | Self::DatabaseName
+                | Self::TotpIssuer
                 | Self::SecretRevealConfirmation
         )
     }
@@ -230,6 +251,8 @@ pub enum SecretPrompt {
     ApiKeyToken,
     /// Collect a database password without terminal echo.
     DatabasePassword,
+    /// Collect a TOTP seed in canonical Base32 without terminal echo.
+    TotpSecret,
 }
 
 impl SecretPrompt {
@@ -247,6 +270,7 @@ impl SecretPrompt {
             Self::CardCvv => "CVV: ",
             Self::ApiKeyToken => "Token: ",
             Self::DatabasePassword => "Password: ",
+            Self::TotpSecret => "Secret (Base32): ",
         }
     }
 }
@@ -488,6 +512,7 @@ mod tests {
         assert_eq!(SecretPrompt::CardCvv.message(), "CVV: ");
         assert_eq!(SecretPrompt::ApiKeyToken.message(), "Token: ");
         assert_eq!(SecretPrompt::DatabasePassword.message(), "Password: ");
+        assert_eq!(SecretPrompt::TotpSecret.message(), "Secret (Base32): ");
         assert_eq!(TextPrompt::LoginTitle.message(), "Title: ");
         assert_eq!(TextPrompt::SecureNoteTitle.message(), "Title: ");
         assert_eq!(TextPrompt::CardTitle.message(), "Title: ");
@@ -517,6 +542,17 @@ mod tests {
         assert_eq!(TextPrompt::DatabasePort.message(), "Port: ");
         assert_eq!(TextPrompt::DatabaseName.message(), "Database (optional): ");
         assert_eq!(TextPrompt::DatabaseUsername.message(), "Username: ");
+        assert_eq!(TextPrompt::TotpLabel.message(), "Label: ");
+        assert_eq!(TextPrompt::TotpIssuer.message(), "Issuer (optional): ");
+        assert_eq!(
+            TextPrompt::TotpAlgorithm.message(),
+            "Algorithm (SHA1/SHA256/SHA512): "
+        );
+        assert_eq!(TextPrompt::TotpDigits.message(), "Digits (6 or 8): ");
+        assert_eq!(
+            TextPrompt::TotpPeriod.message(),
+            "Period seconds (1-3600): "
+        );
         assert_eq!(TextPrompt::LoginUsername.message(), "Username: ");
         assert_eq!(TextPrompt::LoginUrl.message(), "URL (optional): ");
         assert_eq!(
@@ -540,6 +576,11 @@ mod tests {
         assert!(!TextPrompt::DatabasePort.allows_empty());
         assert!(TextPrompt::DatabaseName.allows_empty());
         assert!(!TextPrompt::DatabaseUsername.allows_empty());
+        assert!(!TextPrompt::TotpLabel.allows_empty());
+        assert!(TextPrompt::TotpIssuer.allows_empty());
+        assert!(!TextPrompt::TotpAlgorithm.allows_empty());
+        assert!(!TextPrompt::TotpDigits.allows_empty());
+        assert!(!TextPrompt::TotpPeriod.allows_empty());
         assert!(TextPrompt::LoginUsername.allows_empty());
         assert!(TextPrompt::LoginUrl.allows_empty());
         assert!(TextPrompt::SecretRevealConfirmation.allows_empty());
