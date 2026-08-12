@@ -114,17 +114,15 @@ class MosaicXamlWindowsCIAcceptanceTests(unittest.TestCase):
             )
         self.assertEqual(result.stdout, "required=true\n")
 
-    def test_taskapp_report_requires_exact_documented_gaps(self) -> None:
+    def test_taskapp_report_requires_native_complete_zero_degradations(self) -> None:
         report = {
             "backend": "xaml",
-            "nativeComplete": False,
-            "degradations": [
-                *({"code": "interaction.drag-drop-inert"} for _ in range(4)),
-            ],
+            "nativeComplete": True,
+            "degradations": [],
         }
         MODULE.validate_taskapp_report(report)
         report["degradations"].append({"code": "runtime.sample-fallback"})
-        with self.assertRaisesRegex(ValueError, "observed"):
+        with self.assertRaisesRegex(ValueError, "zero degradations"):
             MODULE.validate_taskapp_report(report)
 
     def test_cli_validates_taskapp_report(self) -> None:
@@ -134,13 +132,8 @@ class MosaicXamlWindowsCIAcceptanceTests(unittest.TestCase):
                 json.dumps(
                     {
                         "backend": "xaml",
-                        "nativeComplete": False,
-                        "degradations": [
-                            *(
-                                {"code": "interaction.drag-drop-inert"}
-                                for _ in range(4)
-                            ),
-                        ],
+                        "nativeComplete": True,
+                        "degradations": [],
                     }
                 ),
                 encoding="utf-8",
@@ -156,7 +149,7 @@ class MosaicXamlWindowsCIAcceptanceTests(unittest.TestCase):
                 capture_output=True,
                 text=True,
             )
-        self.assertIn("matches the four documented drag/drop gaps", result.stdout)
+        self.assertIn("native-complete with zero degradations", result.stdout)
 
     def test_workflow_routes_windows_toolchains_and_acceptance(self) -> None:
         workflow = WORKFLOW.read_text(encoding="utf-8")
@@ -178,7 +171,7 @@ class MosaicXamlWindowsCIAcceptanceTests(unittest.TestCase):
         self.assertIn("-p mosaic-app-conformance -p task-mosaic-app", workflow)
         self.assertIn("task_mosaic_app.dll", workflow)
         self.assertIn(
-            "--backend xaml --output $output --emit-project --runtime-library $taskLibrary.Path",
+            "--backend xaml --output $output --emit-project --profile native-complete --runtime-library $taskLibrary.Path",
             workflow,
         )
         self.assertIn("--validate-taskapp-report", workflow)

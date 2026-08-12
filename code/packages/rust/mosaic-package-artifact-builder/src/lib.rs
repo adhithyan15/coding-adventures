@@ -946,7 +946,9 @@ fn collect_native_degradations(
                     Backend::Flutter | Backend::Compose | Backend::SwiftUI
                 )
                     || (backend == Backend::Qt
-                        && mosaic_emit_qt::pipeline::host_drag_drop_has_native_semantics(node))) => Some((
+                        && mosaic_emit_qt::pipeline::host_drag_drop_has_native_semantics(node))
+                    || (backend == Backend::Xaml
+                        && mosaic_emit_xaml::pipeline::host_drag_drop_has_native_semantics(node))) => Some((
             "interaction.drag-drop-inert",
             "the backend lowers this interactive primitive to a non-interactive container",
         )),
@@ -4377,7 +4379,7 @@ layout Board {
     }
 
     #[test]
-    fn flutter_compose_qt_and_swiftui_native_drag_drop_are_not_reported_as_inert() {
+    fn native_drag_drop_backends_are_not_reported_as_inert() {
         let pkg = make_package("mosaic-pkg-board", &["Board"]);
         fs::write(
             pkg.path().join("src/Board.mll"),
@@ -4425,6 +4427,12 @@ layout Board {
                 .expect("SwiftUI analysis");
         assert!(swiftui.native_complete);
         assert!(swiftui.degradations.is_empty());
+
+        let xaml =
+            analyze_package_degradations(&options(Backend::Xaml), BuildProfile::NativeComplete)
+                .expect("XAML analysis");
+        assert!(xaml.native_complete);
+        assert!(xaml.degradations.is_empty());
     }
 
     #[test]
@@ -4731,11 +4739,8 @@ layout NativeEvents {
         )
         .expect("package-expanded analysis");
 
-        assert!(report.degradations.iter().any(|entry| {
-            entry.component == "Board"
-                && entry.primitive.as_deref() == Some("HostDraggable")
-                && entry.code == "interaction.drag-drop-inert"
-        }));
+        assert!(report.native_complete);
+        assert!(report.degradations.is_empty());
     }
 
     #[test]

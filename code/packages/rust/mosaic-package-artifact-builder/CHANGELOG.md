@@ -1,5 +1,13 @@
 # Changelog
 
+## [Unreleased] - XAML native drag capability
+
+- Native-complete analysis recognizes XAML `HostDraggable` and
+  `HostDropTarget` now that the emitter supplies native pointer, touch,
+  keyboard, acceptance, lifecycle, RTL, and accessibility behavior.
+- The package-expanded TaskApp now reports zero XAML degradations and can be
+  emitted under the strict `native-complete` profile.
+
 ## [Unreleased] - XAML native table capability
 
 - Native-complete analysis recognizes the canonical indexed UI31/Grid shape
@@ -7,8 +15,8 @@
   TableItem/GridItem provider patterns.
 - Unsupported or structurally ambiguous XAML HostTable trees retain the stable
   `accessibility.table-semantics-missing` degradation.
-- Concrete TaskApp XAML output now reports exactly its four remaining inert
-  drag/drop paths.
+- Concrete TaskApp XAML output retained four drag/drop paths at this historical
+  milestone; the native drag capability above subsequently closes them.
 
 ## [Unreleased] - selected runtimes are required
 

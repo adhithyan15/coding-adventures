@@ -1291,7 +1291,7 @@ jobs:
           $taskLibrary = Resolve-Path 'code/packages/rust/target/debug/task_mosaic_app.dll'
 
           $output = Join-Path $env:RUNNER_TEMP 'mosaic-xaml-taskapp'
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend xaml --output $output --emit-project --runtime-library $taskLibrary.Path
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend xaml --output $output --emit-project --profile native-complete --runtime-library $taskLibrary.Path
           if ($LASTEXITCODE -ne 0) {
             throw "TaskApp XAML generation failed with exit code $LASTEXITCODE"
           }

@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 import argparse
-from collections import Counter
 import json
 import subprocess
 from pathlib import Path
@@ -29,13 +28,6 @@ ACCEPTANCE_PACKAGES = frozenset(
 )
 ACCEPTANCE_PACKAGE_PREFIXES = ("unknown/mosaic-pkg-",)
 CI_WORKFLOW_PATH = ".github/workflows/ci.yml"
-TASKAPP_DEGRADATIONS = Counter(
-    {
-        "interaction.drag-drop-inert": 4,
-    }
-)
-
-
 def requires_mosaic_xaml_windows(
     plan: dict[str, Any], *, workflow_changed: bool = False
 ) -> bool:
@@ -76,26 +68,17 @@ def workflow_changed(repo_root: Path, diff_base: str) -> bool:
 
 
 def validate_taskapp_report(report: dict[str, Any]) -> None:
-    """Require exactly the four documented XAML TaskApp drag/drop gaps."""
+    """Require a zero-degradation native-complete XAML TaskApp."""
 
     if report.get("backend") != "xaml":
         raise ValueError("TaskApp degradation report backend must be xaml")
-    if report.get("nativeComplete") is not False:
-        raise ValueError("TaskApp XAML must remain incomplete until its four drag/drop gaps close")
+    if report.get("nativeComplete") is not True:
+        raise ValueError("TaskApp XAML must be native-complete")
     degradations = report.get("degradations")
     if not isinstance(degradations, list):
         raise ValueError("TaskApp degradation report must contain a degradations array")
-    codes = Counter(
-        item.get("code")
-        for item in degradations
-        if isinstance(item, dict) and isinstance(item.get("code"), str)
-    )
-    if codes != TASKAPP_DEGRADATIONS or len(degradations) != 4:
-        raise ValueError(
-            "TaskApp XAML report differs from the four documented drag/drop gaps: "
-            f"expected {dict(TASKAPP_DEGRADATIONS)}, observed {dict(codes)} "
-            f"across {len(degradations)} entries"
-        )
+    if degradations:
+        raise ValueError(f"TaskApp XAML must have zero degradations, observed {degradations}")
 
 
 def main() -> int:
@@ -114,7 +97,7 @@ def main() -> int:
         if not isinstance(report, dict):
             raise ValueError("TaskApp degradation report root must be an object")
         validate_taskapp_report(report)
-        print("TaskApp XAML degradation report matches the four documented drag/drop gaps")
+        print("TaskApp XAML report is native-complete with zero degradations")
         return 0
 
     if args.plan is None:

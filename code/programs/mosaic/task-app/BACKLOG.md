@@ -53,15 +53,6 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
   SVG-overlay host component) or product guidance on visual treatment
   before it's picked up — see `code/specs/task-app-richer-gantt-v1.md`'s
   "What does NOT ship" section for the full reasoning.
-- **Native XAML drag semantics.** Flutter, Compose Desktop, Qt, and
-  SwiftUI now lower the UI35 family to native drag systems with equivalent
-  keyboard and accessibility operation, and their canonical UI31/Grid shapes
-  expose native table semantics. WinUI/XAML now also exposes native UIA table
-  semantics for the canonical Sheet, but still degrades the board and calendar
-  drag interactions to static containers. These are the four remaining reports
-  blocking a strict XAML TaskApp.
-  See
-  `code/specs/UI35-host-drag-drop.md` and UI38's prioritized completion backlog.
 - **Calendar week/day views, resize, and time-blocking.** Deferred from the Phase 7 ship —
   see `code/specs/task-app-calendar-v1.md` for the full rationale (resize isn't supported by
   the UI35 kernel today; time-blocking needs a time-of-day field on `TaskSchedule` that
@@ -91,6 +82,13 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
   needs SQL-over-IndexedDB rather than load-all.
 
 ## Resolved (kept for traceability, not actionable)
+
+- **Native XAML drag semantics.** WinUI now lowers UI35 to component-scoped
+  native drag/drop controls with pointer/touch events, equivalent keyboard
+  traversal, authored acceptance/disabled rules, RTL order, lifecycle dispatch,
+  and UI Automation announcements. This removes the board/calendar's final four
+  degradation reports and promotes complete TaskApp XAML generation to the strict
+  `native-complete` profile.
 
 - **Native XAML table semantics for the Sheet.** The canonical indexed UI31/Grid
   shape now emits component-scoped WinUI table, header, and cell controls whose
