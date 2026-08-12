@@ -1,5 +1,55 @@
 # Changelog — `twig-aot`
 
+## 0.51.0 - 2026-08-12 - Windows native-AOT linker fixes (temp-file handle + dynamic-CRT import libs)
+
+Fixes two confirmed bugs in `link_windows_x86_64_executable` that were blocking
+**all** native Windows AOT linking on a host without the exact CI toolchain
+setup, discovered while trial-compiling Twig programs natively on Windows for
+the first time outside CI:
+
+1. **`LNK1104: cannot open file`.** The object file, runtime archive, and
+   `gc-core-capi` staticlib were written via `tempfile::NamedTempFile` and
+   handed to the linker by path while our own process still held the file
+   handle open. On Windows, `link.exe`/`lld-link.exe` opening that same path
+   in a fresh `CreateFile` call fails outright under those conditions — not a
+   delayed-write race, an outright open failure. Fixed by converting each
+   `NamedTempFile` to a bare `TempPath` (`.into_temp_path()`, closing the
+   handle but keeping the path alive/auto-deleting) immediately after writing,
+   before spawning the linker.
+
+2. **`LNK2019: unresolved external symbol __imp_malloc`** (and `memcpy`,
+   `abort`, every Win32 API the embedded GC pulls in). The linker command
+   hardcoded `libcmt.lib` — the **static** CRT import library — but both the
+   embedded C runtime archive (built by the `cc` crate, which has defaulted to
+   the dynamic CRT since ≥1.0.78) and the embedded `gc-core-capi` staticlib
+   (built by plain `cargo build`, dynamic CRT by default on
+   `x86_64-pc-windows-msvc`) carry `__imp_`-style dllimport references that
+   only `ucrt.lib`/`vcruntime.lib`/`msvcrt.lib` satisfy. Fixed by linking
+   those three plus the Win32 import libs `gc-core-capi`'s bundled Rust std
+   needs (`kernel32.lib`, `ws2_32.lib`, `userenv.lib`, `advapi32.lib`,
+   `bcrypt.lib`, `ntdll.lib`) instead of `libcmt.lib`.
+
+Also improved the `AotError::Linker` message to include the linker's stdout,
+not just stderr — MSVC's `link.exe` writes its diagnostics to stdout, so every
+prior Windows link failure surfaced as `status=Some(N):` with no explanation.
+
+`code/specs/LANG46-twig-aot-multi-target.md`'s pipeline diagram and linker
+code sketch updated to match (they still showed `libcmt.lib`).
+
+**Not fixed here** (tracked as follow-ups, discovered while verifying the
+above — enabling real Windows-native execution for the first time surfaced
+pre-existing bugs unrelated to this linker fix): a self-recursive Twig
+function crashes with `STATUS_STACK_OVERFLOW` on native Windows AOT
+specifically (LLVM/other backends unaffected — see `x86_64-backend`'s
+stack-map handling and the already-failing
+`gc_recursive_frame_live_bytes_differential_on_windows` test below); a CRLF
+vs. `\n` stdout mismatch (`end_to_end_call_builtin_putchar_writes_hi`,
+`end_to_end_lang76_heap_byte_io_writes_hi`); a GC precision mismatch under
+stress (`gc_stress_live_bytes_differential_on_windows`); and a separate
+dynamic-arithmetic-over-a-boxed-value bug (`(+ (car (cons 41 0)) 1)` returns
+`329` instead of `42` on native/LLVM Windows) — see `lang-aot`
+`e6d2b_dynamic_arith.rs`.
+
 ## 0.50.0 - 2026-08-03 - array reference-tracing fix (LANG-FULL E5, runtime, LLVM-only)
 
 `runtime/twig_runtime.c` gains `__twig_alloc_ref_array_bytes(int64_t n)` —

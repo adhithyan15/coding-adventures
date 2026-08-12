@@ -115,7 +115,9 @@ Vec<(fn_name, Vec<u8>)>
    ▼
 factorial.obj   (AMD64, IMAGE_REL_AMD64_REL32 reloc for __twig_print_i64)
    │ link.exe /OUT:factorial.exe /SUBSYSTEM:CONSOLE /ENTRY:main
-   │     factorial.obj libtwig_aot_runtime_windows_x86_64.lib libcmt.lib legacy_stdio_definitions.lib
+   │     factorial.obj libtwig_aot_runtime_windows_x86_64.lib
+   │     ucrt.lib vcruntime.lib msvcrt.lib legacy_stdio_definitions.lib
+   │     kernel32.lib ws2_32.lib userenv.lib advapi32.lib bcrypt.lib ntdll.lib
    ▼
 factorial.exe, runs on Windows x86-64
 ```
@@ -222,8 +224,24 @@ match linker {
         .arg("/SUBSYSTEM:CONSOLE")
         .arg(object_path)
         .arg(runtime_archive_path)
-        .arg("libcmt.lib")
+        // `cc` (>=1.0.78) and rustc both default to the DYNAMIC CRT on
+        // this target (no `/MT`), so the runtime archive and the
+        // gc-core-capi staticlib both carry `__imp_`-style dllimport
+        // references (malloc/memcpy/abort/...) that only
+        // ucrt.lib/vcruntime.lib/msvcrt.lib satisfy -- `libcmt.lib` (the
+        // static CRT) does not define those import thunks at all.
+        // kernel32/ws2_32/userenv/advapi32/bcrypt/ntdll cover the Win32
+        // API surface gc-core-capi's Rust std pulls in.
+        .arg("ucrt.lib")
+        .arg("vcruntime.lib")
+        .arg("msvcrt.lib")
         .arg("legacy_stdio_definitions.lib")
+        .arg("kernel32.lib")
+        .arg("ws2_32.lib")
+        .arg("userenv.lib")
+        .arg("advapi32.lib")
+        .arg("bcrypt.lib")
+        .arg("ntdll.lib")
         .status(),
     WinLinker::LldLink(path) => /* same flags */,
     WinLinker::MinGwGcc(path) => Command::new(path)
@@ -233,6 +251,19 @@ match linker {
         .status(),
 }
 ```
+
+### Temp-file handles must be closed before invoking the linker
+
+The object file, runtime archive, and `gc-core-capi` staticlib are written to
+`tempfile::NamedTempFile`s and handed to the linker by path. On Windows,
+`link.exe`/`lld-link.exe` open that path in a fresh `CreateFile` call while our
+own process handle on it is still live; without releasing it first, that open
+fails outright with `LNK1104: cannot open file` — not a delayed-write race, an
+outright open failure. Convert each `NamedTempFile` to a bare `TempPath` (which
+closes the file handle but keeps the path alive and auto-deleting) via
+`.into_temp_path()` immediately after writing, before spawning the linker
+process. Linux/macOS don't need this — POSIX allows a file to stay open while
+another process opens the same path.
 
 `find_windows_linker()` is small: probe PATH for `link.exe`, then
 `lld-link.exe`, then `gcc.exe`.  V1 does *not* attempt to locate an

@@ -1797,17 +1797,28 @@ pub fn link_windows_x86_64_executable(
         });
     }
 
+    // Each temp file is converted to a bare `TempPath` (closing the Rust-side
+    // handle) right after writing.  On Windows, `link.exe`/`lld-link.exe`
+    // opens these paths in a fresh `CreateFile` call while our own handle is
+    // still live; without the default sharing flags that grants, that open
+    // fails outright (LNK1104 "cannot open file"), not just a delayed-write
+    // race. Closing our handle first sidesteps that regardless of sharing
+    // flags.  The file (and its would-be handle) still isn't visible to a
+    // concurrent AV scan window, but that's the same risk any other build
+    // tool takes on Windows.
     let mut obj_tmp = tempfile::Builder::new()
         .prefix(&format!("twig-aot-{stem}-"))
         .suffix(".obj")
         .tempfile()?;
     obj_tmp.write_all(obj_bytes)?;
+    let obj_tmp = obj_tmp.into_temp_path();
 
     let mut rt_tmp = tempfile::Builder::new()
         .prefix("twig_aot_runtime_")
         .suffix(".lib")
         .tempfile()?;
     rt_tmp.write_all(RUNTIME_WINDOWS_X86_64)?;
+    let rt_tmp = rt_tmp.into_temp_path();
 
     // GC archive (gc-core-capi), embedded and passed after the runtime archive
     // so the linker resolves dynval_runtime.obj's `__twig_gc_alloc` (#118b-2b).
@@ -1816,6 +1827,7 @@ pub fn link_windows_x86_64_executable(
         .suffix(".lib")
         .tempfile()?;
     gc_tmp.write_all(GC_CORE_ARCHIVE)?;
+    let gc_tmp = gc_tmp.into_temp_path();
 
     let linker = find_windows_linker().ok_or_else(|| AotError::Linker {
         status: None,
@@ -1829,19 +1841,35 @@ pub fn link_windows_x86_64_executable(
                 .arg(format!("/OUT:{}", out.display()))
                 .arg("/ENTRY:main")
                 .arg("/SUBSYSTEM:CONSOLE")
-                .arg(obj_tmp.path())
-                .arg(rt_tmp.path())
-                .arg(gc_tmp.path())
-                .arg("libcmt.lib")
+                .arg(&obj_tmp)
+                .arg(&rt_tmp)
+                .arg(&gc_tmp)
+                // `cc` (>=1.0.78) and rustc both default to the DYNAMIC CRT
+                // on this target (no `/MT`), so the runtime archive and
+                // gc-core-capi's staticlib both carry `__imp_`-style
+                // dllimport references (malloc/memcpy/abort/...) that only
+                // ucrt.lib/vcruntime.lib/msvcrt.lib satisfy -- libcmt.lib
+                // (the static CRT) does not define those import thunks at
+                // all. kernel32/ws2_32/userenv/advapi32/bcrypt/ntdll cover
+                // the Win32 API surface gc-core-capi's Rust std pulls in.
+                .arg("ucrt.lib")
+                .arg("vcruntime.lib")
+                .arg("msvcrt.lib")
                 .arg("legacy_stdio_definitions.lib")
+                .arg("kernel32.lib")
+                .arg("ws2_32.lib")
+                .arg("userenv.lib")
+                .arg("advapi32.lib")
+                .arg("bcrypt.lib")
+                .arg("ntdll.lib")
                 .output()
         }
         WinLinkerKind::Gcc => {
             std::process::Command::new(&linker.path)
                 .arg("-o").arg(out)
-                .arg(obj_tmp.path())
-                .arg(rt_tmp.path())
-                .arg(gc_tmp.path())
+                .arg(&obj_tmp)
+                .arg(&rt_tmp)
+                .arg(&gc_tmp)
                 .output()
         }
     }.map_err(|e| AotError::Linker {
@@ -1855,7 +1883,11 @@ pub fn link_windows_x86_64_executable(
     if !output.status.success() {
         return Err(AotError::Linker {
             status: output.status.code(),
-            stderr: String::from_utf8_lossy(&output.stderr).into_owned(),
+            stderr: format!(
+                "{}\n{}",
+                String::from_utf8_lossy(&output.stdout),
+                String::from_utf8_lossy(&output.stderr),
+            ),
         });
     }
     Ok(())

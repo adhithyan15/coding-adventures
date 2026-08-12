@@ -1,5 +1,42 @@
 # Changelog — iir-builtin-lowering
 
+## 0.32.0 - 2026-08-12 - `lower_dynamic_arith` language-gate fix (bare-`any` Twig parameters miscompiled)
+
+Fixes a confirmed correctness bug: any Twig comparison or arithmetic op with a
+function **parameter** as an operand (e.g. `(define (classify n) (if (< n 2)
+111 222))`) silently miscompiled on every native-AOT/LLVM backend. `n=10`
+compared `< 2` should be false, but native AOT printed as if it were true.
+
+Root cause: `dynamic_arith.rs`'s `is_boxed(hint)` treated the bare string
+`"any"` as always denoting a boxed/tagged dynamic value, unconditionally
+inserting an `unbox` (`>> 3`) before the typed op. That's correct for
+McCarthy Lisp — whose `any`-typed parameters genuinely are tagged
+`LispyValue`s — but wrong for Twig, where every untyped function parameter is
+also declared `any` yet passed as a **raw, unboxed** machine `i64`. The
+`unbox` corrupted the parameter's value before the comparison ever ran.
+`dyn_repr.rs` had already solved this exact `ref<any>` vs. bare-`any`
+ambiguity correctly, gating on the module's source language
+(`is_lisp_language`) — `dynamic_arith.rs` just never got the same gate. A
+comment already in the codebase (`twig-ir-compiler/src/compiler.rs:2524-2528`,
+and `lang-aot/tests/e6d2b_dynamic_arith.rs`) shows this was a known footgun
+worked around at individual call sites, not fixed at the root.
+
+Fix: `is_lisp_language` is now `pub(crate)` in `dyn_repr.rs` and reused by
+`dynamic_arith.rs`. `is_boxed(hint, is_lisp)` now only treats bare `any` as
+boxed when `is_lisp` is true (`ref<any>` stays unconditionally boxed in every
+language — it's genuine heap-op provenance, e.g. a `car`/`cdr` result, never a
+placeholder). `lower_dynamic_arith(module)` derives `is_lisp` once from
+`module.language`; `lower_dynamic_arith_function` takes it as a new parameter.
+No public API break: `lower_dynamic_arith`'s signature is unchanged, so none
+of its 7 call sites (across `twig-aot` and `lang-aot`) needed updates.
+
+Two new unit tests (`twig_any_param_operand_is_not_unboxed`,
+`mccarthy_any_param_operand_is_still_unboxed`) lock in both directions of the
+fix. Verified end-to-end: `(define (classify n) (if (< n 2) 111 222))
+(classify 10)` now correctly exits `222` on native Windows x86-64 AOT (was
+`111`) — see `lang-aot` 0.221.0 and `twig-aot` 0.51.0 for the accompanying
+integration test and the Windows-linker fixes that let it actually run there.
+
 ## 0.31.0 - 2026-07-20 — null? runtime lowering + list-ref/assoc index boxing + predicate exit-coercion (native/LLVM lisp fixes)
 
 Part of the fix restoring McCarthy-lisp list programs on the native-AOT / LLVM backends (`lang-aot` `lang_matrix`). See the umbrella commit for the full story: `null?` was never routed to a runtime call on the tagged native/LLVM path (breaking every cons-walk helper), `list-ref`/`assoc` unboxed a raw-int index/key (→ wrong element), a top-level `(null? …)` predicate result was unboxed instead of truthy-coerced, and cons-cell field access failed the JVM verifier. Verified end-to-end: native list-ref/assoc/length/reverse/append/null? all correct.
