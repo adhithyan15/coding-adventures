@@ -519,6 +519,10 @@ struct Compiler {
     /// at control flow or procedure calls; a general runtime f64 formatter is
     /// still required once the source value can vary at run time.
     static_real_slots: HashMap<String, String>,
+    /// Exact values for local integer scalars assigned a literal or another
+    /// tracked integer along the same straight-line path. These snapshots may
+    /// widen into static real expressions only within binary64's exact range.
+    static_integer_slots: HashMap<String, i64>,
     static_real_tracking_disabled: bool,
 }
 
@@ -558,6 +562,7 @@ impl Default for Compiler {
             block_captured: HashSet::new(),
             initialized_string_slots: HashSet::new(),
             static_real_slots: HashMap::new(),
+            static_integer_slots: HashMap::new(),
             static_real_tracking_disabled: false,
         }
     }
@@ -1779,6 +1784,7 @@ impl Compiler {
         let saved_initialized_string_slots =
             std::mem::take(&mut self.initialized_string_slots);
         let saved_static_real_slots = std::mem::take(&mut self.static_real_slots);
+        let saved_static_integer_slots = std::mem::take(&mut self.static_integer_slots);
         let saved_static_real_tracking_disabled =
             std::mem::replace(&mut self.static_real_tracking_disabled, true);
         let saved_scopes = std::mem::replace(&mut self.scopes, vec![HashMap::new()]);
@@ -2019,6 +2025,7 @@ impl Compiler {
         self.switch_expansion_steps = saved_switch_expansion_steps;
         self.initialized_string_slots = saved_initialized_string_slots;
         self.static_real_slots = saved_static_real_slots;
+        self.static_integer_slots = saved_static_integer_slots;
         self.static_real_tracking_disabled = saved_static_real_tracking_disabled;
         self.scopes = saved_scopes;
         self.by_name_bindings = saved_by_name_bindings;
@@ -2335,23 +2342,101 @@ impl Compiler {
     }
 
     fn static_real_arithmetic_value(&self, node: &GrammarASTNode) -> Option<f64> {
+        let widen_tracked_integers = self.static_real_expression_has_real_evidence(node);
         expr_static_real_arithmetic_value_with(node, &|call| {
             self.static_standard_real_value(call)
-                .or_else(|| self.static_tracked_real_value(call))
+                .or_else(|| self.static_tracked_numeric_value(call, widen_tracked_integers))
         })
     }
 
-    fn static_tracked_real_value(&self, node: &GrammarASTNode) -> Option<f64> {
+    fn static_tracked_numeric_value(
+        &self,
+        node: &GrammarASTNode,
+        widen_integer: bool,
+    ) -> Option<f64> {
         let name = expr_variable_name(node)?;
         let binding = self.require_var(&name).ok()?;
-        if binding.ty != ScalarType::Real || binding.is_global {
+        if binding.is_global {
             return None;
         }
-        self.static_real_slots
-            .get(&binding.slot)?
-            .parse::<f64>()
-            .ok()
-            .filter(|value| value.is_finite())
+        match binding.ty {
+            ScalarType::Real => self
+                .static_real_slots
+                .get(&binding.slot)?
+                .parse::<f64>()
+                .ok()
+                .filter(|value| value.is_finite()),
+            ScalarType::Integer if widen_integer => {
+                let value = *self.static_integer_slots.get(&binding.slot)?;
+                (value.unsigned_abs() <= 9_007_199_254_740_992_u64).then_some(value as f64)
+            }
+            _ => None,
+        }
+    }
+
+    fn static_real_expression_has_real_evidence(&self, node: &GrammarASTNode) -> bool {
+        if direct_tokens(node)
+            .iter()
+            .any(|token| token.effective_type_name() == "REAL_LIT" || token.value == "/")
+        {
+            return true;
+        }
+        if let Some(name) = expr_variable_name(node) {
+            return self
+                .require_var(&name)
+                .is_ok_and(|binding| binding.ty == ScalarType::Real);
+        }
+        if node.rule_name == "proc_call" {
+            let name = direct_tokens(node)
+                .into_iter()
+                .find(|token| token.effective_type_name() == "NAME")
+                .map(|token| self.resolve_procedure_identity(&token.value));
+            if name.is_some_and(|name| {
+                matches!(
+                    name.as_str(),
+                    "sqrt" | "sin" | "cos" | "ln" | "exp" | "arctan"
+                )
+            }) {
+                return true;
+            }
+        }
+        direct_nodes(node)
+            .into_iter()
+            .any(|child| self.static_real_expression_has_real_evidence(child))
+    }
+
+    fn static_integer_scalar_value(&self, node: &GrammarASTNode) -> Option<i64> {
+        if let Some(name) = expr_variable_name(node) {
+            let binding = self.require_var(&name).ok()?;
+            if binding.ty == ScalarType::Integer && !binding.is_global {
+                return self.static_integer_slots.get(&binding.slot).copied();
+            }
+            return None;
+        }
+
+        let tokens = direct_tokens(node);
+        let children = direct_nodes(node);
+        if tokens.len() == 1 && tokens[0].effective_type_name() == "INTEGER_LIT" {
+            return tokens[0].value.parse::<i64>().ok();
+        }
+        if tokens.len() == 1
+            && children.len() == 1
+            && matches!(tokens[0].value.as_str(), "+" | "-")
+        {
+            let value = self.static_integer_scalar_value(children[0])?;
+            return if tokens[0].value == "-" {
+                value.checked_neg()
+            } else {
+                Some(value)
+            };
+        }
+        if (tokens.is_empty()
+            || (tokens.len() == 2 && tokens[0].value == "(" && tokens[1].value == ")"))
+            && children.len() == 1
+        {
+            return self.static_integer_scalar_value(children[0]);
+        }
+        None
     }
 
     /// Evaluate deterministic real standard-function calls inside the static
@@ -2461,6 +2546,7 @@ impl Compiler {
 
     fn disable_static_real_tracking(&mut self) {
         self.static_real_slots.clear();
+        self.static_integer_slots.clear();
         self.static_real_tracking_disabled = true;
     }
 
@@ -3818,6 +3904,9 @@ impl Compiler {
             .flatten()
             .filter(|value| value.is_finite())
             .map(|value| value.to_string());
+        let static_integer_value = (!self.static_real_tracking_disabled)
+            .then(|| self.static_integer_scalar_value(expr))
+            .flatten();
 
         if let Some(literal) = expr_string_literal(expr) {
             let mut saw_string_target = false;
@@ -4075,6 +4164,13 @@ impl Compiler {
                         .insert(binding.slot.clone(), text.clone());
                 } else {
                     self.static_real_slots.remove(&binding.slot);
+                }
+            }
+            if binding.ty == ScalarType::Integer && !binding.is_global {
+                if let Some(integer) = static_integer_value {
+                    self.static_integer_slots.insert(binding.slot.clone(), integer);
+                } else {
+                    self.static_integer_slots.remove(&binding.slot);
                 }
             }
             if binding.is_global {
@@ -7282,6 +7378,34 @@ mod tests {
             })
             .collect();
         assert_eq!(literals, vec!["42.5", "2.5"]);
+    }
+
+    #[test]
+    fn al4_print_static_integer_scalar_snapshot_in_real_expression() {
+        let module = compile_source(
+            "begin integer n, saved; n := 40; saved := n; n := 9; output(saved + 2.5) end",
+            "test",
+        )
+        .expect("an exact integer scalar snapshot widens in a static real expression");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "42.5")
+        }));
+        assert!(main
+            .instructions
+            .iter()
+            .all(|instr| !matches!(instr.op.as_str(), "int_to_real" | "add")));
+    }
+
+    #[test]
+    fn al4_print_static_integer_scalar_rejects_inexact_widening() {
+        let err = compile_source(
+            "begin integer n; n := 9007199254740993; output(n + 0.5) end",
+            "test",
+        )
+        .expect_err("an inexact tracked integer widening must fail closed");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
     #[test]
