@@ -395,6 +395,10 @@ unblocks multiple downstream targets; never count source generation as completio
       native `List` compatibility path before macOS 14.4 / iOS 17.4. The full
       TaskApp compiles for macOS and its iOS 16 deployment target; permissive
       output now retains only the sample-runtime fallback.
+    - [x] Promote the strict SwiftUI macOS TaskApp with the concrete
+      `task-mosaic-app` runtime, byte-for-byte SwiftPM resource verification,
+      and direct launch without `MOSAIC_APP_LIBRARY`. Keep iOS 16 compilation
+      as a separate source-portability gate rather than packaging a macOS dylib.
 - [ ] Add launch-and-dispatch conformance fixtures for every native backend.
   - [x] XAML/.NET loads the shared Rust conformance DLL and round-trips startup,
     typed props, semantic dispatch, revised props, buffers, and teardown.

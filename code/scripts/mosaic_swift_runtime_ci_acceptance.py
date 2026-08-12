@@ -16,6 +16,7 @@ ACCEPTANCE_PACKAGES = frozenset(
         "rust/mosaic-app-capi",
         "rust/mosaic-app-conformance",
         "rust/mosaic-app-runtime",
+        "rust/task-mosaic-app",
         "rust/mosaic-compile",
         "rust/mosaic-emit-swiftui",
         "rust/mosaic-package-artifact-builder",
