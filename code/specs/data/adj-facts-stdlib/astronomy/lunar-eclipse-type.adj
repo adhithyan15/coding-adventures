@@ -1,0 +1,61 @@
+% ============================================================================
+% lunar-eclipse-type — three named lunar eclipse types and what each
+% actually is (adj-facts-stdlib, ASTRONOMY).
+% ============================================================================
+% A lunar eclipse happens when Earth passes between the Sun and the Moon,
+% but not every lunar eclipse looks the same: whether the Moon moves fully
+% into Earth's dark inner shadow, only partway into it, or only through
+% Earth's faint outer shadow depends on how exactly the three bodies line
+% up. Recall is a binding query:
+%
+%     ? lunar_eclipse_type(total_lunar_eclipse, $D)
+%       % the_moon_moves_into_the_inner_part_of_earths_shadow_the_umbra
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `lunar_eclipse_type(type, description)` carrying the source
+% citation, so the lookup above is the ordinary SLD binding query — the
+% engine returns the description WITH its source, on the CPU, with zero
+% model calls, and abstains on an eclipse type that is not one of these
+% three. The query also runs BACKWARD — bind a description and recall the
+% eclipse type it names:
+%
+%     ? lunar_eclipse_type($T, the_moon_travels_through_earths_penumbra_the_faint_outer_part_of_its_shadow)
+%       % penumbral_eclipse
+%
+% The three eclipse types, as a little truth table:
+%
+%     type                     description                                                                       quote (verbatim)
+%     -----------------------  --------------------------------------------------------------------------------  ------------------------------------------------------------------------------------------------
+%     total_lunar_eclipse       the_moon_moves_into_the_inner_part_of_earths_shadow_the_umbra                       "The Moon moves into the inner part of Earth's shadow, or the umbra."
+%     partial_lunar_eclipse     an_imperfect_alignment_of_sun_earth_and_moon_results_in_partial_umbra_passage       "An imperfect alignment of Sun, Earth and Moon results in the Moon passing through only part of Earth's umbra."
+%     penumbral_eclipse         the_moon_travels_through_earths_penumbra_the_faint_outer_part_of_its_shadow         "The Moon travels through Earth's penumbra, or the faint outer part of its shadow."
+%
+% Provenance: quoted verbatim from NASA's "Eclipses and the Moon" page,
+% which defines each of these three lunar eclipse types in its own single
+% opening sentence (each is followed by a separate elaboration sentence,
+% not folded into the quoted definition). WebFetch-verified twice — the
+% second pass pulled the full paragraph under each heading to confirm no
+% truncation. `trust authoritative` — NASA is a primary .gov source, the
+% same tier the sibling `solar-eclipse-type.adj` (a sibling library in this
+% directory) already uses for its NASA citation.
+%
+% Honest abstention on `blood_moon`: a real, well-documented term the SAME
+% page discusses under its own "'Blood Moon': How It Works" heading, but
+% the page uses it as a NICKNAME for the reddish color a total lunar
+% eclipse produces, not as a fourth peer eclipse type alongside these
+% three. So a recall on it ABSTAINS rather than inventing a peer-level row
+% for a color phenomenon. (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table lunar_eclipse_type {
+    columns type, description
+
+    row (total_lunar_eclipse, the_moon_moves_into_the_inner_part_of_earths_shadow_the_umbra)
+    row (partial_lunar_eclipse, an_imperfect_alignment_of_sun_earth_and_moon_results_in_partial_umbra_passage)
+    row (penumbral_eclipse, the_moon_travels_through_earths_penumbra_the_faint_outer_part_of_its_shadow)
+
+    source "The Moon moves into the inner part of Earth's shadow, or the umbra."
+    locator "https://science.nasa.gov/moon/eclipses/"
+    trust authoritative
+}
