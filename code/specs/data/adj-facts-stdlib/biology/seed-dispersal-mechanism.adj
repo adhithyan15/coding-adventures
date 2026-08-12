@@ -1,0 +1,86 @@
+% ============================================================================
+% seed-dispersal-mechanism — four named ways a plant disperses its seeds and
+% how each actually works (adj-facts-stdlib, BIOLOGY).
+% ============================================================================
+% A plant cannot walk its own seeds away from itself, so it relies on one of
+% a small set of physical mechanisms to move them: gravity simply lets them
+% fall, an exploding fruit ejects them, wind carries them, and an animal's
+% fur carries them stuck to its outside. Recall is a binding query:
+%
+%     ? seed_dispersal_mechanism(barochory, $D)
+%       % uses_gravity_as_a_simple_means_of_seed_dispersal
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground relation
+% `seed_dispersal_mechanism(mechanism, description)` carrying the source
+% citation, so the lookup above is the ordinary SLD binding query — the
+% engine returns the description WITH its source, on the CPU, with zero
+% model calls, and abstains on a seed-dispersal-related term that is not one
+% of these four. The query also runs BACKWARD — bind a description and
+% recall the mechanism it names:
+%
+%     ? seed_dispersal_mechanism($M, seed_is_forcefully_ejected_by_explosive_dehiscence_of_the_fruit)
+%       % ballochory
+%
+% The four mechanisms, as a little truth table:
+%
+%     mechanism      description                                                        quote (verbatim)
+%     -------------  -----------------------------------------------------------------  --------------------------------------------------------------------------------------------------------------------------------
+%     barochory       uses_gravity_as_a_simple_means_of_seed_dispersal                     "Barochory or the plant use of gravity for dispersal is a simple means of achieving seed dispersal."
+%     ballochory      seed_is_forcefully_ejected_by_explosive_dehiscence_of_the_fruit       "Ballochory is a type of dispersal where the seed is forcefully ejected by explosive dehiscence of the fruit."
+%     anemochory      seeds_float_on_the_breeze_or_flutter_to_the_ground                    "Wind dispersal can take on one of two primary forms: seeds or fruits can float on the breeze or, alternatively, they can flutter to the ground."
+%     epizoochory     transported_on_the_outside_of_vertebrate_animals                      "Seeds can be transported on the outside of vertebrate animals (mostly mammals), a process known as epizoochory."
+%
+% Provenance: quoted verbatim from Wikipedia's "Seed dispersal" article,
+% which gives each of these four mechanisms its own subsection with a
+% single complete defining sentence. This is a MULTI-SOURCE-STYLE table
+% (see `ocean-current-drivers.adj`) in the sense that each row's quote
+% comes from a different subsection of the same page rather than a single
+% shared sentence — this `table`'s own `source` field carries the first
+% row's (barochory) quote; the other three rows' quotes are documented
+% above in this header's truth table and are independently checkable
+% against the same `locator`. WebFetch-verified across multiple passes
+% before writing, pulling each subsection's full surrounding text to
+% confirm the quoted sentence stands alone grammatically. `trust
+% consensus` — Wikipedia, the same tier this stdlib already reserves for
+% other Wikipedia citations (e.g. `pond-zone.adj`).
+%
+% Two real mechanisms the SAME article also names are deliberately NOT
+% rows here, so a recall ABSTAINS on them rather than inventing a
+% description:
+%   - `hydrochory` (water dispersal): every candidate sentence checked
+%     either conflates the mechanism with dispersal DISTANCE rather than
+%     stating how it works, or is immediately qualified by a following
+%     sentence rather than standing alone.
+%   - `endozoochory` (dispersal by ingestion and defecation): its own
+%     defining sentence bundles the definition together with a separate,
+%     distinct empirical claim ("...is the dispersal mechanism for most
+%     tree species") rather than stating one clean fact the way the four
+%     tabled here do.
+% This slice separately confirmed via three additional non-Wikipedia
+% sources (a U.S. National Park Service page that 404'd, USDA Forest
+% Service research papers that describe seed dispersal via multi-fact
+% academic prose rather than clean single-sentence definitions, and a
+% kids'-science page whose per-mechanism descriptions are each bundled
+% with worked examples) that this topic resists the "extend an existing
+% table" and "single clean kids'-education source" patterns this stdlib
+% has otherwise relied on — Wikipedia's own per-mechanism subsections were
+% the only source found with genuinely standalone defining sentences.
+% Picked using the mandatory full-tree-grep-before-scoping discipline —
+% zero hits for
+% "barochory"/"ballochory"/"anemochory"/"epizoochory"/"seed_dispersal"
+% before this file was written. (See ../README.md;
+% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table seed_dispersal_mechanism {
+    columns mechanism, description
+
+    row (barochory, uses_gravity_as_a_simple_means_of_seed_dispersal)
+    row (ballochory, seed_is_forcefully_ejected_by_explosive_dehiscence_of_the_fruit)
+    row (anemochory, seeds_float_on_the_breeze_or_flutter_to_the_ground)
+    row (epizoochory, transported_on_the_outside_of_vertebrate_animals)
+
+    source "Barochory or the plant use of gravity for dispersal is a simple means of achieving seed dispersal."
+    locator "https://en.wikipedia.org/wiki/Seed_dispersal"
+    trust consensus
+}
