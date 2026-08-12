@@ -261,6 +261,33 @@ schema is the union of tool signatures, parse on receipt, dispatch
 to local tool implementations. The polyfill is documented in
 [`LM00a`](LM00a-llm-provider-implementations.md).
 
+The provider-neutral V1 surface is one call per model turn:
+
+```rust
+pub struct ToolCompletionRequest {
+    pub completion: CompletionRequest,
+    pub tools: Vec<ModelToolDefinition>,
+    pub choice: ModelToolChoice,       // auto, required, or exact name
+    pub results: Vec<ModelToolResult>, // results from earlier turns
+}
+
+pub enum ToolCompletionOutput {
+    FinalText(String),
+    ToolCall(ModelToolCall),
+}
+```
+
+`ModelToolDefinition` carries the repository-owned name, description, and
+object-shaped input schema. A returned `ModelToolCall` carries a call id, that
+exact name, and structured arguments. Authorization and execution never happen
+inside the gateway: the caller validates and dispatches the call, then supplies
+a `ModelToolResult` on a later turn. Each result owns the complete preceding
+call, including its structured arguments, so a native adapter can reconstruct
+the provider transcript without hidden conversation state. Existing providers
+inherit the strict JSON prompt polyfill; native adapters override the same
+method without changing callers. Catalogs, choices, results, and decoded
+responses are bounded and an unoffered tool call fails closed.
+
 ### Streaming polyfill
 
 For providers that only support unary completion: the streaming

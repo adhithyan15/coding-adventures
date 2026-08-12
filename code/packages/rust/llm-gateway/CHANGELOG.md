@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased
+
+### Added
+
+- Provider-neutral tool definitions, automatic/required/named selection,
+  model-emitted calls, and prior tool results through
+  `LlmClient::complete_with_tools`.
+- A deterministic JSON prompt polyfill for existing text-only providers and
+  native scripted tool-call support in `MockLlmClient`.
+- Strict catalog, selection, result, response-shape, truncation, and refusal
+  validation so malformed or unoffered calls fail closed.
+
 ## [0.2.0] - 2026-05-11
 
 ### Added
