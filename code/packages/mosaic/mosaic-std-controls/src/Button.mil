@@ -1,0 +1,6 @@
+// Standard push button with native semantics and portable defaults.
+component Button {
+  slot label : text ;
+  slot disabled : bool = false ;
+  emit onClick ;
+}

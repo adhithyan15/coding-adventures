@@ -513,6 +513,11 @@ unblocks multiple downstream targets; never count source generation as completio
       parameters so `Surface` can also pass `native-complete` when compiled as
       an isolated host-facing component.
 - [ ] Ship `mosaic-std-controls`: buttons, inputs, select/picker, switch, slider.
+  - [x] Ship the v0.1 core `Button` and single-line `Input` facade over proven
+    toolkit primitives, with Foundation defaults and all-five-native package
+    plus consuming-app acceptance.
+  - [ ] Add checkbox, radio, and number-input controls.
+  - [ ] Add native select/picker, switch, and slider contracts.
 - [ ] Ship `mosaic-std-navigation`: app shell, toolbar, sidebar/rail, tabs, routes.
 - [ ] Ship `mosaic-std-feedback`: alert, dialog, toast, progress, empty/error states.
 - [ ] Ship `mosaic-std-data`: list, virtualized list, table, form and field patterns.

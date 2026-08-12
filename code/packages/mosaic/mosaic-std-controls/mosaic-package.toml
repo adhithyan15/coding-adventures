@@ -1,0 +1,18 @@
+[package]
+name = "mosaic-std-controls"
+version = "0.1.0"
+description = "Accessible, themed controls for native Mosaic applications"
+license = "MIT OR Apache-2.0"
+
+[components]
+exports = ["Button", "Input"]
+
+[dependencies]
+mosaic-pkg-toolkit = "0.11.0"
+mosaic-std-foundation = "0.1.0"
+
+[styles]
+token_palette = "tokens/controls.json"
+
+[kernel]
+version = "1"

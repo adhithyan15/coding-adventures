@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "tokens": {
+    "foundation-color-text-light": "#172033",
+    "foundation-color-text-dark": "#f7f9fc",
+    "foundation-color-surface-light": "#ffffff",
+    "foundation-color-surface-dark": "#1c2028",
+    "foundation-color-border-light": "#d8dee8",
+    "foundation-color-border-dark": "#3b4350",
+    "foundation-color-accent": "#5b5bd6",
+    "foundation-font-body": "16px",
+    "foundation-space-sm": "8px",
+    "foundation-radius-sm": "6px"
+  }
+}
