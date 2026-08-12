@@ -31,6 +31,7 @@ const CHINESE_WOMAN = DUCTUS[ductusKey("chinese", "女")];
 const CHINESE_CHILD = DUCTUS[ductusKey("chinese", "子")];
 const CHINESE_SUN = DUCTUS[ductusKey("chinese", "日")];
 const CHINESE_SPEECH_RADICAL = DUCTUS[ductusKey("chinese", "讠")];
+const CHINESE_WATER_RADICAL = DUCTUS[ductusKey("chinese", "氵")];
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
@@ -362,6 +363,25 @@ describe("handwriting ductus", () => {
     expect(descent.at(-1)).toEqual(rise[0]);
     expect(rise[0].x).toBeLessThan(rise.at(-1)!.x);
     expect(rise[0].y).toBeLessThan(rise.at(-1)!.y);
+  });
+
+  it("Chinese 氵 draws two falling dots before its joined rising bottom stroke", () => {
+    expect(CHINESE_WATER_RADICAL.script).toBe("chinese");
+    expect(penLifts(CHINESE_WATER_RADICAL)).toBe(2);
+    expect(CHINESE_WATER_RADICAL.strokes).toHaveLength(3);
+    expect(CHINESE_WATER_RADICAL.strokes.map((stroke) => stroke.segments.length)).toEqual([1, 1, 2]);
+    const upper = CHINESE_WATER_RADICAL.strokes[0].segments[0].path;
+    const middle = CHINESE_WATER_RADICAL.strokes[1].segments[0].path;
+    const bottomTurn = CHINESE_WATER_RADICAL.strokes[2].segments[0].path;
+    const bottomRise = CHINESE_WATER_RADICAL.strokes[2].segments[1].path;
+    expect(upper[0].x).toBeLessThan(upper.at(-1)!.x);
+    expect(upper[0].y).toBeGreaterThan(upper.at(-1)!.y);
+    expect(middle[0].x).toBeLessThan(middle.at(-1)!.x);
+    expect(middle[0].y).toBeGreaterThan(middle.at(-1)!.y);
+    expect(bottomTurn[0].x).toBeGreaterThan(bottomTurn[1].x);
+    expect(bottomTurn.at(-1)).toEqual(bottomRise[0]);
+    expect(bottomRise[0].x).toBeLessThan(bottomRise.at(-1)!.x);
+    expect(bottomRise[0].y).toBeLessThan(bottomRise.at(-1)!.y);
   });
 
   it("Hebrew א uses two crossed pen-down runs with one lift", () => {
@@ -1298,6 +1318,9 @@ describe("handwriting ductus", () => {
     expect(verifiedLetterFont("讠", CHINESE_SPEECH_RADICAL.source.url)).toBe(
       "_fonts/NotoSansSC-Subset.ttf",
     );
+    expect(verifiedLetterFont("氵", CHINESE_WATER_RADICAL.source.url)).toBe(
+      "_fonts/NotoSansSC-Subset.ttf",
+    );
     expect(verifiedLetterFont("א", HEBREW_ALEF.source.url)).toBe(
       "_fonts/NotoSansHebrew-Static.ttf",
     );
@@ -1491,6 +1514,19 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /PRC-order dataset.*two ordered strokes.*Median 1.*upper left.*dot down-right.*median 2.*left edge.*rises slightly.*short horizontal.*turns without lifting.*descend.*turns again without lifting.*finishes up-right.*proper stroke order.*medians.*stroke-order animation.*People's Republic of China stroke order.*Noto Sans SC.*both turns inside the second stroke.*one intervening pen lift.*squarer.*Arphic-derived source graphics/i,
+    );
+  });
+
+  it("Chinese 氵 traces its falling dots and rising bottom stroke to the pinned PRC-order dataset", () => {
+    const src = CHINESE_WATER_RADICAL.source;
+    expect(src.url).toBe(
+      "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E6%B0%B5.json",
+    );
+    expect(src.citation).toMatch(
+      /Hanzi Writer Data 氵\.json.*ordered stroke paths and medians 1–3.*snapshot 68d10a4.*updated from Make Me a Hanzi.*22 June 2019/i,
+    );
+    expect(src.variation).toMatch(
+      /PRC-order dataset.*three ordered strokes.*Median 1.*upper left.*descends down-right.*median 2.*middle left.*descends down-right.*median 3.*bottom.*moves slightly up-left.*rises.*upper right.*proper stroke order.*medians.*stroke-order animation.*People's Republic of China stroke order.*Noto Sans SC.*source order.*two intervening pen lifts.*shallower turn.*Arphic-derived source graphics/i,
     );
   });
 

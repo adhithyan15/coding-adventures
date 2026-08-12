@@ -98,6 +98,8 @@ const CHINESE_SUN = ductusFor("日", "chinese")!;
 const chineseSunOutline = chineseOutline("日");
 const CHINESE_SPEECH_RADICAL = ductusFor("讠", "chinese")!;
 const chineseSpeechRadicalOutline = chineseOutline("讠");
+const CHINESE_WATER_RADICAL = ductusFor("氵", "chinese")!;
+const chineseWaterRadicalOutline = chineseOutline("氵");
 const HEBREW_ALEF = ductusFor("א", "hebrew")!;
 const hebrewAlefOutline = hebrewOutline("א");
 const HEBREW_BET = ductusFor("ב", "hebrew")!;
@@ -1024,6 +1026,39 @@ describe("Chinese 讠 — a cited dot followed by one double-turning stroke", ()
     );
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(CHINESE_SPEECH_RADICAL.strokes[1], 1),
+    );
+  });
+});
+
+describe("Chinese 氵 — two falling dots above one rising bottom stroke", () => {
+  const steps = ductusSteps(CHINESE_WATER_RADICAL);
+  const strip = ductusFilmstrip(CHINESE_WATER_RADICAL, chineseWaterRadicalOutline);
+
+  it("keeps all three sourced strokes separate while joining the final rise", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "draw the upper dot down and right",
+      "lift, then draw the middle dot down and right",
+      "lift, then begin the bottom stroke with a slight rise left",
+      "continue without lifting in a long rise to the upper right",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, true, true, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 1, 2, 2]);
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(2);
+    expect(strip.summary).toBe("3 strokes · 2 pen lifts · 4 movements");
+  });
+
+  it("draws the exact Noto Sans SC radical with both completed dots behind the rising stroke", () => {
+    const paths = byTag(strip.frames[3], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      chineseWaterRadicalOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done").map((path) => path.attrs.d)).toEqual([
+      penPathD(CHINESE_WATER_RADICAL.strokes[0], 1),
+      penPathD(CHINESE_WATER_RADICAL.strokes[1], 1),
+    ]);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(CHINESE_WATER_RADICAL.strokes[2], 1),
     );
   });
 });
