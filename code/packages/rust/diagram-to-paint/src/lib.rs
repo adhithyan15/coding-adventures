@@ -3335,6 +3335,7 @@ mod tests {
             width: 340.0,
             height: 100.0,
             divider_y: vec![58.0],
+            direction: None,
             style: ResolvedDiagramStyle {
                 fill: "#fef3c7".into(),
                 stroke: "#b45309".into(),

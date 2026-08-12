@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.31.0
+
+- Preserve optional local direction on composite graph groups and layout groups.
+
 ## 0.30.0
 
 - Preserve ordered concurrent-region membership and resolved group dividers.

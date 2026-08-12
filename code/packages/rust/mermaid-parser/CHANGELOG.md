@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.62.0
+
+- Preserve local `direction` statements on composite state groups.
+
 ## 0.61.0
 
 - Preserve repeated state descriptions as ordered multiline labels.

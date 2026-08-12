@@ -1,5 +1,9 @@
 # Changelog — diagram-layout-graph
 
+## 0.11.0
+
+- Apply composite state direction overrides to direct region members.
+
 ## 0.10.0
 
 - Reserve line-aware node geometry for repeated state descriptions.

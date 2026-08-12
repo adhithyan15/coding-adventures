@@ -149,6 +149,8 @@ and display labels through the same pipeline.
 `--` dividers preserve ordered concurrent-region membership in graph-group IR.
 Graph layout stacks direct region members into deterministic lanes and Paint
 lowering emits horizontal divider paths for every backend.
+Composite-local `direction` statements remain scoped to their group in semantic
+IR and arrange direct region members independently of the document direction.
 Transitions entering or leaving a composite retain the group ID as their
 semantic endpoint. Graph layout attaches those edges to the resolved group
 boundary before existing Paint paths and arrowheads render them.

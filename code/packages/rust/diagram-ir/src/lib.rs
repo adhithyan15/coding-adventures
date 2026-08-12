@@ -1,6 +1,6 @@
-//! diagram-ir v0.30.0 - DG00/DG04 semantic IR
+//! diagram-ir v0.31.0 - DG00/DG04 semantic IR
 
-pub const VERSION: &str = "0.30.0";
+pub const VERSION: &str = "0.31.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramDirection {
@@ -122,6 +122,7 @@ pub struct GraphGroup {
     pub parent_id: Option<String>,
     pub node_ids: Vec<String>,
     pub regions: Vec<Vec<String>>,
+    pub direction: Option<DiagramDirection>,
     pub style: Option<DiagramStyle>,
 }
 
@@ -177,6 +178,7 @@ pub struct LayoutedGraphGroup {
     pub width: f64,
     pub height: f64,
     pub divider_y: Vec<f64>,
+    pub direction: Option<DiagramDirection>,
     pub style: ResolvedDiagramStyle,
 }
 
@@ -998,7 +1000,7 @@ mod tests {
 
     #[test]
     fn version_is_0_24_0() {
-        assert_eq!(VERSION, "0.30.0");
+        assert_eq!(VERSION, "0.31.0");
     }
     #[test]
     fn default_direction_is_tb() {
