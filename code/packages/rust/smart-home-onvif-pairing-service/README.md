@@ -13,9 +13,11 @@ Before writing a secret, the service requires exactly one ONVIF endpoint
 reference on the session bridge and performs authenticated inspection through
 the bridge's reviewed, address-pinned HTTPS endpoint. It then encodes the same
 versioned envelope consumed by `smart-home-onvif-snapshot-host` and commits its
-opaque reference through `smart-home-pairing-transaction`. Startup resolves all
-pending journals before accepting work, and replacement cleanup remains bound
-to the captured Vault revision.
+opaque reference through `smart-home-pairing-transaction` against the shared
+`SmartHomeControllerRuntime` authority. Startup resolves all pending journals
+before accepting work, replacement cleanup remains bound to the captured Vault
+revision, and successful commits are immediately visible to every controller
+consumer without an actor-private runtime copy.
 
 Snapshot delivery remains read-only and never provisions credentials.
 
