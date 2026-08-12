@@ -10,6 +10,22 @@
   joins, five pen lifts, and component order.
 - Reduce Chinese's remaining verified-ductus inventory to 13 entries.
 
+### Added — voice playback of a lesson (HL-C87, HL10 §10.2)
+
+- Add `voicescript.ts`: flatten a chapter's generated narration into an ordered
+  list of speak / wait / respond instructions. It parses nothing — the
+  narration generator already emits typed segments.
+- Add `voiceplayer.ts`: drive that script through `speechSynthesis`, with a
+  per-track BCP-47 tag and a cancel token, because `cancel()` fires pending
+  `onend` handlers and a naive player resumes after being stopped.
+- Add `narration-sources.ts`, loading one chapter's narration on demand so 344
+  files per track stay out of the eager chunk.
+- Show a "Play this lesson aloud" control on the frontier card, with a line of
+  what is being said; leaving Learn mode stops the audio.
+- Recognition is deliberately not wired: it needs a microphone permission and a
+  device to verify against, and a `respond` step waits its authored budget
+  instead.
+
 ### Added — cited Chinese 你 ductus (HL-C09CI)
 
 - Render **你** in nine source-aligned frames: write 亻, then 尔's falling

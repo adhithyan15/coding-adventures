@@ -106,6 +106,9 @@ import { bookHashStatus, whenBookHashesReady } from "./bookhashes.ts";
 import { practiseAll } from "./atommastery.ts";
 import { type ReviewPick, refreshesOf, reviewPicks } from "./atomschedule.ts";
 import { type SynthesisDrill, piecesUsed, synthesisDrill } from "./synthesisdrill.ts";
+import { buildVoiceScript, type NarrationLesson } from "./voicescript.ts";
+import { type VoiceHandle, browserSpeech, playVoiceScript } from "./voiceplayer.ts";
+import { loadNarration } from "./narration-sources.ts";
 import { browserStorage as masteryStorage, loadMastery, saveMastery } from "./masterystore.ts";
 import { parseFont, boundsOf, type Font } from "./truetype.ts";
 import {
@@ -1126,6 +1129,7 @@ function renderTeachingStep(
       card.appendChild(hook);
     }
     if (lesson.body.trim() !== "") card.appendChild(renderLessonBody(lesson));
+  card.appendChild(renderVoiceControls(lesson));
   }
 
   // The threads back to earlier languages — the spiral, made literal. Each is a
@@ -1373,6 +1377,62 @@ function renderFrontierEncounter(
  */
 const DRILL_CORPUS_THRESHOLD = 6;
 
+// Voice mode (HL10 §10.2). One lesson plays at a time; starting another stops
+// the first, and leaving the view stops it too — audio that outlives the thing
+// that started it is the worst bug this feature can have.
+let voice: { lessonId: string; handle: VoiceHandle; step: string } | null = null;
+
+function stopVoice(): void {
+  voice?.handle.stop();
+  voice = null;
+}
+
+/**
+ * Speak one lesson, from the narration the corpus already generates.
+ *
+ * The learner's half of the loop — recognition — is deliberately absent: a
+ * `respond` step waits its authored budget and moves on. That is what a
+ * cassette course did, it needs no microphone permission, and it is genuinely
+ * useful to somebody driving. Scoring speech is a later slice.
+ */
+async function speakLesson(lesson: (typeof LESSONS)[number]): Promise<void> {
+  stopVoice();
+  const speech = browserSpeech(lesson.language);
+  if (!speech) {
+    learnNotice = "This browser has no speech synthesis, so lessons cannot be read aloud here.";
+    render();
+    return;
+  }
+  const chapter = (await loadNarration(lesson.language, lesson.chapter)) as
+    | { lessons?: NarrationLesson[] }
+    | null;
+  const source = chapter?.lessons?.find((candidate) => candidate.id === lesson.id);
+  if (!source) {
+    learnNotice = "No narration has been generated for this lesson yet.";
+    render();
+    return;
+  }
+  const steps = buildVoiceScript(source);
+  const handle = playVoiceScript(steps, speech, {
+    onStep: (_index, step) => {
+      if (!voice) return;
+      voice.step =
+        step.kind === "speak"
+          ? step.text
+          : step.kind === "respond"
+            ? `Your turn: ${step.instruction}`
+            : "…";
+      render();
+    },
+    onDone: () => {
+      voice = null;
+      render();
+    },
+  });
+  voice = { lessonId: lesson.id, handle, step: "…" };
+  render();
+}
+
 let drillSeed = 0;
 let drillAnswer: { seed: number; used: string[]; total: number } | null = null;
 
@@ -1443,6 +1503,36 @@ function renderSynthesisDrill(drill: SynthesisDrill): HTMLElement {
   };
   section.appendChild(another);
   return section;
+}
+
+/**
+ * Play/stop for one lesson, plus what is being said right now.
+ *
+ * The line of current text is not decoration. Voice mode is for somebody whose
+ * eyes are elsewhere, but the same page is used by somebody sitting down, and a
+ * button that produces sound with no visible sign of what it is doing is
+ * indistinguishable from a broken one.
+ */
+function renderVoiceControls(lesson: (typeof LESSONS)[number]): HTMLElement {
+  const bar = el("div", "voice");
+  const playing = voice?.lessonId === lesson.id;
+  const button = el("button", "opt voice__button") as HTMLButtonElement;
+  button.textContent = playing ? "Stop" : "Play this lesson aloud";
+  button.onclick = () => {
+    if (playing) {
+      stopVoice();
+      render();
+      return;
+    }
+    void speakLesson(lesson);
+  };
+  bar.appendChild(button);
+  if (playing) {
+    const now = el("p", "muted voice__now");
+    now.textContent = voice!.step;
+    bar.appendChild(now);
+  }
+  return bar;
 }
 
 /** Every lesson id the learner has passed, across all selected paths. */
@@ -2069,6 +2159,7 @@ function render(): void {
     app!.appendChild(renderTabs());
   }
 
+  if (mode !== "learn") stopVoice();
   if (mode === "learn") {
     app!.appendChild(renderLearn());
   } else if (mode === "concepts") {
