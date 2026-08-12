@@ -463,8 +463,10 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   口 in three more; its eight-frame Noto Sans SC path preserves both joined turns
   and five lifts. **字** then completes 宀 before drawing 子; its nine-frame Noto
   Sans SC path preserves the roof hook, 子's two joined turns, and five lifts.
-  The remaining **139** prose part orders across six scripts
-  (`arabic` 3, `chinese` 8,
+  **谢** writes 讠 before 身 and 寸 in twelve strokes; its seventeen-frame Noto
+  Sans SC path preserves all five joined turns and eleven lifts.
+  The remaining **138** prose part orders across six scripts
+  (`arabic` 3, `chinese` 7,
   `cyrillic` 33, `devanagari` 28,
   `gujarati` 33, `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a
