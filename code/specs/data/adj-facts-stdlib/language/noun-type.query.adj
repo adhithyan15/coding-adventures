@@ -11,4 +11,7 @@ import "noun-type.adj"
 
 ? noun_type(common_noun, $D)                                        % expect generic_name_of_an_item_in_a_class_or_group (direct)
 ? noun_type($T, cannot_be_perceived_by_the_senses)                  % expect abstract_noun (reverse)
-? noun_type(possessive_noun, $D)                                     % expect abstain -- a real noun type the source mentions, but not one of the three tabled here
+? noun_type(concrete_noun, $D)                                      % expect perceived_by_the_senses_physical_or_tangible (direct, new row)
+? noun_type($T, impossible_to_count)                                % expect uncountable_noun (reverse, new row)
+? noun_type(proper_noun, $D)                                        % expect abstain -- a real noun type the same source page defines, but its sentence bundles the naming function with a separate capitalization rule
+? noun_type(possessive_noun, $D)                                     % expect abstain -- a real noun type the source mentions, but not one of the six tabled here
