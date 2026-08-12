@@ -313,8 +313,8 @@ describe("corpus snapshot", () => {
     // +1 to both: Tamil chapter 39, ledgered in chapters.json, declared in
     // book-generation.json and \input into tamil/book/book.tex. All three are needed —
     // the first alone fails the book-cli "ledgered chapter into its book" gate.
-    expect(report.summary.bookChapters).toBe(694); // +8: HL-C94 splits the four over-budget opening chapters into twelve // +16: vocabulary wave 4, 4 tracks x 4 chapters // +4: HL-C98 gives the first paradigm one cell per chapter (3 teaching + review + synthesis) // +15: vocabulary wave 5 (persian +3, telugu +6, malayalam +6) // +4: HL-C88 slices 5-6 (Spanish friend-ending chapters) // +3: HL-C88 slice 8 // +12: vocabulary wave 6, round 2 (russian +3, persian +3, urdu +3, bengali +3)
-    expect(report.summary.declaredChapters).toBe(694); // +98: handwritten capability closure // +4: HL-C98 // +15: vocabulary wave 5 // +4: HL-C88 slices 5-6 // +3: HL-C88 slice 8 // +12: vocabulary wave 6
+    expect(report.summary.bookChapters).toBe(695); // +8: HL-C94 splits the four over-budget opening chapters into twelve // +16: vocabulary wave 4, 4 tracks x 4 chapters // +4: HL-C98 gives the first paradigm one cell per chapter (3 teaching + review + synthesis) // +15: vocabulary wave 5 (persian +3, telugu +6, malayalam +6) // +4: HL-C88 slices 5-6 (Spanish friend-ending chapters) // +3: HL-C88 slice 8 // +12: vocabulary wave 6, round 2 (russian +3, persian +3, urdu +3, bengali +3)
+    expect(report.summary.declaredChapters).toBe(695); // +98: handwritten capability closure // +4: HL-C98 // +15: vocabulary wave 5 // +4: HL-C88 slices 5-6 // +3: HL-C88 slice 8 // +12: vocabulary wave 6
     expect(report.summary.chaptersWithoutCapability).toBe(0);
     expect(report.summary.payoffsNotClosed).toBe(0);
     expect(report.summary.unknownPayoffLessons).toBe(0);

@@ -613,7 +613,7 @@ describe("the whole corpus", () => {
     // 659 -> 674: vocabulary wave 5 (persian/telugu/malayalam), 15 new chapters.
     // 674 -> 678: HL-C88 slices 5-6 (Spanish).
     // 682 -> 694: vocabulary wave 6, round 2 (russian/persian/urdu/bengali), 12 new chapters.
-    expect(chapters).toHaveLength(694);
+    expect(chapters).toHaveLength(695);
   });
 
   it("leaves no Markdown typography in the spoken script", () => {
