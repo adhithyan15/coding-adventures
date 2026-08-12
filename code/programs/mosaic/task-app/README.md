@@ -30,7 +30,7 @@ The native path is:
 
 ```text
 TaskApp.mil / .mll / .msl
-        │  mosaic-compile --backend <native> --profile native-complete
+        │  mosaic-compile --backend <native> [--profile native-complete]
         ▼
 generated native UI + standard host binding
         │  bundled mosaic-app C ABI
@@ -45,6 +45,14 @@ an injected runtime path. The ABI conformance fixture remains a separate gate, s
 a passing TaskApp launch cannot mask a regression in the standard host binding.
 The generated SwiftUI sources also compile for the iOS 16 deployment target; that
 gate is source portability rather than a claim that a macOS dylib can run on iOS.
+
+XAML/WinUI also bundles the concrete adapter and verifies it byte-for-byte beside
+`TaskApp.exe`. A task-specific console fixture drives startup props and a semantic
+event through the generated .NET binding without an injected path. XAML remains a
+permissive build until its four drag/drop reports and one missing table-semantics
+report are closed. GitHub-hosted Windows workers do not provide a reliable
+interactive desktop, so visible WinUI launch is deliberately reserved for a local
+or self-hosted interactive Windows gate.
 
 ## What it does
 

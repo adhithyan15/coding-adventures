@@ -1278,21 +1278,29 @@ jobs:
           jq -e '.nativeComplete == true and (.degradations | length == 0)' "$strict_output/compose/mosaic-degradations.json"
           gradle --no-daemon --stacktrace -p "$strict_output/compose" compileKotlin
 
-      - name: Build complete Mosaic TaskApp WinUI shell
+      - name: Build concrete Mosaic TaskApp WinUI shell
         if: runner.os == 'Windows' && needs.detect.outputs.needs_mosaic_xaml_windows == 'true'
         shell: pwsh
         timeout-minutes: 15
         run: |
-          cargo build --manifest-path code/packages/rust/Cargo.toml -p mosaic-app-conformance
+          cargo build --manifest-path code/packages/rust/Cargo.toml -p mosaic-app-conformance -p task-mosaic-app
           if ($LASTEXITCODE -ne 0) {
-            throw "Mosaic Rust conformance app build failed with exit code $LASTEXITCODE"
+            throw "Mosaic Rust application builds failed with exit code $LASTEXITCODE"
           }
           $library = Resolve-Path 'code/packages/rust/target/debug/mosaic_app_conformance.dll'
+          $taskLibrary = Resolve-Path 'code/packages/rust/target/debug/task_mosaic_app.dll'
 
           $output = Join-Path $env:RUNNER_TEMP 'mosaic-xaml-taskapp'
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend xaml --output $output --emit-project
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend xaml --output $output --emit-project --runtime-library $taskLibrary.Path
           if ($LASTEXITCODE -ne 0) {
             throw "TaskApp XAML generation failed with exit code $LASTEXITCODE"
+          }
+          $taskReport = Get-Content (Join-Path $output 'xaml/mosaic-degradations.json') -Raw | ConvertFrom-Json
+          $taskDegradations = @($taskReport.degradations)
+          $dragDegradations = @($taskDegradations | Where-Object { $_.code -eq 'interaction.drag-drop-inert' })
+          $tableDegradations = @($taskDegradations | Where-Object { $_.code -eq 'accessibility.table-semantics-missing' })
+          if ($taskReport.nativeComplete -or $taskDegradations.Count -ne 5 -or $dragDegradations.Count -ne 4 -or $tableDegradations.Count -ne 1) {
+            throw 'TaskApp XAML report differs from the five documented native interaction/accessibility gaps'
           }
 
           $project = Join-Path $output 'xaml/TaskApp.csproj'
@@ -1313,7 +1321,36 @@ jobs:
           if ($null -eq $executable) {
             throw 'TaskApp WinUI build did not produce TaskApp.exe'
           }
+          $installedTaskRuntime = Join-Path $executable.DirectoryName 'mosaic_app.dll'
+          if (!(Test-Path $installedTaskRuntime)) {
+            throw 'TaskApp WinUI build did not copy mosaic_app.dll beside TaskApp.exe'
+          }
+          $taskSourceHash = (Get-FileHash $taskLibrary.Path -Algorithm SHA256).Hash
+          $taskInstalledHash = (Get-FileHash $installedTaskRuntime -Algorithm SHA256).Hash
+          if ($taskSourceHash -ne $taskInstalledHash) {
+            throw 'TaskApp WinUI runtime bytes differ from task-mosaic-app.dll'
+          }
           Write-Host "Built generated WinUI executable at $($executable.FullName)"
+
+          $taskHarness = Join-Path $env:RUNNER_TEMP 'mosaic-xaml-taskapp-runtime-conformance'
+          New-Item -ItemType Directory -Path $taskHarness -Force | Out-Null
+          Copy-Item 'code/packages/rust/task-mosaic-app/conformance/xaml/*' $taskHarness -Recurse
+          Copy-Item (Join-Path $output 'xaml/MosaicRuntimeHost.cs') (Join-Path $taskHarness 'MosaicRuntimeHost.cs')
+          $taskHarnessProject = Join-Path $taskHarness 'TaskAppXamlRuntimeConformance.csproj'
+          dotnet build $taskHarnessProject -c Release --nologo
+          if ($LASTEXITCODE -ne 0) {
+            throw "TaskApp XAML runtime conformance build failed with exit code $LASTEXITCODE"
+          }
+          $taskHarnessBinary = Get-ChildItem -Path (Join-Path $taskHarness 'bin') -Filter 'TaskAppXamlRuntimeConformance.dll' -Recurse -File | Select-Object -First 1
+          if ($null -eq $taskHarnessBinary) {
+            throw 'TaskApp XAML runtime conformance build did not produce TaskAppXamlRuntimeConformance.dll'
+          }
+          Copy-Item $taskLibrary.Path (Join-Path $taskHarnessBinary.DirectoryName 'mosaic_app.dll')
+          Remove-Item Env:MOSAIC_APP_LIBRARY -ErrorAction SilentlyContinue
+          dotnet $taskHarnessBinary.FullName
+          if ($LASTEXITCODE -ne 0) {
+            throw "TaskApp XAML Rust runtime conformance failed with exit code $LASTEXITCODE"
+          }
 
           $strictOutput = Join-Path $env:RUNNER_TEMP 'mosaic-xaml-native-complete-rating-controls'
           cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-rating-controls --backend xaml --output $strictOutput --emit-project --profile native-complete --runtime-library $library.Path

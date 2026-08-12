@@ -34,11 +34,6 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
 
 ## Backlog (lower priority — Phase 10+, spec explicitly defers these)
 
-- **Promote the concrete TaskApp Rust adapter on the remaining native backends.**
-  `task-mosaic-app` now supplies the complete MIL prop/event contract and Qt bundles
-  it in a strict, zero-degradation app (see Resolved). Promote XAML next while
-  retaining its build/install/launch gate. Flutter, Compose, and SwiftUI on macOS
-  now use the concrete adapter and launch their generated native apps (see Resolved).
 - **Segmented-switch icons.** Split out from the icon/SVG-assets item (see
   Resolved below) — everything else in that item shipped. The six
   view-switcher buttons (List/Board/Sheet/Calendar/Notes/Timeline) each want
@@ -58,11 +53,13 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
   SVG-overlay host component) or product guidance on visual treatment
   before it's picked up — see `code/specs/task-app-richer-gantt-v1.md`'s
   "What does NOT ship" section for the full reasoning.
-- **Native drag support for HostDraggable/HostDropTarget.** Flutter, Compose
-  Desktop, Qt, and SwiftUI now lower the UI35 family to native drag systems with
-  equivalent keyboard and accessibility operation. WinUI/XAML still degrades
-  the board and calendar drag interactions to static containers; close that
-  remaining native backend gap. See
+- **Native XAML drag and table semantics.** Flutter, Compose Desktop, Qt, and
+  SwiftUI now lower the UI35 family to native drag systems with equivalent
+  keyboard and accessibility operation, and their canonical UI31/Grid shapes
+  expose native table semantics. WinUI/XAML still degrades the board and calendar
+  drag interactions to static containers and renders Sheet without native table
+  semantics. These are the five remaining reports blocking a strict XAML TaskApp.
+  See
   `code/specs/UI35-host-drag-drop.md` and UI38's prioritized completion backlog.
 - **Calendar week/day views, resize, and time-blocking.** Deferred from the Phase 7 ship —
   see `code/specs/task-app-calendar-v1.md` for the full rationale (resize isn't supported by
@@ -93,6 +90,14 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
   needs SQL-over-IndexedDB rather than load-all.
 
 ## Resolved (kept for traceability, not actionable)
+
+- **Concrete Rust TaskApp engine in the XAML WinUI artifact.** Windows CI now
+  builds `task-mosaic-app`, emits the complete TaskApp with that selected DLL,
+  verifies `mosaic_app.dll` beside `TaskApp.exe` byte-for-byte, and drives initial
+  props plus a real `newTaskNameChange` event through the generated standard .NET
+  binding without `MOSAIC_APP_LIBRARY`. The app remains permissive for the five
+  explicitly asserted XAML UI gaps, and visible launch remains an interactive
+  Windows-worker gate rather than a claim made from GitHub's hosted worker.
 
 - **Concrete Rust TaskApp engine on strict SwiftUI for macOS.** SwiftUI CI keeps
   the counter ABI conformance package and harness independent, then emits TaskApp

@@ -4,6 +4,21 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added - concrete Rust TaskApp runtime in the XAML WinUI artifact
+
+The Windows acceptance lane now builds `task-mosaic-app`, supplies it while
+emitting the complete TaskApp WinUI project, and verifies that the DLL copied
+beside `TaskApp.exe` is byte-for-byte identical. A task-specific .NET console
+fixture loads that app-local DLL through the generated standard binding, checks
+initial TaskApp props, dispatches `newTaskNameChange`, and checks the revised prop
+without `MOSAIC_APP_LIBRARY`.
+
+This does not overstate the remaining platform work: the generated XAML report
+must contain exactly four inert drag/drop paths and one missing table-semantics
+path. The app cannot become `native-complete` until those five UI gaps close, and
+visible WinUI launch remains an interactive Windows-worker gate because hosted
+GitHub workers cannot reliably initialize a desktop surface.
+
 ### Added - concrete Rust TaskApp runtime on SwiftUI for macOS
 
 SwiftUI's strict acceptance lane now keeps ABI conformance on its dedicated

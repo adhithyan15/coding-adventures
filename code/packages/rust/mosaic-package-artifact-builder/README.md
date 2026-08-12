@@ -58,8 +58,11 @@ older deployment targets. Each strict desktop output has no known degradations,
 bundles the standard Rust runtime, verifies that installed runtime against the
 selected artifact, and launches without an injected library path. SwiftUI's iOS
 16 build remains a separate source-portability gate rather than packaging the
-macOS dylib. This does not close the cross-backend milestone; XAML retains
-explicit TaskApp degradations and concrete adapter promotion remains separate.
+macOS dylib. XAML now also bundles the concrete `task-mosaic-app` adapter, verifies
+the DLL installed beside `TaskApp.exe`, and drives the generated .NET binding with
+that app-local engine. It remains permissive while four drag/drop paths and one
+table-semantics path are explicit degradations; hosted Windows CI therefore does
+not close the cross-backend strict-profile milestone or claim a visible launch.
 
 Property degradations carry the exact package-expanded node and property index.
 For example, Compose/Flutter/SwiftUI report an authored, non-false

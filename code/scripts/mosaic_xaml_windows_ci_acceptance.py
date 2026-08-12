@@ -22,6 +22,7 @@ ACCEPTANCE_PACKAGES = frozenset(
         "rust/moslayout-compiler",
         "rust/mosmodel-compiler",
         "rust/mosstyle-compiler",
+        "rust/task-mosaic-app",
         "unknown/programs/task-app",
     }
 )
@@ -32,7 +33,7 @@ CI_WORKFLOW_PATH = ".github/workflows/ci.yml"
 def requires_mosaic_xaml_windows(
     plan: dict[str, Any], *, workflow_changed: bool = False
 ) -> bool:
-    """Return whether this plan must build and launch the generated WinUI app."""
+    """Return whether this plan must build WinUI and exercise its Rust binding."""
 
     if workflow_changed:
         return True
