@@ -299,7 +299,20 @@ layout TaskApp {
           Row [ board ] {
             For ( each: slot: board-columns , as: col , index: ci ) {
               Column [ board-col ] {
-                Text [ col-head ] ( content : ( col[0] ) )
+                Row [ col-head-row ] {
+                  // `state-when-X` (UI28-1/Task #35) only accepts a fixed pseudo-
+                  // state vocabulary (hover/pressed/selected/…), not an arbitrary
+                  // per-column key — confirmed against the compiler's own
+                  // diagnostic. UI36's `background` binding (already extended for
+                  // the icon-assets progress ring) is the right tool instead: a
+                  // value that varies per `For`-loop row, exactly what it exists
+                  // for. `main.tsx` resolves `col[3]` to the theme-correct hex
+                  // (Root overrides it, same as `ringGradient` — the controller
+                  // that builds `board-columns` doesn't know the active theme).
+                  Box [ col-bar ] ( background : ( col[3] ) ) { }
+                  Text [ col-head ] ( content : ( col[0] ) )
+                  Text [ col-count ] ( content : ( col[2] ) )
+                }
                 HostDropTarget [ col-drop ] (
                   drop-key : ( col[1] ) ,
                   onDrop : emit: onCardDropped
@@ -308,14 +321,29 @@ layout TaskApp {
                     // Place a card by comparing keys rather than nesting a list in a
                     // list — one `If` says everything, and both loops stay flat.
                     If ( when: ( card[1] == col[1] ) ) {
-                      HostDraggable [ board-card ] (
-                        drag-key : ( card[2] ) ,
-                        drag-kind : "task" ,
-                        drag-label : ( card[0] )
-                      ) {
-                        Text [ card-name ] ( content : ( card[0] ) )
-                        If ( when: ( card[3] ) ) {
-                          Text [ card-crit ] ( content : ( card[3] ) )
+                      // Two alternate parts (matching the pill-warn/pill-ok and
+                      // theme-toggle-sun/moon precedent) rather than a `state-
+                      // when-` on `board-card` itself: `HostDraggable`'s own
+                      // dedicated emitter doesn't build the conditional-style-
+                      // spread machinery `Box`/`Row`/`Column` do. The old text
+                      // chip is gone — overdue now reads as a border, per the
+                      // design-fidelity item's own wording.
+                      If ( when: ( card[3] ) ) {
+                        HostDraggable [ board-card-crit ] (
+                          drag-key : ( card[2] ) ,
+                          drag-kind : "task" ,
+                          drag-label : ( card[0] )
+                        ) {
+                          Text [ card-name-crit ] ( content : ( card[0] ) )
+                        }
+                      }
+                      Else {
+                        HostDraggable [ board-card ] (
+                          drag-key : ( card[2] ) ,
+                          drag-kind : "task" ,
+                          drag-label : ( card[0] )
+                        ) {
+                          Text [ card-name ] ( content : ( card[0] ) )
                         }
                       }
                     }

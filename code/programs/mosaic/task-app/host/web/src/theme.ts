@@ -132,3 +132,22 @@ export function ringGradient(theme: Theme, percent: number): string {
   const deg = (Math.max(0, Math.min(100, Math.round(percent))) / 100) * 360;
   return `conic-gradient(${RING_FILL[theme]} ${deg}deg, ${RING_TRACK[theme]} ${deg}deg)`;
 }
+
+/**
+ * Board's column accent bars (Board design-fidelity item, BACKLOG.md). Same
+ * duplication reasoning as `RING_FILL`/`RING_TRACK` above — `col-bar`'s background
+ * is a UI36-bound property (it varies per `For`-loop row, which is knowable from the
+ * status id alone but not statically by the stylesheet), and `getProps()` builds
+ * `board-columns` without knowing the active theme, so `Root` resolves the real hex
+ * per row. Reuses established semantic tokens (`GROUND`/pill/theme-toggle) rather
+ * than inventing four new colours — `review` is the one genuinely new addition.
+ */
+const BOARD_ACCENT: Record<Theme, Record<string, string>> = {
+  light: { next: "#9b9289", doing: "#e0942a", review: "#5b84ad", done: "#4f8e6a" },
+  dark: { next: "#867c70", doing: "#eaa63f", review: "#7fa8d1", done: "#6fb489" },
+};
+
+/** The accent-bar `background` for a status id, in the given theme. */
+export function boardAccent(theme: Theme, statusId: string): string {
+  return BOARD_ACCENT[theme][statusId] ?? BOARD_ACCENT[theme].next;
+}

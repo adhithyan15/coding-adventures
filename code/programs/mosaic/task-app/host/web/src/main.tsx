@@ -13,6 +13,7 @@ import { TaskApp as TaskAppLight, type TaskAppEvent } from "./TaskApp.light";
 import { TaskApp as TaskAppDark } from "./TaskApp.dark";
 import {
   applyThemeGround,
+  boardAccent,
   resolveTheme,
   ringGradient as computeRingGradient,
   storeTheme,
@@ -393,41 +394,17 @@ function makeController(engine: any, init: ControllerInit = {}) {
     return { ids, names: ids.map((id) => all[id]?.name || id), depths, activeId };
   };
 
-  // The board's columns. Status is the engine's own vocabulary; these are the three
-  // states this app exposes today.
-  const BOARD_COLUMNS: Array<{ title: string; key: string }> = [
+  // The board's columns — the real statuses of the workflow
+  // `ProjectState::ensure_default_workflow` seeds, in the fixed order the design
+  // calls for (not whatever order `kanban()` happens to return them in, which sorts
+  // by category then name — those happen to agree today, but this is pinned
+  // explicitly rather than relying on that being incidental).
+  const BOARD_STATUSES: Array<{ title: string; key: string }> = [
     { title: "Up next", key: "next" },
     { title: "In progress", key: "doing" },
+    { title: "In review", key: "review" },
     { title: "Done", key: "done" },
   ];
-
-  // Percent-complete per task, read ONCE.
-  //
-  // It comes from `todos()`, not `checklist()` — only todos carries
-  // `percentComplete`. Reading the wrong projection returned `undefined` for every
-  // task, so everything scored 0 and the board put the whole project in "Up next"
-  // with "In progress" permanently empty. Building the map once also keeps this off
-  // the per-card path, which was issuing an engine query per rendered card.
-  const progress = (): Map<string, number> =>
-    new Map(
-      ((engine.todos().data ?? []) as any[]).map((t) => [
-        t.task as string,
-        (t.percentComplete ?? 0) as number,
-      ]),
-    );
-
-  // Which column a task belongs in.
-  //
-  // This reads PROGRESS, not "is it scheduled". Scheduling is not a signal of intent:
-  // the engine schedules every task that has a duration, so keying off a start date
-  // put *everything* in "In progress" and left "Up next" permanently empty — a dead
-  // column whose drop zone did nothing. Percent-complete is what a person actually
-  // means by "I've started this", and it is settable, which is what makes dragging
-  // between those two columns work at all.
-  const columnOf = (id: string, byTask: Map<string, any>, pct: Map<string, number>): string => {
-    if (byTask.get(id)?.value[DONE]?.value === true) return "done";
-    return (pct.get(id) ?? 0) > 0 ? "doing" : "next";
-  };
 
   // The timeline: hand the engine's own gantt bars to the geometry module. Every
   // date here was computed by the ENGINE; the host only asks how far across the track
@@ -786,18 +763,39 @@ function makeController(engine: any, init: ControllerInit = {}) {
       const cal = view === "calendar" ? calendarData() : { cells: [], events: [] };
       // Computed only while the notes view is showing — same discipline.
       const notes = view === "notes" ? noteRows() : { ids: [], rows: [] };
-      const boardCards: string[][] = (() => {
-        if (view !== "board") return [];
-        const pct = progress();
-        return displayIds().map((id) => {
-          const c = byTask.get(id)!;
-          return [
-            c.display[NAME],
-            columnOf(id, byTask, pct),
-            id,
-            c.value[OVERDUE]?.value === true ? "overdue" : "",
-          ];
-        });
+      // The real Workflow/Status/kanban() engine, not the old completed/percent-
+      // complete heuristic — see task-core's CHANGELOG and BACKLOG.md's Board
+      // design-fidelity item. `ensureDefaultWorkflow` is idempotent and cheap
+      // after its first call, so — same "only compute what the current view
+      // needs" discipline as `sheet`/`cal`/`notes` above — this only runs while
+      // Board is actually showing.
+      const board: { columns: string[][]; cards: string[][] } = (() => {
+        if (view !== "board") return { columns: [], cards: [] };
+        engine.ensureDefaultWorkflow({});
+        const byStatus = new Map<string, any[]>(
+          ((engine.kanban("default").data ?? []) as any[])
+            .filter((c) => c.status)
+            .map((c) => [c.status as string, c.cards as any[]]),
+        );
+        const columns = BOARD_STATUSES.map((s) => [
+          s.title,
+          s.key,
+          String((byStatus.get(s.key) ?? []).length),
+          // Placeholder — a UI36-bound accent-bar color needs the resolved
+          // theme, which this controller never sees. Root overrides this
+          // cell with `boardAccent(theme, key)` from ./theme.ts, the same
+          // reasoning as `ringGradient`.
+          "",
+        ]);
+        const cards = BOARD_STATUSES.flatMap((s) =>
+          (byStatus.get(s.key) ?? []).map((c) => [
+            c.name as string,
+            s.key,
+            c.task as string,
+            byTask.get(c.task as string)?.value[OVERDUE]?.value === true ? "overdue" : "",
+          ]),
+        );
+        return { columns, cards };
       })();
       // The engine's verdict on the plan. Overdue work is the one thing worth
       // colouring red in the header; everything else reads as on track.
@@ -827,8 +825,8 @@ function makeController(engine: any, init: ControllerInit = {}) {
         allowTimeline: complexity === "full" ? "full" : "",
         timelineMode: view === "timeline" ? "timeline" : "",
         boardMode: view === "board" ? "board" : "",
-        boardColumns: BOARD_COLUMNS.map((c) => [c.title, c.key]),
-        boardCards,
+        boardColumns: board.columns,
+        boardCards: board.cards,
         sheetMode: view === "sheet" ? "sheet" : "",
         sheetViewportRows: sheet.cells,
         sheetColumnHeaders: sheetFields.map((f) => f.label),
@@ -908,47 +906,22 @@ function makeController(engine: any, init: ControllerInit = {}) {
           view = "notes";
           break;
         case "cardDropped": {
-          // A drop is a PROPOSAL. The engine owns what a status change means; the host
-          // only translates "landed in this column" into the operation expressing it.
+          // A drop is a PROPOSAL. The engine owns what a status change means — as of
+          // ensure_default_workflow/set_status's completed-cascade fix (task-core
+          // CHANGELOG), that includes flipping `completed` when the target status is
+          // a workflow's done_status. The host just translates "landed in this
+          // column" into the one setStatus call expressing it.
           const { byTask } = rows();
           // Validate BOTH ends. The key guards a stale id (a card from a project you
-          // have since switched away from); the target guards an unknown column —
-          // without it an unrecognised target fell through to the "leaving done"
-          // branch and silently un-completed the task.
+          // have since switched away from); the target guards an unknown column.
           if (!byTask.has(event.key)) break;
-          if (!BOARD_COLUMNS.some((c) => c.key === event.targetKey)) break;
+          if (!BOARD_STATUSES.some((s) => s.key === event.targetKey)) break;
 
-          const from = columnOf(event.key, byTask, progress());
-          if (from === event.targetKey) break; // dropped where it already was
-
-          // The ABI's field is `percent`, not `percentComplete` — the latter is what
-          // the *projections* return, and passing it here failed the parse and came
-          // back as an error envelope. Check every result rather than assuming: a
-          // rejected op that nobody reads is a card that silently springs back.
-          const ran = (label: string, res: any): boolean => {
-            if (res?.ok === false) {
-              console.error(`Board move failed (${label}):`, res.error ?? res);
-              return false;
-            }
-            return true;
-          };
-
-          let ok = true;
-          // Leaving Done must clear the completed flag first, or the card springs
-          // straight back — `columnOf` checks completion before progress.
-          if (from === "done" && event.targetKey !== "done") {
-            ok = ran("clear completed", engine.setCompleted({ id: event.key, completed: false }));
+          const res = engine.setStatus({ id: event.key, status: event.targetKey });
+          if (res?.ok === false) {
+            console.error("Board move failed:", res.error ?? res);
+            break;
           }
-          if (ok && event.targetKey === "done") {
-            ok = ran("complete", engine.setCompleted({ id: event.key, completed: true }));
-          } else if (ok && event.targetKey === "doing") {
-            // "Started" is any progress at all; the exact figure is the user's to
-            // refine later, so claim the minimum rather than inventing one.
-            ok = ran("start", engine.setPercentComplete({ id: event.key, percent: 1 }));
-          } else if (ok) {
-            ok = ran("un-start", engine.setPercentComplete({ id: event.key, percent: 0 }));
-          }
-          if (!ok) break;
           persist();
           break;
         }
@@ -1376,6 +1349,14 @@ async function boot() {
         {...props}
         themeIsDark={theme === "dark" ? "dark" : ""}
         ringGradient={computeRingGradient(theme, props.ringPercentValue)}
+        // `board.columns`' 4th cell is a placeholder — same reasoning as
+        // ringGradient above, the controller never sees the resolved theme.
+        boardColumns={props.boardColumns.map((row: string[]) => [
+          row[0],
+          row[1],
+          row[2],
+          boardAccent(theme, row[1]),
+        ])}
         dispatch={dispatch}
       />
     );
