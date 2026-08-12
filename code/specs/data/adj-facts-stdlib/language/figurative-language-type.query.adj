@@ -1,0 +1,15 @@
+% ============================================================================
+% figurative-language-type.query.adj — worked recall over the
+% figurative-language-type library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what does this
+% figure of speech do?" (direct) or "which figure of speech matches this
+% description?" (reverse) — it states no fact of its own — it only
+% `import`s the grounded table and asks binding queries.
+% ============================================================================
+
+import "figurative-language-type.adj"
+
+? figurative_language_type(hyperbole, $D)                                                       % expect a_great_exaggeration_used_to_add_emphasis (direct)
+? figurative_language_type($T, gives_human_characteristics_to_nonhuman_or_abstract_things)      % expect personification (reverse)
+? figurative_language_type(allusion, $D)                                                         % expect abstain -- a real device the source names with its own clean sentence, but one that works by referencing an external work/person/event, a different mechanism than the three tabled here
