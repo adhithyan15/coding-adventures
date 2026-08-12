@@ -7,6 +7,7 @@ license = "MIT"
 
 [dependencies]
 chief-of-staff-secure-host-channel = { path = "../chief-of-staff-secure-host-channel" }
+serde_json = "1"
 
 [dev-dependencies]
 coding_adventures_x3dh = { path = "../x3dh" }

@@ -352,7 +352,7 @@ fn real_child_exchanges_all_authenticated_data_plane_operations() {
 
     let deadline = Instant::now() + Duration::from_secs(5);
     let mut operations = Vec::new();
-    while operations.len() < 4 {
+    while operations.len() < 5 {
         if let Some(request) = supervisor.pending_data_plane_request(&host_name).unwrap() {
             let response = match request {
                 DataPlaneRequest::Receive { id, .. } => {
@@ -382,6 +382,13 @@ fn real_child_exchanges_all_authenticated_data_plane_operations() {
                         failure: DataPlaneFailure::Unavailable,
                     }
                 }
+                DataPlaneRequest::CompleteWithTools { id, .. } => {
+                    operations.push("complete_with_tools");
+                    DataPlaneResponse::Failed {
+                        id,
+                        failure: DataPlaneFailure::Unavailable,
+                    }
+                }
             };
             supervisor.respond_data_plane(&host_name, response).unwrap();
         } else {
@@ -391,7 +398,13 @@ fn real_child_exchanges_all_authenticated_data_plane_operations() {
     }
     assert_eq!(
         operations,
-        ["receive", "publish", "acknowledge", "complete"]
+        [
+            "receive",
+            "publish",
+            "acknowledge",
+            "complete",
+            "complete_with_tools"
+        ]
     );
     supervisor.stop(&host_name).unwrap();
     assert_eq!(supervisor.pending_data_plane_request(&host_name), Ok(None));
@@ -439,6 +452,13 @@ impl HostDataPlaneDispatcher for TestDataPlaneDispatcher {
                     failure: DataPlaneFailure::Unavailable,
                 }
             }
+            DataPlaneRequest::CompleteWithTools { id, .. } => {
+                self.operations.lock().unwrap().push("complete_with_tools");
+                DataPlaneResponse::Failed {
+                    id: *id,
+                    failure: DataPlaneFailure::Unavailable,
+                }
+            }
         }
     }
 }
@@ -460,7 +480,7 @@ fn injected_dispatcher_answers_authenticated_requests_automatically() {
     let deadline = Instant::now() + Duration::from_secs(5);
     loop {
         supervisor.inspect(&registration).unwrap();
-        if dispatcher.operations.lock().unwrap().len() == 4 {
+        if dispatcher.operations.lock().unwrap().len() == 5 {
             break;
         }
         assert!(Instant::now() < deadline, "timed out waiting for dispatch");
@@ -468,7 +488,13 @@ fn injected_dispatcher_answers_authenticated_requests_automatically() {
     }
     assert_eq!(
         *dispatcher.operations.lock().unwrap(),
-        ["receive", "publish", "acknowledge", "complete"]
+        [
+            "receive",
+            "publish",
+            "acknowledge",
+            "complete",
+            "complete_with_tools"
+        ]
     );
     assert_eq!(
         supervisor

@@ -17,3 +17,4 @@ llm-gateway = { path = "../llm-gateway" }
 storage-core = { path = "../storage-core" }
 
 [dev-dependencies]
+serde_json = "1"

@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Override `LlmClient::complete_with_tools` with the authenticated child-control
+  transport and preserve structured calls/results plus provider audit metadata.
 - Exercise the real child with durable launch bindings and the daemon's production
   data-plane composition: owner-only channel keys, encrypted input/output stores,
   an explicit Ollama provider, publication, and acknowledgement all run together.
