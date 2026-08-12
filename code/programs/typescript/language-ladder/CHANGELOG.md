@@ -2,6 +2,14 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Chinese 你 ductus (HL-C09CI)
+
+- Render **你** in nine source-aligned frames: write 亻, then 尔's falling
+  stroke, two joined hooks, and separately placed lower dots.
+- Fit all seven source runs to Noto Sans SC while preserving both joined hooks,
+  six pen lifts, and component order.
+- Reduce Chinese's remaining verified-ductus inventory to 14 entries.
+
 ### Added — cited Chinese 宀 ductus (HL-C09CH)
 
 - Render **宀** in four source-aligned frames: draw its top dot, restart for the

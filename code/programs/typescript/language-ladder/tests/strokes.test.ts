@@ -33,6 +33,7 @@ const CHINESE_SUN = DUCTUS[ductusKey("chinese", "日")];
 const CHINESE_SPEECH_RADICAL = DUCTUS[ductusKey("chinese", "讠")];
 const CHINESE_WATER_RADICAL = DUCTUS[ductusKey("chinese", "氵")];
 const CHINESE_ROOF_RADICAL = DUCTUS[ductusKey("chinese", "宀")];
+const CHINESE_YOU = DUCTUS[ductusKey("chinese", "你")];
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
@@ -402,6 +403,31 @@ describe("handwriting ductus", () => {
     expect(roof.at(-1)).toEqual(hook[0]);
     expect(hook[0].x).toBeGreaterThan(hook.at(-1)!.x);
     expect(hook[0].y).toBeGreaterThan(hook.at(-1)!.y);
+  });
+
+  it("Chinese 你 writes 亻 before two joined hooks and two separate dots", () => {
+    expect(CHINESE_YOU.script).toBe("chinese");
+    expect(penLifts(CHINESE_YOU)).toBe(6);
+    expect(CHINESE_YOU.strokes).toHaveLength(7);
+    expect(CHINESE_YOU.strokes.map((stroke) => stroke.segments.length)).toEqual([1, 1, 1, 2, 2, 1, 1]);
+    const personFall = CHINESE_YOU.strokes[0].segments[0].path;
+    const personVertical = CHINESE_YOU.strokes[1].segments[0].path;
+    const upperFall = CHINESE_YOU.strokes[2].segments[0].path;
+    const horizontal = CHINESE_YOU.strokes[3].segments[0].path;
+    const upperHook = CHINESE_YOU.strokes[3].segments[1].path;
+    const vertical = CHINESE_YOU.strokes[4].segments[0].path;
+    const baseHook = CHINESE_YOU.strokes[4].segments[1].path;
+    const leftDot = CHINESE_YOU.strokes[5].segments[0].path;
+    const rightDot = CHINESE_YOU.strokes[6].segments[0].path;
+    expect(personFall[0].x).toBeGreaterThan(personFall.at(-1)!.x);
+    expect(personVertical[0].y).toBeGreaterThan(personVertical.at(-1)!.y);
+    expect(upperFall[0].x).toBeGreaterThan(upperFall.at(-1)!.x);
+    expect(horizontal.at(-1)).toEqual(upperHook[0]);
+    expect(upperHook[0].x).toBeGreaterThan(upperHook.at(-1)!.x);
+    expect(vertical.at(-1)).toEqual(baseHook[0]);
+    expect(baseHook[0].x).toBeGreaterThan(baseHook.at(-1)!.x);
+    expect(leftDot[0].x).toBeGreaterThan(leftDot.at(-1)!.x);
+    expect(rightDot[0].x).toBeLessThan(rightDot.at(-1)!.x);
   });
 
   it("Hebrew א uses two crossed pen-down runs with one lift", () => {
@@ -1344,6 +1370,9 @@ describe("handwriting ductus", () => {
     expect(verifiedLetterFont("宀", CHINESE_ROOF_RADICAL.source.url)).toBe(
       "_fonts/NotoSansSC-Subset.ttf",
     );
+    expect(verifiedLetterFont("你", CHINESE_YOU.source.url)).toBe(
+      "_fonts/NotoSansSC-Subset.ttf",
+    );
     expect(verifiedLetterFont("א", HEBREW_ALEF.source.url)).toBe(
       "_fonts/NotoSansHebrew-Static.ttf",
     );
@@ -1563,6 +1592,19 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /PRC-order dataset.*three ordered strokes.*Median 1.*upper left.*top dot down-right.*median 2.*left side.*descends down-left.*median 3.*left roof edge.*horizontally to the right.*hooks down-left without lifting.*proper stroke order.*medians.*stroke-order animation.*People's Republic of China stroke order.*Noto Sans SC.*joined horizontal hook.*two intervening pen lifts.*squarer.*more vertical.*Arphic-derived source graphics/i,
+    );
+  });
+
+  it("Chinese 你 traces its component order and two joined hooks to the pinned PRC-order dataset", () => {
+    const src = CHINESE_YOU.source;
+    expect(src.url).toBe(
+      "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E4%BD%A0.json",
+    );
+    expect(src.citation).toMatch(
+      /Hanzi Writer Data 你\.json.*ordered stroke paths and medians 1–7.*snapshot 68d10a4.*updated from Make Me a Hanzi.*22 June 2019/i,
+    );
+    expect(src.variation).toMatch(
+      /PRC-order dataset.*seven ordered strokes.*Medians 1–2.*亻 first.*left-falling stroke.*separately started vertical.*Median 3.*upper right.*falls down-left.*median 4.*crosses rightward.*hooks down-left without lifting.*median 5.*centre.*descends.*hooks left without lifting.*medians 6–7.*lower-left dot down-left.*lower-right dot down-right.*proper stroke order.*medians.*stroke-order animation.*People's Republic of China stroke order.*Noto Sans SC.*both joined hooks.*component order.*six intervening pen lifts.*squarer.*Arphic-derived source graphics/i,
     );
   });
 
