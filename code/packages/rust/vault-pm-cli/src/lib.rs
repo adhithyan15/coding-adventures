@@ -36,7 +36,9 @@ use coding_adventures_vault_pm_domain::{
 };
 use coding_adventures_vault_pm_local_host::{LocalHostError, LocalVaultPaths, LocalWriterGuard};
 use coding_adventures_vault_pm_storage_storage_core::StorageCoreObjectStore;
-use coding_adventures_vault_records::{AnyRecord, Login, SecureNote, LOGIN_V1, SECURE_NOTE_V1};
+use coding_adventures_vault_records::{
+    AnyRecord, Card, Login, SecureNote, CARD_V1, LOGIN_V1, SECURE_NOTE_V1,
+};
 use coding_adventures_zeroize::Zeroizing;
 use core::fmt::{self, Debug, Formatter};
 use std::collections::BTreeMap;
@@ -50,7 +52,7 @@ const PRODUCTION_KDF_MEMORY_KIB: u32 = 64 * 1024;
 const PRODUCTION_KDF_ITERATIONS: u32 = 3;
 const PRODUCTION_KDF_LANES: u8 = 1;
 const ITEM_OPERATION_RANDOM_BYTES: usize = 32;
-const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm vault create NAME\n  vault-pm [--vault NAME] status [--json]\n  vault-pm [--vault NAME] audit enable\n  vault-pm [--vault NAME] audit verify\n  vault-pm [--vault NAME] audit list\n  vault-pm [--vault NAME] audit show TRACE\n  vault-pm [--vault NAME] doctor [--unlock]\n  vault-pm [--vault NAME] export FILE\n  vault-pm [--vault NAME] import FILE\n  vault-pm --vault NAME restore FILE\n  vault-pm [--vault NAME] restore verify FILE\n  vault-pm [--vault NAME] item add login\n  vault-pm [--vault NAME] item add secure-note\n  vault-pm [--vault NAME] item edit ITEM\n  vault-pm [--vault NAME] item delete ITEM\n  vault-pm [--vault NAME] item list\n  vault-pm [--vault NAME] item show ITEM\n  vault-pm [--vault NAME] item reveal ITEM FIELD\n  vault-pm [--vault NAME] history list ITEM\n  vault-pm [--vault NAME] history restore ITEM REVISION\n  vault-pm [--vault NAME] conflict list ITEM\n  vault-pm [--vault NAME] conflict choose ITEM REVISION\n";
+const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm vault create NAME\n  vault-pm [--vault NAME] status [--json]\n  vault-pm [--vault NAME] audit enable\n  vault-pm [--vault NAME] audit verify\n  vault-pm [--vault NAME] audit list\n  vault-pm [--vault NAME] audit show TRACE\n  vault-pm [--vault NAME] doctor [--unlock]\n  vault-pm [--vault NAME] export FILE\n  vault-pm [--vault NAME] import FILE\n  vault-pm --vault NAME restore FILE\n  vault-pm [--vault NAME] restore verify FILE\n  vault-pm [--vault NAME] item add login\n  vault-pm [--vault NAME] item add secure-note\n  vault-pm [--vault NAME] item add card\n  vault-pm [--vault NAME] item edit ITEM\n  vault-pm [--vault NAME] item delete ITEM\n  vault-pm [--vault NAME] item list\n  vault-pm [--vault NAME] item show ITEM\n  vault-pm [--vault NAME] item reveal ITEM FIELD\n  vault-pm [--vault NAME] history list ITEM\n  vault-pm [--vault NAME] history restore ITEM REVISION\n  vault-pm [--vault NAME] conflict list ITEM\n  vault-pm [--vault NAME] conflict choose ITEM REVISION\n";
 
 /// Stable process exit classes defined by VLT-PM00.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -148,6 +150,27 @@ pub trait CliHost {
 
     /// Collect a secure-note body with terminal echo disabled.
     fn read_secure_note_body(&self) -> Result<Zeroizing<String>, HostError>;
+
+    /// Collect a payment-card title from the controlling terminal.
+    fn read_card_title(&self) -> Result<Zeroizing<String>, HostError>;
+
+    /// Collect a payment-card holder name from the controlling terminal.
+    fn read_card_holder(&self) -> Result<Zeroizing<String>, HostError>;
+
+    /// Collect a payment-card number with terminal echo disabled.
+    fn read_card_number(&self) -> Result<Zeroizing<String>, HostError>;
+
+    /// Collect a payment-card expiry month from the controlling terminal.
+    fn read_card_expiry_month(&self) -> Result<Zeroizing<String>, HostError>;
+
+    /// Collect a payment-card expiry year from the controlling terminal.
+    fn read_card_expiry_year(&self) -> Result<Zeroizing<String>, HostError>;
+
+    /// Collect a payment-card verification code with terminal echo disabled.
+    fn read_card_cvv(&self) -> Result<Zeroizing<String>, HostError>;
+
+    /// Collect an optional payment-card billing postal code.
+    fn read_card_billing_postal_code(&self) -> Result<Option<Zeroizing<String>>, HostError>;
 
     /// Require explicit interactive confirmation before revealing a secret.
     fn confirm_secret_reveal(&self) -> Result<bool, HostError>;
@@ -250,6 +273,45 @@ impl CliHost for NativeCliHost {
 
     fn read_secure_note_body(&self) -> Result<Zeroizing<String>, HostError> {
         self.read_utf8_secret(SecretPrompt::SecureNoteBody)
+    }
+
+    fn read_card_title(&self) -> Result<Zeroizing<String>, HostError> {
+        ControllingTerminal
+            .read_text(TextPrompt::CardTitle)
+            .map_err(map_native_cli_host)
+    }
+
+    fn read_card_holder(&self) -> Result<Zeroizing<String>, HostError> {
+        ControllingTerminal
+            .read_text(TextPrompt::CardHolder)
+            .map_err(map_native_cli_host)
+    }
+
+    fn read_card_number(&self) -> Result<Zeroizing<String>, HostError> {
+        self.read_utf8_secret(SecretPrompt::CardNumber)
+    }
+
+    fn read_card_expiry_month(&self) -> Result<Zeroizing<String>, HostError> {
+        ControllingTerminal
+            .read_text(TextPrompt::CardExpiryMonth)
+            .map_err(map_native_cli_host)
+    }
+
+    fn read_card_expiry_year(&self) -> Result<Zeroizing<String>, HostError> {
+        ControllingTerminal
+            .read_text(TextPrompt::CardExpiryYear)
+            .map_err(map_native_cli_host)
+    }
+
+    fn read_card_cvv(&self) -> Result<Zeroizing<String>, HostError> {
+        self.read_utf8_secret(SecretPrompt::CardCvv)
+    }
+
+    fn read_card_billing_postal_code(&self) -> Result<Option<Zeroizing<String>>, HostError> {
+        let value = ControllingTerminal
+            .read_text(TextPrompt::CardBillingPostalCode)
+            .map_err(map_native_cli_host)?;
+        Ok((!value.is_empty()).then_some(value))
     }
 
     fn confirm_secret_reveal(&self) -> Result<bool, HostError> {
@@ -380,6 +442,7 @@ enum Command {
     },
     ItemAddLogin,
     ItemAddSecureNote,
+    ItemAddCard,
     ItemEdit {
         item_id: ItemId,
     },
@@ -556,6 +619,7 @@ fn parse_item(arguments: &[String]) -> Result<Command, CliFailure> {
         [action, kind] if action == "add" && kind == "secure-note" => {
             Ok(Command::ItemAddSecureNote)
         }
+        [action, kind] if action == "add" && kind == "card" => Ok(Command::ItemAddCard),
         [action, item] if action == "edit" => Ok(Command::ItemEdit {
             item_id: ItemId::from_user_string(item).map_err(|_| CliFailure::InvalidCommand)?,
         }),
@@ -662,6 +726,7 @@ fn execute(invocation: Invocation, host: &dyn CliHost) -> Result<CliOutput, CliF
         Command::ItemAddSecureNote => {
             item_add_secure_note(host, prepared.paths(), &writer, selected_vault)
         }
+        Command::ItemAddCard => item_add_card(host, prepared.paths(), &writer, selected_vault),
         Command::ItemEdit { item_id } => {
             item_edit_login(host, prepared.paths(), &writer, selected_vault, item_id)
         }
@@ -1326,6 +1391,90 @@ fn item_add_secure_note(
     context.complete(document)
 }
 
+fn item_add_card(
+    host: &dyn CliHost,
+    paths: &LocalVaultPaths,
+    writer: &LocalWriterGuard,
+    selected_vault: Option<&ConfigName>,
+) -> Result<CliOutput, CliFailure> {
+    let context = prepare_item_create(host, paths, writer, selected_vault)?;
+    let input = (|| {
+        Ok::<_, HostError>((
+            host.read_card_title()?,
+            host.read_card_holder()?,
+            host.read_card_number()?,
+            host.read_card_expiry_month()?,
+            host.read_card_expiry_year()?,
+            host.read_card_cvv()?,
+            host.read_card_billing_postal_code()?,
+        ))
+    })();
+    let (title, holder, number, expiry_month, expiry_year, cvv, billing_zip) = match input {
+        Ok(input) => input,
+        Err(error) => return context.fail(map_host(error)),
+    };
+    if validate_ascii_digits(&number, 8, 19).is_err() || validate_ascii_digits(&cvv, 3, 4).is_err()
+    {
+        return context.fail(CliFailure::InvalidCommand);
+    }
+    let expiry_month = match parse_card_expiry_month(&expiry_month) {
+        Ok(value) => value,
+        Err(error) => return context.fail(error),
+    };
+    let expiry_year = match parse_card_expiry_year(&expiry_year) {
+        Ok(value) => value,
+        Err(error) => return context.fail(error),
+    };
+    let document = context.document(
+        CARD_V1,
+        AnyRecord::Card(Card {
+            title: title.into_inner(),
+            holder: holder.into_inner(),
+            number: number.into_inner(),
+            expiry_month,
+            expiry_year,
+            cvv: cvv.into_inner(),
+            billing_zip: billing_zip.map(Zeroizing::into_inner),
+        }),
+    );
+    let document = match document {
+        Ok(document) => document,
+        Err(error) => return context.fail(error),
+    };
+    context.complete(document)
+}
+
+fn validate_ascii_digits(value: &str, min: usize, max: usize) -> Result<(), CliFailure> {
+    if (min..=max).contains(&value.len()) && value.bytes().all(|byte| byte.is_ascii_digit()) {
+        Ok(())
+    } else {
+        Err(CliFailure::InvalidCommand)
+    }
+}
+
+fn parse_card_expiry_month(value: &str) -> Result<u8, CliFailure> {
+    let month = value
+        .parse::<u8>()
+        .map_err(|_| CliFailure::InvalidCommand)?;
+    if (1..=12).contains(&month) && month.to_string() == value {
+        Ok(month)
+    } else {
+        Err(CliFailure::InvalidCommand)
+    }
+}
+
+fn parse_card_expiry_year(value: &str) -> Result<u16, CliFailure> {
+    if value.len() != 4 || !value.bytes().all(|byte| byte.is_ascii_digit()) {
+        return Err(CliFailure::InvalidCommand);
+    }
+    let year = value
+        .parse::<u16>()
+        .map_err(|_| CliFailure::InvalidCommand)?;
+    (year != 0)
+        .then_some(year)
+        .ok_or(CliFailure::InvalidCommand)
+}
+
 fn item_list(
     host: &dyn CliHost,
     paths: &LocalVaultPaths,
@@ -1799,6 +1948,30 @@ fn render_item(item: RedactedItemView) -> Result<CliOutput, CliFailure> {
             output.push_str("Title: ");
             output.push_str(&quoted(title));
             output.push_str("\nBody: <redacted>\n");
+        }
+        RedactedRecordView::Card {
+            title,
+            holder,
+            last_four,
+            expiry_month,
+            expiry_year,
+            has_billing_zip,
+            ..
+        } => {
+            output.push_str("Title: ");
+            output.push_str(&quoted(title));
+            output.push_str("\nCardholder: ");
+            output.push_str(&quoted(holder));
+            output.push_str("\nLast four: ");
+            output.push_str(&quoted(last_four));
+            output.push_str(&format!("\nExpiry: {expiry_month:02}/{expiry_year:04}\n"));
+            output.push_str("Card number: <redacted>\nCVV: <redacted>\n");
+            output.push_str("Billing postal code: ");
+            output.push_str(if *has_billing_zip {
+                "present\n"
+            } else {
+                "absent\n"
+            });
         }
         _ => return Err(CliFailure::Unsupported),
     }
@@ -2797,6 +2970,39 @@ mod tests {
             Ok(Zeroizing::new(text.to_owned()))
         }
 
+        fn read_card_title(&self) -> Result<Zeroizing<String>, HostError> {
+            self.text()
+        }
+
+        fn read_card_holder(&self) -> Result<Zeroizing<String>, HostError> {
+            self.text()
+        }
+
+        fn read_card_number(&self) -> Result<Zeroizing<String>, HostError> {
+            let value = self.secret()?;
+            let text = core::str::from_utf8(&value).map_err(|_| HostError::Invalid)?;
+            Ok(Zeroizing::new(text.to_owned()))
+        }
+
+        fn read_card_expiry_month(&self) -> Result<Zeroizing<String>, HostError> {
+            self.text()
+        }
+
+        fn read_card_expiry_year(&self) -> Result<Zeroizing<String>, HostError> {
+            self.text()
+        }
+
+        fn read_card_cvv(&self) -> Result<Zeroizing<String>, HostError> {
+            let value = self.secret()?;
+            let text = core::str::from_utf8(&value).map_err(|_| HostError::Invalid)?;
+            Ok(Zeroizing::new(text.to_owned()))
+        }
+
+        fn read_card_billing_postal_code(&self) -> Result<Option<Zeroizing<String>>, HostError> {
+            self.text()
+                .map(|value| (!value.is_empty()).then_some(value))
+        }
+
         fn confirm_secret_reveal(&self) -> Result<bool, HostError> {
             self.text().map(|answer| answer.as_str() == "yes")
         }
@@ -2915,6 +3121,7 @@ mod tests {
             vec!["audit", "show", "not-a-trace", "extra"],
             vec!["item", "add", "login", "--password", "secret"],
             vec!["item", "add", "secure-note", "--body", "secret"],
+            vec!["item", "add", "card", "--number", "4242424242424242"],
             vec!["item", "edit", "not-an-item-id"],
             vec!["item", "delete", "not-an-item-id"],
             vec!["item", "list", "extra"],
@@ -4458,6 +4665,192 @@ mod tests {
         assert!(!audit
             .stdout()
             .contains(core::str::from_utf8(&body).unwrap()));
+    }
+
+    #[test]
+    fn card_create_failures_and_success_are_audited_without_secret_rendering() {
+        assert_eq!(
+            parse(["item", "add", "card"]),
+            default_invocation(Command::ItemAddCard)
+        );
+        assert_eq!(
+            parse(["--vault", "work", "item", "add", "card"]),
+            Ok(Invocation {
+                selected_vault: Some(ConfigName::new("work".to_owned()).unwrap()),
+                command: Command::ItemAddCard,
+            })
+        );
+        assert_eq!(parse_card_expiry_month("1"), Ok(1));
+        assert_eq!(parse_card_expiry_month("12"), Ok(12));
+        assert_eq!(
+            parse_card_expiry_month("01"),
+            Err(CliFailure::InvalidCommand)
+        );
+        assert_eq!(parse_card_expiry_year("2030"), Ok(2030));
+        assert_eq!(
+            parse_card_expiry_year("0000"),
+            Err(CliFailure::InvalidCommand)
+        );
+
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"card create passphrase".to_vec();
+        let number = b"4242424242424242".to_vec();
+        let cvv = b"123".to_vec();
+        let postal_code = "94107";
+        let init_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
+
+        let unavailable_host = TestHost::with_entropy_seed(paths.clone(), [passphrase.clone()], 11);
+        let unavailable = run(["item", "add", "card"], &unavailable_host);
+        assert_eq!(
+            unavailable.exit_code(),
+            ExitCode::Provider,
+            "{unavailable:?}"
+        );
+        assert!(unavailable.stdout().is_empty());
+
+        let invalid_utf8_host = TestHost::with_texts_and_entropy_seed(
+            paths.clone(),
+            [passphrase.clone(), vec![0xff]],
+            ["Personal Visa".to_owned(), "Ada Lovelace".to_owned()],
+            19,
+        );
+        let invalid_utf8 = run(["item", "add", "card"], &invalid_utf8_host);
+        assert_eq!(
+            invalid_utf8.exit_code(),
+            ExitCode::InvalidInput,
+            "{invalid_utf8:?}"
+        );
+        assert!(invalid_utf8.stdout().is_empty());
+
+        let invalid_attempt =
+            |seed, attempted_number: &[u8], attempted_cvv: &[u8], month: &str, year: &str| {
+                let host = TestHost::with_texts_and_entropy_seed(
+                    paths.clone(),
+                    [
+                        passphrase.clone(),
+                        attempted_number.to_vec(),
+                        attempted_cvv.to_vec(),
+                    ],
+                    [
+                        "Personal Visa".to_owned(),
+                        "Ada Lovelace".to_owned(),
+                        month.to_owned(),
+                        year.to_owned(),
+                        postal_code.to_owned(),
+                    ],
+                    seed,
+                );
+                let output = run(["item", "add", "card"], &host);
+                assert_eq!(output.exit_code(), ExitCode::InvalidInput, "{output:?}");
+                assert!(output.stdout().is_empty());
+            };
+        invalid_attempt(23, b"42", &cvv, "12", "2030");
+        invalid_attempt(31, &number, b"12", "12", "2030");
+        invalid_attempt(43, &number, &cvv, "01", "2030");
+        invalid_attempt(47, &number, &cvv, "12", "0000");
+
+        let add_host = TestHost::with_texts_and_entropy_seed(
+            paths.clone(),
+            [passphrase.clone(), number.clone(), cvv.clone()],
+            [
+                "Personal Visa".to_owned(),
+                "Ada Lovelace".to_owned(),
+                "12".to_owned(),
+                "2030".to_owned(),
+                postal_code.to_owned(),
+            ],
+            59,
+        );
+        let added = run(["item", "add", "card"], &add_host);
+        assert_eq!(added.exit_code(), ExitCode::Success, "{added:?}");
+        let item = added
+            .stdout()
+            .strip_prefix("Item added: ")
+            .and_then(|value| value.strip_suffix('\n'))
+            .unwrap();
+        assert!(ItemId::from_user_string(item).is_ok());
+
+        let list_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        let listed = run(["item", "list"], &list_host);
+        assert_eq!(listed.exit_code(), ExitCode::Success, "{listed:?}");
+        assert_eq!(
+            listed.stdout(),
+            format!("{item}\t{CARD_V1}\t\"Personal Visa\"\n")
+        );
+
+        let show_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        let shown = run(["item", "show", item], &show_host);
+        assert_eq!(shown.exit_code(), ExitCode::Success, "{shown:?}");
+        assert_eq!(
+            shown.stdout(),
+            format!(
+                "Item: {item}\nType: {CARD_V1}\nTitle: \"Personal Visa\"\nCardholder: \"Ada Lovelace\"\nLast four: \"4242\"\nExpiry: 12/2030\nCard number: <redacted>\nCVV: <redacted>\nBilling postal code: present\nFavorite: no\nUpdated: 1700000000000\n"
+            )
+        );
+        for secret in [&number, &cvv] {
+            assert!(!shown
+                .stdout()
+                .contains(core::str::from_utf8(secret).unwrap()));
+        }
+        assert!(!shown.stdout().contains(postal_code));
+
+        let number_host = TestHost::with_texts_and_entropy_seed(
+            paths.clone(),
+            [passphrase.clone()],
+            ["yes".to_owned()],
+            61,
+        );
+        let revealed_number = run(["item", "reveal", item, "card-number"], &number_host);
+        assert_eq!(
+            revealed_number.exit_code(),
+            ExitCode::Success,
+            "{revealed_number:?}"
+        );
+        assert!(revealed_number.stdout().is_empty());
+        assert!(number_host.revealed_equals(&number));
+
+        let cvv_host = TestHost::with_texts_and_entropy_seed(
+            paths.clone(),
+            [passphrase.clone()],
+            ["yes".to_owned()],
+            67,
+        );
+        let revealed_cvv = run(["item", "reveal", item, "card-cvv"], &cvv_host);
+        assert_eq!(
+            revealed_cvv.exit_code(),
+            ExitCode::Success,
+            "{revealed_cvv:?}"
+        );
+        assert!(revealed_cvv.stdout().is_empty());
+        assert!(cvv_host.revealed_equals(&cvv));
+
+        let audit_host = TestHost::with_entropy_seed(paths, [passphrase], 71);
+        let audit = run(["audit", "list"], &audit_host);
+        assert_eq!(audit.exit_code(), ExitCode::Success, "{audit:?}");
+        assert_eq!(
+            audit
+                .stdout()
+                .lines()
+                .filter(|line| line.contains("action=item_create\toutcome=failed"))
+                .count(),
+            6,
+            "{audit:?}"
+        );
+        assert!(audit.stdout().lines().any(|line| {
+            line.contains("action=item_create\toutcome=succeeded")
+                && line.contains(&format!("\titem={item}"))
+        }));
+        for value in [
+            "Personal Visa",
+            "Ada Lovelace",
+            core::str::from_utf8(&number).unwrap(),
+            core::str::from_utf8(&cvv).unwrap(),
+            postal_code,
+        ] {
+            assert!(!audit.stdout().contains(value));
+        }
     }
 
     #[test]

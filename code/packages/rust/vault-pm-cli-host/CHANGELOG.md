@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add fixed bounded payment-card metadata prompts plus hidden PAN and CVV
+  prompts, retaining controlling-terminal input and wipe-on-drop ownership.
 - Add exact-`yes` controlling-terminal confirmation and direct quoted,
   control-escaped secret delivery without routing values through process
   stdout or stderr.

@@ -22,6 +22,7 @@ vault-pm --vault NAME restore FILE
 vault-pm [--vault NAME] restore verify FILE
 vault-pm [--vault NAME] item add login
 vault-pm [--vault NAME] item add secure-note
+vault-pm [--vault NAME] item add card
 vault-pm [--vault NAME] item edit ITEM
 vault-pm [--vault NAME] item delete ITEM
 vault-pm [--vault NAME] item list
@@ -35,11 +36,11 @@ vault-pm [--vault NAME] conflict choose ITEM REVISION
 
 `init` and every authenticated command require a controlling terminal even
 when stdin is redirected. No passphrase flag, environment variable, config
-field, URL, or stdin path exists. Unix integration tests launch this exact binary
-under fresh pseudo-terminals, verify passphrases and item passwords are not
-echoed, restart the process for durable item add/edit/list/show, explicitly
-confirm one audited current-password reveal directly on `/dev/tty` while
-captured process stdout remains empty, inject decoy
+field, URL, or stdin path exists. Unix integration tests launch this exact
+binary under fresh pseudo-terminals. The primary drill verifies passphrases and
+item passwords are not echoed, restarts the process for durable item
+add/edit/list/show, explicitly confirms one audited current-password reveal
+directly on `/dev/tty` while captured process stdout remains empty, injects decoy
 bytes through stdin, verify redacted canonical history across another fresh
 process, delete to a causal tombstone, restore an exact live ancestor into a
 new revision, activate the signed audit epoch, force an invalid edit prompt in
@@ -53,6 +54,14 @@ another hidden prompt, publish import with no intermediate output, independently
 reopen the target in the same command for audited semantic verification,
 restart into redacted restored items, reopen the untouched source, and inspect
 the shared profile tree for plaintext secret bytes.
+
+A separate payment-card drill creates a card through fixed metadata plus hidden
+PAN/CVV prompts, restarts into holder/last-four/expiry-only rendering, reveals
+PAN and CVV only through independently confirmed direct-terminal accesses,
+verifies the advanced audit chain and its closed event-field grammar, and scans
+the profile tree for the collision-resistant full PAN bytes. Exact typed
+round-trips and redacted rendering cover the necessarily short CVV value
+without relying on a collision-prone raw substring scan of random ciphertext.
 
 ## Verification
 

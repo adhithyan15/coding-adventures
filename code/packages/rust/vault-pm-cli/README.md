@@ -5,8 +5,9 @@ manager. It owns strict parsing, stable exit classes, redacted rendering, and
 the bounded `init`, locked `status`/`doctor`, authenticated `audit enable` and
 `audit verify`, explicit `audit list`/`audit show TRACE`, and opt-in full
 `doctor --unlock` workflows. It now also owns the first usable item vertical:
-authenticated login creation plus durable redacted list/show. The same
-one-shot boundary now supports revision-safe login replacement. The
+authenticated login, secure-note, and payment-card creation plus durable
+redacted list/show. The same one-shot boundary now supports revision-safe login
+replacement. The
 newest-first `history list ITEM` projection exposes canonical revision
 selectors plus safe causal metadata without opening historical secrets. The
 same selectors now support reversible `item delete ITEM` and `history restore
@@ -98,10 +99,17 @@ and a required single-line body through the fixed hidden `Note:` prompt, and
 publishes the same atomic `ItemCreate` event on success. List output contains
 only the escaped title; show output contains `Body: <redacted>`. The body never
 enters normal CLI rendering or audit projections.
+`item add card` again reuses the boundary after reserving every identity and
+audit input before unlock. It collects bounded title, holder, expiry, and
+optional postal metadata plus hidden wipe-on-drop PAN and CVV. Post-unlock host
+or validation failures publish `ItemCreate Failed`; success atomically
+publishes the typed encrypted card and `ItemCreate Succeeded`. Show renders
+only holder, last four, expiry, postal-presence, and explicit PAN/CVV redaction;
+the complete PAN and CVV require the separate audited `item reveal` ceremony.
 `item list` and `item show ITEM` reopen in separate one-shot sessions and
-render only escaped redacted projections; the password and notes body are
-never available to the renderer. In an active epoch, both commands first make
-their exact signed access outcome durable.
+render only escaped redacted projections; login passwords, note bodies, PANs,
+CVVs, and postal values are never available to the renderer. In an active
+epoch, both commands first make their exact signed access outcome durable.
 
 `item edit ITEM` asks the application for an opaque edit preparation that owns
 the authenticated current revision and wipe-on-drop secret document without
