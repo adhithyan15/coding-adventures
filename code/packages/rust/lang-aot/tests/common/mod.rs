@@ -49,6 +49,11 @@ pub fn gc_core_capi_archive() -> PathBuf {
 /// gc-core-capi staticlib, followed by the system libraries its bundled Rust std
 /// needs. On Linux that is `-lpthread -ldl`; macOS provides both through
 /// `libSystem`, so no extra flags (and `-ldl` would error — there is no libdl).
+/// On Windows, `cc`/rustc default to the DYNAMIC CRT on this target, so the
+/// staticlib carries `__imp_`-style dllimport references (malloc/memcpy/
+/// abort/...) that only `ucrt`/`vcruntime`/`msvcrt` satisfy, plus the Win32
+/// API surface gc-core-capi's Rust std pulls in — the same mismatch (and the
+/// same fix) as `twig-aot::link_windows_x86_64_executable`'s `libcmt.lib` bug.
 ///
 /// Ordering: the archive comes first so the linker can satisfy
 /// `dynval_runtime.o`'s undefined `__twig_gc_alloc` from it, then the system libs
@@ -58,6 +63,11 @@ pub fn gc_link_args() -> Vec<String> {
     if cfg!(target_os = "linux") {
         args.push("-lpthread".into());
         args.push("-ldl".into());
+    }
+    if cfg!(target_os = "windows") {
+        for lib in ["ucrt", "vcruntime", "msvcrt", "kernel32", "ws2_32", "userenv", "advapi32", "bcrypt", "ntdll"] {
+            args.push(format!("-l{lib}"));
+        }
     }
     args
 }

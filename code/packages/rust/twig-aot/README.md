@@ -96,3 +96,15 @@ untouched.
 
 - Apple Silicon Mac running macOS 15+ (Sequoia / Tahoe)
 - Xcode Command Line Tools (`/usr/bin/ld`, `xcrun`)
+
+### Windows x86-64
+
+A Windows linker on `PATH`, probed in this order (`find_windows_linker`):
+`link.exe` (MSVC, from Visual Studio Build Tools' "Desktop development with
+C++" workload — note some shells (git-bash/MSYS) ship an unrelated POSIX
+`link(1)` under the same name; it's detected by banner and skipped), then
+`lld-link.exe` (LLVM), then `gcc.exe` (MinGW). An MSVC install also needs its
+environment loaded (`vcvars64.bat`, or the Developer Command Prompt) so `LIB`/
+`INCLUDE` point at the CRT and Windows SDK import libraries — `link.exe`
+resolves purely by name on `PATH` and doesn't auto-detect an unregistered MSVC
+install (no `vswhere` probing in V1).

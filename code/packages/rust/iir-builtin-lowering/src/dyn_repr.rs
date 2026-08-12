@@ -135,7 +135,11 @@ const EXIT_CODE_BUILTIN: &str = "dyn_to_exit_code";
 /// (today: McCarthy 1960 Lisp). Gates the lambda-aware `call` handling so a Twig
 /// module — which shares this pass and also types untyped params `any` — is left
 /// completely untouched.
-fn is_lisp_language(language: &str) -> bool {
+///
+/// `pub(crate)`: `dynamic_arith.rs` reuses this to gate its own bare-`any`
+/// boxed-ness check the same way (see its `is_boxed`) — the two passes must
+/// agree on what "any" means, so there is exactly one definition.
+pub(crate) fn is_lisp_language(language: &str) -> bool {
     language == "mccarthy-lisp"
 }
 
