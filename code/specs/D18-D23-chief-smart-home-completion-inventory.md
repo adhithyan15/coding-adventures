@@ -1930,6 +1930,24 @@ pairing services, and the local controller:
   controller commit, restart recovery, replacement cleanup, and secret-free
   durable state.
 
+## Current Chief Controller Adapter Slice
+
+This slice moves the existing D18D `smart_home.*` bridge onto the same durable
+authority used by discovery, automations, pairing services, and the local
+controller:
+
+- `chief-of-staff-smart-home-tools` receives `SmartHomeControllerRuntime`
+  instead of an actor-local `Rc<RefCell<SmartHomeRuntime>>`.
+- Every Chief tool invocation runs as one serialized controller transaction;
+  runtime and authorization-audit changes are persisted before they become
+  visible to shared consumers.
+- The adapter remains thin: D18D owns tool validation, policy, event streams,
+  terminal results, and journals, while D23 continues to own smart-home state,
+  authorization, command, discovery, pairing, and supervision semantics.
+- Tests prove the bridge is `Send + Sync` over the storage backend and that a
+  Chief read or denied command advances the durable revision while publishing
+  the same audit state to the shared runtime handle.
+
 ## Smart Home Remaining Work
 
 The remaining backlog is ordered by the strongest executable production path
@@ -1939,13 +1957,11 @@ The reusable central owner, discovery service transaction migration,
 production Hue mDNS composition, and Hue, ONVIF, Axis, ZoneMinder, Synology,
 and Reolink pairing migrations are complete. The remaining central-composition
 backlog takes priority over adding another isolated integration or Chief read
-model:
+model. The thread-safe Chief controller adapter is now complete:
 
-1. Replace the `Rc<RefCell<SmartHomeRuntime>>` Chief bridge with a thread-safe
-   service adapter against the controller authority.
-2. Add provider-neutral model tool declarations/results, authenticated host
+1. Add provider-neutral model tool declarations/results, authenticated host
    tool dispatch, and production Chief daemon injection.
-3. Prove one executable Chief host to `smart_home.*` to central D23 owner path,
+2. Prove one executable Chief host to `smart_home.*` to central D23 owner path,
    including durable audit/state and Home Assistant API readback.
 
 The protocol- and vendor-specific backlog below remains valid after those
