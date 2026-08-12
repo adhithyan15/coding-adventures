@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Exposed audited authored payment-card conflict merge with hidden PAN/CVV,
+  opaque base retention, closed validation, and all-current-parent publication.
 - Exposed audited authored secure-note conflict merge with hidden body input,
   opaque base retention, and all-current-parent publication.
 - Exposed audited authored login conflict merge with opaque base selection,

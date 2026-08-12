@@ -2,6 +2,19 @@
 
 All notable changes to this package are documented here.
 
+## [0.57.0] - 2026-08-12
+
+### Added
+
+- Add an opaque audited authored payment-card conflict merge preparation with
+  a complete wipe-on-drop replacement form and exact-current card base.
+
+### Security
+
+- Keep PAN/CVV and prior candidate documents inside application ownership,
+  publish host and closed form-validation failures before returning them, and
+  publish success atomically with the all-current-parent revision.
+
 ## [0.56.0] - 2026-08-12
 
 ### Added

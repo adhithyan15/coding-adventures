@@ -216,6 +216,13 @@ all-current-parent, item-scoped audit ordering to a complete title and hidden
 body form. It never prefills or exposes a candidate body. Success emits only
 the merged item selector; failures emit no partial output.
 
+`conflict merge card ITEM BASE_REVISION` extends that ceremony to a complete
+payment-card form. PAN and CVV use hidden prompts; month, year, and digit-shape
+validation is repeated inside the application-owned preparation so invalid
+forms are audited before their closed error. The base and every former
+candidate value remain opaque, success names all current candidates as parents,
+and ordinary output contains only the merged item selector.
+
 `item reveal ITEM FIELD` requires an active audit epoch and accepts only closed
 schema-specific selectors. It reserves time and audit entropy before
 unlock, then requires exact `yes` through a fixed controlling-terminal prompt.
