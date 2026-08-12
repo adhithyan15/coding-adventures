@@ -1948,6 +1948,23 @@ controller:
   Chief read or denied command advances the durable revision while publishing
   the same audit state to the shared runtime handle.
 
+## Current Provider-Neutral Model Tool Contract Slice
+
+This slice gives the Chief model boundary a reusable tool-use vocabulary
+without allowing the model gateway to authorize or execute D18D calls:
+
+- `llm-gateway` accepts bounded JSON-schema-shaped tool declarations,
+  automatic, required, or named selection, and prior structured tool results.
+- One turn returns exactly one final-text value or one model-requested call with
+  a stable call id, repository-owned tool name, and structured arguments.
+- Existing text-only providers inherit a deterministic JSON prompt polyfill;
+  native providers and the strict mock can override the same contract.
+- Invalid catalogs, unknown named choices, malformed responses, unoffered
+  calls, refusals, and truncated outputs fail closed with the existing provider
+  identity and error taxonomy.
+- Authenticated Chief host transport, D18D dispatch, and production daemon
+  injection remain separate ownership steps below.
+
 ## Smart Home Remaining Work
 
 The remaining backlog is ordered by the strongest executable production path
@@ -1959,8 +1976,10 @@ and Reolink pairing migrations are complete. The remaining central-composition
 backlog takes priority over adding another isolated integration or Chief read
 model. The thread-safe Chief controller adapter is now complete:
 
-1. Add provider-neutral model tool declarations/results, authenticated host
-   tool dispatch, and production Chief daemon injection.
+1. Carry the completed provider-neutral model tool declarations, calls, and
+   results through the authenticated host data plane, dispatch returned calls
+   through D18D, and inject the resulting catalog into the production Chief
+   daemon.
 2. Prove one executable Chief host to `smart_home.*` to central D23 owner path,
    including durable audit/state and Home Assistant API readback.
 
