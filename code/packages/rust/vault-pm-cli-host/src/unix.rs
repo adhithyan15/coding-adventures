@@ -50,6 +50,35 @@ pub(super) fn read_text(
     read_text_from_terminal(&mut terminal, prompt.as_bytes(), max_bytes)
 }
 
+pub(super) fn write_revealed_text(value: &str) -> Result<(), CliHostError> {
+    let raw = unsafe {
+        libc::open(
+            c"/dev/tty".as_ptr(),
+            libc::O_RDWR | libc::O_CLOEXEC | libc::O_NOFOLLOW,
+        )
+    };
+    if raw < 0 {
+        return Err(match std::io::Error::last_os_error().raw_os_error() {
+            Some(libc::ENXIO) | Some(libc::ENODEV) | Some(libc::ENOENT) | Some(libc::ENOTTY) => {
+                CliHostError::TerminalUnavailable
+            }
+            _ => CliHostError::TerminalAccessFailed,
+        });
+    }
+    let mut terminal = File::from(owned_fd(raw).map_err(|_| CliHostError::TerminalAccessFailed)?);
+    write_revealed_text_to_terminal(&mut terminal, value)
+}
+
+fn write_revealed_text_to_terminal(terminal: &mut File, value: &str) -> Result<(), CliHostError> {
+    verify_terminal(terminal)?;
+    terminal
+        .write_all(b"Secret: ")
+        .and_then(|()| terminal.write_all(value.as_bytes()))
+        .and_then(|()| terminal.write_all(b"\n"))
+        .and_then(|()| terminal.flush())
+        .map_err(|_| CliHostError::TerminalAccessFailed)
+}
+
 fn read_text_from_terminal(
     terminal: &mut File,
     prompt: &[u8],
@@ -262,6 +291,25 @@ mod tests {
         assert!(!output
             .windows(b"hidden value".len())
             .any(|part| part == b"hidden value"));
+    }
+
+    #[test]
+    fn revealed_text_writes_one_explicit_terminal_line() {
+        let (mut master, mut slave) = pseudo_terminal();
+        write_revealed_text_to_terminal(&mut slave, "\"line\\nterminal\"").unwrap();
+        let mut output = Vec::new();
+        loop {
+            let mut byte = [0; 1];
+            master.read_exact(&mut byte).unwrap();
+            output.push(byte[0]);
+            if byte[0] == b'\n' {
+                break;
+            }
+        }
+        assert!(
+            output == b"Secret: \"line\\nterminal\"\n"
+                || output == b"Secret: \"line\\nterminal\"\r\n"
+        );
     }
 
     #[test]

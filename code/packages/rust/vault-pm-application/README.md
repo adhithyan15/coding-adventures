@@ -30,9 +30,12 @@ recoverable. Complete verification, coarse diagnostics, and encrypted portable
 export now use that same boundary, including failed export-input attempts.
 Exact current-revision capabilities, whole secret-bearing documents, and
 schema-specific secret fields are also held until their succeeded, denied, or
-failed event is durable. The production migration boundary can start one
-explicit audit epoch. Explicit authenticated audit-history reads now publish
-their own successful `AuditRead` event first, re-verify the complete newly
+failed event is durable. A combined item-bound variant resolves the sole
+current live revision internally, so ordinary CLI composition never receives
+that capability or a complete secret-bearing document. The production
+migration boundary can start one explicit audit epoch. Explicit authenticated
+audit-history reads now publish their own successful `AuditRead` event first,
+re-verify the complete newly
 advanced chain, and return a bounded newest-first secret-free projection or an
 exact trace lookup. The projection includes stable item and revision selectors
 only for this explicit surface; default debug output redacts every stable
@@ -242,6 +245,9 @@ publish the item and exact successfully reached revision before release;
 unconfirmed disclosure ceremonies publish `Denied` without revision traversal,
 while missing revisions and field/schema mismatches publish `Failed`. An audit
 publication failure withholds the capability, secret, and original error.
+The item-bound current-field boundary records refusal as `Denied` without item
+traversal, ambiguity or absence as `Failed` without a revision, schema mismatch
+as `Failed` with the reached revision, and success with that exact revision.
 
 Long-lived hosts can retain an explicit `VaultAccessV1` lifecycle boundary.
 It begins with only a redacted `LockedVaultV1` locator handle, authenticates a

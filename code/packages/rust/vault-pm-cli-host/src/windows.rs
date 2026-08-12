@@ -70,6 +70,14 @@ pub(super) fn read_text(
     })
 }
 
+pub(super) fn write_revealed_text(value: &str) -> Result<(), CliHostError> {
+    let output = open_console(CONSOLE_OUTPUT, GENERIC_READ | GENERIC_WRITE)?;
+    verify_console(&output)?;
+    write_console(&output, "Secret: ")?;
+    write_console(&output, value)?;
+    write_console(&output, "\r\n")
+}
+
 fn open_console(name: &[u16], access: u32) -> Result<OwnedHandle, CliHostError> {
     let raw = unsafe {
         CreateFileW(
@@ -99,7 +107,7 @@ fn verify_console(handle: &OwnedHandle) -> Result<CONSOLE_MODE, CliHostError> {
 }
 
 fn write_console(handle: &OwnedHandle, value: &str) -> Result<(), CliHostError> {
-    let value: Vec<u16> = value.encode_utf16().collect();
+    let value = Zeroizing::new(value.encode_utf16().collect::<Vec<u16>>());
     let mut written = 0;
     let succeeded = unsafe {
         WriteConsoleW(

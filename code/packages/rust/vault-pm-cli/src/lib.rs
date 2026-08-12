@@ -13,6 +13,7 @@ use coding_adventures_vault_pm_application::{
     LocalStateStoreError, LocalVaultStateV1, LoginEditInputV1, PortableExportPolicyV1,
     PortableExportRandomnessV1, PortableImportRandomnessV1, PortableOpenPolicyV1,
     ReplaceItemRandomnessV1, ResolveItemConflictRandomnessV1, RestoreItemRandomnessV1,
+    RevealedSecretEncodingV1, SecretDisclosureIntentV1, SecretFieldV1,
     V1ApplicationRepositoryFactory, VaultAccessV1, VaultDoctorStateV1, VaultStatusStateV1,
     ADD_ITEM_RANDOM_BYTES, AUDITED_ACCESS_RANDOM_BYTES, AUDITED_GENERATION_ZERO_RANDOM_BYTES,
     DEFAULT_AUDIT_HISTORY_LIMIT, DEFAULT_ITEM_HISTORY_LIMIT, DELETE_ITEM_RANDOM_BYTES,
@@ -49,7 +50,7 @@ const PRODUCTION_KDF_MEMORY_KIB: u32 = 64 * 1024;
 const PRODUCTION_KDF_ITERATIONS: u32 = 3;
 const PRODUCTION_KDF_LANES: u8 = 1;
 const ITEM_OPERATION_RANDOM_BYTES: usize = 32;
-const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm vault create NAME\n  vault-pm [--vault NAME] status [--json]\n  vault-pm [--vault NAME] audit enable\n  vault-pm [--vault NAME] audit verify\n  vault-pm [--vault NAME] audit list\n  vault-pm [--vault NAME] audit show TRACE\n  vault-pm [--vault NAME] doctor [--unlock]\n  vault-pm [--vault NAME] export FILE\n  vault-pm [--vault NAME] import FILE\n  vault-pm --vault NAME restore FILE\n  vault-pm [--vault NAME] restore verify FILE\n  vault-pm [--vault NAME] item add login\n  vault-pm [--vault NAME] item add secure-note\n  vault-pm [--vault NAME] item edit ITEM\n  vault-pm [--vault NAME] item delete ITEM\n  vault-pm [--vault NAME] item list\n  vault-pm [--vault NAME] item show ITEM\n  vault-pm [--vault NAME] history list ITEM\n  vault-pm [--vault NAME] history restore ITEM REVISION\n  vault-pm [--vault NAME] conflict list ITEM\n  vault-pm [--vault NAME] conflict choose ITEM REVISION\n";
+const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm vault create NAME\n  vault-pm [--vault NAME] status [--json]\n  vault-pm [--vault NAME] audit enable\n  vault-pm [--vault NAME] audit verify\n  vault-pm [--vault NAME] audit list\n  vault-pm [--vault NAME] audit show TRACE\n  vault-pm [--vault NAME] doctor [--unlock]\n  vault-pm [--vault NAME] export FILE\n  vault-pm [--vault NAME] import FILE\n  vault-pm --vault NAME restore FILE\n  vault-pm [--vault NAME] restore verify FILE\n  vault-pm [--vault NAME] item add login\n  vault-pm [--vault NAME] item add secure-note\n  vault-pm [--vault NAME] item edit ITEM\n  vault-pm [--vault NAME] item delete ITEM\n  vault-pm [--vault NAME] item list\n  vault-pm [--vault NAME] item show ITEM\n  vault-pm [--vault NAME] item reveal ITEM FIELD\n  vault-pm [--vault NAME] history list ITEM\n  vault-pm [--vault NAME] history restore ITEM REVISION\n  vault-pm [--vault NAME] conflict list ITEM\n  vault-pm [--vault NAME] conflict choose ITEM REVISION\n";
 
 /// Stable process exit classes defined by VLT-PM00.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -148,6 +149,12 @@ pub trait CliHost {
     /// Collect a secure-note body with terminal echo disabled.
     fn read_secure_note_body(&self) -> Result<Zeroizing<String>, HostError>;
 
+    /// Require explicit interactive confirmation before revealing a secret.
+    fn confirm_secret_reveal(&self) -> Result<bool, HostError>;
+
+    /// Deliver one audited UTF-8 secret directly to the controlling terminal.
+    fn write_revealed_text(&self, value: &str) -> Result<(), HostError>;
+
     /// Collect and confirm a distinct portable-export passphrase without echo.
     fn read_export_passphrase(&self) -> Result<Zeroizing<Vec<u8>>, HostError>;
 
@@ -243,6 +250,18 @@ impl CliHost for NativeCliHost {
 
     fn read_secure_note_body(&self) -> Result<Zeroizing<String>, HostError> {
         self.read_utf8_secret(SecretPrompt::SecureNoteBody)
+    }
+
+    fn confirm_secret_reveal(&self) -> Result<bool, HostError> {
+        ControllingTerminal
+            .confirm_secret_reveal()
+            .map_err(map_native_cli_host)
+    }
+
+    fn write_revealed_text(&self, value: &str) -> Result<(), HostError> {
+        ControllingTerminal
+            .write_revealed_text(value)
+            .map_err(map_native_cli_host)
     }
 
     fn read_export_passphrase(&self) -> Result<Zeroizing<Vec<u8>>, HostError> {
@@ -370,6 +389,10 @@ enum Command {
     ItemList,
     ItemShow {
         item_id: ItemId,
+    },
+    ItemReveal {
+        item_id: ItemId,
+        field: SecretFieldV1,
     },
     HistoryList {
         item_id: ItemId,
@@ -543,6 +566,22 @@ fn parse_item(arguments: &[String]) -> Result<Command, CliFailure> {
         [action, item] if action == "show" => Ok(Command::ItemShow {
             item_id: ItemId::from_user_string(item).map_err(|_| CliFailure::InvalidCommand)?,
         }),
+        [action, item, field] if action == "reveal" => Ok(Command::ItemReveal {
+            item_id: ItemId::from_user_string(item).map_err(|_| CliFailure::InvalidCommand)?,
+            field: parse_secret_field(field)?,
+        }),
+        _ => Err(CliFailure::InvalidCommand),
+    }
+}
+
+fn parse_secret_field(value: &str) -> Result<SecretFieldV1, CliFailure> {
+    match value {
+        "login-password" => Ok(SecretFieldV1::LoginPassword),
+        "secure-note-body" => Ok(SecretFieldV1::SecureNoteBody),
+        "card-number" => Ok(SecretFieldV1::CardNumber),
+        "card-cvv" => Ok(SecretFieldV1::CardCvv),
+        "api-key-token" => Ok(SecretFieldV1::ApiKeyToken),
+        "database-password" => Ok(SecretFieldV1::DatabasePassword),
         _ => Err(CliFailure::InvalidCommand),
     }
 }
@@ -633,6 +672,14 @@ fn execute(invocation: Invocation, host: &dyn CliHost) -> Result<CliOutput, CliF
         Command::ItemShow { item_id } => {
             item_show(host, prepared.paths(), &writer, selected_vault, item_id)
         }
+        Command::ItemReveal { item_id, field } => item_reveal(
+            host,
+            prepared.paths(),
+            &writer,
+            selected_vault,
+            item_id,
+            field,
+        ),
         Command::HistoryList { item_id } => {
             history_list(host, prepared.paths(), &writer, selected_vault, item_id)
         }
@@ -1439,6 +1486,49 @@ fn item_show(
             .ok_or(CliFailure::NotFound)?
     };
     render_item(item)
+}
+
+fn item_reveal(
+    host: &dyn CliHost,
+    paths: &LocalVaultPaths,
+    writer: &LocalWriterGuard,
+    selected_vault: Option<&ConfigName>,
+    item_id: ItemId,
+    field: SecretFieldV1,
+) -> Result<CliOutput, CliFailure> {
+    let (wall_time_ms, randomness) = audited_access_inputs(host)?;
+    let (access, application_store) = authenticated_access(host, paths, writer, selected_vault)?;
+    let (confirmed, confirmation_error) = match host.confirm_secret_reveal() {
+        Ok(confirmed) => (confirmed, None),
+        Err(error) => (false, Some(error)),
+    };
+    let disclosed = access
+        .into_unlocked()
+        .map_err(map_application)?
+        .audited_reveal_current_item_field(
+            item_id,
+            field,
+            SecretDisclosureIntentV1::InteractiveReveal { confirmed },
+            wall_time_ms,
+            randomness,
+            &application_store,
+        )
+        .map_err(map_application)?
+        .into_operation();
+    if let Some(error) = confirmation_error {
+        if !matches!(disclosed, Err(ApplicationError::InvalidInput)) {
+            return Err(CliFailure::Internal);
+        }
+        return Err(map_host(error));
+    }
+    let secret = disclosed.map_err(map_application)?;
+    if secret.encoding() != RevealedSecretEncodingV1::Utf8 {
+        return Err(CliFailure::Unsupported);
+    }
+    let value = core::str::from_utf8(secret.as_bytes()).map_err(|_| CliFailure::Integrity)?;
+    host.write_revealed_text(value).map_err(map_host)?;
+    drop(secret);
+    Ok(CliOutput::success(""))
 }
 
 fn item_delete(
@@ -2560,6 +2650,7 @@ mod tests {
         paths: LocalVaultPaths,
         secrets: Mutex<VecDeque<Vec<u8>>>,
         texts: Mutex<VecDeque<String>>,
+        revealed: Mutex<Vec<Zeroizing<Vec<u8>>>>,
         entropy_seed: u8,
         entropy_available: bool,
     }
@@ -2570,6 +2661,7 @@ mod tests {
                 paths,
                 secrets: Mutex::new(secrets.into_iter().collect()),
                 texts: Mutex::new(VecDeque::new()),
+                revealed: Mutex::new(Vec::new()),
                 entropy_seed: 1,
                 entropy_available: true,
             }
@@ -2584,6 +2676,7 @@ mod tests {
                 paths,
                 secrets: Mutex::new(secrets.into_iter().collect()),
                 texts: Mutex::new(VecDeque::new()),
+                revealed: Mutex::new(Vec::new()),
                 entropy_seed,
                 entropy_available: true,
             }
@@ -2598,7 +2691,24 @@ mod tests {
                 paths,
                 secrets: Mutex::new(secrets.into_iter().collect()),
                 texts: Mutex::new(texts.into_iter().collect()),
+                revealed: Mutex::new(Vec::new()),
                 entropy_seed: 1,
+                entropy_available: true,
+            }
+        }
+
+        fn with_texts_and_entropy_seed(
+            paths: LocalVaultPaths,
+            secrets: impl IntoIterator<Item = Vec<u8>>,
+            texts: impl IntoIterator<Item = String>,
+            entropy_seed: u8,
+        ) -> Self {
+            Self {
+                paths,
+                secrets: Mutex::new(secrets.into_iter().collect()),
+                texts: Mutex::new(texts.into_iter().collect()),
+                revealed: Mutex::new(Vec::new()),
+                entropy_seed,
                 entropy_available: true,
             }
         }
@@ -2611,6 +2721,7 @@ mod tests {
                 paths,
                 secrets: Mutex::new(secrets.into_iter().collect()),
                 texts: Mutex::new(VecDeque::new()),
+                revealed: Mutex::new(Vec::new()),
                 entropy_seed: 1,
                 entropy_available: false,
             }
@@ -2632,6 +2743,15 @@ mod tests {
                 .pop_front()
                 .map(Zeroizing::new)
                 .ok_or(HostError::Unavailable)
+        }
+
+        fn revealed_equals(&self, expected: &[u8]) -> bool {
+            let revealed = self.revealed.lock().unwrap();
+            matches!(revealed.as_slice(), [value] if value.as_slice() == expected)
+        }
+
+        fn revealed_count(&self) -> usize {
+            self.revealed.lock().unwrap().len()
         }
     }
 
@@ -2675,6 +2795,18 @@ mod tests {
             let value = self.secret()?;
             let text = core::str::from_utf8(&value).map_err(|_| HostError::Invalid)?;
             Ok(Zeroizing::new(text.to_owned()))
+        }
+
+        fn confirm_secret_reveal(&self) -> Result<bool, HostError> {
+            self.text().map(|answer| answer.as_str() == "yes")
+        }
+
+        fn write_revealed_text(&self, value: &str) -> Result<(), HostError> {
+            self.revealed
+                .lock()
+                .unwrap()
+                .push(Zeroizing::new(value.as_bytes().to_vec()));
+            Ok(())
         }
 
         fn read_export_passphrase(&self) -> Result<Zeroizing<Vec<u8>>, HostError> {
@@ -2787,6 +2919,8 @@ mod tests {
             vec!["item", "delete", "not-an-item-id"],
             vec!["item", "list", "extra"],
             vec!["item", "show", "not-an-item-id"],
+            vec!["item", "reveal", "not-an-item-id", "login-password"],
+            vec!["item", "reveal", "not-an-item-id", "unknown-field"],
             vec!["history"],
             vec!["history", "list", "not-an-item-id"],
             vec!["history", "list", "not-an-item-id", "extra"],
@@ -2895,6 +3029,43 @@ mod tests {
         );
         assert_eq!(
             parse(["item", "show", canonical.to_lowercase().as_str()]),
+            Err(CliFailure::InvalidCommand)
+        );
+        assert_eq!(
+            parse(["item", "reveal", canonical.as_str(), "login-password",]),
+            default_invocation(Command::ItemReveal {
+                item_id,
+                field: SecretFieldV1::LoginPassword,
+            })
+        );
+        assert_eq!(
+            parse([
+                "--vault",
+                "work",
+                "item",
+                "reveal",
+                canonical.as_str(),
+                "secure-note-body",
+            ]),
+            Ok(Invocation {
+                selected_vault: Some(ConfigName::new("work".to_owned()).unwrap()),
+                command: Command::ItemReveal {
+                    item_id,
+                    field: SecretFieldV1::SecureNoteBody,
+                },
+            })
+        );
+        assert_eq!(
+            parse([
+                "item",
+                "reveal",
+                canonical.to_lowercase().as_str(),
+                "login-password",
+            ]),
+            Err(CliFailure::InvalidCommand)
+        );
+        assert_eq!(
+            parse(["item", "reveal", canonical.as_str(), "password"]),
             Err(CliFailure::InvalidCommand)
         );
         assert_eq!(
@@ -4287,6 +4458,129 @@ mod tests {
         assert!(!audit
             .stdout()
             .contains(core::str::from_utf8(&body).unwrap()));
+    }
+
+    #[test]
+    fn interactive_secret_reveal_audits_before_direct_terminal_delivery() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"secret reveal passphrase".to_vec();
+        let password = b"line one\n\"terminal-safe\"".to_vec();
+        let init_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
+
+        let add_host = TestHost::with_texts_and_entropy_seed(
+            paths.clone(),
+            [passphrase.clone(), password.clone()],
+            [
+                "Revealable login".to_owned(),
+                "ada@example.test".to_owned(),
+                String::new(),
+            ],
+            41,
+        );
+        let added = run(["item", "add", "login"], &add_host);
+        assert_eq!(added.exit_code(), ExitCode::Success, "{added:?}");
+        let item = added
+            .stdout()
+            .strip_prefix("Item added: ")
+            .and_then(|value| value.strip_suffix('\n'))
+            .unwrap();
+        let item_id = ItemId::from_user_string(item).unwrap();
+
+        let denied_host = TestHost::with_texts_and_entropy_seed(
+            paths.clone(),
+            [passphrase.clone()],
+            ["no".to_owned()],
+            53,
+        );
+        let denied = run(["item", "reveal", item, "login-password"], &denied_host);
+        assert_eq!(denied.exit_code(), ExitCode::InvalidInput, "{denied:?}");
+        assert!(denied.stdout().is_empty());
+        assert_eq!(denied_host.revealed_count(), 0);
+
+        let unavailable_host = TestHost::with_entropy_seed(paths.clone(), [passphrase.clone()], 67);
+        let unavailable = run(
+            ["item", "reveal", item, "login-password"],
+            &unavailable_host,
+        );
+        assert_eq!(
+            unavailable.exit_code(),
+            ExitCode::Provider,
+            "{unavailable:?}"
+        );
+        assert!(unavailable.stdout().is_empty());
+        assert_eq!(unavailable_host.revealed_count(), 0);
+
+        let wrong_field_host = TestHost::with_texts_and_entropy_seed(
+            paths.clone(),
+            [passphrase.clone()],
+            ["yes".to_owned()],
+            79,
+        );
+        let wrong_field = run(
+            ["item", "reveal", item, "secure-note-body"],
+            &wrong_field_host,
+        );
+        assert_eq!(
+            wrong_field.exit_code(),
+            ExitCode::InvalidInput,
+            "{wrong_field:?}"
+        );
+        assert!(wrong_field.stdout().is_empty());
+        assert_eq!(wrong_field_host.revealed_count(), 0);
+
+        let reveal_host = TestHost::with_texts_and_entropy_seed(
+            paths.clone(),
+            [passphrase.clone()],
+            ["yes".to_owned()],
+            89,
+        );
+        let revealed = run(["item", "reveal", item, "login-password"], &reveal_host);
+        assert_eq!(revealed.exit_code(), ExitCode::Success, "{revealed:?}");
+        assert!(revealed.stdout().is_empty());
+        assert!(revealed.stderr().is_empty());
+        assert!(reveal_host.revealed_equals(&password));
+
+        let locked_host = TestHost::with_texts_and_entropy_seed(
+            paths.clone(),
+            [b"wrong passphrase".to_vec()],
+            ["yes".to_owned()],
+            97,
+        );
+        let locked = run(["item", "reveal", item, "login-password"], &locked_host);
+        assert_eq!(locked.exit_code(), ExitCode::Locked, "{locked:?}");
+        assert_eq!(locked_host.revealed_count(), 0);
+
+        let audit_host = TestHost::with_entropy_seed(paths, [passphrase], 101);
+        let audit = run(["audit", "list"], &audit_host);
+        assert_eq!(audit.exit_code(), ExitCode::Success, "{audit:?}");
+        assert_eq!(
+            audit
+                .stdout()
+                .lines()
+                .filter(|line| {
+                    line.contains("action=item_read\toutcome=denied")
+                        && line.contains(&format!("\titem={}", item_id.to_user_string()))
+                })
+                .count(),
+            2,
+            "{audit:?}"
+        );
+        assert!(audit.stdout().lines().any(|line| {
+            line.contains("action=item_read\toutcome=failed")
+                && line.contains(&format!("\titem={}", item_id.to_user_string()))
+        }));
+        assert!(audit.stdout().lines().any(|line| {
+            line.contains("action=item_read\toutcome=succeeded")
+                && line.contains(&format!("\titem={}", item_id.to_user_string()))
+                && line.contains("\tselected=")
+        }));
+        assert!(!audit.stdout().contains("Revealable login"));
+        assert!(!audit
+            .stdout()
+            .contains(core::str::from_utf8(&password).unwrap()));
+        assert!(!audit.stdout().contains("secret reveal passphrase"));
     }
 
     #[test]

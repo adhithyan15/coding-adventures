@@ -163,6 +163,17 @@ fn real_cli_initializes_through_a_hidden_tty_and_survives_restart() {
     assert!(updated_transcript.contains("URL: none"));
     assert!(!updated_transcript.contains("e2e updated password"));
 
+    let (reveal_status, reveal_transcript, reveal_stdout) =
+        run_secret_reveal_in_pty(&home, &item_id);
+    assert!(
+        reveal_status.success(),
+        "secret reveal failed: {reveal_transcript}"
+    );
+    assert!(reveal_transcript.contains("Reveal secret on this terminal? Type yes to continue: "));
+    assert!(reveal_transcript.contains("Secret: \"e2e updated password stays encrypted\""));
+    assert!(reveal_stdout.is_empty(), "secret entered process stdout");
+    assert_transcript_excludes_secrets(&reveal_transcript);
+
     let (history_status, history_transcript) = run_unlock_in_pty(
         &home,
         &["history", "list", &item_id],
@@ -251,7 +262,7 @@ fn real_cli_initializes_through_a_hidden_tty_and_survives_restart() {
     let (post_failure_status, post_failure_transcript) = run_unlock_in_pty(
         &home,
         &["audit", "verify"],
-        b"commits=18 catalogs=6 revisions=5 items=2 audit_events=18",
+        b"commits=19 catalogs=6 revisions=5 items=2 audit_events=19",
     );
     assert!(
         post_failure_status.success(),
@@ -303,7 +314,7 @@ fn real_cli_initializes_through_a_hidden_tty_and_survives_restart() {
     assert_transcript_excludes_secrets(&audit_show_transcript);
 
     let (final_audit_status, final_audit_transcript) =
-        run_unlock_in_pty(&home, &["audit", "verify"], b"audit_events=22");
+        run_unlock_in_pty(&home, &["audit", "verify"], b"audit_events=23");
     assert!(
         final_audit_status.success(),
         "final audit verification failed: {final_audit_transcript}"
@@ -545,6 +556,63 @@ fn run_edit_login_in_pty(home: &TestHome, item_id: &str) -> (ExitStatus, String)
         UPDATED_ITEM_PASSWORD,
         b"",
         b"Item updated: ",
+    )
+}
+
+fn run_secret_reveal_in_pty(home: &TestHome, item_id: &str) -> (ExitStatus, String, Vec<u8>) {
+    let (mut master, slave) = open_pty();
+    let mut command = Command::new(env!("CARGO_BIN_EXE_vault-pm"));
+    command.args(["item", "reveal", item_id, "login-password"]);
+    home.configure(&mut command);
+    command
+        .stdin(Stdio::piped())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::from(slave));
+    unsafe {
+        command.pre_exec(|| {
+            if libc::setsid() < 0 || libc::ioctl(libc::STDERR_FILENO, tiocsctty_request(), 0) < 0 {
+                return Err(io::Error::last_os_error());
+            }
+            Ok(())
+        });
+    }
+    let mut child = command.spawn().unwrap();
+    drop(command);
+    child
+        .stdin
+        .take()
+        .unwrap()
+        .write_all(STDIN_INJECTION)
+        .unwrap();
+    let mut transcript = Vec::new();
+    read_until(&mut master, &mut transcript, b"Vault passphrase: ");
+    master.write_all(PASSPHRASE).unwrap();
+    master.write_all(b"\n").unwrap();
+    read_until(
+        &mut master,
+        &mut transcript,
+        b"Reveal secret on this terminal? Type yes to continue: ",
+    );
+    master.write_all(b"yes\n").unwrap();
+    read_until(
+        &mut master,
+        &mut transcript,
+        b"Secret: \"e2e updated password stays encrypted\"",
+    );
+    drain_pty(&mut master, &mut transcript);
+    drop(master);
+    let status = child.wait().unwrap();
+    let mut stdout = Vec::new();
+    child
+        .stdout
+        .take()
+        .unwrap()
+        .read_to_end(&mut stdout)
+        .unwrap();
+    (
+        status,
+        String::from_utf8_lossy(&transcript).into_owned(),
+        stdout,
     )
 }
 
