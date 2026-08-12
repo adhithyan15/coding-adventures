@@ -1354,6 +1354,66 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: chineseCharacterSource("我"),
   },
+  // 是 closes 日 in four strokes before drawing the five-stroke lower body.
+  // Only 日's top-right corner remains joined: nine strokes, eight lifts, and
+  // ten visible movements on the Noto Sans SC fit.
+  [ductusKey("chinese", "是")]: {
+    script: "chinese",
+    glyph: "是",
+    strokes: [
+      { segments: [{ label: "draw 日's left vertical", path: [
+        { x: 200, y: 770 }, { x: 200, y: 710 }, { x: 200, y: 650 },
+        { x: 200, y: 590 }, { x: 200, y: 530 }, { x: 200, y: 490 },
+      ] }] },
+      { segments: [
+        { label: "lift, then draw 日's top horizontal", path: [
+          { x: 200, y: 760 }, { x: 300, y: 760 }, { x: 400, y: 760 },
+          { x: 500, y: 760 }, { x: 600, y: 760 }, { x: 700, y: 760 },
+          { x: 795, y: 760 },
+        ] },
+        { label: "turn down the right side without lifting", path: [
+          { x: 795, y: 760 }, { x: 795, y: 700 }, { x: 795, y: 640 },
+          { x: 795, y: 580 }, { x: 795, y: 520 }, { x: 795, y: 490 },
+        ] },
+      ] },
+      { segments: [{ label: "lift, then draw 日's inner horizontal", path: [
+          { x: 235, y: 634 }, { x: 330, y: 634 }, { x: 430, y: 634 },
+          { x: 530, y: 634 }, { x: 630, y: 634 }, { x: 730, y: 634 },
+          { x: 760, y: 634 },
+      ] }] },
+      { segments: [{ label: "lift, then close 日 with the bottom horizontal", path: [
+        { x: 235, y: 500 }, { x: 330, y: 500 }, { x: 430, y: 500 },
+        { x: 530, y: 500 }, { x: 630, y: 500 }, { x: 730, y: 500 },
+        { x: 760, y: 500 },
+      ] }] },
+      { segments: [{ label: "lift, then draw the wide middle horizontal", path: [
+        { x: 65, y: 365 }, { x: 180, y: 365 }, { x: 300, y: 365 },
+        { x: 420, y: 365 }, { x: 540, y: 365 }, { x: 660, y: 365 },
+        { x: 780, y: 365 }, { x: 900, y: 365 }, { x: 940, y: 365 },
+      ] }] },
+      { segments: [{ label: "lift, then descend the central vertical", path: [
+        { x: 508, y: 350 }, { x: 508, y: 300 }, { x: 508, y: 245 },
+        { x: 508, y: 190 }, { x: 508, y: 130 }, { x: 508, y: 70 },
+        { x: 508, y: 10 },
+      ] }] },
+      { segments: [{ label: "lift, then draw the short lower-right horizontal", path: [
+        { x: 510, y: 185 }, { x: 580, y: 185 }, { x: 650, y: 185 },
+        { x: 720, y: 185 }, { x: 790, y: 185 }, { x: 850, y: 185 },
+      ] }] },
+      { segments: [{ label: "lift, then draw the lower-left falling stroke", path: [
+        { x: 265, y: 280 }, { x: 250, y: 230 }, { x: 230, y: 180 },
+        { x: 205, y: 130 }, { x: 175, y: 85 }, { x: 140, y: 45 },
+        { x: 100, y: 10 }, { x: 60, y: -25 },
+      ] }] },
+      { segments: [{ label: "lift, then draw the long finishing stroke down and right", path: [
+        { x: 245, y: 180 }, { x: 280, y: 140 }, { x: 320, y: 105 },
+        { x: 370, y: 65 }, { x: 430, y: 25 }, { x: 500, y: -5 },
+        { x: 580, y: -25 }, { x: 670, y: -25 }, { x: 760, y: -25 },
+        { x: 850, y: -25 }, { x: 920, y: -20 },
+      ] }] },
+    ],
+    source: chineseCharacterSource("是"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the

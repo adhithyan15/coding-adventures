@@ -2,6 +2,11 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Chinese 是 ductus (HL-C09CL)
+
+- Render **是** in ten source-aligned movements across nine strokes.
+- Preserve 日-first order, its joined corner, and eight lifts in Noto Sans SC.
+
 ### Added — cited Chinese 我 ductus (HL-C09CK)
 
 - Render **我** in nine source-aligned movements across seven strokes.
