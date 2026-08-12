@@ -1,38 +1,34 @@
-Spanish, chapter 168: Se Compran Libros --- The Verb Tells On Itself.
+Spanish, chapter 168: Se Habla Espanol --- Nobody in Particular.
 1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-se compran libros — the verb tells on itself.
+se habla español — nobody in particular.
 
 Warm-up.
 [pause 2 seconds]
-Se habla español — one thing, singular verb. Now guess what happens with more than one thing.
+Se llama — "he calls himself." You have had that se since your third chapter. Here it is doing something you have seen on signs and never been able to parse.
 
-Grammar Lens: it agrees, and that is strange.
-Se compra el libro. — The book is bought. Se compran libros. — Books are bought.
-The verb changed. Compra for one book, compran for several — the verb is agreeing with the thing being bought.
-Stop and notice how odd that is. In se habla español there is nobody doing the speaking, so what is the verb agreeing with? If this were simply "one buys books," the verb would stay singular, because one is one person. It does not stay singular.
-The thing is behaving like the subject. And that is the clue to where this construction came from.
-
-The word, taken apart.
-Read se compran libros with the se meaning what it meant in se llama:
-Books buy themselves.
-That is nonsense as a description of the world, and it is exactly the sentence Spanish is using. The reflexive was stretched: first the door closes itself (true enough of doors), then the books sell themselves, and finally any verb at all with the doer quietly dropped.
-Once you see that, the agreement stops being strange. Libros is the subject of se compran in the same way él is the subject of se llama. The verb has been agreeing with its subject all along; it is just that the subject is a thing, and the thing is not really doing anything.
-So this se is the reflexive se — grown, not borrowed. Unlike the se of se lo digo, which only looks like it.
+Grammar Lens: a sentence with nobody in it.
+Se habla español. — Spanish is spoken here. Se come bien. — One eats well here. / The food is good.
+Look for the person doing it. There is not one, and there is not meant to be. Se habla español does not tell you who speaks Spanish — it tells you that Spanish gets spoken, and that is the entire content.
+English has to work harder to be that vague. It reaches for a passive ("Spanish is spoken"), or a fake subject ("they speak Spanish here", "you eat well there"), and neither is quite honest, because there is no they and no you.
+Spanish just... leaves the person out. The se is the mark that says nobody is being named.
+This is why it is the natural voice of signs, notices and rules: se habla español, se prohíbe fumar, no se aceptan tarjetas. A sign is not addressed by anyone to anyone. It simply reports that something is the case.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "Se compra el libro" then "Se compran libros" — hear the verb follow the thing]
+[your turn — say: "Se habla español" as if reading it off a window]
 [pause 8 seconds for the answer]
+[your turn — say: "Se come bien"]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 8 seconds]
+Write the sign that says Spanish is spoken here.
 [question — say your answer, then pause 10 seconds]
-Say books are bought.
-[question — say your answer, then pause 10 seconds]
-What is the verb agreeing with in se compran libros?
-[question — say your answer, then pause 12 seconds]
-Read se compran libros as if se still meant themselves. What does it say?
+Who speaks Spanish, according to that sentence?
+[question — say your answer, then pause 8 seconds]
+Say one eats well here.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Why does the verb go plural? (Because it agrees with the thing.) And why does it agree with the thing? (Because underneath, the thing is doing it to itself.) Next: the one you will use every day.
+Se habla español — who is speaking? (Nobody named — that is the point.) What does the se mark? (That no person is being named.) Next: why this form grew out of the one you already knew.

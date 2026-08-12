@@ -2,32 +2,25 @@
   "version": 1,
   "language": "spanish",
   "chapter": 102,
-  "title": "Hablado, Comido, Vivido --- The Participle",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:63896a081223f72f",
+  "title": "Synthesis --- A Small Story",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:0b48a76012a8f999",
   "lessons": [
     {
-      "id": "ES-C49-participio",
-      "sequence": 1315,
-      "title": "hablado, comido, vivido — the participle",
-      "headword": "hablado / comido / vivido",
-      "romanization": "hablado / comido / vivido",
-      "gloss": "the participle — one ending for -ar, one for the other two, and the same merger you already met in the preterite",
+      "id": "ES-C48-sintesis-una-historia",
+      "sequence": 1314,
+      "title": "Synthesis — a small story",
+      "headword": "(synthesis)",
+      "romanization": "(synthesis)",
+      "gloss": "synthesis — a story in four sentences, which is the first thing in this book that needs both pasts at once",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c756846be9fe3b4b",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:75aa1348a64e0888",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -42,57 +35,53 @@
             },
             {
               "kind": "speech",
-              "text": "Your three verb families, once more: hablar, comer, vivir. This chapter gives each of them one new form, and two of the three get the same one."
+              "text": "Everything in this book so far has been sentences. A story is different: it needs a background and a foreground at the same time."
             }
           ]
         },
         {
           "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: two endings, not three",
+          "type": "input",
+          "title": "The exchange",
           "segments": [
             {
               "kind": "speech",
-              "text": "hablar becomes hablado, comer becomes comido, vivir becomes vivido."
+              "text": "Four sentences. Watch the tenses take turns."
             },
             {
               "kind": "speech",
-              "text": "-ar verbs take -ado."
+              "text": "Yo estudiaba español. No tenía un libro. Tuve un libro en marzo. Y cuando tuve el libro, hablé con Ana."
             },
             {
               "kind": "speech",
-              "text": "-er and -ir verbs both take -ido."
+              "text": "Now read only the imperfects: estudiaba, tenía. Those two sentences tell you what things were like — the situation, with no edges, going on for as long as it needed to."
             },
             {
               "kind": "speech",
-              "text": "You have seen those two families collapse into one before: in the preterite, where comí and viví have identical endings. It happens here for the same reason it happened there — the difference between -er and -ir was never deep, and outside the present tense it mostly stops existing."
+              "text": "Now read only the preterites: tuve, hablé. Those tell you what happened — two events, each with edges, in order."
             },
             {
               "kind": "speech",
-              "text": "So this is one new ending and one you can predict."
-            },
-            {
-              "kind": "speech",
-              "text": "The word itself does not change for who is speaking. Hablado is hablado whether you, I, or a hundred people did the speaking. That is unusual enough to notice: every other verb form you hold has been carrying a person on its back."
+              "text": "The story is the two layers together. Neither layer is a story on its own: the imperfects alone are a description that never moves, and the preterites alone are a list of events with no world around them."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
+          "type": "grammar",
+          "title": "Grammar Lens: what you can now do",
           "segments": [
             {
               "kind": "speech",
-              "text": "Grammarians call this a participle, from Latin participium — \"the form that takes part.\" It was named for doing two jobs at once: it is built from a verb, and it behaves like an adjective."
+              "text": "Notice the third sentence. Tuve un libro is not \"I had a book\" — it is the moment you got one, which is why it belongs in the foreground with hablé rather than in the background with tenía. The same verb appears in both layers of this story, doing two different jobs, and nothing about it is irregular."
             },
             {
               "kind": "speech",
-              "text": "You can see the adjective half immediately. Cansado (\"tired\") is the participle of cansar, and it agrees like any adjective: cansada, cansados. The same shape, doing adjective work."
+              "text": "That is the whole rung. From here you can narrate: not just report that something happened, but say what the world was like while it did."
             },
             {
               "kind": "speech",
-              "text": "Next chapter puts it to its verb work instead — and there, held in place by another word, it stops agreeing with anything at all."
+              "text": "It is worth naming the cost. Two tenses learned separately, then three chapters on nothing but the choice between them — because the forms were never the difficulty. English lets you leave this question unanswered; Spanish does not."
             }
           ]
         },
@@ -110,76 +99,103 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"hablado, comido, vivido\" — one ending, then the shared one",
+              "instruction": "the four sentences straight through",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"hablado, comido, vivido\" — one ending, then the shared one]"
+              "source": "[YOU SAY: the four sentences straight through]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"comí, viví\" then \"comido, vivido\" — the same merger, twice",
+              "instruction": "only the imperfects, then only the preterites, and hear the two layers",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"comí, viví\" then \"comido, vivido\" — the same merger, twice]"
+              "source": "[YOU SAY: only the imperfects, then only the preterites, and hear the two layers]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C49-participio-ar",
-              "prompt": "Give the participle of hablar.",
+              "id": "ES-C48-sintesis-una-historia-layers",
+              "prompt": "In the story, which two verbs are the background?",
               "assesses": [
-                "ES-GRAMMAR-PAST-PARTICIPLE",
-                "ES-LEX-HABLAR"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "hablado",
-                "habl-ado"
-              ],
-              "feedback": {
-                "correct": "-ar takes -ado.",
-                "incorrect": "Hablado."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C49-participio-erir",
-              "prompt": "Give the participles of comer and vivir.",
-              "assesses": [
-                "ES-GRAMMAR-PAST-PARTICIPLE",
-                "ES-LEX-COMER",
-                "ES-LEX-VIVIR"
+                "ES-GRAMMAR-BACKDROP-AND-EVENT"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "comido, vivido",
-                "comido vivido"
+                "estudiaba and tenia",
+                "estudiaba, tenía",
+                "the imperfects"
               ],
               "feedback": {
-                "correct": "Both -ido — the two families merge again.",
-                "incorrect": "Comido and vivido."
+                "correct": "What things were like.",
+                "incorrect": "Estudiaba and tenia — the imperfects."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C49-participio-person",
-              "prompt": "Does the participle change for who is speaking?",
+              "id": "ES-C48-sintesis-una-historia-third",
+              "prompt": "Why is tuve un libro in the foreground when tenia un libro was not?",
               "assesses": [
-                "ES-GRAMMAR-PAST-PARTICIPLE"
+                "ES-GRAMMAR-ASPECT-CHANGES-MEANING",
+                "ES-GRAMMAR-TENER-PRETERITE-SINGULAR"
               ],
-              "responseSeconds": 8,
+              "responseSeconds": 12,
               "acceptedResponses": [
-                "no",
-                "no, it stays the same"
+                "tuve is the moment of getting it",
+                "because it is an event, not a state",
+                "getting has edges"
               ],
               "feedback": {
-                "correct": "The first verb form you hold that carries no person.",
-                "incorrect": "No — hablado is hablado for everybody."
+                "correct": "Same verb, both layers, nothing irregular.",
+                "incorrect": "Tuve is the moment you got one — an event with edges."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C48-sintesis-una-historia-tell",
+              "prompt": "Say I was studying when I spoke with Ana.",
+              "assesses": [
+                "ES-GRAMMAR-BACKDROP-AND-EVENT",
+                "ES-LEX-CUANDO",
+                "ES-LEX-ESTUDIAR",
+                "ES-LEX-HABLAR"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "estudiaba cuando hable con ana",
+                "estudiaba cuando hablé con ana"
+              ],
+              "feedback": {
+                "correct": "Background, then the thing that walked into it.",
+                "incorrect": "Estudiaba cuando hable con Ana."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C48-sintesis-una-historia-why",
+              "prompt": "Why did this take three chapters when neither tense was new?",
+              "assesses": [
+                "ES-GRAMMAR-ASPECT-NOT-TIME"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "because the choice is the difficulty, not the forms",
+                "english lets you leave the question unanswered",
+                "the forms were never the hard part"
+              ],
+              "feedback": {
+                "correct": "Spanish asks a question your first language let you skip.",
+                "incorrect": "The forms were never the difficulty. The choice is."
               }
             }
           ]
@@ -197,7 +213,7 @@
             },
             {
               "kind": "speech",
-              "text": "Participle of hablar? (Hablado.) Of comer and vivir? (Comido, vivido — the same ending.) What does participium mean? (The form that takes part — verb and adjective at once.) Next: the word that turns it into a tense."
+              "text": "Which layer says what things were like? (The imperfect.) Which says what happened? (The preterite.) And what can you do now that you could not before? (Tell a story — not just report events, but say what the world was like while they happened.)"
             }
           ]
         }

@@ -1,80 +1,66 @@
-Spanish, chapter 52: Ir in the Plural --- a Verb That Is Not Ir.
-2 lessons. All 2 can be done entirely by ear.
+Spanish, chapter 52: Tener in the Plural, and the Stem-Change Rule.
+2 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
 Lesson 1 of 2.
-vamos — from a verb that is not ir.
+tenemos — and the stem change disappears.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
 
 Warm-up.
 [pause 2 seconds]
-Say "I go." (Voy.) And "we speak." (Hablamos.)
+Say "I have" and "you have." (Tengo, tienes.) And "we eat." (Comemos.)
 
-Grammar Lens: -amos and -áis, on a stem you have not seen.
-vamos — we go., vais — you all go.
-The endings are ordinary. -amos and -áis are the plain -ar endings from hablamos and habláis.
-What is strange is the stem. The infinitive is ir, and there is no v in it anywhere — yet every one of these forms begins with one.
-
-The word, taken apart.
-You met this shape two chapters ago and now you can use it as a tool.
-Ir is not one verb. Latin had īre, "to go", which gives the infinitive ir and little else. It also had vādere, "to advance, to make one's way", which gives voy, vas, va, vamos, vais and one more — the entire present tense.
-So the present of ir is not irregular. It is regular for a different verb, one whose infinitive Spanish stopped using. The endings behave perfectly; they are simply attached to a stem the dictionary form does not show you.
-That is the third time this pattern has explained something: ser from esse and sedēre, and now ir from īre and vādere. English does it too — go and went, where went is really the past of wend.
-The commonest verbs in a language are the likeliest to be made of more than one, because they are used so much that no single word's forms survive intact.
+Grammar Lens: the break is gone.
+tenemos — we have., tenéis — you all have.
+Not tienemos. Look at what happened: tienes had the broken stem ie, and here it is plain e again — the ordinary -er endings, on the ordinary stem.
+You already know why. It is the same reason -er and -ir looked identical in the singular and parted in the plural: stress.
+Tienes stresses the stem, and a stressed e in that position breaks into ie. Tenemos stresses the ending, so the stem is unstressed and its vowel stays whole.
+The stem change was never a property of the verb. It is a property of where the stress lands, and these two forms are where the stress lands elsewhere.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "hablamos, vamos" — the same ending, an unexpected stem]
+[your turn — say: "tienes" then "tenemos" — and hear the stress move off the stem]
 [pause 8 seconds for the answer]
-[your turn — say: "voy, vas, va, vamos, vais" — all one verb, and it is not ir]
+[your turn — say: "comemos, tenemos" — the same endings]
 [pause 8 seconds for the answer]
 [question — say your answer, then pause 8 seconds]
-Say we go.
+Say we have.
 [question — say your answer, then pause 10 seconds]
-Why does the present of ir begin with v when the infinitive has none?
-[question — say your answer, then pause 10 seconds]
-Name the English pair that works the same way.
+Why does tienes break its stem but tenemos does not?
 
 Wrap-up Recall.
 [pause 3 seconds]
-What is "we go"? (Vamos.) Which Latin verb do these forms come from? (Vādere.) And what does that make ir? (Two verbs, like ser — and like English go and went.)
+What is "we have"? (Tenemos.) Where did the ie go? (Nowhere — it only ever appears when the stem is stressed.) Next: the form where the stress comes back.
 
 
 Lesson 2 of 2.
-van — and the four are done.
+tienen — the break comes back.
 
 Warm-up.
 [pause 2 seconds]
-Say "we go." (Vamos.) And "they speak." (Hablan.)
+Say "we have", then "you have" to a friend. (Tenemos, tienes.) Which one has the broken stem?
 
-Grammar Lens: the last form.
-van — they go, and ustedes van, you all go.
-Latin's form was vadunt. Spanish wore it down to three letters, and the rule still holds visibly: a final -n, and the subject is plural and not you.
-
-What you've built.
-Four chapters ago you could conjugate any regular verb in the present, and none of the irregular ones. Now the four commonest verbs in Spanish are complete in every person:
-ser, estar, tener, ir — to be, to be, to have, to go.
-And each one taught something that outlives it:
-ser — two Latin verbs fused, so the seam shows at eres.
-estar — one verb, so it is regular; the accent only marks stress.
-tener — the stem breaks exactly where it is stressed, in every stem-changing verb, which is why nosotros and vosotros never break.
-ir — its present belongs to a different verb entirely.
-Three of those four are about the same underlying thing: a verb that looks chaotic is usually more than one word, and the places it looks regular are the places one word survived intact.
+Grammar Lens: the rule, stated once and for all.
+tienen — they have, and ustedes tienen, you all have.
+The ie is back. And now you have seen it appear, vanish and return, which is enough to state the rule outright:
+A stem change happens exactly where the stem is stressed, and nowhere else.
+That is four forms with the break — setting aside the yo form, which has an oddity of its own — and two without: nosotros and vosotros. Always those two. In every stem-changing verb in the language.
+Learners are usually told to memorise a shape called "the boot" — the four stressed forms drawn as an outline around a table. You do not need the boot. You need to know where Spanish puts its stress, which you already do.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "somos, estamos, tenemos, vamos" — the four, in the we form]
+[your turn — say: "tienes, tenemos, tienen" — break, no break, break]
 [pause 8 seconds for the answer]
-[your turn — say: "son, están, tienen, van" — the four, in the they form]
+[your turn — say: the two forms that never break, for any verb]
 [pause 8 seconds for the answer]
-[repeat that twice]
-Until all four run without a gap.
-[question — say your answer, then pause 6 seconds]
-Say they go.
+[question — say your answer, then pause 8 seconds]
+Say they have.
 [question — say your answer, then pause 10 seconds]
-They are (permanently), and they are (right now): which two forms?
-[question — say your answer, then pause 10 seconds]
-What usually explains a Spanish verb that looks chaotic?
+In any stem-changing verb, which two forms never break?
+[question — say your answer, then pause 8 seconds]
+What actually decides whether the stem breaks?
 
 Wrap-up Recall.
 [pause 3 seconds]
-What is "they go"? (Van.) Name the four verbs you have just completed. (Ser, estar, tener, ir.) And what do three of them have in common? (Each is more than one Latin verb, or its stem change follows the stress.)
+What is "they have"? (Tienen.) State the stem-change rule. (The stem breaks exactly where it is stressed.) Which two forms never break? (Nosotros and vosotros.)

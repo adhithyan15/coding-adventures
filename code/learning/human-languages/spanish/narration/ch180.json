@@ -2,32 +2,25 @@
   "version": 1,
   "language": "spanish",
   "chapter": 180,
-  "title": "Review --- Three Letters",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:809c62bff7a260ff",
+  "title": "Hay Que --- Somebody Has To, and Nobody in Particular",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:fa05edc5bdab17b0",
   "lessons": [
     {
-      "id": "ES-C54-repaso-hay",
-      "sequence": 2139,
-      "title": "Review — three letters",
-      "headword": "(review)",
-      "romanization": "(review)",
-      "gloss": "review — three letters, three uses, and the last piece the audit was missing",
+      "id": "ES-C54-hay-que",
+      "sequence": 2138,
+      "title": "hay que — somebody has to, and nobody in particular",
+      "headword": "hay que",
+      "romanization": "hay que",
+      "gloss": "\"one must\" — obligation with nobody obliged, and the second of Spanish's two ways to leave a person out",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2d84c73913f4ebd8",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:2fbc7776273137fe",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -42,66 +35,57 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing new. What does hay agree with?"
+              "text": "Se habla español left the person out. So did every sign you read. Here is the other way Spanish does that — and this one is about obligation."
             }
           ]
         },
         {
           "index": 1,
-          "type": "notice",
-          "title": "What you've built",
+          "type": "grammar",
+          "title": "Grammar Lens: an obligation with nobody in it",
           "segments": [
+            {
+              "kind": "speech",
+              "text": "hay que + a plain infinitive — one must, you have to, it is necessary to."
+            },
+            {
+              "kind": "speech",
+              "text": "Hay que hablar español. — You have to speak Spanish. Hay que comer. — One must eat."
+            },
+            {
+              "kind": "speech",
+              "text": "Three words you already own, and no new grammar: hay, que, and a verb in its dictionary form."
+            },
+            {
+              "kind": "speech",
+              "text": "What it produces is an obligation with nobody obliged. Hay que hablar español does not say who has to — not you, not me, not them. It says the requirement exists, the way a sign says a thing is forbidden without saying who forbids it."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the same move as the impersonal se, and now you have both:"
+            },
             {
               "kind": "table",
               "headers": [
                 "",
-                "",
-                ""
+                "Spanish",
+                "leaves out"
               ],
               "columns": 3,
-              "rowCount": 4,
+              "rowCount": 2,
               "utterances": [
-                "one thing, Hay una casa., There is a house.",
-                "many things, Hay libros., There are books.",
-                "an obligation, Hay que comer., One must eat.",
-                "what it is made of, ha + y, \"it has there\"."
+                "something happens. Spanish: se habla español. leaves out: who does it.",
+                "something must happen. Spanish: hay que hablar español. leaves out: who must."
               ]
             },
             {
               "kind": "speech",
-              "text": "Three letters, and everything above came out of them."
-            },
-            {
-              "kind": "speech",
-              "text": "Notice the shape of this arc, because it is the shape of a lot of language learning: the smallest words need the most explaining. Hay is shorter than any noun you have learned and it took four chapters, while comida took one. Short words are short because they are used constantly, and constant use is what wears them into fossils that no longer explain themselves."
+              "text": "Two constructions, one habit: Spanish is comfortable saying that something is the case without saying who is behind it. English needs a vague you or they or a passive to manage the same thing, and always sounds slightly like it is avoiding the question."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: what it does not do",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Two things hay never does, and both save you work:"
-            },
-            {
-              "kind": "speech",
-              "text": "It never agrees. Not with number, not with anything. One form."
-            },
-            {
-              "kind": "speech",
-              "text": "It never names anybody. Neither does hay que."
-            },
-            {
-              "kind": "speech",
-              "text": "So of everything you have learned about making Spanish verbs match their surroundings — six endings a tense, gender on the pronouns, number on the articles — none of it applies here. After a hundred and seventy chapters of agreement, the last word is the one that opted out."
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -114,78 +98,76 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "all four rows of the table",
+              "instruction": "\"Hay que hablar español\" then \"Se habla español\" — both with nobody in them",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: all four rows of the table]"
-            },
-            {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
+              "source": "[YOU SAY: \"Hay que hablar español\" then \"Se habla español\" — both with nobody in them]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C54-repaso-hay-three",
-              "prompt": "Say there is a house, there are books, and one must eat.",
+              "id": "ES-C54-hay-que-say",
+              "prompt": "Say you have to speak Spanish, without naming anybody.",
               "assesses": [
-                "ES-LEX-HAY",
-                "ES-GRAMMAR-HAY-NO-AGREEMENT",
-                "ES-GRAMMAR-HAY-QUE"
+                "ES-GRAMMAR-HAY-QUE",
+                "ES-LEX-HABLAR",
+                "ES-LEX-ESPANOL"
               ],
-              "responseSeconds": 14,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "hay una casa, hay libros, hay que comer",
-                "hay una casa; hay libros; hay que comer"
+                "hay que hablar espanol",
+                "hay que hablar español"
               ],
               "feedback": {
-                "correct": "One word, three jobs.",
-                "incorrect": "Hay una casa. Hay libros. Hay que comer."
+                "correct": "An obligation with nobody obliged.",
+                "incorrect": "Hay que hablar espanol."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C54-repaso-hay-never",
-              "prompt": "Name the two things hay never does.",
+              "id": "ES-C54-hay-que-form",
+              "prompt": "What form of the verb follows hay que?",
               "assesses": [
-                "ES-GRAMMAR-HAY-NO-AGREEMENT"
+                "ES-GRAMMAR-HAY-QUE",
+                "ES-LEX-QUE"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "the infinitive",
+                "the dictionary form",
+                "the plain infinitive"
+              ],
+              "feedback": {
+                "correct": "No conjugation at all — there is nobody to conjugate for.",
+                "incorrect": "The infinitive, the dictionary form."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C54-hay-que-pair",
+              "prompt": "Name the other Spanish construction that leaves the person out.",
+              "assesses": [
+                "ES-GRAMMAR-SE-IMPERSONAL",
+                "ES-GRAMMAR-HAY-QUE"
               ],
               "responseSeconds": 12,
               "acceptedResponses": [
-                "agree, and name anybody",
-                "it never agrees and never names a person"
+                "the impersonal se",
+                "se habla espanol",
+                "the se of se habla"
               ],
               "feedback": {
-                "correct": "After all that agreement, the last word opts out of it entirely.",
-                "incorrect": "It never agrees, and it never names anybody."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C54-repaso-hay-small",
-              "prompt": "Why did a three-letter word need four chapters when comida needed one?",
-              "assesses": [
-                "ES-ETYMON-HAY-IBI"
-              ],
-              "responseSeconds": 14,
-              "acceptedResponses": [
-                "short words are worn down by constant use",
-                "the smallest words need the most explaining",
-                "heavy use turns them into fossils"
-              ],
-              "feedback": {
-                "correct": "They stop explaining themselves.",
-                "incorrect": "Short words are short because they are used constantly, and that wears them into fossils."
+                "correct": "One says something happens; the other says something must.",
+                "incorrect": "The impersonal se — se habla espanol."
               }
             }
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -197,7 +179,7 @@
             },
             {
               "kind": "speech",
-              "text": "Three uses of hay — say them. (There is, there are, and hay que for must.) What does it agree with? (Nothing at all.) Next: the last synthesis."
+              "text": "\"One must eat\"? (Hay que comer.) Who must? (Nobody named.) And which other construction does the same? (The impersonal se.) Next: all of it in one place."
             }
           ]
         }

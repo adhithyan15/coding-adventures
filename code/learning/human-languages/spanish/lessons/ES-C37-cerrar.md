@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C37-cerrar
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 1950
-chapter: 152
+chapter: 153
 type: word
 headword: cerrar
 gloss: to close — from the bar dropped across a door, not from the Latin verb English inherited

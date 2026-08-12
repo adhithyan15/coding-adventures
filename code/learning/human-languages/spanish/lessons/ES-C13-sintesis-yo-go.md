@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C13-sintesis-yo-go
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 1115
-chapter: 59
+chapter: 60
 type: practice-mix
 headword: (synthesis)
 gloss: synthesis — the same sentence about you and about someone else, and only one of them is odd

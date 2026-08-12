@@ -1,38 +1,64 @@
-Spanish, chapter 43: Comeis and Vivis.
-1 lesson. All 1 can be done entirely by ear.
+Spanish, chapter 43: Where -er and -ir Part Company.
+2 lessons. All 2 can be done entirely by ear.
 
 
-Lesson 1 of 1.
-coméis and vivís — the second difference, and the last.
+Lesson 1 of 2.
+comemos — "we eat".
 
 Warm-up.
 [pause 2 seconds]
-Which form goes with vosotros for hablar? (Habláis.) And where is that word used? (Spain.)
+Say "we speak." (Hablamos.) And "I eat." (Como.)
 
-Grammar Lens: two families, two endings, one lesson.
-coméis — you all eat., vivís — you all live.
-These two are taught together, and it is worth saying why, because this book has otherwise insisted on one form per lesson.
-You already know the fact they demonstrate. The -er and -ir families differ in exactly two slots — nosotros, which you met last chapter, and vosotros, which is this one. Learning them apart would teach the same single fact twice and hide the pattern that makes it easy.
-And after this, the two families agree again. They eat and they live take the same ending, as every singular form did.
-
-The word, taken apart.
-Both descend from Latin's -tis: comeditis, vīvitis. Spanish lost the -t- between vowels — as it lost most of them — and what was left collapsed differently in each family. The -er line kept two vowels, -éis. The -ir line kept one, -ís.
-Same ending, same erosion, two outcomes. That is most of what sound change looks like.
+Grammar Lens: the same -mos, a different vowel.
+Drop the -er, add -emos:
+comemos — we eat.
+The -mos is the one you already have from hablamos. Only the vowel in front of it changed, from a to e — and it changed for the reason it always does: the ending takes the colour of its family.
+That is the pattern for every plural ending you will meet. -mos and -n never change. The vowel before them does.
+Something is about to happen that has not happened before. In the singular, -er and -ir were identical — como/comes/come and vivo/vives/vive, the same three endings twice over. That was a genuine saving, and it is about to stop. The next lesson is where the two families finally part.
 
 Guided Practice.
 [pause 1 second]
-[your turn — hear: "coméis", "vivís"]
-[pause 8 seconds for the answer]
-becomes a Spaniard, addressing friends.
-[your turn — say: "comemos, coméis" then "vivimos, vivís" — the two differing slots, side by side]
+[your turn — say: "hablamos" then "comemos" — the same -mos, a different vowel]
 [pause 8 seconds for the answer]
 [question — say your answer, then pause 8 seconds]
-Vosotros, from comer.
+Turn comer into we eat.
 [question — say your answer, then pause 8 seconds]
-Vosotros, from vivir.
-[question — say your answer, then pause 10 seconds]
-In how many of the six slots do -er and -ir actually differ?
+Which part of the ending is the same in hablamos and comemos?
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give both vosotros forms. (Coméis, vivís.) In how many slots do the two families differ? (Two — and you have now met both.) What Latin ending is behind them? (-tis.)
+What is "we eat"? (Comemos.) Which part of a plural ending never changes? (The -mos.) And what has been true of -er and -ir until now? (They were identical — which the next lesson ends.)
+
+
+Lesson 2 of 2.
+vivimos — where the two families part.
+
+Warm-up.
+[pause 2 seconds]
+Say "we eat." (Comemos.) And "I live." (Vivo.)
+
+Grammar Lens: the saving ends here.
+Drop the -ir, add -imos:
+vivimos — we live.
+Not vivemos. Vivimos.
+This is the first form in the whole book where -er and -ir do not match. For every singular form you learned, the two families shared endings exactly — and you were told that saving would end in the plural. This is where.
+comemos — we eat., vivimos — we live.
+One vowel apart, and it is each family's own vowel: the e of comer, the i of vivir. The families were never really the same; the singular endings simply happened to fall out identically.
+
+The word, taken apart.
+Why did the singular hide the difference and the plural expose it?
+Stress. In vivo, vives, vive, the stress is on the stem and the ending is unstressed — and unstressed vowels wear toward each other until they are indistinguishable. In vivimos, the stress lands on the ending itself, and a stressed vowel keeps its own quality.
+So the families did not diverge here. They were always distinct, and the plural is simply the place where the stress lets you hear it.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "comemos" then "vivimos" — and hear the one vowel that separates them]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 8 seconds]
+Turn vivir into we live.
+[question — say your answer, then pause 10 seconds]
+What is the only difference between comemos and vivimos?
+
+Wrap-up Recall.
+[pause 3 seconds]
+What is "we live"? (Vivimos.) Why was the difference invisible in the singular? (The ending was unstressed, so the vowels wore together.) And what makes it audible here? (The stress falls on the ending.)

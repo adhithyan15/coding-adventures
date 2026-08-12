@@ -344,6 +344,18 @@
       "after": []
     },
     {
+      "id": "ES-PATH-028-SOUND-ES",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "ES-C57-es-inicial"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-028-SOUND-ES"
+      ],
+      "after": []
+    },
+    {
       "id": "ES-PATH-028-SYNTH-LAWS",
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
@@ -2116,6 +2128,7 @@
         "ES-PATH-028-SYNTH-FR",
         "ES-PATH-028-SOUND-F-H",
         "ES-PATH-028-SOUND-LL",
+        "ES-PATH-028-SOUND-ES",
         "ES-PATH-028-SYNTH-LAWS",
         "ES-PATH-028",
         "ES-PATH-029",
@@ -4354,6 +4367,17 @@
       "prerequisites": [],
       "lessons": [
         "ES-C57-ll"
+      ]
+    },
+    {
+      "id": "ES-EXT-028-SOUND-ES",
+      "stage": "A1",
+      "kind": "required",
+      "category": "etymology",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C57-es-inicial"
       ]
     },
     {

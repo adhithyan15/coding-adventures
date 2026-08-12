@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 38,
-  "title": "Hablan --- They, and Ustedes",
+  "title": "Hablamos --- the First Form That Is Not About One Person",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:fccb1eecd63ee824",
+  "sourceHash": "fnv1a64:67e4bf1974f325d7",
   "lessons": [
     {
-      "id": "ES-C07-hablan",
-      "sequence": 730,
-      "title": "hablan — \"they speak,\" and \"you all speak\"",
-      "headword": "hablan",
-      "romanization": "hablan",
-      "gloss": "they speak\" — and, across most of the Spanish-speaking world, \"you all speak",
+      "id": "ES-C07-hablamos",
+      "sequence": 710,
+      "title": "hablamos — \"we speak\"",
+      "headword": "hablamos",
+      "romanization": "hablamos",
+      "gloss": "\"we speak\" — the first form in this book that is not about one person",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ce8bdd3e9b722417",
+      "sourceHash": "fnv1a64:8775b8e253dfe647",
       "notice": null,
       "blocks": [
         {
@@ -35,49 +35,57 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"we speak.\" (Hablamos.) And what was the form for he speaks? (Habla.)"
+              "text": "Say \"I speak\", then \"you speak\" to a friend. (Hablo. Hablas.)"
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: add the plural -n",
+          "title": "Grammar Lens: the first form that is not about one person",
           "segments": [
             {
               "kind": "speech",
-              "text": "Take habla, the form for one other person, and add -n:"
+              "text": "Every verb form you have met so far — in every tense — has been about one person. That changes here."
             },
             {
               "kind": "speech",
-              "text": "hablan — they speak."
+              "text": "Drop the -ar, add -amos:"
             },
             {
               "kind": "speech",
-              "text": "That is the whole operation, and it is the same one Spanish uses everywhere: a final -n on a verb means the subject is plural and is not you."
+              "text": "hablamos — we speak."
+            },
+            {
+              "kind": "speech",
+              "text": "One word again, no pronoun, and now it covers you and somebody else."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the form you will reach for constantly and have not had: we speak, we work, we study. Everything you could say about yourself, you can now say about a group you belong to."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: the form does a second job, exactly as habla did",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "ustedes — you all. And it takes hablan, the they form."
+              "text": "The -mos is remarkable for how little happened to it."
             },
             {
               "kind": "speech",
-              "text": "You have seen this exact move before. Usted takes the he/she form because it grew out of vuestra merced, \"your grace\" — a thing you talk about. Ustedes is simply that phrase made plural, vuestras mercedes, \"your graces\". Same origin, same consequence."
+              "text": "Latin marked we with -mus: amāmus, \"we love\". Spanish says -mos. One vowel changed in two thousand years, and nothing else — no consonant lost, no syllable worn away, no analogy pulling it out of shape."
             },
             {
               "kind": "speech",
-              "text": "Where this is the ordinary word. Across all of Latin America, and in the Canary Islands and parts of Andalusia, ustedes is how you address any group — friends, family, strangers alike. There is no separate familiar plural. For most Spanish speakers alive, this lesson is the complete answer to \"how do I talk to more than one person?\""
+              "text": "Compare what became of the third person, which lost its -t entirely (hablat becomes habla). Endings do not decay at the same rate, and this one barely decayed at all."
             },
             {
               "kind": "speech",
-              "text": "Spain uses a different word for friends, and it has the next chapter to itself."
+              "text": "And Portuguese and Italian kept it too — falamos, parliamo. If you ever meet another Romance language, -mos or -mo will be waiting for you, doing the same job."
             }
           ]
         },
@@ -95,75 +103,56 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"habla\" then \"hablan\" — one other person, then several",
+              "instruction": "\"hablo\" then \"hablamos\" — one person, then a group",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"habla\" then \"hablan\" — one other person, then several]"
+              "source": "[YOU SAY: \"hablo\" then \"hablamos\" — one person, then a group]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ustedes hablan\", addressing a group you have just met",
+              "instruction": "\"hablamos\" alone, and notice it is still a whole sentence",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ustedes hablan\", addressing a group you have just met]"
+              "source": "[YOU SAY: \"hablamos\" alone, and notice it is still a whole sentence]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C07-hablan-form",
-              "prompt": "Turn hablar into they speak.",
+              "id": "ES-C07-hablamos-form",
+              "prompt": "Turn hablar into we speak.",
               "assesses": [
-                "ES-GRAMMAR-AR-PRESENT-3PL"
+                "ES-GRAMMAR-AR-PRESENT-1PL"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "hablan",
-                "ellos hablan"
+                "hablamos",
+                "nosotros hablamos"
               ],
               "feedback": {
-                "correct": "Right — habla plus -n.",
-                "incorrect": "hablan."
+                "correct": "Right — drop -ar, add -amos.",
+                "incorrect": "hablamos."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C07-hablan-ustedes",
-              "prompt": "Which form goes with ustedes?",
+              "id": "ES-C07-hablamos-latin",
+              "prompt": "What was the Latin ending that became -mos?",
               "assesses": [
-                "ES-LEX-USTEDES",
-                "ES-GRAMMAR-AR-PRESENT-3PL"
+                "ES-GRAMMAR-AR-PRESENT-1PL"
               ],
-              "responseSeconds": 10,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "hablan",
-                "ustedes hablan"
+                "-mus",
+                "mus",
+                "amamus"
               ],
               "feedback": {
-                "correct": "Yes — ustedes takes the they form, for the same reason usted takes the he form.",
-                "incorrect": "Hablan."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C07-hablan-why",
-              "prompt": "What phrase is ustedes worn down from?",
-              "assesses": [
-                "ES-ETYMON-VUESTRA-MERCED"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "vuestras mercedes",
-                "your graces",
-                "vuestra merced plural"
-              ],
-              "feedback": {
-                "correct": "Yes — your graces, the plural of the phrase behind usted.",
-                "incorrect": "Vuestras mercedes, your graces."
+                "correct": "Yes — barely changed in two thousand years.",
+                "incorrect": "-mus, as in amamus."
               }
             }
           ]
@@ -181,7 +170,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is \"they speak\"? (Hablan.) What does a final -n on a verb tell you? (The subject is plural, and not you.) And who does ustedes address in Latin America? (Any group at all.) Next: the word Spain uses instead, for friends."
+              "text": "How do you say \"we speak\"? (Hablamos.) Which Latin ending is that? (-mus, almost unchanged.) How many words? (One — still no pronoun.) Next: the form for them."
             }
           ]
         }

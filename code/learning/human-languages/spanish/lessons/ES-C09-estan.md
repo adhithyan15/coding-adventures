@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C09-estan
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 963
-chapter: 50
+chapter: 51
 type: grammar
 headword: están
 gloss: "they are" — with an accent that tells you where the stress went

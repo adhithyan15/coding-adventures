@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C07-come
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 629
-chapter: 33
+chapter: 34
 type: grammar
 headword: come
 gloss: "he eats," "she eats," and the polite "you eat" — the third slot

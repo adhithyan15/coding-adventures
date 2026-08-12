@@ -1,46 +1,49 @@
-Spanish, chapter 30: Synthesis --- The Decoder.
+Spanish, chapter 30: Es- --- the Vowel Spanish Put in Front.
 1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-Synthesis — the decoder.
+es- + consonant — the little e- Spanish put in front of words that started with two consonants — and why English kept them bare.
 
 Warm-up.
 [pause 2 seconds]
-Three sound laws and three endings. Before the practice: what do you do with an unfamiliar word starting h-? And one starting ll-?
+Say "to be" — the one about how and where. (Estar.) Now say "to study." (Estudiar.)
+[pause 1 second]
+You have known both since your first chapters. Today they explain each other.
 
-What you've built.
-[a table of 6 rows, read aloud]
-what you see: -ch-. what to try: Latin -ct-. example: noche becomes nocturnal.
-what you see: h-. what to try: put an f back. example: hijo becomes filial.
-what you see: ll-. what to try: try cl-, pl-, fl-. example: llave becomes clavicle.
-what you see: -ción. what to try: -tion. example: nación becomes nation.
-what you see: -dad. what to try: -ty. example: ciudad becomes city.
-what you see: -mente. what to try: -ly. example: claramente becomes clearly.
-Six rules, and between them they will get you through a great deal of written Spanish this book has no room to teach.
-
-Grammar Lens: what a decoder is not.
-It is worth being exact about what you have, because overclaiming it will disappoint you at the worst moment.
-This is a reading tool, and mostly a first-guess one. It will not tell you how to say something you want to say, it will not give you gender or conjugation, and it will occasionally point at the wrong English word.
-What it does is remove the feeling that an unfamiliar Spanish word is a wall. Most of the time it is not a wall — it is a word you already know, wearing clothes you have now learned to recognise. That change of expectation is worth more than any individual word in this chapter, because it is what lets you read something above your level and get most of it.
-And when the decoder fails, that is information too. A word that resists every rule is usually from one of Spanish's non-Latin layers — Arabic, Basque, or the Americas — worth noticing precisely because it breaks a rule you hold.
+Grammar Lens: a word cannot start like that.
+Latin words beginning s + a consonant grew an e- in front.
+Latin was happy to start a word with st-, sp- or sc-. Spanish was not — the mouth wants a vowel there — so it put one in.
+stāre becomes estar, studēre becomes estudiar.
+Nothing was added to the meaning. A vowel was added to the front, because the alternative was a beginning Spanish could not say.
+English borrowed the very same Latin words and never needed the vowel:
+[a table of 5 rows, read aloud]
+Spanish: estar. from: stāre. English kept it bare: state, stay, status.
+Spanish: estudiar. from: studēre. English kept it bare: study, student, studio.
+Spanish: escuela. from: schola. English kept it bare: school, scholar.
+Spanish: especial. from: speciālis. English kept it bare: special, species.
+Spanish: espíritu. from: spīritus. English kept it bare: spirit.
+So the rule runs in both directions, and the backwards one is the useful one: take the e- off the front, and an English word is often standing there.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: the six rules, in order]
+Take the e- off and say what you see.
+[your turn — say: estación becomes stación becomes station]
 [pause 8 seconds for the answer]
-[your turn — say: "hoja, lleno, noche" and name the law behind each]
+[your turn — say: estudiante becomes studiante becomes student]
 [pause 8 seconds for the answer]
-[repeat that twice]
-[question — say your answer, then pause 12 seconds]
-Decode hoja.
-[question — say your answer, then pause 12 seconds]
-Decode lleno.
-[question — say your answer, then pause 14 seconds]
-Decode la conservacion de la ciudad.
-[question — say your answer, then pause 14 seconds]
-A word resists every rule you have. What does that suggest?
+[your turn — say: espacio becomes spacio becomes space]
+[pause 8 seconds for the answer]
+[pause 2 seconds]
+Estación took two rules at once: the e- came off the front, and the -ción you learned seven chapters ago became -tion at the back. That is what these rules are for — they stack.
+
+Why it's said this way.
+A word you would expect to fit, and it does not.
+Español looks like a perfect example. It is not. Its Es- is not an added vowel — it is what is left of Latin Hispānia, whose H was already silent. España is Hispania with the h gone, not spaña with an e glued on.
+So check before you claim one. The rule is about words that began with two consonants in Latin. When the e was there all along, there is nothing to take off.
 
 Wrap-up Recall.
-[pause 3 seconds]
-How many rules do you now hold? (Six — three laws and three endings.) What are they for? (Reading, mostly first guesses.) And what has really changed? (An unfamiliar word is no longer a wall.)
+[pause 2 seconds]
+Say the rule in your own words.
+[pause 2 seconds]
+Then take the e- off estilo and say the English word you find. (Style.)

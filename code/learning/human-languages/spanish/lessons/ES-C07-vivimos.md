@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C07-vivimos
 spine_node: SPINE-ASK-LOCATION
 sequence: 798
-chapter: 42
+chapter: 43
 type: grammar
 headword: vivimos
 gloss: "we live" — the first form in which -ir is not the same as -er

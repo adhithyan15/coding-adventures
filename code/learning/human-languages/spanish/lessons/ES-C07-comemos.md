@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C07-comemos
 spine_node: SPINE-ASK-LOCATION
 sequence: 795
-chapter: 42
+chapter: 43
 type: grammar
 headword: comemos
 gloss: "we eat" — and the first place -er and -ir stop agreeing

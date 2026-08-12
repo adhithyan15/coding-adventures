@@ -2,36 +2,25 @@
   "version": 1,
   "language": "spanish",
   "chapter": 45,
-  "title": "Review --- the Present Tense, Whole",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:99ae54b744805907",
+  "title": "Comen and Viven --- Agreeing Again",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:da89124f4e12267b",
   "lessons": [
     {
-      "id": "ES-C07-repaso-tres-familias",
-      "sequence": 814,
-      "title": "Review — the present tense, whole",
-      "headword": "(review)",
-      "romanization": "(review)",
-      "gloss": "review — the present tense of every regular Spanish verb, complete",
+      "id": "ES-C07-comen-viven",
+      "sequence": 810,
+      "title": "comen and viven — agreeing again",
+      "headword": "comen · viven",
+      "romanization": "comen · viven",
+      "gloss": "\"they eat,\" \"they live\" — and the families agree again",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue",
-        "wide-table"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4c842c7e976919e4",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down",
-          "your eyes for one table that cannot be read aloud"
-        ],
-        "waitUntilStopped": [
-          "Grammar Lens: eighteen forms, and you built each one"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down and your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called Grammar Lens: eighteen forms, and you built each one until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:fe65f653fb73bc37",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -46,47 +35,38 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing new in this chapter. Say \"we eat\" and \"we live.\""
+              "text": "What is \"they speak\"? (Hablan.) And who else does that form address? (Ustedes.)"
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: eighteen forms, and you built each one",
+          "title": "Grammar Lens: one ending for both",
           "segments": [
             {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
-              "rowCount": 6,
-              "headers": [
-                "who",
-                "-ar",
-                "-er",
-                "-ir"
-              ],
-              "text": "There is a table here I cannot read to you — 4 columns and 6 rows, and it has more columns than can be held in the ear at once. Its columns are: who, -ar, -er, -ir. Come back and look at it when you have stopped."
+              "kind": "speech",
+              "text": "Both families take -en:"
             },
             {
               "kind": "speech",
-              "text": "This is the present tense of the Spanish language. Not a summary of it, not the regular part of it with exceptions pending — every regular verb in Spanish sits in that grid, and there are thousands of them."
+              "text": "comen — they eat, ustedes eat. viven — they live, ustedes live."
             },
             {
               "kind": "speech",
-              "text": "Two things are worth reading off it before you close the chapter:"
+              "text": "No split here. After two chapters of divergence the families fall back into step, and they stay there."
             },
             {
               "kind": "speech",
-              "text": "The yo row is the same in all three families. It always was. That is why the second and third families cost so little when they arrived."
+              "text": "That is the shape of the whole system, and it is worth holding as one sentence:"
             },
             {
               "kind": "speech",
-              "text": "-er and -ir differ in exactly two boxes — nosotros and vosotros. Four of their six forms are identical."
+              "text": "-er and -ir are identical in four of the six slots. They differ only in nosotros and vosotros."
             },
             {
               "kind": "speech",
-              "text": "So the whole grid is really one set of endings with a family vowel, plus two exceptions. That is the shape you have actually learned."
+              "text": "Two exceptions in a system of twelve forms. You have now met both, and everything else you already knew."
             }
           ]
         },
@@ -104,58 +84,67 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "one column straight down — hablar, all six",
+              "instruction": "\"comen, viven\" — one ending, both families",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: one column straight down — *hablar*, all six]"
+              "source": "[YOU SAY: \"comen, viven\" — one ending, both families]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "one row straight across — nosotros, all three families",
+              "instruction": "\"ustedes comen\", addressing a group",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: one row straight across — *nosotros*, all three families]"
-            },
-            {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "Down a column, then across a row, until neither direction stalls."
+              "source": "[YOU SAY: \"ustedes comen\", addressing a group]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C07-repaso-tres-familias-yo",
-              "prompt": "Which row is identical across all three families?",
+              "id": "ES-C07-comen-viven-eat",
+              "prompt": "They eat.",
               "assesses": [
-                "ES-GRAMMAR-PRESENT-INDICATIVE-COMPLETE"
+                "ES-GRAMMAR-ER-PRESENT-3PL"
               ],
-              "responseSeconds": 8,
+              "responseSeconds": 6,
               "acceptedResponses": [
-                "yo",
-                "the yo row",
-                "the i form",
-                "-o"
+                "comen",
+                "ellos comen",
+                "ustedes comen"
               ],
               "feedback": {
-                "correct": "The yo row — always -o.",
-                "incorrect": "The yo row."
+                "correct": "Yes.",
+                "incorrect": "comen."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C07-repaso-tres-familias-diff",
-              "prompt": "In which two rows do -er and -ir differ?",
+              "id": "ES-C07-comen-viven-live",
+              "prompt": "They live.",
               "assesses": [
-                "ES-GRAMMAR-IR-PRESENT-1PL",
-                "ES-GRAMMAR-ER-PRESENT-1PL"
+                "ES-GRAMMAR-IR-PRESENT-3PL"
+              ],
+              "responseSeconds": 6,
+              "acceptedResponses": [
+                "viven",
+                "ellos viven",
+                "ustedes viven"
+              ],
+              "feedback": {
+                "correct": "Yes — the same ending as comen.",
+                "incorrect": "viven."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C07-comen-viven-where",
+              "prompt": "In which two slots do -er and -ir differ?",
+              "assesses": [
+                "ES-GRAMMAR-ER-PRESENT-3PL",
+                "ES-GRAMMAR-IR-PRESENT-3PL"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
@@ -164,26 +153,8 @@
                 "we and you all"
               ],
               "feedback": {
-                "correct": "Those two only.",
-                "incorrect": "Nosotros and vosotros."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C07-repaso-tres-familias-live",
-              "prompt": "We live.",
-              "assesses": [
-                "ES-GRAMMAR-IR-PRESENT-1PL"
-              ],
-              "responseSeconds": 6,
-              "acceptedResponses": [
-                "vivimos",
-                "nosotros vivimos"
-              ],
-              "feedback": {
-                "correct": "Yes.",
-                "incorrect": "vivimos."
+                "correct": "Those two, and no others.",
+                "incorrect": "Nosotros and vosotros only."
               }
             }
           ]
@@ -201,7 +172,7 @@
             },
             {
               "kind": "speech",
-              "text": "How many forms are in the grid? (Eighteen — three families, six each.) Which row never varies? (Yo.) And how many boxes separate -er from -ir? (Two.)"
+              "text": "Give they eat and they live. (Comen, viven.) In how many of the six slots do the two families agree? (Four.) Next chapter: all three families, whole."
             }
           ]
         }

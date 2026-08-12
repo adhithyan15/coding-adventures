@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 148,
-  "title": "Review --- Three Verbs That Behave",
+  "title": "Ayudar — the Same Word as Aid",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:305ea79b9f2df2c9",
+  "sourceHash": "fnv1a64:ffdbef7aaef74a24",
   "lessons": [
     {
-      "id": "ES-C35-repaso-tres",
-      "sequence": 1884,
-      "title": "Review — three verbs that behave",
-      "headword": "(review)",
-      "romanization": "(review)",
-      "gloss": "review — three ordinary verbs, and what \"ordinary\" is about to mean",
+      "id": "ES-C35-ayudar",
+      "sequence": 1880,
+      "title": "ayudar — \"to help\", and it is English \"aid\" in disguise",
+      "headword": "ayudar",
+      "romanization": "ayudar",
+      "gloss": "to help — literally the same word as English \"aid\", arriving by a different road",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:74741369d5664082",
+      "sourceHash": "fnv1a64:8104b5cd952ef3e8",
       "notice": null,
       "blocks": [
         {
@@ -35,58 +35,93 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing new here. Name the three verbs of the last three chapters: to take, to ask, to help."
+              "text": "You can ask a question now. The next thing to ask for is a hand — and this verb is one you already own in English without knowing it."
             }
           ]
         },
         {
           "index": 1,
-          "type": "notice",
-          "title": "What you've built",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "All three work the way you expect, and it is worth naming that out loud before the next chapter, where one does not."
+              "text": "vowel-a — a clean, open a: a-yoo-DAR."
             },
             {
               "kind": "speech",
-              "text": "In each of them, you are the one doing it. You take. You ask. You help. The person doing the verb is the person the sentence is about — exactly as in English, and exactly as in every verb you have met since hablo."
-            },
-            {
-              "kind": "speech",
-              "text": "Hold on to that. It is about to be worth money."
+              "text": "r-tap — one tap at the end, not an English r."
             }
           ]
         },
         {
           "index": 2,
           "type": "etymology",
-          "title": "The word, taken apart",
+          "title": "The word, taken apart: ayudar",
           "segments": [
             {
               "kind": "speech",
-              "text": "Three origins, three very different kinds of story:"
+              "text": "ayudar (\"to help\") from Latin adiūtāre, the repeating form of adiuvāre: ad- (\"toward\") + iuvāre (\"to help, to delight\"). To help was to move toward someone."
             },
             {
               "kind": "speech",
-              "text": "ayudar is the tidy one. Latin adiūtāre becomes English aid. Same word, two roads, and you can still hear it."
+              "text": "English borrowed that identical verb through Old French aidier and calls it aid. So ayudar and aid are not merely cousins — they are the same word by two different roads. The family came with it:"
             },
             {
               "kind": "speech",
-              "text": "preguntar is the reshaped one — percontārī, to sound a depth with a pole. Asking as measuring how deep something goes."
+              "text": "aide, and aide-de-camp, an officer who helps."
             },
             {
               "kind": "speech",
-              "text": "tomar is the honest gap. It has no agreed origin at all. The verb Latin actually handed down for \"take\" was coger, and coger turned coarse across much of Latin America — so an everyday word had to come from somewhere, and nobody is sure where."
+              "text": "adjutant — the officer whose whole job is assisting."
             },
             {
               "kind": "speech",
-              "text": "Not every word has a clean story. A course that pretended otherwise would be inventing them."
+              "text": "adjuvant — a substance that helps another drug work."
+            },
+            {
+              "kind": "speech",
+              "text": "coadjutor — one who helps alongside."
+            },
+            {
+              "kind": "speech",
+              "text": "The shape change is a rule, not an accident. Latin -di- before a vowel turned into Spanish y: adiūtāre becomes ayudar, hodiē becomes hoy (\"today\"), podium becomes poyo. Once you have that, the word stops looking arbitrary."
             }
           ]
         },
         {
           "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: a plain -ar verb, and how to ask for a hand",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Nothing breaks; the endings are the ones you started with:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "person",
+                "form",
+                "meaning"
+              ],
+              "columns": 3,
+              "rowCount": 4,
+              "utterances": [
+                "person: yo. form: ayudo. meaning: I help.",
+                "person: tú. form: ayudas. meaning: you help.",
+                "person: nosotros. form: ayudamos. meaning: we help.",
+                "person: ellos/ustedes. form: ayudan. meaning: they help."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Its noun is la ayuda (fem.), \"help\" — the word on relief packages worldwide. Two sentences worth owning: ¿Me ayudas? (\"will you help me?\" — Spanish uses the plain present where English needs will) and, politely, ¿Puedo ayudarle?"
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -99,79 +134,43 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the three verbs, then one sentence with each",
+              "instruction": "\"ayudo, ayudas, ayudamos, ayudan\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the three verbs, then one sentence with each]"
+              "source": "[YOU SAY: \"ayudo, ayudas, ayudamos, ayudan\"]"
             },
             {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C35-repaso-tres-aid",
-              "prompt": "Which of the three is the same word as English aid?",
-              "assesses": [
-                "ES-ETYMON-AYUDAR-06"
-              ],
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"¿Me ayudas?\" — will you help me?",
+              "spoken": true,
+              "scored": false,
               "responseSeconds": 8,
-              "acceptedResponses": [
-                "ayudar",
-                "ayudar (to help)",
-                "help"
-              ],
-              "feedback": {
-                "correct": "Yes — adiutare, straight through to aid.",
-                "incorrect": "ayudar, from adiutare."
-              }
+              "source": "[YOU SAY: \"¿Me ayudas?\" — will you help me?]"
             },
             {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C35-repaso-tres-nostory",
-              "prompt": "Which of the three has no agreed etymology at all?",
-              "assesses": [
-                "ES-LEX-TOMAR-01"
-              ],
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Te pregunto\" then \"Me ayudas\" — I ask you, you help me",
+              "spoken": true,
+              "scored": false,
               "responseSeconds": 8,
-              "acceptedResponses": [
-                "tomar",
-                "tomar (to take)",
-                "take"
-              ],
-              "feedback": {
-                "correct": "Yes — nobody is sure. That is an honest answer, not a missing one.",
-                "incorrect": "tomar. Its origin is genuinely unsettled."
-              }
+              "source": "[YOU SAY: \"Te pregunto\" then \"Me ayudas\" — I ask you, you help me]"
             },
             {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C35-repaso-tres-who",
-              "prompt": "In all three verbs, who is the sentence about — the one doing it, or the thing done?",
-              "assesses": [
-                "ES-LEX-PREGUNTAR-03"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "the one doing it",
-                "the doer",
-                "the person doing it",
-                "the subject does it"
-              ],
-              "feedback": {
-                "correct": "Right. Remember that for the next chapter.",
-                "incorrect": "The one doing it — which is about to stop being true."
-              }
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ayudar\" then English \"aid, adjutant, adjuvant\" — one word, two roads",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ayudar\" then English \"aid, adjutant, adjuvant\" — one word, two roads]"
             }
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -183,7 +182,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which one has no settled origin? (Tomar.) In all three, who is the sentence about? (The one doing it.) Next chapter: a verb where that stops being true."
+              "text": "What two Latin pieces build adiuvāre? (Ad- \"toward\" + iuvāre \"to help\".) What everyday English word is ayudar, arriving by French? (Aid.) What sound-law turned adiūtāre into ayudar, and which other word shows it? (Latin -di- became Spanish y; hodiē becomes hoy.) Next: gustar, the verb that runs backwards."
             }
           ]
         }

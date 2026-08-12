@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C51-para
 spine_node: SPINE-GIVE-REASONS
 sequence: 2121
-chapter: 162
+chapter: 163
 type: word
 headword: para
 gloss: "for" pointing forward — at a destination, a purpose, a deadline, a person meant to receive something

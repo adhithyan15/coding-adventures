@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 71,
-  "title": "Me and Te --- The Two People Talking",
-  "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:512b592f230276e6",
+  "title": "La --- The Pronoun Carries What Left",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:7044fb480cc969df",
   "lessons": [
     {
-      "id": "ES-C42-me-objeto",
-      "sequence": 1149,
-      "title": "me quieres — \"you love me\"",
-      "headword": "me quieres",
-      "romanization": "me quieres",
-      "gloss": "me doing its plain job — no new form at all, only a second use for a word you have had since chapter four",
+      "id": "ES-C42-la",
+      "sequence": 1147,
+      "title": "la — \"it,\" for a feminine noun",
+      "headword": "la",
+      "romanization": "la",
+      "gloss": "\"it\" for something feminine — the one word in this pair that never had to change",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4ae7f4562fa15adc",
+      "sourceHash": "fnv1a64:3425529a7e9ec4f6",
       "notice": null,
       "blocks": [
         {
@@ -35,42 +35,34 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"my name is.\" (Me llamo.) That me has been in your mouth for more than fifty chapters. This chapter gives it nothing new to look like — only something new to do."
+              "text": "Say \"I have it,\" about the book. (Lo tengo.) Now guess the feminine version before you read on."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: the same word, a simpler job",
+          "title": "Grammar Lens: the form you probably guessed",
           "segments": [
             {
               "kind": "speech",
-              "text": "In me llamo, the me points back at the speaker: I call myself. That is a special use, and it was the one you needed first."
+              "text": "la — it, standing in for something feminine."
             },
             {
               "kind": "speech",
-              "text": "Here is the ordinary one:"
+              "text": "Hago la comida. — I make the meal. La hago. — I make it."
             },
             {
               "kind": "speech",
-              "text": "Me quieres. — You love me."
+              "text": "If you guessed la, you were not lucky. You were doing what the shape of Spanish invites you to do: el and la mark the two genders everywhere else, so the object pronouns mark them the same way."
             },
             {
               "kind": "speech",
-              "text": "Now me is not pointing back at anybody. It is simply the person the verb lands on — the same job lo does for a book and la does for a meal."
+              "text": "The pronoun agrees with the noun it replaces — not with you, and not with the verb. El libro is masculine, so lo. La comida and la casa are feminine, so la."
             },
             {
               "kind": "speech",
-              "text": "Lo tengo. — I have it. Me quieres. — You love me."
-            },
-            {
-              "kind": "speech",
-              "text": "Same slot, in front of the verb. Same kind of work. The only difference is that me is a person and lo is a thing, which is a fact about the world rather than a fact about Spanish."
-            },
-            {
-              "kind": "speech",
-              "text": "Notice what this chapter did not ask you to learn: a form. You already had it. Some of the ground you gain in a language is like this — not new material, but an old piece turning out to reach further than you were told."
+              "text": "That last point is worth pausing on. La here is not agreeing with anything present in the sentence. The noun is gone; the pronoun is carrying its gender on its behalf. This is the first time in Spanish that a word has had to remember something that is no longer being said."
             }
           ]
         },
@@ -81,11 +73,15 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Me comes from Latin mē, and Latin got it from something far older. English me is not a translation of it and not a borrowing from it — the two are the same inherited word, sitting in two languages that split thousands of years ago and never bothered to change it."
+              "text": "Last chapter had a small mystery: why lo and not el, when both come from the same Latin word? Here that mystery quietly disappears."
             },
             {
               "kind": "speech",
-              "text": "Words this short and this used are the ones that survive intact. That is why your very first Spanish pronoun was also the easiest one you will ever meet."
+              "text": "The feminine object form in Latin was illam. Worn down as an article it gave la. Worn down as a pronoun it gave — la. Both routes arrived at the same place, because the vowel that got lost on the masculine side (elo becomes el) was never at risk on the feminine side."
+            },
+            {
+              "kind": "speech",
+              "text": "So the masculine pair split into two shapes and the feminine pair did not. Not an exception to memorise: a single sound change that happened to bite one word and not the other."
             }
           ]
         },
@@ -103,272 +99,79 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"me llamo\" then \"me quieres\" — the same syllable, two jobs",
+              "instruction": "\"Hago la comida\" then \"La hago\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"me llamo\" then \"me quieres\" — the same syllable, two jobs]"
+              "source": "[YOU SAY: \"Hago la comida\" then \"La hago\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"lo tengo\" then \"me quieres\" — hear that the slot never moves",
+              "instruction": "\"lo tengo\" then \"la hago\" — one syllable carries the whole difference",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"lo tengo\" then \"me quieres\" — hear that the slot never moves]"
+              "source": "[YOU SAY: \"lo tengo\" then \"la hago\" — one syllable carries the whole difference]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C42-me-objeto-say",
-              "prompt": "Say you love me.",
+              "id": "ES-C42-la-form",
+              "prompt": "Say I make it, about la comida.",
               "assesses": [
-                "ES-GRAMMAR-ME-DIRECT-OBJECT",
-                "ES-GRAMMAR-QUERER-PRESENT-SINGULAR",
-                "ES-LEX-QUERER"
+                "ES-GRAMMAR-DIRECT-OBJECT-LA",
+                "ES-LEX-LA-OBJECT",
+                "ES-GRAMMAR-HACER-PRESENT-SINGULAR"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "me quieres",
-                "tu me quieres"
+                "la hago",
+                "yo la hago"
               ],
               "feedback": {
-                "correct": "Yes — same slot, in front of the verb.",
-                "incorrect": "Me quieres. The pronoun leads, exactly as in me llamo."
+                "correct": "Yes — feminine noun, feminine pronoun.",
+                "incorrect": "La hago. The pronoun takes the gender of the noun it replaces."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C42-me-objeto-difference",
-              "prompt": "In me llamo the me points back at the speaker. What is it doing in me quieres?",
+              "id": "ES-C42-la-agree",
+              "prompt": "What decides whether you say lo or la?",
               "assesses": [
-                "ES-GRAMMAR-ME-DIRECT-OBJECT",
-                "ES-LEX-ME"
-              ],
-              "responseSeconds": 12,
-              "acceptedResponses": [
-                "it is the person the verb lands on",
-                "it is the object",
-                "it is who is being loved"
-              ],
-              "feedback": {
-                "correct": "Right — the ordinary job, not the reflexive one.",
-                "incorrect": "It is simply the object: the one on the receiving end."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C42-me-objeto-new",
-              "prompt": "How many new word forms did this lesson ask you to learn?",
-              "assesses": [
-                "ES-GRAMMAR-OBJECT-PRONOUN"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "none",
-                "zero",
-                "0"
-              ],
-              "feedback": {
-                "correct": "None. Only a second job for one you already had.",
-                "incorrect": "None — me was already yours."
-              }
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Say \"you love me.\" (Me quieres.) Where did the pronoun go? (Before the verb, as always.) Next: the answering half of that sentence."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C42-te",
-      "sequence": 1151,
-      "title": "te quiero — \"I love you\"",
-      "headword": "te quiero",
-      "romanization": "te quiero",
-      "gloss": "\"you\" as the object — and the sentence it makes, which is the one people actually need",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:05ac4a922eb56da0",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Say \"you love me.\" (Me quieres.) Now turn it around in your head: what would \"I love you\" need?"
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: the partner of tú",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "te — you, when you are the one it happens to."
-            },
-            {
-              "kind": "speech",
-              "text": "Te quiero. — I love you."
-            },
-            {
-              "kind": "speech",
-              "text": "Tú is for the one doing; te is for the one it lands on. Spanish keeps those apart with two different shapes, the same way it keeps el and lo apart, and the same way English keeps I and me apart."
-            },
-            {
-              "kind": "speech",
-              "text": "Me quieres. — You love me. Te quiero. — I love you."
-            },
-            {
-              "kind": "speech",
-              "text": "Two words each, and a complete exchange. Read them aloud one after the other: the pair is a conversation."
-            },
-            {
-              "kind": "speech",
-              "text": "One thing worth knowing before you use it. Querer means to want, and you have been using it that way for a long time. But querer pointed at a person does not mean wanting them — it means loving them. Quiero un libro is \"I want a book\"; te quiero is \"I love you.\""
-            },
-            {
-              "kind": "speech",
-              "text": "So the sentence is built entirely out of pieces you already had. What is new is not a form — it is that the verb changes its meaning depending on whether its object is a thing or a person."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Te is Latin tē — the object form of tū, which you already have."
-            },
-            {
-              "kind": "speech",
-              "text": "English used to do this exactly. Old English had thou for the doer and thee for the one it happened to — and, this is the striking part, those are the same two words. Tú/te and thou/thee are one ancient pair, inherited twice. English later dropped both and let you cover the two jobs; Spanish kept them apart."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Te quiero\" then \"Me quieres\" — a whole exchange in four words",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Te quiero\" then \"Me quieres\" — a whole exchange in four words]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"tú\" then \"te\", and \"thou\" then \"thee\" — the same split twice",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"tú\" then \"te\", and \"thou\" then \"thee\" — the same split twice]"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C42-te-say",
-              "prompt": "Say I love you.",
-              "assesses": [
-                "ES-GRAMMAR-TE-DIRECT-OBJECT",
-                "ES-LEX-TE-OBJECT",
-                "ES-LEX-TE-QUIERO"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "te quiero",
-                "yo te quiero"
-              ],
-              "feedback": {
-                "correct": "Te quiero — the pronoun first, as always.",
-                "incorrect": "Te quiero. Te is the object partner of tu."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C42-te-meaning",
-              "prompt": "Quiero un libro means I want a book. Why does te quiero not mean I want you?",
-              "assesses": [
-                "ES-LEX-QUERER",
-                "ES-LEX-TE-QUIERO",
-                "ES-LEX-LIBRO"
-              ],
-              "responseSeconds": 12,
-              "acceptedResponses": [
-                "querer aimed at a person means to love",
-                "because the object is a person",
-                "with people it means love"
-              ],
-              "feedback": {
-                "correct": "The object decides which meaning the verb takes.",
-                "incorrect": "Pointed at a person, querer means to love."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C42-te-english",
-              "prompt": "Which old English pair is the same inherited pair as tu and te?",
-              "assesses": [
-                "ES-ETYMON-TE-TU",
-                "ES-LEX-TU"
+                "ES-GRAMMAR-NOUN-GENDER",
+                "ES-GRAMMAR-DIRECT-OBJECT-LO",
+                "ES-LEX-CASA"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "thou and thee",
-                "thou thee",
-                "thee and thou"
+                "the gender of the noun it replaces",
+                "the noun's gender",
+                "whether the noun is masculine or feminine"
               ],
               "feedback": {
-                "correct": "The very same two words, inherited twice.",
-                "incorrect": "Thou and thee — English kept the split until it dropped both."
+                "correct": "Right — the noun decides, not the speaker and not the verb.",
+                "incorrect": "The gender of the noun being replaced."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C42-la-why",
+              "prompt": "Why does the feminine article match its pronoun exactly, when the masculine pair does not?",
+              "assesses": [
+                "ES-ETYMON-ILLE-ILLA"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "the masculine lost a vowel and the feminine had none to lose",
+                "only the masculine wore down",
+                "the sound change only hit the masculine"
+              ],
+              "feedback": {
+                "correct": "Exactly — one sound change, one victim.",
+                "incorrect": "Both come from illam unchanged; the masculine elo lost its vowel and became el."
               }
             }
           ]
@@ -386,7 +189,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"I love you.\" (Te quiero.) And \"you love me.\" (Me quieres.) Which English pair matches tú and te? (Thou and thee.) Next: all four of these in one place, for the first time."
+              "text": "Which pronoun replaces a feminine noun? (La.) What decides it — you, the verb, or the noun? (The noun, even though it is no longer there.) Next: the same slot, for the two people actually talking."
             }
           ]
         }

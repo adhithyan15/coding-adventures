@@ -2,25 +2,32 @@
   "version": 1,
   "language": "spanish",
   "chapter": 98,
-  "title": "Cuando --- Both Pasts in One Sentence",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:9a74800d54917fa7",
+  "title": "Hablaba and Hablo --- Two Ways of Looking",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:c4558ddee19e4a31",
   "lessons": [
     {
-      "id": "ES-C48-cuando",
-      "sequence": 1311,
-      "title": "cuando — putting both pasts in one sentence",
-      "headword": "cuando",
-      "romanization": "cuando",
-      "gloss": "\"when\" — the word that puts a scene and an event in one sentence, so the two pasts can be seen doing different jobs",
+      "id": "ES-C48-dos-miradas",
+      "sequence": 1310,
+      "title": "hablaba and habló — two ways of looking",
+      "headword": "hablaba / habló",
+      "romanization": "hablaba / habló",
+      "gloss": "the two past tenses are not two times — they are two ways of looking at the same time",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "sight-cue"
       ],
-      "sourceHash": "fnv1a64:515a7f87bb33f16e",
-      "notice": null,
+      "sourceHash": "fnv1a64:e50bb891a480725b",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -35,85 +42,70 @@
             },
             {
               "kind": "speech",
-              "text": "One tense is the scenery and one is the event. So far you have only been able to use one at a time. This chapter's word lets them share a sentence."
+              "text": "You hold two past tenses. Say \"I spoke\" in both. (Hablé. Hablaba.)"
             }
           ]
         },
         {
           "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
+          "type": "grammar",
+          "title": "Grammar Lens: not two times — two viewpoints",
           "segments": [
             {
               "kind": "speech",
-              "text": "diphthong-ua — cua is one syllable, not two: KWAN-doh."
+              "text": "The obvious guess is that one is further back than the other. It is not. Both describe the same afternoon."
+            },
+            {
+              "kind": "speech",
+              "text": "Ayer hablé con Ana. — Yesterday I spoke with Ana. Ayer hablaba con Ana. — Yesterday I was speaking with Ana."
+            },
+            {
+              "kind": "speech",
+              "text": "Same day, same conversation, same two people. What changes is where you are standing."
+            },
+            {
+              "kind": "speech",
+              "text": "Hablé looks at the conversation from outside, finished, as one thing with edges. It happened, it is over, next."
+            },
+            {
+              "kind": "speech",
+              "text": "Hablaba puts you inside it, while it is still going on. No edges. It is the scenery, not the event."
+            },
+            {
+              "kind": "speech",
+              "text": "This is why the choice cannot be made by a rule about time. It is made by what you are doing with the sentence: reporting something that happened, or setting a scene where something else can happen."
+            },
+            {
+              "kind": "speech",
+              "text": "Grammar books call this aspect. The word is not important. The habit is: when you reach for a past tense, you are being asked a question about your own point of view, and you answer it every time whether you notice or not."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
           "segments": [
             {
               "kind": "speech",
-              "text": "cuando — when."
+              "text": "English asks you the same question and lets you dodge it."
             },
             {
               "kind": "speech",
-              "text": "From Latin quandō, and the qu- at the front is not decoration. It is the same question-marker sitting inside qué, quién and cómo — a family you have been collecting since your very first questions."
+              "text": "I spoke. I was speaking. I used to speak."
             },
             {
               "kind": "speech",
-              "text": "Latin built its question words from one root and Spanish kept the whole set, so cuándo with an accent asks a question and cuando without one simply joins two things. Same word, and the accent is doing the same job it always does: marking the stressed, questioning one."
+              "text": "Those are three different viewpoints, and English marks them with extra words rather than with the verb itself. Because they are optional, you can say \"I spoke\" for almost anything and be understood."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish put the choice inside the verb, so it is not optional. Every past sentence commits to a viewpoint before it commits to anything else. That is why this is the piece of Spanish that stays difficult longest for English speakers: not because it is complicated, but because it asks a question your first language let you leave unanswered."
             }
           ]
         },
         {
           "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: the scene and the thing that interrupts it",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Now the two tenses can do their jobs side by side:"
-            },
-            {
-              "kind": "speech",
-              "text": "Estudiaba cuando habló Ana. — I was studying when Ana spoke."
-            },
-            {
-              "kind": "speech",
-              "text": "Read what each tense is doing:"
-            },
-            {
-              "kind": "speech",
-              "text": "Estudiaba — imperfect. The scene. Already going, no edges, and it does not stop being true when something else happens."
-            },
-            {
-              "kind": "speech",
-              "text": "Habló — preterite. The event. One thing, with edges, dropped into that scene."
-            },
-            {
-              "kind": "speech",
-              "text": "This is the shape most Spanish stories are built from, and it is worth hearing the pattern rather than memorising a rule: the imperfect sets the room, the preterite is what walks into it."
-            },
-            {
-              "kind": "speech",
-              "text": "Turn it around and the sentence changes meaning, not just style:"
-            },
-            {
-              "kind": "speech",
-              "text": "Estudié cuando hablaba Ana. — I studied while Ana was talking."
-            },
-            {
-              "kind": "speech",
-              "text": "Now the talking is the room and the studying is the event. Neither version is more correct. They are about different things."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -126,84 +118,84 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Estudiaba cuando habló Ana\"",
+              "instruction": "\"hablé\" then \"hablaba\" — outside, then inside",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Estudiaba cuando habló Ana\"]"
+              "source": "[YOU SAY: \"hablé\" then \"hablaba\" — outside, then inside]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the reversed version, and notice the story changed",
+              "instruction": "\"estudié\" then \"estudiaba\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the reversed version, and notice the story changed]"
+              "source": "[YOU SAY: \"estudié\" then \"estudiaba\"]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C48-cuando-say",
-              "prompt": "Say I was studying when Ana spoke.",
+              "id": "ES-C48-dos-miradas-which",
+              "prompt": "Do the two past tenses differ in when something happened?",
               "assesses": [
-                "ES-LEX-CUANDO",
-                "ES-GRAMMAR-BACKDROP-AND-EVENT",
-                "ES-LEX-ESTUDIAR"
-              ],
-              "responseSeconds": 12,
-              "acceptedResponses": [
-                "estudiaba cuando hablo ana",
-                "estudiaba cuando habló ana"
-              ],
-              "feedback": {
-                "correct": "Scene in the imperfect, event in the preterite.",
-                "incorrect": "Estudiaba cuando hablo Ana."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C48-cuando-which",
-              "prompt": "Which tense sets the room, and which one walks into it?",
-              "assesses": [
-                "ES-GRAMMAR-BACKDROP-AND-EVENT",
-                "ES-GRAMMAR-AR-IMPERFECT-SINGULAR"
-              ],
-              "responseSeconds": 12,
-              "acceptedResponses": [
-                "the imperfect sets the room, the preterite walks in",
-                "imperfect is the scene, preterite is the event"
-              ],
-              "feedback": {
-                "correct": "That is the shape most Spanish stories are built from.",
-                "incorrect": "The imperfect is the scene; the preterite is the event."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C48-cuando-family",
-              "prompt": "Which other Spanish question words share the front of cuando?",
-              "assesses": [
-                "ES-ETYMON-QUANDO",
-                "ES-LEX-QUE"
+                "ES-GRAMMAR-ASPECT-NOT-TIME"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "que, quien, como",
-                "qué, quién, cómo",
-                "que and quien"
+                "no, in how you look at it",
+                "no",
+                "they differ in viewpoint"
               ],
               "feedback": {
-                "correct": "One Latin root, a whole family kept.",
-                "incorrect": "Qué, quién and cómo — the same qu- question-marker."
+                "correct": "Same time, two viewpoints.",
+                "incorrect": "No. Both can describe the same afternoon; what differs is your point of view."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C48-dos-miradas-outside",
+              "prompt": "Which form looks at the event from outside, finished?",
+              "assesses": [
+                "ES-GRAMMAR-AR-PRETERITE-SINGULAR",
+                "ES-LEX-HABLAR"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "hable",
+                "hablé",
+                "the preterite"
+              ],
+              "feedback": {
+                "correct": "One thing, with edges.",
+                "incorrect": "Hable — the preterite views it from outside, complete."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C48-dos-miradas-inside",
+              "prompt": "Say I was studying, putting the listener inside it.",
+              "assesses": [
+                "ES-GRAMMAR-AR-IMPERFECT-SINGULAR",
+                "ES-GRAMMAR-IMPERFECT-ONGOING-HABITUAL",
+                "ES-LEX-ESTUDIAR"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "estudiaba",
+                "yo estudiaba"
+              ],
+              "feedback": {
+                "correct": "No edges — scenery, not event.",
+                "incorrect": "Estudiaba."
               }
             }
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -215,7 +207,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which tense is the room? (The imperfect.) Which one walks into it? (The preterite.) Next: two verbs where the choice does not change the picture — it changes the meaning."
+              "text": "Do the two pasts differ in when? (No — in how you look at it.) Which one has edges? (The preterite.) Next: the word that lets both of them stand in one sentence."
             }
           ]
         }

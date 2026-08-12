@@ -3,12 +3,12 @@ schema_version: 2
 id: ES-C57-sintesis-descifrar
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 547
-chapter: 30
+chapter: 31
 type: practice-mix
 headword: (synthesis)
 gloss: synthesis — etymology stops being history and becomes a decoder you carry
 concept_tag: ES-SYNTHESIS-SOUND-LAWS
-prerequisites: [ES-C57-ll]
+prerequisites: [ES-C57-es-inicial]
 sounds: []
 roots: []
 teaches_cells: []
@@ -26,7 +26,7 @@ modes: [interpretive, presentational]
 strands: [meaning-input, meaning-output, fluency]
 register: neutral
 variety: general
-reviews_of: [ES-C57-f-a-h, ES-C57-ll]
+reviews_of: [ES-C57-f-a-h, ES-C57-ll, ES-C57-es-inicial]
 ---
 
 # Synthesis — the decoder
@@ -34,8 +34,8 @@ reviews_of: [ES-C57-f-a-h, ES-C57-ll]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ES-SOUND-F-TO-H, ES-SOUND-CLUSTER-TO-LL] -->
 
-[PAUSE 2s] Three sound laws and three endings. Before the practice: what do you
-do with an unfamiliar word starting *h-*? And one starting *ll-*?
+[PAUSE 2s] Four sound laws and three endings. Before the practice: what do you
+do with an unfamiliar word starting *h-*? One starting *ll-*? One starting *es-*?
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[ES-SOUND-LATIN-CLUSTER-TO-CH, ES-SOUND-F-TO-H, ES-SOUND-CLUSTER-TO-LL, ES-FRIEND-CION-TION, ES-FRIEND-DAD-TY, ES-LEX-NOCHE] -->
@@ -45,28 +45,27 @@ do with an unfamiliar word starting *h-*? And one starting *ll-*?
 | *-ch-* | Latin *-ct-* | *noche* → **nocturnal** |
 | *h-* | put an *f* back | *hijo* → **filial** |
 | *ll-* | try *cl-*, *pl-*, *fl-* | *llave* → **clavicle** |
+| *es-* + consonant | take the *e-* off | *escuela* → **school** |
 | *-ción* | *-tion* | *nación* → **nation** |
 | *-dad* | *-ty* | *ciudad* → **city** |
 | *-mente* | *-ly* | *claramente* → **clearly** |
 
-Six rules, and between them they will get you through a great deal of written
-Spanish this book has no room to teach.
+Seven rules, and between them they will get you through a great deal of written
+Spanish this book has no room to teach. They also **stack**: *estación* gives up
+both ends at once.
 
 ## Grammar Lens: what a decoder is not
 <!-- hl-knowledge: introduces=[]; assesses=[ES-SOUND-F-TO-H, ES-SOUND-CLUSTER-TO-LL] -->
 
-It is worth being exact about what you have, because overclaiming it will
-disappoint you at the worst moment.
-
-This is a **reading** tool, and mostly a first-guess one. It will not tell you
-how to say something you want to say, it will not give you gender or
-conjugation, and it will occasionally point at the wrong English word.
+Be exact about what you have, because overclaiming it will disappoint you at
+the worst moment. This is a **reading** tool, and mostly a first-guess one: it
+will not tell you how to say something, will not give you gender or
+conjugation, and will sometimes point at the wrong English word.
 
 What it does is remove the feeling that an unfamiliar Spanish word is a wall.
-Most of the time it is not a wall — it is a word you already know, wearing
-clothes you have now learned to recognise. That change of expectation is worth
-more than any individual word in this chapter, because it is what lets you read
-something above your level and get most of it.
+Usually it is not — it is a word you already know, wearing clothes you have
+learned to recognise. That change of expectation is worth more than any word in
+this chapter: it is what lets you read above your level and get most of it.
 
 **And when the decoder fails, that is information too.** A word that resists
 every rule is usually from one of Spanish's non-Latin layers — Arabic, Basque,
@@ -82,7 +81,7 @@ or the Americas — worth noticing precisely because it breaks a rule you hold.
 
 [PAUSE 1s]
 
-- [YOU SAY: the six rules, in order]
+- [YOU SAY: the seven rules, in order]
 - [YOU SAY: "hoja, lleno, noche" and name the law behind each]
 
 [REPEAT x2]
@@ -90,6 +89,6 @@ or the Americas — worth noticing precisely because it breaks a rule you hold.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ES-SOUND-F-TO-H, ES-SOUND-CLUSTER-TO-LL] -->
 
-[PAUSE 3s] How many rules do you now hold? (**Six** — three laws and three
+[PAUSE 3s] How many rules do you now hold? (**Seven** — four laws and three
 endings.) What are they for? (**Reading**, mostly first guesses.) And what has
 really changed? (An unfamiliar word is **no longer a wall**.)

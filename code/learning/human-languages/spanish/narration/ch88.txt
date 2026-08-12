@@ -1,43 +1,47 @@
-Spanish, chapter 88: Synthesis --- Two at a Time.
+Spanish, chapter 88: Review --- The Pairs.
 1 lesson. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
 Lesson 1 of 1.
-Synthesis — two at a time.
+Review — the pairs.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
 
 Warm-up.
 [pause 2 seconds]
-"I tell it to him," in three words. (Se lo digo.)
+Nothing new. Two facts before the table: which pronoun leads, and what happens to le in front of lo?
 
-The exchange.
-— ¿Tienes el libro? — Sí. ¿Te lo digo? — Sí, y se lo dices a Ana. — Y la comida — se la hago hoy.
-Look at the last three lines. After the first sentence names the book, not one noun does any work. Te lo, se lo, se la — six words that name nothing, and the conversation is perfectly clear to both speakers.
-That is what all of this has been for. Fifteen chapters of object pronouns exist so that a conversation can stop repeating itself, and this is the point where the machinery is complete enough to see it happen.
+What you've built.
+Every pair Spanish permits, in one place:
+[a table of 5 rows, read aloud]
+person: me. + thing: lo / la / los / las. gives: me lo, me la, me los, me las.
+person: te. + thing: ". gives: te lo, te la, …
+person: le / les. + thing: ". gives: se lo, se la, se los, se las.
+person: nos. + thing: ". gives: nos lo, nos la, …
+person: os. + thing: ". gives: os lo, os la, …
+Read the whole table as two facts, because that is all it is:
+The person comes first. Always.
+Le and les turn into se in front of the thing. Only there.
+Every other row is just the two pronouns you already had, standing next to each other with nothing done to either of them.
 
-Grammar Lens: two words carrying a whole sentence.
-Se la hago is three words and it means "I make the meal for her, today." Two of the three are pronouns; between them they carry a person and a thing, neither of which is named anywhere in the sentence.
-English cannot compress like this. I'll make it for her needs five words and still spells out for. Spanish puts both jobs in front of the verb, in a fixed order, and gets on with it.
-The cost is the one you already know, doubled. Two pronouns are two promises that both things are still in the room. When you lose track of one of them, the sentence does not become wrong — it becomes about somebody else, and nobody will notice until it matters.
-So the practice that pays here is not conjugation. It is keeping a conversation's furniture in mind while you talk.
+Grammar Lens: how little is actually new.
+Count the new material in this whole arc: one order, and one substitution. No new pronoun, no new form, no new position in the sentence. Four chapters, two facts, and one of the two turned out to be an accident of medieval pronunciation rather than a rule at all.
+That is worth saying plainly, because se lo has a reputation. It is usually taught as the moment Spanish object pronouns become genuinely hard. It is instead the moment they stop growing: this is the last new thing the system does.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: the four-turn exchange straight through]
+[your turn — say: "me lo, te lo, se lo, nos lo, os lo" — the whole first column]
 [pause 8 seconds for the answer]
-[your turn — say: "te lo digo, se lo dices, se la hago" until the pairs feel like single words]
+[your turn — say: "se lo digo, se la hago" and notice that only the middle row changed]
 [pause 8 seconds for the answer]
 [repeat that twice]
-[question — say your answer, then pause 8 seconds]
-Say shall I tell it to you.
-[question — say your answer, then pause 10 seconds]
-Say I make it for her, about la comida.
-[question — say your answer, then pause 10 seconds]
-In se la hago, how many of the three words name anything?
 [question — say your answer, then pause 12 seconds]
-You lose track of which thing se la points at. Does the sentence become wrong?
+State the two facts that generate the whole table.
+[question — say your answer, then pause 8 seconds]
+Give the pair meaning it to us.
+[question — say your answer, then pause 8 seconds]
+How many new pronoun forms did this arc introduce?
 
 Wrap-up Recall.
 [pause 3 seconds]
-"I make it for her"? (Se la hago.) How many nouns are in that sentence? (None.) And what does each pronoun promise? (That its thing is still in the room.) Next: the past tense.
+Which row is the only one that changes? (Le and les becomes se.) How many new pronouns did you learn here? (None.) Next: all of it in a conversation, at speed.

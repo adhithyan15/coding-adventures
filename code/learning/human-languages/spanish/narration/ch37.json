@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 37,
-  "title": "Hablamos --- the First Form That Is Not About One Person",
+  "title": "Synthesis --- Asking, and Answering",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:8928a7960159417f",
+  "sourceHash": "fnv1a64:83477a341d4888ac",
   "lessons": [
     {
-      "id": "ES-C07-hablamos",
-      "sequence": 710,
-      "title": "hablamos — \"we speak\"",
-      "headword": "hablamos",
-      "romanization": "hablamos",
-      "gloss": "\"we speak\" — the first form in this book that is not about one person",
+      "id": "ES-C07-sintesis-preguntar",
+      "sequence": 700,
+      "title": "Synthesis — asking, and answering",
+      "headword": "(synthesis)",
+      "romanization": "(synthesis)",
+      "gloss": "synthesis — three verb families and two question words become a conversation",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b8964bae8532a5a8",
+      "sourceHash": "fnv1a64:164739a80e03fb43",
       "notice": null,
       "blocks": [
         {
@@ -35,57 +35,45 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"I speak\", then \"you speak\" to a friend. (Hablo. Hablas.)"
+              "text": "Nothing new in this chapter. Say \"I eat\" and \"I live.\" (Como. Vivo.)"
             }
           ]
         },
         {
           "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: the first form that is not about one person",
+          "type": "notice",
+          "title": "What you've built",
           "segments": [
             {
               "kind": "speech",
-              "text": "Every verb form you have met so far — in every tense — has been about one person. That changes here."
+              "text": "Something quietly enormous happened over the last four chapters, and it is worth saying out loud before you use it."
             },
             {
               "kind": "speech",
-              "text": "Drop the -ar, add -amos:"
+              "text": "Spanish has three verb families. You now hold the singular of all three. That is not three facts — it is a machine: hand it any regular verb you meet for the rest of your life, and you can already say what you do with it, what a friend does, and what somebody else does."
             },
             {
               "kind": "speech",
-              "text": "hablamos — we speak."
-            },
-            {
-              "kind": "speech",
-              "text": "One word again, no pronoun, and now it covers you and somebody else."
-            },
-            {
-              "kind": "speech",
-              "text": "This is the form you will reach for constantly and have not had: we speak, we work, we study. Everything you could say about yourself, you can now say about a group you belong to."
+              "text": "Two question words turn that machine outward. ¿Qué? asks what. ¿Dónde? asks where. With them, the forms stop being an exercise and start being a conversation."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
+          "type": "input",
+          "title": "The exchange",
           "segments": [
             {
               "kind": "speech",
-              "text": "The -mos is remarkable for how little happened to it."
+              "text": "— ¿Qué bebes? — Bebo café. ¿Y tú? — Yo también. ¿Dónde vives? — Vivo en Madrid."
             },
             {
               "kind": "speech",
-              "text": "Latin marked we with -mus: amāmus, \"we love\". Spanish says -mos. One vowel changed in two thousand years, and nothing else — no consonant lost, no syllable worn away, no analogy pulling it out of shape."
+              "text": "Four lines, and every single word in them is something you built yourself. No new vocabulary was needed to get here — only the endings, one slot at a time."
             },
             {
               "kind": "speech",
-              "text": "Compare what became of the third person, which lost its -t entirely (hablat becomes habla). Endings do not decay at the same rate, and this one barely decayed at all."
-            },
-            {
-              "kind": "speech",
-              "text": "And Portuguese and Italian kept it too — falamos, parliamo. If you ever meet another Romance language, -mos or -mo will be waiting for you, doing the same job."
+              "text": "Notice what the questions cost: nothing. You did not learn a question form. You put ¿qué? or ¿dónde? in front of a verb you already had."
             }
           ]
         },
@@ -103,56 +91,89 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"hablo\" then \"hablamos\" — one person, then a group",
+              "instruction": "the exchange above, both parts, without stopping",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"hablo\" then \"hablamos\" — one person, then a group]"
+              "source": "[YOU SAY: the exchange above, both parts, without stopping]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"hablamos\" alone, and notice it is still a whole sentence",
+              "instruction": "it again, swapping in comes for bebes",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"hablamos\" alone, and notice it is still a whole sentence]"
+              "source": "[YOU SAY: it again, swapping in *comes* for *bebes*]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "Run it until the question and the answer arrive together."
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C07-hablamos-form",
-              "prompt": "Turn hablar into we speak.",
+              "id": "ES-C07-sintesis-preguntar-what",
+              "prompt": "Ask a friend what they eat.",
               "assesses": [
-                "ES-GRAMMAR-AR-PRESENT-1PL"
+                "ES-LEX-QUE",
+                "ES-GRAMMAR-ER-PRESENT-SINGULAR"
               ],
-              "responseSeconds": 8,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "hablamos",
-                "nosotros hablamos"
+                "que comes",
+                "¿que comes?",
+                "qué comes",
+                "que comes tu"
               ],
               "feedback": {
-                "correct": "Right — drop -ar, add -amos.",
-                "incorrect": "hablamos."
+                "correct": "Yes — the question word, then the tu form.",
+                "incorrect": "Que comes. The question word goes in front of the form you already have."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C07-hablamos-latin",
-              "prompt": "What was the Latin ending that became -mos?",
+              "id": "ES-C07-sintesis-preguntar-where",
+              "prompt": "Ask a friend where they live.",
               "assesses": [
-                "ES-GRAMMAR-AR-PRESENT-1PL"
+                "ES-LEX-DONDE",
+                "ES-GRAMMAR-IR-PRESENT-SINGULAR"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "donde vives",
+                "¿donde vives?",
+                "dónde vives"
+              ],
+              "feedback": {
+                "correct": "Yes.",
+                "incorrect": "Donde vives."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C07-sintesis-preguntar-families",
+              "prompt": "How many verb families do you now hold in the singular?",
+              "assesses": [
+                "ES-GRAMMAR-AR-PRESENT-SINGULAR",
+                "ES-GRAMMAR-IR-PRESENT-SINGULAR"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "-mus",
-                "mus",
-                "amamus"
+                "three",
+                "3",
+                "all three"
               ],
               "feedback": {
-                "correct": "Yes — barely changed in two thousand years.",
-                "incorrect": "-mus, as in amamus."
+                "correct": "All three — and that covers every regular verb.",
+                "incorrect": "Three: -ar, -er and -ir."
               }
             }
           ]
@@ -170,7 +191,7 @@
             },
             {
               "kind": "speech",
-              "text": "How do you say \"we speak\"? (Hablamos.) Which Latin ending is that? (-mus, almost unchanged.) How many words? (One — still no pronoun.) Next: the form for them."
+              "text": "How many verb families do you hold? (Three — and that is all of them.) What did the question words cost you? (Nothing — they sit in front of forms you already had.) Ask where somebody lives. (¿Dónde vives?)"
             }
           ]
         }

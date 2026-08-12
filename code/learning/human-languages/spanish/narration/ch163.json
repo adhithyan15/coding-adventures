@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 163,
-  "title": "Por --- And Three Phrases You Already Owned",
+  "title": "Para --- For, Pointing Forward",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:92b1eac43a1c23c6",
+  "sourceHash": "fnv1a64:825eb87ab1cfac13",
   "lessons": [
     {
-      "id": "ES-C51-por",
-      "sequence": 2122,
-      "title": "por — and you already know three of these",
-      "headword": "por",
-      "romanization": "por",
-      "gloss": "\"for\" pointing back or through — at a cause, a route, an exchange; and you have been saying it since your first page",
+      "id": "ES-C51-para",
+      "sequence": 2121,
+      "title": "para — \"for,\" pointing forward",
+      "headword": "para",
+      "romanization": "para",
+      "gloss": "\"for\" pointing forward — at a destination, a purpose, a deadline, a person meant to receive something",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c6f1848934c4b92e",
+      "sourceHash": "fnv1a64:f1680c211e0876d6",
       "notice": null,
       "blocks": [
         {
@@ -35,46 +35,30 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"please.\" (Por favor.) Say \"why.\" (¿Por qué?) Say \"because.\" (Porque.) You have been carrying this word since your first page and nobody has told you what it means."
+              "text": "English has one word, for, doing about ten jobs. Spanish splits them between two words, and most courses hand you a list of twelve rules. You are getting one idea instead, and this chapter is half of it."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: the arrow points back, or through",
+          "title": "Grammar Lens: the arrow points away from you",
           "segments": [
             {
               "kind": "speech",
-              "text": "por — for, when something is the cause, the route, or what is given in exchange."
+              "text": "para — for, when something is aimed at something else."
             },
             {
               "kind": "speech",
-              "text": "Gracias por la comida. — Thanks for the meal. (the cause) Por ti. — Because of you. (the cause)."
+              "text": "Es para ti. — It's for you. (aimed at a person) Para mañana. — By tomorrow. (aimed at a moment) Hago la comida para la casa. — I make the meal for the house. (aimed at a purpose)."
             },
             {
               "kind": "speech",
-              "text": "Where para pointed forward at a target, por points back at a reason or through a middle — what something came through, not what it heads toward."
+              "text": "Destination, deadline, recipient, purpose. They look like four different rules and they are one: something is heading toward something else. Draw an arrow from the thing to its target, and if the arrow makes sense, the word is para."
             },
             {
               "kind": "speech",
-              "text": "Now look again at the three phrases you already own:"
-            },
-            {
-              "kind": "speech",
-              "text": "por favor — literally by way of a favour. You are not aiming at a favour; you are asking through one."
-            },
-            {
-              "kind": "speech",
-              "text": "¿por qué? — literally through what? — that is, caused by what?"
-            },
-            {
-              "kind": "speech",
-              "text": "porque — the same two words fused into an answer: because."
-            },
-            {
-              "kind": "speech",
-              "text": "Three of your oldest phrases turn out to be the same preposition, doing exactly what this chapter says it does. You knew por before you knew hola meant anything."
+              "text": "That is the whole of this chapter. Not four uses — one direction."
             }
           ]
         },
@@ -85,23 +69,19 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Por is two Latin words run together: pro (\"in front of, on behalf of\") and per (\"through\")."
+              "text": "The direction is not a mnemonic somebody invented. It is inside the word."
             },
             {
               "kind": "speech",
-              "text": "The per half is still alive and unchanged in English, in the least poetic corner of the language:"
+              "text": "Para was Latin per + ad, squeezed into one word. And ad means \"toward\" — it is the same ad sitting at the front of English advance, admit, adhere, address, all of which are about moving or pointing at something."
             },
             {
               "kind": "speech",
-              "text": "per hour, per person, per cent — cent being hundred, so literally through each hundred."
+              "text": "So para is, at the bottom, \"through-toward.\" A word that is literally made of an arrow."
             },
             {
               "kind": "speech",
-              "text": "percolate, permeate, perforate — all piercing through."
-            },
-            {
-              "kind": "speech",
-              "text": "English kept per meaning \"through\" and Spanish kept it inside por. Saying por favor, you are using the same word as miles per hour."
+              "text": "Once you have that, you do not have to remember which of the twelve textbook uses of para is which. You have to ask one question: is this pointing at something?"
             }
           ]
         },
@@ -119,78 +99,69 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"por favor\", \"¿por qué?\", \"porque\" — three old friends, one word",
+              "instruction": "\"para ti\", \"para mañana\", \"para la casa\" — draw the arrow each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"por favor\", \"¿por qué?\", \"porque\" — three old friends, one word]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Gracias por la comida\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Gracias por la comida\"]"
+              "source": "[YOU SAY: \"para ti\", \"para mañana\", \"para la casa\" — draw the arrow each time]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C51-por-thanks",
-              "prompt": "Say thanks for the meal.",
+              "id": "ES-C51-para-you",
+              "prompt": "Say it is for you.",
               "assesses": [
-                "ES-LEX-POR",
-                "ES-LEX-GRACIAS",
-                "ES-GRAMMAR-POR-THROUGH-BECAUSE"
+                "ES-LEX-PARA",
+                "ES-GRAMMAR-PARA-FORWARD",
+                "ES-LEX-TU"
               ],
-              "responseSeconds": 10,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "gracias por la comida",
-                "gracias por la comida."
+                "es para ti",
+                "para ti"
               ],
               "feedback": {
-                "correct": "Por — the cause of the thanks.",
-                "incorrect": "Gracias por la comida."
+                "correct": "Aimed at a person.",
+                "incorrect": "Es para ti."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C51-por-favor",
-              "prompt": "What does por favor literally say?",
+              "id": "ES-C51-para-when",
+              "prompt": "Say by tomorrow.",
               "assesses": [
-                "ES-LEX-POR-FAVOR",
-                "ES-GRAMMAR-POR-THROUGH-BECAUSE"
+                "ES-GRAMMAR-PARA-FORWARD",
+                "ES-LEX-MANANA"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "para manana",
+                "para mañana"
+              ],
+              "feedback": {
+                "correct": "Aimed at a moment.",
+                "incorrect": "Para manana."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C51-para-arrow",
+              "prompt": "Which Latin piece inside para means toward, and which English words carry it?",
+              "assesses": [
+                "ES-ETYMON-PER-AD",
+                "ES-GRAMMAR-PARA-FORWARD"
               ],
               "responseSeconds": 12,
               "acceptedResponses": [
-                "by way of a favour",
-                "through a favour",
-                "by means of a favour"
+                "ad, as in advance and admit",
+                "ad",
+                "ad — advance, admit, adhere"
               ],
               "feedback": {
-                "correct": "Not aimed at a favour — asked through one.",
-                "incorrect": "By way of a favour."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C51-por-per",
-              "prompt": "Which everyday English word is the per inside por, still meaning through?",
-              "assesses": [
-                "ES-ETYMON-PRO-PER"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "per, as in per hour",
-                "per",
-                "per hour, per cent"
-              ],
-              "feedback": {
-                "correct": "Per cent is literally through each hundred.",
-                "incorrect": "Per — per hour, per person, per cent."
+                "correct": "A word literally made of an arrow.",
+                "incorrect": "Ad — the same ad in advance, admit, adhere."
               }
             }
           ]
@@ -208,7 +179,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which direction does por point? (Back at a cause, or through something.) What is por favor literally? (By way of a favour.) Which English word is the per inside it? (Per, as in per hour.) Next: the two side by side."
+              "text": "What one question decides para? (Is it pointing at something?) What is inside the word? (Ad — \"toward.\") Next: the other half — and you have been saying it since your first chapter."
             }
           ]
         }

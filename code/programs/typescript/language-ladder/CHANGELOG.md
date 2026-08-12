@@ -2,6 +2,10 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Changed — Spanish reaches 182 chapters
+
+- Re-pin the Spanish chapter table from the generated manifest.
+
 ### Fixed — the bundle staleness guard no longer trips on book builds
 
 - Count only files the bundler can import when deciding whether `dist/` is stale.
