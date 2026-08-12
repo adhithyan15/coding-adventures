@@ -7749,15 +7749,8 @@ impl HtmlParser {
                     "start tag `<optgroup>` implied the end of an option or optgroup in select scope",
                 ));
             }
-        } else if incoming_name == "rb" {
-            self.close_open_ruby_element_if(is_ruby_annotation_element);
-            self.close_open_ruby_element_if(|name| name == "rtc");
-        } else if incoming_name == "rt" || incoming_name == "rp" {
-            self.close_open_element_if(|name| name == "p");
-            self.close_open_ruby_element_if(|name| name == "rb" || name == "rt" || name == "rp");
-        } else if incoming_name == "rtc" {
-            self.close_open_ruby_element_if(|name| name == "rb" || name == "rt" || name == "rp");
-            self.close_open_ruby_element_if(|name| name == "rtc");
+        } else if matches!(incoming_name, "rb" | "rtc" | "rp" | "rt") {
+            self.apply_ruby_implied_end_tags(incoming_name);
         } else if is_heading_element(incoming_name) {
             if !self.current_parent_has_element_ancestor("button") {
                 self.close_open_element_if(|name| name == "p");
@@ -8227,18 +8220,28 @@ impl HtmlParser {
         self.template_insertion_modes.last().copied()
     }
 
-    fn close_open_ruby_element_if(&mut self, predicate: impl Fn(&str) -> bool) -> bool {
-        let last_ruby = self.open_elements.iter().rposition(|path| {
-            element_at_path(&self.document, path).is_some_and(|name| name == "ruby")
-        });
-        let lower_bound = last_ruby.map_or(0, |index| index + 1);
-        let Some(relative_index) = self.open_elements[lower_bound..].iter().rposition(|path| {
-            element_at_path(&self.document, path).is_some_and(&predicate)
-        }) else {
-            return false;
+    fn apply_ruby_implied_end_tags(&mut self, incoming_name: &str) {
+        let Some(ruby_index) = self.open_html_element_in_scope_index("ruby") else {
+            return;
         };
-        self.open_elements.truncate(lower_bound + relative_index);
-        true
+        let preserves_rtc = matches!(incoming_name, "rp" | "rt");
+        while self.open_elements.len() > ruby_index + 1
+            && self.current_element_name().is_some_and(|name| {
+                is_implied_end_tag_element(name) && !(preserves_rtc && name == "rtc")
+            })
+        {
+            self.open_elements.pop();
+        }
+        let current_is_allowed =
+            self.current_element_is("ruby") || (preserves_rtc && self.current_element_is("rtc"));
+        if !current_is_allowed {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-ruby-annotation-start-tag",
+                format!(
+                    "start tag `<{incoming_name}>` was inserted while a non-ruby element remained current"
+                ),
+            ));
+        }
     }
 
     fn capture_formatting_above(&mut self, element_index: usize) {
@@ -11674,10 +11677,6 @@ fn is_thoroughly_implied_end_tag_element(name: &str) -> bool {
 
 fn is_heading_element(name: &str) -> bool {
     matches!(name, "h1" | "h2" | "h3" | "h4" | "h5" | "h6")
-}
-
-fn is_ruby_annotation_element(name: &str) -> bool {
-    matches!(name, "rb" | "rt" | "rp")
 }
 
 fn is_list_item_scope_boundary(name: &str) -> bool {
@@ -32024,48 +32023,86 @@ mod tests {
     }
 
     #[test]
-    fn closes_scoped_ruby_annotations_around_nested_inline_children() {
-        let document =
-            parse_html("<ruby><rb><em>漢<rt><span>kan<rb>字<rtc><rt><b>group<rtc><rt>group2")
+    fn reports_ruby_annotation_starts_with_non_ruby_current_nodes() {
+        for annotation in ["rb", "rtc", "rp", "rt"] {
+            let source = format!(
+                "<!doctype html><ruby><div><span><{annotation}></{annotation}></span></div></ruby>"
+            );
+            let output = parse_html_with_diagnostics(&source).unwrap();
+            assert_eq!(
+                output.parser_diagnostics,
+                vec![ParserDiagnostic::new(
+                    "unexpected-ruby-annotation-start-tag",
+                    format!(
+                        "start tag `<{annotation}>` was inserted while a non-ruby element remained current"
+                    )
+                )],
+                "source {source:?}"
+            );
+
+            let ruby = element(&body(&output.document).children[0]);
+            let div = element(&ruby.children[0]);
+            let span = element(&div.children[0]);
+            assert_eq!(element(&span.children[0]).name, annotation);
+        }
+    }
+
+    #[test]
+    fn ruby_annotation_starts_generate_the_required_implied_end_tags() {
+        for annotation in ["rb", "rtc", "rp", "rt"] {
+            let source = format!("<!doctype html><ruby><p><{annotation}></{annotation}></ruby>");
+            let output = parse_html_with_diagnostics(&source).unwrap();
+            assert!(output.parser_diagnostics.is_empty(), "source {source:?}");
+
+            let ruby = element(&body(&output.document).children[0]);
+            assert_eq!(element(&ruby.children[0]).name, "p");
+            assert_eq!(element(&ruby.children[1]).name, annotation);
+        }
+
+        let rtc =
+            parse_html_with_diagnostics("<!doctype html><ruby><rtc><p><rt></rt></rtc></ruby>")
                 .unwrap();
+        assert!(rtc.parser_diagnostics.is_empty());
+        let ruby = element(&body(&rtc.document).children[0]);
+        let rtc = element(&ruby.children[0]);
+        assert_eq!(element(&rtc.children[0]).name, "p");
+        assert_eq!(element(&rtc.children[1]).name, "rt");
+    }
 
-        let ruby = element(&body(&document).children[0]);
-        assert_eq!(ruby.name, "ruby");
-        assert_eq!(ruby.children.len(), 5);
+    #[test]
+    fn ruby_annotation_diagnostics_require_an_authored_ruby_in_scope() {
+        let document =
+            parse_html_with_diagnostics("<!doctype html><div><span><rt></rt></span></div>")
+                .unwrap();
+        assert!(document.parser_diagnostics.is_empty());
 
-        let first_base = element(&ruby.children[0]);
-        assert_eq!(first_base.name, "rb");
+        let fragment =
+            parse_html_fragment_for_context_with_diagnostics("<div><rt></rt></div>", "ruby")
+                .unwrap();
+        assert!(fragment.parser_diagnostics.is_empty());
+    }
+
+    #[test]
+    fn ruby_annotation_starts_do_not_cross_non_implied_inline_nodes() {
+        let output = parse_html_with_diagnostics(
+            "<!doctype html><ruby><rb><em>base<rt>text</rt></em></rb></ruby>",
+        )
+        .unwrap();
         assert_eq!(
-            element(&first_base.children[0]).children,
-            vec![Node::text("漢")]
+            output.parser_diagnostics,
+            vec![ParserDiagnostic::new(
+                "unexpected-ruby-annotation-start-tag",
+                "start tag `<rt>` was inserted while a non-ruby element remained current"
+            )]
         );
 
-        let first_text = element(&ruby.children[1]);
-        assert_eq!(first_text.name, "rt");
-        assert_eq!(
-            element(&first_text.children[0]).children,
-            vec![Node::text("kan")]
-        );
-
-        let second_base = element(&ruby.children[2]);
-        assert_eq!(second_base.name, "rb");
-        assert_eq!(second_base.children, vec![Node::text("字")]);
-
-        let first_container = element(&ruby.children[3]);
-        assert_eq!(first_container.name, "rtc");
-        let grouped_text = element(&first_container.children[0]);
-        assert_eq!(grouped_text.name, "rt");
-        assert_eq!(
-            element(&grouped_text.children[0]).children,
-            vec![Node::text("group")]
-        );
-
-        let second_container = element(&ruby.children[4]);
-        assert_eq!(second_container.name, "rtc");
-        assert_eq!(
-            element(&second_container.children[0]).children,
-            vec![Node::text("group2")]
-        );
+        let ruby = element(&body(&output.document).children[0]);
+        let rb = element(&ruby.children[0]);
+        let em = element(&rb.children[0]);
+        assert_eq!(em.children[0], Node::text("base"));
+        let rt = element(&em.children[1]);
+        assert_eq!(rt.name, "rt");
+        assert_eq!(rt.children, vec![Node::text("text")]);
     }
 
     #[test]
