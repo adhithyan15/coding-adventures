@@ -2436,7 +2436,50 @@ impl Compiler {
         {
             return self.static_integer_scalar_value(children[0]);
         }
-        None
+
+        let seq = pieces(node);
+        if seq.len() == 1 {
+            return match seq[0] {
+                Piece::Node(child) => self.static_integer_scalar_value(child),
+                Piece::Op(_) => None,
+            };
+        }
+
+        let mut index = 0;
+        let mut negate = false;
+        if let Some(Piece::Op(op)) = seq.first() {
+            negate = match op.as_str() {
+                "+" => false,
+                "-" => true,
+                _ => return None,
+            };
+            index += 1;
+        }
+        let Piece::Node(first) = seq.get(index)? else {
+            return None;
+        };
+        let first = self.static_integer_scalar_value(first)?;
+        let mut value = if negate { first.checked_neg()? } else { first };
+        index += 1;
+        while index < seq.len() {
+            let Piece::Op(op) = seq.get(index)? else {
+                return None;
+            };
+            let Piece::Node(rhs) = seq.get(index + 1)? else {
+                return None;
+            };
+            let rhs = self.static_integer_scalar_value(rhs)?;
+            value = match op.as_str() {
+                "+" => value.checked_add(rhs)?,
+                "-" => value.checked_sub(rhs)?,
+                "*" => value.checked_mul(rhs)?,
+                "div" => value.checked_div(rhs)?,
+                "mod" => value.checked_rem(rhs)?,
+                _ => return None,
+            };
+            index += 2;
+        }
+        Some(value)
     }
 
     /// Evaluate deterministic real standard-function calls inside the static
@@ -7396,6 +7439,45 @@ mod tests {
             .instructions
             .iter()
             .all(|instr| !matches!(instr.op.as_str(), "int_to_real" | "add")));
+    }
+
+    #[test]
+    fn al4_print_static_integer_arithmetic_snapshot_in_real_expression() {
+        let module = compile_source(
+            "begin integer n, saved, quotient; n := (8 - 1) * 6; saved := n; n := 9; quotient := 100 div 3 + 9 mod 4 + 8; output(saved + 0.5, quotient + 0.5) end",
+            "test",
+        )
+        .expect("checked integer arithmetic snapshots widen in static real expressions");
+        let main = module.get_function("main").expect("has main");
+        let outputs = main
+            .instructions
+            .iter()
+            .filter(|instr| {
+                instr.op == "str_const"
+                    && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "42.5")
+            })
+            .count();
+        assert_eq!(outputs, 2);
+    }
+
+    #[test]
+    fn al4_print_static_integer_arithmetic_rejects_overflow() {
+        let err = compile_source(
+            "begin integer n; n := 9223372036854775807 + 1; output(n + 0.5) end",
+            "test",
+        )
+        .expect_err("overflowing integer arithmetic must invalidate the static snapshot");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_print_static_integer_arithmetic_rejects_zero_division() {
+        let err = compile_source(
+            "begin integer n; n := 1 div 0; output(n + 0.5) end",
+            "test",
+        )
+        .expect_err("zero division must invalidate the static integer snapshot");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
     #[test]
