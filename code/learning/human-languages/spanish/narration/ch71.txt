@@ -1,78 +1,39 @@
-Spanish, chapter 71: Me and Te --- The Two People Talking.
-2 lessons. All 2 can be done entirely by ear.
+Spanish, chapter 71: La --- The Pronoun Carries What Left.
+1 lesson. All 1 can be done entirely by ear.
 
 
-Lesson 1 of 2.
-me quieres — "you love me".
-
-Warm-up.
-[pause 2 seconds]
-Say "my name is." (Me llamo.) That me has been in your mouth for more than fifty chapters. This chapter gives it nothing new to look like — only something new to do.
-
-Grammar Lens: the same word, a simpler job.
-In me llamo, the me points back at the speaker: I call myself. That is a special use, and it was the one you needed first.
-Here is the ordinary one:
-Me quieres. — You love me.
-Now me is not pointing back at anybody. It is simply the person the verb lands on — the same job lo does for a book and la does for a meal.
-Lo tengo. — I have it. Me quieres. — You love me.
-Same slot, in front of the verb. Same kind of work. The only difference is that me is a person and lo is a thing, which is a fact about the world rather than a fact about Spanish.
-Notice what this chapter did not ask you to learn: a form. You already had it. Some of the ground you gain in a language is like this — not new material, but an old piece turning out to reach further than you were told.
-
-The word, taken apart.
-Me comes from Latin mē, and Latin got it from something far older. English me is not a translation of it and not a borrowing from it — the two are the same inherited word, sitting in two languages that split thousands of years ago and never bothered to change it.
-Words this short and this used are the ones that survive intact. That is why your very first Spanish pronoun was also the easiest one you will ever meet.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "me llamo" then "me quieres" — the same syllable, two jobs]
-[pause 8 seconds for the answer]
-[your turn — say: "lo tengo" then "me quieres" — hear that the slot never moves]
-[pause 8 seconds for the answer]
-[question — say your answer, then pause 8 seconds]
-Say you love me.
-[question — say your answer, then pause 12 seconds]
-In me llamo the me points back at the speaker. What is it doing in me quieres?
-[question — say your answer, then pause 8 seconds]
-How many new word forms did this lesson ask you to learn?
-
-Wrap-up Recall.
-[pause 3 seconds]
-Say "you love me." (Me quieres.) Where did the pronoun go? (Before the verb, as always.) Next: the answering half of that sentence.
-
-
-Lesson 2 of 2.
-te quiero — "I love you".
+Lesson 1 of 1.
+la — "it," for a feminine noun.
 
 Warm-up.
 [pause 2 seconds]
-Say "you love me." (Me quieres.) Now turn it around in your head: what would "I love you" need?
+Say "I have it," about the book. (Lo tengo.) Now guess the feminine version before you read on.
 
-Grammar Lens: the partner of tú.
-te — you, when you are the one it happens to.
-Te quiero. — I love you.
-Tú is for the one doing; te is for the one it lands on. Spanish keeps those apart with two different shapes, the same way it keeps el and lo apart, and the same way English keeps I and me apart.
-Me quieres. — You love me. Te quiero. — I love you.
-Two words each, and a complete exchange. Read them aloud one after the other: the pair is a conversation.
-One thing worth knowing before you use it. Querer means to want, and you have been using it that way for a long time. But querer pointed at a person does not mean wanting them — it means loving them. Quiero un libro is "I want a book"; te quiero is "I love you."
-So the sentence is built entirely out of pieces you already had. What is new is not a form — it is that the verb changes its meaning depending on whether its object is a thing or a person.
+Grammar Lens: the form you probably guessed.
+la — it, standing in for something feminine.
+Hago la comida. — I make the meal. La hago. — I make it.
+If you guessed la, you were not lucky. You were doing what the shape of Spanish invites you to do: el and la mark the two genders everywhere else, so the object pronouns mark them the same way.
+The pronoun agrees with the noun it replaces — not with you, and not with the verb. El libro is masculine, so lo. La comida and la casa are feminine, so la.
+That last point is worth pausing on. La here is not agreeing with anything present in the sentence. The noun is gone; the pronoun is carrying its gender on its behalf. This is the first time in Spanish that a word has had to remember something that is no longer being said.
 
 The word, taken apart.
-Te is Latin tē — the object form of tū, which you already have.
-English used to do this exactly. Old English had thou for the doer and thee for the one it happened to — and, this is the striking part, those are the same two words. Tú/te and thou/thee are one ancient pair, inherited twice. English later dropped both and let you cover the two jobs; Spanish kept them apart.
+Last chapter had a small mystery: why lo and not el, when both come from the same Latin word? Here that mystery quietly disappears.
+The feminine object form in Latin was illam. Worn down as an article it gave la. Worn down as a pronoun it gave — la. Both routes arrived at the same place, because the vowel that got lost on the masculine side (elo becomes el) was never at risk on the feminine side.
+So the masculine pair split into two shapes and the feminine pair did not. Not an exception to memorise: a single sound change that happened to bite one word and not the other.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "Te quiero" then "Me quieres" — a whole exchange in four words]
+[your turn — say: "Hago la comida" then "La hago"]
 [pause 8 seconds for the answer]
-[your turn — say: "tú" then "te", and "thou" then "thee" — the same split twice]
+[your turn — say: "lo tengo" then "la hago" — one syllable carries the whole difference]
 [pause 8 seconds for the answer]
 [question — say your answer, then pause 8 seconds]
-Say I love you.
-[question — say your answer, then pause 12 seconds]
-Quiero un libro means I want a book. Why does te quiero not mean I want you?
+Say I make it, about la comida.
 [question — say your answer, then pause 10 seconds]
-Which old English pair is the same inherited pair as tu and te?
+What decides whether you say lo or la?
+[question — say your answer, then pause 12 seconds]
+Why does the feminine article match its pronoun exactly, when the masculine pair does not?
 
 Wrap-up Recall.
 [pause 3 seconds]
-Say "I love you." (Te quiero.) And "you love me." (Me quieres.) Which English pair matches tú and te? (Thou and thee.) Next: all four of these in one place, for the first time.
+Which pronoun replaces a feminine noun? (La.) What decides it — you, the verb, or the noun? (The noun, even though it is no longer there.) Next: the same slot, for the two people actually talking.

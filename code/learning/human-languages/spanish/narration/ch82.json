@@ -2,32 +2,25 @@
   "version": 1,
   "language": "spanish",
   "chapter": 82,
-  "title": "Review --- Two Systems, Two New Words",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:89103f7f51639e0a",
+  "title": "Which One Is the Verb Asking For?",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:56e1d11214b021d4",
   "lessons": [
     {
-      "id": "ES-C46-repaso-dos-sistemas",
-      "sequence": 1164,
-      "title": "Review — two systems, two new words",
-      "headword": "(review)",
-      "romanization": "(review)",
-      "gloss": "review — two systems, twelve cells, and only two of them new",
+      "id": "ES-C46-cual-pide",
+      "sequence": 1163,
+      "title": "Which one is the verb asking for?",
+      "headword": "lo tengo / le hablo",
+      "romanization": "lo tengo / le hablo",
+      "gloss": "how to know which pronoun a verb is asking for — one question, asked of the verb rather than memorised per verb",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ca9630ed488bf816",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:592834555ad0b5db",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -42,63 +35,61 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing new. Two questions before the tables: where does an object pronoun go, and what single question chooses between the two sets?"
+              "text": "You have two sets now. The obvious worry is that you will have to learn, verb by verb, which set each one wants. You do not."
             }
           ]
         },
         {
           "index": 1,
-          "type": "notice",
-          "title": "What you've built",
+          "type": "grammar",
+          "title": "Grammar Lens: ask the verb one question",
           "segments": [
             {
-              "kind": "table",
-              "headers": [
-                "",
-                "direct — what",
-                "indirect — to whom"
-              ],
-              "columns": 3,
-              "rowCount": 6,
-              "utterances": [
-                "me. direct — what: me. indirect — to whom: me.",
-                "you. direct — what: te. indirect — to whom: te.",
-                "him / her / usted. direct — what: lo, la. indirect — to whom: le.",
-                "us. direct — what: nos. indirect — to whom: nos.",
-                "you all (Spain). direct — what: os. indirect — to whom: os.",
-                "them / ustedes. direct — what: los, las. indirect — to whom: les."
-              ]
+              "kind": "speech",
+              "text": "Does the verb do something to this, or aim something at this?"
             },
             {
               "kind": "speech",
-              "text": "Twelve cells. Two of them are new since the last review, and you produced one of those yourself by adding an -s."
+              "text": "That is the whole test."
             },
             {
               "kind": "speech",
-              "text": "Do the arithmetic once and it will stay done. Fourteen chapters of object pronouns have asked you to learn, as shapes: te, lo, la, nos, os, le. Six words. Me you had from chapter four; los, las and les you derived. Six words, spread across fourteen chapters, with a review and a synthesis at each joint — that is what a gentle ramp costs and what it buys."
+              "text": "Tengo el libro becomes Lo tengo. The having lands on the book. Direct. Hablo a Ana becomes Le hablo. The speaking is aimed at Ana. Indirect."
+            },
+            {
+              "kind": "speech",
+              "text": "Say the sentence in English with the little word to in front of the person. If it fits, Spanish wants the indirect one:"
+            },
+            {
+              "kind": "speech",
+              "text": "I speak to her becomes le hablo. Fits."
+            },
+            {
+              "kind": "speech",
+              "text": "I have to the book becomes nonsense. So lo tengo."
+            },
+            {
+              "kind": "speech",
+              "text": "English hides this by dropping the to: you say I told him, not I told to him. Put it back, and if it survives, the pronoun is le."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: the one asymmetry",
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
           "segments": [
             {
               "kind": "speech",
-              "text": "Read the third row again, because it is the only place the two columns disagree in shape rather than spelling:"
+              "text": "One thing the test will not settle, said now rather than met later as a shock."
             },
             {
               "kind": "speech",
-              "text": "direct: lo / la — two forms, gender marked. indirect: le — one form, gender not marked."
+              "text": "In much of Spain, speakers use le for a male person even where the grammar calls for lo: le veo rather than lo veo. It has a name, leísmo, it is old, it is accepted for people, and roughly a fifth of the Spanish-speaking world does it."
             },
             {
               "kind": "speech",
-              "text": "Spanish cares about the gender of a thing being acted on and does not care about the gender of a person being aimed at. There is no deep reason for it; Latin's dative simply had one form where its accusative had two, and Spanish inherited the asymmetry whole."
-            },
-            {
-              "kind": "speech",
-              "text": "It is good news. The row that carries all the difficulty in one column carries none in the other."
+              "text": "So if you hear le where this chapter predicts lo, neither of you has misunderstood. The test above is right everywhere."
             }
           ]
         },
@@ -116,89 +107,89 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the direct six, then the indirect six, and hear how much is the same",
+              "instruction": "\"Lo tengo\" then \"Le hablo\" — which question does each answer?",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the direct six, then the indirect six, and hear how much is the same]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"lo tengo, le hablo, los tengo, les hablo\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"lo tengo, le hablo, los tengo, les hablo\"]"
-            },
-            {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "Until the shared four stop feeling like two separate lists."
+              "source": "[YOU SAY: \"Lo tengo\" then \"Le hablo\" — which question does each answer?]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C46-repaso-dos-sistemas-indirect",
-              "prompt": "Give the six indirect object pronouns.",
+              "id": "ES-C46-cual-pide-test",
+              "prompt": "State the one-question test in your own words.",
               "assesses": [
-                "ES-GRAMMAR-INDIRECT-OBJECT-LE",
-                "ES-GRAMMAR-INDIRECT-OBJECT-PLURAL",
-                "ES-GRAMMAR-OBJECT-SETS-OVERLAP"
+                "ES-GRAMMAR-WHICH-OBJECT"
               ],
-              "responseSeconds": 10,
+              "responseSeconds": 12,
               "acceptedResponses": [
-                "me, te, le, nos, os, les",
-                "me te le nos os les"
+                "does the verb act on it or aim at it",
+                "can you put to in front of it in english",
+                "to whom versus what"
               ],
               "feedback": {
-                "correct": "Four of them were already yours.",
-                "incorrect": "me, te, le, nos, os, les."
+                "correct": "Acts on it, or aims at it.",
+                "incorrect": "Ask whether the verb acts ON the thing, or aims something AT the person."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C46-repaso-dos-sistemas-row",
-              "prompt": "Which row is the only one where the two sets differ in shape, and how?",
+              "id": "ES-C46-cual-pide-speak",
+              "prompt": "Say I speak to her.",
+              "assesses": [
+                "ES-GRAMMAR-INDIRECT-OBJECT-LE",
+                "ES-LEX-HABLAR",
+                "ES-GRAMMAR-AR-PRESENT-1SG"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "le hablo",
+                "yo le hablo"
+              ],
+              "feedback": {
+                "correct": "Aimed at her, so le.",
+                "incorrect": "Le hablo — the speaking is aimed at somebody."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C46-cual-pide-have",
+              "prompt": "Say I have it, about the book, and say which set that is.",
               "assesses": [
                 "ES-GRAMMAR-DIRECT-OBJECT-LO",
-                "ES-GRAMMAR-DIRECT-OBJECT-LA",
+                "ES-LEX-LIBRO",
+                "ES-GRAMMAR-TENER-PRESENT-SINGULAR"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "lo tengo, direct",
+                "lo tengo"
+              ],
+              "feedback": {
+                "correct": "The having lands on the book.",
+                "incorrect": "Lo tengo — direct, because the verb acts on the thing."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C46-cual-pide-leismo",
+              "prompt": "Somebody in Madrid says le veo for I see him. Has a rule been broken?",
+              "assesses": [
+                "ES-GRAMMAR-WHICH-OBJECT",
                 "ES-GRAMMAR-INDIRECT-OBJECT-LE"
               ],
               "responseSeconds": 12,
               "acceptedResponses": [
-                "the him/her row: lo and la versus le",
-                "the third row",
-                "lo la versus le"
+                "no, it is leismo and it is accepted",
+                "no",
+                "no, that is normal in spain"
               ],
               "feedback": {
-                "correct": "Two forms in one column, one in the other.",
-                "incorrect": "The him/her/usted row: direct has lo and la, indirect has only le."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C46-repaso-dos-sistemas-count",
-              "prompt": "Across both tables, how many distinct word shapes are there in total?",
-              "assesses": [
-                "ES-GRAMMAR-OBJECT-SETS-OVERLAP",
-                "ES-GRAMMAR-DIRECT-OBJECT-PLURAL"
-              ],
-              "responseSeconds": 12,
-              "acceptedResponses": [
-                "nine",
-                "9",
-                "me te lo la le nos os los las les"
-              ],
-              "feedback": {
-                "correct": "Nine shapes covering twelve cells, because four do double duty.",
-                "incorrect": "Nine: me, te, lo, la, le, nos, os, los, las, les — with four shared between the systems."
+                "correct": "Two answers, both somebody's normal.",
+                "incorrect": "No. That is leismo, it is old and accepted for people, and about a fifth of speakers do it."
               }
             }
           ]
@@ -216,7 +207,7 @@
             },
             {
               "kind": "speech",
-              "text": "How many pronouns are shared between the two sets? (Four.) Which row differs? (Him / her / usted — lo and la against le.) Next: both sets in one conversation, where you have to choose fast."
+              "text": "What one question tells you which set to use? (Does the verb act on it, or aim at it?) What is it called when Spain uses le for a man where the rule says lo? (Leísmo — and it is fine.) Next: both sets in one place."
             }
           ]
         }

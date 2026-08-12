@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 39,
-  "title": "Hablais --- the Form Spain Keeps",
+  "title": "Hablan --- They, and Ustedes",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:2358cfb7cb11deda",
+  "sourceHash": "fnv1a64:7ad0557d441ae557",
   "lessons": [
     {
-      "id": "ES-C07-hablais",
-      "sequence": 750,
-      "title": "habláis — the form Spain keeps",
-      "headword": "habláis",
-      "romanization": "habláis",
-      "gloss": "\"you all speak\" in Spain — a whole form that half the Spanish world does not use",
+      "id": "ES-C07-hablan",
+      "sequence": 730,
+      "title": "hablan — \"they speak,\" and \"you all speak\"",
+      "headword": "hablan",
+      "romanization": "hablan",
+      "gloss": "they speak\" — and, across most of the Spanish-speaking world, \"you all speak",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a414b65a5b0bbaa9",
+      "sourceHash": "fnv1a64:407b6577cdf44bb8",
       "notice": null,
       "blocks": [
         {
@@ -35,53 +35,49 @@
             },
             {
               "kind": "speech",
-              "text": "How do you say \"you all speak\" to a group in Mexico? (Ustedes hablan.)"
+              "text": "Say \"we speak.\" (Hablamos.) And what was the form for he speaks? (Habla.)"
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: a second plural you",
+          "title": "Grammar Lens: add the plural -n",
           "segments": [
             {
               "kind": "speech",
-              "text": "In Spain, addressing a group of friends uses a different word and a different verb form:"
+              "text": "Take habla, the form for one other person, and add -n:"
             },
             {
               "kind": "speech",
-              "text": "vosotros habláis — you all speak, informally."
+              "text": "hablan — they speak."
             },
             {
               "kind": "speech",
-              "text": "vosotros — you all, familiar. Its ending is -áis, and it is the last of the six."
-            },
-            {
-              "kind": "speech",
-              "text": "This is not an ornament. In Spain it is the ordinary, everyday way to speak to more than one friend, and a Spaniard hears ustedes to a group of friends as oddly formal — roughly as an English speaker hears sir from someone they know well."
+              "text": "That is the whole operation, and it is the same one Spanish uses everywhere: a final -n on a verb means the subject is plural and is not you."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
+          "type": "grammar",
+          "title": "Grammar Lens: the form does a second job, exactly as habla did",
           "segments": [
             {
               "kind": "speech",
-              "text": "You met vos long ago: Latin's plural you, which drifted into the singular across much of the Americas."
+              "text": "ustedes — you all. And it takes hablan, the they form."
             },
             {
               "kind": "speech",
-              "text": "That drift left Spain with a problem. If vos was being used for one polite person, what was left for an actual group? Spaniards added a word to disambiguate: vos + otros, \"you others\" — hence vosotros, and its feminine vosotras."
+              "text": "You have seen this exact move before. Usted takes the he/she form because it grew out of vuestra merced, \"your grace\" — a thing you talk about. Ustedes is simply that phrase made plural, vuestras mercedes, \"your graces\". Same origin, same consequence."
             },
             {
               "kind": "speech",
-              "text": "The Americas never needed the repair, because ustedes had already taken the plural job. So the split is not a difference of taste. Two regions solved the same problem in two different ways, and both solutions are still in use."
+              "text": "Where this is the ordinary word. Across all of Latin America, and in the Canary Islands and parts of Andalusia, ustedes is how you address any group — friends, family, strangers alike. There is no separate familiar plural. For most Spanish speakers alive, this lesson is the complete answer to \"how do I talk to more than one person?\""
             },
             {
               "kind": "speech",
-              "text": "What you owe this form. Recognition, at minimum — you will meet it in every book, film and song from Spain. Produce it if you are learning for Spain; otherwise ustedes will carry you anywhere."
+              "text": "Spain uses a different word for friends, and it has the next chapter to itself."
             }
           ]
         },
@@ -98,82 +94,76 @@
             },
             {
               "kind": "prompt",
-              "action": "HEAR",
-              "instruction": "\"habláis\"",
+              "action": "SAY",
+              "instruction": "\"habla\" then \"hablan\" — one other person, then several",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU HEAR: \"habláis\"]"
-            },
-            {
-              "kind": "speech",
-              "text": "becomes a Spaniard, talking to friends."
+              "source": "[YOU SAY: \"habla\" then \"hablan\" — one other person, then several]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ustedes hablan\" then \"vosotros habláis\" — the same sentence, two continents",
+              "instruction": "\"ustedes hablan\", addressing a group you have just met",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ustedes hablan\" then \"vosotros habláis\" — the same sentence, two continents]"
+              "source": "[YOU SAY: \"ustedes hablan\", addressing a group you have just met]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C07-hablais-form",
-              "prompt": "Which form goes with vosotros?",
+              "id": "ES-C07-hablan-form",
+              "prompt": "Turn hablar into they speak.",
               "assesses": [
-                "ES-GRAMMAR-AR-PRESENT-2PL"
+                "ES-GRAMMAR-AR-PRESENT-3PL"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "hablais",
-                "habláis",
-                "vosotros hablais"
+                "hablan",
+                "ellos hablan"
               ],
               "feedback": {
-                "correct": "Yes — the -ais ending.",
-                "incorrect": "hablais."
+                "correct": "Right — habla plus -n.",
+                "incorrect": "hablan."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C07-hablais-where",
-              "prompt": "You are addressing a group of friends in Argentina. Vosotros or ustedes?",
+              "id": "ES-C07-hablan-ustedes",
+              "prompt": "Which form goes with ustedes?",
               "assesses": [
-                "ES-CULTURE-VOSOTROS-USTEDES-SPLIT",
-                "ES-LEX-USTEDES"
+                "ES-LEX-USTEDES",
+                "ES-GRAMMAR-AR-PRESENT-3PL"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "ustedes",
+                "hablan",
                 "ustedes hablan"
               ],
               "feedback": {
-                "correct": "Right — vosotros is Spain only.",
-                "incorrect": "Ustedes. Vosotros is not used in the Americas."
+                "correct": "Yes — ustedes takes the they form, for the same reason usted takes the he form.",
+                "incorrect": "Hablan."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C07-hablais-why",
-              "prompt": "What two words is vosotros built from?",
+              "id": "ES-C07-hablan-why",
+              "prompt": "What phrase is ustedes worn down from?",
               "assesses": [
-                "ES-LEX-VOSOTROS",
-                "ES-ETYMON-VOS-03"
+                "ES-ETYMON-VUESTRA-MERCED"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "vos and otros",
-                "vos otros",
-                "you others"
+                "vuestras mercedes",
+                "your graces",
+                "vuestra merced plural"
               ],
               "feedback": {
-                "correct": "Yes — you others, added to keep the plural apart from singular vos.",
-                "incorrect": "Vos plus otros, you others."
+                "correct": "Yes — your graces, the plural of the phrase behind usted.",
+                "incorrect": "Vuestras mercedes, your graces."
               }
             }
           ]
@@ -191,7 +181,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is vosotros built from? (Vos + otros — \"you others\".) Why did Spain need it and the Americas not? (Because vos had drifted singular in the Americas, where ustedes already covered the plural.) Which will carry you anywhere? (Ustedes.)"
+              "text": "What is \"they speak\"? (Hablan.) What does a final -n on a verb tell you? (The subject is plural, and not you.) And who does ustedes address in Latin America? (Any group at all.) Next: the word Spain uses instead, for friends."
             }
           ]
         }

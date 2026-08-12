@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 112,
-  "title": "Wanting, Not Asserting",
+  "title": "Synthesis --- Promising, and Supposing",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:df6528b48f2e0ad3",
+  "sourceHash": "fnv1a64:ac419ef07519735d",
   "lessons": [
     {
-      "id": "ES-C18-quiero-que",
-      "sequence": 1390,
-      "title": "Hablas español, Quiero que hables español — fact or wanted event?",
-      "headword": "Hablas español · Quiero que hables español",
-      "romanization": "Hablas español · Quiero que hables español",
-      "gloss": "an asserted event beside a wanted, not-yet-real event",
+      "id": "ES-C17-sintesis-futuro-condicional",
+      "sequence": 1382,
+      "title": "Synthesis — promising, and supposing",
+      "headword": "(synthesis)",
+      "romanization": "(synthesis)",
+      "gloss": "synthesis — one stem, two endings, and the difference between promising and supposing",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6da3d7507b2b426b",
+      "sourceHash": "fnv1a64:e7b16064da3a1465",
       "notice": null,
       "blocks": [
         {
@@ -35,37 +35,73 @@
             },
             {
               "kind": "speech",
-              "text": "Hablas español can assert “You speak Spanish.” Now compare Quiero que hables español — “I want you to speak Spanish.” Hables does not report what is true. It presents the speaking as wanted and not yet asserted. That meaning contrast is the first small doorway into the subjunctive."
+              "text": "Nothing new in this chapter. Say hablaré, then hablaría."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: count the doers",
+          "title": "Grammar Lens: the two endings are one word, twice",
           "segments": [
             {
-              "kind": "table",
-              "headers": [
-                "meaning",
-                "Spanish",
-                "doers"
-              ],
-              "columns": 3,
-              "rowCount": 2,
-              "utterances": [
-                "meaning: I want to speak Spanish. Spanish: Quiero hablar español. doers: one: I want; I speak.",
-                "meaning: I want you to speak Spanish. Spanish: Quiero que hables español. doers: two: I want; you speak."
-              ]
+              "kind": "speech",
+              "text": "Three chapters ago you were told where these endings came from. Now it is worth seeing what that fact buys you."
             },
             {
               "kind": "speech",
-              "text": "With one doer, keep the known infinitive hablar. With a different doer for the wanted event, use que and the new form hables. This is a bounded pattern for querer, not a rule for every clause in Spanish."
+              "text": "Both are the verb haber — Latin habēre, \"to have\" — glued onto the back of the infinitive. Romance speakers stopped saying \"I have to speak\" as two words and fused it into one:"
+            },
+            {
+              "kind": "speech",
+              "text": "hablar + he (I have) becomes hablaré — I will speak. hablar + había (I had) becomes hablaría — I would speak."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the entire difference between the two tenses: the same auxiliary, once in the present and once in the past. Not two systems to learn — one system, looked at from two moments."
             }
           ]
         },
         {
           "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "And the meaning follows from the grammar rather than being extra to it."
+            },
+            {
+              "kind": "speech",
+              "text": "Having to do something now is a commitment: hablaré is a promise, or a prediction you are standing behind. Having had to do it is a supposition — the obligation sits in a past that never arrived, so hablaría is hypothetical."
+            },
+            {
+              "kind": "speech",
+              "text": "Promise from the present. Suppose from the past."
+            },
+            {
+              "kind": "speech",
+              "text": "English hides the same move: will is the present of an old verb meaning to want, and would is its past. Will/would is the same pair as -é/-ía."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "input",
+          "title": "The exchange",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "— ¿Hablarás español en Madrid? — Sí, hablaré español. — ¿Y sin práctica? — Hablaría español, pero no bien."
+            },
+            {
+              "kind": "speech",
+              "text": "One letter-run apart, and the second speaker has moved from a commitment to a guess without changing a single other word."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -78,94 +114,84 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“Hablas español.”",
+              "instruction": "hablaré then hablaría, and hear a promise turn into a guess",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “Hablas español.”]"
+              "source": "[YOU SAY: *hablaré* then *hablaría*, and hear a promise turn into a guess]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“Quiero hablar español.”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “Quiero hablar español.”]"
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“Quiero que hables español.”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “Quiero que hables español.”]"
+              "kind": "speech",
+              "text": "Until the choice is about what you mean, not which ending it was."
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C18-quiero-que-meaning",
-              "prompt": "Which form asserts that one friend speaks: hablas or hables?",
+              "id": "ES-C17-sintesis-futuro-condicional-promise",
+              "prompt": "You are committing to it. I will speak: which form?",
               "assesses": [
-                "ES-GRAMMAR-SUBJUNCTIVE-WANTED-NONASSERTED",
-                "ES-GRAMMAR-AR-PRESENT-SINGULAR"
+                "ES-GRAMMAR-AR-FUTURE-SINGULAR"
               ],
-              "responseSeconds": 6,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "hablas"
+                "hablare",
+                "hablaré",
+                "yo hablare"
               ],
               "feedback": {
-                "correct": "Right: hablas can assert the event.",
-                "incorrect": "Use indicative hablas for the asserted event; hables is the wanted form here."
+                "correct": "Yes — the future is the promise.",
+                "incorrect": "hablare. The present auxiliary means you are standing behind it."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C18-quiero-que-one-doer",
-              "prompt": "Say 'I want to speak Spanish' in Spanish.",
+              "id": "ES-C17-sintesis-futuro-condicional-suppose",
+              "prompt": "Now you are only supposing. I would speak: which form?",
               "assesses": [
-                "ES-GRAMMAR-WANT-ONE-TWO-SUBJECT-CONTRAST",
-                "ES-LEX-QUERER",
-                "ES-LEX-HABLAR",
-                "ES-LEX-ESPANOL"
+                "ES-GRAMMAR-AR-CONDITIONAL-SINGULAR",
+                "ES-GRAMMAR-CONDITIONAL-HYPOTHETICAL"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "quiero hablar español.",
-                "quiero hablar español"
+                "hablaria",
+                "hablaría",
+                "yo hablaria"
               ],
               "feedback": {
-                "correct": "Right: one doer keeps the infinitive hablar.",
-                "incorrect": "Use known quiero plus the infinitive: Quiero hablar español."
+                "correct": "Yes — the past auxiliary makes it hypothetical.",
+                "incorrect": "hablaria."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C18-quiero-que-two-doers",
-              "prompt": "Say 'I want you to speak Spanish' to one friend.",
+              "id": "ES-C17-sintesis-futuro-condicional-why",
+              "prompt": "What single word is glued onto the infinitive in BOTH tenses?",
               "assesses": [
-                "ES-GRAMMAR-SUBJUNCTIVE-WANTED-NONASSERTED",
-                "ES-GRAMMAR-WANT-ONE-TWO-SUBJECT-CONTRAST",
-                "ES-LEX-QUE",
-                "ES-LEX-ESPANOL"
+                "ES-ETYMON-ROMANCE-FUTURE-CONDITIONAL"
               ],
-              "responseSeconds": 9,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "quiero que hables español.",
-                "quiero que hables español"
+                "haber",
+                "habere",
+                "the verb to have",
+                "have"
               ],
               "feedback": {
-                "correct": "Right: two doers give quiero que hables.",
-                "incorrect": "Join the wanted event with que and use hables: Quiero que hables español."
+                "correct": "Yes — once in the present, once in the past. That is the only difference.",
+                "incorrect": "haber, from Latin habere. Present gives the future; past gives the conditional."
               }
             }
           ]
         },
         {
-          "index": 3,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -177,7 +203,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which form asserts the event? (Hablas.) Which presents it as wanted? (Hables, after quiero que.) What happens when the wanter and the speaker are the same? (Use the infinitive: Quiero hablar.) Next, build the three singular -ar forms one piece at a time."
+              "text": "What is glued onto the infinitive in both tenses? (Haber — the verb to have.) Which one is a promise, and which a supposition? (-é the promise, -ía the supposition.) And what is the English pair that works the same way? (Will and would — a present and a past of one old verb.)"
             }
           ]
         }

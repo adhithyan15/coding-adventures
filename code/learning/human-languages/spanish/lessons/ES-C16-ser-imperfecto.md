@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C16-ser-imperfecto
 spine_node: SPINE-TALK-ABOUT-PAST
 sequence: 1296
-chapter: 95
+chapter: 96
 type: grammar
 headword: era
 gloss: the singular imperfect of ser — era, eras, era

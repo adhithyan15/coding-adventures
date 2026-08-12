@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C10-mi-tu-su
 spine_node: SPINE-DEFINITE-REFERENCE
 sequence: 940
-chapter: 48
+chapter: 49
 type: word
 headword: mi, tu, su
 gloss: my, your informal, and your formal or his or her — before a singular noun

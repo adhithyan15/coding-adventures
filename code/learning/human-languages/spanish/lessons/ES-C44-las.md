@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C44-las
 spine_node: SPINE-DEFINITE-REFERENCE
 sequence: 1125
-chapter: 64
+chapter: 65
 type: grammar
 headword: las casas
 gloss: "the houses" — the plural article, which does exactly what the noun does

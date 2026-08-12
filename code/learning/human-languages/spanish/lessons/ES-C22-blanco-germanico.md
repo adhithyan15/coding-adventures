@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C22-blanco-germanico
 spine_node: SPINE-DEFINITE-REFERENCE
 sequence: 1560
-chapter: 125
+chapter: 126
 type: etymology
 headword: blanco ← *blank
 gloss: white is a Germanic loan, not a Latin inheritance — and Latin's own albus is still around, just not as a colour

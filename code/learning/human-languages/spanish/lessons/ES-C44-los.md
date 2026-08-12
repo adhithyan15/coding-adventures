@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C44-los
 spine_node: SPINE-DEFINITE-REFERENCE
 sequence: 1127
-chapter: 65
+chapter: 66
 type: grammar
 headword: los libros
 gloss: "the books" — the one article that does not simply add -s, for a reason you already met

@@ -2,25 +2,32 @@
   "version": 1,
   "language": "spanish",
   "chapter": 101,
-  "title": "Synthesis --- A Small Story",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:98fa6f02159c52e8",
+  "title": "Review --- One Question, Three Answers",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:cd3f351e6f0d6f50",
   "lessons": [
     {
-      "id": "ES-C48-sintesis-una-historia",
-      "sequence": 1314,
-      "title": "Synthesis — a small story",
-      "headword": "(synthesis)",
-      "romanization": "(synthesis)",
-      "gloss": "synthesis — a story in four sentences, which is the first thing in this book that needs both pasts at once",
+      "id": "ES-C48-repaso-dos-pasados",
+      "sequence": 1313,
+      "title": "Review — one question, three answers",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "review — one question, asked of every past sentence, and the three answers it can have",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "sight-cue"
       ],
-      "sourceHash": "fnv1a64:df4b170365789311",
-      "notice": null,
+      "sourceHash": "fnv1a64:d0d09cab2bd770d9",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -35,53 +42,69 @@
             },
             {
               "kind": "speech",
-              "text": "Everything in this book so far has been sentences. A story is different: it needs a background and a foreground at the same time."
+              "text": "Nothing new. Before the table: do the two past tenses differ in when?"
             }
           ]
         },
         {
           "index": 1,
-          "type": "input",
-          "title": "The exchange",
+          "type": "notice",
+          "title": "What you've built",
           "segments": [
             {
               "kind": "speech",
-              "text": "Four sentences. Watch the tenses take turns."
+              "text": "Three chapters, one question, three ways it gets answered."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "what you are doing",
+                "tense",
+                "example"
+              ],
+              "columns": 3,
+              "rowCount": 4,
+              "utterances": [
+                "what you are doing: reporting an event, with edges. tense: preterite. example: hablé — I spoke.",
+                "what you are doing: setting a scene, no edges. tense: imperfect. example: hablaba — I was speaking.",
+                "what you are doing: naming a state. tense: imperfect. example: tenía — I had.",
+                "what you are doing: naming the moment a state began. tense: preterite. example: tuve — I got."
+              ]
             },
             {
               "kind": "speech",
-              "text": "Yo estudiaba español. No tenía un libro. Tuve un libro en marzo. Y cuando tuve el libro, hablé con Ana."
-            },
-            {
-              "kind": "speech",
-              "text": "Now read only the imperfects: estudiaba, tenía. Those two sentences tell you what things were like — the situation, with no edges, going on for as long as it needed to."
-            },
-            {
-              "kind": "speech",
-              "text": "Now read only the preterites: tuve, hablé. Those tell you what happened — two events, each with edges, in order."
-            },
-            {
-              "kind": "speech",
-              "text": "The story is the two layers together. Neither layer is a story on its own: the imperfects alone are a description that never moves, and the preterites alone are a list of events with no world around them."
+              "text": "Rows one and two are the same event seen from two places. Rows three and four are not: there the tense changes what happened."
             }
           ]
         },
         {
           "index": 2,
           "type": "grammar",
-          "title": "Grammar Lens: what you can now do",
+          "title": "Grammar Lens: the question to actually ask",
           "segments": [
             {
               "kind": "speech",
-              "text": "Notice the third sentence. Tuve un libro is not \"I had a book\" — it is the moment you got one, which is why it belongs in the foreground with hablé rather than in the background with tenía. The same verb appears in both layers of this story, doing two different jobs, and nothing about it is irregular."
+              "text": "Not \"which tense is this?\" — that has no answer without you."
             },
             {
               "kind": "speech",
-              "text": "That is the whole rung. From here you can narrate: not just report that something happened, but say what the world was like while it did."
+              "text": "Am I telling you what happened, or what things were like?"
             },
             {
               "kind": "speech",
-              "text": "It is worth naming the cost. Two tenses learned separately, then three chapters on nothing but the choice between them — because the forms were never the difficulty. English lets you leave this question unanswered; Spanish does not."
+              "text": "What happened has edges: preterite. What things were like does not: imperfect. A story is mostly the second with the first dropped into it, which is what cuando let you build:"
+            },
+            {
+              "kind": "speech",
+              "text": "Estudiaba cuando habló Ana."
+            },
+            {
+              "kind": "speech",
+              "text": "And when the verb names a state rather than an action, the same question still works — you are simply more likely to be describing what things were like, so the imperfect is the ordinary case and the preterite is the special one."
+            },
+            {
+              "kind": "speech",
+              "text": "There is no list to memorise here, and that is deliberate. Lists of \"preterite trigger words\" exist in most courses and they fail exactly where the choice is interesting, because the same word can sit in either sentence. The question does not fail, because the question is the thing the language is actually asking."
             }
           ]
         },
@@ -99,20 +122,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the four sentences straight through",
+              "instruction": "\"hablé / hablaba\", then \"tenía / tuve\", and name the difference in each pair",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the four sentences straight through]"
+              "source": "[YOU SAY: \"hablé / hablaba\", then \"tenía / tuve\", and name the difference in each pair]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "only the imperfects, then only the preterites, and hear the two layers",
+              "instruction": "the question aloud before each one",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: only the imperfects, then only the preterites, and hear the two layers]"
+              "source": "[YOU SAY: the question aloud before each one]"
             },
             {
               "kind": "repeat",
@@ -120,82 +143,65 @@
               "source": "[REPEAT x2]"
             },
             {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C48-sintesis-una-historia-layers",
-              "prompt": "In the story, which two verbs are the background?",
-              "assesses": [
-                "ES-GRAMMAR-BACKDROP-AND-EVENT"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "estudiaba and tenia",
-                "estudiaba, tenía",
-                "the imperfects"
-              ],
-              "feedback": {
-                "correct": "What things were like.",
-                "incorrect": "Estudiaba and tenia — the imperfects."
-              }
+              "kind": "speech",
+              "text": "Until the question arrives before the verb does."
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C48-sintesis-una-historia-third",
-              "prompt": "Why is tuve un libro in the foreground when tenia un libro was not?",
-              "assesses": [
-                "ES-GRAMMAR-ASPECT-CHANGES-MEANING",
-                "ES-GRAMMAR-TENER-PRETERITE-SINGULAR"
-              ],
-              "responseSeconds": 12,
-              "acceptedResponses": [
-                "tuve is the moment of getting it",
-                "because it is an event, not a state",
-                "getting has edges"
-              ],
-              "feedback": {
-                "correct": "Same verb, both layers, nothing irregular.",
-                "incorrect": "Tuve is the moment you got one — an event with edges."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C48-sintesis-una-historia-tell",
-              "prompt": "Say I was studying when I spoke with Ana.",
-              "assesses": [
-                "ES-GRAMMAR-BACKDROP-AND-EVENT",
-                "ES-LEX-CUANDO",
-                "ES-LEX-ESTUDIAR",
-                "ES-LEX-HABLAR"
-              ],
-              "responseSeconds": 12,
-              "acceptedResponses": [
-                "estudiaba cuando hable con ana",
-                "estudiaba cuando hablé con ana"
-              ],
-              "feedback": {
-                "correct": "Background, then the thing that walked into it.",
-                "incorrect": "Estudiaba cuando hable con Ana."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C48-sintesis-una-historia-why",
-              "prompt": "Why did this take three chapters when neither tense was new?",
+              "id": "ES-C48-repaso-dos-pasados-question",
+              "prompt": "State the one question that chooses the tense.",
               "assesses": [
                 "ES-GRAMMAR-ASPECT-NOT-TIME"
               ],
-              "responseSeconds": 14,
+              "responseSeconds": 12,
               "acceptedResponses": [
-                "because the choice is the difficulty, not the forms",
-                "english lets you leave the question unanswered",
-                "the forms were never the hard part"
+                "am i saying what happened or what things were like",
+                "what happened versus what things were like",
+                "does it have edges"
               ],
               "feedback": {
-                "correct": "Spanish asks a question your first language let you skip.",
-                "incorrect": "The forms were never the difficulty. The choice is."
+                "correct": "Edges, or no edges.",
+                "incorrect": "Am I telling what happened, or what things were like?"
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C48-repaso-dos-pasados-scene",
+              "prompt": "In estudiaba cuando hablo Ana, which verb is the scene?",
+              "assesses": [
+                "ES-GRAMMAR-BACKDROP-AND-EVENT",
+                "ES-LEX-CUANDO"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "estudiaba",
+                "the imperfect one",
+                "estudiaba, the imperfect"
+              ],
+              "feedback": {
+                "correct": "And hablo is what walked into it.",
+                "incorrect": "Estudiaba — the imperfect sets the room."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C48-repaso-dos-pasados-state",
+              "prompt": "Which two rows of the table are NOT the same event seen twice?",
+              "assesses": [
+                "ES-GRAMMAR-ASPECT-CHANGES-MEANING"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "the state rows, tenia and tuve",
+                "rows three and four",
+                "tenia and tuve"
+              ],
+              "feedback": {
+                "correct": "There the tense changes what happened, not just the view.",
+                "incorrect": "The state rows: tenia is having, tuve is getting."
               }
             }
           ]
@@ -213,7 +219,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which layer says what things were like? (The imperfect.) Which says what happened? (The preterite.) And what can you do now that you could not before? (Tell a story — not just report events, but say what the world was like while they happened.)"
+              "text": "The one question? (What happened, or what things were like?) Which pair changes meaning rather than viewpoint? (Tenía and tuve.) Next: a whole small story, which is what all of this was for."
             }
           ]
         }

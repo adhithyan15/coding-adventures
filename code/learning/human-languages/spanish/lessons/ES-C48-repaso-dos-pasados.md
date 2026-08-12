@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C48-repaso-dos-pasados
 spine_node: SPINE-TALK-ABOUT-PAST
 sequence: 1313
-chapter: 100
+chapter: 101
 type: practice-mix
 headword: (review)
 gloss: review — one question, asked of every past sentence, and the three answers it can have

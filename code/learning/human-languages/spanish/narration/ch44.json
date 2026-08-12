@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 44,
-  "title": "Comen and Viven --- Agreeing Again",
+  "title": "Comeis and Vivis",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:b50e5f8893e9e8fd",
+  "sourceHash": "fnv1a64:68e3805c4810d188",
   "lessons": [
     {
-      "id": "ES-C07-comen-viven",
-      "sequence": 810,
-      "title": "comen and viven — agreeing again",
-      "headword": "comen · viven",
-      "romanization": "comen · viven",
-      "gloss": "\"they eat,\" \"they live\" — and the families agree again",
+      "id": "ES-C07-comeis-vivis",
+      "sequence": 802,
+      "title": "coméis and vivís — the second difference, and the last",
+      "headword": "coméis · vivís",
+      "romanization": "coméis · vivís",
+      "gloss": "the vosotros forms — the second and last place the two families differ",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:da207733ee5eddd8",
+      "sourceHash": "fnv1a64:bcebc600c35838f5",
       "notice": null,
       "blocks": [
         {
@@ -35,43 +35,50 @@
             },
             {
               "kind": "speech",
-              "text": "What is \"they speak\"? (Hablan.) And who else does that form address? (Ustedes.)"
+              "text": "Which form goes with vosotros for hablar? (Habláis.) And where is that word used? (Spain.)"
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: one ending for both",
+          "title": "Grammar Lens: two families, two endings, one lesson",
           "segments": [
             {
               "kind": "speech",
-              "text": "Both families take -en:"
+              "text": "coméis — you all eat., vivís — you all live."
             },
             {
               "kind": "speech",
-              "text": "comen — they eat, ustedes eat. viven — they live, ustedes live."
+              "text": "These two are taught together, and it is worth saying why, because this book has otherwise insisted on one form per lesson."
             },
             {
               "kind": "speech",
-              "text": "No split here. After two chapters of divergence the families fall back into step, and they stay there."
+              "text": "You already know the fact they demonstrate. The -er and -ir families differ in exactly two slots — nosotros, which you met last chapter, and vosotros, which is this one. Learning them apart would teach the same single fact twice and hide the pattern that makes it easy."
             },
             {
               "kind": "speech",
-              "text": "That is the shape of the whole system, and it is worth holding as one sentence:"
-            },
-            {
-              "kind": "speech",
-              "text": "-er and -ir are identical in four of the six slots. They differ only in nosotros and vosotros."
-            },
-            {
-              "kind": "speech",
-              "text": "Two exceptions in a system of twelve forms. You have now met both, and everything else you already knew."
+              "text": "And after this, the two families agree again. They eat and they live take the same ending, as every singular form did."
             }
           ]
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Both descend from Latin's -tis: comeditis, vīvitis. Spanish lost the -t- between vowels — as it lost most of them — and what was left collapsed differently in each family. The -er line kept two vowels, -éis. The -ir line kept one, -ís."
+            },
+            {
+              "kind": "speech",
+              "text": "Same ending, same erosion, two outcomes. That is most of what sound change looks like."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -83,84 +90,88 @@
             },
             {
               "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"comen, viven\" — one ending, both families",
+              "action": "HEAR",
+              "instruction": "\"coméis\", \"vivís\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"comen, viven\" — one ending, both families]"
+              "source": "[YOU HEAR: \"coméis\", \"vivís\"]"
+            },
+            {
+              "kind": "speech",
+              "text": "becomes a Spaniard, addressing friends."
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ustedes comen\", addressing a group",
+              "instruction": "\"comemos, coméis\" then \"vivimos, vivís\" — the two differing slots, side by side",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ustedes comen\", addressing a group]"
+              "source": "[YOU SAY: \"comemos, coméis\" then \"vivimos, vivís\" — the two differing slots, side by side]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C07-comen-viven-eat",
-              "prompt": "They eat.",
+              "id": "ES-C07-comeis-vivis-eat",
+              "prompt": "Vosotros, from comer.",
               "assesses": [
-                "ES-GRAMMAR-ER-PRESENT-3PL"
+                "ES-GRAMMAR-ER-PRESENT-2PL"
               ],
-              "responseSeconds": 6,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "comen",
-                "ellos comen",
-                "ustedes comen"
+                "comeis",
+                "coméis",
+                "vosotros comeis"
               ],
               "feedback": {
-                "correct": "Yes.",
-                "incorrect": "comen."
+                "correct": "Yes — comeis.",
+                "incorrect": "comeis."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C07-comen-viven-live",
-              "prompt": "They live.",
+              "id": "ES-C07-comeis-vivis-live",
+              "prompt": "Vosotros, from vivir.",
               "assesses": [
-                "ES-GRAMMAR-IR-PRESENT-3PL"
+                "ES-GRAMMAR-IR-PRESENT-2PL"
               ],
-              "responseSeconds": 6,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "viven",
-                "ellos viven",
-                "ustedes viven"
+                "vivis",
+                "vivís",
+                "vosotros vivis"
               ],
               "feedback": {
-                "correct": "Yes — the same ending as comen.",
-                "incorrect": "viven."
+                "correct": "Yes — vivis, one vowel where comeis has two.",
+                "incorrect": "vivis."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C07-comen-viven-where",
-              "prompt": "In which two slots do -er and -ir differ?",
+              "id": "ES-C07-comeis-vivis-count",
+              "prompt": "In how many of the six slots do -er and -ir actually differ?",
               "assesses": [
-                "ES-GRAMMAR-ER-PRESENT-3PL",
-                "ES-GRAMMAR-IR-PRESENT-3PL"
+                "ES-GRAMMAR-ER-PRESENT-2PL",
+                "ES-GRAMMAR-IR-PRESENT-1PL"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "nosotros and vosotros",
-                "nosotros, vosotros",
-                "we and you all"
+                "two",
+                "2",
+                "nosotros and vosotros"
               ],
               "feedback": {
-                "correct": "Those two, and no others.",
-                "incorrect": "Nosotros and vosotros only."
+                "correct": "Two — nosotros and vosotros. The other four are identical.",
+                "incorrect": "Two: nosotros and vosotros."
               }
             }
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -172,7 +183,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give they eat and they live. (Comen, viven.) In how many of the six slots do the two families agree? (Four.) Next chapter: all three families, whole."
+              "text": "Give both vosotros forms. (Coméis, vivís.) In how many slots do the two families differ? (Two — and you have now met both.) What Latin ending is behind them? (-tis.)"
             }
           ]
         }

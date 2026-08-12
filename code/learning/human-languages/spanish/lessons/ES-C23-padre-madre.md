@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C23-padre-madre
 spine_node: SPINE-EXCHANGE-NAMES
 sequence: 1590
-chapter: 126
+chapter: 127
 type: word
 headword: el padre, la madre
 gloss: father and mother — among the oldest reconstructible words in the whole family

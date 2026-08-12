@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C07-comeis-vivis
 spine_node: SPINE-ASK-LOCATION
 sequence: 802
-chapter: 43
+chapter: 44
 type: grammar
 headword: coméis · vivís
 gloss: the vosotros forms — the second and last place the two families differ

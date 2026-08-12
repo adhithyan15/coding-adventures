@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 33,
-  "title": "Comer --- the Second Verb Family, One Slot at a Time",
-  "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:4c29b301ad428660",
+  "title": "Putting the -ar Verbs to Work",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:cb862476e67c7bb6",
   "lessons": [
     {
-      "id": "ES-C07-comer",
-      "sequence": 620,
-      "title": "comer — \"to eat,\" and the second verb family",
-      "headword": "comer",
-      "romanization": "comer",
-      "gloss": "to eat — your first -er verb, and the family whose yo-form you already own",
+      "id": "ES-C06-practice",
+      "sequence": 610,
+      "title": "Practice — making sentences with -ar verbs",
+      "headword": "(practice)",
+      "romanization": "(practice)",
+      "gloss": "your first sentences — the -ar present tense in action",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ece9429cd6fb6382",
+      "sourceHash": "fnv1a64:7072a3ff918a32da",
       "notice": null,
       "blocks": [
         {
@@ -35,64 +35,74 @@
             },
             {
               "kind": "speech",
-              "text": "Last chapter you learned the -ar verbs. Spanish has two more families — -er and -ir — and here's the good news: they're almost the same. Meet comer (\"to eat\"), your first -er verb."
+              "text": "A milestone chapter: for the first time you're not reciting fixed phrases, you're building sentences from a pattern. Drill the three verbs through the endings until hablo / hablas / habla is automatic."
             }
           ]
         },
         {
           "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
+          "type": "grammar",
+          "title": "Grammar Lens: conjugate on command",
           "segments": [
             {
-              "kind": "speech",
-              "text": "r-tap — one soft tap: ko-MER."
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
             },
             {
               "kind": "speech",
-              "text": "The c before o is a hard k: comer = ko-MER."
+              "text": "Run each verb through the three singular jobs you know: the ending alone for I becomes tú becomes usted:"
+            },
+            {
+              "kind": "speech",
+              "text": "hablar: hablo, hablas, habla."
+            },
+            {
+              "kind": "speech",
+              "text": "trabajar: trabajo, trabajas, trabaja."
+            },
+            {
+              "kind": "speech",
+              "text": "estudiar: estudio, estudias, estudia."
+            },
+            {
+              "kind": "speech",
+              "text": "Same three endings (-o / -as / -a) every time — that's the whole regular -ar present, singular."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
+          "type": "input",
+          "title": "The exchange — say something real",
           "segments": [
             {
               "kind": "speech",
-              "text": "comer derives from Latin comedere, \"to eat up\" — com- (intensifier, \"completely\") + edere, \"to eat.\" That edere is the twin of English eat (both from the same ancient root), and it feeds a small English family:"
-            },
-            {
-              "kind": "speech",
-              "text": "edible — fit to be eaten."
-            },
-            {
-              "kind": "speech",
-              "text": "comestible — a fancy word for food (straight from comedere)."
-            },
-            {
-              "kind": "speech",
-              "text": "English eat itself — the Germanic cousin of Latin edere."
+              "text": "— ¿Hablas español? — Hablo español. — ¿Estudias español? — Estudio español. — Café, por favor. — ¡Gracias! — De nada."
             }
           ]
         },
         {
           "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: one family over, and one ending already yours",
+          "type": "notice",
+          "title": "What you've built this chapter",
           "segments": [
             {
               "kind": "speech",
-              "text": "Hablar ended in -ar. Comer ends in -er, and that single letter is what makes it a different family."
+              "text": "por favor — please ( from \"for a favour\"), completing gracias / de nada / por favor."
             },
             {
               "kind": "speech",
-              "text": "Here is the good news, and it is worth having before you meet a single new form: the yo ending does not change. Hablar gave hablo. Comer will give como. The ending you already own works untouched."
+              "text": "the singular regular -ar pattern — drop -ar, add -o / -as / -a: the template behind hablar, trabajar, and estudiar."
             },
             {
               "kind": "speech",
-              "text": "Only two slots in this family behave differently from the one you know, and you will meet them one at a time over the next three chapters — not here."
+              "text": "hablar ( from fābula, fable; the f becomes h law), trabajar ( from tripalium, torture becomes travail/travel), estudiar ( from studēre, eagerness becomes student)."
+            },
+            {
+              "kind": "speech",
+              "text": "Hablo español — your first self-assembled sentence (pro-drop, no article)."
             }
           ]
         },
@@ -110,20 +120,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"comer\" — ko-MER",
+              "instruction": "conjugate all three verbs for I / tú / usted, without stopping",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"comer\" — *ko-MER*]"
+              "source": "[YOU SAY: conjugate all three verbs for I / tú / usted, without stopping]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"comer\" then English \"edible, comestible, eat\" — the edere family",
+              "instruction": "answer “¿Hablas español?” and “¿Estudias español?” about yourself",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"comer\" then English \"edible, comestible, eat\" — the *edere* family]"
+              "source": "[YOU SAY: answer “¿Hablas español?” and “¿Estudias español?” about yourself]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "request “Café, por favor” and run the full gracias/de nada loop",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: request “Café, por favor” and run the full gracias/de nada loop]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask and answer “¿Hablas español? — Hablo español.”"
             }
           ]
         },
@@ -140,710 +168,7 @@
             },
             {
               "kind": "speech",
-              "text": "What Latin verb is comer from, and its English cousins? (Comedere from edere — edible, eat.) Which ending is the same in both families? (The yo ending, -o.) Next: the yo form — and it will cost you nothing."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C07-comer-family",
-              "prompt": "Which ending makes comer a different family from hablar?",
-              "assesses": [
-                "ES-LEX-COMER"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "-er",
-                "er",
-                "the -er ending"
-              ],
-              "feedback": {
-                "correct": "Yes — -ar and -er are two families.",
-                "incorrect": "The -er ending."
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C07-como",
-      "sequence": 623,
-      "title": "como — \"I eat,\" and you already knew how",
-      "headword": "como",
-      "romanization": "como",
-      "gloss": "\"I eat\" — the form you can already build, and the word that does three jobs",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:d74aedc0ca5ddc89",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "How do you say \"I speak\"? (Hablo.) And what is the verb for \"to eat\"? (Comer.)"
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: the ending that did not change",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Drop the -er, add -o:"
-            },
-            {
-              "kind": "speech",
-              "text": "comer becomes como — I eat."
-            },
-            {
-              "kind": "speech",
-              "text": "That is the same operation and the same ending you used on hablar. A new verb family, and the yo slot cost you nothing at all."
-            },
-            {
-              "kind": "speech",
-              "text": "This is worth pausing on, because it is how most of the rest will go. Spanish's three families differ in two of their singular slots, never in the first one. Whatever the verb, \"I\" is -o."
-            },
-            {
-              "kind": "speech",
-              "text": "And as before, one word is the whole sentence: como. No pronoun."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "One warning, because this word is busy. Como is three things:"
-            },
-            {
-              "kind": "speech",
-              "text": "como — I eat, the form you just built."
-            },
-            {
-              "kind": "speech",
-              "text": "como — like, as. (Como tú — \"like you.\")"
-            },
-            {
-              "kind": "speech",
-              "text": "cómo, with the accent — how?, which you have used since your first conversations."
-            },
-            {
-              "kind": "speech",
-              "text": "Same four letters, three jobs. The accent marks the question word; context sorts the other two. This is not a trap so much as a reminder that the accent in Spanish is doing real work."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"hablo\" then \"como\" — the same ending, twice",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"hablo\" then \"como\" — the same ending, twice]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"como\" alone, as a complete sentence",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"como\" alone, as a complete sentence]"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C07-como-form",
-              "prompt": "Turn comer into I eat.",
-              "assesses": [
-                "ES-GRAMMAR-ER-PRESENT-1SG"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "como",
-                "yo como"
-              ],
-              "feedback": {
-                "correct": "Right — drop -er, add -o.",
-                "incorrect": "Drop the -er and add -o: como."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C07-como-same",
-              "prompt": "Which ending is identical in the -ar and -er families?",
-              "assesses": [
-                "ES-GRAMMAR-AR-PRESENT-1SG",
-                "ES-GRAMMAR-ER-PRESENT-1SG"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "the yo ending -o",
-                "-o",
-                "o",
-                "the yo ending"
-              ],
-              "feedback": {
-                "correct": "Yes — I is always -o.",
-                "incorrect": "The yo ending, -o. It never changes family to family."
-              }
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "How do you say \"I eat\"? (Como.) Which slot never changes between verb families? (The yo slot — always -o.) What does cómo with an accent mean? (How?) Next: the slot that does change."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C07-comes",
-      "sequence": 626,
-      "title": "comes — \"you eat,\" and the first real difference",
-      "headword": "comes",
-      "romanization": "comes",
-      "gloss": "\"you eat\" — the first slot where -er parts company with -ar",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:3d7375c83d4acd72",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Say \"I eat.\" (Como.) Now say \"you speak,\" to a friend. (Hablas.)"
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: one vowel moves",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "In the -ar family, tú took -as. Here it takes -es:"
-            },
-            {
-              "kind": "speech",
-              "text": "comer becomes comes — you eat."
-            },
-            {
-              "kind": "speech",
-              "text": "That is the whole difference. The -s that means you is still there, doing the same job it does in hablas. Only the vowel in front of it has moved from a to e — and it moved because the verb's own family vowel is e. The ending is agreeing with the family it belongs to."
-            },
-            {
-              "kind": "speech",
-              "text": "So you are not learning a new ending so much as watching a familiar one take on the colour of its surroundings."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Latin had amās for \"you love\" and comedis for \"you eat\" — different vowels in the ending, exactly as Spanish has now. The split is not a Spanish invention; it is inherited, and it is why the families exist at all."
-            },
-            {
-              "kind": "speech",
-              "text": "What every one of them kept, across two thousand years, is the -s. If a Spanish verb form ends in -s, it is talking to tú. That single rule will carry you through every tense in this book."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"hablas\" then \"comes\" — the same -s, a different vowel",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"hablas\" then \"comes\" — the same *-s*, a different vowel]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"como\" then \"comes\" — and feel the sentence turn toward the other person",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"como\" then \"comes\" — and feel the sentence turn toward the other person]"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C07-comes-form",
-              "prompt": "Turn comer into you eat, to a friend.",
-              "assesses": [
-                "ES-GRAMMAR-ER-PRESENT-2SG"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "comes",
-                "tu comes"
-              ],
-              "feedback": {
-                "correct": "Right — drop -er, add -es.",
-                "incorrect": "Drop the -er and add -es: comes."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C07-comes-s",
-              "prompt": "What does a final -s on a Spanish verb always tell you?",
-              "assesses": [
-                "ES-GRAMMAR-ER-PRESENT-2SG",
-                "ES-GRAMMAR-AR-PRESENT-2SG"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "it is talking to tu",
-                "you, informal",
-                "it means tu",
-                "the subject is tu"
-              ],
-              "feedback": {
-                "correct": "Yes — a final -s means tu, in every tense.",
-                "incorrect": "That the subject is tu."
-              }
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What is \"you eat,\" to a friend? (Comes.) What part of the ending is the same as in hablas? (The -s.) What changed, and why? (The vowel, to match the verb's own family.) Next: the last of the three."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C07-come",
-      "sequence": 629,
-      "title": "come — \"he eats,\" and the polite \"you eat\"",
-      "headword": "come",
-      "romanization": "come",
-      "gloss": "\"he eats,\" \"she eats,\" and the polite \"you eat\" — the third slot",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:8ac7aca2ae7602f2",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Say \"you eat,\" to a friend. (Comes.) And what was the usted form of hablar? (Habla.)"
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: take the -s off again",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Drop the -er, add -e:"
-            },
-            {
-              "kind": "speech",
-              "text": "comer becomes come — he eats, she eats, and usted come, you eat, politely."
-            },
-            {
-              "kind": "speech",
-              "text": "The relationship is the one you already know. In the -ar family, hablas became habla by losing its -s. Here comes becomes come the same way."
-            },
-            {
-              "kind": "speech",
-              "text": "And exactly as before, this one form does three jobs — he, she, and the respectful you — for the same reason it did last time: usted began life as vuestra merced, a thing you talk about."
-            },
-            {
-              "kind": "speech",
-              "text": "Three slots, three chapters, and the shape of the family is now yours."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Latin's form here was comedit. Spanish let the final -t fall, precisely as it let it fall from hablat to give habla."
-            },
-            {
-              "kind": "speech",
-              "text": "That is the useful part: the two families were not worn down by different forces. The same weather hit both. Which is why, once you know what happened to one, the other holds no surprises."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"habla\" then \"come\" — the same move, one family over",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"habla\" then \"come\" — the same move, one family over]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"come\" for a friend's sister, then for a stranger you are being polite to",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"come\" for a friend's sister, then for a stranger you are being polite to]"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C07-come-form",
-              "prompt": "Turn comer into he eats.",
-              "assesses": [
-                "ES-GRAMMAR-ER-PRESENT-3SG"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "come",
-                "el come"
-              ],
-              "feedback": {
-                "correct": "Right — drop -er, add -e.",
-                "incorrect": "Drop the -er and add -e: come."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C07-come-usted",
-              "prompt": "Which form goes with usted: comes or come?",
-              "assesses": [
-                "ES-GRAMMAR-USTED-THIRD-PERSON",
-                "ES-GRAMMAR-ER-PRESENT-3SG"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "come",
-                "usted come"
-              ],
-              "feedback": {
-                "correct": "Yes — usted takes the he/she form.",
-                "incorrect": "Come. Usted always takes the he/she form."
-              }
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What is \"she eats\"? (Come.) How did it come from comes? (By losing the -s, exactly as hablas becomes habla.) What did Latin's comedit lose? (Its -t.) A short review closes this chapter; the third and last family follows."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C07-repaso-comer",
-      "sequence": 632,
-      "title": "Review — the -er family, all three",
-      "headword": "(review)",
-      "romanization": "(review)",
-      "gloss": "review — the -er singular, earned one slot at a time",
-      "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "wide-table"
-      ],
-      "sourceHash": "fnv1a64:646e0a07e4eeabd3",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes for one table that cannot be read aloud"
-        ],
-        "waitUntilStopped": [
-          "Grammar Lens: the table you have earned"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called Grammar Lens: the table you have earned until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Nothing new. Say the three forms of comer you have built, in any order they come to you."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: the table you have earned",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Three slots, three lessons. Now they are worth seeing beside the family you already had:"
-            },
-            {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
-              "rowCount": 3,
-              "headers": [
-                "who",
-                "-ar",
-                "-er",
-                ""
-              ],
-              "text": "There is a table here I cannot read to you — 4 columns and 3 rows, and it has more columns than can be held in the ear at once. Its columns are: who, -ar, -er, one with no heading. Come back and look at it when you have stopped."
-            },
-            {
-              "kind": "speech",
-              "text": "Read the middle two columns down and the whole -er family is one observation: the yo slot is shared, and the other two swap a for e."
-            },
-            {
-              "kind": "speech",
-              "text": "That is the entire cost of a second verb family. Every regular -er verb in Spanish runs on it."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"como, comes, come\" straight through",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"como, comes, come\" straight through]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"hablo, como\", \"hablas, comes\", \"habla, come\" — the two families in step",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"hablo, como\" · \"hablas, comes\" · \"habla, come\" — the two families in step]"
-            },
-            {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C07-repaso-comer-i",
-              "prompt": "I eat.",
-              "assesses": [
-                "ES-GRAMMAR-ER-PRESENT-1SG"
-              ],
-              "responseSeconds": 6,
-              "acceptedResponses": [
-                "como",
-                "yo como"
-              ],
-              "feedback": {
-                "correct": "Yes.",
-                "incorrect": "como."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C07-repaso-comer-you",
-              "prompt": "You eat, to a friend.",
-              "assesses": [
-                "ES-GRAMMAR-ER-PRESENT-2SG"
-              ],
-              "responseSeconds": 6,
-              "acceptedResponses": [
-                "comes",
-                "tu comes"
-              ],
-              "feedback": {
-                "correct": "Yes.",
-                "incorrect": "comes."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C07-repaso-comer-diff",
-              "prompt": "Which of the three slots is identical between the -ar and -er families?",
-              "assesses": [
-                "ES-GRAMMAR-ER-PRESENT-SINGULAR",
-                "ES-GRAMMAR-AR-PRESENT-SINGULAR"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "the yo slot",
-                "yo",
-                "the i form",
-                "-o"
-              ],
-              "feedback": {
-                "correct": "Yes — only the tu and el slots differ.",
-                "incorrect": "The yo slot. Only the other two swap a for e."
-              }
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Give the three -er endings. (-o, -es, -e.) Which one matches -ar exactly? (The yo ending.) How many regular -er verbs does this fit? (All of them.) Next chapter: the third family, and it is the smallest change yet."
+              "text": "What are the three singular -ar endings? (-o / -as / -a.) Give the “I” form of all three verbs. (Hablo, trabajo, estudio.) Why does Hablo español need no separate subject word? (The -o carries “I.”) You can now generate sentences — this book stops handing you phrases and starts handing you rules. Next chapter adds the -er/-ir verb families."
             }
           ]
         }

@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 31,
-  "title": "Synthesis --- The Same Conversation, Twice",
+  "title": "Synthesis --- The Decoder",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:fee377e45bc64e86",
+  "sourceHash": "fnv1a64:62ab06597adb3224",
   "lessons": [
     {
-      "id": "ES-C06-repaso-hablar",
-      "sequence": 574,
-      "title": "Synthesis — the same conversation, twice",
+      "id": "ES-C57-sintesis-descifrar",
+      "sequence": 547,
+      "title": "Synthesis — the decoder",
       "headword": "(synthesis)",
       "romanization": "(synthesis)",
-      "gloss": "synthesis — one conversation, held twice, where the only thing that changes is who you are talking to",
+      "gloss": "synthesis — etymology stops being history and becomes a decoder you carry",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:33d71254615d5491",
+      "sourceHash": "fnv1a64:d9391b39a841931b",
       "notice": null,
       "blocks": [
         {
@@ -35,53 +35,61 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing new in this chapter either. This one is for using what you have — because knowing three endings is not the same as choosing the right one while a real person waits for you to finish."
+              "text": "Four sound laws and three endings. Before the practice: what do you do with an unfamiliar word starting h-? One starting ll-? One starting es-?"
             }
           ]
         },
         {
           "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: what the ending is really saying",
+          "type": "notice",
+          "title": "What you've built",
           "segments": [
             {
-              "kind": "speech",
-              "text": "You are going to hold one short conversation twice — once with someone your own age, once with someone you want to show respect to. The words barely change. What changes is one letter on the end of one verb."
+              "kind": "table",
+              "headers": [
+                "what you see",
+                "what to try",
+                "example"
+              ],
+              "columns": 3,
+              "rowCount": 7,
+              "utterances": [
+                "what you see: -ch-. what to try: Latin -ct-. example: noche becomes nocturnal.",
+                "what you see: h-. what to try: put an f back. example: hijo becomes filial.",
+                "what you see: ll-. what to try: try cl-, pl-, fl-. example: llave becomes clavicle.",
+                "what you see: es- + consonant. what to try: take the e- off. example: escuela becomes school.",
+                "what you see: -ción. what to try: -tion. example: nación becomes nation.",
+                "what you see: -dad. what to try: -ty. example: ciudad becomes city.",
+                "what you see: -mente. what to try: -ly. example: claramente becomes clearly."
+              ]
             },
             {
               "kind": "speech",
-              "text": "That letter is the whole message. Hablas says I am at ease with you. Habla says I am being careful with you. English would need a change of tone, or a \"sir.\" Spanish does it with an -s."
+              "text": "Seven rules, and between them they will get you through a great deal of written Spanish this book has no room to teach. They also stack: estación gives up both ends at once."
             }
           ]
         },
         {
           "index": 2,
-          "type": "input",
-          "title": "The exchange — with a friend",
+          "type": "grammar",
+          "title": "Grammar Lens: what a decoder is not",
           "segments": [
             {
               "kind": "speech",
-              "text": "— ¡Hola! Me llamo Ana. — Me llamo David. Mucho gusto. — ¿Hablas español? — Sí, hablo español. ¡Gracias!"
+              "text": "Be exact about what you have, because overclaiming it will disappoint you at the worst moment. This is a reading tool, and mostly a first-guess one: it will not tell you how to say something, will not give you gender or conjugation, and will sometimes point at the wrong English word."
+            },
+            {
+              "kind": "speech",
+              "text": "What it does is remove the feeling that an unfamiliar Spanish word is a wall. Usually it is not — it is a word you already know, wearing clothes you have learned to recognise. That change of expectation is worth more than any word in this chapter: it is what lets you read above your level and get most of it."
+            },
+            {
+              "kind": "speech",
+              "text": "And when the decoder fails, that is information too. A word that resists every rule is usually from one of Spanish's non-Latin layers — Arabic, Basque, or the Americas — worth noticing precisely because it breaks a rule you hold."
             }
           ]
         },
         {
           "index": 3,
-          "type": "input",
-          "title": "The exchange, again — being polite",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "— Buenos días. Me llamo Ana. — Me llamo David. Mucho gusto. — ¿Habla usted español? — Sí, hablo español. Gracias."
-            },
-            {
-              "kind": "speech",
-              "text": "One letter. Hablas became habla, and the whole exchange changed its temperature. Your own line — hablo — never moved, because you are still you in both conversations."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -94,20 +102,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "version one, both parts, start to finish",
+              "instruction": "the seven rules, in order",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: version one, both parts, start to finish]"
+              "source": "[YOU SAY: the seven rules, in order]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "version two — and catch the single letter that moved",
+              "instruction": "\"hoja, lleno, noche\" and name the law behind each",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: version two — and catch the single letter that moved]"
+              "source": "[YOU SAY: \"hoja, lleno, noche\" and name the law behind each]"
             },
             {
               "kind": "repeat",
@@ -115,69 +123,84 @@
               "source": "[REPEAT x2]"
             },
             {
-              "kind": "speech",
-              "text": "Run whichever version is harder."
-            },
-            {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C06-repaso-hablar-friend",
-              "prompt": "You are talking to someone your own age. Which form: hablas or habla?",
+              "id": "ES-C57-sintesis-descifrar-h",
+              "prompt": "Decode hoja.",
               "assesses": [
-                "ES-GRAMMAR-AR-PRESENT-2SG"
+                "ES-SOUND-F-TO-H"
               ],
-              "responseSeconds": 8,
+              "responseSeconds": 12,
               "acceptedResponses": [
-                "hablas",
-                "tu hablas"
+                "folia, leaf, as in foliage",
+                "leaf",
+                "foliage, portfolio"
               ],
               "feedback": {
-                "correct": "Yes — hablas is the warm one.",
-                "incorrect": "With a friend or a peer, hablas."
+                "correct": "Put the f back and the English appears.",
+                "incorrect": "Foja, folia. Leaf — as in foliage."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C06-repaso-hablar-polite",
-              "prompt": "You are speaking to someone you want to show respect to. Which form?",
+              "id": "ES-C57-sintesis-descifrar-ll",
+              "prompt": "Decode lleno.",
               "assesses": [
-                "ES-GRAMMAR-AR-PRESENT-3SG",
-                "ES-REGISTER-TU-USTED"
+                "ES-SOUND-CLUSTER-TO-LL"
               ],
-              "responseSeconds": 8,
+              "responseSeconds": 12,
               "acceptedResponses": [
-                "habla",
-                "habla usted"
+                "plenum, full, as in plenty",
+                "full",
+                "plenty, plenary"
               ],
               "feedback": {
-                "correct": "Yes — habla, the usted form.",
-                "incorrect": "Usted takes the he/she form: habla."
+                "correct": "pl- was the right one of the three.",
+                "incorrect": "Try pl-: plenum. Full, as in plenty."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C06-repaso-hablar-self",
-              "prompt": "In BOTH conversations, how do you say I speak?",
+              "id": "ES-C57-sintesis-descifrar-mix",
+              "prompt": "Decode la conservacion de la ciudad.",
               "assesses": [
-                "ES-GRAMMAR-AR-PRESENT-1SG"
+                "ES-FRIEND-CION-TION",
+                "ES-FRIEND-DAD-TY"
               ],
-              "responseSeconds": 10,
+              "responseSeconds": 14,
               "acceptedResponses": [
-                "hablo",
-                "the same, hablo",
-                "hablo both times"
+                "the conservation of the city",
+                "conservation of the city"
               ],
               "feedback": {
-                "correct": "Right — your own form never changes. Only the one aimed at them does.",
-                "incorrect": "hablo, both times. You are still you."
+                "correct": "Two endings, one phrase, nothing memorised.",
+                "incorrect": "The conservation of the city."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C57-sintesis-descifrar-limits",
+              "prompt": "A word resists every rule you have. What does that suggest?",
+              "assesses": [
+                "ES-SOUND-F-TO-H"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "it is probably not from latin",
+                "it may be arabic, basque or from the americas"
+              ],
+              "feedback": {
+                "correct": "The exceptions are informative too.",
+                "incorrect": "That it is probably from one of Spanish's non-Latin layers — Arabic, Basque, or the Americas."
               }
             }
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -189,7 +212,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is the only thing that changed between the two conversations? (One letter — hablas becomes habla.) Why did hablo stay the same? (Because it is about you, and you did not change.) What does choosing habla over hablas actually tell the other person? (That you are being respectful — the grammar is carrying the manners.)"
+              "text": "How many rules do you now hold? (Seven — four laws and three endings.) What are they for? (Reading, mostly first guesses.) And what has really changed? (An unfamiliar word is no longer a wall.)"
             }
           ]
         }

@@ -2,24 +2,470 @@
   "version": 1,
   "language": "spanish",
   "chapter": 51,
-  "title": "Tener in the Plural, and the Stem-Change Rule",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:f7d6bf5fa8249a38",
+  "title": "Estar in the Plural",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:eae42f4bd1eb7d6a",
   "lessons": [
     {
-      "id": "ES-C08-tenemos",
-      "sequence": 970,
-      "title": "tenemos — and the stem change disappears",
-      "headword": "tenemos · tenéis",
-      "romanization": "tenemos · tenéis",
-      "gloss": "\"we have,\" \"you all have\" — and the stem change vanishes, for a reason you already know",
+      "id": "ES-C09-estamos",
+      "sequence": 960,
+      "title": "estamos — the other \"we are\"",
+      "headword": "estamos",
+      "romanization": "estamos",
+      "gloss": "\"we are\" — the other one, and the plural where estar behaves and ser does not",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bb8a3e5de1a601d5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"we are\" with ser. (Somos.) And how do you ask a friend how they are? (¿Cómo estás?)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: this one behaves",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "estamos — we are."
+            },
+            {
+              "kind": "speech",
+              "text": "Drop the -ar, add -amos. That is the plain -ar ending you learned on hablamos, applied without alteration."
+            },
+            {
+              "kind": "speech",
+              "text": "And that is the point of this lesson. You have just spent a chapter on ser, whose six forms come from two different Latin verbs and refuse to resemble each other. Estar is not like that at all. In the plural it is an ordinary -ar verb."
+            },
+            {
+              "kind": "speech",
+              "text": "hablamos, estamos — the same ending, and no surprises."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The reason is simple, and it is the reason for almost every irregularity you have met: estar is one verb. Latin stāre, \"to stand\" — and that is the whole ancestry. Nothing was fused into it, so nothing in it has a seam."
+            },
+            {
+              "kind": "speech",
+              "text": "Ser is irregular because two verbs were welded together. Estar is regular because it never was."
+            },
+            {
+              "kind": "speech",
+              "text": "That is worth carrying, because it predicts the rest. Where a Spanish verb looks chaotic, the usual explanation is not that it decayed strangely but that it is more than one word wearing a single name."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"hablamos, estamos\" — the same ending",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"hablamos, estamos\" — the same ending]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"somos, estamos\" — two verbs for we are, and only one of them is strange",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"somos, estamos\" — two verbs for *we are*, and only one of them is strange]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C09-estamos-form",
+              "prompt": "Say we are, using estar.",
+              "assesses": [
+                "ES-GRAMMAR-ESTAR-PRESENT-1PL"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "estamos",
+                "nosotros estamos"
+              ],
+              "feedback": {
+                "correct": "Yes — a plain -ar ending.",
+                "incorrect": "estamos."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C09-estamos-why",
+              "prompt": "Why is estar regular here when ser is not?",
+              "assesses": [
+                "ES-ETYMON-STARE",
+                "ES-GRAMMAR-SER-PRESENT-1PL"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "estar is one latin verb, ser is two fused",
+                "estar is one verb",
+                "ser is two verbs, estar is one",
+                "because estar has one ancestor"
+              ],
+              "feedback": {
+                "correct": "Right — nothing was welded into estar, so it has no seam.",
+                "incorrect": "Estar descends from one verb, stare. Ser is two fused together."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"we are\" with estar? (Estamos.) Which Latin verb is it from? (Stāre, \"to stand\".) And why is it regular where ser is not? (Because it is one verb, not two.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C09-estan",
+      "sequence": 963,
+      "title": "están — \"they are\"",
+      "headword": "están",
+      "romanization": "están",
+      "gloss": "\"they are\" — with an accent that tells you where the stress went",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:38c3f2d1b6f61673",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"we are\" with estar. (Estamos.) And \"they speak.\" (Hablan.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the ending is regular, the accent is the clue",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "están — they are, and ustedes están, you all are."
+            },
+            {
+              "kind": "speech",
+              "text": "The ending is -an, exactly as in hablan. But there is a written accent, and it is not decoration."
+            },
+            {
+              "kind": "speech",
+              "text": "Estar is unusual in one specific way: it puts its stress on the ending rather than the stem, in every singular and plural form except estamos. You have already seen this without being told — estás, está, and now están. The accent is simply Spanish writing that stress down, by the rule for written accents you learned long ago."
+            },
+            {
+              "kind": "speech",
+              "text": "hablan — stress on the stem, no accent. están — stress on the ending, so an accent."
+            },
+            {
+              "kind": "speech",
+              "text": "Same ending, different stress, and the spelling records it faithfully."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"hablan\" then \"están\" — same ending, and hear the stress move",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"hablan\" then \"están\" — same ending, and hear the stress move]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ustedes están\", addressing a group",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ustedes están\", addressing a group]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C09-estan-form",
+              "prompt": "Say they are, using estar.",
+              "assesses": [
+                "ES-GRAMMAR-ESTAR-PRESENT-3PL"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "estan",
+                "están",
+                "ellos estan",
+                "ustedes estan"
+              ],
+              "feedback": {
+                "correct": "Yes — with the accent.",
+                "incorrect": "estan, written with an accent."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C09-estan-accent",
+              "prompt": "Why does estan carry an accent when hablan does not?",
+              "assesses": [
+                "ES-SOUND-WRITTEN-ACCENT",
+                "ES-GRAMMAR-ESTAR-PRESENT-3PL"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "the stress is on the ending",
+                "because estar stresses the ending",
+                "stress on the last syllable"
+              ],
+              "feedback": {
+                "correct": "Right — the accent is the stress, written down.",
+                "incorrect": "Because estar stresses its ending, and hablan stresses its stem."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"they are\" with estar? (Están.) Why the accent? (The stress falls on the ending.) Which form of estar does not do that? (Estamos.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C09-estais",
+      "sequence": 966,
+      "title": "estáis — and nothing surprises you",
+      "headword": "estáis",
+      "romanization": "estáis",
+      "gloss": "the vosotros form of estar, and the pattern is now fully predictable",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:462e24f08e0c5731",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"they are\" with estar. (Están.) And the vosotros form of hablar? (Habláis.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: predictable, and that is the news",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vosotros estáis — you all are, in Spain."
+            },
+            {
+              "kind": "speech",
+              "text": "If you guessed that before reading it, you have understood the chapter. The ending is -áis, the plain -ar one from habláis, and the accent is there for the reason it is always there with this verb: the stress sits on the ending."
+            },
+            {
+              "kind": "speech",
+              "text": "That is now three forms in a row where knowing estar meant knowing nothing new. In the Americas, ustedes están does this job."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"habláis\" then \"estáis\" — the same ending, twice",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"habláis\" then \"estáis\" — the same ending, twice]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C09-estais-form",
+              "prompt": "Vosotros, from estar.",
+              "assesses": [
+                "ES-GRAMMAR-ESTAR-PRESENT-2PL"
+              ],
+              "responseSeconds": 6,
+              "acceptedResponses": [
+                "estais",
+                "estáis",
+                "vosotros estais"
+              ],
+              "feedback": {
+                "correct": "Yes.",
+                "incorrect": "estais, with an accent."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C09-estais-where",
+              "prompt": "The same thing in Chile: which form?",
+              "assesses": [
+                "ES-CULTURE-VOSOTROS-USTEDES-SPLIT",
+                "ES-GRAMMAR-ESTAR-PRESENT-3PL"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "estan",
+                "están",
+                "ustedes estan"
+              ],
+              "feedback": {
+                "correct": "Yes — ustedes estan.",
+                "incorrect": "Estan, with ustedes."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is the vosotros form of estar? (Estáis.) Why the accent? (Estar stresses its ending.) And in Argentina? (Ustedes están.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C09-repaso-ser-estar",
+      "sequence": 969,
+      "title": "Review — both verbs for \"to be\"",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "review — two verbs for \"to be,\" in every person, and why only one of them is strange",
       "script": "latin",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:a5f79e04d815ae3a",
+      "sourceHash": "fnv1a64:76da6473f2f846eb",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -42,34 +488,48 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"I have\" and \"you have.\" (Tengo, tienes.) And \"we eat.\" (Comemos.)"
+              "text": "Nothing new. Say somos, then estamos."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: the break is gone",
+          "title": "Grammar Lens: side by side, and the difference is history",
           "segments": [
             {
-              "kind": "speech",
-              "text": "tenemos — we have., tenéis — you all have."
+              "kind": "table",
+              "headers": [
+                "who",
+                "ser",
+                "estar"
+              ],
+              "columns": 3,
+              "rowCount": 6,
+              "utterances": [
+                "who: yo. ser: soy. estar: estoy.",
+                "who: tú. ser: eres. estar: estás.",
+                "who: él, ella, usted. ser: es. estar: está.",
+                "who: nosotros. ser: somos. estar: estamos.",
+                "who: vosotros. ser: sois. estar: estáis.",
+                "who: ellos, ustedes. ser: son. estar: están."
+              ]
             },
             {
               "kind": "speech",
-              "text": "Not tienemos. Look at what happened: tienes had the broken stem ie, and here it is plain e again — the ordinary -er endings, on the ordinary stem."
+              "text": "Read the two columns down and the difference is not a matter of difficulty. It is a matter of history."
             },
             {
               "kind": "speech",
-              "text": "You already know why. It is the same reason -er and -ir looked identical in the singular and parted in the plural: stress."
+              "text": "Ser is two Latin verbs fused — esse and sedēre — so its forms have no common shape. Five begin with s-; eres does not, and that is the seam."
             },
             {
               "kind": "speech",
-              "text": "Tienes stresses the stem, and a stressed e in that position breaks into ie. Tenemos stresses the ending, so the stem is unstressed and its vowel stays whole."
+              "text": "Estar is one Latin verb, stāre. Its plural is a plain -ar paradigm, and the only oddity in the whole column is where the stress falls, which the written accent records honestly."
             },
             {
               "kind": "speech",
-              "text": "The stem change was never a property of the verb. It is a property of where the stress lands, and these two forms are where the stress lands elsewhere."
+              "text": "So the two hardest-looking verbs in Spanish are hard for opposite reasons: one because it is two words, and the other not really at all."
             }
           ]
         },
@@ -87,58 +547,82 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"tienes\" then \"tenemos\" — and hear the stress move off the stem",
+              "instruction": "one column down, then the other",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"tienes\" then \"tenemos\" — and hear the stress move off the stem]"
+              "source": "[YOU SAY: one column down, then the other]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"comemos, tenemos\" — the same endings",
+              "instruction": "each row across — soy, estoy, somos, estamos — and hear which column surprises you",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"comemos, tenemos\" — the same endings]"
+              "source": "[YOU SAY: each row across — *soy, estoy* · *somos, estamos* — and hear which column surprises you]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C08-tenemos-form",
-              "prompt": "Say we have.",
+              "id": "ES-C09-repaso-ser-estar-we",
+              "prompt": "We are, with estar.",
               "assesses": [
-                "ES-GRAMMAR-TENER-PRESENT-1PL"
+                "ES-GRAMMAR-ESTAR-PRESENT-1PL"
               ],
-              "responseSeconds": 8,
+              "responseSeconds": 6,
               "acceptedResponses": [
-                "tenemos",
-                "nosotros tenemos"
+                "estamos",
+                "nosotros estamos"
               ],
               "feedback": {
-                "correct": "Yes — and no ie.",
-                "incorrect": "tenemos, with a plain e."
+                "correct": "Yes.",
+                "incorrect": "estamos."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C08-tenemos-why",
-              "prompt": "Why does tienes break its stem but tenemos does not?",
+              "id": "ES-C09-repaso-ser-estar-they",
+              "prompt": "They are, with estar.",
               "assesses": [
-                "ES-GRAMMAR-TENER-PRESENT-1PL",
-                "ES-GRAMMAR-TENER-PRESENT-SINGULAR"
+                "ES-GRAMMAR-ESTAR-PRESENT-3PL"
+              ],
+              "responseSeconds": 6,
+              "acceptedResponses": [
+                "estan",
+                "están",
+                "ellos estan"
+              ],
+              "feedback": {
+                "correct": "Yes.",
+                "incorrect": "estan."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C09-repaso-ser-estar-why",
+              "prompt": "Which of the two has a regular plural, and why?",
+              "assesses": [
+                "ES-GRAMMAR-ESTAR-PRESENT-COMPLETE",
+                "ES-GRAMMAR-SER-PRESENT-COMPLETE"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "the stress is on the stem in tienes and on the ending in tenemos",
-                "stress",
-                "because of where the stress falls",
-                "tenemos stresses the ending"
+                "estar, because it is one latin verb",
+                "estar",
+                "estar - one verb",
+                "estar, it has one ancestor"
               ],
               "feedback": {
-                "correct": "Right — the break follows the stress, not the verb.",
-                "incorrect": "Stress. Tienes stresses the stem; tenemos stresses the ending."
+                "correct": "Right — estar is one verb, so it has no seam.",
+                "incorrect": "Estar. It descends from a single verb, stare."
               }
             }
           ]
@@ -156,174 +640,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is \"we have\"? (Tenemos.) Where did the ie go? (Nowhere — it only ever appears when the stem is stressed.) Next: the form where the stress comes back."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C08-tienen",
-      "sequence": 974,
-      "title": "tienen — the break comes back",
-      "headword": "tienen",
-      "romanization": "tienen",
-      "gloss": "\"they have\" — where the stress returns to the stem, and so does the break",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:f243c17e6ecb2a8f",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Say \"we have\", then \"you have\" to a friend. (Tenemos, tienes.) Which one has the broken stem?"
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: the rule, stated once and for all",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "tienen — they have, and ustedes tienen, you all have."
-            },
-            {
-              "kind": "speech",
-              "text": "The ie is back. And now you have seen it appear, vanish and return, which is enough to state the rule outright:"
-            },
-            {
-              "kind": "speech",
-              "text": "A stem change happens exactly where the stem is stressed, and nowhere else."
-            },
-            {
-              "kind": "speech",
-              "text": "That is four forms with the break — setting aside the yo form, which has an oddity of its own — and two without: nosotros and vosotros. Always those two. In every stem-changing verb in the language."
-            },
-            {
-              "kind": "speech",
-              "text": "Learners are usually told to memorise a shape called \"the boot\" — the four stressed forms drawn as an outline around a table. You do not need the boot. You need to know where Spanish puts its stress, which you already do."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"tienes, tenemos, tienen\" — break, no break, break",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"tienes, tenemos, tienen\" — break, no break, break]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the two forms that never break, for any verb",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the two forms that never break, for any verb]"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C08-tienen-form",
-              "prompt": "Say they have.",
-              "assesses": [
-                "ES-GRAMMAR-TENER-PRESENT-3PL"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "tienen",
-                "ellos tienen",
-                "ustedes tienen"
-              ],
-              "feedback": {
-                "correct": "Yes — the break is back.",
-                "incorrect": "tienen."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C08-tienen-rule",
-              "prompt": "In any stem-changing verb, which two forms never break?",
-              "assesses": [
-                "ES-GRAMMAR-STEM-CHANGE-STRESS-RULE"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "nosotros and vosotros",
-                "nosotros, vosotros",
-                "we and you all"
-              ],
-              "feedback": {
-                "correct": "Those two, always — because the stress is on the ending there.",
-                "incorrect": "Nosotros and vosotros, in every stem-changing verb."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C08-tienen-boot",
-              "prompt": "What actually decides whether the stem breaks?",
-              "assesses": [
-                "ES-GRAMMAR-STEM-CHANGE-STRESS-RULE"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "whether the stem is stressed",
-                "stress",
-                "where the stress falls"
-              ],
-              "feedback": {
-                "correct": "Stress — that is the whole rule.",
-                "incorrect": "Whether the stem carries the stress."
-              }
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What is \"they have\"? (Tienen.) State the stem-change rule. (The stem breaks exactly where it is stressed.) Which two forms never break? (Nosotros and vosotros.)"
+              "text": "Which of the two verbs is regular in the plural? (Estar.) Why? (It is one Latin verb; ser is two.) And what is the only oddity in estar's column? (Where the stress falls — which the accent records.)"
             }
           ]
         }

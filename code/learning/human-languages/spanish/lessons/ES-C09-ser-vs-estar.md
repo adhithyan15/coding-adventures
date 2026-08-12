@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C09-ser-vs-estar
 spine_node: SPINE-CHECK-WELLBEING
 sequence: 880
-chapter: 47
+chapter: 48
 type: phrase
 headword: ser vs estar
 gloss: identify with ser; describe a current state or location with estar

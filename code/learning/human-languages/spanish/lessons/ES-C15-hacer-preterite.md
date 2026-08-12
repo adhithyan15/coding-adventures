@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C15-hacer-preterite
 spine_node: SPINE-TALK-ABOUT-PAST
 sequence: 1265
-chapter: 91
+chapter: 92
 type: grammar
 headword: hice
 gloss: the strong singular preterite of hacer — hice, hiciste, hizo
