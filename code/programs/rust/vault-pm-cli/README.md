@@ -26,6 +26,7 @@ vault-pm [--vault NAME] item edit ITEM
 vault-pm [--vault NAME] item delete ITEM
 vault-pm [--vault NAME] item list
 vault-pm [--vault NAME] item show ITEM
+vault-pm [--vault NAME] item reveal ITEM FIELD
 vault-pm [--vault NAME] history list ITEM
 vault-pm [--vault NAME] history restore ITEM REVISION
 vault-pm [--vault NAME] conflict list ITEM
@@ -36,7 +37,9 @@ vault-pm [--vault NAME] conflict choose ITEM REVISION
 when stdin is redirected. No passphrase flag, environment variable, config
 field, URL, or stdin path exists. Unix integration tests launch this exact binary
 under fresh pseudo-terminals, verify passphrases and item passwords are not
-echoed, restart the process for durable item add/edit/list/show, inject decoy
+echoed, restart the process for durable item add/edit/list/show, explicitly
+confirm one audited current-password reveal directly on `/dev/tty` while
+captured process stdout remains empty, inject decoy
 bytes through stdin, verify redacted canonical history across another fresh
 process, delete to a causal tombstone, restore an exact live ancestor into a
 new revision, activate the signed audit epoch, force an invalid edit prompt in

@@ -102,6 +102,8 @@ pub enum TextPrompt {
     LoginUsername,
     /// Optional primary login URL.
     LoginUrl,
+    /// Explicit confirmation before one audited terminal secret disclosure.
+    SecretRevealConfirmation,
 }
 
 impl TextPrompt {
@@ -110,6 +112,9 @@ impl TextPrompt {
             Self::LoginTitle | Self::SecureNoteTitle => "Title: ",
             Self::LoginUsername => "Username: ",
             Self::LoginUrl => "URL (optional): ",
+            Self::SecretRevealConfirmation => {
+                "Reveal secret on this terminal? Type yes to continue: "
+            }
         }
     }
 
@@ -118,11 +123,15 @@ impl TextPrompt {
             Self::LoginTitle | Self::SecureNoteTitle => 256,
             Self::LoginUsername => 1_024,
             Self::LoginUrl => MAX_TEXT_BYTES,
+            Self::SecretRevealConfirmation => 16,
         }
     }
 
     const fn allows_empty(self) -> bool {
-        matches!(self, Self::LoginUsername | Self::LoginUrl)
+        matches!(
+            self,
+            Self::LoginUsername | Self::LoginUrl | Self::SecretRevealConfirmation
+        )
     }
 }
 
@@ -206,6 +215,31 @@ impl ControllingTerminal {
             Err(CliHostError::UnsupportedPlatform)
         }
     }
+
+    /// Require an exact echoed `yes` before a terminal secret disclosure.
+    pub fn confirm_secret_reveal(&self) -> Result<bool, CliHostError> {
+        let answer = self.read_text(TextPrompt::SecretRevealConfirmation)?;
+        Ok(answer.as_str() == "yes")
+    }
+
+    /// Write one quoted and control-escaped secret directly to the controlling
+    /// terminal, never through ordinary process standard output.
+    pub fn write_revealed_text(&self, value: &str) -> Result<(), CliHostError> {
+        let escaped = escaped_revealed_text(value);
+        #[cfg(any(unix, windows))]
+        {
+            platform::write_revealed_text(&escaped)
+        }
+        #[cfg(not(any(unix, windows)))]
+        {
+            let _ = escaped;
+            Err(CliHostError::UnsupportedPlatform)
+        }
+    }
+}
+
+fn escaped_revealed_text(value: &str) -> Zeroizing<String> {
+    Zeroizing::new(format!("{value:?}"))
 }
 
 /// Durably create one explicit portable-export destination without replacing it.
@@ -376,10 +410,15 @@ mod tests {
         assert_eq!(TextPrompt::SecureNoteTitle.message(), "Title: ");
         assert_eq!(TextPrompt::LoginUsername.message(), "Username: ");
         assert_eq!(TextPrompt::LoginUrl.message(), "URL (optional): ");
+        assert_eq!(
+            TextPrompt::SecretRevealConfirmation.message(),
+            "Reveal secret on this terminal? Type yes to continue: "
+        );
         assert!(!TextPrompt::LoginTitle.allows_empty());
         assert!(!TextPrompt::SecureNoteTitle.allows_empty());
         assert!(TextPrompt::LoginUsername.allows_empty());
         assert!(TextPrompt::LoginUrl.allows_empty());
+        assert!(TextPrompt::SecretRevealConfirmation.allows_empty());
         let expected = [
             (
                 CliHostError::TerminalUnavailable,
@@ -448,6 +487,15 @@ mod tests {
         for (error, display) in expected {
             assert_eq!(error.to_string(), display);
         }
+    }
+
+    #[test]
+    fn revealed_text_is_quoted_and_control_escaped() {
+        assert_eq!(&*escaped_revealed_text("plain secret"), "\"plain secret\"");
+        assert_eq!(
+            &*escaped_revealed_text("line\n\"terminal\u{1b}"),
+            "\"line\\n\\\"terminal\\u{1b}\""
+        );
     }
 
     #[test]

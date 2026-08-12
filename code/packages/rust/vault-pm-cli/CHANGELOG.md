@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Added audit-required `item reveal ITEM FIELD` with exact-`yes` controlling
+  terminal confirmation, application-owned current-revision selection, durable
+  denied/failed/succeeded outcomes, and direct escaped terminal delivery that
+  never enters ordinary CLI output.
 - Added audit-required `conflict list ITEM` and `conflict choose ITEM REVISION`
   with redacted candidate rows, item-bound selection, durable failed attempts,
   and atomic choose-existing resolution.

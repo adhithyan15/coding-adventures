@@ -2,6 +2,19 @@
 
 All notable changes to this package are documented here.
 
+## [0.52.0] - 2026-08-11
+
+### Added
+
+- Add item-bound audited disclosure of one typed field from the sole current
+  live candidate without returning its revision capability to the host.
+
+### Security
+
+- Publish denied confirmation, missing/conflicted item, field mismatch, and
+  successful exact-revision outcomes before releasing a non-printable owned
+  secret.
+
 ## [0.51.0] - 2026-08-11
 
 ### Added

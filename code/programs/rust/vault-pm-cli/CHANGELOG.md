@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Exposed audited interactive current-secret reveal and extended the real PTY
+  drill to prove direct controlling-terminal delivery with empty captured
+  process stdout and restart-backed audit advancement.
 - Exposed audited redacted conflict listing and choose-existing-candidate
   resolution through the thin executable.
 - Exposed explicit-target `restore FILE` and moved the real-process PTY drill to

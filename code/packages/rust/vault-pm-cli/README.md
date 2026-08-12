@@ -12,6 +12,9 @@ selectors plus safe causal metadata without opening historical secrets. The
 same selectors now support reversible `item delete ITEM` and `history restore
 ITEM REVISION`. `conflict list ITEM` and `conflict choose ITEM REVISION` expose
 redacted current candidates and explicit audited choose-existing resolution.
+`item reveal ITEM FIELD` adds explicitly confirmed, publish-before-release
+interactive access to one schema-specific current secret without returning the
+revision capability or complete document to CLI orchestration.
 `export FILE`, `import FILE`, `restore verify FILE`, and the
 composed `--vault TARGET restore FILE` add the encrypted recovery-artifact
 round trip, retryable independent verification, and a completed-and-verified
@@ -141,6 +144,16 @@ reserves mutation and failure-audit entropy before unlock, validates both
 selectors inside the application, and publishes either a failed attempt or an
 atomic all-current-parent resolution event before its closed outcome. It emits
 only the resolved item selector and never deletes losing immutable history.
+
+`item reveal ITEM FIELD` requires an active audit epoch and accepts only closed
+schema-specific UTF-8 selectors. It reserves time and audit entropy before
+unlock, then requires exact `yes` through a fixed controlling-terminal prompt.
+Refusal and prompt failure publish `Denied`; missing, conflicted, or
+wrong-schema selections publish `Failed`; success binds the exact current
+revision before returning a non-printable wipe-on-drop secret. The native host
+writes a quoted, control-escaped `Secret: "..."` line directly to `/dev/tty` or
+the attached console. The secret never enters cloneable/debuggable `CliOutput`,
+process stdout/stderr, arguments, stdin, configuration, or audit metadata.
 
 `export FILE` reserves export and audit entropy before unlock, collects and
 constant-time confirms a distinct export passphrase through two hidden fixed

@@ -6,8 +6,9 @@ auditable adapters:
 
 - `ControllingTerminal` opens `/dev/tty` on Unix or `CONIN$`/`CONOUT$` on
   Windows, emits only fixed prompts, reads bounded item metadata under the
-  existing echo mode or disables echo for secrets, and restores the original
-  terminal mode before returning; and
+  existing echo mode or disables echo for secrets, restores the original
+  terminal mode before returning, and supports exact-`yes` confirmation plus
+  quoted/control-escaped direct secret delivery; and
 - `OsEntropy` completely fills a caller-owned non-empty buffer using the
   repository `csprng` wrapper and maps operating-system details to one stable,
   payload-free failure; and
@@ -43,7 +44,14 @@ and contain no secret, OS error, terminal path, user name, or caller payload.
 This crate deliberately does not parse commands, choose vault storage, persist
 configuration, calibrate Argon2id, or prepare vault bytes.
 
-Eleven Unix tests exercise stable diagnostics, text/secret bounds, constant-time
+Interactive reveal never routes a secret through ordinary process stdout or
+stderr. After the application has durably authorized the access, the adapter
+reopens the controlling terminal and writes one `Secret: "..."` line. Debug
+string escaping prevents stored control characters from becoming terminal
+commands or counterfeit output; the escaped string and Windows UTF-16 buffer
+are wipe-on-drop.
+
+Thirteen Unix tests exercise stable diagnostics, text/secret bounds, constant-time
 confirmation behavior, real OS entropy, pseudo-terminal ordinary and hidden
 input, mode restoration, oversized-line draining, non-terminal refusal, and
 create-new durable export persistence, and bounded artifact reads.

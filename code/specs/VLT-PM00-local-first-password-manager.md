@@ -1504,6 +1504,12 @@ changelog, focused build, and downstream validation.
                  secret documents stay out of orchestration; precondition,
                  prompt, entropy, and input failures publish before their
                  errors; successful updates remain atomic mutations.
+9b-2c-5b-3c. completed item-bound active-epoch interactive secret reveal:
+               exact-`yes` terminal confirmation, application-owned current
+               revision selection, durable denied/failed/succeeded outcomes,
+               publish-before-release direct controlling-terminal delivery,
+               escaped controls, and empty ordinary process output, using
+               `VLT-PM25-cli-secret-reveal.md`.
 9b-2c-5c-1. completed bounded newest-first application audit projection and
              exact trace lookup: each call publishes its own successful
              `AuditRead` first, fully verifies the newly advanced chain, and
@@ -1536,8 +1542,8 @@ changelog, focused build, and downstream validation.
            validation, publish-before-error failed attempts, atomic successful
            mutation events, immutable losing history, and command-scoped named
            target selection, using `VLT-PM24-cli-conflict-resolution.md`.
-9b-3b-2b. remaining explicit secret-field reveal plus user-authored merged
-           document conflict resolution.
+9b-3b-2b. remaining candidate-specific secret-field reveal plus user-authored
+           merged-document conflict resolution.
 9b-4a. completed authenticated encrypted portable export with a separately
         confirmed hidden passphrase, pre-authentication audit reservation,
         publish-before-release ordering, and an explicit create-new durable
@@ -1640,7 +1646,8 @@ The following are not allowed to block Phase 1A, but each needs a later spec:
   `VLT-PM21-audit-first-generation-zero.md`, and
   `VLT-PM22-cli-named-targets.md`, and
   `VLT-PM23-cli-verified-restore.md`, and
-  `VLT-PM24-cli-conflict-resolution.md` —
+  `VLT-PM24-cli-conflict-resolution.md`, and
+  `VLT-PM25-cli-secret-reveal.md` —
   product repository wire,
   object-store, domain, verified-DAG, application, local-host, configuration,
   terminal/entropy, executable composition, authenticated verification, and
@@ -1651,7 +1658,8 @@ The following are not allowed to block Phase 1A, but each needs a later spec:
   retryable local CLI ceremony, plus an initialization audit genesis for every
   new CLI vault, independently selectable audited named targets, and automatic
   import-plus-independent-verification composition, plus audited redacted
-  current-conflict selection and choose-existing resolution.
+  current-conflict selection and choose-existing resolution, plus audited
+  interactive current-secret terminal delivery.
 - `VLT12-vault-revision-history.md`, `VLT13-vault-encrypted-search.md`,
   `VLT14-vault-attachments.md`, `VLT15-vault-import-export.md`.
 - `STR01-storage-fs-backend.md` and `storage-core`.

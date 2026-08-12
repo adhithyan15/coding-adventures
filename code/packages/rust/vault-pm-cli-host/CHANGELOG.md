@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Add exact-`yes` controlling-terminal confirmation and direct quoted,
+  control-escaped secret delivery without routing values through process
+  stdout or stderr.
+- Wipe the temporary escaped string and Windows UTF-16 console buffer after
+  every terminal disclosure attempt.
 - Add a bounded regular-file portable-artifact reader and reuse the fixed
   hidden import-passphrase prompt through CLI composition.
 - Add fixed hidden portable-export passphrase and confirmation prompts with
