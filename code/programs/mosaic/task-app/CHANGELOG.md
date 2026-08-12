@@ -4,6 +4,16 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added - zero-degradation native-complete XAML TaskApp
+
+Board cards and calendar items now use native WinUI drag/drop events with the
+same accepted-drop lifecycle for pointer, touch, and keyboard operation.
+Component-local target scoping, authored kind filtering, disabled states, RTL
+keyboard order, focus semantics, and UI Automation announcements preserve UI35's
+cross-backend contract. Together with the existing native Sheet semantics and
+concrete Rust runtime, Windows CI now emits and builds the complete TaskApp under
+the strict `native-complete` profile with zero degradations.
+
 ### Added - native XAML Sheet table semantics
 
 The canonical dynamic Sheet now keeps its existing WinUI visuals and editable
@@ -22,10 +32,9 @@ fixture loads that app-local DLL through the generated standard binding, checks
 initial TaskApp props, dispatches `newTaskNameChange`, and checks the revised prop
 without `MOSAIC_APP_LIBRARY`.
 
-This does not overstate the remaining platform work: the generated XAML report
-must contain exactly four inert drag/drop paths. The app cannot become
-`native-complete` until those four UI gaps close, and
-visible WinUI launch remains an interactive Windows-worker gate because hosted
+At this historical milestone the generated XAML report still contained exactly
+four inert drag/drop paths; the native drag milestone above subsequently closes
+them. Visible WinUI launch remains an interactive Windows-worker gate because hosted
 GitHub workers cannot reliably initialize a desktop surface.
 
 ### Added - concrete Rust TaskApp runtime on SwiftUI for macOS

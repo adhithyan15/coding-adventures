@@ -1,5 +1,14 @@
 # Changelog — mosaic-emit-xaml
 
+## [Unreleased] — native WinUI drag and drop
+
+`HostDraggable` and `HostDropTarget` now lower to component-scoped WinUI
+controls backed by native pointer/touch drag events and equivalent keyboard
+operation. Generated code applies authored acceptance and disabled-state rules,
+keeps repeated/nested component scopes isolated, sends every lifecycle event
+through the existing MIL dispatcher, and exposes focus, names, help, and live
+announcements through UI Automation.
+
 ## [Unreleased] — native UI Automation table semantics
 
 Canonical dynamic UI31 tables now emit component-scoped WinUI table, header,
