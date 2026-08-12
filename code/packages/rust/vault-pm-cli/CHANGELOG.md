@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Added audit-required `conflict merge login ITEM BASE_REVISION`, which keeps
+  the exact current login base opaque, collects a complete bounded terminal
+  form, durably records precondition/prompt/entropy/validation failures, and
+  publishes one all-current-parent authored revision on success.
 - Added audit-required `conflict reveal ITEM REVISION FIELD`, which accepts
   only an exact current conflict candidate, reuses the exact-`yes` ceremony,
   publishes denial/failure/success before release, and writes the selected

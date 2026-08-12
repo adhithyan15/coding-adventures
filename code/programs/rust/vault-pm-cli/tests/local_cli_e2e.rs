@@ -263,6 +263,15 @@ fn real_cli_initializes_through_a_hidden_tty_and_survives_restart() {
     assert!(failed_candidate_stdout.is_empty());
     assert_transcript_excludes_secrets(&failed_candidate_transcript);
 
+    let (failed_merge_status, failed_merge_transcript) = run_unlock_in_pty(
+        &home,
+        &["conflict", "merge", "login", &item_id, &original_revision],
+        b"vault-pm: recovery or conflict required",
+    );
+    assert_eq!(failed_merge_status.code(), Some(5));
+    assert!(!failed_merge_transcript.contains("Title: "));
+    assert_transcript_excludes_secrets(&failed_merge_transcript);
+
     let expected_delete = format!("Item deleted: {item_id}");
     let (delete_status, delete_transcript) = run_unlock_in_pty(
         &home,
@@ -342,7 +351,7 @@ fn real_cli_initializes_through_a_hidden_tty_and_survives_restart() {
     );
     assert!(
         post_failure_transcript
-            .contains("commits=23 catalogs=6 revisions=5 items=2 audit_events=23"),
+            .contains("commits=24 catalogs=6 revisions=5 items=2 audit_events=24"),
         "unexpected post-failure audit totals: {post_failure_transcript}"
     );
     assert_transcript_excludes_secrets(&post_failure_transcript);
@@ -363,6 +372,7 @@ fn real_cli_initializes_through_a_hidden_tty_and_survives_restart() {
     assert!(audit_list_transcript.contains("action=item_search\toutcome=succeeded"));
     assert!(audit_list_transcript.contains("action=item_read\toutcome=denied"));
     assert!(audit_list_transcript.contains("action=item_read\toutcome=failed"));
+    assert!(audit_list_transcript.contains("action=item_conflict_merge\toutcome=failed"));
     assert!(audit_list_transcript.contains("action=audit_read\toutcome=succeeded"));
     assert!(audit_list_transcript.contains("action=vault_verify\toutcome=succeeded"));
     assert_transcript_excludes_secrets(&audit_list_transcript);
@@ -400,7 +410,7 @@ fn real_cli_initializes_through_a_hidden_tty_and_survives_restart() {
         "final audit verification failed: {final_audit_transcript}"
     );
     assert!(
-        final_audit_transcript.contains("audit_events=27"),
+        final_audit_transcript.contains("audit_events=28"),
         "unexpected final audit total: {final_audit_transcript}"
     );
     assert_transcript_excludes_secrets(&final_audit_transcript);

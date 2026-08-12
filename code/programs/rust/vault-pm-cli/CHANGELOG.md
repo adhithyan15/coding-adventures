@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Exposed audited authored login conflict merge with opaque base selection,
+  complete hidden form collection, durable failure ordering, and an
+  all-current-parent success mutation.
 - Exposed audited `conflict reveal ITEM REVISION FIELD` and extended the
   restart drill through terminal-confirmation denial plus an unconflicted
   candidate failure, empty stdout, secret exclusion, and durable audit-chain
