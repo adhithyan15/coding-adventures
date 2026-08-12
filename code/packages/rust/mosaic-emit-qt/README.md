@@ -118,6 +118,7 @@ sample or inert UI. Permissive builds retain the optional bridge above.
 | `Input`       | `TextArea { ... }` when multiline; otherwise the `HostInput` lowering       |
 | `HostInput`   | `TextInput` or placeholder-capable `TextField` with native input semantics   |
 | `HostButton`  | `Button { text: ...; enabled: ...; onClicked: ... }` (from Controls 2.15)   |
+| `HostSlider`  | `Slider { value: ...; from: ...; to: ...; stepSize: ... }` with movement and release events |
 | `HostScroll`  | `ScrollView { ... children ... }` (from Controls 2.15)                      |
 | `HostDialog`  | `Popup { modal: ...; visible: ...; closePolicy: ...; contentItem: ColumnLayout { ... } }` (from Controls 2.15) |
 | `HostDraggable` | Native `DragHandler` + `Drag.Automatic`, with keyboard and screen-reader operation |

@@ -4,6 +4,13 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added - native adjustable slider
+
+`HostSlider` now lowers to Qt Quick Controls' native `Slider`, including
+controlled value, range, step or continuous movement, disabled state,
+continuous change dispatch, and release-time commit dispatch. A strict
+native-complete fixture compiles the generated QML project in Linux CI.
+
 ### Added - portable Text accessibility
 
 `Text` now emits live `Accessible.name` bindings, the native heading role, and
