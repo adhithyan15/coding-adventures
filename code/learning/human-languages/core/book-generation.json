@@ -3133,6 +3133,31 @@
       "output": "spanish/book/chapters/ch162-synthesis-se.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 163,
+      "output": "spanish/book/chapters/ch163-relative-que.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 164,
+      "output": "spanish/book/chapters/ch164-relative-obligatory.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 165,
+      "output": "spanish/book/chapters/ch165-lo-que.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 166,
+      "output": "spanish/book/chapters/ch166-review-relative.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 167,
+      "output": "spanish/book/chapters/ch167-synthesis-relative.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "output": "tamil/book/chapters/ch06-dative-case.tex",

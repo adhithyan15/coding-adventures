@@ -1717,6 +1717,66 @@
         "ES-EXT-037-SYNTH-SE"
       ],
       "after": []
+    },
+    {
+      "id": "ES-PATH-037-REL-QUE",
+      "spine_node": "SPINE-GIVE-REASONS",
+      "lessons": [
+        "ES-C53-que-relativo"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-037-REL-QUE"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-037-REL-OBLIG",
+      "spine_node": "SPINE-GIVE-REASONS",
+      "lessons": [
+        "ES-C53-que-no-se-cae"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-037-REL-OBLIG"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-037-LO-QUE",
+      "spine_node": "SPINE-GIVE-REASONS",
+      "lessons": [
+        "ES-C53-lo-que"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-037-LO-QUE"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-037-REVIEW-REL",
+      "spine_node": "SPINE-GIVE-REASONS",
+      "lessons": [
+        "ES-C53-repaso-que"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-037-REVIEW-REL"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-037-SYNTH-REL",
+      "spine_node": "SPINE-GIVE-REASONS",
+      "lessons": [
+        "ES-C53-sintesis-frases-largas"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-037-SYNTH-REL"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -1991,7 +2051,12 @@
         "ES-PATH-037-SE-AGREE",
         "ES-PATH-037-COMO-SE-DICE",
         "ES-PATH-037-REVIEW-SE",
-        "ES-PATH-037-SYNTH-SE"
+        "ES-PATH-037-SYNTH-SE",
+        "ES-PATH-037-REL-QUE",
+        "ES-PATH-037-REL-OBLIG",
+        "ES-PATH-037-LO-QUE",
+        "ES-PATH-037-REVIEW-REL",
+        "ES-PATH-037-SYNTH-REL"
       ],
       "omits": [],
       "relocates": {}
@@ -3909,6 +3974,61 @@
       "prerequisites": [],
       "lessons": [
         "ES-C52-sintesis-el-letrero"
+      ]
+    },
+    {
+      "id": "ES-EXT-037-REL-QUE",
+      "stage": "B1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C53-que-relativo"
+      ]
+    },
+    {
+      "id": "ES-EXT-037-REL-OBLIG",
+      "stage": "B1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C53-que-no-se-cae"
+      ]
+    },
+    {
+      "id": "ES-EXT-037-LO-QUE",
+      "stage": "B1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C53-lo-que"
+      ]
+    },
+    {
+      "id": "ES-EXT-037-REVIEW-REL",
+      "stage": "B1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C53-repaso-que"
+      ]
+    },
+    {
+      "id": "ES-EXT-037-SYNTH-REL",
+      "stage": "B1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C53-sintesis-frases-largas"
       ]
     }
   ]

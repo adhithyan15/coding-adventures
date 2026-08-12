@@ -3302,6 +3302,102 @@
         ],
         "note": "This construction is written at the reader rather than spoken to them, so the skill is reading it off the world -- and the missing person is what gives a sign its authority."
       }
+    },
+    {
+      "chapter": 163,
+      "title": "El Libro Que Compro --- One Sentence Out of Two",
+      "label": "ch:relative-que",
+      "canDo": "I can join two sentences with que so a noun carries a clause.",
+      "spineNodes": [
+        "SPINE-GIVE-REASONS"
+      ],
+      "payoff": {
+        "lesson": "ES-C53-que-relativo",
+        "kind": "task",
+        "summary": "Complete ES-C53-que-relativo: join two sentences with que and name the question words that share its root.",
+        "assesses": [
+          "ES-GRAMMAR-RELATIVE-QUE",
+          "ES-ETYMON-QUI-RELATIVE"
+        ],
+        "note": "The point where sentences stop having one verb each. Que is a worn-down question word, and a question and a relative clause both fill a gap."
+      }
+    },
+    {
+      "chapter": 164,
+      "title": "El Libro Que Compre --- The Word You Cannot Leave Out",
+      "label": "ch:relative-obligatory",
+      "canDo": "I can supply the que that English deletes.",
+      "spineNodes": [
+        "SPINE-GIVE-REASONS"
+      ],
+      "payoff": {
+        "lesson": "ES-C53-que-no-se-cae",
+        "kind": "task",
+        "summary": "Complete ES-C53-que-no-se-cae: produce el libro que compre and name the English pattern that always needs a que.",
+        "assesses": [
+          "ES-GRAMMAR-RELATIVE-QUE-OBLIGATORY"
+        ],
+        "note": "The error that outlives the others, because the learner thinks the English first and the gap is invisible. English can delete the joint because its word order is rigid; Spanish moves its pieces, so it cannot."
+      }
+    },
+    {
+      "chapter": 165,
+      "title": "Lo Que --- What, Out of Two Old Words",
+      "label": "ch:lo-que",
+      "canDo": "I can use lo que for a thing that is never named.",
+      "spineNodes": [
+        "SPINE-GIVE-REASONS"
+      ],
+      "payoff": {
+        "lesson": "ES-C53-lo-que",
+        "kind": "task",
+        "summary": "Complete ES-C53-lo-que: produce lo que digo and contrast it with lo digo.",
+        "assesses": [
+          "ES-GRAMMAR-LO-QUE",
+          "ES-GRAMMAR-DIRECT-OBJECT-LO"
+        ],
+        "note": "A noun-shaped hole with a sentence attached, built from two words the reader already held. The chapter introduces no new vocabulary."
+      }
+    },
+    {
+      "chapter": 166,
+      "title": "Review --- Three Jobs, No New Words",
+      "label": "ch:review-relative",
+      "canDo": "I can use all three relative patterns and name the error that outlives the others.",
+      "spineNodes": [
+        "SPINE-GIVE-REASONS"
+      ],
+      "payoff": {
+        "lesson": "ES-C53-repaso-que",
+        "kind": "task",
+        "summary": "Complete ES-C53-repaso-que: say how many new words the rung added and name the trap.",
+        "assesses": [
+          "ES-GRAMMAR-RELATIVE-QUE",
+          "ES-GRAMMAR-RELATIVE-QUE-OBLIGATORY",
+          "ES-GRAMMAR-LO-QUE"
+        ],
+        "note": "Answer: none. The last big structural piece a beginner's course owes, and it cost no vocabulary at all."
+      }
+    },
+    {
+      "chapter": 167,
+      "title": "Synthesis --- Sentences Worth Saying",
+      "label": "ch:synthesis-relative",
+      "canDo": "I can build a sentence containing other sentences.",
+      "spineNodes": [
+        "SPINE-GIVE-REASONS"
+      ],
+      "payoff": {
+        "lesson": "ES-C53-sintesis-frases-largas",
+        "kind": "task",
+        "summary": "Complete ES-C53-sintesis-frases-largas: build a three-verb sentence and say why length is not difficulty.",
+        "assesses": [
+          "ES-GRAMMAR-LO-QUE",
+          "ES-GRAMMAR-RELATIVE-QUE",
+          "ES-GRAMMAR-RELATIVE-QUE-OBLIGATORY"
+        ],
+        "note": "A relative clause adds a slot, not grammar. From here the growth is more of what the reader has, arranged more deeply -- what remains hard is vocabulary and hearing speed, and both are time."
+      }
     }
   ]
 }

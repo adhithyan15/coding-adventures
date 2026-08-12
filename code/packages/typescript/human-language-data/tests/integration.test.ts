@@ -104,7 +104,7 @@ describe("real curriculum", () => {
     // 40 (esperar, contestar, comprar). Two sessions authored a chapter 38 in parallel;
     // the collision surfaced as a merge conflict on chapters.json rather than silently,
     // because both sides must edit it.
-    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(162); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis
+    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(167); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis
     expect(
       books.books
         .find((book) => book.language === "persian")
@@ -692,6 +692,23 @@ describe("real curriculum", () => {
       "ES-C52-tres-ses-test",
       "ES-C52-tres-ses-two",
       "ES-C52-tres-ses-which",
+      "ES-C53-lo-que-contrast",
+      "ES-C53-lo-que-new",
+      "ES-C53-lo-que-say",
+      "ES-C53-que-no-se-cae-book",
+      "ES-C53-que-no-se-cae-habit",
+      "ES-C53-que-no-se-cae-house",
+      "ES-C53-que-no-se-cae-why",
+      "ES-C53-que-relativo-family",
+      "ES-C53-que-relativo-join",
+      "ES-C53-que-relativo-what",
+      "ES-C53-repaso-que-drop",
+      "ES-C53-repaso-que-hole",
+      "ES-C53-repaso-que-none",
+      "ES-C53-sintesis-frases-largas-ask",
+      "ES-C53-sintesis-frases-largas-full",
+      "ES-C53-sintesis-frases-largas-hole",
+      "ES-C53-sintesis-frases-largas-why",
       "ES-W03-question-span-roberto-outside",
       "FA-C02-esm-e-man-sara",
       "FA-C03-chist-fusion",
