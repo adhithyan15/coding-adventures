@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C47-sintesis-dos-a-la-vez
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 1170
-chapter: 89
+sequence: 1200
+chapter: 93
 type: practice-mix
 headword: (synthesis)
 gloss: synthesis — a four-turn exchange carried almost entirely by pronouns, and what that does to how it sounds

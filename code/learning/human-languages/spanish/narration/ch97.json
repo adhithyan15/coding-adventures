@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 97,
-  "title": "Synthesis --- Three Exceptions, and No Others",
+  "title": "Synthesis --- You Can Hear Which Past It Is",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:067184c600feb1f9",
+  "sourceHash": "fnv1a64:f53cf2c7b39db3a2",
   "lessons": [
     {
-      "id": "ES-C16-practice",
-      "sequence": 1308,
-      "title": "Practice — keep the past open or close it",
+      "id": "ES-C15-practice",
+      "sequence": 1305,
+      "title": "Practice — six singular patterns, no hidden vocabulary",
       "headword": "(practice)",
       "romanization": "(practice)",
-      "gloss": "a singular checkpoint for the open past and the completed-past contrast",
+      "gloss": "a singular checkpoint for regular and strong completed-past patterns",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5d76e5d86b7f2bd7",
+      "sourceHash": "fnv1a64:4e7c8e7e852eb6c3",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "This checkpoint adds no vocabulary and no plural persons. Retrieve the seven learned singular rows, then choose whether a known sentence presents the past as completed or leaves it open as background, progress, or habit."
+              "text": "This checkpoint adds nothing. Retrieve only the three singular persons of each learned row. Every word in the short sentences is already known."
             }
           ]
         },
@@ -50,58 +50,54 @@
             },
             {
               "kind": "speech",
-              "text": "yo: hablaba, comía, vivía."
+              "text": "yo: hablé, comí, viví."
             },
             {
               "kind": "speech",
-              "text": "tú: hablabas, comías, vivías."
+              "text": "tú: hablaste, comiste, viviste."
             },
             {
               "kind": "speech",
-              "text": "él / ella / usted: hablaba, comía, vivía."
+              "text": "él / ella / usted: habló, comió, vivió."
             },
             {
               "kind": "speech",
-              "text": "The three special rows:"
+              "text": "Strong rows:"
             },
             {
               "kind": "speech",
-              "text": "yo: era, iba, veía."
+              "text": "yo: tuve, hice, estuve."
             },
             {
               "kind": "speech",
-              "text": "tú: eras, ibas, veías."
+              "text": "tú: tuviste, hiciste, estuviste."
             },
             {
               "kind": "speech",
-              "text": "él / ella / usted: era, iba, veía."
+              "text": "él / ella / usted: tuvo, hizo, estuvo."
             },
             {
               "kind": "speech",
-              "text": "The first and third forms match in every learned row. Comer and vivir share -ía, -ías, -ía. Ver keeps ve- before that material. Plural persons remain outside this checkpoint."
+              "text": "The -er and -ir rows share -í, -iste, -ió. The three strong rows share -e, -iste, -o, but their stems must be learned: tuv-, hic-/hiz-, estuv-. Plural persons, more strong verbs, and new time or setting vocabulary remain outside this checkpoint."
             }
           ]
         },
         {
           "index": 2,
           "type": "grammar",
-          "title": "Grammar Lens: one scene, two frames",
+          "title": "Grammar Lens: let spelling show the stress",
           "segments": [
             {
               "kind": "speech",
-              "text": "Hablé español. — completed event. Hablaba español. — open, background, or habitual speaking."
+              "text": "Regular comí, comió, viví, vivió carry written accents for final stress."
             },
             {
               "kind": "speech",
-              "text": "Viví en Madrid. — completed stretch. Vivía en Madrid. — we stand inside that past stretch."
+              "text": "Strong tuve, tuvo, hice, hizo, estuve, estuvo carry no written accents; stress remains in the strong stem."
             },
             {
               "kind": "speech",
-              "text": "Fui a Madrid. — completed trip. Iba a Madrid. — motion was in progress or habitual."
-            },
-            {
-              "kind": "speech",
-              "text": "The tense does not mechanically report how long something lasted. It frames the past from a different viewpoint."
+              "text": "Comiste and viviste need no accent because their ordinary stress is already next to last."
             }
           ]
         },
@@ -112,7 +108,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "-aba continues the Latin -ābam family. -ía continues material from the -ēbam family after several Romance changes. Era continues eram; iba continues ībam from īre; and veía keeps the ve- shape also visible in Old Spanish veer. These are historical bridges, not recipes for generating unlearned forms."
+              "text": "The regular -er/-ir endings continue Latin perfect material reshaped across Romance. Tuve and hice continue older strong-perfect histories, also reshaped rather than copied letter for letter. Estuve shows especially clear analogical remodeling beside the -uv- family of tuve."
             }
           ]
         },
@@ -130,170 +126,190 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“hablaba, comía, vivía”",
+              "instruction": "“hablé, comí, viví”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “hablaba, comía, vivía”]"
+              "source": "[YOU SAY: “hablé, comí, viví”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“era, iba, veía”",
+              "instruction": "“tuve, hice, estuve”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “era, iba, veía”]"
+              "source": "[YOU SAY: “tuve, hice, estuve”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“Hablé / hablaba, viví / vivía, fui / iba”",
+              "instruction": "“Hice café. Viví en Madrid. Estuve bien.”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “Hablé / hablaba · viví / vivía · fui / iba”]"
+              "source": "[YOU SAY: “Hice café. Viví en Madrid. Estuve bien.”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“comí and comió have accents; tuve and tuvo do not”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “comí and comió have accents; tuve and tuvo do not”]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C16-practice-regular-yo-forms",
-              "prompt": "Give the imperfect yo forms of hablar, comer, and vivir, in that order.",
+              "id": "ES-C15-practice-regular-yo-forms",
+              "prompt": "Give the learned yo past forms of hablar, comer, and vivir, in that order.",
               "assesses": [
-                "ES-GRAMMAR-AR-IMPERFECT-SINGULAR",
-                "ES-GRAMMAR-ER-IMPERFECT-SINGULAR",
-                "ES-GRAMMAR-IR-IMPERFECT-SINGULAR"
+                "ES-GRAMMAR-AR-PRETERITE-SINGULAR",
+                "ES-GRAMMAR-ER-PRETERITE-SINGULAR",
+                "ES-GRAMMAR-IR-PRETERITE-SINGULAR",
+                "ES-GRAMMAR-ER-IR-PRETERITE-CONVERGENCE",
+                "ES-LEX-HABLAR",
+                "ES-LEX-COMER",
+                "ES-LEX-VIVIR"
               ],
               "responseSeconds": 9,
               "acceptedResponses": [
-                "hablaba, comía, vivía",
-                "hablaba comía vivía",
-                "hablaba / comía / vivía"
+                "hablé, comí, viví",
+                "hablé comí viví",
+                "hablé / comí / viví"
               ],
               "feedback": {
-                "correct": "Right: hablaba, comía, vivía.",
-                "incorrect": "Retrieve hablaba, then the shared -ía forms comía and vivía."
+                "correct": "Right: hablé, comí, viví.",
+                "incorrect": "Retrieve the three regular yo forms: hablé, comí, viví."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C16-practice-short-yo-forms",
-              "prompt": "Give the imperfect yo forms of ser, ir, and ver, in that order.",
+              "id": "ES-C15-practice-strong-yo-forms",
+              "prompt": "Give the learned yo past forms of tener, hacer, and estar, in that order.",
               "assesses": [
-                "ES-GRAMMAR-SER-IMPERFECT-SINGULAR",
-                "ES-GRAMMAR-IR-VERB-IMPERFECT-SINGULAR",
-                "ES-GRAMMAR-VER-IMPERFECT-SINGULAR"
+                "ES-GRAMMAR-STRONG-PRETERITE-SINGULAR-PATTERN",
+                "ES-GRAMMAR-TENER-PRETERITE-SINGULAR",
+                "ES-GRAMMAR-HACER-PRETERITE-SINGULAR",
+                "ES-GRAMMAR-ESTAR-PRETERITE-SINGULAR",
+                "ES-LEX-TENER",
+                "ES-LEX-HACER",
+                "ES-LEX-ESTAR"
               ],
               "responseSeconds": 9,
               "acceptedResponses": [
-                "era, iba, veía",
-                "era iba veía",
-                "era / iba / veía"
+                "tuve, hice, estuve",
+                "tuve hice estuve",
+                "tuve / hice / estuve"
               ],
               "feedback": {
-                "correct": "Right: era, iba, veía.",
-                "incorrect": "Retrieve the three learned rows: era, iba, veía."
+                "correct": "Right: tuve, hice, estuve.",
+                "incorrect": "Retrieve the three strong yo forms: tuve, hice, estuve."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C16-practice-hablaba-espanol",
-              "prompt": "Say 'I was speaking Spanish' in Spanish.",
+              "id": "ES-C15-practice-hice-cafe",
+              "prompt": "Say 'I made coffee' in Spanish.",
               "assesses": [
-                "ES-GRAMMAR-IMPERFECT-ONGOING-HABITUAL",
-                "ES-GRAMMAR-AR-IMPERFECT-SINGULAR",
-                "ES-LEX-HABLAR"
+                "ES-GRAMMAR-HACER-PRETERITE-SINGULAR",
+                "ES-LEX-HACER",
+                "ES-LEX-CAFE"
               ],
               "responseSeconds": 7,
               "acceptedResponses": [
-                "hablaba español.",
-                "hablaba español"
+                "hice café.",
+                "hice café"
               ],
               "feedback": {
-                "correct": "Right: Hablaba español.",
-                "incorrect": "Use imperfect hablaba, then known español."
+                "correct": "Right: Hice café.",
+                "incorrect": "Use the strong yo form hice, then known café."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C16-practice-vivia-madrid",
-              "prompt": "Say 'I was living in Madrid' in Spanish.",
+              "id": "ES-C15-practice-vivi-madrid",
+              "prompt": "Say 'I lived in Madrid' in Spanish.",
               "assesses": [
-                "ES-GRAMMAR-IR-IMPERFECT-SINGULAR",
+                "ES-GRAMMAR-IR-PRETERITE-SINGULAR",
+                "ES-ORTHOGRAPHY-ER-IR-PRETERITE-FINAL-STRESS",
                 "ES-LEX-VIVIR",
                 "ES-LEX-EN"
               ],
               "responseSeconds": 7,
               "acceptedResponses": [
-                "vivía en madrid.",
-                "vivía en madrid"
+                "viví en madrid.",
+                "viví en madrid"
               ],
               "feedback": {
-                "correct": "Right: Vivía en Madrid.",
-                "incorrect": "Use imperfect vivía, then known en Madrid."
+                "correct": "Right: Viví en Madrid.",
+                "incorrect": "Use accented viví, then known en Madrid."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C16-practice-iba-madrid",
-              "prompt": "Say 'I was going to Madrid' in Spanish.",
+              "id": "ES-C15-practice-estuve-bien",
+              "prompt": "Say 'I was well' as a completed event in Spanish.",
               "assesses": [
-                "ES-GRAMMAR-IR-VERB-IMPERFECT-SINGULAR",
-                "ES-LEX-IR",
-                "ES-LEX-A"
+                "ES-GRAMMAR-ESTAR-PRETERITE-SINGULAR",
+                "ES-LEX-ESTAR",
+                "ES-LEX-BIEN"
               ],
               "responseSeconds": 7,
               "acceptedResponses": [
-                "iba a madrid.",
-                "iba a madrid"
+                "estuve bien.",
+                "estuve bien"
               ],
               "feedback": {
-                "correct": "Right: Iba a Madrid.",
-                "incorrect": "Use imperfect iba, then known a Madrid."
+                "correct": "Right: Estuve bien.",
+                "incorrect": "Use the strong yo form estuve, then known bien."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C16-practice-comi-comia",
-              "prompt": "Choose the open past: comí or comía.",
+              "id": "ES-C15-practice-accent-contrast",
+              "prompt": "Which pair carries written accents: comí/comió or tuve/tuvo?",
               "assesses": [
+                "ES-ORTHOGRAPHY-ER-IR-PRETERITE-FINAL-STRESS",
                 "ES-GRAMMAR-ER-PRETERITE-SINGULAR",
-                "ES-GRAMMAR-ER-IMPERFECT-SINGULAR",
-                "ES-GRAMMAR-IMPERFECT-ONGOING-HABITUAL"
+                "ES-GRAMMAR-STRONG-PRETERITE-SINGULAR-PATTERN"
               ],
-              "responseSeconds": 6,
+              "responseSeconds": 7,
               "acceptedResponses": [
-                "comía"
+                "comí and comió",
+                "comí comió",
+                "comí/comió",
+                "comí y comió"
               ],
               "feedback": {
-                "correct": "Right: comía leaves the eating open or habitual.",
-                "incorrect": "Comí closes the event; comía leaves it open."
+                "correct": "Right: comí and comió mark final stress; tuve and tuvo do not.",
+                "incorrect": "The regular final-stressed pair carries the marks: comí and comió."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C16-practice-history-match",
-              "prompt": "Match the three forms to their historical bridges: era, iba, veía — eram, ībam, veer.",
+              "id": "ES-C15-practice-history-match",
+              "prompt": "Which learned form is especially described as analogically remodeled beside tuve: comí, hice, or estuve?",
               "assesses": [
-                "ES-ETYMON-ERA",
-                "ES-ETYMON-IBA",
-                "ES-ETYMON-VER-VIDERE"
+                "ES-HISTORY-ER-IR-PRETERITE-LATIN-PERFECT",
+                "ES-ETYMON-TUVE",
+                "ES-ETYMON-HICE",
+                "ES-ETYMON-ESTUVE-ANALOGY"
               ],
-              "responseSeconds": 10,
+              "responseSeconds": 7,
               "acceptedResponses": [
-                "era—eram; iba—ībam; veía—veer",
-                "era eram iba ībam veía veer",
-                "era-eram, iba-ībam, veía-veer"
+                "estuve"
               ],
               "feedback": {
-                "correct": "Right: era—eram, iba—ībam, veía—veer.",
-                "incorrect": "Pair the visible shapes: era—eram, iba—ībam, veía—veer."
+                "correct": "Right: estuve was analogically remodeled beside the -uv- strong family.",
+                "incorrect": "Look for the form sharing -uv- with tuve: estuve."
               }
             }
           ]
@@ -311,26 +327,26 @@
             },
             {
               "kind": "speech",
-              "text": "Give the six yo forms. (Hablaba, comía, vivía, era, iba, veía.) Which two regular classes share a row? (-er and -ir.) What is the core contrast? (The preterite presents a completed event; the imperfect leaves past action open, habitual, in progress, or in the background.) Chapter 17 can now build on -ía without borrowing a plural form here."
+              "text": "Give the regular comer and vivir sets. (Comí, comiste, comió; viví, viviste, vivió.) Give the three strong sets. (Tuve, tuviste, tuvo; hice, hiciste, hizo; estuve, estuviste, estuvo.) Which rows share endings? (-er/-ir share one regular set; the strong rows share another.) The next chapter can add a new past contrast without borrowing any plural form here."
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C16-sintesis-imperfecto",
-      "sequence": 1309,
-      "title": "Synthesis — three exceptions, and no others",
+      "id": "ES-C15-sintesis-preterito",
+      "sequence": 1308,
+      "title": "Synthesis — you can hear which past it is",
       "headword": "(synthesis)",
       "romanization": "(synthesis)",
-      "gloss": "synthesis — the kindest tense in Spanish, and the three verbs that break it",
+      "gloss": "synthesis — two pasts with two histories, and you can hear which is which",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0b4a6a38c207833f",
+      "sourceHash": "fnv1a64:a16ae6743d5d2ae5",
       "notice": null,
       "blocks": [
         {
@@ -346,49 +362,57 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing new in this chapter. Say hablaba, then comía."
+              "text": "Nothing new in this chapter. Say comí, then tuve."
             }
           ]
         },
         {
           "index": 1,
-          "type": "notice",
-          "title": "What you've built",
+          "type": "grammar",
+          "title": "Grammar Lens: the stress tells you everything",
           "segments": [
             {
               "kind": "speech",
-              "text": "Here is the fact that no single lesson of this chapter could give you, and it is worth more than any of them."
+              "text": "Say those two again and listen to where your voice lifts."
             },
             {
               "kind": "speech",
-              "text": "The imperfect has exactly three irregular verbs in the entire language. Ser, ir, ver. That is the complete list — not \"the common ones\", not \"to start with\". Three."
+              "text": "comí — the stress lands on the ending. tuve — the stress lands on the stem."
             },
             {
               "kind": "speech",
-              "text": "Every other Spanish verb, without exception, takes -aba or -ía and behaves. After the preterite, which has a strong stem for what feels like every verb worth using, this is a tense that simply lets you get on with it."
+              "text": "That is not a detail. It is the whole difference between the two kinds of past in this chapter, and it is audible before you know anything else about the verb."
             },
             {
               "kind": "speech",
-              "text": "So the honest instruction for the imperfect is short: learn era, iba and veía, and stop worrying."
+              "text": "Endings stressed becomes the regular preterite. It needs a written accent, because Spanish marks a stressed final vowel: comí, viví."
+            },
+            {
+              "kind": "speech",
+              "text": "Stem stressed becomes a strong preterite. It needs no accent at all: tuve, hice, estuve."
+            },
+            {
+              "kind": "speech",
+              "text": "So the accent is not extra spelling to remember. It is the stress, written down. If a preterite has no accent, the stress moved back onto the stem, and you are looking at one of the strong ones."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
+          "type": "notice",
+          "title": "What you've built",
           "segments": [
             {
               "kind": "speech",
-              "text": "And the three are not random. They are the most used verbs in the language — to be, to go, to see — worn straight through from Latin erat and ibat without ever being tidied up."
+              "text": "The two kinds have two histories."
             },
             {
               "kind": "speech",
-              "text": "That is how irregularity works everywhere: a form survives unchanged because it is said constantly, and speakers never have to reach for a rule to rebuild it. Rare verbs get regularised precisely because nobody remembers them well enough to keep the odd shape alive."
+              "text": "The regular preterite is Spanish doing what Spanish does: one set of endings, and — as in the present and the imperfect — -er and -ir agreeing with each other rather than going separate ways."
             },
             {
               "kind": "speech",
-              "text": "The exceptions are the words you use most. That is not bad luck — it is the reason they are exceptions."
+              "text": "The strong preterites are older. They are Latin's own perfect, carried through with the stress where Latin had put it, on verbs used too heavily ever to be rebuilt. Which is the same reason the imperfect has only three irregulars: the words people say constantly are the ones that keep their odd shapes."
             }
           ]
         },
@@ -406,20 +430,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "era, iba, veía — the whole irregular inventory, in one breath",
+              "instruction": "comí, viví — and feel the lift on the last syllable",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *era*, *iba*, *veía* — the whole irregular inventory, in one breath]"
+              "source": "[YOU SAY: *comí*, *viví* — and feel the lift on the last syllable]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "hablaba, comía, vivía — and notice nothing surprises you",
+              "instruction": "tuve, hice, estuve — and feel it move back",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *hablaba*, *comía*, *vivía* — and notice nothing surprises you]"
+              "source": "[YOU SAY: *tuve*, *hice*, *estuve* — and feel it move back]"
             },
             {
               "kind": "repeat",
@@ -427,65 +451,67 @@
               "source": "[REPEAT x2]"
             },
             {
+              "kind": "speech",
+              "text": "Until you can place a preterite by ear before you place it by rule."
+            },
+            {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C16-sintesis-imperfecto-count",
-              "prompt": "How many irregular verbs does the imperfect have in the whole language?",
+              "id": "ES-C15-sintesis-preterito-stress",
+              "prompt": "A preterite with no written accent. Where is the stress, and which kind is it?",
               "assesses": [
-                "ES-GRAMMAR-SER-IMPERFECT-SINGULAR"
+                "ES-GRAMMAR-STRONG-PRETERITE-SINGULAR-PATTERN"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "on the stem, a strong preterite",
+                "stem, strong",
+                "on the stem",
+                "strong preterite"
+              ],
+              "feedback": {
+                "correct": "Yes — no accent means the stress moved back onto the stem.",
+                "incorrect": "On the stem, which makes it a strong preterite."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C15-sintesis-preterito-accent",
+              "prompt": "Why does comi carry an accent when tuve does not?",
+              "assesses": [
+                "ES-ORTHOGRAPHY-ER-IR-PRETERITE-FINAL-STRESS"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "the stress is on its final vowel",
+                "because the stress is on the ending",
+                "stressed final vowel",
+                "the ending is stressed"
+              ],
+              "feedback": {
+                "correct": "Right — the accent is the stress, written down.",
+                "incorrect": "Because comi is stressed on its final vowel and tuve is not."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C15-sintesis-preterito-families",
+              "prompt": "In the regular preterite, do -er and -ir take the same endings?",
+              "assesses": [
+                "ES-GRAMMAR-ER-IR-PRETERITE-CONVERGENCE"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "three",
-                "3",
-                "tres",
-                "only three"
+                "yes",
+                "yes, the same",
+                "they agree",
+                "identical"
               ],
               "feedback": {
-                "correct": "Three, and that is the complete list.",
-                "incorrect": "Three: ser, ir, ver."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C16-sintesis-imperfecto-which",
-              "prompt": "Name them.",
-              "assesses": [
-                "ES-GRAMMAR-IR-VERB-IMPERFECT-SINGULAR",
-                "ES-GRAMMAR-VER-IMPERFECT-SINGULAR"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "ser, ir, ver",
-                "era, iba, veia",
-                "ser ir ver",
-                "to be, to go, to see"
-              ],
-              "feedback": {
-                "correct": "Yes — era, iba, veia.",
-                "incorrect": "ser, ir and ver: era, iba, veia."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C16-sintesis-imperfecto-why",
-              "prompt": "Why are those three the irregular ones?",
-              "assesses": [
-                "ES-ETYMON-ERA",
-                "ES-ETYMON-IBA"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "they are the most used verbs, so they were never regularised",
-                "because they are used constantly",
-                "most common verbs",
-                "they were never tidied up"
-              ],
-              "feedback": {
-                "correct": "Right — heavy use preserves an odd shape; rare verbs get regularised.",
-                "incorrect": "Because they are used constantly. Heavy use keeps an old form alive."
+                "correct": "Yes — as in the present and the imperfect.",
+                "incorrect": "They do, exactly as in the present and the imperfect."
               }
             }
           ]
@@ -503,7 +529,7 @@
             },
             {
               "kind": "speech",
-              "text": "How many irregular imperfects are there? (Three — and that is all.) Which verbs? (Ser, ir, ver.) And why those three? (Because they are the ones people say constantly, so the old forms were never worn into a rule.)"
+              "text": "Where does the stress fall in a strong preterite? (On the stem.) What does a missing accent tell you? (That it is one of the strong ones.) And why do the strong ones exist at all? (They are Latin's own perfect, kept intact on verbs used too much to be rebuilt.)"
             }
           ]
         }

@@ -2,25 +2,32 @@
   "version": 1,
   "language": "spanish",
   "chapter": 72,
-  "title": "Me and Te --- The Two People Talking",
-  "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:74dd109ae9c73346",
+  "title": "Review --- All Four Words for The",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:19ddf8eff14ac748",
   "lessons": [
     {
-      "id": "ES-C42-me-objeto",
-      "sequence": 1149,
-      "title": "me quieres — \"you love me\"",
-      "headword": "me quieres",
-      "romanization": "me quieres",
-      "gloss": "me doing its plain job — no new form at all, only a second use for a word you have had since chapter four",
+      "id": "ES-C44-repaso-articulos",
+      "sequence": 1161,
+      "title": "Review — all four words for \"the\"",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "review — the four words for \"the,\" complete at last, and the two plural rules that feed them",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "sight-cue"
       ],
-      "sourceHash": "fnv1a64:496f72daec693f7d",
-      "notice": null,
+      "sourceHash": "fnv1a64:9c0b9df6e4724bce",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -35,57 +42,67 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"my name is.\" (Me llamo.) That me has been in your mouth for more than fifty chapters. This chapter gives it nothing new to look like — only something new to do."
+              "text": "Nothing new here. Before the table: how many words does Spanish have for \"the\"?"
             }
           ]
         },
         {
           "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: the same word, a simpler job",
+          "type": "notice",
+          "title": "What you've built",
           "segments": [
             {
               "kind": "speech",
-              "text": "In me llamo, the me points back at the speaker: I call myself. That is a special use, and it was the one you needed first."
+              "text": "Four. And you have now met every one of them separately, which is why they are allowed to appear together."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "singular",
+                "plural"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "masculine. singular: el libro. plural: los libros.",
+                "feminine. singular: la casa. plural: las casas."
+              ]
             },
             {
               "kind": "speech",
-              "text": "Here is the ordinary one:"
+              "text": "English has one word here and Spanish has four, so it is easy to read this table as three extra things to carry. It is not. It is two questions you were already answering — which gender? and how many? — laid out in a grid."
             },
             {
               "kind": "speech",
-              "text": "Me quieres. — You love me."
-            },
-            {
-              "kind": "speech",
-              "text": "Now me is not pointing back at anybody. It is simply the person the verb lands on — the same job lo does for a book and la does for a meal."
-            },
-            {
-              "kind": "speech",
-              "text": "Lo tengo. — I have it. Me quieres. — You love me."
-            },
-            {
-              "kind": "speech",
-              "text": "Same slot, in front of the verb. Same kind of work. The only difference is that me is a person and lo is a thing, which is a fact about the world rather than a fact about Spanish."
-            },
-            {
-              "kind": "speech",
-              "text": "Notice what this chapter did not ask you to learn: a form. You already had it. Some of the ground you gain in a language is like this — not new material, but an old piece turning out to reach further than you were told."
+              "text": "The first chapter of this book taught the top row. The last two chapters taught the bottom one. Nothing in this table arrived without being built."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
+          "type": "grammar",
+          "title": "Grammar Lens: the two plural rules",
           "segments": [
             {
               "kind": "speech",
-              "text": "Me comes from Latin mē, and Latin got it from something far older. English me is not a translation of it and not a borrowing from it — the two are the same inherited word, sitting in two languages that split thousands of years ago and never bothered to change it."
+              "text": "And underneath the grid, one rule with a repair:"
             },
             {
               "kind": "speech",
-              "text": "Words this short and this used are the ones that survive intact. That is why your very first Spanish pronoun was also the easiest one you will ever meet."
+              "text": "Add -s. If the word ends in a consonant and the -s would be unsayable, add -es instead."
+            },
+            {
+              "kind": "speech",
+              "text": "casa becomes casas, libro becomes libros, comida becomes comidas — vowels, plain -s."
+            },
+            {
+              "kind": "speech",
+              "text": "usted becomes ustedes, español becomes españoles — consonants, -es."
+            },
+            {
+              "kind": "speech",
+              "text": "You held the first half from chapter one and the second half from ustedes without knowing it had a name."
             }
           ]
         },
@@ -103,272 +120,87 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"me llamo\" then \"me quieres\" — the same syllable, two jobs",
+              "instruction": "\"el, la, los, las\" until the order is automatic",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"me llamo\" then \"me quieres\" — the same syllable, two jobs]"
+              "source": "[YOU SAY: \"el, la, los, las\" until the order is automatic]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"lo tengo\" then \"me quieres\" — hear that the slot never moves",
+              "instruction": "\"el libro, los libros, la casa, las casas\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"lo tengo\" then \"me quieres\" — hear that the slot never moves]"
+              "source": "[YOU SAY: \"el libro, los libros, la casa, las casas\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "Until the grid is a reflex rather than a lookup."
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C42-me-objeto-say",
-              "prompt": "Say you love me.",
+              "id": "ES-C44-repaso-articulos-four",
+              "prompt": "Give the four Spanish words for the, in the order masculine singular, feminine singular, masculine plural, feminine plural.",
               "assesses": [
-                "ES-GRAMMAR-ME-DIRECT-OBJECT",
-                "ES-GRAMMAR-QUERER-PRESENT-SINGULAR",
-                "ES-LEX-QUERER"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "me quieres",
-                "tu me quieres"
-              ],
-              "feedback": {
-                "correct": "Yes — same slot, in front of the verb.",
-                "incorrect": "Me quieres. The pronoun leads, exactly as in me llamo."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C42-me-objeto-difference",
-              "prompt": "In me llamo the me points back at the speaker. What is it doing in me quieres?",
-              "assesses": [
-                "ES-GRAMMAR-ME-DIRECT-OBJECT",
-                "ES-LEX-ME"
-              ],
-              "responseSeconds": 12,
-              "acceptedResponses": [
-                "it is the person the verb lands on",
-                "it is the object",
-                "it is who is being loved"
-              ],
-              "feedback": {
-                "correct": "Right — the ordinary job, not the reflexive one.",
-                "incorrect": "It is simply the object: the one on the receiving end."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C42-me-objeto-new",
-              "prompt": "How many new word forms did this lesson ask you to learn?",
-              "assesses": [
-                "ES-GRAMMAR-OBJECT-PRONOUN"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "none",
-                "zero",
-                "0"
-              ],
-              "feedback": {
-                "correct": "None. Only a second job for one you already had.",
-                "incorrect": "None — me was already yours."
-              }
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Say \"you love me.\" (Me quieres.) Where did the pronoun go? (Before the verb, as always.) Next: the answering half of that sentence."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C42-te",
-      "sequence": 1151,
-      "title": "te quiero — \"I love you\"",
-      "headword": "te quiero",
-      "romanization": "te quiero",
-      "gloss": "\"you\" as the object — and the sentence it makes, which is the one people actually need",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:ea4c088349c2b76b",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Say \"you love me.\" (Me quieres.) Now turn it around in your head: what would \"I love you\" need?"
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: the partner of tú",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "te — you, when you are the one it happens to."
-            },
-            {
-              "kind": "speech",
-              "text": "Te quiero. — I love you."
-            },
-            {
-              "kind": "speech",
-              "text": "Tú is for the one doing; te is for the one it lands on. Spanish keeps those apart with two different shapes, the same way it keeps el and lo apart, and the same way English keeps I and me apart."
-            },
-            {
-              "kind": "speech",
-              "text": "Me quieres. — You love me. Te quiero. — I love you."
-            },
-            {
-              "kind": "speech",
-              "text": "Two words each, and a complete exchange. Read them aloud one after the other: the pair is a conversation."
-            },
-            {
-              "kind": "speech",
-              "text": "One thing worth knowing before you use it. Querer means to want, and you have been using it that way for a long time. But querer pointed at a person does not mean wanting them — it means loving them. Quiero un libro is \"I want a book\"; te quiero is \"I love you.\""
-            },
-            {
-              "kind": "speech",
-              "text": "So the sentence is built entirely out of pieces you already had. What is new is not a form — it is that the verb changes its meaning depending on whether its object is a thing or a person."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Te is Latin tē — the object form of tū, which you already have."
-            },
-            {
-              "kind": "speech",
-              "text": "English used to do this exactly. Old English had thou for the doer and thee for the one it happened to — and, this is the striking part, those are the same two words. Tú/te and thou/thee are one ancient pair, inherited twice. English later dropped both and let you cover the two jobs; Spanish kept them apart."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Te quiero\" then \"Me quieres\" — a whole exchange in four words",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Te quiero\" then \"Me quieres\" — a whole exchange in four words]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"tú\" then \"te\", and \"thou\" then \"thee\" — the same split twice",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"tú\" then \"te\", and \"thou\" then \"thee\" — the same split twice]"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C42-te-say",
-              "prompt": "Say I love you.",
-              "assesses": [
-                "ES-GRAMMAR-TE-DIRECT-OBJECT",
-                "ES-LEX-TE-OBJECT",
-                "ES-LEX-TE-QUIERO"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "te quiero",
-                "yo te quiero"
-              ],
-              "feedback": {
-                "correct": "Te quiero — the pronoun first, as always.",
-                "incorrect": "Te quiero. Te is the object partner of tu."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C42-te-meaning",
-              "prompt": "Quiero un libro means I want a book. Why does te quiero not mean I want you?",
-              "assesses": [
-                "ES-LEX-QUERER",
-                "ES-LEX-TE-QUIERO",
-                "ES-LEX-LIBRO"
-              ],
-              "responseSeconds": 12,
-              "acceptedResponses": [
-                "querer aimed at a person means to love",
-                "because the object is a person",
-                "with people it means love"
-              ],
-              "feedback": {
-                "correct": "The object decides which meaning the verb takes.",
-                "incorrect": "Pointed at a person, querer means to love."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C42-te-english",
-              "prompt": "Which old English pair is the same inherited pair as tu and te?",
-              "assesses": [
-                "ES-ETYMON-TE-TU",
-                "ES-LEX-TU"
+                "ES-GRAMMAR-DEFINITE-ARTICLES",
+                "ES-GRAMMAR-DEFINITE-PLURAL-MASCULINE",
+                "ES-GRAMMAR-DEFINITE-PLURAL-FEMININE"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "thou and thee",
-                "thou thee",
-                "thee and thou"
+                "el, la, los, las",
+                "el la los las",
+                "el / la / los / las"
               ],
               "feedback": {
-                "correct": "The very same two words, inherited twice.",
-                "incorrect": "Thou and thee — English kept the split until it dropped both."
+                "correct": "That is the whole set.",
+                "incorrect": "el, la, los, las."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C44-repaso-articulos-grid",
+              "prompt": "Say the books and then the houses.",
+              "assesses": [
+                "ES-GRAMMAR-DEFINITE-PLURAL-MASCULINE",
+                "ES-LEX-LIBRO"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "los libros, las casas",
+                "los libros las casas"
+              ],
+              "feedback": {
+                "correct": "Gender picks the row, number picks the column.",
+                "incorrect": "Los libros, las casas."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C44-repaso-articulos-rule",
+              "prompt": "State the plural rule in one sentence, including what happens after a consonant.",
+              "assesses": [
+                "ES-GRAMMAR-NOUN-PLURAL-ES",
+                "ES-GRAMMAR-NOUN-NUMBER"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "add -s, or -es when the bare s would be unsayable",
+                "-s after a vowel and -es after a consonant"
+              ],
+              "feedback": {
+                "correct": "One rule and a repair.",
+                "incorrect": "Add -s; after a consonant add -es, because the bare -s could not be said."
               }
             }
           ]
@@ -386,7 +218,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"I love you.\" (Te quiero.) And \"you love me.\" (Me quieres.) Which English pair matches tú and te? (Thou and thee.) Next: all four of these in one place, for the first time."
+              "text": "Four articles — say them. (El, la, los, las.) Two questions decide which? (Gender and number.) Next: what happens to a when there is more than one — and the answer is not what you would expect."
             }
           ]
         }

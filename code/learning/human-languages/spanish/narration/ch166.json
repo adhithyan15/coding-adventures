@@ -2,32 +2,25 @@
   "version": 1,
   "language": "spanish",
   "chapter": 166,
-  "title": "Review --- One Arrow",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:72771520c8d97c5d",
+  "title": "Saying Why",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:f355dac7046efc2f",
   "lessons": [
     {
-      "id": "ES-C51-repaso-flecha",
-      "sequence": 2124,
-      "title": "Review — one arrow",
-      "headword": "(review)",
-      "romanization": "(review)",
-      "gloss": "review — one arrow, two directions, and the phrases you already owned lined up under it",
+      "id": "ES-C41-creer",
+      "sequence": 2120,
+      "title": "creer — to put your heart somewhere",
+      "headword": "creer",
+      "romanization": "creer",
+      "gloss": "to believe, to think — putting your heart somewhere, where pensar weighs it up",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2ebb02f805a1ad42",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:3ac089a5427d128c",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -42,69 +35,100 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing new. One question before the table: which way does each preposition point?"
+              "text": "You have pensar — to think, and underneath it pēnsāre, \"to weigh\". Spanish has a second verb for the inside of your head, and it does a different job. Where pensar weighs, this one commits."
             }
           ]
         },
         {
           "index": 1,
-          "type": "notice",
-          "title": "What you've built",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
-              "kind": "table",
-              "headers": [
-                "",
-                "para — toward",
-                "por — through, because"
-              ],
-              "columns": 3,
-              "rowCount": 7,
-              "utterances": [
-                "built from. para — toward: ad, \"toward\". por — through, because: per, \"through\".",
-                "the arrow. para — toward: points at it. por — through, because: comes from it.",
-                "a person. para — toward: para ti — you get it. por — through, because: por ti — you caused it.",
-                "a time. para — toward: para mañana — by then. por — through, because: —.",
-                "thanks. para — toward: —. por — through, because: gracias por — for what caused it.",
-                "asking. para — toward: —. por — through, because: por favor — through a favour.",
-                "asking why. para — toward: —. por — through, because: ¿por qué? — through what?"
-              ]
+              "kind": "speech",
+              "text": "hiatus-ee — the two e's do not merge: creer = kreh-EHR, two beats."
             },
             {
               "kind": "speech",
-              "text": "Look at the right-hand column. Four of those six por entries are phrases you have owned since the opening chapters. This review is not mostly teaching you new Spanish — it is re-filing old Spanish under a heading that explains it."
-            },
-            {
-              "kind": "speech",
-              "text": "That happens more than a course usually admits. A great deal of what looks like new grammar late in a book is a name for something you have been doing correctly and blindly for a long time."
+              "text": "r-tap — a single flick, not the rolled rr."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: what to do when you are unsure",
+          "type": "etymology",
+          "title": "The word, taken apart: creer",
           "segments": [
             {
               "kind": "speech",
-              "text": "You will still hesitate sometimes. Two things help, in this order:"
+              "text": "creer = \"to believe\", and in everyday use \"to think\" in the sense of hold an opinion."
             },
             {
               "kind": "speech",
-              "text": "Ask what the sentence is about. A destination, a deadline, a recipient, a purpose — para. A cause, a route, a swap, a duration — por."
+              "text": "It comes from Latin crēdere, \"to entrust, to believe\" — and crēdere is a compound so old that Latin had already forgotten it was one. It is PIE ḱred-dʰeh₁-: \"to put ḱred-\"."
             },
             {
               "kind": "speech",
-              "text": "If it is genuinely both, it is genuinely both. Lo hago para ti and lo hago por ti are both good Spanish; you are not choosing right from wrong, you are choosing which thing to say."
+              "text": "What is that first half? Traditionally, the heart word — the root of Latin cor, cordis and of English heart. Be honest that the step is disputed: that root normally appears as ḱḗr, never ḱred-. The compound is not in doubt; only what it was built on."
             },
             {
               "kind": "speech",
-              "text": "That second point matters more than it looks. Most por/para anxiety comes from believing every sentence has one correct answer waiting to be found. Plenty of sentences take either, and the choice is the meaning."
+              "text": "Taking the traditional reading:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "from crēdere",
+                "from cor, cordis"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "from crēdere: credit, creed, credo. from cor, cordis: cordial, courage.",
+                "from crēdere: credential, incredible. from cor, cordis: record, accord, discord."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "To record is to bring something back to the cor — for a Roman the seat of memory, not of feeling. To have courage is to have heart."
             }
           ]
         },
         {
           "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: creer que",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Creer almost always drags a que behind it, and then a whole clause:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "Creo que llueve., I think it's raining.",
+                "Creo que hace frío., I think it's cold.",
+                "No creo que llueva., I don't think it's raining."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Look hard at that third row. Creo que llueve — but no creo que llueva. Negating creer flips the clause into the subjunctive from chapter eighteen: stop vouching for something and Spanish stops using the tense that states facts."
+            },
+            {
+              "kind": "speech",
+              "text": "Pienso is the weighing; creo is where it landed. Treat that as a way to feel the difference, not a rule — both take que and a clause, and a speaker may use either. But creo que is the ordinary opening for an opinion."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -117,80 +141,43 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"para ti / por ti\", \"para mañana\", \"gracias por la comida\"",
+              "instruction": "\"creer\" — kreh-EHR, two beats, not one",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"para ti / por ti\", \"para mañana\", \"gracias por la comida\"]"
+              "source": "[YOU SAY: \"creer\" — *kreh-EHR*, two beats, not one]"
             },
             {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Creo que llueve.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Creo que llueve.\"]"
             },
             {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C51-repaso-flecha-two",
-              "prompt": "Give the two directions in one line.",
-              "assesses": [
-                "ES-GRAMMAR-POR-PARA-CONTRAST"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "para points at it, por comes from it",
-                "para toward, por through or because"
-              ],
-              "feedback": {
-                "correct": "One arrow, two directions.",
-                "incorrect": "Para points at the thing; por comes from it."
-              }
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pair — \"pienso\" (I weigh) then \"creo\" (I hold)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pair — \"pienso\" (I weigh) then \"creo\" (I hold)]"
             },
             {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C51-repaso-flecha-old",
-              "prompt": "Name three phrases you already knew that turn out to contain por.",
-              "assesses": [
-                "ES-LEX-POR-FAVOR",
-                "ES-LEX-PORQUE-03",
-                "ES-LEX-GRACIAS"
-              ],
-              "responseSeconds": 12,
-              "acceptedResponses": [
-                "por favor, por que, gracias por",
-                "por favor, porque, gracias por"
-              ],
-              "feedback": {
-                "correct": "Old Spanish, newly explained.",
-                "incorrect": "por favor, ¿por qué?, porque, gracias por — any three."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C51-repaso-flecha-both",
-              "prompt": "A sentence takes either por or para. What should you conclude?",
-              "assesses": [
-                "ES-GRAMMAR-POR-PARA-CONTRAST",
-                "ES-LEX-PARA",
-                "ES-LEX-POR"
-              ],
-              "responseSeconds": 12,
-              "acceptedResponses": [
-                "that it means two different things",
-                "both are correct and the choice is the meaning",
-                "neither is wrong"
-              ],
-              "feedback": {
-                "correct": "Not right versus wrong — which thing you are saying.",
-                "incorrect": "That both are good Spanish and the choice is the meaning."
-              }
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"creer\" then English \"credit, creed, cordial, record\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"creer\" then English \"credit, creed, cordial, record\"]"
             }
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -202,7 +189,557 @@
             },
             {
               "kind": "speech",
-              "text": "Para — which way? (At it.) Por — which way? (From it.) And when a sentence takes either? (Both are right — the choice is the meaning.) Next: the two of them in a conversation, where the choice does real work."
+              "text": "What shape is crēdere, under the surface? (A compound — ḱred-."
+            },
+            {
+              "kind": "speech",
+              "text": "dʰeh₁-, \"to put ḱred-\".) What is the traditional reading of that first half, and why hedge it? (Heart — but the heart root is ḱḗr, never ḱred-, so the step is disputed.) Pensar weighs; what does creer do? (It lands — it holds the opinion the weighing produced.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C41-asi-que",
+      "sequence": 2130,
+      "title": "así que — \"so\", and a word you have been saying since yes",
+      "headword": "así que",
+      "romanization": "así que",
+      "gloss": "thus, in that way — and with que after it, \"so\"; built on the same sīc that gave you sí",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7124d40e716a7120",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Porque runs from a claim back to its reason. This runs the other way — from the reason forward to what follows. Same two facts, opposite arrow, and you need both to explain anything."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "s-clear — a clean hiss in así, never a z buzz."
+            },
+            {
+              "kind": "speech",
+              "text": "k-hard — qu is a plain k; the u is silent."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart: así que",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "así = \"so, thus, in that way\". así que = \"so, and therefore\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Así is Latin sīc, \"thus\" — with an a- that Spanish added later, the same one it put on apenas and afuera. And you have met sīc before: it is the whole of Spanish sí, \"yes\". Latin sīc meant \"thus, in this way\", and saying thus in answer to a question is how a language gets a word for yes."
+            },
+            {
+              "kind": "speech",
+              "text": "So sí and así are the same Latin adverb, one bare and one with the a- attached. English borrowed it raw and never translated it: sic, the mark an editor puts after a quoted mistake — \"thus it stood\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: the two arrows",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The pair is worth drilling as a pair, because they carry the same two facts in opposite orders:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "No corro porque llueve., I'm not running because it's raining.",
+                "Llueve, así que no corro., It's raining, so I'm not running."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Porque points backwards to the cause. Así que points forwards to the consequence. Which you reach for depends only on which fact you want to say first — and that is a choice about emphasis, not about grammar."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "Hace frío, así que bebo café., It's cold, so I drink coffee.",
+                "Creo que llueve, así que leo., I think it's raining, so I read."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"sí\" then \"así\" — the same Latin word, one with an a- on the front",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"sí\" then \"así\" — the same Latin word, one with an *a-* on the front]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Llueve, así que no corro.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Llueve, así que no corro.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same two facts the other way — \"No corro porque llueve.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same two facts the other way — \"No corro porque llueve.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Creo que hace frío, así que bebo café.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Creo que hace frío, así que bebo café.\"]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which Latin adverb is hiding in both sí and así? (Sīc, \"thus\".) Which way does porque point, and which way así que? (Porque backwards to the cause; así que forwards to the consequence.) What does an editor's sic mean? (Thus it stood — the same word, borrowed whole.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C41-deber",
+      "sequence": 2140,
+      "title": "deber — to owe, and therefore to ought",
+      "headword": "deber",
+      "romanization": "deber",
+      "gloss": "should, ought to — and to owe, because the word is literally \"to have something from someone\"",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d3a8be1645584261",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can now say what you think and what follows from it. This verb adds the third move in any explanation: what somebody ought to do about it. It gets there from an unexpected direction — money."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "b-soft — between vowels the b softens: deber = deh-BEHR."
+            },
+            {
+              "kind": "speech",
+              "text": "r-tap — one flick at the end, not a roll."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart: deber",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "deber does two jobs: \"to owe\", and \"ought to, should\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Latin dēbēre explains both, because it is a compound: dē- (\"from\") plus habēre (\"to have\"). To dēbēre something is to have it from someone — which is exactly what owing is. You are holding what is theirs."
+            },
+            {
+              "kind": "speech",
+              "text": "English helped itself to this verb four times over — three of them from the participle dēbitum rather than the verb — and the spellings record each route:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "English",
+                "how it came"
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "English: debt. how it came: through French, then re-spelled to show the Latin b.",
+                "English: debit. how it came: straight from Latin bookkeeping.",
+                "English: due. how it came: through French deü, the b worn away.",
+                "English: duty. how it came: built on due."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "One more came the long way round, and not by borrowing. French turned dēbēre into devoir, \"duty\". English translated the phrase mettre en devoir — to put oneself under an obligation — half-way, as put in dever, and the last two words later fused into endeavour."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: debo + infinitive",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Deber is regular, and for \"ought to\" it takes a bare infinitive straight after it — no que, no preposition:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "person",
+                "form"
+              ],
+              "columns": 2,
+              "rowCount": 5,
+              "utterances": [
+                "person: yo. form: debo.",
+                "person: tú. form: debes.",
+                "person: él/ella/usted. form: debe.",
+                "person: nosotros. form: debemos.",
+                "person: ellos/ustedes. form: deben."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Debo estudiar. — I ought to study. Llueve, así que debo leer. — It's raining, so I ought to read."
+            },
+            {
+              "kind": "speech",
+              "text": "The obligation is softer than a command and firmer than a wish, which is the register an explanation usually wants."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"debo, debes, debe, debemos, deben\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"debo, debes, debe, debemos, deben\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Debo trabajar.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Debo trabajar.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Hace frío, así que debo beber café.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Hace frío, así que debo beber café.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Creo que llueve, así que debo leer.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Creo que llueve, así que debo leer.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"deber\" then English \"debt, debit, due, duty\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"deber\" then English \"debt, debit, due, duty\"]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What two Latin pieces build dēbēre, and what do they say together? (Dē- + habēre — \"to have from someone\", which is owing.) Name two of the four English words it became. (Any of debt, debit, due, duty.) What follows debo — a que, or a bare infinitive? (A bare infinitive: debo estudiar.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C41-explicar",
+      "sequence": 2150,
+      "title": "explicar — to unfold",
+      "headword": "explicar",
+      "romanization": "explicar",
+      "gloss": "to explain — literally to unfold, and the verb that names what this whole chapter has been building",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:919db019f815a32e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three pieces are in your hands: creo que to state an opinion, así que to run forward to what follows, debo to say what ought to happen. This lesson puts all three in a row, under the verb that names the act."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "k-hard — c before a is a hard k: explicar = eks-plee-KAR."
+            },
+            {
+              "kind": "speech",
+              "text": "l-clear — a clean l in the pl, no vowel slipped in between."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart: explicar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "explicar = Latin explicāre: ex- (\"out\") + plicāre (\"to fold\"). To explain is to unfold — something was folded shut, and you open it."
+            },
+            {
+              "kind": "speech",
+              "text": "Plicāre is one of the great suppliers of English. Some came from Latin directly, some through French, and the sound changed on the way:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "straight from Latin",
+                "through French"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "straight from Latin: explicate. through French: explicit, application.",
+                "straight from Latin: complicated (com- + fold). through French: employ, deploy.",
+                "straight from Latin: duplicate. through French: display — a doublet of deploy."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "And simple is sim-plex — \"one-fold\". Something simple has been folded only once. Something complicated has been folded together, over and over, which is why it needs unfolding. The metaphor is consistent all the way down, and Spanish keeps it in the plainest verb of the set."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: the shape of an explanation",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Explicar is regular — it takes the plain -ar endings of hablar, with no stem change at all: explico, explicas, explica, explicamos, explican. (Contar, which you met earlier, breaks its o to ue; this one does not, and there is nothing to remember.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Here is a whole explanation, with every piece something this book has taught:"
+            },
+            {
+              "kind": "speech",
+              "text": "— ¿Por qué no corres? — Creo que llueve. No corro porque llueve, así que leo. Debo estudiar. — Why aren't you running? — I think it's raining. I'm not running because it's raining, so I read. I ought to study."
+            },
+            {
+              "kind": "speech",
+              "text": "Four moves, four words: an opinion (creo que), a cause (porque), a consequence (así que), an obligation (debo). That is what an explanation is made of, and you can now build one in either direction — cause first or claim first — because porque and así que let you choose."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"explico, explicas, explica, explicamos, explican\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"explico, explicas, explica, explicamos, explican\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Explico bien.\" — I explain well.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Explico bien.\" — I explain well.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the four moves — \"Creo que llueve, porque hace frío, así que debo leer.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the four moves — \"Creo que llueve, porque hace frío, así que debo leer.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"explicar\" then English \"explicit, complicated, simple, display\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"explicar\" then English \"explicit, complicated, simple, display\"]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does explicāre literally say? (To fold out — ex- + plicāre.) What is simple, folded? (Once — sim-plex; complicated is folded together, again and again.) Name the four moves of an explanation and the word for each. (Opinion creo que, cause porque, consequence así que, obligation debo.)"
             }
           ]
         }

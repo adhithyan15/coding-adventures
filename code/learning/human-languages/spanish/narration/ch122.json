@@ -2,25 +2,32 @@
   "version": 1,
   "language": "spanish",
   "chapter": 122,
-  "title": "Review --- Four Boxes",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:00f12b59cc3a8559",
+  "title": "Habla --- Telling Somebody To Do Something",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:be5f03fa36fb4455",
   "lessons": [
     {
-      "id": "ES-C50-repaso-mandatos",
-      "sequence": 1431,
-      "title": "Review — four boxes",
-      "headword": "(review)",
-      "romanization": "(review)",
-      "gloss": "review — four boxes, one of which is free and three of which you already had",
+      "id": "ES-C50-habla",
+      "sequence": 1457,
+      "title": "habla — telling somebody to do something",
+      "headword": "habla · come · vive",
+      "romanization": "habla · come · vive",
+      "gloss": "telling somebody to do something — and the form is one you have had since your seventh chapter",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "sight-cue"
       ],
-      "sourceHash": "fnv1a64:0229593641ff51b5",
-      "notice": null,
+      "sourceHash": "fnv1a64:30a4c10a352f370e",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -35,63 +42,64 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing new. Before the grid: which single box does not use the subjunctive?"
+              "text": "Say \"he speaks.\" (Habla.) Hold that word. You are about to be told it does a second job you have never been shown."
             }
           ]
         },
         {
           "index": 1,
-          "type": "notice",
-          "title": "What you've built",
+          "type": "grammar",
+          "title": "Grammar Lens: you already have it",
           "segments": [
+            {
+              "kind": "speech",
+              "text": "To tell somebody you address as tú to do something, use the he/she form of the present."
+            },
+            {
+              "kind": "speech",
+              "text": "Habla. — Speak. Come. — Eat. Vive. — Live."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the whole rule, and it costs you nothing. Habla was already in your mouth as \"he speaks\"; the same two syllables, said to somebody, are an order."
+            },
             {
               "kind": "table",
               "headers": [
-                "",
-                "tú",
-                "usted"
+                "verb",
+                "he/she does",
+                "you, do it"
               ],
               "columns": 3,
-              "rowCount": 2,
+              "rowCount": 3,
               "utterances": [
-                "do it. tú: habla, come. usted: hable, coma.",
-                "don't. tú: no hables, no comas. usted: no hable, no coma."
+                "verb: hablar. he/she does: habla. you, do it: habla.",
+                "verb: comer. he/she does: come. you, do it: come.",
+                "verb: vivir. he/she does: vive. you, do it: vive."
               ]
             },
             {
               "kind": "speech",
-              "text": "Three of the four boxes are the subjunctive, which you built chapters ago for wanting and hoping. The fourth is the ordinary he/she present, which you built long before that."
+              "text": "The column repeats. That is not an oversight in the table."
             },
             {
               "kind": "speech",
-              "text": "Now count what this rung actually cost you. A whole grammatical mood — the one every phrasebook opens with — and the only genuinely new material in it was eight one-syllable words: di, haz, ve, pon, ten, sal, sé, ven."
-            },
-            {
-              "kind": "speech",
-              "text": "Everything else was a form you already owned, doing one more job."
+              "text": "Spanish does this often enough that it is worth naming as a habit: rather than inventing a new form for every job, it reuses one and lets context sort it out. Habla said about somebody is a statement; habla said to somebody is a command, and nobody has ever confused the two."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: why the odd box is the odd one",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "It is worth asking why the informal positive command is the exception."
+              "text": "The name for this form is the imperative, from Latin imperāre, \"to command.\""
             },
             {
               "kind": "speech",
-              "text": "Because it is the one that is said most. Come, ven, habla, ten — said to children, friends, dogs, and across kitchens, thousands of times a day for two thousand years. That is the box under the most pressure, and heavy use keeps old short forms alive rather than letting them be replaced by tidier ones."
-            },
-            {
-              "kind": "speech",
-              "text": "The same pressure explains the eight irregulars, which live in exactly that box and nowhere else. There are no irregular negative commands to learn, because negatives are said less and had time to be regularised."
-            },
-            {
-              "kind": "speech",
-              "text": "The messiest corner of this grid is the most-used corner. That has been true of every irregularity in this book."
+              "text": "That imper- is a word you already know in English clothes. An emperor is literally one who commands; an empire is the thing he commands. The grammar term and the political ones are the same root, which is a fair description of what the form does: it is the sentence shape that expects to be obeyed."
             }
           ]
         },
@@ -109,83 +117,77 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the four boxes for hablar, then for comer",
+              "instruction": "\"habla\" as a statement, then \"¡Habla!\" as an order — same word, different job",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the four boxes for *hablar*, then for *comer*]"
+              "source": "[YOU SAY: \"habla\" as a statement, then \"¡Habla!\" as an order — same word, different job]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the eight irregulars once more",
+              "instruction": "\"come\", \"vive\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the eight irregulars once more]"
-            },
-            {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
+              "source": "[YOU SAY: \"come\", \"vive\"]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C50-repaso-mandatos-grid",
-              "prompt": "Give all four command forms of comer: tu do it, tu don't, usted do it, usted don't.",
+              "id": "ES-C50-habla-say",
+              "prompt": "Tell somebody you call tu to eat.",
               "assesses": [
                 "ES-GRAMMAR-COMMAND-TU-AFFIRMATIVE",
-                "ES-GRAMMAR-COMMAND-NEGATIVE",
-                "ES-GRAMMAR-COMMAND-USTED",
                 "ES-LEX-COMER"
               ],
-              "responseSeconds": 14,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "come, no comas, coma, no coma",
-                "come no comas coma no coma"
+                "come",
+                "¡come!",
+                "come!"
               ],
               "feedback": {
-                "correct": "One ordinary form and three subjunctives.",
-                "incorrect": "come, no comas, coma, no coma."
+                "correct": "Same word as he eats.",
+                "incorrect": "Come — the he/she form, said to somebody."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C50-repaso-mandatos-cost",
-              "prompt": "What was the only genuinely new material in this whole rung?",
+              "id": "ES-C50-habla-rule",
+              "prompt": "Which form do you use to give a tu command?",
               "assesses": [
-                "ES-GRAMMAR-COMMAND-IRREGULAR-EIGHT"
+                "ES-GRAMMAR-COMMAND-TU-AFFIRMATIVE",
+                "ES-GRAMMAR-AR-PRESENT-3SG"
               ],
-              "responseSeconds": 12,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "the eight irregular tu commands",
-                "eight one-syllable words",
-                "di haz ve pon ten sal se ven"
+                "the he/she present form",
+                "the third person singular",
+                "the el form"
               ],
               "feedback": {
-                "correct": "Everything else was a form you already had.",
-                "incorrect": "The eight one-syllable irregulars. Every other box reused a form you held."
+                "correct": "No new form at all.",
+                "incorrect": "The he/she form of the present."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C50-repaso-mandatos-odd",
-              "prompt": "Why is the informal positive command the one box that keeps old irregular forms?",
+              "id": "ES-C50-habla-emperor",
+              "prompt": "Which two English words share a root with imperative?",
               "assesses": [
-                "ES-GRAMMAR-COMMAND-TU-AFFIRMATIVE"
+                "ES-ETYMON-IMPERARE"
               ],
-              "responseSeconds": 14,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "it is said the most",
-                "because it is the most used",
-                "heavy use keeps old forms alive"
+                "emperor and empire",
+                "emperor, empire"
               ],
               "feedback": {
-                "correct": "The messiest corner is always the most-used corner.",
-                "incorrect": "It is said most often, and heavy use keeps short old forms alive."
+                "correct": "One who commands, and the thing commanded.",
+                "incorrect": "Emperor and empire — both from imperare, to command."
               }
             }
           ]
@@ -203,7 +205,7 @@
             },
             {
               "kind": "speech",
-              "text": "How many of the four boxes use the subjunctive? (Three.) What did this rung genuinely cost? (Eight one-syllable words.) Next: what a command sounds like to the person receiving it."
+              "text": "Tell somebody to speak. (Habla.) Which form is that? (The he/she present — nothing new.) What does imperāre mean? (To command — as in emperor.) Next: eight verbs that refused, and every one of them is a single syllable."
             }
           ]
         }

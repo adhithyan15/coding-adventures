@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C13-repaso-yo-go
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1106
-chapter: 59
+sequence: 1136
+chapter: 63
 type: practice-mix
 headword: (review)
 gloss: review — the -go club is complete, and it was never a club to begin with

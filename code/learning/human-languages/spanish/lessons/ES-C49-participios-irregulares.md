@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C49-participios-irregulares
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 1318
-chapter: 106
+sequence: 1348
+chapter: 110
 type: grammar
 headword: hecho · dicho · visto · puesto
 gloss: four participles that refused the ending — and they are the four verbs you would have guessed

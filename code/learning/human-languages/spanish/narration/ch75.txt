@@ -1,41 +1,39 @@
-Spanish, chapter 75: Nos --- Us, and the Word Inside -mos.
+Spanish, chapter 75: La --- The Pronoun Carries What Left.
 1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-nos — "us".
+la — "it," for a feminine noun.
 
 Warm-up.
 [pause 2 seconds]
-Say "you love me." (Me quieres.) And "I love you." (Te quiero.) Both of those are about one person on the receiving end. Here is more than one.
+Say "I have it," about the book. (Lo tengo.) Now guess the feminine version before you read on.
 
-Grammar Lens: the third person in the room.
-nos — us.
-Nos quieren. — They love us.
-Same slot as always, in front of the verb. Me is one person speaking; nos is that person and somebody else.
-Me quieren. — They love me. Nos quieren. — They love us.
-One letter of difference, and the difference is how many people you are speaking for.
+Grammar Lens: the form you probably guessed.
+la — it, standing in for something feminine.
+Hago la comida. — I make the meal. La hago. — I make it.
+If you guessed la, you were not lucky. You were doing what the shape of Spanish invites you to do: el and la mark the two genders everywhere else, so the object pronouns mark them the same way.
+The pronoun agrees with the noun it replaces — not with you, and not with the verb. El libro is masculine, so lo. La comida and la casa are feminine, so la.
+That last point is worth pausing on. La here is not agreeing with anything present in the sentence. The noun is gone; the pronoun is carrying its gender on its behalf. This is the first time in Spanish that a word has had to remember something that is no longer being said.
 
 The word, taken apart.
-Nos is Latin nōs, which meant both we and us — the language had not yet split them into two words.
-You have been carrying it for a long time without being shown. The -mos ending on hablamos, comemos, tenemos is that same nōs, worn down and glued to the back of the verb. Every time you said "we speak," you were saying nos twice: once in the ending, and once by not needing to say it at all.
-And the word for "we" itself:
-nosotros — we, literally nos + otros, "we others."
-Spanish added otros to the plain nos somewhere in the Middle Ages, to make clear the speaker meant this group and not the person being addressed. Nothing else in the family did it quite this way, and the seam is still visible in the word.
+Last chapter had a small mystery: why lo and not el, when both come from the same Latin word? Here that mystery quietly disappears.
+The feminine object form in Latin was illam. Worn down as an article it gave la. Worn down as a pronoun it gave — la. Both routes arrived at the same place, because the vowel that got lost on the masculine side (elo becomes el) was never at risk on the feminine side.
+So the masculine pair split into two shapes and the feminine pair did not. Not an exception to memorise: a single sound change that happened to bite one word and not the other.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "Me quieren" then "Nos quieren"]
+[your turn — say: "Hago la comida" then "La hago"]
 [pause 8 seconds for the answer]
-[your turn — say: "hablamos" and hear the nos at the end of it]
+[your turn — say: "lo tengo" then "la hago" — one syllable carries the whole difference]
 [pause 8 seconds for the answer]
 [question — say your answer, then pause 8 seconds]
-Say they love us.
+Say I make it, about la comida.
 [question — say your answer, then pause 10 seconds]
-Which verb ending is the same ancient word as nos?
+What decides whether you say lo or la?
 [question — say your answer, then pause 12 seconds]
-What are the two pieces inside nosotros, and what do they mean together?
+Why does the feminine article match its pronoun exactly, when the masculine pair does not?
 
 Wrap-up Recall.
 [pause 3 seconds]
-Say "they love us." (Nos quieren.) What is nosotros made of? (Nos + otros — "we others.") Next: the plural of lo and la, and you will not need to be told what they are.
+Which pronoun replaces a feminine noun? (La.) What decides it — you, the verb, or the noun? (The noun, even though it is no longer there.) Next: the same slot, for the two people actually talking.

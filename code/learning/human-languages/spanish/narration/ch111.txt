@@ -1,99 +1,45 @@
-Spanish, chapter 111: One Stem, Two Tenses.
-2 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
+Spanish, chapter 111: Review --- A Tense You Build.
+1 lesson. All 1 can be done entirely by ear.
 
 
-Lesson 1 of 2.
-haré, tendré, podré — three stems, two ending sets.
+Lesson 1 of 1.
+Review — a tense you build.
 
 Warm-up.
 [pause 2 seconds]
-Regular verbs keep the whole infinitive. Three common verbs you already know use a shorter or reshaped stem. Learn only these three today. In each row, the same stem serves the future and the conditional.
+Nothing new. Two questions: how many words is this tense, and which of them carries the person?
 
-Grammar Lens: hacer becomes har-.
-[a table of 3 rows, read aloud]
-person: yo. future: haré. conditional: haría.
-person: tú. future: harás. conditional: harías.
-person: él / ella / usted. future: hará. conditional: haría.
-Use the known noun in Haré café — “I will make coffee” — and Haría café — “I would make coffee.”
+What you've built.
+Piece one — the person: he, has, ha, hemos, habéis, han.
+Piece two — the meaning: the participle, which never changes.
+[a table of 2 rows, read aloud]
+-ar. regular: -ado, hablado.
+-er / -ir. regular: -ido, comido, vivido.
+[a table of 2 rows, read aloud]
+hacer. irregular: hecho, decir becomes dicho.
+ver. irregular: visto, poner becomes puesto.
+Six little words times any participle you can form. That is the whole tense.
 
-Grammar Lens: tener becomes tendr-.
-[a table of 3 rows, read aloud]
-person: yo. future: tendré. conditional: tendría.
-person: tú. future: tendrás. conditional: tendrías.
-person: él / ella / usted. future: tendrá. conditional: tendría.
-The d in tendr- arose during the history of the compact future and conditional. Treat tendr- as the learned stem, not as permission to insert d into a new verb.
-
-Grammar Lens: poder becomes podr-.
-[a table of 3 rows, read aloud]
-person: yo. future: podré. conditional: podría.
-person: tú. future: podrás. conditional: podrías.
-person: él / ella / usted. future: podrá. conditional: podría.
-Podré hablar español says “I will be able to speak Spanish.” Podría hablar español says “I could / would be able to speak Spanish.”
-These stems reflect inherited reductions and sound changes. The useful modern fact is bounded: har-, tendr-, podr-, each followed by the same endings you already learned.
+Grammar Lens: why this one was cheap.
+Every other tense you have learned made you attach endings to every verb. The present has six endings per family; the preterite has its own set; the imperfect has another.
+This one does not work like that. You learn six words once, and then any verb you ever meet joins the tense by forming a single participle. A tense that is built rather than conjugated costs a fixed amount instead of a per-verb amount.
+That is worth recognising as a shape, because Spanish does it again. Once you have haber plus a participle, the same two pieces will give you more tenses later by changing only the little word — and each of those will cost you almost nothing, for the same reason this one did.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: “haré, haría”]
+[your turn — say: "he hablado, has comido, ha vivido, hemos hecho, habéis dicho, han visto"]
 [pause 8 seconds for the answer]
-[your turn — say: “tendré, tendría”]
-[pause 8 seconds for the answer]
-[your turn — say: “podré, podría”]
-[pause 8 seconds for the answer]
-[question — say your answer, then pause 9 seconds]
-Give the pair 'I will make coffee; I would make coffee' in Spanish.
+[repeat that twice]
+Until the little word arrives without thought.
+[question — say your answer, then pause 12 seconds]
+What are the two pieces of this tense, and which carries the person?
 [question — say your answer, then pause 8 seconds]
-Give the future and conditional yo forms of tener, in that order.
+Say we have lived.
 [question — say your answer, then pause 10 seconds]
-Give the pair 'I will be able to speak Spanish; I could speak Spanish' in Spanish.
+Say you have said it, using the participle of decir.
+[question — say your answer, then pause 12 seconds]
+Why did this tense cost less than the present or the preterite?
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give the three learned stems. (Har-, tendr-, podr-.) Does each verb need separate future and conditional stems? (No; one stem serves both.) Do the endings change? (No.) Next: retrieve the complete twelve-atom chapter.
-
-
-Lesson 2 of 2.
-Practice — one infinitive frame, two futures of thought.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for 2 tables that cannot be read aloud. You can listen to everything else now — leave the sections called Grammar Lens: the regular frame and Grammar Lens: three learned stems until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-This checkpoint adds no vocabulary and no plural persons. Retrieve the six regular singular rows, then the three learned irregular stems. Use the future for “will” and the conditional for the bounded core meaning “would.”
-
-Grammar Lens: the regular frame.
-There is a table here I cannot read to you — 4 columns and 6 rows, and it has more columns than can be held in the ear at once. Its columns are: person, hablar, comer, vivir. Come back and look at it when you have stopped.
-All three regular infinitives remain whole. Future endings are -é, -ás, -á; conditional endings are -ía, -ías, -ía. Plural persons wait.
-
-Grammar Lens: three learned stems.
-There is a table here I cannot read to you — 4 columns and 3 rows, and it has more columns than can be held in the ear at once. Its columns are: verb, learned stem, future yo, conditional yo. Come back and look at it when you have stopped.
-The stems change; the ending sets do not. Other irregular stems remain outside this chapter.
-
-The ending, taken apart.
-Romance future and conditional forms grew from constructions pairing an infinitive with forms of Latin habēre. Present material contributed to the future; past or imperfect material contributed to the conditional. Many paths and competing forms existed during the change, so this is a bridge for memory, not a one-step story or a recipe using modern haber.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: “hablaré, comeré, viviré”]
-[pause 8 seconds for the answer]
-[your turn — say: “hablaría, comería, viviría”]
-[pause 8 seconds for the answer]
-[your turn — say: “haré/haría, tendré/tendría, podré/podría”]
-[pause 8 seconds for the answer]
-[question — say your answer, then pause 9 seconds]
-Give the future yo forms of hablar, comer, and vivir, in that order.
-[question — say your answer, then pause 9 seconds]
-Give the conditional yo forms of hablar, comer, and vivir, in that order.
-[question — say your answer, then pause 7 seconds]
-Say 'I will speak Spanish' in Spanish.
-[question — say your answer, then pause 7 seconds]
-Say 'I would live in Madrid' in Spanish.
-[question — say your answer, then pause 9 seconds]
-Give the pair 'I will make coffee; I would make coffee' in Spanish.
-[question — say your answer, then pause 8 seconds]
-Give the learned stems for hacer, tener, and poder, in that order.
-[question — say your answer, then pause 7 seconds]
-Which Latin 'have' verb contributed material to both Romance constructions?
-
-Wrap-up Recall.
-[pause 3 seconds]
-Give the three regular future yo forms. (Hablaré, comeré, viviré.) Give the three regular conditional yo forms. (Hablaría, comería, viviría.) Which three learned stems replace a whole infinitive? (Har-, tendr-, podr-.) What is the careful historical bridge? (Infinitive plus forms of Latin habēre, reshaped through Romance.) The next chapter can now begin without borrowing plural persons, new auxiliaries, or clock-time vocabulary.
+Two pieces — name them. (A form of haber, plus a participle.) The four irregulars? (Hecho, dicho, visto, puesto.) Next: when to reach for this tense instead of the preterite — and the answer depends on where you are standing on the map.

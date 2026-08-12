@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C44-repaso-articulos
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 1131
-chapter: 68
+sequence: 1161
+chapter: 72
 type: practice-mix
 headword: (review)
 gloss: review — the four words for "the," complete at last, and the two plural rules that feed them

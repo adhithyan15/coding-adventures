@@ -2,25 +2,32 @@
   "version": 1,
   "language": "spanish",
   "chapter": 123,
-  "title": "Synthesis --- Asking Without Sounding Rude",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:d108517660feb973",
+  "title": "Di, Haz, Ve, Pon, Ten, Sal, Se, Ven",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:80235d2f3090fee5",
   "lessons": [
     {
-      "id": "ES-C50-sintesis-pedir-bien",
-      "sequence": 1432,
-      "title": "Synthesis — asking without sounding rude",
-      "headword": "(synthesis)",
-      "romanization": "(synthesis)",
-      "gloss": "synthesis — a command in Spanish is not the blunt thing a bare English imperative is, and knowing why keeps you from sounding rude by accident",
+      "id": "ES-C50-ocho-cortos",
+      "sequence": 1458,
+      "title": "di, haz, ve, pon, ten, sal, sé, ven",
+      "headword": "di · haz · ve · pon · ten · sal · sé · ven",
+      "romanization": "di · haz · ve · pon · ten · sal · sé · ven",
+      "gloss": "the eight irregular commands — and every one of them is a single syllable, for a reason",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "sight-cue"
       ],
-      "sourceHash": "fnv1a64:65e44e4bfa7d32e8",
-      "notice": null,
+      "sourceHash": "fnv1a64:7416f6122811cab6",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -35,58 +42,51 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"eat\" to a friend. (Come.) In English, saying \"Eat.\" to somebody lands hard. You are about to learn that it does not land the same way here."
+              "text": "By last chapter's rule, \"say it\" should be dice. It is not. There are exactly eight of these, and once you see them together you will not need to memorise the list."
             }
           ]
         },
         {
           "index": 1,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way",
+          "type": "grammar",
+          "title": "Grammar Lens: eight, all one syllable",
           "segments": [
             {
-              "kind": "speech",
-              "text": "English has almost no polite imperative. Eat. Sit. Bare, they sound like orders to a dog, so English speakers pad them: could you, would you mind."
+              "kind": "table",
+              "headers": [
+                "verb",
+                "command",
+                ""
+              ],
+              "columns": 3,
+              "rowCount": 8,
+              "utterances": [
+                "verb: decir. command: di, say.",
+                "verb: hacer. command: haz, do, make.",
+                "verb: ir. command: ve, go.",
+                "verb: poner. command: pon, put.",
+                "verb: tener. command: ten, have, hold.",
+                "verb: salir. command: sal, leave.",
+                "verb: ser. command: sé, be.",
+                "verb: venir. command: ven, come."
+              ]
             },
             {
               "kind": "speech",
-              "text": "Spanish needs no padding, because it spends its politeness elsewhere — on the choice of person."
+              "text": "Read the middle column down. Every single one is one syllable, and most are two or three letters. No other set of forms in Spanish is this short."
             },
             {
               "kind": "speech",
-              "text": "Come. — to a friend. Perfectly warm. Coma, por favor. — to a stranger. Perfectly polite."
+              "text": "That is the fact worth carrying, and it has a cause. A command is the sentence you shout, the sentence you say in a hurry, the sentence you interrupt somebody with. Words used that way get worn down harder than words used calmly — and these eight are the commonest verbs in the language, so they had the most use to be worn by."
             },
             {
               "kind": "speech",
-              "text": "The tú command is not blunt; it is intimate. Using it says we are on those terms, which between friends is friendly rather than bossy. The usted command is not cold; it is respectful, for the same reason."
-            },
-            {
-              "kind": "speech",
-              "text": "So an English speaker's mistake here is not tone. It is picking the wrong person: usted with a friend sounds stiff, tú with a stranger presumptuous. The politeness lives in the pronoun you chose before the command left your mouth. Por favor helps and costs nothing, but here it is a garnish rather than the structure."
+              "text": "So the list is not eight arbitrary exceptions. It is what the eight most-shouted verbs look like after two thousand years of being shouted."
             }
           ]
         },
         {
           "index": 2,
-          "type": "input",
-          "title": "The exchange",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "The same four things said twice — once to a friend, once to a stranger."
-            },
-            {
-              "kind": "speech",
-              "text": "To a friend: Ven. Come. No hables. Ten. To a stranger: Venga. Coma, por favor. No hable. Tenga."
-            },
-            {
-              "kind": "speech",
-              "text": "Read both aloud. The first is not ruder; it is closer. Say the second to somebody you have known for years and you have not been polite — you have put a small distance between you, and they will hear it."
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -99,20 +99,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Ven\" then \"Venga\" — hear the distance, not the rudeness",
+              "instruction": "all eight in one breath — \"di, haz, ve, pon, ten, sal, sé, ven\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Ven\" then \"Venga\" — hear the distance, not the rudeness]"
+              "source": "[YOU SAY: all eight in one breath — \"di, haz, ve, pon, ten, sal, sé, ven\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the friend row, then the stranger row, straight through",
+              "instruction": "each one as if calling across a room",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the friend row, then the stranger row, straight through]"
+              "source": "[YOU SAY: each one as if calling across a room]"
             },
             {
               "kind": "repeat",
@@ -120,10 +120,32 @@
               "source": "[REPEAT x2]"
             },
             {
+              "kind": "speech",
+              "text": "Until the list is a rhythm rather than eight facts."
+            },
+            {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C50-sintesis-pedir-bien-friend",
-              "prompt": "Tell a friend to come.",
+              "id": "ES-C50-ocho-cortos-list",
+              "prompt": "Give the eight irregular tu commands.",
+              "assesses": [
+                "ES-GRAMMAR-COMMAND-IRREGULAR-EIGHT"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "di, haz, ve, pon, ten, sal, se, ven",
+                "di haz ve pon ten sal sé ven"
+              ],
+              "feedback": {
+                "correct": "Eight, and every one a single syllable.",
+                "incorrect": "di, haz, ve, pon, ten, sal, se, ven."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C50-ocho-cortos-come",
+              "prompt": "Tell somebody to come.",
               "assesses": [
                 "ES-GRAMMAR-COMMAND-IRREGULAR-EIGHT",
                 "ES-LEX-VENIR"
@@ -134,75 +156,33 @@
                 "¡ven!"
               ],
               "feedback": {
-                "correct": "Warm, not blunt.",
-                "incorrect": "Ven."
+                "correct": "Ven.",
+                "incorrect": "Ven — from venir."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C50-sintesis-pedir-bien-stranger",
-              "prompt": "Ask a stranger to eat, politely.",
+              "id": "ES-C50-ocho-cortos-why",
+              "prompt": "Why are these eight so much shorter than every other verb form?",
               "assesses": [
-                "ES-GRAMMAR-COMMAND-USTED",
-                "ES-LEX-COMER",
-                "ES-LEX-POR-FAVOR"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "coma, por favor",
-                "coma por favor"
-              ],
-              "feedback": {
-                "correct": "Coma, por favor.",
-                "incorrect": "Coma, por favor — the usted form."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C50-sintesis-pedir-bien-where",
-              "prompt": "In Spanish, where does the politeness of a command mostly live?",
-              "assesses": [
-                "ES-CULTURE-COMMAND-REGISTER",
-                "ES-LEX-TU",
-                "ES-LEX-USTED"
-              ],
-              "responseSeconds": 12,
-              "acceptedResponses": [
-                "in the choice of tu or usted",
-                "in which person you chose",
-                "in the pronoun"
-              ],
-              "feedback": {
-                "correct": "Chosen before the command ever left your mouth.",
-                "incorrect": "In whether you chose tu or usted — not in extra words."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C50-sintesis-pedir-bien-mistake",
-              "prompt": "You use usted commands with an old friend. What have you done?",
-              "assesses": [
-                "ES-CULTURE-COMMAND-REGISTER",
-                "ES-GRAMMAR-COMMAND-USTED"
+                "ES-GRAMMAR-COMMAND-IRREGULAR-EIGHT"
               ],
               "responseSeconds": 14,
               "acceptedResponses": [
-                "put distance between you",
-                "sounded stiff",
-                "been cold rather than polite"
+                "commands are shouted and hurried, so they wore down most",
+                "because they are the most used and most shouted",
+                "frequency and hurry"
               ],
               "feedback": {
-                "correct": "Politeness in the wrong place reads as distance.",
-                "incorrect": "Not been extra polite — you have opened a small distance, and they will hear it."
+                "correct": "What the most-shouted verbs look like after two thousand years.",
+                "incorrect": "A command is shouted and hurried, and these are the commonest verbs — the most use, so the most wear."
               }
             }
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -214,7 +194,7 @@
             },
             {
               "kind": "speech",
-              "text": "Is Come rude to a friend? (No — it is close.) Where does the politeness of a Spanish command live? (In the person you chose.) And what does usted with an old friend sound like? (Distance, not courtesy.)"
+              "text": "How many irregular tú commands are there? (Eight.) What do they all have in common besides being irregular? (One syllable each.) Next: how to tell somebody not to do something — and you already have that form too."
             }
           ]
         }

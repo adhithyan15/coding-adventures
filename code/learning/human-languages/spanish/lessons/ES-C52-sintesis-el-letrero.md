@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C52-sintesis-el-letrero
 spine_node: SPINE-GIVE-REASONS
-sequence: 2130
-chapter: 172
+sequence: 2160
+chapter: 176
 type: practice-mix
 headword: (synthesis)
 gloss: synthesis — reading a shop window, which is where this grammar actually lives, and asking your way past the words you do not have

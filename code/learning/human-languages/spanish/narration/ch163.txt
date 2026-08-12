@@ -1,37 +1,44 @@
-Spanish, chapter 163: Para --- For, Pointing Forward.
+Spanish, chapter 163: Review --- All Four Stem Changes.
 1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-para — "for," pointing forward.
+Review — the four stem changes, all of them.
 
 Warm-up.
 [pause 2 seconds]
-English has one word, for, doing about ten jobs. Spanish splits them between two words, and most courses hand you a list of twelve rules. You are getting one idea instead, and this chapter is half of it.
+Nothing new in this chapter. Say a verb whose stem breaks under stress — any one you have met.
 
-Grammar Lens: the arrow points away from you.
-para — for, when something is aimed at something else.
-Es para ti. — It's for you. (aimed at a person) Para mañana. — By tomorrow. (aimed at a moment) Hago la comida para la casa. — I make the meal for the house. (aimed at a purpose).
-Destination, deadline, recipient, purpose. They look like four different rules and they are one: something is heading toward something else. Draw an arrow from the thing to its target, and if the arrow makes sense, the word is para.
-That is the whole of this chapter. Not four uses — one direction.
+What you've built.
+Something finished in the last two chapters and it is worth stopping for.
+Spanish has four stem-change patterns. Not five, not a dozen — four. You met the first two long ago with querer and poder, and the last two in the chapters you have just finished. That is the whole system, and you now hold all of it:
+[a table of 4 rows, read aloud]
+the change: e becomes ie. the verb that taught it: querer. what breaks: becomes quiero.
+the change: o becomes ue. the verb that taught it: poder. what breaks: becomes puedo.
+the change: e becomes i. the verb that taught it: conseguir. what breaks: becomes consigo.
+the change: u becomes ue. the verb that taught it: jugar. what breaks: becomes juego.
+This table is allowed here because every row in it is something you can already do. It is a picture of the ground you hold, not a list to memorise.
 
-The word, taken apart.
-The direction is not a mnemonic somebody invented. It is inside the word.
-Para was Latin per + ad, squeezed into one word. And ad means "toward" — it is the same ad sitting at the front of English advance, admit, adhere, address, all of which are about moving or pointing at something.
-So para is, at the bottom, "through-toward." A word that is literally made of an arrow.
-Once you have that, you do not have to remember which of the twelve textbook uses of para is which. You have to ask one question: is this pointing at something?
+Grammar Lens: the pattern with one member.
+The fourth row is strange, and worth knowing precisely.
+u becomes ue happens in exactly one verb in the entire language: jugar.
+Not "mostly one." One. Every other Spanish verb with a u in its stem leaves it alone. So you are not learning a pattern here so much as a single fact with a pattern's shape — which is easier, not harder, and is the kind of thing a course should tell you instead of letting you brace for more.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "para ti", "para mañana", "para la casa" — draw the arrow each time]
+[your turn — say: one verb from each of the four rows]
 [pause 8 seconds for the answer]
+[your turn — say: the four changes themselves, as sounds — e-ie, o-ue, e-i, u-ue]
+[pause 8 seconds for the answer]
+[repeat that twice]
+Until naming the pattern is faster than working it out.
 [question — say your answer, then pause 8 seconds]
-Say it is for you.
+How many stem-change patterns does Spanish have in total?
+[question — say your answer, then pause 10 seconds]
+Which pattern belongs to exactly one verb, and which verb?
 [question — say your answer, then pause 8 seconds]
-Say by tomorrow.
-[question — say your answer, then pause 12 seconds]
-Which Latin piece inside para means toward, and which English words carry it?
+Which change does conseguir make?
 
 Wrap-up Recall.
 [pause 3 seconds]
-What one question decides para? (Is it pointing at something?) What is inside the word? (Ad — "toward.") Next: the other half — and you have been saying it since your first chapter.
+How many stem-change patterns are there? (Four — and that is all of them.) Which one has a single member? (u becomes ue, only jugar.) Next chapter is not about forms at all — it is about three places where English gives you one word and Spanish makes you choose.

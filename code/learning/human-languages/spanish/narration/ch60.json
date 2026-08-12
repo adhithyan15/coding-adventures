@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 60,
-  "title": "Synthesis --- You, and Somebody Else",
+  "title": "Poner --- Putting, and the Root Under Position",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:251cb80509072ffe",
+  "sourceHash": "fnv1a64:8e7bce49dcc951cd",
   "lessons": [
     {
-      "id": "ES-C13-sintesis-yo-go",
-      "sequence": 1115,
-      "title": "Synthesis — you, and somebody else",
-      "headword": "(synthesis)",
-      "romanization": "(synthesis)",
-      "gloss": "synthesis — the same sentence about you and about someone else, and only one of them is odd",
+      "id": "ES-C13-poner",
+      "sequence": 1110,
+      "title": "poner — putting or placing with three singular forms",
+      "headword": "poner",
+      "romanization": "poner",
+      "gloss": "to put or place — with the singular present forms pongo, pones, and pone",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:865e9a920bf72af4",
+      "sourceHash": "fnv1a64:0d45dd4c1ebe416c",
       "notice": null,
       "blocks": [
         {
@@ -35,64 +35,58 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing new here. Say three of the six -go forms, whichever come first."
+              "text": "You already know hago, haces, hace and the careful comparison tengo, hago, digo. Add one verb on its own evidence: poner, “to put” or “to place.”"
             }
           ]
         },
         {
           "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: the odd slot is the one about you",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "Here is the practical shape of what you have, and it is worth noticing before you use it."
-            },
-            {
-              "kind": "speech",
-              "text": "These six verbs are irregular only when you talk about yourself. Every one of them behaves normally the moment the sentence is about anybody else:"
-            },
-            {
-              "kind": "speech",
-              "text": "salgo — but sales, sale. pongo — but pones, pone. vengo — but vienes, viene."
-            },
-            {
-              "kind": "speech",
-              "text": "So the cost of the whole set is one form each, and it is the form you will use most, because most of what a beginner says is about themselves."
-            },
-            {
-              "kind": "speech",
-              "text": "That is a good trade, and it is not an accident of teaching order: the verbs that wore down oddly are the ones people said constantly."
+              "text": "The g in pongo has the familiar hard sound. Tap the final r of poner lightly; do not turn it into the stronger written rr sound."
             }
           ]
         },
         {
           "index": 2,
-          "type": "input",
-          "title": "The exchange",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "The same two sentences, once about you and once about a friend. Watch which word changes shape and which does not:"
-            },
-            {
-              "kind": "speech",
-              "text": "Salgo. — I'm leaving. Sales. — You're leaving. Vengo. — I'm coming. Viene. — He's coming."
-            },
-            {
-              "kind": "speech",
-              "text": "One word each time, no pronoun, and the only surprise is in the first line of each pair."
+              "text": "poner descends from Latin pōnere, “to put or place.” English keeps the same placing family in position, compose (“place together”), and deposit (“place down”). The two shapes pon- and pos- are historical relatives, so poner and position are cousins even though their endings differ."
             }
           ]
         },
         {
           "index": 3,
-          "type": "notice",
-          "title": "What you've built",
+          "type": "grammar",
+          "title": "Grammar Lens: only the three singular forms",
           "segments": [
             {
+              "kind": "table",
+              "headers": [
+                "person",
+                "present of poner"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "person: yo. present of poner: pongo.",
+                "person: tú. present of poner: pones.",
+                "person: él / ella / usted. present of poner: pone."
+              ]
+            },
+            {
               "kind": "speech",
-              "text": "Six of the most common verbs in the language, in the person you speak in most. You can now say that you have, do, say, put, leave and come — about yourself, in one word, with no pronoun."
+              "text": "Say the bounded set as pongo, pones, pone. The learned yo form joins the known comparison because it ends in -go. That resemblance helps memory; it still does not predict an unseen verb."
+            },
+            {
+              "kind": "speech",
+              "text": "For now, practise the forms and their meaning without importing a new object. Later lessons can add the nouns needed for expressions such as setting a table or putting on clothing. Plural persons and reflexive ponerse also wait."
             }
           ]
         },
@@ -110,84 +104,68 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "each pair above — first about yourself, then about someone else",
+              "instruction": "“poner — pongo, pones, pone”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: each pair above — first about yourself, then about someone else]"
+              "source": "[YOU SAY: “poner — pongo, pones, pone”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "all six yo forms, then all six tú forms, and hear the difference vanish",
+              "instruction": "“pōnere — position — poner”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: all six *yo* forms, then all six *tú* forms, and hear the difference vanish]"
+              "source": "[YOU SAY: “pōnere — position — poner”]"
             },
             {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C13-sintesis-yo-go-me",
-              "prompt": "Say I am leaving, in one word.",
-              "assesses": [
-                "ES-GRAMMAR-SALIR-PRESENT-SINGULAR"
-              ],
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“a learned comparison, not a prediction rule”",
+              "spoken": true,
+              "scored": false,
               "responseSeconds": 8,
-              "acceptedResponses": [
-                "salgo",
-                "yo salgo"
-              ],
-              "feedback": {
-                "correct": "Yes — and no pronoun needed.",
-                "incorrect": "salgo."
-              }
+              "source": "[YOU SAY: “a learned comparison, not a prediction rule”]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C13-sintesis-yo-go-them",
-              "prompt": "Now say she is leaving. Is it irregular?",
+              "id": "ES-C13-poner-singular-forms",
+              "prompt": "Give the learned singular present forms of poner: yo, tú, then él/ella/usted.",
               "assesses": [
-                "ES-GRAMMAR-SALIR-PRESENT-SINGULAR",
-                "ES-GRAMMAR-YO-GO-CONTRAST-LEARNED"
+                "ES-LEX-PONER",
+                "ES-GRAMMAR-PONER-PRESENT-SINGULAR"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "sale, and no",
-                "sale",
-                "sale - regular",
-                "no, sale"
+                "pongo, pones, pone",
+                "pongo pones pone",
+                "pongo / pones / pone"
               ],
               "feedback": {
-                "correct": "Right — the oddity is only ever in the yo form.",
-                "incorrect": "Sale, and it is perfectly regular."
+                "correct": "Right: pongo, pones, pone.",
+                "incorrect": "Keep the g in the yo form: pongo, pones, pone."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C13-sintesis-yo-go-which",
-              "prompt": "In these six verbs, which slot is the only irregular one?",
+              "id": "ES-C13-poner-meaning",
+              "prompt": "What two English verbs does poner cover?",
               "assesses": [
-                "ES-GRAMMAR-YO-GO-CONTRAST-LEARNED",
-                "ES-GRAMMAR-HACER-PRESENT-SINGULAR"
+                "ES-LEX-PONER"
               ],
-              "responseSeconds": 8,
+              "responseSeconds": 7,
               "acceptedResponses": [
-                "the yo slot",
-                "yo",
-                "the i form",
-                "first person"
+                "to put or to place",
+                "put or place",
+                "to put and to place",
+                "put and place"
               ],
               "feedback": {
-                "correct": "Only yo. Everything else is regular.",
-                "incorrect": "The yo slot, and only that one."
+                "correct": "Right: poner means to put or to place.",
+                "incorrect": "Retrieve the placing pair: to put or to place."
               }
             }
           ]
@@ -205,7 +183,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which slot in these six verbs is irregular? (Only the yo form.) How many words does \"I'm leaving\" take? (One — salgo.) Why is that one form worth the trouble? (Because it is the one you will say most.)"
+              "text": "What does poner mean? (“To put” or “to place.”) Give its three learned forms. (Pongo, pones, pone.) Which Latin source and English cousin help explain it? (Pōnere; position, compose, or deposit.) Next: learn salir inside the same three-person frame."
             }
           ]
         }

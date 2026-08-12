@@ -1,43 +1,40 @@
-Spanish, chapter 177: Synthesis --- Sentences Worth Saying.
+Spanish, chapter 177: El Libro Que Compro --- One Sentence Out of Two.
 1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-Synthesis — sentences worth saying.
+el libro que compro — one sentence out of two.
 
 Warm-up.
 [pause 2 seconds]
-Until this rung, every sentence you could build had one verb in it. Count the verbs in the next one.
+Say "I want you to speak." (Quiero que hables.) That que is about to do a second job — and it is the job that lets your sentences stop being short.
 
-The exchange.
-— ¿Tienes el libro que compré? — Sí. Lo que no tengo es la comida que haces.
-Read the second line again. It has three verbs in it, and you can build every piece of it:
-lo que no tengo — the thing I do not have (a noun-shaped hole).
-es — is.
-la comida que haces — the meal you make (a noun with a sentence hung off it).
-Nothing in that sentence is new. What is new is that the pieces are allowed to sit inside each other.
+Grammar Lens: stapling two sentences together.
+You have two sentences about one book:
+Tengo el libro. — I have the book. Compro el libro. — I buy the book.
+Que joins them, and the repeated noun disappears:
+Tengo el libro que compro. — I have the book that I buy.
+That is the whole mechanism. Name the thing once, then use que to hang a second sentence off it. Everything you can already say can now be attached to a noun instead of standing alone.
+This is the point where a language stops being a list of statements. Up to now your sentences have had one verb each. From here a sentence can contain another sentence, and then another — which is what allows description, explanation and storytelling of any length.
 
-Grammar Lens: length is not difficulty.
-Long sentences look like an increase in difficulty and are not.
-A relative clause does not add grammar. It adds a slot where a whole sentence can go, and you fill it with the same Spanish you were already making. Two short sentences become one long one, and the only new thing is the joint.
-That is why this is the last structural rung a beginner's course owes you. Not because nothing is left, but because from here the growth is more of what you have, arranged more deeply. What remains genuinely hard is vocabulary and hearing speed, and both are time.
+The word, taken apart.
+Que comes from the Latin qui / quem / quid family — the same qu- question-root sitting inside qué, quién, cómo and cuándo, which you have been collecting since your very first questions.
+That is not a coincidence of spelling. A question and a relative clause are doing related work: ¿qué compras? asks you to fill a gap, and el libro que compro fills one. Latin used the same word family for both, and Spanish kept the arrangement.
+So the busiest structural word in the language is a worn-down question word. English did the identical thing: what, which, who and that all serve twice, as questions and as joints.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: the full two-line exchange]
+[your turn — say: the two short sentences, then the joined one]
 [pause 8 seconds for the answer]
-[your turn — say: the long sentence broken into its three pieces, then whole]
+[your turn — say: "el libro que compro", "la casa que tengo"]
 [pause 8 seconds for the answer]
-[repeat that twice]
 [question — say your answer, then pause 12 seconds]
-Ask whether somebody has the book you bought.
+Join Tengo el libro and Compro el libro into one sentence.
 [question — say your answer, then pause 10 seconds]
-Say the thing I do not have.
-[question — say your answer, then pause 16 seconds]
-Say what I do not have is the meal you make.
-[question — say your answer, then pause 14 seconds]
-Why is a long sentence not harder than the short ones it is made of?
+What happens to the repeated noun when que joins two sentences?
+[question — say your answer, then pause 10 seconds]
+Which question words share que's root?
 
 Wrap-up Recall.
 [pause 3 seconds]
-How many verbs can one sentence hold now? (As many as you can join.) What does a relative clause actually add? (A slot, not new grammar.) And what is genuinely hard from here? (Vocabulary and hearing speed — both of which are time.)
+Join "I have the book" and "I buy the book." (Tengo el libro que compro.) What does que let a sentence do that it could not before? (Contain another sentence.) Next: the one place English is lazier than Spanish, and it trips every learner.

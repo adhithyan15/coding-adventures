@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C48-sintesis-una-historia
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 1314
-chapter: 102
+sequence: 1344
+chapter: 106
 type: practice-mix
 headword: (synthesis)
 gloss: synthesis — a story in four sentences, which is the first thing in this book that needs both pasts at once

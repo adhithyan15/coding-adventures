@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C13-venir
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1100
-chapter: 58
+sequence: 1130
+chapter: 62
 type: word
 headword: venir
 gloss: to come — with the singular present forms vengo, vienes, and viene

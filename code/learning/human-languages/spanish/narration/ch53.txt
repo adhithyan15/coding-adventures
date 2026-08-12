@@ -1,80 +1,48 @@
-Spanish, chapter 53: Ir in the Plural --- a Verb That Is Not Ir.
-2 lessons. All 2 can be done entirely by ear.
+Spanish, chapter 53: -ista --- Jobs You Can Already Read.
+1 lesson. All 1 can be done entirely by ear.
 
 
-Lesson 1 of 2.
-vamos — from a verb that is not ir.
-
-Warm-up.
-[pause 2 seconds]
-Say "I go." (Voy.) And "we speak." (Hablamos.)
-
-Grammar Lens: -amos and -áis, on a stem you have not seen.
-vamos — we go., vais — you all go.
-The endings are ordinary. -amos and -áis are the plain -ar endings from hablamos and habláis.
-What is strange is the stem. The infinitive is ir, and there is no v in it anywhere — yet every one of these forms begins with one.
-
-The word, taken apart.
-You met this shape two chapters ago and now you can use it as a tool.
-Ir is not one verb. Latin had īre, "to go", which gives the infinitive ir and little else. It also had vādere, "to advance, to make one's way", which gives voy, vas, va, vamos, vais and one more — the entire present tense.
-So the present of ir is not irregular. It is regular for a different verb, one whose infinitive Spanish stopped using. The endings behave perfectly; they are simply attached to a stem the dictionary form does not show you.
-That is the third time this pattern has explained something: ser from esse and sedēre, and now ir from īre and vādere. English does it too — go and went, where went is really the past of wend.
-The commonest verbs in a language are the likeliest to be made of more than one, because they are used so much that no single word's forms survive intact.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "hablamos, vamos" — the same ending, an unexpected stem]
-[pause 8 seconds for the answer]
-[your turn — say: "voy, vas, va, vamos, vais" — all one verb, and it is not ir]
-[pause 8 seconds for the answer]
-[question — say your answer, then pause 8 seconds]
-Say we go.
-[question — say your answer, then pause 10 seconds]
-Why does the present of ir begin with v when the infinitive has none?
-[question — say your answer, then pause 10 seconds]
-Name the English pair that works the same way.
-
-Wrap-up Recall.
-[pause 3 seconds]
-What is "we go"? (Vamos.) Which Latin verb do these forms come from? (Vādere.) And what does that make ir? (Two verbs, like ser — and like English go and went.)
-
-
-Lesson 2 of 2.
-van — and the four are done.
+Lesson 1 of 1.
+-ista — the ending that names what someone does — and it is the same -ist English uses.
 
 Warm-up.
 [pause 2 seconds]
-Say "we go." (Vamos.) And "they speak." (Hablan.)
+What does -ante make? (The one doing it.) Say "I am a student." (Soy estudiante.)
 
-Grammar Lens: the last form.
-van — they go, and ustedes van, you all go.
-Latin's form was vadunt. Spanish wore it down to three letters, and the rule still holds visibly: a final -n, and the subject is plural and not you.
+Grammar Lens: a job you can already read.
+Spanish -ista is English -ist.
+Greek -istēs named the doer of an action. Latin borrowed it, and Spanish and English both still use it — so this ending needs almost no learning.
+[a table of 4 rows, read aloud]
+artista means artist.
+dentista means dentist.
+turista means tourist.
+periodista means journalist.
+Three of those four you could read before this chapter opened. That is the point: the ending is doing the work, not your memory.
+The fourth is the interesting one. Periodista is not periodist — it is built on periódico, a newspaper, which is a periodical, something that comes round at a period. The ending is regular; the root is the surprise.
 
-What you've built.
-Four chapters ago you could conjugate any regular verb in the present, and none of the irregular ones. Now the four commonest verbs in Spanish are complete in every person:
-ser, estar, tener, ir — to be, to be, to have, to go.
-And each one taught something that outlives it:
-ser — two Latin verbs fused, so the seam shows at eres.
-estar — one verb, so it is regular; the accent only marks stress.
-tener — the stem breaks exactly where it is stressed, in every stem-changing verb, which is why nosotros and vosotros never break.
-ir — its present belongs to a different verb entirely.
-Three of those four are about the same underlying thing: a verb that looks chaotic is usually more than one word, and the places it looks regular are the places one word survived intact.
+Grammar Lens: -ista never changes.
+Like -ante, an -ista word is the same for a man or a woman — and it keeps its -a either way:
+Él es artista., Ella es artista.
+The -a is not feminine here. It is just how the word ends. Only the article moves: el artista, la artista.
+[pause 2 seconds]
+And still no un: Soy artista, not Soy un artista.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "somos, estamos, tenemos, vamos" — the four, in the we form]
+[your turn — say: artista, dentista, turista]
 [pause 8 seconds for the answer]
-[your turn — say: "son, están, tienen, van" — the four, in the they form]
+[your turn — say: Soy — and one of them]
 [pause 8 seconds for the answer]
 [repeat that twice]
-Until all four run without a gap.
-[question — say your answer, then pause 6 seconds]
-Say they go.
 [question — say your answer, then pause 10 seconds]
-They are (permanently), and they are (right now): which two forms?
+Decode dentista.
 [question — say your answer, then pause 10 seconds]
-What usually explains a Spanish verb that looks chaotic?
+Say: she is an artist.
+[question — say your answer, then pause 14 seconds]
+Periodista is built on periodico. What is a periodico?
 
 Wrap-up Recall.
-[pause 3 seconds]
-What is "they go"? (Van.) Name the four verbs you have just completed. (Ser, estar, tener, ir.) And what do three of them have in common? (Each is more than one Latin verb, or its stem change follows the stress.)
+[pause 2 seconds]
+What is -ista in English? (-ist.)
+[pause 2 seconds]
+Does it change for a woman? (No.)

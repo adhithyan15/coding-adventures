@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C47-por-que-se
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 1168
-chapter: 87
+sequence: 1198
+chapter: 91
 type: etymology
 headword: gelo → se lo
 gloss: why le turns into se — and why it is not the se you already know, however much it looks like it

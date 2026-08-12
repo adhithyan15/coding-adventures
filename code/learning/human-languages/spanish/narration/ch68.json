@@ -2,32 +2,25 @@
   "version": 1,
   "language": "spanish",
   "chapter": 68,
-  "title": "Review --- All Four Words for The",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:02ca20c9a2731bf6",
+  "title": "La Comida --- A Noun You Can Build",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:8aaeb9b144fd5dfa",
   "lessons": [
     {
-      "id": "ES-C44-repaso-articulos",
-      "sequence": 1131,
-      "title": "Review — all four words for \"the\"",
-      "headword": "(review)",
-      "romanization": "(review)",
-      "gloss": "review — the four words for \"the,\" complete at last, and the two plural rules that feed them",
+      "id": "ES-C43-comida",
+      "sequence": 1153,
+      "title": "la comida — \"food,\" built from a verb you have",
+      "headword": "la comida",
+      "romanization": "la comida",
+      "gloss": "food, a meal — a noun you can build yourself out of a verb you already own",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3221d251b1e17e8a",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:16b75cfbb1a4b238",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -42,72 +35,88 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing new here. Before the table: how many words does Spanish have for \"the\"?"
+              "text": "Say \"to eat.\" (Comer.) Keep it in mind — this chapter's noun is made out of it, in front of you."
             }
           ]
         },
         {
           "index": 1,
-          "type": "notice",
-          "title": "What you've built",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "Four. And you have now met every one of them separately, which is why they are allowed to appear together."
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "",
-                "singular",
-                "plural"
-              ],
-              "columns": 3,
-              "rowCount": 2,
-              "utterances": [
-                "masculine. singular: el libro. plural: los libros.",
-                "feminine. singular: la casa. plural: las casas."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "English has one word here and Spanish has four, so it is easy to read this table as three extra things to carry. It is not. It is two questions you were already answering — which gender? and how many? — laid out in a grid."
-            },
-            {
-              "kind": "speech",
-              "text": "The first chapter of this book taught the top row. The last two chapters taught the bottom one. Nothing in this table arrived without being built."
+              "text": "d-soft — the d between vowels is soft, close to the th in English this: ko-MEE-thah, not a hard d."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: the two plural rules",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "And underneath the grid, one rule with a repair:"
+              "text": "la comida — food, and also a meal."
             },
             {
               "kind": "speech",
-              "text": "Add -s. If the word ends in a consonant and the -s would be unsayable, add -es instead."
+              "text": "Take comer, drop the ending, add -ida:"
             },
             {
               "kind": "speech",
-              "text": "casa becomes casas, libro becomes libros, comida becomes comidas — vowels, plain -s."
+              "text": "comer becomes comida — literally the eaten thing."
             },
             {
               "kind": "speech",
-              "text": "usted becomes ustedes, español becomes españoles — consonants, -es."
+              "text": "That ending is not decoration. It is a working tool: it takes a verb and hands you back a noun for the result of that verb. You will meet it again and recognise it when you do."
             },
             {
               "kind": "speech",
-              "text": "You held the first half from chapter one and the second half from ustedes without knowing it had a name."
+              "text": "This is the first Spanish noun you did not have to be given. You could have built it. That is a different kind of possession from memorising a list, and it is the reason the ending is worth more here than the word."
+            },
+            {
+              "kind": "speech",
+              "text": "Comer itself comes from Latin comedere — ed- is \"eat,\" the same ancient root as English eat, with com- (\"thoroughly\") in front. So comida is, at the bottom, \"the thoroughly-eaten thing.\""
             }
           ]
         },
         {
           "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: -ida nouns are feminine",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Nouns built this way end in -a and are feminine, every time. So the ending gives you two things at once: the word, and its gender."
+            },
+            {
+              "kind": "speech",
+              "text": "la comida — the food. Hago la comida. — I make the meal."
+            },
+            {
+              "kind": "speech",
+              "text": "Set your three nouns side by side and the pattern is doing all the work:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "noun",
+                "gender",
+                "article"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "noun: libro. gender: masculine. article: el.",
+                "noun: casa. gender: feminine. article: la.",
+                "noun: comida. gender: feminine. article: la."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -120,93 +129,82 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"el, la, los, las\" until the order is automatic",
+              "instruction": "\"comer\" then \"comida\" — hear the verb inside the noun",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"el, la, los, las\" until the order is automatic]"
+              "source": "[YOU SAY: \"comer\" then \"comida\" — hear the verb inside the noun]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"el libro, los libros, la casa, las casas\"",
+              "instruction": "\"Hago la comida\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"el libro, los libros, la casa, las casas\"]"
-            },
-            {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "Until the grid is a reflex rather than a lookup."
+              "source": "[YOU SAY: \"Hago la comida\"]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C44-repaso-articulos-four",
-              "prompt": "Give the four Spanish words for the, in the order masculine singular, feminine singular, masculine plural, feminine plural.",
+              "id": "ES-C43-comida-build",
+              "prompt": "Build the noun for food from the verb comer.",
               "assesses": [
-                "ES-GRAMMAR-DEFINITE-ARTICLES",
-                "ES-GRAMMAR-DEFINITE-PLURAL-MASCULINE",
-                "ES-GRAMMAR-DEFINITE-PLURAL-FEMININE"
+                "ES-GRAMMAR-NOUN-FROM-VERB-IDA",
+                "ES-LEX-COMER"
               ],
-              "responseSeconds": 10,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "el, la, los, las",
-                "el la los las",
-                "el / la / los / las"
+                "comida",
+                "la comida"
               ],
               "feedback": {
-                "correct": "That is the whole set.",
-                "incorrect": "el, la, los, las."
+                "correct": "Comer plus -ida: the eaten thing.",
+                "incorrect": "Comida — drop the -er, add -ida."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C44-repaso-articulos-grid",
-              "prompt": "Say the books and then the houses.",
+              "id": "ES-C43-comida-make",
+              "prompt": "Say I make the meal.",
               "assesses": [
-                "ES-GRAMMAR-DEFINITE-PLURAL-MASCULINE",
-                "ES-LEX-LIBRO"
+                "ES-GRAMMAR-HACER-PRESENT-SINGULAR",
+                "ES-LEX-COMIDA"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "los libros, las casas",
-                "los libros las casas"
+                "hago la comida",
+                "yo hago la comida"
               ],
               "feedback": {
-                "correct": "Gender picks the row, number picks the column.",
-                "incorrect": "Los libros, las casas."
+                "correct": "Hago la comida.",
+                "incorrect": "Hago la comida — feminine, so la."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C44-repaso-articulos-rule",
-              "prompt": "State the plural rule in one sentence, including what happens after a consonant.",
+              "id": "ES-C43-comida-gender",
+              "prompt": "What gender is any noun built with -ida?",
               "assesses": [
-                "ES-GRAMMAR-NOUN-PLURAL-ES",
-                "ES-GRAMMAR-NOUN-NUMBER"
+                "ES-GRAMMAR-NOUN-FROM-VERB-IDA",
+                "ES-GRAMMAR-NOUN-GENDER"
               ],
-              "responseSeconds": 12,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "add -s, or -es when the bare s would be unsayable",
-                "-s after a vowel and -es after a consonant"
+                "feminine",
+                "always feminine"
               ],
               "feedback": {
-                "correct": "One rule and a repair.",
-                "incorrect": "Add -s; after a consonant add -es, because the bare -s could not be said."
+                "correct": "Always — the ending settles it.",
+                "incorrect": "Feminine, every time."
               }
             }
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -218,7 +216,7 @@
             },
             {
               "kind": "speech",
-              "text": "Four articles — say them. (El, la, los, las.) Two questions decide which? (Gender and number.) Next: what happens to a when there is more than one — and the answer is not what you would expect."
+              "text": "What verb is hiding inside comida? (Comer.) What does the -ida ending give you besides the word? (Its gender — always feminine.) Next: what happens to these three nouns, and to their articles, when there is more than one of something."
             }
           ]
         }

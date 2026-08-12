@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C42-me-objeto
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 1149
-chapter: 72
+sequence: 1179
+chapter: 76
 type: grammar
 headword: me quieres
 gloss: me doing its plain job — no new form at all, only a second use for a word you have had since chapter four

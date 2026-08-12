@@ -104,7 +104,7 @@ describe("real curriculum", () => {
     // 40 (esperar, contestar, comprar). Two sessions authored a chapter 38 in parallel;
     // the collision surfaced as a merge conflict on chapters.json rather than silently,
     // because both sides must edit it.
-    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(182); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis
+    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(186); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis
     expect(
       books.books
         .find((book) => book.language === "persian")
@@ -263,10 +263,19 @@ describe("real curriculum", () => {
       "ES-C09-estamos-why",
       "ES-C09-estan-accent",
       "ES-C09-estan-form",
+      "ES-C09-estudiante-build",
+      "ES-C09-estudiante-decode",
+      "ES-C09-estudiante-we",
+      "ES-C09-ista-decode",
+      "ES-C09-ista-root",
+      "ES-C09-ista-say",
       "ES-C09-practice-identity",
       "ES-C09-practice-location",
       "ES-C09-practice-origin",
       "ES-C09-practice-state",
+      "ES-C09-profesor-cousin",
+      "ES-C09-profesor-say",
+      "ES-C09-profesor-she",
       "ES-C09-repaso-ser-estar-they",
       "ES-C09-repaso-ser-estar-we",
       "ES-C09-repaso-ser-estar-why",
@@ -277,6 +286,9 @@ describe("real curriculum", () => {
       "ES-C09-ser-singular-forms",
       "ES-C09-ser-vs-estar-identify",
       "ES-C09-ser-vs-estar-state",
+      "ES-C09-sintesis-trabajo-read",
+      "ES-C09-sintesis-trabajo-turn",
+      "ES-C09-sintesis-trabajo-we",
       "ES-C09-sois-form",
       "ES-C09-sois-where",
       "ES-C09-somos-form",

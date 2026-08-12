@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 62,
-  "title": "La Casa --- Your First Everyday Noun",
+  "title": "Venir --- Coming",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f25b99f4b255bd64",
+  "sourceHash": "fnv1a64:684a868378ff0f8a",
   "lessons": [
     {
-      "id": "ES-C43-casa",
-      "sequence": 1119,
-      "title": "la casa — \"house,\" and \"home\"",
-      "headword": "la casa",
-      "romanization": "la casa",
-      "gloss": "house, home — and a word French wore down so far it stopped looking like a noun",
+      "id": "ES-C13-venir",
+      "sequence": 1130,
+      "title": "venir — coming with three singular forms",
+      "headword": "venir",
+      "romanization": "venir",
+      "gloss": "to come — with the singular present forms vengo, vienes, and viene",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ee7eb1bfcb032aa1",
+      "sourceHash": "fnv1a64:bfd9f419ee3e146d",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "You have spent a long time learning what to do with nouns — their gender, their articles, their agreement. This chapter and the next few hand you some nouns to do it with."
+              "text": "You can say salgo de Madrid, and you already know tengo, tienes, tiene. Now learn venir, “to come,” inside exactly the same three singular persons."
             }
           ]
         },
@@ -46,7 +46,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "s-sound — the s in casa is a plain, unvoiced s. Spanish has no z buzz here: KAH-sah, never KAH-zah."
+              "text": "The g in vengo is hard. In vienes and viene, let ie move as one smooth vowel sequence."
             }
           ]
         },
@@ -57,38 +57,53 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "la casa — the house, and just as often home."
-            },
-            {
-              "kind": "speech",
-              "text": "Latin casa meant something humbler than a house: a hut, a cottage, the small shelter a farm worker lived in. The grand Latin word for a proper house was domus — which is where domestic and dome come from. And domus lost. Across the whole west of the Roman world the humble word won and the grand one faded: Spanish casa, Italian casa, Portuguese casa."
-            },
-            {
-              "kind": "speech",
-              "text": "French took the same word somewhere stranger. Casa wore down until it stopped being a noun at all and became the little word chez — so chez moi is, underneath, \"at the house of me.\""
-            },
-            {
-              "kind": "speech",
-              "text": "Italian kept a small one too: casino is casa plus a diminutive ending — literally \"little house.\""
+              "text": "venir descends from Latin venīre, “to come.” English convene means “come together”; an event is something that “comes out”; and adventure passed through the idea of what may “come to” a person. The recurring ven- or vent- shape marks this old coming family."
             }
           ]
         },
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: a feminine noun, behaving exactly as promised",
+          "title": "Grammar Lens: one known comparison, still singular",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Casa ends in -a and is feminine, so it takes la. That is the common case, and it is worth having one plain example on hand before you meet the awkward ones."
+              "kind": "table",
+              "headers": [
+                "person",
+                "present of venir",
+                "known tener comparison"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "person: yo. present of venir: vengo. known tener comparison: tengo.",
+                "person: tú. present of venir: vienes. known tener comparison: tienes.",
+                "person: él / ella / usted. present of venir: viene. known tener comparison: tiene."
+              ]
             },
             {
               "kind": "speech",
-              "text": "la casa — the house. Tengo una casa. — I have a house."
+              "text": "Say vengo, vienes, viene. The learned singular forms line up closely with tengo, tienes, tiene: the yo form ends in -go, while the other two show ie. This comparison describes two complete learned sets; it does not introduce a plural “boot” table or license guesses about other verbs."
             },
             {
               "kind": "speech",
-              "text": "Nothing new is happening here. That is the point: the machinery has been ready for a long time, and this is the first ordinary thing to run through it."
+              "text": "Now contrast leaving and coming with known de and Madrid:"
+            },
+            {
+              "kind": "speech",
+              "text": "Salgo de Madrid. — “I leave Madrid.”"
+            },
+            {
+              "kind": "speech",
+              "text": "Vengo de Madrid. — “I come from Madrid.”"
+            },
+            {
+              "kind": "speech",
+              "text": "Vienes de Madrid. — “You come from Madrid.”"
+            },
+            {
+              "kind": "speech",
+              "text": "Plural persons and free-standing arrival vocabulary wait for later lessons."
             }
           ]
         },
@@ -106,75 +121,88 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"la casa\" — KAH-sah, a clean s",
+              "instruction": "“venir — vengo, vienes, viene”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"la casa\" — *KAH-sah*, a clean *s*]"
+              "source": "[YOU SAY: “venir — vengo, vienes, viene”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Tengo una casa\"",
+              "instruction": "“Vengo de Madrid.”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Tengo una casa\"]"
+              "source": "[YOU SAY: “Vengo de Madrid.”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“vengo / tengo — vienes / tienes”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “vengo / tengo — vienes / tienes”]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C43-casa-article",
-              "prompt": "Say the house in Spanish.",
+              "id": "ES-C13-venir-singular-forms",
+              "prompt": "Give the learned singular present forms of venir: yo, tú, then él/ella/usted.",
               "assesses": [
-                "ES-LEX-CASA",
-                "ES-GRAMMAR-NOUN-GENDER"
+                "ES-LEX-VENIR",
+                "ES-GRAMMAR-VENIR-PRESENT-SINGULAR"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "vengo, vienes, viene",
+                "vengo vienes viene",
+                "vengo / vienes / viene"
+              ],
+              "feedback": {
+                "correct": "Right: vengo, vienes, viene.",
+                "incorrect": "Retrieve the bounded set: vengo, vienes, viene."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C13-venir-come-from-madrid",
+              "prompt": "Say 'I come from Madrid' in Spanish.",
+              "assesses": [
+                "ES-LEX-VENIR",
+                "ES-GRAMMAR-VENIR-PRESENT-SINGULAR",
+                "ES-LEX-DE"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "la casa",
-                "casa"
+                "vengo de madrid.",
+                "vengo de madrid"
               ],
               "feedback": {
-                "correct": "Feminine, so la.",
-                "incorrect": "La casa — it ends in -a and is feminine."
+                "correct": "Right: Vengo de Madrid.",
+                "incorrect": "Use vengo, then the known de plus Madrid."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C43-casa-have",
-              "prompt": "Say I have a house.",
+              "id": "ES-C13-venir-tener-contrast",
+              "prompt": "Give the tú forms of venir and tener, in that order.",
               "assesses": [
-                "ES-GRAMMAR-TENER-PRESENT-SINGULAR",
-                "ES-LEX-CASA"
+                "ES-GRAMMAR-VENIR-PRESENT-SINGULAR",
+                "ES-GRAMMAR-TENER-PRESENT-SINGULAR"
               ],
-              "responseSeconds": 10,
+              "responseSeconds": 7,
               "acceptedResponses": [
-                "tengo una casa",
-                "yo tengo una casa"
+                "vienes, tienes",
+                "vienes tienes",
+                "vienes / tienes"
               ],
               "feedback": {
-                "correct": "Yes — and note you needed no new grammar for it.",
-                "incorrect": "Tengo una casa."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C43-casa-french",
-              "prompt": "Which French word is casa worn all the way down?",
-              "assesses": [
-                "ES-ETYMON-CASA"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "chez",
-                "chez, as in chez moi"
-              ],
-              "feedback": {
-                "correct": "Chez moi is literally at the house of me.",
-                "incorrect": "Chez. The noun wore down until it became a preposition."
+                "correct": "Right: vienes, tienes.",
+                "incorrect": "Both learned tú forms show ie: vienes, tienes."
               }
             }
           ]
@@ -192,7 +220,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is \"the house\"? (La casa.) What did casa mean in Latin? (A hut — the humble word that outlived the grand one.) Next: a masculine noun whose Latin ancestor was a piece of a tree."
+              "text": "What does venir mean? (“To come.”) Give its three learned forms. (Vengo, vienes, viene.) Which learned verb provides the close comparison? (Tener: tengo, tienes, tiene.) Which Latin source and English cousin help explain it? (Venīre; convene, event, or adventure.) Next: compare all six learned yo forms only after retrieving this chapter's three verbs."
             }
           ]
         }

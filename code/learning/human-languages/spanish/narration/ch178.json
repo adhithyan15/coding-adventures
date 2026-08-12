@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 178,
-  "title": "Hay --- There Is, There Are, Same Word",
+  "title": "El Libro Que Compre --- The Word You Cannot Leave Out",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:ccab3322eabefe57",
+  "sourceHash": "fnv1a64:1a8608022a91f00e",
   "lessons": [
     {
-      "id": "ES-C54-hay",
-      "sequence": 2136,
-      "title": "hay — \"there is,\" \"there are,\" same word",
-      "headword": "hay",
-      "romanization": "hay",
-      "gloss": "\"there is\" and \"there are\" — one word for both, which no other Spanish verb form manages",
+      "id": "ES-C53-que-no-se-cae",
+      "sequence": 2162,
+      "title": "el libro que compré — the word you cannot leave out",
+      "headword": "el libro que compré",
+      "romanization": "el libro que compré",
+      "gloss": "the que you can never leave out — English drops its \"that\" and Spanish never does, and this is the error that outlives every other",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a6117e1ec7657ec8",
+      "sourceHash": "fnv1a64:19fe5858b4adc1b2",
       "notice": null,
       "blocks": [
         {
@@ -35,45 +35,61 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"I have eaten.\" (He comido.) You met haber as the verb with no meaning left. It kept one more job, and this is it."
+              "text": "Say this English sentence out loud: \"the book I bought.\" Notice that you did not say that. Now try to translate it."
             }
           ]
         },
         {
           "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
+          "type": "grammar",
+          "title": "Grammar Lens: English drops it, Spanish never does",
           "segments": [
             {
               "kind": "speech",
-              "text": "diphthong-ai — hay is one syllable, rhyming with English eye. The h is silent, as always."
+              "text": "el libro que compré — the book I bought. la casa que tengo — the house I have."
+            },
+            {
+              "kind": "speech",
+              "text": "English lets you delete the joint. The book that I bought and the book I bought are both fine, and in speech you almost always drop it."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish cannot. There is no version of these without que. Leaving it out does not sound casual or fast — it sounds like a sentence that broke."
+            },
+            {
+              "kind": "speech",
+              "text": "This is worth a chapter of its own because of what it does to a learner. You will build the sentence in English first, silently, with the that already missing — and then translate the version you thought of. The gap is invisible precisely because your own language put it there."
+            },
+            {
+              "kind": "speech",
+              "text": "So the habit to build is: whenever an English noun is followed straight by a new subject and verb, a que belongs in the Spanish."
+            },
+            {
+              "kind": "speech",
+              "text": "the book I bought becomes el libro que compré."
+            },
+            {
+              "kind": "speech",
+              "text": "the house we have becomes la casa que tenemos."
+            },
+            {
+              "kind": "speech",
+              "text": "the meal she makes becomes la comida que hace."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: one form, and it does not count",
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
           "segments": [
             {
               "kind": "speech",
-              "text": "hay — there is, and there are."
+              "text": "English can afford to drop it because its word order is rigid: the book I bought can only be read one way."
             },
             {
               "kind": "speech",
-              "text": "Hay una casa. — There is a house. Hay libros. — There are books. Hay una casa aquí. — There's a house here."
-            },
-            {
-              "kind": "speech",
-              "text": "Read those twice. One book or a hundred, hay does not move."
-            },
-            {
-              "kind": "speech",
-              "text": "That is remarkable, and you are now in a position to see why. Every verb form in this book has agreed with something: with the person speaking, with the thing being replaced, with the noun being described. In the impersonal se chapter, even a sentence with nobody in it still made the verb agree with the thing — se compran libros."
-            },
-            {
-              "kind": "speech",
-              "text": "Hay does not. It is the one common Spanish verb form that counts nothing at all, and it is a small gift: no decision to make, ever."
+              "text": "Spanish word order is looser — subjects vanish under pro-drop, objects move in front of verbs. Where the pieces can sit in several places, a deletable joint would make sentences ambiguous. So it is never deleted. Not arbitrary strictness: the price of the freedom Spanish gives you elsewhere."
             }
           ]
         },
@@ -91,68 +107,95 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Hay una casa\" then \"Hay libros\" — the same word, twice",
+              "instruction": "\"the book I bought\" then \"el libro que compré\" — hear the extra word",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Hay una casa\" then \"Hay libros\" — the same word, twice]"
+              "source": "[YOU SAY: \"the book I bought\" then \"el libro que compré\" — hear the extra word]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "Until the missing English that stops being invisible."
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C54-hay-one",
-              "prompt": "Say there is a house.",
+              "id": "ES-C53-que-no-se-cae-book",
+              "prompt": "Say the book I bought.",
               "assesses": [
-                "ES-LEX-HAY",
-                "ES-LEX-CASA"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "hay una casa",
-                "hay una casa."
-              ],
-              "feedback": {
-                "correct": "Hay una casa.",
-                "incorrect": "Hay una casa."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C54-hay-many",
-              "prompt": "Say there are books.",
-              "assesses": [
-                "ES-GRAMMAR-HAY-NO-AGREEMENT",
+                "ES-GRAMMAR-RELATIVE-QUE-OBLIGATORY",
                 "ES-LEX-LIBRO",
-                "ES-GRAMMAR-BARE-PLURAL-NOUN"
+                "ES-GRAMMAR-AR-PRETERITE-SINGULAR"
               ],
-              "responseSeconds": 8,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "hay libros",
-                "hay libros."
+                "el libro que compre",
+                "el libro que compré"
               ],
               "feedback": {
-                "correct": "The same hay — it never goes plural.",
-                "incorrect": "Hay libros. Hay does not change."
+                "correct": "The que English left out.",
+                "incorrect": "El libro que compre — the que is not optional."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C54-hay-unique",
-              "prompt": "What does hay agree with?",
+              "id": "ES-C53-que-no-se-cae-house",
+              "prompt": "Say the house I have.",
               "assesses": [
-                "ES-GRAMMAR-HAY-NO-AGREEMENT"
+                "ES-GRAMMAR-RELATIVE-QUE-OBLIGATORY",
+                "ES-LEX-CASA",
+                "ES-GRAMMAR-TENER-PRESENT-SINGULAR"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "nothing",
-                "nothing at all",
-                "it never changes"
+                "la casa que tengo",
+                "la casa que yo tengo"
               ],
               "feedback": {
-                "correct": "The one common verb form in Spanish that counts nothing.",
-                "incorrect": "Nothing. Not the number, not the person."
+                "correct": "La casa que tengo.",
+                "incorrect": "La casa que tengo."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C53-que-no-se-cae-habit",
+              "prompt": "What English pattern always means a que is needed in Spanish?",
+              "assesses": [
+                "ES-GRAMMAR-RELATIVE-QUE-OBLIGATORY"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "a noun followed straight by a new subject and verb",
+                "a noun then a subject and verb with no that"
+              ],
+              "feedback": {
+                "correct": "That is the invisible gap, and now it is visible.",
+                "incorrect": "A noun followed directly by a new subject and verb: the book I bought."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C53-que-no-se-cae-why",
+              "prompt": "Why can English afford to drop it when Spanish cannot?",
+              "assesses": [
+                "ES-GRAMMAR-RELATIVE-QUE-OBLIGATORY"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "english word order is rigid, spanish is looser",
+                "spanish moves its pieces around, so it needs the joint"
+              ],
+              "feedback": {
+                "correct": "The price of the freedom Spanish gives you elsewhere.",
+                "incorrect": "English word order is rigid; Spanish moves subjects and objects around, so a deletable joint would be ambiguous."
               }
             }
           ]
@@ -170,7 +213,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"There is a house\"? (Hay una casa.) \"There are books\"? (Hay libros — the same word.) What does hay agree with? (Nothing.) Next: what it is actually made of, and the fossil hiding in it."
+              "text": "\"The house I have\"? (La casa que tengo.) Can que ever be left out? (No — never.) And why not? (Because Spanish moves its pieces around, so the joint has to stay.)"
             }
           ]
         }

@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 86,
-  "title": "Se Lo --- The Pair That Does Not Exist",
+  "title": "Which One Is the Verb Asking For?",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:712b482084dea4b3",
+  "sourceHash": "fnv1a64:315295e9e3b58241",
   "lessons": [
     {
-      "id": "ES-C47-se-lo",
-      "sequence": 1167,
-      "title": "se lo — the pair that does not exist",
-      "headword": "se lo",
-      "romanization": "se lo",
-      "gloss": "the one pair Spanish will not say — le lo does not exist, and something else stands in for it",
+      "id": "ES-C46-cual-pide",
+      "sequence": 1193,
+      "title": "Which one is the verb asking for?",
+      "headword": "lo tengo / le hablo",
+      "romanization": "lo tengo / le hablo",
+      "gloss": "how to know which pronoun a verb is asking for — one question, asked of the verb rather than memorised per verb",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f7f49e0993c7bd66",
+      "sourceHash": "fnv1a64:1bbfd6e64fe37c5c",
       "notice": null,
       "blocks": [
         {
@@ -35,47 +35,66 @@
             },
             {
               "kind": "speech",
-              "text": "Person first, then thing. So \"I tell it to him\" should be le plus lo plus digo. Say that out loud: le lo digo."
+              "text": "You have two sets now. The obvious worry is that you will have to learn, verb by verb, which set each one wants. You do not."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: nobody says that",
+          "title": "Grammar Lens: ask the verb one question",
           "segments": [
             {
               "kind": "speech",
-              "text": "Your mouth probably objected before your grammar did. Le lo is two nearly identical syllables in a row, and Spanish will not say it."
+              "text": "Does the verb do something to this, or aim something at this?"
             },
             {
               "kind": "speech",
-              "text": "In front of lo, la, los or las, the pronouns le and les become se."
+              "text": "That is the whole test."
             },
             {
               "kind": "speech",
-              "text": "Le lo digo. becomes Se lo digo. — I tell it to him. Les la hago. becomes Se la hago. — I make it for them."
+              "text": "Tengo el libro becomes Lo tengo. The having lands on the book. Direct. Hablo a Ana becomes Le hablo. The speaking is aimed at Ana. Indirect."
             },
             {
               "kind": "speech",
-              "text": "Everything else about the sentence is unchanged. The order is still person then thing. The slot is still in front of the verb. Only the first word's shape changes, and it changes for one reason: what follows it."
+              "text": "Say the sentence in English with the little word to in front of the person. If it fits, Spanish wants the indirect one:"
             },
             {
               "kind": "speech",
-              "text": "Note what se does not tell you. Le already refused to mark gender, and se goes further — it does not mark number either:"
+              "text": "I speak to her becomes le hablo. Fits."
             },
             {
               "kind": "speech",
-              "text": "Se lo digo — to him. To her. To you. To them. To you all."
+              "text": "I have to the book becomes nonsense. So lo tengo."
             },
             {
               "kind": "speech",
-              "text": "Five readings, one word. Context does all the work, and if you need to be precise you add it in words rather than in the pronoun."
+              "text": "English hides this by dropping the to: you say I told him, not I told to him. Put it back, and if it survives, the pronoun is le."
             }
           ]
         },
         {
           "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One thing the test will not settle, said now rather than met later as a shock."
+            },
+            {
+              "kind": "speech",
+              "text": "In much of Spain, speakers use le for a male person even where the grammar calls for lo: le veo rather than lo veo. It has a name, leísmo, it is old, it is accepted for people, and roughly a fifth of the Spanish-speaking world does it."
+            },
+            {
+              "kind": "speech",
+              "text": "So if you hear le where this chapter predicts lo, neither of you has misunderstood. The test above is right everywhere."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -88,84 +107,95 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"le lo digo\" once, badly, and then \"se lo digo\" — feel why",
+              "instruction": "\"Lo tengo\" then \"Le hablo\" — which question does each answer?",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"le lo digo\" once, badly, and then \"se lo digo\" — feel why]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Se lo digo\" and \"Se la hago\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Se lo digo\" and \"Se la hago\"]"
+              "source": "[YOU SAY: \"Lo tengo\" then \"Le hablo\" — which question does each answer?]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C47-se-lo-say",
-              "prompt": "Say I tell it to him.",
+              "id": "ES-C46-cual-pide-test",
+              "prompt": "State the one-question test in your own words.",
               "assesses": [
-                "ES-GRAMMAR-SE-FOR-LE",
-                "ES-GRAMMAR-DECIR-PRESENT-SINGULAR"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "se lo digo",
-                "yo se lo digo"
-              ],
-              "feedback": {
-                "correct": "Se lo digo — le could not stand in front of lo.",
-                "incorrect": "Se lo digo. Le becomes se before lo."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C47-se-lo-when",
-              "prompt": "In front of which four words do le and les become se?",
-              "assesses": [
-                "ES-GRAMMAR-SE-FOR-LE",
-                "ES-GRAMMAR-DIRECT-OBJECT-LA"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "lo, la, los, las",
-                "lo la los las",
-                "the direct object pronouns for things"
-              ],
-              "feedback": {
-                "correct": "Only those four, and always those four.",
-                "incorrect": "lo, la, los and las."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C47-se-lo-ambiguous",
-              "prompt": "How many different people can se lo digo be about?",
-              "assesses": [
-                "ES-GRAMMAR-SE-FOR-LE",
-                "ES-GRAMMAR-INDIRECT-OBJECT-PLURAL"
+                "ES-GRAMMAR-WHICH-OBJECT"
               ],
               "responseSeconds": 12,
               "acceptedResponses": [
-                "five: him, her, you, them, you all",
-                "five",
-                "him her you them or you all"
+                "does the verb act on it or aim at it",
+                "can you put to in front of it in english",
+                "to whom versus what"
               ],
               "feedback": {
-                "correct": "Se marks neither gender nor number. Context carries it.",
-                "incorrect": "Five — him, her, usted, them, ustedes. Se marks neither gender nor number."
+                "correct": "Acts on it, or aims at it.",
+                "incorrect": "Ask whether the verb acts ON the thing, or aims something AT the person."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C46-cual-pide-speak",
+              "prompt": "Say I speak to her.",
+              "assesses": [
+                "ES-GRAMMAR-INDIRECT-OBJECT-LE",
+                "ES-LEX-HABLAR",
+                "ES-GRAMMAR-AR-PRESENT-1SG"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "le hablo",
+                "yo le hablo"
+              ],
+              "feedback": {
+                "correct": "Aimed at her, so le.",
+                "incorrect": "Le hablo — the speaking is aimed at somebody."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C46-cual-pide-have",
+              "prompt": "Say I have it, about the book, and say which set that is.",
+              "assesses": [
+                "ES-GRAMMAR-DIRECT-OBJECT-LO",
+                "ES-LEX-LIBRO",
+                "ES-GRAMMAR-TENER-PRESENT-SINGULAR"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "lo tengo, direct",
+                "lo tengo"
+              ],
+              "feedback": {
+                "correct": "The having lands on the book.",
+                "incorrect": "Lo tengo — direct, because the verb acts on the thing."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C46-cual-pide-leismo",
+              "prompt": "Somebody in Madrid says le veo for I see him. Has a rule been broken?",
+              "assesses": [
+                "ES-GRAMMAR-WHICH-OBJECT",
+                "ES-GRAMMAR-INDIRECT-OBJECT-LE"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "no, it is leismo and it is accepted",
+                "no",
+                "no, that is normal in spain"
+              ],
+              "feedback": {
+                "correct": "Two answers, both somebody's normal.",
+                "incorrect": "No. That is leismo, it is old and accepted for people, and about a fifth of speakers do it."
               }
             }
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -177,7 +207,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"I tell it to him\"? (Se lo digo.) What happened to le? (It became se in front of lo.) Next: why it became se — and it is not the reason almost everyone assumes."
+              "text": "What one question tells you which set to use? (Does the verb act on it, or aim at it?) What is it called when Spain uses le for a man where the rule says lo? (Leísmo — and it is fine.) Next: both sets in one place."
             }
           ]
         }

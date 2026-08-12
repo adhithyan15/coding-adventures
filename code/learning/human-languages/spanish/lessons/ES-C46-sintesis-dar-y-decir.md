@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C46-sintesis-dar-y-decir
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 1165
-chapter: 84
+sequence: 1195
+chapter: 88
 type: practice-mix
 headword: (synthesis)
 gloss: synthesis — choosing between the two sets at conversation speed, where the choice is made by meaning and not by a table

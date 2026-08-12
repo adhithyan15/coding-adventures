@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 116,
-  "title": "Ojala --- a Prayer That Outlived Its Religion",
-  "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:7fdee932942968f9",
+  "title": "Synthesis --- Promising, and Supposing",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:52c48507cc8c99bf",
   "lessons": [
     {
-      "id": "ES-C18-ojala",
-      "sequence": 1418,
-      "title": "ojalá + subjunctive — a wish borrowed through Arabic",
-      "headword": "ojalá + subjunctive",
-      "romanization": "ojalá + subjunctive",
-      "gloss": "a wish trigger borrowed through Hispanic Arabic",
+      "id": "ES-C17-sintesis-futuro-condicional",
+      "sequence": 1412,
+      "title": "Synthesis — promising, and supposing",
+      "headword": "(synthesis)",
+      "romanization": "(synthesis)",
+      "gloss": "synthesis — one stem, two endings, and the difference between promising and supposing",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9dbe6bb6e6ead924",
+      "sourceHash": "fnv1a64:f24f4d05a69aeb01",
       "notice": null,
       "blocks": [
         {
@@ -35,430 +35,163 @@
             },
             {
               "kind": "speech",
-              "text": "Ojalá hables español means “I hope you speak Spanish” or “May you speak Spanish.” Ojalá expresses the wish by itself. It needs neither a main verb nor que before the subjunctive. Keep the first frame tiny:"
-            },
-            {
-              "kind": "speech",
-              "text": "Ojalá + subjunctive."
-            },
-            {
-              "kind": "speech",
-              "text": "That is a usable modern pattern. It does not make the Arabic source phrase new Spanish vocabulary."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "etymology",
-          "title": "The wish-word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "The Real Academia Española records ojalá from Hispanic Arabic wa šá lláh, “and God has willed.” Long contact in al-Andalus carried the expression into Spanish, where its sound and grammatical life changed. You met another Arabic-derived function word in hasta. The historical phrase explains a route; only modern ojalá is available for your Spanish sentences."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Use only modern ojalá as the Spanish trigger."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C18-ojala-trigger",
-              "prompt": "Say 'I hope you speak Spanish' to one friend using ojalá.",
-              "assesses": [
-                "ES-LEX-OJALA-SUBJUNCTIVE-TRIGGER",
-                "ES-GRAMMAR-AR-SUBJUNCTIVE-SINGULAR",
-                "ES-LEX-HABLAR",
-                "ES-LEX-ESPANOL"
-              ],
-              "responseSeconds": 9,
-              "acceptedResponses": [
-                "ojalá hables español.",
-                "ojalá hables español",
-                "ojala hables espanol"
-              ],
-              "feedback": {
-                "correct": "Right: Ojalá hables español.",
-                "incorrect": "Use ojalá directly before the tú subjunctive hables."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C18-ojala-no-que",
-              "prompt": "Does the learned ojalá frame require que before hables? Answer yes or no.",
-              "assesses": [
-                "ES-LEX-OJALA-SUBJUNCTIVE-TRIGGER"
-              ],
-              "responseSeconds": 5,
-              "acceptedResponses": [
-                "no"
-              ],
-              "feedback": {
-                "correct": "Right: ojalá directly licenses the subjunctive in this frame.",
-                "incorrect": "No: say Ojalá hables, without que."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C18-ojala-source",
-              "prompt": "Through which historical language variety did Spanish receive ojalá?",
-              "assesses": [
-                "ES-ETYMON-OJALA-HISPANIC-ARABIC"
-              ],
-              "responseSeconds": 7,
-              "acceptedResponses": [
-                "hispanic arabic",
-                "arabic",
-                "andalusi arabic",
-                "hispano-arabic"
-              ],
-              "feedback": {
-                "correct": "Right: the recorded route is through Hispanic Arabic.",
-                "incorrect": "The historical route named here is Hispanic Arabic."
-              }
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What follows ojalá in the learned frame? (The subjunctive.) Does it need que? (No.) Which historical language variety carried the word into Spanish? (Hispanic Arabic.) Is the older Arabic phrase usable as new Spanish vocabulary here? (No.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C18-practice",
-      "sequence": 1422,
-      "title": "Practice — assert the event or want it",
-      "headword": "(practice)",
-      "romanization": "(practice)",
-      "gloss": "a singular checkpoint for wanted events and the present subjunctive",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:b4cc5e5bccc3b8ea",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "This checkpoint adds no vocabulary, plural person, object pronoun, or new clause frame. First decide whether the event is asserted or wanted. Then retrieve only the singular rows you learned."
+              "text": "Nothing new in this chapter. Say hablaré, then hablaría."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: the bounded map",
+          "title": "Grammar Lens: the two endings are one word, twice",
           "segments": [
             {
-              "kind": "table",
-              "headers": [
-                "verb",
-                "yo / él / ella / usted",
-                "tú"
-              ],
-              "columns": 3,
-              "rowCount": 6,
-              "utterances": [
-                "verb: hablar. yo / él / ella / usted: hable. tú: hables.",
-                "verb: comer. yo / él / ella / usted: coma. tú: comas.",
-                "verb: vivir. yo / él / ella / usted: viva. tú: vivas.",
-                "verb: querer. yo / él / ella / usted: quiera. tú: quieras.",
-                "verb: poder. yo / él / ella / usted: pueda. tú: puedas.",
-                "verb: hacer. yo / él / ella / usted: haga. tú: hagas."
-              ]
+              "kind": "speech",
+              "text": "Three chapters ago you were told where these endings came from. Now it is worth seeing what that fact buys you."
             },
             {
               "kind": "speech",
-              "text": "The repeated outer form is not a missing row: first- and third-person singular match. Every plural form waits."
+              "text": "Both are the verb haber — Latin habēre, \"to have\" — glued onto the back of the infinitive. Romance speakers stopped saying \"I have to speak\" as two words and fused it into one:"
+            },
+            {
+              "kind": "speech",
+              "text": "hablar + he (I have) becomes hablaré — I will speak. hablar + había (I had) becomes hablaría — I would speak."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the entire difference between the two tenses: the same auxiliary, once in the present and once in the past. Not two systems to learn — one system, looked at from two moments."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: two safe triggers",
+          "type": "notice",
+          "title": "What you've built",
           "segments": [
             {
               "kind": "speech",
-              "text": "Same doer: Quiero hablar español."
+              "text": "And the meaning follows from the grammar rather than being extra to it."
             },
             {
               "kind": "speech",
-              "text": "Different doer: Quiero que hables español."
+              "text": "Having to do something now is a commitment: hablaré is a promise, or a prediction you are standing behind. Having had to do it is a supposition — the obligation sits in a past that never arrived, so hablaría is hypothetical."
             },
             {
               "kind": "speech",
-              "text": "Wish by itself: Ojalá hables español."
+              "text": "Promise from the present. Suppose from the past."
             },
             {
               "kind": "speech",
-              "text": "Do not extend these two frames to every emotion, doubt, command, or conjunction yet. More triggers belong in later micro-lessons."
+              "text": "English hides the same move: will is the present of an old verb meaning to want, and would is its past. Will/would is the same pair as -é/-ía."
             }
           ]
         },
         {
           "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
+          "type": "input",
+          "title": "The exchange",
           "segments": [
             {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
+              "kind": "speech",
+              "text": "— ¿Hablarás español en Madrid? — Sí, hablaré español. — ¿Y sin práctica? — Hablaría español, pero no bien."
             },
             {
               "kind": "speech",
-              "text": "Decide the meaning first; then retrieve only the learned form."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C18-practice-fact-wanted",
-              "prompt": "Choose the wanted-event form: hablas or hables.",
-              "assesses": [
-                "ES-GRAMMAR-SUBJUNCTIVE-WANTED-NONASSERTED",
-                "ES-GRAMMAR-AR-SUBJUNCTIVE-SINGULAR"
-              ],
-              "responseSeconds": 5,
-              "acceptedResponses": [
-                "hables"
-              ],
-              "feedback": {
-                "correct": "Right: hables is the wanted-event form in this chapter.",
-                "incorrect": "Hablas can assert; hables follows the learned wish frame."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C18-practice-one-two",
-              "prompt": "Give the pair 'I want to speak Spanish; I want you to speak Spanish.'",
-              "assesses": [
-                "ES-GRAMMAR-WANT-ONE-TWO-SUBJECT-CONTRAST",
-                "ES-LEX-HABLAR",
-                "ES-LEX-ESPANOL"
-              ],
-              "responseSeconds": 11,
-              "acceptedResponses": [
-                "quiero hablar español; quiero que hables español.",
-                "quiero hablar español quiero que hables español",
-                "quiero hablar español / quiero que hables español"
-              ],
-              "feedback": {
-                "correct": "Right: one doer uses hablar; two use que hables.",
-                "incorrect": "Use Quiero hablar español, then Quiero que hables español."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C18-practice-regular-rows",
-              "prompt": "Give the tú subjunctive forms of hablar, comer, and vivir, in that order.",
-              "assesses": [
-                "ES-GRAMMAR-AR-SUBJUNCTIVE-SINGULAR",
-                "ES-GRAMMAR-ER-SUBJUNCTIVE-SINGULAR",
-                "ES-GRAMMAR-IR-SUBJUNCTIVE-SINGULAR"
-              ],
-              "responseSeconds": 9,
-              "acceptedResponses": [
-                "hables, comas, vivas",
-                "hables comas vivas",
-                "hables / comas / vivas"
-              ],
-              "feedback": {
-                "correct": "Right: hables, comas, vivas.",
-                "incorrect": "Retrieve the three tú forms: hable-s, coma-s, viva-s."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C18-practice-yo-stem",
-              "prompt": "Which present-person form supplies the stem in this chapter's recipe?",
-              "assesses": [
-                "ES-GRAMMAR-SUBJUNCTIVE-YO-STEM-VOWEL-SWAP"
-              ],
-              "responseSeconds": 6,
-              "acceptedResponses": [
-                "the yo form",
-                "yo",
-                "present yo form"
-              ],
-              "feedback": {
-                "correct": "Right: start from the present yo form.",
-                "incorrect": "The recipe begins with the present yo form."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C18-practice-querer",
-              "prompt": "Give the learned singular subjunctive row of querer.",
-              "assesses": [
-                "ES-GRAMMAR-QUERER-SUBJUNCTIVE-SINGULAR",
-                "ES-LEX-QUERER"
-              ],
-              "responseSeconds": 9,
-              "acceptedResponses": [
-                "quiera, quieras, quiera",
-                "quiera quieras quiera",
-                "quiera / quieras / quiera"
-              ],
-              "feedback": {
-                "correct": "Right: quiera, quieras, quiera.",
-                "incorrect": "Keep quier- and add -a, -as, -a."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C18-practice-poder",
-              "prompt": "Say 'I want you to be able to speak Spanish' to one friend.",
-              "assesses": [
-                "ES-GRAMMAR-PODER-SUBJUNCTIVE-SINGULAR",
-                "ES-LEX-PODER",
-                "ES-LEX-HABLAR",
-                "ES-LEX-ESPANOL"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "quiero que puedas hablar español.",
-                "quiero que puedas hablar español"
-              ],
-              "feedback": {
-                "correct": "Right: Quiero que puedas hablar español.",
-                "incorrect": "Use quiero que plus puedas, then hablar español."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C18-practice-hacer",
-              "prompt": "Say 'I want you to make coffee' to one friend.",
-              "assesses": [
-                "ES-GRAMMAR-HACER-SUBJUNCTIVE-SINGULAR",
-                "ES-LEX-HACER",
-                "ES-LEX-CAFE"
-              ],
-              "responseSeconds": 9,
-              "acceptedResponses": [
-                "quiero que hagas café.",
-                "quiero que hagas café",
-                "quiero que hagas cafe"
-              ],
-              "feedback": {
-                "correct": "Right: Quiero que hagas café.",
-                "incorrect": "Use quiero que plus hagas, then café."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C18-practice-ojala",
-              "prompt": "Say 'I hope you live in Madrid' to one friend using ojalá.",
-              "assesses": [
-                "ES-LEX-OJALA-SUBJUNCTIVE-TRIGGER",
-                "ES-GRAMMAR-IR-SUBJUNCTIVE-SINGULAR",
-                "ES-LEX-VIVIR",
-                "ES-LEX-EN"
-              ],
-              "responseSeconds": 9,
-              "acceptedResponses": [
-                "ojalá vivas en madrid.",
-                "ojalá vivas en madrid",
-                "ojala vivas en madrid"
-              ],
-              "feedback": {
-                "correct": "Right: Ojalá vivas en Madrid.",
-                "incorrect": "Use ojalá directly before vivas en Madrid."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C18-practice-subjunctive-name",
-              "prompt": "What does the Latin source subiūnctīvus help you picture?",
-              "assesses": [
-                "ES-ETYMON-SUBJUNCTIVE-SUBIUNCTIVUS"
-              ],
-              "responseSeconds": 7,
-              "acceptedResponses": [
-                "a clause subjoined or joined under another",
-                "subjoined",
-                "joined under"
-              ],
-              "feedback": {
-                "correct": "Right: a subjoined clause.",
-                "incorrect": "It carries the idea of being subjoined, or joined under another."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C18-practice-ojala-source",
-              "prompt": "Name the historical language variety through which ojalá entered Spanish.",
-              "assesses": [
-                "ES-ETYMON-OJALA-HISPANIC-ARABIC"
-              ],
-              "responseSeconds": 7,
-              "acceptedResponses": [
-                "hispanic arabic",
-                "arabic",
-                "andalusi arabic",
-                "hispano-arabic"
-              ],
-              "feedback": {
-                "correct": "Right: Hispanic Arabic.",
-                "incorrect": "The route recorded here is Hispanic Arabic."
-              }
+              "text": "One letter-run apart, and the second speaker has moved from a commitment to a guess without changing a single other word."
             }
           ]
         },
         {
           "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hablaré then hablaría, and hear a promise turn into a guess",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hablaré* then *hablaría*, and hear a promise turn into a guess]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "Until the choice is about what you mean, not which ending it was."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C17-sintesis-futuro-condicional-promise",
+              "prompt": "You are committing to it. I will speak: which form?",
+              "assesses": [
+                "ES-GRAMMAR-AR-FUTURE-SINGULAR"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "hablare",
+                "hablaré",
+                "yo hablare"
+              ],
+              "feedback": {
+                "correct": "Yes — the future is the promise.",
+                "incorrect": "hablare. The present auxiliary means you are standing behind it."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C17-sintesis-futuro-condicional-suppose",
+              "prompt": "Now you are only supposing. I would speak: which form?",
+              "assesses": [
+                "ES-GRAMMAR-AR-CONDITIONAL-SINGULAR",
+                "ES-GRAMMAR-CONDITIONAL-HYPOTHETICAL"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "hablaria",
+                "hablaría",
+                "yo hablaria"
+              ],
+              "feedback": {
+                "correct": "Yes — the past auxiliary makes it hypothetical.",
+                "incorrect": "hablaria."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C17-sintesis-futuro-condicional-why",
+              "prompt": "What single word is glued onto the infinitive in BOTH tenses?",
+              "assesses": [
+                "ES-ETYMON-ROMANCE-FUTURE-CONDITIONAL"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "haber",
+                "habere",
+                "the verb to have",
+                "have"
+              ],
+              "feedback": {
+                "correct": "Yes — once in the present, once in the past. That is the only difference.",
+                "incorrect": "haber, from Latin habere. Present gives the future; past gives the conditional."
+              }
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -470,7 +203,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is the first meaning choice? (Asserted event or wanted event.) Give the three regular tú forms. (Hables, comas, vivas.) Give the three bounded special tú forms. (Quieras, puedas, hagas.) Name the two safe triggers. (Quiero que for a different doer; ojalá for a wish.) What still waits? (Plural persons, additional irregular verbs, and additional subjunctive triggers.)"
+              "text": "What is glued onto the infinitive in both tenses? (Haber — the verb to have.) Which one is a promise, and which a supposition? (-é the promise, -ía the supposition.) And what is the English pair that works the same way? (Will and would — a present and a past of one old verb.)"
             }
           ]
         }

@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C24-cabeza
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 1620
-chapter: 128
+sequence: 1650
+chapter: 132
 type: word
 headword: la cabeza
 gloss: the head — Spanish KEPT Latin's real word, unlike French, which replaced it with slang for "pot"
