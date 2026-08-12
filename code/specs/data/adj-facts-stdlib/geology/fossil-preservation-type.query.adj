@@ -1,0 +1,5 @@
+import "fossil-preservation-type.adj"
+
+? fossil_preservation_type(mold, $D)                                                                        % expect three_dimensional_impression_of_all_or_part_of_a_body_fossil_or_trace_fossil (direct)
+? fossil_preservation_type($T, consists_of_the_evidence_of_living_organisms_but_not_the_actual_organism_itself)   % expect trace_fossil (reverse)
+? fossil_preservation_type(steinkern, $D)                                                                    % expect abstain -- a real term with its own clean definition on the same page, but the page frames it as a specific KIND of cast (an internal cast), not a fourth preservation type
