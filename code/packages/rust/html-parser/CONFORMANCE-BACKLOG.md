@@ -308,8 +308,13 @@ Prioritized work items:
    when an authored HTML `ruby` is in scope and report when a non-ruby node
    remains current, matching WPT `tests19.dat` and `webkit01.dat` while keeping
    valid annotation transitions, outside-ruby starts, and synthetic ruby
-   fragment contexts quiet. Continue the fresh in-body scope and recovery audit
-   beyond active formatting.
+   fragment contexts quiet. An `hr` start tag in select scope now generates
+   implied ends and reports when a non-implied descendant leaves an `option` or
+   `optgroup` open, matching the current Standard while inserting the `hr` at
+   the surviving current node. Direct option and group children close quietly;
+   empty selects, ordinary body content, table cells, select fragments, and
+   foreign content retain their expected paths. Continue the fresh in-body
+   scope and recovery audit beyond active formatting.
 3. **Diagnostic positions and error taxonomy.** Carry source positions into
    tree construction and map diagnostics to current WHATWG concepts. Legacy
    WPT/html5lib error labels are evidence hints, not a normative public API.
