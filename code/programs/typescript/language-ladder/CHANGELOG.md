@@ -2,6 +2,11 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Chinese 我 ductus (HL-C09CK)
+
+- Render **我** in nine source-aligned movements across seven strokes.
+- Preserve the hooked vertical, six lifts, and the Noto Sans SC outline fit.
+
 ### Added — cited Chinese 好 ductus (HL-C09CJ)
 
 - Render **好** in nine source-aligned frames: all three 女 strokes first,
