@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Added explicit-named-target `restore FILE`, which opens the artifact once,
+  publishes audited import without intermediate output, independently reopens
+  the durable target, and claims completed-and-verified only after its audited
+  semantic comparison succeeds.
+- Reserve both audit traces before restore mutation and retain standalone
+  `restore verify FILE` as the safe retry after a post-import interruption.
 - Added audit-first `vault create NAME` with a distinct adapter namespace,
   trace-before-config ordering, exact prepared-journal retry, and no replacement
   of active targets.
