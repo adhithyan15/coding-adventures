@@ -7,6 +7,8 @@ The crate is intentionally a thin adapter:
 
 - it publishes `smart_home.*` D18D tool definitions
 - it registers in-process handlers on `InMemoryToolRuntime`
+- it can execute one selected definition through a short-lived D18D runtime for
+  thread-safe authenticated host dispatch
 - handlers translate JSON arguments into controller transactions containing
   `SmartHomeRuntime` read, discover, event-subscription, pair, command,
   event-ingest, supervision, desired-state, and read-only D23A catalog requests

@@ -10,6 +10,8 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+- Add selected-call invocation for thread-safe authenticated model-tool dispatch
+  without moving policy or state out of D18D and the central D23 controller.
 - Replaced the actor-local `Rc<RefCell<SmartHomeRuntime>>` bridge with a
   thread-safe adapter over `SmartHomeControllerRuntime`; every Chief tool
   invocation now serializes, durably commits, and publishes its runtime and

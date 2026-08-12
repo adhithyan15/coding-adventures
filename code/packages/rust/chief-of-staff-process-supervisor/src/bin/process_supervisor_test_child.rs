@@ -1,6 +1,6 @@
 use chief_of_staff_host_control_protocol::{
     ChannelBindingAccess, CompletionCall, DataPlaneResponse, ModelToolChoice, ModelToolDefinition,
-    PromptMessage, PromptRole, ToolCompletionCall,
+    PromptMessage, PromptRole, ToolCompletionCall, ToolCompletionOutput,
 };
 use chief_of_staff_host_runtime::{verify_agent_package, AgentPackageRuntime, PackageKeyring};
 use chief_of_staff_process_supervisor::ChildProcessControl;
@@ -80,8 +80,18 @@ fn exercise_data_plane(
         choice: ModelToolChoice::Required,
         results: Vec::new(),
     })?;
-    if !matches!(tool_completed, DataPlaneResponse::Failed { .. }) {
+    let DataPlaneResponse::ToolCompleted { result, .. } = tool_completed else {
         return Err("unexpected tool completion response".into());
+    };
+    let ToolCompletionOutput::ToolCall(call) = result.output else {
+        return Err("expected model-returned tool call".into());
+    };
+    let executed = control.request_tool_execution(call.clone())?;
+    if !matches!(
+        executed,
+        DataPlaneResponse::ToolExecuted { result, .. } if result.call == call
+    ) {
+        return Err("unexpected tool execution response".into());
     }
     Ok(())
 }

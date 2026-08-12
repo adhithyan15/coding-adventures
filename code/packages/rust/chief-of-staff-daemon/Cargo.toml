@@ -23,14 +23,23 @@ chief-of-staff-daemon-keyring = { path = "../chief-of-staff-daemon-keyring" }
 chief-of-staff-daemon-policy = { path = "../chief-of-staff-daemon-policy" }
 chief-of-staff-daemon-runtime = { path = "../chief-of-staff-daemon-runtime" }
 chief-of-staff-host-data-plane = { path = "../chief-of-staff-host-data-plane" }
+chief-of-staff-host-control-protocol = { path = "../chief-of-staff-host-control-protocol" }
+chief-of-staff-smart-home-tools = { path = "../chief-of-staff-smart-home-tools" }
+chief-of-staff-tool-api = { path = "../chief-of-staff-tool-api" }
 chief-of-staff-orchestrator-core = { path = "../chief-of-staff-orchestrator-core" }
+chief-of-staff-pipeline-bindings = { path = "../chief-of-staff-pipeline-bindings" }
 chief-of-staff-process-supervisor = { path = "../chief-of-staff-process-supervisor" }
 chief-of-staff-service-reconciler = { path = "../chief-of-staff-service-reconciler" }
 coding_adventures_x3dh = { path = "../x3dh" }
 coding_adventures_uuid = { path = "../uuid" }
 process-shutdown = { path = "../process-shutdown" }
+serde_json = "1"
 storage-core = { path = "../storage-core" }
 coding_adventures_storage_fs = { path = "../storage-fs" }
+coding-adventures-json-serializer = { path = "../json-serializer" }
+coding-adventures-json-value = { path = "../json-value" }
+smart-home-controller-runtime = { path = "../smart-home-controller-runtime" }
+smart-home-core = { path = "../smart-home-core" }
 transport-platform = { path = "../transport-platform" }
 websocket-runtime = { path = "../websocket-runtime" }
 
@@ -39,6 +48,7 @@ windows-sys = { version = "0.52", features = ["Win32_Storage_FileSystem"] }
 
 [dev-dependencies]
 coding_adventures_ed25519 = { path = "../ed25519" }
+chief-of-staff-service-registry = { path = "../chief-of-staff-service-registry" }
 
 [target.'cfg(unix)'.dev-dependencies]
 libc = "0.2"

@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Restore the central Smart Home controller for model-enabled deployments and
+  inject a bounded core D18D catalog into authenticated host tool dispatch.
 - Expose the exact production host data-plane composition boundary so the real
   Level 1 child can be exercised against file-provisioned keys, durable encrypted
   channels, and the configured Ollama adapter in one end-to-end test.
