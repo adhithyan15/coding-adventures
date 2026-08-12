@@ -181,11 +181,15 @@ fn grid_component_lowers_to_xaml_without_error() {
     // test to pass.
     let (xaml, code_behind, events) = compile_component("Grid");
     assert!(xaml.contains("<UserControl"));
-    // HostTable lowered.
+    // Canonical HostTable lowered to the component-scoped Grid subclass whose
+    // automation peer exposes native Table/Grid patterns.
     assert!(
-        xaml.contains("<Grid>") || xaml.contains("<Grid "),
-        "Grid XAML missing <Grid> from HostTable lowering, got:\n{xaml}"
+        xaml.contains("<local:GridMosaicTable "),
+        "Grid XAML missing accessible MosaicTable lowering, got:\n{xaml}"
     );
+    assert!(xaml.contains("<local:GridMosaicTableHeaderCell "));
+    assert!(xaml.contains("<local:GridMosaicTableCell "));
+    assert!(xaml.contains("AutomationProperties.Name=\"{x:Bind MosaicTableName}\""));
     // For block lowered to ItemsRepeater.
     assert!(
         xaml.contains("<ItemsRepeater"),
@@ -206,6 +210,10 @@ fn grid_component_lowers_to_xaml_without_error() {
         code_behind.contains("public sealed partial class Grid : UserControl"),
         "Grid code-behind missing partial class"
     );
+    assert!(code_behind.contains("IGridProvider, ITableProvider"));
+    assert!(code_behind.contains("IGridItemProvider, ITableItemProvider"));
+    assert!(code_behind.contains("PatternInterface.Grid or PatternInterface.Table"));
+    assert!(code_behind.contains("case VirtualKey.Left"));
     // Three emits (onNavigate, onEditCommit, onEditCancel) → three records.
     assert!(events.contains("Navigate"));
     assert!(events.contains("EditCommit"));

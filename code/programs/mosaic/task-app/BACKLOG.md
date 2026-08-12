@@ -53,12 +53,13 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
   SVG-overlay host component) or product guidance on visual treatment
   before it's picked up — see `code/specs/task-app-richer-gantt-v1.md`'s
   "What does NOT ship" section for the full reasoning.
-- **Native XAML drag and table semantics.** Flutter, Compose Desktop, Qt, and
+- **Native XAML drag semantics.** Flutter, Compose Desktop, Qt, and
   SwiftUI now lower the UI35 family to native drag systems with equivalent
   keyboard and accessibility operation, and their canonical UI31/Grid shapes
-  expose native table semantics. WinUI/XAML still degrades the board and calendar
-  drag interactions to static containers and renders Sheet without native table
-  semantics. These are the five remaining reports blocking a strict XAML TaskApp.
+  expose native table semantics. WinUI/XAML now also exposes native UIA table
+  semantics for the canonical Sheet, but still degrades the board and calendar
+  drag interactions to static containers. These are the four remaining reports
+  blocking a strict XAML TaskApp.
   See
   `code/specs/UI35-host-drag-drop.md` and UI38's prioritized completion backlog.
 - **Calendar week/day views, resize, and time-blocking.** Deferred from the Phase 7 ship —
@@ -91,12 +92,20 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
 
 ## Resolved (kept for traceability, not actionable)
 
+- **Native XAML table semantics for the Sheet.** The canonical indexed UI31/Grid
+  shape now emits component-scoped WinUI table, header, and cell controls whose
+  peers implement UIA Table/Grid and TableItem/GridItem patterns. The authored
+  editable Cell subtree remains intact, while automation clients receive stable
+  dimensions, header associations, row/column coordinates, names, and arrow-key
+  movement. Ambiguous HostTable trees retain the visual fallback and explicit
+  degradation.
+
 - **Concrete Rust TaskApp engine in the XAML WinUI artifact.** Windows CI now
   builds `task-mosaic-app`, emits the complete TaskApp with that selected DLL,
   verifies `mosaic_app.dll` beside `TaskApp.exe` byte-for-byte, and drives initial
   props plus a real `newTaskNameChange` event through the generated standard .NET
-  binding without `MOSAIC_APP_LIBRARY`. The app remains permissive for the five
-  explicitly asserted XAML UI gaps, and visible launch remains an interactive
+  binding without `MOSAIC_APP_LIBRARY`. The app remains permissive for the four
+  explicitly asserted XAML drag/drop gaps, and visible launch remains an interactive
   Windows-worker gate rather than a claim made from GitHub's hosted worker.
 
 - **Concrete Rust TaskApp engine on strict SwiftUI for macOS.** SwiftUI CI keeps

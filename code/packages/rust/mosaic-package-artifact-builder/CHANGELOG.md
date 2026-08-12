@@ -1,12 +1,21 @@
 # Changelog
 
+## [Unreleased] - XAML native table capability
+
+- Native-complete analysis recognizes the canonical indexed UI31/Grid shape
+  when the XAML emitter supplies native UIA Table/Grid and
+  TableItem/GridItem provider patterns.
+- Unsupported or structurally ambiguous XAML HostTable trees retain the stable
+  `accessibility.table-semantics-missing` degradation.
+- Concrete TaskApp XAML output now reports exactly its four remaining inert
+  drag/drop paths.
+
 ## [Unreleased] - selected runtimes are required
 
 - Passing `--runtime-library` now emits a runtime-required native shell even
   under the permissive degradation-reporting profile. This removes the sample
   fallback without suppressing unrelated capability reports, allowing XAML
-  TaskApp to bundle its concrete engine while its drag/drop and table gaps
-  remain explicit.
+  TaskApp to bundle its concrete engine while its drag/drop gaps remain explicit.
 
 ## [Unreleased] - SwiftUI native table capability
 

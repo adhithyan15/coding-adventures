@@ -4,6 +4,15 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added - native XAML Sheet table semantics
+
+The canonical dynamic Sheet now keeps its existing WinUI visuals and editable
+cell subtree while generated component-scoped automation peers expose native
+UIA Table/Grid and TableItem/GridItem patterns. Narrator and other automation
+clients receive table dimensions, column-header associations, row/column
+coordinates, accessible cell names, and arrow-key cell navigation. The concrete
+TaskApp report now contains exactly the four remaining drag/drop degradations.
+
 ### Added - concrete Rust TaskApp runtime in the XAML WinUI artifact
 
 The Windows acceptance lane now builds `task-mosaic-app`, supplies it while
@@ -14,8 +23,8 @@ initial TaskApp props, dispatches `newTaskNameChange`, and checks the revised pr
 without `MOSAIC_APP_LIBRARY`.
 
 This does not overstate the remaining platform work: the generated XAML report
-must contain exactly four inert drag/drop paths and one missing table-semantics
-path. The app cannot become `native-complete` until those five UI gaps close, and
+must contain exactly four inert drag/drop paths. The app cannot become
+`native-complete` until those four UI gaps close, and
 visible WinUI launch remains an interactive Windows-worker gate because hosted
 GitHub workers cannot reliably initialize a desktop surface.
 

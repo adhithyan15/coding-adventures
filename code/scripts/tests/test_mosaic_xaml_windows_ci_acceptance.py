@@ -120,7 +120,6 @@ class MosaicXamlWindowsCIAcceptanceTests(unittest.TestCase):
             "nativeComplete": False,
             "degradations": [
                 *({"code": "interaction.drag-drop-inert"} for _ in range(4)),
-                {"code": "accessibility.table-semantics-missing"},
             ],
         }
         MODULE.validate_taskapp_report(report)
@@ -141,7 +140,6 @@ class MosaicXamlWindowsCIAcceptanceTests(unittest.TestCase):
                                 {"code": "interaction.drag-drop-inert"}
                                 for _ in range(4)
                             ),
-                            {"code": "accessibility.table-semantics-missing"},
                         ],
                     }
                 ),
@@ -158,7 +156,7 @@ class MosaicXamlWindowsCIAcceptanceTests(unittest.TestCase):
                 capture_output=True,
                 text=True,
             )
-        self.assertIn("matches the five documented gaps", result.stdout)
+        self.assertIn("matches the four documented drag/drop gaps", result.stdout)
 
     def test_workflow_routes_windows_toolchains_and_acceptance(self) -> None:
         workflow = WORKFLOW.read_text(encoding="utf-8")

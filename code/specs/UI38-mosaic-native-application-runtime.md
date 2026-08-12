@@ -403,8 +403,13 @@ unblocks multiple downstream targets; never count source generation as completio
       WinUI artifact, verify the DLL beside `TaskApp.exe` byte-for-byte, and drive
       TaskApp startup props plus a semantic event through the generated .NET
       binding without `MOSAIC_APP_LIBRARY`. Keep the build permissive until the
-      four drag/drop and one table-semantics degradations below are removed;
+      remaining four drag/drop degradations below are removed;
       visible launch remains an interactive Windows-worker gate.
+    - [x] Remove XAML's table-semantics degradation by wrapping the canonical
+      indexed UI31/Grid shape in component-scoped WinUI controls whose automation
+      peers implement UIA Table/Grid and TableItem/GridItem provider patterns,
+      while retaining the authored editable cell subtree and conservative visual
+      fallback for unsupported shapes.
 - [ ] Add launch-and-dispatch conformance fixtures for every native backend.
   - [x] XAML/.NET loads the shared Rust conformance DLL and round-trips startup,
     typed props, semantic dispatch, revised props, buffers, and teardown.

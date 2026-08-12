@@ -35,11 +35,18 @@ mosstyle base styling:
 | `HostLink` | `<HyperlinkButton>` or routed `<Button>` |
 | `HostNumberInput` | `<NumberBox>` |
 | `HostScroll` | `<ScrollViewer>` |
-| `HostTable` | structural `<Grid>` |
+| `HostTable` | component-scoped WinUI table controls with native UIA Table/Grid peers for the canonical dynamic shape; structural `<Grid>` fallback otherwise |
 | `HostDialog` | `<ContentDialog>` / `<Flyout>` |
 
 Plus the UI24 event-dispatch contract (one `Dispatch` event per UserControl)
 and slot → `DependencyProperty` translation.
+
+Canonical UI31 tables keep their authored `Grid`/`ItemsRepeater` visuals and
+arbitrary interactive cell subtree, while generated automation peers expose
+table dimensions, header associations, row/column coordinates, accessible cell
+names, and arrow-key navigation. Structurally ambiguous tables retain the visual
+fallback and remain visible to native-completeness reporting rather than claiming
+semantics the emitter cannot prove.
 
 ## MSL states and motion
 

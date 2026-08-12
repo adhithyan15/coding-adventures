@@ -32,7 +32,6 @@ CI_WORKFLOW_PATH = ".github/workflows/ci.yml"
 TASKAPP_DEGRADATIONS = Counter(
     {
         "interaction.drag-drop-inert": 4,
-        "accessibility.table-semantics-missing": 1,
     }
 )
 
@@ -77,12 +76,12 @@ def workflow_changed(repo_root: Path, diff_base: str) -> bool:
 
 
 def validate_taskapp_report(report: dict[str, Any]) -> None:
-    """Require exactly the five documented XAML TaskApp UI degradations."""
+    """Require exactly the four documented XAML TaskApp drag/drop gaps."""
 
     if report.get("backend") != "xaml":
         raise ValueError("TaskApp degradation report backend must be xaml")
     if report.get("nativeComplete") is not False:
-        raise ValueError("TaskApp XAML must remain incomplete until its five UI gaps close")
+        raise ValueError("TaskApp XAML must remain incomplete until its four drag/drop gaps close")
     degradations = report.get("degradations")
     if not isinstance(degradations, list):
         raise ValueError("TaskApp degradation report must contain a degradations array")
@@ -91,9 +90,9 @@ def validate_taskapp_report(report: dict[str, Any]) -> None:
         for item in degradations
         if isinstance(item, dict) and isinstance(item.get("code"), str)
     )
-    if codes != TASKAPP_DEGRADATIONS or len(degradations) != 5:
+    if codes != TASKAPP_DEGRADATIONS or len(degradations) != 4:
         raise ValueError(
-            "TaskApp XAML report differs from the five documented gaps: "
+            "TaskApp XAML report differs from the four documented drag/drop gaps: "
             f"expected {dict(TASKAPP_DEGRADATIONS)}, observed {dict(codes)} "
             f"across {len(degradations)} entries"
         )
@@ -115,7 +114,7 @@ def main() -> int:
         if not isinstance(report, dict):
             raise ValueError("TaskApp degradation report root must be an object")
         validate_taskapp_report(report)
-        print("TaskApp XAML degradation report matches the five documented gaps")
+        print("TaskApp XAML degradation report matches the four documented drag/drop gaps")
         return 0
 
     if args.plan is None:
