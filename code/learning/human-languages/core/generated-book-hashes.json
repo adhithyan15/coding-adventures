@@ -2510,6 +2510,69 @@
       "tex": "malayalam/book/chapters/ch34-taking-asking-helping-liking.tex"
     },
     {
+      "language": "malayalam",
+      "chapter": 35,
+      "sourceHash": "fnv1a64:c232c6f1f01f4b05",
+      "lessonIds": [
+        "ML-C35-kudumbam",
+        "ML-C35-suhruthu"
+      ],
+      "tex": "malayalam/book/chapters/ch35-family-and-friend.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 36,
+      "sourceHash": "fnv1a64:8db83948043d9889",
+      "lessonIds": [
+        "ML-C36-kutti",
+        "ML-C36-makan",
+        "ML-C36-makal"
+      ],
+      "tex": "malayalam/book/chapters/ch36-child-son-daughter.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 37,
+      "sourceHash": "fnv1a64:16a9316903c40aea",
+      "lessonIds": [
+        "ML-C37-kannu",
+        "ML-C37-chevi",
+        "ML-C37-mookku",
+        "ML-C37-vaay"
+      ],
+      "tex": "malayalam/book/chapters/ch37-face-words.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 38,
+      "sourceHash": "fnv1a64:ad59d04b4f35ec22",
+      "lessonIds": [
+        "ML-C38-hrudayam",
+        "ML-C38-nenchu"
+      ],
+      "tex": "malayalam/book/chapters/ch38-two-hearts.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 39,
+      "sourceHash": "fnv1a64:09ae6cb6e6cd21c3",
+      "lessonIds": [
+        "ML-C39-chaaya",
+        "ML-C39-kaapi",
+        "ML-C39-paal"
+      ],
+      "tex": "malayalam/book/chapters/ch39-tea-coffee-milk.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 40,
+      "sourceHash": "fnv1a64:4a2f234a1943e89a",
+      "lessonIds": [
+        "ML-C40-oon"
+      ],
+      "tex": "malayalam/book/chapters/ch40-the-meal.tex"
+    },
+    {
       "language": "marathi",
       "chapter": 6,
       "sourceHash": "fnv1a64:b3366258b8d30e41",

@@ -1,0 +1,433 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 39,
+  "title": "Tea, Coffee, Milk",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:e8554b428e920083",
+  "lessons": [
+    {
+      "id": "ML-C39-chaaya",
+      "sequence": 900,
+      "title": "ചായ (chaaya) (chāya) — \"tea,\" which walked to Kerala rather than sailed",
+      "headword": "ചായ",
+      "romanization": "chaaya",
+      "gloss": "tea — Chinese, carried overland through Persian and Hindi before it ever reached Kerala",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:472dad0ccbbb8205",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two hearts done. Now the drink you would politely ask for first, in any Kerala home — and a chance to put Chapter 8's ദയവായി back to work."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ചായ (chaaya) — chāya — tea."
+            },
+            {
+              "kind": "speech",
+              "text": "ദയവായി ഒരു ചായ (chaaya). — dayavāyi oru chāya. — \"A tea, please.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Dayavāyi has been yours since Chapter 8; oru, \"a/one,\" you have already met attached to nāḷ and maṇi."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ചായ (chaaya) traces to Northern Chinese chá, carried overland along Central Asian trade routes into Persian چای (chāy), and from there into Hindi-Urdu chāy and Malayalam chāya alike — the same land route most of North and South India took for their word for tea. Tea that instead reached Europe by sea kept a different, southern Chinese form, which is why English says tea and French says thé — one leaf, two roads: chai by land, tea by sea."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: the two hearts, and the spine node so far",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ദയവായി ഒരു ചായ (chaaya) leans on the very dative Chapter 6 named, ‑ikku/‑inu — the same suffix beside Tamil's ‑ukku, Telugu's ‑ku, and Kannada's ‑ge. This chapter carries both halves of the spine node ദയവായി and ഹൃദയം/നെഞ്ച് already opened: asking politely, and — if you ask for the wrong thing — repairing with ക്ഷമിക്കണം."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"dayavāyi oru chāya\" — a tea, please",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"dayavāyi oru chāya\" — a tea, please]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the road — \"chá … chāy … chāya\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the road — \"chá … chāy … chāya\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "land against sea — \"chai … tea\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: land against sea — \"chai … tea\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "please, once more, and its plainer everyday form — \"dayavāyi … irikkū\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: please, once more, and its plainer everyday form — \"dayavāyi … irikkū\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "two hearts, once more — \"hṛdayaṁ … nenchŭ\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: two hearts, once more — \"hṛdayaṁ … nenchŭ\"]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask for tea, politely. (Dayavāyi oru chāya.) Name the three languages chāya passed through, in order. (Chinese, then Persian, then Hindi-Urdu, into Malayalam.) Why does English say \"tea\" instead of \"chai\"? (It arrived by sea, carrying a different Chinese form.) Which Chapter 6 suffix does dayavāyi... enikku share with Tamil, Telugu and Kannada? (The dative — ‑ikku/‑ukku/‑ku/‑ge.) What is the repair half of this spine node's word pair? (ക്ഷമിക്കണം, sorry.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C39-kaapi",
+      "sequence": 910,
+      "title": "കാപ്പി (kaapi) (kāppi) — \"coffee,\" which sailed while tea walked",
+      "headword": "കാപ്പി",
+      "romanization": "kaapi",
+      "gloss": "coffee — an English colonial-era loan, itself from Arabic by way of Turkish and Italian; tea and coffee arrived by opposite roads",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7b78a9516917d3a5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Chāya travelled overland. This drink took the opposite road — and arrives from further away."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കാപ്പി (kaapi) — kāppi — coffee."
+            },
+            {
+              "kind": "speech",
+              "text": "ദയവായി ഒരു കാപ്പി (kaapi). — dayavāyi oru kāppi. — \"A coffee, please.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കാപ്പി (kaapi) comes from English coffee, borrowed during the colonial period and reshaped to Malayalam's own consonants and vowels. English's own word for the drink is itself a loan, several times over: Arabic قهوة (qahwah) became Turkish kahve, then Italian caffè, then English coffee, before finally landing in Kerala as kāppi."
+            },
+            {
+              "kind": "speech",
+              "text": "Set the two drinks side by side: ചായ (chaaya) walked overland from China, through Persia, into North and South Indian speech alike. കാപ്പി (kaapi) sailed from Arabia, through Ottoman Turkey and Renaissance Italy, into English, and only then into Malayalam. Two drinks, two opposite roads — one over land, one over sea — meeting on the very same tea-shop counter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"dayavāyi oru kāppi\" — a coffee, please",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"dayavāyi oru kāppi\" — a coffee, please]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the long road — \"qahwah … kahve … caffè … coffee … kāppi\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the long road — \"qahwah … kahve … caffè … coffee … kāppi\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "two drinks, two roads — \"chāya,\" overland; \"kāppi,\" by sea",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: two drinks, two roads — \"chāya,\" overland; \"kāppi,\" by sea]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "two hearts, still — \"hṛdayaṁ … nenchŭ\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: two hearts, still — \"hṛdayaṁ … nenchŭ\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask for coffee, politely. (Dayavāyi oru kāppi.) Which language did Malayalam borrow kāppi directly from? (English.) Name the four languages the word passed through before that. (Arabic, Turkish, Italian, English.) Which of this chapter's two drinks travelled by land, and which by sea? (Chāya by land; kāppi by sea.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C39-paal",
+      "sequence": 920,
+      "title": "പാൽ (paal) (pāl) — \"milk,\" where Tamil agrees completely",
+      "headword": "പാൽ",
+      "romanization": "paal",
+      "gloss": "milk — native, matching Tamil exactly, and matching Kannada by the family's regular p-to-h shift",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:61f51f28f2a1de92",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Chapter 15's വെള്ളം broke away from Tamil's water-word entirely. This drink, the third in the chapter, does the opposite."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പാൽ (paal) — pāl — milk."
+            },
+            {
+              "kind": "speech",
+              "text": "ദയവായി ഒരു പാൽ (paal). — dayavāyi oru pāl. — \"A milk, please.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പാൽ (paal) is native Dravidian, from Proto-South-Dravidian pāl, \"milk.\" Tamil keeps the shape unchanged: பால் (pāl), letter for letter the same as Malayalam. Kannada shows its own regular p‑to‑h sound law here too, giving ಹಾಲು (hālu) — the identical shift that turns Malayalam's pōkuka into Kannada's hōgu."
+            },
+            {
+              "kind": "speech",
+              "text": "Set beside Chapter 15's finding, this is the mirror image: വെള്ളം (water) broke from Tamil's nīr entirely, choosing a completely different root; പാൽ (paal) (milk) shows the opposite — perfect three-way agreement in shape, with only Kannada's regular sound law setting its form apart. Two everyday liquids, two entirely different outcomes."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"dayavāyi oru pāl\" — a milk, please",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"dayavāyi oru pāl\" — a milk, please]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "unchanged, then shifted — \"pāl … pāl … hālu\" — Malayalam, Tamil, Kannada",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: unchanged, then shifted — \"pāl … pāl … hālu\" — Malayalam, Tamil, Kannada]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "water against milk — \"veḷḷam broke away; pāl agrees\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: water against milk — \"veḷḷam broke away; pāl agrees\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "three drinks, once more — \"chāya, kāppi, pāl\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: three drinks, once more — \"chāya, kāppi, pāl\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the long road, once more — \"qahwah … kahve … caffè … kāppi\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the long road, once more — \"qahwah … kahve … caffè … kāppi\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask for milk, politely. (Dayavāyi oru pāl.) Does Tamil's word for milk match Malayalam's? (Yes — exactly, pāl both.) What does Kannada's hālu show? (The regular p-to-h law.) Which earlier liquid word broke from Tamil entirely, unlike this one? (വെള്ളം, water — Chapter 15.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
