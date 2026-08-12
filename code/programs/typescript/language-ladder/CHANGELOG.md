@@ -2,6 +2,11 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Chinese 名 ductus (HL-C09CN)
+
+- Render **名** in eight source-aligned movements across six strokes.
+- Preserve 夕-before-口 order, both joined turns, and five lifts in Noto Sans SC.
+
 ### Added — cited Chinese 不 ductus (HL-C09CM)
 
 - Render **不** in four separately placed source-aligned strokes.
