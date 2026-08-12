@@ -2,6 +2,13 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased
+
+### Fixed
+
+- Retry an interrupted platform poll so native process signals can reach the
+  cooperative stop flag instead of being reported as listener failures.
+
 ## [0.1.0] - 2026-04-18
 
 ### Added

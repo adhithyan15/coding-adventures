@@ -15,6 +15,12 @@ The package performs no filesystem or environment access. `~` paths are resolved
 only when the caller supplies an explicit absolute home directory, keeping daemon
 composition deterministic and testable.
 
+An optional closed `[smart_home]` table enables a second, Home
+Assistant-compatible loopback listener owned by the Chief process. It requires a
+non-zero port, a bounded non-empty instance name, and an exact endpoint distinct
+from `[orchestrator]`; non-loopback addresses, control characters, duplicate
+fields, and unknown fields fail validation.
+
 An optional `[data_plane]` table declares exact production authorities without
 putting secret bytes in TOML. Directional channel-key entries bind canonical
 UUID-v7 pipeline and channel identities plus an exact agent identity to raw

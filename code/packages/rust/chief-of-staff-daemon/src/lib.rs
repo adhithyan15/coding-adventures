@@ -11,7 +11,8 @@ use chief_of_staff_daemon_authority_provisioning::{
     provision_authorities, AuthorityProvisioningError,
 };
 use chief_of_staff_daemon_config::{
-    parse_config, ChiefConfig, ConfigError, SmartHomeToolGrantConfig, SmartHomeToolGrantStatus,
+    parse_config, ChiefConfig, ConfigError, SmartHomeListenerConfig, SmartHomeToolGrantConfig,
+    SmartHomeToolGrantStatus,
 };
 use chief_of_staff_daemon_credential::{load_or_create_credential, CredentialFileError};
 use chief_of_staff_daemon_keyring::{load_package_keyring, KeyringLoadError};
@@ -42,11 +43,15 @@ use coding_adventures_json_serializer::serialize as serialize_json;
 use coding_adventures_json_value::{parse as parse_json, JsonValue};
 use coding_adventures_storage_fs::FsStorageBackend;
 use coding_adventures_x3dh::generate_identity_keypair;
+use embeddable_http_server::HttpServerOptions;
 use process_shutdown::{ShutdownError, ShutdownListener};
 use smart_home_controller_runtime::{ControllerRestoreError, SmartHomeControllerRuntime};
 use smart_home_core::{
-    AgentId as SmartHomeAgentId, CapabilityGrant, CapabilityGrantId, CapabilityGrantStatus,
-    SmartHomeTool,
+    AgentId as SmartHomeAgentId, CapabilityGrant, CapabilityGrantId, CapabilityGrantScope,
+    CapabilityGrantStatus, PrivilegeTier, SmartHomeTool,
+};
+use smart_home_platform_http::{
+    home_assistant_runtime_web_app, SmartHomePlatformHttpConfig, SmartHomePlatformHttpRuntime,
 };
 use std::convert::Infallible;
 use std::env;
@@ -57,14 +62,18 @@ use std::io::Read;
 use std::net::SocketAddr;
 use std::path::{Component, Path, PathBuf};
 use std::sync::Arc;
+use std::thread;
 use std::time::{SystemTime, UNIX_EPOCH};
 use storage_core::{StorageBackend, StorageError};
 use transport_platform::{PlatformError, TransportPlatform};
+use web_core::{WebApp, WebServer};
 use websocket_runtime::WebSocketServerOptions;
 
 const MAX_CONFIG_BYTES: usize = 256 * 1024;
 const DEFAULT_CONFIG_SUFFIX: &str = ".chief-of-staff/config.toml";
 const HEARTBEAT_GRACE_INTERVALS: u64 = 3;
+const SMART_HOME_HTTP_PRINCIPAL_ID: &str = "agent:home-assistant-local-api";
+const SMART_HOME_HTTP_GRANT_ID: &str = "grant:agent:home-assistant-local-api:local-api-full-access";
 
 /// Stable payload-blind startup, serving, and teardown failure.
 #[derive(Debug)]
@@ -93,6 +102,10 @@ pub enum ChiefDaemonError {
     SmartHome(ControllerRestoreError),
     /// Declared Chief-host smart-home grants could not be validated or committed.
     SmartHomeGrantProvisioning,
+    /// The Home Assistant-compatible listener could not bind or serve.
+    SmartHomeHttp(PlatformError),
+    /// The Home Assistant-compatible listener thread panicked.
+    SmartHomeHttpPanicked,
     /// The local operator credential could not be loaded or created safely.
     Credential(CredentialFileError),
     /// Local bearer policy construction failed.
@@ -134,6 +147,8 @@ impl Display for ChiefDaemonError {
             Self::SmartHomeGrantProvisioning => {
                 "chief daemon: smart-home grant provisioning failed"
             }
+            Self::SmartHomeHttp(_) => "chief daemon: smart-home HTTP listener failed",
+            Self::SmartHomeHttpPanicked => "chief daemon: smart-home HTTP listener panicked",
             Self::Credential(_) => "chief daemon: operator credential failed",
             Self::Authentication(_) => "chief daemon: local authentication policy failed",
             Self::Storage(_) => "chief daemon: durable storage failed",
@@ -278,7 +293,7 @@ pub fn run(config: ChiefConfig, home: &Path) -> Result<(), ChiefDaemonError> {
         LocalBearerAuthorizer::new(&credential).map_err(ChiefDaemonError::Authentication)?;
     drop(credential);
 
-    let backend: Arc<dyn StorageBackend> = Arc::new(FsStorageBackend::new(state_dir));
+    let backend: Arc<dyn StorageBackend> = Arc::new(FsStorageBackend::new(state_dir.clone()));
     backend.initialize().map_err(ChiefDaemonError::Storage)?;
     let program = HostProgram::new(host_executable, std::iter::empty::<OsString>())
         .map_err(ChiefDaemonError::Process)?;
@@ -296,8 +311,31 @@ pub fn run(config: ChiefConfig, home: &Path) -> Result<(), ChiefDaemonError> {
     let schedule = ReconcileSchedule::new(interval).map_err(ChiefDaemonError::Runtime)?;
     let clock: Arc<dyn MonotonicClock> = Arc::new(SystemMonotonicClock::new());
     let launch_bindings = Arc::new(DurableHostLaunchBindings::new(Arc::clone(&backend)));
-    let data_plane =
-        compose_host_data_plane(&config, home, Arc::clone(&backend), Arc::clone(&clock))?;
+    let needs_smart_home_controller = config.smart_home().is_some()
+        || !config.data_plane().ollama_models().is_empty()
+        || !config.data_plane().smart_home_tool_grants().is_empty();
+    let smart_home_controller = needs_smart_home_controller
+        .then(|| SmartHomeControllerRuntime::restore(FsStorageBackend::new(&state_dir)))
+        .transpose()
+        .map_err(ChiefDaemonError::SmartHome)?;
+    let unix_clock: Arc<dyn UnixTimeClock> = Arc::new(SystemUnixTimeClock);
+    let data_plane = compose_host_data_plane_with_controller(
+        &config,
+        home,
+        Arc::clone(&backend),
+        Arc::clone(&clock),
+        smart_home_controller.clone(),
+        Arc::clone(&unix_clock),
+    )?;
+    let smart_home_http = config
+        .smart_home()
+        .map(|listener| {
+            let controller = smart_home_controller
+                .clone()
+                .ok_or(ChiefDaemonError::SmartHomeGrantProvisioning)?;
+            compose_smart_home_http_service(listener, controller, Arc::clone(&unix_clock))
+        })
+        .transpose()?;
     let core = OrchestratorCore::with_process_supervisor(
         backend,
         process_config,
@@ -315,7 +353,7 @@ pub fn run(config: ChiefConfig, home: &Path) -> Result<(), ChiefDaemonError> {
         config.orchestrator().bind(),
         config.orchestrator().port(),
     ));
-    run_platform(address, api, schedule)
+    run_platform(address, api, schedule, smart_home_http)
 }
 
 /// Compose the exact production host data plane from validated daemon authority.
@@ -330,19 +368,93 @@ pub fn compose_host_data_plane(
     backend: Arc<dyn StorageBackend>,
     clock: Arc<dyn MonotonicClock>,
 ) -> Result<Arc<dyn HostDataPlaneDispatcher>, ChiefDaemonError> {
+    let needs_controller = !config.data_plane().ollama_models().is_empty()
+        || !config.data_plane().smart_home_tool_grants().is_empty();
+    let controller = if needs_controller {
+        let state_dir = config
+            .orchestrator()
+            .state_dir()
+            .resolve(home)
+            .map_err(ChiefDaemonError::Config)?;
+        Some(
+            SmartHomeControllerRuntime::restore(FsStorageBackend::new(state_dir))
+                .map_err(ChiefDaemonError::SmartHome)?,
+        )
+    } else {
+        None
+    };
+    compose_host_data_plane_with_controller(
+        config,
+        home,
+        backend,
+        clock,
+        controller,
+        Arc::new(SystemUnixTimeClock),
+    )
+}
+
+fn compose_host_data_plane_with_controller(
+    config: &ChiefConfig,
+    home: &Path,
+    backend: Arc<dyn StorageBackend>,
+    clock: Arc<dyn MonotonicClock>,
+    controller: Option<SmartHomeControllerRuntime<FsStorageBackend>>,
+    unix_clock: Arc<dyn UnixTimeClock>,
+) -> Result<Arc<dyn HostDataPlaneDispatcher>, ChiefDaemonError> {
     let metadata_source: Arc<dyn MessageMetadataSource> =
         Arc::new(SystemMessageMetadataSource::new(clock));
-    let service = compose_data_plane_service(config, home, Arc::clone(&backend), metadata_source)?;
+    let service = compose_data_plane_service_with_controller(
+        config,
+        home,
+        Arc::clone(&backend),
+        metadata_source,
+        controller,
+        unix_clock,
+    )?;
     Ok(Arc::new(DurableHostDataPlaneDispatcher::new(
         backend, service,
     )))
 }
 
+#[cfg(test)]
 fn compose_data_plane_service(
     config: &ChiefConfig,
     home: &Path,
     backend: Arc<dyn StorageBackend>,
     metadata_source: Arc<dyn MessageMetadataSource>,
+) -> Result<Arc<dyn HostDataPlaneService>, ChiefDaemonError> {
+    let needs_controller = !config.data_plane().ollama_models().is_empty()
+        || !config.data_plane().smart_home_tool_grants().is_empty();
+    let controller = if needs_controller {
+        let state_dir = config
+            .orchestrator()
+            .state_dir()
+            .resolve(home)
+            .map_err(ChiefDaemonError::Config)?;
+        Some(
+            SmartHomeControllerRuntime::restore(FsStorageBackend::new(state_dir))
+                .map_err(ChiefDaemonError::SmartHome)?,
+        )
+    } else {
+        None
+    };
+    compose_data_plane_service_with_controller(
+        config,
+        home,
+        backend,
+        metadata_source,
+        controller,
+        Arc::new(SystemUnixTimeClock),
+    )
+}
+
+fn compose_data_plane_service_with_controller(
+    config: &ChiefConfig,
+    home: &Path,
+    backend: Arc<dyn StorageBackend>,
+    metadata_source: Arc<dyn MessageMetadataSource>,
+    controller: Option<SmartHomeControllerRuntime<FsStorageBackend>>,
+    unix_clock: Arc<dyn UnixTimeClock>,
 ) -> Result<Arc<dyn HostDataPlaneService>, ChiefDaemonError> {
     if config.data_plane().channel_keys().is_empty()
         && config.data_plane().ollama_models().is_empty()
@@ -363,14 +475,7 @@ fn compose_data_plane_service(
             metadata_source,
         )));
     }
-    let state_dir = config
-        .orchestrator()
-        .state_dir()
-        .resolve(home)
-        .map_err(ChiefDaemonError::Config)?;
-    let controller = SmartHomeControllerRuntime::restore(FsStorageBackend::new(state_dir))
-        .map_err(ChiefDaemonError::SmartHome)?;
-    let unix_clock: Arc<dyn UnixTimeClock> = Arc::new(SystemUnixTimeClock);
+    let controller = controller.ok_or(ChiefDaemonError::SmartHomeGrantProvisioning)?;
     provision_smart_home_tool_grants(
         &controller,
         config.data_plane().smart_home_tool_grants(),
@@ -414,6 +519,86 @@ const PRODUCTION_SMART_HOME_MODEL_TOOLS: &[&str] = &[
     SMART_HOME_COMPLETE_PAIRING_TOOL_ID,
     SMART_HOME_OBSERVE_SUPERVISION_TOOL_ID,
 ];
+
+struct SmartHomeHttpService {
+    address: SocketAddr,
+    app: Arc<WebApp>,
+}
+
+fn compose_smart_home_http_service(
+    config: &SmartHomeListenerConfig,
+    controller: SmartHomeControllerRuntime<FsStorageBackend>,
+    clock: Arc<dyn UnixTimeClock>,
+) -> Result<SmartHomeHttpService, ChiefDaemonError> {
+    let runtime = compose_smart_home_http_runtime(config, controller, clock)?;
+    Ok(SmartHomeHttpService {
+        address: SocketAddr::new(config.bind(), config.port()),
+        app: Arc::new(home_assistant_runtime_web_app(runtime)),
+    })
+}
+
+fn compose_smart_home_http_runtime<B: StorageBackend + 'static>(
+    config: &SmartHomeListenerConfig,
+    controller: SmartHomeControllerRuntime<B>,
+    clock: Arc<dyn UnixTimeClock>,
+) -> Result<SmartHomePlatformHttpRuntime, ChiefDaemonError> {
+    provision_smart_home_http_grant(&controller, clock.as_ref())?;
+    let request_clock = Arc::clone(&clock);
+    let runtime = SmartHomePlatformHttpRuntime::from_shared_runtime(
+        controller.runtime_handle(),
+        SmartHomePlatformHttpConfig::new(config.instance_name()),
+    )
+    .with_principal_id(SmartHomeAgentId::trusted(SMART_HOME_HTTP_PRINCIPAL_ID))
+    .with_clock(move || request_clock.now_ms().unwrap_or(0))
+    .with_automation_runtime(controller.automation_runtime_handle())
+    .with_mutation_persistence(controller.runtime_persistence_adapter())
+    .with_automation_persistence(controller.automation_persistence_adapter());
+    Ok(runtime)
+}
+
+fn provision_smart_home_http_grant<B: StorageBackend>(
+    controller: &SmartHomeControllerRuntime<B>,
+    clock: &dyn UnixTimeClock,
+) -> Result<(), ChiefDaemonError> {
+    let saved_at_ms = clock
+        .now_ms()
+        .ok_or(ChiefDaemonError::SmartHomeGrantProvisioning)?;
+    let grant_id = CapabilityGrantId::trusted(SMART_HOME_HTTP_GRANT_ID);
+    let runtime = controller.runtime_handle();
+    let existing = runtime
+        .lock()
+        .map_err(|_| ChiefDaemonError::SmartHomeGrantProvisioning)?
+        .registry()
+        .capability_grant(&grant_id)
+        .cloned();
+    if let Some(grant) = existing {
+        let compatible = grant.principal_id
+            == SmartHomeAgentId::trusted(SMART_HOME_HTTP_PRINCIPAL_ID)
+            && grant.scope == CapabilityGrantScope::AllSmartHome
+            && grant.max_tier == PrivilegeTier::HighRisk
+            && grant.expires_at_ms.is_none()
+            && grant.status == CapabilityGrantStatus::Active
+            && grant.metadata.is_empty()
+            && grant.granted_at_ms <= saved_at_ms;
+        return compatible
+            .then_some(())
+            .ok_or(ChiefDaemonError::SmartHomeGrantProvisioning);
+    }
+    let grant = CapabilityGrant::for_all_smart_home(
+        grant_id,
+        SmartHomeAgentId::trusted(SMART_HOME_HTTP_PRINCIPAL_ID),
+        PrivilegeTier::HighRisk,
+        "chief-daemon",
+        saved_at_ms,
+    );
+    controller
+        .transaction(saved_at_ms, move |runtime, _| {
+            runtime.registry_mut().upsert_capability_grant(grant);
+            Ok::<(), Infallible>(())
+        })
+        .map_err(|_| ChiefDaemonError::SmartHomeGrantProvisioning)?;
+    Ok(())
+}
 
 struct D18dSmartHomeModelTools<B> {
     bridge: SmartHomeToolBridge<B>,
@@ -620,9 +805,10 @@ fn serve<P, C, A>(
     address: BindAddress,
     api: Arc<DaemonApi<C, A>>,
     schedule: ReconcileSchedule,
+    smart_home: Option<(P, SmartHomeHttpService)>,
 ) -> Result<(), ChiefDaemonError>
 where
-    P: TransportPlatform,
+    P: TransportPlatform + Send + 'static,
     C: chief_of_staff_daemon_api::ChiefControlPlane + Send + 'static,
     A: chief_of_staff_daemon_api::SessionAuthorizer + Send + Sync + 'static,
     A::Session: Send + 'static,
@@ -635,11 +821,52 @@ where
         schedule,
     )
     .map_err(ChiefDaemonError::Runtime)?;
-    let stop = runtime.stop_handle();
-    let listener =
-        ShutdownListener::install(move |_| stop.stop()).map_err(ChiefDaemonError::Shutdown)?;
+    let mut smart_home_server = smart_home
+        .map(|(platform, service)| {
+            WebServer::bind(
+                platform,
+                BindAddress::Ip(service.address),
+                HttpServerOptions::default(),
+                service.app,
+            )
+            .map_err(ChiefDaemonError::SmartHomeHttp)
+        })
+        .transpose()?;
+    let daemon_stop = runtime.stop_handle();
+    let smart_home_stop = smart_home_server.as_ref().map(WebServer::stop_handle);
+    let listener_daemon_stop = daemon_stop.clone();
+    let listener_smart_home_stop = smart_home_stop.clone();
+    let listener = ShutdownListener::install(move |_| {
+        listener_daemon_stop.stop();
+        if let Some(stop) = listener_smart_home_stop {
+            stop.stop();
+        }
+    })
+    .map_err(ChiefDaemonError::Shutdown)?;
+    let smart_home_thread = smart_home_server.take().map(|mut server| {
+        let address = server.local_addr();
+        let daemon_stop = daemon_stop.clone();
+        eprintln!("chief smart-home HTTP listening on {address}");
+        thread::spawn(move || {
+            let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| server.serve()));
+            daemon_stop.stop();
+            result
+                .map_err(|_| ChiefDaemonError::SmartHomeHttpPanicked)?
+                .map_err(ChiefDaemonError::SmartHomeHttp)
+        })
+    });
     eprintln!("chief daemon listening on {}", runtime.local_addr());
     let runtime_result = runtime.serve();
+    if let Some(stop) = smart_home_stop {
+        stop.stop();
+    }
+    let smart_home_result = smart_home_thread
+        .map(|thread| {
+            thread
+                .join()
+                .map_err(|_| ChiefDaemonError::SmartHomeHttpPanicked)?
+        })
+        .transpose();
     let shutdown_result = listener.uninstall();
     drop(runtime);
     let recovery_result = Arc::try_unwrap(api)
@@ -650,6 +877,7 @@ where
                 .map_err(ChiefDaemonError::ControlPlaneRecovery)
         });
     runtime_result.map_err(ChiefDaemonError::Runtime)?;
+    smart_home_result?;
     shutdown_result.map_err(ChiefDaemonError::Shutdown)?;
     recovery_result
 }
@@ -659,6 +887,7 @@ fn run_platform<C, A>(
     address: BindAddress,
     api: Arc<DaemonApi<C, A>>,
     schedule: ReconcileSchedule,
+    smart_home: Option<SmartHomeHttpService>,
 ) -> Result<(), ChiefDaemonError>
 where
     C: chief_of_staff_daemon_api::ChiefControlPlane + Send + 'static,
@@ -667,7 +896,14 @@ where
 {
     let platform = transport_platform::linux::EpollTransportPlatform::new()
         .map_err(ChiefDaemonError::Platform)?;
-    serve(platform, address, api, schedule)
+    let smart_home = smart_home
+        .map(|service| {
+            transport_platform::linux::EpollTransportPlatform::new()
+                .map(|platform| (platform, service))
+                .map_err(ChiefDaemonError::Platform)
+        })
+        .transpose()?;
+    serve(platform, address, api, schedule, smart_home)
 }
 
 #[cfg(any(
@@ -681,6 +917,7 @@ fn run_platform<C, A>(
     address: BindAddress,
     api: Arc<DaemonApi<C, A>>,
     schedule: ReconcileSchedule,
+    smart_home: Option<SmartHomeHttpService>,
 ) -> Result<(), ChiefDaemonError>
 where
     C: chief_of_staff_daemon_api::ChiefControlPlane + Send + 'static,
@@ -689,7 +926,14 @@ where
 {
     let platform = transport_platform::bsd::KqueueTransportPlatform::new()
         .map_err(ChiefDaemonError::Platform)?;
-    serve(platform, address, api, schedule)
+    let smart_home = smart_home
+        .map(|service| {
+            transport_platform::bsd::KqueueTransportPlatform::new()
+                .map(|platform| (platform, service))
+                .map_err(ChiefDaemonError::Platform)
+        })
+        .transpose()?;
+    serve(platform, address, api, schedule, smart_home)
 }
 
 #[cfg(target_os = "windows")]
@@ -697,6 +941,7 @@ fn run_platform<C, A>(
     address: BindAddress,
     api: Arc<DaemonApi<C, A>>,
     schedule: ReconcileSchedule,
+    smart_home: Option<SmartHomeHttpService>,
 ) -> Result<(), ChiefDaemonError>
 where
     C: chief_of_staff_daemon_api::ChiefControlPlane + Send + 'static,
@@ -705,7 +950,14 @@ where
 {
     let platform = transport_platform::windows::WindowsTransportPlatform::new()
         .map_err(ChiefDaemonError::Platform)?;
-    serve(platform, address, api, schedule)
+    let smart_home = smart_home
+        .map(|service| {
+            transport_platform::windows::WindowsTransportPlatform::new()
+                .map(|platform| (platform, service))
+                .map_err(ChiefDaemonError::Platform)
+        })
+        .transpose()?;
+    serve(platform, address, api, schedule, smart_home)
 }
 
 #[cfg(not(any(
@@ -721,6 +973,7 @@ fn run_platform<C, A>(
     _address: BindAddress,
     _api: Arc<DaemonApi<C, A>>,
     _schedule: ReconcileSchedule,
+    _smart_home: Option<SmartHomeHttpService>,
 ) -> Result<(), ChiefDaemonError> {
     Err(ChiefDaemonError::UnsupportedPlatform)
 }
@@ -777,7 +1030,9 @@ mod tests {
     use chief_of_staff_pipeline_bindings::{HostPipelineBinding, PipelineId};
     use chief_of_staff_service_registry::{HostName, HostRegistration, PackagePath, RestartPolicy};
     use smart_home_core::{
-        AgentId, AuthorizationOutcome, CapabilityGrant, CapabilityGrantId, SmartHomeTool,
+        AgentId, AuthorizationOutcome, Bridge, BridgeId, BridgeTransport, CapabilityGrant,
+        CapabilityGrantId, Device, DeviceId, Entity, EntityId, EntityKind, Health, IntegrationId,
+        SmartHomeTool,
     };
     use std::convert::Infallible;
     use std::sync::atomic::{AtomicU64, Ordering};
@@ -1087,6 +1342,131 @@ hardware_key_timeout = 60
     }
 
     #[test]
+    fn smart_home_http_composition_shares_one_durable_controller() {
+        let directory = TestDir::new();
+        let state_dir = directory.0.join("smart-home-http-state");
+        let controller =
+            SmartHomeControllerRuntime::restore(FsStorageBackend::new(&state_dir)).unwrap();
+        let config = smart_home_listener_config();
+        let clock: Arc<dyn UnixTimeClock> = Arc::new(TestUnixTimeClock::new(1_500));
+        let http = compose_smart_home_http_runtime(
+            config.smart_home().unwrap(),
+            controller.clone(),
+            Arc::clone(&clock),
+        )
+        .unwrap();
+        let grant_revision = controller.revision().unwrap().unwrap();
+
+        let bridge_id = BridgeId::trusted("bridge:shared-controller");
+        let device_id = DeviceId::trusted("device:shared-controller");
+        let entity_id = EntityId::trusted("light.shared_controller");
+        controller
+            .transaction(1_600, |runtime, _| {
+                runtime
+                    .upsert_bridge(Bridge::new(
+                        bridge_id.clone(),
+                        IntegrationId::trusted("chief-test"),
+                        BridgeTransport::LanHttp,
+                    ))
+                    .unwrap();
+                runtime
+                    .upsert_device(Device {
+                        device_id: device_id.clone(),
+                        bridge_id,
+                        manufacturer: "Coding Adventures".to_string(),
+                        model: "Shared Controller".to_string(),
+                        name: "Shared Controller Device".to_string(),
+                        serial: None,
+                        firmware_version: None,
+                        room_id: None,
+                        entity_ids: vec![entity_id.clone()],
+                        identifiers: Vec::new(),
+                        health: Health::Online,
+                        metadata: Vec::new(),
+                    })
+                    .unwrap();
+                runtime
+                    .upsert_entity(Entity {
+                        entity_id: entity_id.clone(),
+                        device_id,
+                        kind: EntityKind::Light,
+                        name: "Shared Controller Light".to_string(),
+                        capabilities: Vec::new(),
+                        state: None,
+                        metadata: Vec::new(),
+                    })
+                    .unwrap();
+                Ok::<(), Infallible>(())
+            })
+            .unwrap();
+
+        let state = http.snapshot();
+        assert_eq!(state.entities.len(), 1);
+        assert_eq!(state.entities[0].entity_id, entity_id);
+        assert_eq!(state.generated_at_ms, 1_500);
+
+        let shared_revision = controller.revision().unwrap().unwrap();
+        assert_ne!(shared_revision, grant_revision);
+        let second = compose_smart_home_http_runtime(
+            config.smart_home().unwrap(),
+            controller.clone(),
+            clock,
+        )
+        .unwrap();
+        assert_eq!(
+            controller.revision().unwrap(),
+            Some(shared_revision.clone())
+        );
+        assert_eq!(second.snapshot().entities[0].entity_id, entity_id);
+        drop(second);
+        drop(http);
+        drop(controller);
+
+        let restored =
+            SmartHomeControllerRuntime::restore(FsStorageBackend::new(&state_dir)).unwrap();
+        assert_eq!(restored.revision().unwrap(), Some(shared_revision));
+        let runtime = restored.runtime_handle();
+        let runtime = runtime.lock().unwrap();
+        assert!(runtime.registry().entity(&entity_id).is_some());
+        assert!(runtime
+            .registry()
+            .capability_grant(&CapabilityGrantId::trusted(SMART_HOME_HTTP_GRANT_ID))
+            .is_some());
+    }
+
+    #[test]
+    fn smart_home_http_grant_provisioning_fails_closed() {
+        let controller =
+            SmartHomeControllerRuntime::restore(InMemoryStorageBackend::new()).unwrap();
+        assert!(matches!(
+            provision_smart_home_http_grant(&controller, &UnavailableUnixTimeClock),
+            Err(ChiefDaemonError::SmartHomeGrantProvisioning)
+        ));
+        assert_eq!(controller.revision().unwrap(), None);
+
+        controller
+            .transaction(2_000, |runtime, _| {
+                runtime.registry_mut().upsert_capability_grant(
+                    CapabilityGrant::for_all_smart_home(
+                        CapabilityGrantId::trusted(SMART_HOME_HTTP_GRANT_ID),
+                        AgentId::trusted(SMART_HOME_HTTP_PRINCIPAL_ID),
+                        PrivilegeTier::HighRisk,
+                        "chief-daemon",
+                        2_000,
+                    ),
+                );
+                Ok::<(), Infallible>(())
+            })
+            .unwrap();
+        let revision = controller.revision().unwrap();
+        assert!(matches!(
+            provision_smart_home_http_grant(&controller, &TestUnixTimeClock::new(1_500)),
+            Err(ChiefDaemonError::SmartHomeGrantProvisioning)
+        ));
+        assert_eq!(controller.revision().unwrap(), revision);
+    }
+
+    #[test]
     fn configured_host_tool_grants_commit_durably_and_support_revocation() {
         let directory = TestDir::new();
         let state_dir = directory.0.join("smart-home-state");
@@ -1293,6 +1673,13 @@ hardware_key_timeout = 60
 
     fn configured_tool_grant_config(status: &str, tool_id: &str) -> ChiefConfig {
         configured_tool_grant_config_at(status, tool_id, 1_000, 2_000)
+    }
+
+    fn smart_home_listener_config() -> ChiefConfig {
+        parse_config(&format!(
+            "{VALID_CONFIG}\n[smart_home]\nbind = \"127.0.0.1\"\nport = 8123\ninstance_name = \"Chief Smart Home\"\n"
+        ))
+        .unwrap()
     }
 
     fn configured_tool_grant_config_at(

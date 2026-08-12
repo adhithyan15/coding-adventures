@@ -1994,17 +1994,22 @@ The remaining backlog is ordered by the strongest executable production path
 and then by prerequisite readiness:
 
 The reusable central owner, discovery service transaction migration,
-production Hue mDNS composition, and Hue, ONVIF, Axis, ZoneMinder, Synology,
-and Reolink pairing migrations are complete. The remaining central-composition
-backlog takes priority over adding another isolated integration or Chief read
-model. The thread-safe Chief controller adapter, exact host catalog, catalog
-discovery, D18D dispatcher, and production daemon injection are now complete:
+production Hue mDNS composition, Hue/ONVIF/Axis/ZoneMinder/Synology/Reolink
+pairing migrations, bounded Level One host tool loop, real child-process D18D
+execution, and durable Home Assistant readback are complete. The production
+Chief daemon now restores one D23 controller and optionally serves the Home
+Assistant-compatible API from that exact live owner. Listener authority is
+provisioned through a central transaction; both loopback listeners bind before
+serving and share coordinated failure and shutdown semantics.
 
-1. Add a bounded Level One host tool loop that discovers the exact catalog,
-   requests and executes a tool call, replays the structured result, and ends
-   with final text or a strict turn cap.
-2. Prove one executable Chief host to `smart_home.*` to central D23 owner path,
-   including durable audit/state and Home Assistant API readback.
+The remaining central-composition backlog still takes priority over adding
+another isolated integration or Chief read model:
+
+1. Move supervised discovery/pairing workers that still require the standalone
+   local-controller composition into the Chief-owned controller process without
+   creating a second runtime owner.
+2. Move automation schedule workers into the same process and prove restart-safe
+   tick recovery and HTTP/model-tool visibility under coordinated shutdown.
 
 The protocol- and vendor-specific backlog below remains valid after those
 central ownership steps:

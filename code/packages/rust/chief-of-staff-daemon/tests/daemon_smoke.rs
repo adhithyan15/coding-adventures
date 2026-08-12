@@ -1,7 +1,7 @@
 #![cfg(unix)]
 
 use std::fs;
-use std::io::Read;
+use std::io::{Read, Write};
 use std::net::{TcpListener, TcpStream};
 use std::path::{Path, PathBuf};
 use std::process::{Child, Command, Stdio};
@@ -31,11 +31,21 @@ impl Drop for TestDir {
     }
 }
 
-fn wait_until_listening(child: &mut Child, port: u16) {
+fn wait_for_http_config(child: &mut Child, port: u16) -> String {
     let deadline = Instant::now() + Duration::from_secs(10);
     loop {
-        if TcpStream::connect(("127.0.0.1", port)).is_ok() {
-            return;
+        if let Ok(mut stream) = TcpStream::connect(("127.0.0.1", port)) {
+            stream
+                .set_read_timeout(Some(Duration::from_secs(2)))
+                .unwrap();
+            stream
+                .write_all(
+                    b"GET /api/config HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n",
+                )
+                .unwrap();
+            let mut response = String::new();
+            stream.read_to_string(&mut response).unwrap();
+            return response;
         }
         if let Some(status) = child.try_wait().unwrap() {
             let mut stderr = String::new();
@@ -63,7 +73,7 @@ fn wait_for_exit(child: &mut Child) -> std::process::ExitStatus {
     }
 }
 
-fn write_config(home: &Path, port: u16) -> PathBuf {
+fn write_config(home: &Path, port: u16, smart_home_port: u16) -> PathBuf {
     fs::create_dir(home.join("run")).unwrap();
     fs::create_dir(home.join("keys")).unwrap();
     let public_key = coding_adventures_ed25519::generate_keypair(&[7; 32]).0;
@@ -76,6 +86,11 @@ port = {port}
 packages_dir = "~/agents"
 state_dir = "~/state"
 credential_path = "~/run/operator.credential"
+
+[smart_home]
+bind = "127.0.0.1"
+port = {smart_home_port}
+instance_name = "Chief Smart Home"
 
 [keyring]
 trusted_keys = [
@@ -114,12 +129,13 @@ ollama_models = [
 #[test]
 fn daemon_provisions_without_network_probe_binds_and_stops_on_sigterm() {
     let directory = TestDir::new();
-    let port = TcpListener::bind(("127.0.0.1", 0))
-        .unwrap()
-        .local_addr()
-        .unwrap()
-        .port();
-    let config = write_config(&directory.0, port);
+    let chief_reservation = TcpListener::bind(("127.0.0.1", 0)).unwrap();
+    let smart_home_reservation = TcpListener::bind(("127.0.0.1", 0)).unwrap();
+    let port = chief_reservation.local_addr().unwrap().port();
+    let smart_home_port = smart_home_reservation.local_addr().unwrap().port();
+    drop(chief_reservation);
+    drop(smart_home_reservation);
+    let config = write_config(&directory.0, port, smart_home_port);
     let mut child = Command::new(env!("CARGO_BIN_EXE_chief-of-staff-daemon"))
         .arg(config)
         .env("HOME", &directory.0)
@@ -128,7 +144,13 @@ fn daemon_provisions_without_network_probe_binds_and_stops_on_sigterm() {
         .spawn()
         .unwrap();
 
-    wait_until_listening(&mut child, port);
+    let response = wait_for_http_config(&mut child, smart_home_port);
+    assert!(response.starts_with("HTTP/1.1 200"), "{response}");
+    assert!(response.contains("Chief Smart Home"), "{response}");
+    assert!(
+        TcpListener::bind(("127.0.0.1", port)).is_err(),
+        "Chief listener was not bound"
+    );
     // SAFETY: `child.id()` is the live subprocess created above, and SIGTERM is
     // installed by that subprocess's process-shutdown listener.
     assert_eq!(unsafe { libc::kill(child.id() as i32, libc::SIGTERM) }, 0);
@@ -143,4 +165,37 @@ fn daemon_provisions_without_network_probe_binds_and_stops_on_sigterm() {
     assert!(status.success(), "daemon failed ({status}): {stderr}");
     assert!(directory.0.join("run/operator.credential").is_file());
     assert!(directory.0.join("state").is_dir());
+}
+
+#[test]
+fn smart_home_bind_failure_releases_the_chief_listener() {
+    let directory = TestDir::new();
+    let chief_reservation = TcpListener::bind(("127.0.0.1", 0)).unwrap();
+    let occupied_smart_home = TcpListener::bind(("127.0.0.1", 0)).unwrap();
+    let chief_port = chief_reservation.local_addr().unwrap().port();
+    let smart_home_port = occupied_smart_home.local_addr().unwrap().port();
+    drop(chief_reservation);
+    let config = write_config(&directory.0, chief_port, smart_home_port);
+    let mut child = Command::new(env!("CARGO_BIN_EXE_chief-of-staff-daemon"))
+        .arg(config)
+        .env("HOME", &directory.0)
+        .stdout(Stdio::null())
+        .stderr(Stdio::piped())
+        .spawn()
+        .unwrap();
+
+    let status = wait_for_exit(&mut child);
+    let mut stderr = String::new();
+    child
+        .stderr
+        .as_mut()
+        .unwrap()
+        .read_to_string(&mut stderr)
+        .unwrap();
+    assert!(!status.success(), "daemon unexpectedly succeeded: {stderr}");
+    assert!(
+        stderr.contains("smart-home HTTP listener failed"),
+        "{stderr}"
+    );
+    TcpListener::bind(("127.0.0.1", chief_port)).unwrap();
 }

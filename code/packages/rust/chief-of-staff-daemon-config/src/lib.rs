@@ -17,6 +17,7 @@ const HOST_DEFAULTS: &[&str] = &["hosts", "defaults"];
 const VAULT: &[&str] = &["vault"];
 const PRIVILEGE: &[&str] = &["privilege"];
 const DATA_PLANE: &[&str] = &["data_plane"];
+const SMART_HOME: &[&str] = &["smart_home"];
 const MAX_CONFIG_BYTES: usize = 256 * 1024;
 const MAX_PATH_BYTES: usize = 4096;
 const MAX_TRUSTED_KEYS: usize = 256;
@@ -27,6 +28,7 @@ const MAX_AGENT_ID_BYTES: usize = 4 * 1024;
 const MAX_GRANT_ID_BYTES: usize = 4 * 1024;
 const MAX_GRANTED_BY_BYTES: usize = 4 * 1024;
 const MAX_TOOL_ID_BYTES: usize = 512;
+const MAX_SMART_HOME_INSTANCE_NAME_BYTES: usize = 200;
 const MAX_MODEL_BYTES: usize = 200;
 const MAX_ENDPOINT_BYTES: usize = 512;
 const MAX_PROCESS_TIMEOUT_MILLIS: u64 = 5 * 60 * 1000;
@@ -171,6 +173,31 @@ pub struct OrchestratorConfig {
     packages_dir: ConfigPath,
     state_dir: ConfigPath,
     credential_path: ConfigPath,
+}
+
+/// Optional loopback Home Assistant-compatible listener owned by Chief.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct SmartHomeListenerConfig {
+    bind: IpAddr,
+    port: u16,
+    instance_name: String,
+}
+
+impl SmartHomeListenerConfig {
+    /// Return the loopback-only listener IP.
+    pub fn bind(&self) -> IpAddr {
+        self.bind
+    }
+
+    /// Return the non-zero TCP listener port.
+    pub fn port(&self) -> u16 {
+        self.port
+    }
+
+    /// Return the bounded Home Assistant instance name.
+    pub fn instance_name(&self) -> &str {
+        &self.instance_name
+    }
 }
 
 impl OrchestratorConfig {
@@ -483,6 +510,7 @@ impl PrivilegeConfig {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct ChiefConfig {
     orchestrator: OrchestratorConfig,
+    smart_home: Option<SmartHomeListenerConfig>,
     keyring: KeyringConfig,
     host_defaults: HostDefaultsConfig,
     vault: VaultConfig,
@@ -494,6 +522,11 @@ impl ChiefConfig {
     /// Return listener and package-root settings.
     pub fn orchestrator(&self) -> &OrchestratorConfig {
         &self.orchestrator
+    }
+
+    /// Return the optional Chief-owned Home Assistant-compatible listener.
+    pub fn smart_home(&self) -> Option<&SmartHomeListenerConfig> {
+        self.smart_home.as_ref()
     }
 
     /// Return package-signing trust settings.
@@ -531,13 +564,13 @@ pub fn parse_config(source: &str) -> Result<ChiefConfig, ConfigError> {
     let mut document = RawDocument::from_ast(&ast)?;
     document.validate_tables()?;
 
-    let bind = expect_string(document.take(ORCHESTRATOR, "bind")?)?
+    let orchestrator_bind = expect_string(document.take(ORCHESTRATOR, "bind")?)?
         .parse::<IpAddr>()
         .map_err(|_| ConfigError::InvalidValue)?;
-    if !bind.is_loopback() {
+    if !orchestrator_bind.is_loopback() {
         return Err(ConfigError::NonLoopbackBind);
     }
-    let port = parse_port(document.take(ORCHESTRATOR, "port")?)?;
+    let orchestrator_port = parse_port(document.take(ORCHESTRATOR, "port")?)?;
     let packages_dir =
         ConfigPath::parse(expect_string(document.take(ORCHESTRATOR, "packages_dir")?)?)?;
     let state_dir = ConfigPath::parse(expect_string(document.take(ORCHESTRATOR, "state_dir")?)?)?;
@@ -561,6 +594,31 @@ pub fn parse_config(source: &str) -> Result<ChiefConfig, ConfigError> {
         positive_secs(document.take(PRIVILEGE, "tier_1_auto_approve_timeout")?)?;
     let biometric_timeout = positive_secs(document.take(PRIVILEGE, "biometric_timeout")?)?;
     let hardware_key_timeout = positive_secs(document.take(PRIVILEGE, "hardware_key_timeout")?)?;
+    let smart_home = if document.has_table(SMART_HOME) {
+        let bind = expect_string(document.take(SMART_HOME, "bind")?)?
+            .parse::<IpAddr>()
+            .map_err(|_| ConfigError::InvalidValue)?;
+        if !bind.is_loopback() {
+            return Err(ConfigError::NonLoopbackBind);
+        }
+        let port = parse_port(document.take(SMART_HOME, "port")?)?;
+        let instance_name = bounded_identity(
+            expect_string(document.take(SMART_HOME, "instance_name")?)?,
+            MAX_SMART_HOME_INSTANCE_NAME_BYTES,
+        )?;
+        Some(SmartHomeListenerConfig {
+            bind,
+            port,
+            instance_name,
+        })
+    } else {
+        None
+    };
+    if smart_home.as_ref().is_some_and(|listener| {
+        listener.bind == orchestrator_bind && listener.port == orchestrator_port
+    }) {
+        return Err(ConfigError::InvalidValue);
+    }
     let data_plane = if document.has_table(DATA_PLANE) {
         DataPlaneConfig {
             channel_keys: parse_channel_keys(document.take(DATA_PLANE, "channel_keys")?)?,
@@ -580,12 +638,13 @@ pub fn parse_config(source: &str) -> Result<ChiefConfig, ConfigError> {
 
     Ok(ChiefConfig {
         orchestrator: OrchestratorConfig {
-            bind,
-            port,
+            bind: orchestrator_bind,
+            port: orchestrator_port,
             packages_dir,
             state_dir,
             credential_path,
         },
+        smart_home,
         keyring: KeyringConfig { trusted_keys },
         host_defaults: HostDefaultsConfig {
             restart_policy,
@@ -977,6 +1036,7 @@ impl RawDocument {
             .collect::<BTreeSet<_>>();
         let mut allowed = required.clone();
         allowed.insert(strings_to_vec(DATA_PLANE));
+        allowed.insert(strings_to_vec(SMART_HOME));
         if self.tables.iter().any(|table| !allowed.contains(table)) {
             Err(ConfigError::Unknown)
         } else if required.iter().any(|table| !self.tables.contains(table)) {
@@ -1231,6 +1291,39 @@ hardware_key_timeout = 60
         assert!(config.data_plane().channel_keys().is_empty());
         assert!(config.data_plane().ollama_models().is_empty());
         assert!(config.data_plane().smart_home_tool_grants().is_empty());
+        assert!(config.smart_home().is_none());
+    }
+
+    #[test]
+    fn parses_an_optional_distinct_loopback_smart_home_listener() {
+        let source = format!(
+            "{VALID}\n[smart_home]\nbind = \"127.0.0.1\"\nport = 8123\ninstance_name = \"Codex Home\"\n"
+        );
+        let config = parse_config(&source).unwrap();
+        let listener = config.smart_home().unwrap();
+        assert_eq!(listener.bind(), "127.0.0.1".parse::<IpAddr>().unwrap());
+        assert_eq!(listener.port(), 8123);
+        assert_eq!(listener.instance_name(), "Codex Home");
+
+        assert_eq!(
+            parse_config(&source.replace("port = 8123", "port = 7463")),
+            Err(ConfigError::InvalidValue)
+        );
+        assert_eq!(
+            parse_config(&source.replace("127.0.0.1", "0.0.0.0")),
+            Err(ConfigError::NonLoopbackBind)
+        );
+        assert_eq!(
+            parse_config(&source.replace("Codex Home", " Codex Home")),
+            Err(ConfigError::InvalidValue)
+        );
+        assert_eq!(
+            parse_config(&source.replace(
+                "instance_name = \"Codex Home\"",
+                "instance_name = \"Codex Home\"\nsurprise = true"
+            )),
+            Err(ConfigError::Unknown)
+        );
     }
 
     #[test]

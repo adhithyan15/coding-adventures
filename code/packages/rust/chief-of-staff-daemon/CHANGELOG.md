@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add an optional Chief-owned Home Assistant-compatible HTTP listener backed by
+  the exact same restored durable D23 controller as model tools. Both listeners
+  bind before serving and stop together; local HTTP authority provisioning is
+  durable, idempotent, and fail-closed.
 - Provision operator-declared Chief-host smart-home tool grants through a
   serialized central D23 transaction before serving. Exact unchanged records are
   idempotent, stable grant IDs support durable revocation, and unknown tools,

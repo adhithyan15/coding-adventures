@@ -55,14 +55,26 @@ does not erase an already committed grant; set the same `grant_id` to
 future issuance times, or an unavailable provisioning clock fail startup without
 publishing a partial in-memory policy.
 
+An optional `[smart_home]` table makes this daemon the Home Assistant-compatible
+local-controller process as well. Chief restores the durable D23 controller
+exactly once, shares that live owner with both D18D model tools and the HTTP
+adapter, provisions the adapter's stable local full-access principal through the
+same serialized transaction boundary, and binds both loopback listeners before
+either begins serving. A bind failure releases both listeners. Native shutdown,
+an HTTP server failure, or a Chief server failure stops the peer listener and
+joins it before control-plane teardown. The standalone
+`smart-home-local-controller` remains available for deployments that do not opt
+into Chief composition, but it must not point at the same state directory while
+this table is enabled.
+
 The exported production data-plane composition boundary is also used by the real
 Level 1 host integration test. That test supplies owner-only key files and a
 loopback Ollama fixture, then proves encrypted receive, completion, encrypted
 publish, and input acknowledgement through the same dispatcher used by `run`.
 
 SIGINT, SIGTERM, Ctrl+C, Ctrl+Break, console close, logoff, and system shutdown
-request a cooperative listener stop. Dropping the composed process supervisor
-reaps every child still owned by this daemon instance.
+request a cooperative stop of every configured listener. Dropping the composed
+process supervisor reaps every child still owned by this daemon instance.
 
 ## Validation
 

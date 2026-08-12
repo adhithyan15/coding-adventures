@@ -2181,6 +2181,11 @@ packages_dir = "~/.chief-of-staff/agents/"
 state_dir = "~/.chief-of-staff/state/"
 credential_path = "~/.chief-of-staff/run/operator.credential"
 
+[smart_home]
+bind = "127.0.0.1"            # optional Home Assistant-compatible API
+port = 8123                    # distinct from the Chief WebSocket endpoint
+instance_name = "Chief Smart Home"
+
 [keyring]
 trusted_keys = [
   { id = "prod-001", path = "~/.chief-of-staff/keys/prod-001.pub", type = "production" },
@@ -2236,6 +2241,17 @@ governance history; operators revoke an existing record by retaining its grant I
 and setting `status = "revoked"`. Unknown/uninstalled tools, unavailable wall-clock
 time, future issuance times, or persistence failure abort startup without
 publishing partial policy.
+
+The optional closed `[smart_home]` table composes the Home Assistant-compatible
+HTTP adapter into the Chief daemon instead of requiring a second local-controller
+process. It accepts only a loopback address, non-zero port, bounded non-empty
+instance name, and an exact endpoint distinct from `[orchestrator]`. When enabled,
+the daemon restores one durable D23 controller, shares it with the D18D model-tool
+bridge and HTTP adapter, and provisions the adapter's stable local principal
+through the same serialized durable transaction boundary. Both listeners bind
+before serving and stop as one process; a bind or serving failure cannot leave the
+peer listener running. A standalone local controller must not concurrently own
+the same D23 state directory.
 
 The operator credential path is a fail-closed local trust boundary. Composition
 MUST load an existing canonical 64-byte lowercase-hex credential or claim an absent
