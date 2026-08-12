@@ -108,7 +108,7 @@ describe("corpus snapshot", () => {
     // pure speech and the script strand runs one lesson at a time from chapter 4, so
     // no Tamil chapter exceeds the budget. This is the number that most directly
     // measures "do not throw many things at the reader at once".
-    expect(report.summary.chapterViolations).toBe(20); // -1: HL-C96 splits ch7, the last Spanish chapter over budget -- Spanish is now clean
+    expect(report.summary.chapterViolations).toBe(21); // -1: HL-C96 splits ch7, the last Spanish chapter over budget -- Spanish is now clean // +1: vocabulary wave 6
 
     // HALF THE CORPUS IS INVISIBLE HERE. 572 lessons declare no atoms, so they are
     // neither compliant nor violating — they are unmigrated. A track with few violations
@@ -146,7 +146,7 @@ describe("corpus snapshot", () => {
     // newly measurable teaching lessons carry the corpus across one point, and the
     // five-step Chapter-15 migration carries it across the next. Chapter 18's eight
     // measurable teaching lessons carry the current corpus across another point.
-    expect(report.summary.measurablePercent).toBe(69); // +1: HL-C98 // +1: vocabulary wave 5 added 40 schema-v2 lessons, all measurable
+    expect(report.summary.measurablePercent).toBe(70); // +1: HL-C98 // +1: vocabulary wave 5 added 40 schema-v2 lessons, all measurable // +1: vocabulary wave 6 added 54 schema-v2 lessons, all measurable
   });
 
   it("names the steepest lesson, which is where a burn-down starts", () => {

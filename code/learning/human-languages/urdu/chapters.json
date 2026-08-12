@@ -279,6 +279,84 @@
           "UR-LEX-PASAND"
         ]
       }
+    },
+    {
+      "chapter": 13,
+      "title": "Four Colors",
+      "label": "ch:ur-colors",
+      "canDo": "I can name red, white, black and blue in Urdu, and tell which colors change their ending for the noun they describe and which never do.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "UR-C13-nila",
+        "kind": "production",
+        "summary": "Say all four colors — لال, سفید, کالا, نیلا — sorting the two that agree with the noun's gender from the two that never change, and trace نیلا's cousin nīlī forward through Persian and Arabic into English aniline.",
+        "assesses": [
+          "UR-LEX-KALA",
+          "UR-GRAMMAR-ADJECTIVE-AGREEMENT",
+          "UR-LEX-LAL",
+          "UR-LEX-SAFED",
+          "UR-LEX-NILA",
+          "UR-ETYMON-NILA-ANILINE",
+          "UR-CROSSLINGUAL-KHUDA-HAFIZ-SPELLING",
+          "UR-SCRIPT-MERA-NAAM-HAI",
+          "UR-CHUNK-AAP-SE-MIL-KAR"
+        ]
+      }
+    },
+    {
+      "chapter": 14,
+      "title": "Four Things You Wear",
+      "label": "ch:ur-clothing",
+      "canDo": "I can name a shirt, shoe, cap and coat in Urdu, and sort each word by which direction it was borrowed: into Urdu, out of Urdu into English, or straight from English.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "UR-C14-koat",
+        "kind": "production",
+        "summary": "Name قمیض, جوتا, ٹوپی and کوٹ, then sort all four by the direction their loan travelled: Persian and Arabic into Urdu, Urdu out into English, or English straight into Urdu — three directions in one small set of words.",
+        "assesses": [
+          "UR-LEX-TOPI",
+          "UR-ETYMON-TOPI-INTO-ENGLISH",
+          "UR-LEX-JUTA",
+          "UR-LEX-QAMIZ",
+          "UR-LEX-KOAT",
+          "UR-REGISTER-ENGLISH-LAYER",
+          "UR-LEX-KHUDA-HAFIZ",
+          "UR-LEX-WELLBEING-REPLY",
+          "UR-PRAGMATICS-STANDARD-FAREWELL"
+        ]
+      }
+    },
+    {
+      "chapter": 15,
+      "title": "Rain, Sun, Wind, Heat, Cold",
+      "label": "ch:ur-weather",
+      "canDo": "I can name rain, sunshine, wind, heat and cold in Urdu, and tell which of these words' roots reach back to a documented ancestor and which stop at an honest dead end.",
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
+      "payoff": {
+        "lesson": "UR-C15-sardi",
+        "kind": "production",
+        "summary": "Say all five weather words in one breath and sort each by how far its root reaches: two Persian dead ends, one inherited dead end, one loan of a loan, and گرمی's own root reaching all the way to Greek thermós — the same two-roads shape دل showed on the body's most-named part.",
+        "assesses": [
+          "UR-LEX-GARMI",
+          "UR-ETYMON-GARMI-WARM-PIE",
+          "UR-LEX-SARDI",
+          "UR-ETYMON-SARDI-PERSIAN",
+          "UR-SCRIPT-HAMZA-YE",
+          "UR-SCRIPT-KAAN-NAAK-REVERSAL",
+          "UR-SCRIPT-NUN-NASAL-VOWEL",
+          "UR-LEX-BARISH",
+          "UR-LEX-DHOOP",
+          "UR-LEX-HAWA",
+          "UR-ETYMON-DIL-HEART-PIE",
+          "UR-REGISTER-TWO-ROADS-ONE-ROOT"
+        ]
+      }
     }
   ]
 }

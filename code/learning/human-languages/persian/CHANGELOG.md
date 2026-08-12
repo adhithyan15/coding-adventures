@@ -1,5 +1,130 @@
 # Changelog
 
+## 0.11.0 — 2026-08-12
+
+- Added fourteen schema-v2 word lessons across three new chapters (12-14),
+  the track's second pre-A1 vocabulary tranche and part of the corpus-wide
+  pre-A1 vocabulary program (HL-C41 continuation, wave 6). Persian's pre-A1
+  headword count rises from 29 to 43 against the 300-word target (shortfall
+  271 → 257); track-wide vocabulary rises from 42 to 56. All seven pre-A1
+  spine nodes were already realized going into this tranche (confirmed
+  against `core/spine.json` before writing a single lesson), so no
+  spine-node work was needed; this tranche is vocabulary depth only.
+- **Chapter 12, *Name, Heart, Door, Book*** (`FA-PATH-013`): **نام** *nâm*,
+  **دل** *del*, **در** *dar*, **کتاب** *ketâb*. **نام** is inherited Persian
+  and stands beside **اسم**, the Arabic loan this track taught first for
+  "name" — Persian's vocabulary layers now include a same-meaning doublet,
+  not just different words for different things. **دل** ← \**ḱḗr* is one of
+  the family's oldest survivors, cousin to English **heart**, Sanskrit
+  **hṛdaya**, Armenian **sirt**. **در** ← \**dʰwer-* is a textbook
+  Indo-European cognate set: English **door**, German **Tür**, Latin
+  **foris**, Sanskrit **dvāra**. **کتاب** closes the chapter as a second
+  Arabic loan (root **ك ت ب**, "to write"), and the payoff, `FA-C12-ketab`,
+  reuses the ezafe from `اسمِ من` and `کلیدِ من` to build **کتابِ من، لطفاً**
+  and rebuilds the earlier name exchange that **نام**'s reappearance
+  reopens.
+- **Chapter 13, *Sky, Sun, Moon, Star, Rain*** (`FA-PATH-014`): **آسمان**,
+  **خورشید**, **ماه**, **ستاره**, **باران**. **آسمان** ← \**h₂éḱmō*, "stone,"
+  preserves the old Indo-European habit of picturing the sky as a stone
+  vault — Sanskrit **aśman** still means only "stone." **خورشید** is a
+  compound: **خور** *khor* continues the same distant root as English
+  **sun**, Latin **sol**, Greek **hḗlios**, and Sanskrit **sūrya**, fused
+  with **شید** *shid*, "shining," an unrelated word Avestan had already
+  paired it with. **ماه** ← \**mḗh₁n̥s* repeats **زبان**'s trick of holding
+  two English words, "moon" and "month," inside one Persian root. **ستاره**
+  ← \**h₂stḗr* is another of the corpus's best-attested cognate sets
+  (English **star**, Latin **stella**, Greek **astron**), and introduces
+  one small spelling habit rather than a new letter: a word-final **ه** read
+  as the vowel *-e* (`heh-e`). **باران** closes the chapter honestly: its
+  root, Indo-Iranian \**wáHr̥* ("water"), has cousins only inside
+  Indo-Iranian (Avestan **vāra**, Sanskrit **vār**) — English **rain** is
+  unrelated, so no cousin is claimed, the same policy `raftan` and `goftan`
+  set. The payoff, `FA-C13-baran`, also rebuilds the careful wellbeing
+  question small talk about the sky commonly follows.
+- **Chapter 14, *Sister, Son, Man, Woman, Friend*** (`FA-PATH-015`,
+  the tranche's payoff): **خواهر**, **پسر**, **مرد**, **زن**, **دوست**.
+  **خواهر** ← \**swésōr* is the fifth and last of the plainest
+  Indo-European kinship cousins, completing the set **مادر، پدر، برادر،
+  دختر، خواهر** started three chapters ago, and reuses the silent **و**
+  `خواندن` first taught. **پسر**, cognate with Sanskrit **putra**, pairs
+  with **دختر** as "son" and "daughter" even though only one of the two has
+  an English relative — English **son** is unrelated, so none is claimed.
+  **مرد** ← \**mer-*, "to die," is a genuine false friend: its root means
+  "mortal" (Latin **mortuus**, Greek **brotós**, Sanskrit **martya**), not
+  "man," which is unrelated. **زن** ← \**gʷḗn(h₂)-* keeps the same root
+  English narrowed down to **queen**, and Greek kept plainly as **gynē**.
+  The tranche closes on `FA-C14-dust`, **دوست**, "friend" — the noun the
+  compound verb **دوست داشتن** ("to love," Chapter 8) had always run on,
+  now given its own lesson — which reruns all five people-words, a polite
+  request for tea and a key, and the standard farewell both voices share.
+- **Etymology verified against real sources before use, not assumed from
+  the brief**: the brief that requested this tranche named categories
+  (weather words, household items, additional family/social words) and
+  general comparison targets, but asserted no specific etymological claims
+  of its own for these fourteen words, so there is nothing from it to
+  "correct" the way wave 5 corrected the brief's **آب**/Hindi **pānī**
+  assumption. Every root cited below was checked against Wiktionary before
+  a lesson was drafted, and three findings shaped the lessons rather than
+  the other way around: (1) **خورشید** is not itself a simple cousin of
+  English **sun** — it is a *compound*, and only its first half, **خور**,
+  continues the shared distant root; the second half, **شید** ("shining"),
+  is unrelated, and the lesson states the compound explicitly rather than
+  implying the whole word is the cognate. (2) **پسر** is cognate with
+  Sanskrit **putra**, not with English **son**, which descends from an
+  entirely different root — the lesson denies the English cognate outright
+  rather than leaving it implied by proximity to **دختر**. (3) **مرد**'s
+  root means "mortal," not "man"; English **man** is unrelated, a genuine
+  false friend worth naming rather than an ordinary cognate. A fourth
+  candidate word considered during drafting, connecting **آسمان**'s
+  "stone" root to English **hammer**, was dropped: no source consulted
+  states that connection, so it is left out rather than asserted. Every
+  lesson cites its Wiktionary source at the bottom.
+- **Reinforcement discipline**: each new lesson's `practises.knowledge`
+  reaches back to the one to three lessons before it, closing the R1/R2
+  windows across all three chapters. The tranche's payoff, `FA-C14-dust`,
+  reaches back several chapters to rescue nine atoms that had never been
+  revisited at any distance: `FA-LEX-KHODAHAFEZ`,
+  `FA-GRAMMAR-KHODAHAFEZ-ELLIPSIS`, `FA-SCRIPT-KHODAHAFEZ-JOINED`,
+  `FA-PRAGMATICS-STANDARD-FAREWELL`, `FA-DIALOGUE-TAKE-LEAVE`,
+  `FA-LEX-HAFEZ`, `FA-SCRIPT-HAFEZ`, `FA-LEX-CHAY`, and `FA-LEX-KELID`.
+  `FA-C12-del` rescues `FA-LEX-DOKHTAR`; `FA-C12-ketab` and `FA-C13-setare`
+  rescue `FA-LEX-PA` and `FA-LEX-DAR`; `FA-C13-aseman` and `FA-C12-nam`
+  rescue `FA-LEX-ZABAN` and `FA-SCRIPT-ZE`; `FA-C14-khahar` and
+  `FA-C14-zan` rescue `FA-LEX-KETAB` and `FA-LEX-SETARE`. Together with
+  wave 5's own three-atom rescue, this closes every one of the twenty
+  non-etymology atoms the level gate had flagged as under-reinforced at
+  pre-A1 — the `reinforcement` criterion no longer appears among Persian's
+  pre-A1 blockers at all. Extending the track's tail also newly exposed a
+  handful of atoms this tranche itself introduces (its own final lessons
+  have nothing yet following them) as under-reinforced by the same
+  measurement; these are left as visible debt for the next tranche, the
+  same policy wave 5 itself used for `FA-C11-zaban`'s own closing atoms.
+- **No new atom-budget violations**: every new lesson introduces exactly
+  two atoms (well under the three-atom lesson ceiling), and each of the
+  three new chapters introduces eight or ten atoms (against the
+  twelve-atom chapter ceiling). The pre-existing atom-budget violations
+  (`FA-C03-shoma-to`, `FA-C05-khodahafez`) are unrelated to this tranche
+  and are left untouched, as is the pre-existing chapter-level overage in
+  Chapters 3 and 4.
+- Every new lesson reuses letters the track has already taught — all
+  fourteen words were chosen for it — and introduces exactly one new sound
+  id, `heh-e`, for **ستاره**'s word-final **ه** read as *-e*.
+  `pronunciation-reference.md` is updated to match.
+- The book gains Chapters 12-14 (`ch12-name-heart-door-book.tex`,
+  `ch13-sky-words.tex`, `ch14-people-words.tex`), generated from the same
+  canonical lesson AST as the rest of the track, and grows to
+  fifty-nine lessons across fourteen chapters. Verified locally with
+  XeLaTeX: zero `Missing character` lines across two compilation passes.
+  Two Unicode characters introduced during drafting — the PIE syllabic-
+  consonant ring-below diacritic (as in \**h₁nómn̥*) and the Persian
+  zero-width non-joiner (as in **می‌خواهد**) — are not covered by the
+  book's Latin Modern Roman / Noto Naskh Arabic fonts in every weight used
+  and were removed from lesson prose rather than left as silent rendering
+  gaps; the etymological content is unaffected. `book.tex`'s front matter
+  is updated to match (eleven chapters → fourteen).
+- `core/lesson-modality.json`, the narration export, and
+  `README.md`'s generated track-progress table are regenerated to match.
+
 ## 0.10.0 — 2026-08-08
 
 - Added twelve schema-v2 word lessons across three new chapters (9-11), the

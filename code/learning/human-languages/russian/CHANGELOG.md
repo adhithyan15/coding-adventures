@@ -1,5 +1,113 @@
 # Changelog — Russian track
 
+## 0.11.0 — 2026-08-12
+
+Pre-A1 vocabulary tranche, round 2 (wave 6 of the cross-track vocabulary
+program). Fourteen new lessons across three new chapters (11-13) moving
+pre-A1 vocabulary from **25 to 39** distinct headwords (shortfall 275 → 261)
+and track-wide vocabulary from **39 to 53**. `SPINE-TAKE-LEAVE`, the one
+pre-A1 spine node Russian had never realized, is now realized — closing all
+seven of Russian's pre-A1 nodes and, uniquely among the six tracks in this
+wave, closing **all six** of the node's own concepts (`FAREWELL`,
+`FAREWELL-CASUAL`, `FAREWELL-LATER`, `FAREWELL-SOON`, `FAREWELL-TOMORROW`,
+`GREETING-GOODNIGHT`) rather than leaving one deliberately open the way the
+French track's realization does.
+
+- **Ch. 11 — Parting Words** (`SPINE-TAKE-LEAVE`, first realization for
+  Russian): до свидания, пока, до скорого, до завтра, до встречи, спокойной
+  ночи. *до свидания* is built live from Chapter 3's *видеть* ("to see") —
+  the same move as French *au revoir* and German *auf Wiedersehen*, all
+  three literally "until the re-seeing." *пока* traces to the same ancient
+  interrogative root as *как* and the whole English *wh-* family, by way of
+  the old pronoun *кыи* ("which") — but its use as a farewell is only
+  20th-century slang, likely modeled on English "so long," a genuinely
+  different kind of fact than its ancient root. *до скорого* and *до
+  встречи* are the chapter's honest dead ends — real, old words with no
+  secure English cousin. *до завтра* splits into *за-* + *утро*, and *утро*
+  is PIE *\*h₂ews-*, cousin of English *east*, Latin *aurora*, Greek *ēōs*.
+  The chapter closes on *спокойной ночи*, its most secure pair: *ночь* is
+  PIE *\*nókʷts* (English *night*, Latin *nox*, Greek *nyx*), and *покой* is
+  PIE *\*kʷeih₁-* (English *quiet*, *tranquil*, and — through a separate
+  Germanic path — *while*). New grammar atom `RU-GRAMMAR-DO-GENITIVE`: до
+  always reshapes the word after it into the genitive.
+- **Ch. 12 — Mother and Father** (`SPINE-EXCHANGE-NAMES`): мама, папа, мать,
+  отец, completing the family Chapter 8's *семья* gathered. *мама* and
+  *папа* are universal infant-babbling words — not true language-family
+  cousins of anything, reinvented from scratch by every generation of
+  babies, a genuinely different kind of "no cousin" than *рот*'s or *до
+  скорого*'s. *мать* is the real article: PIE *\*méh₂tēr*, one of the most
+  secure cognate sets in the family, matching English *mother*, Latin
+  *māter*, Greek *mḗtēr*, Sanskrit *mātar*. *отец* is the chapter's
+  correction of an assumption: it is genuinely old (PIE *\*átta*, cousin of
+  Gothic *atta*, Latin *atta*, Hittite *attaš*) but is **not** related to
+  English *father* at all — that word continues a separate PIE root,
+  *\*ph₂tḗr*, that Slavic simply lost. New grammar atom
+  `RU-GRAMMAR-NATURAL-GENDER-OVERRIDE`: *папа* is the book's first live case
+  of a male person overriding the *-а/-я* feminine-ending rule from Chapter
+  6, a real closed-class rule rather than a *кофе*-style fossil.
+- **Ch. 13 — Milk, Cheese, Juice, and Soup** (`SPINE-POLITE-REQUEST-REPAIR`):
+  молоко, сыр, сок, суп, extending Chapter 6's drink shelf and its
+  *[word], пожалуйста* request pattern to four more nouns. *молоко* is PIE
+  *\*h₂melǵ-* ("to rub, to milk"), a straight cousin of English *milk* down
+  to the hand motion described (hedged: some etymologists treat the Slavic
+  word as an early Germanic borrowing rather than an independent
+  inheritance, the same kind of caveat already given for *думать*/*doom*).
+  *сыр* shares its root with *сырой* ("raw, damp") and English *sour*. *сок*
+  is a solid PIE reconstruction (*\*sokʷós*) with no surviving English
+  cousin. *суп* closes the chapter as a mirror of *кофе*'s loanword story:
+  an 18th-century borrowing from French *soupe* — and English *soup* took
+  the identical French word by a separate crossing, so the two are related
+  by parallel borrowing, not by shared Russian-English ancestry.
+- **No new Cyrillic letters.** Every letter these fourteen words need — б,
+  в, г, д, е, з, и, й, к, л, м, н, о, п, р, с, т, у, ф, х, ц, ч, ы, ь, я —
+  was already introduced in Chapters 1-10, so none of the new lessons
+  carries a "The letters in this word" section, the same pattern already
+  set by Chapter 9's *ухо*.
+- **Reinforcement discipline held, including for the boundary it created.**
+  Every new lesson's `practises.knowledge` reaches back to the 1-3 lessons
+  before it. The three chapter payoffs reach further: Chapter 11 rescues
+  five Chapter 6 atoms (**ф**, **х**, *чай*, *хлеб*, the request pattern);
+  Chapter 12 rescues Chapter 7/8's *семья* and *сестра*, plus Chapter 2's
+  object-pronoun and indefinite-personal-plural grammar (via *Его зовут…*);
+  Chapter 13 rescues the last two Chapter 2 orphans, the naming-question
+  comparison and *я*'s script warning — closing the **exact eleven** atoms
+  the level-gate flagged as under-reinforced before this branch. Extending
+  the track eleven lessons past *сердце* also newly exposed seven of its own
+  older atoms (сердце, ц, глаз, and four of this tranche's own words) to a
+  reinforcement window they were previously too short a track to be judged
+  against; all seven were closed with a second reach-back rather than left
+  as new debt. Track-wide count of atoms revisited fewer than twice, scoped
+  to pre-A1: **0** (was 11 before this branch).
+  `SPINE-TAKE-LEAVE` is realized entirely with canonical spine concept tags
+  (`FAREWELL`, `FAREWELL-CASUAL`, etc.), not track-specific ones, so the
+  ledger's `omits` for that node moves from six entries to `[]` — Russian is
+  the only track so far to close every concept the node names.
+- **One correction against the brief this wave started from**: the working
+  assumption was that *отец* would turn out to share English *father*'s PIE
+  root, the way *мать* shares *mother*'s. It does not. English *father* and
+  Latin *pater* continue *\*ph₂tḗr*; Slavic lost that word entirely and
+  replaced it with the unrelated nursery-address root *\*átta* instead —
+  real, attested, and cousin to Gothic *atta* and Hittite *attaš*, but a
+  stranger to *father*. The lesson was rewritten around the correction
+  rather than the assumption.
+- **One font trap caught before commit**: Gothic *ƕeila* ("a while") used
+  the Gothic-specific letter **ƕ** (U+01F5-adjacent hwair), which is not in
+  the vendored Latin Modern Roman font and printed as a forced XeLaTeX
+  "Missing character." Flattened to the plain transliteration *hveila*,
+  with no loss — the point was the root, not the Gothic orthography.
+
+Verification: forced XeLaTeX build of the 121-page book has zero missing
+characters and zero duplicate labels. `npx vitest run tests/integration.test.ts
+tests/cli.test.ts tests/chapter-references.test.ts` passes (21/21) —
+`integration.test.ts`'s pinned Russian book-chapter list is updated from
+`[1..10]` to `[1..13]`, the one deliberate edit to a shared test file, per the
+0.10.0 precedent. `check:modality`, `check:books`, `check:narration`,
+`check:figures` and `check:progress` all pass. The ten corpus-wide pinned-number
+tests (chapters, continuity, levels, modality-manifest, narration, ramp,
+info-dump, metalanguage, root-ledger, chapter-modality-book) shift with any
+authored content and are left failing per standing instruction, for the
+orchestrator to re-measure once after all wave-6 branches merge.
+
 ## 0.10.0 — 2026-08-08
 
 Pre-A1 vocabulary tranche (part of the cross-track vocabulary program that has

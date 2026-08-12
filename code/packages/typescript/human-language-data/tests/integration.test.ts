@@ -115,7 +115,11 @@ describe("real curriculum", () => {
       // SPINE-POLITE-REQUEST-REPAIR (âb, nân, chây, kelid); Chapter 10 adds family words
       // onto SPINE-EXCHANGE-NAMES (mâdar, pedar, barâdar, dokhtar); Chapter 11 adds body
       // words onto SPINE-CHECK-WELLBEING (cheshm, dast, pâ, zabân).
-    ).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
+      // 11 -> 14: the pre-A1 vocabulary tranche's second round (HL-C41 continuation).
+      // Chapter 12 adds nâm, del, dar, ketâb onto SPINE-EXCHANGE-NAMES; Chapter 13 adds
+      // âsemân, khorshid, mâh, setâre, bârân onto SPINE-CHECK-WELLBEING; Chapter 14 adds
+      // khâhar, pesar, mard, zan, dust onto SPINE-EXCHANGE-NAMES, closing the tranche.
+    ).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]);
     expect(
       books.books
         .find((book) => book.language === "urdu")
@@ -130,7 +134,10 @@ describe("real curriculum", () => {
       // CHECK-WELLBEING, heart as its own chapter, water/tea/milk/bread realizing
       // POLITE-REQUEST-REPAIR for the first time in this track), each staying within the
       // 12-atom chapter budget like every generated chapter before it.
-    ).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
+      // 12 -> 15: the second pre-A1 vocabulary tranche (wave 6). Chapter 13 (colors) and
+      // 14 (clothing) add further POLITE-REQUEST-REPAIR segments; chapter 15 (weather)
+      // returns to CHECK-WELLBEING. All three stay within the 12-atom chapter budget.
+    ).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
     expect(
       books.books
         .find((book) => book.language === "russian")
@@ -144,7 +151,12 @@ describe("real curriculum", () => {
       // water/coffee/tea/bread under SPINE-POLITE-REQUEST-REPAIR; 7-8 are
       // friend/siblings/family under SPINE-EXCHANGE-NAMES; 9-10 are the track's
       // first realization of SPINE-CHECK-WELLBEING, ear/nose/mouth/eye then heart.
-    ).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+      // 10 -> 13: the pre-A1 vocabulary program's second Russian tranche. Chapter
+      // 11 is the track's first realization of SPINE-TAKE-LEAVE (all six of the
+      // node's concepts); 12 completes the family Chapter 8 gathered with mother
+      // and father; 13 extends SPINE-POLITE-REQUEST-REPAIR with milk, cheese,
+      // juice and soup.
+    ).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]);
     expect(books.books.every((book) => book.chapters.every((chapter) => chapter.tex.length > 100))).toBe(true);
   });
 
@@ -838,6 +850,20 @@ describe("real curriculum", () => {
       "FA-C11-dast-meaning",
       "FA-C11-pa-meaning",
       "FA-C11-zaban-meaning",
+      "FA-C12-dar-meaning",
+      "FA-C12-del-meaning",
+      "FA-C12-ketab-request",
+      "FA-C12-nam-meaning",
+      "FA-C13-aseman-meaning",
+      "FA-C13-baran-meaning",
+      "FA-C13-khorshid-meaning",
+      "FA-C13-mah-meaning",
+      "FA-C13-setare-meaning",
+      "FA-C14-dust-meaning",
+      "FA-C14-khahar-meaning",
+      "FA-C14-mard-meaning",
+      "FA-C14-pesar-meaning",
+      "FA-C14-zan-meaning",
       "FR-C18-oui-negative",
       "GE-C17-kopf-haupt-compound-word",
       "GU-C06-number-histories-be-source",

@@ -43,6 +43,7 @@ lessons will introduce them only when a useful word needs them.
 | `persian-pe` | read **پ** *pe* as English *p*; a **ب** shape with three dots beneath, and the third of Persian's four additions | **پرسیدن** *porsidan* |
 | `silent-vav` | after **خ** and before **ا**, leave **و** unpronounced — it is written, never said | **خواندن** *khândan* |
 | `ze` | read **ز** as English *z*; an ordinary letter from the inherited Arabic set | **زبان** *zabân* |
+| `heh-e` | read a word-final **ه** as the vowel *-e*, not as a consonant | **ستاره** *setâre* |
 
 ## Read the current word before the whole alphabet
 
@@ -69,6 +70,11 @@ lessons will introduce them only when a useful word needs them.
   inside **زبان** *zabân*. Every other word in those three chapters — **آب**,
   **نان**, **چای**, **کلید**, **مادر**, **پدر**, **برادر**, **دختر**, **چشم**,
   **دست**, **پا** — reuses letters already met.
+- The next fourteen words — **نام**, **دل**, **در**, **کتاب**, **آسمان**,
+  **خورشید**, **ماه**, **ستاره**, **باران**, **خواهر**, **پسر**, **مرد**,
+  **زن**, **دوست** — need no new letters at all, only one new habit:
+  **ستاره**'s final **ه** carries the vowel *-e* rather than a consonant,
+  the sound id `heh-e`.
 
 One spelling symbol can do more than one job in later words—especially **و**
 and **ی**—so read from the word and context rather than assigning each shape one

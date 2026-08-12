@@ -189,9 +189,9 @@ describe("the committed corpus", () => {
 
   it("pins the first ledger, and it is the reason the rule exists", () => {
     const l = buildRootLedger(lessons, minReuse);
-    expect(l.summary.roots).toBe(2847); // +5: vos-latin slug and ES-ETYMON-VOS-03 // +78: vocabulary wave 5 // +6: HL-C88 slices 5-6 // +2: HL-C88 slice 8
-    expect(l.summary.underspent).toBe(2739); // +3: a payoff lesson re-spends a root // +1: the vos-latin slug is unspent; ES-ETYMON-VOS-03 is spent three times, so it is NOT latin-vos, spent once so far // -1: HL-C98 spends fabulari-latin a third time // +76: vocabulary wave 5 // +6: HL-C88 slices 5-6 // +2: HL-C88 slice 8
-    expect(l.summary.neverSpent).toBe(1880); // -6: HL-C94 payoff lessons re-spend roots latin-vos, introduced and not yet re-spent // +1: HL-C98 // +51: vocabulary wave 5 // +6: HL-C88 slices 5-6 // +2: HL-C88 slice 8
+    expect(l.summary.roots).toBe(2958); // +5: vos-latin slug and ES-ETYMON-VOS-03 // +78: vocabulary wave 5 // +6: HL-C88 slices 5-6 // +2: HL-C88 slice 8 // +111: vocabulary wave 6
+    expect(l.summary.underspent).toBe(2847); // +3: a payoff lesson re-spends a root // +1: the vos-latin slug is unspent; ES-ETYMON-VOS-03 is spent three times, so it is NOT latin-vos, spent once so far // -1: HL-C98 spends fabulari-latin a third time // +76: vocabulary wave 5 // +6: HL-C88 slices 5-6 // +2: HL-C88 slice 8 // +108: vocabulary wave 6
+    expect(l.summary.neverSpent).toBe(1952); // -6: HL-C94 payoff lessons re-spend roots latin-vos, introduced and not yet re-spent // +1: HL-C98 // +51: vocabulary wave 5 // +6: HL-C88 slices 5-6 // +2: HL-C88 slice 8 // +72: vocabulary wave 6
     expect(l.summary.underspentPercent).toBe(96); // -1: HL-C98
 
     // Both namespaces contribute. If the etymon-atom count ever returns to
@@ -202,7 +202,7 @@ describe("the committed corpus", () => {
     }, {});
     // +1 roots: latin-vos, from ES-C03-vos.
     // +53 roots, +25 etymon-atom: vocabulary wave 5.
-    expect(byNamespace).toEqual({ roots: 2043, "etymon-atom": 804 }); // +1 root + 1 etymon atom: HL-C88 slice 8
+    expect(byNamespace).toEqual({ roots: 2115, "etymon-atom": 843 }); // +1 root + 1 etymon atom: HL-C88 slice 8 // +72 roots, +39 etymon-atom: vocabulary wave 6
   });
 
   it("pins Spanish, the pilot track", () => {
