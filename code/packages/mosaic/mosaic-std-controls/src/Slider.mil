@@ -1,0 +1,12 @@
+// Standard labelled range input with native adjustable semantics everywhere.
+component Slider {
+  slot label : text ;
+  slot value : number = 0 ;
+  slot min : number = 0 ;
+  slot max : number = 100 ;
+  slot step : number = 1 ;
+  slot display-value : text = "" ;
+  slot disabled : bool = false ;
+  emit onChange ( value : number ) ;
+  emit onCommit ( value : number ) ;
+}

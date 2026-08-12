@@ -519,7 +519,7 @@ unblocks multiple downstream targets; never count source generation as completio
   - [x] Add portable two-state checkbox and number-input controls.
   - [ ] Add radio controls once native group and mutual-exclusion semantics are
     complete on every backend.
-  - [ ] Add the native slider contract and standard facade.
+  - [x] Add the native slider contract and standard facade.
     - [x] Register `HostSlider` in the compiler/resolver kernel rosters and
       make every unimplemented native lowering an explicit capability gap.
     - [x] Lower `HostSlider` to native widgets on all five backends.
@@ -537,7 +537,7 @@ unblocks multiple downstream targets; never count source generation as completio
     - [x] Map literal and slot-backed `HostSlider.a11y-label` values to the
       native accessibility name on every backend without replacing the
       adjustable range role.
-    - [ ] Export the native-complete standard `Slider` facade with an authored
+    - [x] Export the native-complete standard `Slider` facade with an authored
       accessible label and optional displayed value, so apps do not depend on a
       raw `HostSlider` automation ID as the only human-readable name.
   - [ ] Add native select/picker and switch contracts.

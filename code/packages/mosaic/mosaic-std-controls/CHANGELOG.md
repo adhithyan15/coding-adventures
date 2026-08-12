@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.3.0] - Unreleased
+
+- Added a labelled `Slider` facade over the all-five-native `HostSlider`
+  contract, including range, step, disabled, live-change, and commit behavior.
+- Required a human-readable label at the MIL boundary and attached it directly
+  to the native adjustable control on every backend.
+- Added an optional formatted visible value that is excluded from accessibility
+  output to avoid duplicating the native range-value announcement.
+- Expanded direct-package and consuming-app `native-complete` acceptance across
+  SwiftUI, Qt/QML, XAML, Flutter, and Compose.
+
 ## [0.2.0] - Unreleased
 
 - Added a portable two-state `Checkbox` facade that keeps native role, focus,

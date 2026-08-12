@@ -4507,6 +4507,7 @@ fn emit_host_slider(
     let step = match find_prop_value(node, "step") {
         Some(LayoutPropValue::Number(step)) if *step > 0.0 => step.to_string(),
         Some(LayoutPropValue::Number(_)) => "nil".to_string(),
+        Some(LayoutPropValue::SlotRef(_) | LayoutPropValue::Expr(_)) => number_expr("step", "1")?,
         _ => "1".to_string(),
     };
     let disabled = match find_prop_value(node, "disabled") {
@@ -9559,6 +9560,7 @@ mod tests {
                 slot("value", SlotType::Number, true),
                 slot("disabled", SlotType::Bool, true),
                 slot("label", SlotType::Text, true),
+                slot("step", SlotType::Number, true),
             ],
             vec![
                 emit("onChange", vec![param("value", EmitPayloadType::Number)]),
@@ -9579,10 +9581,7 @@ mod tests {
                         name: "max".to_string(),
                         value: LayoutPropValue::Number(100.0),
                     },
-                    LayoutProp {
-                        name: "step".to_string(),
-                        value: LayoutPropValue::Number(5.0),
-                    },
+                    prop_slot_ref("step", "step"),
                     prop_slot_ref("disabled", "disabled"),
                     prop_slot_ref("a11y-label", "label"),
                     prop_emit_ref("onChange", "onChange"),
@@ -9598,7 +9597,7 @@ mod tests {
         assert!(out.contains("value: value,"));
         assert!(out.contains("minimum: 0,"));
         assert!(out.contains("maximum: 100,"));
-        assert!(out.contains("step: 5,"));
+        assert!(out.contains("step: step,"));
         assert!(out.contains("disabled: disabled,"));
         assert!(out.contains(".accessibilityLabel(_mosaicText(label))"));
         assert!(out.contains("onChange: { value in dispatch(.change(value: value)) },"));

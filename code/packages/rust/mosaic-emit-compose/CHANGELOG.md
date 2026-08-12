@@ -7,6 +7,9 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Fixed
 
+- MIL slots with authored defaults now emit non-null Kotlin parameters with
+  matching default arguments, so reusable package components can consume their
+  own defaulted text, number, and boolean values without nullable type errors.
 - Preserve literal `HostInput` values and read-only state, and render its
   placeholder through `BasicTextField`'s native decoration slot.
 
@@ -14,6 +17,9 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 - `HostSlider` now maps literal and slot-backed `a11y-label` values to the
   native slider semantics node without replacing its adjustable range role.
+- Slot-bound or expression-backed slider steps now derive Compose's discrete
+  interior-stop count at runtime, including continuous behavior when step is
+  non-positive.
 - `HostSlider` now lowers to Compose Material's native adjustable `Slider`,
   including controlled numeric values, range and discrete-step mapping,
   disabled state, continuous `onChange`, and release-time `onCommit` events.

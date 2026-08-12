@@ -1618,9 +1618,10 @@ fn emit_widget_class(
         let field = to_camel_case_first_lower(&s.name);
         validate_slot_or_field_name(&field)?;
         let dart_type = slot_type_to_dart(&s.r#type);
-        // Slots that aren't required get nullable Dart types so the
-        // host can pass `null` (or omit the named param entirely).
-        let nullable = !s.required;
+        // A MIL default makes the native field non-null while keeping the
+        // named argument optional. Truly optional hand-built IR without a
+        // default remains nullable.
+        let nullable = !s.required && s.default.is_none();
         let suffix = if nullable { "?" } else { "" };
         writeln!(out, "  final {dart_type}{suffix} {field};").unwrap();
     }
@@ -1633,7 +1634,12 @@ fn emit_widget_class(
     for s in slots {
         let field = to_camel_case_first_lower(&s.name);
         let prefix = if s.required { "required " } else { "" };
-        writeln!(out, "    {prefix}this.{field},").unwrap();
+        let default = s
+            .default
+            .as_ref()
+            .map(|_| format!(" = {}", sample_value_for_slot(s)))
+            .unwrap_or_default();
+        writeln!(out, "    {prefix}this.{field}{default},").unwrap();
     }
     writeln!(out, "    required this.dispatch,").unwrap();
     writeln!(out, "  }});").unwrap();
@@ -3650,10 +3656,19 @@ fn emit_host_slider(
                 }
                 _ => 100.0,
             };
-            Some(((range / step).round() as i64).max(1))
+            Some(((range / step).round() as i64).max(1).to_string())
         }
         Some(LayoutPropValue::Number(_)) => None,
-        _ => Some(100),
+        Some(LayoutPropValue::SlotRef(_) | LayoutPropValue::Expr(_)) => {
+            let step_expr = number_expr("step", "1")?;
+            let intervals = format!(
+                "((({max}).toDouble() - ({min}).toDouble()) / ({step_expr}).toDouble()).round()"
+            );
+            Some(format!(
+                "({step_expr}).toDouble() > 0 ? ({intervals} < 1 ? 1 : {intervals}) : null"
+            ))
+        }
+        _ => Some("100".to_string()),
     };
 
     let mut args = vec![
@@ -5285,6 +5300,28 @@ mod tests {
         );
     }
 
+    #[test]
+    fn defaulted_slots_are_non_nullable_with_constructor_defaults() {
+        let mut title = slot("title", SlotType::Text, false);
+        title.default = Some(SlotDefault::Text("Ready".into()));
+        let mut count = slot("count", SlotType::Number, false);
+        count.default = Some(SlotDefault::Number(3.0));
+        let mut enabled = slot("enabled", SlotType::Bool, false);
+        enabled.default = Some(SlotDefault::Bool(true));
+        let m = component("Profile", vec![title, count, enabled], vec![]);
+        let l = layout("Profile", node("Box"));
+        let out = from_pipeline(&m, &l, &empty_style("Profile"))
+            .unwrap()
+            .output;
+
+        assert!(out.contains("final String title;"), "{out}");
+        assert!(out.contains("final double count;"), "{out}");
+        assert!(out.contains("final bool enabled;"), "{out}");
+        assert!(out.contains("this.title = \"Ready\","), "{out}");
+        assert!(out.contains("this.count = 3.0,"), "{out}");
+        assert!(out.contains("this.enabled = true,"), "{out}");
+    }
+
     // ----- Container nesting: Row/Column children walk -----------------
 
     #[test]
@@ -5997,6 +6034,7 @@ mod tests {
                 slot("value", SlotType::Number, true),
                 slot("disabled", SlotType::Bool, true),
                 slot("label", SlotType::Text, true),
+                slot("step", SlotType::Number, true),
             ],
             vec![
                 emit(
@@ -6034,7 +6072,7 @@ mod tests {
                     },
                     LayoutProp {
                         name: "step".into(),
-                        value: LayoutPropValue::Number(5.0),
+                        value: LayoutPropValue::SlotRef("step".into()),
                     },
                     LayoutProp {
                         name: "disabled".into(),
@@ -6066,7 +6104,8 @@ mod tests {
         assert!(out.contains("value: (value).toDouble()"));
         assert!(out.contains("min: (0).toDouble()"));
         assert!(out.contains("max: (100).toDouble()"));
-        assert!(out.contains("divisions: 20"));
+        assert!(out.contains("divisions: (step).toDouble() > 0 ?"));
+        assert!(out.contains("/ (step).toDouble()).round()"));
         assert!(out.contains(
             "onChanged: _mosaicTruthy(disabled) ? null : (value) { dispatch(SliderEventChange(value: value)); }"
         ));
