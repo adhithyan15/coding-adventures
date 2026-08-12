@@ -5,7 +5,11 @@ manager. The current slices define lossless canonical persistence for local
 device secrets, item revisions, catalog snapshots, and signed VLT-PM15
 operation events, plus domain-separated V1 encrypted object framing and an
 authority-anchored repository verifier for the single authorized Phase 1A
-device. Audit events use their own authenticated object-kind domain; durable
+device. Audit-first generation zero now binds a signed encrypted
+`VaultInitialize` genesis into the initial commit, retry journal, and intended
+active owner state. The separate legacy pre-audit preparation boundary remains
+available for migration and recovery compatibility. Audit events use their
+own authenticated object-kind domain; durable
 owner state can now journal a redacted per-device event head and refuses to
 activate a later publication that omits or reuses that head. Once such a head
 exists, every item mutation and portable import constructs an encrypted signed
@@ -55,12 +59,13 @@ an unlocked authority-anchored verifier at connection time, consumes exact
 publication batches by value, and translates storage and integrity failures to
 a closed payload-free application error surface.
 
-Generation-zero preparation is also complete as a pure no-write boundary. It
-consumes an owned zeroizing passphrase, bounded KDF policy, advisory time, and
-one caller-filled CSPRNG block, then returns the exact `PreparedInit` state,
-bootstrap locator, repository address, and mandatory verifier. All root,
-signing, device, passphrase, and randomness material is held in wipe-on-drop
-containers.
+Generation-zero preparation is also complete as pure no-write boundaries.
+Both consume an owned zeroizing passphrase, bounded KDF policy, advisory time,
+and one caller-filled CSPRNG block, then return the exact `PreparedInit` state,
+bootstrap locator, repository address, and mandatory verifier. The product
+boundary additionally consumes a fresh trace and encrypted-event randomness
+and creates the `VaultInitialize` audit genesis. All root, signing, device,
+passphrase, trace, and randomness material is held in wipe-on-drop containers.
 
 Durable `PreparedInit` journals can be passphrase-rehydrated after process
 loss without any external write. Rehydration authenticates the root wrap,

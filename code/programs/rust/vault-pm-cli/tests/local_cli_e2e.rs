@@ -81,12 +81,12 @@ fn real_cli_initializes_through_a_hidden_tty_and_survives_restart() {
     let (audit_status, audit_transcript) = run_unlock_in_pty(
         &home,
         &["audit", "verify"],
-        b"Audit: verified (announcements=1 commits=1 catalogs=1 revisions=0 items=0 audit_events=0)",
+        b"Audit: verified (announcements=1 commits=1 catalogs=1 revisions=0 items=0 audit_events=1)",
     );
     assert!(audit_status.success(), "audit failed: {audit_transcript}");
     assert!(audit_transcript.contains("Vault passphrase: "));
     assert!(audit_transcript.contains(
-        "Audit: verified (announcements=1 commits=1 catalogs=1 revisions=0 items=0 audit_events=0)"
+        "Audit: verified (announcements=1 commits=1 catalogs=1 revisions=0 items=0 audit_events=1)"
     ));
     assert_transcript_excludes_secrets(&audit_transcript);
 
@@ -228,7 +228,7 @@ fn real_cli_initializes_through_a_hidden_tty_and_survives_restart() {
     assert!(!restored_transcript.contains("e2e updated password"));
 
     let (enable_status, enable_transcript) =
-        run_unlock_in_pty(&home, &["audit", "enable"], b"Audit: enabled.");
+        run_unlock_in_pty(&home, &["audit", "enable"], b"Audit: already enabled.");
     assert!(
         enable_status.success(),
         "audit enable failed: {enable_transcript}"
@@ -250,7 +250,7 @@ fn real_cli_initializes_through_a_hidden_tty_and_survives_restart() {
     let (post_failure_status, post_failure_transcript) = run_unlock_in_pty(
         &home,
         &["audit", "verify"],
-        b"commits=9 catalogs=6 revisions=5 items=2 audit_events=3",
+        b"commits=18 catalogs=6 revisions=5 items=2 audit_events=18",
     );
     assert!(
         post_failure_status.success(),
@@ -302,7 +302,7 @@ fn real_cli_initializes_through_a_hidden_tty_and_survives_restart() {
     assert_transcript_excludes_secrets(&audit_show_transcript);
 
     let (final_audit_status, final_audit_transcript) =
-        run_unlock_in_pty(&home, &["audit", "verify"], b"audit_events=7");
+        run_unlock_in_pty(&home, &["audit", "verify"], b"audit_events=22");
     assert!(
         final_audit_status.success(),
         "final audit verification failed: {final_audit_transcript}"
@@ -334,8 +334,11 @@ fn real_cli_initializes_through_a_hidden_tty_and_survives_restart() {
         restore_init_status.success(),
         "restore target init failed: {restore_init_transcript}"
     );
-    let (restore_audit_status, restore_audit_transcript) =
-        run_unlock_in_pty(&restore_home, &["audit", "enable"], b"Audit: enabled.");
+    let (restore_audit_status, restore_audit_transcript) = run_unlock_in_pty(
+        &restore_home,
+        &["audit", "enable"],
+        b"Audit: already enabled.",
+    );
     assert!(
         restore_audit_status.success(),
         "restore target audit enable failed: {restore_audit_transcript}"
@@ -792,6 +795,7 @@ fn run_unlock_in_pty(
     master.write_all(PASSPHRASE).unwrap();
     master.write_all(b"\n").unwrap();
     read_until(&mut master, &mut transcript, expected_output);
+    drain_pty(&mut master, &mut transcript);
     drop(master);
     let status = child.wait().unwrap();
     (status, String::from_utf8_lossy(&transcript).into_owned())
@@ -839,7 +843,10 @@ fn read_until(master: &mut File, transcript: &mut Vec<u8>, pattern: &[u8]) {
         let mut byte = [0_u8; 1];
         match master.read(&mut byte) {
             Ok(1) => transcript.push(byte[0]),
-            Ok(0) => panic!("pseudo-terminal closed before expected prompt"),
+            Ok(0) => panic!(
+                "pseudo-terminal closed before expected public text: {}",
+                String::from_utf8_lossy(pattern)
+            ),
             Ok(_) => unreachable!(),
             Err(error) => panic!("pseudo-terminal read failed: {error}"),
         }
@@ -854,9 +861,24 @@ fn read_until_from(master: &mut File, transcript: &mut Vec<u8>, start: usize, pa
         let mut byte = [0_u8; 1];
         match master.read(&mut byte) {
             Ok(1) => transcript.push(byte[0]),
-            Ok(0) => panic!("pseudo-terminal closed before expected line ending"),
+            Ok(0) => panic!(
+                "pseudo-terminal closed before line ending after public text: {}",
+                String::from_utf8_lossy(pattern)
+            ),
             Ok(_) => unreachable!(),
             Err(error) => panic!("pseudo-terminal read failed: {error}"),
+        }
+    }
+}
+
+fn drain_pty(master: &mut File, transcript: &mut Vec<u8>) {
+    let mut bytes = [0_u8; 4096];
+    loop {
+        match master.read(&mut bytes) {
+            Ok(0) => return,
+            Ok(count) => transcript.extend_from_slice(&bytes[..count]),
+            Err(error) if error.raw_os_error() == Some(libc::EIO) => return,
+            Err(error) => panic!("pseudo-terminal drain failed: {error}"),
         }
     }
 }

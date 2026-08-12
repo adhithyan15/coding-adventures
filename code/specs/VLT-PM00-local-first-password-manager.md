@@ -1547,6 +1547,11 @@ changelog, focused build, and downstream validation.
              hidden passphrase input, host-failure events, aggregate-only
              success, and real-process restart proof, using
              `VLT-PM20-cli-portable-restore-verify.md`.
+9b-4b-2b-1a. completed audit-first generation zero for every new CLI vault,
+              binding the signed encrypted `VaultInitialize` genesis into the
+              initial commit, retry journal, and active owner head while
+              retaining explicit legacy migration, using
+              `VLT-PM21-audit-first-generation-zero.md`.
 9b-4b-2b-2. remaining explicit target creation/configuration switching and
              automatic verifier composition before a fully verified-restore
              claim.
@@ -1614,7 +1619,8 @@ The following are not allowed to block Phase 1A, but each needs a later spec:
   `VLT-PM15-operation-audit.md`, `VLT-PM16-cli-secure-note-create.md`, and
   `VLT-PM17-cli-portable-export.md`, `VLT-PM18-cli-portable-import.md`, and
   `VLT-PM19-portable-restore-verification.md`, and
-  `VLT-PM20-cli-portable-restore-verify.md` —
+  `VLT-PM20-cli-portable-restore-verify.md`, and
+  `VLT-PM21-audit-first-generation-zero.md` —
   product repository wire,
   object-store, domain, verified-DAG, application, local-host, configuration,
   terminal/entropy, executable composition, authenticated verification, and
@@ -1622,7 +1628,8 @@ The following are not allowed to block Phase 1A, but each needs a later spec:
   reversible delete/restore, first-class operation-audit contracts, and
   secure-note CLI composition, audited encrypted recovery-artifact
   export/import, independently audited semantic restore verification, and its
-  retryable local CLI ceremony.
+  retryable local CLI ceremony, plus an initialization audit genesis for every
+  new CLI vault.
 - `VLT12-vault-revision-history.md`, `VLT13-vault-encrypted-search.md`,
   `VLT14-vault-attachments.md`, `VLT15-vault-import-export.md`.
 - `STR01-storage-fs-backend.md` and `storage-core`.

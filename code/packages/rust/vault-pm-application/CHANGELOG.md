@@ -2,6 +2,21 @@
 
 All notable changes to this package are documented here.
 
+## [0.50.0] - 2026-08-11
+
+### Added
+
+- Add a distinct audit-first generation-zero boundary with an exact owned
+  randomness block and encrypted `VaultInitialize` genesis event.
+
+### Security
+
+- Bind the signed initialization event into the initial commit, retry journal,
+  and intended active owner state so new product vaults are auditable before
+  the first post-initialization operation.
+- Retain the legacy pre-audit preparation boundary only for migration,
+  recovery, and fail-closed compatibility verification.
+
 ## [0.49.0] - 2026-08-11
 
 ### Added

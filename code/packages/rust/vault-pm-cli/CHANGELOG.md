@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- New `init` operations use audit-first generation zero, making the encrypted
+  signed `VaultInitialize` event the first repository commit and audit head.
+- `audit enable` is an idempotent no-write success on new vaults while the
+  explicit epoch-start migration remains available for legacy pre-audit state.
 - Added retryable audit-required `restore verify FILE`, which authenticates the
   current target and encrypted artifact independently, prepares the opaque
   source expectation, and releases aggregate verified counts only after a

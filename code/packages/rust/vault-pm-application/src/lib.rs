@@ -49,8 +49,9 @@ pub use export::{
     MAX_PORTABLE_EXPORT_PLAINTEXT_BYTES, PORTABLE_EXPORT_RANDOM_BYTES,
 };
 pub use initialize::{
-    complete_generation_zero, prepare_generation_zero, rehydrate_prepared_init,
-    GenerationZeroPolicyV1, GenerationZeroRandomness, PreparedGenerationZero,
+    complete_generation_zero, prepare_audited_generation_zero, prepare_generation_zero,
+    rehydrate_prepared_init, AuditedGenerationZeroRandomness, GenerationZeroPolicyV1,
+    GenerationZeroRandomness, PreparedGenerationZero, AUDITED_GENERATION_ZERO_RANDOM_BYTES,
     GENERATION_ZERO_RANDOM_BYTES,
 };
 pub use lifecycle::{LockedVaultV1, VaultAccessV1};

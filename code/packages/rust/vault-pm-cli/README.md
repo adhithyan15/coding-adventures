@@ -24,10 +24,13 @@ match the prepared platform object root before storage is touched.
 Initialization collects a new passphrase only through the injected fixed
 secret-input boundary, fills the complete generation-zero randomness block
 from the injected OS entropy boundary, and uses a fixed production Argon2id
-floor. It durably installs the exact `PreparedInit` owner journal before
-publishing the configuration that makes the random locator discoverable. A
-restart with a prepared journal collects the existing passphrase and resumes
-the exact journal without generating new identities or ciphertext.
+floor. New vaults use the audit-first application boundary: the initial commit,
+prepared journal, and intended active state all bind one signed encrypted
+`VaultInitialize` genesis event. It durably installs the exact `PreparedInit`
+owner journal before publishing the configuration that makes the random
+locator discoverable. A restart with a prepared journal collects the existing
+passphrase and resumes the exact journal without generating new identities,
+trace IDs, audit events, or ciphertext.
 
 Status and plain doctor do not prompt or unlock. Authenticated audit and doctor
 commands collect the existing passphrase through the controlling terminal,
@@ -38,8 +41,11 @@ authenticated encrypted operation events (zero for pre-audit vaults), with no
 paths, locators, providers, identities, or cryptographic details. No command
 accepts a passphrase through argv, stdin, environment, configuration, or URL.
 
-`audit enable` is the explicit one-time boundary between a vault's declared
-unlogged historical prefix and its signed operation-event epoch. It consumes
+New CLI vaults are already audit-enabled at generation zero, so `audit enable`
+returns an idempotent no-write `already enabled` success for them. For legacy
+pre-audit owner state, `audit enable` remains the explicit one-time boundary
+between the declared unlogged historical prefix and its signed operation-event
+epoch. It consumes
 the unlocked session through the existing crash-resumable audit-only journal
 and returns only after the successful `AuditEpochStart` event and next owner
 state are durable. Repeating the command is a no-write success. Once enabled,
