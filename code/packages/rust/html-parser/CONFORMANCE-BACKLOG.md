@@ -314,7 +314,10 @@ Prioritized work items:
    the surviving current node. Direct option and group children close quietly;
    empty selects, ordinary body content, table cells, select fragments, and
    foreign content retain their expected paths. Continue the fresh in-body
-   scope and recovery audit beyond active formatting.
+   scope and recovery audit beyond active formatting. Template-owned `form`
+   elements now bypass an outer form pointer without replacing or clearing it,
+   matching the current Standard while ordinary repeated forms remain ignored
+   and foreign template-named elements do not activate the HTML-template path.
 3. **Diagnostic positions and error taxonomy.** Carry source positions into
    tree construction and map diagnostics to current WHATWG concepts. Legacy
    WPT/html5lib error labels are evidence hints, not a normative public API.
