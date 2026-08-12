@@ -1,0 +1,20 @@
+style Slider {
+  part slider-root {
+    gap : $foundation-space-xs ;
+  }
+
+  part slider-heading {
+    gap : $foundation-space-sm ;
+  }
+
+  part slider-label {
+    color       : $foundation-color-text-dark ;
+    font-size   : $foundation-font-body ;
+    font-weight : 600 ;
+  }
+
+  part slider-value {
+    color     : $foundation-color-muted-dark ;
+    font-size : $foundation-font-caption ;
+  }
+}

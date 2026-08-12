@@ -5,7 +5,7 @@ use std::fmt::Write;
 
 use moslayout_compiler::{LayoutDef, LayoutNode, LayoutProp, LayoutPropValue};
 use mosmodel_compiler::{
-    EmitDecl, EmitPayloadType, ListInnerType, MosmodelComponent, SlotDecl, SlotType,
+    EmitDecl, EmitPayloadType, ListInnerType, MosmodelComponent, SlotDecl, SlotDefault, SlotType,
 };
 use mosstyle_compiler::{StyleDef, StyleProp};
 
@@ -280,6 +280,9 @@ pub fn from_pipeline(
     writeln!(out, "import androidx.compose.ui.text.font.FontFamily").unwrap();
     writeln!(out, "import androidx.compose.ui.text.input.ImeAction").unwrap();
     writeln!(out, "import androidx.compose.ui.text.input.KeyboardType").unwrap();
+    if uses_host_slider {
+        writeln!(out, "import kotlin.math.roundToInt").unwrap();
+    }
     writeln!(
         out,
         "import androidx.compose.ui.semantics.contentDescription"
@@ -1021,9 +1024,15 @@ fn emit_composable_function(
         let field = to_camel_case_first_lower(&s.name);
         validate_safe_identifier(&field).map_err(PipelineEmitError::UnsafeSlotName)?;
         let ty = slot_type_to_kotlin(&s.r#type);
-        // Optional slots in the IR become nullable Kotlin types.
-        let suffix = if s.required { "" } else { "?" };
-        writeln!(out, "    {field}: {ty}{suffix},").unwrap();
+        let suffix = if s.required || s.default.is_some() {
+            ""
+        } else {
+            "?"
+        };
+        let default = kotlin_slot_default(s)
+            .map(|value| format!(" = {value}"))
+            .unwrap_or_default();
+        writeln!(out, "    {field}: {ty}{suffix}{default},").unwrap();
     }
     writeln!(out, "    dispatch: ({component_name}Event) -> Unit,").unwrap();
     writeln!(out, ") {{").unwrap();
@@ -1205,9 +1214,15 @@ fn emit_composable_parameters(
         let field = to_camel_case_first_lower(&s.name);
         validate_safe_identifier(&field).map_err(PipelineEmitError::UnsafeSlotName)?;
         let ty = slot_type_to_kotlin(&s.r#type);
-        // Optional slots in the IR become nullable Kotlin types.
-        let suffix = if s.required { "" } else { "?" };
-        writeln!(out, "    {field}: {ty}{suffix},").unwrap();
+        let suffix = if s.required || s.default.is_some() {
+            ""
+        } else {
+            "?"
+        };
+        let default = kotlin_slot_default(s)
+            .map(|value| format!(" = {value}"))
+            .unwrap_or_default();
+        writeln!(out, "    {field}: {ty}{suffix}{default},").unwrap();
     }
     writeln!(out, "    dispatch: ({component_name}Event) -> Unit,").unwrap();
     Ok(())
@@ -4095,7 +4110,7 @@ fn emit_host_slider(
     let accessibility_label = text_prop_expr(node, "a11y-label")?;
 
     let steps = match find_prop_value(node, "step") {
-        Some(LayoutPropValue::Number(step)) if *step == 0.0 => None,
+        Some(LayoutPropValue::Number(step)) if *step == 0.0 => "0".to_string(),
         Some(LayoutPropValue::Number(step)) if *step > 0.0 => {
             let range = match (find_prop_value(node, "min"), find_prop_value(node, "max")) {
                 (Some(LayoutPropValue::Number(min)), Some(LayoutPropValue::Number(max))) => {
@@ -4103,10 +4118,16 @@ fn emit_host_slider(
                 }
                 _ => 100.0,
             };
-            Some(((range / step).round() as i64 - 1).max(0))
+            ((range / step).round() as i64 - 1).max(0).to_string()
         }
-        Some(LayoutPropValue::Number(_)) => None,
-        _ => Some(99),
+        Some(LayoutPropValue::Number(_)) => "0".to_string(),
+        Some(LayoutPropValue::SlotRef(_) | LayoutPropValue::Expr(_)) => {
+            let step_expr = number_expr("step", "1.0")?;
+            format!(
+                "if (({step_expr}).toDouble() > 0.0) (((({max_expr}).toDouble() - ({min_expr}).toDouble()) / ({step_expr}).toDouble()).roundToInt() - 1).coerceAtLeast(0) else 0"
+            )
+        }
+        _ => "99".to_string(),
     };
 
     let mut out = String::new();
@@ -4149,7 +4170,7 @@ fn emit_host_slider(
         "{inner}valueRange = ({min_expr}).toFloat()..({max_expr}).toFloat(),"
     )
     .unwrap();
-    writeln!(out, "{inner}steps = {},", steps.unwrap_or(0)).unwrap();
+    writeln!(out, "{inner}steps = {steps},").unwrap();
     writeln!(out, "{pad})").unwrap();
     Ok(out)
 }
@@ -4350,6 +4371,24 @@ fn slot_type_to_kotlin(t: &SlotType) -> String {
                 "/*UNSAFE_COMPONENT_NAME*/Any".to_string()
             }
         }
+    }
+}
+
+fn kotlin_slot_default(slot: &SlotDecl) -> Option<String> {
+    match slot.default.as_ref()? {
+        SlotDefault::Text(value) => Some(format!("\"{}\"", escape_kotlin_string(value))),
+        SlotDefault::Number(value) if value.is_finite() => {
+            let text = value.to_string();
+            Some(
+                if text.contains('.') || text.contains('e') || text.contains('E') {
+                    text
+                } else {
+                    format!("{text}.0")
+                },
+            )
+        }
+        SlotDefault::Number(_) => Some("0.0".to_string()),
+        SlotDefault::Bool(value) => Some(value.to_string()),
     }
 }
 
@@ -5129,6 +5168,23 @@ mod tests {
     }
 
     #[test]
+    fn defaulted_slots_emit_non_nullable_parameters_with_native_defaults() {
+        let mut title = slot("title", SlotType::Text, false);
+        title.default = Some(SlotDefault::Text("Ready".into()));
+        let mut count = slot("count", SlotType::Number, false);
+        count.default = Some(SlotDefault::Number(3.0));
+        let mut enabled = slot("enabled", SlotType::Bool, false);
+        enabled.default = Some(SlotDefault::Bool(true));
+        let m = component("X", vec![title, count, enabled], vec![]);
+        let l = layout("X", node("Box", vec![], vec![]));
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+
+        assert!(out.contains("title: String = \"Ready\","), "{out}");
+        assert!(out.contains("count: Double = 3.0,"), "{out}");
+        assert!(out.contains("enabled: Boolean = true,"), "{out}");
+    }
+
+    #[test]
     fn root_container_children_split_into_private_composables() {
         let m = component("X", vec![slot("title", SlotType::Text, true)], vec![]);
         let l = layout(
@@ -5805,6 +5861,7 @@ mod tests {
                 slot("value", SlotType::Number, true),
                 slot("locked", SlotType::Bool, true),
                 slot("label", SlotType::Text, true),
+                slot("step", SlotType::Number, true),
             ],
             vec![
                 emit_decl(
@@ -5831,10 +5888,7 @@ mod tests {
                         name: "max".into(),
                         value: LayoutPropValue::Number(100.0),
                     },
-                    LayoutProp {
-                        name: "step".into(),
-                        value: LayoutPropValue::Number(5.0),
-                    },
+                    slot_prop("step", "step"),
                     slot_prop("disabled", "locked"),
                     slot_prop("a11y-label", "label"),
                     LayoutProp {
@@ -5868,7 +5922,9 @@ mod tests {
         assert!(out.contains("enabled = !_mosaicTruthy(locked),"));
         assert!(out.contains("modifier = Modifier.semantics { contentDescription = label },"));
         assert!(out.contains("valueRange = (0).toFloat()..(100).toFloat(),"));
-        assert!(out.contains("steps = 19,"));
+        assert!(out.contains("import kotlin.math.roundToInt"));
+        assert!(out.contains("if ((step).toDouble() > 0.0)"));
+        assert!(out.contains("/ (step).toDouble()).roundToInt() - 1"));
     }
 
     #[test]

@@ -9,6 +9,9 @@ All notable changes to this package will be documented in this file.
 Literal and slot-backed `HostSlider.a11y-label` values now lower to a native
 SwiftUI accessibility label without replacing the slider's adjustable role.
 
+Slot-bound or expression-backed slider steps now flow into the generated
+native Slider wrapper instead of falling back to a hard-coded increment.
+
 ### Added - native adjustable slider
 
 `HostSlider` now lowers to SwiftUI's native `Slider`, including controlled

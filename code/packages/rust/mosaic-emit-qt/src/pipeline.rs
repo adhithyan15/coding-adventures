@@ -3583,13 +3583,24 @@ fn emit_host_slider_qml(
     writeln!(out, "{inner}value: {}", number_expr("value", "0")?).unwrap();
     writeln!(out, "{inner}from: {}", number_expr("min", "0")?).unwrap();
     writeln!(out, "{inner}to: {}", number_expr("max", "100")?).unwrap();
-    let step = find_number_prop(node, "step").unwrap_or(1.0);
+    let step = number_expr("step", "1")?;
     writeln!(out, "{inner}stepSize: {step}").unwrap();
     if let Some(accessible_name) = build_text_accessible_name_attribute(node) {
         writeln!(out, "{inner}{accessible_name}").unwrap();
     }
-    if step > 0.0 {
-        writeln!(out, "{inner}snapMode: MosaicControls.Slider.SnapAlways").unwrap();
+    match node
+        .props
+        .iter()
+        .find(|prop| prop.name == "step")
+        .map(|prop| &prop.value)
+    {
+        Some(LayoutPropValue::Number(value)) if *value <= 0.0 => {}
+        Some(LayoutPropValue::SlotRef(_) | LayoutPropValue::Expr(_)) => {
+            writeln!(out, "{inner}snapMode: stepSize > 0 ? MosaicControls.Slider.SnapAlways : MosaicControls.Slider.NoSnap").unwrap();
+        }
+        _ => {
+            writeln!(out, "{inner}snapMode: MosaicControls.Slider.SnapAlways").unwrap();
+        }
     }
     if let Some(prop) = node.props.iter().find(|prop| prop.name == "disabled") {
         let enabled = match &prop.value {
@@ -9672,6 +9683,7 @@ mod tests {
                 slot("value", SlotType::Number, true),
                 slot("disabled", SlotType::Bool, true),
                 slot("label", SlotType::Text, true),
+                slot("step", SlotType::Number, true),
             ],
             vec![
                 EmitDecl {
@@ -9710,7 +9722,7 @@ mod tests {
                     },
                     LayoutProp {
                         name: "step".to_string(),
-                        value: LayoutPropValue::Number(5.0),
+                        value: LayoutPropValue::SlotRef("step".to_string()),
                     },
                     LayoutProp {
                         name: "disabled".to_string(),
@@ -9740,9 +9752,9 @@ mod tests {
         assert!(out.contains("value: mosaicRoot.value"));
         assert!(out.contains("from: 0"));
         assert!(out.contains("to: 100"));
-        assert!(out.contains("stepSize: 5"));
+        assert!(out.contains("stepSize: mosaicRoot.step"));
         assert!(out.contains("Accessible.name: label"));
-        assert!(out.contains("snapMode: MosaicControls.Slider.SnapAlways"));
+        assert!(out.contains("snapMode: stepSize > 0 ? MosaicControls.Slider.SnapAlways : MosaicControls.Slider.NoSnap"));
         assert!(out.contains("enabled: !mosaicRoot.disabled"));
         assert!(out.contains("onMoved: mosaicRoot.change(value)"));
         assert!(out.contains("onPressedChanged: if (!pressed) mosaicRoot.commit(value)"));
