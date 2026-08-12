@@ -4,6 +4,13 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
 
 ## [Unreleased]
 
+### Added - source-verified Chinese 好 (HL-C09CJ)
+
+- Verify 好 from its pinned Hanzi Writer Data record as six ordered runs: all
+  three strokes of 女 before all three strokes of 子.
+- Preserve three joined turns and five lifts in a Noto Sans SC fit.
+- Reduce measured HL-C09 debt to 144 entries; Chinese has 13 outstanding.
+
 ### Added - source-verified Chinese 你 (HL-C09CI)
 
 - Verify 你 from its pinned Hanzi Writer Data record as seven ordered runs:

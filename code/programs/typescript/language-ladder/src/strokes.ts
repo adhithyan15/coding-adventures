@@ -1153,6 +1153,151 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: chineseCharacterSource("你"),
   },
+  // 好 writes all three strokes of 女 before the three strokes of 子. The
+  // first strokes of both components turn without lifting, and 子's vertical
+  // keeps its base hook joined. Six Noto-fitted runs preserve five lifts.
+  [ductusKey("chinese", "好")]: {
+    script: "chinese",
+    glyph: "好",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw 女's first bent stroke down and left",
+            path: [
+              { x: 218, y: 820 },
+              { x: 205, y: 750 },
+              { x: 190, y: 675 },
+              { x: 175, y: 600 },
+              { x: 155, y: 520 },
+              { x: 135, y: 440 },
+              { x: 120, y: 365 },
+              { x: 100, y: 320 },
+              { x: 82, y: 300 },
+            ],
+          },
+          {
+            label: "turn without lifting and sweep right",
+            path: [
+              { x: 82, y: 300 },
+              { x: 145, y: 270 },
+              { x: 205, y: 225 },
+              { x: 265, y: 175 },
+              { x: 325, y: 120 },
+              { x: 375, y: 70 },
+              { x: 410, y: 40 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then draw 女's left-falling stroke",
+            path: [
+              { x: 390, y: 620 },
+              { x: 380, y: 550 },
+              { x: 365, y: 475 },
+              { x: 345, y: 395 },
+              { x: 320, y: 310 },
+              { x: 290, y: 225 },
+              { x: 255, y: 150 },
+              { x: 215, y: 80 },
+              { x: 165, y: 20 },
+              { x: 95, y: -45 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then draw 女's horizontal stroke left to right",
+            path: [
+              { x: 45, y: 600 },
+              { x: 100, y: 600 },
+              { x: 160, y: 600 },
+              { x: 220, y: 600 },
+              { x: 280, y: 600 },
+              { x: 335, y: 600 },
+              { x: 370, y: 600 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then draw 子's top horizontal left to right",
+            path: [
+              { x: 485, y: 730 },
+              { x: 555, y: 730 },
+              { x: 630, y: 730 },
+              { x: 705, y: 730 },
+              { x: 780, y: 730 },
+              { x: 850, y: 730 },
+            ],
+          },
+          {
+            label: "turn without lifting and sweep down-left",
+            path: [
+              { x: 850, y: 730 },
+              { x: 840, y: 700 },
+              { x: 820, y: 665 },
+              { x: 790, y: 625 },
+              { x: 755, y: 585 },
+              { x: 715, y: 545 },
+              { x: 680, y: 520 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then descend 子's vertical stroke",
+            path: [
+              { x: 700, y: 520 },
+              { x: 700, y: 440 },
+              { x: 700, y: 350 },
+              { x: 700, y: 260 },
+              { x: 700, y: 170 },
+              { x: 700, y: 80 },
+              { x: 700, y: 15 },
+              { x: 695, y: -25 },
+            ],
+          },
+          {
+            label: "hook left at the base without lifting",
+            path: [
+              { x: 695, y: -25 },
+              { x: 665, y: -35 },
+              { x: 625, y: -40 },
+              { x: 585, y: -38 },
+              { x: 545, y: -25 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then draw 子's middle horizontal left to right",
+            path: [
+              { x: 440, y: 380 },
+              { x: 520, y: 380 },
+              { x: 610, y: 380 },
+              { x: 700, y: 380 },
+              { x: 790, y: 380 },
+              { x: 880, y: 380 },
+              { x: 950, y: 380 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: chineseCharacterSource("好"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the

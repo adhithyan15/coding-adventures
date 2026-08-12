@@ -34,6 +34,7 @@ const CHINESE_SPEECH_RADICAL = DUCTUS[ductusKey("chinese", "讠")];
 const CHINESE_WATER_RADICAL = DUCTUS[ductusKey("chinese", "氵")];
 const CHINESE_ROOF_RADICAL = DUCTUS[ductusKey("chinese", "宀")];
 const CHINESE_YOU = DUCTUS[ductusKey("chinese", "你")];
+const CHINESE_GOOD = DUCTUS[ductusKey("chinese", "好")];
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
@@ -428,6 +429,31 @@ describe("handwriting ductus", () => {
     expect(baseHook[0].x).toBeGreaterThan(baseHook.at(-1)!.x);
     expect(leftDot[0].x).toBeGreaterThan(leftDot.at(-1)!.x);
     expect(rightDot[0].x).toBeLessThan(rightDot.at(-1)!.x);
+  });
+
+  it("Chinese 好 writes 女 before 子 with three joined turns", () => {
+    expect(CHINESE_GOOD.script).toBe("chinese");
+    expect(penLifts(CHINESE_GOOD)).toBe(5);
+    expect(CHINESE_GOOD.strokes).toHaveLength(6);
+    expect(CHINESE_GOOD.strokes.map((stroke) => stroke.segments.length)).toEqual([2, 1, 1, 2, 2, 1]);
+    const womanBend = CHINESE_GOOD.strokes[0].segments[0].path;
+    const womanSweep = CHINESE_GOOD.strokes[0].segments[1].path;
+    const womanFall = CHINESE_GOOD.strokes[1].segments[0].path;
+    const womanBar = CHINESE_GOOD.strokes[2].segments[0].path;
+    const childBar = CHINESE_GOOD.strokes[3].segments[0].path;
+    const childTurn = CHINESE_GOOD.strokes[3].segments[1].path;
+    const childVertical = CHINESE_GOOD.strokes[4].segments[0].path;
+    const childHook = CHINESE_GOOD.strokes[4].segments[1].path;
+    const childMiddle = CHINESE_GOOD.strokes[5].segments[0].path;
+    expect(womanBend.at(-1)).toEqual(womanSweep[0]);
+    expect(womanSweep[0].x).toBeLessThan(womanSweep.at(-1)!.x);
+    expect(womanFall[0].x).toBeGreaterThan(womanFall.at(-1)!.x);
+    expect(womanBar[0].x).toBeLessThan(womanBar.at(-1)!.x);
+    expect(childBar.at(-1)).toEqual(childTurn[0]);
+    expect(childTurn[0].x).toBeGreaterThan(childTurn.at(-1)!.x);
+    expect(childVertical.at(-1)).toEqual(childHook[0]);
+    expect(childHook[0].x).toBeGreaterThan(childHook.at(-1)!.x);
+    expect(childMiddle[0].x).toBeLessThan(childMiddle.at(-1)!.x);
   });
 
   it("Hebrew א uses two crossed pen-down runs with one lift", () => {
@@ -1373,6 +1399,9 @@ describe("handwriting ductus", () => {
     expect(verifiedLetterFont("你", CHINESE_YOU.source.url)).toBe(
       "_fonts/NotoSansSC-Subset.ttf",
     );
+    expect(verifiedLetterFont("好", CHINESE_GOOD.source.url)).toBe(
+      "_fonts/NotoSansSC-Subset.ttf",
+    );
     expect(verifiedLetterFont("א", HEBREW_ALEF.source.url)).toBe(
       "_fonts/NotoSansHebrew-Static.ttf",
     );
@@ -1605,6 +1634,19 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /PRC-order dataset.*seven ordered strokes.*Medians 1–2.*亻 first.*left-falling stroke.*separately started vertical.*Median 3.*upper right.*falls down-left.*median 4.*crosses rightward.*hooks down-left without lifting.*median 5.*centre.*descends.*hooks left without lifting.*medians 6–7.*lower-left dot down-left.*lower-right dot down-right.*proper stroke order.*medians.*stroke-order animation.*People's Republic of China stroke order.*Noto Sans SC.*both joined hooks.*component order.*six intervening pen lifts.*squarer.*Arphic-derived source graphics/i,
+    );
+  });
+
+  it("Chinese 好 traces 女-before-子 and three joined turns to the pinned PRC-order dataset", () => {
+    const src = CHINESE_GOOD.source;
+    expect(src.url).toBe(
+      "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E5%A5%BD.json",
+    );
+    expect(src.citation).toMatch(
+      /Hanzi Writer Data 好\.json.*ordered stroke paths and medians 1–6.*snapshot 68d10a4.*updated from Make Me a Hanzi.*22 June 2019/i,
+    );
+    expect(src.variation).toMatch(
+      /PRC-order dataset.*six ordered strokes.*Medians 1–3.*女 first.*bent stroke.*down-left.*sweeps right without lifting.*separately started stroke falls down-left.*horizontal crosses left-to-right.*Medians 4–6.*子.*horizontal turns down-left without lifting.*vertical descends and hooks left without lifting.*middle horizontal crosses left-to-right.*proper stroke order.*medians.*stroke-order animation.*People's Republic of China stroke order.*Noto Sans SC.*女-before-子 component order.*all three joined turns.*five intervening pen lifts.*more angular.*flatter.*Arphic-derived source graphics/i,
     );
   });
 

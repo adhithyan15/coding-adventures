@@ -2,6 +2,14 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Chinese 好 ductus (HL-C09CJ)
+
+- Render **好** in nine source-aligned frames: all three 女 strokes first,
+  followed by 子's joined top turn, joined vertical hook, and middle horizontal.
+- Fit all six source runs to Noto Sans SC while preserving three internal
+  joins, five pen lifts, and component order.
+- Reduce Chinese's remaining verified-ductus inventory to 13 entries.
+
 ### Added — cited Chinese 你 ductus (HL-C09CI)
 
 - Render **你** in nine source-aligned frames: write 亻, then 尔's falling
