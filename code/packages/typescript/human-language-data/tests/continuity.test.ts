@@ -422,7 +422,7 @@ describe("the real corpus", () => {
     // not number the family; ch19's ஆகிறது is described the same way), so it practises
     // TA-GRAMMAR-DATIVE-SUBJECT-02 at a distance of 90 lessons (index 38 -> 128)
     // rather than re-teaching it.
-    expect(report.summary.atomsTaught).toBe(2892); // +4: ES-LEX-VOS-01, ES-CULTURE-VOSEO-02 (ES-C03-vos) // +3: HL-C98 splits AR-PRESENT-SINGULAR into 1SG/2SG/3SG // +83: vocabulary wave 5 (persian ch9-11, telugu ch35-40, malayalam ch35-40) // +7: HL-C88 slices 5-6 (Spanish) // +2: HL-C88 slice 8
+    expect(report.summary.atomsTaught).toBe(2995); // +4: ES-LEX-VOS-01, ES-CULTURE-VOSEO-02 (ES-C03-vos) // +3: HL-C98 splits AR-PRESENT-SINGULAR into 1SG/2SG/3SG // +83: vocabulary wave 5 (persian ch9-11, telugu ch35-40, malayalam ch35-40) // +7: HL-C88 slices 5-6 (Spanish) // +2: HL-C88 slice 8 // +103: vocabulary wave 6, round 2 (russian/persian/urdu/bengali)
     // +2, and it goes UP, which is worth stating plainly. Three of the five new atoms
     // are TA-W09's and nothing follows TA-W09, so they are orphans by construction:
     // PA-YA-01, E-SIGN-02, READ-PEYAR-03. TA-W08's two are revisited by TA-W09.
@@ -485,7 +485,7 @@ describe("the real corpus", () => {
     // would put the prerequisite AFTER its dependent and fail the ordering rule). The
     // tie is carried by `reviews_of` instead, which does not count as a revisit.
     // Chapters 40 and 41 are planned to close this.
-    expect(report.summary.atomsNeverRevisited).toBe(473); // -17: payoff lessons plus si/no moving early // +2: HL-C98's per-cell atoms are revisited later than the R-windows reach // -8: vocabulary wave 5 rescues net orphan atoms via reach-back payoffs // +4: HL-C88 slices 5-6
+    expect(report.summary.atomsNeverRevisited).toBe(476); // -17: payoff lessons plus si/no moving early // +2: HL-C98's per-cell atoms are revisited later than the R-windows reach // -8: vocabulary wave 5 rescues net orphan atoms via reach-back payoffs // +4: HL-C88 slices 5-6 // +3: vocabulary wave 6 (russian/persian/urdu/bengali reinforcement pushed most orphans to zero, but extending each track exposed a few new tail atoms)
     expect(report.summary.neverRevisitedPercent).toBe(16);
 
     // 509 -> 517, and the eight split into TWO DIFFERENT PHENOMENA this number conflates.
@@ -569,7 +569,7 @@ describe("the real corpus", () => {
     // measure the distance against and stayed silent. Naming a teacher is what made
     // the existing early use visible. It also argues ஒரு belongs earlier than 39,
     // which the runway did not allow.
-    expect(report.summary.forwardReferences).toBe(451); // -1: HL-C98 removes a forward reference // -5: HL-C103 census adds comes/hand/regular to ENGLISH_COLLISIONS, and drops an untaught tres from an accepted list // +19: vocabulary wave 5 // +8: HL-C88 slices 5-6 // -8: HL-C112 moves casa and libro ahead of the adjective arc, so uses that were early are now taught
+    expect(report.summary.forwardReferences).toBe(458); // -1: HL-C98 removes a forward reference // -5: HL-C103 census adds comes/hand/regular to ENGLISH_COLLISIONS, and drops an untaught tres from an accepted list // +19: vocabulary wave 5 // +8: HL-C88 slices 5-6 // -8: HL-C112 moves casa and libro ahead of the adjective arc, so uses that were early are now taught // +7: vocabulary wave 6
 
     // HL09 step 3 closed 17 R1 windows in chapters 3-6, measured on the corpus of the
     // day as 766 -> 749. The absolute figures drift as main lands lessons; what the
@@ -648,7 +648,7 @@ describe("the real corpus", () => {
     // READ-MUUNRU-02 gained a real revisit at the same time (0 -> 1, TA-W20 re-reads
     // மூன்று beside ஒன்று) and still misses R1, because TA-W20 is 4 lessons later and
     // R1 stops at 3.
-    expect(report.summary.missedByWindow.R1).toBe(908); // +2: HL-C98 // +2: vocabulary wave 5 // +4: HL-C88 slices 5-6 // +1: HL-C112 moves casa and libro 14 chapters earlier, so one atom's next re-use now falls outside R1
+    expect(report.summary.missedByWindow.R1).toBe(920); // +2: HL-C98 // +2: vocabulary wave 5 // +4: HL-C88 slices 5-6 // +1: HL-C112 moves casa and libro 14 chapters earlier, so one atom's next re-use now falls outside R1 // +12: vocabulary wave 6
     // +2 net, and the composition is the interesting part: all FIVE new atoms miss R2
     // as well, offset by THREE pre-existing atoms that TA-W09 pulls back into it.
     // TA-W09 sits 12 lessons after TA-W06 and 8 after TA-W07, both inside R2's 5-15
@@ -742,7 +742,7 @@ describe("the real corpus", () => {
     // GRAMMAR-DATIVE-SUBJECT-02 2 -> 3, LEX-DATIVE-SUBJECT-01 3 -> 4 and
     // LEX-NUMBERS-1-5-01 2 -> 3 out of R4. Chapter 6's dative and chapter 7's numbers
     // are reached at R4 distance for the first time.
-    expect(report.summary.missedByWindow.R2).toBe(2010); // +1: ES-C02-concordancia (HL-C85). buenos dias/buenas tardes stop REQUIRING the agreement rule; it becomes a payoff lesson after the learner has used all three greetings. // +84: vocabulary wave 5, new pre-A1 nouns landing late in already-long chapters // +4: HL-C88 slices 5-6 // +1: HL-C112, same cause as R1 above // +1: HL-C88 slice 8
+    expect(report.summary.missedByWindow.R2).toBe(2097); // +1: ES-C02-concordancia (HL-C85). buenos dias/buenas tardes stop REQUIRING the agreement rule; it becomes a payoff lesson after the learner has used all three greetings. // +84: vocabulary wave 5, new pre-A1 nouns landing late in already-long chapters // +4: HL-C88 slices 5-6 // +1: HL-C112, same cause as R1 above // +1: HL-C88 slice 8 // +87: vocabulary wave 6
   });
 
   it("shows what a declared reading order was worth", () => {
