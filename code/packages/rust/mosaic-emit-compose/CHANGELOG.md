@@ -12,6 +12,12 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- `HostSlider` now lowers to Compose Material's native adjustable `Slider`,
+  including controlled numeric values, range and discrete-step mapping,
+  disabled state, continuous `onChange`, and release-time `onCommit` events.
+  Numeric values convert at the Float-based Compose boundary and return to
+  Mosaic's portable number payload as Double. CI compiles a native-complete
+  slider package through the generated Compose project shell.
 - `Text` now lowers literal or slot-backed accessible names, heading roles,
   and intentional hiding through Compose semantics. Replacement labels clear
   the built-in text semantics so assistive technology does not announce both

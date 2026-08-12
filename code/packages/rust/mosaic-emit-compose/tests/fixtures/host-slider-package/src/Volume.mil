@@ -1,0 +1,7 @@
+component Volume {
+  slot value : number ;
+  slot disabled : bool ;
+
+  emit onChange ( value : number ) ;
+  emit onCommit ( value : number ) ;
+}

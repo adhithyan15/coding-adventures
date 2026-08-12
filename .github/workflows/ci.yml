@@ -1273,6 +1273,11 @@ jobs:
           cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-toolkit --backend compose --output "$toolkit_output" --emit-project
           gradle --no-daemon --stacktrace -p "$toolkit_output/compose" compileKotlin
 
+          slider_output="$RUNNER_TEMP/mosaic-compose-host-slider"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-emit-compose/tests/fixtures/host-slider-package --backend compose --output "$slider_output" --emit-project --profile native-complete --runtime-library "$runtime_library"
+          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$slider_output/compose/mosaic-degradations.json"
+          gradle --no-daemon --stacktrace -p "$slider_output/compose" compileKotlin
+
           strict_output="$RUNNER_TEMP/mosaic-compose-native-complete-rating-controls"
           cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-rating-controls --backend compose --output "$strict_output" --emit-project --profile native-complete --runtime-library "$runtime_library"
           jq -e '.nativeComplete == true and (.degradations | length == 0)' "$strict_output/compose/mosaic-degradations.json"

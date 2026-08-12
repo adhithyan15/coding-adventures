@@ -2,8 +2,9 @@
 
 ## [Unreleased] - HostSlider capability tracking
 
-- Native-complete analysis reports `primitive.slider-unimplemented` on every
-  native backend until its real adjustable range-control lowering ships.
+- Native-complete analysis now accepts `HostSlider` on Compose after its real
+  adjustable range-control lowering, while continuing to report
+  `primitive.slider-unimplemented` on Flutter, Qt, SwiftUI, and XAML.
 - This keeps newly registered `HostSlider` packages from being mislabeled as
   native-complete while emitter work proceeds one backend at a time.
 
