@@ -71,6 +71,23 @@ four family cousins Chapter 6 only named in passing — **مادر**, **پدر**
 cousin: it looks nothing like Sanskrit **हस्त** *hasta*, yet the two descend
 from the identical Indo-Iranian word by a completely regular sound law.
 
+Chapters 12 through 14 open a second vocabulary round on the same three
+pre-A1 spine nodes. Chapter 12 pairs **نام** *nâm*, an inherited word for
+"name" that now stands beside the Arabic loan **اسم** taught first, with
+**دل** *del*, "heart," **در** *dar*, "door" — two of the family's best
+attested Indo-European cognates — and closes on the Arabic loan **کتاب**
+*ketâb*, "book." Chapter 13 turns to the sky: **آسمان**, **خورشید**,
+**ماه**, **ستاره**, and **باران** — sky, sun, moon, star, and rain — where
+**ماه** repeats **زبان**'s trick of holding two English words, "moon" and
+"month," inside one Persian root, and **باران** is stated plainly to have
+no secure English cousin at all. Chapter 14 completes the people words this
+track had left out: **خواهر**, the missing fifth kinship cousin beside
+**مادر، پدر، برادر، دختر**; **پسر**, "son," a cousin of Sanskrit **putra**
+with no English relative; **مرد**, "man," whose root actually means
+"mortal," not "man," a genuine false friend; **زن**, "woman," whose root
+English kept only inside **queen**; and **دوست**, "friend," now given its
+own lesson as the noun the compound verb **دوست داشتن** had always run on.
+
 Later chapters will add the present and past tenses on top of these stems,
 colloquial contractions, and more joined shapes.
 
@@ -86,6 +103,34 @@ Persian.
   sitting, and when to come back to each one.
 - [`pronunciation-reference.md`](./pronunciation-reference.md) collects the
   script and sound facts for lookup; it is never a prerequisite chapter.
-- [`lessons/`](./lessons/) contains the forty-five canonical short practice
+- [`lessons/`](./lessons/) contains the fifty-nine canonical short practice
   lessons.
+
+---
+
+## For contributors
+
+Everything below this line is about how the track is built and checked. It
+is here for people working on the curriculum; nothing in it is needed to
+learn the language.
+
+## Chapter capabilities
+
+[`chapters.json`](./chapters.json) is the track's
+[`HL05`](../../../specs/HL05-chapter-capability-and-step-by-step-shape.md)
+capability ledger. Each entry says, in the reader's own first-person words,
+what finishing that chapter lets them do, and names the lesson that proves
+it — for example:
+
+```json
+{
+  "chapter": 14,
+  "title": "Sister, Son, Man, Woman, Friend",
+  "canDo": "I can name my sister, son, and friend in Persian, tell man and woman apart, and open and close a short interaction with all of them.",
+  "payoff": { "lesson": "FA-C14-dust", "kind": "production", "assesses": ["…"] }
+}
+```
+
+Every `payoff.assesses` list is the payoff lesson's own `practises.knowledge`
+set verbatim — nothing is claimed that the lesson does not already practise.
 

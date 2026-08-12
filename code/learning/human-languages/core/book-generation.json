@@ -2083,6 +2083,27 @@
       "scriptCommand": "fa"
     },
     {
+      "language": "persian",
+      "chapter": 12,
+      "output": "persian/book/chapters/ch12-name-heart-door-book.tex",
+      "unicodeScript": "Arabic",
+      "scriptCommand": "fa"
+    },
+    {
+      "language": "persian",
+      "chapter": 13,
+      "output": "persian/book/chapters/ch13-sky-words.tex",
+      "unicodeScript": "Arabic",
+      "scriptCommand": "fa"
+    },
+    {
+      "language": "persian",
+      "chapter": 14,
+      "output": "persian/book/chapters/ch14-people-words.tex",
+      "unicodeScript": "Arabic",
+      "scriptCommand": "fa"
+    },
+    {
       "language": "portuguese",
       "chapter": 2,
       "output": "portuguese/book/chapters/ch02-how-are-you.tex"

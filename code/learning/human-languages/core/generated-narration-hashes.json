@@ -5374,6 +5374,59 @@
       "jsonHash": "fnv1a64:0b0b0c632e56d2fc"
     },
     {
+      "language": "persian",
+      "chapter": 12,
+      "sourceHash": "fnv1a64:8df79aa43b350f9f",
+      "lessonIds": [
+        "FA-C12-nam",
+        "FA-C12-del",
+        "FA-C12-dar",
+        "FA-C12-ketab"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "persian/narration/ch12.txt",
+      "json": "persian/narration/ch12.json",
+      "textHash": "fnv1a64:c0420c20f3d365af",
+      "jsonHash": "fnv1a64:6fe9acf09a5f8577"
+    },
+    {
+      "language": "persian",
+      "chapter": 13,
+      "sourceHash": "fnv1a64:f682c82bef25fe00",
+      "lessonIds": [
+        "FA-C13-aseman",
+        "FA-C13-khorshid",
+        "FA-C13-mah",
+        "FA-C13-setare",
+        "FA-C13-baran"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "persian/narration/ch13.txt",
+      "json": "persian/narration/ch13.json",
+      "textHash": "fnv1a64:ed8cbed2cc0dceaf",
+      "jsonHash": "fnv1a64:21d9dd9cbed86b1e"
+    },
+    {
+      "language": "persian",
+      "chapter": 14,
+      "sourceHash": "fnv1a64:cb22b062034b1bbd",
+      "lessonIds": [
+        "FA-C14-khahar",
+        "FA-C14-pesar",
+        "FA-C14-mard",
+        "FA-C14-zan",
+        "FA-C14-dust"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "persian/narration/ch14.txt",
+      "json": "persian/narration/ch14.json",
+      "textHash": "fnv1a64:a4605dd18532ffca",
+      "jsonHash": "fnv1a64:4909c4cedf569170"
+    },
+    {
       "language": "portuguese",
       "chapter": 1,
       "sourceHash": "fnv1a64:eeea38606ef36d23",

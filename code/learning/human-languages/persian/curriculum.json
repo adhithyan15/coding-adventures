@@ -180,6 +180,53 @@
         "FA-EXT-019-LANGUAGE-SPECIFIC"
       ],
       "after": []
+    },
+    {
+      "id": "FA-PATH-013",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "FA-C12-nam",
+        "FA-C12-del",
+        "FA-C12-dar",
+        "FA-C12-ketab"
+      ],
+      "before": [],
+      "inline": [
+        "FA-EXT-020-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "FA-PATH-014",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "FA-C13-aseman",
+        "FA-C13-khorshid",
+        "FA-C13-mah",
+        "FA-C13-setare",
+        "FA-C13-baran"
+      ],
+      "before": [],
+      "inline": [
+        "FA-EXT-021-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "FA-PATH-015",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "FA-C14-khahar",
+        "FA-C14-pesar",
+        "FA-C14-mard",
+        "FA-C14-zan",
+        "FA-C14-dust"
+      ],
+      "before": [],
+      "inline": [
+        "FA-EXT-022-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -217,7 +264,9 @@
     "SPINE-EXCHANGE-NAMES": {
       "segments": [
         "FA-PATH-004",
-        "FA-PATH-011"
+        "FA-PATH-011",
+        "FA-PATH-013",
+        "FA-PATH-015"
       ],
       "omits": [
         "PRONOUN-I",
@@ -231,7 +280,8 @@
     "SPINE-CHECK-WELLBEING": {
       "segments": [
         "FA-PATH-005",
-        "FA-PATH-012"
+        "FA-PATH-012",
+        "FA-PATH-014"
       ],
       "omits": [
         "WORD-WELL",
@@ -785,6 +835,50 @@
         "FA-C11-dast",
         "FA-C11-pa",
         "FA-C11-zaban"
+      ]
+    },
+    {
+      "id": "FA-EXT-020-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can say name, heart, door, and book in Persian, and I can tell which of the four is inherited and which is a later Arabic loan.",
+      "prerequisites": [],
+      "lessons": [
+        "FA-C12-nam",
+        "FA-C12-del",
+        "FA-C12-dar",
+        "FA-C12-ketab"
+      ]
+    },
+    {
+      "id": "FA-EXT-021-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can name the sky, sun, moon, star, and rain in Persian, and I can say which of those words has no established English cousin.",
+      "prerequisites": [],
+      "lessons": [
+        "FA-C13-aseman",
+        "FA-C13-khorshid",
+        "FA-C13-mah",
+        "FA-C13-setare",
+        "FA-C13-baran"
+      ]
+    },
+    {
+      "id": "FA-EXT-022-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can name my sister, son, and friend in Persian, tell man and woman apart, and open and close a short interaction with all of them.",
+      "prerequisites": [],
+      "lessons": [
+        "FA-C14-khahar",
+        "FA-C14-pesar",
+        "FA-C14-mard",
+        "FA-C14-zan",
+        "FA-C14-dust"
       ]
     }
   ]
