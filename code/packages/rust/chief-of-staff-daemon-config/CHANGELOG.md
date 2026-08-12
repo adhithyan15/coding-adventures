@@ -11,3 +11,6 @@
 - Bound secure-bootstrap and graceful-stop deadlines to five minutes.
 - Add optional, closed, typed data-plane declarations for exact directional
   channel-key files and exact Ollama model endpoints.
+- Add optional bounded smart-home tool-grant declarations for exact Chief host
+  principals, stable grant identities, issuance/expiry times, and explicit
+  pending, active, or revoked lifecycle state.

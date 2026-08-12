@@ -20,8 +20,14 @@ putting secret bytes in TOML. Directional channel-key entries bind canonical
 UUID-v7 pipeline and channel identities plus an exact agent identity to raw
 32-byte owner-only files. Ollama entries bind one unique launch model selector to
 one explicit endpoint and a non-zero timeout capped at five minutes. The parser
-validates and retains only typed declarations; a separate provisioning adapter
-performs all file and provider construction.
+also accepts bounded `smart_home_tool_grants` records with a stable grant ID,
+exact Chief host principal, exact `smart_home.*` tool ID, operator identity,
+positive Unix-millisecond issuance time, optional later expiry, and optional
+`pending`, `active`, or `revoked` lifecycle state. Grant IDs are unique and every
+inline record is closed. Existing `[data_plane]` configurations may omit this
+additive field. The parser validates and retains only typed declarations; a
+separate provisioning adapter performs all file, provider, and durable D23 grant
+construction.
 
 ## Validation
 

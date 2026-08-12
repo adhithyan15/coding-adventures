@@ -2212,6 +2212,9 @@ channel_keys = [
 ollama_models = [
   { model = "qwen2.5:0.5b", endpoint = "http://127.0.0.1:11434", timeout = 120000 },
 ]
+smart_home_tool_grants = [
+  { grant_id = "grant-weather-list-devices", principal_id = "weather-level-one", tool_id = "smart_home.list_devices", granted_by = "operator:local", granted_at_ms = 1767225600000, expires_at_ms = 1769817600000, status = "active" },
+]
 ```
 
 The optional data-plane table is closed and explicit. Each channel-key entry
@@ -2223,6 +2226,16 @@ Each Ollama entry registers its unique model tag as the exact launch selector,
 requires one `http://host:port` authority with no implicit path or port, and
 bounds the request timeout to five minutes. Provisioning validates and
 constructs these immutable authorities without a network reachability probe.
+Each optional smart-home tool grant names a stable unique grant record, the exact
+Chief host principal and installed tool, a non-secret operator identity, a
+positive Unix-millisecond issuance time, an optional strictly later expiry,
+and an optional `pending`, `active`, or `revoked` state. The daemon commits changed
+records through the central durable D23 controller before serving and treats an
+unchanged declaration idempotently. Removing a declaration does not erase durable
+governance history; operators revoke an existing record by retaining its grant ID
+and setting `status = "revoked"`. Unknown/uninstalled tools, unavailable wall-clock
+time, future issuance times, or persistence failure abort startup without
+publishing partial policy.
 
 The operator credential path is a fail-closed local trust boundary. Composition
 MUST load an existing canonical 64-byte lowercase-hex credential or claim an absent
