@@ -239,11 +239,11 @@ describe("the committed corpus", () => {
     const { lessons } = loadEverything();
     const r = measureMetalanguage(lessons, loadMetalanguage());
     expect(r.summary.terms).toBe(54);
-    expect(r.summary.lessonsUsingTerms).toBe(1870); // +8: HL-C94 // +4: HL-C98 // +40: vocabulary wave 5 // +4: HL-C88 slices 5-6 // +3: HL-C88 slice 8
+    expect(r.summary.lessonsUsingTerms).toBe(1871); // +8: HL-C94 // +4: HL-C98 // +40: vocabulary wave 5 // +4: HL-C88 slices 5-6 // +3: HL-C88 slice 8 // +1: HL-C88 slice 9 (falsos amigos)
 
     // No lesson declares an introduction yet, so every use is early. The total
     // says how pervasive the assumption is; the technical count says what to fix.
-    expect(r.summary.usesBeforeIntroduction).toBe(8617); // +5: ES-C03-vos and the two practice edits use ordinary terms (word, plural, ending) // +15: HL-C98's four lessons use ordinary terms (ending, verb, form) // +112: vocabulary wave 5 // +17: HL-C88 slices 5-6 // +11: HL-C88 slice 8
+    expect(r.summary.usesBeforeIntroduction).toBe(8619); // +5: ES-C03-vos and the two practice edits use ordinary terms (word, plural, ending) // +15: HL-C98's four lessons use ordinary terms (ending, verb, form) // +112: vocabulary wave 5 // +17: HL-C88 slices 5-6 // +11: HL-C88 slice 8 // +2: HL-C88 slice 9 (falsos amigos)
     expect(r.summary.technicalUsesBeforeIntroduction).toBe(2631); // +4: HL-C98 // +26: vocabulary wave 5 // +7: HL-C88 slices 5-6 // +3: HL-C88 slice 8
     expect(r.summary.technicalLessons).toBe(1306); // +4: HL-C98 // +21: vocabulary wave 5 // +4: HL-C88 slices 5-6 // +2: HL-C88 slice 8
 

@@ -1,43 +1,40 @@
-Spanish, chapter 186: El Libro Que Compre --- The Word You Cannot Leave Out.
+Spanish, chapter 186: El Libro Que Compro --- One Sentence Out of Two.
 1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-el libro que compré — the word you cannot leave out.
+el libro que compro — one sentence out of two.
 
 Warm-up.
 [pause 2 seconds]
-Say this English sentence out loud: "the book I bought." Notice that you did not say that. Now try to translate it.
+Say "I want you to speak." (Quiero que hables.) That que is about to do a second job — and it is the job that lets your sentences stop being short.
 
-Grammar Lens: English drops it, Spanish never does.
-el libro que compré — the book I bought. la casa que tengo — the house I have.
-English lets you delete the joint. The book that I bought and the book I bought are both fine, and in speech you almost always drop it.
-Spanish cannot. There is no version of these without que. Leaving it out does not sound casual or fast — it sounds like a sentence that broke.
-This is worth a chapter of its own because of what it does to a learner. You will build the sentence in English first, silently, with the that already missing — and then translate the version you thought of. The gap is invisible precisely because your own language put it there.
-So the habit to build is: whenever an English noun is followed straight by a new subject and verb, a que belongs in the Spanish.
-the book I bought becomes el libro que compré.
-the house we have becomes la casa que tenemos.
-the meal she makes becomes la comida que hace.
+Grammar Lens: stapling two sentences together.
+You have two sentences about one book:
+Tengo el libro. — I have the book. Compro el libro. — I buy the book.
+Que joins them, and the repeated noun disappears:
+Tengo el libro que compro. — I have the book that I buy.
+That is the whole mechanism. Name the thing once, then use que to hang a second sentence off it. Everything you can already say can now be attached to a noun instead of standing alone.
+This is the point where a language stops being a list of statements. Up to now your sentences have had one verb each. From here a sentence can contain another sentence, and then another — which is what allows description, explanation and storytelling of any length.
 
-Why it's said this way.
-English can afford to drop it because its word order is rigid: the book I bought can only be read one way.
-Spanish word order is looser — subjects vanish under pro-drop, objects move in front of verbs. Where the pieces can sit in several places, a deletable joint would make sentences ambiguous. So it is never deleted. Not arbitrary strictness: the price of the freedom Spanish gives you elsewhere.
+The word, taken apart.
+Que comes from the Latin qui / quem / quid family — the same qu- question-root sitting inside qué, quién, cómo and cuándo, which you have been collecting since your very first questions.
+That is not a coincidence of spelling. A question and a relative clause are doing related work: ¿qué compras? asks you to fill a gap, and el libro que compro fills one. Latin used the same word family for both, and Spanish kept the arrangement.
+So the busiest structural word in the language is a worn-down question word. English did the identical thing: what, which, who and that all serve twice, as questions and as joints.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "the book I bought" then "el libro que compré" — hear the extra word]
+[your turn — say: the two short sentences, then the joined one]
 [pause 8 seconds for the answer]
-[repeat that twice]
-Until the missing English that stops being invisible.
+[your turn — say: "el libro que compro", "la casa que tengo"]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 12 seconds]
+Join Tengo el libro and Compro el libro into one sentence.
 [question — say your answer, then pause 10 seconds]
-Say the book I bought.
-[question — say your answer, then pause 8 seconds]
-Say the house I have.
-[question — say your answer, then pause 14 seconds]
-What English pattern always means a que is needed in Spanish?
-[question — say your answer, then pause 14 seconds]
-Why can English afford to drop it when Spanish cannot?
+What happens to the repeated noun when que joins two sentences?
+[question — say your answer, then pause 10 seconds]
+Which question words share que's root?
 
 Wrap-up Recall.
 [pause 3 seconds]
-"The house I have"? (La casa que tengo.) Can que ever be left out? (No — never.) And why not? (Because Spanish moves its pieces around, so the joint has to stay.)
+Join "I have the book" and "I buy the book." (Tengo el libro que compro.) What does que let a sentence do that it could not before? (Contain another sentence.) Next: the one place English is lazier than Spanish, and it trips every learner.

@@ -1,43 +1,42 @@
-Spanish, chapter 82: Lo --- Saying It Without Naming It.
+Spanish, chapter 82: Synthesis --- More Than One.
 1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-lo — "it".
+Synthesis — more than one.
 
 Warm-up.
 [pause 2 seconds]
-Say "my name is" in Spanish. (Me llamo.) Where does that little me sit — before the verb, or after it?
+Say "I have a book." (Tengo un libro.) Now say "I have books," and notice where you hesitate.
 
-Grammar Lens: a slot you have been using all along.
-Before the verb. You have known that since your fourth chapter, and you have been doing it every time you say your name.
-Here is a second word for that same slot.
-lo — it, standing in for something masculine.
-Watch what it does:
-Tengo el libro. — I have the book. Lo tengo. — I have it.
-The noun leaves; lo takes its place; and it goes where me goes — in front of the verb. Not one new rule. One new word for a slot you already own.
-Notice that this only became possible last chapter. A pronoun replaces a noun, so it needs a noun to replace — which is why these three ordinary words came first.
+Grammar Lens: the article that leaves.
+The hesitation is the right instinct. The pluralised neatly — el became los. A cannot, because "a" and "more than one" disagree by definition.
+English solves this by swapping in another word: a book becomes some books, or just books. Spanish takes the shorter road:
+Tengo un libro. — I have a book. Tengo libros. — I have books.
+The article simply goes. Not replaced, not pluralised — dropped. A bare plural noun is a complete, ordinary Spanish phrase.
+This is the mirror image of everything you have been doing. For fifty chapters Spanish has made you say more than English: two genders, four articles, six verb endings. Here, for once, it says less.
 
-The word, taken apart.
-Lo should look faintly familiar, and it should also look wrong. It is almost el, but not quite. That is not a coincidence, and the near-miss has a cause.
-Latin ille, "that one," changed shape depending on the job it was doing. As the object of a verb it was illum. Spanish got both its article and its object pronoun out of that one word — and then wore it down twice, differently, because the two jobs put the stress in different places:
-Leaning on a noun, unstressed, it lost its vowel: illum becomes elo becomes el.
-Standing alone in the verb's slot, it kept the vowel: illum becomes lo.
-So el and lo are the same ancient word, split by the work it was asked to do. English did something similar with he and him: one word, two shapes, and the shape tells you the job.
+The exchange.
+Read this aloud and watch the two plurals doing different jobs.
+— ¿Tienes libros? — Sí, tengo libros. — ¿Y los libros de la casa? — Los libros de la casa, no.
+Bare libros means "books, some books, books in general." Los libros means "the books" — particular ones, already known to both of you.
+That is the same distinction English makes and never explains: do you have books? is a different question from do you have the books? You have simply never had to choose it deliberately before.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "Tengo el libro" then "Lo tengo" — hear the noun disappear]
+[your turn — say: "Tengo un libro" then "Tengo libros" — hear the article vanish]
 [pause 8 seconds for the answer]
-[your turn — say: "me llamo" then "lo tengo" — the same slot, twice]
+[your turn — say: "libros" then "los libros", twice, until the two feel like different questions]
 [pause 8 seconds for the answer]
 [question — say your answer, then pause 8 seconds]
-Say I have it, replacing el libro.
+Say I have books.
 [question — say your answer, then pause 8 seconds]
-Does the pronoun go before or after the conjugated verb?
+Now say I have the books.
 [question — say your answer, then pause 10 seconds]
-Which everyday Spanish word comes from the same Latin word as lo?
+Say I make meals, meaning meals in general.
+[question — say your answer, then pause 12 seconds]
+What is the difference in meaning between casas and las casas?
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does lo mean? (It — for something masculine.) Where does it go? (Before the verb.) Next: the same job, done by a word that never changed its shape at all.
+"I have books"? (Tengo libros — no article.) "I have the books"? (Tengo los libros.) Which article pluralises and which one leaves? (The pluralises; a leaves.) Next: the small words that let you stop naming a thing you have already named.

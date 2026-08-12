@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C16-vivir-imperfecto
 spine_node: SPINE-TALK-ABOUT-PAST
 sequence: 1358
-chapter: 106
+chapter: 107
 type: grammar
 headword: vivía
 gloss: the singular -ir imperfect — vivía, vivías, vivía

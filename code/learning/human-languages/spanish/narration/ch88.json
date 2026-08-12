@@ -2,32 +2,25 @@
   "version": 1,
   "language": "spanish",
   "chapter": 88,
-  "title": "Los and Las --- Them, Derived",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:ecfb51ec0763c0bf",
+  "title": "Nos --- Us, and the Word Inside -mos",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:8ace7d2514a9d404",
   "lessons": [
     {
-      "id": "ES-C45-los-las",
-      "sequence": 1227,
-      "title": "los and las — \"them\"",
-      "headword": "los, las",
-      "romanization": "los, las",
-      "gloss": "\"them\" — the two forms you can produce before being told, and the one place the pronoun is tidier than the article",
+      "id": "ES-C45-nos",
+      "sequence": 1226,
+      "title": "nos — \"us\"",
+      "headword": "nos",
+      "romanization": "nos",
+      "gloss": "\"us\" — and the word hiding inside the verb ending you have used since hablamos",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e454d0d872dea49b",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:ccbfdfbae7589f2b",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -42,30 +35,34 @@
             },
             {
               "kind": "speech",
-              "text": "Tengo el libro becomes lo tengo. Now: Tengo los libros. Say the short version out loud before reading on."
+              "text": "Say \"you love me.\" (Me quieres.) And \"I love you.\" (Te quiero.) Both of those are about one person on the receiving end. Here is more than one."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: you were right",
+          "title": "Grammar Lens: the third person in the room",
           "segments": [
             {
               "kind": "speech",
-              "text": "los — them, masculine. las — them, feminine."
+              "text": "nos — us."
             },
             {
               "kind": "speech",
-              "text": "Tengo los libros. becomes Los tengo. — I have them. Hago las comidas. becomes Las hago. — I make them."
+              "text": "Nos quieren. — They love us."
             },
             {
               "kind": "speech",
-              "text": "Add -s. That is the whole lesson, and you did it yourself in the warm-up."
+              "text": "Same slot as always, in front of the verb. Me is one person speaking; nos is that person and somebody else."
             },
             {
               "kind": "speech",
-              "text": "Two chapters have now asked you for a plural and this is the first one that behaved exactly as you would guess. That is worth noticing rather than passing over: most of what is ahead of you in Spanish is like this, and the memorable exceptions are memorable because they are rare."
+              "text": "Me quieren. — They love me. Nos quieren. — They love us."
+            },
+            {
+              "kind": "speech",
+              "text": "One letter of difference, and the difference is how many people you are speaking for."
             }
           ]
         },
@@ -76,33 +73,23 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "There is one genuinely satisfying thing here."
+              "text": "Nos is Latin nōs, which meant both we and us — the language had not yet split them into two words."
             },
             {
               "kind": "speech",
-              "text": "The article could not do this. El did not become els; it became los, because el is a worn-down elo that had lost its vowel and the plural had kept it."
+              "text": "You have been carrying it for a long time without being shown. The -mos ending on hablamos, comemos, tenemos is that same nōs, worn down and glued to the back of the verb. Every time you said \"we speak,\" you were saying nos twice: once in the ending, and once by not needing to say it at all."
             },
             {
               "kind": "speech",
-              "text": "The pronoun never lost that vowel. Lo is illum with the vowel intact — which is exactly why it was not el in the first place. So when the plural came, lo had nothing to repair:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "",
-                "singular",
-                "plural"
-              ],
-              "columns": 3,
-              "rowCount": 2,
-              "utterances": [
-                "article. singular: el (worn down). plural: los.",
-                "pronoun. singular: lo (vowel kept). plural: los."
-              ]
+              "text": "And the word for \"we\" itself:"
             },
             {
               "kind": "speech",
-              "text": "The two arrive at the same place from different directions, and the pronoun takes the plain road. An irregularity in one column and none in the other, from one Latin word, decided entirely by which one got leaned on."
+              "text": "nosotros — we, literally nos + otros, \"we others.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish added otros to the plain nos somewhere in the Middle Ages, to make clear the speaker meant this group and not the person being addressed. Nothing else in the family did it quite this way, and the seam is still visible in the word."
             }
           ]
         },
@@ -120,79 +107,77 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"lo tengo\" then \"los tengo\"; \"la hago\" then \"las hago\"",
+              "instruction": "\"Me quieren\" then \"Nos quieren\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"lo tengo\" then \"los tengo\"; \"la hago\" then \"las hago\"]"
+              "source": "[YOU SAY: \"Me quieren\" then \"Nos quieren\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"el / los\" then \"lo / los\" — one pair changed shape, one did not",
+              "instruction": "\"hablamos\" and hear the nos at the end of it",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"el / los\" then \"lo / los\" — one pair changed shape, one did not]"
+              "source": "[YOU SAY: \"hablamos\" and hear the *nos* at the end of it]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C45-los-las-books",
-              "prompt": "Say I have them, about los libros.",
+              "id": "ES-C45-nos-say",
+              "prompt": "Say they love us.",
               "assesses": [
-                "ES-GRAMMAR-DIRECT-OBJECT-PLURAL",
-                "ES-LEX-LIBRO",
-                "ES-GRAMMAR-TENER-PRESENT-SINGULAR"
+                "ES-GRAMMAR-NOS-DIRECT-OBJECT",
+                "ES-LEX-NOS-OBJECT"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "los tengo",
-                "yo los tengo"
+                "nos quieren",
+                "ellos nos quieren"
               ],
               "feedback": {
-                "correct": "Just an -s on the pronoun you already had.",
-                "incorrect": "Los tengo."
+                "correct": "Same slot, in front of the verb.",
+                "incorrect": "Nos quieren."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C45-los-las-meals",
-              "prompt": "Say I make them, about las comidas.",
+              "id": "ES-C45-nos-ending",
+              "prompt": "Which verb ending is the same ancient word as nos?",
               "assesses": [
-                "ES-GRAMMAR-DIRECT-OBJECT-PLURAL",
-                "ES-LEX-COMIDA",
-                "ES-GRAMMAR-HACER-PRESENT-SINGULAR"
+                "ES-ETYMON-NOS-OTROS",
+                "ES-GRAMMAR-AR-PRESENT-1PL"
               ],
-              "responseSeconds": 8,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "las hago",
-                "yo las hago"
+                "-mos",
+                "the -mos ending",
+                "mos"
               ],
               "feedback": {
-                "correct": "Las hago.",
-                "incorrect": "Las hago — feminine plural."
+                "correct": "Hablamos carries it on the back of the verb.",
+                "incorrect": "The -mos of hablamos: nos worn down and glued on."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C45-los-las-tidy",
-              "prompt": "The article el had to change shape for its plural. Why did the pronoun lo not?",
+              "id": "ES-C45-nos-word",
+              "prompt": "What are the two pieces inside nosotros, and what do they mean together?",
               "assesses": [
-                "ES-ETYMON-ILLE-ILLA",
-                "ES-GRAMMAR-DEFINITE-PLURAL-MASCULINE"
+                "ES-LEX-NOSOTROS"
               ],
               "responseSeconds": 12,
               "acceptedResponses": [
-                "lo never lost the vowel el lost",
-                "it kept its vowel",
-                "there was nothing to repair"
+                "nos and otros, we others",
+                "nos + otros",
+                "we others"
               ],
               "feedback": {
-                "correct": "Same word, two roads, and the pronoun took the plain one.",
-                "incorrect": "El is a worn-down elo; lo kept the vowel, so its plural is just lo plus -s."
+                "correct": "The seam is still visible.",
+                "incorrect": "nos + otros, literally we others."
               }
             }
           ]
@@ -210,7 +195,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"I have them,\" about books? (Los tengo.) About meals? (Las hago.) How do you make an object pronoun plural? (Add -s.) Next: one more form, and it belongs to one part of the world."
+              "text": "Say \"they love us.\" (Nos quieren.) What is nosotros made of? (Nos + otros — \"we others.\") Next: the plural of lo and la, and you will not need to be told what they are."
             }
           ]
         }

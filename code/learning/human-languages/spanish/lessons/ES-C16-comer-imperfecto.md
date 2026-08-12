@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C16-comer-imperfecto
 spine_node: SPINE-TALK-ABOUT-PAST
 sequence: 1354
-chapter: 106
+chapter: 107
 type: grammar
 headword: comía
 gloss: the singular -er imperfect — comía, comías, comía

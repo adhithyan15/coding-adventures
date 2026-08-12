@@ -612,7 +612,7 @@ describe("the whole corpus", () => {
     // +1: Tamil chapter 39.
     // 659 -> 674: vocabulary wave 5 (persian/telugu/malayalam), 15 new chapters.
     // 674 -> 678: HL-C88 slices 5-6 (Spanish).
-    expect(chapters).toHaveLength(682);
+    expect(chapters).toHaveLength(683); // +1: HL-C88 slice 9 (falsos amigos)
   });
 
   it("leaves no Markdown typography in the spoken script", () => {

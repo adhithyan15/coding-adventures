@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 181,
-  "title": "Se Compran Libros --- The Verb Tells On Itself",
+  "title": "Se Habla Espanol --- Nobody in Particular",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:8f147aa3a8bbfdc6",
+  "sourceHash": "fnv1a64:444d95790a41f7ba",
   "lessons": [
     {
-      "id": "ES-C52-se-venden",
-      "sequence": 2197,
-      "title": "se compran libros — the verb tells on itself",
-      "headword": "se compran libros",
-      "romanization": "se compran libros",
-      "gloss": "the verb agrees with the thing — which is the clue to where this whole construction came from",
+      "id": "ES-C52-se-habla",
+      "sequence": 2196,
+      "title": "se habla español — nobody in particular",
+      "headword": "se habla español",
+      "romanization": "se habla español",
+      "gloss": "how Spanish says something happens without saying who does it — the sign in every shop window",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1a181574dfb36292",
+      "sourceHash": "fnv1a64:7dced929e046eaf7",
       "notice": null,
       "blocks": [
         {
@@ -35,62 +35,39 @@
             },
             {
               "kind": "speech",
-              "text": "Se habla español — one thing, singular verb. Now guess what happens with more than one thing."
+              "text": "Se llama — \"he calls himself.\" You have had that se since your third chapter. Here it is doing something you have seen on signs and never been able to parse."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: it agrees, and that is strange",
+          "title": "Grammar Lens: a sentence with nobody in it",
           "segments": [
             {
               "kind": "speech",
-              "text": "Se compra el libro. — The book is bought. Se compran libros. — Books are bought."
+              "text": "Se habla español. — Spanish is spoken here. Se come bien. — One eats well here. / The food is good."
             },
             {
               "kind": "speech",
-              "text": "The verb changed. Compra for one book, compran for several — the verb is agreeing with the thing being bought."
+              "text": "Look for the person doing it. There is not one, and there is not meant to be. Se habla español does not tell you who speaks Spanish — it tells you that Spanish gets spoken, and that is the entire content."
             },
             {
               "kind": "speech",
-              "text": "Stop and notice how odd that is. In se habla español there is nobody doing the speaking, so what is the verb agreeing with? If this were simply \"one buys books,\" the verb would stay singular, because one is one person. It does not stay singular."
+              "text": "English has to work harder to be that vague. It reaches for a passive (\"Spanish is spoken\"), or a fake subject (\"they speak Spanish here\", \"you eat well there\"), and neither is quite honest, because there is no they and no you."
             },
             {
               "kind": "speech",
-              "text": "The thing is behaving like the subject. And that is the clue to where this construction came from."
+              "text": "Spanish just... leaves the person out. The se is the mark that says nobody is being named."
+            },
+            {
+              "kind": "speech",
+              "text": "This is why it is the natural voice of signs, notices and rules: se habla español, se prohíbe fumar, no se aceptan tarjetas. A sign is not addressed by anyone to anyone. It simply reports that something is the case."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Read se compran libros with the se meaning what it meant in se llama:"
-            },
-            {
-              "kind": "speech",
-              "text": "Books buy themselves."
-            },
-            {
-              "kind": "speech",
-              "text": "That is nonsense as a description of the world, and it is exactly the sentence Spanish is using. The reflexive was stretched: first the door closes itself (true enough of doors), then the books sell themselves, and finally any verb at all with the doer quietly dropped."
-            },
-            {
-              "kind": "speech",
-              "text": "Once you see that, the agreement stops being strange. Libros is the subject of se compran in the same way él is the subject of se llama. The verb has been agreeing with its subject all along; it is just that the subject is a thing, and the thing is not really doing anything."
-            },
-            {
-              "kind": "speech",
-              "text": "So this se is the reflexive se — grown, not borrowed. Unlike the se of se lo digo, which only looks like it."
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -103,74 +80,83 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Se compra el libro\" then \"Se compran libros\" — hear the verb follow the thing",
+              "instruction": "\"Se habla español\" as if reading it off a window",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Se compra el libro\" then \"Se compran libros\" — hear the verb follow the thing]"
+              "source": "[YOU SAY: \"Se habla español\" as if reading it off a window]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Se come bien\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Se come bien\"]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C52-se-venden-plural",
-              "prompt": "Say books are bought.",
+              "id": "ES-C52-se-habla-sign",
+              "prompt": "Write the sign that says Spanish is spoken here.",
               "assesses": [
-                "ES-GRAMMAR-SE-PASSIVE-AGREEMENT",
-                "ES-LEX-COMPRAR-07",
-                "ES-LEX-LIBRO"
+                "ES-GRAMMAR-SE-IMPERSONAL",
+                "ES-LEX-ESPANOL"
               ],
-              "responseSeconds": 10,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "se compran libros",
-                "se compran los libros"
+                "se habla espanol",
+                "se habla español"
               ],
               "feedback": {
-                "correct": "Plural thing, plural verb.",
-                "incorrect": "Se compran libros."
+                "correct": "No person named anywhere in it.",
+                "incorrect": "Se habla espanol."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C52-se-venden-agree",
-              "prompt": "What is the verb agreeing with in se compran libros?",
+              "id": "ES-C52-se-habla-who",
+              "prompt": "Who speaks Spanish, according to that sentence?",
               "assesses": [
-                "ES-GRAMMAR-SE-PASSIVE-AGREEMENT"
+                "ES-GRAMMAR-SE-IMPERSONAL"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "the books",
-                "the thing being bought",
-                "libros"
+                "nobody in particular",
+                "it does not say",
+                "no one is named"
               ],
               "feedback": {
-                "correct": "The thing is behaving like the subject.",
-                "incorrect": "With libros — the thing, not any doer."
+                "correct": "That absence is the whole point of the form.",
+                "incorrect": "It does not say, and it is not meant to."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C52-se-venden-origin",
-              "prompt": "Read se compran libros as if se still meant themselves. What does it say?",
+              "id": "ES-C52-se-habla-eat",
+              "prompt": "Say one eats well here.",
               "assesses": [
-                "ES-GRAMMAR-REFLEXIVE-THIRD-PERSON",
-                "ES-GRAMMAR-SE-PASSIVE-AGREEMENT"
+                "ES-GRAMMAR-SE-IMPERSONAL",
+                "ES-LEX-COMER",
+                "ES-LEX-BIEN"
               ],
-              "responseSeconds": 12,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "books buy themselves",
-                "the books buy themselves"
+                "se come bien",
+                "aqui se come bien"
               ],
               "feedback": {
-                "correct": "Nonsense about the world, and exactly the sentence Spanish is using.",
-                "incorrect": "Books buy themselves — which is where the construction came from."
+                "correct": "Se come bien.",
+                "incorrect": "Se come bien."
               }
             }
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -182,7 +168,7 @@
             },
             {
               "kind": "speech",
-              "text": "Why does the verb go plural? (Because it agrees with the thing.) And why does it agree with the thing? (Because underneath, the thing is doing it to itself.) Next: the one you will use every day."
+              "text": "Se habla español — who is speaking? (Nobody named — that is the point.) What does the se mark? (That no person is being named.) Next: why this form grew out of the one you already knew."
             }
           ]
         }

@@ -2,25 +2,32 @@
   "version": 1,
   "language": "spanish",
   "chapter": 86,
-  "title": "Synthesis --- Saying It Once",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:8b5c19059855fc57",
+  "title": "Review --- Four Pronouns, One Slot",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:a9c9f199f9fa60e4",
   "lessons": [
     {
-      "id": "ES-C42-sintesis-decirlo-una-vez",
-      "sequence": 1225,
-      "title": "Synthesis — saying it once",
-      "headword": "(synthesis)",
-      "romanization": "(synthesis)",
-      "gloss": "synthesis — what these four words are for, which is not accuracy but not sounding like a stranger",
+      "id": "ES-C42-repaso-objeto",
+      "sequence": 1223,
+      "title": "Review — four pronouns, one slot",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "review — four pronouns, one slot, and the single question that chooses between them",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "sight-cue"
       ],
-      "sourceHash": "fnv1a64:44421cb097423d1d",
-      "notice": null,
+      "sourceHash": "fnv1a64:3fedaf3fe69ef10e",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -35,57 +42,69 @@
             },
             {
               "kind": "speech",
-              "text": "Answer out loud: ¿Tienes el libro? Say yes, and do not use the word libro."
+              "text": "Nothing new in this chapter. Before the table: where does an object pronoun go?"
             }
           ]
         },
         {
           "index": 1,
-          "type": "input",
-          "title": "The exchange",
+          "type": "notice",
+          "title": "What you've built",
           "segments": [
             {
               "kind": "speech",
-              "text": "Here are the same two exchanges, twice. Read both versions aloud."
+              "text": "Four chapters, four words, and now they can stand together — because you built each one separately and none of them is new here."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "the one it happens to",
+                "pronoun",
+                "example"
+              ],
+              "columns": 3,
+              "rowCount": 4,
+              "utterances": [
+                "the one it happens to: me. pronoun: me. example: me quieres — you love me.",
+                "the one it happens to: you. pronoun: te. example: te quiero — I love you.",
+                "the one it happens to: it (masculine). pronoun: lo. example: lo tengo — I have it.",
+                "the one it happens to: it (feminine). pronoun: la. example: la hago — I make it."
+              ]
             },
             {
               "kind": "speech",
-              "text": "Version one:"
-            },
-            {
-              "kind": "speech",
-              "text": "— ¿Tienes el libro? — Sí, tengo el libro. — ¿Haces la comida? — Sí, hago la comida."
-            },
-            {
-              "kind": "speech",
-              "text": "Version two:"
-            },
-            {
-              "kind": "speech",
-              "text": "— ¿Tienes el libro? — Sí, lo tengo. — ¿Haces la comida? — Sí, la hago."
-            },
-            {
-              "kind": "speech",
-              "text": "Every sentence in version one is correct. Not one of them is a mistake. And no speaker of Spanish would say them."
+              "text": "Read down the last column. The verb never moved. The pronoun never moved. Only the first word changed, and it changed for one reason at a time."
             }
           ]
         },
         {
           "index": 2,
           "type": "grammar",
-          "title": "Grammar Lens: what the pronoun is actually for",
+          "title": "Grammar Lens: the single question",
           "segments": [
             {
               "kind": "speech",
-              "text": "These four words do not make you more correct. They make you sound like somebody having a conversation instead of somebody completing an exercise."
+              "text": "Choosing between these looks like four decisions. It is one:"
             },
             {
               "kind": "speech",
-              "text": "A conversation carries what has already been said. English does the same thing and you have never noticed: you would not answer do you have the book? with yes, I have the book."
+              "text": "Who or what is the verb landing on?"
             },
             {
               "kind": "speech",
-              "text": "So this is the first place where knowing the form is not the skill. The skill is noticing that the thing has already been named — and no table can drill that."
+              "text": "If it is you speaking becomes me."
+            },
+            {
+              "kind": "speech",
+              "text": "If it is the person you are speaking to becomes te."
+            },
+            {
+              "kind": "speech",
+              "text": "If it is a thing or somebody else becomes lo or la, and the noun decides which, not you."
+            },
+            {
+              "kind": "speech",
+              "text": "That last clause is the whole of the difficulty. Me and te are about the conversation, so you always know them. Lo and la are about the noun, so they are only as reliable as your grip on its gender. That is why the three nouns came first: el libro and la comida are not vocabulary here so much as the two test cases you run every new pronoun against."
             }
           ]
         },
@@ -103,101 +122,89 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "both versions of the book exchange, and hear the difference",
+              "instruction": "the four in order, then the four examples",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: both versions of the book exchange, and hear the difference]"
+              "source": "[YOU SAY: the four in order, then the four examples]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Sí, lo tengo\" and \"Sí, la hago\" until no decision is needed",
+              "instruction": "\"Te quiero\" and \"Me quieres\" back to back, as if two people were speaking",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Sí, lo tengo\" and \"Sí, la hago\" until no decision is needed]"
+              "source": "[YOU SAY: \"Te quiero\" and \"Me quieres\" back to back, as if two people were speaking]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "Until the choice arrives before the sentence does."
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C42-sintesis-decirlo-una-vez-book",
-              "prompt": "Answer yes to Tienes el libro, without repeating the noun.",
-              "assesses": [
-                "ES-GRAMMAR-DIRECT-OBJECT-LO",
-                "ES-LEX-LIBRO",
-                "ES-GRAMMAR-TENER-PRESENT-SINGULAR"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "si, lo tengo",
-                "lo tengo",
-                "si lo tengo"
-              ],
-              "feedback": {
-                "correct": "That is what a speaker would actually say.",
-                "incorrect": "Si, lo tengo. The noun was already named once; that was enough."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C42-sintesis-decirlo-una-vez-meal",
-              "prompt": "Answer yes to Haces la comida, without repeating the noun.",
-              "assesses": [
-                "ES-GRAMMAR-DIRECT-OBJECT-LA",
-                "ES-LEX-COMIDA",
-                "ES-GRAMMAR-HACER-PRESENT-SINGULAR"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "si, la hago",
-                "la hago",
-                "si la hago"
-              ],
-              "feedback": {
-                "correct": "La, because comida is feminine.",
-                "incorrect": "Si, la hago. The pronoun carries the gender of the noun that left."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C42-sintesis-decirlo-una-vez-people",
-              "prompt": "Somebody says Te quiero. Say the answering half.",
+              "id": "ES-C42-repaso-objeto-four",
+              "prompt": "Name the four object pronouns you now hold.",
               "assesses": [
                 "ES-GRAMMAR-ME-DIRECT-OBJECT",
                 "ES-GRAMMAR-TE-DIRECT-OBJECT",
-                "ES-GRAMMAR-QUERER-PRESENT-SINGULAR"
+                "ES-GRAMMAR-DIRECT-OBJECT-LO",
+                "ES-GRAMMAR-DIRECT-OBJECT-LA"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "me quieres",
-                "y yo te quiero",
-                "te quiero"
+                "me, te, lo, la",
+                "me te lo la",
+                "me / te / lo / la"
               ],
               "feedback": {
-                "correct": "Two people, four words, a complete exchange.",
-                "incorrect": "Me quieres — or turn it back with te quiero."
+                "correct": "Four, each earned separately.",
+                "incorrect": "me, te, lo, la."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C42-sintesis-decirlo-una-vez-point",
-              "prompt": "Version one of the dialogue was grammatically correct. What was wrong with it?",
+              "id": "ES-C42-repaso-objeto-question",
+              "prompt": "What single question chooses between all four?",
               "assesses": [
-                "ES-GRAMMAR-DIRECT-OBJECT-LO"
+                "ES-GRAMMAR-OBJECT-PRONOUN"
               ],
-              "responseSeconds": 12,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "it named the same thing twice",
-                "it repeated the noun",
-                "nobody talks like that"
+                "who or what the verb lands on",
+                "who is receiving the action",
+                "what the object is"
               ],
               "feedback": {
-                "correct": "Right — correct is not the same as what a speaker would say.",
-                "incorrect": "Nothing was ungrammatical. It just repeated a thing both people already had in mind."
+                "correct": "One question, four answers.",
+                "incorrect": "Who or what the verb lands on — that is the only decision."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C42-repaso-objeto-hard",
+              "prompt": "Which two of the four depend on knowing a noun's gender?",
+              "assesses": [
+                "ES-GRAMMAR-DIRECT-OBJECT-LA",
+                "ES-LEX-COMIDA"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "lo and la",
+                "lo, la",
+                "la and lo"
+              ],
+              "feedback": {
+                "correct": "Yes — and that is where the work is.",
+                "incorrect": "Lo and la. Me and te are decided by the conversation instead."
               }
             }
           ]
@@ -215,7 +222,7 @@
             },
             {
               "kind": "speech",
-              "text": "¿Tienes el libro? (Sí, lo tengo.) ¿Haces la comida? (Sí, la hago.) And what were these four words for? (Not repeating what has already been said.) Next: the past tense — and you will find these four words sit in exactly the same place there."
+              "text": "Four pronouns — say them. (Me, te, lo, la.) Which two are decided by a noun rather than by you? (Lo and la.) Next chapter has no new forms either — it asks what these words are actually for."
             }
           ]
         }

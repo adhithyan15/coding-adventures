@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 92,
-  "title": "Le --- To Him, To Her, To You",
+  "title": "Synthesis --- The Conversation Without Them",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:9b84a0caf1938e8b",
+  "sourceHash": "fnv1a64:dabc0605125384c3",
   "lessons": [
     {
-      "id": "ES-C46-le",
-      "sequence": 1231,
-      "title": "le — \"to him,\" \"to her,\" \"to you\"",
-      "headword": "le",
-      "romanization": "le",
-      "gloss": "\"to him, to her, to you\" — a Latin case Spanish kept and English threw away",
+      "id": "ES-C45-sintesis-sin-repetir",
+      "sequence": 1230,
+      "title": "Synthesis — the conversation without them",
+      "headword": "(synthesis)",
+      "romanization": "(synthesis)",
+      "gloss": "synthesis — a conversation that would collapse without these eight words, and one that shows what they cost",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b4d552adc59d57c9",
+      "sourceHash": "fnv1a64:35f9d79acb23a139",
       "notice": null,
       "blocks": [
         {
@@ -35,73 +35,53 @@
             },
             {
               "kind": "speech",
-              "text": "Lo and la answer the question what. This chapter answers a different one: to whom."
+              "text": "¿Tienes los libros? Answer yes without saying libros."
             }
           ]
         },
         {
           "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: the other question",
+          "type": "input",
+          "title": "The exchange",
           "segments": [
             {
               "kind": "speech",
-              "text": "le — to him, to her, to you (with usted)."
+              "text": "Four turns, with the pronouns:"
             },
             {
               "kind": "speech",
-              "text": "Le digo. — I tell him. Or her. Or you."
+              "text": "— ¿Tienes los libros? — Sí, los tengo. — ¿Y las comidas? — Las hago hoy."
             },
             {
               "kind": "speech",
-              "text": "Some verbs land on a thing: you have it, you make it, you want it. Others land on a person you are aiming at — you tell them, you speak to them, you give them something. Spanish uses a different pronoun for the second kind, and le is it."
+              "text": "Now the same four turns without them:"
             },
             {
               "kind": "speech",
-              "text": "Same slot. Still in front of the verb. Nothing about the shape of a sentence has changed in eleven chapters."
+              "text": "— ¿Tienes los libros? — Sí, tengo los libros. — ¿Y las comidas? — Hago las comidas hoy."
             },
             {
               "kind": "speech",
-              "text": "And here is the relief: le does not mark gender."
-            },
-            {
-              "kind": "speech",
-              "text": "Le digo. — I tell him. and I tell her. and I tell you."
-            },
-            {
-              "kind": "speech",
-              "text": "After four chapters of choosing between lo and la by the gender of a noun, this one asks you for nothing. One form covers three people. If you need to say which, you add it in words — but the pronoun itself does not care."
+              "text": "Read the second version aloud, all four lines. It is not wrong anywhere. It is exhausting, and by the fourth line it sounds like somebody being careful with a stranger rather than talking."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
+          "type": "grammar",
+          "title": "Grammar Lens: what a pronoun buys, and what it costs",
           "segments": [
             {
               "kind": "speech",
-              "text": "Lo and le are the same Latin word again — and this time the difference is not wear, it is grammar."
+              "text": "The pronoun buys speed, and it is paid for with attention."
             },
             {
               "kind": "speech",
-              "text": "Latin changed a word's ending to show its job in the sentence. Ille, \"that one,\" had one form for the thing an action hit and another for the person it was aimed at:"
+              "text": "Los tengo is only clear because both of you remember what los points at. If the last three sentences were about meals and you say los tengo, your listener hunts for a masculine thing and finds none. A pronoun is a promise that the thing is still in the room."
             },
             {
               "kind": "speech",
-              "text": "illum — the one the verb acts on becomes Spanish lo."
-            },
-            {
-              "kind": "speech",
-              "text": "illī — the one it is aimed at becomes Spanish le."
-            },
-            {
-              "kind": "speech",
-              "text": "Latin called these the accusative and the dative. Almost all of that system collapsed on the way to Spanish; nouns lost their endings entirely. But in these small, constantly-used pronouns, two of the cases survived, and you are looking at them."
-            },
-            {
-              "kind": "speech",
-              "text": "English had the same distinction and lost it more completely. It survives in a word order rather than a shape: I told him the story — him is doing exactly what le does, and English simply stopped marking it."
+              "text": "That is the real skill, and it is not on the grid: hold what has been said, and point back at it accurately. English asks the same of you and you have done it since you were three, which is why nobody taught it to you. Here the pointer must also agree in gender and number — which is why lo and la were the hard quarter of that table."
             }
           ]
         },
@@ -119,79 +99,100 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Lo tengo\" then \"Le digo\" — what, then to whom",
+              "instruction": "both versions of the four-turn exchange, and hear the second one tire",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Lo tengo\" then \"Le digo\" — what, then to whom]"
+              "source": "[YOU SAY: both versions of the four-turn exchange, and hear the second one tire]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Le digo\" three times, meaning him, then her, then usted",
+              "instruction": "\"los tengo\" and \"las hago\" until the gender arrives with the noun, not after it",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Le digo\" three times, meaning him, then her, then usted]"
+              "source": "[YOU SAY: \"los tengo\" and \"las hago\" until the gender arrives with the noun, not after it]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C46-le-say",
-              "prompt": "Say I tell him.",
+              "id": "ES-C45-sintesis-sin-repetir-books",
+              "prompt": "Answer yes to Tienes los libros, without the noun.",
               "assesses": [
-                "ES-GRAMMAR-INDIRECT-OBJECT-LE",
-                "ES-LEX-LE-OBJECT",
-                "ES-GRAMMAR-DECIR-PRESENT-SINGULAR"
+                "ES-GRAMMAR-DIRECT-OBJECT-PLURAL",
+                "ES-LEX-LIBRO",
+                "ES-GRAMMAR-TENER-PRESENT-SINGULAR"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "le digo",
-                "yo le digo"
+                "si, los tengo",
+                "los tengo",
+                "si los tengo"
               ],
               "feedback": {
-                "correct": "And the same two words mean I tell her.",
-                "incorrect": "Le digo."
+                "correct": "Los tengo.",
+                "incorrect": "Si, los tengo."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C46-le-gender",
-              "prompt": "How many genders does le have?",
+              "id": "ES-C45-sintesis-sin-repetir-meals",
+              "prompt": "Answer the question about las comidas, saying you make them.",
               "assesses": [
-                "ES-GRAMMAR-INDIRECT-OBJECT-LE",
+                "ES-GRAMMAR-DIRECT-OBJECT-PLURAL",
+                "ES-LEX-COMIDA",
+                "ES-GRAMMAR-HACER-PRESENT-SINGULAR"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "las hago",
+                "si, las hago",
+                "las hago hoy"
+              ],
+              "feedback": {
+                "correct": "Feminine plural, so las.",
+                "incorrect": "Las hago."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C45-sintesis-sin-repetir-us",
+              "prompt": "Say they love us.",
+              "assesses": [
+                "ES-GRAMMAR-NOS-DIRECT-OBJECT",
+                "ES-GRAMMAR-QUERER-PRESENT-PLURAL"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "nos quieren",
+                "ellos nos quieren"
+              ],
+              "feedback": {
+                "correct": "Nos quieren.",
+                "incorrect": "Nos quieren."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C45-sintesis-sin-repetir-cost",
+              "prompt": "You have been talking about meals and you say los tengo. What goes wrong for your listener?",
+              "assesses": [
+                "ES-GRAMMAR-DIRECT-OBJECT-LO",
                 "ES-GRAMMAR-DIRECT-OBJECT-LA"
               ],
-              "responseSeconds": 8,
+              "responseSeconds": 14,
               "acceptedResponses": [
-                "none",
-                "one form for all",
-                "it does not mark gender"
+                "they look for a masculine thing and there is not one",
+                "the pronoun points at nothing",
+                "the gender does not match what was said"
               ],
               "feedback": {
-                "correct": "One form for him, her and usted.",
-                "incorrect": "None — unlike lo and la, le does not mark gender at all."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C46-le-case",
-              "prompt": "Lo comes from Latin illum. Which Latin form does le come from, and what was it for?",
-              "assesses": [
-                "ES-ETYMON-ILLI-DATIVE",
-                "ES-ETYMON-ILLE-ILLA"
-              ],
-              "responseSeconds": 12,
-              "acceptedResponses": [
-                "illi, for the one the action is aimed at",
-                "illi, the dative",
-                "illi"
-              ],
-              "feedback": {
-                "correct": "Two Latin cases, both still alive in these two small words.",
-                "incorrect": "Illi — the dative, the form for whoever the verb was aimed at."
+                "correct": "A pronoun is a promise that the thing is still in the room.",
+                "incorrect": "Los is masculine, and nothing masculine has been named. The pointer misses."
               }
             }
           ]
@@ -209,7 +210,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"I tell him.\" (Le digo.) And \"I tell her.\" (Le digo — the same.) Which Latin case is le? (The dative, illī.) Next: its plural, and a discovery about how little of this system is actually new."
+              "text": "¿Tienes los libros? (Sí, los tengo.) ¿Y las comidas? (Las hago.) What does a pronoun promise? (That the thing it points at is still in the room.) Next: the past tense."
             }
           ]
         }

@@ -313,8 +313,8 @@ describe("corpus snapshot", () => {
     // +1 to both: Tamil chapter 39, ledgered in chapters.json, declared in
     // book-generation.json and \input into tamil/book/book.tex. All three are needed —
     // the first alone fails the book-cli "ledgered chapter into its book" gate.
-    expect(report.summary.bookChapters).toBe(682); // +8: HL-C94 splits the four over-budget opening chapters into twelve // +16: vocabulary wave 4, 4 tracks x 4 chapters // +4: HL-C98 gives the first paradigm one cell per chapter (3 teaching + review + synthesis) // +15: vocabulary wave 5 (persian +3, telugu +6, malayalam +6) // +4: HL-C88 slices 5-6 (Spanish friend-ending chapters) // +3: HL-C88 slice 8
-    expect(report.summary.declaredChapters).toBe(682); // +98: handwritten capability closure // +4: HL-C98 // +15: vocabulary wave 5 // +4: HL-C88 slices 5-6 // +3: HL-C88 slice 8
+    expect(report.summary.bookChapters).toBe(683); // +8: HL-C94 splits the four over-budget opening chapters into twelve // +16: vocabulary wave 4, 4 tracks x 4 chapters // +4: HL-C98 gives the first paradigm one cell per chapter (3 teaching + review + synthesis) // +15: vocabulary wave 5 (persian +3, telugu +6, malayalam +6) // +4: HL-C88 slices 5-6 (Spanish friend-ending chapters) // +3: HL-C88 slice 8 // +1: HL-C88 slice 9 (falsos amigos)
+    expect(report.summary.declaredChapters).toBe(683); // +98: handwritten capability closure // +4: HL-C98 // +15: vocabulary wave 5 // +4: HL-C88 slices 5-6 // +3: HL-C88 slice 8 // +1: HL-C88 slice 9 (falsos amigos)
     expect(report.summary.chaptersWithoutCapability).toBe(0);
     expect(report.summary.payoffsNotClosed).toBe(0);
     expect(report.summary.unknownPayoffLessons).toBe(0);
@@ -391,5 +391,50 @@ describe("corpus snapshot", () => {
       { name: "object", fillers: ["ES-LEX-CAFE"] },
     ]);
     expect(report.findings.filter((finding) => finding.code.startsWith("pattern-"))).toEqual([]);
+  });
+
+  // ---------------------------------------------------------------------------
+  // `sequence` and `chapter` must agree about reading order.
+  //
+  // A lesson carries both: `sequence` orders lessons within a track, `chapter`
+  // groups them. Nothing forced them to agree, and twice in one day an inserted
+  // chapter took a sequence INSIDE the span of the chapter it displaced, so
+  // sorting the corpus by `sequence` alone walked chapter numbers backwards.
+  //
+  // Neither instance was caught by anything. `readingOrder` sorts chapter-first,
+  // so every existing gate stayed green while `sequence` quietly stopped being a
+  // valid standalone ordering key -- and any consumer that trusts it renders
+  // chapter 67 before chapter 66.
+  //
+  // This is the missing check. It is deliberately corpus-wide rather than
+  // Spanish-only: the defect is a property of how chapters are inserted, not of
+  // one track.
+  it("keeps chapter numbers non-decreasing when lessons are sorted by sequence", () => {
+    const { lessons } = loadEverything();
+    const byTrack = new Map<string, { sequence: number; chapter: number; id: string }[]>();
+    for (const lesson of lessons) {
+      const sequence = Number(lesson.frontmatter.sequence);
+      const chapter = lesson.realization.chapter;
+      if (!Number.isFinite(sequence)) continue;
+      const id = lesson.realization.lessonId;
+      const group = byTrack.get(lesson.language) ?? [];
+      group.push({ sequence, chapter, id });
+      byTrack.set(lesson.language, group);
+    }
+    const regressions: string[] = [];
+    for (const [language, group] of byTrack) {
+      const ordered = [...group].sort((a, b) => a.sequence - b.sequence);
+      for (let i = 1; i < ordered.length; i++) {
+        const previous = ordered[i - 1]!;
+        const current = ordered[i]!;
+        if (current.chapter < previous.chapter) {
+          regressions.push(
+            `${language}: ${previous.id} (seq ${previous.sequence}, ch ${previous.chapter}) ` +
+              `is followed by ${current.id} (seq ${current.sequence}, ch ${current.chapter})`,
+          );
+        }
+      }
+    }
+    expect(regressions).toEqual([]);
   });
 });

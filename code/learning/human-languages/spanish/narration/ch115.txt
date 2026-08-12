@@ -1,42 +1,42 @@
-Spanish, chapter 115: Hablado, Comido, Vivido --- The Participle.
-1 lesson. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+Spanish, chapter 115: Synthesis --- A Small Story.
+1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-hablado, comido, vivido — the participle.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+Synthesis — a small story.
 
 Warm-up.
 [pause 2 seconds]
-Your three verb families, once more: hablar, comer, vivir. This chapter gives each of them one new form, and two of the three get the same one.
+Everything in this book so far has been sentences. A story is different: it needs a background and a foreground at the same time.
 
-Grammar Lens: two endings, not three.
-hablar becomes hablado, comer becomes comido, vivir becomes vivido.
--ar verbs take -ado.
--er and -ir verbs both take -ido.
-You have seen those two families collapse into one before: in the preterite, where comí and viví have identical endings. It happens here for the same reason it happened there — the difference between -er and -ir was never deep, and outside the present tense it mostly stops existing.
-So this is one new ending and one you can predict.
-The word itself does not change for who is speaking. Hablado is hablado whether you, I, or a hundred people did the speaking. That is unusual enough to notice: every other verb form you hold has been carrying a person on its back.
+The exchange.
+Four sentences. Watch the tenses take turns.
+Yo estudiaba español. No tenía un libro. Tuve un libro en marzo. Y cuando tuve el libro, hablé con Ana.
+Now read only the imperfects: estudiaba, tenía. Those two sentences tell you what things were like — the situation, with no edges, going on for as long as it needed to.
+Now read only the preterites: tuve, hablé. Those tell you what happened — two events, each with edges, in order.
+The story is the two layers together. Neither layer is a story on its own: the imperfects alone are a description that never moves, and the preterites alone are a list of events with no world around them.
 
-The word, taken apart.
-Grammarians call this a participle, from Latin participium — "the form that takes part." It was named for doing two jobs at once: it is built from a verb, and it behaves like an adjective.
-You can see the adjective half immediately. Cansado ("tired") is the participle of cansar, and it agrees like any adjective: cansada, cansados. The same shape, doing adjective work.
-Next chapter puts it to its verb work instead — and there, held in place by another word, it stops agreeing with anything at all.
+Grammar Lens: what you can now do.
+Notice the third sentence. Tuve un libro is not "I had a book" — it is the moment you got one, which is why it belongs in the foreground with hablé rather than in the background with tenía. The same verb appears in both layers of this story, doing two different jobs, and nothing about it is irregular.
+That is the whole rung. From here you can narrate: not just report that something happened, but say what the world was like while it did.
+It is worth naming the cost. Two tenses learned separately, then three chapters on nothing but the choice between them — because the forms were never the difficulty. English lets you leave this question unanswered; Spanish does not.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "hablado, comido, vivido" — one ending, then the shared one]
+[your turn — say: the four sentences straight through]
 [pause 8 seconds for the answer]
-[your turn — say: "comí, viví" then "comido, vivido" — the same merger, twice]
+[your turn — say: only the imperfects, then only the preterites, and hear the two layers]
 [pause 8 seconds for the answer]
-[question — say your answer, then pause 8 seconds]
-Give the participle of hablar.
+[repeat that twice]
 [question — say your answer, then pause 10 seconds]
-Give the participles of comer and vivir.
-[question — say your answer, then pause 8 seconds]
-Does the participle change for who is speaking?
+In the story, which two verbs are the background?
+[question — say your answer, then pause 12 seconds]
+Why is tuve un libro in the foreground when tenia un libro was not?
+[question — say your answer, then pause 12 seconds]
+Say I was studying when I spoke with Ana.
+[question — say your answer, then pause 14 seconds]
+Why did this take three chapters when neither tense was new?
 
 Wrap-up Recall.
 [pause 3 seconds]
-Participle of hablar? (Hablado.) Of comer and vivir? (Comido, vivido — the same ending.) What does participium mean? (The form that takes part — verb and adjective at once.) Next: the word that turns it into a tense.
+Which layer says what things were like? (The imperfect.) Which says what happened? (The preterite.) And what can you do now that you could not before? (Tell a story — not just report events, but say what the world was like while they happened.)

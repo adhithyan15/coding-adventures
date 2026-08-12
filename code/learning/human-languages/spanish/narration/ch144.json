@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 144,
-  "title": "The Months",
+  "title": "La Bebo --- The Pronoun Tells the Truth",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:4157df54b6a3ee03",
+  "sourceHash": "fnv1a64:cf383bc7b60b4962",
   "lessons": [
     {
-      "id": "ES-C27-los-meses",
-      "sequence": 1750,
-      "title": "los meses — the calendar's gods and Caesars",
-      "headword": "los meses",
-      "romanization": "los meses",
-      "gloss": "the months — Roman gods and emperors, marching almost unchanged from Latin",
+      "id": "ES-C55-la-bebo",
+      "sequence": 1745,
+      "title": "la bebo — the pronoun tells the truth",
+      "headword": "la bebo",
+      "romanization": "la bebo",
+      "gloss": "the pronoun as a witness — el agua takes el, and la bebo proves the word was feminine all along",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ba3d2cc39604d3c6",
+      "sourceHash": "fnv1a64:38e8ae2a207e362d",
       "notice": null,
       "blocks": [
         {
@@ -35,50 +35,34 @@
             },
             {
               "kind": "speech",
-              "text": "Spanish's twelve months are a procession of Roman gods and emperors, barely changed from Latin. Two things you already know pay off immediately: marzo is the war-god you met in martes, and septiembre–diciembre are the Latin numbers 7–10 from the counting chapters."
+              "text": "Which article does agua take? (El.) And what gender is agua really? (Feminine — the article is a sound rule, not a gender.)"
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The months, taken apart",
+          "type": "grammar",
+          "title": "Grammar Lens: a third witness",
           "segments": [
             {
-              "kind": "table",
-              "headers": [
-                "Spanish",
-                "from Latin",
-                "who / what"
-              ],
-              "columns": 3,
-              "rowCount": 12,
-              "utterances": [
-                "Spanish: enero. from Latin: Iānuārius. who / what: Janus, the two-faced god of doors & beginnings.",
-                "Spanish: febrero. from Latin: Februārius. who / what: Februa, the Roman purification festival.",
-                "Spanish: marzo. from Latin: Martius. who / what: Mars, the war-god — the same Mars as martes (Tuesday)!",
-                "Spanish: abril. from Latin: Aprīlis. who / what: perhaps aperīre, \"to open\" (buds opening).",
-                "Spanish: mayo. from Latin: Māius. who / what: Maia, goddess of growth.",
-                "Spanish: junio. from Latin: Iūnius. who / what: Juno, queen of the gods.",
-                "Spanish: julio. from Latin: Iūlius. who / what: originally Quīntīlis, \"the 5th [month]\" — renamed for Julius Caesar after his death.",
-                "Spanish: agosto. from Latin: Augustus. who / what: originally Sextīlis, \"the 6th [month]\" — renamed for the emperor Augustus.",
-                "Spanish: septiembre. from Latin: september. who / what: \"7th\" (septem).",
-                "Spanish: octubre. from Latin: octōber. who / what: \"8th\" (octō).",
-                "Spanish: noviembre. from Latin: november. who / what: \"9th\" (novem).",
-                "Spanish: diciembre. from Latin: december. who / what: \"10th\" (decem)."
-              ]
+              "kind": "speech",
+              "text": "When you met el agua you were given two proofs that the word is feminine underneath: the adjective it takes and the plural it forms. Here is a third, and it costs you nothing new."
             },
             {
               "kind": "speech",
-              "text": "Two payoffs land at once:"
+              "text": "Bebo el agua. — I drink the water. La bebo. — I drink it."
             },
             {
               "kind": "speech",
-              "text": "marzo = Mars = martes. The month and the weekday honor the same war-god — Martius (his month) and Martis diēs (his day). Spot one, you know the other."
+              "text": "Not lo bebo. La bebo."
             },
             {
               "kind": "speech",
-              "text": "The 7–10 months. Septiembre through diciembre still carry septem, octō, novem, decem — because the old Roman year originally began in March, with September genuinely the 7th month. Centuries before Caesar, two new months (Januarius, Februarius) were added at the front to cover the winter, which pushed every later month's number out of step with its name — September became the 9th month while still being named \"7th.\" Julius and Augustus had nothing to do with that shift: they simply got two already-existing months — Quintilis and Sextilis, literally \"5th\" and \"6th\" — renamed in their honor after the fact. The names stuck; the months themselves were never new."
+              "text": "The article had to say el for a reason that has nothing to do with gender — two a sounds colliding. The pronoun is under no such pressure. Nothing sits in front of it, no vowels collide, so it reports the gender straight."
+            },
+            {
+              "kind": "speech",
+              "text": "This is worth more than one word. When an article looks suspicious, the object pronoun is a witness that cannot be leaned on. You now have a test you can run yourself, rather than a list to trust."
             }
           ]
         },
@@ -96,29 +80,79 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the twelve — \"enero, febrero, marzo, abril, mayo, junio, julio, agosto, septiembre, octubre, noviembre, diciembre\"",
+              "instruction": "\"el agua\" then \"la bebo\" — until the clash stops feeling like an error",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the twelve — \"enero, febrero, marzo, abril, mayo, junio, julio, agosto, septiembre, octubre, noviembre, diciembre\"]"
+              "source": "[YOU SAY: \"el agua\" then \"la bebo\" — until the clash stops feeling like an error]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the tie-back — \"marzo / martes — both Mars, the war-god\"",
+              "instruction": "\"lo bebo\" then \"la bebo\", and notice which one is about water",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the tie-back — \"marzo / martes — both Mars, the war-god\"]"
+              "source": "[YOU SAY: \"lo bebo\" then \"la bebo\", and notice which one is about water]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"septiembre = 7, diciembre = 10\" — the old March-start year",
-              "spoken": true,
-              "scored": false,
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C55-la-bebo-drink",
+              "prompt": "Say I drink it, about el agua.",
+              "assesses": [
+                "ES-GRAMMAR-DIRECT-OBJECT-LA",
+                "ES-LEX-BEBER",
+                "ES-GRAMMAR-ER-PRESENT-SINGULAR"
+              ],
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"septiembre = 7, diciembre = 10\" — the old March-start year]"
+              "acceptedResponses": [
+                "la bebo",
+                "yo la bebo"
+              ],
+              "feedback": {
+                "correct": "La bebo — the pronoun does not pretend.",
+                "incorrect": "La bebo. The article says el for a sound reason; the pronoun says la for a gender reason."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C55-la-bebo-why",
+              "prompt": "Why can the pronoun show a gender the article hides?",
+              "assesses": [
+                "ES-GRAMMAR-PRONOUN-REVEALS-GENDER",
+                "ES-GRAMMAR-AGUA-ARTICLE-03"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "nothing collides in front of the pronoun",
+                "the article changes for sound, the pronoun does not",
+                "there are no two a sounds meeting"
+              ],
+              "feedback": {
+                "correct": "The swap was phonological, and it only ever applied to the article.",
+                "incorrect": "The el swap avoids two a sounds meeting. A pronoun is not in front of the noun, so nothing pushes on it."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C55-la-bebo-test",
+              "prompt": "You meet a new noun and cannot tell its gender from its article. What can you listen for?",
+              "assesses": [
+                "ES-GRAMMAR-PRONOUN-REVEALS-GENDER"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "which object pronoun a speaker uses for it",
+                "whether they say lo or la",
+                "the pronoun"
+              ],
+              "feedback": {
+                "correct": "That is a test you can run for the rest of your life.",
+                "incorrect": "Listen for lo or la. The pronoun reports the gender without interference."
+              }
             }
           ]
         },
@@ -135,7 +169,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which god links marzo and martes? (Mars, the war-god — his month and his day.) Why is diciembre Latin for \"ten\"? (The Roman year began in March, and adding January/February at the front later pushed every month's number out of step with its name.) Did Julius Caesar and Augustus add new months to the calendar? (No — julio and agosto were already-existing months, Quintilis and Sextilis (\"5th\"/\"6th\"), simply renamed in their honor.)"
+              "text": "El agua — which pronoun replaces it? (La.) And why does that not contradict the article? (The article changed for sound, not gender.)"
             }
           ]
         }
