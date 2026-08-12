@@ -1894,18 +1894,36 @@ Axis pairing, and the local controller:
   controller commit, restart recovery, replacement cleanup, and secret-free
   durable state.
 
+## Current Synology Pairing Central Ownership Slice
+
+This slice moves the completed Synology credential executor onto the shared
+durable authority used by discovery, automations, the other migrated pairing
+services, and the local controller:
+
+- `smart-home-synology-pairing-service` receives the shared central controller
+  instead of restoring and replacing an actor-private runtime copy.
+- Authorization, reviewed connection-target and installed-camera validation,
+  and live revision checks still precede credential input, authenticated
+  Surveillance Station inspection, Vault, and transaction-journal activity.
+- Pairing transaction recovery and exact-revision completion now publish
+  directly through the controller authority, so every shared consumer sees the
+  installed opaque Synology credential reference immediately.
+- Tests prove central commit visibility, stale-request rejection after another
+  controller commit, restart recovery, replacement cleanup, and secret-free
+  durable state.
+
 ## Smart Home Remaining Work
 
 The remaining backlog is ordered by the strongest executable production path
 and then by prerequisite readiness:
 
 The reusable central owner, discovery service transaction migration,
-production Hue mDNS composition, and Hue, ONVIF, Axis, and ZoneMinder pairing
-migrations are complete. The remaining central-composition backlog takes
-priority over adding another isolated integration or Chief read model:
+production Hue mDNS composition, and Hue, ONVIF, Axis, ZoneMinder, and Synology
+pairing migrations are complete. The remaining central-composition backlog
+takes priority over adding another isolated integration or Chief read model:
 
-1. Migrate the remaining Synology and Reolink pairing services so they transact
-   against the same live revision instead of restoring private runtime copies.
+1. Migrate the remaining Reolink pairing service so it transacts against the
+   same live revision instead of restoring a private runtime copy.
 2. Replace the `Rc<RefCell<SmartHomeRuntime>>` Chief bridge with a thread-safe
    service adapter against the controller authority.
 3. Add provider-neutral model tool declarations/results, authenticated host

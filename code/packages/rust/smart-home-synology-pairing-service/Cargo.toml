@@ -12,10 +12,10 @@ coding_adventures_csprng = { path = "../csprng" }
 coding_adventures_vault_sealed_store = { path = "../vault-sealed-store" }
 coding_adventures_zeroize = { path = "../zeroize" }
 serde_json = "1"
+smart-home-controller-runtime = { path = "../smart-home-controller-runtime" }
 smart-home-core = { path = "../smart-home-core" }
 smart-home-pairing-transaction = { path = "../smart-home-pairing-transaction" }
 smart-home-runtime = { path = "../smart-home-runtime" }
-smart-home-runtime-store = { path = "../smart-home-runtime-store" }
 smart-home-synology-snapshot-host = { path = "../smart-home-synology-snapshot-host" }
 smart-home-synology-surveillance-integration = { path = "../smart-home-synology-surveillance-integration" }
 storage-core = { path = "../storage-core" }
@@ -23,4 +23,5 @@ url-parser = { path = "../url-parser" }
 
 [dev-dependencies]
 coding_adventures_vault_leases = { path = "../vault-leases" }
+smart-home-runtime-store = { path = "../smart-home-runtime-store" }
 storage-local-folder = { path = "../storage-local-folder" }
