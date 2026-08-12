@@ -1,0 +1,75 @@
+% ============================================================================
+% syllable-substitution — changing one syllable in a word to form a new word,
+% a SEVENTH literacy sub-skill in the ADJ stdlib (adj-facts-stdlib, LANGUAGE).
+% ============================================================================
+% Deliberately DIFFERENT in shape from all six prior literacy libraries:
+% `word-families.adj` derives RHYMING, `syllable-count.adj` recalls a
+% SYLLABLE COUNT, `onset-rime.adj` recalls an ONSET/RIME split,
+% `initial-sound.adj` recalls a BEGINNING sound, `phoneme-substitution.adj`
+% recalls the new word formed by swapping one SOUND, and
+% `phoneme-deletion.adj` recalls the new word formed by removing one sound.
+% This library recalls what happens when you substitute a whole SYLLABLE (not
+% a single phoneme) in a multi-syllable word, grounding a syllable-level
+% analogue of the phonemic-awareness continuum as a pure lookup:
+% `syllable_substitution(original_word, new_word, changed_position)`. Recall
+% is a binding query:
+%
+%     ? syllable_substitution(suntan, sunset, $Position)   % second
+%
+% This is a native `table` (ADJ-TABLES RS-5, a THREE-column table like
+% `onset-rime.adj`): each `row` lowers to a ground relation
+% `syllable_substitution(original_word, new_word, changed_position)` carrying
+% the Reading Rockets citation, so the lookup above is the ordinary SLD
+% binding query — the engine returns the changed position WITH its source, on
+% the CPU, with zero model calls, and abstains on any word pair not the one
+% the cited page walks through. The query also runs BACKWARD — bind a
+% position and recall the word pair that changes there:
+%
+%     ? syllable_substitution($Orig, $New, second)   % suntan, sunset
+%
+% The one substitution this table carries, as a little truth table:
+%
+%     original_word   new_word   changed_position
+%     -------------   --------   ----------------
+%     suntan          sunset     second
+%
+% Provenance: quoted verbatim from Reading Rockets' "Phonological and
+% Phonemic Awareness: In Practice" module — the SAME already-vetted page
+% `syllable-count.adj`, `phoneme-substitution.adj`, and `phoneme-deletion.adj`
+% already cite (its "Substituting Syllables" section), WebFetch-verified
+% TWICE for consistency before writing. The exact spans, composed together
+% the same way `phoneme-substitution.adj`'s and `phoneme-deletion.adj`'s own
+% rows already are (two distinct CLEAN PROSE sentences from the same cited
+% section, each stating one fact — deliberately NOT drawing from the
+% section's bracketed stage-direction text, which names the literal old/new
+% syllable text ("tan"/"set") but is instructional stage direction rather
+% than a stated fact):
+%
+%   "I will change 'suntan' to 'sunset'."
+%     (states the transformation: suntan -> sunset)
+%   "The second syllable is different."
+%     (states which syllable position changed: second)
+%
+% `trust consensus` — the same tier `phoneme-substitution.adj`'s,
+% `phoneme-deletion.adj`'s, and `syllable-count.adj`'s sibling sections of
+% this page already earned. Deliberately scoped to ONLY this ONE
+% substitution the cited page walks through step by step, and to the
+% POSITION fact its clean prose sentences state (not the literal syllable
+% text, which only appears inside bracketed stage directions) — honestly
+% narrow (mirroring `phoneme-deletion.adj`'s and `onset-rime.adj`'s
+% precedent) rather than inventing a syllable-text value the source's own
+% prose does not state. A future slice can add a second substitution, or a
+% syllable-text column, once a comparably clean citation is found. (See
+% ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table syllable_substitution {
+    columns original_word, new_word, changed_position
+
+    row (suntan, sunset, second)
+
+    source "I will change 'suntan' to 'sunset'."
+    locator "https://www.readingrockets.org/reading-101/reading-101-learning-modules/course-modules/phonological-and-phonemic-awareness/practice"
+    trust consensus
+}
