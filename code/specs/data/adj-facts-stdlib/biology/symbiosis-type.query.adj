@@ -1,0 +1,5 @@
+import "symbiosis-type.adj"
+
+? symbiosis_type(mutualism, $D)                                                 % expect both_parties_benefit (direct)
+? symbiosis_type($T, the_parasite_benefits_while_the_host_is_harmed)            % expect parasitism (reverse)
+? symbiosis_type(amensalism, $D)                                                % expect abstain -- a real interaction category the source names, but its own sentence bundles it with competition rather than stating one clean fact

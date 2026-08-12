@@ -1,0 +1,73 @@
+% ============================================================================
+% symbiosis-type — three named types of symbiotic relationship and what
+% actually defines each (adj-facts-stdlib, BIOLOGY).
+% ============================================================================
+% Two organisms living in a close, long-term relationship are sorted by ONE
+% question: who benefits, and who (if anyone) is harmed? Mutualism is both
+% sides winning, commensalism is one side winning while the other is
+% unaffected, and parasitism is one side winning at the other's expense.
+% Recall is a binding query:
+%
+%     ? symbiosis_type(mutualism, $D)
+%       % both_parties_benefit
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground relation
+% `symbiosis_type(type, description)` carrying the source citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the
+% description WITH its source, on the CPU, with zero model calls, and
+% abstains on a symbiosis-related term that is not one of these three. The
+% query also runs BACKWARD — bind a description and recall the type it
+% names:
+%
+%     ? symbiosis_type($T, the_parasite_benefits_while_the_host_is_harmed)
+%       % parasitism
+%
+% The three types, as a little truth table:
+%
+%     type            description                                                        quote (verbatim)
+%     --------------  -----------------------------------------------------------------  --------------------------------------------------------------------------------------------------------------------
+%     mutualism        both_parties_benefit                                                "Where both parties benefit, the relationship is described as mutualistic."
+%     commensalism      one_organism_benefits_and_the_other_is_not_significantly_harmed_or_helped   "Commensalism describes a relationship between two living organisms where one benefits and the other is not significantly harmed or helped."
+%     parasitism        the_parasite_benefits_while_the_host_is_harmed                      "In a parasitic relationship, the parasite benefits while the host is harmed."
+%
+% Provenance: quoted verbatim from Wikipedia's "Symbiosis" article, which
+% gives each of these three types its own standalone defining sentence.
+% This is a MULTI-SOURCE-STYLE table (see `ocean-current-drivers.adj`,
+% `seed-dispersal-mechanism.adj`) in the sense that each row's quote comes
+% from a different part of the same page rather than a single shared
+% sentence — this `table`'s own `source` field carries the first row's
+% (mutualism) quote; the other two rows' quotes are documented above in
+% this header's truth table and are independently checkable against the
+% same `locator`. WebFetch-verified across two passes before writing, the
+% second pass pulling the full surrounding paragraph for each candidate
+% sentence to confirm it stands alone grammatically and isn't qualified or
+% contradicted by an adjacent sentence. `trust consensus` — Wikipedia, the
+% same tier this stdlib already reserves for other Wikipedia citations
+% (e.g. `pond-zone.adj`, `seed-dispersal-mechanism.adj`).
+%
+% Two related terms the SAME article's opening paragraph also names are
+% deliberately NOT rows here, so a recall ABSTAINS on them rather than
+% inventing a description: `competition` and `amensalism`. Both are
+% real ecological interaction categories the source names, but its own
+% defining sentence bundles them together as a single semicolon-joined
+% compound sentence ("Where the interaction reduces both parties' fitness,
+% it is called competition; where just one party's fitness is reduced, it
+% is called amensalism.") rather than stating one clean fact each the way
+% mutualism/commensalism/parasitism do. Picked using the mandatory
+% full-tree-grep-before-scoping discipline — zero hits for
+% "symbiosis_type"/"mutualism"/"commensalism"/"parasitism" before this
+% file was written. (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table symbiosis_type {
+    columns type, description
+
+    row (mutualism, both_parties_benefit)
+    row (commensalism, one_organism_benefits_and_the_other_is_not_significantly_harmed_or_helped)
+    row (parasitism, the_parasite_benefits_while_the_host_is_harmed)
+
+    source "Where both parties benefit, the relationship is described as mutualistic."
+    locator "https://en.wikipedia.org/wiki/Symbiosis"
+    trust consensus
+}
