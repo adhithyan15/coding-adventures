@@ -1298,6 +1298,62 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: chineseCharacterSource("好"),
   },
+  // 我 has seven sourced strokes. Only the vertical and its base hook remain
+  // joined; the long curved slash also hooks upward without lifting, producing
+  // nine visible movements and six pen lifts.
+  [ductusKey("chinese", "我")]: {
+    script: "chinese",
+    glyph: "我",
+    strokes: [
+      { segments: [{ label: "draw the short upper-left falling stroke", path: [
+        { x: 450, y: 800 }, { x: 390, y: 785 }, { x: 325, y: 770 },
+        { x: 255, y: 755 }, { x: 185, y: 740 }, { x: 105, y: 720 },
+      ] }] },
+      { segments: [{ label: "lift, then draw the upper horizontal left to right", path: [
+        { x: 65, y: 510 }, { x: 180, y: 510 }, { x: 300, y: 510 },
+        { x: 420, y: 510 }, { x: 540, y: 510 }, { x: 660, y: 510 },
+        { x: 780, y: 510 }, { x: 900, y: 510 }, { x: 940, y: 510 },
+      ] }] },
+      { segments: [
+        { label: "lift, then descend the vertical stroke", path: [
+          { x: 307, y: 720 }, { x: 307, y: 620 }, { x: 307, y: 520 },
+          { x: 307, y: 420 }, { x: 307, y: 320 }, { x: 307, y: 220 },
+          { x: 307, y: 120 }, { x: 307, y: 20 }, { x: 302, y: -25 },
+        ] },
+        { label: "hook left at the base without lifting", path: [
+          { x: 302, y: -25 }, { x: 275, y: -35 }, { x: 235, y: -40 },
+          { x: 195, y: -38 }, { x: 155, y: -25 },
+        ] },
+      ] },
+      { segments: [{ label: "lift, then draw the lower rising stroke", path: [
+        { x: 55, y: 215 }, { x: 120, y: 230 }, { x: 190, y: 245 },
+        { x: 265, y: 262 }, { x: 340, y: 280 }, { x: 415, y: 298 },
+        { x: 490, y: 315 },
+      ] }] },
+      { segments: [
+        { label: "lift, then draw the long curved slash down and right", path: [
+          { x: 600, y: 810 }, { x: 600, y: 700 }, { x: 605, y: 590 },
+          { x: 615, y: 480 }, { x: 635, y: 365 }, { x: 660, y: 255 },
+          { x: 700, y: 150 }, { x: 750, y: 65 }, { x: 805, y: 5 },
+          { x: 850, y: -35 }, { x: 875, y: -45 },
+        ] },
+        { label: "hook upward on the right without lifting", path: [
+          { x: 875, y: -45 }, { x: 895, y: 5 }, { x: 905, y: 55 },
+          { x: 915, y: 105 }, { x: 925, y: 145 },
+        ] },
+      ] },
+      { segments: [{ label: "lift, then draw the separate rising slash up and left", path: [
+        { x: 850, y: 390 }, { x: 815, y: 325 }, { x: 770, y: 260 },
+        { x: 720, y: 200 }, { x: 660, y: 140 }, { x: 595, y: 85 },
+        { x: 525, y: 35 }, { x: 455, y: -5 },
+      ] }] },
+      { segments: [{ label: "lift, then place the upper-right dot down and right", path: [
+        { x: 755, y: 785 }, { x: 785, y: 755 }, { x: 815, y: 720 },
+        { x: 845, y: 685 }, { x: 875, y: 650 }, { x: 895, y: 625 },
+      ] }] },
+    ],
+    source: chineseCharacterSource("我"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the

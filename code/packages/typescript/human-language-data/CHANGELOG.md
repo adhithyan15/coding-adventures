@@ -4,6 +4,12 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
 
 ## [Unreleased]
 
+### Added - source-verified Chinese 我 (HL-C09CK)
+
+- Verify 我 as seven ordered strokes with six lifts against the pinned PRC source.
+- Add a Noto Sans SC fit preserving the hooked vertical and long curved slash.
+- Reduce HL-C09 debt to 143 entries; Chinese has 12 outstanding.
+
 ### Added - source-verified Chinese 好 (HL-C09CJ)
 
 - Verify 好 from its pinned Hanzi Writer Data record as six ordered runs: all
