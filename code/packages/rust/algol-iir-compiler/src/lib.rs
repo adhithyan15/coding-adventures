@@ -4633,6 +4633,7 @@ impl Compiler {
         let entry_real_slots = self.static_real_slots.clone();
         let entry_integer_slots = self.static_integer_slots.clone();
         let entry_tracking_disabled = self.static_real_tracking_disabled;
+        let entry_initialized_string_slots = self.initialized_string_slots.clone();
 
         let branches: Vec<&GrammarASTNode> = children
             .into_iter()
@@ -4657,6 +4658,7 @@ impl Compiler {
         let mut then_real_slots = self.static_real_slots.clone();
         let mut then_integer_slots = self.static_integer_slots.clone();
         let then_tracking_disabled = self.static_real_tracking_disabled;
+        let then_initialized_string_slots = self.initialized_string_slots.clone();
         self.emit(IIRInstr::new(
             "jmp",
             None,
@@ -4667,13 +4669,20 @@ impl Compiler {
         self.static_real_slots = entry_real_slots;
         self.static_integer_slots = entry_integer_slots;
         self.static_real_tracking_disabled = entry_tracking_disabled;
+        self.initialized_string_slots = entry_initialized_string_slots;
         if let Some(branch) = else_branch {
             self.emit_branch_node(branch)?;
         }
         let else_real_slots = self.static_real_slots.clone();
         let else_integer_slots = self.static_integer_slots.clone();
         let else_tracking_disabled = self.static_real_tracking_disabled;
+        let else_initialized_string_slots = self.initialized_string_slots.clone();
         self.emit_label(&end_label);
+
+        self.initialized_string_slots = then_initialized_string_slots
+            .intersection(&else_initialized_string_slots)
+            .cloned()
+            .collect();
 
         if then_tracking_disabled || else_tracking_disabled {
             self.disable_static_real_tracking();
@@ -8244,6 +8253,39 @@ mod tests {
         let err = compile_source("begin string s; print(s) end", "test")
             .expect_err("unassigned string variables are not initialized");
         assert!(format!("{err:?}").contains("requires initialized string variable"));
+    }
+
+    #[test]
+    fn al4_then_only_string_initialization_rejects_after_conditional() {
+        let err = compile_source(
+            "begin boolean flag; string s; flag := false; if flag then s := 'HI'; print(s) end",
+            "test",
+        )
+        .expect_err("a then-only assignment does not definitely initialize the string");
+        assert!(format!("{err:?}").contains("requires initialized string variable"));
+    }
+
+    #[test]
+    fn al4_both_string_branches_initialize_after_conditional() {
+        let module = compile_source(
+            "begin boolean flag; string s; flag := false; if flag then s := 'HI' else s := 'LO'; print(s) end",
+            "test",
+        )
+        .expect("both conditional exits definitely initialize the string");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "print_str"
+                && matches!(instr.srcs.first(), Some(Operand::Var(slot)) if slot == "s")
+        }));
+    }
+
+    #[test]
+    fn al4_initialized_string_survives_missing_else_join() {
+        compile_source(
+            "begin boolean flag; string s; flag := false; s := 'OK'; if flag then s := 'HI'; print(s) end",
+            "test",
+        )
+        .expect("an initialized baseline remains initialized on both exits");
     }
 
     // ── E4-dyn payoff (E4d-AL): string procedures ────────────────────────────

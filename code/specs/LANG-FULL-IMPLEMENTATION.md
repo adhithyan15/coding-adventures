@@ -861,7 +861,8 @@ backend immediately) come before the enabler-dependent items.
   arithmetic and exact standard-function evaluator. Integer literals within
   binary64's exact range may widen into that evaluator; larger values fail
   closed. Conditional statements intersect equal outgoing snapshots, including
-  the unmodified path when `else` is absent. Labels, loops, gotos, calls, dynamic
+  the unmodified path when `else` is absent, and definite string initialization
+  intersects both branch exits. Labels, loops, gotos, calls, dynamic
   reassignment, differing branches, and captured globals invalidate the tracked value. General computed/runtime
   `f64` formatting remains a follow-up requiring a portable typed formatter ABI.
   Unicode-aware BEAM strings remain.
