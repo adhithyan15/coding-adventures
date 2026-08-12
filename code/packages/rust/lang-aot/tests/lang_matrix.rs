@@ -2123,6 +2123,16 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("OK"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — definite string initialization is joined across statement
+    // control flow. Both exits assign the same typed local slot, so the later
+    // runtime print is valid regardless of which branch executes.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean flag; string s; flag := false; if flag then s := 'HI' else s := 'LO'; print(s) end",
+        expect: Expect::Stdout("LO"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — literal-backed scalar string predicates. AL4 now lowers
     // comparisons over string literals and literal-backed scalar variables
     // through the shared E4 `str_eq` / `str_cmp` ops, then compares their
