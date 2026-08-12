@@ -1,0 +1,15 @@
+% ============================================================================
+% syllable-substitution.query.adj — worked recall over the syllable-
+% substitution library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "which syllable changed
+% between these two words?" (direct) or "which word pair changes at this
+% position?" (reverse) — it states no fact of its own — it only `import`s
+% the grounded table and asks binding queries.
+% ============================================================================
+
+import "syllable-substitution.adj"
+
+? syllable_substitution(suntan, sunset, $Position)    % expect second (direct: which syllable differs?)
+? syllable_substitution($Orig, $New, second)           % expect suntan, sunset (reverse: which pair changes at position 2?)
+? syllable_substitution(cat, hat, $Position)            % expect abstain -- this pair is not tabled
