@@ -414,7 +414,11 @@ impl<P: TransportPlatform, S: Send + 'static> StreamReactor<P, S> {
         let mut events = Vec::new();
         while !self.stop_flag.load(Ordering::SeqCst) {
             self.drain_mailbox()?;
-            self.platform.poll(Some(self.poll_timeout), &mut events)?;
+            match self.platform.poll(Some(self.poll_timeout), &mut events) {
+                Ok(()) => {}
+                Err(PlatformError::Interrupted) => continue,
+                Err(error) => return Err(error),
+            }
             for event in &events {
                 match event {
                     PlatformEvent::ListenerAcceptReady { listener }
@@ -479,7 +483,8 @@ impl<P: TransportPlatform, S: Send + 'static> StreamReactor<P, S> {
         stream: StreamId,
         peer_addr: SocketAddr,
     ) -> Result<(), PlatformError> {
-        self.platform.configure_stream(stream, self.stream_options)?;
+        self.platform
+            .configure_stream(stream, self.stream_options)?;
         self.platform
             .set_stream_interest(stream, StreamInterest::readable())?;
 
@@ -602,8 +607,7 @@ impl<P: TransportPlatform, S: Send + 'static> StreamReactor<P, S> {
                 state.read_paused = false;
                 return self.progress_reads_with_state(stream, state);
             }
-            StreamMailboxCommand::ResumeAllReads
-            | StreamMailboxCommand::AdoptConnection { .. } => {
+            StreamMailboxCommand::ResumeAllReads | StreamMailboxCommand::AdoptConnection { .. } => {
                 unreachable!("handled before dispatch")
             }
         }
@@ -1044,7 +1048,10 @@ mod tests {
         assert_eq!(ids.len(), 3, "every connection should be observed");
         for id in ids {
             assert_eq!(id & 0b11, 1, "shard index must occupy the low 2 bits: {id}");
-            assert!(id >> 2 >= 1, "the sequence (high bits) must start at 1: {id}");
+            assert!(
+                id >> 2 >= 1,
+                "the sequence (high bits) must start at 1: {id}"
+            );
         }
     }
 

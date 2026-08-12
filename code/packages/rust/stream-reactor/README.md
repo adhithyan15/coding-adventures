@@ -39,6 +39,7 @@ Phase one supports:
 - deferred-read replay so a handler can retain already-read bytes until the
   mailbox resumes reads
 - cooperative stop via a stop flag
+- interrupted-poll retry so native signals can complete cooperative shutdown
 - macOS/BSD convenience binding through `transport_platform::bsd::KqueueTransportPlatform`
 
 ## Development

@@ -14,3 +14,5 @@
 - Add optional bounded smart-home tool-grant declarations for exact Chief host
   principals, stable grant identities, issuance/expiry times, and explicit
   pending, active, or revoked lifecycle state.
+- Add an optional closed Home Assistant-compatible loopback listener with a
+  distinct endpoint and bounded instance name.
