@@ -1,0 +1,5 @@
+import "point-of-view.adj"
+
+? point_of_view(first_person, $D)                                              % expect the_reader_accesses_the_story_through_one_person (direct)
+? point_of_view($T, uses_the_pronoun_you)                                      % expect second_person (reverse)
+? point_of_view(third_person_omniscient, $D)                                   % expect abstain -- a real subtype of third person the same source defines, but not a fourth peer point of view

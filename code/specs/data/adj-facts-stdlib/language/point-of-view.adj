@@ -1,0 +1,64 @@
+% ============================================================================
+% point-of-view — the three named PERSPECTIVES a story can be told from and
+% what each actually is (adj-facts-stdlib, LANGUAGE).
+% ============================================================================
+% A story's point of view is a LITERARY DEVICE, not a grammar category — it
+% is the vantage point the narrator tells the story from, distinct from
+% `pronoun-type.adj` (a sibling library in this directory), which tables
+% grammatical pronoun CATEGORIES (personal/indefinite/interrogative), not
+% narrative perspective. Recall is a binding query:
+%
+%     ? point_of_view(first_person, $D)
+%       % the_reader_accesses_the_story_through_one_person
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground relation
+% `point_of_view(type, description)` carrying the source citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the
+% description WITH its source, on the CPU, with zero model calls, and
+% abstains on a point-of-view-related term that is not one of these three.
+% The query also runs BACKWARD — bind a description and recall the type it
+% names:
+%
+%     ? point_of_view($T, uses_the_pronoun_you)
+%       % second_person
+%
+% The three points of view, as a little truth table:
+%
+%     type            description                                          quote (verbatim)
+%     --------------  ---------------------------------------------------  ------------------------------------------------------------------------------
+%     first_person     the_reader_accesses_the_story_through_one_person     "In first-person point of view, the reader accesses the story through one person."
+%     second_person    uses_the_pronoun_you                                 "Second-person point of view uses the pronoun you."
+%     third_person     the_narrator_has_the_ability_to_know_everything      "In third-person point of view, the narrator has the ability to know everything."
+%
+% Provenance: quoted verbatim from Grammarly's "What Is Point of View in
+% Writing, and How Does It Work?" article. WebFetch-verified twice — the
+% second pass pulled the full opening paragraph for `first_person` and
+% `third_person` to confirm each quoted sentence is the article's own first,
+% complete, standalone defining sentence (the elaboration that follows each
+% one, e.g. "It's like reading the main character's diary," is a separate
+% sentence, not folded into the quoted definition). `trust consensus` —
+% Grammarly is a reputable secondary reference, the same tier the sibling
+% `pronoun-type.adj`/`sentence-type.adj`/`part-of-speech.adj` (the other
+% libraries in this directory) already use for their Grammarly citations.
+%
+% Honest abstention on `third_person_omniscient`: a real, well-documented
+% term the SAME article defines with its own clean sentence ("The narrator
+% speaks freely about everyone and everything.") — but the article itself
+% frames it as a SUBTYPE of third person (alongside third_person_limited and
+% third_person_objective), not a fourth peer point of view alongside these
+% three. So a recall on it ABSTAINS rather than inventing a peer-level row
+% for a sub-category. (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table point_of_view {
+    columns type, description
+
+    row (first_person, the_reader_accesses_the_story_through_one_person)
+    row (second_person, uses_the_pronoun_you)
+    row (third_person, the_narrator_has_the_ability_to_know_everything)
+
+    source "In first-person point of view, the reader accesses the story through one person."
+    locator "https://www.grammarly.com/blog/literary-devices/point-of-view/"
+    trust consensus
+}
