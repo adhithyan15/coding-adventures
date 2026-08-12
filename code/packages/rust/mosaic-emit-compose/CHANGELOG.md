@@ -5,6 +5,11 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Fixed
+
+- Preserve literal `HostInput` values and read-only state, and render its
+  placeholder through `BasicTextField`'s native decoration slot.
+
 ### Added
 
 - `Text` now lowers literal or slot-backed accessible names, heading roles,

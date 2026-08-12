@@ -1,0 +1,18 @@
+[workspace]
+
+[package]
+name = "mosaic-std-controls-smoke"
+version = "0.1.0"
+edition = "2021"
+description = "Acceptance harness for the Mosaic standard controls package"
+publish = false
+
+[dev-dependencies]
+mosaic-package-artifact-builder = { path = "../../rust/mosaic-package-artifact-builder" }
+serde_json = "1"
+tempfile = "3"
+toml = "0.8"
+
+[[test]]
+name = "package_compiles"
+path = "tests/package_compiles.rs"
