@@ -1,0 +1,64 @@
+% ============================================================================
+% comma-rule — three named comma rules and what each actually says to do
+% (adj-facts-stdlib, LANGUAGE).
+% ============================================================================
+% A comma is not an end-of-sentence mark like the period, question mark, or
+% exclamation point tabled in the sibling `end-punctuation-mark.adj` -- it
+% is a MID-sentence mark, and which rule applies depends on WHY it's there:
+% separating items in a list, joining two independent clauses in front of a
+% coordinating conjunction, or setting off the name of the person being
+% spoken to. Recall is a binding query:
+%
+%     ? comma_rule(comma_in_a_series, $D)
+%       % use_commas_to_separate_elements_in_a_list_of_more_than_two_elements
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `comma_rule(rule, description)` carrying the source citation, so
+% the lookup above is the ordinary SLD binding query — the engine returns
+% the description WITH its source, on the CPU, with zero model calls, and
+% abstains on a comma-related term that is not one of these three. The
+% query also runs BACKWARD — bind a description and recall the rule it
+% names:
+%
+%     ? comma_rule($R, set_off_the_name_with_commas_when_addressing_another_person_by_name)
+%       % comma_with_direct_address
+%
+% The three comma rules, as a little truth table:
+%
+%     rule                        description                                                                        quote (verbatim)
+%     ---------------------------  ---------------------------------------------------------------------------------  --------------------------------------------------------------------------------------------------
+%     comma_in_a_series             use_commas_to_separate_elements_in_a_list_of_more_than_two_elements                 "When you have a list that contains more than two elements, use commas to separate them."
+%     comma_before_but              use_a_comma_before_but_when_it_is_joining_two_independent_clauses                   "Use a comma before the coordinating conjunction but if it is joining two independent clauses."
+%     comma_with_direct_address     set_off_the_name_with_commas_when_addressing_another_person_by_name                 "When addressing another person by name, set off the name with commas."
+%
+% Provenance: quoted verbatim from Grammarly's "Rules for Using Commas,
+% With Examples" article. WebFetch-verified twice — the second pass pulled
+% the full paragraph under each of these three headings, confirming each
+% quoted sentence is the article's own first, complete, standalone rule
+% sentence, with worked examples following it (not folded into the quote).
+% `trust consensus` — Grammarly is a reputable secondary reference, the
+% same tier the sibling `end-punctuation-mark.adj`/`capitalization-rule.adj`
+% (the other libraries in this directory) already use for their Grammarly
+% citations.
+%
+% Honest abstention on `oxford_comma`: a real, well-known term the SAME
+% page discusses under its own heading, but its own rule sentence bundles
+% the placement rule together with a caveat about its optionality ("the
+% final comma ... is optional") rather than stating one clean single fact
+% like the three tabled here. So a recall on it ABSTAINS rather than
+% inventing a description the source's own sentence doesn't cleanly state.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table comma_rule {
+    columns rule, description
+
+    row (comma_in_a_series, use_commas_to_separate_elements_in_a_list_of_more_than_two_elements)
+    row (comma_before_but, use_a_comma_before_but_when_it_is_joining_two_independent_clauses)
+    row (comma_with_direct_address, set_off_the_name_with_commas_when_addressing_another_person_by_name)
+
+    source "When you have a list that contains more than two elements, use commas to separate them."
+    locator "https://www.grammarly.com/blog/punctuation-capitalization/comma/"
+    trust consensus
+}
