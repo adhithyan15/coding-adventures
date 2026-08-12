@@ -35,6 +35,7 @@ vault-pm [--vault NAME] search QUERY
 vault-pm [--vault NAME] history list ITEM
 vault-pm [--vault NAME] history restore ITEM REVISION
 vault-pm [--vault NAME] conflict list ITEM
+vault-pm [--vault NAME] conflict reveal ITEM REVISION FIELD
 vault-pm [--vault NAME] conflict choose ITEM REVISION
 ```
 
@@ -47,9 +48,11 @@ add/edit/list/show with ordered multi-URL fields and optional hidden login
 notes, searches redacted URL metadata without echoing the query, explicitly
 confirms audited current-password and login-notes reveals
 directly on `/dev/tty` while captured process stdout remains empty, injects decoy
-bytes through stdin, verify redacted canonical history across another fresh
-process, delete to a causal tombstone, restore an exact live ancestor into a
-new revision, activate the signed audit epoch, force an invalid edit prompt in
+bytes through stdin, verifies redacted canonical history across another fresh
+process, proves candidate-reveal denial and unconflicted failure advance the
+audit chain without entering stdout or disclosing a secret, deletes to a causal
+tombstone, restores an exact live ancestor into a new revision, activates the
+signed audit epoch, forces an invalid edit prompt in
 a later process, verify that failure event from another process, inspect the
 same verified history in newest-first order, select the failed edit by its
 canonical trace in another process, verify both history accesses became

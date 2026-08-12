@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Exposed audited `conflict reveal ITEM REVISION FIELD` and extended the
+  restart drill through terminal-confirmation denial plus an unconflicted
+  candidate failure, empty stdout, secret exclusion, and durable audit-chain
+  advancement.
 - Exposed audited `search QUERY` and extended the primary restart drill through
   a URL metadata match, non-echoed query, redacted result row, audit-chain
   advancement, and closed audit-field verification.

@@ -2,6 +2,19 @@
 
 All notable changes to this package are documented here.
 
+## [0.54.0] - 2026-08-12
+
+### Added
+
+- Add an audited item-bound secret disclosure boundary that accepts only an
+  exact member of the authenticated current conflict set.
+
+### Security
+
+- Publish denial without candidate traversal, reject unconflicted and
+  historical noncandidate revisions, and bind the exact revision only after
+  current membership is authenticated.
+
 ## [0.53.0] - 2026-08-11
 
 ### Added

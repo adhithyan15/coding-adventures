@@ -1563,8 +1563,11 @@ changelog, focused build, and downstream validation.
            validation, publish-before-error failed attempts, atomic successful
            mutation events, immutable losing history, and command-scoped named
            target selection, using `VLT-PM24-cli-conflict-resolution.md`.
-9b-3b-2b. remaining candidate-specific secret-field reveal plus user-authored
-           merged-document conflict resolution.
+9b-3b-2b-1. completed audit-required candidate-specific secret-field reveal,
+             requiring exact current-conflict membership, publish-before-release
+             denied/failed/succeeded outcomes, and direct controlling-terminal
+             delivery, using `VLT-PM32-cli-conflict-candidate-reveal.md`.
+9b-3b-2b-2. remaining user-authored merged-document conflict resolution.
 9b-4a. completed authenticated encrypted portable export with a separately
         confirmed hidden passphrase, pre-authentication audit reservation,
         publish-before-release ordering, and an explicit create-new durable
@@ -1671,7 +1674,11 @@ The following are not allowed to block Phase 1A, but each needs a later spec:
   `VLT-PM25-cli-secret-reveal.md`, and
   `VLT-PM26-cli-card-create.md`, and
   `VLT-PM27-cli-api-key-create.md`, and
-  `VLT-PM28-cli-database-credential-create.md` —
+  `VLT-PM28-cli-database-credential-create.md`, and
+  `VLT-PM29-cli-totp-create.md`, and
+  `VLT-PM30-cli-rich-login-edit.md`, and
+  `VLT-PM31-cli-audited-search.md`, and
+  `VLT-PM32-cli-conflict-candidate-reveal.md` —
   product repository wire,
   object-store, domain, verified-DAG, application, local-host, configuration,
   terminal/entropy, executable composition, authenticated verification, and
@@ -1684,7 +1691,9 @@ The following are not allowed to block Phase 1A, but each needs a later spec:
   import-plus-independent-verification composition, plus audited redacted
   current-conflict selection and choose-existing resolution, plus audited
   interactive current-secret terminal delivery, plus audited payment-card and
-  API-key and static database-credential creation with redacted observation.
+  API-key and static database-credential creation with redacted observation,
+  plus exact audited conflict-candidate secret reveal using
+  `VLT-PM32-cli-conflict-candidate-reveal.md`.
 - `VLT12-vault-revision-history.md`, `VLT13-vault-encrypted-search.md`,
   `VLT14-vault-attachments.md`, `VLT15-vault-import-export.md`.
 - `STR01-storage-fs-backend.md` and `storage-core`.

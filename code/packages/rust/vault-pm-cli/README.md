@@ -12,8 +12,10 @@ replacement. The
 newest-first `history list ITEM` projection exposes canonical revision
 selectors plus safe causal metadata without opening historical secrets. The
 same selectors now support reversible `item delete ITEM` and `history restore
-ITEM REVISION`. `conflict list ITEM` and `conflict choose ITEM REVISION` expose
-redacted current candidates and explicit audited choose-existing resolution.
+ITEM REVISION`. `conflict list ITEM`,
+`conflict reveal ITEM REVISION FIELD`, and `conflict choose ITEM REVISION`
+expose redacted current candidates, explicit audited field inspection, and
+choose-existing resolution.
 `item reveal ITEM FIELD` adds explicitly confirmed, publish-before-release
 interactive access to one schema-specific current secret without returning the
 revision capability or complete document to CLI orchestration.
@@ -188,6 +190,15 @@ reserves mutation and failure-audit entropy before unlock, validates both
 selectors inside the application, and publishes either a failed attempt or an
 atomic all-current-parent resolution event before its closed outcome. It emits
 only the resolved item selector and never deletes losing immutable history.
+
+`conflict reveal ITEM REVISION FIELD` requires the named revision to belong to
+the named item's current conflict set before it may disclose one closed
+schema-specific field. It reuses the exact-`yes` controlling-terminal ceremony
+and direct escaped delivery from `item reveal`: refusal publishes `Denied`
+without candidate traversal; unconflicted, missing, noncandidate, tombstone,
+and wrong-field attempts publish `Failed`; success binds item and exact
+revision before the secret is released. No outcome selects a candidate,
+changes the conflict, enters ordinary process output, or persists plaintext.
 
 `item reveal ITEM FIELD` requires an active audit epoch and accepts only closed
 schema-specific selectors. It reserves time and audit entropy before
