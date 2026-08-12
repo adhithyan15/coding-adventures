@@ -98,6 +98,13 @@ import { loadLanguages, saveLanguages } from "./languagestore.ts";
 import { lessonSections } from "./lessonbody.ts";
 import { generatedFigureUrl } from "./figures.ts";
 import { bookHashStatus, whenBookHashesReady } from "./bookhashes.ts";
+// Per-atom mastery (HL10 §10.1). The scheduler still runs on lessons; this
+// records what the learner actually holds, atom by atom, so a later slice can
+// schedule from it. Recording first and scheduling second is deliberate: the
+// record has to exist and be trustworthy before anything is allowed to depend
+// on it.
+import { practiseAll } from "./atommastery.ts";
+import { browserStorage as masteryStorage, loadMastery, saveMastery } from "./masterystore.ts";
 import { parseFont, boundsOf, type Font } from "./truetype.ts";
 import {
   ductusFilmstrip,
@@ -144,6 +151,24 @@ const REVIEW_STORAGE = browserStorage();
 // the id list comes from the lesson-source map, which is deliberately lazy so
 // its ~27 kB of paths stay out of the eager chunk (HL-C110).
 let BUNDLED_LESSON_IDS: Set<string> | null = null;
+
+// The learner's per-atom record, loaded once and written back on every answer.
+// Kept beside the other stores rather than inside them: this is a third,
+// genuinely different thing (see masterystore.ts).
+let MASTERY = loadMastery(masteryStorage());
+
+/**
+ * Credit one answer against every atom it assessed.
+ *
+ * `assesses` is authored per activity, so this is the exact set the learner was
+ * just tested on — not the whole lesson, which would credit atoms they never
+ * had to produce.
+ */
+function recordAtomAnswer(atoms: readonly string[] | undefined, correct: boolean): void {
+  if (!atoms || atoms.length === 0) return;
+  MASTERY = practiseAll(MASTERY, atoms, correct, Date.now());
+  saveMastery(masteryStorage(), MASTERY);
+}
 let LESSONS: Lesson[] = [];
 let LESSON_IDS: string[] = [];
 const AVAILABLE_LANGUAGE_IDS = LANGUAGE_CHAIN.filter((language) =>
@@ -1233,9 +1258,11 @@ function renderFocusedCheck(
     form.append(label, budget, input, submit);
     form.onsubmit = (event) => {
       event.preventDefault();
+      const correct = activityAnswerIsCorrect(input.value, activity);
+      recordAtomAnswer(activity.assesses, correct);
       focusedAttempt = {
         lessonId: lesson.id,
-        state: activityAnswerIsCorrect(input.value, activity) ? "correct" : "wrong",
+        state: correct ? "correct" : "wrong",
       };
       learnNotice = null;
       render();
@@ -1256,9 +1283,13 @@ function renderFocusedCheck(
     form.append(label, input, submit);
     form.onsubmit = (event) => {
       event.preventDefault();
+      const correct = meaningAnswerIsCorrect(input.value, lesson.gloss);
+      // A meaning check has no authored `assesses` list, so it credits what the
+      // lesson exists to teach: its own introduced atoms.
+      recordAtomAnswer(lesson.introducesAtoms, correct);
       focusedAttempt = {
         lessonId: lesson.id,
-        state: meaningAnswerIsCorrect(input.value, lesson.gloss) ? "correct" : "wrong",
+        state: correct ? "correct" : "wrong",
       };
       learnNotice = null;
       render();

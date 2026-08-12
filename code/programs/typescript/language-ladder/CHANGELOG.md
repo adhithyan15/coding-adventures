@@ -18,6 +18,20 @@
   turn, two pen lifts, and the upper-to-lower order.
 - Reduce Chinese's remaining verified-ductus inventory to 16 entries.
 
+### Added — per-atom mastery, recorded (HL-C87, HL10 §10.1)
+
+- Add `atommastery.ts`: a pure engine for what this learner holds atom by atom.
+  Strength moves asymptotically on a hit and multiplicatively on a miss, decays
+  with a 10-day half-life, and schedules on a cubic interval.
+- Add `masterystore.ts`, persisting it under its own key in the `reviewstore.ts`
+  style — untrusted blob, every field clamped, bad rows dropped.
+- Carry `introducesAtoms` on the browser `Lesson`, so a meaning check can credit
+  what the lesson exists to teach.
+- Credit both answer paths: an authored activity credits its own `assesses`
+  list; a meaning check credits the lesson's introduced atoms.
+- Nothing schedules from this yet. The record is deliberately made trustworthy
+  before anything is allowed to depend on it.
+
 ### Added — cited Chinese 讠 ductus (HL-C09CF)
 
 - Render **讠** in four source-aligned frames: draw the dot, then restart for a

@@ -23,7 +23,7 @@ function L(language: string, concept: string, roots: string[], chapter = 1): Les
     script: language,
     etymologyHook: "",
     body: "",
-    activities: [],
+    activities: [], introducesAtoms: [],
     estMinutes: 5,
   };
 }
