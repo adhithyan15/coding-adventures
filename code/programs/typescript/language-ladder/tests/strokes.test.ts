@@ -36,6 +36,7 @@ const CHINESE_ROOF_RADICAL = DUCTUS[ductusKey("chinese", "宀")];
 const CHINESE_YOU = DUCTUS[ductusKey("chinese", "你")];
 const CHINESE_GOOD = DUCTUS[ductusKey("chinese", "好")];
 const CHINESE_I = DUCTUS[ductusKey("chinese", "我")];
+const CHINESE_BE = DUCTUS[ductusKey("chinese", "是")];
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
@@ -470,6 +471,17 @@ describe("handwriting ductus", () => {
     const slashHook = CHINESE_I.strokes[4].segments[1].path;
     expect(slash.at(-1)).toEqual(slashHook[0]);
     expect(slashHook[0].y).toBeLessThan(slashHook.at(-1)!.y);
+  });
+
+  it("Chinese 是 closes 日 before its five-stroke lower body", () => {
+    expect(CHINESE_BE.script).toBe("chinese");
+    expect(penLifts(CHINESE_BE)).toBe(8);
+    expect(CHINESE_BE.strokes).toHaveLength(9);
+    expect(CHINESE_BE.strokes.map((stroke) => stroke.segments.length)).toEqual([1, 2, 1, 1, 1, 1, 1, 1, 1]);
+    const top = CHINESE_BE.strokes[1].segments[0].path;
+    const right = CHINESE_BE.strokes[1].segments[1].path;
+    expect(top.at(-1)).toEqual(right[0]);
+    expect(right[0].y).toBeGreaterThan(right.at(-1)!.y);
   });
 
   it("Hebrew א uses two crossed pen-down runs with one lift", () => {
@@ -1419,6 +1431,7 @@ describe("handwriting ductus", () => {
       "_fonts/NotoSansSC-Subset.ttf",
     );
     expect(verifiedLetterFont("我", CHINESE_I.source.url)).toBe("_fonts/NotoSansSC-Subset.ttf");
+    expect(verifiedLetterFont("是", CHINESE_BE.source.url)).toBe("_fonts/NotoSansSC-Subset.ttf");
     expect(verifiedLetterFont("א", HEBREW_ALEF.source.url)).toBe(
       "_fonts/NotoSansHebrew-Static.ttf",
     );
@@ -1675,6 +1688,17 @@ describe("handwriting ductus", () => {
     expect(src.citation).toMatch(/Hanzi Writer Data 我\.json.*medians 1–7.*snapshot 68d10a4/i);
     expect(src.variation).toMatch(
       /seven ordered strokes.*upper-left falling stroke.*upper horizontal.*hooked vertical.*lower rising stroke.*long curved slash.*hooks upward.*without lifting.*separate rising slash up-left.*final upper-right dot.*People's Republic of China stroke order.*Noto Sans SC.*both joined hooks.*six lifts/i,
+    );
+  });
+
+  it("Chinese 是 traces 日-first order to the pinned PRC-order dataset", () => {
+    const src = CHINESE_BE.source;
+    expect(src.url).toBe(
+      "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E6%98%AF.json",
+    );
+    expect(src.citation).toMatch(/Hanzi Writer Data 是\.json.*medians 1–9.*snapshot 68d10a4/i);
+    expect(src.variation).toMatch(
+      /nine ordered strokes.*Medians 1–4.*日 first.*left vertical.*joined top and right sides.*inner horizontal.*closing bottom horizontal.*Medians 5–9.*wide horizontal.*central vertical.*short lower-right horizontal.*lower-left falling stroke.*long finishing stroke down-right.*People's Republic of China stroke order.*Noto Sans SC.*joined top-right corner.*eight intervening lifts/i,
     );
   });
 
