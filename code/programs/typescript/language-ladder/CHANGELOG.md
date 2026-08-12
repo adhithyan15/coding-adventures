@@ -7,6 +7,11 @@
 - Render **我** in nine source-aligned movements across seven strokes.
 - Preserve the hooked vertical, six lifts, and the Noto Sans SC outline fit.
 
+### Changed — Spanish runs 1..173 (HL-C107)
+
+- Re-pin the Spanish book-hash table for the pronoun-evidence chapter inserted
+  at 122; chapters after it shift by one.
+
 ### Added — cited Chinese 好 ductus (HL-C09CJ)
 
 - Render **好** in nine source-aligned frames: all three 女 strokes first,

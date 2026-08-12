@@ -2,25 +2,32 @@
   "version": 1,
   "language": "spanish",
   "chapter": 157,
-  "title": "Synthesis --- The Gift and the Motive",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:0998566bb0d704c1",
+  "title": "Review --- One Arrow",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:39821c130679f83e",
   "lessons": [
     {
-      "id": "ES-C51-sintesis-regalo-motivo",
-      "sequence": 2085,
-      "title": "Synthesis — the gift and the motive",
-      "headword": "(synthesis)",
-      "romanization": "(synthesis)",
-      "gloss": "synthesis — a short exchange in which the two-letter difference changes what one person means to another",
+      "id": "ES-C51-repaso-flecha",
+      "sequence": 2084,
+      "title": "Review — one arrow",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "review — one arrow, two directions, and the phrases you already owned lined up under it",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "sight-cue"
       ],
-      "sourceHash": "fnv1a64:b390090a285ba074",
-      "notice": null,
+      "sourceHash": "fnv1a64:dfbcfa9ee708db61",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -35,57 +42,64 @@
             },
             {
               "kind": "speech",
-              "text": "Para ti or por ti — one of them is a present and one of them is a reason. Which is which?"
+              "text": "Nothing new. One question before the table: which way does each preposition point?"
             }
           ]
         },
         {
           "index": 1,
-          "type": "input",
-          "title": "The exchange",
+          "type": "notice",
+          "title": "What you've built",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read this twice, changing only one word."
+              "kind": "table",
+              "headers": [
+                "",
+                "para — toward",
+                "por — through, because"
+              ],
+              "columns": 3,
+              "rowCount": 7,
+              "utterances": [
+                "built from. para — toward: ad, \"toward\". por — through, because: per, \"through\".",
+                "the arrow. para — toward: points at it. por — through, because: comes from it.",
+                "a person. para — toward: para ti — you get it. por — through, because: por ti — you caused it.",
+                "a time. para — toward: para mañana — by then. por — through, because: —.",
+                "thanks. para — toward: —. por — through, because: gracias por — for what caused it.",
+                "asking. para — toward: —. por — through, because: por favor — through a favour.",
+                "asking why. para — toward: —. por — through, because: ¿por qué? — through what?"
+              ]
             },
             {
               "kind": "speech",
-              "text": "— Hago la comida para ti. — Gracias."
+              "text": "Look at the right-hand column. Four of those six por entries are phrases you have owned since the opening chapters. This review is not mostly teaching you new Spanish — it is re-filing old Spanish under a heading that explains it."
             },
             {
               "kind": "speech",
-              "text": "— Hago la comida por ti. — …gracias."
-            },
-            {
-              "kind": "speech",
-              "text": "The first is somebody cooking you dinner. The second is somebody telling you they are cooking because of you — which, depending on the day, is an act of love or a small complaint."
-            },
-            {
-              "kind": "speech",
-              "text": "Two letters. Nothing else in the sentence moved."
+              "text": "That happens more than a course usually admits. A great deal of what looks like new grammar late in a book is a name for something you have been doing correctly and blindly for a long time."
             }
           ]
         },
         {
           "index": 2,
           "type": "grammar",
-          "title": "Grammar Lens: a preposition carrying the feeling",
+          "title": "Grammar Lens: what to do when you are unsure",
           "segments": [
             {
               "kind": "speech",
-              "text": "This is the first place in the book where the smallest word in the sentence carries its emotional content."
+              "text": "You will still hesitate sometimes. Two things help, in this order:"
             },
             {
               "kind": "speech",
-              "text": "Nouns and verbs have been doing the meaning until now. Here the noun is the same, the verb is the same, the person is the same — and the sentence changes completely on a preposition. That is worth meeting deliberately, because English speakers arrive expecting the little words to be plumbing."
+              "text": "Ask what the sentence is about. A destination, a deadline, a recipient, a purpose — para. A cause, a route, a swap, a duration — por."
             },
             {
               "kind": "speech",
-              "text": "They are not plumbing here. Por and para are the difference between I made this for you and I made this because of you, and no amount of context repairs the wrong one: your listener will simply hear the thing you did not mean."
+              "text": "If it is genuinely both, it is genuinely both. Lo hago para ti and lo hago por ti are both good Spanish; you are not choosing right from wrong, you are choosing which thing to say."
             },
             {
               "kind": "speech",
-              "text": "Which is also the reassuring part. If you pick the wrong one, you have not produced nonsense or bad grammar — you have said something true about a different situation. Somebody will look faintly puzzled, and you will notice, and that is how this stops being difficult."
+              "text": "That second point matters more than it looks. Most por/para anxiety comes from believing every sentence has one correct answer waiting to be found. Plenty of sentences take either, and the choice is the meaning."
             }
           ]
         },
@@ -103,11 +117,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "both versions of the dinner sentence, and hear the second one land differently",
+              "instruction": "\"para ti / por ti\", \"para mañana\", \"gracias por la comida\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: both versions of the dinner sentence, and hear the second one land differently]"
+              "source": "[YOU SAY: \"para ti / por ti\", \"para mañana\", \"gracias por la comida\"]"
             },
             {
               "kind": "repeat",
@@ -117,80 +131,60 @@
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C51-sintesis-regalo-motivo-gift",
-              "prompt": "Tell somebody you are making the meal as a gift to them.",
-              "assesses": [
-                "ES-GRAMMAR-POR-PARA-CONTRAST",
-                "ES-LEX-PARA",
-                "ES-LEX-COMIDA",
-                "ES-GRAMMAR-HACER-PRESENT-SINGULAR"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "hago la comida para ti",
-                "la hago para ti"
-              ],
-              "feedback": {
-                "correct": "They receive it.",
-                "incorrect": "Hago la comida para ti."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C51-sintesis-regalo-motivo-cause",
-              "prompt": "Now say it meaning they are the reason you are doing it at all.",
-              "assesses": [
-                "ES-GRAMMAR-POR-PARA-CONTRAST",
-                "ES-LEX-POR"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "hago la comida por ti",
-                "la hago por ti"
-              ],
-              "feedback": {
-                "correct": "Love or complaint, depending on the day.",
-                "incorrect": "Hago la comida por ti."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C51-sintesis-regalo-motivo-thanks",
-              "prompt": "Thank somebody for the meal.",
-              "assesses": [
-                "ES-LEX-GRACIAS",
-                "ES-LEX-POR",
-                "ES-LEX-COMIDA"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "gracias por la comida",
-                "gracias por la comida."
-              ],
-              "feedback": {
-                "correct": "Por — the cause of your thanks.",
-                "incorrect": "Gracias por la comida."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C51-sintesis-regalo-motivo-wrong",
-              "prompt": "You pick the wrong one of the two. What have you produced?",
+              "id": "ES-C51-repaso-flecha-two",
+              "prompt": "Give the two directions in one line.",
               "assesses": [
                 "ES-GRAMMAR-POR-PARA-CONTRAST"
               ],
-              "responseSeconds": 14,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "a true sentence about a different situation",
-                "something correct that means something else",
-                "not nonsense, just the wrong meaning"
+                "para points at it, por comes from it",
+                "para toward, por through or because"
               ],
               "feedback": {
-                "correct": "Which is why this stops being difficult once you are talking to people.",
-                "incorrect": "Not bad grammar — a perfectly good sentence about something you did not mean."
+                "correct": "One arrow, two directions.",
+                "incorrect": "Para points at the thing; por comes from it."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C51-repaso-flecha-old",
+              "prompt": "Name three phrases you already knew that turn out to contain por.",
+              "assesses": [
+                "ES-LEX-POR-FAVOR",
+                "ES-LEX-PORQUE-03",
+                "ES-LEX-GRACIAS"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "por favor, por que, gracias por",
+                "por favor, porque, gracias por"
+              ],
+              "feedback": {
+                "correct": "Old Spanish, newly explained.",
+                "incorrect": "por favor, ¿por qué?, porque, gracias por — any three."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C51-repaso-flecha-both",
+              "prompt": "A sentence takes either por or para. What should you conclude?",
+              "assesses": [
+                "ES-GRAMMAR-POR-PARA-CONTRAST",
+                "ES-LEX-PARA",
+                "ES-LEX-POR"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "that it means two different things",
+                "both are correct and the choice is the meaning",
+                "neither is wrong"
+              ],
+              "feedback": {
+                "correct": "Not right versus wrong — which thing you are saying.",
+                "incorrect": "That both are good Spanish and the choice is the meaning."
               }
             }
           ]
@@ -208,7 +202,7 @@
             },
             {
               "kind": "speech",
-              "text": "Para ti — a gift or a reason? (A gift.) Por ti? (A reason.) And what happens if you choose wrong? (You say something true about a different situation — and somebody will look puzzled, which is how you learn it.)"
+              "text": "Para — which way? (At it.) Por — which way? (From it.) And when a sentence takes either? (Both are right — the choice is the meaning.) Next: the two of them in a conversation, where the choice does real work."
             }
           ]
         }

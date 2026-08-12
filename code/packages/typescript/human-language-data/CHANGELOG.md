@@ -10,6 +10,16 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
 - Add a Noto Sans SC fit preserving the hooked vertical and long curved slash.
 - Reduce HL-C09 debt to 143 entries; Chinese has 12 outstanding.
 
+### Added - the pronoun as evidence of a hidden gender (HL-C107)
+
+- Add chapter 122, immediately after `el agua`: a third proof that the word is
+  feminine, after the adjective and the plural, and the cheapest of the three.
+- `La bebo`, not `lo bebo` — nothing sits in front of a pronoun, so no vowels
+  collide and it reports the gender straight.
+- Close on the general test rather than the single word: when an article looks
+  suspicious, listen for `lo` or `la`.
+- Spanish reaches 173 chapters and 319 lessons.
+
 ### Added - source-verified Chinese 好 (HL-C09CJ)
 
 - Verify 好 from its pinned Hanzi Writer Data record as six ordered runs: all

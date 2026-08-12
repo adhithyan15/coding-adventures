@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 165,
-  "title": "Lo Que --- What, Out of Two Old Words",
+  "title": "El Libro Que Compre --- The Word You Cannot Leave Out",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:8daabd666ede9b2d",
+  "sourceHash": "fnv1a64:1cfbd54d15df1f99",
   "lessons": [
     {
-      "id": "ES-C53-lo-que",
-      "sequence": 2093,
-      "title": "lo que — \"what,\" out of two old words",
-      "headword": "lo que",
-      "romanization": "lo que",
-      "gloss": "\"what\" — two words you already own, put together to name a thing you cannot name",
+      "id": "ES-C53-que-no-se-cae",
+      "sequence": 2092,
+      "title": "el libro que compré — the word you cannot leave out",
+      "headword": "el libro que compré",
+      "romanization": "el libro que compré",
+      "gloss": "the que you can never leave out — English drops its \"that\" and Spanish never does, and this is the error that outlives every other",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:09e3f697ef23e533",
+      "sourceHash": "fnv1a64:83ac361a06297cb8",
       "notice": null,
       "blocks": [
         {
@@ -35,47 +35,66 @@
             },
             {
               "kind": "speech",
-              "text": "You have lo. You have que. This chapter puts them next to each other and adds nothing."
+              "text": "Say this English sentence out loud: \"the book I bought.\" Notice that you did not say that. Now try to translate it."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: a noun-shaped hole",
+          "title": "Grammar Lens: English drops it, Spanish never does",
           "segments": [
             {
               "kind": "speech",
-              "text": "lo que — what, in the sense of the thing that."
+              "text": "el libro que compré — the book I bought. la casa que tengo — the house I have."
             },
             {
               "kind": "speech",
-              "text": "Lo que digo — what I say. (= the thing that I say) Lo que compro — what I buy."
+              "text": "English lets you delete the joint. The book that I bought and the book I bought are both fine, and in speech you almost always drop it."
             },
             {
               "kind": "speech",
-              "text": "Every relative clause so far has hung off a noun: el libro que compro. But sometimes there is no noun, because you do not know or do not care what the thing is. Lo stands in for it — a placeholder with no gender and nothing behind it — and que does its usual job of joining."
+              "text": "Spanish cannot. There is no version of these without que. Leaving it out does not sound casual or fast — it sounds like a sentence that broke."
             },
             {
               "kind": "speech",
-              "text": "So lo que is a noun-shaped hole with a sentence attached. That is why it translates as English what, which is doing exactly the same thing: what I say is the thing that I say with the word thing taken out."
+              "text": "This is worth a chapter of its own because of what it does to a learner. You will build the sentence in English first, silently, with the that already missing — and then translate the version you thought of. The gap is invisible precisely because your own language put it there."
             },
             {
               "kind": "speech",
-              "text": "Now compare it to the lo you already know:"
+              "text": "So the habit to build is: whenever an English noun is followed straight by a new subject and verb, a que belongs in the Spanish."
             },
             {
               "kind": "speech",
-              "text": "Lo digo. — I say it. (a specific thing, already named) Lo que digo — what I say. (no specific thing at all)."
+              "text": "the book I bought becomes el libro que compré."
             },
             {
               "kind": "speech",
-              "text": "Same word. In the first it points at something known; in the second it points at a gap the following clause will fill."
+              "text": "the house we have becomes la casa que tenemos."
+            },
+            {
+              "kind": "speech",
+              "text": "the meal she makes becomes la comida que hace."
             }
           ]
         },
         {
           "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "English can afford to drop it because its word order is rigid: the book I bought can only be read one way."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish word order is looser — subjects vanish under pro-drop, objects move in front of verbs. Where the pieces can sit in several places, a deletable joint would make sentences ambiguous. So it is never deleted. Not arbitrary strictness: the price of the freedom Spanish gives you elsewhere."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -88,83 +107,101 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"lo digo\" then \"lo que digo\" — pointing at a thing, then at a gap",
+              "instruction": "\"the book I bought\" then \"el libro que compré\" — hear the extra word",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"lo digo\" then \"lo que digo\" — pointing at a thing, then at a gap]"
+              "source": "[YOU SAY: \"the book I bought\" then \"el libro que compré\" — hear the extra word]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"lo que compro\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"lo que compro\"]"
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "Until the missing English that stops being invisible."
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C53-lo-que-say",
-              "prompt": "Say what I say, meaning the thing that I say.",
+              "id": "ES-C53-que-no-se-cae-book",
+              "prompt": "Say the book I bought.",
               "assesses": [
-                "ES-GRAMMAR-LO-QUE",
-                "ES-LEX-DECIR",
-                "ES-GRAMMAR-DECIR-PRESENT-SINGULAR"
+                "ES-GRAMMAR-RELATIVE-QUE-OBLIGATORY",
+                "ES-LEX-LIBRO",
+                "ES-GRAMMAR-AR-PRETERITE-SINGULAR"
               ],
-              "responseSeconds": 8,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "lo que digo",
-                "lo que yo digo"
+                "el libro que compre",
+                "el libro que compré"
               ],
               "feedback": {
-                "correct": "A noun-shaped hole with a sentence attached.",
-                "incorrect": "Lo que digo."
+                "correct": "The que English left out.",
+                "incorrect": "El libro que compre — the que is not optional."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C53-lo-que-contrast",
-              "prompt": "What is the difference between lo digo and lo que digo?",
+              "id": "ES-C53-que-no-se-cae-house",
+              "prompt": "Say the house I have.",
               "assesses": [
-                "ES-GRAMMAR-DIRECT-OBJECT-LO",
-                "ES-GRAMMAR-LO-QUE"
+                "ES-GRAMMAR-RELATIVE-QUE-OBLIGATORY",
+                "ES-LEX-CASA",
+                "ES-GRAMMAR-TENER-PRESENT-SINGULAR"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "la casa que tengo",
+                "la casa que yo tengo"
+              ],
+              "feedback": {
+                "correct": "La casa que tengo.",
+                "incorrect": "La casa que tengo."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C53-que-no-se-cae-habit",
+              "prompt": "What English pattern always means a que is needed in Spanish?",
+              "assesses": [
+                "ES-GRAMMAR-RELATIVE-QUE-OBLIGATORY"
               ],
               "responseSeconds": 14,
               "acceptedResponses": [
-                "lo digo points at a known thing, lo que digo points at no thing",
-                "one is i say it, the other is what i say"
+                "a noun followed straight by a new subject and verb",
+                "a noun then a subject and verb with no that"
               ],
               "feedback": {
-                "correct": "Same word, pointing at something known or at a gap.",
-                "incorrect": "Lo digo = I say it, about something already named. Lo que digo = what I say, with no specific thing."
+                "correct": "That is the invisible gap, and now it is visible.",
+                "incorrect": "A noun followed directly by a new subject and verb: the book I bought."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C53-lo-que-new",
-              "prompt": "How many new words did this chapter introduce?",
+              "id": "ES-C53-que-no-se-cae-why",
+              "prompt": "Why can English afford to drop it when Spanish cannot?",
               "assesses": [
-                "ES-GRAMMAR-LO-QUE"
+                "ES-GRAMMAR-RELATIVE-QUE-OBLIGATORY"
               ],
-              "responseSeconds": 8,
+              "responseSeconds": 14,
               "acceptedResponses": [
-                "none",
-                "zero",
-                "0"
+                "english word order is rigid, spanish is looser",
+                "spanish moves its pieces around, so it needs the joint"
               ],
               "feedback": {
-                "correct": "Two old words, side by side.",
-                "incorrect": "None. Lo and que were both already yours."
+                "correct": "The price of the freedom Spanish gives you elsewhere.",
+                "incorrect": "English word order is rigid; Spanish moves subjects and objects around, so a deletable joint would be ambiguous."
               }
             }
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -176,7 +213,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"what I buy.\" (Lo que compro.) What is lo doing there? (Standing in for a thing that is never named.) How many new words was that? (None.) Next: all of it in one place."
+              "text": "\"The house I have\"? (La casa que tengo.) Can que ever be left out? (No — never.) And why not? (Because Spanish moves its pieces around, so the joint has to stay.)"
             }
           ]
         }

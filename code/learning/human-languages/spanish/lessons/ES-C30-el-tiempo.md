@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C30-el-tiempo
 spine_node: SPINE-TIME-OF-DAY
 sequence: 1670
-chapter: 125
+chapter: 126
 type: word
 headword: el tiempo
 gloss: the one noun that covers both "time" and "weather" — because Latin tempus already did

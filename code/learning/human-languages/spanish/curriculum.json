@@ -1445,6 +1445,18 @@
       "after": []
     },
     {
+      "id": "ES-PATH-024-PRONOUN-EVIDENCE",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "ES-C55-la-bebo"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-024-PRONOUN-EVIDENCE"
+      ],
+      "after": []
+    },
+    {
       "id": "ES-PATH-025",
       "spine_node": "SPINE-TIME-OF-DAY",
       "lessons": [
@@ -1904,7 +1916,8 @@
       "segments": [
         "ES-PATH-013",
         "ES-PATH-018",
-        "ES-PATH-024"
+        "ES-PATH-024",
+        "ES-PATH-024-PRONOUN-EVIDENCE"
       ],
       "omits": [],
       "relocates": {}
@@ -4149,6 +4162,17 @@
       "prerequisites": [],
       "lessons": [
         "ES-C54-sintesis-lo-que-hay"
+      ]
+    },
+    {
+      "id": "ES-EXT-024-PRONOUN-EVIDENCE",
+      "stage": "A2",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C55-la-bebo"
       ]
     }
   ]

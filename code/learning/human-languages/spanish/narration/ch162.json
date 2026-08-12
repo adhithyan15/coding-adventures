@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 162,
-  "title": "Synthesis --- Reading the Window",
+  "title": "Review --- The Three Se's",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:295cf3ec0e950f4d",
+  "sourceHash": "fnv1a64:8a17f27ea13b4c9b",
   "lessons": [
     {
-      "id": "ES-C52-sintesis-el-letrero",
-      "sequence": 2090,
-      "title": "Synthesis — reading the window",
-      "headword": "(synthesis)",
-      "romanization": "(synthesis)",
-      "gloss": "synthesis — reading a shop window, which is where this grammar actually lives, and asking your way past the words you do not have",
+      "id": "ES-C52-tres-ses",
+      "sequence": 2089,
+      "title": "Review — the three se's",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "review — the three se's, two of which are one word and one of which is an impostor",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:763301449fcacb8d",
+      "sourceHash": "fnv1a64:b665f0d8bf34441e",
       "notice": null,
       "blocks": [
         {
@@ -35,57 +35,76 @@
             },
             {
               "kind": "speech",
-              "text": "Almost nobody will say se habla español to you. It will be written, on a window, and you will be walking past it."
+              "text": "Nothing new. Say se llama, then se habla español, then se lo digo. Three sentences, three ses, learned about a hundred chapters apart."
             }
           ]
         },
         {
           "index": 1,
-          "type": "input",
-          "title": "The exchange",
+          "type": "notice",
+          "title": "What you've built",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Four things on four windows, in one street:"
+              "kind": "table",
+              "headers": [
+                "",
+                "example",
+                "what the se is"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "reflexive. example: se llama. what the se is: himself.",
+                "impersonal. example: se habla español. what the se is: nobody named.",
+                "the impostor. example: se lo digo. what the se is: le, in disguise."
+              ]
             },
             {
               "kind": "speech",
-              "text": "SE HABLA ESPAÑOL SE COMPRAN LIBROS AQUÍ SE COME BIEN SE PROHÍBE FUMAR."
+              "text": "And here is the fact that makes this a review rather than a fourth thing to learn:"
             },
             {
               "kind": "speech",
-              "text": "Three you can read completely. The fourth has words you have never met — and you can still read its shape: something is forbidden, by nobody in particular."
+              "text": "The first two are the same word. The third is not."
             },
             {
               "kind": "speech",
-              "text": "That is what this rung buys. Not producing these sentences, but reading them off the world, and knowing the missing person is missing on purpose."
+              "text": "The impersonal grew out of the reflexive — the books sell themselves becoming books are sold — which is why the verb still agrees with the thing. Same word, stretched."
             },
             {
               "kind": "speech",
-              "text": "And for the two unknown words, you already have the tool:"
+              "text": "The third only looks like them. It is Latin illī — the le you already know — which arrived at this spelling by an accident of medieval pronunciation, as you saw when gelo became se lo."
             },
             {
               "kind": "speech",
-              "text": "¿Cómo se dice \"fumar\", por favor?"
-            },
-            {
-              "kind": "speech",
-              "text": "Which is itself the same construction, asked out loud."
+              "text": "So Spanish does not have three ses. It has two, and a coincidence."
             }
           ]
         },
         {
           "index": 2,
           "type": "grammar",
-          "title": "Grammar Lens: what it means that nobody is named",
+          "title": "Grammar Lens: how to tell them apart in the wild",
           "segments": [
             {
               "kind": "speech",
-              "text": "A sentence with nobody in it is not just vague — it is doing something with the vagueness. Se prohíbe fumar does not say who forbids it, and that is what gives a sign its authority: nobody is claiming anything, so there is nobody to argue with. English does the same when a report says mistakes were made."
+              "text": "You will not have to work this out consciously for long, but while you do:"
             },
             {
               "kind": "speech",
-              "text": "So when you meet a se with no doer, ask who is being left out. Sometimes the answer is interesting."
+              "text": "Is there a lo, la, los or las right after it? Then it is the impostor: se lo, se la. It means to him / to her / to them."
+            },
+            {
+              "kind": "speech",
+              "text": "Otherwise, is anybody named as the doer? If not, it is the impersonal: se habla, se dice, se come bien."
+            },
+            {
+              "kind": "speech",
+              "text": "Otherwise it is the reflexive, pointing back at whoever the sentence is about: se llama, se levanta."
+            },
+            {
+              "kind": "speech",
+              "text": "The first test is nearly free, because that direct object pronoun is sitting right there in the open."
             }
           ]
         },
@@ -103,20 +122,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the four signs aloud as if walking past them",
+              "instruction": "\"se llama\", \"se habla español\", \"se lo digo\" — two of these are relatives",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the four signs aloud as if walking past them]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"¿Cómo se dice, por favor?\" — the way out of any of them",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"¿Cómo se dice, por favor?\" — the way out of any of them]"
+              "source": "[YOU SAY: \"se llama\", \"se habla español\", \"se lo digo\" — two of these are relatives]"
             },
             {
               "kind": "repeat",
@@ -126,80 +136,60 @@
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C52-sintesis-el-letrero-read",
-              "prompt": "What does the sign SE COMPRAN LIBROS tell you?",
-              "assesses": [
-                "ES-GRAMMAR-SE-PASSIVE-AGREEMENT",
-                "ES-LEX-COMPRAR-07",
-                "ES-LEX-LIBRO"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "books are bought here",
-                "they buy books",
-                "we buy books"
-              ],
-              "feedback": {
-                "correct": "And the verb is plural because libros is.",
-                "incorrect": "Books are bought here."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C52-sintesis-el-letrero-unknown",
-              "prompt": "A sign has a word you do not know. Ask somebody, politely.",
-              "assesses": [
-                "ES-LEX-COMO-SE-DICE",
-                "ES-LEX-POR-FAVOR"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "como se dice, por favor",
-                "¿cómo se dice, por favor?"
-              ],
-              "feedback": {
-                "correct": "The same construction, asked out loud.",
-                "incorrect": "¿Como se dice, por favor?"
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C52-sintesis-el-letrero-eat",
-              "prompt": "Say the food is good here, the way a sign would.",
+              "id": "ES-C52-tres-ses-two",
+              "prompt": "Of the three se's, which two are really one word?",
               "assesses": [
                 "ES-GRAMMAR-SE-IMPERSONAL",
-                "ES-LEX-COMER",
-                "ES-LEX-BIEN"
+                "ES-GRAMMAR-REFLEXIVE-THIRD-PERSON",
+                "ES-ETYMON-GELO"
               ],
-              "responseSeconds": 10,
+              "responseSeconds": 12,
               "acceptedResponses": [
-                "aqui se come bien",
-                "se come bien"
+                "the reflexive and the impersonal",
+                "se llama and se habla",
+                "reflexive and impersonal"
               ],
               "feedback": {
-                "correct": "Nobody named, and none needed.",
-                "incorrect": "Aqui se come bien."
+                "correct": "The impersonal grew out of the reflexive.",
+                "incorrect": "The reflexive and the impersonal. The se of se lo is a different word entirely."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C52-sintesis-el-letrero-authority",
-              "prompt": "Why does leaving the person out give a sign its authority?",
+              "id": "ES-C52-tres-ses-test",
+              "prompt": "What single thing right after se tells you it is the impostor?",
               "assesses": [
-                "ES-GRAMMAR-SE-IMPERSONAL"
+                "ES-GRAMMAR-SE-FOR-LE"
               ],
-              "responseSeconds": 14,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "nobody is claiming it, so there is nobody to argue with",
-                "there is no person to disagree with",
-                "it sounds like a fact rather than an opinion"
+                "lo, la, los or las",
+                "a direct object pronoun",
+                "lo or la"
               ],
               "feedback": {
-                "correct": "Worth noticing every time you meet it.",
-                "incorrect": "No person is claiming anything, so there is nobody to argue with."
+                "correct": "Sitting right there in the open.",
+                "incorrect": "A lo, la, los or las immediately after it."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C52-tres-ses-which",
+              "prompt": "Which se is in como se dice?",
+              "assesses": [
+                "ES-GRAMMAR-SE-IMPERSONAL",
+                "ES-LEX-COMO-SE-DICE"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "the impersonal",
+                "impersonal — nobody is named"
+              ],
+              "feedback": {
+                "correct": "Asking how it gets said, not who says it.",
+                "incorrect": "The impersonal. Nobody is named as the sayer."
               }
             }
           ]
@@ -217,7 +207,7 @@
             },
             {
               "kind": "speech",
-              "text": "Where does this grammar mostly live? (Written on things.) What does the missing person buy a sign? (Authority — nobody to argue with.) And what do you say when a sign has a word you do not have? (¿Cómo se dice, por favor?)"
+              "text": "How many ses does Spanish really have? (Two, and a coincidence.) Which one is the impostor? (The one in se lo — it is le.) Next: all of it in a place you would actually meet it."
             }
           ]
         }
