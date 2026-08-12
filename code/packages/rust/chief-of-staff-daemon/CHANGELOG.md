@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Preserve Home Assistant request-clock failure through the shared HTTP
+  runtime instead of substituting timestamp zero. Each request now samples one
+  Unix-millisecond value and returns 503 before authorization or mutation when
+  production wall time is unavailable.
 - Add an optional Chief-owned Home Assistant-compatible HTTP listener backed by
   the exact same restored durable D23 controller as model tools. Both listeners
   bind before serving and stop together; local HTTP authority provisioning is

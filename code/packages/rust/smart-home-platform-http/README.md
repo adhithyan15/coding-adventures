@@ -74,6 +74,15 @@ Targets can use either the D23 entity ids, such as `entity-light-1`, or the
 Home Assistant-style aliases exposed in state attributes, such as
 `light.entity_light_1`.
 
+Runtime-backed applications can install an infallible live clock with
+`with_clock` or an explicitly fallible source with `with_fallible_clock`. The
+web app samples that source exactly once before each matched handler and pins
+the timestamp for the whole request. If time is unavailable, it returns HTTP
+503 before authorization or mutation; otherwise grant activation/expiry,
+authorization audit, persistence timestamps, freshness, and response
+projections all observe the same request time. Direct automation mutations also
+return an error before changing state when a fallible clock is unavailable.
+
 Local controller state writes are represented as runtime desired-state targets,
 not observed-state rewrites. `POST /api/smart_home/desired_states/:entity_id`
 accepts a `desired_state` capability map and `POST /api/states/:entity_id`

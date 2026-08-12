@@ -100,11 +100,14 @@ fn main() -> Result<(), Box<dyn Error>> {
         Arc::clone(&shared_runtime),
         SmartHomePlatformHttpConfig::new("Codex Home"),
     )
-    .with_clock(unix_time_ms)
+    .with_fallible_clock(try_unix_time_ms)
     .with_automation_runtime(Arc::clone(&automation_runtime))
     .with_mutation_persistence(controller.runtime_persistence_adapter())
     .with_automation_persistence(controller.automation_persistence_adapter())
-    .grant_local_full_access("smart-home-local-controller", unix_time_ms());
+    .grant_local_full_access(
+        "smart-home-local-controller",
+        try_unix_time_ms().ok_or_else(|| invalid_input("system clock is unavailable"))?,
+    );
 
     if let Some(path) = config.dashboard_manifest.as_ref() {
         let bytes = fs::read(path).map_err(|error| {
@@ -367,11 +370,15 @@ fn invalid_input(message: impl Into<String>) -> io::Error {
 }
 
 fn unix_time_ms() -> u64 {
+    try_unix_time_ms().expect("system clock should be available while workers are running")
+}
+
+fn try_unix_time_ms() -> Option<u64> {
     let milliseconds = SystemTime::now()
         .duration_since(UNIX_EPOCH)
-        .unwrap_or_default()
+        .ok()?
         .as_millis();
-    u64::try_from(milliseconds).unwrap_or(u64::MAX)
+    u64::try_from(milliseconds).ok()
 }
 
 fn dashboard_server_options() -> HttpServerOptions {
