@@ -40,7 +40,7 @@ use coding_adventures_vault_records::{
     AnyRecord, ApiKey, Card, DatabaseCredential, Login, SecureNote, TotpSeed, API_KEY_V1, CARD_V1,
     DATABASE_CREDENTIAL_V1, LOGIN_V1, SECURE_NOTE_V1, TOTP_SEED_V1,
 };
-use coding_adventures_zeroize::Zeroizing;
+use coding_adventures_zeroize::{Zeroize, Zeroizing};
 use core::fmt::{self, Debug, Formatter};
 use std::collections::{BTreeMap, BTreeSet};
 use std::ffi::OsString;
@@ -53,7 +53,8 @@ const PRODUCTION_KDF_MEMORY_KIB: u32 = 64 * 1024;
 const PRODUCTION_KDF_ITERATIONS: u32 = 3;
 const PRODUCTION_KDF_LANES: u8 = 1;
 const ITEM_OPERATION_RANDOM_BYTES: usize = 32;
-const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm vault create NAME\n  vault-pm [--vault NAME] status [--json]\n  vault-pm [--vault NAME] audit enable\n  vault-pm [--vault NAME] audit verify\n  vault-pm [--vault NAME] audit list\n  vault-pm [--vault NAME] audit show TRACE\n  vault-pm [--vault NAME] doctor [--unlock]\n  vault-pm [--vault NAME] export FILE\n  vault-pm [--vault NAME] import FILE\n  vault-pm --vault NAME restore FILE\n  vault-pm [--vault NAME] restore verify FILE\n  vault-pm [--vault NAME] item add login\n  vault-pm [--vault NAME] item add secure-note\n  vault-pm [--vault NAME] item add card\n  vault-pm [--vault NAME] item add api-key\n  vault-pm [--vault NAME] item add database-credential\n  vault-pm [--vault NAME] item add totp\n  vault-pm [--vault NAME] item edit ITEM\n  vault-pm [--vault NAME] item delete ITEM\n  vault-pm [--vault NAME] item list\n  vault-pm [--vault NAME] item show ITEM\n  vault-pm [--vault NAME] item reveal ITEM FIELD\n  vault-pm [--vault NAME] history list ITEM\n  vault-pm [--vault NAME] history restore ITEM REVISION\n  vault-pm [--vault NAME] conflict list ITEM\n  vault-pm [--vault NAME] conflict choose ITEM REVISION\n";
+const DEFAULT_SEARCH_RESULT_LIMIT: usize = 100;
+const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm vault create NAME\n  vault-pm [--vault NAME] status [--json]\n  vault-pm [--vault NAME] audit enable\n  vault-pm [--vault NAME] audit verify\n  vault-pm [--vault NAME] audit list\n  vault-pm [--vault NAME] audit show TRACE\n  vault-pm [--vault NAME] doctor [--unlock]\n  vault-pm [--vault NAME] export FILE\n  vault-pm [--vault NAME] import FILE\n  vault-pm --vault NAME restore FILE\n  vault-pm [--vault NAME] restore verify FILE\n  vault-pm [--vault NAME] item add login\n  vault-pm [--vault NAME] item add secure-note\n  vault-pm [--vault NAME] item add card\n  vault-pm [--vault NAME] item add api-key\n  vault-pm [--vault NAME] item add database-credential\n  vault-pm [--vault NAME] item add totp\n  vault-pm [--vault NAME] item edit ITEM\n  vault-pm [--vault NAME] item delete ITEM\n  vault-pm [--vault NAME] item list\n  vault-pm [--vault NAME] item show ITEM\n  vault-pm [--vault NAME] item reveal ITEM FIELD\n  vault-pm [--vault NAME] search QUERY\n  vault-pm [--vault NAME] history list ITEM\n  vault-pm [--vault NAME] history restore ITEM REVISION\n  vault-pm [--vault NAME] conflict list ITEM\n  vault-pm [--vault NAME] conflict choose ITEM REVISION\n";
 
 /// Stable process exit classes defined by VLT-PM00.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -561,13 +562,13 @@ where
     }
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Debug, PartialEq, Eq)]
 struct Invocation {
     selected_vault: Option<ConfigName>,
     command: Command,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Debug, PartialEq, Eq)]
 enum Command {
     Init {
         vault: ConfigName,
@@ -620,6 +621,9 @@ enum Command {
         item_id: ItemId,
         field: SecretFieldV1,
     },
+    Search {
+        query: SearchQuery,
+    },
     HistoryList {
         item_id: ItemId,
     },
@@ -637,29 +641,77 @@ enum Command {
     Help,
 }
 
+struct SearchQuery(Zeroizing<String>);
+
+impl SearchQuery {
+    fn new(value: String) -> Self {
+        Self(Zeroizing::new(value))
+    }
+
+    fn into_zeroizing(self) -> Zeroizing<String> {
+        self.0
+    }
+}
+
+impl Debug for SearchQuery {
+    fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
+        formatter.write_str("SearchQuery(<redacted>)")
+    }
+}
+
+impl PartialEq for SearchQuery {
+    fn eq(&self, other: &Self) -> bool {
+        self.0.as_str() == other.0.as_str()
+    }
+}
+
+impl Eq for SearchQuery {}
+
 fn parse<I, S>(arguments: I) -> Result<Invocation, CliFailure>
 where
     I: IntoIterator<Item = S>,
     S: Into<OsString>,
 {
-    let values = arguments
-        .into_iter()
-        .map(|value| {
-            value
-                .into()
-                .into_string()
-                .map_err(|_| CliFailure::InvalidCommand)
-        })
-        .collect::<Result<Vec<_>, _>>()?;
-    let (selected_vault, command_index) = match values.as_slice() {
-        [selector, name, ..] if selector == "--vault" => (
-            Some(ConfigName::new(name.clone()).map_err(|_| CliFailure::InvalidCommand)?),
-            2,
-        ),
-        _ => (None, 0),
-    };
+    let mut values = Vec::new();
+    for value in arguments {
+        match value.into().into_string() {
+            Ok(value) => values.push(value),
+            Err(_) => {
+                for value in &mut values {
+                    value.zeroize();
+                }
+                return Err(CliFailure::InvalidCommand);
+            }
+        }
+    }
+    let command_index = usize::from(values.first().is_some_and(|value| value == "--vault")) * 2;
+    if values
+        .get(command_index)
+        .is_some_and(|name| name == "search")
+    {
+        let command = parse_search(&mut values, command_index)?;
+        let selected_vault = if command_index == 2 {
+            values
+                .get(1)
+                .cloned()
+                .map(ConfigName::new)
+                .transpose()
+                .map_err(|_| CliFailure::InvalidCommand)?
+        } else {
+            None
+        };
+        return Ok(Invocation {
+            selected_vault,
+            command,
+        });
+    }
     let Some(name) = values.get(command_index).map(String::as_str) else {
         return Err(CliFailure::InvalidCommand);
+    };
+    let selected_vault = if command_index == 2 {
+        Some(ConfigName::new(values[1].clone()).map_err(|_| CliFailure::InvalidCommand)?)
+    } else {
+        None
     };
     let tail = &values[command_index + 1..];
     let command = match name {
@@ -691,6 +743,20 @@ where
     Ok(Invocation {
         selected_vault,
         command,
+    })
+}
+
+fn parse_search(values: &mut [String], command_index: usize) -> Result<Command, CliFailure> {
+    let query_index = command_index + 1;
+    if values.len() != query_index + 1 || values[query_index].starts_with('-') {
+        for value in values.iter_mut().skip(query_index) {
+            value.zeroize();
+        }
+        return Err(CliFailure::InvalidCommand);
+    }
+    let query = core::mem::take(&mut values[query_index]);
+    Ok(Command::Search {
+        query: SearchQuery::new(query),
     })
 }
 
@@ -920,6 +986,9 @@ fn execute(invocation: Invocation, host: &dyn CliHost) -> Result<CliOutput, CliF
             item_id,
             field,
         ),
+        Command::Search { query } => {
+            item_search(host, prepared.paths(), &writer, selected_vault, query)
+        }
         Command::HistoryList { item_id } => {
             history_list(host, prepared.paths(), &writer, selected_vault, item_id)
         }
@@ -1987,8 +2056,52 @@ fn item_list(
         result
     };
     let items = result.map_err(map_application)?;
+    Ok(render_item_rows(items, "No items.\n"))
+}
+
+fn item_search(
+    host: &dyn CliHost,
+    paths: &LocalVaultPaths,
+    writer: &LocalWriterGuard,
+    selected_vault: Option<&ConfigName>,
+    query: SearchQuery,
+) -> Result<CliOutput, CliFailure> {
+    let (mut access, application_store) =
+        authenticated_access(host, paths, writer, selected_vault)?;
+    let query = query.into_zeroizing();
+    let result = if access
+        .as_unlocked()
+        .map_err(map_application)?
+        .audit_enabled()
+    {
+        let (wall_time_ms, randomness) = audited_access_inputs(host)?;
+        access
+            .into_unlocked()
+            .map_err(map_application)?
+            .audited_search_items(
+                query,
+                None,
+                DEFAULT_SEARCH_RESULT_LIMIT,
+                wall_time_ms,
+                randomness,
+                &application_store,
+            )
+            .map_err(map_application)?
+            .into_operation()
+    } else {
+        let result = access
+            .as_unlocked()
+            .and_then(|session| session.search_items(query, None, DEFAULT_SEARCH_RESULT_LIMIT));
+        access.lock();
+        result
+    };
+    let items = result.map_err(map_application)?;
+    Ok(render_item_rows(items, "No matches.\n"))
+}
+
+fn render_item_rows(items: Vec<RedactedItemView>, empty: &'static str) -> CliOutput {
     if items.is_empty() {
-        return Ok(CliOutput::success("No items.\n"));
+        return CliOutput::success(empty);
     }
     let mut output = String::new();
     for item in items {
@@ -1999,7 +2112,7 @@ fn item_list(
         output.push_str(&quoted(record_title(&item.record)));
         output.push('\n');
     }
-    Ok(CliOutput::success(output))
+    CliOutput::success(output)
 }
 
 fn item_edit_login(
@@ -3784,6 +3897,9 @@ mod tests {
             vec!["item", "show", "not-an-item-id"],
             vec!["item", "reveal", "not-an-item-id", "login-password"],
             vec!["item", "reveal", "not-an-item-id", "unknown-field"],
+            vec!["search"],
+            vec!["search", "portal", "extra"],
+            vec!["search", "--query"],
             vec!["history"],
             vec!["history", "list", "not-an-item-id"],
             vec!["history", "list", "not-an-item-id", "extra"],
@@ -3798,6 +3914,55 @@ mod tests {
             assert_eq!(output.stderr(), "vault-pm: invalid command\n");
         }
         assert!(!root.0.join("config").exists());
+    }
+
+    #[test]
+    fn search_parser_owns_and_redacts_exactly_one_query() {
+        let parsed = parse(["search", "private portal metadata"]);
+        assert_eq!(
+            parsed,
+            default_invocation(Command::Search {
+                query: SearchQuery::new("private portal metadata".to_owned()),
+            })
+        );
+        let diagnostic = format!("{parsed:?}");
+        assert!(diagnostic.contains("SearchQuery(<redacted>)"));
+        assert!(!diagnostic.contains("private portal metadata"));
+
+        assert_eq!(
+            parse(["--vault", "work", "search", "portal"]),
+            Ok(Invocation {
+                selected_vault: Some(ConfigName::new("work".to_owned()).unwrap()),
+                command: Command::Search {
+                    query: SearchQuery::new("portal".to_owned()),
+                },
+            })
+        );
+        assert_eq!(
+            parse(["search", ""]),
+            default_invocation(Command::Search {
+                query: SearchQuery::new(String::new()),
+            })
+        );
+        assert_eq!(
+            parse(["--vault", "bad.name", "search", "metadata"]),
+            Err(CliFailure::InvalidCommand)
+        );
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn search_parser_rejects_non_unicode_after_wiping_prior_owned_values() {
+        use std::os::unix::ffi::OsStringExt;
+
+        assert_eq!(
+            parse([
+                OsString::from("search"),
+                OsString::from("metadata query"),
+                OsString::from_vec(vec![0xff]),
+            ]),
+            Err(CliFailure::InvalidCommand)
+        );
     }
 
     #[test]
@@ -4205,6 +4370,28 @@ mod tests {
         assert_eq!(work_items.exit_code(), ExitCode::Success, "{work_items:?}");
         assert!(work_items.stdout().contains("Work-only login"));
 
+        let search_personal =
+            TestHost::with_entropy_seed(paths.clone(), [personal_passphrase.clone()], 24);
+        let personal_matches = run(["search", "Work-only login"], &search_personal);
+        assert_eq!(
+            personal_matches.exit_code(),
+            ExitCode::Success,
+            "{personal_matches:?}"
+        );
+        assert_eq!(personal_matches.stdout(), "No matches.\n");
+
+        let search_work = TestHost::with_entropy_seed(paths.clone(), [work_passphrase.clone()], 25);
+        let work_matches = run(
+            ["--vault", "work", "search", "Work-only login"],
+            &search_work,
+        );
+        assert_eq!(
+            work_matches.exit_code(),
+            ExitCode::Success,
+            "{work_matches:?}"
+        );
+        assert!(work_matches.stdout().contains("Work-only login"));
+
         let audit_work = TestHost::with_entropy_seed(paths.clone(), [work_passphrase.clone()], 23);
         let events = run(["--vault", "work", "audit", "list"], &audit_work);
         assert_eq!(events.exit_code(), ExitCode::Success, "{events:?}");
@@ -4341,6 +4528,7 @@ mod tests {
             vec!["item", "list"],
             vec!["item", "show", item_id.as_str()],
             vec!["history", "list", item_id.as_str()],
+            vec!["search", "user@example.test"],
         ] {
             let host = TestHost::new(paths.clone(), [passphrase.clone()]);
             let output = run(arguments, &host);
@@ -4348,11 +4536,41 @@ mod tests {
             assert!(!output.stdout().contains("audited item secret"));
         }
 
+        for invalid_query in [String::new(), "line\nbreak".to_owned(), "x".repeat(257)] {
+            let invalid_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+            let invalid = run(["search".to_owned(), invalid_query], &invalid_host);
+            assert_eq!(invalid.exit_code(), ExitCode::InvalidInput, "{invalid:?}");
+            assert!(invalid.stdout().is_empty());
+        }
+
+        let secret_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        let secret = run(["search", "audited item secret"], &secret_host);
+        assert_eq!(secret.exit_code(), ExitCode::Success, "{secret:?}");
+        assert_eq!(secret.stdout(), "No matches.\n");
+        assert!(!secret.stdout().contains("audited item secret"));
+
         let audit_host = TestHost::new(paths.clone(), [passphrase.clone()]);
         let audit = run(["audit", "verify"], &audit_host);
         assert_eq!(audit.exit_code(), ExitCode::Success, "{audit:?}");
-        assert!(audit.stdout().contains("commits=5"), "{audit:?}");
-        assert!(audit.stdout().contains("audit_events=5"), "{audit:?}");
+        assert!(audit.stdout().contains("commits=10"), "{audit:?}");
+        assert!(audit.stdout().contains("audit_events=10"), "{audit:?}");
+
+        let list_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        let listed = run(["audit", "list"], &list_host);
+        assert_eq!(listed.exit_code(), ExitCode::Success, "{listed:?}");
+        assert!(listed
+            .stdout()
+            .contains("action=item_search\toutcome=succeeded"));
+        assert!(listed
+            .stdout()
+            .contains("action=item_search\toutcome=failed"));
+        for forbidden in [
+            "user@example.test",
+            "audited item secret",
+            "private portal metadata",
+        ] {
+            assert!(!listed.stdout().contains(forbidden), "{listed:?}");
+        }
 
         let doctor_host = TestHost::new(paths.clone(), [passphrase.clone()]);
         let doctor = run(["doctor", "--unlock"], &doctor_host);
@@ -4366,11 +4584,11 @@ mod tests {
             "{final_audit:?}"
         );
         assert!(
-            final_audit.stdout().contains("commits=7"),
+            final_audit.stdout().contains("commits=13"),
             "{final_audit:?}"
         );
         assert!(
-            final_audit.stdout().contains("audit_events=7"),
+            final_audit.stdout().contains("audit_events=13"),
             "{final_audit:?}"
         );
     }

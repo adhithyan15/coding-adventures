@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Added audited `search QUERY` over the application-owned wipe-on-lock
+  projection, with zeroizing/redacted query ownership, a fixed 100-result cap,
+  deterministic list-row rendering, and durable failed semantic queries.
 - Extended login add/edit to collect zero-to-sixteen ordered URLs plus optional
   hidden notes, accept existing multi-URL records, replace the complete form,
   redact notes presence, audit invalid counts before returning, and expose
