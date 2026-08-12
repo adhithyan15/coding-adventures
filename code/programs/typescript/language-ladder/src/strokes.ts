@@ -873,6 +873,70 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: chineseCharacterSource("讠"),
   },
+  // 氵 stacks two separately drawn down-right dots above a third stroke that
+  // begins at the bottom and rises to the upper right. The three pinned
+  // medians remain separate while fitting the narrow Noto Sans SC radical.
+  [ductusKey("chinese", "氵")]: {
+    script: "chinese",
+    glyph: "氵",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "draw the upper dot down and right",
+            path: [
+              { x: 155, y: 785 },
+              { x: 195, y: 770 },
+              { x: 235, y: 745 },
+              { x: 275, y: 720 },
+              { x: 315, y: 695 },
+              { x: 350, y: 675 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then draw the middle dot down and right",
+            path: [
+              { x: 72, y: 515 },
+              { x: 110, y: 505 },
+              { x: 150, y: 485 },
+              { x: 190, y: 465 },
+              { x: 230, y: 445 },
+              { x: 270, y: 420 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then begin the bottom stroke with a slight rise left",
+            path: [
+              { x: 158, y: -58 },
+              { x: 150, y: -32 },
+              { x: 155, y: 0 },
+            ],
+          },
+          {
+            label: "continue without lifting in a long rise to the upper right",
+            path: [
+              { x: 155, y: 0 },
+              { x: 185, y: 45 },
+              { x: 220, y: 95 },
+              { x: 255, y: 145 },
+              { x: 290, y: 195 },
+              { x: 325, y: 245 },
+              { x: 360, y: 295 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: chineseCharacterSource("氵"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the
