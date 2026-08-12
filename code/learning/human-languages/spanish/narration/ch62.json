@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 62,
-  "title": "Hacer, Decir, and the -go Verb Club",
-  "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:10d1b6eea63126f0",
+  "title": "Verbs That Break in the Middle --- the Stem Changers",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:64de4767ab6faf45",
   "lessons": [
     {
-      "id": "ES-C12-hacer",
-      "sequence": 1100,
-      "title": "hacer — doing or making with three singular forms",
-      "headword": "hacer",
-      "romanization": "hacer",
-      "gloss": "to do or make — with the singular present forms hago, haces, and hace",
+      "id": "ES-C11-querer",
+      "sequence": 1050,
+      "title": "querer — wanting with one familiar vowel change",
+      "headword": "querer",
+      "romanization": "querer",
+      "gloss": "to want — with the singular present forms quiero, quieres, and quiere",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1cabc1ff4ef3f946",
+      "sourceHash": "fnv1a64:c9f695888658c508",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "You already use tengo, tienes, tiene, and you already know café and the question word qué. Reuse that small frontier for one verb that covers both English “do” and “make.”"
+              "text": "You already say tienes and tiene, where the middle e opens into ie. Today, reuse that visible change in one useful verb and keep the same three-person frame you already own."
             }
           ]
         },
@@ -46,7 +46,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The h in hacer is silent, just as it is in hola. In hago, the written g has the hard sound heard before a."
+              "text": "diphthong-ie — begin quiero with one smooth kye- syllable."
+            },
+            {
+              "kind": "speech",
+              "text": "r-tap — end the infinitive querer with one light tap."
             }
           ]
         },
@@ -57,7 +61,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "hacer means “to do” or “to make.” It descends from Latin facere, with the same making root preserved in English fact, factory, and manufacture. Much of early Castilian changed word-initial Latin f into an h sound that later became silent, leaving the spelling as a historical trace."
+              "text": "querer means “to want.” With a person as its object, it can also express love, but wanting is the meaning used in this lesson."
+            },
+            {
+              "kind": "speech",
+              "text": "It descends from Latin quaerere, “to seek or ask.” English keeps the same searching idea in query, quest, inquire, and require. Wanting something begins as seeking it."
             }
           ]
         },
@@ -70,39 +78,39 @@
               "kind": "table",
               "headers": [
                 "person",
-                "present of hacer"
+                "present of querer"
               ],
               "columns": 2,
               "rowCount": 3,
               "utterances": [
-                "person: yo. present of hacer: hago.",
-                "person: tú. present of hacer: haces.",
-                "person: él / ella / usted. present of hacer: hace."
+                "person: yo. present of querer: quiero.",
+                "person: tú. present of querer: quieres.",
+                "person: él / ella / usted. present of querer: quiere."
               ]
             },
             {
               "kind": "speech",
-              "text": "Say the bounded set as hago, haces, hace. Only the learned yo form contains g. Compare it with the familiar tengo, but do not extend the comparison beyond forms you already own."
+              "text": "Say the small set as quiero, quieres, quiere. The e becomes ie that you saw in tienes, tiene is visible again. The plural persons are deliberately left for a later step."
             },
             {
               "kind": "speech",
-              "text": "Use the forms with one known object:"
+              "text": "Place one known infinitive after the form of querer:"
             },
             {
               "kind": "speech",
-              "text": "Hago café. — “I make coffee.”"
+              "text": "Quiero hablar. — “I want to speak.”"
             },
             {
               "kind": "speech",
-              "text": "Haces café. — “You make coffee.”"
+              "text": "Quieres comer. — “You want to eat.”"
             },
             {
               "kind": "speech",
-              "text": "Hace café. — “He, she, or formal you makes coffee.”"
+              "text": "Quiere vivir. — “He, she, or formal you wants to live.”"
             },
             {
               "kind": "speech",
-              "text": "You can also ask ¿Qué haces? — “What are you doing?” Plural persons and weather expressions wait for later lessons."
+              "text": "The second verb stays in its known infinitive form."
             }
           ]
         },
@@ -120,70 +128,68 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“hacer — hago, haces, hace”",
+              "instruction": "“querer — quiero, quieres, quiere”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “hacer — hago, haces, hace”]"
+              "source": "[YOU SAY: “querer — quiero, quieres, quiere”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“¿Qué haces? Hago café.”",
+              "instruction": "“Quiero hablar”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “¿Qué haces? Hago café.”]"
+              "source": "[YOU SAY: “Quiero hablar”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“facere — fact — factory — hacer”",
+              "instruction": "“quaerere — query — querer”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “facere — fact — factory — hacer”]"
+              "source": "[YOU SAY: “quaerere — query — querer”]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C12-hacer-singular-forms",
-              "prompt": "Give the learned singular present forms of hacer: yo, tú, then él/ella/usted.",
+              "id": "ES-C11-querer-singular-forms",
+              "prompt": "Give the learned singular present forms of querer: yo, tú, then él/ella/usted.",
               "assesses": [
-                "ES-LEX-HACER",
-                "ES-GRAMMAR-HACER-PRESENT-SINGULAR"
+                "ES-LEX-QUERER",
+                "ES-GRAMMAR-QUERER-PRESENT-SINGULAR"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "hago, haces, hace",
-                "hago haces hace",
-                "hago / haces / hace"
+                "quiero, quieres, quiere",
+                "quiero quieres quiere",
+                "quiero / quieres / quiere"
               ],
               "feedback": {
-                "correct": "Right: hago, haces, hace.",
-                "incorrect": "Keep the g only in the yo form: hago, haces, hace."
+                "correct": "Right: quiero, quieres, quiere.",
+                "incorrect": "Keep the e becomes ie stem and use the three singular endings: quiero, quieres, quiere."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C12-hacer-make-coffee",
-              "prompt": "Say 'I make coffee' in Spanish.",
+              "id": "ES-C11-querer-want-to-speak",
+              "prompt": "Say 'I want to speak' in Spanish.",
               "assesses": [
-                "ES-LEX-HACER",
-                "ES-GRAMMAR-HACER-PRESENT-SINGULAR",
-                "ES-LEX-CAFE"
+                "ES-LEX-QUERER",
+                "ES-GRAMMAR-QUERER-PRESENT-SINGULAR",
+                "ES-LEX-HABLAR"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "hago café.",
-                "hago café",
-                "hago cafe",
-                "hago cafe."
+                "quiero hablar.",
+                "quiero hablar"
               ],
               "feedback": {
-                "correct": "Right: Hago café.",
-                "incorrect": "Use the yo form hago before the known noun café."
+                "correct": "Right: Quiero hablar.",
+                "incorrect": "Use quiero followed by the unchanged infinitive hablar."
               }
             }
           ]
@@ -201,26 +207,26 @@
             },
             {
               "kind": "speech",
-              "text": "What two English verbs does hacer cover? (“Do” and “make.”) Give the three learned forms. (Hago, haces, hace.) Which Latin source and English cousin help explain it? (Facere; fact or factory.) Next: add decir without widening the person frame."
+              "text": "What does querer mean? (“To want.”) Give the three learned forms. (Quiero, quieres, quiere.) Which Latin verb and English cousin help explain it? (Quaerere, “seek”; query or quest.) Next: add the other singular vowel change with poder."
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C12-decir",
-      "sequence": 1110,
-      "title": "decir — saying with the same small person frame",
-      "headword": "decir",
-      "romanization": "decir",
-      "gloss": "to say or tell — with the singular present forms digo, dices, and dice",
+      "id": "ES-C11-poder",
+      "sequence": 1060,
+      "title": "poder — ability with the o becomes ue change",
+      "headword": "poder",
+      "romanization": "poder",
+      "gloss": "to be able or can — with the singular present forms puedo, puedes, and puede",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:64d46ddead0c2446",
+      "sourceHash": "fnv1a64:6e2ecea9d94331d3",
       "notice": null,
       "blocks": [
         {
@@ -236,7 +242,7 @@
             },
             {
               "kind": "speech",
-              "text": "You can ask cómo, say hola, and retrieve hago, haces, hace. Keep those three persons fixed while adding the verb “to say.”"
+              "text": "Quiero hablar says what you want to do. Now change the first verb to say what you are able to do. The second verb will remain a known infinitive."
             }
           ]
         },
@@ -247,7 +253,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "In digo, the g before o is hard. Keep the i in all three learned forms short and clear: digo, dices, dice."
+              "text": "diphthong-ue — puedo begins pwe- with one smooth glide."
+            },
+            {
+              "kind": "speech",
+              "text": "r-tap — end poder with one light tap."
             }
           ]
         },
@@ -258,52 +268,52 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "decir means “to say” or “to tell.” It descends from Latin dīcere, “to say.” English keeps the same root in diction, dictionary, predict (“say beforehand”), and verdict (“a true saying”)."
+              "text": "poder means “to be able”; in a sentence it often translates as “can.” It descends through Latin potere from posse, “to be able.” English power, potent, potential, and possible belong to the same family. Ability is the power to do something."
             }
           ]
         },
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: one more three-form set",
+          "title": "Grammar Lens: the three singular forms",
           "segments": [
             {
               "kind": "table",
               "headers": [
                 "person",
-                "present of decir"
+                "present of poder"
               ],
               "columns": 2,
               "rowCount": 3,
               "utterances": [
-                "person: yo. present of decir: digo.",
-                "person: tú. present of decir: dices.",
-                "person: él / ella / usted. present of decir: dice."
+                "person: yo. present of poder: puedo.",
+                "person: tú. present of poder: puedes.",
+                "person: él / ella / usted. present of poder: puede."
               ]
             },
             {
               "kind": "speech",
-              "text": "Say digo, dices, dice. The yo form has g, while the other two learned forms do not. Do not build a full table or a general vowel-change rule from this small set yet."
+              "text": "Say puedo, puedes, puede. In these three learned forms, the stem o opens into ue. Plural persons wait."
             },
             {
               "kind": "speech",
-              "text": "Now combine it only with known language:"
+              "text": "Follow the form of poder with one unchanged infinitive:"
             },
             {
               "kind": "speech",
-              "text": "Digo hola. — “I say hello.”"
+              "text": "Puedo hablar. — “I can speak.”"
             },
             {
               "kind": "speech",
-              "text": "Dices hola. — “You say hello.”"
+              "text": "Puedes comer. — “You can eat.”"
             },
             {
               "kind": "speech",
-              "text": "Dice hola. — “He, she, or formal you says hello.”"
+              "text": "Puede vivir. — “He, she, or formal you can live.”"
             },
             {
               "kind": "speech",
-              "text": "¿Cómo dices “hola”? — “How do you say ‘hello’?”"
+              "text": "Compare Quiero hablar with Puedo hablar: only the first verb changes the meaning from want to ability."
             }
           ]
         },
@@ -321,92 +331,68 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“decir — digo, dices, dice”",
+              "instruction": "“poder — puedo, puedes, puede”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “decir — digo, dices, dice”]"
+              "source": "[YOU SAY: “poder — puedo, puedes, puede”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“Digo hola. ¿Cómo dices hola?”",
+              "instruction": "“Puedo hablar”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “Digo hola. ¿Cómo dices hola?”]"
+              "source": "[YOU SAY: “Puedo hablar”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“dīcere — diction — decir”",
+              "instruction": "“poder — power — possible”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “dīcere — diction — decir”]"
+              "source": "[YOU SAY: “poder — power — possible”]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C12-decir-singular-forms",
-              "prompt": "Give the learned singular present forms of decir: yo, tú, then él/ella/usted.",
+              "id": "ES-C11-poder-singular-forms",
+              "prompt": "Give the learned singular present forms of poder: yo, tú, then él/ella/usted.",
               "assesses": [
-                "ES-LEX-DECIR",
-                "ES-GRAMMAR-DECIR-PRESENT-SINGULAR"
+                "ES-LEX-PODER",
+                "ES-GRAMMAR-PODER-PRESENT-SINGULAR"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "digo, dices, dice",
-                "digo dices dice",
-                "digo / dices / dice"
+                "puedo, puedes, puede",
+                "puedo puedes puede",
+                "puedo / puedes / puede"
               ],
               "feedback": {
-                "correct": "Right: digo, dices, dice.",
-                "incorrect": "Keep the g in the yo form only: digo, dices, dice."
+                "correct": "Right: puedo, puedes, puede.",
+                "incorrect": "Keep the o becomes ue stem and use the three singular endings: puedo, puedes, puede."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C12-decir-say-hello",
-              "prompt": "Say 'I say hello' in Spanish.",
+              "id": "ES-C11-poder-can-eat",
+              "prompt": "Say 'You can eat' to one friend in Spanish.",
               "assesses": [
-                "ES-LEX-DECIR",
-                "ES-GRAMMAR-DECIR-PRESENT-SINGULAR",
-                "ES-LEX-HOLA"
+                "ES-LEX-PODER",
+                "ES-GRAMMAR-PODER-PRESENT-SINGULAR",
+                "ES-LEX-COMER"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "digo hola.",
-                "digo hola"
+                "puedes comer.",
+                "puedes comer"
               ],
               "feedback": {
-                "correct": "Right: Digo hola.",
-                "incorrect": "Use the yo form digo before the known word hola."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C12-decir-how-do-you-say",
-              "prompt": "Ask one friend 'How do you say hello?' in Spanish.",
-              "assesses": [
-                "ES-LEX-DECIR",
-                "ES-GRAMMAR-DECIR-PRESENT-SINGULAR",
-                "ES-LEX-COMO",
-                "ES-LEX-HOLA"
-              ],
-              "responseSeconds": 9,
-              "acceptedResponses": [
-                "¿cómo dices 'hola'?",
-                "¿cómo dices hola?",
-                "cómo dices hola?",
-                "como dices hola?",
-                "¿como dices hola?"
-              ],
-              "feedback": {
-                "correct": "Right: ¿Cómo dices ‘hola’?",
-                "incorrect": "Begin with cómo and use the tú form dices: ¿Cómo dices hola?"
+                "correct": "Right: Puedes comer.",
+                "incorrect": "Use the tú form puedes followed by the unchanged infinitive comer."
               }
             }
           ]
@@ -424,207 +410,26 @@
             },
             {
               "kind": "speech",
-              "text": "What does decir mean? (“To say” or “to tell.”) Give the three learned forms. (Digo, dices, dice.) Which Latin source and English cousin help explain it? (Dīcere; diction, dictionary, or predict.) Next: compare only the three yo forms you have actually learned."
+              "text": "What does poder mean? (“To be able; can.”) Give the three learned forms. (Puedo, puedes, puede.) What English word is its close cousin? (Power.) Next: compare only the singular forms you have actually learned."
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C12-yo-go",
-      "sequence": 1120,
-      "title": "tengo, hago, digo — compare only what you know",
-      "headword": "tengo · hago · digo",
-      "romanization": "tengo · hago · digo",
-      "gloss": "comparing the three learned yo forms that end in -go",
-      "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "wide-table"
-      ],
-      "sourceHash": "fnv1a64:68ce12bb69999553",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes for one table that cannot be read aloud"
-        ],
-        "waitUntilStopped": [
-          "Grammar Lens: one visible corner"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called Grammar Lens: one visible corner until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Three learned verbs now place g in the yo form: tengo, hago, digo. Compare those three without guessing the form of any unseen verb."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: one visible corner",
-          "segments": [
-            {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
-              "rowCount": 3,
-              "headers": [
-                "infinitive",
-                "meaning",
-                "learned yo form",
-                "learned tú form"
-              ],
-              "text": "There is a table here I cannot read to you — 4 columns and 3 rows, and it has more columns than can be held in the ear at once. Its columns are: infinitive, meaning, learned yo form, learned tú form. Come back and look at it when you have stopped."
-            },
-            {
-              "kind": "speech",
-              "text": "The shared observation is narrow: each learned yo form ends in -go, while each learned tú form does not. This is a memory organizer for three known forms, not permission to manufacture new ones."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The pattern, taken apart — convergence, not one magic rule",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "The three modern forms did not arise by attaching one productive Latin -go ending. Older stem sounds changed in different ways, and analogy helped common verbs converge on a familiar shape. That mixed history explains why the group is useful to remember but unsafe as a prediction rule."
-            },
-            {
-              "kind": "speech",
-              "text": "Later lessons can introduce other verbs on their own evidence. For now, the complete comparison is exactly tengo, hago, digo."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“tengo — hago — digo”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “tengo — hago — digo”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“tienes — haces — dices”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “tienes — haces — dices”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“a memory organizer, not a prediction machine”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “a memory organizer, not a prediction machine”]"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C12-yo-go-learned-order",
-              "prompt": "Give the learned yo forms of tener, hacer, and decir, in that order.",
-              "assesses": [
-                "ES-GRAMMAR-YO-GO-CONTRAST-LEARNED",
-                "ES-GRAMMAR-TENER-PRESENT-SINGULAR",
-                "ES-GRAMMAR-HACER-PRESENT-SINGULAR",
-                "ES-GRAMMAR-DECIR-PRESENT-SINGULAR"
-              ],
-              "responseSeconds": 9,
-              "acceptedResponses": [
-                "tengo, hago, digo",
-                "tengo hago digo",
-                "tengo / hago / digo"
-              ],
-              "feedback": {
-                "correct": "Right: tengo, hago, digo.",
-                "incorrect": "Retrieve the three learned yo forms: tengo, hago, digo."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C12-yo-go-hacer-choice",
-              "prompt": "Which learned yo form means 'I do' or 'I make'?",
-              "assesses": [
-                "ES-GRAMMAR-YO-GO-CONTRAST-LEARNED",
-                "ES-GRAMMAR-HACER-PRESENT-SINGULAR"
-              ],
-              "responseSeconds": 6,
-              "acceptedResponses": [
-                "hago",
-                "yo hago"
-              ],
-              "feedback": {
-                "correct": "Right: hago means 'I do' or 'I make.'",
-                "incorrect": "Choose hago, the learned yo form of hacer."
-              }
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Which three learned yo forms end in -go? (Tengo, hago, digo.) May this comparison predict an unseen verb? (No.) Why not? (Different sound histories and analogy converged on the same shape.) Next: retrieve the whole chapter without adding any word or form."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C12-practice",
-      "sequence": 1130,
-      "title": "Practice — doing, making, and saying in the singular",
-      "headword": "(practice)",
-      "romanization": "(practice)",
-      "gloss": "singular doing, making, saying, and the learned tengo, hago, digo comparison",
+      "id": "ES-C11-stem-changes",
+      "sequence": 1070,
+      "title": "e becomes ie and o becomes ue — compare the singular forms",
+      "headword": "e → ie and o → ue",
+      "romanization": "e → ie and o → ue",
+      "gloss": "comparing the two vowel changes inside the learned singular forms",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9e23616852de0af9",
+      "sourceHash": "fnv1a64:35a6b77fc854ceb5",
       "notice": null,
       "blocks": [
         {
@@ -640,53 +445,64 @@
             },
             {
               "kind": "speech",
-              "text": "This checkpoint adds nothing. Retrieve two bounded three-form sets, use them with known words, and compare only tengo, hago, digo."
+              "text": "You now own three small singular sets: tengo, tienes, tiene; quiero, quieres, quiere; and puedo, puedes, puede. Compare only those learned forms before extending the pattern later."
             }
           ]
         },
         {
           "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: the complete small chapter frame",
+          "type": "etymology",
+          "title": "The word, taken apart — why vowels opened",
           "segments": [
             {
               "kind": "speech",
-              "text": "doing or making: hago, haces, hace."
+              "text": "On the road from Latin to Spanish, many short e and o vowels opened when stressed: e becomes ie and o becomes ue. That history helps explain why a verb's stem can look different across its forms."
             },
             {
               "kind": "speech",
-              "text": "saying or telling: digo, dices, dice."
-            },
-            {
-              "kind": "speech",
-              "text": "the learned yo comparison: tengo, hago, digo."
-            },
-            {
-              "kind": "speech",
-              "text": "known-word use: Hago café. Digo hola. ¿Cómo dices “hola”?"
-            },
-            {
-              "kind": "speech",
-              "text": "Plural persons, weather nouns, homework vocabulary, and unseen verbs remain outside this checkpoint."
+              "text": "It is a clue, not a machine that predicts every form. Learn each verb's small set, then use the shared history to organize what you remember."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The words, taken apart — retrieve the history",
+          "type": "grammar",
+          "title": "Grammar Lens: two changes, one learned frame",
           "segments": [
             {
-              "kind": "speech",
-              "text": "hacer continues Latin facere, the making family of fact and factory."
+              "kind": "table",
+              "headers": [
+                "person",
+                "tener / querer, e becomes ie family",
+                "poder, o becomes ue"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "person: yo. tener / querer, e becomes ie family: tengo / quiero. poder, o becomes ue: puedo.",
+                "person: tú. tener / querer, e becomes ie family: tienes / quieres. poder, o becomes ue: puedes.",
+                "person: él / ella / usted. tener / querer, e becomes ie family: tiene / quiere. poder, o becomes ue: puede."
+              ]
             },
             {
               "kind": "speech",
-              "text": "decir continues Latin dīcere, the saying family of diction and predict."
+              "text": "The comparison says exactly this:"
             },
             {
               "kind": "speech",
-              "text": "inherited sound changes and analogy made three known yo forms converge on -go; the resemblance does not predict forms you have not learned."
+              "text": "querer shows ie in all three forms learned here."
+            },
+            {
+              "kind": "speech",
+              "text": "poder shows ue in all three forms learned here."
+            },
+            {
+              "kind": "speech",
+              "text": "tener reminds you that a common verb may combine more than one change: tengo has its known g, while tienes and tiene show ie."
+            },
+            {
+              "kind": "speech",
+              "text": "No plural form and no new verb is part of today's generalization."
             }
           ]
         },
@@ -704,145 +520,71 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“hago, haces, hace”",
+              "instruction": "“quiero, quieres, quiere”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “hago, haces, hace”]"
+              "source": "[YOU SAY: “quiero, quieres, quiere”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“digo, dices, dice”",
+              "instruction": "“puedo, puedes, puede”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “digo, dices, dice”]"
+              "source": "[YOU SAY: “puedo, puedes, puede”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“tengo, hago, digo”",
+              "instruction": "“stressed e and o often opened to ie and ue”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “tengo, hago, digo”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“Hago café. Digo hola.”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “Hago café. Digo hola.”]"
+              "source": "[YOU SAY: “stressed e and o often opened to ie and ue”]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C12-practice-hacer-forms",
-              "prompt": "Give the learned singular forms of hacer: yo, tú, then usted.",
+              "id": "ES-C11-stem-changes-yo-contrast",
+              "prompt": "Give the learned yo forms of querer and poder, in that order.",
               "assesses": [
-                "ES-LEX-HACER",
-                "ES-GRAMMAR-HACER-PRESENT-SINGULAR"
+                "ES-GRAMMAR-STEM-CHANGE-CONTRAST-SINGULAR",
+                "ES-GRAMMAR-QUERER-PRESENT-SINGULAR",
+                "ES-GRAMMAR-PODER-PRESENT-SINGULAR"
               ],
-              "responseSeconds": 9,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "hago, haces, hace",
-                "hago haces hace",
-                "hago / haces / hace"
+                "quiero, puedo",
+                "quiero puedo",
+                "quiero / puedo"
               ],
               "feedback": {
-                "correct": "Right: hago, haces, hace.",
-                "incorrect": "Retrieve only the learned singular set: hago, haces, hace."
+                "correct": "Right: quiero, puedo — e becomes ie beside o becomes ue.",
+                "incorrect": "Use the learned yo forms: quiero, then puedo."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C12-practice-decir-forms",
-              "prompt": "Give the learned singular forms of decir: yo, tú, then usted.",
+              "id": "ES-C11-stem-changes-tu-contrast",
+              "prompt": "Give the learned tú forms of tener, querer, and poder, in that order.",
               "assesses": [
-                "ES-LEX-DECIR",
-                "ES-GRAMMAR-DECIR-PRESENT-SINGULAR"
-              ],
-              "responseSeconds": 9,
-              "acceptedResponses": [
-                "digo, dices, dice",
-                "digo dices dice",
-                "digo / dices / dice"
-              ],
-              "feedback": {
-                "correct": "Right: digo, dices, dice.",
-                "incorrect": "Retrieve only the learned singular set: digo, dices, dice."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C12-practice-yo-go-order",
-              "prompt": "Give the learned yo forms of tener, hacer, and decir, in that order.",
-              "assesses": [
-                "ES-GRAMMAR-YO-GO-CONTRAST-LEARNED",
+                "ES-GRAMMAR-STEM-CHANGE-CONTRAST-SINGULAR",
                 "ES-GRAMMAR-TENER-PRESENT-SINGULAR",
-                "ES-GRAMMAR-HACER-PRESENT-SINGULAR",
-                "ES-GRAMMAR-DECIR-PRESENT-SINGULAR"
+                "ES-GRAMMAR-QUERER-PRESENT-SINGULAR",
+                "ES-GRAMMAR-PODER-PRESENT-SINGULAR"
               ],
-              "responseSeconds": 9,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "tengo, hago, digo",
-                "tengo hago digo",
-                "tengo / hago / digo"
+                "tienes, quieres, puedes",
+                "tienes quieres puedes",
+                "tienes / quieres / puedes"
               ],
               "feedback": {
-                "correct": "Right: tengo, hago, digo.",
-                "incorrect": "Retrieve the bounded comparison: tengo, hago, digo."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C12-practice-make-coffee",
-              "prompt": "Say 'I make coffee' in Spanish.",
-              "assesses": [
-                "ES-LEX-HACER",
-                "ES-GRAMMAR-HACER-PRESENT-SINGULAR",
-                "ES-LEX-CAFE"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "hago café.",
-                "hago café",
-                "hago cafe",
-                "hago cafe."
-              ],
-              "feedback": {
-                "correct": "Right: Hago café.",
-                "incorrect": "Use hago before the known noun café."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C12-practice-how-say-hello",
-              "prompt": "Ask one friend 'How do you say hello?' in Spanish.",
-              "assesses": [
-                "ES-LEX-DECIR",
-                "ES-GRAMMAR-DECIR-PRESENT-SINGULAR",
-                "ES-LEX-COMO",
-                "ES-LEX-HOLA"
-              ],
-              "responseSeconds": 9,
-              "acceptedResponses": [
-                "¿cómo dices 'hola'?",
-                "¿cómo dices hola?",
-                "cómo dices hola?",
-                "como dices hola?",
-                "¿como dices hola?"
-              ],
-              "feedback": {
-                "correct": "Right: ¿Cómo dices ‘hola’?",
-                "incorrect": "Use cómo plus the tú form dices: ¿Cómo dices hola?"
+                "correct": "Right: tienes, quieres, puedes.",
+                "incorrect": "Retrieve the three known tú forms: tienes, quieres, puedes."
               }
             }
           ]
@@ -860,7 +602,424 @@
             },
             {
               "kind": "speech",
-              "text": "Give both three-form sets. (Hago, haces, hace; digo, dices, dice.) Which three learned yo forms share -go? (Tengo, hago, digo.) Why is that comparison a memory aid rather than a prediction rule? (Its mixed history does not license unseen forms.) The next chapter may now introduce its own verbs one at a time."
+              "text": "Which change appears in querer? (e becomes ie.) In poder? (o becomes ue.) Why is the history useful but not a complete prediction rule? (It organizes learned forms, but individual verbs can combine or resist changes.) Next: one possessive that agrees with a known noun's gender."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C11-nuestro",
+      "sequence": 1080,
+      "title": "nuestro, nuestra — “our” with singular gender agreement",
+      "headword": "nuestro, nuestra",
+      "romanization": "nuestro, nuestra",
+      "gloss": "our — matching a known masculine or feminine singular noun",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4495186bd44b4528",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You put mi, tu, or su before the known noun café. Now add “our” and let it match one contrast you learned much earlier: masculine día beside feminine noche."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "nuestro and nuestra mean “our.” They descend from Latin noster, also “our.” Paternoster means “Our Father,” and English nostrum originally meant “our thing.”"
+            },
+            {
+              "kind": "speech",
+              "text": "The change from noster to nuestro also displays the historical o becomes ue opening you just used to organize poder."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: match singular gender",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "known noun",
+                "“our” phrase"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "known noun: el día, masculine. “our” phrase: nuestro día.",
+                "known noun: la noche, feminine. “our” phrase: nuestra noche."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Like mi, tu, and su, the new word goes before the noun. Unlike those earlier forms, it shows the noun's gender: nuestro before a masculine singular noun, nuestra before a feminine singular noun."
+            },
+            {
+              "kind": "speech",
+              "text": "Only these two singular forms belong to this lesson. Plural agreement and the separate word for “your” to a group wait."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“nuestro día”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “nuestro día”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“nuestra noche”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “nuestra noche”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“noster — nuestro — Paternoster”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “noster — nuestro — Paternoster”]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C11-nuestro-our-day",
+              "prompt": "Say 'our day' in Spanish.",
+              "assesses": [
+                "ES-LEX-POSSESSIVES-NUESTRO-NUESTRA",
+                "ES-GRAMMAR-POSSESSIVE-GENDER-AGREEMENT-SINGULAR",
+                "ES-LEX-DIA"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "nuestro día",
+                "nuestro dia"
+              ],
+              "feedback": {
+                "correct": "Right: masculine día takes nuestro.",
+                "incorrect": "Use the masculine singular form nuestro before día."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C11-nuestro-our-night",
+              "prompt": "Say 'our night' in Spanish.",
+              "assesses": [
+                "ES-LEX-POSSESSIVES-NUESTRO-NUESTRA",
+                "ES-GRAMMAR-POSSESSIVE-GENDER-AGREEMENT-SINGULAR",
+                "ES-LEX-NOCHE"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "nuestra noche",
+                "nuestra noche."
+              ],
+              "feedback": {
+                "correct": "Right: feminine noche takes nuestra.",
+                "incorrect": "Use the feminine singular form nuestra before noche."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which form goes before masculine día? (Nuestro.) Before feminine noche? (Nuestra.) What Latin source explains the pair? (Noster, “our.”) Next: retrieve the whole chapter without adding a form."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C11-practice",
+      "sequence": 1090,
+      "title": "Practice — wanting, ability, and our known nouns",
+      "headword": "(practice)",
+      "romanization": "(practice)",
+      "gloss": "singular wanting, ability, vowel-change comparison, and our day or night",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:68f425a690b043db",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "This checkpoint adds nothing. Retrieve two three-form verbs, compare their two vowel changes, and choose nuestro or nuestra before one known singular noun."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the complete small chapter frame",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "wanting: quiero, quieres, quiere plus a known infinitive."
+            },
+            {
+              "kind": "speech",
+              "text": "ability: puedo, puedes, puede plus a known infinitive."
+            },
+            {
+              "kind": "speech",
+              "text": "the contrast: e becomes ie in the learned querer set; o becomes ue in the learned poder set."
+            },
+            {
+              "kind": "speech",
+              "text": "singular “our”: nuestro día, nuestra noche."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural persons and plural possessive agreement remain deferred."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The words, taken apart — retrieve the history",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "querer continues Latin quaerere, “seek,” the family of query."
+            },
+            {
+              "kind": "speech",
+              "text": "poder continues the Latin ability family behind power and possible."
+            },
+            {
+              "kind": "speech",
+              "text": "stressed Latin e and o often opened into Spanish ie and ue."
+            },
+            {
+              "kind": "speech",
+              "text": "nuestro, nuestra continue Latin noster, “our.”"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“quiero hablar; puedo hablar”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “quiero hablar; puedo hablar”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“quieres comer; puedes comer”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “quieres comer; puedes comer”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“nuestro día; nuestra noche”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “nuestro día; nuestra noche”]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C11-practice-querer-forms",
+              "prompt": "Give the learned singular forms of querer: yo, tú, then usted.",
+              "assesses": [
+                "ES-LEX-QUERER",
+                "ES-GRAMMAR-QUERER-PRESENT-SINGULAR"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "quiero, quieres, quiere",
+                "quiero quieres quiere",
+                "quiero / quieres / quiere"
+              ],
+              "feedback": {
+                "correct": "Right: quiero, quieres, quiere.",
+                "incorrect": "Retrieve the three learned forms: quiero, quieres, quiere."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C11-practice-poder-forms",
+              "prompt": "Give the learned singular forms of poder: yo, tú, then usted.",
+              "assesses": [
+                "ES-LEX-PODER",
+                "ES-GRAMMAR-PODER-PRESENT-SINGULAR"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "puedo, puedes, puede",
+                "puedo puedes puede",
+                "puedo / puedes / puede"
+              ],
+              "feedback": {
+                "correct": "Right: puedo, puedes, puede.",
+                "incorrect": "Retrieve the three learned forms: puedo, puedes, puede."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C11-practice-want-to-speak",
+              "prompt": "Say 'I want to speak' in Spanish.",
+              "assesses": [
+                "ES-LEX-QUERER",
+                "ES-GRAMMAR-QUERER-PRESENT-SINGULAR",
+                "ES-LEX-HABLAR"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "quiero hablar.",
+                "quiero hablar"
+              ],
+              "feedback": {
+                "correct": "Right: Quiero hablar.",
+                "incorrect": "Use quiero followed by the known infinitive hablar."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C11-practice-can-eat",
+              "prompt": "Say 'You can eat' to one friend in Spanish.",
+              "assesses": [
+                "ES-LEX-PODER",
+                "ES-GRAMMAR-PODER-PRESENT-SINGULAR",
+                "ES-LEX-COMER"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "puedes comer.",
+                "puedes comer"
+              ],
+              "feedback": {
+                "correct": "Right: Puedes comer.",
+                "incorrect": "Use puedes followed by the known infinitive comer."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C11-practice-our-night",
+              "prompt": "Say 'our night' in Spanish.",
+              "assesses": [
+                "ES-LEX-POSSESSIVES-NUESTRO-NUESTRA",
+                "ES-GRAMMAR-POSSESSIVE-GENDER-AGREEMENT-SINGULAR",
+                "ES-LEX-NOCHE"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "nuestra noche",
+                "nuestra noche."
+              ],
+              "feedback": {
+                "correct": "Right: feminine noche takes nuestra.",
+                "incorrect": "Choose feminine singular nuestra before noche."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the two singular sets. (Quiero, quieres, quiere; puedo, puedes, puede.) Which vowel contrast organizes them? (e becomes ie beside o becomes ue.) Say “our day” and “our night.” (Nuestro día; nuestra noche.) The next chapter can now build from this closed singular frontier."
             }
           ]
         }

@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 115,
-  "title": "Synthesis --- Two Shores, Two Answers",
+  "title": "Review --- A Tense You Build",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:9e1adb99b0b40ead",
+  "sourceHash": "fnv1a64:db85178b8e8aa9ef",
   "lessons": [
     {
-      "id": "ES-C49-sintesis-dos-orillas",
-      "sequence": 1380,
-      "title": "Synthesis — two shores, two answers",
-      "headword": "(synthesis)",
-      "romanization": "(synthesis)",
-      "gloss": "synthesis — when to reach for this tense instead of the preterite, and why the honest answer is a map rather than a rule",
+      "id": "ES-C49-repaso-perfecto",
+      "sequence": 1379,
+      "title": "Review — a tense you build",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "review — a whole tense assembled from two pieces, neither of which changes with the other",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a3129681e9bed533",
+      "sourceHash": "fnv1a64:d7481e57e94300e5",
       "notice": null,
       "blocks": [
         {
@@ -35,57 +35,73 @@
             },
             {
               "kind": "speech",
-              "text": "You can now say \"I spoke\" two ways: hablé and he hablado. The obvious question is which one to use, and it has an unusual answer."
+              "text": "Nothing new. Two questions: how many words is this tense, and which of them carries the person?"
             }
           ]
         },
         {
           "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: what the perfect is for",
+          "type": "notice",
+          "title": "What you've built",
           "segments": [
             {
               "kind": "speech",
-              "text": "Start with the part everybody agrees on. The perfect reaches into now:"
+              "text": "Piece one — the person: he, has, ha, hemos, habéis, han."
             },
             {
               "kind": "speech",
-              "text": "He comido. — I have eaten. (so I am not hungry) Comí. — I ate. (a finished event, back there)."
+              "text": "Piece two — the meaning: the participle, which never changes."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "regular",
+                ""
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "-ar. regular: -ado, hablado.",
+                "-er / -ir. regular: -ido, comido, vivido."
+              ]
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "irregular",
+                ""
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "hacer. irregular: hecho, decir becomes dicho.",
+                "ver. irregular: visto, poner becomes puesto."
+              ]
             },
             {
               "kind": "speech",
-              "text": "The preterite puts an event in the past and leaves it there. The perfect drags it forward and makes it matter now — the tense is telling your listener what to do with the information, not when it happened. English agrees: I have eaten and I ate are not interchangeable for you either."
+              "text": "Six little words times any participle you can form. That is the whole tense."
             }
           ]
         },
         {
           "index": 2,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way",
+          "type": "grammar",
+          "title": "Grammar Lens: why this one was cheap",
           "segments": [
             {
               "kind": "speech",
-              "text": "Now the part nobody agrees on, and it is worth having straight before you are corrected by two people who contradict each other."
+              "text": "Every other tense you have learned made you attach endings to every verb. The present has six endings per family; the preterite has its own set; the imperfect has another."
             },
             {
               "kind": "speech",
-              "text": "For something that happened today, Spain and most of Latin America choose differently:"
+              "text": "This one does not work like that. You learn six words once, and then any verb you ever meet joins the tense by forming a single participle. A tense that is built rather than conjugated costs a fixed amount instead of a per-verb amount."
             },
             {
               "kind": "speech",
-              "text": "Hoy he hablado con Ana. — Spain. Hoy hablé con Ana. — most of Latin America."
-            },
-            {
-              "kind": "speech",
-              "text": "Same day, same conversation, both entirely correct. Spain uses the perfect for anything inside the current stretch of time; much of Latin America uses the preterite and saves the perfect for things whose relevance is still open."
-            },
-            {
-              "kind": "speech",
-              "text": "Third split in this book decided by geography rather than meaning, after vosotros and os. There is no version of Spanish that is the real one, and no choice here that will make you wrong."
-            },
-            {
-              "kind": "speech",
-              "text": "A default, if you want one: the Latin American pattern is understood everywhere and is what most learners meet first, so leaning on the preterite for finished events is a safe habit. In Spain you will hear the perfect constantly and pick it up in a week."
+              "text": "That is worth recognising as a shape, because Spanish does it again. Once you have haber plus a participle, the same two pieces will give you more tenses later by changing only the little word — and each of those will cost you almost nothing, for the same reason this one did."
             }
           ]
         },
@@ -103,20 +119,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"He comido\" then \"Comí\" — one reaches into now, one does not",
+              "instruction": "\"he hablado, has comido, ha vivido, hemos hecho, habéis dicho, han visto\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"He comido\" then \"Comí\" — one reaches into now, one does not]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Hoy he hablado con Ana\" then \"Hoy hablé con Ana\" — two shores",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Hoy he hablado con Ana\" then \"Hoy hablé con Ana\" — two shores]"
+              "source": "[YOU SAY: \"he hablado, has comido, ha vivido, hemos hecho, habéis dicho, han visto\"]"
             },
             {
               "kind": "repeat",
@@ -124,81 +131,81 @@
               "source": "[REPEAT x2]"
             },
             {
+              "kind": "speech",
+              "text": "Until the little word arrives without thought."
+            },
+            {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C49-sintesis-dos-orillas-now",
-              "prompt": "Say I have eaten, meaning you are not hungry now.",
+              "id": "ES-C49-repaso-perfecto-pieces",
+              "prompt": "What are the two pieces of this tense, and which carries the person?",
               "assesses": [
                 "ES-GRAMMAR-PERFECT-COMPLETE",
-                "ES-LEX-COMER"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "he comido",
-                "yo he comido"
-              ],
-              "feedback": {
-                "correct": "The perfect drags it forward into now.",
-                "incorrect": "He comido."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C49-sintesis-dos-orillas-split",
-              "prompt": "For something that happened today, which tense would a speaker in Madrid pick, and one in Mexico City?",
-              "assesses": [
-                "ES-GRAMMAR-PERFECT-REGIONAL-SPLIT",
-                "ES-GRAMMAR-AR-PRETERITE-SINGULAR"
-              ],
-              "responseSeconds": 14,
-              "acceptedResponses": [
-                "madrid the perfect, mexico the preterite",
-                "he hablado in spain, hable in latin america"
-              ],
-              "feedback": {
-                "correct": "Both correct; the difference is a map, not a rule.",
-                "incorrect": "Madrid: he hablado. Mexico City: hable."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C49-sintesis-dos-orillas-wrong",
-              "prompt": "Two speakers correct you in opposite directions. Which of them is right?",
-              "assesses": [
-                "ES-GRAMMAR-PERFECT-REGIONAL-SPLIT"
+                "ES-GRAMMAR-PAST-PARTICIPLE"
               ],
               "responseSeconds": 12,
               "acceptedResponses": [
-                "both, for their own variety",
-                "both",
-                "neither is wrong"
+                "haber and the participle; haber carries the person",
+                "a form of haber plus a participle"
               ],
               "feedback": {
-                "correct": "Third split in this book decided by geography, after vosotros and os.",
-                "incorrect": "Both. Neither variety is the real Spanish."
+                "correct": "And the participle never moves.",
+                "incorrect": "A form of haber, which carries the person, plus a participle, which carries the meaning."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C49-sintesis-dos-orillas-build",
-              "prompt": "Say we have spoken Spanish.",
+              "id": "ES-C49-repaso-perfecto-build",
+              "prompt": "Say we have lived.",
               "assesses": [
                 "ES-GRAMMAR-PERFECT-COMPLETE",
-                "ES-GRAMMAR-PAST-PARTICIPLE",
-                "ES-LEX-HABLAR",
-                "ES-LEX-ESPANOL"
+                "ES-LEX-VIVIR"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "hemos vivido",
+                "nosotros hemos vivido"
+              ],
+              "feedback": {
+                "correct": "Hemos vivido.",
+                "incorrect": "Hemos vivido."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C49-repaso-perfecto-irreg",
+              "prompt": "Say you have said it, using the participle of decir.",
+              "assesses": [
+                "ES-GRAMMAR-IRREGULAR-PARTICIPLES"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "hemos hablado espanol",
-                "hemos hablado español"
+                "lo has dicho",
+                "has dicho"
               ],
               "feedback": {
-                "correct": "Hemos hablado espanol.",
-                "incorrect": "Hemos hablado espanol."
+                "correct": "Has dicho.",
+                "incorrect": "Lo has dicho — dicho, not decido."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C49-repaso-perfecto-cost",
+              "prompt": "Why did this tense cost less than the present or the preterite?",
+              "assesses": [
+                "ES-GRAMMAR-PERFECT-COMPLETE"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "it is built from two pieces rather than conjugated per verb",
+                "six words once, not endings on every verb"
+              ],
+              "feedback": {
+                "correct": "A fixed cost instead of a per-verb one.",
+                "incorrect": "Six words learned once, plus one participle per verb — not a new ending set for every family."
               }
             }
           ]
@@ -216,7 +223,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does the perfect do that the preterite does not? (Reaches into now.) And for something that happened today? (Spain says he hablado; much of Latin America says hablé — and both are right.)"
+              "text": "Two pieces — name them. (A form of haber, plus a participle.) The four irregulars? (Hecho, dicho, visto, puesto.) Next: when to reach for this tense instead of the preterite — and the answer depends on where you are standing on the map."
             }
           ]
         }

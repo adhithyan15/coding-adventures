@@ -1,39 +1,43 @@
-Spanish, chapter 78: La --- The Pronoun Carries What Left.
+Spanish, chapter 78: Lo --- Saying It Without Naming It.
 1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-la — "it," for a feminine noun.
+lo — "it".
 
 Warm-up.
 [pause 2 seconds]
-Say "I have it," about the book. (Lo tengo.) Now guess the feminine version before you read on.
+Say "my name is" in Spanish. (Me llamo.) Where does that little me sit — before the verb, or after it?
 
-Grammar Lens: the form you probably guessed.
-la — it, standing in for something feminine.
-Hago la comida. — I make the meal. La hago. — I make it.
-If you guessed la, you were not lucky. You were doing what the shape of Spanish invites you to do: el and la mark the two genders everywhere else, so the object pronouns mark them the same way.
-The pronoun agrees with the noun it replaces — not with you, and not with the verb. El libro is masculine, so lo. La comida and la casa are feminine, so la.
-That last point is worth pausing on. La here is not agreeing with anything present in the sentence. The noun is gone; the pronoun is carrying its gender on its behalf. This is the first time in Spanish that a word has had to remember something that is no longer being said.
+Grammar Lens: a slot you have been using all along.
+Before the verb. You have known that since your fourth chapter, and you have been doing it every time you say your name.
+Here is a second word for that same slot.
+lo — it, standing in for something masculine.
+Watch what it does:
+Tengo el libro. — I have the book. Lo tengo. — I have it.
+The noun leaves; lo takes its place; and it goes where me goes — in front of the verb. Not one new rule. One new word for a slot you already own.
+Notice that this only became possible last chapter. A pronoun replaces a noun, so it needs a noun to replace — which is why these three ordinary words came first.
 
 The word, taken apart.
-Last chapter had a small mystery: why lo and not el, when both come from the same Latin word? Here that mystery quietly disappears.
-The feminine object form in Latin was illam. Worn down as an article it gave la. Worn down as a pronoun it gave — la. Both routes arrived at the same place, because the vowel that got lost on the masculine side (elo becomes el) was never at risk on the feminine side.
-So the masculine pair split into two shapes and the feminine pair did not. Not an exception to memorise: a single sound change that happened to bite one word and not the other.
+Lo should look faintly familiar, and it should also look wrong. It is almost el, but not quite. That is not a coincidence, and the near-miss has a cause.
+Latin ille, "that one," changed shape depending on the job it was doing. As the object of a verb it was illum. Spanish got both its article and its object pronoun out of that one word — and then wore it down twice, differently, because the two jobs put the stress in different places:
+Leaning on a noun, unstressed, it lost its vowel: illum becomes elo becomes el.
+Standing alone in the verb's slot, it kept the vowel: illum becomes lo.
+So el and lo are the same ancient word, split by the work it was asked to do. English did something similar with he and him: one word, two shapes, and the shape tells you the job.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "Hago la comida" then "La hago"]
+[your turn — say: "Tengo el libro" then "Lo tengo" — hear the noun disappear]
 [pause 8 seconds for the answer]
-[your turn — say: "lo tengo" then "la hago" — one syllable carries the whole difference]
+[your turn — say: "me llamo" then "lo tengo" — the same slot, twice]
 [pause 8 seconds for the answer]
 [question — say your answer, then pause 8 seconds]
-Say I make it, about la comida.
+Say I have it, replacing el libro.
+[question — say your answer, then pause 8 seconds]
+Does the pronoun go before or after the conjugated verb?
 [question — say your answer, then pause 10 seconds]
-What decides whether you say lo or la?
-[question — say your answer, then pause 12 seconds]
-Why does the feminine article match its pronoun exactly, when the masculine pair does not?
+Which everyday Spanish word comes from the same Latin word as lo?
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which pronoun replaces a feminine noun? (La.) What decides it — you, the verb, or the noun? (The noun, even though it is no longer there.) Next: the same slot, for the two people actually talking.
+What does lo mean? (It — for something masculine.) Where does it go? (Before the verb.) Next: the same job, done by a word that never changed its shape at all.

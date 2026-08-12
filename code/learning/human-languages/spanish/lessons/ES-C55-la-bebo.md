@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C55-la-bebo
 spine_node: SPINE-POLITE-REQUEST-REPAIR
 sequence: 1735
-chapter: 138
+chapter: 139
 type: grammar
 headword: la bebo
 gloss: the pronoun as a witness — el agua takes el, and la bebo proves the word was feminine all along

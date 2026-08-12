@@ -1,41 +1,118 @@
-Spanish, chapter 69: La Casa --- Your First Everyday Noun.
-1 lesson. All 1 can be done entirely by ear.
+Spanish, chapter 69: Deriving the Rest.
+3 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 1.
-la casa — "house," and "home".
+Lesson 1 of 3.
+queremos, quieren — work them out first.
 
 Warm-up.
-[pause 2 seconds]
-You have spent a long time learning what to do with nouns — their gender, their articles, their agreement. This chapter and the next few hand you some nouns to do it with.
+[pause 3 seconds]
+Before you read on: you have the singular of querer, and you have the stem-change rule. What is "we want"? Say your answer out loud, then continue.
 
-Sounds you'll need.
-s-sound — the s in casa is a plain, unvoiced s. Spanish has no z buzz here: KAH-sah, never KAH-zah.
-
-The word, taken apart.
-la casa — the house, and just as often home.
-Latin casa meant something humbler than a house: a hut, a cottage, the small shelter a farm worker lived in. The grand Latin word for a proper house was domus — which is where domestic and dome come from. And domus lost. Across the whole west of the Roman world the humble word won and the grand one faded: Spanish casa, Italian casa, Portuguese casa.
-French took the same word somewhere stranger. Casa wore down until it stopped being a noun at all and became the little word chez — so chez moi is, underneath, "at the house of me."
-Italian kept a small one too: casino is casa plus a diminutive ending — literally "little house."
-
-Grammar Lens: a feminine noun, behaving exactly as promised.
-Casa ends in -a and is feminine, so it takes la. That is the common case, and it is worth having one plain example on hand before you meet the awkward ones.
-la casa — the house. Tengo una casa. — I have a house.
-Nothing new is happening here. That is the point: the machinery has been ready for a long time, and this is the first ordinary thing to run through it.
+Grammar Lens: you were right.
+queremos — we want., quieren — they want. podemos — we can., pueden — they can.
+If you said queremos rather than quieremos, you did not remember it. You derived it, from a rule you were given one chapter ago: the stem breaks exactly where it is stressed, so nosotros never breaks.
+And quieren breaks, because there the stress is back on the stem.
+That is the difference between a course that hands you tables and one that hands you rules. Four forms you had never seen, and none of them needed teaching.
+A test you can run yourself. You have puedo and puedes. Without being told, what are we can and they can?
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "la casa" — KAH-sah, a clean s]
+[your turn — say: the yo, nosotros and ellos forms of querer — break, no break, break]
 [pause 8 seconds for the answer]
-[your turn — say: "Tengo una casa"]
+[your turn — say: the same three for poder]
 [pause 8 seconds for the answer]
 [question — say your answer, then pause 8 seconds]
-Say the house in Spanish.
+We want.
+[question — say your answer, then pause 8 seconds]
+They can.
 [question — say your answer, then pause 10 seconds]
-Say I have a house.
-[question — say your answer, then pause 10 seconds]
-Which French word is casa worn all the way down?
+Poder changes o to ue. What is we can?
 
 Wrap-up Recall.
 [pause 3 seconds]
-What is "the house"? (La casa.) What did casa mean in Latin? (A hut — the humble word that outlived the grand one.) Next: a masculine noun whose Latin ancestor was a piece of a tree.
+What is "we want"? (Queremos.) Why no break? (The stress is on the ending.) And could you have produced these without this lesson? (Yes — which is the point of it.)
+
+
+Lesson 2 of 3.
+hacemos, hacen — and the club has no plural at all.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+[pause 2 seconds]
+Name the six -go verbs. And say where in each one the -go appears.
+
+Grammar Lens: an oddity that was only ever in one slot.
+You were told, when the club closed, that the -go lives in the yo form and nowhere else. Here is what that is worth:
+hacemos, hacéis, hacen — plain -er endings. ponemos, ponéis, ponen — plain -er endings. salimos, salís, salen — plain -ir endings.
+Nothing to learn. The -go club has no plural forms of its own, because the thing that made it a club was never in the plural to begin with.
+Two of the six do something in the plural, and it is not the -go:
+decimos but dicen, venimos but vienen.
+Those are stem changes, and they follow the rule you already have — the stem breaks where it is stressed, and nosotros is never stressed on the stem. So even the exceptions are not exceptions.
+
+What you've built.
+Two rules — the -go is yo-only, and stems break under stress — now generate the entire present tense of every irregular verb in this book, in every person.
+That is what a rule buys that a table does not: the table stops at the forms printed on it.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: all six -go verbs in the we form — and hear that none is odd]
+[pause 8 seconds for the answer]
+[your turn — say: "decimos, dicen" and "venimos, vienen" — the two that break, and why]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 8 seconds]
+We do or make.
+[question — say your answer, then pause 8 seconds]
+They leave.
+[question — say your answer, then pause 10 seconds]
+Decir stem-changes. What are we say and they say?
+
+Wrap-up Recall.
+[pause 3 seconds]
+How many special plural forms does the -go club have? (None — the -go was only ever in yo.) Which two do something in the plural, and what? (Decir and venir — a stem change, following the stress.) How many rules now generate every irregular present in this book? (Two.)
+
+
+Lesson 3 of 3.
+Synthesis — a verb you have never met.
+
+Warm-up.
+[pause 2 seconds]
+Nothing new in this chapter, and nothing to memorise. Say the six endings of a regular -er verb.
+
+What you've built.
+Everything you hold about the present tense now fits in three lines:
+Three families, six endings each; -er and -ir differ only in nosotros and vosotros.
+A stem breaks exactly where it is stressed — so nosotros and vosotros never break.
+A -go sits in the yo form and nowhere else.
+That is the whole system. Not a summary of it — the system.
+And a system, unlike a table, works on words it has never seen.
+
+The exchange.
+Here is a verb this book has not taught you: beber, "to drink" — you have met the word, but never its full set.
+Do not look anything up. It is a regular -er verb, so:
+bebo, bebes, bebe, bebemos, bebéis, beben.
+Six forms, and the only thing you needed was rule 1.
+Now one that uses all three rules. Salir is an -ir verb, and it is in the -go club. Rules 1 and 3 give you every form, and you can produce them before reading on:
+salgo, sales, sale, salimos, salís, salen.
+One odd form, in the one slot rule 3 names. The other five are plain -ir.
+Four broken, two whole, and the two whole ones are the two the stress leaves alone. Every time.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: all six of beber, without looking]
+[pause 8 seconds for the answer]
+[your turn — say: all six of salir, and name the only odd one]
+[pause 8 seconds for the answer]
+[repeat that twice]
+Until deriving is faster than remembering.
+[question — say your answer, then pause 10 seconds]
+Salir is a -go verb. What is we leave?
+[question — say your answer, then pause 8 seconds]
+And they leave?
+[question — say your answer, then pause 8 seconds]
+How many rules generate the whole present tense?
+
+Wrap-up Recall.
+[pause 3 seconds]
+State the three rules. (Three families, stems break under stress, the -go is yo-only.) Which two forms never break? (Nosotros, vosotros.) And what can you do now that a table could not give you? (Conjugate a verb nobody taught me.)

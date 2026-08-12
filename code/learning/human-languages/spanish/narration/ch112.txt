@@ -1,42 +1,42 @@
-Spanish, chapter 112: Has, Ha, Hemos, Habeis, Han.
+Spanish, chapter 112: He Hablado --- A Verb With No Meaning Left.
 1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-has, ha, hemos, habéis, han — the rest of haber — five short words, and the shortest paradigm in the language for the reason that made it short.
+he hablado — "I have spoken".
 
 Warm-up.
 [pause 2 seconds]
-Say "I have eaten." (He comido.) Now the other five people need their word.
+You have hablado, and it cannot stand alone — it names no person and no time. It needs a word in front of it. Here is that word.
 
-Grammar Lens: the whole of it.
-[a table of 6 rows, read aloud]
-I. haber: he. with a participle: he comido.
-you. haber: has. with a participle: has comido.
-he / she / usted. haber: ha. with a participle: ha comido.
-we. haber: hemos. with a participle: hemos comido.
-you all (Spain). haber: habéis. with a participle: habéis comido.
-they / ustedes. haber: han. with a participle: han comido.
-Six forms, and five of them are one syllable. Only hemos and habéis are longer, and they are the two you say least often.
-That is not a coincidence, and it is the same principle you met with ser and ir: the most-used words wear down the most. Haber is said in every perfect sentence in the language, so it has been ground shorter than any ordinary verb — down to he, has, ha, which barely have room to be irregular in.
-Notice also what does not change. Comido is comido in all six rows. One word does all the person-work and the other never moves, which is why this tense, unlike every other you have learned, costs six little words rather than six endings on every verb you know.
+Sounds you'll need.
+silent-h — the h in he is silent, as every Spanish h is. It is one sound: eh.
+
+Grammar Lens: the emptied verb.
+he + participle — I have done something.
+He hablado español. — I have spoken Spanish.
+Two words, and the work is split cleanly between them. He carries the person and the tense. Hablado carries the meaning. Neither does the other's job, and that division is why the participle never had to agree with anybody.
+He is a form of haber — and here is the thing worth the chapter: haber does not mean anything here. It is not "I hold spoken." You cannot translate it on its own. It is a word whose entire remaining purpose is to hold a participle in place.
+
+The word, taken apart.
+Haber comes from Latin habēre, "to hold, to have" — a completely ordinary verb with a completely ordinary meaning.
+Then Spanish did something drastic. It handed the meaning to tener (which had been the narrower "hold, grip"), and kept haber for this one grammatical job. The verb was hollowed out: the meaning left, the machinery stayed.
+English did exactly the same thing to have, and you never noticed. When you say I have eaten, nobody is holding anything. Two languages, independently, took their word for "hold" and wore it down into a tense marker — because the step from I have a thing that is done to I have done a thing is a very short one, and everybody takes it eventually.
+So when haber feels meaningless, that is not a gap in your understanding. It is an accurate perception of what happened to the word.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "he, has, ha, hemos, habéis, han" until the list is one breath]
+[your turn — say: "He hablado español"]
 [pause 8 seconds for the answer]
-[your turn — say: "he comido, has comido, ha comido…" through all six]
+[your turn — say: "I have eaten" in English, and notice that nothing is being held]
 [pause 8 seconds for the answer]
-[repeat that twice]
+[question — say your answer, then pause 10 seconds]
+Say I have spoken Spanish.
 [question — say your answer, then pause 12 seconds]
-Give all six forms of haber, in order.
-[question — say your answer, then pause 8 seconds]
-Say they have eaten.
-[question — say your answer, then pause 12 seconds]
-Why is haber shorter than an ordinary verb?
-[question — say your answer, then pause 8 seconds]
-How many forms does comido take across all six rows?
+What does haber mean in he hablado?
+[question — say your answer, then pause 10 seconds]
+Which English verb was hollowed out the same way?
 
 Wrap-up Recall.
 [pause 3 seconds]
-"They have eaten"? (Han comido.) "We have eaten"? (Hemos comido.) How many times does the participle change? (Never.) Next: four participles that refused to follow the rule.
+"I have spoken"? (He hablado.) Which word carries the meaning? (Hablado.) And what does haber contribute? (A person and a tense — and no meaning at all.) Next: the rest of it.

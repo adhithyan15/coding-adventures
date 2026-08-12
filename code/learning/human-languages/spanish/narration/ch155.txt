@@ -1,47 +1,42 @@
-Spanish, chapter 155: Ayudar — the Same Word as Aid.
+Spanish, chapter 155: Preguntar — Asking, and Sounding a Depth.
 1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-ayudar — "to help", and it is English "aid" in disguise.
+preguntar — "to ask", by sounding the water with a pole.
 
 Warm-up.
 [pause 2 seconds]
-You can ask a question now. The next thing to ask for is a hand — and this verb is one you already own in English without knowing it.
+English gets by with one verb, ask. Spanish splits the job in two, and picking the wrong half is a reliable beginner mistake. Here is the first half.
 
 Sounds you'll need.
-vowel-a — a clean, open a: a-yoo-DAR.
-r-tap — one tap at the end, not an English r.
+pr-cluster — pre- is one crisp beat, preh, with a tapped r.
+g-hard — the g before u is hard, as in English gun: pre-goon-TAR.
 
-The word, taken apart: ayudar.
-ayudar ("to help") from Latin adiūtāre, the repeating form of adiuvāre: ad- ("toward") + iuvāre ("to help, to delight"). To help was to move toward someone.
-English borrowed that identical verb through Old French aidier and calls it aid. So ayudar and aid are not merely cousins — they are the same word by two different roads. The family came with it:
-aide, and aide-de-camp, an officer who helps.
-adjutant — the officer whose whole job is assisting.
-adjuvant — a substance that helps another drug work.
-coadjutor — one who helps alongside.
-The shape change is a rule, not an accident. Latin -di- before a vowel turned into Spanish y: adiūtāre becomes ayudar, hodiē becomes hoy ("today"), podium becomes poyo. Once you have that, the word stops looking arbitrary.
+The word, taken apart: preguntar.
+preguntar ("to ask a question") from Vulgar Latin praecunctāre, itself a reshaping of classical percontārī, "to inquire". And percontārī was built on contus, "a punting pole": to percontor was to push a pole down through water and find out how deep it was.
+Asking is taking a sounding. Unlike almost every other word here, preguntar left English nothing — the pole word died out — yet English rebuilt the same metaphor on its own: you sound someone out, you probe.
+The verb is a plain -ar one: pregunto, preguntas, pregunta, preguntamos, preguntan. Its noun is la pregunta (fem.), and note that Spanish makes a question rather than asking one: hacer una pregunta.
 
-Grammar Lens: a plain -ar verb, and how to ask for a hand.
-Nothing breaks; the endings are the ones you started with:
-[a table of 4 rows, read aloud]
-person: yo. form: ayudo. meaning: I help.
-person: tú. form: ayudas. meaning: you help.
-person: nosotros. form: ayudamos. meaning: we help.
-person: ellos/ustedes. form: ayudan. meaning: they help.
-Its noun is la ayuda (fem.), "help" — the word on relief packages worldwide. Two sentences worth owning: ¿Me ayudas? ("will you help me?" — Spanish uses the plain present where English needs will) and, politely, ¿Puedo ayudarle?
+Grammar Lens: one English "ask", two Spanish verbs.
+Spanish sorts asking by what you are after:
+[a table of 2 rows, read aloud]
+what you want: information. verb: preguntar. example: Te pregunto la hora — I'm asking you the time.
+what you want: a thing or a favour. verb: pedir. example: Pido un café — I'm asking for a coffee.
+Ask for a coffee with preguntar and you have said "I question a coffee". The line is simple: a question takes preguntar, a request takes pedir.
+pedir from Latin petere, "to make for, to aim at" — and that root stocked English generously: petition, appetite, compete, impetus, perpetual, centripetal. It cracks a third way, e becomes i: pido, pides, pide, pedimos, piden. Recognise pido for now; the pattern gets its own lesson later.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "ayudo, ayudas, ayudamos, ayudan"]
+[your turn — say: "pregunto, preguntas, pregunta, preguntamos, preguntan"]
 [pause 8 seconds for the answer]
-[your turn — say: "¿Me ayudas?" — will you help me?]
+[your turn — say: "Te pregunto la hora" — I'm asking you the time]
 [pause 8 seconds for the answer]
-[your turn — say: "Te pregunto" then "Me ayudas" — I ask you, you help me]
+[your turn — say: "Pido un café" then "Tomo un café" — I ask for one, I have one]
 [pause 8 seconds for the answer]
-[your turn — say: "ayudar" then English "aid, adjutant, adjuvant" — one word, two roads]
+[your turn — say: "pedir" then English "petition, appetite, compete" — the aiming family]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What two Latin pieces build adiuvāre? (Ad- "toward" + iuvāre "to help".) What everyday English word is ayudar, arriving by French? (Aid.) What sound-law turned adiūtāre into ayudar, and which other word shows it? (Latin -di- became Spanish y; hodiē becomes hoy.) Next: gustar, the verb that runs backwards.
+What did percontārī picture literally? (Sounding water with a pole.) Which verb asks for a coffee, and which asks the time? (Pedir for the coffee; preguntar for the time.) What Latin root is pedir from, and one English cousin? (Petere, "to aim at" — petition, appetite, compete.) Next: ayudar, which is the same word as English aid.

@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 125,
-  "title": "Habla --- Telling Somebody To Do Something",
+  "title": "Synthesis --- Claiming, and Not Claiming",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:e43a9f1f45c8a4c1",
+  "sourceHash": "fnv1a64:106623fa750f2170",
   "lessons": [
     {
-      "id": "ES-C50-habla",
-      "sequence": 1487,
-      "title": "habla — telling somebody to do something",
-      "headword": "habla · come · vive",
-      "romanization": "habla · come · vive",
-      "gloss": "telling somebody to do something — and the form is one you have had since your seventh chapter",
+      "id": "ES-C18-sintesis-subjuntivo",
+      "sequence": 1486,
+      "title": "Synthesis — claiming, and not claiming",
+      "headword": "(synthesis)",
+      "romanization": "(synthesis)",
+      "gloss": "synthesis — the mood tells your listener whether you are claiming it is true",
       "script": "latin",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:e18e664e0d3b0750",
+      "sourceHash": "fnv1a64:1855298b27d576ae",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -42,69 +42,73 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"he speaks.\" (Habla.) Hold that word. You are about to be told it does a second job you have never been shown."
+              "text": "Nothing new in this chapter. Say hablas, then hables."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: you already have it",
+          "title": "Grammar Lens: what the second one is actually doing",
           "segments": [
             {
               "kind": "speech",
-              "text": "To tell somebody you address as tú to do something, use the he/she form of the present."
+              "text": "Those two forms are not two tenses. They are two stances."
             },
             {
               "kind": "speech",
-              "text": "Habla. — Speak. Come. — Eat. Vive. — Live."
+              "text": "Hablas español. — I am telling you this is so. Quiero que hables español. — I am not telling you anything is so."
             },
             {
               "kind": "speech",
-              "text": "That is the whole rule, and it costs you nothing. Habla was already in your mouth as \"he speaks\"; the same two syllables, said to somebody, are an order."
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "verb",
-                "he/she does",
-                "you, do it"
-              ],
-              "columns": 3,
-              "rowCount": 3,
-              "utterances": [
-                "verb: hablar. he/she does: habla. you, do it: habla.",
-                "verb: comer. he/she does: come. you, do it: come.",
-                "verb: vivir. he/she does: vive. you, do it: vive."
-              ]
+              "text": "In the first, you put a fact on the table and stood behind it. In the second, nothing has been claimed at all: the speaking has not happened, and might not. The mood is the difference, and the difference is about what you are willing to assert."
             },
             {
               "kind": "speech",
-              "text": "The column repeats. That is not an oversight in the table."
+              "text": "That is the whole of it, and it is worth holding onto, because every remaining use of this mood — and there are many — is a version of the same move. Wishing, doubting, denying, hoping: none of them puts a fact on the table."
             },
             {
               "kind": "speech",
-              "text": "Spanish does this often enough that it is worth naming as a habit: rather than inventing a new form for every job, it reuses one and lets context sort it out. Habla said about somebody is a statement; habla said to somebody is a command, and nobody has ever confused the two."
+              "text": "Indicative: this is so. Subjunctive: I am not saying this is so."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
+          "type": "input",
+          "title": "The exchange",
           "segments": [
             {
               "kind": "speech",
-              "text": "The name for this form is the imperative, from Latin imperāre, \"to command.\""
+              "text": "— ¿Hablas español? — Ana quiere que hable español. — Ojalá hables mucho."
             },
             {
               "kind": "speech",
-              "text": "That imper- is a word you already know in English clothes. An emperor is literally one who commands; an empire is the thing he commands. The grammar term and the political ones are the same root, which is a fair description of what the form does: it is the sentence shape that expects to be obeyed."
+              "text": "Three lines, three stances. The first asks about a fact. The second reports somebody's wish, so nothing is asserted. The third wishes it outright."
             }
           ]
         },
         {
           "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Ojalá deserves a last look, because it explains itself."
+            },
+            {
+              "kind": "speech",
+              "text": "It is Arabic — wa-šā' allāh, \"and may God will it\" — carried into Spanish over eight centuries of al-Andalus and kept long after the religion behind it stopped being the speaker's. A Spanish speaker saying ojalá today is uttering a prayer in a language they do not speak, to a God the sentence no longer names."
+            },
+            {
+              "kind": "speech",
+              "text": "And it can only ever take this mood. Of course it can: a thing God has yet to will is, by definition, not a fact you can assert."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -117,83 +121,83 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"habla\" as a statement, then \"¡Habla!\" as an order — same word, different job",
+              "instruction": "the three-line exchange, and name the stance of each line",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"habla\" as a statement, then \"¡Habla!\" as an order — same word, different job]"
+              "source": "[YOU SAY: the three-line exchange, and name the stance of each line]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"come\", \"vive\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"come\", \"vive\"]"
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "Until choosing the mood feels like choosing what you mean."
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C50-habla-say",
-              "prompt": "Tell somebody you call tu to eat.",
+              "id": "ES-C18-sintesis-subjuntivo-assert",
+              "prompt": "You are stating a fact about a friend: you speak Spanish. Hablas or hables?",
               "assesses": [
-                "ES-GRAMMAR-COMMAND-TU-AFFIRMATIVE",
-                "ES-LEX-COMER"
+                "ES-GRAMMAR-AR-PRESENT-SINGULAR",
+                "ES-GRAMMAR-SUBJUNCTIVE-WANTED-NONASSERTED"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "come",
-                "¡come!",
-                "come!"
+                "hablas",
+                "hablas - indicative"
               ],
               "feedback": {
-                "correct": "Same word as he eats.",
-                "incorrect": "Come — the he/she form, said to somebody."
+                "correct": "Yes — you put a fact on the table.",
+                "incorrect": "hablas. The indicative asserts."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C50-habla-rule",
-              "prompt": "Which form do you use to give a tu command?",
+              "id": "ES-C18-sintesis-subjuntivo-wish",
+              "prompt": "Now you only wish it were so. Which form follows ojala?",
               "assesses": [
-                "ES-GRAMMAR-COMMAND-TU-AFFIRMATIVE",
-                "ES-GRAMMAR-AR-PRESENT-3SG"
+                "ES-GRAMMAR-AR-SUBJUNCTIVE-SINGULAR"
               ],
-              "responseSeconds": 10,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "the he/she present form",
-                "the third person singular",
-                "the el form"
+                "hables",
+                "hables - subjunctive",
+                "ojala hables"
               ],
               "feedback": {
-                "correct": "No new form at all.",
-                "incorrect": "The he/she form of the present."
+                "correct": "Yes — nothing is being claimed.",
+                "incorrect": "hables. A wish asserts nothing."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C50-habla-emperor",
-              "prompt": "Which two English words share a root with imperative?",
+              "id": "ES-C18-sintesis-subjuntivo-ojala",
+              "prompt": "What did ojala originally mean, and in which language?",
               "assesses": [
-                "ES-ETYMON-IMPERARE"
+                "ES-ETYMON-OJALA-HISPANIC-ARABIC"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "emperor and empire",
-                "emperor, empire"
+                "may god will it, in arabic",
+                "arabic, may god will it",
+                "and may god will it",
+                "wa sha allah"
               ],
               "feedback": {
-                "correct": "One who commands, and the thing commanded.",
-                "incorrect": "Emperor and empire — both from imperare, to command."
+                "correct": "Right — and that is exactly why it cannot take the asserting mood.",
+                "incorrect": "Arabic wa-sha' allah, 'and may God will it'."
               }
             }
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -205,7 +209,7 @@
             },
             {
               "kind": "speech",
-              "text": "Tell somebody to speak. (Habla.) Which form is that? (The he/she present — nothing new.) What does imperāre mean? (To command — as in emperor.) Next: eight verbs that refused, and every one of them is a single syllable."
+              "text": "What does the indicative do that the subjunctive does not? (Claim that something is so.) Why can ojalá never take the indicative? (Because a thing not yet willed is not a fact.) And what language is ojalá? (Arabic — a prayer that outlived the religion behind it.)"
             }
           ]
         }

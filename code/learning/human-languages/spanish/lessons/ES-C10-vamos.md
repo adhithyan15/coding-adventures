@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C10-vamos
 spine_node: SPINE-ASK-LOCATION
 sequence: 1040
-chapter: 60
+chapter: 61
 type: grammar
 headword: vamos · vais
 gloss: "we go," "you all go" — from a verb that is not ir at all

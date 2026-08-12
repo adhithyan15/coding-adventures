@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 71,
-  "title": "La Comida --- A Noun You Can Build",
+  "title": "El Libro --- And a Word Made of Tree Bark",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:529609cce36eb43e",
+  "sourceHash": "fnv1a64:0e7d2a408876beea",
   "lessons": [
     {
-      "id": "ES-C43-comida",
-      "sequence": 1183,
-      "title": "la comida — \"food,\" built from a verb you have",
-      "headword": "la comida",
-      "romanization": "la comida",
-      "gloss": "food, a meal — a noun you can build yourself out of a verb you already own",
+      "id": "ES-C43-libro",
+      "sequence": 1181,
+      "title": "el libro — \"book\"",
+      "headword": "el libro",
+      "romanization": "el libro",
+      "gloss": "book — named after the part of a tree people wrote on before paper",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:98e03c95bc958d69",
+      "sourceHash": "fnv1a64:187723ff6a5505d3",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"to eat.\" (Comer.) Keep it in mind — this chapter's noun is made out of it, in front of you."
+              "text": "Say \"the house.\" (La casa.) Why la and not el? (Casa is feminine.) Here is one that goes the other way."
             }
           ]
         },
@@ -46,7 +46,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "d-soft — the d between vowels is soft, close to the th in English this: ko-MEE-thah, not a hard d."
+              "text": "r-tap — a single flick of the tongue: LEE-broh. One tap, not a roll."
             }
           ]
         },
@@ -57,61 +57,50 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "la comida — food, and also a meal."
+              "text": "el libro — the book."
             },
             {
               "kind": "speech",
-              "text": "Take comer, drop the ending, add -ida:"
+              "text": "Latin liber did not mean \"book.\" It meant the inner bark of a tree — the thin, pale layer just under the rough outside, which is what Romans wrote on before they had anything better."
             },
             {
               "kind": "speech",
-              "text": "comer becomes comida — literally the eaten thing."
+              "text": "So the word travelled the way these words usually do: from the material, to the thing made of it, to the thing itself long after the material is gone. Nobody has written on bark for two thousand years, and the word has not noticed."
             },
             {
               "kind": "speech",
-              "text": "That ending is not decoration. It is a working tool: it takes a verb and hands you back a noun for the result of that verb. You will meet it again and recognise it when you do."
+              "text": "English took the same root and kept it in the places books live:"
             },
             {
               "kind": "speech",
-              "text": "This is the first Spanish noun you did not have to be given. You could have built it. That is a different kind of possession from memorising a list, and it is the reason the ending is worth more here than the word."
+              "text": "library — and French livre, Italian libro."
             },
             {
               "kind": "speech",
-              "text": "Comer itself comes from Latin comedere — ed- is \"eat,\" the same ancient root as English eat, with com- (\"thoroughly\") in front. So comida is, at the bottom, \"the thoroughly-eaten thing.\""
+              "text": "libretto — Italian for \"little book,\" the words of an opera."
+            },
+            {
+              "kind": "speech",
+              "text": "English's own word went the same route from a different tree: book is related to beech, whose bark the Germanic peoples wrote on. Two languages, two trees, the same idea."
             }
           ]
         },
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: -ida nouns are feminine",
+          "title": "Grammar Lens: a masculine noun to sit beside the feminine one",
           "segments": [
             {
               "kind": "speech",
-              "text": "Nouns built this way end in -a and are feminine, every time. So the ending gives you two things at once: the word, and its gender."
+              "text": "Libro ends in -o and is masculine, so it takes el."
             },
             {
               "kind": "speech",
-              "text": "la comida — the food. Hago la comida. — I make the meal."
+              "text": "el libro — the book. Tengo un libro. — I have a book. la casa — the house. Tengo una casa. — I have a house."
             },
             {
               "kind": "speech",
-              "text": "Set your three nouns side by side and the pattern is doing all the work:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "noun",
-                "gender",
-                "article"
-              ],
-              "columns": 3,
-              "rowCount": 3,
-              "utterances": [
-                "noun: libro. gender: masculine. article: el.",
-                "noun: casa. gender: feminine. article: la.",
-                "noun: comida. gender: feminine. article: la."
-              ]
+              "text": "Two nouns, one of each gender, side by side. That pairing is worth more than either noun alone: from here on, when something in Spanish depends on gender, you have a plain example of both to test it against."
             }
           ]
         },
@@ -129,76 +118,77 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"comer\" then \"comida\" — hear the verb inside the noun",
+              "instruction": "\"el libro\" — one tap on the r",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"comer\" then \"comida\" — hear the verb inside the noun]"
+              "source": "[YOU SAY: \"el libro\" — one tap on the *r*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Hago la comida\"",
+              "instruction": "\"Tengo un libro\" then \"Tengo una casa\" — hear the article follow the noun",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Hago la comida\"]"
+              "source": "[YOU SAY: \"Tengo un libro\" then \"Tengo una casa\" — hear the article follow the noun]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C43-comida-build",
-              "prompt": "Build the noun for food from the verb comer.",
+              "id": "ES-C43-libro-article",
+              "prompt": "Say the book in Spanish.",
               "assesses": [
-                "ES-GRAMMAR-NOUN-FROM-VERB-IDA",
-                "ES-LEX-COMER"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "comida",
-                "la comida"
-              ],
-              "feedback": {
-                "correct": "Comer plus -ida: the eaten thing.",
-                "incorrect": "Comida — drop the -er, add -ida."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C43-comida-make",
-              "prompt": "Say I make the meal.",
-              "assesses": [
-                "ES-GRAMMAR-HACER-PRESENT-SINGULAR",
-                "ES-LEX-COMIDA"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "hago la comida",
-                "yo hago la comida"
-              ],
-              "feedback": {
-                "correct": "Hago la comida.",
-                "incorrect": "Hago la comida — feminine, so la."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C43-comida-gender",
-              "prompt": "What gender is any noun built with -ida?",
-              "assesses": [
-                "ES-GRAMMAR-NOUN-FROM-VERB-IDA",
+                "ES-LEX-LIBRO",
                 "ES-GRAMMAR-NOUN-GENDER"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "feminine",
-                "always feminine"
+                "el libro",
+                "libro"
               ],
               "feedback": {
-                "correct": "Always — the ending settles it.",
-                "incorrect": "Feminine, every time."
+                "correct": "Masculine, so el.",
+                "incorrect": "El libro."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C43-libro-have",
+              "prompt": "Say I have a book.",
+              "assesses": [
+                "ES-GRAMMAR-TENER-PRESENT-SINGULAR",
+                "ES-GRAMMAR-INDEFINITE-ARTICLE-MASCULINE",
+                "ES-LEX-LIBRO"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "tengo un libro",
+                "yo tengo un libro"
+              ],
+              "feedback": {
+                "correct": "Tengo un libro.",
+                "incorrect": "Tengo un libro — masculine, so un."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C43-libro-bark",
+              "prompt": "What did Latin liber originally mean?",
+              "assesses": [
+                "ES-ETYMON-LIBER"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "the inner bark of a tree",
+                "tree bark",
+                "bark"
+              ],
+              "feedback": {
+                "correct": "The writing surface came first; the book came after.",
+                "incorrect": "The inner bark of a tree — what Romans wrote on."
               }
             }
           ]
@@ -216,7 +206,7 @@
             },
             {
               "kind": "speech",
-              "text": "What verb is hiding inside comida? (Comer.) What does the -ida ending give you besides the word? (Its gender — always feminine.) Next: what happens to these three nouns, and to their articles, when there is more than one of something."
+              "text": "\"The book\"? (El libro.) \"The house\"? (La casa.) What was liber before it was a book? (Tree bark.) Next: a noun you can build yourself, out of a verb you already have."
             }
           ]
         }
