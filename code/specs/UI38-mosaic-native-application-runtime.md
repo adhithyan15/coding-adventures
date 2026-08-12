@@ -519,7 +519,12 @@ unblocks multiple downstream targets; never count source generation as completio
   - [x] Add portable two-state checkbox and number-input controls.
   - [ ] Add radio controls once native group and mutual-exclusion semantics are
     complete on every backend.
-  - [ ] Add native select/picker, switch, and slider contracts.
+  - [ ] Add the native slider contract and standard facade.
+    - [x] Register `HostSlider` in the compiler/resolver kernel rosters and
+      make every unimplemented native lowering an explicit capability gap.
+    - [ ] Lower `HostSlider` to native widgets on all five backends.
+    - [ ] Export the native-complete standard `Slider` facade.
+  - [ ] Add native select/picker and switch contracts.
 - [ ] Ship `mosaic-std-navigation`: app shell, toolbar, sidebar/rail, tabs, routes.
 - [ ] Ship `mosaic-std-feedback`: alert, dialog, toast, progress, empty/error states.
 - [ ] Ship `mosaic-std-data`: list, virtualized list, table, form and field patterns.

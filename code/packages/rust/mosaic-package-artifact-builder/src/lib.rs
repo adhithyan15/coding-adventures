@@ -1118,6 +1118,10 @@ fn collect_native_degradations(
             "interaction.dialog-placeholder",
             "the Flutter emitter produces a zero-size TODO placeholder instead of a native dialog",
         )),
+        "HostSlider" if backend.is_native() => Some((
+            "primitive.slider-unimplemented",
+            "the backend does not yet lower HostSlider to its native adjustable range control",
+        )),
         "HostLink" if backend == Backend::Flutter && flutter_link_requires_url_host(node) => Some((
             "effect.url-host-missing",
             "the Flutter emitter cannot open URLs without an application-supplied effect host",
@@ -4653,6 +4657,59 @@ layout Board {
                 .expect("repeat analysis"),
             "the report must not depend on directory iteration order"
         );
+    }
+
+    #[test]
+    fn host_slider_is_explicitly_incomplete_until_native_lowerings_land() {
+        let pkg = make_package("mosaic-pkg-volume", &["Volume"]);
+        fs::write(
+            pkg.path().join("src/Volume.mll"),
+            r#"
+layout Volume {
+  HostSlider [ root ] (
+    value: 35,
+    min: 0,
+    max: 100,
+    step: 1,
+    disabled: false
+  )
+}
+"#,
+        )
+        .unwrap();
+
+        for backend in [
+            Backend::Compose,
+            Backend::Flutter,
+            Backend::Qt,
+            Backend::SwiftUI,
+            Backend::Xaml,
+        ] {
+            let out = TempDir::new().unwrap();
+            let report = analyze_package_degradations(
+                &BuildOptions {
+                    package_root: pkg.path().to_path_buf(),
+                    output_root: out.path().to_path_buf(),
+                    backend,
+                    emit_project: false,
+                    theme: None,
+                },
+                BuildProfile::NativeComplete,
+            )
+            .expect("slider capability analysis");
+
+            assert!(!report.native_complete, "{backend:?} must remain honest");
+            assert_eq!(
+                report.degradations.len(),
+                1,
+                "unexpected {backend:?} report"
+            );
+            assert_eq!(
+                report.degradations[0].code,
+                "primitive.slider-unimplemented"
+            );
+            assert_eq!(report.degradations[0].layout_path, "root");
+        }
     }
 
     #[test]

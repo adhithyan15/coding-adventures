@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+### Added - HostSlider kernel contract
+
+- Registered `HostSlider` as the portable native range-input primitive, keeping
+  authored value, min/max/step, disabled, change, and commit bindings in the
+  shared layout IR for backend lowering.
+
 ### Added - UI29-2 default authored-children mount
 
 - Added `slot: <name>` in layout child position and a recognizable child-mount

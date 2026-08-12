@@ -8,6 +8,8 @@
   package components; explicit call-site bindings continue to take precedence.
 
 ### Added
+- Registered `HostSlider` as a kernel primitive so package expansion preserves
+  native range controls for backend lowering.
 - Default UI29-2 authored children are spliced into a dependency component's
   typed child mount during package expansion. Caller-owned slot bindings retain
   consumer scope, empty mounts disappear, and passing children to a component
