@@ -3251,6 +3251,44 @@
       "tex": "russian/book/chapters/ch10-heart.tex"
     },
     {
+      "language": "russian",
+      "chapter": 11,
+      "sourceHash": "fnv1a64:db2e96809a7ffd4b",
+      "lessonIds": [
+        "RU-C11-do-svidaniya",
+        "RU-C11-poka",
+        "RU-C11-do-skorogo",
+        "RU-C11-do-zavtra",
+        "RU-C11-do-vstrechi",
+        "RU-C11-spokoynoy-nochi"
+      ],
+      "tex": "russian/book/chapters/ch11-parting-words.tex"
+    },
+    {
+      "language": "russian",
+      "chapter": 12,
+      "sourceHash": "fnv1a64:77400bcf75b3f11e",
+      "lessonIds": [
+        "RU-C12-mama",
+        "RU-C12-papa",
+        "RU-C12-mat",
+        "RU-C12-otets"
+      ],
+      "tex": "russian/book/chapters/ch12-mother-and-father.tex"
+    },
+    {
+      "language": "russian",
+      "chapter": 13,
+      "sourceHash": "fnv1a64:e33f8fc7f6b068cb",
+      "lessonIds": [
+        "RU-C13-moloko",
+        "RU-C13-syr",
+        "RU-C13-sok",
+        "RU-C13-sup"
+      ],
+      "tex": "russian/book/chapters/ch13-milk-cheese-juice-soup.tex"
+    },
+    {
       "language": "sanskrit",
       "chapter": 6,
       "sourceHash": "fnv1a64:9481178c13d9d2c2",
