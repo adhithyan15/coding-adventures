@@ -2438,6 +2438,31 @@ impl Compiler {
         }
 
         let seq = pieces(node);
+        if node.rule_name == "expr_pow"
+            && seq
+                .iter()
+                .any(|piece| matches!(piece, Piece::Op(op) if op == "^" || op == "**"))
+        {
+            if seq.len().is_multiple_of(2) {
+                return None;
+            }
+            let mut operands = Vec::new();
+            for (index, piece) in seq.iter().enumerate() {
+                if index % 2 == 0 {
+                    let Piece::Node(operand) = piece else {
+                        return None;
+                    };
+                    operands.push(*operand);
+                } else if !matches!(piece, Piece::Op(op) if op == "^" || op == "**") {
+                    return None;
+                }
+            }
+            let (base, exponents) = operands.split_first()?;
+            let exponent = literal_nonneg_integer_power_chain(exponents)?;
+            return self
+                .static_integer_scalar_value(base)?
+                .checked_pow(exponent);
+        }
         if seq.len() == 1 {
             return match seq[0] {
                 Piece::Node(child) => self.static_integer_scalar_value(child),
@@ -7477,6 +7502,30 @@ mod tests {
             "test",
         )
         .expect_err("zero division must invalidate the static integer snapshot");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_print_static_integer_power_snapshot_in_real_expression() {
+        let module = compile_source(
+            "begin integer n, saved; n := 2 ^ 3 + 34; saved := n; n := 9; output(saved + 0.5) end",
+            "test",
+        )
+        .expect("checked integer powers participate in static snapshots");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "42.5")
+        }));
+    }
+
+    #[test]
+    fn al4_print_static_integer_power_rejects_overflow() {
+        let err = compile_source(
+            "begin integer n; n := 2 ^ 63; output(n + 0.5) end",
+            "test",
+        )
+        .expect_err("overflowing integer powers must invalidate the static snapshot");
         assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
