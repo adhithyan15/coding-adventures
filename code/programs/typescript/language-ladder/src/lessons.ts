@@ -76,6 +76,14 @@ export interface Lesson {
   body: string;
   /** Typed, block-bound retrieval contracts; never inferred from lesson prose. */
   activities: CompiledLessonActivity[];
+  /**
+   * The atoms this lesson TEACHES, from `introduces.knowledge`.
+   *
+   * Carried into the browser for per-atom mastery (HL10 §10.1). A focused check
+   * that is not an authored activity has no `assesses` list of its own, so this
+   * is what it credits: the thing the lesson exists to teach.
+   */
+  introducesAtoms: string[];
   /** Ordered known fillers for a productive `pattern` lesson. */
   patternSlots?: LessonPatternSlot[];
   /** Canonical AST fingerprint; generated books combine these in authored order. */
@@ -147,6 +155,7 @@ export function toLesson(parsed: ParsedLesson): Lesson | null {
     etymologyHook: r.etymologyHook,
     body: parsed.body,
     activities: compileLessonActivities(parsed.blocks),
+    introducesAtoms: arr(fm["introduces.knowledge"]),
     patternSlots: parsed.patternSlots,
     sourceHash: parsed.sourceHash,
     sequence:
