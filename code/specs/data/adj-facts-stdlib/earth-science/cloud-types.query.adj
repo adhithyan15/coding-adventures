@@ -16,4 +16,6 @@ import "cloud-types.adj"
 
 ? cloud_altitude(cirrus, $Level)        % expect high
 ? cloud_altitude(cumulus, $Level)       % expect low
+? cloud_altitude(cirrocumulus, $Level)  % expect high (new row)
+? cloud_altitude(altocumulus, $Level)   % expect middle (new row)
 ? cloud_altitude(fog, $Level)           % expect abstain — the page never gives fog a level

@@ -61,3 +61,24 @@ fn earth_science_cloud_altitude_recall_binds_level_with_citation() {
     // fabricated level.
     assert!(out.contains("\"abstained\":true"), "fog abstains: {out}");
 }
+
+#[test]
+fn earth_science_cloud_altitude_recall_binds_newly_added_rows() {
+    let dir = scratch("clouds_new");
+    let src = facts_stdlib().join("earth-science/cloud-types.adj");
+    std::fs::copy(&src, dir.join("cloud-types.adj")).expect("copy shipped cloud-types.adj");
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"cloud-types.adj\"\n\
+         ? cloud_altitude(cirrocumulus, $Level)\n\
+         ? cloud_altitude(altocumulus, $Level)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // Both newly added rows come from the SAME already-quoted source
+    // sentence -- cirrocumulus is a high cloud, altocumulus is mid-level.
+    assert!(out.contains("\"Level\":\"high\""), "cirrocumulus → high: {out}");
+    assert!(out.contains("\"Level\":\"middle\""), "altocumulus → middle: {out}");
+}

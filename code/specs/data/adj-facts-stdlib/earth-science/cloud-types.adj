@@ -18,12 +18,15 @@
 % $L)` gives low, and reverse `? cloud_altitude($C, middle)` gives altostratus.
 % Both atoms — the cloud name and its level — are lowercase.
 %
-% The four clouds, and the deck each one sits in, as a truth table:
+% The seven clouds, and the deck each one sits in, as a truth table:
 %
 %     cloud         altitude   why (the level word the NWS page uses)
 %     ------------  ---------  ---------------------------------------------
 %     cirrus        high       "high clouds ... cirrus"        (above ~20,000 ft)
+%     cirrostratus  high       "high clouds ... cirrostratus"
+%     cirrocumulus  high       "high clouds ... cirrocumulus"
 %     altostratus   middle     "mid-level clouds ... altostratus" (6,500–20,000 ft)
+%     altocumulus   middle     "mid-level clouds ... altocumulus"
 %     stratus       low        "low clouds include stratus"   (below 6,500 ft)
 %     cumulus       low        "low clouds include ... cumulus"
 %
@@ -35,14 +38,23 @@
 % "rainbow" — is NOT a row, so the engine stays silent rather than invent a
 % level. That honest-miss property is what makes the table safe to trust.
 %
-% Provenance: the four cloud → level groupings are copied from NOAA's National
+% Provenance: the seven cloud → level groupings are copied from NOAA's National
 % Weather Service (Louisville, KY / LMK office) "Cloud Classification and
 % Characteristics" page. Its three "main types" sentences at the `locator` name
-% each cloud under its deck (see `source`, quoted verbatim): the high deck lists
-% cirrus, the mid-level deck lists altostratus, and the low deck lists stratus
-% and cumulus. `trust authoritative` — weather.gov (NOAA/NWS) is a U.S.
-% government (.gov) primary source. Nothing here is asserted from memory.
-% (See ../README.md; feedback_nothing_human_authored,
+% each cloud under its deck (see `source`, quoted verbatim): the high deck
+% lists cirrus, cirrostratus, and cirrocumulus; the mid-level deck lists
+% altostratus and altocumulus; and the low deck lists stratus and cumulus —
+% this table's OWN already-quoted `source` sentence names all seven, so
+% extending from four rows to seven required no new WebFetch, just reading the
+% span already captured here. `trust authoritative` — weather.gov (NOAA/NWS)
+% is a U.S. government (.gov) primary source. Nothing here is asserted from
+% memory. Distinct from the sibling `meteorology/cloud-type.adj`, which
+% answers a completely different question (what WEATHER does a cloud's
+% presence indicate?) from the SAME NWS page's separate weather-indication
+% sentences, not the altitude-deck sentence this table uses — the two tables
+% do not overlap even though `altocumulus` happens to be named (as an
+% abstention target, for an unrelated reason) in both files. (See
+% ../README.md; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts.)
 % ============================================================================
 
@@ -50,7 +62,10 @@ table cloud_altitude {
     columns cloud, altitude
 
     row (cirrus, high)
+    row (cirrostratus, high)
+    row (cirrocumulus, high)
     row (altostratus, middle)
+    row (altocumulus, middle)
     row (stratus, low)
     row (cumulus, low)
 
