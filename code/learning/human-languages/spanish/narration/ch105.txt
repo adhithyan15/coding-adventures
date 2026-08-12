@@ -1,113 +1,98 @@
-Spanish, chapter 105: The Only Three Irregulars.
-3 lessons. All 3 can be done entirely by ear.
+Spanish, chapter 105: Synthesis --- You Can Hear Which Past It Is.
+2 lessons. All 2 can be done entirely by ear.
 
 
-Lesson 1 of 3.
-era — an old root in an open past.
-
-Warm-up.
-[pause 2 seconds]
-You know present soy, eres, es and completed-past fui, fuiste, fue. The open or background past of ser uses a different short stem: era.
-
-Grammar Lens: the singular ser row.
-[a table of 3 rows, read aloud]
-person: yo. open or background past: era.
-person: tú. open or background past: eras.
-person: él / ella / usted. open or background past: era.
-Say era, eras, era. The first and third forms match, just as they did in the regular imperfect rows. ¿Era usted? asks “Was it you?” without adding a new noun. Plural persons wait.
-
-The root, taken apart.
-Era continues Latin eram, an old form in the esse family. That is the family already connected to Spanish ser and English essence. The preterite fue comes from another historical set, so era / fue is a real contrast inside one modern verb.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: “era, eras, era”]
-[pause 8 seconds for the answer]
-[your turn — say: “¿Era usted?”]
-[pause 8 seconds for the answer]
-[your turn — say: “era comes from Latin eram”]
-[pause 8 seconds for the answer]
-[question — say your answer, then pause 8 seconds]
-Give the learned singular imperfect forms of ser: yo, tú, then él/ella/usted.
-[question — say your answer, then pause 7 seconds]
-Which ser form presents a background past: era or fue?
-[question — say your answer, then pause 6 seconds]
-Which Latin form stands directly behind Spanish era: eram or ībam?
-
-Wrap-up Recall.
-[pause 3 seconds]
-Give the three learned ser forms. (Era, eras, era.) Which past form supplies background, era or fue? (Era.) Which Latin form stands behind it? (Eram.) Next: follow ir back toward its own older verb.
-
-
-Lesson 2 of 3.
-iba — ir returns to its inherited past.
+Lesson 1 of 2.
+Practice — six singular patterns, no hidden vocabulary.
 
 Warm-up.
 [pause 2 seconds]
-Present voy and completed-past fui came from different historical sets. For an open or habitual past, ir gives you iba — “I was going” or “I used to go.”
+This checkpoint adds nothing. Retrieve only the three singular persons of each learned row. Every word in the short sentences is already known.
 
-Grammar Lens: the singular ir row.
-[a table of 3 rows, read aloud]
-person: yo. open or habitual past: iba.
-person: tú. open or habitual past: ibas.
-person: él / ella / usted. open or habitual past: iba.
-Say iba, ibas, iba. Reuse the destination frame: Iba a Madrid — “I was going to Madrid” or “I used to go to Madrid.” Plural persons wait.
+Grammar Lens: the complete frame for this chapter.
+Regular rows:
+yo: hablé, comí, viví.
+tú: hablaste, comiste, viviste.
+él / ella / usted: habló, comió, vivió.
+Strong rows:
+yo: tuve, hice, estuve.
+tú: tuviste, hiciste, estuviste.
+él / ella / usted: tuvo, hizo, estuvo.
+The -er and -ir rows share -í, -iste, -ió. The three strong rows share -e, -iste, -o, but their stems must be learned: tuv-, hic-/hiz-, estuv-. Plural persons, more strong verbs, and new time or setting vocabulary remain outside this checkpoint.
 
-The word, taken apart.
-Iba continues Latin ībam, from īre, the inherited verb behind the Spanish infinitive ir. Present voy contains material associated with vādere, while preterite fui comes from the Latin “be” perfect family. These sources help explain the three learned sets; they do not mean that every form in every tense can be assigned to one source by a three-box rule.
+Grammar Lens: let spelling show the stress.
+Regular comí, comió, viví, vivió carry written accents for final stress.
+Strong tuve, tuvo, hice, hizo, estuve, estuvo carry no written accents; stress remains in the strong stem.
+Comiste and viviste need no accent because their ordinary stress is already next to last.
+
+The histories, taken apart.
+The regular -er/-ir endings continue Latin perfect material reshaped across Romance. Tuve and hice continue older strong-perfect histories, also reshaped rather than copied letter for letter. Estuve shows especially clear analogical remodeling beside the -uv- family of tuve.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: “iba, ibas, iba”]
+[your turn — say: “hablé, comí, viví”]
 [pause 8 seconds for the answer]
-[your turn — say: “Fui a Madrid. Iba a Madrid.”]
+[your turn — say: “tuve, hice, estuve”]
 [pause 8 seconds for the answer]
-[your turn — say: “iba continues ībam from īre”]
+[your turn — say: “Hice café. Viví en Madrid. Estuve bien.”]
 [pause 8 seconds for the answer]
-[question — say your answer, then pause 8 seconds]
-Give the learned singular imperfect forms of ir: yo, tú, then él/ella/usted.
+[your turn — say: “comí and comió have accents; tuve and tuvo do not”]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 9 seconds]
+Give the learned yo past forms of hablar, comer, and vivir, in that order.
+[question — say your answer, then pause 9 seconds]
+Give the learned yo past forms of tener, hacer, and estar, in that order.
 [question — say your answer, then pause 7 seconds]
-Say 'I was going to Madrid' in Spanish.
-[question — say your answer, then pause 6 seconds]
-Which inherited Latin verb stands behind iba: īre or vidēre?
+Say 'I made coffee' in Spanish.
+[question — say your answer, then pause 7 seconds]
+Say 'I lived in Madrid' in Spanish.
+[question — say your answer, then pause 7 seconds]
+Say 'I was well' as a completed event in Spanish.
+[question — say your answer, then pause 7 seconds]
+Which pair carries written accents: comí/comió or tuve/tuvo?
+[question — say your answer, then pause 7 seconds]
+Which learned form is especially described as analogically remodeled beside tuve: comí, hice, or estuve?
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give the three learned forms. (Iba, ibas, iba.) Say “I was going to Madrid.” (Iba a Madrid.) Which Latin form stands behind iba? (Ībam, from īre.) Next: put newly learned ver into the same past.
+Give the regular comer and vivir sets. (Comí, comiste, comió; viví, viviste, vivió.) Give the three strong sets. (Tuve, tuviste, tuvo; hice, hiciste, hizo; estuve, estuviste, estuvo.) Which rows share endings? (-er/-ir share one regular set; the strong rows share another.) The next chapter can add a new past contrast without borrowing any plural form here.
 
 
-Lesson 3 of 3.
-veía — keep the extra e you already met.
+Lesson 2 of 2.
+Synthesis — you can hear which past it is.
 
 Warm-up.
 [pause 2 seconds]
-You learned ver before its past: veo, ves, ve. Its imperfect keeps ve- and adds the familiar -ía row. That gives veía — “I was seeing” or “I used to see.”
+Nothing new in this chapter. Say comí, then tuve.
 
-Grammar Lens: the singular ver row.
-[a table of 3 rows, read aloud]
-person: yo. open or habitual past: veía.
-person: tú. open or habitual past: veías.
-person: él / ella / usted. open or habitual past: veía.
-Say veía, veías, veía. Keep í-a in separate syllables. Plural persons wait.
+Grammar Lens: the stress tells you everything.
+Say those two again and listen to where your voice lifts.
+comí — the stress lands on the ending. tuve — the stress lands on the stem.
+That is not a detail. It is the whole difference between the two kinds of past in this chapter, and it is audible before you know anything else about the verb.
+Endings stressed becomes the regular preterite. It needs a written accent, because Spanish marks a stressed final vowel: comí, viví.
+Stem stressed becomes a strong preterite. It needs no accent at all: tuve, hice, estuve.
+So the accent is not extra spelling to remember. It is the stress, written down. If a preterite has no accent, the stress moved back onto the stem, and you are looking at one of the strong ones.
 
-The extra e, taken apart.
-Old Spanish veer displays the ve- shape clearly. The imperfect veía preserves that vowel before the familiar -ía material. It is useful to call this an exceptional learned row, but not to pretend that ver was already known before this chapter or that the history is merely “regular plus one letter.”
+What you've built.
+The two kinds have two histories.
+The regular preterite is Spanish doing what Spanish does: one set of endings, and — as in the present and the imperfect — -er and -ir agreeing with each other rather than going separate ways.
+The strong preterites are older. They are Latin's own perfect, carried through with the stress where Latin had put it, on verbs used too heavily ever to be rebuilt. Which is the same reason the imperfect has only three irregulars: the words people say constantly are the ones that keep their odd shapes.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: “veía, veías, veía”]
+[your turn — say: comí, viví — and feel the lift on the last syllable]
 [pause 8 seconds for the answer]
-[your turn — say: “Veo café. Veía café.”]
+[your turn — say: tuve, hice, estuve — and feel it move back]
 [pause 8 seconds for the answer]
-[your turn — say: “veer helps explain ve-”]
-[pause 8 seconds for the answer]
+[repeat that twice]
+Until you can place a preterite by ear before you place it by rule.
+[question — say your answer, then pause 10 seconds]
+A preterite with no written accent. Where is the stress, and which kind is it?
+[question — say your answer, then pause 10 seconds]
+Why does comi carry an accent when tuve does not?
 [question — say your answer, then pause 8 seconds]
-Give the learned singular imperfect forms of ver: yo, tú, then él/ella/usted.
-[question — say your answer, then pause 7 seconds]
-Which sentence means 'I was seeing coffee': Veo café or Veía café?
-[question — say your answer, then pause 6 seconds]
-Which earlier Spanish form makes the extra e of veía easier to see: veer or ir?
+In the regular preterite, do -er and -ir take the same endings?
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give the three learned forms. (Veía, veías, veía.) Which vowel stays before -ía? (e.) Which earlier form displays it? (Veer.) Next: retrieve every row of this chapter and make a few bounded contrasts.
+Where does the stress fall in a strong preterite? (On the stem.) What does a missing accent tell you? (That it is one of the strong ones.) And why do the strong ones exist at all? (They are Latin's own perfect, kept intact on verbs used too much to be rebuilt.)

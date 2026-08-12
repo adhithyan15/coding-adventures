@@ -624,6 +624,42 @@
       "after": []
     },
     {
+      "id": "ES-PATH-030-ARIO",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "ES-C09-ario"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-030-ARIO"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-030-REVIEW-OCHO",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "ES-C09-repaso-ocho"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-030-REVIEW-OCHO"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-030-SYNTH-OCHO",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "ES-C09-sintesis-ocho"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-030-SYNTH-OCHO"
+      ],
+      "after": []
+    },
+    {
       "id": "ES-PATH-011-SER-ESTAR",
       "spine_node": "SPINE-CHECK-WELLBEING",
       "lessons": [
@@ -2251,6 +2287,9 @@
         "ES-PATH-030-SYNTH-DESC",
         "ES-PATH-030-OSO",
         "ES-PATH-030-NCIA",
+        "ES-PATH-030-ARIO",
+        "ES-PATH-030-REVIEW-OCHO",
+        "ES-PATH-030-SYNTH-OCHO",
         "ES-PATH-030-ABILITY-CH11",
         "ES-PATH-030-HACER-CH12",
         "ES-PATH-030-DECIR-CH12",
@@ -4605,6 +4644,39 @@
       "prerequisites": [],
       "lessons": [
         "ES-C09-ncia"
+      ]
+    },
+    {
+      "id": "ES-EXT-030-ARIO",
+      "stage": "A1",
+      "kind": "required",
+      "category": "etymology",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C09-ario"
+      ]
+    },
+    {
+      "id": "ES-EXT-030-REVIEW-OCHO",
+      "stage": "A1",
+      "kind": "required",
+      "category": "etymology",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C09-repaso-ocho"
+      ]
+    },
+    {
+      "id": "ES-EXT-030-SYNTH-OCHO",
+      "stage": "A1",
+      "kind": "required",
+      "category": "etymology",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C09-sintesis-ocho"
       ]
     }
   ]

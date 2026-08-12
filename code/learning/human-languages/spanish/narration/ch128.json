@@ -2,32 +2,25 @@
   "version": 1,
   "language": "spanish",
   "chapter": 128,
-  "title": "Di, Haz, Ve, Pon, Ten, Sal, Se, Ven",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:e4e0c88b44f40a80",
+  "title": "Ojala --- a Prayer That Outlived Its Religion",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:b84621589e15ab66",
   "lessons": [
     {
-      "id": "ES-C50-ocho-cortos",
-      "sequence": 1498,
-      "title": "di, haz, ve, pon, ten, sal, sé, ven",
-      "headword": "di · haz · ve · pon · ten · sal · sé · ven",
-      "romanization": "di · haz · ve · pon · ten · sal · sé · ven",
-      "gloss": "the eight irregular commands — and every one of them is a single syllable, for a reason",
+      "id": "ES-C18-ojala",
+      "sequence": 1488,
+      "title": "ojalá + subjunctive — a wish borrowed through Arabic",
+      "headword": "ojalá + subjunctive",
+      "romanization": "ojalá + subjunctive",
+      "gloss": "a wish trigger borrowed through Hispanic Arabic",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bb3678d169c24ded",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:4194e98acb597e72",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -42,46 +35,26 @@
             },
             {
               "kind": "speech",
-              "text": "By last chapter's rule, \"say it\" should be dice. It is not. There are exactly eight of these, and once you see them together you will not need to memorise the list."
+              "text": "Ojalá hables español means “I hope you speak Spanish” or “May you speak Spanish.” Ojalá expresses the wish by itself. It needs neither a main verb nor que before the subjunctive. Keep the first frame tiny:"
+            },
+            {
+              "kind": "speech",
+              "text": "Ojalá + subjunctive."
+            },
+            {
+              "kind": "speech",
+              "text": "That is a usable modern pattern. It does not make the Arabic source phrase new Spanish vocabulary."
             }
           ]
         },
         {
           "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: eight, all one syllable",
+          "type": "etymology",
+          "title": "The wish-word, taken apart",
           "segments": [
             {
-              "kind": "table",
-              "headers": [
-                "verb",
-                "command",
-                ""
-              ],
-              "columns": 3,
-              "rowCount": 8,
-              "utterances": [
-                "verb: decir. command: di, say.",
-                "verb: hacer. command: haz, do, make.",
-                "verb: ir. command: ve, go.",
-                "verb: poner. command: pon, put.",
-                "verb: tener. command: ten, have, hold.",
-                "verb: salir. command: sal, leave.",
-                "verb: ser. command: sé, be.",
-                "verb: venir. command: ven, come."
-              ]
-            },
-            {
               "kind": "speech",
-              "text": "Read the middle column down. Every single one is one syllable, and most are two or three letters. No other set of forms in Spanish is this short."
-            },
-            {
-              "kind": "speech",
-              "text": "That is the fact worth carrying, and it has a cause. A command is the sentence you shout, the sentence you say in a hurry, the sentence you interrupt somebody with. Words used that way get worn down harder than words used calmly — and these eight are the commonest verbs in the language, so they had the most use to be worn by."
-            },
-            {
-              "kind": "speech",
-              "text": "So the list is not eight arbitrary exceptions. It is what the eight most-shouted verbs look like after two thousand years of being shouted."
+              "text": "The Real Academia Española records ojalá from Hispanic Arabic wa šá lláh, “and God has willed.” Long contact in al-Andalus carried the expression into Spanish, where its sound and grammatical life changed. You met another Arabic-derived function word in hasta. The historical phrase explains a route; only modern ojalá is available for your Spanish sentences."
             }
           ]
         },
@@ -97,86 +70,66 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "all eight in one breath — \"di, haz, ve, pon, ten, sal, sé, ven\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: all eight in one breath — \"di, haz, ve, pon, ten, sal, sé, ven\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "each one as if calling across a room",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: each one as if calling across a room]"
-            },
-            {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
               "kind": "speech",
-              "text": "Until the list is a rhythm rather than eight facts."
+              "text": "Use only modern ojalá as the Spanish trigger."
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C50-ocho-cortos-list",
-              "prompt": "Give the eight irregular tu commands.",
+              "id": "ES-C18-ojala-trigger",
+              "prompt": "Say 'I hope you speak Spanish' to one friend using ojalá.",
               "assesses": [
-                "ES-GRAMMAR-COMMAND-IRREGULAR-EIGHT"
+                "ES-LEX-OJALA-SUBJUNCTIVE-TRIGGER",
+                "ES-GRAMMAR-AR-SUBJUNCTIVE-SINGULAR",
+                "ES-LEX-HABLAR",
+                "ES-LEX-ESPANOL"
               ],
-              "responseSeconds": 14,
+              "responseSeconds": 9,
               "acceptedResponses": [
-                "di, haz, ve, pon, ten, sal, se, ven",
-                "di haz ve pon ten sal sé ven"
+                "ojalá hables español.",
+                "ojalá hables español",
+                "ojala hables espanol"
               ],
               "feedback": {
-                "correct": "Eight, and every one a single syllable.",
-                "incorrect": "di, haz, ve, pon, ten, sal, se, ven."
+                "correct": "Right: Ojalá hables español.",
+                "incorrect": "Use ojalá directly before the tú subjunctive hables."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C50-ocho-cortos-come",
-              "prompt": "Tell somebody to come.",
+              "id": "ES-C18-ojala-no-que",
+              "prompt": "Does the learned ojalá frame require que before hables? Answer yes or no.",
               "assesses": [
-                "ES-GRAMMAR-COMMAND-IRREGULAR-EIGHT",
-                "ES-LEX-VENIR"
+                "ES-LEX-OJALA-SUBJUNCTIVE-TRIGGER"
               ],
-              "responseSeconds": 8,
+              "responseSeconds": 5,
               "acceptedResponses": [
-                "ven",
-                "¡ven!"
+                "no"
               ],
               "feedback": {
-                "correct": "Ven.",
-                "incorrect": "Ven — from venir."
+                "correct": "Right: ojalá directly licenses the subjunctive in this frame.",
+                "incorrect": "No: say Ojalá hables, without que."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C50-ocho-cortos-why",
-              "prompt": "Why are these eight so much shorter than every other verb form?",
+              "id": "ES-C18-ojala-source",
+              "prompt": "Through which historical language variety did Spanish receive ojalá?",
               "assesses": [
-                "ES-GRAMMAR-COMMAND-IRREGULAR-EIGHT"
+                "ES-ETYMON-OJALA-HISPANIC-ARABIC"
               ],
-              "responseSeconds": 14,
+              "responseSeconds": 7,
               "acceptedResponses": [
-                "commands are shouted and hurried, so they wore down most",
-                "because they are the most used and most shouted",
-                "frequency and hurry"
+                "hispanic arabic",
+                "arabic",
+                "andalusi arabic",
+                "hispano-arabic"
               ],
               "feedback": {
-                "correct": "What the most-shouted verbs look like after two thousand years.",
-                "incorrect": "A command is shouted and hurried, and these are the commonest verbs — the most use, so the most wear."
+                "correct": "Right: the recorded route is through Hispanic Arabic.",
+                "incorrect": "The historical route named here is Hispanic Arabic."
               }
             }
           ]
@@ -194,7 +147,330 @@
             },
             {
               "kind": "speech",
-              "text": "How many irregular tú commands are there? (Eight.) What do they all have in common besides being irregular? (One syllable each.) Next: how to tell somebody not to do something — and you already have that form too."
+              "text": "What follows ojalá in the learned frame? (The subjunctive.) Does it need que? (No.) Which historical language variety carried the word into Spanish? (Hispanic Arabic.) Is the older Arabic phrase usable as new Spanish vocabulary here? (No.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C18-practice",
+      "sequence": 1492,
+      "title": "Practice — assert the event or want it",
+      "headword": "(practice)",
+      "romanization": "(practice)",
+      "gloss": "a singular checkpoint for wanted events and the present subjunctive",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bebefbd3a2e56fda",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "This checkpoint adds no vocabulary, plural person, object pronoun, or new clause frame. First decide whether the event is asserted or wanted. Then retrieve only the singular rows you learned."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the bounded map",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "verb",
+                "yo / él / ella / usted",
+                "tú"
+              ],
+              "columns": 3,
+              "rowCount": 6,
+              "utterances": [
+                "verb: hablar. yo / él / ella / usted: hable. tú: hables.",
+                "verb: comer. yo / él / ella / usted: coma. tú: comas.",
+                "verb: vivir. yo / él / ella / usted: viva. tú: vivas.",
+                "verb: querer. yo / él / ella / usted: quiera. tú: quieras.",
+                "verb: poder. yo / él / ella / usted: pueda. tú: puedas.",
+                "verb: hacer. yo / él / ella / usted: haga. tú: hagas."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The repeated outer form is not a missing row: first- and third-person singular match. Every plural form waits."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: two safe triggers",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Same doer: Quiero hablar español."
+            },
+            {
+              "kind": "speech",
+              "text": "Different doer: Quiero que hables español."
+            },
+            {
+              "kind": "speech",
+              "text": "Wish by itself: Ojalá hables español."
+            },
+            {
+              "kind": "speech",
+              "text": "Do not extend these two frames to every emotion, doubt, command, or conjunction yet. More triggers belong in later micro-lessons."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Decide the meaning first; then retrieve only the learned form."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-practice-fact-wanted",
+              "prompt": "Choose the wanted-event form: hablas or hables.",
+              "assesses": [
+                "ES-GRAMMAR-SUBJUNCTIVE-WANTED-NONASSERTED",
+                "ES-GRAMMAR-AR-SUBJUNCTIVE-SINGULAR"
+              ],
+              "responseSeconds": 5,
+              "acceptedResponses": [
+                "hables"
+              ],
+              "feedback": {
+                "correct": "Right: hables is the wanted-event form in this chapter.",
+                "incorrect": "Hablas can assert; hables follows the learned wish frame."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-practice-one-two",
+              "prompt": "Give the pair 'I want to speak Spanish; I want you to speak Spanish.'",
+              "assesses": [
+                "ES-GRAMMAR-WANT-ONE-TWO-SUBJECT-CONTRAST",
+                "ES-LEX-HABLAR",
+                "ES-LEX-ESPANOL"
+              ],
+              "responseSeconds": 11,
+              "acceptedResponses": [
+                "quiero hablar español; quiero que hables español.",
+                "quiero hablar español quiero que hables español",
+                "quiero hablar español / quiero que hables español"
+              ],
+              "feedback": {
+                "correct": "Right: one doer uses hablar; two use que hables.",
+                "incorrect": "Use Quiero hablar español, then Quiero que hables español."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-practice-regular-rows",
+              "prompt": "Give the tú subjunctive forms of hablar, comer, and vivir, in that order.",
+              "assesses": [
+                "ES-GRAMMAR-AR-SUBJUNCTIVE-SINGULAR",
+                "ES-GRAMMAR-ER-SUBJUNCTIVE-SINGULAR",
+                "ES-GRAMMAR-IR-SUBJUNCTIVE-SINGULAR"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "hables, comas, vivas",
+                "hables comas vivas",
+                "hables / comas / vivas"
+              ],
+              "feedback": {
+                "correct": "Right: hables, comas, vivas.",
+                "incorrect": "Retrieve the three tú forms: hable-s, coma-s, viva-s."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-practice-yo-stem",
+              "prompt": "Which present-person form supplies the stem in this chapter's recipe?",
+              "assesses": [
+                "ES-GRAMMAR-SUBJUNCTIVE-YO-STEM-VOWEL-SWAP"
+              ],
+              "responseSeconds": 6,
+              "acceptedResponses": [
+                "the yo form",
+                "yo",
+                "present yo form"
+              ],
+              "feedback": {
+                "correct": "Right: start from the present yo form.",
+                "incorrect": "The recipe begins with the present yo form."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-practice-querer",
+              "prompt": "Give the learned singular subjunctive row of querer.",
+              "assesses": [
+                "ES-GRAMMAR-QUERER-SUBJUNCTIVE-SINGULAR",
+                "ES-LEX-QUERER"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "quiera, quieras, quiera",
+                "quiera quieras quiera",
+                "quiera / quieras / quiera"
+              ],
+              "feedback": {
+                "correct": "Right: quiera, quieras, quiera.",
+                "incorrect": "Keep quier- and add -a, -as, -a."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-practice-poder",
+              "prompt": "Say 'I want you to be able to speak Spanish' to one friend.",
+              "assesses": [
+                "ES-GRAMMAR-PODER-SUBJUNCTIVE-SINGULAR",
+                "ES-LEX-PODER",
+                "ES-LEX-HABLAR",
+                "ES-LEX-ESPANOL"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "quiero que puedas hablar español.",
+                "quiero que puedas hablar español"
+              ],
+              "feedback": {
+                "correct": "Right: Quiero que puedas hablar español.",
+                "incorrect": "Use quiero que plus puedas, then hablar español."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-practice-hacer",
+              "prompt": "Say 'I want you to make coffee' to one friend.",
+              "assesses": [
+                "ES-GRAMMAR-HACER-SUBJUNCTIVE-SINGULAR",
+                "ES-LEX-HACER",
+                "ES-LEX-CAFE"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "quiero que hagas café.",
+                "quiero que hagas café",
+                "quiero que hagas cafe"
+              ],
+              "feedback": {
+                "correct": "Right: Quiero que hagas café.",
+                "incorrect": "Use quiero que plus hagas, then café."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-practice-ojala",
+              "prompt": "Say 'I hope you live in Madrid' to one friend using ojalá.",
+              "assesses": [
+                "ES-LEX-OJALA-SUBJUNCTIVE-TRIGGER",
+                "ES-GRAMMAR-IR-SUBJUNCTIVE-SINGULAR",
+                "ES-LEX-VIVIR",
+                "ES-LEX-EN"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "ojalá vivas en madrid.",
+                "ojalá vivas en madrid",
+                "ojala vivas en madrid"
+              ],
+              "feedback": {
+                "correct": "Right: Ojalá vivas en Madrid.",
+                "incorrect": "Use ojalá directly before vivas en Madrid."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-practice-subjunctive-name",
+              "prompt": "What does the Latin source subiūnctīvus help you picture?",
+              "assesses": [
+                "ES-ETYMON-SUBJUNCTIVE-SUBIUNCTIVUS"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "a clause subjoined or joined under another",
+                "subjoined",
+                "joined under"
+              ],
+              "feedback": {
+                "correct": "Right: a subjoined clause.",
+                "incorrect": "It carries the idea of being subjoined, or joined under another."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C18-practice-ojala-source",
+              "prompt": "Name the historical language variety through which ojalá entered Spanish.",
+              "assesses": [
+                "ES-ETYMON-OJALA-HISPANIC-ARABIC"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "hispanic arabic",
+                "arabic",
+                "andalusi arabic",
+                "hispano-arabic"
+              ],
+              "feedback": {
+                "correct": "Right: Hispanic Arabic.",
+                "incorrect": "The route recorded here is Hispanic Arabic."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is the first meaning choice? (Asserted event or wanted event.) Give the three regular tú forms. (Hables, comas, vivas.) Give the three bounded special tú forms. (Quieras, puedas, hagas.) Name the two safe triggers. (Quiero que for a different doer; ojalá for a wish.) What still waits? (Plural persons, additional irregular verbs, and additional subjunctive triggers.)"
             }
           ]
         }

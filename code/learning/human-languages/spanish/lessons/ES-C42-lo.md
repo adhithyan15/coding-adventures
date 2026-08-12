@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C42-lo
 spine_node: SPINE-DEFINITE-REFERENCE
 sequence: 1215
-chapter: 79
+chapter: 82
 type: word
 headword: lo
 gloss: "it" — a word you have been saying since your fourth chapter, in a job you have not met yet

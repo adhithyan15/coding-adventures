@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C42-te
 spine_node: SPINE-DEFINITE-REFERENCE
 sequence: 1221
-chapter: 81
+chapter: 84
 type: word
 headword: te quiero
 gloss: "you" as the object — and the sentence it makes, which is the one people actually need

@@ -2,32 +2,25 @@
   "version": 1,
   "language": "spanish",
   "chapter": 190,
-  "title": "Review --- Three Letters",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6d5bc9025e38a6b4",
+  "title": "Hay --- There Is, There Are, Same Word",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:101f64f3f3470516",
   "lessons": [
     {
-      "id": "ES-C54-repaso-hay",
-      "sequence": 2209,
-      "title": "Review — three letters",
-      "headword": "(review)",
-      "romanization": "(review)",
-      "gloss": "review — three letters, three uses, and the last piece the audit was missing",
+      "id": "ES-C54-hay",
+      "sequence": 2206,
+      "title": "hay — \"there is,\" \"there are,\" same word",
+      "headword": "hay",
+      "romanization": "hay",
+      "gloss": "\"there is\" and \"there are\" — one word for both, which no other Spanish verb form manages",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5810fa0e6e839959",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:ae1cf8f1339cf46c",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -42,61 +35,45 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing new. What does hay agree with?"
+              "text": "Say \"I have eaten.\" (He comido.) You met haber as the verb with no meaning left. It kept one more job, and this is it."
             }
           ]
         },
         {
           "index": 1,
-          "type": "notice",
-          "title": "What you've built",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
-              "kind": "table",
-              "headers": [
-                "",
-                "",
-                ""
-              ],
-              "columns": 3,
-              "rowCount": 4,
-              "utterances": [
-                "one thing, Hay una casa., There is a house.",
-                "many things, Hay libros., There are books.",
-                "an obligation, Hay que comer., One must eat.",
-                "what it is made of, ha + y, \"it has there\"."
-              ]
-            },
-            {
               "kind": "speech",
-              "text": "Three letters, and everything above came out of them."
-            },
-            {
-              "kind": "speech",
-              "text": "Notice the shape of this arc, because it is the shape of a lot of language learning: the smallest words need the most explaining. Hay is shorter than any noun you have learned and it took four chapters, while comida took one. Short words are short because they are used constantly, and constant use is what wears them into fossils that no longer explain themselves."
+              "text": "diphthong-ai — hay is one syllable, rhyming with English eye. The h is silent, as always."
             }
           ]
         },
         {
           "index": 2,
           "type": "grammar",
-          "title": "Grammar Lens: what it does not do",
+          "title": "Grammar Lens: one form, and it does not count",
           "segments": [
             {
               "kind": "speech",
-              "text": "Two things hay never does, and both save you work:"
+              "text": "hay — there is, and there are."
             },
             {
               "kind": "speech",
-              "text": "It never agrees. Not with number, not with anything. One form."
+              "text": "Hay una casa. — There is a house. Hay libros. — There are books. Hay una casa aquí. — There's a house here."
             },
             {
               "kind": "speech",
-              "text": "It never names anybody. Neither does hay que."
+              "text": "Read those twice. One book or a hundred, hay does not move."
             },
             {
               "kind": "speech",
-              "text": "So of everything you have learned about making Spanish verbs match their surroundings — six endings a tense, gender on the pronouns, number on the articles — none of it applies here. After a hundred and seventy chapters of agreement, the last word is the one that opted out."
+              "text": "That is remarkable, and you are now in a position to see why. Every verb form in this book has agreed with something: with the person speaking, with the thing being replaced, with the noun being described. In the impersonal se chapter, even a sentence with nobody in it still made the verb agree with the thing — se compran libros."
+            },
+            {
+              "kind": "speech",
+              "text": "Hay does not. It is the one common Spanish verb form that counts nothing at all, and it is a small gift: no decision to make, ever."
             }
           ]
         },
@@ -114,72 +91,68 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "all four rows of the table",
+              "instruction": "\"Hay una casa\" then \"Hay libros\" — the same word, twice",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: all four rows of the table]"
-            },
-            {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
+              "source": "[YOU SAY: \"Hay una casa\" then \"Hay libros\" — the same word, twice]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C54-repaso-hay-three",
-              "prompt": "Say there is a house, there are books, and one must eat.",
+              "id": "ES-C54-hay-one",
+              "prompt": "Say there is a house.",
               "assesses": [
                 "ES-LEX-HAY",
-                "ES-GRAMMAR-HAY-NO-AGREEMENT",
-                "ES-GRAMMAR-HAY-QUE"
+                "ES-LEX-CASA"
               ],
-              "responseSeconds": 14,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "hay una casa, hay libros, hay que comer",
-                "hay una casa; hay libros; hay que comer"
+                "hay una casa",
+                "hay una casa."
               ],
               "feedback": {
-                "correct": "One word, three jobs.",
-                "incorrect": "Hay una casa. Hay libros. Hay que comer."
+                "correct": "Hay una casa.",
+                "incorrect": "Hay una casa."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C54-repaso-hay-never",
-              "prompt": "Name the two things hay never does.",
+              "id": "ES-C54-hay-many",
+              "prompt": "Say there are books.",
+              "assesses": [
+                "ES-GRAMMAR-HAY-NO-AGREEMENT",
+                "ES-LEX-LIBRO",
+                "ES-GRAMMAR-BARE-PLURAL-NOUN"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "hay libros",
+                "hay libros."
+              ],
+              "feedback": {
+                "correct": "The same hay — it never goes plural.",
+                "incorrect": "Hay libros. Hay does not change."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C54-hay-unique",
+              "prompt": "What does hay agree with?",
               "assesses": [
                 "ES-GRAMMAR-HAY-NO-AGREEMENT"
               ],
-              "responseSeconds": 12,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "agree, and name anybody",
-                "it never agrees and never names a person"
+                "nothing",
+                "nothing at all",
+                "it never changes"
               ],
               "feedback": {
-                "correct": "After all that agreement, the last word opts out of it entirely.",
-                "incorrect": "It never agrees, and it never names anybody."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C54-repaso-hay-small",
-              "prompt": "Why did a three-letter word need four chapters when comida needed one?",
-              "assesses": [
-                "ES-ETYMON-HAY-IBI"
-              ],
-              "responseSeconds": 14,
-              "acceptedResponses": [
-                "short words are worn down by constant use",
-                "the smallest words need the most explaining",
-                "heavy use turns them into fossils"
-              ],
-              "feedback": {
-                "correct": "They stop explaining themselves.",
-                "incorrect": "Short words are short because they are used constantly, and that wears them into fossils."
+                "correct": "The one common verb form in Spanish that counts nothing.",
+                "incorrect": "Nothing. Not the number, not the person."
               }
             }
           ]
@@ -197,7 +170,7 @@
             },
             {
               "kind": "speech",
-              "text": "Three uses of hay — say them. (There is, there are, and hay que for must.) What does it agree with? (Nothing at all.) Next: the last synthesis."
+              "text": "\"There is a house\"? (Hay una casa.) \"There are books\"? (Hay libros — the same word.) What does hay agree with? (Nothing.) Next: what it is actually made of, and the fossil hiding in it."
             }
           ]
         }

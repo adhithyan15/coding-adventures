@@ -133,7 +133,15 @@ describe("corpus snapshot", () => {
     // singular steps; its terminal checkpoint remains correctly atom-free.
     // Chapter 18 replaces nine legacy teaching lessons with eight measurable
     // singular steps; its terminal checkpoint remains correctly atom-free.
-    expect(report.summary.unmeasurableLessons).toBe(582);
+    // HL-C88 slice 8 moves this UP by two, which is the one direction this
+    // ratchet is not supposed to travel, so it needs saying: the two lessons are
+    // chapter 64's review and chapter 65's synthesis, and a review or a synthesis
+    // introduces no atoms BY DESIGN -- it re-practises what the teaching chapters
+    // introduced. They are terminal lessons of exactly the kind every note above
+    // calls "correctly atom-free". The blind spot they add is real but it is not
+    // unmigrated corpus, and migrating them would mean inventing atoms for lessons
+    // whose whole job is to revisit.
+    expect(report.summary.unmeasurableLessons).toBe(584); // +2: HL-C88 slice 8 review + synthesis, correctly atom-free
     // 65 -> 66: vocabulary wave 4 added 52 schema-v2 lessons. Chapter 10's three
     // newly measurable teaching lessons carry the corpus across one point, and the
     // five-step Chapter-15 migration carries it across the next. Chapter 18's eight

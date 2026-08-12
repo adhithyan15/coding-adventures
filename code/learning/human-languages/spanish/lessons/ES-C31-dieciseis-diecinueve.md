@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C31-dieciseis-diecinueve
 spine_node: SPINE-COUNT-ONE-TO-FIVE
 sequence: 1820
-chapter: 145
+chapter: 148
 type: word
 headword: dieciséis — diecinueve
 gloss: 16-19 — not words to memorise but a formula, diez y X, with the seam still visible

@@ -1,42 +1,48 @@
-Spanish, chapter 113: He Hablado --- A Verb With No Meaning Left.
-1 lesson. All 1 can be done entirely by ear.
+Spanish, chapter 113: Review --- One Question, Three Answers.
+1 lesson. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
 Lesson 1 of 1.
-he hablado — "I have spoken".
+Review — one question, three answers.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
 
 Warm-up.
 [pause 2 seconds]
-You have hablado, and it cannot stand alone — it names no person and no time. It needs a word in front of it. Here is that word.
+Nothing new. Before the table: do the two past tenses differ in when?
 
-Sounds you'll need.
-silent-h — the h in he is silent, as every Spanish h is. It is one sound: eh.
+What you've built.
+Three chapters, one question, three ways it gets answered.
+[a table of 4 rows, read aloud]
+what you are doing: reporting an event, with edges. tense: preterite. example: hablé — I spoke.
+what you are doing: setting a scene, no edges. tense: imperfect. example: hablaba — I was speaking.
+what you are doing: naming a state. tense: imperfect. example: tenía — I had.
+what you are doing: naming the moment a state began. tense: preterite. example: tuve — I got.
+Rows one and two are the same event seen from two places. Rows three and four are not: there the tense changes what happened.
 
-Grammar Lens: the emptied verb.
-he + participle — I have done something.
-He hablado español. — I have spoken Spanish.
-Two words, and the work is split cleanly between them. He carries the person and the tense. Hablado carries the meaning. Neither does the other's job, and that division is why the participle never had to agree with anybody.
-He is a form of haber — and here is the thing worth the chapter: haber does not mean anything here. It is not "I hold spoken." You cannot translate it on its own. It is a word whose entire remaining purpose is to hold a participle in place.
-
-The word, taken apart.
-Haber comes from Latin habēre, "to hold, to have" — a completely ordinary verb with a completely ordinary meaning.
-Then Spanish did something drastic. It handed the meaning to tener (which had been the narrower "hold, grip"), and kept haber for this one grammatical job. The verb was hollowed out: the meaning left, the machinery stayed.
-English did exactly the same thing to have, and you never noticed. When you say I have eaten, nobody is holding anything. Two languages, independently, took their word for "hold" and wore it down into a tense marker — because the step from I have a thing that is done to I have done a thing is a very short one, and everybody takes it eventually.
-So when haber feels meaningless, that is not a gap in your understanding. It is an accurate perception of what happened to the word.
+Grammar Lens: the question to actually ask.
+Not "which tense is this?" — that has no answer without you.
+Am I telling you what happened, or what things were like?
+What happened has edges: preterite. What things were like does not: imperfect. A story is mostly the second with the first dropped into it, which is what cuando let you build:
+Estudiaba cuando habló Ana.
+And when the verb names a state rather than an action, the same question still works — you are simply more likely to be describing what things were like, so the imperfect is the ordinary case and the preterite is the special one.
+There is no list to memorise here, and that is deliberate. Lists of "preterite trigger words" exist in most courses and they fail exactly where the choice is interesting, because the same word can sit in either sentence. The question does not fail, because the question is the thing the language is actually asking.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "He hablado español"]
+[your turn — say: "hablé / hablaba", then "tenía / tuve", and name the difference in each pair]
 [pause 8 seconds for the answer]
-[your turn — say: "I have eaten" in English, and notice that nothing is being held]
+[your turn — say: the question aloud before each one]
 [pause 8 seconds for the answer]
-[question — say your answer, then pause 10 seconds]
-Say I have spoken Spanish.
+[repeat that twice]
+Until the question arrives before the verb does.
 [question — say your answer, then pause 12 seconds]
-What does haber mean in he hablado?
+State the one question that chooses the tense.
 [question — say your answer, then pause 10 seconds]
-Which English verb was hollowed out the same way?
+In estudiaba cuando hablo Ana, which verb is the scene?
+[question — say your answer, then pause 12 seconds]
+Which two rows of the table are NOT the same event seen twice?
 
 Wrap-up Recall.
 [pause 3 seconds]
-"I have spoken"? (He hablado.) Which word carries the meaning? (Hablado.) And what does haber contribute? (A person and a tense — and no meaning at all.) Next: the rest of it.
+The one question? (What happened, or what things were like?) Which pair changes meaning rather than viewpoint? (Tenía and tuve.) Next: a whole small story, which is what all of this was for.

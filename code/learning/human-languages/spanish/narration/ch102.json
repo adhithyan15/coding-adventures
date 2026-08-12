@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 102,
-  "title": "Synthesis --- You Can Hear Which Past It Is",
-  "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:faec7957a313ed3a",
+  "title": "The Preterite --- Your First Past Tense",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:9bf8363689dee82e",
   "lessons": [
     {
-      "id": "ES-C15-practice",
-      "sequence": 1345,
-      "title": "Practice — six singular patterns, no hidden vocabulary",
-      "headword": "(practice)",
-      "romanization": "(practice)",
-      "gloss": "a singular checkpoint for regular and strong completed-past patterns",
+      "id": "ES-C14-ser-ir-preterite",
+      "sequence": 1290,
+      "title": "fui — one past set shared by ser and ir",
+      "headword": "fui",
+      "romanization": "fui",
+      "gloss": "the shared singular preterite of ser and ir — fui, fuiste, fue",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:863fbe6599acfbfc",
+      "sourceHash": "fnv1a64:6ed8754047625b86",
       "notice": null,
       "blocks": [
         {
@@ -35,80 +35,281 @@
             },
             {
               "kind": "speech",
-              "text": "This checkpoint adds nothing. Retrieve only the three singular persons of each learned row. Every word in the short sentences is already known."
+              "text": "You already use ser for identity and ir for going. Spanish now gives both verbs one completed-past set. This lesson keeps the same three singular persons you know: fui, fuiste, fue."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: the complete frame for this chapter",
+          "title": "Grammar Lens: three singular forms, two verbs",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "person",
+                "completed past of ser or ir"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "person: yo. completed past of ser or ir: fui.",
+                "person: tú. completed past of ser or ir: fuiste.",
+                "person: él / ella / usted. completed past of ser or ir: fue."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Say fui, fuiste, fue. Each form can belong to either verb. The surrounding words decide which meaning is possible:"
+            },
+            {
+              "kind": "speech",
+              "text": "Fui a Madrid. — “I went to Madrid.” The known a plus a destination points to ir."
+            },
+            {
+              "kind": "speech",
+              "text": "Fue Roberto. — “It was Roberto.” Identification points to ser."
+            },
+            {
+              "kind": "speech",
+              "text": "Fui and fue are one-syllable words, so standard Spanish spelling gives them no written accent. Plural forms wait until a later lesson."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The form, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "Regular rows:"
+              "text": "The shared set continues the Latin perfect family of “be,” including Latin fuī, “I have been.” Sound change and analogy reshaped the inherited forms. Spanish ir then came to share this past family with ser: a case of suppletion, where one verb draws forms from more than one historical root. English go / went uses the same broad strategy, although not the same words."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“fui, fuiste, fue”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “fui, fuiste, fue”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“Fui a Madrid.”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “Fui a Madrid.”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“Fue Roberto — identification, so ser.”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “Fue Roberto — identification, so ser.”]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C14-ser-ir-preterite-singular-forms",
+              "prompt": "Give the shared singular preterite forms of ser and ir: yo, tú, then él/ella/usted.",
+              "assesses": [
+                "ES-LEX-FUI-SER-IR",
+                "ES-GRAMMAR-SER-IR-PRETERITE-SINGULAR"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "fui, fuiste, fue",
+                "fui fuiste fue",
+                "fui / fuiste / fue"
+              ],
+              "feedback": {
+                "correct": "Right: fui, fuiste, fue.",
+                "incorrect": "Retrieve only the three learned singular forms: fui, fuiste, fue."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C14-ser-ir-preterite-fui-madrid",
+              "prompt": "Say 'I went to Madrid' in Spanish.",
+              "assesses": [
+                "ES-LEX-FUI-SER-IR",
+                "ES-GRAMMAR-SER-IR-PRETERITE-SINGULAR",
+                "ES-LEX-A"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "fui a madrid.",
+                "fui a madrid"
+              ],
+              "feedback": {
+                "correct": "Right: Fui a Madrid.",
+                "incorrect": "Use the shared yo form fui, then known a plus Madrid."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C14-ser-ir-preterite-context",
+              "prompt": "In 'Fue Roberto', which verb does fue express?",
+              "assesses": [
+                "ES-LEX-FUI-SER-IR",
+                "ES-GRAMMAR-SER-IR-PRETERITE-SINGULAR"
+              ],
+              "responseSeconds": 6,
+              "acceptedResponses": [
+                "ser"
+              ],
+              "feedback": {
+                "correct": "Right: identifying Roberto points to ser.",
+                "incorrect": "This sentence identifies who it was, so fue expresses ser."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
             },
             {
               "kind": "speech",
-              "text": "yo: hablé, comí, viví."
+              "text": "Give the three shared forms. (Fui, fuiste, fue.) Which two verbs share them? (Ser and ir.) What decides the meaning? (Context.) What older family supplied the forms? (The Latin perfect family of “be.”) Next, reuse the known verb hablar to build a regular singular past."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C14-hablar-preterite",
+      "sequence": 1300,
+      "title": "hablé — a regular singular past from a known verb",
+      "headword": "hablé",
+      "romanization": "hablé",
+      "gloss": "the regular singular -ar preterite — hablé, hablaste, habló",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e3b261544074bdf9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
             },
             {
               "kind": "speech",
-              "text": "tú: hablaste, comiste, viviste."
+              "text": "You know hablar and its present singular hablo, hablas, habla. To say that the speaking was completed, keep habl- and learn three new endings: hablé, hablaste, habló."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: present beside completed past",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "person",
+                "present",
+                "completed past"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "person: yo. present: hablo. completed past: hablé.",
+                "person: tú. present: hablas. completed past: hablaste.",
+                "person: él / ella / usted. present: habla. completed past: habló."
+              ]
             },
             {
               "kind": "speech",
-              "text": "él / ella / usted: habló, comió, vivió."
+              "text": "Say hablé, hablaste, habló. This is a complete singular pattern, not a preview of plural forms. Notice the exact changes:"
             },
             {
               "kind": "speech",
-              "text": "Strong rows:"
+              "text": "hablo becomes hablé changes the final vowel and moves stress to the end."
             },
             {
               "kind": "speech",
-              "text": "yo: tuve, hice, estuve."
+              "text": "hablas becomes hablaste adds the past ending -aste."
             },
             {
               "kind": "speech",
-              "text": "tú: tuviste, hiciste, estuviste."
-            },
-            {
-              "kind": "speech",
-              "text": "él / ella / usted: tuvo, hizo, estuvo."
-            },
-            {
-              "kind": "speech",
-              "text": "The -er and -ir rows share -í, -iste, -ió. The three strong rows share -e, -iste, -o, but their stems must be learned: tuv-, hic-/hiz-, estuv-. Plural persons, more strong verbs, and new time or setting vocabulary remain outside this checkpoint."
+              "text": "habla becomes habló changes the final vowel and moves stress to the end."
             }
           ]
         },
         {
           "index": 2,
           "type": "grammar",
-          "title": "Grammar Lens: let spelling show the stress",
+          "title": "Grammar Lens: two accents, one natural stress pattern",
           "segments": [
             {
               "kind": "speech",
-              "text": "Regular comí, comió, viví, vivió carry written accents for final stress."
+              "text": "The written accents in hablé and habló show final stress. Without those marks, words ending in a vowel normally stress the next-to-last syllable. Hablaste already follows that ordinary pattern — blas is next to last — so it needs no written accent. The mark records the stress; it is not the only change that makes a form past."
             },
             {
               "kind": "speech",
-              "text": "Strong tuve, tuvo, hice, hizo, estuve, estuvo carry no written accents; stress remains in the strong stem."
+              "text": "Now reuse known words:"
             },
             {
               "kind": "speech",
-              "text": "Comiste and viviste need no accent because their ordinary stress is already next to last."
+              "text": "Hablé español. — “I spoke Spanish.”"
+            },
+            {
+              "kind": "speech",
+              "text": "¿Hablaste español? — “Did you speak Spanish?”"
+            },
+            {
+              "kind": "speech",
+              "text": "Habló español. — “He, she, or you-formal spoke Spanish.”"
             }
           ]
         },
         {
           "index": 3,
           "type": "etymology",
-          "title": "The histories, taken apart",
+          "title": "The endings, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "The regular -er/-ir endings continue Latin perfect material reshaped across Romance. Tuve and hice continue older strong-perfect histories, also reshaped rather than copied letter for letter. Estuve shows especially clear analogical remodeling beside the -uv- family of tuve."
+              "text": "The regular -ar past continues material from the Latin first-conjugation perfect, visible in forms such as amāvī, amāvistī, amāvit. Centuries of sound change and analogy produced the Spanish family -é, -aste, -ó. The history explains a family resemblance; it is not one tidy letter-by-letter erosion for every modern ending."
             }
           ]
         },
@@ -126,190 +327,88 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“hablé, comí, viví”",
+              "instruction": "“hablé, hablaste, habló”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “hablé, comí, viví”]"
+              "source": "[YOU SAY: “hablé, hablaste, habló”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“tuve, hice, estuve”",
+              "instruction": "“Hablo español. Hablé español.”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “tuve, hice, estuve”]"
+              "source": "[YOU SAY: “Hablo español. Hablé español.”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“Hice café. Viví en Madrid. Estuve bien.”",
+              "instruction": "“hablé and habló carry written accents; hablaste does not”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “Hice café. Viví en Madrid. Estuve bien.”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“comí and comió have accents; tuve and tuvo do not”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “comí and comió have accents; tuve and tuvo do not”]"
+              "source": "[YOU SAY: “hablé and habló carry written accents; hablaste does not”]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C15-practice-regular-yo-forms",
-              "prompt": "Give the learned yo past forms of hablar, comer, and vivir, in that order.",
+              "id": "ES-C14-hablar-preterite-singular-forms",
+              "prompt": "Give the singular completed-past forms of hablar: yo, tú, then él/ella/usted.",
               "assesses": [
-                "ES-GRAMMAR-AR-PRETERITE-SINGULAR",
-                "ES-GRAMMAR-ER-PRETERITE-SINGULAR",
-                "ES-GRAMMAR-IR-PRETERITE-SINGULAR",
-                "ES-GRAMMAR-ER-IR-PRETERITE-CONVERGENCE",
                 "ES-LEX-HABLAR",
-                "ES-LEX-COMER",
-                "ES-LEX-VIVIR"
+                "ES-GRAMMAR-AR-PRETERITE-SINGULAR"
               ],
-              "responseSeconds": 9,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "hablé, comí, viví",
-                "hablé comí viví",
-                "hablé / comí / viví"
+                "hablé, hablaste, habló",
+                "hablé hablaste habló",
+                "hablé / hablaste / habló"
               ],
               "feedback": {
-                "correct": "Right: hablé, comí, viví.",
-                "incorrect": "Retrieve the three regular yo forms: hablé, comí, viví."
+                "correct": "Right: hablé, hablaste, habló.",
+                "incorrect": "Keep habl- and retrieve -é, -aste, -ó."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C15-practice-strong-yo-forms",
-              "prompt": "Give the learned yo past forms of tener, hacer, and estar, in that order.",
+              "id": "ES-C14-hablar-preterite-hable-espanol",
+              "prompt": "Say 'I spoke Spanish' in Spanish.",
               "assesses": [
-                "ES-GRAMMAR-STRONG-PRETERITE-SINGULAR-PATTERN",
-                "ES-GRAMMAR-TENER-PRETERITE-SINGULAR",
-                "ES-GRAMMAR-HACER-PRETERITE-SINGULAR",
-                "ES-GRAMMAR-ESTAR-PRETERITE-SINGULAR",
-                "ES-LEX-TENER",
-                "ES-LEX-HACER",
-                "ES-LEX-ESTAR"
+                "ES-LEX-HABLAR",
+                "ES-GRAMMAR-AR-PRETERITE-SINGULAR",
+                "ES-LEX-ESPANOL",
+                "ES-ORTHOGRAPHY-AR-PRETERITE-FINAL-STRESS"
               ],
-              "responseSeconds": 9,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "tuve, hice, estuve",
-                "tuve hice estuve",
-                "tuve / hice / estuve"
+                "hablé español.",
+                "hablé español"
               ],
               "feedback": {
-                "correct": "Right: tuve, hice, estuve.",
-                "incorrect": "Retrieve the three strong yo forms: tuve, hice, estuve."
+                "correct": "Right: Hablé español.",
+                "incorrect": "Use hablé with its final written accent, then known español."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C15-practice-hice-cafe",
-              "prompt": "Say 'I made coffee' in Spanish.",
+              "id": "ES-C14-hablar-preterite-present-past",
+              "prompt": "Which form means 'I spoke' as a completed event: hablo or hablé?",
               "assesses": [
-                "ES-GRAMMAR-HACER-PRETERITE-SINGULAR",
-                "ES-LEX-HACER",
-                "ES-LEX-CAFE"
+                "ES-GRAMMAR-AR-PRESENT-SINGULAR",
+                "ES-GRAMMAR-AR-PRETERITE-SINGULAR",
+                "ES-ORTHOGRAPHY-AR-PRETERITE-FINAL-STRESS"
               ],
-              "responseSeconds": 7,
+              "responseSeconds": 6,
               "acceptedResponses": [
-                "hice café.",
-                "hice café"
+                "hablé"
               ],
               "feedback": {
-                "correct": "Right: Hice café.",
-                "incorrect": "Use the strong yo form hice, then known café."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C15-practice-vivi-madrid",
-              "prompt": "Say 'I lived in Madrid' in Spanish.",
-              "assesses": [
-                "ES-GRAMMAR-IR-PRETERITE-SINGULAR",
-                "ES-ORTHOGRAPHY-ER-IR-PRETERITE-FINAL-STRESS",
-                "ES-LEX-VIVIR",
-                "ES-LEX-EN"
-              ],
-              "responseSeconds": 7,
-              "acceptedResponses": [
-                "viví en madrid.",
-                "viví en madrid"
-              ],
-              "feedback": {
-                "correct": "Right: Viví en Madrid.",
-                "incorrect": "Use accented viví, then known en Madrid."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C15-practice-estuve-bien",
-              "prompt": "Say 'I was well' as a completed event in Spanish.",
-              "assesses": [
-                "ES-GRAMMAR-ESTAR-PRETERITE-SINGULAR",
-                "ES-LEX-ESTAR",
-                "ES-LEX-BIEN"
-              ],
-              "responseSeconds": 7,
-              "acceptedResponses": [
-                "estuve bien.",
-                "estuve bien"
-              ],
-              "feedback": {
-                "correct": "Right: Estuve bien.",
-                "incorrect": "Use the strong yo form estuve, then known bien."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C15-practice-accent-contrast",
-              "prompt": "Which pair carries written accents: comí/comió or tuve/tuvo?",
-              "assesses": [
-                "ES-ORTHOGRAPHY-ER-IR-PRETERITE-FINAL-STRESS",
-                "ES-GRAMMAR-ER-PRETERITE-SINGULAR",
-                "ES-GRAMMAR-STRONG-PRETERITE-SINGULAR-PATTERN"
-              ],
-              "responseSeconds": 7,
-              "acceptedResponses": [
-                "comí and comió",
-                "comí comió",
-                "comí/comió",
-                "comí y comió"
-              ],
-              "feedback": {
-                "correct": "Right: comí and comió mark final stress; tuve and tuvo do not.",
-                "incorrect": "The regular final-stressed pair carries the marks: comí and comió."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C15-practice-history-match",
-              "prompt": "Which learned form is especially described as analogically remodeled beside tuve: comí, hice, or estuve?",
-              "assesses": [
-                "ES-HISTORY-ER-IR-PRETERITE-LATIN-PERFECT",
-                "ES-ETYMON-TUVE",
-                "ES-ETYMON-HICE",
-                "ES-ETYMON-ESTUVE-ANALOGY"
-              ],
-              "responseSeconds": 7,
-              "acceptedResponses": [
-                "estuve"
-              ],
-              "feedback": {
-                "correct": "Right: estuve was analogically remodeled beside the -uv- strong family.",
-                "incorrect": "Look for the form sharing -uv- with tuve: estuve."
+                "correct": "Right: hablé is the completed-past yo form.",
+                "incorrect": "Hablo is present; hablé is the completed-past form."
               }
             }
           ]
@@ -327,26 +426,26 @@
             },
             {
               "kind": "speech",
-              "text": "Give the regular comer and vivir sets. (Comí, comiste, comió; viví, viviste, vivió.) Give the three strong sets. (Tuve, tuviste, tuvo; hice, hiciste, hizo; estuve, estuviste, estuvo.) Which rows share endings? (-er/-ir share one regular set; the strong rows share another.) The next chapter can add a new past contrast without borrowing any plural form here."
+              "text": "Give the three learned past forms. (Hablé, hablaste, habló.) Which two carry written accents, and why? (Hablé and habló; the marks show final stress.) What older family lies behind the endings? (The Latin first-conjugation perfect.) Next: choose between the two past patterns using only known words."
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C15-sintesis-preterito",
-      "sequence": 1348,
-      "title": "Synthesis — you can hear which past it is",
-      "headword": "(synthesis)",
-      "romanization": "(synthesis)",
-      "gloss": "synthesis — two pasts with two histories, and you can hear which is which",
+      "id": "ES-C14-practice",
+      "sequence": 1310,
+      "title": "Practice — two singular ways to talk about a completed past",
+      "headword": "(practice)",
+      "romanization": "(practice)",
+      "gloss": "a singular checkpoint for fui/fuiste/fue and hablé/hablaste/habló",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b75042ffadc0d21a",
+      "sourceHash": "fnv1a64:bf8d000824980d04",
       "notice": null,
       "blocks": [
         {
@@ -362,57 +461,49 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing new in this chapter. Say comí, then tuve."
+              "text": "This checkpoint adds nothing. Retrieve the shared singular set and the regular hablar set, then use context and spelling to keep them apart."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: the stress tells you everything",
+          "title": "Grammar Lens: the complete frame for this chapter",
           "segments": [
             {
               "kind": "speech",
-              "text": "Say those two again and listen to where your voice lifts."
+              "text": "shared past of ser and ir: fui, fuiste, fue."
             },
             {
               "kind": "speech",
-              "text": "comí — the stress lands on the ending. tuve — the stress lands on the stem."
+              "text": "regular past of hablar: hablé, hablaste, habló."
             },
             {
               "kind": "speech",
-              "text": "That is not a detail. It is the whole difference between the two kinds of past in this chapter, and it is audible before you know anything else about the verb."
+              "text": "context: Fui a Madrid expresses ir; Fue Roberto expresses ser."
             },
             {
               "kind": "speech",
-              "text": "Endings stressed becomes the regular preterite. It needs a written accent, because Spanish marks a stressed final vowel: comí, viví."
+              "text": "time contrast: Hablo español is present; Hablé español is completed past."
             },
             {
               "kind": "speech",
-              "text": "Stem stressed becomes a strong preterite. It needs no accent at all: tuve, hice, estuve."
+              "text": "spelling: hablé and habló show final stress with a written accent; hablaste needs none."
             },
             {
               "kind": "speech",
-              "text": "So the accent is not extra spelling to remember. It is the stress, written down. If a preterite has no accent, the stress moved back onto the stem, and you are looking at one of the strong ones."
+              "text": "Plural persons, additional past-tense verb classes, new time words, and new place or person vocabulary wait for later lessons."
             }
           ]
         },
         {
           "index": 2,
-          "type": "notice",
-          "title": "What you've built",
+          "type": "etymology",
+          "title": "The two histories, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "The two kinds have two histories."
-            },
-            {
-              "kind": "speech",
-              "text": "The regular preterite is Spanish doing what Spanish does: one set of endings, and — as in the present and the imperfect — -er and -ir agreeing with each other rather than going separate ways."
-            },
-            {
-              "kind": "speech",
-              "text": "The strong preterites are older. They are Latin's own perfect, carried through with the stress where Latin had put it, on verbs used too heavily ever to be rebuilt. Which is the same reason the imperfect has only three irregulars: the words people say constantly are the ones that keep their odd shapes."
+              "text": "The fui family continues Latin perfect “be” material and became shared by ser and ir. The regular -ar endings continue Latin first-conjugation perfect material, reshaped by sound change and analogy."
             }
           ]
         },
@@ -430,88 +521,142 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "comí, viví — and feel the lift on the last syllable",
+              "instruction": "“fui, fuiste, fue”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *comí*, *viví* — and feel the lift on the last syllable]"
+              "source": "[YOU SAY: “fui, fuiste, fue”]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "tuve, hice, estuve — and feel it move back",
+              "instruction": "“hablé, hablaste, habló”",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *tuve*, *hice*, *estuve* — and feel it move back]"
+              "source": "[YOU SAY: “hablé, hablaste, habló”]"
             },
             {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“Fui a Madrid. Fue Roberto.”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “Fui a Madrid. Fue Roberto.”]"
             },
             {
-              "kind": "speech",
-              "text": "Until you can place a preterite by ear before you place it by rule."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C15-sintesis-preterito-stress",
-              "prompt": "A preterite with no written accent. Where is the stress, and which kind is it?",
-              "assesses": [
-                "ES-GRAMMAR-STRONG-PRETERITE-SINGULAR-PATTERN"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "on the stem, a strong preterite",
-                "stem, strong",
-                "on the stem",
-                "strong preterite"
-              ],
-              "feedback": {
-                "correct": "Yes — no accent means the stress moved back onto the stem.",
-                "incorrect": "On the stem, which makes it a strong preterite."
-              }
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“Hablo español. Hablé español.”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “Hablo español. Hablé español.”]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C15-sintesis-preterito-accent",
-              "prompt": "Why does comi carry an accent when tuve does not?",
+              "id": "ES-C14-practice-ser-ir-forms",
+              "prompt": "Give the three learned forms shared by ser and ir.",
               "assesses": [
-                "ES-ORTHOGRAPHY-ER-IR-PRETERITE-FINAL-STRESS"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "the stress is on its final vowel",
-                "because the stress is on the ending",
-                "stressed final vowel",
-                "the ending is stressed"
-              ],
-              "feedback": {
-                "correct": "Right — the accent is the stress, written down.",
-                "incorrect": "Because comi is stressed on its final vowel and tuve is not."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C15-sintesis-preterito-families",
-              "prompt": "In the regular preterite, do -er and -ir take the same endings?",
-              "assesses": [
-                "ES-GRAMMAR-ER-IR-PRETERITE-CONVERGENCE"
+                "ES-LEX-FUI-SER-IR",
+                "ES-GRAMMAR-SER-IR-PRETERITE-SINGULAR"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "yes",
-                "yes, the same",
-                "they agree",
-                "identical"
+                "fui, fuiste, fue",
+                "fui fuiste fue",
+                "fui / fuiste / fue"
               ],
               "feedback": {
-                "correct": "Yes — as in the present and the imperfect.",
-                "incorrect": "They do, exactly as in the present and the imperfect."
+                "correct": "Right: fui, fuiste, fue.",
+                "incorrect": "Retrieve the singular set: fui, fuiste, fue."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C14-practice-ar-forms",
+              "prompt": "Give the three learned completed-past forms of hablar.",
+              "assesses": [
+                "ES-LEX-HABLAR",
+                "ES-GRAMMAR-AR-PRETERITE-SINGULAR"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "hablé, hablaste, habló",
+                "hablé hablaste habló",
+                "hablé / hablaste / habló"
+              ],
+              "feedback": {
+                "correct": "Right: hablé, hablaste, habló.",
+                "incorrect": "Retrieve the singular set: hablé, hablaste, habló."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C14-practice-context-ser-ir",
+              "prompt": "Which sentence uses the shared form as ir, 'to go': Fui a Madrid or Fue Roberto?",
+              "assesses": [
+                "ES-LEX-FUI-SER-IR",
+                "ES-GRAMMAR-SER-IR-PRETERITE-SINGULAR",
+                "ES-LEX-A"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "fui a madrid.",
+                "fui a madrid"
+              ],
+              "feedback": {
+                "correct": "Right: a plus Madrid supplies a destination, so fui expresses ir.",
+                "incorrect": "The destination phrase a Madrid makes Fui a Madrid the ir sentence."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C14-practice-present-past",
+              "prompt": "Give 'I speak Spanish' and then 'I spoke Spanish.'",
+              "assesses": [
+                "ES-LEX-HABLAR",
+                "ES-GRAMMAR-AR-PRESENT-SINGULAR",
+                "ES-GRAMMAR-AR-PRETERITE-SINGULAR",
+                "ES-LEX-ESPANOL"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "hablo español. hablé español.",
+                "hablo español; hablé español",
+                "hablo español. hablé español",
+                "hablo español hablé español"
+              ],
+              "feedback": {
+                "correct": "Right: Hablo español; Hablé español.",
+                "incorrect": "Use present hablo first, then completed-past hablé."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C14-practice-written-accents",
+              "prompt": "Which two of hablé, hablaste, habló carry written accents?",
+              "assesses": [
+                "ES-ORTHOGRAPHY-AR-PRETERITE-FINAL-STRESS",
+                "ES-SOUND-WRITTEN-ACCENT",
+                "ES-GRAMMAR-AR-PRETERITE-SINGULAR"
+              ],
+              "responseSeconds": 7,
+              "acceptedResponses": [
+                "hablé and habló",
+                "hablé habló",
+                "hablé y habló",
+                "hablé / habló"
+              ],
+              "feedback": {
+                "correct": "Right: hablé and habló mark final stress.",
+                "incorrect": "The final-stressed forms are hablé and habló."
               }
             }
           ]
@@ -529,7 +674,7 @@
             },
             {
               "kind": "speech",
-              "text": "Where does the stress fall in a strong preterite? (On the stem.) What does a missing accent tell you? (That it is one of the strong ones.) And why do the strong ones exist at all? (They are Latin's own perfect, kept intact on verbs used too much to be rebuilt.)"
+              "text": "Give both singular sets. (Fui, fuiste, fue; hablé, hablaste, habló.) How does context separate ser from ir? (A destination points to going; identification points to being.) Which regular forms carry written accents? (Hablé and habló.) The next chapter can add another past family without borrowing plural forms or unseen vocabulary from this checkpoint."
             }
           ]
         }

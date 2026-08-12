@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 177,
-  "title": "Se Habla Espanol --- Nobody in Particular",
+  "title": "Which Way Is the Arrow Pointing?",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:0c8f413c86384874",
+  "sourceHash": "fnv1a64:03891be94ccdc546",
   "lessons": [
     {
-      "id": "ES-C52-se-habla",
-      "sequence": 2196,
-      "title": "se habla español — nobody in particular",
-      "headword": "se habla español",
-      "romanization": "se habla español",
-      "gloss": "how Spanish says something happens without saying who does it — the sign in every shop window",
+      "id": "ES-C51-la-flecha",
+      "sequence": 2193,
+      "title": "Which way is the arrow pointing?",
+      "headword": "por vs para",
+      "romanization": "por vs para",
+      "gloss": "the one question that replaces the twelve rules — which way is the arrow pointing?",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8e0f3626dc9f9622",
+      "sourceHash": "fnv1a64:cca6d3997d2893fd",
       "notice": null,
       "blocks": [
         {
@@ -35,39 +35,74 @@
             },
             {
               "kind": "speech",
-              "text": "Se llama — \"he calls himself.\" You have had that se since your third chapter. Here it is doing something you have seen on signs and never been able to parse."
+              "text": "One points forward at a target. One points back at a cause. Say which is which before you read on."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: a sentence with nobody in it",
+          "title": "Grammar Lens: the same sentence, twice",
           "segments": [
             {
               "kind": "speech",
-              "text": "Se habla español. — Spanish is spoken here. Se come bien. — One eats well here. / The food is good."
+              "text": "The pair that makes the difference visible:"
             },
             {
               "kind": "speech",
-              "text": "Look for the person doing it. There is not one, and there is not meant to be. Se habla español does not tell you who speaks Spanish — it tells you that Spanish gets spoken, and that is the entire content."
+              "text": "Lo hago para ti. — I'm doing it for you. (you receive it) Lo hago por ti. — I'm doing it because of you. (you are the reason)."
             },
             {
               "kind": "speech",
-              "text": "English has to work harder to be that vague. It reaches for a passive (\"Spanish is spoken\"), or a fake subject (\"they speak Spanish here\", \"you eat well there\"), and neither is quite honest, because there is no they and no you."
+              "text": "Two letters apart, and two different sentences about your relationship with somebody. The first is a gift; the second is a motive."
             },
             {
               "kind": "speech",
-              "text": "Spanish just... leaves the person out. The se is the mark that says nobody is being named."
+              "text": "English says for in both and lets context carry the rest. Spanish makes you choose, and once you hear the choice you notice English was hiding it."
             },
             {
               "kind": "speech",
-              "text": "This is why it is the natural voice of signs, notices and rules: se habla español, se prohíbe fumar, no se aceptan tarjetas. A sign is not addressed by anyone to anyone. It simply reports that something is the case."
+              "text": "The test:"
+            },
+            {
+              "kind": "speech",
+              "text": "Draw an arrow. Does it point at the thing (para), or come from it (por)?"
+            },
+            {
+              "kind": "speech",
+              "text": "Es para ti — arrow at you. You get it."
+            },
+            {
+              "kind": "speech",
+              "text": "Es por ti — arrow from you. You caused it."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the whole rung: one arrow, two directions."
             }
           ]
         },
         {
           "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The test works because it is not a trick. It is what the two words are made of: para contains ad (\"toward\"), por contains per (\"through\")."
+            },
+            {
+              "kind": "speech",
+              "text": "You are not memorising which preposition suits which situation. You are reading a direction built into each word before Spanish existed."
+            },
+            {
+              "kind": "speech",
+              "text": "That keeps working on uses this book never showed you: meeting por in an unfamiliar sentence, ask what it comes through or because of."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -80,83 +115,101 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Se habla español\" as if reading it off a window",
+              "instruction": "\"Lo hago para ti\" then \"Lo hago por ti\" — two letters, two relationships",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Se habla español\" as if reading it off a window]"
+              "source": "[YOU SAY: \"Lo hago para ti\" then \"Lo hago por ti\" — two letters, two relationships]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Se come bien\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Se come bien\"]"
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "Until the arrow arrives before the word does."
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C52-se-habla-sign",
-              "prompt": "Write the sign that says Spanish is spoken here.",
+              "id": "ES-C51-la-flecha-gift",
+              "prompt": "Say I am doing it for you, meaning you will receive it.",
               "assesses": [
-                "ES-GRAMMAR-SE-IMPERSONAL",
-                "ES-LEX-ESPANOL"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "se habla espanol",
-                "se habla español"
-              ],
-              "feedback": {
-                "correct": "No person named anywhere in it.",
-                "incorrect": "Se habla espanol."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C52-se-habla-who",
-              "prompt": "Who speaks Spanish, according to that sentence?",
-              "assesses": [
-                "ES-GRAMMAR-SE-IMPERSONAL"
+                "ES-GRAMMAR-POR-PARA-CONTRAST",
+                "ES-LEX-PARA",
+                "ES-LEX-TU"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "nobody in particular",
-                "it does not say",
-                "no one is named"
+                "lo hago para ti",
+                "para ti"
               ],
               "feedback": {
-                "correct": "That absence is the whole point of the form.",
-                "incorrect": "It does not say, and it is not meant to."
+                "correct": "Arrow points at you.",
+                "incorrect": "Lo hago para ti."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C52-se-habla-eat",
-              "prompt": "Say one eats well here.",
+              "id": "ES-C51-la-flecha-cause",
+              "prompt": "Now say it meaning you are the reason.",
               "assesses": [
-                "ES-GRAMMAR-SE-IMPERSONAL",
-                "ES-LEX-COMER",
-                "ES-LEX-BIEN"
+                "ES-GRAMMAR-POR-PARA-CONTRAST",
+                "ES-LEX-POR"
               ],
-              "responseSeconds": 8,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "se come bien",
-                "aqui se come bien"
+                "lo hago por ti",
+                "por ti"
               ],
               "feedback": {
-                "correct": "Se come bien.",
-                "incorrect": "Se come bien."
+                "correct": "Arrow points from you.",
+                "incorrect": "Lo hago por ti."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C51-la-flecha-test",
+              "prompt": "State the test in one sentence.",
+              "assesses": [
+                "ES-GRAMMAR-POR-PARA-CONTRAST"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "does the arrow point at it or come from it",
+                "at the thing is para, from the thing is por"
+              ],
+              "feedback": {
+                "correct": "One arrow, two directions.",
+                "incorrect": "Does the arrow point at the thing (para) or come from it (por)?"
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C51-la-flecha-why",
+              "prompt": "Why is the arrow test not just a mnemonic?",
+              "assesses": [
+                "ES-ETYMON-PER-AD",
+                "ES-ETYMON-PRO-PER"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "the directions are inside the words, ad and per",
+                "para contains ad, toward; por contains per, through"
+              ],
+              "feedback": {
+                "correct": "You are reading the words, not remembering a trick.",
+                "incorrect": "Para contains ad (toward) and por contains per (through). The test describes the words."
               }
             }
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -168,7 +221,7 @@
             },
             {
               "kind": "speech",
-              "text": "Se habla español — who is speaking? (Nobody named — that is the point.) What does the se mark? (That no person is being named.) Next: why this form grew out of the one you already knew."
+              "text": "Para ti — who gets it? (You do.) Por ti — who caused it? (You did.) And why does the test keep working on sentences this book never showed you? (Because the directions are inside the words.) Next: both in one place."
             }
           ]
         }

@@ -2,32 +2,25 @@
   "version": 1,
   "language": "spanish",
   "chapter": 185,
-  "title": "Review --- Three Jobs, No New Words",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:ee39d47ce8dc3510",
+  "title": "El Libro Que Compro --- One Sentence Out of Two",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:3e58cd5c164a2856",
   "lessons": [
     {
-      "id": "ES-C53-repaso-que",
-      "sequence": 2204,
-      "title": "Review — three jobs, no new words",
-      "headword": "(review)",
-      "romanization": "(review)",
-      "gloss": "review — a whole grammatical machine assembled from two words you already had",
+      "id": "ES-C53-que-relativo",
+      "sequence": 2201,
+      "title": "el libro que compro — one sentence out of two",
+      "headword": "el libro que compro",
+      "romanization": "el libro que compro",
+      "gloss": "joining two sentences into one — with a word you have had since you learned to want things",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2f42529db76592fd",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:b6b38ba1f7481b76",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -42,68 +35,57 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing new. One question first: how many new words did this rung teach you?"
+              "text": "Say \"I want you to speak.\" (Quiero que hables.) That que is about to do a second job — and it is the job that lets your sentences stop being short."
             }
           ]
         },
         {
           "index": 1,
-          "type": "notice",
-          "title": "What you've built",
+          "type": "grammar",
+          "title": "Grammar Lens: stapling two sentences together",
           "segments": [
             {
               "kind": "speech",
-              "text": "None. Here is the whole rung:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "",
-                "Spanish",
-                "English"
-              ],
-              "columns": 3,
-              "rowCount": 3,
-              "utterances": [
-                "joining to a noun. Spanish: el libro que compro. English: the book that I buy.",
-                "the same, with English's that dropped. Spanish: la casa que tengo. English: the house I have.",
-                "no noun to join to. Spanish: lo que digo. English: what I say."
-              ]
+              "text": "You have two sentences about one book:"
             },
             {
               "kind": "speech",
-              "text": "Que you have held since quiero que hables. Lo you have held since the object pronouns. This rung put them to work and added nothing."
+              "text": "Tengo el libro. — I have the book. Compro el libro. — I buy the book."
             },
             {
               "kind": "speech",
-              "text": "That is worth pausing on, because it is the last big structural piece a beginner's course owes you, and it turned out to cost no vocabulary at all. Almost everything in a language is like this eventually: the pieces stop being new and start being rearranged."
+              "text": "Que joins them, and the repeated noun disappears:"
+            },
+            {
+              "kind": "speech",
+              "text": "Tengo el libro que compro. — I have the book that I buy."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the whole mechanism. Name the thing once, then use que to hang a second sentence off it. Everything you can already say can now be attached to a noun instead of standing alone."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the point where a language stops being a list of statements. Up to now your sentences have had one verb each. From here a sentence can contain another sentence, and then another — which is what allows description, explanation and storytelling of any length."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: what to actually watch for",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "One error will outlive the others, so it gets the last word here."
+              "text": "Que comes from the Latin qui / quem / quid family — the same qu- question-root sitting inside qué, quién, cómo and cuándo, which you have been collecting since your very first questions."
             },
             {
               "kind": "speech",
-              "text": "English deletes its joint. Spanish never does."
+              "text": "That is not a coincidence of spelling. A question and a relative clause are doing related work: ¿qué compras? asks you to fill a gap, and el libro que compro fills one. Latin used the same word family for both, and Spanish kept the arrangement."
             },
             {
               "kind": "speech",
-              "text": "You will think the book I bought, translate what you thought, and produce el libro compré. It will feel complete because your English was complete."
-            },
-            {
-              "kind": "speech",
-              "text": "The check is mechanical and takes a second: a noun, then a new subject and verb, with nothing in between — that gap needs a que."
-            },
-            {
-              "kind": "speech",
-              "text": "And when there is no noun to begin with, lo supplies one so that que has something to hang from. Which means both chapters were about the same thing: Spanish will not let the joint go missing."
+              "text": "So the busiest structural word in the language is a worn-down question word. English did the identical thing: what, which, who and that all serve twice, as questions and as joints."
             }
           ]
         },
@@ -121,75 +103,78 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "all three rows of the table",
+              "instruction": "the two short sentences, then the joined one",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: all three rows of the table]"
+              "source": "[YOU SAY: the two short sentences, then the joined one]"
             },
             {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "Until the missing English that is loud."
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"el libro que compro\", \"la casa que tengo\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"el libro que compro\", \"la casa que tengo\"]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C53-repaso-que-none",
-              "prompt": "How many new words did this rung introduce?",
+              "id": "ES-C53-que-relativo-join",
+              "prompt": "Join Tengo el libro and Compro el libro into one sentence.",
               "assesses": [
                 "ES-GRAMMAR-RELATIVE-QUE",
-                "ES-GRAMMAR-LO-QUE"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "none",
-                "zero",
-                "0"
-              ],
-              "feedback": {
-                "correct": "Que and lo were both already yours.",
-                "incorrect": "None."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C53-repaso-que-drop",
-              "prompt": "Say the house I have, and name the trap.",
-              "assesses": [
-                "ES-GRAMMAR-RELATIVE-QUE-OBLIGATORY"
+                "ES-LEX-LIBRO",
+                "ES-LEX-COMPRAR-07"
               ],
               "responseSeconds": 12,
               "acceptedResponses": [
-                "la casa que tengo; english drops the that",
-                "la casa que tengo"
+                "tengo el libro que compro",
+                "el libro que compro"
               ],
               "feedback": {
-                "correct": "You think the English, and the que goes missing with it.",
-                "incorrect": "La casa que tengo. The trap is that English deletes its that."
+                "correct": "Name the thing once, hang the rest off que.",
+                "incorrect": "Tengo el libro que compro."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C53-repaso-que-hole",
-              "prompt": "When there is no noun to join to, what supplies one?",
+              "id": "ES-C53-que-relativo-what",
+              "prompt": "What happens to the repeated noun when que joins two sentences?",
               "assesses": [
-                "ES-GRAMMAR-LO-QUE"
+                "ES-GRAMMAR-RELATIVE-QUE"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "lo",
-                "lo, as in lo que"
+                "it disappears",
+                "you only say it once",
+                "it is not repeated"
               ],
               "feedback": {
-                "correct": "So that que has something to hang from.",
-                "incorrect": "Lo — giving que something to attach to."
+                "correct": "Once is enough — que carries it into the second half.",
+                "incorrect": "It disappears. You name it once."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C53-que-relativo-family",
+              "prompt": "Which question words share que's root?",
+              "assesses": [
+                "ES-ETYMON-QUI-RELATIVE",
+                "ES-LEX-QUE"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "que, quien, como, cuando",
+                "qué, quién, cómo, cuándo",
+                "the qu- family"
+              ],
+              "feedback": {
+                "correct": "A question fills a gap; so does a relative clause.",
+                "incorrect": "Qué, quién, cómo, cuándo — the same qu- root."
               }
             }
           ]
@@ -207,7 +192,7 @@
             },
             {
               "kind": "speech",
-              "text": "New words this rung? (None.) The error that outlives the others? (Dropping que, because English drops that.) Next: sentences long enough to be worth saying."
+              "text": "Join \"I have the book\" and \"I buy the book.\" (Tengo el libro que compro.) What does que let a sentence do that it could not before? (Contain another sentence.) Next: the one place English is lazier than Spanish, and it trips every learner."
             }
           ]
         }

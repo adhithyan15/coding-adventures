@@ -1,39 +1,46 @@
-Spanish, chapter 80: La --- The Pronoun Carries What Left.
-1 lesson. All 1 can be done entirely by ear.
+Spanish, chapter 80: Review --- All Four Words for The.
+1 lesson. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
 Lesson 1 of 1.
-la — "it," for a feminine noun.
+Review — all four words for "the".
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
 
 Warm-up.
 [pause 2 seconds]
-Say "I have it," about the book. (Lo tengo.) Now guess the feminine version before you read on.
+Nothing new here. Before the table: how many words does Spanish have for "the"?
 
-Grammar Lens: the form you probably guessed.
-la — it, standing in for something feminine.
-Hago la comida. — I make the meal. La hago. — I make it.
-If you guessed la, you were not lucky. You were doing what the shape of Spanish invites you to do: el and la mark the two genders everywhere else, so the object pronouns mark them the same way.
-The pronoun agrees with the noun it replaces — not with you, and not with the verb. El libro is masculine, so lo. La comida and la casa are feminine, so la.
-That last point is worth pausing on. La here is not agreeing with anything present in the sentence. The noun is gone; the pronoun is carrying its gender on its behalf. This is the first time in Spanish that a word has had to remember something that is no longer being said.
+What you've built.
+Four. And you have now met every one of them separately, which is why they are allowed to appear together.
+[a table of 2 rows, read aloud]
+masculine. singular: el libro. plural: los libros.
+feminine. singular: la casa. plural: las casas.
+English has one word here and Spanish has four, so it is easy to read this table as three extra things to carry. It is not. It is two questions you were already answering — which gender? and how many? — laid out in a grid.
+The first chapter of this book taught the top row. The last two chapters taught the bottom one. Nothing in this table arrived without being built.
 
-The word, taken apart.
-Last chapter had a small mystery: why lo and not el, when both come from the same Latin word? Here that mystery quietly disappears.
-The feminine object form in Latin was illam. Worn down as an article it gave la. Worn down as a pronoun it gave — la. Both routes arrived at the same place, because the vowel that got lost on the masculine side (elo becomes el) was never at risk on the feminine side.
-So the masculine pair split into two shapes and the feminine pair did not. Not an exception to memorise: a single sound change that happened to bite one word and not the other.
+Grammar Lens: the two plural rules.
+And underneath the grid, one rule with a repair:
+Add -s. If the word ends in a consonant and the -s would be unsayable, add -es instead.
+casa becomes casas, libro becomes libros, comida becomes comidas — vowels, plain -s.
+usted becomes ustedes, español becomes españoles — consonants, -es.
+You held the first half from chapter one and the second half from ustedes without knowing it had a name.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "Hago la comida" then "La hago"]
+[your turn — say: "el, la, los, las" until the order is automatic]
 [pause 8 seconds for the answer]
-[your turn — say: "lo tengo" then "la hago" — one syllable carries the whole difference]
+[your turn — say: "el libro, los libros, la casa, las casas"]
 [pause 8 seconds for the answer]
-[question — say your answer, then pause 8 seconds]
-Say I make it, about la comida.
+[repeat that twice]
+Until the grid is a reflex rather than a lookup.
 [question — say your answer, then pause 10 seconds]
-What decides whether you say lo or la?
+Give the four Spanish words for the, in the order masculine singular, feminine singular, masculine plural, feminine plural.
+[question — say your answer, then pause 10 seconds]
+Say the books and then the houses.
 [question — say your answer, then pause 12 seconds]
-Why does the feminine article match its pronoun exactly, when the masculine pair does not?
+State the plural rule in one sentence, including what happens after a consonant.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which pronoun replaces a feminine noun? (La.) What decides it — you, the verb, or the noun? (The noun, even though it is no longer there.) Next: the same slot, for the two people actually talking.
+Four articles — say them. (El, la, los, las.) Two questions decide which? (Gender and number.) Next: what happens to a when there is more than one — and the answer is not what you would expect.

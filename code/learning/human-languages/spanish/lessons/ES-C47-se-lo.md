@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C47-se-lo
 spine_node: SPINE-DEFINITE-REFERENCE
 sequence: 1237
-chapter: 95
+chapter: 98
 type: grammar
 headword: se lo
 gloss: the one pair Spanish will not say — le lo does not exist, and something else stands in for it

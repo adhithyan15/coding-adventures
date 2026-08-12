@@ -2,25 +2,32 @@
   "version": 1,
   "language": "spanish",
   "chapter": 80,
-  "title": "La --- The Pronoun Carries What Left",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:02110d3a10c2212e",
+  "title": "Review --- All Four Words for The",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:4a892ef8c1185824",
   "lessons": [
     {
-      "id": "ES-C42-la",
-      "sequence": 1217,
-      "title": "la — \"it,\" for a feminine noun",
-      "headword": "la",
-      "romanization": "la",
-      "gloss": "\"it\" for something feminine — the one word in this pair that never had to change",
+      "id": "ES-C44-repaso-articulos",
+      "sequence": 1201,
+      "title": "Review — all four words for \"the\"",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "review — the four words for \"the,\" complete at last, and the two plural rules that feed them",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "sight-cue"
       ],
-      "sourceHash": "fnv1a64:f21a0d4682813b43",
-      "notice": null,
+      "sourceHash": "fnv1a64:9822d55794babd3e",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -35,53 +42,67 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"I have it,\" about the book. (Lo tengo.) Now guess the feminine version before you read on."
+              "text": "Nothing new here. Before the table: how many words does Spanish have for \"the\"?"
             }
           ]
         },
         {
           "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: the form you probably guessed",
+          "type": "notice",
+          "title": "What you've built",
           "segments": [
             {
               "kind": "speech",
-              "text": "la — it, standing in for something feminine."
+              "text": "Four. And you have now met every one of them separately, which is why they are allowed to appear together."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "singular",
+                "plural"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "masculine. singular: el libro. plural: los libros.",
+                "feminine. singular: la casa. plural: las casas."
+              ]
             },
             {
               "kind": "speech",
-              "text": "Hago la comida. — I make the meal. La hago. — I make it."
+              "text": "English has one word here and Spanish has four, so it is easy to read this table as three extra things to carry. It is not. It is two questions you were already answering — which gender? and how many? — laid out in a grid."
             },
             {
               "kind": "speech",
-              "text": "If you guessed la, you were not lucky. You were doing what the shape of Spanish invites you to do: el and la mark the two genders everywhere else, so the object pronouns mark them the same way."
-            },
-            {
-              "kind": "speech",
-              "text": "The pronoun agrees with the noun it replaces — not with you, and not with the verb. El libro is masculine, so lo. La comida and la casa are feminine, so la."
-            },
-            {
-              "kind": "speech",
-              "text": "That last point is worth pausing on. La here is not agreeing with anything present in the sentence. The noun is gone; the pronoun is carrying its gender on its behalf. This is the first time in Spanish that a word has had to remember something that is no longer being said."
+              "text": "The first chapter of this book taught the top row. The last two chapters taught the bottom one. Nothing in this table arrived without being built."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
+          "type": "grammar",
+          "title": "Grammar Lens: the two plural rules",
           "segments": [
             {
               "kind": "speech",
-              "text": "Last chapter had a small mystery: why lo and not el, when both come from the same Latin word? Here that mystery quietly disappears."
+              "text": "And underneath the grid, one rule with a repair:"
             },
             {
               "kind": "speech",
-              "text": "The feminine object form in Latin was illam. Worn down as an article it gave la. Worn down as a pronoun it gave — la. Both routes arrived at the same place, because the vowel that got lost on the masculine side (elo becomes el) was never at risk on the feminine side."
+              "text": "Add -s. If the word ends in a consonant and the -s would be unsayable, add -es instead."
             },
             {
               "kind": "speech",
-              "text": "So the masculine pair split into two shapes and the feminine pair did not. Not an exception to memorise: a single sound change that happened to bite one word and not the other."
+              "text": "casa becomes casas, libro becomes libros, comida becomes comidas — vowels, plain -s."
+            },
+            {
+              "kind": "speech",
+              "text": "usted becomes ustedes, español becomes españoles — consonants, -es."
+            },
+            {
+              "kind": "speech",
+              "text": "You held the first half from chapter one and the second half from ustedes without knowing it had a name."
             }
           ]
         },
@@ -99,79 +120,87 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Hago la comida\" then \"La hago\"",
+              "instruction": "\"el, la, los, las\" until the order is automatic",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Hago la comida\" then \"La hago\"]"
+              "source": "[YOU SAY: \"el, la, los, las\" until the order is automatic]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"lo tengo\" then \"la hago\" — one syllable carries the whole difference",
+              "instruction": "\"el libro, los libros, la casa, las casas\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"lo tengo\" then \"la hago\" — one syllable carries the whole difference]"
+              "source": "[YOU SAY: \"el libro, los libros, la casa, las casas\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "Until the grid is a reflex rather than a lookup."
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C42-la-form",
-              "prompt": "Say I make it, about la comida.",
+              "id": "ES-C44-repaso-articulos-four",
+              "prompt": "Give the four Spanish words for the, in the order masculine singular, feminine singular, masculine plural, feminine plural.",
               "assesses": [
-                "ES-GRAMMAR-DIRECT-OBJECT-LA",
-                "ES-LEX-LA-OBJECT",
-                "ES-GRAMMAR-HACER-PRESENT-SINGULAR"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "la hago",
-                "yo la hago"
-              ],
-              "feedback": {
-                "correct": "Yes — feminine noun, feminine pronoun.",
-                "incorrect": "La hago. The pronoun takes the gender of the noun it replaces."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C42-la-agree",
-              "prompt": "What decides whether you say lo or la?",
-              "assesses": [
-                "ES-GRAMMAR-NOUN-GENDER",
-                "ES-GRAMMAR-DIRECT-OBJECT-LO",
-                "ES-LEX-CASA"
+                "ES-GRAMMAR-DEFINITE-ARTICLES",
+                "ES-GRAMMAR-DEFINITE-PLURAL-MASCULINE",
+                "ES-GRAMMAR-DEFINITE-PLURAL-FEMININE"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "the gender of the noun it replaces",
-                "the noun's gender",
-                "whether the noun is masculine or feminine"
+                "el, la, los, las",
+                "el la los las",
+                "el / la / los / las"
               ],
               "feedback": {
-                "correct": "Right — the noun decides, not the speaker and not the verb.",
-                "incorrect": "The gender of the noun being replaced."
+                "correct": "That is the whole set.",
+                "incorrect": "el, la, los, las."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C42-la-why",
-              "prompt": "Why does the feminine article match its pronoun exactly, when the masculine pair does not?",
+              "id": "ES-C44-repaso-articulos-grid",
+              "prompt": "Say the books and then the houses.",
               "assesses": [
-                "ES-ETYMON-ILLE-ILLA"
+                "ES-GRAMMAR-DEFINITE-PLURAL-MASCULINE",
+                "ES-LEX-LIBRO"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "los libros, las casas",
+                "los libros las casas"
+              ],
+              "feedback": {
+                "correct": "Gender picks the row, number picks the column.",
+                "incorrect": "Los libros, las casas."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C44-repaso-articulos-rule",
+              "prompt": "State the plural rule in one sentence, including what happens after a consonant.",
+              "assesses": [
+                "ES-GRAMMAR-NOUN-PLURAL-ES",
+                "ES-GRAMMAR-NOUN-NUMBER"
               ],
               "responseSeconds": 12,
               "acceptedResponses": [
-                "the masculine lost a vowel and the feminine had none to lose",
-                "only the masculine wore down",
-                "the sound change only hit the masculine"
+                "add -s, or -es when the bare s would be unsayable",
+                "-s after a vowel and -es after a consonant"
               ],
               "feedback": {
-                "correct": "Exactly — one sound change, one victim.",
-                "incorrect": "Both come from illam unchanged; the masculine elo lost its vowel and became el."
+                "correct": "One rule and a repair.",
+                "incorrect": "Add -s; after a consonant add -es, because the bare -s could not be said."
               }
             }
           ]
@@ -189,7 +218,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which pronoun replaces a feminine noun? (La.) What decides it — you, the verb, or the noun? (The noun, even though it is no longer there.) Next: the same slot, for the two people actually talking."
+              "text": "Four articles — say them. (El, la, los, las.) Two questions decide which? (Gender and number.) Next: what happens to a when there is more than one — and the answer is not what you would expect."
             }
           ]
         }

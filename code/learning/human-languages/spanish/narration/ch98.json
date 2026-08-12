@@ -2,32 +2,25 @@
   "version": 1,
   "language": "spanish",
   "chapter": 98,
-  "title": "Synthesis --- Two at a Time",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:7013014393d21000",
+  "title": "Se Lo --- The Pair That Does Not Exist",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:80fbfa5901b9e3cc",
   "lessons": [
     {
-      "id": "ES-C47-sintesis-dos-a-la-vez",
-      "sequence": 1240,
-      "title": "Synthesis — two at a time",
-      "headword": "(synthesis)",
-      "romanization": "(synthesis)",
-      "gloss": "synthesis — a four-turn exchange carried almost entirely by pronouns, and what that does to how it sounds",
+      "id": "ES-C47-se-lo",
+      "sequence": 1237,
+      "title": "se lo — the pair that does not exist",
+      "headword": "se lo",
+      "romanization": "se lo",
+      "gloss": "the one pair Spanish will not say — le lo does not exist, and something else stands in for it",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5d62e590d826288d",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:05579e586c842b5a",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -42,54 +35,47 @@
             },
             {
               "kind": "speech",
-              "text": "\"I tell it to him,\" in three words. (Se lo digo.)"
+              "text": "Person first, then thing. So \"I tell it to him\" should be le plus lo plus digo. Say that out loud: le lo digo."
             }
           ]
         },
         {
           "index": 1,
-          "type": "input",
-          "title": "The exchange",
+          "type": "grammar",
+          "title": "Grammar Lens: nobody says that",
           "segments": [
             {
               "kind": "speech",
-              "text": "— ¿Tienes el libro? — Sí. ¿Te lo digo? — Sí, y se lo dices a Ana. — Y la comida — se la hago hoy."
+              "text": "Your mouth probably objected before your grammar did. Le lo is two nearly identical syllables in a row, and Spanish will not say it."
             },
             {
               "kind": "speech",
-              "text": "Look at the last three lines. After the first sentence names the book, not one noun does any work. Te lo, se lo, se la — six words that name nothing, and the conversation is perfectly clear to both speakers."
+              "text": "In front of lo, la, los or las, the pronouns le and les become se."
             },
             {
               "kind": "speech",
-              "text": "That is what all of this has been for. Fifteen chapters of object pronouns exist so that a conversation can stop repeating itself, and this is the point where the machinery is complete enough to see it happen."
+              "text": "Le lo digo. becomes Se lo digo. — I tell it to him. Les la hago. becomes Se la hago. — I make it for them."
+            },
+            {
+              "kind": "speech",
+              "text": "Everything else about the sentence is unchanged. The order is still person then thing. The slot is still in front of the verb. Only the first word's shape changes, and it changes for one reason: what follows it."
+            },
+            {
+              "kind": "speech",
+              "text": "Note what se does not tell you. Le already refused to mark gender, and se goes further — it does not mark number either:"
+            },
+            {
+              "kind": "speech",
+              "text": "Se lo digo — to him. To her. To you. To them. To you all."
+            },
+            {
+              "kind": "speech",
+              "text": "Five readings, one word. Context does all the work, and if you need to be precise you add it in words rather than in the pronoun."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: two words carrying a whole sentence",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Se la hago is three words and it means \"I make the meal for her, today.\" Two of the three are pronouns; between them they carry a person and a thing, neither of which is named anywhere in the sentence."
-            },
-            {
-              "kind": "speech",
-              "text": "English cannot compress like this. I'll make it for her needs five words and still spells out for. Spanish puts both jobs in front of the verb, in a fixed order, and gets on with it."
-            },
-            {
-              "kind": "speech",
-              "text": "The cost is the one you already know, doubled. Two pronouns are two promises that both things are still in the room. When you lose track of one of them, the sentence does not become wrong — it becomes about somebody else, and nobody will notice until it matters."
-            },
-            {
-              "kind": "speech",
-              "text": "So the practice that pays here is not conjugation. It is keeping a conversation's furniture in mind while you talk."
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -102,111 +88,84 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the four-turn exchange straight through",
+              "instruction": "\"le lo digo\" once, badly, and then \"se lo digo\" — feel why",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the four-turn exchange straight through]"
+              "source": "[YOU SAY: \"le lo digo\" once, badly, and then \"se lo digo\" — feel why]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"te lo digo, se lo dices, se la hago\" until the pairs feel like single words",
+              "instruction": "\"Se lo digo\" and \"Se la hago\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"te lo digo, se lo dices, se la hago\" until the pairs feel like single words]"
-            },
-            {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
+              "source": "[YOU SAY: \"Se lo digo\" and \"Se la hago\"]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C47-sintesis-dos-a-la-vez-you",
-              "prompt": "Say shall I tell it to you.",
+              "id": "ES-C47-se-lo-say",
+              "prompt": "Say I tell it to him.",
               "assesses": [
-                "ES-GRAMMAR-DOUBLE-OBJECT-ORDER",
-                "ES-GRAMMAR-DECIR-PRESENT-SINGULAR",
-                "ES-GRAMMAR-DIRECT-OBJECT-LO"
+                "ES-GRAMMAR-SE-FOR-LE",
+                "ES-GRAMMAR-DECIR-PRESENT-SINGULAR"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "te lo digo",
-                "¿te lo digo?",
-                "te lo digo?"
+                "se lo digo",
+                "yo se lo digo"
               ],
               "feedback": {
-                "correct": "Person first, thing second.",
-                "incorrect": "Te lo digo."
+                "correct": "Se lo digo — le could not stand in front of lo.",
+                "incorrect": "Se lo digo. Le becomes se before lo."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C47-sintesis-dos-a-la-vez-her",
-              "prompt": "Say I make it for her, about la comida.",
+              "id": "ES-C47-se-lo-when",
+              "prompt": "In front of which four words do le and les become se?",
               "assesses": [
                 "ES-GRAMMAR-SE-FOR-LE",
-                "ES-LEX-COMIDA",
-                "ES-GRAMMAR-HACER-PRESENT-SINGULAR",
                 "ES-GRAMMAR-DIRECT-OBJECT-LA"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "se la hago",
-                "yo se la hago"
+                "lo, la, los, las",
+                "lo la los las",
+                "the direct object pronouns for things"
               ],
               "feedback": {
-                "correct": "Three words, a person and a thing, neither named.",
-                "incorrect": "Se la hago — le becomes se in front of la."
+                "correct": "Only those four, and always those four.",
+                "incorrect": "lo, la, los and las."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C47-sintesis-dos-a-la-vez-count",
-              "prompt": "In se la hago, how many of the three words name anything?",
-              "assesses": [
-                "ES-GRAMMAR-DOUBLE-OBJECT-ORDER"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "none",
-                "zero",
-                "0"
-              ],
-              "feedback": {
-                "correct": "And it is still completely clear to both speakers.",
-                "incorrect": "None. Both the person and the thing are carried by pronouns."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C47-sintesis-dos-a-la-vez-cost",
-              "prompt": "You lose track of which thing se la points at. Does the sentence become wrong?",
+              "id": "ES-C47-se-lo-ambiguous",
+              "prompt": "How many different people can se lo digo be about?",
               "assesses": [
                 "ES-GRAMMAR-SE-FOR-LE",
-                "ES-GRAMMAR-DIRECT-OBJECT-LA"
+                "ES-GRAMMAR-INDIRECT-OBJECT-PLURAL"
               ],
               "responseSeconds": 12,
               "acceptedResponses": [
-                "no, it becomes about something else",
-                "no",
-                "it stays grammatical but means something else"
+                "five: him, her, you, them, you all",
+                "five",
+                "him her you them or you all"
               ],
               "feedback": {
-                "correct": "Which is harder to notice than being wrong.",
-                "incorrect": "No. It stays grammatical and quietly becomes about something else."
+                "correct": "Se marks neither gender nor number. Context carries it.",
+                "incorrect": "Five — him, her, usted, them, ustedes. Se marks neither gender nor number."
               }
             }
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -218,7 +177,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"I make it for her\"? (Se la hago.) How many nouns are in that sentence? (None.) And what does each pronoun promise? (That its thing is still in the room.) Next: the past tense."
+              "text": "\"I tell it to him\"? (Se lo digo.) What happened to le? (It became se in front of lo.) Next: why it became se — and it is not the reason almost everyone assumes."
             }
           ]
         }

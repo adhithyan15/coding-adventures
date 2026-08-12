@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C47-repaso-dobles
 spine_node: SPINE-DEFINITE-REFERENCE
 sequence: 1239
-chapter: 97
+chapter: 100
 type: practice-mix
 headword: (review)
 gloss: review — every pair of pronouns Spanish allows, which is fewer combinations than it sounds

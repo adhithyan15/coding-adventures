@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C49-sintesis-dos-orillas
 spine_node: SPINE-TALK-ABOUT-PAST
 sequence: 1390
-chapter: 117
+chapter: 120
 type: practice-mix
 headword: (synthesis)
 gloss: synthesis — when to reach for this tense instead of the preterite, and why the honest answer is a map rather than a rule

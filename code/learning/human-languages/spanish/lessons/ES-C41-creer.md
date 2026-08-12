@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C41-creer
 spine_node: SPINE-GIVE-REASONS
 sequence: 2160
-chapter: 171
+chapter: 174
 type: word
 headword: creer
 gloss: to believe, to think — putting your heart somewhere, where pensar weighs it up
