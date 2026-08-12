@@ -42,7 +42,8 @@ when stdin is redirected. No passphrase flag, environment variable, config
 field, URL, or stdin path exists. Unix integration tests launch this exact
 binary under fresh pseudo-terminals. The primary drill verifies passphrases and
 item passwords are not echoed, restarts the process for durable item
-add/edit/list/show, explicitly confirms one audited current-password reveal
+add/edit/list/show with ordered multi-URL fields and optional hidden login
+notes, explicitly confirms audited current-password and login-notes reveals
 directly on `/dev/tty` while captured process stdout remains empty, injects decoy
 bytes through stdin, verify redacted canonical history across another fresh
 process, delete to a causal tombstone, restore an exact live ancestor into a
@@ -56,7 +57,7 @@ select it without changing the source default, open the artifact through
 another hidden prompt, publish import with no intermediate output, independently
 reopen the target in the same command for audited semantic verification,
 restart into redacted restored items, reopen the untouched source, and inspect
-the shared profile tree for plaintext secret bytes.
+the shared profile tree for password and notes plaintext bytes.
 
 A separate payment-card drill creates a card through fixed metadata plus hidden
 PAN/CVV prompts, restarts into holder/last-four/expiry-only rendering, reveals

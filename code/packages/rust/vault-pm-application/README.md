@@ -163,6 +163,11 @@ It requires the requested item to have exactly one current live candidate equal
 to the caller's expected revision, then writes a new revision whose sole direct
 causal parent is that expected revision. Item identity, content schema, and
 creation time are immutable; every unrelated catalog candidate is preserved.
+The typed login replacement input owns the complete ordered URL list and
+optional notes in wipe-on-drop values. It accepts existing multi-URL logins and
+replaces all authored login fields without truncating or implicitly preserving
+an uneditable tail.
+
 Absent items return the payload-free `NotFound` error, while stale, tombstoned,
 or conflicted candidates return `ConflictRequired` before any local write.
 Replacement uses an owned wipe-on-drop 240-byte entropy block and the same exact
@@ -226,7 +231,8 @@ the application never guesses which current, conflicted, or historical
 candidate a host intended.
 
 Hosts can now narrow that exact revision to one schema-specific first-party
-secret field. The selector covers login passwords, secure-note bodies, card
+secret field. The selector covers login passwords and optional notes,
+secure-note bodies, card
 numbers and CVVs, raw TOTP seeds, API tokens, and database passwords; a selector
 for the wrong schema or an opaque record fails closed. The resulting
 `RevealedSecretV1` distinguishes UTF-8 from binary bytes but implements no
