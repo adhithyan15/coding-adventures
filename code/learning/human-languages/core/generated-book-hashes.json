@@ -2778,6 +2778,44 @@
       "tex": "persian/book/chapters/ch11-body.tex"
     },
     {
+      "language": "persian",
+      "chapter": 12,
+      "sourceHash": "fnv1a64:78d09fa60f45a70c",
+      "lessonIds": [
+        "FA-C12-nam",
+        "FA-C12-del",
+        "FA-C12-dar",
+        "FA-C12-ketab"
+      ],
+      "tex": "persian/book/chapters/ch12-name-heart-door-book.tex"
+    },
+    {
+      "language": "persian",
+      "chapter": 13,
+      "sourceHash": "fnv1a64:f9cced230ff54588",
+      "lessonIds": [
+        "FA-C13-aseman",
+        "FA-C13-khorshid",
+        "FA-C13-mah",
+        "FA-C13-setare",
+        "FA-C13-baran"
+      ],
+      "tex": "persian/book/chapters/ch13-sky-words.tex"
+    },
+    {
+      "language": "persian",
+      "chapter": 14,
+      "sourceHash": "fnv1a64:5da7cf393cf4ac91",
+      "lessonIds": [
+        "FA-C14-khahar",
+        "FA-C14-pesar",
+        "FA-C14-mard",
+        "FA-C14-zan",
+        "FA-C14-dust"
+      ],
+      "tex": "persian/book/chapters/ch14-people-words.tex"
+    },
+    {
       "language": "portuguese",
       "chapter": 2,
       "sourceHash": "fnv1a64:b0efef039678335d",

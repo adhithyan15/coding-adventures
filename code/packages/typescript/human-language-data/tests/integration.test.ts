@@ -115,7 +115,11 @@ describe("real curriculum", () => {
       // SPINE-POLITE-REQUEST-REPAIR (âb, nân, chây, kelid); Chapter 10 adds family words
       // onto SPINE-EXCHANGE-NAMES (mâdar, pedar, barâdar, dokhtar); Chapter 11 adds body
       // words onto SPINE-CHECK-WELLBEING (cheshm, dast, pâ, zabân).
-    ).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
+      // 11 -> 14: the pre-A1 vocabulary tranche's second round (HL-C41 continuation).
+      // Chapter 12 adds nâm, del, dar, ketâb onto SPINE-EXCHANGE-NAMES; Chapter 13 adds
+      // âsemân, khorshid, mâh, setâre, bârân onto SPINE-CHECK-WELLBEING; Chapter 14 adds
+      // khâhar, pesar, mard, zan, dust onto SPINE-EXCHANGE-NAMES, closing the tranche.
+    ).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]);
     expect(
       books.books
         .find((book) => book.language === "urdu")
@@ -843,6 +847,20 @@ describe("real curriculum", () => {
       "FA-C11-dast-meaning",
       "FA-C11-pa-meaning",
       "FA-C11-zaban-meaning",
+      "FA-C12-dar-meaning",
+      "FA-C12-del-meaning",
+      "FA-C12-ketab-request",
+      "FA-C12-nam-meaning",
+      "FA-C13-aseman-meaning",
+      "FA-C13-baran-meaning",
+      "FA-C13-khorshid-meaning",
+      "FA-C13-mah-meaning",
+      "FA-C13-setare-meaning",
+      "FA-C14-dust-meaning",
+      "FA-C14-khahar-meaning",
+      "FA-C14-mard-meaning",
+      "FA-C14-pesar-meaning",
+      "FA-C14-zan-meaning",
       "FR-C18-oui-negative",
       "GE-C17-kopf-haupt-compound-word",
       "GU-C06-number-histories-be-source",
