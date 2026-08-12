@@ -1,41 +1,80 @@
-Spanish, chapter 67: Poner --- Putting, and the Root Under Position.
-1 lesson. All 1 can be done entirely by ear.
+Spanish, chapter 67: Ir in the Plural --- a Verb That Is Not Ir.
+2 lessons. All 2 can be done entirely by ear.
 
 
-Lesson 1 of 1.
-poner — putting or placing with three singular forms.
+Lesson 1 of 2.
+vamos — from a verb that is not ir.
 
 Warm-up.
 [pause 2 seconds]
-You already know hago, haces, hace and the careful comparison tengo, hago, digo. Add one verb on its own evidence: poner, “to put” or “to place.”
+Say "I go." (Voy.) And "we speak." (Hablamos.)
 
-Sounds you'll need.
-The g in pongo has the familiar hard sound. Tap the final r of poner lightly; do not turn it into the stronger written rr sound.
+Grammar Lens: -amos and -áis, on a stem you have not seen.
+vamos — we go., vais — you all go.
+The endings are ordinary. -amos and -áis are the plain -ar endings from hablamos and habláis.
+What is strange is the stem. The infinitive is ir, and there is no v in it anywhere — yet every one of these forms begins with one.
 
 The word, taken apart.
-poner descends from Latin pōnere, “to put or place.” English keeps the same placing family in position, compose (“place together”), and deposit (“place down”). The two shapes pon- and pos- are historical relatives, so poner and position are cousins even though their endings differ.
-
-Grammar Lens: only the three singular forms.
-[a table of 3 rows, read aloud]
-person: yo. present of poner: pongo.
-person: tú. present of poner: pones.
-person: él / ella / usted. present of poner: pone.
-Say the bounded set as pongo, pones, pone. The learned yo form joins the known comparison because it ends in -go. That resemblance helps memory; it still does not predict an unseen verb.
-For now, practise the forms and their meaning without importing a new object. Later lessons can add the nouns needed for expressions such as setting a table or putting on clothing. Plural persons and reflexive ponerse also wait.
+You met this shape two chapters ago and now you can use it as a tool.
+Ir is not one verb. Latin had īre, "to go", which gives the infinitive ir and little else. It also had vādere, "to advance, to make one's way", which gives voy, vas, va, vamos, vais and one more — the entire present tense.
+So the present of ir is not irregular. It is regular for a different verb, one whose infinitive Spanish stopped using. The endings behave perfectly; they are simply attached to a stem the dictionary form does not show you.
+That is the third time this pattern has explained something: ser from esse and sedēre, and now ir from īre and vādere. English does it too — go and went, where went is really the past of wend.
+The commonest verbs in a language are the likeliest to be made of more than one, because they are used so much that no single word's forms survive intact.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: “poner — pongo, pones, pone”]
+[your turn — say: "hablamos, vamos" — the same ending, an unexpected stem]
 [pause 8 seconds for the answer]
-[your turn — say: “pōnere — position — poner”]
+[your turn — say: "voy, vas, va, vamos, vais" — all one verb, and it is not ir]
 [pause 8 seconds for the answer]
-[your turn — say: “a learned comparison, not a prediction rule”]
-[pause 8 seconds for the answer]
+[question — say your answer, then pause 8 seconds]
+Say we go.
 [question — say your answer, then pause 10 seconds]
-Give the learned singular present forms of poner: yo, tú, then él/ella/usted.
-[question — say your answer, then pause 7 seconds]
-What two English verbs does poner cover?
+Why does the present of ir begin with v when the infinitive has none?
+[question — say your answer, then pause 10 seconds]
+Name the English pair that works the same way.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does poner mean? (“To put” or “to place.”) Give its three learned forms. (Pongo, pones, pone.) Which Latin source and English cousin help explain it? (Pōnere; position, compose, or deposit.) Next: learn salir inside the same three-person frame.
+What is "we go"? (Vamos.) Which Latin verb do these forms come from? (Vādere.) And what does that make ir? (Two verbs, like ser — and like English go and went.)
+
+
+Lesson 2 of 2.
+van — and the four are done.
+
+Warm-up.
+[pause 2 seconds]
+Say "we go." (Vamos.) And "they speak." (Hablan.)
+
+Grammar Lens: the last form.
+van — they go, and ustedes van, you all go.
+Latin's form was vadunt. Spanish wore it down to three letters, and the rule still holds visibly: a final -n, and the subject is plural and not you.
+
+What you've built.
+Four chapters ago you could conjugate any regular verb in the present, and none of the irregular ones. Now the four commonest verbs in Spanish are complete in every person:
+ser, estar, tener, ir — to be, to be, to have, to go.
+And each one taught something that outlives it:
+ser — two Latin verbs fused, so the seam shows at eres.
+estar — one verb, so it is regular; the accent only marks stress.
+tener — the stem breaks exactly where it is stressed, in every stem-changing verb, which is why nosotros and vosotros never break.
+ir — its present belongs to a different verb entirely.
+Three of those four are about the same underlying thing: a verb that looks chaotic is usually more than one word, and the places it looks regular are the places one word survived intact.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "somos, estamos, tenemos, vamos" — the four, in the we form]
+[pause 8 seconds for the answer]
+[your turn — say: "son, están, tienen, van" — the four, in the they form]
+[pause 8 seconds for the answer]
+[repeat that twice]
+Until all four run without a gap.
+[question — say your answer, then pause 6 seconds]
+Say they go.
+[question — say your answer, then pause 10 seconds]
+They are (permanently), and they are (right now): which two forms?
+[question — say your answer, then pause 10 seconds]
+What usually explains a Spanish verb that looks chaotic?
+
+Wrap-up Recall.
+[pause 3 seconds]
+What is "they go"? (Van.) Name the four verbs you have just completed. (Ser, estar, tener, ir.) And what do three of them have in common? (Each is more than one Latin verb, or its stem change follows the stress.)

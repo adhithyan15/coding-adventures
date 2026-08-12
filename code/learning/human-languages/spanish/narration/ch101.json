@@ -2,25 +2,32 @@
   "version": 1,
   "language": "spanish",
   "chapter": 101,
-  "title": "The Strong Preterites",
-  "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:20aebdfce51df0ea",
+  "title": "Synthesis --- Two at a Time",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:44cea2a968c2b079",
   "lessons": [
     {
-      "id": "ES-C15-tener-preterite",
-      "sequence": 1330,
-      "title": "tuve — let the strong stem carry the stress",
-      "headword": "tuve",
-      "romanization": "tuve",
-      "gloss": "the strong singular preterite of tener — tuve, tuviste, tuvo",
+      "id": "ES-C47-sintesis-dos-a-la-vez",
+      "sequence": 1240,
+      "title": "Synthesis — two at a time",
+      "headword": "(synthesis)",
+      "romanization": "(synthesis)",
+      "gloss": "synthesis — a four-turn exchange carried almost entirely by pronouns, and what that does to how it sounds",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "sight-cue"
       ],
-      "sourceHash": "fnv1a64:953939f6adbef6b5",
-      "notice": null,
+      "sourceHash": "fnv1a64:076e619fcd27e21a",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -35,60 +42,49 @@
             },
             {
               "kind": "speech",
-              "text": "You know present tengo, tienes, tiene. Its completed past changes the stem to tuv- and uses tuve, tuviste, tuvo. Unlike comí and comió, none of these three forms carries a written accent."
+              "text": "\"I tell it to him,\" in three words. (Se lo digo.)"
             }
           ]
         },
         {
           "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: one strong singular pattern",
+          "type": "input",
+          "title": "The exchange",
           "segments": [
             {
-              "kind": "table",
-              "headers": [
-                "person",
-                "present",
-                "completed past"
-              ],
-              "columns": 3,
-              "rowCount": 3,
-              "utterances": [
-                "person: yo. present: tengo. completed past: tuve.",
-                "person: tú. present: tienes. completed past: tuviste.",
-                "person: él / ella / usted. present: tiene. completed past: tuvo."
-              ]
+              "kind": "speech",
+              "text": "— ¿Tienes el libro? — Sí. ¿Te lo digo? — Sí, y se lo dices a Ana. — Y la comida — se la hago hoy."
             },
             {
               "kind": "speech",
-              "text": "The strong stem tuv- takes -e, -iste, -o. Say tuve, tuviste, tuvo. Stress remains in the stem, so normal spelling needs no accent mark. Reuse known café:"
+              "text": "Look at the last three lines. After the first sentence names the book, not one noun does any work. Te lo, se lo, se la — six words that name nothing, and the conversation is perfectly clear to both speakers."
             },
             {
               "kind": "speech",
-              "text": "Tuve café. — “I had coffee.”"
-            },
-            {
-              "kind": "speech",
-              "text": "¿Tuviste café? — “Did you have coffee?”"
-            },
-            {
-              "kind": "speech",
-              "text": "Tuvo café. — “He, she, or you-formal had coffee.”"
-            },
-            {
-              "kind": "speech",
-              "text": "“Strong” describes the stem-stressed historical pattern. It does not mean that the meaning is forceful. Plural endings wait."
+              "text": "That is what all of this has been for. Fifteen chapters of object pronouns exist so that a conversation can stop repeating itself, and this is the point where the machinery is complete enough to see it happen."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The stem, taken apart",
+          "type": "grammar",
+          "title": "Grammar Lens: two words carrying a whole sentence",
           "segments": [
             {
               "kind": "speech",
-              "text": "Tener continues Latin tenēre. Its past also belongs to an older strong history associated with Latin tenuī. Spanish sound change and analogy reshaped that material into the tuv- family. Tenuī becomes tuve is therefore a historical relationship, not a promise that every letter passed across intact."
+              "text": "Se la hago is three words and it means \"I make the meal for her, today.\" Two of the three are pronouns; between them they carry a person and a thing, neither of which is named anywhere in the sentence."
+            },
+            {
+              "kind": "speech",
+              "text": "English cannot compress like this. I'll make it for her needs five words and still spells out for. Spanish puts both jobs in front of the verb, in a fixed order, and gets on with it."
+            },
+            {
+              "kind": "speech",
+              "text": "The cost is the one you already know, doubled. Two pronouns are two promises that both things are still in the room. When you lose track of one of them, the sentence does not become wrong — it becomes about somebody else, and nobody will notice until it matters."
+            },
+            {
+              "kind": "speech",
+              "text": "So the practice that pays here is not conjugation. It is keeping a conversation's furniture in mind while you talk."
             }
           ]
         },
@@ -106,296 +102,105 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“tuve, tuviste, tuvo”",
+              "instruction": "the four-turn exchange straight through",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “tuve, tuviste, tuvo”]"
+              "source": "[YOU SAY: the four-turn exchange straight through]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "“Tuve café.”",
+              "instruction": "\"te lo digo, se lo dices, se la hago\" until the pairs feel like single words",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: “Tuve café.”]"
+              "source": "[YOU SAY: \"te lo digo, se lo dices, se la hago\" until the pairs feel like single words]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“comí has final stress; tuve has stem stress”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “comí has final stress; tuve has stem stress”]"
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C15-tener-preterite-singular-forms",
-              "prompt": "Give the singular completed-past forms of tener: yo, tú, then él/ella/usted.",
+              "id": "ES-C47-sintesis-dos-a-la-vez-you",
+              "prompt": "Say shall I tell it to you.",
               "assesses": [
-                "ES-LEX-TENER",
-                "ES-GRAMMAR-STRONG-PRETERITE-SINGULAR-PATTERN",
-                "ES-GRAMMAR-TENER-PRETERITE-SINGULAR"
+                "ES-GRAMMAR-DOUBLE-OBJECT-ORDER",
+                "ES-GRAMMAR-DECIR-PRESENT-SINGULAR",
+                "ES-GRAMMAR-DIRECT-OBJECT-LO"
               ],
-              "responseSeconds": 9,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "tuve, tuviste, tuvo",
-                "tuve tuviste tuvo",
-                "tuve / tuviste / tuvo"
+                "te lo digo",
+                "¿te lo digo?",
+                "te lo digo?"
               ],
               "feedback": {
-                "correct": "Right: tuve, tuviste, tuvo.",
-                "incorrect": "Use strong stem tuv- with -e, -iste, -o."
+                "correct": "Person first, thing second.",
+                "incorrect": "Te lo digo."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C15-tener-preterite-tuve-cafe",
-              "prompt": "Say 'I had coffee' in Spanish.",
+              "id": "ES-C47-sintesis-dos-a-la-vez-her",
+              "prompt": "Say I make it for her, about la comida.",
               "assesses": [
-                "ES-LEX-TENER",
-                "ES-GRAMMAR-TENER-PRESENT-SINGULAR",
-                "ES-GRAMMAR-TENER-PRETERITE-SINGULAR",
-                "ES-LEX-CAFE"
-              ],
-              "responseSeconds": 7,
-              "acceptedResponses": [
-                "tuve café.",
-                "tuve café"
-              ],
-              "feedback": {
-                "correct": "Right: Tuve café.",
-                "incorrect": "Use completed-past tuve, then known café."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C15-tener-preterite-history",
-              "prompt": "Which phrase best describes tuve: a letter-for-letter copy of tenuī, or a historically reshaped strong form?",
-              "assesses": [
-                "ES-ETYMON-TENERE",
-                "ES-ETYMON-TUVE",
-                "ES-GRAMMAR-STRONG-PRETERITE-SINGULAR-PATTERN",
-                "ES-ORTHOGRAPHY-ER-IR-PRETERITE-FINAL-STRESS"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "a historically reshaped strong form",
-                "historically reshaped strong form",
-                "a reshaped strong form"
-              ],
-              "feedback": {
-                "correct": "Right: sound change and analogy reshaped the older strong material.",
-                "incorrect": "Treat tenuī and tuve as historically related, not letter-for-letter copies."
-              }
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Give the three learned tener forms. (Tuve, tuviste, tuvo.) Which endings attach to tuv-? (-e, -iste, -o.) Why are there no written accents? (The strong stem carries the stress.) What shaped tuve historically? (Older strong-perfect material, sound change, and analogy.) Next: reuse the strong endings with hacer."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C15-hacer-preterite",
-      "sequence": 1335,
-      "title": "hice — the strong pattern with one third-person swerve",
-      "headword": "hice",
-      "romanization": "hice",
-      "gloss": "the strong singular preterite of hacer — hice, hiciste, hizo",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:c230a5e15b1a6f30",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "You know present hago, haces, hace and strong past tuve, tuviste, tuvo. Hacer reuses the strong endings: hice, hiciste, hizo. Watch the third form: the stem is hiz- there, not hic-."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: hacer in the completed past",
-          "segments": [
-            {
-              "kind": "table",
-              "headers": [
-                "person",
-                "completed past",
-                "stem plus ending"
-              ],
-              "columns": 3,
-              "rowCount": 3,
-              "utterances": [
-                "person: yo. completed past: hice. stem plus ending: hic- + -e.",
-                "person: tú. completed past: hiciste. stem plus ending: hic- + -iste.",
-                "person: él / ella / usted. completed past: hizo. stem plus ending: hiz- + -o."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Say hice, hiciste, hizo. These are strong, stem-stressed forms with no written accents. Hizo is an irregular stem alternation inside this family; it is not a general rule that c must become z before o. Reuse known café:"
-            },
-            {
-              "kind": "speech",
-              "text": "Hice café. — “I made coffee.”"
-            },
-            {
-              "kind": "speech",
-              "text": "¿Hiciste café? — “Did you make coffee?”"
-            },
-            {
-              "kind": "speech",
-              "text": "Hizo café. — “He, she, or you-formal made coffee.”"
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The form, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Hacer continues Latin facere, and hice continues the history of its strong perfect fēcī. Long sound changes help explain Spanish h- and the changed vowel and consonant; this is not a direct spelling recipe. The pattern links hice historically to strong tuve, while each verb keeps its own stem."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“hice, hiciste, hizo”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “hice, hiciste, hizo”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“Hice café.”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “Hice café.”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“hizo is a learned hiz- alternation, not a general c-before-o rule”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “hizo is a learned hiz- alternation, not a general c-before-o rule”]"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C15-hacer-preterite-singular-forms",
-              "prompt": "Give the singular completed-past forms of hacer: yo, tú, then él/ella/usted.",
-              "assesses": [
-                "ES-LEX-HACER",
-                "ES-GRAMMAR-STRONG-PRETERITE-SINGULAR-PATTERN",
-                "ES-GRAMMAR-HACER-PRETERITE-SINGULAR"
-              ],
-              "responseSeconds": 9,
-              "acceptedResponses": [
-                "hice, hiciste, hizo",
-                "hice hiciste hizo",
-                "hice / hiciste / hizo"
-              ],
-              "feedback": {
-                "correct": "Right: hice, hiciste, hizo.",
-                "incorrect": "Use hic- with -e and -iste, then retrieve third-person hizo."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C15-hacer-preterite-hice-cafe",
-              "prompt": "Say 'I made coffee' in Spanish.",
-              "assesses": [
-                "ES-LEX-HACER",
+                "ES-GRAMMAR-SE-FOR-LE",
+                "ES-LEX-COMIDA",
                 "ES-GRAMMAR-HACER-PRESENT-SINGULAR",
-                "ES-GRAMMAR-HACER-PRETERITE-SINGULAR",
-                "ES-LEX-CAFE"
+                "ES-GRAMMAR-DIRECT-OBJECT-LA"
               ],
-              "responseSeconds": 7,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "hice café.",
-                "hice café"
+                "se la hago",
+                "yo se la hago"
               ],
               "feedback": {
-                "correct": "Right: Hice café.",
-                "incorrect": "Use completed-past hice, then known café."
+                "correct": "Three words, a person and a thing, neither named.",
+                "incorrect": "Se la hago — le becomes se in front of la."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C15-hacer-preterite-history",
-              "prompt": "Which Latin strong-perfect form lies behind the historical development of hice?",
+              "id": "ES-C47-sintesis-dos-a-la-vez-count",
+              "prompt": "In se la hago, how many of the three words name anything?",
               "assesses": [
-                "ES-ETYMON-FACERE",
-                "ES-ETYMON-HICE",
-                "ES-ETYMON-TUVE",
-                "ES-GRAMMAR-TENER-PRETERITE-SINGULAR"
+                "ES-GRAMMAR-DOUBLE-OBJECT-ORDER"
               ],
-              "responseSeconds": 7,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "fēcī",
-                "feci"
+                "none",
+                "zero",
+                "0"
               ],
               "feedback": {
-                "correct": "Right: Latin fēcī lies behind the long development to hice.",
-                "incorrect": "Retrieve the strong perfect of facere: fēcī."
+                "correct": "And it is still completely clear to both speakers.",
+                "incorrect": "None. Both the person and the thing are carried by pronouns."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C47-sintesis-dos-a-la-vez-cost",
+              "prompt": "You lose track of which thing se la points at. Does the sentence become wrong?",
+              "assesses": [
+                "ES-GRAMMAR-SE-FOR-LE",
+                "ES-GRAMMAR-DIRECT-OBJECT-LA"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "no, it becomes about something else",
+                "no",
+                "it stays grammatical but means something else"
+              ],
+              "feedback": {
+                "correct": "Which is harder to notice than being wrong.",
+                "incorrect": "No. It stays grammatical and quietly becomes about something else."
               }
             }
           ]
@@ -413,232 +218,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give the three learned hacer forms. (Hice, hiciste, hizo.) What changes in the third form? (Hic- becomes hiz-.) Is that a general c-before-o spelling rule? (No; learn it inside this irregular family.) What older form lies behind hice? (Latin fēcī, through substantial historical change.) Next: add strong estar without adding plural forms."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C15-preterite-fuertes",
-      "sequence": 1340,
-      "title": "estuve — a third known verb joins the strong pattern",
-      "headword": "estuve",
-      "romanization": "estuve",
-      "gloss": "the strong singular preterite of estar — estuve, estuviste, estuvo",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:bb1e59135271bd46",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "You know present estoy, estás, está and the strong past pairs tuve, tuviste, tuvo and hice, hiciste, hizo. Now use the same strong endings with estuv-: estuve, estuviste, estuvo."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: estar in the completed past",
-          "segments": [
-            {
-              "kind": "table",
-              "headers": [
-                "person",
-                "completed past"
-              ],
-              "columns": 2,
-              "rowCount": 3,
-              "utterances": [
-                "person: yo. completed past: estuve.",
-                "person: tú. completed past: estuviste.",
-                "person: él / ella / usted. completed past: estuvo."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Say estuve, estuviste, estuvo. The strong stem estuv- takes -e, -iste, -o. These forms carry no written accents. Reuse known bien:"
-            },
-            {
-              "kind": "speech",
-              "text": "Estuve bien. — “I was well.”"
-            },
-            {
-              "kind": "speech",
-              "text": "¿Estuviste bien? — “Were you well?”"
-            },
-            {
-              "kind": "speech",
-              "text": "Estuvo bien. — “He, she, or you-formal was well.”"
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: three strong singular rows",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "yo: tuve, hice, estuve."
-            },
-            {
-              "kind": "speech",
-              "text": "tú: tuviste, hiciste, estuviste."
-            },
-            {
-              "kind": "speech",
-              "text": "él / ella / usted: tuvo, hizo, estuvo."
-            },
-            {
-              "kind": "speech",
-              "text": "All three rows use the learned strong endings. Only hacer changes its stem shape from hic- to hiz- before third-person -o. Plural forms and other irregular verbs still wait."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "etymology",
-          "title": "The -uv- shape, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Estar grew from a Romance verb related to Latin stāre, “stand.” But modern estuve is not a direct, tidy wearing-down of Latin stetī. Historical analogy helped reshape its past beside other strong forms, including the -uv- pattern visible in tuve. This explains the family resemblance without pretending that each modern letter came straight from one Latin form."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“estuve, estuviste, estuvo”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “estuve, estuviste, estuvo”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“Estuve bien.”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “Estuve bien.”]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "“tuve and estuve share -uv- through historical analogy”",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: “tuve and estuve share -uv- through historical analogy”]"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C15-preterite-fuertes-estar-forms",
-              "prompt": "Give the singular completed-past forms of estar: yo, tú, then él/ella/usted.",
-              "assesses": [
-                "ES-LEX-ESTAR",
-                "ES-GRAMMAR-ESTAR-PRETERITE-SINGULAR",
-                "ES-GRAMMAR-STRONG-PRETERITE-SINGULAR-PATTERN"
-              ],
-              "responseSeconds": 9,
-              "acceptedResponses": [
-                "estuve, estuviste, estuvo",
-                "estuve estuviste estuvo",
-                "estuve / estuviste / estuvo"
-              ],
-              "feedback": {
-                "correct": "Right: estuve, estuviste, estuvo.",
-                "incorrect": "Use strong stem estuv- with -e, -iste, -o."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C15-preterite-fuertes-estuve-bien",
-              "prompt": "Say 'I was well' as a completed past statement in Spanish.",
-              "assesses": [
-                "ES-LEX-ESTAR",
-                "ES-GRAMMAR-ESTAR-ESTA-ESTAS",
-                "ES-GRAMMAR-ESTAR-PRETERITE-SINGULAR",
-                "ES-LEX-BIEN"
-              ],
-              "responseSeconds": 7,
-              "acceptedResponses": [
-                "estuve bien.",
-                "estuve bien"
-              ],
-              "feedback": {
-                "correct": "Right: Estuve bien.",
-                "incorrect": "Use completed-past estuve, then known bien."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C15-preterite-fuertes-analogy",
-              "prompt": "Which known strong form helped shape the family resemblance in estuve: tuve or hice?",
-              "assesses": [
-                "ES-ETYMON-ESTUVE-ANALOGY",
-                "ES-ETYMON-STARE",
-                "ES-GRAMMAR-TENER-PRETERITE-SINGULAR",
-                "ES-GRAMMAR-HACER-PRETERITE-SINGULAR"
-              ],
-              "responseSeconds": 6,
-              "acceptedResponses": [
-                "tuve"
-              ],
-              "feedback": {
-                "correct": "Right: estuve shares the analogically shaped -uv- pattern of tuve.",
-                "incorrect": "Look for the shared -uv- shape: tuve and estuve."
-              }
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Give the three learned estar forms. (Estuve, estuviste, estuvo.) Which known strong verb shares their -uv- shape? (Tener: tuve.) Why should estuve not be shown as a direct wearing-down of stetī? (Analogy reshaped the Spanish family.) Next: retrieve all six bounded patterns."
+              "text": "\"I make it for her\"? (Se la hago.) How many nouns are in that sentence? (None.) And what does each pronoun promise? (That its thing is still in the room.) Next: the past tense."
             }
           ]
         }

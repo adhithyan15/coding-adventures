@@ -1,66 +1,51 @@
-Spanish, chapter 63: Tener in the Plural, and the Stem-Change Rule.
-2 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+Spanish, chapter 63: -ario --- the Eighth and Last Ending.
+1 lesson. All 1 can be done entirely by ear.
 
 
-Lesson 1 of 2.
-tenemos — and the stem change disappears.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+Lesson 1 of 1.
+-ario — the last of the eight — and the one that names the place where a thing is kept.
 
 Warm-up.
 [pause 2 seconds]
-Say "I have" and "you have." (Tengo, tienes.) And "we eat." (Comemos.)
-
-Grammar Lens: the break is gone.
-tenemos — we have., tenéis — you all have.
-Not tienemos. Look at what happened: tienes had the broken stem ie, and here it is plain e again — the ordinary -er endings, on the ordinary stem.
-You already know why. It is the same reason -er and -ir looked identical in the singular and parted in the plural: stress.
-Tienes stresses the stem, and a stressed e in that position breaks into ie. Tenemos stresses the ending, so the stem is unstressed and its vowel stays whole.
-The stem change was never a property of the verb. It is a property of where the stress lands, and these two forms are where the stress lands elsewhere.
-
-Guided Practice.
+-ncia? (-nce.) -oso? (-ous.)
 [pause 1 second]
-[your turn — say: "tienes" then "tenemos" — and hear the stress move off the stem]
-[pause 8 seconds for the answer]
-[your turn — say: "comemos, tenemos" — the same endings]
-[pause 8 seconds for the answer]
-[question — say your answer, then pause 8 seconds]
-Say we have.
-[question — say your answer, then pause 10 seconds]
-Why does tienes break its stem but tenemos does not?
+One more, and the set is complete.
 
-Wrap-up Recall.
-[pause 3 seconds]
-What is "we have"? (Tenemos.) Where did the ie go? (Nowhere — it only ever appears when the stem is stressed.) Next: the form where the stress comes back.
+Grammar Lens: belonging to, or the place for.
+Spanish -ario is English -ary.
+Latin -ārius meant belonging to — and then, by an easy step, the place where that thing is kept.
+diccionario — the place the words are kept.
+Which is exactly what an English dictionary is, and neither language ever said so out loud.
+[a table of 5 rows, read aloud]
+necesario means necessary.
+ordinario means ordinary.
+primario means primary.
+diccionario means dictionary.
+aniversario means anniversary.
 
-
-Lesson 2 of 2.
-tienen — the break comes back.
-
-Warm-up.
+Grammar Lens: it does two jobs.
+Unlike the other seven, -ario makes both nouns and adjectives, and the sentence tells you which:
+[a table of 2 rows, read aloud]
+un diccionario, a dictionary — a thing.
+es necesario, it is necessary — a quality.
+When it is an adjective it ends in -o, so it shifts the way you already expect: necesario / necesaria. When it is a noun it is masculine, and takes el or un.
 [pause 2 seconds]
-Say "we have", then "you have" to a friend. (Tenemos, tienes.) Which one has the broken stem?
-
-Grammar Lens: the rule, stated once and for all.
-tienen — they have, and ustedes tienen, you all have.
-The ie is back. And now you have seen it appear, vanish and return, which is enough to state the rule outright:
-A stem change happens exactly where the stem is stressed, and nowhere else.
-That is four forms with the break — setting aside the yo form, which has an oddity of its own — and two without: nosotros and vosotros. Always those two. In every stem-changing verb in the language.
-Learners are usually told to memorise a shape called "the boot" — the four stressed forms drawn as an outline around a table. You do not need the boot. You need to know where Spanish puts its stress, which you already do.
+You do not have to decide in advance. The sentence decides.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "tienes, tenemos, tienen" — break, no break, break]
+[your turn — say: necesario, ordinario, primario]
 [pause 8 seconds for the answer]
-[your turn — say: the two forms that never break, for any verb]
+[your turn — say: un diccionario]
 [pause 8 seconds for the answer]
-[question — say your answer, then pause 8 seconds]
-Say they have.
+[repeat that twice]
 [question — say your answer, then pause 10 seconds]
-In any stem-changing verb, which two forms never break?
-[question — say your answer, then pause 8 seconds]
-What actually decides whether the stem breaks?
+You have never seen imaginario. What is it?
+[question — say your answer, then pause 14 seconds]
+Why does diccionario mean dictionary rather than word-ish?
+[question — say your answer, then pause 12 seconds]
+Necesario, said of a feminine noun. What changes?
 
 Wrap-up Recall.
-[pause 3 seconds]
-What is "they have"? (Tienen.) State the stem-change rule. (The stem breaks exactly where it is stressed.) Which two forms never break? (Nosotros and vosotros.)
+[pause 2 seconds]
+-ario in English? (-ary.) Noun or adjective? (Either — the sentence decides.)

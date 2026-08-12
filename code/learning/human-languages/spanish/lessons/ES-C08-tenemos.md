@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C08-tenemos
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1040
-chapter: 63
+sequence: 1046
+chapter: 66
 type: grammar
 headword: tenemos · tenéis
 gloss: "we have," "you all have" — and the stem change vanishes, for a reason you already know

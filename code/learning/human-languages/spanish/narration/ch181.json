@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 181,
-  "title": "Synthesis --- Reading the Window",
+  "title": "Se Compran Libros --- The Verb Tells On Itself",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:c2b1f261c79ae09a",
+  "sourceHash": "fnv1a64:8f147aa3a8bbfdc6",
   "lessons": [
     {
-      "id": "ES-C52-sintesis-el-letrero",
-      "sequence": 2200,
-      "title": "Synthesis — reading the window",
-      "headword": "(synthesis)",
-      "romanization": "(synthesis)",
-      "gloss": "synthesis — reading a shop window, which is where this grammar actually lives, and asking your way past the words you do not have",
+      "id": "ES-C52-se-venden",
+      "sequence": 2197,
+      "title": "se compran libros — the verb tells on itself",
+      "headword": "se compran libros",
+      "romanization": "se compran libros",
+      "gloss": "the verb agrees with the thing — which is the clue to where this whole construction came from",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b2fd0a89c9c9994f",
+      "sourceHash": "fnv1a64:1a181574dfb36292",
       "notice": null,
       "blocks": [
         {
@@ -35,57 +35,57 @@
             },
             {
               "kind": "speech",
-              "text": "Almost nobody will say se habla español to you. It will be written, on a window, and you will be walking past it."
+              "text": "Se habla español — one thing, singular verb. Now guess what happens with more than one thing."
             }
           ]
         },
         {
           "index": 1,
-          "type": "input",
-          "title": "The exchange",
+          "type": "grammar",
+          "title": "Grammar Lens: it agrees, and that is strange",
           "segments": [
             {
               "kind": "speech",
-              "text": "Four things on four windows, in one street:"
+              "text": "Se compra el libro. — The book is bought. Se compran libros. — Books are bought."
             },
             {
               "kind": "speech",
-              "text": "SE HABLA ESPAÑOL SE COMPRAN LIBROS AQUÍ SE COME BIEN SE PROHÍBE FUMAR."
+              "text": "The verb changed. Compra for one book, compran for several — the verb is agreeing with the thing being bought."
             },
             {
               "kind": "speech",
-              "text": "Three you can read completely. The fourth has words you have never met — and you can still read its shape: something is forbidden, by nobody in particular."
+              "text": "Stop and notice how odd that is. In se habla español there is nobody doing the speaking, so what is the verb agreeing with? If this were simply \"one buys books,\" the verb would stay singular, because one is one person. It does not stay singular."
             },
             {
               "kind": "speech",
-              "text": "That is what this rung buys. Not producing these sentences, but reading them off the world, and knowing the missing person is missing on purpose."
-            },
-            {
-              "kind": "speech",
-              "text": "And for the two unknown words, you already have the tool:"
-            },
-            {
-              "kind": "speech",
-              "text": "¿Cómo se dice \"fumar\", por favor?"
-            },
-            {
-              "kind": "speech",
-              "text": "Which is itself the same construction, asked out loud."
+              "text": "The thing is behaving like the subject. And that is the clue to where this construction came from."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: what it means that nobody is named",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "A sentence with nobody in it is not just vague — it is doing something with the vagueness. Se prohíbe fumar does not say who forbids it, and that is what gives a sign its authority: nobody is claiming anything, so there is nobody to argue with. English does the same when a report says mistakes were made."
+              "text": "Read se compran libros with the se meaning what it meant in se llama:"
             },
             {
               "kind": "speech",
-              "text": "So when you meet a se with no doer, ask who is being left out. Sometimes the answer is interesting."
+              "text": "Books buy themselves."
+            },
+            {
+              "kind": "speech",
+              "text": "That is nonsense as a description of the world, and it is exactly the sentence Spanish is using. The reflexive was stretched: first the door closes itself (true enough of doors), then the books sell themselves, and finally any verb at all with the doer quietly dropped."
+            },
+            {
+              "kind": "speech",
+              "text": "Once you see that, the agreement stops being strange. Libros is the subject of se compran in the same way él is the subject of se llama. The verb has been agreeing with its subject all along; it is just that the subject is a thing, and the thing is not really doing anything."
+            },
+            {
+              "kind": "speech",
+              "text": "So this se is the reflexive se — grown, not borrowed. Unlike the se of se lo digo, which only looks like it."
             }
           ]
         },
@@ -103,31 +103,17 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the four signs aloud as if walking past them",
+              "instruction": "\"Se compra el libro\" then \"Se compran libros\" — hear the verb follow the thing",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the four signs aloud as if walking past them]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"¿Cómo se dice, por favor?\" — the way out of any of them",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"¿Cómo se dice, por favor?\" — the way out of any of them]"
-            },
-            {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
+              "source": "[YOU SAY: \"Se compra el libro\" then \"Se compran libros\" — hear the verb follow the thing]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C52-sintesis-el-letrero-read",
-              "prompt": "What does the sign SE COMPRAN LIBROS tell you?",
+              "id": "ES-C52-se-venden-plural",
+              "prompt": "Say books are bought.",
               "assesses": [
                 "ES-GRAMMAR-SE-PASSIVE-AGREEMENT",
                 "ES-LEX-COMPRAR-07",
@@ -135,71 +121,50 @@
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "books are bought here",
-                "they buy books",
-                "we buy books"
+                "se compran libros",
+                "se compran los libros"
               ],
               "feedback": {
-                "correct": "And the verb is plural because libros is.",
-                "incorrect": "Books are bought here."
+                "correct": "Plural thing, plural verb.",
+                "incorrect": "Se compran libros."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C52-sintesis-el-letrero-unknown",
-              "prompt": "A sign has a word you do not know. Ask somebody, politely.",
+              "id": "ES-C52-se-venden-agree",
+              "prompt": "What is the verb agreeing with in se compran libros?",
               "assesses": [
-                "ES-LEX-COMO-SE-DICE",
-                "ES-LEX-POR-FAVOR"
+                "ES-GRAMMAR-SE-PASSIVE-AGREEMENT"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "como se dice, por favor",
-                "¿cómo se dice, por favor?"
+                "the books",
+                "the thing being bought",
+                "libros"
               ],
               "feedback": {
-                "correct": "The same construction, asked out loud.",
-                "incorrect": "¿Como se dice, por favor?"
+                "correct": "The thing is behaving like the subject.",
+                "incorrect": "With libros — the thing, not any doer."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C52-sintesis-el-letrero-eat",
-              "prompt": "Say the food is good here, the way a sign would.",
+              "id": "ES-C52-se-venden-origin",
+              "prompt": "Read se compran libros as if se still meant themselves. What does it say?",
               "assesses": [
-                "ES-GRAMMAR-SE-IMPERSONAL",
-                "ES-LEX-COMER",
-                "ES-LEX-BIEN"
+                "ES-GRAMMAR-REFLEXIVE-THIRD-PERSON",
+                "ES-GRAMMAR-SE-PASSIVE-AGREEMENT"
               ],
-              "responseSeconds": 10,
+              "responseSeconds": 12,
               "acceptedResponses": [
-                "aqui se come bien",
-                "se come bien"
+                "books buy themselves",
+                "the books buy themselves"
               ],
               "feedback": {
-                "correct": "Nobody named, and none needed.",
-                "incorrect": "Aqui se come bien."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C52-sintesis-el-letrero-authority",
-              "prompt": "Why does leaving the person out give a sign its authority?",
-              "assesses": [
-                "ES-GRAMMAR-SE-IMPERSONAL"
-              ],
-              "responseSeconds": 14,
-              "acceptedResponses": [
-                "nobody is claiming it, so there is nobody to argue with",
-                "there is no person to disagree with",
-                "it sounds like a fact rather than an opinion"
-              ],
-              "feedback": {
-                "correct": "Worth noticing every time you meet it.",
-                "incorrect": "No person is claiming anything, so there is nobody to argue with."
+                "correct": "Nonsense about the world, and exactly the sentence Spanish is using.",
+                "incorrect": "Books buy themselves — which is where the construction came from."
               }
             }
           ]
@@ -217,7 +182,7 @@
             },
             {
               "kind": "speech",
-              "text": "Where does this grammar mostly live? (Written on things.) What does the missing person buy a sign? (Authority — nobody to argue with.) And what do you say when a sign has a word you do not have? (¿Cómo se dice, por favor?)"
+              "text": "Why does the verb go plural? (Because it agrees with the thing.) And why does it agree with the thing? (Because underneath, the thing is doing it to itself.) Next: the one you will use every day."
             }
           ]
         }

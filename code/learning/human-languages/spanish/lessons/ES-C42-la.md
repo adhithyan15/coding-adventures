@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C42-la
 spine_node: SPINE-DEFINITE-REFERENCE
 sequence: 1217
-chapter: 80
+chapter: 83
 type: word
 headword: la
 gloss: "it" for something feminine — the one word in this pair that never had to change

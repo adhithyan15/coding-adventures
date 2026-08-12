@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C13-plurales-yo-go
 spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 1187
-chapter: 72
+chapter: 75
 type: grammar
 headword: hacemos · hacen
 gloss: the -go verbs in the plural — where the oddity simply is not

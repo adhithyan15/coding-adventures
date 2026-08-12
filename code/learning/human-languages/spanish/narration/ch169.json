@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 169,
-  "title": "Synthesis --- The Choices English Never Makes You Make",
+  "title": "Jugar --- Playing Was Joking",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:b3c10d1d72328f0e",
+  "sourceHash": "fnv1a64:384e8622d1c1f82e",
   "lessons": [
     {
-      "id": "ES-C39-sintesis-elegir",
-      "sequence": 2126,
-      "title": "Synthesis — the choices English never makes you make",
-      "headword": "(synthesis)",
-      "romanization": "(synthesis)",
-      "gloss": "synthesis — three places where English hands you one word and Spanish makes you choose",
+      "id": "ES-C39-jugar",
+      "sequence": 2110,
+      "title": "jugar — \"to play\", and the only verb of its kind",
+      "headword": "jugar",
+      "romanization": "jugar",
+      "gloss": "to play — from Latin's word for joking, and the only verb in the language that breaks u to ue",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a2c60cf7138c5658",
+      "sourceHash": "fnv1a64:35bbed099ada62e0",
       "notice": null,
       "blocks": [
         {
@@ -35,72 +35,88 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing new here. Two verbs to say aloud first: traer, conocer."
+              "text": "Consigo cracked its e to i. Here is a verb that cracks a vowel no other verb in Spanish cracks — and it started life as a joke."
             }
           ]
         },
         {
           "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: one English word, two Spanish verbs",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "Three times now you have met a pair of verbs where English makes do with one. They arrived chapters apart and have never been put side by side:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "English gives you",
-                "Spanish makes you choose",
-                "the question you must answer"
-              ],
-              "columns": 3,
-              "rowCount": 3,
-              "utterances": [
-                "English gives you: to ask. Spanish makes you choose: preguntar, pedir. the question you must answer: asking a question, or asking for a thing?",
-                "English gives you: to bring / take. Spanish makes you choose: traer, llevar. the question you must answer: toward the speaker, or away?",
-                "English gives you: to know. Spanish makes you choose: conocer, saber. the question you must answer: a person or place, or a fact?"
-              ]
+              "text": "j-jota — the j is scraped at the back of the throat: khoo-GAR."
             },
             {
               "kind": "speech",
-              "text": "None of these is a vocabulary problem. In each one, the word is easy and the decision is the work — and the decision is information English speakers are simply never required to supply."
+              "text": "diphthong-ue — juego is three beats, KHWE-go."
             }
           ]
         },
         {
           "index": 2,
-          "type": "notice",
-          "title": "What you've built",
+          "type": "etymology",
+          "title": "The word, taken apart: jugar",
           "segments": [
             {
               "kind": "speech",
-              "text": "When you pick traer over llevar, you have told your listener where you are standing. When you pick conocer over saber, you have told them whether you have met the thing or only heard of it. The grammar is carrying meaning that English would need a whole clause to add."
+              "text": "jugar (\"to play\") from Latin iocārī, \"to joke, to jest\", built on the noun iocus, \"a joke\". Playing and joking were one word, and Spanish kept the joking one for both."
             },
             {
               "kind": "speech",
-              "text": "You are not translating any more. You are choosing."
+              "text": "English holds iocus in several shapes: joke; through French jocular; juggler, from ioculātor, an entertainer; and jeopardy, from Old French jeu parti, \"an evenly divided game\" — a position so balanced that either side might lose. The Spanish family stays close: el juego, a game; el juguete, a toy."
             }
           ]
         },
         {
           "index": 3,
-          "type": "input",
-          "title": "The exchange",
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: the play-verb Spanish let go",
           "segments": [
             {
               "kind": "speech",
-              "text": "— ¿Conoces Madrid? — Sí, conozco Madrid. Pero no sé dónde está el café."
+              "text": "Latin's ordinary word for playing was lūdere, and Spanish dropped it exactly as it dropped claudere for shutting doors. English kept the whole family instead: illusion, allude, elude, delude, collude, prelude, interlude, ludicrous."
             },
             {
               "kind": "speech",
-              "text": "Two \"knows\" in two lines, and not interchangeable. The first is acquaintance — I have been there. The second is a fact. English uses know for both and loses the difference."
+              "text": "Claudere and lūdere tell one story: the large English family belongs to the Latin verb Spanish walked away from."
             }
           ]
         },
         {
           "index": 4,
+          "type": "grammar",
+          "title": "Grammar Lens: the fourth crack, with one member",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "person",
+                "form"
+              ],
+              "columns": 2,
+              "rowCount": 5,
+              "utterances": [
+                "person: yo. form: juego.",
+                "person: tú. form: juegas.",
+                "person: él/ella/usted. form: juega.",
+                "person: nosotros. form: jugamos.",
+                "person: ellos/ustedes. form: juegan."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Dormir breaks o becomes ue. Jugar breaks u becomes ue, and it is the only verb in Spanish that does: the o of iocārī had already slid irregularly to u, so the crack landed on a vowel no other verb offers. Jugamos stays plain, because the stress moves to the ending."
+            },
+            {
+              "kind": "speech",
+              "text": "One more habit: Spanish plays at a thing rather than simply playing it. El fútbol is football, and you say juego al fútbol, with a + el fused into al. With a companion rather than a game it is con: juego con el perro, I play with the dog."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -113,83 +129,43 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the exchange above, both parts",
+              "instruction": "\"juego, juegas, juega, jugamos, juegan\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the exchange above, both parts]"
+              "source": "[YOU SAY: \"juego, juegas, juega, jugamos, juegan\"]"
             },
             {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "speech",
-              "text": "Until the choice happens before you notice making it."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C39-sintesis-elegir-know",
-              "prompt": "You want to say you know a person. Conocer or saber?",
-              "assesses": [
-                "ES-GRAMMAR-CONOCER-SABER-12"
-              ],
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Juego con el perro\"",
+              "spoken": true,
+              "scored": false,
               "responseSeconds": 8,
-              "acceptedResponses": [
-                "conocer",
-                "conocer (acquaintance)",
-                "conozco"
-              ],
-              "feedback": {
-                "correct": "Yes — conocer is for people and places you have met.",
-                "incorrect": "Conocer. Saber is for facts."
-              }
+              "source": "[YOU SAY: \"Juego con el perro\"]"
             },
             {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C39-sintesis-elegir-bring",
-              "prompt": "Someone asks you to move something toward where they are. Traer or llevar?",
-              "assesses": [
-                "ES-GRAMMAR-TRAER-LLEVAR-03"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "traer",
-                "traer (toward)",
-                "bring"
-              ],
-              "feedback": {
-                "correct": "Yes — traer moves it toward the speaker.",
-                "incorrect": "Traer. Llevar moves it away."
-              }
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"duermo\" then \"juego\" — o to ue, then u to ue",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"duermo\" then \"juego\" — o to ue, then u to ue]"
             },
             {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C39-sintesis-elegir-ask",
-              "prompt": "You want to ask for a coffee, not ask a question. Preguntar or pedir?",
-              "assesses": [
-                "ES-GRAMMAR-ASK-SPLIT-04",
-                "ES-LEX-PREGUNTAR-03"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "pedir",
-                "pedir (request)",
-                "pedir un cafe"
-              ],
-              "feedback": {
-                "correct": "Yes — pedir is asking FOR something.",
-                "incorrect": "Pedir. Preguntar is asking a question."
-              }
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"iocus, joke, jocular, juggler\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"iocus, joke, jocular, juggler\"]"
             }
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -201,7 +177,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does choosing traer tell your listener? (Where you are standing.) What does choosing conocer tell them? (That you have met it, not just heard of it.) And which of the three pairs did you learn first? (Preguntar and pedir — long before the other two.)"
+              "text": "What did iocārī mean, and which English words carry it? (To joke; joke, jocular, juggler, jeopardy.) What is unusual about juego among Spanish verbs? (U becomes ue, and no other verb does it.) Which two Latin verbs did Spanish drop while English kept their families? (Claudere and lūdere.) And which vowel does conseguir break? (E to i.)"
             }
           ]
         }

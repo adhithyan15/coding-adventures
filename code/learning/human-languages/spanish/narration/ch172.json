@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 172,
-  "title": "Para --- For, Pointing Forward",
+  "title": "Synthesis --- The Choices English Never Makes You Make",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:8e59887a67b0a87a",
+  "sourceHash": "fnv1a64:bafc551f79856ea2",
   "lessons": [
     {
-      "id": "ES-C51-para",
-      "sequence": 2191,
-      "title": "para — \"for,\" pointing forward",
-      "headword": "para",
-      "romanization": "para",
-      "gloss": "\"for\" pointing forward — at a destination, a purpose, a deadline, a person meant to receive something",
+      "id": "ES-C39-sintesis-elegir",
+      "sequence": 2126,
+      "title": "Synthesis — the choices English never makes you make",
+      "headword": "(synthesis)",
+      "romanization": "(synthesis)",
+      "gloss": "synthesis — three places where English hands you one word and Spanish makes you choose",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ffb0915b6ecff05d",
+      "sourceHash": "fnv1a64:7aa7f14b423b2ef4",
       "notice": null,
       "blocks": [
         {
@@ -35,58 +35,72 @@
             },
             {
               "kind": "speech",
-              "text": "English has one word, for, doing about ten jobs. Spanish splits them between two words, and most courses hand you a list of twelve rules. You are getting one idea instead, and this chapter is half of it."
+              "text": "Nothing new here. Two verbs to say aloud first: traer, conocer."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: the arrow points away from you",
+          "title": "Grammar Lens: one English word, two Spanish verbs",
           "segments": [
             {
               "kind": "speech",
-              "text": "para — for, when something is aimed at something else."
+              "text": "Three times now you have met a pair of verbs where English makes do with one. They arrived chapters apart and have never been put side by side:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "English gives you",
+                "Spanish makes you choose",
+                "the question you must answer"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "English gives you: to ask. Spanish makes you choose: preguntar, pedir. the question you must answer: asking a question, or asking for a thing?",
+                "English gives you: to bring / take. Spanish makes you choose: traer, llevar. the question you must answer: toward the speaker, or away?",
+                "English gives you: to know. Spanish makes you choose: conocer, saber. the question you must answer: a person or place, or a fact?"
+              ]
             },
             {
               "kind": "speech",
-              "text": "Es para ti. — It's for you. (aimed at a person) Para mañana. — By tomorrow. (aimed at a moment) Hago la comida para la casa. — I make the meal for the house. (aimed at a purpose)."
-            },
-            {
-              "kind": "speech",
-              "text": "Destination, deadline, recipient, purpose. They look like four different rules and they are one: something is heading toward something else. Draw an arrow from the thing to its target, and if the arrow makes sense, the word is para."
-            },
-            {
-              "kind": "speech",
-              "text": "That is the whole of this chapter. Not four uses — one direction."
+              "text": "None of these is a vocabulary problem. In each one, the word is easy and the decision is the work — and the decision is information English speakers are simply never required to supply."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
+          "type": "notice",
+          "title": "What you've built",
           "segments": [
             {
               "kind": "speech",
-              "text": "The direction is not a mnemonic somebody invented. It is inside the word."
+              "text": "When you pick traer over llevar, you have told your listener where you are standing. When you pick conocer over saber, you have told them whether you have met the thing or only heard of it. The grammar is carrying meaning that English would need a whole clause to add."
             },
             {
               "kind": "speech",
-              "text": "Para was Latin per + ad, squeezed into one word. And ad means \"toward\" — it is the same ad sitting at the front of English advance, admit, adhere, address, all of which are about moving or pointing at something."
-            },
-            {
-              "kind": "speech",
-              "text": "So para is, at the bottom, \"through-toward.\" A word that is literally made of an arrow."
-            },
-            {
-              "kind": "speech",
-              "text": "Once you have that, you do not have to remember which of the twelve textbook uses of para is which. You have to ask one question: is this pointing at something?"
+              "text": "You are not translating any more. You are choosing."
             }
           ]
         },
         {
           "index": 3,
+          "type": "input",
+          "title": "The exchange",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "— ¿Conoces Madrid? — Sí, conozco Madrid. Pero no sé dónde está el café."
+            },
+            {
+              "kind": "speech",
+              "text": "Two \"knows\" in two lines, and not interchangeable. The first is acquaintance — I have been there. The second is a fact. English uses know for both and loses the difference."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -99,75 +113,83 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"para ti\", \"para mañana\", \"para la casa\" — draw the arrow each time",
+              "instruction": "the exchange above, both parts",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"para ti\", \"para mañana\", \"para la casa\" — draw the arrow each time]"
+              "source": "[YOU SAY: the exchange above, both parts]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "Until the choice happens before you notice making it."
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C51-para-you",
-              "prompt": "Say it is for you.",
+              "id": "ES-C39-sintesis-elegir-know",
+              "prompt": "You want to say you know a person. Conocer or saber?",
               "assesses": [
-                "ES-LEX-PARA",
-                "ES-GRAMMAR-PARA-FORWARD",
-                "ES-LEX-TU"
+                "ES-GRAMMAR-CONOCER-SABER-12"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "es para ti",
-                "para ti"
+                "conocer",
+                "conocer (acquaintance)",
+                "conozco"
               ],
               "feedback": {
-                "correct": "Aimed at a person.",
-                "incorrect": "Es para ti."
+                "correct": "Yes — conocer is for people and places you have met.",
+                "incorrect": "Conocer. Saber is for facts."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C51-para-when",
-              "prompt": "Say by tomorrow.",
+              "id": "ES-C39-sintesis-elegir-bring",
+              "prompt": "Someone asks you to move something toward where they are. Traer or llevar?",
               "assesses": [
-                "ES-GRAMMAR-PARA-FORWARD",
-                "ES-LEX-MANANA"
+                "ES-GRAMMAR-TRAER-LLEVAR-03"
               ],
-              "responseSeconds": 8,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "para manana",
-                "para mañana"
+                "traer",
+                "traer (toward)",
+                "bring"
               ],
               "feedback": {
-                "correct": "Aimed at a moment.",
-                "incorrect": "Para manana."
+                "correct": "Yes — traer moves it toward the speaker.",
+                "incorrect": "Traer. Llevar moves it away."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C51-para-arrow",
-              "prompt": "Which Latin piece inside para means toward, and which English words carry it?",
+              "id": "ES-C39-sintesis-elegir-ask",
+              "prompt": "You want to ask for a coffee, not ask a question. Preguntar or pedir?",
               "assesses": [
-                "ES-ETYMON-PER-AD",
-                "ES-GRAMMAR-PARA-FORWARD"
+                "ES-GRAMMAR-ASK-SPLIT-04",
+                "ES-LEX-PREGUNTAR-03"
               ],
-              "responseSeconds": 12,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "ad, as in advance and admit",
-                "ad",
-                "ad — advance, admit, adhere"
+                "pedir",
+                "pedir (request)",
+                "pedir un cafe"
               ],
               "feedback": {
-                "correct": "A word literally made of an arrow.",
-                "incorrect": "Ad — the same ad in advance, admit, adhere."
+                "correct": "Yes — pedir is asking FOR something.",
+                "incorrect": "Pedir. Preguntar is asking a question."
               }
             }
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -179,7 +201,7 @@
             },
             {
               "kind": "speech",
-              "text": "What one question decides para? (Is it pointing at something?) What is inside the word? (Ad — \"toward.\") Next: the other half — and you have been saying it since your first chapter."
+              "text": "What does choosing traer tell your listener? (Where you are standing.) What does choosing conocer tell them? (That you have met it, not just heard of it.) And which of the three pairs did you learn first? (Preguntar and pedir — long before the other two.)"
             }
           ]
         }

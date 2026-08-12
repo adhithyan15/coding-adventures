@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 184,
-  "title": "Lo Que --- What, Out of Two Old Words",
+  "title": "Synthesis --- Reading the Window",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:6ce0daf82b25462b",
+  "sourceHash": "fnv1a64:92c65d7a8f0afea0",
   "lessons": [
     {
-      "id": "ES-C53-lo-que",
-      "sequence": 2203,
-      "title": "lo que — \"what,\" out of two old words",
-      "headword": "lo que",
-      "romanization": "lo que",
-      "gloss": "\"what\" — two words you already own, put together to name a thing you cannot name",
+      "id": "ES-C52-sintesis-el-letrero",
+      "sequence": 2200,
+      "title": "Synthesis — reading the window",
+      "headword": "(synthesis)",
+      "romanization": "(synthesis)",
+      "gloss": "synthesis — reading a shop window, which is where this grammar actually lives, and asking your way past the words you do not have",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:210668fab80d65ab",
+      "sourceHash": "fnv1a64:16bbcb553b4b3178",
       "notice": null,
       "blocks": [
         {
@@ -35,47 +35,62 @@
             },
             {
               "kind": "speech",
-              "text": "You have lo. You have que. This chapter puts them next to each other and adds nothing."
+              "text": "Almost nobody will say se habla español to you. It will be written, on a window, and you will be walking past it."
             }
           ]
         },
         {
           "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: a noun-shaped hole",
+          "type": "input",
+          "title": "The exchange",
           "segments": [
             {
               "kind": "speech",
-              "text": "lo que — what, in the sense of the thing that."
+              "text": "Four things on four windows, in one street:"
             },
             {
               "kind": "speech",
-              "text": "Lo que digo — what I say. (= the thing that I say) Lo que compro — what I buy."
+              "text": "SE HABLA ESPAÑOL SE COMPRAN LIBROS AQUÍ SE COME BIEN SE PROHÍBE FUMAR."
             },
             {
               "kind": "speech",
-              "text": "Every relative clause so far has hung off a noun: el libro que compro. But sometimes there is no noun, because you do not know or do not care what the thing is. Lo stands in for it — a placeholder with no gender and nothing behind it — and que does its usual job of joining."
+              "text": "Three you can read completely. The fourth has words you have never met — and you can still read its shape: something is forbidden, by nobody in particular."
             },
             {
               "kind": "speech",
-              "text": "So lo que is a noun-shaped hole with a sentence attached. That is why it translates as English what, which is doing exactly the same thing: what I say is the thing that I say with the word thing taken out."
+              "text": "That is what this rung buys. Not producing these sentences, but reading them off the world, and knowing the missing person is missing on purpose."
             },
             {
               "kind": "speech",
-              "text": "Now compare it to the lo you already know:"
+              "text": "And for the two unknown words, you already have the tool:"
             },
             {
               "kind": "speech",
-              "text": "Lo digo. — I say it. (a specific thing, already named) Lo que digo — what I say. (no specific thing at all)."
+              "text": "¿Cómo se dice \"fumar\", por favor?"
             },
             {
               "kind": "speech",
-              "text": "Same word. In the first it points at something known; in the second it points at a gap the following clause will fill."
+              "text": "Which is itself the same construction, asked out loud."
             }
           ]
         },
         {
           "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: what it means that nobody is named",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A sentence with nobody in it is not just vague — it is doing something with the vagueness. Se prohíbe fumar does not say who forbids it, and that is what gives a sign its authority: nobody is claiming anything, so there is nobody to argue with. English does the same when a report says mistakes were made."
+            },
+            {
+              "kind": "speech",
+              "text": "So when you meet a se with no doer, ask who is being left out. Sometimes the answer is interesting."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -88,83 +103,109 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"lo digo\" then \"lo que digo\" — pointing at a thing, then at a gap",
+              "instruction": "the four signs aloud as if walking past them",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"lo digo\" then \"lo que digo\" — pointing at a thing, then at a gap]"
+              "source": "[YOU SAY: the four signs aloud as if walking past them]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"lo que compro\"",
+              "instruction": "\"¿Cómo se dice, por favor?\" — the way out of any of them",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"lo que compro\"]"
+              "source": "[YOU SAY: \"¿Cómo se dice, por favor?\" — the way out of any of them]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C53-lo-que-say",
-              "prompt": "Say what I say, meaning the thing that I say.",
+              "id": "ES-C52-sintesis-el-letrero-read",
+              "prompt": "What does the sign SE COMPRAN LIBROS tell you?",
               "assesses": [
-                "ES-GRAMMAR-LO-QUE",
-                "ES-LEX-DECIR",
-                "ES-GRAMMAR-DECIR-PRESENT-SINGULAR"
+                "ES-GRAMMAR-SE-PASSIVE-AGREEMENT",
+                "ES-LEX-COMPRAR-07",
+                "ES-LEX-LIBRO"
               ],
-              "responseSeconds": 8,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "lo que digo",
-                "lo que yo digo"
+                "books are bought here",
+                "they buy books",
+                "we buy books"
               ],
               "feedback": {
-                "correct": "A noun-shaped hole with a sentence attached.",
-                "incorrect": "Lo que digo."
+                "correct": "And the verb is plural because libros is.",
+                "incorrect": "Books are bought here."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C53-lo-que-contrast",
-              "prompt": "What is the difference between lo digo and lo que digo?",
+              "id": "ES-C52-sintesis-el-letrero-unknown",
+              "prompt": "A sign has a word you do not know. Ask somebody, politely.",
               "assesses": [
-                "ES-GRAMMAR-DIRECT-OBJECT-LO",
-                "ES-GRAMMAR-LO-QUE"
+                "ES-LEX-COMO-SE-DICE",
+                "ES-LEX-POR-FAVOR"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "como se dice, por favor",
+                "¿cómo se dice, por favor?"
+              ],
+              "feedback": {
+                "correct": "The same construction, asked out loud.",
+                "incorrect": "¿Como se dice, por favor?"
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C52-sintesis-el-letrero-eat",
+              "prompt": "Say the food is good here, the way a sign would.",
+              "assesses": [
+                "ES-GRAMMAR-SE-IMPERSONAL",
+                "ES-LEX-COMER",
+                "ES-LEX-BIEN"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "aqui se come bien",
+                "se come bien"
+              ],
+              "feedback": {
+                "correct": "Nobody named, and none needed.",
+                "incorrect": "Aqui se come bien."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C52-sintesis-el-letrero-authority",
+              "prompt": "Why does leaving the person out give a sign its authority?",
+              "assesses": [
+                "ES-GRAMMAR-SE-IMPERSONAL"
               ],
               "responseSeconds": 14,
               "acceptedResponses": [
-                "lo digo points at a known thing, lo que digo points at no thing",
-                "one is i say it, the other is what i say"
+                "nobody is claiming it, so there is nobody to argue with",
+                "there is no person to disagree with",
+                "it sounds like a fact rather than an opinion"
               ],
               "feedback": {
-                "correct": "Same word, pointing at something known or at a gap.",
-                "incorrect": "Lo digo = I say it, about something already named. Lo que digo = what I say, with no specific thing."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C53-lo-que-new",
-              "prompt": "How many new words did this chapter introduce?",
-              "assesses": [
-                "ES-GRAMMAR-LO-QUE"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "none",
-                "zero",
-                "0"
-              ],
-              "feedback": {
-                "correct": "Two old words, side by side.",
-                "incorrect": "None. Lo and que were both already yours."
+                "correct": "Worth noticing every time you meet it.",
+                "incorrect": "No person is claiming anything, so there is nobody to argue with."
               }
             }
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -176,7 +217,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"what I buy.\" (Lo que compro.) What is lo doing there? (Standing in for a thing that is never named.) How many new words was that? (None.) Next: all of it in one place."
+              "text": "Where does this grammar mostly live? (Written on things.) What does the missing person buy a sign? (Authority — nobody to argue with.) And what do you say when a sign has a word you do not have? (¿Cómo se dice, por favor?)"
             }
           ]
         }

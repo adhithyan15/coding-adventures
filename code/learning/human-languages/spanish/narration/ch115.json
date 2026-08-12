@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 115,
-  "title": "Hecho, Dicho, Visto, Puesto",
+  "title": "Hablado, Comido, Vivido --- The Participle",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:43c13146b9d103b3",
+  "sourceHash": "fnv1a64:1468af6b1b4ceac0",
   "lessons": [
     {
-      "id": "ES-C49-participios-irregulares",
-      "sequence": 1388,
-      "title": "hecho, dicho, visto, puesto",
-      "headword": "hecho · dicho · visto · puesto",
-      "romanization": "hecho · dicho · visto · puesto",
-      "gloss": "four participles that refused the ending — and they are the four verbs you would have guessed",
+      "id": "ES-C49-participio",
+      "sequence": 1385,
+      "title": "hablado, comido, vivido — the participle",
+      "headword": "hablado / comido / vivido",
+      "romanization": "hablado / comido / vivido",
+      "gloss": "the participle — one ending for -ar, one for the other two, and the same merger you already met in the preterite",
       "script": "latin",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:4386b837a7510e3e",
+      "sourceHash": "fnv1a64:03557f14903c5932",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -42,38 +42,38 @@
             },
             {
               "kind": "speech",
-              "text": "By the rule, the participle of hacer should be hacido. Say it. Now be told that nobody has ever said it."
+              "text": "Your three verb families, once more: hablar, comer, vivir. This chapter gives each of them one new form, and two of the three get the same one."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: four, and you could have guessed which",
+          "title": "Grammar Lens: two endings, not three",
           "segments": [
             {
-              "kind": "table",
-              "headers": [
-                "verb",
-                "participle",
-                "in use"
-              ],
-              "columns": 3,
-              "rowCount": 4,
-              "utterances": [
-                "verb: hacer. participle: hecho. in use: he hecho — I have done.",
-                "verb: decir. participle: dicho. in use: he dicho — I have said.",
-                "verb: ver. participle: visto. in use: he visto — I have seen.",
-                "verb: poner. participle: puesto. in use: he puesto — I have put."
-              ]
+              "kind": "speech",
+              "text": "hablar becomes hablado, comer becomes comido, vivir becomes vivido."
             },
             {
               "kind": "speech",
-              "text": "Look at that list of verbs before you look at the forms. Do, say, see, put — four of the commonest verbs in any language, and the same four that have been irregular in every tense you have met. The verbs that break rules are not a random selection: they are always the ones said most often, because frequent words are the only ones used enough to survive being irregular."
+              "text": "-ar verbs take -ado."
             },
             {
               "kind": "speech",
-              "text": "You already know this in English. Go/went, see/saw, do/did, put/put — and nobody struggles with them, because you meet them a hundred times a day. The same will happen here."
+              "text": "-er and -ir verbs both take -ido."
+            },
+            {
+              "kind": "speech",
+              "text": "You have seen those two families collapse into one before: in the preterite, where comí and viví have identical endings. It happens here for the same reason it happened there — the difference between -er and -ir was never deep, and outside the present tense it mostly stops existing."
+            },
+            {
+              "kind": "speech",
+              "text": "So this is one new ending and one you can predict."
+            },
+            {
+              "kind": "speech",
+              "text": "The word itself does not change for who is speaking. Hablado is hablado whether you, I, or a hundred people did the speaking. That is unusual enough to notice: every other verb form you hold has been carrying a person on its back."
             }
           ]
         },
@@ -84,31 +84,15 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "These four are not broken. They are older than the rule."
+              "text": "Grammarians call this a participle, from Latin participium — \"the form that takes part.\" It was named for doing two jobs at once: it is built from a verb, and it behaves like an adjective."
             },
             {
               "kind": "speech",
-              "text": "hecho from Latin factum — the thing done. English fact is that same word: a fact is literally a thing that has been done."
+              "text": "You can see the adjective half immediately. Cansado (\"tired\") is the participle of cansar, and it agrees like any adjective: cansada, cansados. The same shape, doing adjective work."
             },
             {
               "kind": "speech",
-              "text": "dicho from Latin dictum — the thing said. English keeps dictum whole, and dictation, verdict (\"a true saying\"), contradict."
-            },
-            {
-              "kind": "speech",
-              "text": "visto from Latin vīsum — the thing seen. English vision, visible."
-            },
-            {
-              "kind": "speech",
-              "text": "puesto from Latin positum — the thing placed. English position, deposit, compose."
-            },
-            {
-              "kind": "speech",
-              "text": "Latin already had participles for these verbs, and Spanish inherited them intact instead of rebuilding them from the stem. The regular -ado / -ido forms are the newer machinery; these four are what was there before it."
-            },
-            {
-              "kind": "speech",
-              "text": "So an irregular participle is not a form that went wrong. It is a form that was never replaced."
+              "text": "Next chapter puts it to its verb work instead — and there, held in place by another word, it stops agreeing with anything at all."
             }
           ]
         },
@@ -126,98 +110,76 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"hecho, dicho, visto, puesto\"",
+              "instruction": "\"hablado, comido, vivido\" — one ending, then the shared one",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"hecho, dicho, visto, puesto\"]"
+              "source": "[YOU SAY: \"hablado, comido, vivido\" — one ending, then the shared one]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "each with English beside it — \"hecho / fact\", \"dicho / dictum\", \"visto / vision\", \"puesto / position\"",
+              "instruction": "\"comí, viví\" then \"comido, vivido\" — the same merger, twice",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: each with English beside it — \"hecho / fact\", \"dicho / dictum\", \"visto / vision\", \"puesto / position\"]"
+              "source": "[YOU SAY: \"comí, viví\" then \"comido, vivido\" — the same merger, twice]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C49-participios-irregulares-four",
-              "prompt": "Give the participles of hacer, decir, ver and poner.",
+              "id": "ES-C49-participio-ar",
+              "prompt": "Give the participle of hablar.",
               "assesses": [
-                "ES-GRAMMAR-IRREGULAR-PARTICIPLES",
-                "ES-LEX-HACER",
-                "ES-LEX-DECIR",
-                "ES-LEX-VER",
-                "ES-LEX-PONER"
+                "ES-GRAMMAR-PAST-PARTICIPLE",
+                "ES-LEX-HABLAR"
               ],
-              "responseSeconds": 12,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "hecho, dicho, visto, puesto",
-                "hecho dicho visto puesto"
+                "hablado",
+                "habl-ado"
               ],
               "feedback": {
-                "correct": "The four commonest, as always.",
-                "incorrect": "hecho, dicho, visto, puesto."
+                "correct": "-ar takes -ado.",
+                "incorrect": "Hablado."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C49-participios-irregulares-fact",
-              "prompt": "Which everyday English noun is the same word as hecho?",
+              "id": "ES-C49-participio-erir",
+              "prompt": "Give the participles of comer and vivir.",
               "assesses": [
-                "ES-ETYMON-FACTUM-DICTUM",
-                "ES-LEX-HACER"
+                "ES-GRAMMAR-PAST-PARTICIPLE",
+                "ES-LEX-COMER",
+                "ES-LEX-VIVIR"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "fact",
-                "fact, from factum"
+                "comido, vivido",
+                "comido vivido"
               ],
               "feedback": {
-                "correct": "A fact is a thing that has been done.",
-                "incorrect": "Fact — Latin factum, the thing done."
+                "correct": "Both -ido — the two families merge again.",
+                "incorrect": "Comido and vivido."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C49-participios-irregulares-why",
-              "prompt": "Why are these four irregular rather than some other four?",
+              "id": "ES-C49-participio-person",
+              "prompt": "Does the participle change for who is speaking?",
               "assesses": [
-                "ES-GRAMMAR-IRREGULAR-PARTICIPLES"
+                "ES-GRAMMAR-PAST-PARTICIPLE"
               ],
-              "responseSeconds": 12,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "they are the most used",
-                "because they are the commonest verbs",
-                "frequency"
+                "no",
+                "no, it stays the same"
               ],
               "feedback": {
-                "correct": "Only frequent words are used enough to survive being irregular.",
-                "incorrect": "They are the commonest verbs — the same four that break every other tense."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C49-participios-irregulares-use",
-              "prompt": "Say we have seen it, using the participle of ver.",
-              "assesses": [
-                "ES-GRAMMAR-PERFECT-COMPLETE",
-                "ES-LEX-VER"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "lo hemos visto",
-                "hemos visto"
-              ],
-              "feedback": {
-                "correct": "Hemos visto.",
-                "incorrect": "Lo hemos visto — or just hemos visto."
+                "correct": "The first verb form you hold that carries no person.",
+                "incorrect": "No — hablado is hablado for everybody."
               }
             }
           ]
@@ -235,7 +197,7 @@
             },
             {
               "kind": "speech",
-              "text": "The four? (Hecho, dicho, visto, puesto.) Are they broken forms? (No — they are older than the rule, inherited whole from Latin.) Next: all of it together."
+              "text": "Participle of hablar? (Hablado.) Of comer and vivir? (Comido, vivido — the same ending.) What does participium mean? (The form that takes part — verb and adjective at once.) Next: the word that turns it into a tense."
             }
           ]
         }

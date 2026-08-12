@@ -1,42 +1,39 @@
-Spanish, chapter 83: Synthesis --- Saying It Once.
+Spanish, chapter 83: La --- The Pronoun Carries What Left.
 1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-Synthesis — saying it once.
+la — "it," for a feminine noun.
 
 Warm-up.
 [pause 2 seconds]
-Answer out loud: ¿Tienes el libro? Say yes, and do not use the word libro.
+Say "I have it," about the book. (Lo tengo.) Now guess the feminine version before you read on.
 
-The exchange.
-Here are the same two exchanges, twice. Read both versions aloud.
-Version one:
-— ¿Tienes el libro? — Sí, tengo el libro. — ¿Haces la comida? — Sí, hago la comida.
-Version two:
-— ¿Tienes el libro? — Sí, lo tengo. — ¿Haces la comida? — Sí, la hago.
-Every sentence in version one is correct. Not one of them is a mistake. And no speaker of Spanish would say them.
+Grammar Lens: the form you probably guessed.
+la — it, standing in for something feminine.
+Hago la comida. — I make the meal. La hago. — I make it.
+If you guessed la, you were not lucky. You were doing what the shape of Spanish invites you to do: el and la mark the two genders everywhere else, so the object pronouns mark them the same way.
+The pronoun agrees with the noun it replaces — not with you, and not with the verb. El libro is masculine, so lo. La comida and la casa are feminine, so la.
+That last point is worth pausing on. La here is not agreeing with anything present in the sentence. The noun is gone; the pronoun is carrying its gender on its behalf. This is the first time in Spanish that a word has had to remember something that is no longer being said.
 
-Grammar Lens: what the pronoun is actually for.
-These four words do not make you more correct. They make you sound like somebody having a conversation instead of somebody completing an exercise.
-A conversation carries what has already been said. English does the same thing and you have never noticed: you would not answer do you have the book? with yes, I have the book.
-So this is the first place where knowing the form is not the skill. The skill is noticing that the thing has already been named — and no table can drill that.
+The word, taken apart.
+Last chapter had a small mystery: why lo and not el, when both come from the same Latin word? Here that mystery quietly disappears.
+The feminine object form in Latin was illam. Worn down as an article it gave la. Worn down as a pronoun it gave — la. Both routes arrived at the same place, because the vowel that got lost on the masculine side (elo becomes el) was never at risk on the feminine side.
+So the masculine pair split into two shapes and the feminine pair did not. Not an exception to memorise: a single sound change that happened to bite one word and not the other.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: both versions of the book exchange, and hear the difference]
+[your turn — say: "Hago la comida" then "La hago"]
 [pause 8 seconds for the answer]
-[your turn — say: "Sí, lo tengo" and "Sí, la hago" until no decision is needed]
+[your turn — say: "lo tengo" then "la hago" — one syllable carries the whole difference]
 [pause 8 seconds for the answer]
+[question — say your answer, then pause 8 seconds]
+Say I make it, about la comida.
 [question — say your answer, then pause 10 seconds]
-Answer yes to Tienes el libro, without repeating the noun.
-[question — say your answer, then pause 10 seconds]
-Answer yes to Haces la comida, without repeating the noun.
-[question — say your answer, then pause 10 seconds]
-Somebody says Te quiero. Say the answering half.
+What decides whether you say lo or la?
 [question — say your answer, then pause 12 seconds]
-Version one of the dialogue was grammatically correct. What was wrong with it?
+Why does the feminine article match its pronoun exactly, when the masculine pair does not?
 
 Wrap-up Recall.
 [pause 3 seconds]
-¿Tienes el libro? (Sí, lo tengo.) ¿Haces la comida? (Sí, la hago.) And what were these four words for? (Not repeating what has already been said.) Next: the past tense — and you will find these four words sit in exactly the same place there.
+Which pronoun replaces a feminine noun? (La.) What decides it — you, the verb, or the noun? (The noun, even though it is no longer there.) Next: the same slot, for the two people actually talking.
