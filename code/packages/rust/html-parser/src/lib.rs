@@ -7510,6 +7510,12 @@ impl HtmlParser {
                     self.form_element_pointer_set = false;
                 }
                 self.generate_implied_end_tags_above(index);
+                if !self.current_element_is("form") {
+                    self.diagnostics.push(ParserDiagnostic::new(
+                        "unexpected-non-current-form-end-tag",
+                        "end tag `</form>` removed a form while a non-form node remained current after implied-end-tag generation",
+                    ));
+                }
                 self.open_elements.remove(index);
                 return;
             }
@@ -31707,6 +31713,10 @@ mod tests {
                     "nested form start tag was ignored while a form element was already open"
                 ),
                 ParserDiagnostic::new(
+                    "unexpected-non-current-form-end-tag",
+                    "end tag `</form>` removed a form while a non-form node remained current after implied-end-tag generation"
+                ),
+                ParserDiagnostic::new(
                     "eof-with-unclosed-elements",
                     "end of file was reached with disallowed open elements"
                 )
@@ -31781,6 +31791,58 @@ mod tests {
                 .filter(|diagnostic| diagnostic.code == "nested-form-start-tag")
                 .count(),
             0
+        );
+    }
+
+    #[test]
+    fn reports_form_end_tags_that_leave_a_non_form_current_node() {
+        for source in [
+            "<!doctype html><form><div></form><div>",
+            "<!doctype html><form><span></form><div>",
+            "<!doctype html><template><form><div></form></template>",
+            "<!doctype html><table><tr><td><form><div></form></td></tr></table>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .filter(|diagnostic| {
+                        diagnostic.code == "unexpected-non-current-form-end-tag"
+                    })
+                    .count(),
+                1,
+                "source {source:?}"
+            );
+        }
+
+        for source in [
+            "<!doctype html><form></form>",
+            "<!doctype html><form><p></form>",
+            "<!doctype html><template><form><p></form></template>",
+            "<!doctype html></form>",
+            "<!doctype html><svg><form><div></form></svg>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(
+                output.parser_diagnostics.iter().all(|diagnostic| {
+                    diagnostic.code != "unexpected-non-current-form-end-tag"
+                }),
+                "source {source:?}: {:?}",
+                output.parser_diagnostics
+            );
+        }
+
+        let fragment =
+            parse_html_fragment_for_context_with_diagnostics("<form><div></form>", "div")
+                .unwrap();
+        assert_eq!(
+            fragment
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-non-current-form-end-tag")
+                .count(),
+            1
         );
     }
 

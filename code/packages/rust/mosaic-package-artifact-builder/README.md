@@ -46,23 +46,24 @@ The overall native-complete milestone remains open while ignored properties,
 events, styles, effects, and
 accessibility metadata are added to the inventory.
 
-Flutter, Compose, Qt, and SwiftUI drag primitives are no longer reported as inert:
-those emitters use native pointer/touch drag targets plus the UI35 keyboard,
-accepted-drop, component-scoping, and announcement contracts. XAML remains an
-explicit degradation until it ships equivalent behavior.
+Flutter, Compose, Qt, SwiftUI, and XAML drag primitives are no longer reported as
+inert: those emitters use native pointer/touch drag targets plus the UI35
+keyboard, accepted-drop, component-scoping, and announcement contracts.
 
 The package-expanded TaskApp is the full strict-profile proof point for Flutter,
-Compose, Qt, and SwiftUI on macOS. SwiftUI emits `Table` with dynamic columns on
+Compose, Qt, SwiftUI on macOS, and XAML/WinUI. SwiftUI emits `Table` with dynamic columns on
 macOS 14.4 / iOS 17.4 and a native `List` compatibility path on the package's
 older deployment targets. Each strict desktop output has no known degradations,
 bundles the standard Rust runtime, verifies that installed runtime against the
 selected artifact, and launches without an injected library path. SwiftUI's iOS
 16 build remains a separate source-portability gate rather than packaging the
-macOS dylib. XAML now also bundles the concrete `task-mosaic-app` adapter, verifies
+macOS dylib. XAML also bundles the concrete `task-mosaic-app` adapter, verifies
 the DLL installed beside `TaskApp.exe`, and drives the generated .NET binding with
-that app-local engine. It remains permissive while four drag/drop paths are
-explicit degradations; hosted Windows CI therefore does
-not close the cross-backend strict-profile milestone or claim a visible launch.
+that app-local engine. The complete TaskApp now passes XAML's strict
+`native-complete` profile with zero degradations: its Sheet carries native UIA
+table/grid semantics and its board/calendar use native WinUI drag, drop, keyboard,
+acceptance, and accessibility behavior. Hosted Windows CI still does not claim a
+visible interactive launch.
 
 Property degradations carry the exact package-expanded node and property index.
 For example, Compose/Flutter/SwiftUI report an authored, non-false

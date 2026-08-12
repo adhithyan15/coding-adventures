@@ -14,6 +14,11 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
 - Shift 241 lessons at sequence >=548 by +20 sequence and +3 chapter, and rebuild the
   capability ledger, book targets, curriculum path segments and extension nodes with them.
 
+### Added - source-verified Chinese 请 (HL-C09CQ)
+
+- Verify 请 as ten ordered strokes with nine lifts against the pinned PRC source.
+- Preserve 讠-before-青 order and all four joined turns in a Noto Sans SC fit.
+- Reduce HL-C09 debt to 137 entries; Chinese has 6 outstanding.
 ### Added - source-verified Chinese 谢 (HL-C09CP)
 
 - Verify 谢 as twelve ordered strokes with eleven lifts against the pinned PRC source.

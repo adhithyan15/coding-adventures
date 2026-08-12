@@ -1642,6 +1642,83 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: chineseCharacterSource("谢"),
   },
+  // 请 writes 讠 before 青. The speech radical keeps both turns inside its
+  // second run; 青 closes with a joined top, right side, and leftward base hook:
+  // ten strokes, nine lifts, and fourteen visible movements.
+  [ductusKey("chinese", "请")]: {
+    script: "chinese",
+    glyph: "请",
+    strokes: [
+      { segments: [{ label: "draw 讠's top dot down-right", path: [
+        { x: 135, y: 780 }, { x: 165, y: 750 }, { x: 195, y: 715 },
+        { x: 225, y: 680 }, { x: 255, y: 650 },
+      ] }] },
+      { segments: [
+        { label: "lift, then draw 讠's short horizontal", path: [
+          { x: 45, y: 490 }, { x: 80, y: 490 }, { x: 120, y: 490 },
+          { x: 160, y: 490 }, { x: 200, y: 490 }, { x: 235, y: 490 },
+        ] },
+        { label: "turn down without lifting", path: [
+          { x: 235, y: 490 }, { x: 235, y: 400 }, { x: 235, y: 300 },
+          { x: 235, y: 200 }, { x: 235, y: 100 }, { x: 235, y: 10 },
+        ] },
+        { label: "turn and finish rising up-right without lifting", path: [
+          { x: 235, y: 10 }, { x: 265, y: 25 }, { x: 295, y: 50 },
+          { x: 330, y: 80 }, { x: 360, y: 110 }, { x: 390, y: 145 },
+        ] },
+      ] },
+      { segments: [{ label: "lift, then draw 青's top horizontal", path: [
+        { x: 385, y: 735 }, { x: 475, y: 735 }, { x: 565, y: 735 },
+        { x: 655, y: 735 }, { x: 745, y: 735 }, { x: 835, y: 735 },
+        { x: 925, y: 735 },
+      ] }] },
+      { segments: [{ label: "lift, then draw 青's second horizontal", path: [
+        { x: 410, y: 610 }, { x: 490, y: 610 }, { x: 570, y: 610 },
+        { x: 650, y: 610 }, { x: 730, y: 610 }, { x: 810, y: 610 },
+        { x: 895, y: 610 },
+      ] }] },
+      { segments: [{ label: "lift, then descend 青's upper vertical", path: [
+        { x: 650, y: 835 }, { x: 650, y: 765 }, { x: 650, y: 695 },
+        { x: 650, y: 625 }, { x: 650, y: 555 }, { x: 650, y: 485 },
+      ] }] },
+      { segments: [{ label: "lift, then draw 青's wide middle horizontal", path: [
+        { x: 355, y: 485 }, { x: 455, y: 485 }, { x: 555, y: 485 },
+        { x: 655, y: 485 }, { x: 755, y: 485 }, { x: 855, y: 485 },
+        { x: 955, y: 485 },
+      ] }] },
+      { segments: [{ label: "lift, then descend 青's lower left side", path: [
+        { x: 460, y: 370 }, { x: 460, y: 295 }, { x: 460, y: 220 },
+        { x: 460, y: 145 }, { x: 460, y: 70 }, { x: 460, y: -5 },
+        { x: 460, y: -70 },
+      ] }] },
+      { segments: [
+        { label: "lift, then draw 青's lower top horizontal", path: [
+          { x: 490, y: 370 }, { x: 550, y: 370 }, { x: 610, y: 370 },
+          { x: 670, y: 370 }, { x: 730, y: 370 }, { x: 790, y: 370 },
+          { x: 845, y: 370 },
+        ] },
+        { label: "turn and descend the right side without lifting", path: [
+          { x: 845, y: 370 }, { x: 845, y: 295 }, { x: 845, y: 220 },
+          { x: 845, y: 145 }, { x: 845, y: 70 }, { x: 845, y: 5 },
+        ] },
+        { label: "hook left at the base without lifting", path: [
+          { x: 845, y: 5 }, { x: 830, y: -15 }, { x: 805, y: -30 },
+          { x: 775, y: -40 }, { x: 740, y: -40 }, { x: 705, y: -35 },
+        ] },
+      ] },
+      { segments: [{ label: "lift, then draw 青's upper inner horizontal", path: [
+        { x: 480, y: 235 }, { x: 540, y: 235 }, { x: 600, y: 235 },
+        { x: 660, y: 235 }, { x: 720, y: 235 }, { x: 780, y: 235 },
+        { x: 825, y: 235 },
+      ] }] },
+      { segments: [{ label: "lift, then draw 青's lower inner horizontal", path: [
+        { x: 480, y: 100 }, { x: 540, y: 100 }, { x: 600, y: 100 },
+        { x: 660, y: 100 }, { x: 720, y: 100 }, { x: 780, y: 100 },
+        { x: 825, y: 100 },
+      ] }] },
+    ],
+    source: chineseCharacterSource("请"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the

@@ -241,8 +241,8 @@ render and are still readable, they simply aren't draggable there.
 > Lower the two primitives to a plain container and carry on. Implementing the real
 > interaction is then a strict upgrade, not a prerequisite for the app to build.
 
-Status: **react**, **html**, **flutter**, **compose**, **qt**, and **swiftui** implement
-the interaction; **xaml** and **webcomponent** degrade to a container. The native
+Status: **react**, **html**, **flutter**, **compose**, **qt**, **swiftui**, and
+**xaml** implement the interaction; **webcomponent** degrades to a container. The native
 backends use their platform drag system and a component-instance target scope;
 pointer/touch and keyboard paths share the accepted-drop function and lifecycle
 payload construction. React and HTML still need the authored `accepts` filter
