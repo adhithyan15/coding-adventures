@@ -132,7 +132,7 @@ enter cross-language review only after focused retrieval.
 | [Portuguese](./portuguese/README.md) | Romance / Latin | 96 | 95 | 26 chapters; through Ch. 26; 25 generated |
 | [Marathi](./marathi/README.md) | Indo-Aryan / Devanagari | 62 | 57 | 13 chapters; through Ch. 13; 8 generated |
 | [Punjabi](./punjabi/README.md) | Indo-Aryan / Gurmukhi | 61 | 54 | 13 chapters; through Ch. 13; 8 generated |
-| [Bengali](./bengali/README.md) | Indo-Aryan / Bengali | 57 | 53 | 12 chapters; through Ch. 12; 7 generated |
+| [Bengali](./bengali/README.md) | Indo-Aryan / Bengali | 70 | 66 | 15 chapters; through Ch. 15; 10 generated |
 | [Gujarati](./gujarati/README.md) | Indo-Aryan / Gujarati | 59 | 55 | 12 chapters; through Ch. 12; 7 generated |
 | [Russian](./russian/README.md) | Slavic / Cyrillic | 50 | 42 | 10 chapters; through Ch. 10; 8 generated |
 | [Sanskrit](./sanskrit/README.md) | Indo-Aryan / Devanagari | 59 | 56 | 13 chapters; through Ch. 13; 8 generated |

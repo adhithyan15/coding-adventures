@@ -1,0 +1,590 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 15,
+  "title": "Cloth, Shirt, Sari, and Glasses",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:f72c5c88d66553d9",
+  "lessons": [
+    {
+      "id": "BN-C15-kapor",
+      "sequence": 1200,
+      "title": "কাপড় (kapor) — \"cloth,\" a word five languages share",
+      "headword": "কাপড়",
+      "romanization": "kapor",
+      "gloss": "cloth, clothing — a word Sanskrit's own dictionaries call homegrown, not inherited, and the flapped letter returns",
+      "script": "bengali",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:7b44fcd2e26effb3",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Five colors named. Now the things they color, starting with the plainest word for cloth itself — and a sound you have not needed since the verb for reading."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: কাপড়",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কাপড় (kapor) — kāpoṛ — cloth, clothing."
+            },
+            {
+              "kind": "speech",
+              "text": "সাদা কাপড় (kapor) (shādā kāpoṛ) — white cloth."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কাপড় (kapor) is ক (kô) with the vowel sign া (ā), plus প (pô), plus ড় — the flapped letter, the same curled-tongue sound the reading verb needed, silent-final here: kā-po-ṛ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কাপড় (kapor) traces to Sanskrit কর্পট (karpaṭa), \"rag, old cloth.\" Here the honesty runs deeper than usual: even Sanskrit's own dictionaries label karpaṭa a deśī word — homegrown vernacular vocabulary that was already sitting inside classical Sanskrit rather than inherited from any older reconstructed root. No further ancestor is claimed for it at all. What makes it worth teaching anyway is how far it travelled sideways: the identical word, worn down by the same kind of sound change, gives Hindi kapṛā, Marathi kapaḍā, Gujarati kapaḍũ, and Punjabi kapṛā — five Indo-Aryan languages sharing one root together, none of them borrowing from the others."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"kāpoṛ\" — cloth",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"kāpoṛ\" — cloth]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"shādā kāpoṛ\" — white cloth",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"shādā kāpoṛ\" — white cloth]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the flap, again — \"poṛā … kāpoṛ\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the flap, again — \"poṛā … kāpoṛ\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the family sharing this root — \"kāpoṛ … kapṛā … kapaḍā\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the family sharing this root — \"kāpoṛ … kapṛā … kapaḍā\"]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Does কাপড় (kapor)'s root, karpaṭa, trace back to a reconstructed PIE ancestor? (No — Sanskrit's own dictionaries call it a homegrown, deśī word.) Name two other Indo-Aryan languages that share this exact root. (Hindi's kapṛā, Marathi's kapaḍā — or Gujarati's kapaḍũ, or Punjabi's kapṛā.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C15-jama",
+      "sequence": 1210,
+      "title": "জামা (jama) — \"shirt,\" a third word from Persian",
+      "headword": "জামা",
+      "romanization": "jama",
+      "gloss": "shirt — a second Persian loan for clothing, the same word behind Hindi's own jaamaa",
+      "script": "bengali",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:6fa947452f036e20",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Cloth in general, now a specific garment — and Persian, again, supplies the word."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: জামা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "জামা (jama) — jāmā — shirt."
+            },
+            {
+              "kind": "speech",
+              "text": "লাল জামা (jama) (lāl jāmā) — a red shirt."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "জামা (jama) is জ (jô) with the vowel sign া (ā), plus ম (mô) with the vowel sign া (ā) again: jā-mā."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "জামা (jama) is a Persian loan, jāma, \"robe, garment\" — carried into Hindi and Urdu as the identical word, jāmā. Count it up: of the clothing and color words in this small set, three now trace to Persian rather than Sanskrit — লাল, সবুজ, and জামা (jama). Bengali's everyday wardrobe vocabulary leans on the same trading world its colors did."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"jāmā\" — shirt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"jāmā\" — shirt]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"lāl jāmā\" — a red shirt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"lāl jāmā\" — a red shirt]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three Persian loans so far — \"lāl … shôbuj … jāmā\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three Persian loans so far — \"lāl … shôbuj … jāmā\"]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does জামা (jama) come from? (Persian jāma, \"robe, garment,\" the identical word Hindi and Urdu also use.) How many of this set's clothing and color words now trace to Persian? (Three — লাল, সবুজ, জামা (jama).)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C15-shari",
+      "sequence": 1220,
+      "title": "শাড়ি (shari) — \"sari,\" a word English simply borrowed",
+      "headword": "শাড়ি",
+      "romanization": "shari",
+      "gloss": "sari — a Sanskrit word for a strip of cloth that walked, almost unchanged, straight into English",
+      "script": "bengali",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:18eb94eb5d5822ae",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Every English cousin this book has traced so far has been buried deep — a shared PIE root, worn down over thousands of years past recognizing. This word's road into English was much shorter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: শাড়ি",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "শাড়ি (shari) — shāṛi — sari."
+            },
+            {
+              "kind": "speech",
+              "text": "লাল শাড়ি (shari) (lāl shāṛi) — a red sari."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "শাড়ি (shari) opens with শ — a second letter for an s-family sound, a different one from স. Sanskrit distinguished three of these (স, শ, and a third, ষ); modern Bengali speech has merged them into one sound, but the spelling keeps them apart. Then া (ā), ড় (the flap you now know from কাপড় (kapor)), and ি (i): shā-ṛi."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "শাড়ি (shari) traces to Sanskrit শাটী (śāṭī), \"a strip of cloth, a garment,\" worn down through Middle Indic সাড়ী (sāḍī) into Bengali and Hindi's shared śāṛī/sāṛī. Here is the unusual part: every English cousin this book has traced so far — heart, nose, bind, come — went underground for thousands of years, worn down by sound change on both ends until only a shared ancient root connects them. This word took a different road. It entered English directly, in the modern era, as an ordinary borrowed word: \"sari.\" No PIE root, no centuries of drift — just a garment's name, carried whole into another language's dictionary."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"shāṛi\" — sari",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"shāṛi\" — sari]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"lāl shāṛi\" — a red sari",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"lāl shāṛi\" — a red sari]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the second s-letter — \"শ, beside স\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the second s-letter — \"শ, beside স\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "three garments so far — \"kāpoṛ … jāmā … shāṛi\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: three garments so far — \"kāpoṛ … jāmā … shāṛi\"]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How did শাড়ি (shari) reach English — through a shared ancient root, worn down over millennia, or as a direct modern loanword? (A direct loanword — \"sari,\" borrowed whole, no PIE root involved.) How many distinct s-family letters did Sanskrit distinguish, now merged in Bengali speech? (Three — স, শ, ষ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C15-choshma",
+      "sequence": 1230,
+      "title": "চশমা (choshma) — \"glasses,\" built on an old cousin's name",
+      "headword": "চশমা",
+      "romanization": "choshma",
+      "gloss": "glasses — built on the very Persian word the eye lesson once named as its only cousin",
+      "script": "bengali",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:03bb7a2f8bcd229d",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three garments named. This one closes the chapter by returning to the very body part the eye lesson once traced to a single named Persian cousin — and building something new out of it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: চশমা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "চশমা (choshma) — chôshmā — glasses."
+            },
+            {
+              "kind": "speech",
+              "text": "আমার চশমা (choshma) (āmār chôshmā) — my glasses."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "চশমা (choshma) is spelled চ (chô) + শ (shô, the second s-letter শাড়ি (shari) just introduced) + ম (mô) + া (ā) — four sounds by the spelling. Ordinary speech thins it to three: chôsh-mā, not chô-sho-mā — an everyday shortening this particular loanword has settled into."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "চশমা (choshma) is built on Persian চশম (chashm), \"eye\" — the exact word the eye lesson once named as চোখ's only named cousin outside the Indo-Aryan family, with no secure English descendant claimed for চোখ itself. চশমা (choshma) takes that word and adds a suffix that turns \"eye\" into \"eye-thing\": spectacles, the thing that sits in front of your eyes. Bengali did not build this the way it built জিজ্ঞাসা করা or সাহায্য করা, by hanging করা on a noun; it took a ready-made South Asian coinage on a Persian root, the same formation Hindi and Urdu also use."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"chôshmā\" — glasses",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"chôshmā\" — glasses]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"āmār chôshmā\" — my glasses",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"āmār chôshmā\" — my glasses]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the eye it is built on — \"chashm … chôshmā\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the eye it is built on — \"chashm … chôshmā\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all four garments of this chapter — \"kāpoṛ, jāmā, shāṛi, chôshmā\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all four garments of this chapter — \"kāpoṛ, jāmā, shāṛi, chôshmā\"]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What Persian word is চশমা (choshma) built on, and where did this book meet it before? (Chashm, \"eye\" — named as চোখ's only cousin outside the family.) Say all five colors and all four garments this small set has now taught. (লাল, নীল, কালো, সাদা, সবুজ; কাপড় (kapor), জামা (jama), শাড়ি (shari), চশমা (choshma).) Two reaches further back, to close out: who is the subject of āmār bhālo lāge, \"I like it\"? (Not you — the good is, the same shape as āmār chôshmā, \"to me, glasses.\") And is āmi bhālobāsi, \"I love,\" built the same inverted way? (No — loving takes you as subject; liking happens to you.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

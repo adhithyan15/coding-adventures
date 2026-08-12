@@ -798,6 +798,27 @@
       "scriptCommand": "bn"
     },
     {
+      "language": "bengali",
+      "chapter": 13,
+      "output": "bengali/book/chapters/ch13-please-sorry-welcome.tex",
+      "unicodeScript": "Bengali",
+      "scriptCommand": "bn"
+    },
+    {
+      "language": "bengali",
+      "chapter": 14,
+      "output": "bengali/book/chapters/ch14-five-colors.tex",
+      "unicodeScript": "Bengali",
+      "scriptCommand": "bn"
+    },
+    {
+      "language": "bengali",
+      "chapter": 15,
+      "output": "bengali/book/chapters/ch15-cloth-shirt-sari-glasses.tex",
+      "unicodeScript": "Bengali",
+      "scriptCommand": "bn"
+    },
+    {
       "language": "chinese",
       "chapter": 1,
       "output": "chinese/book/chapters/ch01-nihao.tex",
