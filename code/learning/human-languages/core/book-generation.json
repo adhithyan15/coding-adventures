@@ -3874,6 +3874,27 @@
       "output": "urdu/book/chapters/ch12-food-words.tex",
       "unicodeScript": "Arabic",
       "scriptCommand": "ur"
+    },
+    {
+      "language": "urdu",
+      "chapter": 13,
+      "output": "urdu/book/chapters/ch13-colors.tex",
+      "unicodeScript": "Arabic",
+      "scriptCommand": "ur"
+    },
+    {
+      "language": "urdu",
+      "chapter": 14,
+      "output": "urdu/book/chapters/ch14-clothing.tex",
+      "unicodeScript": "Arabic",
+      "scriptCommand": "ur"
+    },
+    {
+      "language": "urdu",
+      "chapter": 15,
+      "output": "urdu/book/chapters/ch15-weather.tex",
+      "unicodeScript": "Arabic",
+      "scriptCommand": "ur"
     }
   ],
   "handwritten": [

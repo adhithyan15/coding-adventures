@@ -134,7 +134,10 @@ describe("real curriculum", () => {
       // CHECK-WELLBEING, heart as its own chapter, water/tea/milk/bread realizing
       // POLITE-REQUEST-REPAIR for the first time in this track), each staying within the
       // 12-atom chapter budget like every generated chapter before it.
-    ).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
+      // 12 -> 15: the second pre-A1 vocabulary tranche (wave 6). Chapter 13 (colors) and
+      // 14 (clothing) add further POLITE-REQUEST-REPAIR segments; chapter 15 (weather)
+      // returns to CHECK-WELLBEING. All three stay within the 12-atom chapter budget.
+    ).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
     expect(
       books.books
         .find((book) => book.language === "russian")
