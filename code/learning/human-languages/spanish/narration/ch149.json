@@ -4,11 +4,11 @@
   "chapter": 149,
   "title": "Entender — Understanding Is Stretching Toward",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:b5d98e8c7f7cc0f6",
+  "sourceHash": "fnv1a64:448749c2f9de3ed7",
   "lessons": [
     {
       "id": "ES-C34-entender",
-      "sequence": 1890,
+      "sequence": 1900,
       "title": "entender — \"to understand\", built out of stretching",
       "headword": "entender",
       "romanization": "entender",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b8071df76238cbee",
+      "sourceHash": "fnv1a64:989ef1e3e652b390",
       "notice": null,
       "blocks": [
         {

@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C35-tomar
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1920
+sequence: 1930
 chapter: 154
 type: word
 headword: tomar

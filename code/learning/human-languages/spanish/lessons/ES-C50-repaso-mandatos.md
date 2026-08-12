@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C50-repaso-mandatos
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1491
+sequence: 1501
 chapter: 130
 type: practice-mix
 headword: (review)

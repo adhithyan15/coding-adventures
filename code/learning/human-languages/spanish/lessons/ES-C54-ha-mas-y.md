@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C54-ha-mas-y
 spine_node: SPINE-ASK-LOCATION
-sequence: 2197
+sequence: 2207
 chapter: 187
 type: etymology
 headword: ha + y

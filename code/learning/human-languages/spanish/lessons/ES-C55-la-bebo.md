@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C55-la-bebo
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1735
+sequence: 1745
 chapter: 139
 type: grammar
 headword: la bebo

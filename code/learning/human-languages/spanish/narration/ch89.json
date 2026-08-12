@@ -4,11 +4,11 @@
   "chapter": 89,
   "title": "Les --- And What the Second System Costs",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f81b44bbd65fe087",
+  "sourceHash": "fnv1a64:26feb1211474e220",
   "lessons": [
     {
       "id": "ES-C46-les",
-      "sequence": 1222,
+      "sequence": 1232,
       "title": "les — \"to them,\" and what this system really costs",
       "headword": "les",
       "romanization": "les",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:93c3c7d3b0bbc0b3",
+      "sourceHash": "fnv1a64:db9a07a8d6efe69b",
       "notice": null,
       "blocks": [
         {

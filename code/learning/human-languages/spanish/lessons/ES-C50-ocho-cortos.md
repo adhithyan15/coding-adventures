@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C50-ocho-cortos
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1488
+sequence: 1498
 chapter: 127
 type: grammar
 headword: di · haz · ve · pon · ten · sal · sé · ven

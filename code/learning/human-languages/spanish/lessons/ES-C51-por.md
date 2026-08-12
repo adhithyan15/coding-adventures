@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C51-por
 spine_node: SPINE-GIVE-REASONS
-sequence: 2182
+sequence: 2192
 chapter: 172
 type: word
 headword: por

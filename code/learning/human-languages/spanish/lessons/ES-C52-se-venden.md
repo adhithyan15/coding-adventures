@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C52-se-venden
 spine_node: SPINE-GIVE-REASONS
-sequence: 2187
+sequence: 2197
 chapter: 177
 type: grammar
 headword: se compran libros

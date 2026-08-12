@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C34-sintesis-mente
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1916
+sequence: 1926
 chapter: 153
 type: practice-mix
 headword: (synthesis)

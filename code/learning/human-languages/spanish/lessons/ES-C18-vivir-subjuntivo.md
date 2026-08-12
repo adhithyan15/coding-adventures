@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C18-vivir-subjuntivo
 spine_node: SPINE-SAY-WHAT-I-WANT
-sequence: 1462
+sequence: 1472
 chapter: 122
 type: grammar
 headword: viva · vivas · viva

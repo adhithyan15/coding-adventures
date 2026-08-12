@@ -4,11 +4,11 @@
   "chapter": 116,
   "title": "Synthesis --- Two Shores, Two Answers",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:956e8df65b028100",
+  "sourceHash": "fnv1a64:2373cd68b7d48d39",
   "lessons": [
     {
       "id": "ES-C49-sintesis-dos-orillas",
-      "sequence": 1380,
+      "sequence": 1390,
       "title": "Synthesis — two shores, two answers",
       "headword": "(synthesis)",
       "romanization": "(synthesis)",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fb98a500621c961e",
+      "sourceHash": "fnv1a64:813213b69956ec3b",
       "notice": null,
       "blocks": [
         {

@@ -4,11 +4,11 @@
   "chapter": 123,
   "title": "The Subjunctive Built From the Yo Form",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:c68ba44fd8a6dd0c",
+  "sourceHash": "fnv1a64:462d08f41c5d4391",
   "lessons": [
     {
       "id": "ES-C18-querer-subjuntivo",
-      "sequence": 1466,
+      "sequence": 1476,
       "title": "quiera, quieras, quiera — keep the change you know",
       "headword": "quiera · quieras · quiera",
       "romanization": "quiera · quieras · quiera",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:02633729cf8db52a",
+      "sourceHash": "fnv1a64:02a3ad445407efd1",
       "notice": null,
       "blocks": [
         {
@@ -165,7 +165,7 @@
     },
     {
       "id": "ES-C18-poder-subjuntivo",
-      "sequence": 1470,
+      "sequence": 1480,
       "title": "pueda, puedas, pueda — one more known stem change",
       "headword": "pueda · puedas · pueda",
       "romanization": "pueda · puedas · pueda",
@@ -176,7 +176,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:111dd386503e1416",
+      "sourceHash": "fnv1a64:6abeaf72801dd211",
       "notice": null,
       "blocks": [
         {
@@ -323,7 +323,7 @@
     },
     {
       "id": "ES-C18-hacer-subjuntivo",
-      "sequence": 1474,
+      "sequence": 1484,
       "title": "haga, hagas, haga — hago lends its stem",
       "headword": "haga · hagas · haga",
       "romanization": "haga · hagas · haga",
@@ -334,7 +334,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ad823ff7f4400a1c",
+      "sourceHash": "fnv1a64:b6f31609793058d1",
       "notice": null,
       "blocks": [
         {

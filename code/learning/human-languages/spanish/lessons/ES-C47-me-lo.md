@@ -2,13 +2,13 @@
 schema_version: 2
 id: ES-C47-me-lo
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 1226
+sequence: 1236
 chapter: 93
 type: grammar
 headword: me lo
 gloss: two pronouns at once — and the order is fixed, which means there is one thing to learn and not two
 concept_tag: ES-GRAMMAR-DOUBLE-OBJECT-ORDER
-prerequisites: [ES-C46-sintesis-dar-y-decir]
+prerequisites: [ES-C46-sintesis-dar-y-decir, ES-C12-decir, ES-C12-hacer]
 sounds: []
 roots: []
 teaches_cells: []

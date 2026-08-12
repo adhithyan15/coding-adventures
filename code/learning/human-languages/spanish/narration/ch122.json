@@ -4,11 +4,11 @@
   "chapter": 122,
   "title": "The Subjunctive, Regular",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:00338cd9237adb96",
+  "sourceHash": "fnv1a64:3cfd22d0d06e5a21",
   "lessons": [
     {
       "id": "ES-C18-subjuntivo",
-      "sequence": 1454,
+      "sequence": 1464,
       "title": "hable, hables, hable — the singular -ar row",
       "headword": "hable · hables · hable",
       "romanization": "hable · hables · hable",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1385ad395dcd0b79",
+      "sourceHash": "fnv1a64:be94afcbfdb094a4",
       "notice": null,
       "blocks": [
         {
@@ -173,7 +173,7 @@
     },
     {
       "id": "ES-C18-comer-subjuntivo",
-      "sequence": 1458,
+      "sequence": 1468,
       "title": "coma, comas, coma — let -er cross to a",
       "headword": "coma · comas · coma",
       "romanization": "coma · comas · coma",
@@ -184,7 +184,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:37fcdddae5f73872",
+      "sourceHash": "fnv1a64:78c978dd4e522389",
       "notice": null,
       "blocks": [
         {
@@ -330,7 +330,7 @@
     },
     {
       "id": "ES-C18-vivir-subjuntivo",
-      "sequence": 1462,
+      "sequence": 1472,
       "title": "viva, vivas, viva — -ir joins -er",
       "headword": "viva · vivas · viva",
       "romanization": "viva · vivas · viva",
@@ -341,7 +341,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0c62e83d4b74e550",
+      "sourceHash": "fnv1a64:db0ebfee29ca8a81",
       "notice": null,
       "blocks": [
         {

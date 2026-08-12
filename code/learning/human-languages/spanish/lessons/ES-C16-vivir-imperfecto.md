@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C16-vivir-imperfecto
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 1348
+sequence: 1358
 chapter: 102
 type: grammar
 headword: vivía

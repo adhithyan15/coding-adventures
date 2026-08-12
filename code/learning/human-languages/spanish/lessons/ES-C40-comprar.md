@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C40-comprar
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 2140
+sequence: 2150
 chapter: 169
 type: word
 headword: comprar

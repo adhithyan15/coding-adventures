@@ -4,11 +4,11 @@
   "chapter": 164,
   "title": "Conseguir --- Getting Is Following Until You Have It",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:3f785b054f352325",
+  "sourceHash": "fnv1a64:a5b7286a93e929ed",
   "lessons": [
     {
       "id": "ES-C39-conseguir",
-      "sequence": 2090,
+      "sequence": 2100,
       "title": "conseguir — \"to get\", by following a thing until you have it",
       "headword": "conseguir",
       "romanization": "conseguir",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fd5c1be315041451",
+      "sourceHash": "fnv1a64:c053eea49982b053",
       "notice": null,
       "blocks": [
         {

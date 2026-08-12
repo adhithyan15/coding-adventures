@@ -4,11 +4,11 @@
   "chapter": 171,
   "title": "Para --- For, Pointing Forward",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:e387b26cb99c4dda",
+  "sourceHash": "fnv1a64:f833ccb0a7c373db",
   "lessons": [
     {
       "id": "ES-C51-para",
-      "sequence": 2181,
+      "sequence": 2191,
       "title": "para — \"for,\" pointing forward",
       "headword": "para",
       "romanization": "para",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1573fc1504d16d63",
+      "sourceHash": "fnv1a64:caa47e8f1428ca6c",
       "notice": null,
       "blocks": [
         {

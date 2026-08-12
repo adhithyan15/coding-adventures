@@ -4,11 +4,11 @@
   "chapter": 128,
   "title": "No Hables --- Telling Somebody Not To",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:7b32a0013207e140",
+  "sourceHash": "fnv1a64:f1f6448b56575f96",
   "lessons": [
     {
       "id": "ES-C50-no-hables",
-      "sequence": 1489,
+      "sequence": 1499,
       "title": "no hables — telling somebody not to",
       "headword": "no hables",
       "romanization": "no hables",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8dd42d15abac1c60",
+      "sourceHash": "fnv1a64:9fdb4b3dacd254d1",
       "notice": null,
       "blocks": [
         {

@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C17-condicional
 spine_node: SPINE-TALK-ABOUT-FUTURE
-sequence: 1422
+sequence: 1432
 chapter: 118
 type: grammar
 headword: hablaría

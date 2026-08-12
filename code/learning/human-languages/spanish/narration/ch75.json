@@ -4,11 +4,11 @@
   "chapter": 75,
   "title": "-es --- The Plural Chapter One Promised",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:5c841bb357fa5585",
+  "sourceHash": "fnv1a64:eeddf4ace4c4ad29",
   "lessons": [
     {
       "id": "ES-C44-plural-es",
-      "sequence": 1189,
+      "sequence": 1199,
       "title": "-es — the plural your first chapter owed you",
       "headword": "-es",
       "romanization": "-es",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4e5e6451e8c3552b",
+      "sourceHash": "fnv1a64:543a0d0bdfa4707e",
       "notice": null,
       "blocks": [
         {

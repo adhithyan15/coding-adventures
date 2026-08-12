@@ -4,11 +4,11 @@
   "chapter": 134,
   "title": "Black, White, Red, and Blue",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:1d3277c53b1ec15c",
+  "sourceHash": "fnv1a64:e5c88621cbf84e26",
   "lessons": [
     {
       "id": "ES-C22-negro-blanco",
-      "sequence": 1610,
+      "sequence": 1620,
       "title": "negro, blanco — two colours, and one of their histories",
       "headword": "negro, blanco",
       "romanization": "negro, blanco",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f1e31daa96135504",
+      "sourceHash": "fnv1a64:1fe10798bba4c0e3",
       "notice": null,
       "blocks": [
         {
@@ -130,7 +130,7 @@
     },
     {
       "id": "ES-C22-blanco-germanico",
-      "sequence": 1620,
+      "sequence": 1630,
       "title": "blanco — the colour Spanish did not inherit",
       "headword": "blanco ← *blank",
       "romanization": "blanco ← *blank",
@@ -141,7 +141,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2606d4b694298265",
+      "sourceHash": "fnv1a64:230ded9096ffd64e",
       "notice": null,
       "blocks": [
         {
@@ -283,7 +283,7 @@
     },
     {
       "id": "ES-C22-rojo",
-      "sequence": 1630,
+      "sequence": 1640,
       "title": "rojo — the same family as red, by a different branch",
       "headword": "rojo",
       "romanization": "rojo",
@@ -294,7 +294,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4edc5d8b9576634a",
+      "sourceHash": "fnv1a64:1a9fb3ad47d0579b",
       "notice": null,
       "blocks": [
         {
@@ -394,7 +394,7 @@
     },
     {
       "id": "ES-C22-azul",
-      "sequence": 1640,
+      "sequence": 1650,
       "title": "azul — a stone from Afghanistan, in your everyday vocabulary",
       "headword": "azul",
       "romanization": "azul",
@@ -405,7 +405,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:361d5adeddc053c2",
+      "sourceHash": "fnv1a64:c1502fba59c2c59f",
       "notice": null,
       "blocks": [
         {

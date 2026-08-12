@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C39-jugar
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 2100
+sequence: 2110
 chapter: 165
 type: word
 headword: jugar

@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C36-oir
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1960
+sequence: 1970
 chapter: 160
 type: word
 headword: oír

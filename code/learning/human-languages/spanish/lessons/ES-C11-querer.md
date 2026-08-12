@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C11-querer
 spine_node: SPINE-SAY-WHAT-I-WANT
-sequence: 1050
-chapter: 62
+sequence: 1060
+chapter: 64
 type: word
 headword: querer
 gloss: to want — with the singular present forms quiero, quieres, and quiere

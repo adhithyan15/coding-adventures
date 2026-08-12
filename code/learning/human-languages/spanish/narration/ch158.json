@@ -4,11 +4,11 @@
   "chapter": 158,
   "title": "Gustar — the Verb Built the Other Way Round",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:eb01b583980d3606",
+  "sourceHash": "fnv1a64:d1331020f3dc8c68",
   "lessons": [
     {
       "id": "ES-C35-gustar",
-      "sequence": 1950,
+      "sequence": 1960,
       "title": "gustar — the verb that runs backwards",
       "headword": "gustar",
       "romanization": "gustar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fc1bc71fb334f0da",
+      "sourceHash": "fnv1a64:d9e7b80a55633005",
       "notice": null,
       "blocks": [
         {

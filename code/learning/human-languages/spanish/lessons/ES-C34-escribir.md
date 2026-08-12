@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C34-escribir
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1910
+sequence: 1920
 chapter: 151
 type: word
 headword: escribir

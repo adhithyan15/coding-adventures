@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C52-se-habla
 spine_node: SPINE-GIVE-REASONS
-sequence: 2186
+sequence: 2196
 chapter: 176
 type: grammar
 headword: se habla español

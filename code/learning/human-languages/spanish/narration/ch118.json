@@ -4,11 +4,11 @@
   "chapter": 118,
   "title": "The Conditional --- Saying What Would Happen",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:5c0455193075c03a",
+  "sourceHash": "fnv1a64:acd3f538c35b7bd1",
   "lessons": [
     {
       "id": "ES-C17-condicional",
-      "sequence": 1422,
+      "sequence": 1432,
       "title": "hablaría — the whole infinitive meets -ía",
       "headword": "hablaría",
       "romanization": "hablaría",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c0ecad895b15df16",
+      "sourceHash": "fnv1a64:a3ddaebab8619723",
       "notice": null,
       "blocks": [
         {
@@ -201,7 +201,7 @@
     },
     {
       "id": "ES-C17-comer-condicional",
-      "sequence": 1426,
+      "sequence": 1436,
       "title": "comería — keep -er before “would”",
       "headword": "comería",
       "romanization": "comería",
@@ -212,7 +212,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:060259378760534e",
+      "sourceHash": "fnv1a64:17d17d86f3eb5275",
       "notice": null,
       "blocks": [
         {
@@ -379,7 +379,7 @@
     },
     {
       "id": "ES-C17-vivir-condicional",
-      "sequence": 1430,
+      "sequence": 1440,
       "title": "viviría — the regular conditional closes its small frame",
       "headword": "viviría",
       "romanization": "viviría",
@@ -390,7 +390,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3e23fbaaecffecd6",
+      "sourceHash": "fnv1a64:b040ef9ef9678c2b",
       "notice": null,
       "blocks": [
         {

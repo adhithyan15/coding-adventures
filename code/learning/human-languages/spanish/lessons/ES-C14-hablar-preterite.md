@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C14-hablar-preterite
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 1290
+sequence: 1300
 chapter: 98
 type: grammar
 headword: hablé

@@ -4,11 +4,11 @@
   "chapter": 177,
   "title": "Se Compran Libros --- The Verb Tells On Itself",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:877655f44fa6502c",
+  "sourceHash": "fnv1a64:73b069699e30f842",
   "lessons": [
     {
       "id": "ES-C52-se-venden",
-      "sequence": 2187,
+      "sequence": 2197,
       "title": "se compran libros — the verb tells on itself",
       "headword": "se compran libros",
       "romanization": "se compran libros",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a5a00cbd1905b316",
+      "sourceHash": "fnv1a64:1a0eacdde331d285",
       "notice": null,
       "blocks": [
         {

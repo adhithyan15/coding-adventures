@@ -4,11 +4,11 @@
   "chapter": 160,
   "title": "Hearing, Sleeping, Walking, Running",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:a66d571e27e4d3ec",
+  "sourceHash": "fnv1a64:6e3d4d59ae8c77dd",
   "lessons": [
     {
       "id": "ES-C36-oir",
-      "sequence": 1960,
+      "sequence": 1970,
       "title": "oír — \"to hear\", and the y that appears from nowhere",
       "headword": "oír",
       "romanization": "oír",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bf8fc432e61ab620",
+      "sourceHash": "fnv1a64:acd836b5c0186b91",
       "notice": null,
       "blocks": [
         {
@@ -189,7 +189,7 @@
     },
     {
       "id": "ES-C36-dormir",
-      "sequence": 1970,
+      "sequence": 1980,
       "title": "dormir — \"to sleep\", and the boot's other vowel",
       "headword": "dormir",
       "romanization": "dormir",
@@ -200,7 +200,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:472fa5ec3e50f399",
+      "sourceHash": "fnv1a64:ec59a426f8c55514",
       "notice": null,
       "blocks": [
         {
@@ -368,7 +368,7 @@
     },
     {
       "id": "ES-C36-caminar",
-      "sequence": 1980,
+      "sequence": 1990,
       "title": "caminar — \"to walk\", from a word Rome borrowed from the Celts",
       "headword": "caminar",
       "romanization": "caminar",
@@ -379,7 +379,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:536af45cee1c49a5",
+      "sourceHash": "fnv1a64:1d4b6fee688a9548",
       "notice": null,
       "blocks": [
         {
@@ -546,7 +546,7 @@
     },
     {
       "id": "ES-C36-correr",
-      "sequence": 1990,
+      "sequence": 2000,
       "title": "correr — \"to run\", and the root that runs through half of English",
       "headword": "correr",
       "romanization": "correr",
@@ -557,7 +557,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f7b6f11af16c6bcc",
+      "sourceHash": "fnv1a64:cd15ee6c51beb639",
       "notice": null,
       "blocks": [
         {

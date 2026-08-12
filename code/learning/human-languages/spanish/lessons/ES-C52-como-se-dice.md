@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C52-como-se-dice
 spine_node: SPINE-GIVE-REASONS
-sequence: 2188
+sequence: 2198
 chapter: 178
 type: phrase
 headword: ¿cómo se dice?

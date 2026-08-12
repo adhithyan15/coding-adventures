@@ -4,11 +4,11 @@
   "chapter": 168,
   "title": "Synthesis --- The Choices English Never Makes You Make",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:d02b1e92babd5b9d",
+  "sourceHash": "fnv1a64:4d15346ba0c7c291",
   "lessons": [
     {
       "id": "ES-C39-sintesis-elegir",
-      "sequence": 2116,
+      "sequence": 2126,
       "title": "Synthesis — the choices English never makes you make",
       "headword": "(synthesis)",
       "romanization": "(synthesis)",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ca99a890e96aa1b6",
+      "sourceHash": "fnv1a64:61eb244b1585eccf",
       "notice": null,
       "blocks": [
         {

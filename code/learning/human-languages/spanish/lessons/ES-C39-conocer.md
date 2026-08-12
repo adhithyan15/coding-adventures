@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C39-conocer
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 2110
+sequence: 2120
 chapter: 166
 type: word
 headword: conocer

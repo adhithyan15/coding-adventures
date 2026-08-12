@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C20-perdon
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1580
+sequence: 1590
 chapter: 132
 type: phrase
 headword: perdón

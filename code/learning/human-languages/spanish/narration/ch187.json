@@ -4,11 +4,11 @@
   "chapter": 187,
   "title": "Ha + Y --- The Fossil in a Three-Letter Word",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6be7c13ab55dbf8e",
+  "sourceHash": "fnv1a64:0ea094915f29c04f",
   "lessons": [
     {
       "id": "ES-C54-ha-mas-y",
-      "sequence": 2197,
+      "sequence": 2207,
       "title": "ha + y — the fossil in a three-letter word",
       "headword": "ha + y",
       "romanization": "ha + y",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:323d1ed787f1b0e4",
+      "sourceHash": "fnv1a64:22d65adc8a8f0384",
       "notice": {
         "modality": "sight",
         "needs": [

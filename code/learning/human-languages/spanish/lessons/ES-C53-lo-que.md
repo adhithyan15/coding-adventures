@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C53-lo-que
 spine_node: SPINE-GIVE-REASONS
-sequence: 2193
+sequence: 2203
 chapter: 183
 type: grammar
 headword: lo que

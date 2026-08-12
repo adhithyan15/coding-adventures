@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C36-correr
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1990
+sequence: 2000
 chapter: 160
 type: word
 headword: correr

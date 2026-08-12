@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C17-futuro
 spine_node: SPINE-TALK-ABOUT-FUTURE
-sequence: 1410
+sequence: 1420
 chapter: 117
 type: grammar
 headword: hablaré

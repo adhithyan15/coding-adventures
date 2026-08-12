@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 57,
-  "title": "Cansado --- a State, Not a Quality",
+  "title": "El Libro --- And a Word Made of Tree Bark",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:443a6a0ef4e84110",
+  "sourceHash": "fnv1a64:fad2c3ae6985e398",
   "lessons": [
     {
-      "id": "ES-C09-cansado",
-      "sequence": 1010,
-      "title": "cansado",
-      "headword": "cansado",
-      "romanization": "cansado",
-      "gloss": "tired — a state, not a quality, which is why it takes estar and never ser",
+      "id": "ES-C43-libro",
+      "sequence": 1004,
+      "title": "el libro — \"book\"",
+      "headword": "el libro",
+      "romanization": "el libro",
+      "gloss": "book — named after the part of a tree people wrote on before paper",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:81f955c4caef0524",
+      "sourceHash": "fnv1a64:a7af0b750a679827",
       "notice": null,
       "blocks": [
         {
@@ -35,85 +35,77 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"a big house.\" (Una casa grande.) That is what the house is."
-            },
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Now for something that is only true today."
+              "text": "Say \"the house.\" (La casa.) Why la and not el? (Casa is feminine.) Here is one that goes the other way."
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "cansado — tired."
-            },
-            {
-              "kind": "speech",
-              "text": "Cansado comes from cansar, to tire, and behind that is Latin campsāre: to turn aside off the road. The tiredness is what made you turn off."
-            },
-            {
-              "kind": "speech",
-              "text": "And your decoder cannot help you here. There is no English cousin to find — no cansate, no campsation. English took its word for this from an entirely different place."
-            },
-            {
-              "kind": "speech",
-              "text": "That is worth meeting on purpose. The rules you built are a lead, not a guarantee, and a word that gives nothing back is not a failure of the method. It is simply one of the words you learn the ordinary way."
+              "text": "r-tap — a single flick of the tongue: LEE-broh. One tap, not a roll."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: the state, not the quality",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "Estoy cansado. — not soy cansado."
+              "text": "el libro — the book."
             },
             {
               "kind": "speech",
-              "text": "You learned two verbs for to be. Here is the first describing word that shows you why:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "",
-                ""
-              ],
-              "columns": 2,
-              "rowCount": 2,
-              "utterances": [
-                "Estoy cansado., I am tired — today.",
-                "Es grande., It is big — that is what it is."
-              ]
+              "text": "Latin liber did not mean \"book.\" It meant the inner bark of a tree — the thin, pale layer just under the rough outside, which is what Romans wrote on before they had anything better."
             },
             {
               "kind": "speech",
-              "text": "Ser is for what a thing is. Estar is for how it is right now. Being tired is a state you are passing through, so it takes estar, always."
+              "text": "So the word travelled the way these words usually do: from the material, to the thing made of it, to the thing itself long after the material is gone. Nobody has written on bark for two thousand years, and the word has not noticed."
             },
             {
               "kind": "speech",
-              "text": "And unlike grande, this one does shift, because it ends in -o:"
+              "text": "English took the same root and kept it in the places books live:"
             },
             {
               "kind": "speech",
-              "text": "Estoy cansado., Estoy cansada."
+              "text": "library — and French livre, Italian libro."
+            },
+            {
+              "kind": "speech",
+              "text": "libretto — Italian for \"little book,\" the words of an opera."
+            },
+            {
+              "kind": "speech",
+              "text": "English's own word went the same route from a different tree: book is related to beech, whose bark the Germanic peoples wrote on. Two languages, two trees, the same idea."
             }
           ]
         },
         {
           "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: a masculine noun to sit beside the feminine one",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Libro ends in -o and is masculine, so it takes el."
+            },
+            {
+              "kind": "speech",
+              "text": "el libro — the book. Tengo un libro. — I have a book. la casa — the house. Tengo una casa. — I have a house."
+            },
+            {
+              "kind": "speech",
+              "text": "Two nouns, one of each gender, side by side. That pairing is worth more than either noun alone: from here on, when something in Spanish depends on gender, you have a plain example of both to test it against."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -126,107 +118,95 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "Estoy cansado",
+              "instruction": "\"el libro\" — one tap on the r",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *Estoy cansado*]"
+              "source": "[YOU SAY: \"el libro\" — one tap on the *r*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "La casa es grande, pero estoy cansado",
+              "instruction": "\"Tengo un libro\" then \"Tengo una casa\" — hear the article follow the noun",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *La casa es grande, pero estoy cansado*]"
-            },
-            {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
+              "source": "[YOU SAY: \"Tengo un libro\" then \"Tengo una casa\" — hear the article follow the noun]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C09-cansado-say",
-              "prompt": "Say: I am tired.",
+              "id": "ES-C43-libro-article",
+              "prompt": "Say the book in Spanish.",
               "assesses": [
-                "ES-LEX-CANSADO",
-                "ES-GRAMMAR-STATE-LOCATION-ESTAR"
+                "ES-LEX-LIBRO",
+                "ES-GRAMMAR-NOUN-GENDER"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "el libro",
+                "libro"
+              ],
+              "feedback": {
+                "correct": "Masculine, so el.",
+                "incorrect": "El libro."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C43-libro-have",
+              "prompt": "Say I have a book.",
+              "assesses": [
+                "ES-GRAMMAR-TENER-PRESENT-SINGULAR",
+                "ES-GRAMMAR-INDEFINITE-ARTICLE-MASCULINE",
+                "ES-LEX-LIBRO"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "estoy cansado",
-                "estoy cansada"
+                "tengo un libro",
+                "yo tengo un libro"
               ],
               "feedback": {
-                "correct": "Estar, because it is a state.",
-                "incorrect": "Estoy cansado — or cansada."
+                "correct": "Tengo un libro.",
+                "incorrect": "Tengo un libro — masculine, so un."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C09-cansado-which",
-              "prompt": "Why estoy and not soy?",
+              "id": "ES-C43-libro-bark",
+              "prompt": "What did Latin liber originally mean?",
               "assesses": [
-                "ES-GRAMMAR-STATE-LOCATION-ESTAR"
+                "ES-ETYMON-LIBER"
               ],
-              "responseSeconds": 14,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "it is a state not a quality",
-                "because being tired is temporary"
+                "the inner bark of a tree",
+                "tree bark",
+                "bark"
               ],
               "feedback": {
-                "correct": "Ser for what it is, estar for how it is now.",
-                "incorrect": "Because tired is a passing state, and estar is for states."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C09-cansado-nocousin",
-              "prompt": "Your decoder finds no English cousin for cansado. What does that mean?",
-              "assesses": [
-                "ES-ETYMON-CAMPSARE"
-              ],
-              "responseSeconds": 16,
-              "acceptedResponses": [
-                "nothing is wrong the rules are a lead not a guarantee",
-                "some words simply give nothing back"
-              ],
-              "feedback": {
-                "correct": "A lead, not a guarantee.",
-                "incorrect": "Nothing is wrong — some words give nothing back, and you learn those the ordinary way."
+                "correct": "The writing surface came first; the book came after.",
+                "incorrect": "The inner bark of a tree — what Romans wrote on."
               }
             }
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
             {
               "kind": "pause",
-              "seconds": 2,
+              "seconds": 3,
               "perItem": false,
-              "source": "[PAUSE 2s]"
+              "source": "[PAUSE 3s]"
             },
             {
               "kind": "speech",
-              "text": "Which verb for tired? (Estar.) Why? (It is a state.)"
-            },
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "And does cansado shift for a woman? (Yes — cansada, because it ends in -o.)"
+              "text": "\"The book\"? (El libro.) \"The house\"? (La casa.) What was liber before it was a book? (Tree bark.) Next: a noun you can build yourself, out of a verb you already have."
             }
           ]
         }

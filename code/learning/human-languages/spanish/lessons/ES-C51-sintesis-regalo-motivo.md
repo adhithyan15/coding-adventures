@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C51-sintesis-regalo-motivo
 spine_node: SPINE-GIVE-REASONS
-sequence: 2185
+sequence: 2195
 chapter: 175
 type: practice-mix
 headword: (synthesis)

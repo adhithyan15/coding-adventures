@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C49-participio
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 1375
+sequence: 1385
 chapter: 111
 type: grammar
 headword: hablado / comido / vivido

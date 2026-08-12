@@ -2,13 +2,13 @@
 schema_version: 2
 id: ES-C47-sintesis-dos-a-la-vez
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 1230
+sequence: 1240
 chapter: 97
 type: practice-mix
 headword: (synthesis)
 gloss: synthesis — a four-turn exchange carried almost entirely by pronouns, and what that does to how it sounds
 concept_tag: ES-SYNTHESIS-DOUBLE-OBJECT
-prerequisites: [ES-C47-repaso-dobles]
+prerequisites: [ES-C47-repaso-dobles, ES-C12-decir, ES-C12-hacer]
 sounds: []
 roots: []
 teaches_cells: []

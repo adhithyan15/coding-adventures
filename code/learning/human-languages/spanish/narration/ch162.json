@@ -4,11 +4,11 @@
   "chapter": 162,
   "title": "Telling What Happened",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:244490b0303b860d",
+  "sourceHash": "fnv1a64:7ebd2ef4f4f9fb3e",
   "lessons": [
     {
       "id": "ES-C38-luego",
-      "sequence": 2040,
+      "sequence": 2050,
       "title": "luego — a word you already have, doing a job you have not seen it do",
       "headword": "luego",
       "romanization": "luego",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:df12665fee5a789a",
+      "sourceHash": "fnv1a64:13d7295e113081bb",
       "notice": null,
       "blocks": [
         {
@@ -172,7 +172,7 @@
     },
     {
       "id": "ES-C38-porque",
-      "sequence": 2050,
+      "sequence": 2060,
       "title": "porque — \"because\", and the reason a sequence turns into a story",
       "headword": "porque",
       "romanization": "porque",
@@ -183,7 +183,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3befe20c43ee090f",
+      "sourceHash": "fnv1a64:1b457455106f0fa8",
       "notice": null,
       "blocks": [
         {
@@ -349,7 +349,7 @@
     },
     {
       "id": "ES-C38-imperfecto",
-      "sequence": 2060,
+      "sequence": 2070,
       "title": "llovía / llovió — the same rain, told two ways",
       "headword": "llovía / llovió",
       "romanization": "llovía / llovió",
@@ -360,7 +360,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1d0b373b282b6e4b",
+      "sourceHash": "fnv1a64:0fb3e4067303b89e",
       "notice": null,
       "blocks": [
         {
@@ -524,7 +524,7 @@
     },
     {
       "id": "ES-C38-contar",
-      "sequence": 2070,
+      "sequence": 2080,
       "title": "contar — to tell a story, which is also to count it up",
       "headword": "contar",
       "romanization": "contar",
@@ -535,7 +535,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b3794147e483414a",
+      "sourceHash": "fnv1a64:d5ff485d9db76fe7",
       "notice": null,
       "blocks": [
         {

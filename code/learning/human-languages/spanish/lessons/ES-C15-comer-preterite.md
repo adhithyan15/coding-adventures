@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C15-comer-preterite
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 1310
+sequence: 1320
 chapter: 99
 type: word
 headword: comí

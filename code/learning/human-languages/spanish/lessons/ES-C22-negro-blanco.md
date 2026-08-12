@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C22-negro-blanco
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 1610
+sequence: 1620
 chapter: 134
 type: word
 headword: negro, blanco

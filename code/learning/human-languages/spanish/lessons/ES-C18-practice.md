@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C18-practice
 spine_node: SPINE-SAY-WHAT-I-WANT
-sequence: 1482
+sequence: 1492
 chapter: 124
 type: practice-mix
 headword: (practice)

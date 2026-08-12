@@ -4,11 +4,11 @@
   "chapter": 135,
   "title": "Parents and Siblings",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:aa5d5c8db2c081ba",
+  "sourceHash": "fnv1a64:87636e0b38320786",
   "lessons": [
     {
       "id": "ES-C23-padre-madre",
-      "sequence": 1650,
+      "sequence": 1660,
       "title": "el padre, la madre — among the oldest words there are",
       "headword": "el padre, la madre",
       "romanization": "el padre, la madre",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:74e97c6ef4e223a3",
+      "sourceHash": "fnv1a64:b97cc940ce73babc",
       "notice": null,
       "blocks": [
         {
@@ -144,7 +144,7 @@
     },
     {
       "id": "ES-C23-hermano-hermana",
-      "sequence": 1660,
+      "sequence": 1670,
       "title": "el hermano, la hermana — brother and sister, from a different word entirely",
       "headword": "el hermano, la hermana",
       "romanization": "el hermano, la hermana",
@@ -155,7 +155,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b4b81b38acd8fd06",
+      "sourceHash": "fnv1a64:309e745d88d88cb3",
       "notice": null,
       "blocks": [
         {
@@ -278,7 +278,7 @@
     },
     {
       "id": "ES-C23-hermano-hache",
-      "sequence": 1670,
+      "sequence": 1680,
       "title": "the h in hermano — a letter that was never spoken",
       "headword": "hermano ← *ermano*",
       "romanization": "hermano ← *ermano*",
@@ -289,7 +289,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:da64d394cf908c00",
+      "sourceHash": "fnv1a64:47f8df6444ddbcd3",
       "notice": null,
       "blocks": [
         {

@@ -4,11 +4,11 @@
   "chapter": 142,
   "title": "Telling Time",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:fc03d72be5af32d4",
+  "sourceHash": "fnv1a64:3b47e492312a9f03",
   "lessons": [
     {
       "id": "ES-C29-la-hora",
-      "sequence": 1760,
+      "sequence": 1770,
       "title": "la hora — Spanish's barely-changed Latin hour",
       "headword": "la hora",
       "romanization": "la hora",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f0013bf3a9341aec",
+      "sourceHash": "fnv1a64:7616de6afa1c144f",
       "notice": null,
       "blocks": [
         {

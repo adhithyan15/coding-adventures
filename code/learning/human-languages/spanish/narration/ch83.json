@@ -4,11 +4,11 @@
   "chapter": 83,
   "title": "Nos --- Us, and the Word Inside -mos",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:539bd4dfba7c449a",
+  "sourceHash": "fnv1a64:6cb2804a9fd793de",
   "lessons": [
     {
       "id": "ES-C45-nos",
-      "sequence": 1216,
+      "sequence": 1226,
       "title": "nos — \"us\"",
       "headword": "nos",
       "romanization": "nos",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5b855c6e8d2a63f3",
+      "sourceHash": "fnv1a64:11c82009b2475054",
       "notice": null,
       "blocks": [
         {

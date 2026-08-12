@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C16-ver-imperfecto
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 1364
+sequence: 1374
 chapter: 104
 type: grammar
 headword: veía

@@ -4,11 +4,11 @@
   "chapter": 163,
   "title": "Traer --- Bringing, and Latin for Dragging",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:b0c285296c6b81b9",
+  "sourceHash": "fnv1a64:5db265645142f53d",
   "lessons": [
     {
       "id": "ES-C39-traer",
-      "sequence": 2080,
+      "sequence": 2090,
       "title": "traer — \"to bring\", and the direction baked into it",
       "headword": "traer",
       "romanization": "traer",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4339db80146decc3",
+      "sourceHash": "fnv1a64:85902ad6d36f0546",
       "notice": null,
       "blocks": [
         {

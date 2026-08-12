@@ -2,13 +2,13 @@
 schema_version: 2
 id: ES-C46-cual-pide
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 1223
+sequence: 1233
 chapter: 90
 type: grammar
 headword: lo tengo / le hablo
 gloss: how to know which pronoun a verb is asking for — one question, asked of the verb rather than memorised per verb
 concept_tag: ES-GRAMMAR-WHICH-OBJECT
-prerequisites: [ES-C46-les]
+prerequisites: [ES-C46-les, ES-C12-decir]
 sounds: []
 roots: []
 teaches_cells: []

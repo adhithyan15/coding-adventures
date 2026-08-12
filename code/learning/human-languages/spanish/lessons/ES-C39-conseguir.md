@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C39-conseguir
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 2090
+sequence: 2100
 chapter: 164
 type: word
 headword: conseguir

@@ -2,13 +2,13 @@
 schema_version: 2
 id: ES-C43-casa
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 1179
-chapter: 70
+sequence: 1000
+chapter: 56
 type: word
 headword: la casa
 gloss: house, home — and a word French wore down so far it stopped looking like a noun
 concept_tag: ES-PLACE-HOUSE
-prerequisites: [ES-C13-sintesis-derivar, ES-C02-una]
+prerequisites: [ES-C09-repaso-ser-estar, ES-C02-una]
 sounds: [s-sound]
 roots: [casa-latin]
 teaches_cells: []

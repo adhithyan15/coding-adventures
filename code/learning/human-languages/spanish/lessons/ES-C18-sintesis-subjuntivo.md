@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C18-sintesis-subjuntivo
 spine_node: SPINE-SAY-WHAT-I-WANT
-sequence: 1486
+sequence: 1496
 chapter: 125
 type: practice-mix
 headword: (synthesis)

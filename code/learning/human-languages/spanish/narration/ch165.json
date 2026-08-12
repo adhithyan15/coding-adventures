@@ -4,11 +4,11 @@
   "chapter": 165,
   "title": "Jugar --- Playing Was Joking",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f2770c577d87c3e7",
+  "sourceHash": "fnv1a64:01616d02affb7e15",
   "lessons": [
     {
       "id": "ES-C39-jugar",
-      "sequence": 2100,
+      "sequence": 2110,
       "title": "jugar — \"to play\", and the only verb of its kind",
       "headword": "jugar",
       "romanization": "jugar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:abc8820bec3c4e9f",
+      "sourceHash": "fnv1a64:d6edd20e03d89414",
       "notice": null,
       "blocks": [
         {

@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C15-hacer-preterite
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 1325
+sequence: 1335
 chapter: 100
 type: grammar
 headword: hice

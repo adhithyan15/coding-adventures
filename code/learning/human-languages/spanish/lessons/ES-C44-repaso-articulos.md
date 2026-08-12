@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C44-repaso-articulos
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 1191
+sequence: 1201
 chapter: 76
 type: practice-mix
 headword: (review)

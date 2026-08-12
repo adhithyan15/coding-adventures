@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C38-porque
 spine_node: SPINE-NARRATE-EVENTS
-sequence: 2050
+sequence: 2060
 chapter: 162
 type: word
 headword: porque

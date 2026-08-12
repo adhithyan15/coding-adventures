@@ -4,11 +4,11 @@
   "chapter": 117,
   "title": "The Future --- Saying What Will Happen",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:58127e077e016ac4",
+  "sourceHash": "fnv1a64:a3a75c6a85f47c3d",
   "lessons": [
     {
       "id": "ES-C17-futuro",
-      "sequence": 1410,
+      "sequence": 1420,
       "title": "hablaré — keep the infinitive, add the future",
       "headword": "hablaré",
       "romanization": "hablaré",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ef5ca5087e57b275",
+      "sourceHash": "fnv1a64:505fe7259ceca31a",
       "notice": null,
       "blocks": [
         {
@@ -204,7 +204,7 @@
     },
     {
       "id": "ES-C17-comer-futuro",
-      "sequence": 1414,
+      "sequence": 1424,
       "title": "comeré — the same endings keep -er",
       "headword": "comeré",
       "romanization": "comeré",
@@ -215,7 +215,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f734ffd5ff1545c8",
+      "sourceHash": "fnv1a64:0cb99d4f65d083ed",
       "notice": null,
       "blocks": [
         {
@@ -395,7 +395,7 @@
     },
     {
       "id": "ES-C17-vivir-futuro",
-      "sequence": 1418,
+      "sequence": 1428,
       "title": "viviré — one future row for three verb families",
       "headword": "viviré",
       "romanization": "viviré",
@@ -406,7 +406,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:42617147eeb12add",
+      "sourceHash": "fnv1a64:e412d975c9b750b8",
       "notice": null,
       "blocks": [
         {

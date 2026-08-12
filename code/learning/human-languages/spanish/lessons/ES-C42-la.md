@@ -2,13 +2,13 @@
 schema_version: 2
 id: ES-C42-la
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 1207
+sequence: 1217
 chapter: 79
 type: word
 headword: la
 gloss: "it" for something feminine — the one word in this pair that never had to change
 concept_tag: ES-PRONOUN-LA
-prerequisites: [ES-C42-lo]
+prerequisites: [ES-C42-lo, ES-C12-hacer]
 sounds: []
 roots: [ille, illa]
 teaches_cells: []

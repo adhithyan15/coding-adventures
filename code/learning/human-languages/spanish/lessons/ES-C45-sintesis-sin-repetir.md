@@ -2,13 +2,13 @@
 schema_version: 2
 id: ES-C45-sintesis-sin-repetir
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 1220
+sequence: 1230
 chapter: 87
 type: practice-mix
 headword: (synthesis)
 gloss: synthesis — a conversation that would collapse without these eight words, and one that shows what they cost
 concept_tag: ES-SYNTHESIS-WITHOUT-REPEATING
-prerequisites: [ES-C45-repaso-ocho, ES-C44-sintesis-mas-de-uno]
+prerequisites: [ES-C45-repaso-ocho, ES-C44-sintesis-mas-de-uno, ES-C12-hacer, ES-C13-plurales-cambio]
 sounds: []
 roots: []
 teaches_cells: []

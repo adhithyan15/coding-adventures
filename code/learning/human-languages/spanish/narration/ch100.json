@@ -4,11 +4,11 @@
   "chapter": 100,
   "title": "The Strong Preterites",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:cd09a6fa98409d68",
+  "sourceHash": "fnv1a64:9ead509601d17adc",
   "lessons": [
     {
       "id": "ES-C15-tener-preterite",
-      "sequence": 1320,
+      "sequence": 1330,
       "title": "tuve — let the strong stem carry the stress",
       "headword": "tuve",
       "romanization": "tuve",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a3fdc2d09d13f5e9",
+      "sourceHash": "fnv1a64:6d4671bc410ebfc4",
       "notice": null,
       "blocks": [
         {
@@ -217,7 +217,7 @@
     },
     {
       "id": "ES-C15-hacer-preterite",
-      "sequence": 1325,
+      "sequence": 1335,
       "title": "hice — the strong pattern with one third-person swerve",
       "headword": "hice",
       "romanization": "hice",
@@ -228,7 +228,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2292773ccfcded8a",
+      "sourceHash": "fnv1a64:68a233b81e4c4fcb",
       "notice": null,
       "blocks": [
         {
@@ -421,7 +421,7 @@
     },
     {
       "id": "ES-C15-preterite-fuertes",
-      "sequence": 1330,
+      "sequence": 1340,
       "title": "estuve — a third known verb joins the strong pattern",
       "headword": "estuve",
       "romanization": "estuve",
@@ -432,7 +432,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:93348d0e3aa294a6",
+      "sourceHash": "fnv1a64:5b0add9e7ae689b1",
       "notice": null,
       "blocks": [
         {

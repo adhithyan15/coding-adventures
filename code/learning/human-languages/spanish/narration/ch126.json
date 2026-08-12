@@ -4,11 +4,11 @@
   "chapter": 126,
   "title": "Habla --- Telling Somebody To Do Something",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:9b43b754e74704ed",
+  "sourceHash": "fnv1a64:0a40b7212fcbabf1",
   "lessons": [
     {
       "id": "ES-C50-habla",
-      "sequence": 1487,
+      "sequence": 1497,
       "title": "habla — telling somebody to do something",
       "headword": "habla · come · vive",
       "romanization": "habla · come · vive",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:7661817566e31407",
+      "sourceHash": "fnv1a64:4042b6ee30ba3586",
       "notice": {
         "modality": "sight",
         "needs": [

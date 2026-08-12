@@ -4,11 +4,11 @@
   "chapter": 170,
   "title": "Saying Why",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:5a15f39e55d7ee1c",
+  "sourceHash": "fnv1a64:33ad0534df7d644d",
   "lessons": [
     {
       "id": "ES-C41-creer",
-      "sequence": 2150,
+      "sequence": 2160,
       "title": "creer — to put your heart somewhere",
       "headword": "creer",
       "romanization": "creer",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c5316ceb3663da5a",
+      "sourceHash": "fnv1a64:e2d7feae1a358d6f",
       "notice": null,
       "blocks": [
         {
@@ -201,7 +201,7 @@
     },
     {
       "id": "ES-C41-asi-que",
-      "sequence": 2160,
+      "sequence": 2170,
       "title": "así que — \"so\", and a word you have been saying since yes",
       "headword": "así que",
       "romanization": "así que",
@@ -212,7 +212,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6431d54c134a4f4c",
+      "sourceHash": "fnv1a64:727adf9ead53e23d",
       "notice": null,
       "blocks": [
         {
@@ -377,7 +377,7 @@
     },
     {
       "id": "ES-C41-deber",
-      "sequence": 2170,
+      "sequence": 2180,
       "title": "deber — to owe, and therefore to ought",
       "headword": "deber",
       "romanization": "deber",
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5fdbce216278e807",
+      "sourceHash": "fnv1a64:f2d3b0446dbda058",
       "notice": null,
       "blocks": [
         {
@@ -575,7 +575,7 @@
     },
     {
       "id": "ES-C41-explicar",
-      "sequence": 2180,
+      "sequence": 2190,
       "title": "explicar — to unfold",
       "headword": "explicar",
       "romanization": "explicar",
@@ -586,7 +586,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6f69c715248bec00",
+      "sourceHash": "fnv1a64:cb49205ae20b113b",
       "notice": null,
       "blocks": [
         {
