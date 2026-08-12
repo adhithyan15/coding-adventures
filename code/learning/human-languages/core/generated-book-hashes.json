@@ -4849,6 +4849,51 @@
       "tex": "spanish/book/chapters/ch162-synthesis-se.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 163,
+      "sourceHash": "fnv1a64:626f94ced3654258",
+      "lessonIds": [
+        "ES-C53-que-relativo"
+      ],
+      "tex": "spanish/book/chapters/ch163-relative-que.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 164,
+      "sourceHash": "fnv1a64:e9aebca498601a6f",
+      "lessonIds": [
+        "ES-C53-que-no-se-cae"
+      ],
+      "tex": "spanish/book/chapters/ch164-relative-obligatory.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 165,
+      "sourceHash": "fnv1a64:006e469ac6636d4b",
+      "lessonIds": [
+        "ES-C53-lo-que"
+      ],
+      "tex": "spanish/book/chapters/ch165-lo-que.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 166,
+      "sourceHash": "fnv1a64:2c0c80b2833b51f8",
+      "lessonIds": [
+        "ES-C53-repaso-que"
+      ],
+      "tex": "spanish/book/chapters/ch166-review-relative.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 167,
+      "sourceHash": "fnv1a64:f26f4e8de59a1139",
+      "lessonIds": [
+        "ES-C53-sintesis-frases-largas"
+      ],
+      "tex": "spanish/book/chapters/ch167-synthesis-relative.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "sourceHash": "fnv1a64:c0940889d5248bc5",

@@ -8716,6 +8716,76 @@
       "jsonHash": "fnv1a64:c6fac3dcb180d453"
     },
     {
+      "language": "spanish",
+      "chapter": 163,
+      "sourceHash": "fnv1a64:02a22a8ae345fd9d",
+      "lessonIds": [
+        "ES-C53-que-relativo"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch163.txt",
+      "json": "spanish/narration/ch163.json",
+      "textHash": "fnv1a64:a7489197012a6e14",
+      "jsonHash": "fnv1a64:37fdd1677bf8ec50"
+    },
+    {
+      "language": "spanish",
+      "chapter": 164,
+      "sourceHash": "fnv1a64:3f62d3154bdc2d6d",
+      "lessonIds": [
+        "ES-C53-que-no-se-cae"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch164.txt",
+      "json": "spanish/narration/ch164.json",
+      "textHash": "fnv1a64:1cd68a8b68ab3704",
+      "jsonHash": "fnv1a64:4f1351be25bb63d1"
+    },
+    {
+      "language": "spanish",
+      "chapter": 165,
+      "sourceHash": "fnv1a64:8daabd666ede9b2d",
+      "lessonIds": [
+        "ES-C53-lo-que"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch165.txt",
+      "json": "spanish/narration/ch165.json",
+      "textHash": "fnv1a64:59d3191d144d1d71",
+      "jsonHash": "fnv1a64:b0fd51bd23b7e76f"
+    },
+    {
+      "language": "spanish",
+      "chapter": 166,
+      "sourceHash": "fnv1a64:d4618f820d8086e0",
+      "lessonIds": [
+        "ES-C53-repaso-que"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "spanish/narration/ch166.txt",
+      "json": "spanish/narration/ch166.json",
+      "textHash": "fnv1a64:da7a0ef13fdb194e",
+      "jsonHash": "fnv1a64:1b1665283f54916c"
+    },
+    {
+      "language": "spanish",
+      "chapter": 167,
+      "sourceHash": "fnv1a64:43a01293933d9ee9",
+      "lessonIds": [
+        "ES-C53-sintesis-frases-largas"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch167.txt",
+      "json": "spanish/narration/ch167.json",
+      "textHash": "fnv1a64:132d658a1a540335",
+      "jsonHash": "fnv1a64:dfe757750a29c5de"
+    },
+    {
       "language": "tamil",
       "chapter": 1,
       "sourceHash": "fnv1a64:4ba983e1f562762e",

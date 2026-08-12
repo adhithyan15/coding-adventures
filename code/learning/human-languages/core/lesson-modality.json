@@ -7,19 +7,19 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:99197ac6eeae0180",
+  "sourceHash": "fnv1a64:aa85d06b2d601186",
   "summary": {
-    "totalLessons": 1814,
-    "voice": 1215,
-    "sight": 530,
+    "totalLessons": 1819,
+    "voice": 1219,
+    "sight": 531,
     "pen": 69,
-    "drivableLessons": 1215,
+    "drivableLessons": 1219,
     "drivablePercent": 67,
     "trackCount": 22,
-    "chapterCount": 635,
-    "drivablePrefixTotal": 1028,
-    "fullyDrivableChapters": 424,
-    "unstartableChapters": 158,
+    "chapterCount": 640,
+    "drivablePrefixTotal": 1032,
+    "fullyDrivableChapters": 428,
+    "unstartableChapters": 159,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
   },
@@ -6754,12 +6754,12 @@
     },
     {
       "language": "spanish",
-      "lessonCount": 308,
-      "voice": 274,
-      "sight": 27,
+      "lessonCount": 313,
+      "voice": 278,
+      "sight": 28,
       "pen": 7,
       "drivablePercent": 89,
-      "drivablePrefixTotal": 261,
+      "drivablePrefixTotal": 265,
       "modalities": [
         "voice",
         "sight",
@@ -9446,6 +9446,84 @@
           "drivable": true,
           "drivableLessonIds": [
             "ES-C52-sintesis-el-letrero"
+          ]
+        },
+        {
+          "chapter": 163,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C53-que-relativo"
+          ]
+        },
+        {
+          "chapter": 164,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C53-que-no-se-cae"
+          ]
+        },
+        {
+          "chapter": 165,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C53-lo-que"
+          ]
+        },
+        {
+          "chapter": 166,
+          "lessonCount": 1,
+          "voice": 0,
+          "sight": 1,
+          "pen": 0,
+          "modalities": [
+            "sight"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "ES-C53-repaso-que",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 167,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C53-sintesis-frases-largas"
           ]
         }
       ]
@@ -40188,6 +40266,96 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:763301449fcacb8d"
+    },
+    {
+      "id": "ES-C53-que-relativo",
+      "language": "spanish",
+      "chapter": 163,
+      "sequence": 2091,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:7b2fa4d3f78e60b5"
+    },
+    {
+      "id": "ES-C53-que-no-se-cae",
+      "language": "spanish",
+      "chapter": 164,
+      "sequence": 2092,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:162e43685fbded4d"
+    },
+    {
+      "id": "ES-C53-lo-que",
+      "language": "spanish",
+      "chapter": 165,
+      "sequence": 2093,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:09e3f697ef23e533"
+    },
+    {
+      "id": "ES-C53-repaso-que",
+      "language": "spanish",
+      "chapter": 166,
+      "sequence": 2094,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "sight-cue"
+      ],
+      "coreModality": "sight",
+      "coreReasons": [
+        "sight-cue"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:86dd89a44e6d7949"
+    },
+    {
+      "id": "ES-C53-sintesis-frases-largas",
+      "language": "spanish",
+      "chapter": 167,
+      "sequence": 2095,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:23f6fa64a8c79efe"
     },
     {
       "id": "TA-C01-vanakkam",

@@ -10,6 +10,11 @@
   three pen lifts, and the inside-before-close rule.
 - Reduce Chinese's remaining verified-ductus inventory to 18 entries.
 
+### Changed — Spanish runs 1..167 (HL-C105)
+
+- Re-pin the Spanish book-hash table for the five relative-clause chapters
+  appended at 163.
+
 ### Added — cited Chinese 子 ductus (HL-C09CD)
 
 - Render **子** in five source-aligned frames: cross the top and turn down-left,
