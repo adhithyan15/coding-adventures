@@ -1444,6 +1444,59 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: chineseCharacterSource("不"),
   },
+  // 名 completes 夕 before 口. The second 夕 stroke joins its horizontal to the
+  // long down-left fall, and 口 joins its top to the right side: six strokes,
+  // five lifts, and eight visible movements on the Noto Sans SC fit.
+  [ductusKey("chinese", "名")]: {
+    script: "chinese",
+    glyph: "名",
+    strokes: [
+      { segments: [{ label: "draw 夕's upper left-falling stroke", path: [
+        { x: 445, y: 820 }, { x: 420, y: 775 }, { x: 385, y: 730 },
+        { x: 340, y: 685 }, { x: 285, y: 640 }, { x: 225, y: 600 },
+        { x: 165, y: 560 }, { x: 105, y: 525 },
+      ] }] },
+      { segments: [
+        { label: "lift, then draw 夕's horizontal", path: [
+          { x: 350, y: 705 }, { x: 440, y: 705 }, { x: 530, y: 705 },
+          { x: 620, y: 705 }, { x: 710, y: 705 }, { x: 775, y: 705 },
+        ] },
+        { label: "continue down-left without lifting", path: [
+          { x: 775, y: 705 }, { x: 745, y: 650 }, { x: 700, y: 590 },
+          { x: 640, y: 530 }, { x: 570, y: 470 }, { x: 490, y: 415 },
+          { x: 400, y: 360 }, { x: 305, y: 315 }, { x: 205, y: 275 },
+          { x: 110, y: 240 },
+        ] },
+      ] },
+      { segments: [{ label: "lift, then place 夕's inner down-right dot", path: [
+        { x: 300, y: 540 }, { x: 330, y: 515 }, { x: 365, y: 490 },
+        { x: 400, y: 460 }, { x: 435, y: 430 }, { x: 470, y: 400 },
+      ] }] },
+      { segments: [{ label: "lift, then descend 口's left side", path: [
+        { x: 290, y: 305 }, { x: 290, y: 245 }, { x: 290, y: 185 },
+        { x: 290, y: 125 }, { x: 290, y: 65 }, { x: 290, y: 5 },
+        { x: 290, y: -50 },
+      ] }] },
+      { segments: [
+        { label: "lift, then draw 口's top horizontal", path: [
+          { x: 300, y: 305 }, { x: 385, y: 305 }, { x: 470, y: 305 },
+          { x: 555, y: 305 }, { x: 640, y: 305 }, { x: 725, y: 305 },
+          { x: 810, y: 305 },
+        ] },
+        { label: "turn down the right side without lifting", path: [
+          { x: 810, y: 305 }, { x: 810, y: 245 }, { x: 810, y: 185 },
+          { x: 810, y: 125 }, { x: 810, y: 65 }, { x: 810, y: 5 },
+          { x: 810, y: -50 },
+        ] },
+      ] },
+      { segments: [{ label: "lift, then close 口 with the bottom horizontal", path: [
+        { x: 300, y: 5 }, { x: 385, y: 5 }, { x: 470, y: 5 },
+        { x: 555, y: 5 }, { x: 640, y: 5 }, { x: 725, y: 5 },
+        { x: 800, y: 5 },
+      ] }] },
+    ],
+    source: chineseCharacterSource("名"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the
