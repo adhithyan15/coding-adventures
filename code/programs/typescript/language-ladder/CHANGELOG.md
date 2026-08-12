@@ -2,6 +2,13 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Fixed — the bundle staleness guard no longer trips on book builds
+
+- Count only files the bundler can import when deciding whether `dist/` is stale.
+  A local LaTeX run rewrites `.log`, `.aux` and `.pdf` under the corpus tree, which
+  left the guard permanently tripped — teaching the exact habit it exists to prevent.
+- Re-pin the Spanish chapter table from the generated manifest: 181 chapters.
+
 ### Added — cited Chinese 是 ductus (HL-C09CL)
 
 - Render **是** in ten source-aligned movements across nine strokes.

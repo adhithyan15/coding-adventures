@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C44-plural-es
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 1109
-chapter: 63
+sequence: 1129
+chapter: 66
 type: grammar
 headword: -es
 gloss: the plural ending for words that end in a consonant — a rule you have been using since you learned ustedes

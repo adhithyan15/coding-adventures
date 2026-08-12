@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 77,
-  "title": "Les --- And What the Second System Costs",
+  "title": "Review --- All Eight",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:2e8df170131200d8",
+  "sourceHash": "fnv1a64:473557b203a0a44a",
   "lessons": [
     {
-      "id": "ES-C46-les",
-      "sequence": 1142,
-      "title": "les — \"to them,\" and what this system really costs",
-      "headword": "les",
-      "romanization": "les",
-      "gloss": "\"to them\" — and the discovery that a whole second system costs exactly two new words",
+      "id": "ES-C45-repaso-ocho",
+      "sequence": 1159,
+      "title": "Review — all eight",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "review — the direct object pronouns, complete, and the two questions that pick any one of them",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d349bdcff858f29d",
+      "sourceHash": "fnv1a64:96eea0cc238f7dbf",
       "notice": null,
       "blocks": [
         {
@@ -35,71 +35,69 @@
             },
             {
               "kind": "speech",
-              "text": "Lo became los. So what does le become? Say it before you read on."
+              "text": "Nothing new here. Before the grid: where does an object pronoun sit, and has that ever changed?"
             }
           ]
         },
         {
           "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: right again, and then something better",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "les — to them, to you all."
-            },
-            {
-              "kind": "speech",
-              "text": "Le digo. — I tell him. becomes Les digo. — I tell them."
-            },
-            {
-              "kind": "speech",
-              "text": "Add -s. That is the second time an object pronoun has pluralised without argument, and it will not be the last."
-            },
-            {
-              "kind": "speech",
-              "text": "Now the part worth the chapter. You have just met the sixth and last indirect object pronoun — and you have only ever been taught two of them."
-            }
-          ]
-        },
-        {
-          "index": 2,
           "type": "notice",
           "title": "What you've built",
           "segments": [
             {
               "kind": "speech",
-              "text": "Here are the two sets, side by side:"
+              "text": "Never, in nine chapters. Here is the complete set:"
             },
             {
               "kind": "table",
               "headers": [
                 "",
-                "direct (what)",
-                "indirect (to whom)"
+                "singular",
+                "plural"
               ],
               "columns": 3,
-              "rowCount": 6,
+              "rowCount": 4,
               "utterances": [
-                "me. direct (what): me. indirect (to whom): me.",
-                "you. direct (what): te. indirect (to whom): te.",
-                "him / her / you. direct (what): lo, la. indirect (to whom): le.",
-                "us. direct (what): nos. indirect (to whom): nos.",
-                "you all (Spain). direct (what): os. indirect (to whom): os.",
-                "them / you all. direct (what): los, las. indirect (to whom): les."
+                "me. singular: me. plural: nos.",
+                "you. singular: te. plural: os (Spain).",
+                "it / them — masculine. singular: lo. plural: los.",
+                "it / them — feminine. singular: la. plural: las."
               ]
             },
             {
               "kind": "speech",
-              "text": "Look down the two columns. Four of the six rows are identical. Me, te, nos and os do not change at all — the same word does both jobs, and Spanish never asks you to choose."
+              "text": "Eight cells, built one at a time, and this is the first page on which they have all appeared together. That is deliberate. A grid handed to you on the day you met the first one would have been eight things to memorise; here it is a picture of ground you already hold."
             },
             {
               "kind": "speech",
-              "text": "So a \"whole second system\" turns out to cost exactly two new words: le and les. Everything else you already owned, and you owned it before you knew there were two systems to own it in."
+              "text": "Count the genuinely new shapes you had to learn across those chapters: me was already yours from chapter four, te was one, nos one, os one, lo one, la one — and los and las were free, because you produced them yourself from an -s."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: two questions",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Reading the grid as eight decisions is the hard way. It is two:"
             },
             {
               "kind": "speech",
-              "text": "This is worth holding onto beyond this chapter. A grammar book will show you two complete tables and it will look like twelve things. Count what is actually different and it is two."
+              "text": "Who is on the receiving end — me, you, or something else?"
+            },
+            {
+              "kind": "speech",
+              "text": "How many, and if it is a thing, which gender?"
+            },
+            {
+              "kind": "speech",
+              "text": "The second question only bites in the bottom two rows, because only there does a noun decide. Me, te, nos and os are settled by the conversation itself: you always know who is talking."
+            },
+            {
+              "kind": "speech",
+              "text": "So the difficulty is not eight-eighths of this table. It is one quarter of it."
             }
           ]
         },
@@ -117,77 +115,88 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"le digo\" then \"les digo\"",
+              "instruction": "the eight in grid order, twice",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"le digo\" then \"les digo\"]"
+              "source": "[YOU SAY: the eight in grid order, twice]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"me, te, nos, os\" and note that this list is finished for both systems at once",
+              "instruction": "\"me quieres, te quiero, nos quieren, os quiero\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"me, te, nos, os\" and note that this list is finished for both systems at once]"
+              "source": "[YOU SAY: \"me quieres, te quiero, nos quieren, os quiero\"]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "Until the grid is a reflex rather than a lookup."
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C46-les-say",
-              "prompt": "Say I tell them.",
-              "assesses": [
-                "ES-GRAMMAR-INDIRECT-OBJECT-PLURAL",
-                "ES-GRAMMAR-DECIR-PRESENT-SINGULAR"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "les digo",
-                "yo les digo"
-              ],
-              "feedback": {
-                "correct": "Les digo.",
-                "incorrect": "Les digo — le plus -s."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C46-les-count",
-              "prompt": "How many genuinely new words does the indirect set add?",
-              "assesses": [
-                "ES-GRAMMAR-OBJECT-SETS-OVERLAP"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "two",
-                "2",
-                "le and les"
-              ],
-              "feedback": {
-                "correct": "Two: le and les. The other four you already had.",
-                "incorrect": "Two — le and les."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C46-les-same",
-              "prompt": "Which four pronouns are identical in both sets?",
+              "id": "ES-C45-repaso-ocho-all",
+              "prompt": "Give all eight direct object pronouns.",
               "assesses": [
                 "ES-GRAMMAR-ME-DIRECT-OBJECT",
+                "ES-GRAMMAR-TE-DIRECT-OBJECT",
                 "ES-GRAMMAR-NOS-DIRECT-OBJECT",
-                "ES-GRAMMAR-OBJECT-SETS-OVERLAP"
+                "ES-GRAMMAR-OS-DIRECT-OBJECT"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "me, te, lo, la, nos, os, los, las",
+                "me te lo la nos os los las"
+              ],
+              "feedback": {
+                "correct": "Eight, each earned separately.",
+                "incorrect": "me, te, lo, la, nos, os, los, las."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C45-repaso-ocho-quarter",
+              "prompt": "Which four of the eight need you to know a noun's gender?",
+              "assesses": [
+                "ES-GRAMMAR-DIRECT-OBJECT-LO",
+                "ES-GRAMMAR-DIRECT-OBJECT-LA",
+                "ES-GRAMMAR-DIRECT-OBJECT-PLURAL"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "me, te, nos, os",
-                "me te nos os"
+                "lo, la, los, las",
+                "lo la los las",
+                "the bottom two rows"
               ],
               "feedback": {
-                "correct": "One word, both jobs, no choice to make.",
-                "incorrect": "me, te, nos and os."
+                "correct": "One quarter of the grid carries all of the difficulty.",
+                "incorrect": "lo, la, los and las. The rest are settled by who is speaking."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C45-repaso-ocho-free",
+              "prompt": "Which two of the eight did you never have to be taught?",
+              "assesses": [
+                "ES-GRAMMAR-DIRECT-OBJECT-PLURAL"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "los and las",
+                "los, las"
+              ],
+              "feedback": {
+                "correct": "You made them yourself with an -s.",
+                "incorrect": "Los and las — the plural of lo and la, and nothing more."
               }
             }
           ]
@@ -205,7 +214,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"I tell them\"? (Les digo.) How many new words did the whole indirect system cost you? (Two.) Next: how to know which of the two a verb is asking for."
+              "text": "How many direct object pronouns are there? (Eight.) How many of them depend on a noun? (Four.) Next: what all eight are for, in a conversation that would be unbearable without them."
             }
           ]
         }

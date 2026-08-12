@@ -1,43 +1,38 @@
-Spanish, chapter 168: Synthesis --- Reading the Window.
+Spanish, chapter 168: Se Compran Libros --- The Verb Tells On Itself.
 1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-Synthesis — reading the window.
+se compran libros — the verb tells on itself.
 
 Warm-up.
 [pause 2 seconds]
-Almost nobody will say se habla español to you. It will be written, on a window, and you will be walking past it.
+Se habla español — one thing, singular verb. Now guess what happens with more than one thing.
 
-The exchange.
-Four things on four windows, in one street:
-SE HABLA ESPAÑOL SE COMPRAN LIBROS AQUÍ SE COME BIEN SE PROHÍBE FUMAR.
-Three you can read completely. The fourth has words you have never met — and you can still read its shape: something is forbidden, by nobody in particular.
-That is what this rung buys. Not producing these sentences, but reading them off the world, and knowing the missing person is missing on purpose.
-And for the two unknown words, you already have the tool:
-¿Cómo se dice "fumar", por favor?
-Which is itself the same construction, asked out loud.
+Grammar Lens: it agrees, and that is strange.
+Se compra el libro. — The book is bought. Se compran libros. — Books are bought.
+The verb changed. Compra for one book, compran for several — the verb is agreeing with the thing being bought.
+Stop and notice how odd that is. In se habla español there is nobody doing the speaking, so what is the verb agreeing with? If this were simply "one buys books," the verb would stay singular, because one is one person. It does not stay singular.
+The thing is behaving like the subject. And that is the clue to where this construction came from.
 
-Grammar Lens: what it means that nobody is named.
-A sentence with nobody in it is not just vague — it is doing something with the vagueness. Se prohíbe fumar does not say who forbids it, and that is what gives a sign its authority: nobody is claiming anything, so there is nobody to argue with. English does the same when a report says mistakes were made.
-So when you meet a se with no doer, ask who is being left out. Sometimes the answer is interesting.
+The word, taken apart.
+Read se compran libros with the se meaning what it meant in se llama:
+Books buy themselves.
+That is nonsense as a description of the world, and it is exactly the sentence Spanish is using. The reflexive was stretched: first the door closes itself (true enough of doors), then the books sell themselves, and finally any verb at all with the doer quietly dropped.
+Once you see that, the agreement stops being strange. Libros is the subject of se compran in the same way él is the subject of se llama. The verb has been agreeing with its subject all along; it is just that the subject is a thing, and the thing is not really doing anything.
+So this se is the reflexive se — grown, not borrowed. Unlike the se of se lo digo, which only looks like it.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: the four signs aloud as if walking past them]
+[your turn — say: "Se compra el libro" then "Se compran libros" — hear the verb follow the thing]
 [pause 8 seconds for the answer]
-[your turn — say: "¿Cómo se dice, por favor?" — the way out of any of them]
-[pause 8 seconds for the answer]
-[repeat that twice]
 [question — say your answer, then pause 10 seconds]
-What does the sign SE COMPRAN LIBROS tell you?
+Say books are bought.
 [question — say your answer, then pause 10 seconds]
-A sign has a word you do not know. Ask somebody, politely.
-[question — say your answer, then pause 10 seconds]
-Say the food is good here, the way a sign would.
-[question — say your answer, then pause 14 seconds]
-Why does leaving the person out give a sign its authority?
+What is the verb agreeing with in se compran libros?
+[question — say your answer, then pause 12 seconds]
+Read se compran libros as if se still meant themselves. What does it say?
 
 Wrap-up Recall.
 [pause 3 seconds]
-Where does this grammar mostly live? (Written on things.) What does the missing person buy a sign? (Authority — nobody to argue with.) And what do you say when a sign has a word you do not have? (¿Cómo se dice, por favor?)
+Why does the verb go plural? (Because it agrees with the thing.) And why does it agree with the thing? (Because underneath, the thing is doing it to itself.) Next: the one you will use every day.

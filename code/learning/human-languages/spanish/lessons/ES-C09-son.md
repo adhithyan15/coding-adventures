@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C09-son
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 934
-chapter: 46
+sequence: 954
+chapter: 49
 type: grammar
 headword: son
 gloss: "they are," and "ustedes are" — the most common verb form in Spanish

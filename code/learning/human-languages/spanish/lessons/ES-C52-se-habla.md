@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C52-se-habla
 spine_node: SPINE-GIVE-REASONS
-sequence: 2106
-chapter: 164
+sequence: 2126
+chapter: 167
 type: grammar
 headword: se habla español
 gloss: how Spanish says something happens without saying who does it — the sign in every shop window

@@ -2,25 +2,32 @@
   "version": 1,
   "language": "spanish",
   "chapter": 100,
-  "title": "He Hablado --- A Verb With No Meaning Left",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:26ec3538748318cf",
+  "title": "Review --- One Question, Three Answers",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:857a4402ddb5a081",
   "lessons": [
     {
-      "id": "ES-C49-he-hablado",
-      "sequence": 1296,
-      "title": "he hablado — \"I have spoken\"",
-      "headword": "he hablado",
-      "romanization": "he hablado",
-      "gloss": "\"I have spoken\" — and haber, a verb that gave away its meaning and kept only a job",
+      "id": "ES-C48-repaso-dos-pasados",
+      "sequence": 1313,
+      "title": "Review — one question, three answers",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "review — one question, asked of every past sentence, and the three answers it can have",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "sight-cue"
       ],
-      "sourceHash": "fnv1a64:cf639fa8920e456c",
-      "notice": null,
+      "sourceHash": "fnv1a64:c057f1ec500646f0",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -35,69 +42,74 @@
             },
             {
               "kind": "speech",
-              "text": "You have hablado, and it cannot stand alone — it names no person and no time. It needs a word in front of it. Here is that word."
+              "text": "Nothing new. Before the table: do the two past tenses differ in when?"
             }
           ]
         },
         {
           "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
+          "type": "notice",
+          "title": "What you've built",
           "segments": [
             {
               "kind": "speech",
-              "text": "silent-h — the h in he is silent, as every Spanish h is. It is one sound: eh."
+              "text": "Three chapters, one question, three ways it gets answered."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "what you are doing",
+                "tense",
+                "example"
+              ],
+              "columns": 3,
+              "rowCount": 4,
+              "utterances": [
+                "what you are doing: reporting an event, with edges. tense: preterite. example: hablé — I spoke.",
+                "what you are doing: setting a scene, no edges. tense: imperfect. example: hablaba — I was speaking.",
+                "what you are doing: naming a state. tense: imperfect. example: tenía — I had.",
+                "what you are doing: naming the moment a state began. tense: preterite. example: tuve — I got."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Rows one and two are the same event seen from two places. Rows three and four are not: there the tense changes what happened."
             }
           ]
         },
         {
           "index": 2,
           "type": "grammar",
-          "title": "Grammar Lens: the emptied verb",
+          "title": "Grammar Lens: the question to actually ask",
           "segments": [
             {
               "kind": "speech",
-              "text": "he + participle — I have done something."
+              "text": "Not \"which tense is this?\" — that has no answer without you."
             },
             {
               "kind": "speech",
-              "text": "He hablado español. — I have spoken Spanish."
+              "text": "Am I telling you what happened, or what things were like?"
             },
             {
               "kind": "speech",
-              "text": "Two words, and the work is split cleanly between them. He carries the person and the tense. Hablado carries the meaning. Neither does the other's job, and that division is why the participle never had to agree with anybody."
+              "text": "What happened has edges: preterite. What things were like does not: imperfect. A story is mostly the second with the first dropped into it, which is what cuando let you build:"
             },
             {
               "kind": "speech",
-              "text": "He is a form of haber — and here is the thing worth the chapter: haber does not mean anything here. It is not \"I hold spoken.\" You cannot translate it on its own. It is a word whose entire remaining purpose is to hold a participle in place."
+              "text": "Estudiaba cuando habló Ana."
+            },
+            {
+              "kind": "speech",
+              "text": "And when the verb names a state rather than an action, the same question still works — you are simply more likely to be describing what things were like, so the imperfect is the ordinary case and the preterite is the special one."
+            },
+            {
+              "kind": "speech",
+              "text": "There is no list to memorise here, and that is deliberate. Lists of \"preterite trigger words\" exist in most courses and they fail exactly where the choice is interesting, because the same word can sit in either sentence. The question does not fail, because the question is the thing the language is actually asking."
             }
           ]
         },
         {
           "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Haber comes from Latin habēre, \"to hold, to have\" — a completely ordinary verb with a completely ordinary meaning."
-            },
-            {
-              "kind": "speech",
-              "text": "Then Spanish did something drastic. It handed the meaning to tener (which had been the narrower \"hold, grip\"), and kept haber for this one grammatical job. The verb was hollowed out: the meaning left, the machinery stayed."
-            },
-            {
-              "kind": "speech",
-              "text": "English did exactly the same thing to have, and you never noticed. When you say I have eaten, nobody is holding anything. Two languages, independently, took their word for \"hold\" and wore it down into a tense marker — because the step from I have a thing that is done to I have done a thing is a very short one, and everybody takes it eventually."
-            },
-            {
-              "kind": "speech",
-              "text": "So when haber feels meaningless, that is not a gap in your understanding. It is an accurate perception of what happened to the word."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -110,86 +122,92 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"He hablado español\"",
+              "instruction": "\"hablé / hablaba\", then \"tenía / tuve\", and name the difference in each pair",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"He hablado español\"]"
+              "source": "[YOU SAY: \"hablé / hablaba\", then \"tenía / tuve\", and name the difference in each pair]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"I have eaten\" in English, and notice that nothing is being held",
+              "instruction": "the question aloud before each one",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"I have eaten\" in English, and notice that nothing is being held]"
+              "source": "[YOU SAY: the question aloud before each one]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "Until the question arrives before the verb does."
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C49-he-hablado-say",
-              "prompt": "Say I have spoken Spanish.",
+              "id": "ES-C48-repaso-dos-pasados-question",
+              "prompt": "State the one question that chooses the tense.",
               "assesses": [
-                "ES-GRAMMAR-PERFECT-FIRST-PERSON",
-                "ES-LEX-HABLAR",
-                "ES-LEX-ESPANOL"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "he hablado espanol",
-                "he hablado español",
-                "yo he hablado espanol"
-              ],
-              "feedback": {
-                "correct": "He carries the person; hablado carries the meaning.",
-                "incorrect": "He hablado espanol."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C49-he-hablado-mean",
-              "prompt": "What does haber mean in he hablado?",
-              "assesses": [
-                "ES-LEX-HABER",
-                "ES-ETYMON-HABERE"
+                "ES-GRAMMAR-ASPECT-NOT-TIME"
               ],
               "responseSeconds": 12,
               "acceptedResponses": [
-                "nothing on its own",
-                "nothing",
-                "it has no meaning here, only a job"
+                "am i saying what happened or what things were like",
+                "what happened versus what things were like",
+                "does it have edges"
               ],
               "feedback": {
-                "correct": "The meaning left; the machinery stayed.",
-                "incorrect": "Nothing. Its meaning went to tener and it kept only this job."
+                "correct": "Edges, or no edges.",
+                "incorrect": "Am I telling what happened, or what things were like?"
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C49-he-hablado-english",
-              "prompt": "Which English verb was hollowed out the same way?",
+              "id": "ES-C48-repaso-dos-pasados-scene",
+              "prompt": "In estudiaba cuando hablo Ana, which verb is the scene?",
               "assesses": [
-                "ES-ETYMON-HABERE",
-                "ES-LEX-TENER"
+                "ES-GRAMMAR-BACKDROP-AND-EVENT",
+                "ES-LEX-CUANDO"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "have",
-                "to have",
-                "have, as in i have eaten"
+                "estudiaba",
+                "the imperfect one",
+                "estudiaba, the imperfect"
               ],
               "feedback": {
-                "correct": "Nobody holds anything in I have eaten.",
-                "incorrect": "Have — I have eaten holds nothing."
+                "correct": "And hablo is what walked into it.",
+                "incorrect": "Estudiaba — the imperfect sets the room."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C48-repaso-dos-pasados-state",
+              "prompt": "Which two rows of the table are NOT the same event seen twice?",
+              "assesses": [
+                "ES-GRAMMAR-ASPECT-CHANGES-MEANING"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "the state rows, tenia and tuve",
+                "rows three and four",
+                "tenia and tuve"
+              ],
+              "feedback": {
+                "correct": "There the tense changes what happened, not just the view.",
+                "incorrect": "The state rows: tenia is having, tuve is getting."
               }
             }
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -201,7 +219,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"I have spoken\"? (He hablado.) Which word carries the meaning? (Hablado.) And what does haber contribute? (A person and a tense — and no meaning at all.) Next: the rest of it."
+              "text": "The one question? (What happened, or what things were like?) Which pair changes meaning rather than viewpoint? (Tenía and tuve.) Next: a whole small story, which is what all of this was for."
             }
           ]
         }

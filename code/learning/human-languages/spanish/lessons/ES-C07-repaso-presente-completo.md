@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C07-repaso-presente-completo
 spine_node: SPINE-ASK-LOCATION
-sequence: 750
-chapter: 37
+sequence: 770
+chapter: 40
 type: practice-mix
 headword: (review)
 gloss: review — the first complete paradigm in this book, and it took thirty-two chapters

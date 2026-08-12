@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 78,
-  "title": "Which One Is the Verb Asking For?",
+  "title": "Synthesis --- The Conversation Without Them",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:ed4eb9906d9ae52e",
+  "sourceHash": "fnv1a64:52fb70d9c1f0d573",
   "lessons": [
     {
-      "id": "ES-C46-cual-pide",
-      "sequence": 1143,
-      "title": "Which one is the verb asking for?",
-      "headword": "lo tengo / le hablo",
-      "romanization": "lo tengo / le hablo",
-      "gloss": "how to know which pronoun a verb is asking for — one question, asked of the verb rather than memorised per verb",
+      "id": "ES-C45-sintesis-sin-repetir",
+      "sequence": 1160,
+      "title": "Synthesis — the conversation without them",
+      "headword": "(synthesis)",
+      "romanization": "(synthesis)",
+      "gloss": "synthesis — a conversation that would collapse without these eight words, and one that shows what they cost",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c44d0cb1a9f3bf46",
+      "sourceHash": "fnv1a64:ac60b98e97386979",
       "notice": null,
       "blocks": [
         {
@@ -35,61 +35,53 @@
             },
             {
               "kind": "speech",
-              "text": "You have two sets now. The obvious worry is that you will have to learn, verb by verb, which set each one wants. You do not."
+              "text": "¿Tienes los libros? Answer yes without saying libros."
             }
           ]
         },
         {
           "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: ask the verb one question",
+          "type": "input",
+          "title": "The exchange",
           "segments": [
             {
               "kind": "speech",
-              "text": "Does the verb do something to this, or aim something at this?"
+              "text": "Four turns, with the pronouns:"
             },
             {
               "kind": "speech",
-              "text": "That is the whole test."
+              "text": "— ¿Tienes los libros? — Sí, los tengo. — ¿Y las comidas? — Las hago hoy."
             },
             {
               "kind": "speech",
-              "text": "Tengo el libro becomes Lo tengo. The having lands on the book. Direct. Hablo a Ana becomes Le hablo. The speaking is aimed at Ana. Indirect."
+              "text": "Now the same four turns without them:"
             },
             {
               "kind": "speech",
-              "text": "Say the sentence in English with the little word to in front of the person. If it fits, Spanish wants the indirect one:"
+              "text": "— ¿Tienes los libros? — Sí, tengo los libros. — ¿Y las comidas? — Hago las comidas hoy."
             },
             {
               "kind": "speech",
-              "text": "I speak to her becomes le hablo. Fits."
-            },
-            {
-              "kind": "speech",
-              "text": "I have to the book becomes nonsense. So lo tengo."
-            },
-            {
-              "kind": "speech",
-              "text": "English hides this by dropping the to: you say I told him, not I told to him. Put it back, and if it survives, the pronoun is le."
+              "text": "Read the second version aloud, all four lines. It is not wrong anywhere. It is exhausting, and by the fourth line it sounds like somebody being careful with a stranger rather than talking."
             }
           ]
         },
         {
           "index": 2,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way",
+          "type": "grammar",
+          "title": "Grammar Lens: what a pronoun buys, and what it costs",
           "segments": [
             {
               "kind": "speech",
-              "text": "One thing the test will not settle, said now rather than met later as a shock."
+              "text": "The pronoun buys speed, and it is paid for with attention."
             },
             {
               "kind": "speech",
-              "text": "In much of Spain, speakers use le for a male person even where the grammar calls for lo: le veo rather than lo veo. It has a name, leísmo, it is old, it is accepted for people, and roughly a fifth of the Spanish-speaking world does it."
+              "text": "Los tengo is only clear because both of you remember what los points at. If the last three sentences were about meals and you say los tengo, your listener hunts for a masculine thing and finds none. A pronoun is a promise that the thing is still in the room."
             },
             {
               "kind": "speech",
-              "text": "So if you hear le where this chapter predicts lo, neither of you has misunderstood. The test above is right everywhere."
+              "text": "That is the real skill, and it is not on the grid: hold what has been said, and point back at it accurately. English asks the same of you and you have done it since you were three, which is why nobody taught it to you. Here the pointer must also agree in gender and number — which is why lo and la were the hard quarter of that table."
             }
           ]
         },
@@ -107,89 +99,100 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Lo tengo\" then \"Le hablo\" — which question does each answer?",
+              "instruction": "both versions of the four-turn exchange, and hear the second one tire",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Lo tengo\" then \"Le hablo\" — which question does each answer?]"
+              "source": "[YOU SAY: both versions of the four-turn exchange, and hear the second one tire]"
             },
             {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C46-cual-pide-test",
-              "prompt": "State the one-question test in your own words.",
-              "assesses": [
-                "ES-GRAMMAR-WHICH-OBJECT"
-              ],
-              "responseSeconds": 12,
-              "acceptedResponses": [
-                "does the verb act on it or aim at it",
-                "can you put to in front of it in english",
-                "to whom versus what"
-              ],
-              "feedback": {
-                "correct": "Acts on it, or aims at it.",
-                "incorrect": "Ask whether the verb acts ON the thing, or aims something AT the person."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C46-cual-pide-speak",
-              "prompt": "Say I speak to her.",
-              "assesses": [
-                "ES-GRAMMAR-INDIRECT-OBJECT-LE",
-                "ES-LEX-HABLAR",
-                "ES-GRAMMAR-AR-PRESENT-1SG"
-              ],
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"los tengo\" and \"las hago\" until the gender arrives with the noun, not after it",
+              "spoken": true,
+              "scored": false,
               "responseSeconds": 8,
-              "acceptedResponses": [
-                "le hablo",
-                "yo le hablo"
-              ],
-              "feedback": {
-                "correct": "Aimed at her, so le.",
-                "incorrect": "Le hablo — the speaking is aimed at somebody."
-              }
+              "source": "[YOU SAY: \"los tengo\" and \"las hago\" until the gender arrives with the noun, not after it]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C46-cual-pide-have",
-              "prompt": "Say I have it, about the book, and say which set that is.",
+              "id": "ES-C45-sintesis-sin-repetir-books",
+              "prompt": "Answer yes to Tienes los libros, without the noun.",
               "assesses": [
-                "ES-GRAMMAR-DIRECT-OBJECT-LO",
+                "ES-GRAMMAR-DIRECT-OBJECT-PLURAL",
                 "ES-LEX-LIBRO",
                 "ES-GRAMMAR-TENER-PRESENT-SINGULAR"
               ],
-              "responseSeconds": 10,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "lo tengo, direct",
-                "lo tengo"
+                "si, los tengo",
+                "los tengo",
+                "si los tengo"
               ],
               "feedback": {
-                "correct": "The having lands on the book.",
-                "incorrect": "Lo tengo — direct, because the verb acts on the thing."
+                "correct": "Los tengo.",
+                "incorrect": "Si, los tengo."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C46-cual-pide-leismo",
-              "prompt": "Somebody in Madrid says le veo for I see him. Has a rule been broken?",
+              "id": "ES-C45-sintesis-sin-repetir-meals",
+              "prompt": "Answer the question about las comidas, saying you make them.",
               "assesses": [
-                "ES-GRAMMAR-WHICH-OBJECT",
-                "ES-GRAMMAR-INDIRECT-OBJECT-LE"
+                "ES-GRAMMAR-DIRECT-OBJECT-PLURAL",
+                "ES-LEX-COMIDA",
+                "ES-GRAMMAR-HACER-PRESENT-SINGULAR"
               ],
-              "responseSeconds": 12,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "no, it is leismo and it is accepted",
-                "no",
-                "no, that is normal in spain"
+                "las hago",
+                "si, las hago",
+                "las hago hoy"
               ],
               "feedback": {
-                "correct": "Two answers, both somebody's normal.",
-                "incorrect": "No. That is leismo, it is old and accepted for people, and about a fifth of speakers do it."
+                "correct": "Feminine plural, so las.",
+                "incorrect": "Las hago."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C45-sintesis-sin-repetir-us",
+              "prompt": "Say they love us.",
+              "assesses": [
+                "ES-GRAMMAR-NOS-DIRECT-OBJECT",
+                "ES-GRAMMAR-QUERER-PRESENT-PLURAL"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "nos quieren",
+                "ellos nos quieren"
+              ],
+              "feedback": {
+                "correct": "Nos quieren.",
+                "incorrect": "Nos quieren."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C45-sintesis-sin-repetir-cost",
+              "prompt": "You have been talking about meals and you say los tengo. What goes wrong for your listener?",
+              "assesses": [
+                "ES-GRAMMAR-DIRECT-OBJECT-LO",
+                "ES-GRAMMAR-DIRECT-OBJECT-LA"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "they look for a masculine thing and there is not one",
+                "the pronoun points at nothing",
+                "the gender does not match what was said"
+              ],
+              "feedback": {
+                "correct": "A pronoun is a promise that the thing is still in the room.",
+                "incorrect": "Los is masculine, and nothing masculine has been named. The pointer misses."
               }
             }
           ]
@@ -207,7 +210,7 @@
             },
             {
               "kind": "speech",
-              "text": "What one question tells you which set to use? (Does the verb act on it, or aim at it?) What is it called when Spain uses le for a man where the rule says lo? (Leísmo — and it is fine.) Next: both sets in one place."
+              "text": "¿Tienes los libros? (Sí, los tengo.) ¿Y las comidas? (Las hago.) What does a pronoun promise? (That the thing it points at is still in the room.) Next: the past tense."
             }
           ]
         }

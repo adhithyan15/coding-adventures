@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 58,
-  "title": "La Casa --- Your First Everyday Noun",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:3252917a9a695d30",
+  "title": "Review --- Six Verbs, One Ending",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:47ed8b3928ebb841",
   "lessons": [
     {
-      "id": "ES-C43-casa",
-      "sequence": 1099,
-      "title": "la casa — \"house,\" and \"home\"",
-      "headword": "la casa",
-      "romanization": "la casa",
-      "gloss": "house, home — and a word French wore down so far it stopped looking like a noun",
+      "id": "ES-C13-repaso-yo-go",
+      "sequence": 1106,
+      "title": "Review — six verbs, one ending",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "review — the -go club is complete, and it was never a club to begin with",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a1d97dc8f6cf8973",
+      "sourceHash": "fnv1a64:4a28eff2888a3541",
       "notice": null,
       "blocks": [
         {
@@ -35,18 +35,40 @@
             },
             {
               "kind": "speech",
-              "text": "You have spent a long time learning what to do with nouns — their gender, their articles, their agreement. This chapter and the next few hand you some nouns to do it with."
+              "text": "Nothing new in this chapter. Say the yo forms of the three verbs you have just met: poner, salir, venir."
             }
           ]
         },
         {
           "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
+          "type": "notice",
+          "title": "What you've built",
           "segments": [
             {
               "kind": "speech",
-              "text": "s-sound — the s in casa is a plain, unvoiced s. Spanish has no z buzz here: KAH-sah, never KAH-zah."
+              "text": "The set is closed. Six of the commonest verbs in Spanish put an unexpected -go on the yo form and nowhere else:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "verb",
+                "yo",
+                "and the rest behaves"
+              ],
+              "columns": 3,
+              "rowCount": 6,
+              "utterances": [
+                "verb: tener. yo: tengo. and the rest behaves: normally.",
+                "verb: hacer. yo: hago. and the rest behaves: normally.",
+                "verb: decir. yo: digo. and the rest behaves: normally.",
+                "verb: poner. yo: pongo. and the rest behaves: normally.",
+                "verb: salir. yo: salgo. and the rest behaves: normally.",
+                "verb: venir. yo: vengo. and the rest behaves: normally."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Six verbs, one oddity, and it lives in exactly one slot. That is a much smaller thing to carry than \"six irregular verbs.\""
             }
           ]
         },
@@ -57,43 +79,24 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "la casa — the house, and just as often home."
+              "text": "Here is what the six chapters could not show you separately."
             },
             {
               "kind": "speech",
-              "text": "Latin casa meant something humbler than a house: a hut, a cottage, the small shelter a farm worker lived in. The grand Latin word for a proper house was domus — which is where domestic and dome come from. And domus lost. Across the whole west of the Roman world the humble word won and the grand one faded: Spanish casa, Italian casa, Portuguese casa."
+              "text": "They are not a family. Nobody decided these six belonged together. They came from different Latin verbs, by different routes, and arrived at the same ending by accident — a g that was already in some of the stems, and a sound change that pulled the others into line behind them."
             },
             {
               "kind": "speech",
-              "text": "French took the same word somewhere stranger. Casa wore down until it stopped being a noun at all and became the little word chez — so chez moi is, underneath, \"at the house of me.\""
+              "text": "The club is a result, not a rule. Spanish learners are taught \"the -go verbs\" as though someone had drawn up a membership list; what actually happened is that six unrelated words drifted into the same shape and then reinforced each other."
             },
             {
               "kind": "speech",
-              "text": "Italian kept a small one too: casino is casa plus a diminutive ending — literally \"little house.\""
+              "text": "That is worth knowing for a practical reason: it tells you the list is closed. A pattern with a cause keeps recruiting. A pattern that is an accident stops."
             }
           ]
         },
         {
           "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: a feminine noun, behaving exactly as promised",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Casa ends in -a and is feminine, so it takes la. That is the common case, and it is worth having one plain example on hand before you meet the awkward ones."
-            },
-            {
-              "kind": "speech",
-              "text": "la casa — the house. Tengo una casa. — I have a house."
-            },
-            {
-              "kind": "speech",
-              "text": "Nothing new is happening here. That is the point: the machinery has been ready for a long time, and this is the first ordinary thing to run through it."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -106,81 +109,93 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"la casa\" — KAH-sah, a clean s",
+              "instruction": "all six yo forms in one breath — tengo, hago, digo, pongo, salgo, vengo",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"la casa\" — *KAH-sah*, a clean *s*]"
+              "source": "[YOU SAY: all six *yo* forms in one breath — tengo, hago, digo, pongo, salgo, vengo]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Tengo una casa\"",
+              "instruction": "for each, the plain infinitive it came from",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Tengo una casa\"]"
+              "source": "[YOU SAY: for each, the plain infinitive it came from]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "Until the six run together as one list."
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C43-casa-article",
-              "prompt": "Say the house in Spanish.",
+              "id": "ES-C13-repaso-yo-go-count",
+              "prompt": "How many verbs are in the -go set?",
               "assesses": [
-                "ES-LEX-CASA",
-                "ES-GRAMMAR-NOUN-GENDER"
+                "ES-GRAMMAR-YO-GO-CONTRAST-LEARNED"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "la casa",
-                "casa"
+                "six",
+                "6",
+                "seis"
               ],
               "feedback": {
-                "correct": "Feminine, so la.",
-                "incorrect": "La casa — it ends in -a and is feminine."
+                "correct": "Six — and the set is closed.",
+                "incorrect": "Six: tener, hacer, decir, poner, salir, venir."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C43-casa-have",
-              "prompt": "Say I have a house.",
+              "id": "ES-C13-repaso-yo-go-slot",
+              "prompt": "Which slot does the -go appear in?",
               "assesses": [
-                "ES-GRAMMAR-TENER-PRESENT-SINGULAR",
-                "ES-LEX-CASA"
+                "ES-GRAMMAR-PONER-PRESENT-SINGULAR"
               ],
-              "responseSeconds": 10,
+              "responseSeconds": 8,
               "acceptedResponses": [
-                "tengo una casa",
-                "yo tengo una casa"
+                "the yo slot",
+                "yo",
+                "the i form",
+                "first person"
               ],
               "feedback": {
-                "correct": "Yes — and note you needed no new grammar for it.",
-                "incorrect": "Tengo una casa."
+                "correct": "Only the yo slot. Everything else is regular.",
+                "incorrect": "Only the yo slot."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C43-casa-french",
-              "prompt": "Which French word is casa worn all the way down?",
+              "id": "ES-C13-repaso-yo-go-why",
+              "prompt": "Are these six related to each other?",
               "assesses": [
-                "ES-ETYMON-CASA"
+                "ES-HISTORY-YO-GO-CONVERGENCE"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "chez",
-                "chez, as in chez moi"
+                "no, they converged by accident",
+                "no",
+                "they are not a family",
+                "they arrived by different routes"
               ],
               "feedback": {
-                "correct": "Chez moi is literally at the house of me.",
-                "incorrect": "Chez. The noun wore down until it became a preposition."
+                "correct": "Right — which is why the list is closed rather than growing.",
+                "incorrect": "No. They came from different Latin verbs and drifted into the same shape."
               }
             }
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -192,7 +207,297 @@
             },
             {
               "kind": "speech",
-              "text": "What is \"the house\"? (La casa.) What did casa mean in Latin? (A hut — the humble word that outlived the grand one.) Next: a masculine noun whose Latin ancestor was a piece of a tree."
+              "text": "How many verbs take -go? (Six.) In how many slots? (One — the yo form.) And why does the list not grow? (Because it was never a rule — six unrelated verbs happened to converge.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C13-practice",
+      "sequence": 1110,
+      "title": "Practice — putting, leaving, and coming in the singular",
+      "headword": "(practice)",
+      "romanization": "(practice)",
+      "gloss": "singular putting, leaving, and coming, plus the six learned yo forms",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a0fb66d66917411b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "This checkpoint adds nothing. Retrieve the three bounded singular sets first. Only then widen the memory comparison from three learned yo forms to six."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the complete frame for this chapter",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "putting or placing: pongo, pones, pone."
+            },
+            {
+              "kind": "speech",
+              "text": "leaving or going out: salgo, sales, sale."
+            },
+            {
+              "kind": "speech",
+              "text": "coming: vengo, vienes, viene."
+            },
+            {
+              "kind": "speech",
+              "text": "known-word contrast: Salgo de Madrid. Vengo de Madrid."
+            },
+            {
+              "kind": "speech",
+              "text": "known singular comparison: vengo / tengo, vienes / tienes, viene / tiene."
+            },
+            {
+              "kind": "speech",
+              "text": "Now that all three new verbs have been taught, the learned yo comparison can grow to exactly tengo, hago, digo, pongo, salgo, vengo. It remains a retrieval aid, not a rule for predicting any unseen verb."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural persons, full boot diagrams, reflexive clothing expressions, house and table nouns, clock times, dinner vocabulary, and other unseen contexts remain outside this checkpoint."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The words, taken apart — retrieve the history",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "poner continues Latin pōnere, the placing family of position."
+            },
+            {
+              "kind": "speech",
+              "text": "salir continues Latin salīre, the leaping family of salient."
+            },
+            {
+              "kind": "speech",
+              "text": "venir continues Latin venīre, the coming family of convene."
+            },
+            {
+              "kind": "speech",
+              "text": "different inherited histories and analogy let the six known yo forms converge on -go; the shared shape does not make a productive prediction rule."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“pongo, pones, pone”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “pongo, pones, pone”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“salgo, sales, sale”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “salgo, sales, sale”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“vengo, vienes, viene”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “vengo, vienes, viene”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "“tengo, hago, digo, pongo, salgo, vengo”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: “tengo, hago, digo, pongo, salgo, vengo”]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C13-practice-poner-forms",
+              "prompt": "Give the learned singular forms of poner: yo, tú, then usted.",
+              "assesses": [
+                "ES-LEX-PONER",
+                "ES-GRAMMAR-PONER-PRESENT-SINGULAR"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "pongo, pones, pone",
+                "pongo pones pone",
+                "pongo / pones / pone"
+              ],
+              "feedback": {
+                "correct": "Right: pongo, pones, pone.",
+                "incorrect": "Retrieve only the learned singular set: pongo, pones, pone."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C13-practice-salir-forms",
+              "prompt": "Give the learned singular forms of salir: yo, tú, then usted.",
+              "assesses": [
+                "ES-LEX-SALIR",
+                "ES-GRAMMAR-SALIR-PRESENT-SINGULAR"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "salgo, sales, sale",
+                "salgo sales sale",
+                "salgo / sales / sale"
+              ],
+              "feedback": {
+                "correct": "Right: salgo, sales, sale.",
+                "incorrect": "Retrieve only the learned singular set: salgo, sales, sale."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C13-practice-venir-forms",
+              "prompt": "Give the learned singular forms of venir: yo, tú, then usted.",
+              "assesses": [
+                "ES-LEX-VENIR",
+                "ES-GRAMMAR-VENIR-PRESENT-SINGULAR"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "vengo, vienes, viene",
+                "vengo vienes viene",
+                "vengo / vienes / viene"
+              ],
+              "feedback": {
+                "correct": "Right: vengo, vienes, viene.",
+                "incorrect": "Retrieve only the learned singular set: vengo, vienes, viene."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C13-practice-leave-come",
+              "prompt": "Say 'I leave Madrid; I come from Madrid' in Spanish.",
+              "assesses": [
+                "ES-LEX-SALIR",
+                "ES-GRAMMAR-SALIR-PRESENT-SINGULAR",
+                "ES-LEX-VENIR",
+                "ES-GRAMMAR-VENIR-PRESENT-SINGULAR",
+                "ES-LEX-DE"
+              ],
+              "responseSeconds": 11,
+              "acceptedResponses": [
+                "salgo de madrid; vengo de madrid.",
+                "salgo de madrid. vengo de madrid.",
+                "salgo de madrid, vengo de madrid",
+                "salgo de madrid y vengo de madrid"
+              ],
+              "feedback": {
+                "correct": "Right: Salgo de Madrid; vengo de Madrid.",
+                "incorrect": "Contrast the two learned yo forms: salgo for leave, vengo for come."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C13-practice-six-yo-forms",
+              "prompt": "Give the learned yo forms of tener, hacer, decir, poner, salir, and venir, in that order.",
+              "assesses": [
+                "ES-GRAMMAR-YO-GO-CONTRAST-LEARNED",
+                "ES-GRAMMAR-TENER-PRESENT-SINGULAR",
+                "ES-GRAMMAR-HACER-PRESENT-SINGULAR",
+                "ES-GRAMMAR-DECIR-PRESENT-SINGULAR",
+                "ES-GRAMMAR-PONER-PRESENT-SINGULAR",
+                "ES-GRAMMAR-SALIR-PRESENT-SINGULAR",
+                "ES-GRAMMAR-VENIR-PRESENT-SINGULAR"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "tengo, hago, digo, pongo, salgo, vengo",
+                "tengo hago digo pongo salgo vengo",
+                "tengo / hago / digo / pongo / salgo / vengo"
+              ],
+              "feedback": {
+                "correct": "Right: tengo, hago, digo, pongo, salgo, vengo.",
+                "incorrect": "Retrieve only the six learned forms, in order: tengo, hago, digo, pongo, salgo, vengo."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C13-practice-root-families",
+              "prompt": "Match each Spanish verb to one English cousin: poner, salir, venir.",
+              "assesses": [
+                "ES-ETYMON-PONERE",
+                "ES-ETYMON-SALIRE",
+                "ES-ETYMON-VENIRE"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "poner—position; salir—salient; venir—convene",
+                "poner position salir salient venir convene",
+                "poner: position; salir: salient; venir: convene",
+                "position salient convene"
+              ],
+              "feedback": {
+                "correct": "Right: poner—position; salir—salient; venir—convene.",
+                "incorrect": "Use the placing, leaping, and coming families: position, salient, convene."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give all three new singular sets. (Pongo, pones, pone; salgo, sales, sale; vengo, vienes, viene.) Which six learned yo forms now share -go? (Tengo, hago, digo, pongo, salgo, vengo.) Why is the list a memory aid rather than a prediction rule? (Different histories converged on one shape.) The next chapter may now introduce a new time frame without borrowing any plural form from this chapter."
             }
           ]
         }

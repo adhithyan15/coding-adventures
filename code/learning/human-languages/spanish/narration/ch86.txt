@@ -1,133 +1,41 @@
-Spanish, chapter 86: The Preterite --- Your First Past Tense.
-3 lessons. All 3 can be done entirely by ear.
+Spanish, chapter 86: Why Se? --- Gelo, and a Collision.
+1 lesson. All 1 can be done entirely by ear.
 
 
-Lesson 1 of 3.
-fui — one past set shared by ser and ir.
-
-Warm-up.
-[pause 2 seconds]
-You already use ser for identity and ir for going. Spanish now gives both verbs one completed-past set. This lesson keeps the same three singular persons you know: fui, fuiste, fue.
-
-Grammar Lens: three singular forms, two verbs.
-[a table of 3 rows, read aloud]
-person: yo. completed past of ser or ir: fui.
-person: tú. completed past of ser or ir: fuiste.
-person: él / ella / usted. completed past of ser or ir: fue.
-Say fui, fuiste, fue. Each form can belong to either verb. The surrounding words decide which meaning is possible:
-Fui a Madrid. — “I went to Madrid.” The known a plus a destination points to ir.
-Fue Roberto. — “It was Roberto.” Identification points to ser.
-Fui and fue are one-syllable words, so standard Spanish spelling gives them no written accent. Plural forms wait until a later lesson.
-
-The form, taken apart.
-The shared set continues the Latin perfect family of “be,” including Latin fuī, “I have been.” Sound change and analogy reshaped the inherited forms. Spanish ir then came to share this past family with ser: a case of suppletion, where one verb draws forms from more than one historical root. English go / went uses the same broad strategy, although not the same words.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: “fui, fuiste, fue”]
-[pause 8 seconds for the answer]
-[your turn — say: “Fui a Madrid.”]
-[pause 8 seconds for the answer]
-[your turn — say: “Fue Roberto — identification, so ser.”]
-[pause 8 seconds for the answer]
-[question — say your answer, then pause 9 seconds]
-Give the shared singular preterite forms of ser and ir: yo, tú, then él/ella/usted.
-[question — say your answer, then pause 8 seconds]
-Say 'I went to Madrid' in Spanish.
-[question — say your answer, then pause 6 seconds]
-In 'Fue Roberto', which verb does fue express?
-
-Wrap-up Recall.
-[pause 3 seconds]
-Give the three shared forms. (Fui, fuiste, fue.) Which two verbs share them? (Ser and ir.) What decides the meaning? (Context.) What older family supplied the forms? (The Latin perfect family of “be.”) Next, reuse the known verb hablar to build a regular singular past.
-
-
-Lesson 2 of 3.
-hablé — a regular singular past from a known verb.
+Lesson 1 of 1.
+Why se? — and why it is not the se you know.
 
 Warm-up.
 [pause 2 seconds]
-You know hablar and its present singular hablo, hablas, habla. To say that the speaking was completed, keep habl- and learn three new endings: hablé, hablaste, habló.
+You have known a word se since almost the beginning: se llama, "he calls himself." Now you have met a second se, in se lo digo. The obvious conclusion is that they are the same word doing a second job.
+They are not. They are two different words that arrived at the same spelling, and knowing that removes a confusion most learners carry for years.
 
-Grammar Lens: present beside completed past.
-[a table of 3 rows, read aloud]
-person: yo. present: hablo. completed past: hablé.
-person: tú. present: hablas. completed past: hablaste.
-person: él / ella / usted. present: habla. completed past: habló.
-Say hablé, hablaste, habló. This is a complete singular pattern, not a preview of plural forms. Notice the exact changes:
-hablo becomes hablé changes the final vowel and moves stress to the end.
-hablas becomes hablaste adds the past ending -aste.
-habla becomes habló changes the final vowel and moves stress to the end.
+The word, taken apart.
+Old Spanish did not say se lo. It said gelo.
+That came from the two Latin pronouns you already know, run together and worn down: illī (the dative, giving le) plus illum (the accusative, giving lo) becomes gelo. One squeezed word for "to-him it."
+So the medieval sentence was gelo digo, and it was regular. There was no substitution and no rule to learn.
+Then two things happened:
+The word split back into two — gelo was re-analysed as ge + lo, matching the two-pronoun pattern everywhere else in the language.
+The sound ge drifted until it was pronounced exactly like se — and once two words sound identical, spelling follows.
+By the sixteenth century ge lo had become se lo, and the trail was cold.
 
-Grammar Lens: two accents, one natural stress pattern.
-The written accents in hablé and habló show final stress. Without those marks, words ending in a vowel normally stress the next-to-last syllable. Hablaste already follows that ordinary pattern — blas is next to last — so it needs no written accent. The mark records the stress; it is not the only change that makes a form past.
-Now reuse known words:
-Hablé español. — “I spoke Spanish.”
-¿Hablaste español? — “Did you speak Spanish?”
-Habló español. — “He, she, or you-formal spoke Spanish.”
-
-The endings, taken apart.
-The regular -ar past continues material from the Latin first-conjugation perfect, visible in forms such as amāvī, amāvistī, amāvit. Centuries of sound change and analogy produced the Spanish family -é, -aste, -ó. The history explains a family resemblance; it is not one tidy letter-by-letter erosion for every modern ending.
+Why it's said this way.
+This matters for a practical reason, not a historical one.
+The reflexive se in se llama means himself. If the se in se lo digo were that word, the sentence would have to mean something reflexive — and learners who assume it do spend years trying to make "he tells it to himself" fit sentences where it plainly does not.
+It does not fit because it is not that word. One se is Latin sē, "himself"; the other is illī, "to him." Unrelated, and collided by accident of sound.
+Two words wearing one shape is something this language does often — ser is built from two Latin verbs, ir borrows its present from a third. Here it happens to two of the smallest words in Spanish, which is where it is hardest to notice.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: “hablé, hablaste, habló”]
+[your turn — say: "se llama" then "se lo digo" — two different words, one sound]
 [pause 8 seconds for the answer]
-[your turn — say: “Hablo español. Hablé español.”]
-[pause 8 seconds for the answer]
-[your turn — say: “hablé and habló carry written accents; hablaste does not”]
-[pause 8 seconds for the answer]
-[question — say your answer, then pause 10 seconds]
-Give the singular completed-past forms of hablar: yo, tú, then él/ella/usted.
 [question — say your answer, then pause 8 seconds]
-Say 'I spoke Spanish' in Spanish.
-[question — say your answer, then pause 6 seconds]
-Which form means 'I spoke' as a completed event: hablo or hablé?
+What did Old Spanish say instead of se lo?
+[question — say your answer, then pause 12 seconds]
+Is the se of se lo digo the same word as the se of se llama?
+[question — say your answer, then pause 12 seconds]
+Which two Latin pronouns were squeezed together to make gelo?
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give the three learned past forms. (Hablé, hablaste, habló.) Which two carry written accents, and why? (Hablé and habló; the marks show final stress.) What older family lies behind the endings? (The Latin first-conjugation perfect.) Next: choose between the two past patterns using only known words.
-
-
-Lesson 3 of 3.
-Practice — two singular ways to talk about a completed past.
-
-Warm-up.
-[pause 2 seconds]
-This checkpoint adds nothing. Retrieve the shared singular set and the regular hablar set, then use context and spelling to keep them apart.
-
-Grammar Lens: the complete frame for this chapter.
-shared past of ser and ir: fui, fuiste, fue.
-regular past of hablar: hablé, hablaste, habló.
-context: Fui a Madrid expresses ir; Fue Roberto expresses ser.
-time contrast: Hablo español is present; Hablé español is completed past.
-spelling: hablé and habló show final stress with a written accent; hablaste needs none.
-Plural persons, additional past-tense verb classes, new time words, and new place or person vocabulary wait for later lessons.
-
-The two histories, taken apart.
-The fui family continues Latin perfect “be” material and became shared by ser and ir. The regular -ar endings continue Latin first-conjugation perfect material, reshaped by sound change and analogy.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: “fui, fuiste, fue”]
-[pause 8 seconds for the answer]
-[your turn — say: “hablé, hablaste, habló”]
-[pause 8 seconds for the answer]
-[your turn — say: “Fui a Madrid. Fue Roberto.”]
-[pause 8 seconds for the answer]
-[your turn — say: “Hablo español. Hablé español.”]
-[pause 8 seconds for the answer]
-[question — say your answer, then pause 8 seconds]
-Give the three learned forms shared by ser and ir.
-[question — say your answer, then pause 9 seconds]
-Give the three learned completed-past forms of hablar.
-[question — say your answer, then pause 7 seconds]
-Which sentence uses the shared form as ir, 'to go': Fui a Madrid or Fue Roberto?
-[question — say your answer, then pause 10 seconds]
-Give 'I speak Spanish' and then 'I spoke Spanish.'
-[question — say your answer, then pause 7 seconds]
-Which two of hablé, hablaste, habló carry written accents?
-
-Wrap-up Recall.
-[pause 3 seconds]
-Give both singular sets. (Fui, fuiste, fue; hablé, hablaste, habló.) How does context separate ser from ir? (A destination points to going; identification points to being.) Which regular forms carry written accents? (Hablé and habló.) The next chapter can add another past family without borrowing plural forms or unseen vocabulary from this checkpoint.
+What was se lo before it was se lo? (Gelo.) Is it the reflexive se? (No — a different word that came to sound the same.) Next: all of it together.

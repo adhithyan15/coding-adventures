@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C12-yo-go
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1040
-chapter: 51
+sequence: 1060
+chapter: 54
 type: phrase
 headword: tengo · hago · digo
 gloss: comparing the three learned yo forms that end in -go

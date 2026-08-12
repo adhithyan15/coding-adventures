@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 36,
-  "title": "Hablais --- the Form Spain Keeps",
+  "title": "Synthesis --- Asking, and Answering",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:9cb0b508eed7b446",
+  "sourceHash": "fnv1a64:4005b22999aac4f1",
   "lessons": [
     {
-      "id": "ES-C07-hablais",
-      "sequence": 730,
-      "title": "habláis — the form Spain keeps",
-      "headword": "habláis",
-      "romanization": "habláis",
-      "gloss": "\"you all speak\" in Spain — a whole form that half the Spanish world does not use",
+      "id": "ES-C07-sintesis-preguntar",
+      "sequence": 700,
+      "title": "Synthesis — asking, and answering",
+      "headword": "(synthesis)",
+      "romanization": "(synthesis)",
+      "gloss": "synthesis — three verb families and two question words become a conversation",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:453a1201282edae8",
+      "sourceHash": "fnv1a64:d083ebfc3d37d874",
       "notice": null,
       "blocks": [
         {
@@ -35,53 +35,45 @@
             },
             {
               "kind": "speech",
-              "text": "How do you say \"you all speak\" to a group in Mexico? (Ustedes hablan.)"
+              "text": "Nothing new in this chapter. Say \"I eat\" and \"I live.\" (Como. Vivo.)"
             }
           ]
         },
         {
           "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: a second plural you",
+          "type": "notice",
+          "title": "What you've built",
           "segments": [
             {
               "kind": "speech",
-              "text": "In Spain, addressing a group of friends uses a different word and a different verb form:"
+              "text": "Something quietly enormous happened over the last four chapters, and it is worth saying out loud before you use it."
             },
             {
               "kind": "speech",
-              "text": "vosotros habláis — you all speak, informally."
+              "text": "Spanish has three verb families. You now hold the singular of all three. That is not three facts — it is a machine: hand it any regular verb you meet for the rest of your life, and you can already say what you do with it, what a friend does, and what somebody else does."
             },
             {
               "kind": "speech",
-              "text": "vosotros — you all, familiar. Its ending is -áis, and it is the last of the six."
-            },
-            {
-              "kind": "speech",
-              "text": "This is not an ornament. In Spain it is the ordinary, everyday way to speak to more than one friend, and a Spaniard hears ustedes to a group of friends as oddly formal — roughly as an English speaker hears sir from someone they know well."
+              "text": "Two question words turn that machine outward. ¿Qué? asks what. ¿Dónde? asks where. With them, the forms stop being an exercise and start being a conversation."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
+          "type": "input",
+          "title": "The exchange",
           "segments": [
             {
               "kind": "speech",
-              "text": "You met vos long ago: Latin's plural you, which drifted into the singular across much of the Americas."
+              "text": "— ¿Qué bebes? — Bebo café. ¿Y tú? — Yo también. ¿Dónde vives? — Vivo en Madrid."
             },
             {
               "kind": "speech",
-              "text": "That drift left Spain with a problem. If vos was being used for one polite person, what was left for an actual group? Spaniards added a word to disambiguate: vos + otros, \"you others\" — hence vosotros, and its feminine vosotras."
+              "text": "Four lines, and every single word in them is something you built yourself. No new vocabulary was needed to get here — only the endings, one slot at a time."
             },
             {
               "kind": "speech",
-              "text": "The Americas never needed the repair, because ustedes had already taken the plural job. So the split is not a difference of taste. Two regions solved the same problem in two different ways, and both solutions are still in use."
-            },
-            {
-              "kind": "speech",
-              "text": "What you owe this form. Recognition, at minimum — you will meet it in every book, film and song from Spain. Produce it if you are learning for Spain; otherwise ustedes will carry you anywhere."
+              "text": "Notice what the questions cost: nothing. You did not learn a question form. You put ¿qué? or ¿dónde? in front of a verb you already had."
             }
           ]
         },
@@ -98,82 +90,90 @@
             },
             {
               "kind": "prompt",
-              "action": "HEAR",
-              "instruction": "\"habláis\"",
+              "action": "SAY",
+              "instruction": "the exchange above, both parts, without stopping",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU HEAR: \"habláis\"]"
-            },
-            {
-              "kind": "speech",
-              "text": "becomes a Spaniard, talking to friends."
+              "source": "[YOU SAY: the exchange above, both parts, without stopping]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ustedes hablan\" then \"vosotros habláis\" — the same sentence, two continents",
+              "instruction": "it again, swapping in comes for bebes",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ustedes hablan\" then \"vosotros habláis\" — the same sentence, two continents]"
+              "source": "[YOU SAY: it again, swapping in *comes* for *bebes*]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "speech",
+              "text": "Run it until the question and the answer arrive together."
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C07-hablais-form",
-              "prompt": "Which form goes with vosotros?",
+              "id": "ES-C07-sintesis-preguntar-what",
+              "prompt": "Ask a friend what they eat.",
               "assesses": [
-                "ES-GRAMMAR-AR-PRESENT-2PL"
+                "ES-LEX-QUE",
+                "ES-GRAMMAR-ER-PRESENT-SINGULAR"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "que comes",
+                "¿que comes?",
+                "qué comes",
+                "que comes tu"
+              ],
+              "feedback": {
+                "correct": "Yes — the question word, then the tu form.",
+                "incorrect": "Que comes. The question word goes in front of the form you already have."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C07-sintesis-preguntar-where",
+              "prompt": "Ask a friend where they live.",
+              "assesses": [
+                "ES-LEX-DONDE",
+                "ES-GRAMMAR-IR-PRESENT-SINGULAR"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "donde vives",
+                "¿donde vives?",
+                "dónde vives"
+              ],
+              "feedback": {
+                "correct": "Yes.",
+                "incorrect": "Donde vives."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C07-sintesis-preguntar-families",
+              "prompt": "How many verb families do you now hold in the singular?",
+              "assesses": [
+                "ES-GRAMMAR-AR-PRESENT-SINGULAR",
+                "ES-GRAMMAR-IR-PRESENT-SINGULAR"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "hablais",
-                "habláis",
-                "vosotros hablais"
+                "three",
+                "3",
+                "all three"
               ],
               "feedback": {
-                "correct": "Yes — the -ais ending.",
-                "incorrect": "hablais."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C07-hablais-where",
-              "prompt": "You are addressing a group of friends in Argentina. Vosotros or ustedes?",
-              "assesses": [
-                "ES-CULTURE-VOSOTROS-USTEDES-SPLIT",
-                "ES-LEX-USTEDES"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "ustedes",
-                "ustedes hablan"
-              ],
-              "feedback": {
-                "correct": "Right — vosotros is Spain only.",
-                "incorrect": "Ustedes. Vosotros is not used in the Americas."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C07-hablais-why",
-              "prompt": "What two words is vosotros built from?",
-              "assesses": [
-                "ES-LEX-VOSOTROS",
-                "ES-ETYMON-VOS-03"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "vos and otros",
-                "vos otros",
-                "you others"
-              ],
-              "feedback": {
-                "correct": "Yes — you others, added to keep the plural apart from singular vos.",
-                "incorrect": "Vos plus otros, you others."
+                "correct": "All three — and that covers every regular verb.",
+                "incorrect": "Three: -ar, -er and -ir."
               }
             }
           ]
@@ -191,7 +191,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is vosotros built from? (Vos + otros — \"you others\".) Why did Spain need it and the Americas not? (Because vos had drifted singular in the Americas, where ustedes already covered the plural.) Which will carry you anywhere? (Ustedes.)"
+              "text": "How many verb families do you hold? (Three — and that is all of them.) What did the question words cost you? (Nothing — they sit in front of forms you already had.) Ask where somebody lives. (¿Dónde vives?)"
             }
           ]
         }

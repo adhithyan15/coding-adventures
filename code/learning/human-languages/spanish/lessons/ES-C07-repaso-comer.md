@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C07-repaso-comer
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 612
-chapter: 30
+sequence: 632
+chapter: 33
 type: practice-mix
 headword: (review)
 gloss: review — the -er singular, earned one slot at a time

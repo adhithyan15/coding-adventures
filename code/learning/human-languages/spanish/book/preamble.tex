@@ -206,3 +206,16 @@
 % warnings rather than fix the paragraphs, and the CI log scanner would then be
 % reading a muted log.
 \tolerance=2000
+
+% Callout boxes are set ragged right (HL-C88).
+%
+% Every callout runs at a narrower measure than the body, and its content is the
+% densest part of the book: bold Spanish forms, Latin etymons carrying macrons,
+% and arrows between them. None of those hyphenate under English patterns, so a
+% justified line inside a callout has almost nowhere to break and must stretch
+% the few interword spaces it has -- which is precisely an underfull hbox.
+%
+% Ragged right removes the stretch rather than hiding it: the line simply ends
+% where the last word ended. Block callouts set ragged right is ordinary
+% typography, and it is what \chapteropening already does above.
+\tcbset{before upper=\raggedright}

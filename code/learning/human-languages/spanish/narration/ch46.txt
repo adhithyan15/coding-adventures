@@ -1,140 +1,211 @@
-Spanish, chapter 46: Ser in the Plural.
-4 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+Spanish, chapter 46: Numbers, and How Old You Are.
+5 lessons. All 5 can be done entirely by ear.
 
 
-Lesson 1 of 4.
-somos — "we are".
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+Lesson 1 of 5.
+uno, dos, tres, cuatro, cinco — counting to five.
 
 Warm-up.
 [pause 2 seconds]
-Say "I am." (Soy.) And "we speak." (Hablamos.)
+Numbers are among the most reusable words in any language. Spanish keeps them close enough to Latin that English cousins can help you remember them. This lesson asks for only five: uno, dos, tres, cuatro, cinco.
 
-Grammar Lens: the -mos survives even here.
-somos — we are.
-Look at what survived. Ser is the most irregular verb in Spanish — soy, eres, es share almost nothing — and yet the plural still ends in -mos, exactly as hablamos and comemos do.
-That ending is the single most stable thing in the language. Even a verb that has thrown away everything else kept it.
+Sounds you'll need.
+diphthong-ue — cuatro begins KWA-.
+r-tap — give tres and cuatro one light tap, not an English r.
 
-The word, taken apart.
-And here is why ser's forms refuse to resemble each other: it is not one verb. It is two Latin verbs fused into a single paradigm.
-Latin esse, "to be", gave soy and somos — the s- forms, and the rest of that family arrives over the next two lessons.
-Latin sedēre, "to sit", gave ser itself, and the future and conditional.
-So somos and ser are not irregular versions of each other. They are descendants of different words, brought together because Spanish needed one verb where Latin had two.
-English did something very similar. Am, is, are, was, be — no two of those look related, because they are not: they come from three separate Old English verbs. Every language seems to build "to be" out of spare parts.
+The numbers, taken apart.
+[a table of 5 rows, read aloud]
+Spanish: uno (1). Latin source: ūnus. English memory hook: unit, unique.
+Spanish: dos (2). Latin source: duo. English memory hook: duo, dual.
+Spanish: tres (3). Latin source: trēs. English memory hook: trio, triple.
+Spanish: cuatro (4). Latin source: quattuor. English memory hook: quart, quarter.
+Spanish: cinco (5). Latin source: quīnque. English memory hook: quintet, quintuplet.
+The spellings changed, but the family resemblance remains. Cinco and quintet both descend from quīnque; Spanish changed the opening sound while English borrowed a more visibly Latin form.
+
+Grammar Lens: uno becomes un or una.
+When uno stands alone, it means “one.” Before a noun it shortens:
+un before a masculine noun: un café — one coffee / a coffee.
+una before a feminine noun: una noche — one night / a night.
+This shortening is called apocope: the end drops away. Spanish uses the same forms for “one” and “a/an”; context supplies the difference.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "hablamos, comemos, somos" — the same ending, three times]
+[your turn — say: “uno, dos, tres, cuatro, cinco” — once up, once down]
 [pause 8 seconds for the answer]
-[question — say your answer, then pause 8 seconds]
-Say we are.
+[your turn — say: “uno/unit, dos/duo, tres/trio, cuatro/quart, cinco/quintet”]
+[pause 8 seconds for the answer]
+[your turn — say: “un café, una noche” — hear uno shorten]
+[pause 8 seconds for the answer]
 [question — say your answer, then pause 10 seconds]
-Why do ser's forms look so unlike each other?
+Write the Spanish numbers 1 through 5 in order.
+[question — say your answer, then pause 8 seconds]
+Say 'one coffee' in Spanish.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What is "we are"? (Somos.) Which ending did even this verb keep? (-mos.) And why do soy and ser look unrelated? (They are unrelated — two Latin verbs in one paradigm.)
+Give 1–5 in Spanish. (Uno, dos, tres, cuatro, cinco.) Which English word helps you remember cinco? (Quintet, through Latin quīnque.) What happens to uno before a noun? (It becomes un or una.) Next: six through ten.
 
 
-Lesson 2 of 4.
-son — "they are".
+Lesson 2 of 5.
+seis, siete, ocho, nueve, diez — and the calendar's old count.
 
 Warm-up.
 [pause 2 seconds]
-Say "we are." (Somos.) And "they speak." (Hablan.)
+You can count to five. Add one small set and you reach ten: seis, siete, ocho, nueve, diez. Four English month names will help hold the last four in memory.
 
-Grammar Lens: the final -n, again.
-son — they are, and ustedes son, you all are.
-Three letters, and it is one of the two or three commonest words in the whole language. The rule you know holds even here: a final -n means the subject is plural and is not you.
+Sounds you'll need.
+diphthong-ie — siete begins SYE-.
+diphthong-ue — nueve begins NWE-.
+
+The numbers, taken apart.
+[a table of 5 rows, read aloud]
+Spanish: seis (6). Latin source: sex. English memory hook: sextet.
+Spanish: siete (7). Latin source: septem. English memory hook: September, septet.
+Spanish: ocho (8). Latin source: octō. English memory hook: October, octave.
+Spanish: nueve (9). Latin source: novem. English memory hook: November.
+Spanish: diez (10). Latin source: decem. English memory hook: December, decimal.
+Say the chain aloud: siete–September, ocho–October, nueve–November, diez–December. It is a memory path, not a second list to memorize.
+
+Why it's said this way: why September says “seven”.
+The month names preserve an old Roman count in which March was first: September through December occupied positions seven through ten. When January and February stood before March, those names shifted to positions nine through twelve but kept their old numbers.
+One tempting story is wrong: July and August were not new months inserted into the middle. The existing months Quintilis and Sextilis were later renamed for Julius Caesar and Augustus. The calendar moved; the numbered names stayed.
+Numbers above ten belong to a later chapter. For now, stop cleanly at diez.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: count from uno through diez]
+[pause 8 seconds for the answer]
+[your turn — say: “siete/September, ocho/October, nueve/November, diez/December”]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 10 seconds]
+Write the Spanish numbers 6 through 10 in order.
+[question — say your answer, then pause 8 seconds]
+Were July and August inserted into the Roman calendar or were older months renamed?
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give 6–10. (Seis, siete, ocho, nueve, diez.) Why does December carry the old word for ten? (The month names preserve a March-first count.) What happened to Quintilis and Sextilis? (They were renamed July and August.) Next: the verb tener, “to have.”
+
+
+Lesson 3 of 5.
+tener — “to have,” with two visible changes.
+
+Warm-up.
+[pause 2 seconds]
+Regular comer gave you como, comes, come. The common verb tener, “to have,” belongs to the same -er family, but its three singular forms change in two places. Learn only those three today.
+
+Sounds you'll need.
+diphthong-ie — tienes begins TYE-.
+r-tap — one light tap at the end of tener.
 
 The word, taken apart.
-Latin's form was sunt. Spanish dropped the final -t, exactly as it dropped it from hablat to give habla, and sunt became son.
-That is worth noticing because it is the same erosion you have already watched happen twice. Irregular verbs are not exempt from sound change; they are simply verbs where sound change ran on material that had already been strange.
-A word you may already know. English sonata, sonnet and sound have nothing to do with this — they come from Latin sonāre, "to sound". Son the verb and son the noun in English are unrelated to each other and to both. Spanish is full of these collisions, and the way through is always the same: the root, not the spelling.
+tener descends from Latin tenēre, “to hold or keep.” Having is, at root, holding. English borrowed the same root many times:
+tenant, tenure, tenacious — holding land, office, or position.
+contain, retain, maintain, sustain — holding together, back, in hand, or up.
+When you see -tain in English, think of Spanish tener.
+
+Grammar Lens: the three singular forms.
+[a table of 3 rows, read aloud]
+person: yo. regular comer: como. irregular tener: tengo.
+person: tú. regular comer: comes. irregular tener: tienes.
+person: él / ella / usted. regular comer: come. irregular tener: tiene.
+Two small changes do all the work:
+yo adds g: tengo, not teno.
+The other two singular forms change e becomes ie: tienes, tiene.
+Later chapters will expand both patterns. For now, hold only tengo, tienes, tiene — the same three-person frame you already use for regular verbs.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "somos, son" — the two plural forms you now hold]
+[your turn — say: “tener — tengo, tienes, tiene”]
 [pause 8 seconds for the answer]
-[your turn — say: "ustedes son", addressing a group]
+[your turn — say: “tener / tenant / retain” — the shared idea is hold]
 [pause 8 seconds for the answer]
-[question — say your answer, then pause 6 seconds]
-Say they are.
-[question — say your answer, then pause 8 seconds]
-What Latin form is son worn down from?
+[your turn — say: compare “como, comes, come” with “tengo, tienes, tiene”]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 10 seconds]
+Give the yo, tú, and él/ella forms of tener, in that order.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What is "they are"? (Son.) What did Latin's sunt lose? (Its -t, like every other final -t.) Who else does son address? (Ustedes.)
+What did Latin tenēre mean? (“To hold.”) Give the three singular forms. (Tengo, tienes, tiene.) What are the two changes? (g appears in tengo; e becomes ie in tienes/tiene.) Next: use them to ask and answer about age.
 
 
-Lesson 3 of 4.
-sois — the last of the six.
+Lesson 4 of 5.
+¿Cuántos años tienes? — asking age.
 
 Warm-up.
 [pause 2 seconds]
-Say "they are." (Son.) And which region uses vosotros? (Spain.)
+You now have tengo, tienes, tiene and the numbers one through ten. Put them together and you can ask or answer age. Spanish frames age as something you have.
 
-Grammar Lens: one syllable, and the paradigm closes.
-vosotros sois — you all are, in Spain.
-One syllable, and with it the six forms of ser are complete: soy, eres, es, somos, sois, son.
-As before, this is the form you need in order to follow Spain rather than to speak everywhere. In the Americas, ustedes son does the same job.
+The phrase, taken apart.
+¿Cuántos años tienes? “How old are you?” — literally, “How many years do you have?”
+cuántos means “how many.” Latin quantus, “how much,” also gives English quantity, quantum, quantify.
+años means “years.” Latin annus also gives annual and anniversary. Its doubled nn became Spanish ñ, exactly as your script lesson showed.
+tienes is the tú form of tener.
+Keep the marks visible: opening ¿, the accent in cuántos, and the letter ñ in años each carries information.
 
-The word, taken apart.
-Latin had estis. Spanish wore away the e- at the front and the -t- in the middle, and sois is what was left — a word reduced almost to nothing but still doing its whole job.
-That is the pattern with this verb throughout. Ser is short everywhere because it is said constantly, and constant use grinds words down. The commonest verb in a language is almost always its most eroded one.
+Grammar Lens: Spanish “has” years.
+English says “I am ten years old.” Spanish says:
+— ¿Cuántos años tienes? — Tengo diez años.
+The reusable frame is Tengo + number + años. Use a number you already know: Tengo ocho años, Tengo nueve años, Tengo diez años. Larger numbers wait until their own lesson; the grammar does not change.
 
 Guided Practice.
 [pause 1 second]
-[your turn — hear: "sois"]
+[your turn — say: “¿Cuántos años tienes?”]
 [pause 8 seconds for the answer]
-becomes Spain, addressing friends.
-[your turn — say: "ustedes son" then "vosotros sois" — the same sentence, two continents]
+[your turn — say: “Tengo ocho años. Tengo nueve años. Tengo diez años.”]
 [pause 8 seconds for the answer]
-[question — say your answer, then pause 6 seconds]
-Vosotros, from ser.
+[question — say your answer, then pause 9 seconds]
+Ask one friend 'How old are you?' in Spanish.
 [question — say your answer, then pause 8 seconds]
-The same thing in Peru: which form?
+Answer 'I am eight years old' using the Spanish age frame.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What is the vosotros form of ser? (Sois.) What Latin word is it worn from? (Estis.) And why is this verb so short everywhere? (Because it is said constantly, and constant use grinds words down.)
+What does the question literally ask? (“How many years do you have?”) Which verb carries age? (Tener.) How do cuántos and años connect to English? (Quantus becomes quantity; annus becomes annual.) Next: combine counting, tener, and age in one short exchange.
 
 
-Lesson 4 of 4.
-Review — all of ser.
+Lesson 5 of 5.
+Practice — counting, having, and age.
 
 Warm-up.
 [pause 2 seconds]
-Nothing new. Say "we are", then "they are."
+This checkpoint asks for three small moves: count to ten, choose the right singular form of tener, and use the age frame. Everything here has already appeared.
 
-Grammar Lens: the table, and why it looks like that.
-[a table of 6 rows, read aloud]
-who: yo. ser, which gives:: soy.
-who: tú. ser, which gives:: eres.
-who: él, ella, usted. ser, which gives:: es.
-who: nosotros. ser, which gives:: somos.
-who: vosotros. ser, which gives:: sois.
-who: ellos, ustedes. ser, which gives:: son.
-Most books present this as a table to memorise. You have built it a form at a time, and you can now read something off it that memorisation would never give you.
-Five of the six begin with s-. One does not. Eres is the outlier, and it is the outlier because it comes from somewhere else — Latin eris, from esse's own future stem, pulled in to fill a gap. The rest are the s- family: sum, sumus, sunt.
-So the "irregularity" is not chaos. It is a seam between two verbs, and you can see exactly where it runs.
+Grammar Lens: count and conjugate.
+Count: uno, dos, tres, cuatro, cinco, seis, siete, ocho, nueve, diez.
+Change person: tengo, tienes, tiene.
+Remember the roots: quīnque helps with cinco; decem helps with diez; tenēre, “hold,” helps with tener.
+Keep the calendar correction: July and August were renamed, not inserted.
+
+The exchange — use only what you know.
+— Hola. ¿Cómo te llamas? — Me llamo Ana. ¿Cuántos años tienes? — Tengo diez años. ¿Y tú? — Tengo nueve años.
+The exchange reuses the name question you already know, then adds exactly one new capability: age with tener.
+
+What you've built this chapter.
+uno through diez, with Latin and English hooks instead of an isolated list.
+un / una before a noun, where standalone uno shortens.
+tengo, tienes, tiene, the three singular forms of tener.
+¿Cuántos años tienes? — Tengo … años, with quantus/quantity and annus/annual showing where the words came from.
+Numbers above ten and the plural forms of tener remain deliberately deferred.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: all six, top to bottom]
+[your turn — say: count 1–10 up, then down]
 [pause 8 seconds for the answer]
-[your turn — say: the five s- forms, then eres on its own]
+[your turn — say: “tengo, tienes, tiene”]
+[pause 8 seconds for the answer]
+[your turn — say: ask and answer age with a number from 1–10]
 [pause 8 seconds for the answer]
 [repeat that twice]
-[question — say your answer, then pause 6 seconds]
-We are.
-[question — say your answer, then pause 6 seconds]
-They are.
+“¿Cuántos años tienes? — Tengo nueve años.”
+[question — say your answer, then pause 15 seconds]
+Write the Spanish numbers 1 through 10 in order.
 [question — say your answer, then pause 10 seconds]
-Which of the six does not begin with s, and why?
+Give the three learned singular forms of tener: yo, tú, then él/ella.
+[question — say your answer, then pause 8 seconds]
+Answer ¿Cuántos años tienes? with nine years.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give all six forms of ser. (Soy, eres, es, somos, sois, son.) How many begin with s-? (Five.) And why does the sixth not? (It came from a different Latin verb — the seam is visible.)
+Count to ten. Give the three singular forms of tener. Ask “How old are you?” and answer with a number you learned. You can now move from a name exchange into one concrete personal detail. Next: the two Spanish ways to say “to be,” introduced one contrast at a time.

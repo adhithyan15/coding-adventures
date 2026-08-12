@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C09-estais
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 946
-chapter: 47
+sequence: 966
+chapter: 50
 type: grammar
 headword: estáis
 gloss: the vosotros form of estar, and the pattern is now fully predictable

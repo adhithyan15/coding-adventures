@@ -1,46 +1,46 @@
-Spanish, chapter 77: Les --- And What the Second System Costs.
+Spanish, chapter 77: Review --- All Eight.
 1 lesson. All 1 can be done entirely by ear.
 
 
 Lesson 1 of 1.
-les — "to them," and what this system really costs.
+Review — all eight.
 
 Warm-up.
 [pause 2 seconds]
-Lo became los. So what does le become? Say it before you read on.
-
-Grammar Lens: right again, and then something better.
-les — to them, to you all.
-Le digo. — I tell him. becomes Les digo. — I tell them.
-Add -s. That is the second time an object pronoun has pluralised without argument, and it will not be the last.
-Now the part worth the chapter. You have just met the sixth and last indirect object pronoun — and you have only ever been taught two of them.
+Nothing new here. Before the grid: where does an object pronoun sit, and has that ever changed?
 
 What you've built.
-Here are the two sets, side by side:
-[a table of 6 rows, read aloud]
-me. direct (what): me. indirect (to whom): me.
-you. direct (what): te. indirect (to whom): te.
-him / her / you. direct (what): lo, la. indirect (to whom): le.
-us. direct (what): nos. indirect (to whom): nos.
-you all (Spain). direct (what): os. indirect (to whom): os.
-them / you all. direct (what): los, las. indirect (to whom): les.
-Look down the two columns. Four of the six rows are identical. Me, te, nos and os do not change at all — the same word does both jobs, and Spanish never asks you to choose.
-So a "whole second system" turns out to cost exactly two new words: le and les. Everything else you already owned, and you owned it before you knew there were two systems to own it in.
-This is worth holding onto beyond this chapter. A grammar book will show you two complete tables and it will look like twelve things. Count what is actually different and it is two.
+Never, in nine chapters. Here is the complete set:
+[a table of 4 rows, read aloud]
+me. singular: me. plural: nos.
+you. singular: te. plural: os (Spain).
+it / them — masculine. singular: lo. plural: los.
+it / them — feminine. singular: la. plural: las.
+Eight cells, built one at a time, and this is the first page on which they have all appeared together. That is deliberate. A grid handed to you on the day you met the first one would have been eight things to memorise; here it is a picture of ground you already hold.
+Count the genuinely new shapes you had to learn across those chapters: me was already yours from chapter four, te was one, nos one, os one, lo one, la one — and los and las were free, because you produced them yourself from an -s.
+
+Grammar Lens: two questions.
+Reading the grid as eight decisions is the hard way. It is two:
+Who is on the receiving end — me, you, or something else?
+How many, and if it is a thing, which gender?
+The second question only bites in the bottom two rows, because only there does a noun decide. Me, te, nos and os are settled by the conversation itself: you always know who is talking.
+So the difficulty is not eight-eighths of this table. It is one quarter of it.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "le digo" then "les digo"]
+[your turn — say: the eight in grid order, twice]
 [pause 8 seconds for the answer]
-[your turn — say: "me, te, nos, os" and note that this list is finished for both systems at once]
+[your turn — say: "me quieres, te quiero, nos quieren, os quiero"]
 [pause 8 seconds for the answer]
-[question — say your answer, then pause 8 seconds]
-Say I tell them.
-[question — say your answer, then pause 8 seconds]
-How many genuinely new words does the indirect set add?
+[repeat that twice]
+Until the grid is a reflex rather than a lookup.
+[question — say your answer, then pause 12 seconds]
+Give all eight direct object pronouns.
 [question — say your answer, then pause 10 seconds]
-Which four pronouns are identical in both sets?
+Which four of the eight need you to know a noun's gender?
+[question — say your answer, then pause 10 seconds]
+Which two of the eight did you never have to be taught?
 
 Wrap-up Recall.
 [pause 3 seconds]
-"I tell them"? (Les digo.) How many new words did the whole indirect system cost you? (Two.) Next: how to know which of the two a verb is asking for.
+How many direct object pronouns are there? (Eight.) How many of them depend on a noun? (Four.) Next: what all eight are for, in a conversation that would be unbearable without them.

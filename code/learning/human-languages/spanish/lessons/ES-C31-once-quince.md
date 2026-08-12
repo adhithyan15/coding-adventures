@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C31-once-quince
 spine_node: SPINE-COUNT-ONE-TO-FIVE
-sequence: 1720
-chapter: 132
+sequence: 1740
+chapter: 135
 type: word
 headword: once — quince
 gloss: 11-15 — five single opaque words, each one a Latin compound worn down until the seam disappeared

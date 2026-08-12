@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C44-sintesis-mas-de-uno
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 1113
-chapter: 65
+sequence: 1133
+chapter: 68
 type: practice-mix
 headword: (synthesis)
 gloss: synthesis — talking about more than one, and the article that disappears instead of pluralising

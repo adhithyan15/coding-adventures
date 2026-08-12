@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 130,
-  "title": "Telling Time",
+  "title": "La Bebo --- The Pronoun Tells the Truth",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:691df2fbf475ad34",
+  "sourceHash": "fnv1a64:ee3c617ffb3327e5",
   "lessons": [
     {
-      "id": "ES-C29-la-hora",
-      "sequence": 1680,
-      "title": "la hora — Spanish's barely-changed Latin hour",
-      "headword": "la hora",
-      "romanization": "la hora",
-      "gloss": "hour / o'clock — telling the time, and a word Spanish inherited almost unchanged from Latin",
+      "id": "ES-C55-la-bebo",
+      "sequence": 1675,
+      "title": "la bebo — the pronoun tells the truth",
+      "headword": "la bebo",
+      "romanization": "la bebo",
+      "gloss": "the pronoun as a witness — el agua takes el, and la bebo proves the word was feminine all along",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8f1dfa0bd012ec9c",
+      "sourceHash": "fnv1a64:7c634a2971d3f42a",
       "notice": null,
       "blocks": [
         {
@@ -35,58 +35,39 @@
             },
             {
               "kind": "speech",
-              "text": "You've now seen this Latin word take three different paths: French wore it down to heure, German borrowed it centuries later as Uhr. Spanish's path is the simplest of all — it barely changed."
+              "text": "Which article does agua take? (El.) And what gender is agua really? (Feminine — the article is a sound rule, not a gender.)"
             }
           ]
         },
         {
           "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart: hora",
+          "type": "grammar",
+          "title": "Grammar Lens: a third witness",
           "segments": [
             {
               "kind": "speech",
-              "text": "hora from Latin hōra from Greek hṓrā, \"a season, a time of day\" (the Greek goddesses of the seasons were the Hōrai). Spanish kept the word almost exactly as Latin had it — just a silent h in spelling, a fossil of a Latin h that was already weak and barely pronounced by the time Spanish inherited the word (the same non-story as French heure or English hour's silent h). Be careful not to confuse this with hijo and hacer's silent h — those come from a completely different, later Spanish sound change (Latin f- becomes Old Spanish aspirated h- becomes eventual silence), not from an already-weak Latin h the way hora's is. Two different roads to the same \"silent letter\" result. Compare its cousins: French wore hōra down further to heure; German didn't inherit the word at all, but borrowed it later as Uhr; English took the same Latin hōra and made hour."
+              "text": "When you met el agua you were given two proofs that the word is feminine underneath: the adjective it takes and the plural it forms. Here is a third, and it costs you nothing new."
             },
             {
-              "kind": "table",
-              "headers": [
-                "language",
-                "word",
-                "what happened"
-              ],
-              "columns": 3,
-              "rowCount": 4,
-              "utterances": [
-                "language: Spanish. word: hora. what happened: inherited almost unchanged, just a silent h.",
-                "language: French. word: heure. what happened: inherited, but worn down further.",
-                "language: German. word: Uhr. what happened: not inherited — borrowed later, separately.",
-                "language: English. word: hour. what happened: inherited via French, silent h."
-              ]
+              "kind": "speech",
+              "text": "Bebo el agua. — I drink the water. La bebo. — I drink it."
+            },
+            {
+              "kind": "speech",
+              "text": "Not lo bebo. La bebo."
+            },
+            {
+              "kind": "speech",
+              "text": "The article had to say el for a reason that has nothing to do with gender — two a sounds colliding. The pronoun is under no such pressure. Nothing sits in front of it, no vowels collide, so it reports the gender straight."
+            },
+            {
+              "kind": "speech",
+              "text": "This is worth more than one word. When an article looks suspicious, the object pronoun is a witness that cannot be leaned on. You now have a test you can run yourself, rather than a list to trust."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: Son las and telling time",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Spanish uses ser (\"to be\") plus the feminine plural article (agreeing with the unspoken horas) to tell time — and famously switches number for \"one\":"
-            },
-            {
-              "kind": "speech",
-              "text": "Es la una. — \"It is one o'clock.\" (singular — la una, \"the one\") Son las dos. — \"It is two o'clock.\" (plural — las dos, \"the two\") Son las diez. — \"It is ten o'clock.\""
-            },
-            {
-              "kind": "speech",
-              "text": "Literally \"it is the one\" / \"they are the two/ten\" — the hour count itself is implied by the article and number, without needing to say hora(s) at all in everyday speech (unlike French's il est deux heures, which spells out \"hours\" every time)."
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -99,34 +80,84 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"hora\" — silent h, a fossil of an already-weak Latin h",
+              "instruction": "\"el agua\" then \"la bebo\" — until the clash stops feeling like an error",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"hora\" — silent h, a fossil of an already-weak Latin h]"
+              "source": "[YOU SAY: \"el agua\" then \"la bebo\" — until the clash stops feeling like an error]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Es la una. Son las dos. Son las diez.\"",
+              "instruction": "\"lo bebo\" then \"la bebo\", and notice which one is about water",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Es la una. Son las dos. Son las diez.\"]"
+              "source": "[YOU SAY: \"lo bebo\" then \"la bebo\", and notice which one is about water]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"hora / heure / hour\" — one Latin root, three different fates",
-              "spoken": true,
-              "scored": false,
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C55-la-bebo-drink",
+              "prompt": "Say I drink it, about el agua.",
+              "assesses": [
+                "ES-GRAMMAR-DIRECT-OBJECT-LA",
+                "ES-LEX-BEBER",
+                "ES-GRAMMAR-ER-PRESENT-SINGULAR"
+              ],
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"hora / heure / hour\" — one Latin root, three different fates]"
+              "acceptedResponses": [
+                "la bebo",
+                "yo la bebo"
+              ],
+              "feedback": {
+                "correct": "La bebo — the pronoun does not pretend.",
+                "incorrect": "La bebo. The article says el for a sound reason; the pronoun says la for a gender reason."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C55-la-bebo-why",
+              "prompt": "Why can the pronoun show a gender the article hides?",
+              "assesses": [
+                "ES-GRAMMAR-PRONOUN-REVEALS-GENDER",
+                "ES-GRAMMAR-AGUA-ARTICLE-03"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "nothing collides in front of the pronoun",
+                "the article changes for sound, the pronoun does not",
+                "there are no two a sounds meeting"
+              ],
+              "feedback": {
+                "correct": "The swap was phonological, and it only ever applied to the article.",
+                "incorrect": "The el swap avoids two a sounds meeting. A pronoun is not in front of the noun, so nothing pushes on it."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C55-la-bebo-test",
+              "prompt": "You meet a new noun and cannot tell its gender from its article. What can you listen for?",
+              "assesses": [
+                "ES-GRAMMAR-PRONOUN-REVEALS-GENDER"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "which object pronoun a speaker uses for it",
+                "whether they say lo or la",
+                "the pronoun"
+              ],
+              "feedback": {
+                "correct": "That is a test you can run for the rest of your life.",
+                "incorrect": "Listen for lo or la. The pronoun reports the gender without interference."
+              }
             }
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -138,7 +169,7 @@
             },
             {
               "kind": "speech",
-              "text": "What Latin (and Greek) word is hora from? (hōra from Greek hṓrā.) How did Spanish's path differ from French's and German's? (Spanish inherited it almost unchanged; French wore it down further to heure; German didn't inherit it at all and borrowed Uhr separately, much later.) How do you say \"it is one o'clock\" vs. \"it is two o'clock\"? (Es la una — singular; Son las dos — plural.)"
+              "text": "El agua — which pronoun replaces it? (La.) And why does that not contradict the article? (The article changed for sound, not gender.)"
             }
           ]
         }

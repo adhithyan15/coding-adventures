@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 76,
-  "title": "Le --- To Him, To Her, To You",
+  "title": "Os --- You All, in Spain",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f1f028ce3657bd24",
+  "sourceHash": "fnv1a64:283123697191056f",
   "lessons": [
     {
-      "id": "ES-C46-le",
-      "sequence": 1141,
-      "title": "le — \"to him,\" \"to her,\" \"to you\"",
-      "headword": "le",
-      "romanization": "le",
-      "gloss": "\"to him, to her, to you\" — a Latin case Spanish kept and English threw away",
+      "id": "ES-C45-os",
+      "sequence": 1158,
+      "title": "os — \"you all,\" in Spain",
+      "headword": "os",
+      "romanization": "os",
+      "gloss": "\"you all\" as the object — the shortest word in the set, and the one that stops at a border",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e7db10a1e5c4fbdc",
+      "sourceHash": "fnv1a64:2ba836cc335a30c6",
       "notice": null,
       "blocks": [
         {
@@ -35,42 +35,38 @@
             },
             {
               "kind": "speech",
-              "text": "Lo and la answer the question what. This chapter answers a different one: to whom."
+              "text": "Which word for \"you all\" is used in Spain, and which everywhere else? (Vosotros in Spain; ustedes everywhere.) That split is about to appear one last time."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: the other question",
+          "title": "Grammar Lens: the object form of vosotros",
           "segments": [
             {
               "kind": "speech",
-              "text": "le — to him, to her, to you (with usted)."
+              "text": "os — you all, as the one it happens to."
             },
             {
               "kind": "speech",
-              "text": "Le digo. — I tell him. Or her. Or you."
+              "text": "Os quiero. — I love you all."
             },
             {
               "kind": "speech",
-              "text": "Some verbs land on a thing: you have it, you make it, you want it. Others land on a person you are aiming at — you tell them, you speak to them, you give them something. Spanish uses a different pronoun for the second kind, and le is it."
+              "text": "Two letters, the shortest word in the set. It pairs with vosotros, so it lives exactly where vosotros lives: Spain, and nowhere else in daily speech."
             },
             {
               "kind": "speech",
-              "text": "Same slot. Still in front of the verb. Nothing about the shape of a sentence has changed in eleven chapters."
+              "text": "Across the Atlantic, \"you all\" as an object is los or las — the same forms you learned last chapter, because ustedes is grammatically a they-word:"
             },
             {
               "kind": "speech",
-              "text": "And here is the relief: le does not mark gender."
+              "text": "Os quiero. — I love you all. (Spain) Los quiero. — I love you all. (everywhere else)."
             },
             {
               "kind": "speech",
-              "text": "Le digo. — I tell him. and I tell her. and I tell you."
-            },
-            {
-              "kind": "speech",
-              "text": "After four chapters of choosing between lo and la by the gender of a noun, this one asks you for nothing. One form covers three people. If you need to say which, you add it in words — but the pronoun itself does not care."
+              "text": "Neither is a mistake for the other. Several hundred million speakers will never say os in their lives, and forty million say it every day."
             }
           ]
         },
@@ -81,27 +77,15 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Lo and le are the same Latin word again — and this time the difference is not wear, it is grammar."
+              "text": "Os was vos, and the v simply fell off in the object slot — a word this small, said this often, and never stressed, wears faster than the rest of the language."
             },
             {
               "kind": "speech",
-              "text": "Latin changed a word's ending to show its job in the sentence. Ille, \"that one,\" had one form for the thing an action hit and another for the person it was aimed at:"
+              "text": "That same vos is still visible in two places you have met. It is the front of vosotros (vos + otros, \"you others,\" built exactly like nosotros). And it survives whole as a subject pronoun in Argentina and much of Central America, where vos replaces tú."
             },
             {
               "kind": "speech",
-              "text": "illum — the one the verb acts on becomes Spanish lo."
-            },
-            {
-              "kind": "speech",
-              "text": "illī — the one it is aimed at becomes Spanish le."
-            },
-            {
-              "kind": "speech",
-              "text": "Latin called these the accusative and the dative. Almost all of that system collapsed on the way to Spanish; nouns lost their endings entirely. But in these small, constantly-used pronouns, two of the cases survived, and you are looking at them."
-            },
-            {
-              "kind": "speech",
-              "text": "English had the same distinction and lost it more completely. It survives in a word order rather than a shape: I told him the story — him is doing exactly what le does, and English simply stopped marking it."
+              "text": "So one Latin word left three descendants alive in three different conditions: worn to os in Spain, glued into vosotros in Spain, and standing intact as vos across the Río de la Plata. Same word, three fates, decided by geography."
             }
           ]
         },
@@ -119,79 +103,78 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Lo tengo\" then \"Le digo\" — what, then to whom",
+              "instruction": "\"Os quiero\" then \"Los quiero\" — the same sentence, two continents",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Lo tengo\" then \"Le digo\" — what, then to whom]"
+              "source": "[YOU SAY: \"Os quiero\" then \"Los quiero\" — the same sentence, two continents]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Le digo\" three times, meaning him, then her, then usted",
+              "instruction": "\"vos\", \"os\", \"vosotros\" and hear one word in three states",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Le digo\" three times, meaning him, then her, then usted]"
+              "source": "[YOU SAY: \"vos\", \"os\", \"vosotros\" and hear one word in three states]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C46-le-say",
-              "prompt": "Say I tell him.",
+              "id": "ES-C45-os-say",
+              "prompt": "Say I love you all, as a speaker in Spain would.",
               "assesses": [
-                "ES-GRAMMAR-INDIRECT-OBJECT-LE",
-                "ES-LEX-LE-OBJECT",
-                "ES-GRAMMAR-DECIR-PRESENT-SINGULAR"
+                "ES-GRAMMAR-OS-DIRECT-OBJECT",
+                "ES-LEX-OS-OBJECT"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "le digo",
-                "yo le digo"
+                "os quiero",
+                "yo os quiero"
               ],
               "feedback": {
-                "correct": "And the same two words mean I tell her.",
-                "incorrect": "Le digo."
+                "correct": "Os quiero.",
+                "incorrect": "Os quiero — the object partner of vosotros."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C46-le-gender",
-              "prompt": "How many genders does le have?",
+              "id": "ES-C45-os-other",
+              "prompt": "Say the same thing the way most of the Spanish-speaking world would.",
               "assesses": [
-                "ES-GRAMMAR-INDIRECT-OBJECT-LE",
-                "ES-GRAMMAR-DIRECT-OBJECT-LA"
+                "ES-GRAMMAR-DIRECT-OBJECT-PLURAL",
+                "ES-LEX-USTEDES"
               ],
-              "responseSeconds": 8,
+              "responseSeconds": 10,
               "acceptedResponses": [
-                "none",
-                "one form for all",
-                "it does not mark gender"
+                "los quiero",
+                "las quiero",
+                "los quiero a ustedes"
               ],
               "feedback": {
-                "correct": "One form for him, her and usted.",
-                "incorrect": "None — unlike lo and la, le does not mark gender at all."
+                "correct": "Ustedes behaves as a they-word, so the pronoun is los or las.",
+                "incorrect": "Los quiero — or las, for a group of women."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C46-le-case",
-              "prompt": "Lo comes from Latin illum. Which Latin form does le come from, and what was it for?",
+              "id": "ES-C45-os-vos",
+              "prompt": "Which older word is os worn down from, and where is it still said whole?",
               "assesses": [
-                "ES-ETYMON-ILLI-DATIVE",
-                "ES-ETYMON-ILLE-ILLA"
+                "ES-LEX-OS-OBJECT",
+                "ES-LEX-VOSOTROS"
               ],
               "responseSeconds": 12,
               "acceptedResponses": [
-                "illi, for the one the action is aimed at",
-                "illi, the dative",
-                "illi"
+                "vos, in argentina",
+                "vos",
+                "vos, in the river plate region"
               ],
               "feedback": {
-                "correct": "Two Latin cases, both still alive in these two small words.",
-                "incorrect": "Illi — the dative, the form for whoever the verb was aimed at."
+                "correct": "One word, three fates.",
+                "incorrect": "Vos — worn to os in Spain, glued into vosotros, and standing whole in Argentina."
               }
             }
           ]
@@ -209,7 +192,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"I tell him.\" (Le digo.) And \"I tell her.\" (Le digo — the same.) Which Latin case is le? (The dative, illī.) Next: its plural, and a discovery about how little of this system is actually new."
+              "text": "\"I love you all,\" in Spain? (Os quiero.) Elsewhere? (Los quiero.) What is os worn down from? (Vos.) Next: all eight of these in one place."
             }
           ]
         }

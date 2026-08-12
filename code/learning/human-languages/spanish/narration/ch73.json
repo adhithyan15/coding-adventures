@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 73,
-  "title": "Os --- You All, in Spain",
+  "title": "Synthesis --- Saying It Once",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:01ef346e5b96b484",
+  "sourceHash": "fnv1a64:8ccc36a8bd8ae225",
   "lessons": [
     {
-      "id": "ES-C45-os",
-      "sequence": 1138,
-      "title": "os — \"you all,\" in Spain",
-      "headword": "os",
-      "romanization": "os",
-      "gloss": "\"you all\" as the object — the shortest word in the set, and the one that stops at a border",
+      "id": "ES-C42-sintesis-decirlo-una-vez",
+      "sequence": 1155,
+      "title": "Synthesis — saying it once",
+      "headword": "(synthesis)",
+      "romanization": "(synthesis)",
+      "gloss": "synthesis — what these four words are for, which is not accuracy but not sounding like a stranger",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f3009532ebd80497",
+      "sourceHash": "fnv1a64:40cf1c7ff667f8cf",
       "notice": null,
       "blocks": [
         {
@@ -35,57 +35,57 @@
             },
             {
               "kind": "speech",
-              "text": "Which word for \"you all\" is used in Spain, and which everywhere else? (Vosotros in Spain; ustedes everywhere.) That split is about to appear one last time."
+              "text": "Answer out loud: ¿Tienes el libro? Say yes, and do not use the word libro."
             }
           ]
         },
         {
           "index": 1,
-          "type": "grammar",
-          "title": "Grammar Lens: the object form of vosotros",
+          "type": "input",
+          "title": "The exchange",
           "segments": [
             {
               "kind": "speech",
-              "text": "os — you all, as the one it happens to."
+              "text": "Here are the same two exchanges, twice. Read both versions aloud."
             },
             {
               "kind": "speech",
-              "text": "Os quiero. — I love you all."
+              "text": "Version one:"
             },
             {
               "kind": "speech",
-              "text": "Two letters, the shortest word in the set. It pairs with vosotros, so it lives exactly where vosotros lives: Spain, and nowhere else in daily speech."
+              "text": "— ¿Tienes el libro? — Sí, tengo el libro. — ¿Haces la comida? — Sí, hago la comida."
             },
             {
               "kind": "speech",
-              "text": "Across the Atlantic, \"you all\" as an object is los or las — the same forms you learned last chapter, because ustedes is grammatically a they-word:"
+              "text": "Version two:"
             },
             {
               "kind": "speech",
-              "text": "Os quiero. — I love you all. (Spain) Los quiero. — I love you all. (everywhere else)."
+              "text": "— ¿Tienes el libro? — Sí, lo tengo. — ¿Haces la comida? — Sí, la hago."
             },
             {
               "kind": "speech",
-              "text": "Neither is a mistake for the other. Several hundred million speakers will never say os in their lives, and forty million say it every day."
+              "text": "Every sentence in version one is correct. Not one of them is a mistake. And no speaker of Spanish would say them."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
+          "type": "grammar",
+          "title": "Grammar Lens: what the pronoun is actually for",
           "segments": [
             {
               "kind": "speech",
-              "text": "Os was vos, and the v simply fell off in the object slot — a word this small, said this often, and never stressed, wears faster than the rest of the language."
+              "text": "These four words do not make you more correct. They make you sound like somebody having a conversation instead of somebody completing an exercise."
             },
             {
               "kind": "speech",
-              "text": "That same vos is still visible in two places you have met. It is the front of vosotros (vos + otros, \"you others,\" built exactly like nosotros). And it survives whole as a subject pronoun in Argentina and much of Central America, where vos replaces tú."
+              "text": "A conversation carries what has already been said. English does the same thing and you have never noticed: you would not answer do you have the book? with yes, I have the book."
             },
             {
               "kind": "speech",
-              "text": "So one Latin word left three descendants alive in three different conditions: worn to os in Spain, glued into vosotros in Spain, and standing intact as vos across the Río de la Plata. Same word, three fates, decided by geography."
+              "text": "So this is the first place where knowing the form is not the skill. The skill is noticing that the thing has already been named — and no table can drill that."
             }
           ]
         },
@@ -103,78 +103,101 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Os quiero\" then \"Los quiero\" — the same sentence, two continents",
+              "instruction": "both versions of the book exchange, and hear the difference",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Os quiero\" then \"Los quiero\" — the same sentence, two continents]"
+              "source": "[YOU SAY: both versions of the book exchange, and hear the difference]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"vos\", \"os\", \"vosotros\" and hear one word in three states",
+              "instruction": "\"Sí, lo tengo\" and \"Sí, la hago\" until no decision is needed",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"vos\", \"os\", \"vosotros\" and hear one word in three states]"
+              "source": "[YOU SAY: \"Sí, lo tengo\" and \"Sí, la hago\" until no decision is needed]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C45-os-say",
-              "prompt": "Say I love you all, as a speaker in Spain would.",
+              "id": "ES-C42-sintesis-decirlo-una-vez-book",
+              "prompt": "Answer yes to Tienes el libro, without repeating the noun.",
               "assesses": [
-                "ES-GRAMMAR-OS-DIRECT-OBJECT",
-                "ES-LEX-OS-OBJECT"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "os quiero",
-                "yo os quiero"
-              ],
-              "feedback": {
-                "correct": "Os quiero.",
-                "incorrect": "Os quiero — the object partner of vosotros."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C45-os-other",
-              "prompt": "Say the same thing the way most of the Spanish-speaking world would.",
-              "assesses": [
-                "ES-GRAMMAR-DIRECT-OBJECT-PLURAL",
-                "ES-LEX-USTEDES"
+                "ES-GRAMMAR-DIRECT-OBJECT-LO",
+                "ES-LEX-LIBRO",
+                "ES-GRAMMAR-TENER-PRESENT-SINGULAR"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "los quiero",
-                "las quiero",
-                "los quiero a ustedes"
+                "si, lo tengo",
+                "lo tengo",
+                "si lo tengo"
               ],
               "feedback": {
-                "correct": "Ustedes behaves as a they-word, so the pronoun is los or las.",
-                "incorrect": "Los quiero — or las, for a group of women."
+                "correct": "That is what a speaker would actually say.",
+                "incorrect": "Si, lo tengo. The noun was already named once; that was enough."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C45-os-vos",
-              "prompt": "Which older word is os worn down from, and where is it still said whole?",
+              "id": "ES-C42-sintesis-decirlo-una-vez-meal",
+              "prompt": "Answer yes to Haces la comida, without repeating the noun.",
               "assesses": [
-                "ES-LEX-OS-OBJECT",
-                "ES-LEX-VOSOTROS"
+                "ES-GRAMMAR-DIRECT-OBJECT-LA",
+                "ES-LEX-COMIDA",
+                "ES-GRAMMAR-HACER-PRESENT-SINGULAR"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "si, la hago",
+                "la hago",
+                "si la hago"
+              ],
+              "feedback": {
+                "correct": "La, because comida is feminine.",
+                "incorrect": "Si, la hago. The pronoun carries the gender of the noun that left."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C42-sintesis-decirlo-una-vez-people",
+              "prompt": "Somebody says Te quiero. Say the answering half.",
+              "assesses": [
+                "ES-GRAMMAR-ME-DIRECT-OBJECT",
+                "ES-GRAMMAR-TE-DIRECT-OBJECT",
+                "ES-GRAMMAR-QUERER-PRESENT-SINGULAR"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "me quieres",
+                "y yo te quiero",
+                "te quiero"
+              ],
+              "feedback": {
+                "correct": "Two people, four words, a complete exchange.",
+                "incorrect": "Me quieres — or turn it back with te quiero."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C42-sintesis-decirlo-una-vez-point",
+              "prompt": "Version one of the dialogue was grammatically correct. What was wrong with it?",
+              "assesses": [
+                "ES-GRAMMAR-DIRECT-OBJECT-LO"
               ],
               "responseSeconds": 12,
               "acceptedResponses": [
-                "vos, in argentina",
-                "vos",
-                "vos, in the river plate region"
+                "it named the same thing twice",
+                "it repeated the noun",
+                "nobody talks like that"
               ],
               "feedback": {
-                "correct": "One word, three fates.",
-                "incorrect": "Vos — worn to os in Spain, glued into vosotros, and standing whole in Argentina."
+                "correct": "Right — correct is not the same as what a speaker would say.",
+                "incorrect": "Nothing was ungrammatical. It just repeated a thing both people already had in mind."
               }
             }
           ]
@@ -192,7 +215,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"I love you all,\" in Spain? (Os quiero.) Elsewhere? (Los quiero.) What is os worn down from? (Vos.) Next: all eight of these in one place."
+              "text": "¿Tienes el libro? (Sí, lo tengo.) ¿Haces la comida? (Sí, la hago.) And what were these four words for? (Not repeating what has already been said.) Next: the past tense — and you will find these four words sit in exactly the same place there."
             }
           ]
         }

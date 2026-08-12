@@ -320,6 +320,42 @@
       "after": []
     },
     {
+      "id": "ES-PATH-028-SOUND-F-H",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "ES-C57-f-a-h"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-028-SOUND-F-H"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-028-SOUND-LL",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "ES-C57-ll"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-028-SOUND-LL"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-028-SYNTH-LAWS",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "ES-C57-sintesis-descifrar"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-028-SYNTH-LAWS"
+      ],
+      "after": []
+    },
+    {
       "id": "ES-PATH-028",
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
@@ -2078,6 +2114,9 @@
         "ES-PATH-028-MENTE",
         "ES-PATH-028-REVIEW-FR",
         "ES-PATH-028-SYNTH-FR",
+        "ES-PATH-028-SOUND-F-H",
+        "ES-PATH-028-SOUND-LL",
+        "ES-PATH-028-SYNTH-LAWS",
         "ES-PATH-028",
         "ES-PATH-029",
         "ES-PATH-030-TENER",
@@ -4293,6 +4332,39 @@
       "prerequisites": [],
       "lessons": [
         "ES-C56-sintesis-leer"
+      ]
+    },
+    {
+      "id": "ES-EXT-028-SOUND-F-H",
+      "stage": "A1",
+      "kind": "required",
+      "category": "etymology",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C57-f-a-h"
+      ]
+    },
+    {
+      "id": "ES-EXT-028-SOUND-LL",
+      "stage": "A1",
+      "kind": "required",
+      "category": "etymology",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C57-ll"
+      ]
+    },
+    {
+      "id": "ES-EXT-028-SYNTH-LAWS",
+      "stage": "A1",
+      "kind": "required",
+      "category": "etymology",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C57-sintesis-descifrar"
       ]
     }
   ]

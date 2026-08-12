@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 123,
-  "title": "Parents and Siblings",
-  "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:2afb212739214731",
+  "title": "Lo Siento",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:fb8ba83953f2c8bf",
   "lessons": [
     {
-      "id": "ES-C23-padre-madre",
-      "sequence": 1570,
-      "title": "el padre, la madre — among the oldest words there are",
-      "headword": "el padre, la madre",
-      "romanization": "el padre, la madre",
-      "gloss": "father and mother — among the oldest reconstructible words in the whole family",
+      "id": "ES-C20-lo-siento",
+      "sequence": 1510,
+      "title": "lo siento — \"I'm sorry,\" i.e. \"I feel it\"",
+      "headword": "lo siento",
+      "romanization": "lo siento",
+      "gloss": "I'm sorry — literally \"I feel it,\" a naming of the feeling rather than a claim about yourself",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1e2099672756da87",
+      "sourceHash": "fnv1a64:ca786dddeba92446",
       "notice": null,
       "blocks": [
         {
@@ -35,56 +35,31 @@
             },
             {
               "kind": "speech",
-              "text": "\"Father\" and \"mother\" are some of the oldest reconstructible words in human language — older than Latin, older than Rome. Spanish kept them close to the Latin original, and they are secretly the same words as English father and mother."
+              "text": "You already know por favor, \"please.\" The next courtesy phrase is lo siento. Spanish does not say \"I am sorry\" as an adjective; it says something closer to \"I feel this.\""
             }
           ]
         },
         {
           "index": 1,
           "type": "etymology",
-          "title": "The words, taken apart: padre and madre",
+          "title": "The phrase, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "el padre (\"father\") from Latin pater from PIE ph₂tḗr."
+              "text": "lo = \"it\" — a neuter pronoun. It does not point at any noun; it points at the situation itself. Spanish keeps this one leftover neuter slot precisely for \"the whole business, unnamed.\""
             },
             {
               "kind": "speech",
-              "text": "la madre (\"mother\") from Latin māter from PIE méh₂tēr."
+              "text": "siento = \"I feel,\" from sentir, \"to feel,\" from Latin sentīre. That root gave English a whole family: sentiment, sense, consent (\"feel together\"), resent (\"feel back at\"), and sentence (originally an opinion, something felt)."
+            },
+            {
+              "kind": "speech",
+              "text": "So lo siento is literally \"I feel it.\" You are naming a feeling — regret, sympathy — rather than declaring a state about yourself. That is why it stretches so easily: lo siento mucho, \"I feel it a lot,\" works both for stepping on someone's foot and for hearing that their father died."
             }
           ]
         },
         {
           "index": 2,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way: the English sound-law",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Padre and English father both descend independently from the same PIE word — they're siblings, not parent and child. Latin (and Spanish after it) kept the original p and t largely intact; the Germanic branch that gave English took a separate road through Grimm's Law, which shifted the inherited p becomes f and t becomes th:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "PIE ancestor",
-                "Latin becomes Spanish",
-                "Germanic becomes English"
-              ],
-              "columns": 3,
-              "rowCount": 2,
-              "utterances": [
-                "PIE ancestor: ph₂tḗr. Latin becomes Spanish: pater becomes padre. Germanic becomes English: father.",
-                "PIE ancestor: méh₂tēr. Latin becomes Spanish: māter becomes madre. Germanic becomes English: mother."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "So padre and father aren't lookalikes borrowed late, and neither one comes from the other — they're the same inherited PIE word, one branch keeping the p, the other shifting it to f. The Latin root also gives Spanish and English their \"of a parent\" adjectives: paternal, paternidad, patrón and maternal, maternidad. (A further Latin-only offshoot, māter becomes māteria, \"the stuff a tree-mother produces,\" gives Spanish materia and, separately, matriz — \"womb\" — via Latin mātrix.)"
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -97,34 +72,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"el padre, la madre\"",
+              "instruction": "\"siento\" — I feel — then \"lo siento,\" I feel it / I'm sorry",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"el padre, la madre\"]"
+              "source": "[YOU SAY: \"siento\" — I feel — then \"lo siento,\" I feel it / I'm sorry]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the sound-law — \"padre keeps p; father shifts to f — same word\"",
+              "instruction": "\"lo siento mucho\" — I'm so sorry",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the sound-law — \"padre keeps p; father shifts to f — same word\"]"
+              "source": "[YOU SAY: \"lo siento mucho\" — I'm so sorry]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"padre becomes paternal; madre becomes maternal\"",
+              "instruction": "\"siento\" then English \"sentiment, sense, consent\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"padre → paternal; madre → maternal\"]"
+              "source": "[YOU SAY: \"siento\" then English \"sentiment, sense, consent\"]"
             }
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -136,26 +111,26 @@
             },
             {
               "kind": "speech",
-              "text": "Give \"father\" and \"mother\" with their articles. (el padre, la madre.) Does padre turn into English father directly? (No — both descend independently from the same PIE word; the Germanic branch shifted p becomes f and t becomes th via Grimm's Law, while Latin/Spanish kept the original sounds.) Name an English cousin of each. (padre becomes paternal; madre becomes maternal.)"
+              "text": "What does lo siento literally mean? (\"I feel it\" — siento, \"I feel,\" from Latin sentīre.) What is the lo pointing at? (The situation, not a noun — it is the neuter \"it.\") Next: Spanish's other word for sorry, and when it is the right one."
             }
           ]
         }
       ]
     },
     {
-      "id": "ES-C23-hermano-hermana",
-      "sequence": 1580,
-      "title": "el hermano, la hermana — brother and sister, from a different word entirely",
-      "headword": "el hermano, la hermana",
-      "romanization": "el hermano, la hermana",
-      "gloss": "brother and sister — NOT from frater/soror, but from an adjective meaning \"of the same seed\"",
+      "id": "ES-C20-perdon",
+      "sequence": 1520,
+      "title": "perdón — the sorry that asks for something back",
+      "headword": "perdón",
+      "romanization": "perdón",
+      "gloss": "the other sorry — \"give completely\" — for fault and for getting past people, where lo siento is for regret",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bf0bec3a6cf5b246",
+      "sourceHash": "fnv1a64:f34de7f46576ee37",
       "notice": null,
       "blocks": [
         {
@@ -171,189 +146,56 @@
             },
             {
               "kind": "speech",
-              "text": "You might expect Spanish \"brother\" to come from Latin frāter, the way French's frère does. It does not. Spanish's siblings took a completely different word — one about seeds."
+              "text": "Lo siento names a feeling. Spanish keeps a second word for a different job — one that is not about your feelings at all, but about something you want from the other person."
             }
           ]
         },
         {
           "index": 1,
           "type": "etymology",
-          "title": "The words, taken apart: hermano and hermana",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "Classical Latin could say frāter germānus, literally \"a brother of the same stock/blood\" — distinguishing a full brother from a half-brother, or from a \"brother\" in some looser sense."
+              "text": "perdón (\"pardon\"), from the verb perdonar — Latin per- (\"thoroughly\") + dōnāre (\"to give\"). Literally: \"to give completely.\""
             },
             {
               "kind": "speech",
-              "text": "Then something ordinary and strange happened: in everyday Latin the adjective took over the whole job and the noun quietly dropped out. (English does this all the time — a mobile phone becomes a mobile, a cellular telephone becomes a cell.) What survived is the modifier:"
-            },
-            {
-              "kind": "speech",
-              "text": "el hermano (\"brother\") from Latin germānus."
-            },
-            {
-              "kind": "speech",
-              "text": "la hermana (\"sister\") from Latin germāna."
-            },
-            {
-              "kind": "speech",
-              "text": "So Spanish's everyday word for brother is, grammatically, a leftover adjective."
+              "text": "That dōnāre is English's donate, donor, and condone; the per- is the same intensifier in perfect (\"thoroughly made\") and perturb. So forgiveness, in Latin's picture of it, is a gift given all the way — you hand over the debt rather than keeping a share of it."
             }
           ]
         },
         {
           "index": 2,
           "type": "culture-pragmatics",
-          "title": "Why it's said this way: where germanus comes from",
+          "title": "Why it's said this way: which one to reach for",
           "segments": [
             {
               "kind": "speech",
-              "text": "Germānus traces back to germen, \"sprout, bud, seed\" — the same root that gives English germ, germinate, and germane (originally \"closely related,\" from the same seed, before it loosened into just \"relevant\")."
-            },
-            {
-              "kind": "speech",
-              "text": "So calling someone your hermano is, at the etymological root, calling them \"sprung from the same seed.\" (And no, this has nothing to do with Germany — that name is a separate, unrelated puzzle.)"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"el hermano, la hermana\" — brother, sister",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"el hermano, la hermana\" — brother, sister]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the root chain — \"germen, seed\" becomes \"germānus, of the same seed\" becomes \"hermano\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the root chain — \"germen, seed\" → \"germānus, of the same seed\" → \"hermano\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"hermano\" then English \"germinate, germane\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"hermano\" then English \"germinate, germane\"]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Does Spanish hermano come from Latin frāter? (No — from germānus, \"of the same stock/seed,\" an adjective that swallowed the noun frāter it used to modify.) What does its root germen mean, and what English words share it? (Seed, sprout — germ, germinate, germane.) Next: the silent h on the front, which is not the h you think it is."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ES-C23-hermano-hache",
-      "sequence": 1590,
-      "title": "the h in hermano — a letter that was never spoken",
-      "headword": "hermano ← *ermano*",
-      "romanization": "hermano ← *ermano*",
-      "gloss": "the h on hermano is not the h on hijo — one was spoken for centuries, the other never was",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:38df0d6ad192251c",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Germānus starts with a g. Hermano starts with an h. Something has to explain that — and the obvious explanation is the wrong one."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know first",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "el hermano, la hermana — the words and the germen root."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way: two different silent h's",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "You may already know that Spanish often turns a Latin initial f into a silent h — filius becomes hijo (\"son\"), facere becomes hacer (\"to do\"). Hermano is not that, and the difference is worth getting right."
-            },
-            {
-              "kind": "speech",
-              "text": "Germānus is stressed on its third syllable (ger-MĀ-nus), which leaves the opening ger- unstressed. Latin's g before a front vowel had already softened toward a y-like sound in everyday speech — and in that unstressed position it simply fell away entirely, giving Old Spanish ermano, with no h at all. That is the form actually recorded centuries ago."
-            },
-            {
-              "kind": "speech",
-              "text": "The h you see today was added later, in spelling only, to mark the word's old link to Latin g-. Compare:"
+              "text": "The two are not interchangeable, and the difference follows straight from the etymologies:"
             },
             {
               "kind": "table",
               "headers": [
-                "word",
-                "what happened to the sound",
-                "was the h ever spoken?"
+                "",
+                "lo siento",
+                "perdón"
               ],
               "columns": 3,
-              "rowCount": 2,
+              "rowCount": 3,
               "utterances": [
-                "word: hijo, hacer. what happened to the sound: Latin f- becomes a real breathy h. was the h ever spoken?: yes, for centuries.",
-                "word: hermano. what happened to the sound: Latin g- simply dropped. was the h ever spoken?: no, never."
+                "literally. lo siento: \"I feel it\". perdón: \"give [it] completely\".",
+                "points at. lo siento: your feeling. perdón: their forgiveness.",
+                "use for. lo siento: regret, sympathy. perdón: fault, or getting past someone."
               ]
             },
             {
               "kind": "speech",
-              "text": "Same silent letter today; two completely different backstories, only one of which involves a sound at all."
+              "text": "So perdón is what you say to squeeze through a crowd or catch a waiter's eye (English \"excuse me\"), and to ask forgiveness for something you did — often stronger than lo siento. Lo siento leans toward \"I'm sorry that happened,\" including things that are nobody's fault at all."
+            },
+            {
+              "kind": "speech",
+              "text": "Be honest about the edges: native speakers use whichever fits, the boundary is soft, and mixing them is not a real mistake — just a shade off."
             }
           ]
         },
@@ -371,20 +213,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"germānus\" then \"ermano\" then \"hermano\" — the three stages",
+              "instruction": "\"perdón\" — pardon / excuse me",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"germānus\" then \"ermano\" then \"hermano\" — the three stages]"
+              "source": "[YOU SAY: \"perdón\" — pardon / excuse me]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the honest distinction — hijo/hacer's h was once truly spoken; hermano's h never was",
+              "instruction": "the pair — \"lo siento\" for regret, \"perdón\" for fault",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the honest distinction — hijo/hacer's *h* was once truly spoken; hermano's *h* never was]"
+              "source": "[YOU SAY: the pair — \"lo siento\" for regret, \"perdón\" for fault]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"perdón\" then English \"donate, condone\" — the dōnāre root",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"perdón\" then English \"donate, condone\" — the *dōnāre* root]"
             }
           ]
         },
@@ -401,7 +252,7 @@
             },
             {
               "kind": "speech",
-              "text": "Is hermano's h the same kind of change as hijo's or hacer's? (No.) What actually happened to germānus's opening? (Its g dropped away in an unstressed syllable, giving Old Spanish ermano.) So where did the h come from? (Spelling — added later to mark the Latin link, never pronounced.)"
+              "text": "What do the two halves of perdonar mean? (Per-, \"thoroughly,\" plus dōnāre, \"to give\" — to give completely.) Which word do you use to get past someone in a corridor? (Perdón.) Which leans toward sympathy rather than fault? (Lo siento — \"I feel it.\")"
             }
           ]
         }

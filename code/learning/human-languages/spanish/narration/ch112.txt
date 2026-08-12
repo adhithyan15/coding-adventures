@@ -1,81 +1,35 @@
-Spanish, chapter 112: Ojala --- a Prayer That Outlived Its Religion.
-2 lessons. All 2 can be done entirely by ear.
+Spanish, chapter 112: Wanting, Not Asserting.
+1 lesson. All 1 can be done entirely by ear.
 
 
-Lesson 1 of 2.
-ojalá + subjunctive — a wish borrowed through Arabic.
-
-Warm-up.
-[pause 2 seconds]
-Ojalá hables español means “I hope you speak Spanish” or “May you speak Spanish.” Ojalá expresses the wish by itself. It needs neither a main verb nor que before the subjunctive. Keep the first frame tiny:
-Ojalá + subjunctive.
-That is a usable modern pattern. It does not make the Arabic source phrase new Spanish vocabulary.
-
-The wish-word, taken apart.
-The Real Academia Española records ojalá from Hispanic Arabic wa šá lláh, “and God has willed.” Long contact in al-Andalus carried the expression into Spanish, where its sound and grammatical life changed. You met another Arabic-derived function word in hasta. The historical phrase explains a route; only modern ojalá is available for your Spanish sentences.
-
-Guided Practice.
-[pause 1 second]
-Use only modern ojalá as the Spanish trigger.
-[question — say your answer, then pause 9 seconds]
-Say 'I hope you speak Spanish' to one friend using ojalá.
-[question — say your answer, then pause 5 seconds]
-Does the learned ojalá frame require que before hables? Answer yes or no.
-[question — say your answer, then pause 7 seconds]
-Through which historical language variety did Spanish receive ojalá?
-
-Wrap-up Recall.
-[pause 3 seconds]
-What follows ojalá in the learned frame? (The subjunctive.) Does it need que? (No.) Which historical language variety carried the word into Spanish? (Hispanic Arabic.) Is the older Arabic phrase usable as new Spanish vocabulary here? (No.)
-
-
-Lesson 2 of 2.
-Practice — assert the event or want it.
+Lesson 1 of 1.
+Hablas español, Quiero que hables español — fact or wanted event?
 
 Warm-up.
 [pause 2 seconds]
-This checkpoint adds no vocabulary, plural person, object pronoun, or new clause frame. First decide whether the event is asserted or wanted. Then retrieve only the singular rows you learned.
+Hablas español can assert “You speak Spanish.” Now compare Quiero que hables español — “I want you to speak Spanish.” Hables does not report what is true. It presents the speaking as wanted and not yet asserted. That meaning contrast is the first small doorway into the subjunctive.
 
-Grammar Lens: the bounded map.
-[a table of 6 rows, read aloud]
-verb: hablar. yo / él / ella / usted: hable. tú: hables.
-verb: comer. yo / él / ella / usted: coma. tú: comas.
-verb: vivir. yo / él / ella / usted: viva. tú: vivas.
-verb: querer. yo / él / ella / usted: quiera. tú: quieras.
-verb: poder. yo / él / ella / usted: pueda. tú: puedas.
-verb: hacer. yo / él / ella / usted: haga. tú: hagas.
-The repeated outer form is not a missing row: first- and third-person singular match. Every plural form waits.
-
-Grammar Lens: two safe triggers.
-Same doer: Quiero hablar español.
-Different doer: Quiero que hables español.
-Wish by itself: Ojalá hables español.
-Do not extend these two frames to every emotion, doubt, command, or conjunction yet. More triggers belong in later micro-lessons.
+Grammar Lens: count the doers.
+[a table of 2 rows, read aloud]
+meaning: I want to speak Spanish. Spanish: Quiero hablar español. doers: one: I want; I speak.
+meaning: I want you to speak Spanish. Spanish: Quiero que hables español. doers: two: I want; you speak.
+With one doer, keep the known infinitive hablar. With a different doer for the wanted event, use que and the new form hables. This is a bounded pattern for querer, not a rule for every clause in Spanish.
 
 Guided Practice.
 [pause 1 second]
-Decide the meaning first; then retrieve only the learned form.
-[question — say your answer, then pause 5 seconds]
-Choose the wanted-event form: hablas or hables.
-[question — say your answer, then pause 11 seconds]
-Give the pair 'I want to speak Spanish; I want you to speak Spanish.'
-[question — say your answer, then pause 9 seconds]
-Give the tú subjunctive forms of hablar, comer, and vivir, in that order.
+[your turn — say: “Hablas español.”]
+[pause 8 seconds for the answer]
+[your turn — say: “Quiero hablar español.”]
+[pause 8 seconds for the answer]
+[your turn — say: “Quiero que hables español.”]
+[pause 8 seconds for the answer]
 [question — say your answer, then pause 6 seconds]
-Which present-person form supplies the stem in this chapter's recipe?
+Which form asserts that one friend speaks: hablas or hables?
+[question — say your answer, then pause 8 seconds]
+Say 'I want to speak Spanish' in Spanish.
 [question — say your answer, then pause 9 seconds]
-Give the learned singular subjunctive row of querer.
-[question — say your answer, then pause 10 seconds]
-Say 'I want you to be able to speak Spanish' to one friend.
-[question — say your answer, then pause 9 seconds]
-Say 'I want you to make coffee' to one friend.
-[question — say your answer, then pause 9 seconds]
-Say 'I hope you live in Madrid' to one friend using ojalá.
-[question — say your answer, then pause 7 seconds]
-What does the Latin source subiūnctīvus help you picture?
-[question — say your answer, then pause 7 seconds]
-Name the historical language variety through which ojalá entered Spanish.
+Say 'I want you to speak Spanish' to one friend.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What is the first meaning choice? (Asserted event or wanted event.) Give the three regular tú forms. (Hables, comas, vivas.) Give the three bounded special tú forms. (Quieras, puedas, hagas.) Name the two safe triggers. (Quiero que for a different doer; ojalá for a wish.) What still waits? (Plural persons, additional irregular verbs, and additional subjunctive triggers.)
+Which form asserts the event? (Hablas.) Which presents it as wanted? (Hables, after quiero que.) What happens when the wanter and the speaker are the same? (Use the infinitive: Quiero hablar.) Next, build the three singular -ar forms one piece at a time.

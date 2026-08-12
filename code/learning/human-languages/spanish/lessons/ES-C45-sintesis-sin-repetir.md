@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C45-sintesis-sin-repetir
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 1140
-chapter: 75
+sequence: 1160
+chapter: 78
 type: practice-mix
 headword: (synthesis)
 gloss: synthesis — a conversation that would collapse without these eight words, and one that shows what they cost

@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 163,
-  "title": "Synthesis --- The Gift and the Motive",
+  "title": "Por --- And Three Phrases You Already Owned",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:255e1a10c60e0ffe",
+  "sourceHash": "fnv1a64:92b1eac43a1c23c6",
   "lessons": [
     {
-      "id": "ES-C51-sintesis-regalo-motivo",
-      "sequence": 2105,
-      "title": "Synthesis — the gift and the motive",
-      "headword": "(synthesis)",
-      "romanization": "(synthesis)",
-      "gloss": "synthesis — a short exchange in which the two-letter difference changes what one person means to another",
+      "id": "ES-C51-por",
+      "sequence": 2122,
+      "title": "por — and you already know three of these",
+      "headword": "por",
+      "romanization": "por",
+      "gloss": "\"for\" pointing back or through — at a cause, a route, an exchange; and you have been saying it since your first page",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1107f23e112c961c",
+      "sourceHash": "fnv1a64:c6f1848934c4b92e",
       "notice": null,
       "blocks": [
         {
@@ -35,57 +35,73 @@
             },
             {
               "kind": "speech",
-              "text": "Para ti or por ti — one of them is a present and one of them is a reason. Which is which?"
+              "text": "Say \"please.\" (Por favor.) Say \"why.\" (¿Por qué?) Say \"because.\" (Porque.) You have been carrying this word since your first page and nobody has told you what it means."
             }
           ]
         },
         {
           "index": 1,
-          "type": "input",
-          "title": "The exchange",
+          "type": "grammar",
+          "title": "Grammar Lens: the arrow points back, or through",
           "segments": [
             {
               "kind": "speech",
-              "text": "Read this twice, changing only one word."
+              "text": "por — for, when something is the cause, the route, or what is given in exchange."
             },
             {
               "kind": "speech",
-              "text": "— Hago la comida para ti. — Gracias."
+              "text": "Gracias por la comida. — Thanks for the meal. (the cause) Por ti. — Because of you. (the cause)."
             },
             {
               "kind": "speech",
-              "text": "— Hago la comida por ti. — …gracias."
+              "text": "Where para pointed forward at a target, por points back at a reason or through a middle — what something came through, not what it heads toward."
             },
             {
               "kind": "speech",
-              "text": "The first is somebody cooking you dinner. The second is somebody telling you they are cooking because of you — which, depending on the day, is an act of love or a small complaint."
+              "text": "Now look again at the three phrases you already own:"
             },
             {
               "kind": "speech",
-              "text": "Two letters. Nothing else in the sentence moved."
+              "text": "por favor — literally by way of a favour. You are not aiming at a favour; you are asking through one."
+            },
+            {
+              "kind": "speech",
+              "text": "¿por qué? — literally through what? — that is, caused by what?"
+            },
+            {
+              "kind": "speech",
+              "text": "porque — the same two words fused into an answer: because."
+            },
+            {
+              "kind": "speech",
+              "text": "Three of your oldest phrases turn out to be the same preposition, doing exactly what this chapter says it does. You knew por before you knew hola meant anything."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: a preposition carrying the feeling",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "This is the first place in the book where the smallest word in the sentence carries its emotional content."
+              "text": "Por is two Latin words run together: pro (\"in front of, on behalf of\") and per (\"through\")."
             },
             {
               "kind": "speech",
-              "text": "Nouns and verbs have been doing the meaning until now. Here the noun is the same, the verb is the same, the person is the same — and the sentence changes completely on a preposition. That is worth meeting deliberately, because English speakers arrive expecting the little words to be plumbing."
+              "text": "The per half is still alive and unchanged in English, in the least poetic corner of the language:"
             },
             {
               "kind": "speech",
-              "text": "They are not plumbing here. Por and para are the difference between I made this for you and I made this because of you, and no amount of context repairs the wrong one: your listener will simply hear the thing you did not mean."
+              "text": "per hour, per person, per cent — cent being hundred, so literally through each hundred."
             },
             {
               "kind": "speech",
-              "text": "Which is also the reassuring part. If you pick the wrong one, you have not produced nonsense or bad grammar — you have said something true about a different situation. Somebody will look faintly puzzled, and you will notice, and that is how this stops being difficult."
+              "text": "percolate, permeate, perforate — all piercing through."
+            },
+            {
+              "kind": "speech",
+              "text": "English kept per meaning \"through\" and Spanish kept it inside por. Saying por favor, you are using the same word as miles per hour."
             }
           ]
         },
@@ -103,94 +119,78 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "both versions of the dinner sentence, and hear the second one land differently",
+              "instruction": "\"por favor\", \"¿por qué?\", \"porque\" — three old friends, one word",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: both versions of the dinner sentence, and hear the second one land differently]"
+              "source": "[YOU SAY: \"por favor\", \"¿por qué?\", \"porque\" — three old friends, one word]"
             },
             {
-              "kind": "repeat",
-              "times": 2,
-              "source": "[REPEAT x2]"
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C51-sintesis-regalo-motivo-gift",
-              "prompt": "Tell somebody you are making the meal as a gift to them.",
-              "assesses": [
-                "ES-GRAMMAR-POR-PARA-CONTRAST",
-                "ES-LEX-PARA",
-                "ES-LEX-COMIDA",
-                "ES-GRAMMAR-HACER-PRESENT-SINGULAR"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "hago la comida para ti",
-                "la hago para ti"
-              ],
-              "feedback": {
-                "correct": "They receive it.",
-                "incorrect": "Hago la comida para ti."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C51-sintesis-regalo-motivo-cause",
-              "prompt": "Now say it meaning they are the reason you are doing it at all.",
-              "assesses": [
-                "ES-GRAMMAR-POR-PARA-CONTRAST",
-                "ES-LEX-POR"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "hago la comida por ti",
-                "la hago por ti"
-              ],
-              "feedback": {
-                "correct": "Love or complaint, depending on the day.",
-                "incorrect": "Hago la comida por ti."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C51-sintesis-regalo-motivo-thanks",
-              "prompt": "Thank somebody for the meal.",
-              "assesses": [
-                "ES-LEX-GRACIAS",
-                "ES-LEX-POR",
-                "ES-LEX-COMIDA"
-              ],
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Gracias por la comida\"",
+              "spoken": true,
+              "scored": false,
               "responseSeconds": 8,
+              "source": "[YOU SAY: \"Gracias por la comida\"]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C51-por-thanks",
+              "prompt": "Say thanks for the meal.",
+              "assesses": [
+                "ES-LEX-POR",
+                "ES-LEX-GRACIAS",
+                "ES-GRAMMAR-POR-THROUGH-BECAUSE"
+              ],
+              "responseSeconds": 10,
               "acceptedResponses": [
                 "gracias por la comida",
                 "gracias por la comida."
               ],
               "feedback": {
-                "correct": "Por — the cause of your thanks.",
+                "correct": "Por — the cause of the thanks.",
                 "incorrect": "Gracias por la comida."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C51-sintesis-regalo-motivo-wrong",
-              "prompt": "You pick the wrong one of the two. What have you produced?",
+              "id": "ES-C51-por-favor",
+              "prompt": "What does por favor literally say?",
               "assesses": [
-                "ES-GRAMMAR-POR-PARA-CONTRAST"
+                "ES-LEX-POR-FAVOR",
+                "ES-GRAMMAR-POR-THROUGH-BECAUSE"
               ],
-              "responseSeconds": 14,
+              "responseSeconds": 12,
               "acceptedResponses": [
-                "a true sentence about a different situation",
-                "something correct that means something else",
-                "not nonsense, just the wrong meaning"
+                "by way of a favour",
+                "through a favour",
+                "by means of a favour"
               ],
               "feedback": {
-                "correct": "Which is why this stops being difficult once you are talking to people.",
-                "incorrect": "Not bad grammar — a perfectly good sentence about something you did not mean."
+                "correct": "Not aimed at a favour — asked through one.",
+                "incorrect": "By way of a favour."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C51-por-per",
+              "prompt": "Which everyday English word is the per inside por, still meaning through?",
+              "assesses": [
+                "ES-ETYMON-PRO-PER"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "per, as in per hour",
+                "per",
+                "per hour, per cent"
+              ],
+              "feedback": {
+                "correct": "Per cent is literally through each hundred.",
+                "incorrect": "Per — per hour, per person, per cent."
               }
             }
           ]
@@ -208,7 +208,7 @@
             },
             {
               "kind": "speech",
-              "text": "Para ti — a gift or a reason? (A gift.) Por ti? (A reason.) And what happens if you choose wrong? (You say something true about a different situation — and somebody will look puzzled, which is how you learn it.)"
+              "text": "Which direction does por point? (Back at a cause, or through something.) What is por favor literally? (By way of a favour.) Which English word is the per inside it? (Per, as in per hour.) Next: the two side by side."
             }
           ]
         }

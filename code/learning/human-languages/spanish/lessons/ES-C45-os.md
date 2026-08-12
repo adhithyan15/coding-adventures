@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C45-os
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 1138
-chapter: 73
+sequence: 1158
+chapter: 76
 type: word
 headword: os
 gloss: "you all" as the object — the shortest word in the set, and the one that stops at a border

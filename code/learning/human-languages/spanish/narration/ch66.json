@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 66,
-  "title": "Lo --- Saying It Without Naming It",
+  "title": "-es --- The Plural Chapter One Promised",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:908aa2fe06ae8b85",
+  "sourceHash": "fnv1a64:7e0d934a1ed065b5",
   "lessons": [
     {
-      "id": "ES-C42-lo",
-      "sequence": 1125,
-      "title": "lo — \"it\"",
-      "headword": "lo",
-      "romanization": "lo",
-      "gloss": "\"it\" — a word you have been saying since your fourth chapter, in a job you have not met yet",
+      "id": "ES-C44-plural-es",
+      "sequence": 1129,
+      "title": "-es — the plural your first chapter owed you",
+      "headword": "-es",
+      "romanization": "-es",
+      "gloss": "the plural ending for words that end in a consonant — a rule you have been using since you learned ustedes",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:870b987d0416974d",
+      "sourceHash": "fnv1a64:14d0ca75af8bff99",
       "notice": null,
       "blocks": [
         {
@@ -35,69 +35,57 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"my name is\" in Spanish. (Me llamo.) Where does that little me sit — before the verb, or after it?"
+              "text": "Say \"you,\" formally. (Usted.) Now say it to a group. (Ustedes.) Hold both of those in your mouth for a moment."
             }
           ]
         },
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: a slot you have been using all along",
+          "title": "Grammar Lens: you have been doing this for fifty chapters",
           "segments": [
             {
               "kind": "speech",
-              "text": "Before the verb. You have known that since your fourth chapter, and you have been doing it every time you say your name."
+              "text": "Your first chapter gave you half a rule and said the rest was for later. This is later."
             },
             {
               "kind": "speech",
-              "text": "Here is a second word for that same slot."
+              "text": "A word ending in a vowel adds -s. A word ending in a consonant adds -es."
             },
             {
               "kind": "speech",
-              "text": "lo — it, standing in for something masculine."
+              "text": "And you already know the second half, because you have been saying it since the day you learned to address a group:"
             },
             {
               "kind": "speech",
-              "text": "Watch what it does:"
+              "text": "usted becomes ustedes."
             },
             {
               "kind": "speech",
-              "text": "Tengo el libro. — I have the book. Lo tengo. — I have it."
+              "text": "That is not a special word. That is the consonant rule, and nobody told you. Here it is again on something you also hold:"
             },
             {
               "kind": "speech",
-              "text": "The noun leaves; lo takes its place; and it goes where me goes — in front of the verb. Not one new rule. One new word for a slot you already own."
-            },
-            {
-              "kind": "speech",
-              "text": "Notice that this only became possible last chapter. A pronoun replaces a noun, so it needs a noun to replace — which is why these three ordinary words came first."
+              "text": "español becomes españoles — Spanish people, Spanish speakers. los españoles — with the plural article from last chapter."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
           "segments": [
             {
               "kind": "speech",
-              "text": "Lo should look faintly familiar, and it should also look wrong. It is almost el, but not quite. That is not a coincidence, and the near-miss has a cause."
+              "text": "The extra e is not decoration and not an exception. Try saying usteds out loud. Then españols."
             },
             {
               "kind": "speech",
-              "text": "Latin ille, \"that one,\" changed shape depending on the job it was doing. As the object of a verb it was illum. Spanish got both its article and its object pronoun out of that one word — and then wore it down twice, differently, because the two jobs put the stress in different places:"
+              "text": "Spanish does not let a word end in that pile of consonants. So when the plural -s would land somewhere unsayable, the language puts in the vowel it needs to get the -s out — and that vowel is e."
             },
             {
               "kind": "speech",
-              "text": "Leaning on a noun, unstressed, it lost its vowel: illum becomes elo becomes el."
-            },
-            {
-              "kind": "speech",
-              "text": "Standing alone in the verb's slot, it kept the vowel: illum becomes lo."
-            },
-            {
-              "kind": "speech",
-              "text": "So el and lo are the same ancient word, split by the work it was asked to do. English did something similar with he and him: one word, two shapes, and the shape tells you the job."
+              "text": "Which means the rule is really one rule with a repair attached: add -s; if you cannot say it, make room. That is a better thing to hold than two rules, because it will keep explaining things long after this chapter."
             }
           ]
         },
@@ -115,77 +103,87 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Tengo el libro\" then \"Lo tengo\" — hear the noun disappear",
+              "instruction": "\"usted\" then \"ustedes\" — the rule you already had",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Tengo el libro\" then \"Lo tengo\" — hear the noun disappear]"
+              "source": "[YOU SAY: \"usted\" then \"ustedes\" — the rule you already had]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"me llamo\" then \"lo tengo\" — the same slot, twice",
+              "instruction": "\"los españoles\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"me llamo\" then \"lo tengo\" — the same slot, twice]"
+              "source": "[YOU SAY: \"los españoles\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "try \"usteds\" and hear why the e exists",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: try \"usteds\" and hear why the *e* exists]"
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C42-lo-replace",
-              "prompt": "Say I have it, replacing el libro.",
+              "id": "ES-C44-plural-es-espanol",
+              "prompt": "Make espanol plural.",
               "assesses": [
-                "ES-GRAMMAR-DIRECT-OBJECT-LO",
-                "ES-LEX-LO-OBJECT"
+                "ES-GRAMMAR-NOUN-PLURAL-ES",
+                "ES-LEX-ESPANOL"
               ],
               "responseSeconds": 8,
               "acceptedResponses": [
-                "lo tengo",
-                "yo lo tengo"
+                "espanoles",
+                "los espanoles"
               ],
               "feedback": {
-                "correct": "Yes — and note the order: the little word comes first.",
-                "incorrect": "Lo tengo. The pronoun goes in front of the verb, exactly where me goes."
+                "correct": "Consonant ending, so -es.",
+                "incorrect": "Espanoles — the consonant takes -es."
               }
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C42-lo-place",
-              "prompt": "Does the pronoun go before or after the conjugated verb?",
+              "id": "ES-C44-plural-es-already",
+              "prompt": "Which word have you been using this rule on since long before this chapter?",
               "assesses": [
-                "ES-GRAMMAR-OBJECT-PRONOUN"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "before",
-                "in front of it",
-                "before the verb"
-              ],
-              "feedback": {
-                "correct": "Before — the same slot me has always taken.",
-                "incorrect": "Before the verb, just like the me in me llamo."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C42-lo-origin",
-              "prompt": "Which everyday Spanish word comes from the same Latin word as lo?",
-              "assesses": [
-                "ES-ETYMON-ILLE-ILLA",
-                "ES-GRAMMAR-DEFINITE-ARTICLES"
+                "ES-LEX-USTEDES",
+                "ES-LEX-USTED",
+                "ES-GRAMMAR-NOUN-PLURAL-ES"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "el",
-                "the article el",
-                "el, the article"
+                "ustedes",
+                "usted becomes ustedes",
+                "usted"
               ],
               "feedback": {
-                "correct": "Right — one Latin word, worn down two different ways.",
-                "incorrect": "El. Both descend from illum; the article lost the vowel and the pronoun kept it."
+                "correct": "You had the rule before you had the rule.",
+                "incorrect": "Ustedes — that is usted plus the consonant plural."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C44-plural-es-why",
+              "prompt": "Why -es rather than plain -s after a consonant?",
+              "assesses": [
+                "ES-GRAMMAR-NOUN-PLURAL-ES"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "the bare s would be unsayable",
+                "you cannot pronounce it",
+                "spanish needs a vowel to get the s out"
+              ],
+              "feedback": {
+                "correct": "One rule and a repair, not two rules.",
+                "incorrect": "Try saying ustedes without the e. The vowel is there to make the -s pronounceable."
               }
             }
           ]
@@ -203,7 +201,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does lo mean? (It — for something masculine.) Where does it go? (Before the verb.) Next: the same job, done by a word that never changed its shape at all."
+              "text": "Vowel ending — which plural? (-s.) Consonant ending? (-es.) And why? (A bare -s there would be unsayable.) Next: the four articles in one place, now that every one of them has been earned."
             }
           ]
         }

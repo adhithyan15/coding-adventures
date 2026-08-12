@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C51-por
 spine_node: SPINE-GIVE-REASONS
-sequence: 2102
-chapter: 160
+sequence: 2122
+chapter: 163
 type: word
 headword: por
 gloss: "for" pointing back or through — at a cause, a route, an exchange; and you have been saying it since your first page

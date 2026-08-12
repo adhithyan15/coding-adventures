@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C53-sintesis-frases-largas
 spine_node: SPINE-GIVE-REASONS
-sequence: 2115
-chapter: 173
+sequence: 2135
+chapter: 176
 type: practice-mix
 headword: (synthesis)
 gloss: synthesis — the first sentences in this book long enough to be worth saying, and why length is not the same as difficulty

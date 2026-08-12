@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C09-sois
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 936
-chapter: 46
+sequence: 956
+chapter: 49
 type: grammar
 headword: sois
 gloss: the vosotros form of ser — Spain's, and the last of the six
