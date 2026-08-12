@@ -1,0 +1,64 @@
+% ============================================================================
+% sun-layer — two named layers of the Sun and what each actually is
+% (adj-facts-stdlib, ASTRONOMY).
+% ============================================================================
+% The Sun is not a single uniform ball — it is built of distinct layers, and
+% two of the outermost ones each have a clean, one-fact name for what they
+% are. Recall is a binding query:
+%
+%     ? sun_layer(photosphere, $D)
+%       % the_visible_surface_of_the_sun
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground relation
+% `sun_layer(layer, description)` carrying the source citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the
+% description WITH its source, on the CPU, with zero model calls, and
+% abstains on a solar-layer term that is not one of these two. The query
+% also runs BACKWARD — bind a description and recall the layer it names:
+%
+%     ? sun_layer($L, the_suns_outer_atmosphere)
+%       % corona
+%
+% The two layers, as a little truth table:
+%
+%     layer          description                    quote (verbatim)
+%     -------------  -----------------------------  --------------------------------------
+%     photosphere     the_visible_surface_of_the_sun   "The Photosphere – the visible surface of the Sun."
+%     corona          the_suns_outer_atmosphere        "The Corona – the Sun's outer atmosphere."
+%
+% Provenance: quoted verbatim from NASA's "Layers of the Sun" blog post
+% (The Sun Spot). WebFetch-verified twice — the second pass pulled the full
+% surrounding paragraph for every layer named on the page, confirming
+% `photosphere` and `corona` are the only two whose own sentence states a
+% single clean fact. `trust authoritative` — NASA is a primary .gov source,
+% the same tier the sibling `celestial-objects.adj`/`comet-part.adj`/
+% `space-rock-stage.adj`/`lunar-eclipse-type.adj` (the other libraries in
+% this directory) already use for their NASA citations.
+%
+% Only two rows are shipped, an intentionally smaller table than most
+% siblings in this directory — the honest-abstention discipline applies to
+% table SIZE as much as to individual queries. Honest abstention on
+% `chromosphere`: a real solar layer the SAME page names ("The Chromosphere
+% – an irregular layer above the photosphere where the temperature rises
+% from 6000°C to about 20,000°C.") — but that single sentence bundles the
+% layer's position TOGETHER WITH its temperature range as one grammatically
+% unified relative clause, rather than stating one clean fact the way
+% `photosphere` and `corona` do. `core`, `radiative zone`, and `convection
+% zone` are real layers the same page also names, but each of their
+% sentences bundles location together with process/structure details in
+% the same way — none of them is a row here either. So a recall on any of
+% these ABSTAINS rather than inventing a single-fact description the
+% source's own sentence doesn't cleanly state. (See ../README.md;
+% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table sun_layer {
+    columns layer, description
+
+    row (photosphere, the_visible_surface_of_the_sun)
+    row (corona, the_suns_outer_atmosphere)
+
+    source "The Photosphere – the visible surface of the Sun."
+    locator "https://science.nasa.gov/blogs/the-sun-spot/2023/09/26/layers-of-the-sun/"
+    trust authoritative
+}
