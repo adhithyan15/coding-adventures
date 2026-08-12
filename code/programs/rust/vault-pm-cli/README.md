@@ -31,6 +31,7 @@ vault-pm [--vault NAME] item delete ITEM
 vault-pm [--vault NAME] item list
 vault-pm [--vault NAME] item show ITEM
 vault-pm [--vault NAME] item reveal ITEM FIELD
+vault-pm [--vault NAME] search QUERY
 vault-pm [--vault NAME] history list ITEM
 vault-pm [--vault NAME] history restore ITEM REVISION
 vault-pm [--vault NAME] conflict list ITEM
@@ -43,7 +44,8 @@ field, URL, or stdin path exists. Unix integration tests launch this exact
 binary under fresh pseudo-terminals. The primary drill verifies passphrases and
 item passwords are not echoed, restarts the process for durable item
 add/edit/list/show with ordered multi-URL fields and optional hidden login
-notes, explicitly confirms audited current-password and login-notes reveals
+notes, searches redacted URL metadata without echoing the query, explicitly
+confirms audited current-password and login-notes reveals
 directly on `/dev/tty` while captured process stdout remains empty, injects decoy
 bytes through stdin, verify redacted canonical history across another fresh
 process, delete to a causal tombstone, restore an exact live ancestor into a

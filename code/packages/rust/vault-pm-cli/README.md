@@ -134,6 +134,15 @@ CVVs, postal values, API-key tokens, database passwords, and TOTP seeds are
 never available to the renderer. In an active
 epoch, both commands first make their exact signed access outcome durable.
 
+`search QUERY` rebuilds the storage-neutral in-memory search projection during
+one authenticated session and drops it on lock. The query is moved into a
+wipe-on-drop, debug-redacted owner and is never echoed. Search uses only the
+application allowlist of redacted metadata, aborts on any current conflict,
+returns at most 100 deterministic item-list rows, and never writes index or
+query bytes to a provider. In an active epoch, valid zero/nonzero results and
+invalid semantic queries publish `ItemSearch` success/failure before output or
+the closed error is released.
+
 `item edit ITEM` asks the application for an opaque edit preparation that owns
 the authenticated current revision and wipe-on-drop secret document without
 returning either to CLI orchestration. It preserves immutable identity and

@@ -1450,7 +1450,10 @@ changelog, focused build, and downstream validation.
        separate one-shot processes, using `VLT-PM11-cli-login-create-read.md`.
 9b-2b-1. redacted authenticated revision history listing using
          `VLT-PM13-cli-history-list.md`.
-9b-2b-2. redacted authenticated search plus non-login show renderers.
+9b-2b-2. completed storage-neutral redacted authenticated search plus non-login
+         show renderers, including zeroizing query ownership, fixed bounded
+         results, publish-before-release success/failure audit events, and
+         restart-backed CLI acceptance, using `VLT-PM31-cli-audited-search.md`.
 9b-2c-1. completed storage-neutral signed operation-audit event primitive using
          `VLT-PM15-operation-audit.md`.
 9b-2c-2. completed distinct encrypted application-object kind and strict

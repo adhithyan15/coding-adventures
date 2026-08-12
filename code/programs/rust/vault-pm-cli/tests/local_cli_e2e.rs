@@ -23,6 +23,7 @@ const DATABASE_PASSWORD: &[u8] = b"db_e2e_61f2c0bdb52049d7a77e71a3e68943ae";
 const TOTP_BASE32: &[u8] = b"GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ";
 const TOTP_RAW_SECRET: &[u8] = b"12345678901234567890";
 const EXPORT_PASSPHRASE: &[u8] = b"e2e distinct portable export passphrase";
+const SEARCH_QUERY: &[u8] = b"accounts.example.test";
 const STDIN_INJECTION: &[u8] = b"stdin injected secret\nstdin injected secret\n";
 
 struct TestHome(PathBuf);
@@ -149,6 +150,21 @@ fn real_cli_initializes_through_a_hidden_tty_and_survives_restart() {
     assert!(list_status.success(), "item list failed: {list_transcript}");
     assert!(list_transcript.contains(&item_id));
     assert!(!list_transcript.contains("e2e item password"));
+
+    let search_query = std::str::from_utf8(SEARCH_QUERY).unwrap();
+    let (search_status, search_transcript) = run_unlock_in_pty(
+        &home,
+        &["search", search_query],
+        format!("{item_id}\tvault/login/v1\t\"Example account\"").as_bytes(),
+    );
+    assert!(
+        search_status.success(),
+        "item search failed: {search_transcript}"
+    );
+    assert!(search_transcript.contains(&item_id));
+    assert!(search_transcript.contains("vault/login/v1\t\"Example account\""));
+    assert!(!search_transcript.contains(search_query));
+    assert_transcript_excludes_secrets(&search_transcript);
 
     let (show_status, show_transcript) =
         run_unlock_in_pty(&home, &["item", "show", &item_id], b"Password: <redacted>");
@@ -302,7 +318,7 @@ fn real_cli_initializes_through_a_hidden_tty_and_survives_restart() {
     );
     assert!(
         post_failure_transcript
-            .contains("commits=20 catalogs=6 revisions=5 items=2 audit_events=20"),
+            .contains("commits=21 catalogs=6 revisions=5 items=2 audit_events=21"),
         "unexpected post-failure audit totals: {post_failure_transcript}"
     );
     assert_transcript_excludes_secrets(&post_failure_transcript);
@@ -320,6 +336,7 @@ fn real_cli_initializes_through_a_hidden_tty_and_survives_restart() {
         audit_list_transcript.contains("action=item_create\toutcome=failed"),
         "{audit_list_transcript}"
     );
+    assert!(audit_list_transcript.contains("action=item_search\toutcome=succeeded"));
     assert!(audit_list_transcript.contains("action=audit_read\toutcome=succeeded"));
     assert!(audit_list_transcript.contains("action=vault_verify\toutcome=succeeded"));
     assert_transcript_excludes_secrets(&audit_list_transcript);
@@ -357,7 +374,7 @@ fn real_cli_initializes_through_a_hidden_tty_and_survives_restart() {
         "final audit verification failed: {final_audit_transcript}"
     );
     assert!(
-        final_audit_transcript.contains("audit_events=24"),
+        final_audit_transcript.contains("audit_events=25"),
         "unexpected final audit total: {final_audit_transcript}"
     );
     assert_transcript_excludes_secrets(&final_audit_transcript);
@@ -436,6 +453,7 @@ fn real_cli_initializes_through_a_hidden_tty_and_survives_restart() {
     assert_tree_excludes(&home.0, UPDATED_LOGIN_NOTES);
     assert_tree_excludes(&home.0, SECURE_NOTE_BODY);
     assert_tree_excludes(&home.0, EXPORT_PASSPHRASE);
+    assert_tree_excludes(&home.0, SEARCH_QUERY);
 }
 
 #[test]
