@@ -21,7 +21,7 @@ use coding_adventures_vault_pm_domain::{
 };
 use coding_adventures_vault_pm_format::{DeviceId, ObjectId, VaultId};
 use coding_adventures_vault_pm_repository::{OpenReport, PinnedHeads};
-use coding_adventures_vault_records::{AnyRecord, Login, SecureNote};
+use coding_adventures_vault_records::{AnyRecord, Card, Login, SecureNote};
 use coding_adventures_zeroize::Zeroizing;
 use core::fmt::{self, Debug, Formatter};
 use std::collections::{BTreeMap, BTreeSet};
@@ -47,6 +47,40 @@ pub struct LoginEditInputV1 {
 pub struct SecureNoteConflictMergeInputV1 {
     title: Zeroizing<String>,
     body: Zeroizing<String>,
+}
+
+/// Owned wipe-on-drop caller fields for one complete payment-card merge.
+pub struct CardConflictMergeInputV1 {
+    title: Zeroizing<String>,
+    holder: Zeroizing<String>,
+    number: Zeroizing<String>,
+    expiry_month: Zeroizing<String>,
+    expiry_year: Zeroizing<String>,
+    cvv: Zeroizing<String>,
+    billing_zip: Option<Zeroizing<String>>,
+}
+
+impl CardConflictMergeInputV1 {
+    /// Take the complete bounded payment-card form collected by a trusted host.
+    pub const fn new(
+        title: Zeroizing<String>,
+        holder: Zeroizing<String>,
+        number: Zeroizing<String>,
+        expiry_month: Zeroizing<String>,
+        expiry_year: Zeroizing<String>,
+        cvv: Zeroizing<String>,
+        billing_zip: Option<Zeroizing<String>>,
+    ) -> Self {
+        Self {
+            title,
+            holder,
+            number,
+            expiry_month,
+            expiry_year,
+            cvv,
+            billing_zip,
+        }
+    }
 }
 
 impl SecureNoteConflictMergeInputV1 {
@@ -269,6 +303,36 @@ pub struct SecureNoteConflictMergePreparationV1 {
     failure_audit: ConflictMergeFailureAuditV1,
 }
 
+/// Opaque application-owned state for one validated authored payment-card
+/// conflict merge.
+pub struct CardConflictMergePreparationV1 {
+    session: UnlockedVaultV1,
+    item_id: ItemId,
+    base: Zeroizing<ItemDocument>,
+    failure_audit: ConflictMergeFailureAuditV1,
+}
+
+/// Audited result of validating one authored payment-card conflict merge.
+pub enum AuditedCardConflictMergePreparationV1 {
+    /// The application retains the base document and complete conflict set.
+    Ready(Box<CardConflictMergePreparationV1>),
+    /// The closed precondition failure and its next owner state are durable.
+    Failed(Box<crate::AuditedAccessResultV1<()>>),
+}
+
+impl AuditedCardConflictMergePreparationV1 {
+    /// Return the opaque preparation or its already-durable operation failure.
+    pub fn into_preparation(self) -> Result<CardConflictMergePreparationV1, ApplicationError> {
+        match self {
+            Self::Ready(preparation) => Ok(*preparation),
+            Self::Failed(failure) => match failure.into_operation() {
+                Ok(()) => Err(ApplicationError::InternalInvariant),
+                Err(error) => Err(error),
+            },
+        }
+    }
+}
+
 /// Audited result of validating one authored secure-note conflict merge target.
 pub enum AuditedSecureNoteConflictMergePreparationV1 {
     /// The application retains the base document and complete conflict set.
@@ -413,6 +477,111 @@ impl SecureNoteConflictMergePreparationV1 {
             Err(error),
         )
     }
+}
+
+impl CardConflictMergePreparationV1 {
+    /// Record a host-side prompt or entropy failure before exposing it.
+    pub fn record_audited_host_failure(
+        self,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<ActiveStateV1, ApplicationError> {
+        let audited =
+            self.publish_audited_failure(ApplicationError::InvalidInput, local_state_store)?;
+        Ok(audited.into_parts().0)
+    }
+
+    /// Complete the user-authored payment-card merge and its atomic audit event.
+    pub fn complete_audited(
+        self,
+        input: CardConflictMergeInputV1,
+        randomness: ResolveItemConflictRandomnessV1,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<crate::AuditedAccessResultV1<()>, ApplicationError> {
+        let document =
+            match replacement_card_document(&self.base, input, self.failure_audit.wall_time_ms) {
+                Ok(document) => document,
+                Err(error) => return self.publish_audited_failure(error, local_state_store),
+            };
+        let active = self.session.merge_item_conflict(
+            document,
+            self.failure_audit.wall_time_ms,
+            randomness,
+            local_state_store,
+        )?;
+        Ok(crate::AuditedAccessResultV1::new(active, Ok(())))
+    }
+
+    fn publish_audited_failure(
+        self,
+        error: ApplicationError,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<crate::AuditedAccessResultV1<()>, ApplicationError> {
+        self.session.finish_audited_access(
+            AuditActionV1::ItemConflictMerge,
+            Some(self.item_id),
+            None,
+            self.failure_audit.wall_time_ms,
+            self.failure_audit.randomness,
+            local_state_store,
+            Err(error),
+        )
+    }
+}
+
+fn replacement_card_document(
+    current: &ItemDocument,
+    input: CardConflictMergeInputV1,
+    updated_at_ms: u64,
+) -> Result<ItemDocument, ApplicationError> {
+    let AnyRecord::Card(_) = current.payload() else {
+        return Err(ApplicationError::InternalInvariant);
+    };
+    if !(8..=19).contains(&input.number.len())
+        || !input.number.bytes().all(|byte| byte.is_ascii_digit())
+        || !(3..=4).contains(&input.cvv.len())
+        || !input.cvv.bytes().all(|byte| byte.is_ascii_digit())
+    {
+        return Err(ApplicationError::InvalidInput);
+    }
+    let expiry_month = input
+        .expiry_month
+        .parse::<u8>()
+        .map_err(|_| ApplicationError::InvalidInput)?;
+    if !(1..=12).contains(&expiry_month) || expiry_month.to_string() != input.expiry_month.as_str()
+    {
+        return Err(ApplicationError::InvalidInput);
+    }
+    if input.expiry_year.len() != 4 || !input.expiry_year.bytes().all(|byte| byte.is_ascii_digit())
+    {
+        return Err(ApplicationError::InvalidInput);
+    }
+    let expiry_year = input
+        .expiry_year
+        .parse::<u16>()
+        .map_err(|_| ApplicationError::InvalidInput)?;
+    if expiry_year == 0 {
+        return Err(ApplicationError::InvalidInput);
+    }
+    ItemDocument::new(
+        current.id(),
+        current.schema().clone(),
+        current.created_at_ms(),
+        updated_at_ms.max(current.updated_at_ms()),
+        current.favorite().clone(),
+        current.collection_ids().clone(),
+        current.tags().clone(),
+        AnyRecord::Card(Card {
+            title: input.title.into_inner(),
+            holder: input.holder.into_inner(),
+            number: input.number.into_inner(),
+            expiry_month,
+            expiry_year,
+            cvv: input.cvv.into_inner(),
+            billing_zip: input.billing_zip.map(Zeroizing::into_inner),
+        }),
+        current.attachments().clone(),
+    )
+    .map_err(|_| ApplicationError::InvalidInput)
 }
 
 fn replacement_secure_note_document(
@@ -2234,6 +2403,55 @@ impl UnlockedVaultV1 {
         Ok(base)
     }
 
+    /// Validate one exact current live payment card as the opaque metadata base
+    /// for an authored conflict merge, or publish the failed precondition.
+    pub fn prepare_audited_card_conflict_merge(
+        self,
+        item_id: ItemId,
+        base_revision: RevisionId,
+        wall_time_ms: u64,
+        failure_randomness: AuditedAccessRandomnessV1,
+        local_state_store: &dyn LocalStateStore,
+    ) -> Result<AuditedCardConflictMergePreparationV1, ApplicationError> {
+        self.require_audit_epoch()?;
+        match self.card_conflict_merge_precondition(item_id, base_revision) {
+            Ok(base) => Ok(AuditedCardConflictMergePreparationV1::Ready(Box::new(
+                CardConflictMergePreparationV1 {
+                    session: self,
+                    item_id,
+                    base,
+                    failure_audit: ConflictMergeFailureAuditV1 {
+                        wall_time_ms,
+                        randomness: failure_randomness,
+                    },
+                },
+            ))),
+            Err(error) => self
+                .finish_audited_access(
+                    AuditActionV1::ItemConflictMerge,
+                    Some(item_id),
+                    None,
+                    wall_time_ms,
+                    failure_randomness,
+                    local_state_store,
+                    Err(error),
+                )
+                .map(|failure| AuditedCardConflictMergePreparationV1::Failed(Box::new(failure))),
+        }
+    }
+
+    fn card_conflict_merge_precondition(
+        &self,
+        item_id: ItemId,
+        base_revision: RevisionId,
+    ) -> Result<Zeroizing<ItemDocument>, ApplicationError> {
+        let base = self.conflict_merge_base_precondition(item_id, base_revision)?;
+        let AnyRecord::Card(_) = base.payload() else {
+            return Err(ApplicationError::Unsupported);
+        };
+        Ok(base)
+    }
+
     fn conflict_merge_base_precondition(
         &self,
         item_id: ItemId,
@@ -3392,6 +3610,74 @@ mod tests {
             ObjectKind::Catalog,
             &catalog.encode().unwrap(),
             &ObjectRandomness::new([0xd7; 32], [0xd8; 24], [0xd9; 24]),
+        )
+        .unwrap();
+        (
+            publication_for_catalog(active, objects, catalog_frame),
+            revisions,
+        )
+    }
+
+    fn pending_card_conflict_publication(
+        active: &ActiveStateV1,
+        item_id: ItemId,
+    ) -> (PublicationJournalV1, Vec<RevisionId>) {
+        let fixture = generation_zero_bytes();
+        let root_key: [u8; 32] = fixture[48..80].try_into().unwrap();
+        let keys = V1Keys::derive(active.vault_id(), &root_key).unwrap();
+        let mut objects = Vec::new();
+        let mut revisions = Vec::new();
+        for (index, (title, number, cvv)) in [
+            ("Keep card left", "4111111111111111", "123"),
+            ("Keep card right", "5555555555554444", "456"),
+        ]
+        .into_iter()
+        .enumerate()
+        {
+            let document = ItemDocument::new(
+                item_id,
+                ContentType::new(coding_adventures_vault_records::CARD_V1).unwrap(),
+                500,
+                500,
+                LwwRegister::new(true, 500, OperationId::new([0xe0; 32])),
+                ObservedSet::new(),
+                ObservedSet::new(),
+                AnyRecord::Card(Card {
+                    title: title.to_owned(),
+                    holder: "Ada Lovelace".to_owned(),
+                    number: number.to_owned(),
+                    expiry_month: 12,
+                    expiry_year: 2030,
+                    cvv: cvv.to_owned(),
+                    billing_zip: Some("12345".to_owned()),
+                }),
+                ObservedSet::new(),
+            )
+            .unwrap();
+            let candidate = ItemCandidate::new(
+                RevisionId::new([0; 32]),
+                [],
+                ItemState::Live(Box::new(document)),
+            )
+            .unwrap();
+            let base = 0xe1u8.wrapping_add(index as u8 * 3);
+            let frame = seal_object(
+                &keys,
+                ObjectKind::ItemRevision,
+                &encode_item_revision(candidate.causal_parents(), candidate.state()).unwrap(),
+                &ObjectRandomness::new([base; 32], [base + 1; 24], [base + 2; 24]),
+            )
+            .unwrap();
+            revisions.push(RevisionId::new(*frame.id().unwrap().as_bytes()));
+            objects.push(frame);
+        }
+        revisions.sort_unstable();
+        let catalog = CatalogV1::new(BTreeMap::from([(item_id, revisions.clone())])).unwrap();
+        let catalog_frame = seal_object(
+            &keys,
+            ObjectKind::Catalog,
+            &catalog.encode().unwrap(),
+            &ObjectRandomness::new([0xe7; 32], [0xe8; 24], [0xe9; 24]),
         )
         .unwrap();
         (
@@ -8047,6 +8333,285 @@ mod tests {
         assert_eq!(note.title, "Authored secure note");
         assert_eq!(note.body, "authored secure-note body");
         assert_eq!(reopened.item_history(item_id, 100).unwrap().len(), 3);
+    }
+
+    #[test]
+    fn audited_authored_card_merge_records_host_validation_failure_and_success() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let exact_active = local.0.lock().unwrap().clone().unwrap();
+        let LocalVaultStateV1::Active(active) = LocalVaultStateV1::decode(&exact_active).unwrap()
+        else {
+            panic!("fixture must be active")
+        };
+        let item_id = ItemId::new([0x24; 16]);
+        let (publication, revisions) = pending_card_conflict_publication(&active, item_id);
+        *local.0.lock().unwrap() = Some(
+            LocalVaultStateV1::pending_publication(active, publication)
+                .unwrap()
+                .encode()
+                .unwrap(),
+        );
+        recover_pending_publication(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .activate_audit_epoch(501, audited_access_randomness(0x65), &local)
+        .unwrap();
+
+        let base_revision = revisions[0];
+        open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .prepare_audited_card_conflict_merge(
+            item_id,
+            base_revision,
+            502,
+            audited_access_randomness(0x66),
+            &local,
+        )
+        .unwrap()
+        .into_preparation()
+        .unwrap()
+        .record_audited_host_failure(&local)
+        .unwrap();
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(
+            latest_audit_facts(&session),
+            (
+                AuditActionV1::ItemConflictMerge,
+                AuditOutcomeV1::Failed,
+                Some(item_id),
+                None,
+            )
+        );
+        session
+            .prepare_audited_card_conflict_merge(
+                item_id,
+                base_revision,
+                503,
+                audited_access_randomness(0x67),
+                &local,
+            )
+            .unwrap()
+            .into_preparation()
+            .unwrap()
+            .complete_audited(
+                CardConflictMergeInputV1::new(
+                    Zeroizing::new("Authored card".to_owned()),
+                    Zeroizing::new("Ada Lovelace".to_owned()),
+                    Zeroizing::new("not-a-pan".to_owned()),
+                    Zeroizing::new("12".to_owned()),
+                    Zeroizing::new("2032".to_owned()),
+                    Zeroizing::new("999".to_owned()),
+                    None,
+                ),
+                resolve_item_conflict_randomness(0x68),
+                &local,
+            )
+            .unwrap()
+            .into_operation()
+            .expect_err("invalid card form must remain a closed failed operation");
+        let session = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(session.conflicted_item_count(), 1);
+        assert_eq!(
+            latest_audit_facts(&session),
+            (
+                AuditActionV1::ItemConflictMerge,
+                AuditOutcomeV1::Failed,
+                Some(item_id),
+                None,
+            )
+        );
+        let base_document = session.current_catalog.items[&item_id]
+            .iter()
+            .find(|candidate| candidate.revision_id() == base_revision)
+            .and_then(|candidate| match candidate.state() {
+                ItemState::Live(document) => Some(document),
+                ItemState::Tombstone(_) => None,
+            })
+            .unwrap();
+        let expected_favorite = base_document.favorite().clone();
+        let expected_collections = base_document.collection_ids().clone();
+        let expected_tags = base_document.tags().clone();
+        let expected_attachments = base_document.attachments().clone();
+
+        session
+            .prepare_audited_card_conflict_merge(
+                item_id,
+                base_revision,
+                504,
+                audited_access_randomness(0x69),
+                &local,
+            )
+            .unwrap()
+            .into_preparation()
+            .unwrap()
+            .complete_audited(
+                CardConflictMergeInputV1::new(
+                    Zeroizing::new("Authored card".to_owned()),
+                    Zeroizing::new("Grace Hopper".to_owned()),
+                    Zeroizing::new("4000000000000002".to_owned()),
+                    Zeroizing::new("7".to_owned()),
+                    Zeroizing::new("2032".to_owned()),
+                    Zeroizing::new("999".to_owned()),
+                    Some(Zeroizing::new("90210".to_owned())),
+                ),
+                resolve_item_conflict_randomness(0x6a),
+                &local,
+            )
+            .unwrap()
+            .into_operation()
+            .unwrap();
+
+        let reopened = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(reopened.conflicted_item_count(), 0);
+        assert_eq!(
+            latest_audit_facts(&reopened),
+            (
+                AuditActionV1::ItemConflictMerge,
+                AuditOutcomeV1::Succeeded,
+                Some(item_id),
+                None,
+            )
+        );
+        let [candidate] = reopened.current_catalog.items[&item_id].as_slice() else {
+            panic!("authored payment-card merge must be the sole current candidate")
+        };
+        assert_eq!(
+            candidate.causal_parents(),
+            &revisions.iter().copied().collect::<BTreeSet<_>>()
+        );
+        let ItemState::Live(document) = candidate.state() else {
+            panic!("authored payment-card merge must publish a live document")
+        };
+        assert_eq!(document.created_at_ms(), 500);
+        assert_eq!(document.updated_at_ms(), 504);
+        assert_eq!(document.favorite(), &expected_favorite);
+        assert_eq!(document.collection_ids(), &expected_collections);
+        assert_eq!(document.tags(), &expected_tags);
+        assert_eq!(document.attachments(), &expected_attachments);
+        let AnyRecord::Card(card) = document.payload() else {
+            panic!("authored payment-card merge must retain its schema")
+        };
+        assert_eq!(card.title, "Authored card");
+        assert_eq!(card.holder, "Grace Hopper");
+        assert_eq!(card.number, "4000000000000002");
+        assert_eq!(card.expiry_month, 7);
+        assert_eq!(card.expiry_year, 2032);
+        assert_eq!(card.cvv, "999");
+        assert_eq!(card.billing_zip.as_deref(), Some("90210"));
+        assert_eq!(reopened.item_history(item_id, 100).unwrap().len(), 3);
+    }
+
+    #[test]
+    fn audited_authored_card_merge_rejects_a_secure_note_base() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let exact_active = local.0.lock().unwrap().clone().unwrap();
+        let LocalVaultStateV1::Active(active) = LocalVaultStateV1::decode(&exact_active).unwrap()
+        else {
+            panic!("fixture must be active")
+        };
+        let item_id = ItemId::new([0x25; 16]);
+        let (publication, revisions) = pending_secure_note_conflict_publication(&active, item_id);
+        *local.0.lock().unwrap() = Some(
+            LocalVaultStateV1::pending_publication(active, publication)
+                .unwrap()
+                .encode()
+                .unwrap(),
+        );
+        recover_pending_publication(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .activate_audit_epoch(505, audited_access_randomness(0x6b), &local)
+        .unwrap();
+
+        let result = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap()
+        .prepare_audited_card_conflict_merge(
+            item_id,
+            revisions[0],
+            506,
+            audited_access_randomness(0x6c),
+            &local,
+        )
+        .unwrap()
+        .into_preparation();
+        assert!(matches!(result, Err(ApplicationError::Unsupported)));
+        let reopened = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        )
+        .unwrap();
+        assert_eq!(reopened.conflicted_item_count(), 1);
+        assert_eq!(
+            latest_audit_facts(&reopened),
+            (
+                AuditActionV1::ItemConflictMerge,
+                AuditOutcomeV1::Failed,
+                Some(item_id),
+                None,
+            )
+        );
     }
 
     #[test]

@@ -174,6 +174,12 @@ records precondition and host failures as item-scoped `ItemConflictMerge`, and
 accepts a complete owned title/body form. Success preserves base non-form
 metadata and immutable history while publishing one all-current-parent note.
 
+Payment-card authored merges reuse that opaque preparation boundary while
+collecting a complete replacement form. PAN, CVV, canonical month, and year
+validation remains application-owned so invalid forms publish their failed
+`ItemConflictMerge` event before returning. Successful card merges retain only
+the base's non-form metadata and never return prior card values to the host.
+
 Compare-and-replace is available through the same session-consuming boundary.
 It requires the requested item to have exactly one current live candidate equal
 to the caller's expected revision, then writes a new revision whose sole direct

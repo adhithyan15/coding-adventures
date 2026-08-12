@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Added audit-required `conflict merge card ITEM BASE_REVISION`, which retains
+  the exact current card opaquely, collects PAN/CVV through hidden prompts,
+  durably records host and validation failures, and publishes one authored
+  all-current-parent result without exposing prior candidate values.
 - Added audit-required `conflict merge secure-note ITEM BASE_REVISION`, with an
   opaque exact-current note base, hidden complete body input, durable
   precondition/host failures, and atomic all-current-parent success.
