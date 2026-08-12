@@ -82,6 +82,18 @@ pieces taught before the whole; and a book you can read straight through.
   and Malayalam needed it because **കേൾക്കുക** had narrowed to hearing where
   Tamil's *kēḷ* still asks. The chapter closes on the sentence that will not let
   you be its subject at all.
+- **Chapters 35–40 — Family, Face, Hearts, and Drinks**
+  ([`lessons/ML-C{35..40}-*`](./lessons/)): **kuṭumbaṁ** (family, a Sanskrit
+  loan Chapter 12's six people-words never supplied) and **suhṛttŭ**
+  (friend); **kuṭṭi/makan/makaḷ** (child/son/daughter — *makaḷ* matches
+  Tamil's own word letter for letter); **kaṇṇŭ/cevi/mūkkŭ/vāy** (eye, ear,
+  nose, mouth — the family agrees almost completely on all four except
+  *cevi*, where Kannada alone keeps the older sound); **hṛdayaṁ/nenchŭ**
+  (heart, one Sanskrit and a real Indo-European cousin of English *heart*,
+  one native); **chāya/kāppi/pāl** (tea, coffee, milk — tea walked overland
+  from China through Persia, coffee sailed from Arabia through Europe);
+  **ūṇ** (a meal, and the second eat-verb, **uṇṇuka**, this book had never
+  taught). In the book.
 
 All forty-seven later lessons remain below five effective minutes.
 
@@ -113,10 +125,12 @@ finishing that chapter lets them do, and names the lesson that proves it:
 
 The file is **authored intent**, not a derived cache — no validator may rewrite
 it, and it is derived from the lessons themselves rather than from `roadmap.md`,
-which still lags Chapters 6–32. Chapters 6–32 are covered. Chapters 1–5 are
-deliberately left out: their recap lessons are still schema v1 with no declared
-knowledge atoms, so a payoff there could only be invented. That absence is
-honest, measurable debt and is reported as such.
+which still lags Chapters 6–40. Chapters 6–40 are covered, including
+Chapters 35–40's HL09 pre-A1 vocabulary tranche (family, face, hearts, and
+drinks). Chapters 1–5 are deliberately left out: their recap lessons are
+still schema v1 with no declared knowledge atoms, so a payoff there could
+only be invented. That absence is honest, measurable debt and is reported
+as such.
 
 ## Files
 

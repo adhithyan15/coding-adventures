@@ -4862,6 +4862,99 @@
       "jsonHash": "fnv1a64:997f426f6cf61e66"
     },
     {
+      "language": "malayalam",
+      "chapter": 35,
+      "sourceHash": "fnv1a64:2dbbdcacce4fd0a3",
+      "lessonIds": [
+        "ML-C35-kudumbam",
+        "ML-C35-suhruthu"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "malayalam/narration/ch35.txt",
+      "json": "malayalam/narration/ch35.json",
+      "textHash": "fnv1a64:bfbc1dff27b6fa46",
+      "jsonHash": "fnv1a64:1511d029a6afcfe9"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 36,
+      "sourceHash": "fnv1a64:f5f70e8053923a9b",
+      "lessonIds": [
+        "ML-C36-kutti",
+        "ML-C36-makan",
+        "ML-C36-makal"
+      ],
+      "voiceLessons": 3,
+      "drivablePrefix": 3,
+      "text": "malayalam/narration/ch36.txt",
+      "json": "malayalam/narration/ch36.json",
+      "textHash": "fnv1a64:15b0756597cf9712",
+      "jsonHash": "fnv1a64:66df111c1a65be82"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 37,
+      "sourceHash": "fnv1a64:df1cd201c376ec9f",
+      "lessonIds": [
+        "ML-C37-kannu",
+        "ML-C37-chevi",
+        "ML-C37-mookku",
+        "ML-C37-vaay"
+      ],
+      "voiceLessons": 3,
+      "drivablePrefix": 3,
+      "text": "malayalam/narration/ch37.txt",
+      "json": "malayalam/narration/ch37.json",
+      "textHash": "fnv1a64:10deecbef9899c3b",
+      "jsonHash": "fnv1a64:b3d8d4550b1a440e"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 38,
+      "sourceHash": "fnv1a64:5b91259361354e4b",
+      "lessonIds": [
+        "ML-C38-hrudayam",
+        "ML-C38-nenchu"
+      ],
+      "voiceLessons": 2,
+      "drivablePrefix": 2,
+      "text": "malayalam/narration/ch38.txt",
+      "json": "malayalam/narration/ch38.json",
+      "textHash": "fnv1a64:2f1fd6e4ac6887e5",
+      "jsonHash": "fnv1a64:f98631f3f807d06b"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 39,
+      "sourceHash": "fnv1a64:e8554b428e920083",
+      "lessonIds": [
+        "ML-C39-chaaya",
+        "ML-C39-kaapi",
+        "ML-C39-paal"
+      ],
+      "voiceLessons": 3,
+      "drivablePrefix": 3,
+      "text": "malayalam/narration/ch39.txt",
+      "json": "malayalam/narration/ch39.json",
+      "textHash": "fnv1a64:501267017e1c81da",
+      "jsonHash": "fnv1a64:252f8a16d3839c73"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 40,
+      "sourceHash": "fnv1a64:d6b71fdac2f43300",
+      "lessonIds": [
+        "ML-C40-oon"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "malayalam/narration/ch40.txt",
+      "json": "malayalam/narration/ch40.json",
+      "textHash": "fnv1a64:efbb7370b9ddce59",
+      "jsonHash": "fnv1a64:49e88a565854ba28"
+    },
+    {
       "language": "marathi",
       "chapter": 1,
       "sourceHash": "fnv1a64:07798362d454a9f2",

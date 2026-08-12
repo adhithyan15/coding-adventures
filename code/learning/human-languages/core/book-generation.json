@@ -1928,6 +1928,54 @@
       "scriptSet": "malayalam-comparisons"
     },
     {
+      "language": "malayalam",
+      "chapter": 35,
+      "title": "Family and Friend",
+      "label": "ch:ml-family-and-friend",
+      "output": "malayalam/book/chapters/ch35-family-and-friend.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 36,
+      "title": "Child, Son, Daughter",
+      "label": "ch:ml-child-son-daughter",
+      "output": "malayalam/book/chapters/ch36-child-son-daughter.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 37,
+      "title": "Face Words",
+      "label": "ch:ml-face-words",
+      "output": "malayalam/book/chapters/ch37-face-words.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 38,
+      "title": "The Two Hearts",
+      "label": "ch:ml-two-hearts",
+      "output": "malayalam/book/chapters/ch38-two-hearts.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 39,
+      "title": "Tea, Coffee, Milk",
+      "label": "ch:ml-tea-coffee-milk",
+      "output": "malayalam/book/chapters/ch39-tea-coffee-milk.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 40,
+      "title": "The Meal",
+      "label": "ch:ml-the-meal",
+      "output": "malayalam/book/chapters/ch40-the-meal.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
       "language": "marathi",
       "chapter": 6,
       "output": "marathi/book/chapters/ch06-numbers-1-5.tex",

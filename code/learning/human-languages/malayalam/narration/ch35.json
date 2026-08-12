@@ -1,0 +1,292 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 35,
+  "title": "Family and Friend",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:2dbbdcacce4fd0a3",
+  "lessons": [
+    {
+      "id": "ML-C35-kudumbam",
+      "sequence": 790,
+      "title": "കുടുംബം (kuṭumbaṁ) — \"family,\" the word the six people-words never needed",
+      "headword": "കുടുംബം",
+      "romanization": "kuṭumbaṁ",
+      "gloss": "family — the collective word Chapter 12's six people-words never needed, because each of them already named one specific person",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:44b8a8fb1056cca6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Enikku malayāḷaṁ iṣṭamāṇŭ closed the last chapter on a sentence built from nothing but nouns and a dative. This chapter opens on the plainest nouns of all: the people you would actually say it to."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കുടുംബം — kuṭumbaṁ — family."
+            },
+            {
+              "kind": "speech",
+              "text": "ഇത് എന്റെ കുടുംബമാണ്. — ithu ente kuṭumbamāṇŭ. — \"This is my family.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Ente, \"my,\" has been yours since Chapter 2; ‑ആണ് is the same copula that closed enikku malayāḷaṁ iṣṭamāṇŭ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കുടുംബം (kuṭumbaṁ) is Sanskrit तत्सम कुटुम्ब (kuṭumba), \"family, household,\" absorbed with the same nativizing ‑അം ending you already met on ഇഷ്ടം and സുഖം — a genuine Malayalam habit: dress a bare Sanskrit neuter stem in Malayalam's own ‑aṁ. Kannada borrows the identical word bare, ಕುಟುಂಬ (kuṭumba), no ending added — one more place Malayalam leans harder into Sanskrit than its sisters do, this time in the shape of the loan rather than the fact of it."
+            },
+            {
+              "kind": "speech",
+              "text": "Chapter 12 gave you six words: അച്ഛൻ, അമ്മ, and the four age-graded siblings ചേട്ടൻ/അനിയൻ, ചേച്ചി/അനിയത്തി. Every one is native Dravidian, and not one of them means \"family\" — each names a single, specific person. Malayalam never inherited a word for the group itself, so when it needed one, it reached for Sanskrit. The people came first, and stayed native; the collective came later, and came borrowed."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ithu ente kuṭumbamāṇŭ\" — this is my family",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ithu ente kuṭumbamāṇŭ\" — this is my family]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the six named people, then the borrowed group word — \"acchan, amma, cēṭṭan, aniyan, cēcci, aniyatti … kuṭumbaṁ\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the six named people, then the borrowed group word — \"acchan, amma, cēṭṭan, aniyan, cēcci, aniyatti … kuṭumbaṁ\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bare against dressed — \"kuṭumba\" (Kannada), \"kuṭumbaṁ\" (Malayalam)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: bare against dressed — \"kuṭumba\" (Kannada), \"kuṭumbaṁ\" (Malayalam)]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"this is my family.\" (Ithu ente kuṭumbamāṇŭ.) Is kuṭumbaṁ native Dravidian or a loan? (A Sanskrit loan, like iṣṭaṁ and sukhaṁ — and dressed in the same ‑aṁ.) Name Chapter 12's six family words. (Acchan, amma, cēṭṭan, aniyan, cēcci, aniyatti.) Which of those six means \"family\" as a group? (None of them — that's exactly the gap kuṭumbaṁ fills.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C35-suhruthu",
+      "sequence": 800,
+      "title": "സുഹൃത്ത് (suhṛttŭ) — \"friend,\" a word built out of \"good\" plus \"heart\"",
+      "headword": "സുഹൃത്ത്",
+      "romanization": "suhṛttŭ",
+      "gloss": "friend — Sanskrit \"good-heart,\" a root this chapter's own heart-word will meet again",
+      "script": "malayalam",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:09b680090d7ccdd3",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Kuṭumbaṁ named the group you're born into. This word names the one you choose."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സുഹൃത്ത് — suhṛttŭ — friend."
+            },
+            {
+              "kind": "speech",
+              "text": "ഇത് എന്റെ സുഹൃത്താണ്. — ithu ente suhṛttāṇŭ. — \"This is my friend.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The everyday spoken alternative is കൂട്ടുകാരൻ (kūṭṭukāran, male) / കൂട്ടുകാരി (kūṭṭukāri, female)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഹൃ is ഹ (ha) carrying the ൃ sign — the short vocalic r inherited straight from Sanskrit, the same vowel that opened Chapter 16's വൃശ്ചികം. Malayalam is the only one of the four literary Dravidian scripts that still writes it as a distinct vowel sign rather than respelling it away."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സുഹൃത്ത് (suhṛttŭ) is Sanskrit सुहृद् (suhṛd), literally \"good-heart\": सु (su) \"good\" plus हृद् (hṛd) \"heart\" — the very root a later chapter in this same stretch meets again as ഹൃദയം, \"heart\" itself. Friendship, in Malayalam's borrowed word for it, is a matter of the heart before it is a matter of anything else."
+            },
+            {
+              "kind": "speech",
+              "text": "Everyday speech reaches just as often for കൂട്ടുകാരൻ/കൂട്ടുകാരി — native കൂട്ട് (kūṭṭŭ, \"joining, group,\" the same root as the verb കൂടുക, \"to join, unite\") plus the agentive ‑കാരൻ/‑കാരി. That suffix is itself borrowed, from Sanskrit कार (kāra, \"maker, doer\") fused onto a Dravidian personal ending — so even Malayalam's more casual, native-rooted word for \"friend\" leans on a Sanskrit-derived ending to finish the job. Selective borrowing, as Chapter 2's santōṣaṁ already showed, does not always mean choosing one word wholesale over another; sometimes it means splicing a Dravidian root and a Sanskrit ending into a single new word."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ithu ente suhṛttāṇŭ\" — this is my friend",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ithu ente suhṛttāṇŭ\" — this is my friend]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the casual alternative — \"kūṭṭukāran, kūṭṭukāri\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the casual alternative — \"kūṭṭukāran, kūṭṭukāri\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two pieces — \"su,\" good, plus \"hṛd,\" heart",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two pieces — \"su,\" good, plus \"hṛd,\" heart]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "family and friend, one chapter — \"kuṭumbaṁ … suhṛttŭ\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: family and friend, one chapter — \"kuṭumbaṁ … suhṛttŭ\"]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"this is my friend.\" (Ithu ente suhṛttāṇŭ.) What does suhṛttŭ literally mean, piece by piece? (\"Good\" su + \"heart\" hṛd.) Name the everyday spoken alternative, and what its ending is borrowed from. (Kūṭṭukāran/kūṭṭukāri — the ‑കാരൻ/‑കാരി ending is from Sanskrit kāra, \"maker.\")"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,186 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 40,
+  "title": "The Meal",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:d6b71fdac2f43300",
+  "lessons": [
+    {
+      "id": "ML-C40-oon",
+      "sequence": 930,
+      "title": "ഊണ് (ūṇ) — \"a meal,\" the word that closes this stretch's table",
+      "headword": "ഊണ്",
+      "romanization": "ūṇ",
+      "gloss": "a meal — the noun behind ഉണ്ണുക, Malayalam's second eat-verb, standing beside Chapter 32's everyday തിന്നുക",
+      "script": "malayalam",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:0645e3b215c21ce3",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Chapter 32 taught തിന്നുക, \"to eat,\" for anything at all. It never taught the word for a proper, sit-down meal. Here it is."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഊണ് — ūṇ — a meal."
+            },
+            {
+              "kind": "speech",
+              "text": "ഞാൻ ഊണ് ഉണ്ണുന്നു. — ñān ūṇ uṇṇunnu. — \"I am having a meal.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഊ is the independent long‑ū vowel — the shape a word uses when it opens with this sound and there is no consonant in front of it to carry the small sign ൂ instead. It is the same kind of independent vowel letter as Chapter 1's inherent‑a opening; the sound only changes shape depending on what, if anything, comes before it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഊണ് (ūṇ) is native Dravidian, sharing its root with the verb ഉണ്ണുക (uṇṇuka), \"to eat a meal\" — a second eat-verb this book has never taught, standing beside Chapter 32's everyday തിന്നുക. The difference is the same one English makes between \"eating\" in general and \"having a meal\": tinnuka covers a snack, a fruit, anything at all; uṇṇuka names sitting down to the real thing."
+            },
+            {
+              "kind": "speech",
+              "text": "Tamil's cognate உணவு (uṇavu) generalised the very same root all the way to \"food\" itself. Kannada's ഊട (ūṭa) narrowed it to \"a meal,\" matching Malayalam's own ഊണ് (ūṇ) sense for sense — three sisters, one Proto-Dravidian root, three different landing points."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "grammar",
+          "title": "Grammar Lens: the stretch this chapter closes",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "എനിക്ക് ഊണ് ഇഷ്ടമാണ്. — enikku ūṇ iṣṭamāṇŭ. — \"I like having a meal\" — Chapter 6's dative ‑ikku, Chapter 34's frame, one more turn of the same machine."
+            },
+            {
+              "kind": "speech",
+              "text": "This chapter closes the spine node ദയവായി opened: ദയവായി asks; ക്ഷമിക്കണം repairs, the word for showing up after the ഊണ് (ūṇ) is already over. And ‑ikku is still the same cousin of Tamil's ‑ukku, Telugu's ‑ku, and Kannada's ‑ge that Chapter 6 first named."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ñān ūṇ uṇṇunnu\" — I am having a meal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ñān ūṇ uṇṇunnu\" — I am having a meal]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "everyday against a proper meal — \"tinnunnu … uṇṇunnu\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: everyday against a proper meal — \"tinnunnu … uṇṇunnu\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"enikku ūṇ iṣṭamāṇŭ\" — I like having a meal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"enikku ūṇ iṣṭamāṇŭ\" — I like having a meal]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ask, then repair — \"dayavāyi … kṣamikkaṇaṁ\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: ask, then repair — \"dayavāyi … kṣamikkaṇaṁ\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "this chapter's three drinks and its meal — \"chāya, kāppi, pāl … ūṇ\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: this chapter's three drinks and its meal — \"chāya, kāppi, pāl … ūṇ\"]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I am having a meal.\" (Ñān ūṇ uṇṇunnu.) How does uṇṇuka differ from Chapter 32's tinnuka? (Tinnuka is eating in general; uṇṇuka is having a proper meal.) Which two chapters does this spine node run from? (Chapter 8's dayavāyi asks; Chapter 9's kṣamikkaṇaṁ repairs.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
