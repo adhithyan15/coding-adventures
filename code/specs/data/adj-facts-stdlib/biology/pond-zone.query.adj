@@ -1,0 +1,14 @@
+% ============================================================================
+% pond-zone.query.adj — worked recall over the pond-zone library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what is this pond
+% zone?" (direct) or "which zone matches this description?" (reverse) — it
+% states no fact of its own — it only `import`s the grounded table and asks
+% binding queries.
+% ============================================================================
+
+import "pond-zone.adj"
+
+? pond_zone(littoral_zone, $D)                                                        % expect close_to_the_shore (direct)
+? pond_zone($Z, deep_zone_located_below_the_range_of_effective_light_penetration)      % expect profundal_zone (reverse)
+? pond_zone(benthic_zone, $D)                                                          % expect abstain -- a real freshwater-zone term, but not one of the three tabled here
