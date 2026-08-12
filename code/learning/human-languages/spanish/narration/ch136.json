@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 136,
-  "title": "Tomar — Taking, and a Word With No Past",
+  "title": "Synthesis --- What You Understand, and What You Don't",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:7375b5c42fb79374",
+  "sourceHash": "fnv1a64:b66eeb9c19a80989",
   "lessons": [
     {
-      "id": "ES-C35-tomar",
-      "sequence": 1820,
-      "title": "tomar — \"to take\", and nobody knows where it came from",
-      "headword": "tomar",
-      "romanization": "tomar",
-      "gloss": "to take (and, across Latin America, to drink) — an everyday word with no settled origin",
+      "id": "ES-C34-sintesis-mente",
+      "sequence": 1816,
+      "title": "Synthesis — what you understand, and what you don't",
+      "headword": "(synthesis)",
+      "romanization": "(synthesis)",
+      "gloss": "synthesis — the sentence you have been saying since chapter 14, finally taken apart",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:77589a358e6e8776",
+      "sourceHash": "fnv1a64:7b52adda316beb3a",
       "notice": null,
       "blocks": [
         {
@@ -35,56 +35,72 @@
             },
             {
               "kind": "speech",
-              "text": "Every verb so far ran straight back to a Latin root you could name. Here is one that does not — and the gap is the useful part."
+              "text": "Say the sentence you learned in the repair kit, the one that rescues a conversation. (No entiendo.)"
             }
           ]
         },
         {
           "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
+          "type": "grammar",
+          "title": "Grammar Lens: the formula was a verb all along",
           "segments": [
             {
               "kind": "speech",
-              "text": "r-tap — one soft tap of the tongue: to-MAR."
+              "text": "You have been saying no entiendo since the repair kit, and until four chapters ago it was a single frozen block — two sounds that meant I'm lost, with no moving parts."
             },
             {
               "kind": "speech",
-              "text": "vowel-o — a short, pure o, with no English glide toward ow."
+              "text": "It has parts now. Entiendo is entender, and entender is Latin intendere, \"to stretch toward.\" Which means the sentence you have been using to admit defeat has never actually said I failed. It says:"
+            },
+            {
+              "kind": "speech",
+              "text": "I am not managing to stretch that far."
+            },
+            {
+              "kind": "speech",
+              "text": "That was true the whole time. You just could not see it yet."
+            },
+            {
+              "kind": "speech",
+              "text": "And the moment a formula has parts, it turns. No entiendo stops being the only thing you can say and becomes one option among several."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart: tomar",
+          "type": "input",
+          "title": "The exchange",
           "segments": [
             {
               "kind": "speech",
-              "text": "tomar (\"to take\") is a plain -ar verb: tomo, tomas, toma, tomamos, toman. It is one of the most common verbs in the language, and its origin is genuinely unsettled."
+              "text": "Back in the repair kit, all you could do:"
             },
             {
               "kind": "speech",
-              "text": "The leading proposal derives it from Latin autumāre, \"to take as, to assert\", worn down through an intermediate tumar; a rival one points to a pre-Roman Iberian word Latin never recorded. Neither is proved, and careful dictionaries say so. \"We don't know\" is a real answer in etymology."
+              "text": "— No entiendo. Más despacio, por favor."
             },
             {
               "kind": "speech",
-              "text": "It carries a second everyday sense across Latin America: to drink. A waiter asking ¿Qué vas a tomar? is asking what you would like."
+              "text": "Now, the same moment, with the parts working:"
+            },
+            {
+              "kind": "speech",
+              "text": "— Perdón — leo un poco, pero no entiendo. — Más despacio, por favor. Ahora entiendo. Gracias."
+            },
+            {
+              "kind": "speech",
+              "text": "Same trouble. But the second speaker is no longer only failing — they are reporting which part works and which does not. That is the difference between a distress signal and a conversation."
             }
           ]
         },
         {
           "index": 3,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way: the verb Latin did leave, and how to handle it",
+          "type": "notice",
+          "title": "What you've built",
           "segments": [
             {
               "kind": "speech",
-              "text": "Latin's own \"gather up\" verb survived perfectly well: coger from colligere, which is com- (\"together\") + legere — the very root you met in leer. English took that same Latin word twice: collect straight from the Latin, and coil by way of French."
-            },
-            {
-              "kind": "speech",
-              "text": "In Spain coger is the plain everyday word: coger el autobús, catch the bus. In much of Latin America — Argentina, Mexico and well beyond — it is coarse slang for sex, and using it innocently will derail a conversation. Tomar is safe on both sides of the Atlantic, which is a large part of why it won."
+              "text": "Four verbs is not four words. It is the ability to say where you are in a language: what you take in, what you work on, what lands, what you can produce."
             }
           ]
         },
@@ -102,38 +118,69 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"tomo, tomas, toma, tomamos, toman\"",
+              "instruction": "the repair-kit version — the distress signal on its own",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"tomo, tomas, toma, tomamos, toman\"]"
+              "source": "[YOU SAY: the repair-kit version — the distress signal on its own]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Tomo un café\" — I'll have a coffee",
+              "instruction": "the version above, where you say what does work before what doesn't",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Tomo un café\" — I'll have a coffee]"
+              "source": "[YOU SAY: the version above, where you say what *does* work before what doesn't]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Tomo el autobús\" — the safe way to say it anywhere",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Tomo el autobús\" — the safe way to say it anywhere]"
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"coger\" then English \"collect, coil\" — one root, and one place to be careful",
-              "spoken": true,
-              "scored": false,
+              "kind": "speech",
+              "text": "Run the second one until it sounds like a person, not a repair kit."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C34-sintesis-mente-literal",
+              "prompt": "What does no entiendo literally say, given intendere?",
+              "assesses": [
+                "ES-ETYMON-ENTENDER-04",
+                "ES-LEX-NO-ENTIENDO-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "i am not stretching that far",
+                "i am not reaching that far",
+                "not stretching toward it",
+                "i cannot stretch that far"
+              ],
+              "feedback": {
+                "correct": "Yes — not a confession of failure, a report of reach.",
+                "incorrect": "Intendere is to stretch toward: I am not managing to stretch that far."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C34-sintesis-mente-now",
+              "prompt": "How do you say I understand now, once it slows down?",
+              "assesses": [
+                "ES-LEX-ENTENDER-03"
+              ],
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"coger\" then English \"collect, coil\" — one root, and one place to be careful]"
+              "acceptedResponses": [
+                "ahora entiendo",
+                "entiendo",
+                "entiendo ahora"
+              ],
+              "feedback": {
+                "correct": "Yes.",
+                "incorrect": "Ahora entiendo — now I understand."
+              }
             }
           ]
         },
@@ -150,7 +197,7 @@
             },
             {
               "kind": "speech",
-              "text": "Does tomar have a confirmed etymology? (No — autumāre and a pre-Roman source are both unproved.) What Latin verb gives coger, and which root sits inside it? (Colligere, holding legere, \"to gather\", from leer.) Why reach for tomar instead? (Coger is coarse slang across much of Latin America.) Next: preguntar, and the two different asks."
+              "text": "Which verb was hiding inside no entiendo? (Entender.) What did it physically mean? (To stretch toward.) What can you say now that you could not say back then? (Not just that you are lost — which part is lost.)"
             }
           ]
         }

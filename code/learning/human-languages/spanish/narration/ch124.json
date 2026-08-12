@@ -2,24 +2,24 @@
   "version": 1,
   "language": "spanish",
   "chapter": 124,
-  "title": "Telling Time",
+  "title": "Noon and Midnight",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:a1b4a9630b70c9aa",
+  "sourceHash": "fnv1a64:1655013b34740d66",
   "lessons": [
     {
-      "id": "ES-C29-la-hora",
-      "sequence": 1660,
-      "title": "la hora — Spanish's barely-changed Latin hour",
-      "headword": "la hora",
-      "romanization": "la hora",
-      "gloss": "hour / o'clock — telling the time, and a word Spanish inherited almost unchanged from Latin",
+      "id": "ES-C28-mediodia-medianoche",
+      "sequence": 1650,
+      "title": "mediodía, medianoche — noon and midnight, spelled out in full",
+      "headword": "mediodía, medianoche",
+      "romanization": "mediodía, medianoche",
+      "gloss": "noon and midnight — both halves still fully alive as ordinary Spanish words, unlike French's worn-down midi/minuit",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a7594a8336b58481",
+      "sourceHash": "fnv1a64:ffd69d67e18a85cf",
       "notice": null,
       "blocks": [
         {
@@ -35,58 +35,49 @@
             },
             {
               "kind": "speech",
-              "text": "You've now seen this Latin word take three different paths: French wore it down to heure, German borrowed it centuries later as Uhr. Spanish's path is the simplest of all — it barely changed."
+              "text": "Two hours that don't get a number — they get a name. And Spanish keeps that name far more transparent than its French cousin does."
             }
           ]
         },
         {
           "index": 1,
           "type": "etymology",
-          "title": "The word, taken apart: hora",
+          "title": "The two words, taken apart",
           "segments": [
-            {
-              "kind": "speech",
-              "text": "hora from Latin hōra from Greek hṓrā, \"a season, a time of day\" (the Greek goddesses of the seasons were the Hōrai). Spanish kept the word almost exactly as Latin had it — just a silent h in spelling, a fossil of a Latin h that was already weak and barely pronounced by the time Spanish inherited the word (the same non-story as French heure or English hour's silent h). Be careful not to confuse this with hijo and hacer's silent h — those come from a completely different, later Spanish sound change (Latin f- becomes Old Spanish aspirated h- becomes eventual silence), not from an already-weak Latin h the way hora's is. Two different roads to the same \"silent letter\" result. Compare its cousins: French wore hōra down further to heure; German didn't inherit the word at all, but borrowed it later as Uhr; English took the same Latin hōra and made hour."
-            },
             {
               "kind": "table",
               "headers": [
-                "language",
-                "word",
-                "what happened"
+                "Spanish",
+                "from Latin",
+                "literally"
               ],
               "columns": 3,
-              "rowCount": 4,
+              "rowCount": 2,
               "utterances": [
-                "language: Spanish. word: hora. what happened: inherited almost unchanged, just a silent h.",
-                "language: French. word: heure. what happened: inherited, but worn down further.",
-                "language: German. word: Uhr. what happened: not inherited — borrowed later, separately.",
-                "language: English. word: hour. what happened: inherited via French, silent h."
+                "Spanish: mediodía. from Latin: medius diēs. literally: \"mid-day\" (medio \"middle\" + día \"day\").",
+                "Spanish: medianoche. from Latin: media nox. literally: \"mid-night\" (media \"middle\" + noche \"night\")."
               ]
+            },
+            {
+              "kind": "speech",
+              "text": "Both halves are fully alive, ordinary Spanish words on their own: medio/media (\"middle\" — cousin of English medium, mid, middle) and día/noche (\"day/night,\" words you already know). Compare French, which took the same Latin phrase down a bumpier road: minuit's second half, -nuit, is still the plain, everyday French word for \"night\" — just as recognizable as Spanish's noche. But midi's second half, -di, wore down into an opaque fragment: the ordinary French word for \"day\" is jour, not di — that piece survives only as a fossil, tucked inside weekday names like lundi and mardi. So the erosion split unevenly: French kept \"night\" transparent and lost \"day,\" while Spanish kept both."
+            },
+            {
+              "kind": "speech",
+              "text": "They don't need horas the way a normal Spanish time (son las tres) never does either — they simply stand in for the hour on their own:"
+            },
+            {
+              "kind": "speech",
+              "text": "Es mediodía. — \"It is noon.\" Es medianoche. — \"It is midnight.\""
+            },
+            {
+              "kind": "speech",
+              "text": "(Fun aside: English noon comes from Latin nōna hōra, \"the ninth hour\" — originally mid-afternoon, it drifted earlier over the centuries to mean midday. Spanish kept the tidier, transparent \"mid-day\" instead.)"
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: Son las and telling time",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Spanish uses ser (\"to be\") plus the feminine plural article (agreeing with the unspoken horas) to tell time — and famously switches number for \"one\":"
-            },
-            {
-              "kind": "speech",
-              "text": "Es la una. — \"It is one o'clock.\" (singular — la una, \"the one\") Son las dos. — \"It is two o'clock.\" (plural — las dos, \"the two\") Son las diez. — \"It is ten o'clock.\""
-            },
-            {
-              "kind": "speech",
-              "text": "Literally \"it is the one\" / \"they are the two/ten\" — the hour count itself is implied by the article and number, without needing to say hora(s) at all in everyday speech (unlike French's il est deux heures, which spells out \"hours\" every time)."
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -99,34 +90,43 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"hora\" — silent h, a fossil of an already-weak Latin h",
+              "instruction": "\"mediodía\" (noon), \"medianoche\" (midnight)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"hora\" — silent h, a fossil of an already-weak Latin h]"
+              "source": "[YOU SAY: \"mediodía\" (noon), \"medianoche\" (midnight)]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Es la una. Son las dos. Son las diez.\"",
+              "instruction": "break them — \"medio + día\", \"media + noche\" — both halves still ordinary words",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Es la una. Son las dos. Son las diez.\"]"
+              "source": "[YOU SAY: break them — \"medio + día\", \"media + noche\" — both halves still ordinary words]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"hora / heure / hour\" — one Latin root, three different fates",
+              "instruction": "\"Es mediodía. Es medianoche.\" — they stand in for the hour",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"hora / heure / hour\" — one Latin root, three different fates]"
+              "source": "[YOU SAY: \"Es mediodía. Es medianoche.\" — they stand in for the hour]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the contrast — French kept \"night\" (nuit) but wore \"day\" down to a fossil (-di)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the contrast — French kept \"night\" (nuit) but wore \"day\" down to a fossil (-di)]"
             }
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -138,7 +138,7 @@
             },
             {
               "kind": "speech",
-              "text": "What Latin (and Greek) word is hora from? (hōra from Greek hṓrā.) How did Spanish's path differ from French's and German's? (Spanish inherited it almost unchanged; French wore it down further to heure; German didn't inherit it at all and borrowed Uhr separately, much later.) How do you say \"it is one o'clock\" vs. \"it is two o'clock\"? (Es la una — singular; Son las dos — plural.)"
+              "text": "What do mediodía and medianoche literally mean, and from what Latin? (\"Mid-day\" from medius diēs; \"mid-night\" from media nox.) Are both halves still recognizable, ordinary Spanish words? (Yes — medio/ media \"middle,\" día/noche \"day/night.\") Did French erode its phrase evenly? (No — French's -nuit stayed just as transparent as Spanish's noche, but its -di wore down to an opaque fossil, since the everyday French word for \"day\" is actually jour.) How do you say \"it is noon\"? (Es mediodía.)"
             }
           ]
         }

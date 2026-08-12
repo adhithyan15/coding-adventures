@@ -2,32 +2,25 @@
   "version": 1,
   "language": "spanish",
   "chapter": 156,
-  "title": "Review --- One Arrow",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:d290413df60794fd",
+  "title": "Which Way Is the Arrow Pointing?",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:85fed604fc1a2a73",
   "lessons": [
     {
-      "id": "ES-C51-repaso-flecha",
-      "sequence": 2084,
-      "title": "Review — one arrow",
-      "headword": "(review)",
-      "romanization": "(review)",
-      "gloss": "review — one arrow, two directions, and the phrases you already owned lined up under it",
+      "id": "ES-C51-la-flecha",
+      "sequence": 2083,
+      "title": "Which way is the arrow pointing?",
+      "headword": "por vs para",
+      "romanization": "por vs para",
+      "gloss": "the one question that replaces the twelve rules — which way is the arrow pointing?",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:12b276740a26935a",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:b28b6cc4980d6b4e",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -42,64 +35,69 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing new. One question before the table: which way does each preposition point?"
+              "text": "One points forward at a target. One points back at a cause. Say which is which before you read on."
             }
           ]
         },
         {
           "index": 1,
-          "type": "notice",
-          "title": "What you've built",
+          "type": "grammar",
+          "title": "Grammar Lens: the same sentence, twice",
           "segments": [
             {
-              "kind": "table",
-              "headers": [
-                "",
-                "para — toward",
-                "por — through, because"
-              ],
-              "columns": 3,
-              "rowCount": 7,
-              "utterances": [
-                "built from. para — toward: ad, \"toward\". por — through, because: per, \"through\".",
-                "the arrow. para — toward: points at it. por — through, because: comes from it.",
-                "a person. para — toward: para ti — you get it. por — through, because: por ti — you caused it.",
-                "a time. para — toward: para mañana — by then. por — through, because: —.",
-                "thanks. para — toward: —. por — through, because: gracias por — for what caused it.",
-                "asking. para — toward: —. por — through, because: por favor — through a favour.",
-                "asking why. para — toward: —. por — through, because: ¿por qué? — through what?"
-              ]
+              "kind": "speech",
+              "text": "The pair that makes the difference visible:"
             },
             {
               "kind": "speech",
-              "text": "Look at the right-hand column. Four of those six por entries are phrases you have owned since the opening chapters. This review is not mostly teaching you new Spanish — it is re-filing old Spanish under a heading that explains it."
+              "text": "Lo hago para ti. — I'm doing it for you. (you receive it) Lo hago por ti. — I'm doing it because of you. (you are the reason)."
             },
             {
               "kind": "speech",
-              "text": "That happens more than a course usually admits. A great deal of what looks like new grammar late in a book is a name for something you have been doing correctly and blindly for a long time."
+              "text": "Two letters apart, and two different sentences about your relationship with somebody. The first is a gift; the second is a motive."
+            },
+            {
+              "kind": "speech",
+              "text": "English says for in both and lets context carry the rest. Spanish makes you choose, and once you hear the choice you notice English was hiding it."
+            },
+            {
+              "kind": "speech",
+              "text": "The test:"
+            },
+            {
+              "kind": "speech",
+              "text": "Draw an arrow. Does it point at the thing (para), or come from it (por)?"
+            },
+            {
+              "kind": "speech",
+              "text": "Es para ti — arrow at you. You get it."
+            },
+            {
+              "kind": "speech",
+              "text": "Es por ti — arrow from you. You caused it."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the whole rung: one arrow, two directions."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: what to do when you are unsure",
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
           "segments": [
             {
               "kind": "speech",
-              "text": "You will still hesitate sometimes. Two things help, in this order:"
+              "text": "The test works because it is not a trick. It is what the two words are made of: para contains ad (\"toward\"), por contains per (\"through\")."
             },
             {
               "kind": "speech",
-              "text": "Ask what the sentence is about. A destination, a deadline, a recipient, a purpose — para. A cause, a route, a swap, a duration — por."
+              "text": "You are not memorising which preposition suits which situation. You are reading a direction built into each word before Spanish existed."
             },
             {
               "kind": "speech",
-              "text": "If it is genuinely both, it is genuinely both. Lo hago para ti and lo hago por ti are both good Spanish; you are not choosing right from wrong, you are choosing which thing to say."
-            },
-            {
-              "kind": "speech",
-              "text": "That second point matters more than it looks. Most por/para anxiety comes from believing every sentence has one correct answer waiting to be found. Plenty of sentences take either, and the choice is the meaning."
+              "text": "That keeps working on uses this book never showed you: meeting por in an unfamiliar sentence, ask what it comes through or because of."
             }
           ]
         },
@@ -117,11 +115,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"para ti / por ti\", \"para mañana\", \"gracias por la comida\"",
+              "instruction": "\"Lo hago para ti\" then \"Lo hago por ti\" — two letters, two relationships",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"para ti / por ti\", \"para mañana\", \"gracias por la comida\"]"
+              "source": "[YOU SAY: \"Lo hago para ti\" then \"Lo hago por ti\" — two letters, two relationships]"
             },
             {
               "kind": "repeat",
@@ -129,62 +127,83 @@
               "source": "[REPEAT x2]"
             },
             {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C51-repaso-flecha-two",
-              "prompt": "Give the two directions in one line.",
-              "assesses": [
-                "ES-GRAMMAR-POR-PARA-CONTRAST"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "para points at it, por comes from it",
-                "para toward, por through or because"
-              ],
-              "feedback": {
-                "correct": "One arrow, two directions.",
-                "incorrect": "Para points at the thing; por comes from it."
-              }
+              "kind": "speech",
+              "text": "Until the arrow arrives before the word does."
             },
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C51-repaso-flecha-old",
-              "prompt": "Name three phrases you already knew that turn out to contain por.",
-              "assesses": [
-                "ES-LEX-POR-FAVOR",
-                "ES-LEX-PORQUE-03",
-                "ES-LEX-GRACIAS"
-              ],
-              "responseSeconds": 12,
-              "acceptedResponses": [
-                "por favor, por que, gracias por",
-                "por favor, porque, gracias por"
-              ],
-              "feedback": {
-                "correct": "Old Spanish, newly explained.",
-                "incorrect": "por favor, ¿por qué?, porque, gracias por — any three."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C51-repaso-flecha-both",
-              "prompt": "A sentence takes either por or para. What should you conclude?",
+              "id": "ES-C51-la-flecha-gift",
+              "prompt": "Say I am doing it for you, meaning you will receive it.",
               "assesses": [
                 "ES-GRAMMAR-POR-PARA-CONTRAST",
                 "ES-LEX-PARA",
+                "ES-LEX-TU"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "lo hago para ti",
+                "para ti"
+              ],
+              "feedback": {
+                "correct": "Arrow points at you.",
+                "incorrect": "Lo hago para ti."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C51-la-flecha-cause",
+              "prompt": "Now say it meaning you are the reason.",
+              "assesses": [
+                "ES-GRAMMAR-POR-PARA-CONTRAST",
                 "ES-LEX-POR"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "lo hago por ti",
+                "por ti"
+              ],
+              "feedback": {
+                "correct": "Arrow points from you.",
+                "incorrect": "Lo hago por ti."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C51-la-flecha-test",
+              "prompt": "State the test in one sentence.",
+              "assesses": [
+                "ES-GRAMMAR-POR-PARA-CONTRAST"
               ],
               "responseSeconds": 12,
               "acceptedResponses": [
-                "that it means two different things",
-                "both are correct and the choice is the meaning",
-                "neither is wrong"
+                "does the arrow point at it or come from it",
+                "at the thing is para, from the thing is por"
               ],
               "feedback": {
-                "correct": "Not right versus wrong — which thing you are saying.",
-                "incorrect": "That both are good Spanish and the choice is the meaning."
+                "correct": "One arrow, two directions.",
+                "incorrect": "Does the arrow point at the thing (para) or come from it (por)?"
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C51-la-flecha-why",
+              "prompt": "Why is the arrow test not just a mnemonic?",
+              "assesses": [
+                "ES-ETYMON-PER-AD",
+                "ES-ETYMON-PRO-PER"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "the directions are inside the words, ad and per",
+                "para contains ad, toward; por contains per, through"
+              ],
+              "feedback": {
+                "correct": "You are reading the words, not remembering a trick.",
+                "incorrect": "Para contains ad (toward) and por contains per (through). The test describes the words."
               }
             }
           ]
@@ -202,7 +221,7 @@
             },
             {
               "kind": "speech",
-              "text": "Para — which way? (At it.) Por — which way? (From it.) And when a sentence takes either? (Both are right — the choice is the meaning.) Next: the two of them in a conversation, where the choice does real work."
+              "text": "Para ti — who gets it? (You do.) Por ti — who caused it? (You did.) And why does the test keep working on sentences this book never showed you? (Because the directions are inside the words.) Next: both in one place."
             }
           ]
         }

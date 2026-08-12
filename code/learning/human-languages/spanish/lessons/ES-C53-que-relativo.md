@@ -3,7 +3,7 @@ schema_version: 2
 id: ES-C53-que-relativo
 spine_node: SPINE-GIVE-REASONS
 sequence: 2091
-chapter: 163
+chapter: 164
 type: grammar
 headword: el libro que compro
 gloss: joining two sentences into one — with a word you have had since you learned to want things
