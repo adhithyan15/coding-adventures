@@ -39,6 +39,7 @@ const CHINESE_I = DUCTUS[ductusKey("chinese", "我")];
 const CHINESE_BE = DUCTUS[ductusKey("chinese", "是")];
 const CHINESE_NOT = DUCTUS[ductusKey("chinese", "不")];
 const CHINESE_NAME = DUCTUS[ductusKey("chinese", "名")];
+const CHINESE_CHARACTER = DUCTUS[ductusKey("chinese", "字")];
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
@@ -506,6 +507,18 @@ describe("handwriting ductus", () => {
     expect(CHINESE_NAME.strokes.map((stroke) => stroke.segments.length)).toEqual([1, 2, 1, 1, 2, 1]);
     expect(CHINESE_NAME.strokes[1].segments[0].path.at(-1)).toEqual(CHINESE_NAME.strokes[1].segments[1].path[0]);
     expect(CHINESE_NAME.strokes[4].segments[0].path.at(-1)).toEqual(CHINESE_NAME.strokes[4].segments[1].path[0]);
+  });
+
+  it("Chinese 字 completes 宀 before 子 and preserves all three joined turns", () => {
+    expect(CHINESE_CHARACTER.script).toBe("chinese");
+    expect(penLifts(CHINESE_CHARACTER)).toBe(5);
+    expect(CHINESE_CHARACTER.strokes).toHaveLength(6);
+    expect(CHINESE_CHARACTER.strokes.map((stroke) => stroke.segments.length)).toEqual([1, 1, 2, 2, 2, 1]);
+    for (const strokeIndex of [2, 3, 4]) {
+      expect(CHINESE_CHARACTER.strokes[strokeIndex].segments[0].path.at(-1)).toEqual(
+        CHINESE_CHARACTER.strokes[strokeIndex].segments[1].path[0],
+      );
+    }
   });
 
   it("Hebrew א uses two crossed pen-down runs with one lift", () => {
@@ -1458,6 +1471,7 @@ describe("handwriting ductus", () => {
     expect(verifiedLetterFont("是", CHINESE_BE.source.url)).toBe("_fonts/NotoSansSC-Subset.ttf");
     expect(verifiedLetterFont("不", CHINESE_NOT.source.url)).toBe("_fonts/NotoSansSC-Subset.ttf");
     expect(verifiedLetterFont("名", CHINESE_NAME.source.url)).toBe("_fonts/NotoSansSC-Subset.ttf");
+    expect(verifiedLetterFont("字", CHINESE_CHARACTER.source.url)).toBe("_fonts/NotoSansSC-Subset.ttf");
     expect(verifiedLetterFont("א", HEBREW_ALEF.source.url)).toBe(
       "_fonts/NotoSansHebrew-Static.ttf",
     );
@@ -1747,6 +1761,17 @@ describe("handwriting ductus", () => {
     expect(src.citation).toMatch(/Hanzi Writer Data 名\.json.*medians 1–6.*snapshot 68d10a4/i);
     expect(src.variation).toMatch(
       /six ordered strokes.*Medians 1–3.*夕 first.*left-falling stroke.*horizontal.*down-left without lifting.*inner down-right dot.*Medians 4–6.*口.*left vertical.*top horizontal.*right side without lifting.*closing bottom horizontal.*People's Republic of China stroke order.*Noto Sans SC.*both joined turns.*five intervening lifts/i,
+    );
+  });
+
+  it("Chinese 字 traces 宀-before-子 order to the pinned PRC-order dataset", () => {
+    const src = CHINESE_CHARACTER.source;
+    expect(src.url).toBe(
+      "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E5%AD%97.json",
+    );
+    expect(src.citation).toMatch(/Hanzi Writer Data 字\.json.*medians 1–6.*snapshot 68d10a4/i);
+    expect(src.variation).toMatch(
+      /six ordered strokes.*Medians 1–3.*宀 first.*down-right top dot.*left-side down-left stroke.*horizontal roof.*hooks down-left without lifting.*Medians 4–6.*子.*top horizontal.*turns down-left without lifting.*vertical.*hooks left without lifting.*final middle horizontal.*People's Republic of China stroke order.*Noto Sans SC.*all three joined turns.*five intervening lifts/i,
     );
   });
 
