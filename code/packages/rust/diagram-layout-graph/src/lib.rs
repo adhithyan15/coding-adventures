@@ -38,7 +38,7 @@
 //! | `h_padding`     | 24      | Horizontal text padding inside a node    |
 //! | `char_width`    | 8       | Approximate width per character (px)     |
 
-pub const VERSION: &str = "0.10.0";
+pub const VERSION: &str = "0.11.0";
 
 use diagram_ir::{
     DiagramDirection, DiagramShape, GraphDiagram, LayoutedGraphDiagram, LayoutedGraphEdge,
@@ -470,6 +470,42 @@ fn stack_concurrent_regions(diagram: &GraphDiagram, nodes: &mut [LayoutedGraphNo
     }
 }
 
+fn apply_group_directions(diagram: &GraphDiagram, nodes: &mut [LayoutedGraphNode], gap: f64) {
+    for group in &diagram.groups {
+        let Some(direction) = &group.direction else {
+            continue;
+        };
+        for region in &group.regions {
+            let indices: Vec<_> = region
+                .iter()
+                .filter_map(|id| nodes.iter().position(|node| &node.id == id))
+                .collect();
+            let (Some(min_x), Some(min_y)) = (
+                indices.iter().map(|index| nodes[*index].x).reduce(f64::min),
+                indices.iter().map(|index| nodes[*index].y).reduce(f64::min),
+            ) else {
+                continue;
+            };
+            let mut offset = 0.0;
+            for index in indices {
+                let node = &mut nodes[index];
+                match direction {
+                    DiagramDirection::Lr | DiagramDirection::Rl => {
+                        node.x = min_x + offset;
+                        node.y = min_y;
+                        offset += node.width + gap;
+                    }
+                    DiagramDirection::Tb | DiagramDirection::Bt => {
+                        node.x = min_x;
+                        node.y = min_y + offset;
+                        offset += node.height + gap;
+                    }
+                }
+            }
+        }
+    }
+}
+
 fn layout_groups(diagram: &GraphDiagram, nodes: &[LayoutedGraphNode]) -> Vec<LayoutedGraphGroup> {
     let mut computed: std::collections::HashMap<String, LayoutedGraphGroup> =
         std::collections::HashMap::new();
@@ -534,6 +570,7 @@ fn layout_groups(diagram: &GraphDiagram, nodes: &[LayoutedGraphNode]) -> Vec<Lay
                 width: max_x - min_x + 48.0,
                 height: max_y - min_y + 64.0,
                 divider_y,
+                direction: group.direction.clone(),
                 style: resolve_style_with_base(
                     group.style.as_ref(),
                     ResolvedDiagramStyle {
@@ -628,6 +665,7 @@ pub fn layout_graph_diagram(
         note.y = state.y + (state.height - note.height) / 2.0;
     }
 
+    apply_group_directions(diagram, &mut nodes, opts.node_gap);
     stack_concurrent_regions(diagram, &mut nodes, opts.node_gap);
     let mut groups = layout_groups(diagram, &nodes);
 
@@ -756,7 +794,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.10.0");
+        assert_eq!(VERSION, "0.11.0");
     }
 
     #[test]
@@ -947,6 +985,7 @@ mod tests {
             parent_id: None,
             node_ids: vec!["A".into(), "B".into()],
             regions: vec![vec!["A".into(), "B".into()]],
+            direction: None,
             style: Some(diagram_ir::DiagramStyle {
                 fill: Some("#fef3c7".into()),
                 stroke_width: Some(3.0),
@@ -973,6 +1012,7 @@ mod tests {
             parent_id: None,
             node_ids: vec!["A".into(), "B".into()],
             regions: vec![vec!["A".into()], vec!["B".into()]],
+            direction: None,
             style: None,
         });
         let l = layout_graph_diagram(&d, None, None);
@@ -994,6 +1034,7 @@ mod tests {
             parent_id: None,
             node_ids: vec!["B".into()],
             regions: vec![vec!["B".into()]],
+            direction: None,
             style: None,
         });
         let l = layout_graph_diagram(&d, None, None);
@@ -1002,5 +1043,26 @@ mod tests {
 
         assert_eq!(edge.to_node_id, "Active");
         assert_eq!(edge.points.last().unwrap().x, group.x);
+    }
+
+    #[test]
+    fn composite_direction_overrides_document_direction() {
+        let mut d = two_node_diagram(DiagramDirection::Tb);
+        d.groups.push(diagram_ir::GraphGroup {
+            id: "Active".into(),
+            label: DiagramLabel::new("Active"),
+            parent_id: None,
+            node_ids: vec!["A".into(), "B".into()],
+            regions: vec![vec!["A".into(), "B".into()]],
+            direction: Some(DiagramDirection::Lr),
+            style: None,
+        });
+        let l = layout_graph_diagram(&d, None, None);
+        let a = l.nodes.iter().find(|node| node.id == "A").unwrap();
+        let b = l.nodes.iter().find(|node| node.id == "B").unwrap();
+
+        assert!(a.x < b.x);
+        assert_eq!(a.y, b.y);
+        assert_eq!(l.groups[0].direction, Some(DiagramDirection::Lr));
     }
 }

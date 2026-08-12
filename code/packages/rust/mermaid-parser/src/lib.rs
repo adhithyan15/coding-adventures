@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.61.0";
+pub const VERSION: &str = "0.62.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -1137,13 +1137,22 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
             let token = cursor
                 .consume_if("DIRECTION")
                 .ok_or_else(|| token_error(cursor.current(), "expected state direction"))?;
-            direction = match token.value.to_ascii_uppercase().as_str() {
+            let parsed_direction = match token.value.to_ascii_uppercase().as_str() {
                 "TB" => DiagramDirection::Tb,
                 "BT" => DiagramDirection::Bt,
                 "LR" => DiagramDirection::Lr,
                 "RL" => DiagramDirection::Rl,
                 _ => unreachable!("state.tokens restricts direction values"),
             };
+            if let Some(group_id) = group_stack.last() {
+                groups
+                    .iter_mut()
+                    .find(|group| &group.id == group_id)
+                    .expect("open composite group must exist")
+                    .direction = Some(parsed_direction);
+            } else {
+                direction = parsed_direction;
+            }
         } else if cursor.current().value.eq_ignore_ascii_case("click") {
             cursor.advance();
             let node_id = take_state_ref(&mut cursor)?;
@@ -1313,6 +1322,7 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
                         parent_id: group_stack.last().cloned(),
                         node_ids: Vec::new(),
                         regions: vec![Vec::new()],
+                        direction: None,
                         style: None,
                     });
                     group_stack.push(id);
@@ -1354,6 +1364,7 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
                     parent_id: group_stack.last().cloned(),
                     node_ids: Vec::new(),
                     regions: vec![Vec::new()],
+                    direction: None,
                     style: None,
                 });
                 group_stack.push(id);
@@ -4655,6 +4666,17 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     }
 
     #[test]
+    fn state_preserves_composite_local_direction() {
+        let diagram = parse_state_diagram(
+            "stateDiagram-v2\ndirection TB\nstate Active {\ndirection LR\nIdle --> Busy\n}\n",
+        )
+        .expect("composite local direction");
+
+        assert_eq!(diagram.direction, DiagramDirection::Tb);
+        assert_eq!(diagram.groups[0].direction, Some(DiagramDirection::Lr));
+    }
+
+    #[test]
     fn sequence_parses_case_insensitive_keywords() {
         let diagram = parse_any_mermaid(
             "SeQuEnCeDiAgRaM\nPaRtIcIpAnT A As Alice\nA->>B: Hello\nAcTiVaTe B\nNoTe RiGhT Of B: WRAP: Ready\nDeAcTiVaTe B\n",
@@ -5425,7 +5447,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.61.0");
+        assert_eq!(crate::VERSION, "0.62.0");
     }
 
     #[test]
