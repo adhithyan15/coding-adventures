@@ -4,11 +4,11 @@
   "chapter": 156,
   "title": "Ayudar — the Same Word as Aid",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:e64fcd7eeab595ca",
+  "sourceHash": "fnv1a64:f4765bacf9c3bdd1",
   "lessons": [
     {
       "id": "ES-C35-ayudar",
-      "sequence": 1940,
+      "sequence": 1950,
       "title": "ayudar — \"to help\", and it is English \"aid\" in disguise",
       "headword": "ayudar",
       "romanization": "ayudar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0c476fc3ae27b0ee",
+      "sourceHash": "fnv1a64:3651dd592c95eb0b",
       "notice": null,
       "blocks": [
         {

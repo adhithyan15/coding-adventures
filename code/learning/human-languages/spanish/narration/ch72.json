@@ -4,11 +4,11 @@
   "chapter": 72,
   "title": "La Comida --- A Noun You Can Build",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:6891669b7778e22a",
+  "sourceHash": "fnv1a64:e428ef895d72b137",
   "lessons": [
     {
       "id": "ES-C43-comida",
-      "sequence": 1183,
+      "sequence": 1193,
       "title": "la comida — \"food,\" built from a verb you have",
       "headword": "la comida",
       "romanization": "la comida",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:32d04982f9aa74d8",
+      "sourceHash": "fnv1a64:eabf734ff0ebeb88",
       "notice": null,
       "blocks": [
         {

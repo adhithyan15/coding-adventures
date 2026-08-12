@@ -4,11 +4,11 @@
   "chapter": 161,
   "title": "Opening, Closing, Sitting Down, Standing Up",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:dbd080f8a5720962",
+  "sourceHash": "fnv1a64:f2772df1c14af2cd",
   "lessons": [
     {
       "id": "ES-C37-abrir",
-      "sequence": 2000,
+      "sequence": 2010,
       "title": "abrir — \"to open\", and the one part of it that misbehaves",
       "headword": "abrir",
       "romanization": "abrir",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3778cff6e432fbec",
+      "sourceHash": "fnv1a64:f8e068b07e5fc3c5",
       "notice": null,
       "blocks": [
         {
@@ -174,7 +174,7 @@
     },
     {
       "id": "ES-C37-cerrar",
-      "sequence": 2010,
+      "sequence": 2020,
       "title": "cerrar — \"to close\", from the bar across the door",
       "headword": "cerrar",
       "romanization": "cerrar",
@@ -185,7 +185,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c745efbfbcb321ee",
+      "sourceHash": "fnv1a64:f145576d38c02c59",
       "notice": null,
       "blocks": [
         {
@@ -351,7 +351,7 @@
     },
     {
       "id": "ES-C37-sentarse",
-      "sequence": 2020,
+      "sequence": 2030,
       "title": "sentarse — \"to seat oneself\", which is how Spanish thinks about sitting down",
       "headword": "sentarse",
       "romanization": "sentarse",
@@ -362,7 +362,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:601e153af7fa5aab",
+      "sourceHash": "fnv1a64:4186738ca0bfccac",
       "notice": null,
       "blocks": [
         {
@@ -521,7 +521,7 @@
     },
     {
       "id": "ES-C37-levantarse",
-      "sequence": 2030,
+      "sequence": 2040,
       "title": "levantarse — \"to raise oneself\", and how Spanish says \"stand\"",
       "headword": "levantarse",
       "romanization": "levantarse",
@@ -532,7 +532,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:691d54cdec88d992",
+      "sourceHash": "fnv1a64:8a363c98fd3302c3",
       "notice": null,
       "blocks": [
         {

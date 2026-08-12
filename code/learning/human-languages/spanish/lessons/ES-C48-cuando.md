@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C48-cuando
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 1371
+sequence: 1381
 chapter: 107
 type: word
 headword: cuando

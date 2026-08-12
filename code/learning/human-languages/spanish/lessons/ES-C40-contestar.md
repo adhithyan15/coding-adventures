@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C40-contestar
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 2130
+sequence: 2140
 chapter: 169
 type: word
 headword: contestar

@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C49-sintesis-dos-orillas
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 1380
+sequence: 1390
 chapter: 116
 type: practice-mix
 headword: (synthesis)

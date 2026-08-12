@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C41-deber
 spine_node: SPINE-GIVE-REASONS
-sequence: 2170
+sequence: 2180
 chapter: 170
 type: word
 headword: deber

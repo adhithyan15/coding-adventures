@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C18-quiero-que
 spine_node: SPINE-SAY-WHAT-I-WANT
-sequence: 1450
+sequence: 1460
 chapter: 121
 type: grammar
 headword: Hablas español · Quiero que hables español

@@ -4,11 +4,11 @@
   "chapter": 91,
   "title": "Review --- Two Systems, Two New Words",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:7a98c170e3cc8e7c",
+  "sourceHash": "fnv1a64:8266ba23e5412136",
   "lessons": [
     {
       "id": "ES-C46-repaso-dos-sistemas",
-      "sequence": 1224,
+      "sequence": 1234,
       "title": "Review — two systems, two new words",
       "headword": "(review)",
       "romanization": "(review)",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:578f4839cb43fdaf",
+      "sourceHash": "fnv1a64:06429672eb45a4be",
       "notice": {
         "modality": "sight",
         "needs": [

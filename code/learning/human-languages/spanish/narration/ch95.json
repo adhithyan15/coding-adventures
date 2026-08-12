@@ -4,11 +4,11 @@
   "chapter": 95,
   "title": "Why Se? --- Gelo, and a Collision",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:c16c0c85d2c1164f",
+  "sourceHash": "fnv1a64:e6d89ad44b44a0d4",
   "lessons": [
     {
       "id": "ES-C47-por-que-se",
-      "sequence": 1228,
+      "sequence": 1238,
       "title": "Why se? — and why it is not the se you know",
       "headword": "gelo → se lo",
       "romanization": "gelo → se lo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fa69441fc6ff8c87",
+      "sourceHash": "fnv1a64:59e3f85809da9736",
       "notice": null,
       "blocks": [
         {

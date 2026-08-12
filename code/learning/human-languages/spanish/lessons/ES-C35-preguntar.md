@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C35-preguntar
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1930
+sequence: 1940
 chapter: 155
 type: word
 headword: preguntar

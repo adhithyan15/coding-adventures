@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C49-he-hablado
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 1376
+sequence: 1386
 chapter: 112
 type: grammar
 headword: he hablado

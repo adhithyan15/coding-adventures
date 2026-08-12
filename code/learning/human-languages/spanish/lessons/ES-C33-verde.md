@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C33-verde
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 1860
+sequence: 1870
 chapter: 146
 type: word
 headword: verde

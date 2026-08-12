@@ -540,6 +540,30 @@
       "after": []
     },
     {
+      "id": "ES-PATH-003-CASA",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C43-casa"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-003-CASA"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-003-LIBRO",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C43-libro"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-003-LIBRO"
+      ],
+      "after": []
+    },
+    {
       "id": "ES-PATH-030-GRANDE",
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
@@ -836,30 +860,6 @@
       "before": [],
       "inline": [
         "ES-EXT-030-CONSOLIDATION-CH13"
-      ],
-      "after": []
-    },
-    {
-      "id": "ES-PATH-003-CASA",
-      "spine_node": "SPINE-DEFINITE-REFERENCE",
-      "lessons": [
-        "ES-C43-casa"
-      ],
-      "before": [],
-      "inline": [
-        "ES-EXT-003-CASA"
-      ],
-      "after": []
-    },
-    {
-      "id": "ES-PATH-003-LIBRO",
-      "spine_node": "SPINE-DEFINITE-REFERENCE",
-      "lessons": [
-        "ES-C43-libro"
-      ],
-      "before": [],
-      "inline": [
-        "ES-EXT-003-LIBRO"
       ],
       "after": []
     },
@@ -2170,10 +2170,10 @@
     "SPINE-DEFINITE-REFERENCE": {
       "segments": [
         "ES-PATH-003",
-        "ES-PATH-003-POSSESSIVE",
-        "ES-PATH-003-OUR",
         "ES-PATH-003-CASA",
         "ES-PATH-003-LIBRO",
+        "ES-PATH-003-POSSESSIVE",
+        "ES-PATH-003-OUR",
         "ES-PATH-003-COMIDA",
         "ES-PATH-003-LAS",
         "ES-PATH-003-LOS",

@@ -4,11 +4,11 @@
   "chapter": 112,
   "title": "He Hablado --- A Verb With No Meaning Left",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:85a546b60a6f4e8a",
+  "sourceHash": "fnv1a64:ba7f704a55678abb",
   "lessons": [
     {
       "id": "ES-C49-he-hablado",
-      "sequence": 1376,
+      "sequence": 1386,
       "title": "he hablado — \"I have spoken\"",
       "headword": "he hablado",
       "romanization": "he hablado",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2842099426dcc76a",
+      "sourceHash": "fnv1a64:29b29a7607b6b849",
       "notice": null,
       "blocks": [
         {

@@ -4,11 +4,11 @@
   "chapter": 76,
   "title": "Review --- All Four Words for The",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:36302f63d56ea89a",
+  "sourceHash": "fnv1a64:b997c0d0fe12f559",
   "lessons": [
     {
       "id": "ES-C44-repaso-articulos",
-      "sequence": 1191,
+      "sequence": 1201,
       "title": "Review — all four words for \"the\"",
       "headword": "(review)",
       "romanization": "(review)",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:a71b6adf979da4e5",
+      "sourceHash": "fnv1a64:a9037fdb4938a121",
       "notice": {
         "modality": "sight",
         "needs": [

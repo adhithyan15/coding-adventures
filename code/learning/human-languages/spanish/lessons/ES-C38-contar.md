@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C38-contar
 spine_node: SPINE-NARRATE-EVENTS
-sequence: 2070
+sequence: 2080
 chapter: 162
 type: word
 headword: contar

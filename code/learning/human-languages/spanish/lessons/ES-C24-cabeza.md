@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C24-cabeza
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 1680
+sequence: 1690
 chapter: 136
 type: word
 headword: la cabeza

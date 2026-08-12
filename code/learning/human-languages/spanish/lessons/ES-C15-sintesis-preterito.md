@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C15-sintesis-preterito
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 1338
+sequence: 1348
 chapter: 101
 type: practice-mix
 headword: (synthesis)

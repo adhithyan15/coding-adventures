@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C41-asi-que
 spine_node: SPINE-GIVE-REASONS
-sequence: 2160
+sequence: 2170
 chapter: 170
 type: phrase
 headword: así que

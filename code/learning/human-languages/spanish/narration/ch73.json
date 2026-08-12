@@ -4,11 +4,11 @@
   "chapter": 73,
   "title": "Las --- The Plural Article That Behaves",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:a4c49301010a4a01",
+  "sourceHash": "fnv1a64:6728ccfa4d5978e3",
   "lessons": [
     {
       "id": "ES-C44-las",
-      "sequence": 1185,
+      "sequence": 1195,
       "title": "las casas — \"the houses\"",
       "headword": "las casas",
       "romanization": "las casas",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7c97fd8d3e2c5a2b",
+      "sourceHash": "fnv1a64:05616be8f8d1cd6e",
       "notice": null,
       "blocks": [
         {

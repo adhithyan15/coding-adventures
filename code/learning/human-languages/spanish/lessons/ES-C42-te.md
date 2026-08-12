@@ -2,13 +2,13 @@
 schema_version: 2
 id: ES-C42-te
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 1211
+sequence: 1221
 chapter: 80
 type: word
 headword: te quiero
 gloss: "you" as the object — and the sentence it makes, which is the one people actually need
 concept_tag: ES-PRONOUN-TE
-prerequisites: [ES-C42-me-objeto]
+prerequisites: [ES-C42-me-objeto, ES-C11-querer]
 sounds: []
 roots: [te-latin]
 teaches_cells: []

@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C48-tenia-tuve
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 1372
+sequence: 1382
 chapter: 108
 type: grammar
 headword: tenía / tuve

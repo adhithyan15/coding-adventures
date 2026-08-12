@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C54-hay-que
 spine_node: SPINE-ASK-LOCATION
-sequence: 2198
+sequence: 2208
 chapter: 188
 type: grammar
 headword: hay que

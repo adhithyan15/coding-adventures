@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C17-vivir-futuro
 spine_node: SPINE-TALK-ABOUT-FUTURE
-sequence: 1418
+sequence: 1428
 chapter: 117
 type: grammar
 headword: viviré

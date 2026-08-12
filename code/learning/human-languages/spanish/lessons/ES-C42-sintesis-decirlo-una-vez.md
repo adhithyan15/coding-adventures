@@ -2,13 +2,13 @@
 schema_version: 2
 id: ES-C42-sintesis-decirlo-una-vez
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 1215
+sequence: 1225
 chapter: 82
 type: practice-mix
 headword: (synthesis)
 gloss: synthesis — what these four words are for, which is not accuracy but not sounding like a stranger
 concept_tag: ES-SYNTHESIS-SAY-IT-ONCE
-prerequisites: [ES-C42-repaso-objeto]
+prerequisites: [ES-C42-repaso-objeto, ES-C12-hacer, ES-C11-querer]
 sounds: []
 roots: []
 teaches_cells: []

@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C15-preterite-fuertes
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 1330
+sequence: 1340
 chapter: 100
 type: grammar
 headword: estuve

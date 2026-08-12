@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C37-sentarse
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 2020
+sequence: 2030
 chapter: 161
 type: word
 headword: sentarse

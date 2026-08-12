@@ -4,11 +4,11 @@
   "chapter": 129,
   "title": "Hable Usted --- The Polite Command",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f6a6e708c1b55d3d",
+  "sourceHash": "fnv1a64:d31a1c89b6a29ff5",
   "lessons": [
     {
       "id": "ES-C50-hable-usted",
-      "sequence": 1490,
+      "sequence": 1500,
       "title": "hable usted — the polite command",
       "headword": "hable usted",
       "romanization": "hable usted",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eff8e61bce6ae288",
+      "sourceHash": "fnv1a64:6db9d7993bbee90a",
       "notice": null,
       "blocks": [
         {

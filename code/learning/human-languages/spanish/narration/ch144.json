@@ -4,11 +4,11 @@
   "chapter": 144,
   "title": "Numbers Eleven to Twenty",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:a495d48c5753fc88",
+  "sourceHash": "fnv1a64:2253d8b2a1e857c1",
   "lessons": [
     {
       "id": "ES-C31-once-quince",
-      "sequence": 1800,
+      "sequence": 1810,
       "title": "once — quince: five words with a seam you can no longer see",
       "headword": "once — quince",
       "romanization": "once — quince",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:86d6b169e38987f2",
+      "sourceHash": "fnv1a64:0fed9269af900457",
       "notice": null,
       "blocks": [
         {
@@ -122,7 +122,7 @@
     },
     {
       "id": "ES-C31-dieciseis-diecinueve",
-      "sequence": 1810,
+      "sequence": 1820,
       "title": "dieciséis — diecinueve: where the seam reopens",
       "headword": "dieciséis — diecinueve",
       "romanization": "dieciséis — diecinueve",
@@ -133,7 +133,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:774c2c2d95a14f60",
+      "sourceHash": "fnv1a64:30f235646da31dcb",
       "notice": null,
       "blocks": [
         {
@@ -270,7 +270,7 @@
     },
     {
       "id": "ES-C31-teens-latinos",
-      "sequence": 1820,
+      "sequence": 1830,
       "title": "duodēvīgintī — the quirk Spanish threw away",
       "headword": "duodēvīgintī, ūndēvīgintī",
       "romanization": "duodēvīgintī, ūndēvīgintī",
@@ -281,7 +281,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:028ce3a2e316abad",
+      "sourceHash": "fnv1a64:8c1c9b35501d8242",
       "notice": null,
       "blocks": [
         {
@@ -397,7 +397,7 @@
     },
     {
       "id": "ES-C31-veinte",
-      "sequence": 1830,
+      "sequence": 1840,
       "title": "veinte — the number the teens were counting toward",
       "headword": "veinte",
       "romanization": "veinte",
@@ -408,7 +408,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5a8f6680ce384e84",
+      "sourceHash": "fnv1a64:63e133a392a0d447",
       "notice": null,
       "blocks": [
         {

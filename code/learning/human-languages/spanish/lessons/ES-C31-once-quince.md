@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C31-once-quince
 spine_node: SPINE-COUNT-ONE-TO-FIVE
-sequence: 1800
+sequence: 1810
 chapter: 144
 type: word
 headword: once — quince

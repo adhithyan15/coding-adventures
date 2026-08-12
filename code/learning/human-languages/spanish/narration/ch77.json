@@ -4,11 +4,11 @@
   "chapter": 77,
   "title": "Synthesis --- More Than One",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:618e586c0f81178c",
+  "sourceHash": "fnv1a64:57cc5dce8c3029b6",
   "lessons": [
     {
       "id": "ES-C44-sintesis-mas-de-uno",
-      "sequence": 1193,
+      "sequence": 1203,
       "title": "Synthesis — more than one",
       "headword": "(synthesis)",
       "romanization": "(synthesis)",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1991bf26f59e8313",
+      "sourceHash": "fnv1a64:fde0a6b2d7373ea6",
       "notice": null,
       "blocks": [
         {

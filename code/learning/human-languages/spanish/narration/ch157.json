@@ -4,11 +4,11 @@
   "chapter": 157,
   "title": "Review --- Three Verbs That Behave",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:7883321dafab4cf8",
+  "sourceHash": "fnv1a64:123cdd3b1687facc",
   "lessons": [
     {
       "id": "ES-C35-repaso-tres",
-      "sequence": 1944,
+      "sequence": 1954,
       "title": "Review — three verbs that behave",
       "headword": "(review)",
       "romanization": "(review)",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5ea7395fa280b4a9",
+      "sourceHash": "fnv1a64:cd21d4ab8d3b8890",
       "notice": null,
       "blocks": [
         {

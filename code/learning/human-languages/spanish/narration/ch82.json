@@ -4,11 +4,11 @@
   "chapter": 82,
   "title": "Synthesis --- Saying It Once",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:246ccb54c6ce47a2",
+  "sourceHash": "fnv1a64:2567b001bcfc7a2d",
   "lessons": [
     {
       "id": "ES-C42-sintesis-decirlo-una-vez",
-      "sequence": 1215,
+      "sequence": 1225,
       "title": "Synthesis — saying it once",
       "headword": "(synthesis)",
       "romanization": "(synthesis)",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9164be8c32ed1be8",
+      "sourceHash": "fnv1a64:f8faa22dafc007f9",
       "notice": null,
       "blocks": [
         {

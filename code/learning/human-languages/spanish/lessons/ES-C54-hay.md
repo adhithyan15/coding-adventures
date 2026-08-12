@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C54-hay
 spine_node: SPINE-ASK-LOCATION
-sequence: 2196
+sequence: 2206
 chapter: 186
 type: word
 headword: hay

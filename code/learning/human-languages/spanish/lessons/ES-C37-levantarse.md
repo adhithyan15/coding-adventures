@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C37-levantarse
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 2030
+sequence: 2040
 chapter: 161
 type: word
 headword: levantarse

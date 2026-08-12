@@ -4,11 +4,11 @@
   "chapter": 145,
   "title": "Dog and Cat",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:c255868bacc14c25",
+  "sourceHash": "fnv1a64:85c829e9cf76ff96",
   "lessons": [
     {
       "id": "ES-C32-gato",
-      "sequence": 1840,
+      "sequence": 1850,
       "title": "gato — the word that travelled with the animal",
       "headword": "gato",
       "romanization": "gato",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:508cfcbc40da10bc",
+      "sourceHash": "fnv1a64:311e4d695c633935",
       "notice": null,
       "blocks": [
         {
@@ -119,7 +119,7 @@
     },
     {
       "id": "ES-C32-perro",
-      "sequence": 1850,
+      "sequence": 1860,
       "title": "perro — the word nobody can explain",
       "headword": "perro",
       "romanization": "perro",
@@ -130,7 +130,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:68c7d2a7bcccb132",
+      "sourceHash": "fnv1a64:4f49f0abb8980ceb",
       "notice": null,
       "blocks": [
         {

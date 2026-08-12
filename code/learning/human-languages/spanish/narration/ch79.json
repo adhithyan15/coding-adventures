@@ -4,11 +4,11 @@
   "chapter": 79,
   "title": "La --- The Pronoun Carries What Left",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:b41146daefe7b345",
+  "sourceHash": "fnv1a64:b06040fb3115ccb4",
   "lessons": [
     {
       "id": "ES-C42-la",
-      "sequence": 1207,
+      "sequence": 1217,
       "title": "la — \"it,\" for a feminine noun",
       "headword": "la",
       "romanization": "la",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b338c2bbf4abff85",
+      "sourceHash": "fnv1a64:b844e939142dc773",
       "notice": null,
       "blocks": [
         {

@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C52-sintesis-el-letrero
 spine_node: SPINE-GIVE-REASONS
-sequence: 2190
+sequence: 2200
 chapter: 180
 type: practice-mix
 headword: (synthesis)

@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C36-caminar
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1980
+sequence: 1990
 chapter: 160
 type: word
 headword: caminar

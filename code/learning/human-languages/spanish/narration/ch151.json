@@ -4,11 +4,11 @@
   "chapter": 151,
   "title": "Escribir — Writing Is Scratching",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:76b53cbc66fc4af5",
+  "sourceHash": "fnv1a64:979cd8ae2814f95d",
   "lessons": [
     {
       "id": "ES-C34-escribir",
-      "sequence": 1910,
+      "sequence": 1920,
       "title": "escribir — \"to write\", which once meant \"to scratch\"",
       "headword": "escribir",
       "romanization": "escribir",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:52f28181532e581e",
+      "sourceHash": "fnv1a64:5e822d6dd1c0fbfb",
       "notice": null,
       "blocks": [
         {

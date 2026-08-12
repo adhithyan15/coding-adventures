@@ -2,13 +2,13 @@
 schema_version: 2
 id: ES-C46-sintesis-dar-y-decir
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 1225
+sequence: 1235
 chapter: 92
 type: practice-mix
 headword: (synthesis)
 gloss: synthesis — choosing between the two sets at conversation speed, where the choice is made by meaning and not by a table
 concept_tag: ES-SYNTHESIS-TWO-OBJECT-SETS
-prerequisites: [ES-C46-repaso-dos-sistemas]
+prerequisites: [ES-C46-repaso-dos-sistemas, ES-C12-decir]
 sounds: []
 roots: []
 teaches_cells: []

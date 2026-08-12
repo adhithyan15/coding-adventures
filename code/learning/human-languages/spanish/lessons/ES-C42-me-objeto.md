@@ -2,13 +2,13 @@
 schema_version: 2
 id: ES-C42-me-objeto
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 1209
+sequence: 1219
 chapter: 80
 type: grammar
 headword: me quieres
 gloss: me doing its plain job — no new form at all, only a second use for a word you have had since chapter four
 concept_tag: ES-GRAMMAR-ME-DIRECT-OBJECT
-prerequisites: [ES-C42-la]
+prerequisites: [ES-C42-la, ES-C11-querer]
 sounds: []
 roots: [me-latin]
 teaches_cells: []

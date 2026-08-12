@@ -4,11 +4,11 @@
   "chapter": 173,
   "title": "Which Way Is the Arrow Pointing?",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f6b0fdfc8343a6dd",
+  "sourceHash": "fnv1a64:28ada725d7a6a84d",
   "lessons": [
     {
       "id": "ES-C51-la-flecha",
-      "sequence": 2183,
+      "sequence": 2193,
       "title": "Which way is the arrow pointing?",
       "headword": "por vs para",
       "romanization": "por vs para",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:be53a7d898641044",
+      "sourceHash": "fnv1a64:a51a3d65053d2c69",
       "notice": null,
       "blocks": [
         {

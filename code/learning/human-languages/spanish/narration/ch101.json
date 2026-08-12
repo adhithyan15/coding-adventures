@@ -4,11 +4,11 @@
   "chapter": 101,
   "title": "Synthesis --- You Can Hear Which Past It Is",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:161d6a136ce240d0",
+  "sourceHash": "fnv1a64:629b024cc82b5e02",
   "lessons": [
     {
       "id": "ES-C15-practice",
-      "sequence": 1335,
+      "sequence": 1345,
       "title": "Practice — six singular patterns, no hidden vocabulary",
       "headword": "(practice)",
       "romanization": "(practice)",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:25364f1e4f49b592",
+      "sourceHash": "fnv1a64:779c0f05a34c16c9",
       "notice": null,
       "blocks": [
         {
@@ -335,7 +335,7 @@
     },
     {
       "id": "ES-C15-sintesis-preterito",
-      "sequence": 1338,
+      "sequence": 1348,
       "title": "Synthesis — you can hear which past it is",
       "headword": "(synthesis)",
       "romanization": "(synthesis)",
@@ -346,7 +346,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:13823ff3c6379e5c",
+      "sourceHash": "fnv1a64:622730683c43721b",
       "notice": null,
       "blocks": [
         {

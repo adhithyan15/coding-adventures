@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C09-sintesis-describir
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1020
-chapter: 58
+sequence: 1030
+chapter: 60
 type: practice
 headword: describing things
 gloss: ser for what a thing is, estar for how it is right now — the contrast you learned before you had the words for it

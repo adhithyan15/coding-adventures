@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C49-participios-irregulares
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 1378
+sequence: 1388
 chapter: 114
 type: grammar
 headword: hecho · dicho · visto · puesto

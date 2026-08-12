@@ -4,11 +4,11 @@
   "chapter": 143,
   "title": "The Weather",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:79e096412c039305",
+  "sourceHash": "fnv1a64:ed4dc07c70e559e4",
   "lessons": [
     {
       "id": "ES-C30-el-tiempo",
-      "sequence": 1770,
+      "sequence": 1780,
       "title": "el tiempo — one word doing two jobs",
       "headword": "el tiempo",
       "romanization": "el tiempo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d23051be94141f01",
+      "sourceHash": "fnv1a64:151a8f7064e069f2",
       "notice": null,
       "blocks": [
         {
@@ -119,7 +119,7 @@
     },
     {
       "id": "ES-C30-hace-calor",
-      "sequence": 1780,
+      "sequence": 1790,
       "title": "hace calor, hace frío, hace sol — the weather Spanish makes",
       "headword": "hace calor, hace frío, hace sol",
       "romanization": "hace calor, hace frío, hace sol",
@@ -130,7 +130,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:652b830a613dbbe1",
+      "sourceHash": "fnv1a64:b6794cfc46b150a0",
       "notice": null,
       "blocks": [
         {
@@ -242,7 +242,7 @@
     },
     {
       "id": "ES-C30-llueve",
-      "sequence": 1790,
+      "sequence": 1800,
       "title": "llueve — the one weather word that will not join hacer",
       "headword": "llueve",
       "romanization": "llueve",
@@ -253,7 +253,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ccf5fbb1dcf39450",
+      "sourceHash": "fnv1a64:5ac8d8c6ce63de48",
       "notice": null,
       "blocks": [
         {

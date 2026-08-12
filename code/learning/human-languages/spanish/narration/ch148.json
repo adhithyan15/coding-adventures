@@ -4,11 +4,11 @@
   "chapter": 148,
   "title": "Pensar — Thinking Is Weighing",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:22af497fdba4b085",
+  "sourceHash": "fnv1a64:3d3c589420d91b14",
   "lessons": [
     {
       "id": "ES-C34-pensar",
-      "sequence": 1880,
+      "sequence": 1890,
       "title": "pensar — \"to think\", and it started out meaning \"to weigh\"",
       "headword": "pensar",
       "romanization": "pensar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5bdacb1e34b9db28",
+      "sourceHash": "fnv1a64:eb58bf1ab5ec59a5",
       "notice": null,
       "blocks": [
         {

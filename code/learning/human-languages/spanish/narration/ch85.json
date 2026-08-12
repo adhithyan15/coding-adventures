@@ -4,11 +4,11 @@
   "chapter": 85,
   "title": "Os --- You All, in Spain",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:bd6cd47abbb584d0",
+  "sourceHash": "fnv1a64:0498b2df1f1d3fe0",
   "lessons": [
     {
       "id": "ES-C45-os",
-      "sequence": 1218,
+      "sequence": 1228,
       "title": "os — \"you all,\" in Spain",
       "headword": "os",
       "romanization": "os",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:612b09cf676f6857",
+      "sourceHash": "fnv1a64:66f68ec05b75c83d",
       "notice": null,
       "blocks": [
         {

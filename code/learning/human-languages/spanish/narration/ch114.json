@@ -4,11 +4,11 @@
   "chapter": 114,
   "title": "Hecho, Dicho, Visto, Puesto",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:9ce485db63dec61e",
+  "sourceHash": "fnv1a64:f918a7af6c4d290e",
   "lessons": [
     {
       "id": "ES-C49-participios-irregulares",
-      "sequence": 1378,
+      "sequence": 1388,
       "title": "hecho, dicho, visto, puesto",
       "headword": "hecho · dicho · visto · puesto",
       "romanization": "hecho · dicho · visto · puesto",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:4b719190e28c062a",
+      "sourceHash": "fnv1a64:f0a27af3e6394ed1",
       "notice": {
         "modality": "sight",
         "needs": [

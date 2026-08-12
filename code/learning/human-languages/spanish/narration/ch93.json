@@ -4,11 +4,11 @@
   "chapter": 93,
   "title": "Me Lo --- Both at Once",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:9b635e484f7c3090",
+  "sourceHash": "fnv1a64:87200858410fd22c",
   "lessons": [
     {
       "id": "ES-C47-me-lo",
-      "sequence": 1226,
+      "sequence": 1236,
       "title": "me lo — both at once",
       "headword": "me lo",
       "romanization": "me lo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b4bd24445ed93494",
+      "sourceHash": "fnv1a64:5743dff1adf11ac3",
       "notice": null,
       "blocks": [
         {

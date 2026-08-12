@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C42-lo
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 1205
+sequence: 1215
 chapter: 78
 type: word
 headword: lo

@@ -4,11 +4,11 @@
   "chapter": 182,
   "title": "El Libro Que Compre --- The Word You Cannot Leave Out",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:faf924043c7323c8",
+  "sourceHash": "fnv1a64:972c830fc7a144b5",
   "lessons": [
     {
       "id": "ES-C53-que-no-se-cae",
-      "sequence": 2192,
+      "sequence": 2202,
       "title": "el libro que compré — the word you cannot leave out",
       "headword": "el libro que compré",
       "romanization": "el libro que compré",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6fbdc73c8e76c0ac",
+      "sourceHash": "fnv1a64:89013ba762ca05cc",
       "notice": null,
       "blocks": [
         {

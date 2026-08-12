@@ -4,11 +4,11 @@
   "chapter": 178,
   "title": "Como Se Dice --- The Sentence That Unlocks the Rest",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:e9f21dd7c8fffe89",
+  "sourceHash": "fnv1a64:a975ef3cb2cc1b67",
   "lessons": [
     {
       "id": "ES-C52-como-se-dice",
-      "sequence": 2188,
+      "sequence": 2198,
       "title": "¿cómo se dice? — the sentence that unlocks the rest",
       "headword": "¿cómo se dice?",
       "romanization": "¿cómo se dice?",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e39ffa97956f052d",
+      "sourceHash": "fnv1a64:4bc8115ab951fb1e",
       "notice": null,
       "blocks": [
         {

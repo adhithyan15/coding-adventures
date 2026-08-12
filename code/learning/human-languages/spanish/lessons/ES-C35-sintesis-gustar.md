@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C35-sintesis-gustar
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1954
+sequence: 1964
 chapter: 159
 type: practice-mix
 headword: (synthesis)

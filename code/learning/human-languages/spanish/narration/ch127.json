@@ -4,11 +4,11 @@
   "chapter": 127,
   "title": "Di, Haz, Ve, Pon, Ten, Sal, Se, Ven",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:341b5819c6d9ff03",
+  "sourceHash": "fnv1a64:04ba3321ec3ab890",
   "lessons": [
     {
       "id": "ES-C50-ocho-cortos",
-      "sequence": 1488,
+      "sequence": 1498,
       "title": "di, haz, ve, pon, ten, sal, sé, ven",
       "headword": "di · haz · ve · pon · ten · sal · sé · ven",
       "romanization": "di · haz · ve · pon · ten · sal · sé · ven",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:76816d3c1e7b043d",
+      "sourceHash": "fnv1a64:e615697952653f56",
       "notice": {
         "modality": "sight",
         "needs": [

@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C17-vivir-condicional
 spine_node: SPINE-TALK-ABOUT-FUTURE
-sequence: 1430
+sequence: 1440
 chapter: 118
 type: grammar
 headword: viviría

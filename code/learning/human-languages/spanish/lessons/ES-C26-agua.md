@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C26-agua
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1710
+sequence: 1720
 chapter: 138
 type: word
 headword: el agua

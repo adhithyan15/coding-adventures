@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C38-luego
 spine_node: SPINE-NARRATE-EVENTS
-sequence: 2040
+sequence: 2050
 chapter: 162
 type: word
 headword: luego

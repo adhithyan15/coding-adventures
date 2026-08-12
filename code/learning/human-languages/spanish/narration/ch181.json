@@ -4,11 +4,11 @@
   "chapter": 181,
   "title": "El Libro Que Compro --- One Sentence Out of Two",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:538ece5d61c3bc80",
+  "sourceHash": "fnv1a64:d446b159709f70fc",
   "lessons": [
     {
       "id": "ES-C53-que-relativo",
-      "sequence": 2191,
+      "sequence": 2201,
       "title": "el libro que compro — one sentence out of two",
       "headword": "el libro que compro",
       "romanization": "el libro que compro",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8404882c1e6063b6",
+      "sourceHash": "fnv1a64:79cbe7dfb930e10a",
       "notice": null,
       "blocks": [
         {

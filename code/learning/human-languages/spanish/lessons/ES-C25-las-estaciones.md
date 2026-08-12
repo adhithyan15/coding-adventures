@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C25-las-estaciones
 spine_node: SPINE-TIME-OF-DAY
-sequence: 1700
+sequence: 1710
 chapter: 137
 type: word
 headword: la primavera, el verano, el otoño, el invierno

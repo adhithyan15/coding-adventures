@@ -4,11 +4,11 @@
   "chapter": 104,
   "title": "The Only Three Irregulars",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:9ef24ede00e1391a",
+  "sourceHash": "fnv1a64:018507f82cddeee4",
   "lessons": [
     {
       "id": "ES-C16-ser-imperfecto",
-      "sequence": 1356,
+      "sequence": 1366,
       "title": "era — an old root in an open past",
       "headword": "era",
       "romanization": "era",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:63f00a9b45747ef8",
+      "sourceHash": "fnv1a64:8d33190119c27527",
       "notice": null,
       "blocks": [
         {
@@ -193,7 +193,7 @@
     },
     {
       "id": "ES-C16-ir-imperfecto",
-      "sequence": 1360,
+      "sequence": 1370,
       "title": "iba — ir returns to its inherited past",
       "headword": "iba",
       "romanization": "iba",
@@ -204,7 +204,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6f866375e66d9304",
+      "sourceHash": "fnv1a64:fcb434596ec64df1",
       "notice": null,
       "blocks": [
         {
@@ -380,7 +380,7 @@
     },
     {
       "id": "ES-C16-ver-imperfecto",
-      "sequence": 1364,
+      "sequence": 1374,
       "title": "veía — keep the extra e you already met",
       "headword": "veía",
       "romanization": "veía",
@@ -391,7 +391,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4feab4deb265afc1",
+      "sourceHash": "fnv1a64:d5b031f0f26471ae",
       "notice": null,
       "blocks": [
         {

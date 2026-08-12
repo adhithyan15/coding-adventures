@@ -4,11 +4,11 @@
   "chapter": 185,
   "title": "Synthesis --- Sentences Worth Saying",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:c68ea1a4ecd23691",
+  "sourceHash": "fnv1a64:a89031fdc3bb9073",
   "lessons": [
     {
       "id": "ES-C53-sintesis-frases-largas",
-      "sequence": 2195,
+      "sequence": 2205,
       "title": "Synthesis — sentences worth saying",
       "headword": "(synthesis)",
       "romanization": "(synthesis)",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2b7d0c9fc5d27c75",
+      "sourceHash": "fnv1a64:dc6c3350c8f07e85",
       "notice": null,
       "blocks": [
         {

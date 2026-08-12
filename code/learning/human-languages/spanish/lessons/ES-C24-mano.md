@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C24-mano
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 1690
+sequence: 1700
 chapter: 136
 type: word
 headword: la mano

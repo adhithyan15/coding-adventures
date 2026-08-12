@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C53-sintesis-frases-largas
 spine_node: SPINE-GIVE-REASONS
-sequence: 2195
+sequence: 2205
 chapter: 185
 type: practice-mix
 headword: (synthesis)

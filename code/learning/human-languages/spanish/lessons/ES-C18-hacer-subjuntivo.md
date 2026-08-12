@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C18-hacer-subjuntivo
 spine_node: SPINE-SAY-WHAT-I-WANT
-sequence: 1474
+sequence: 1484
 chapter: 123
 type: grammar
 headword: haga · hagas · haga

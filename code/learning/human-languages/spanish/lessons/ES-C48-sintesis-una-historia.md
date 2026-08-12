@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C48-sintesis-una-historia
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 1374
+sequence: 1384
 chapter: 110
 type: practice-mix
 headword: (synthesis)

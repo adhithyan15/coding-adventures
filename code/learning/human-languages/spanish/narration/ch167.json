@@ -4,11 +4,11 @@
   "chapter": 167,
   "title": "Review --- All Four Stem Changes",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:d0c81aeb6ca10f59",
+  "sourceHash": "fnv1a64:a9e00954a1c01116",
   "lessons": [
     {
       "id": "ES-C39-repaso-cambios",
-      "sequence": 2113,
+      "sequence": 2123,
       "title": "Review — the four stem changes, all of them",
       "headword": "(review)",
       "romanization": "(review)",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:988e02acedc1e8d6",
+      "sourceHash": "fnv1a64:aa96c51ef30a6405",
       "notice": null,
       "blocks": [
         {

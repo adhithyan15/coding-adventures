@@ -4,11 +4,11 @@
   "chapter": 88,
   "title": "Le --- To Him, To Her, To You",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:9587264394931576",
+  "sourceHash": "fnv1a64:cf3349492ec866b1",
   "lessons": [
     {
       "id": "ES-C46-le",
-      "sequence": 1221,
+      "sequence": 1231,
       "title": "le — \"to him,\" \"to her,\" \"to you\"",
       "headword": "le",
       "romanization": "le",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3c1f4255dc7d9a52",
+      "sourceHash": "fnv1a64:d7b36c5805033858",
       "notice": null,
       "blocks": [
         {
