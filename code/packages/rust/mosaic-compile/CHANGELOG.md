@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### Added - versioned package token palettes
+
+Package mode accepts `--token-palette <JSON>`. Schema-v1 palettes provide
+global token values plus optional per-backend overrides, and are applied to the
+app package and all referenced Mosaic packages before native emission.
+
 ### Fixed - Flutter bootstrap analyzes as a complete project
 
 Flutter project emission now writes Mosaic-owned analyzer configuration and a

@@ -1,5 +1,12 @@
 # Changelog
 
+## [Unreleased] - application token palettes
+
+- Added token-aware composition and package-build entry points.
+- One override map now applies to root and recursively referenced package
+  styles, enabling reusable components to inherit app branding.
+- Existing build and composition APIs retain the built-in Mosaic palette.
+
 ## [Unreleased] - XAML native drag capability
 
 - Native-complete analysis recognizes XAML `HostDraggable` and
