@@ -523,6 +523,9 @@ unblocks multiple downstream targets; never count source generation as completio
     - [x] Register `HostSlider` in the compiler/resolver kernel rosters and
       make every unimplemented native lowering an explicit capability gap.
     - [ ] Lower `HostSlider` to native widgets on all five backends.
+      - [x] Compose Material `Slider`, including range, step, disabled,
+        continuous change, and release-time commit semantics.
+      - [ ] Flutter, Qt, SwiftUI, and XAML native lowerings.
     - [ ] Export the native-complete standard `Slider` facade.
   - [ ] Add native select/picker and switch contracts.
 - [ ] Ship `mosaic-std-navigation`: app shell, toolbar, sidebar/rail, tabs, routes.

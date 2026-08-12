@@ -1,0 +1,630 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 13,
+  "title": "Please, Sorry, and Welcome",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:1db68e8f6fa97b48",
+  "lessons": [
+    {
+      "id": "BN-C13-doya-kore",
+      "sequence": 1000,
+      "title": "দয়া করে (doya kore) — \"please,\" a kindness done",
+      "headword": "দয়া করে",
+      "romanization": "doya kore",
+      "gloss": "please — literally \"having done a kindness,\" and the noun-plus-করা pattern's third demonstration",
+      "script": "bengali",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:62bd76a1ad4c9542",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The heart word closed the last chapter. A new one opens on a feeling that starts in the same place — and a word this book has never taught you before now."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: দয়া করে",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "দয়া করে — doya kore — please."
+            },
+            {
+              "kind": "speech",
+              "text": "দয়া করে বসুন (doya kore bôshun) — please, sit."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "দয়া is দ (dô) plus য় (the glide already met inside হৃদয়) with the vowel sign া (ā): doyā. করে is ক (kô) plus র (r) with the vowel sign ে (e): kôre."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "দয়া is Sanskrit দয়া (dayā), \"compassion, pity.\" Most Indo-Europeanists trace its root back to PIE deh₂-, \"to divide, to apportion\" — the same root proposed for Greek daíomai, \"to divide,\" and dêmos, \"a portion of land, the people,\" which English holds without inheriting it directly: democracy, epidemic, demographic. If the comparison is right, compassion and sharing are the same idea at the root — you feel দয়া for someone by dividing your own good fortune with them, the warmth this book already located in হৃদয়, the heart."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "grammar",
+          "title": "Grammar Lens: করা wears a new outfit",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Noun plus করা already builds a verb — কাজ করা, \"to work\"; জিজ্ঞাসা করা, \"to ask.\" Here করা takes a different shape, করে, \"having done\": not a full sentence on its own, but a piece that leans on the next word."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "shape of করা",
+                "job",
+                "example"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "shape of করা: a finite ending (করি, করে, করেন…) job: states an action. example: আমি কাজ করি — I work.",
+                "shape of করা: করে, unchanged. job: \"having done,\" leaning forward. example: দয়া করে (doya kore) বসুন — please, sit."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "দয়া করে (doya kore) literally says \"having done a kindness, [now do this]\" — the kindness is named, then the actual request follows."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"doya\" — compassion, then \"kore\" — having done",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"doya\" — compassion, then \"kore\" — having done]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"doya kore bôshun\" — please, sit",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"doya kore bôshun\" — please, sit]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the family this word joins — \"kāj kôrā … jijñāsā kôrā … doya kore\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the family this word joins — \"kāj kôrā … jijñāsā kôrā … doya kore\"]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does দয়া করে (doya kore) mean literally, piece by piece? (\"Having done a kindness\" — দয়া \"compassion\" + করে \"having done.\") Is করে here a full sentence by itself? (No — it leans forward onto the request that follows it.) One quick reach back: what root does দয়া share with a very old disputed argument about democracy? (PIE deh₂-, \"to divide\" — the same proposed root behind Greek dêmos, and behind the warmth হৃদয়, the heart, already carries — two lessons after নাক, the nose, which shares none of it.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C13-dukkhito",
+      "sequence": 1010,
+      "title": "দুঃখিত (dukkhito) — \"sorry,\" and a prefix that reaches Greek",
+      "headword": "দুঃখিত",
+      "romanization": "dukkhito",
+      "gloss": "sorry — built on a word two dictionaries explain two different ways, and a prefix with a real Greek cousin",
+      "script": "bengali",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:4fa1250af5ed940d",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Last lesson's kindness gets a request said politely. This lesson is what you say when the kindness came too late."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: দুঃখিত",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "দুঃখিত — dukkhito — sorry."
+            },
+            {
+              "kind": "speech",
+              "text": "আমি দুঃখিত (āmi dukkhito) — I'm sorry."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "দুঃখিত is দ (dô) with the vowel sign ু (u), then ঃ — a new mark, the visarga, two small stacked dots that add a light breath after the vowel — then খ (kh) with the vowel sign ি (i), then ত (t, silent at the end). Spelled duḥkhita, said dukkhito: the breath mark softens toward the consonant that follows it rather than staying a separate sound."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "দুঃখিত (dukkhito) is built on Sanskrit দুঃখ (duḥkha), \"sorrow, suffering\" — the word Buddhism made famous as dukkha. Take it apart and one half is certain: দুঃ/দুস্ (dus-) means \"bad, difficult,\" from PIE dus-, the very prefix inside Greek dys-: dystopia, dysfunctional. The other half, খ (kha), is where the certainty ends. Sanskrit's own grammatical tradition explains it as \"an axle-hole\" — a duḥkha journey is a bad axle-hole, a rough ride, set against সুখ (sukha), \"a good axle-hole,\" comfort. It is a vivid story, and it is repeated everywhere. It is also, by the account of modern Sanskritists including Mayrhofer, not a story to trust: the axle-hole reading may be a later folk explanation grafted onto a word whose real root is lost. দুঃ's cousin is real; খ's is a story, reported and not settled."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"dukkhito\" — sorry",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"dukkhito\" — sorry]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"āmi dukkhito\" — I'm sorry",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"āmi dukkhito\" — I'm sorry]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the secure half and its Greek cousin — \"dus- … dystopia\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the secure half and its Greek cousin — \"dus- … dystopia\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "last lesson's request again — \"doya kore bôshun\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: last lesson's request again — \"doya kore bôshun\"]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I'm sorry\" in Bengali. (আমি দুঃখিত (dukkhito).) Which half of দুঃখ is a secure PIE prefix, and which English word shares it? (দুঃ/dus-, \"bad\" — dystopia, by way of Greek dys-.) Is the \"bad axle-hole\" story of খ settled fact? (No — a repeated tradition, treated with real skepticism by modern Sanskritists.) Sorrow, like compassion, can weigh somewhere specific — where? (হৃদয়, the heart.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C13-maf-korben",
+      "sequence": 1020,
+      "title": "মাফ করবেন (maf korben) — \"excuse me,\" borrowed and softened",
+      "headword": "মাফ করবেন",
+      "romanization": "maf korben",
+      "gloss": "excuse me — the same Persian loan Hindi's own \"sorry\" phrase uses, softened here by the future tense rather than a command",
+      "script": "bengali",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:8f474ddd4d824d26",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Last lesson's word for \"sorry\" was a native Sanskrit word. This one is a loanword — the very same loanword Hindi uses in its own \"sorry\" phrase — and it softens a request in a way you have not met yet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: মাফ করবেন",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "মাফ করবেন — maf korben — excuse me."
+            },
+            {
+              "kind": "speech",
+              "text": "মাফ করবেন, একটু জায়গা দেবেন? (maf korben, êktu jāygā debên?) — excuse me, could you make a little room?"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "মাফ is ম (mô) with া (ā) plus ফ (ph, the puffed p). Notice what is missing: Hindi marks this same borrowed sound with a small dot under its own letter for pha, a nuqtā, to write a dedicated letter for f. Bengali's script has no such mark at all — ফ alone serves for both the native puffed p and this borrowed f, and only habit tells a reader which one a given word means."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "মাফ is not Bengali, and not Sanskrit: it is borrowed, by way of Persian, from Arabic 'afw, \"to pardon, to wipe a wrong away.\" Hindi borrowed the identical word for the identical job. Bengali also keeps a formal, Sanskritic cousin for the same idea, ক্ষমা করবেন, from ক্ষমা (kṣamā), \"patience, forbearance\" — the everyday loan and the bookish native word side by side, the same split Hindi keeps."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "grammar",
+          "title": "Grammar Lens: the future, asked to be gentle",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The tea-offering pattern you already own reuses a present verb — আপনি খান — to make a request. করবেন does the same job with a different tense: it is the plain future, \"you will do,\" not a command at all by its grammar, and yet its job here is exactly a request — a third shape for করা, beside last lesson's participle করে."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "tense used",
+                "what it does",
+                "example"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "tense used: present habitual. what it does: states, and doubles as a request. example: আপনি খান — you eat / please eat.",
+                "tense used: future. what it does: states, and doubles as a softer request. example: মাফ করবেন (maf korben) — you will excuse / please excuse."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The future's distance is what buys the softness: asking rather than telling, even grammatically."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"maf korben\" — excuse me",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"maf korben\" — excuse me]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two soft requests compared — \"chā khān … maf korben\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two soft requests compared — \"chā khān … maf korben\"]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does মাফ come from? (Arabic 'afw, \"to pardon,\" by way of Persian — the same loan Hindi's own \"sorry\" phrase uses.) What tense is করবেন, and why does that make it gentler than a command? (Future — \"you will do,\" asking rather than telling.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C13-sbagotom",
+      "sequence": 1030,
+      "title": "স্বাগতম (shbagotom) — \"welcome,\" a good arrival",
+      "headword": "স্বাগতম",
+      "romanization": "shbagotom",
+      "gloss": "welcome — \"a good coming,\" built on the same \"hither\" prefix already met, and a verb whose PIE root is unusually secure",
+      "script": "bengali",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:0ab6d51218767ac6",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "This chapter has taught what to say after a mistake. It closes on what to say before anything goes wrong at all — a word built on the same \"hither\" you have carried since the verb for coming."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: স্বাগতম",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "স্বাগতম — shbagotom — welcome."
+            },
+            {
+              "kind": "speech",
+              "text": "আমাদের বাড়িতে স্বাগতম (āmāder bāṛite shbagotom) — welcome to our house."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "স্বাগতম (shbagotom) is স্ব (a conjunct, স joined straight to ব with no vowel between — sbô, tilted by the same s becomes sh habit every Sanskrit word in this book has shown) plus া (ā), then গ (gô), ত (tô), and ম (mô, keeping its own inherent vowel at the very end): shbā-go-to-m."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "স্বাগতম (shbagotom) is Sanskrit স্বাগতম (shbagotom) (svāgatam), built from two pieces fused together. The second piece, আগত (āgata), \"arrived, come,\" opens with the very same আ-, \"hither,\" that আসা's own lesson already named — except here it rides a different verb, √গম্ (√gam, \"to go, to come\"), not আসা's own unsettled stem. √gam is PIE gʷem-, and this root is about as secure as roots get: it is the direct ancestor of English come, and, by way of Latin venīre, of advent and convene too. The first piece, সু- (su-, \"good\"), loses its vowel to the glide ব when the next syllable also opens with a vowel — ordinary Sanskrit sandhi, the same trade সু- plus আগত makes every time: svāgata. সু- is PIE h₁su-, cousin of Greek eu-, the \"good\" inside eulogy and euphoria. Put the pieces back together: স্বাগতম (shbagotom) is, literally, \"a good coming.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"shbagotom\" — welcome",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"shbagotom\" — welcome]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"āmāder bāṛite shbagotom\" — welcome to our house",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"āmāder bāṛite shbagotom\" — welcome to our house]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the shared prefix — \"ā-, hither\" — on āsā, then on āgata",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the shared prefix — \"ā-, hither\" — on āsā, then on āgata]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two secure cousins — \"gam … come\" and \"su- … eu-\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two secure cousins — \"gam … come\" and \"su- … eu-\"]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give \"welcome\" in Bengali. (স্বাগতম (shbagotom).) What does স্বাগতম (shbagotom) mean, piece by piece? (\"Good\" plus \"come\" — a good arrival.) Which prefix does it share with আসা, and on a different verb this time? (আ-, \"hither\" — on √gam here, not আসা's own uncertain stem.) Run this chapter's three other new words back: a kindness done, a word for sorrow, and a borrowed pardon. (দয়া করে (doya kore), দুঃখিত (dukkhito), মাফ করবেন (maf korben).) One more reach: what tense softened that pardon into a request? (Future — করবেন, \"you will do.\")"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

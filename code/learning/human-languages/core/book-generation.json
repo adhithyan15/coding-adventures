@@ -798,6 +798,27 @@
       "scriptCommand": "bn"
     },
     {
+      "language": "bengali",
+      "chapter": 13,
+      "output": "bengali/book/chapters/ch13-please-sorry-welcome.tex",
+      "unicodeScript": "Bengali",
+      "scriptCommand": "bn"
+    },
+    {
+      "language": "bengali",
+      "chapter": 14,
+      "output": "bengali/book/chapters/ch14-five-colors.tex",
+      "unicodeScript": "Bengali",
+      "scriptCommand": "bn"
+    },
+    {
+      "language": "bengali",
+      "chapter": 15,
+      "output": "bengali/book/chapters/ch15-cloth-shirt-sari-glasses.tex",
+      "unicodeScript": "Bengali",
+      "scriptCommand": "bn"
+    },
+    {
       "language": "chinese",
       "chapter": 1,
       "output": "chinese/book/chapters/ch01-nihao.tex",
@@ -2083,6 +2104,27 @@
       "scriptCommand": "fa"
     },
     {
+      "language": "persian",
+      "chapter": 12,
+      "output": "persian/book/chapters/ch12-name-heart-door-book.tex",
+      "unicodeScript": "Arabic",
+      "scriptCommand": "fa"
+    },
+    {
+      "language": "persian",
+      "chapter": 13,
+      "output": "persian/book/chapters/ch13-sky-words.tex",
+      "unicodeScript": "Arabic",
+      "scriptCommand": "fa"
+    },
+    {
+      "language": "persian",
+      "chapter": 14,
+      "output": "persian/book/chapters/ch14-people-words.tex",
+      "unicodeScript": "Arabic",
+      "scriptCommand": "fa"
+    },
+    {
       "language": "portuguese",
       "chapter": 2,
       "output": "portuguese/book/chapters/ch02-how-are-you.tex"
@@ -2318,6 +2360,27 @@
       "language": "russian",
       "chapter": 10,
       "output": "russian/book/chapters/ch10-heart.tex",
+      "unicodeScript": "Cyrillic",
+      "scriptCommand": "ru"
+    },
+    {
+      "language": "russian",
+      "chapter": 11,
+      "output": "russian/book/chapters/ch11-parting-words.tex",
+      "unicodeScript": "Cyrillic",
+      "scriptCommand": "ru"
+    },
+    {
+      "language": "russian",
+      "chapter": 12,
+      "output": "russian/book/chapters/ch12-mother-and-father.tex",
+      "unicodeScript": "Cyrillic",
+      "scriptCommand": "ru"
+    },
+    {
+      "language": "russian",
+      "chapter": 13,
+      "output": "russian/book/chapters/ch13-milk-cheese-juice-soup.tex",
       "unicodeScript": "Cyrillic",
       "scriptCommand": "ru"
     },
@@ -3835,6 +3898,27 @@
       "language": "urdu",
       "chapter": 12,
       "output": "urdu/book/chapters/ch12-food-words.tex",
+      "unicodeScript": "Arabic",
+      "scriptCommand": "ur"
+    },
+    {
+      "language": "urdu",
+      "chapter": 13,
+      "output": "urdu/book/chapters/ch13-colors.tex",
+      "unicodeScript": "Arabic",
+      "scriptCommand": "ur"
+    },
+    {
+      "language": "urdu",
+      "chapter": 14,
+      "output": "urdu/book/chapters/ch14-clothing.tex",
+      "unicodeScript": "Arabic",
+      "scriptCommand": "ur"
+    },
+    {
+      "language": "urdu",
+      "chapter": 15,
+      "output": "urdu/book/chapters/ch15-weather.tex",
       "unicodeScript": "Arabic",
       "scriptCommand": "ur"
     }

@@ -2,6 +2,21 @@
 
 All notable changes to this package are documented here.
 
+## [0.55.0] - 2026-08-12
+
+### Added
+
+- Add an opaque audited preparation for authored login conflict merges using
+  one exact current live login as the non-form metadata base.
+
+### Security
+
+- Publish item-scoped `ItemConflictMerge` failures for invalid bases, host
+  failures, and invalid authored forms before returning them, while publishing
+  success atomically with an all-current-parent merged revision.
+- Enforce the closed sixteen-URL ceiling inside the application-owned login
+  replacement builder as well as at the terminal host.
+
 ## [0.54.0] - 2026-08-12
 
 ### Added

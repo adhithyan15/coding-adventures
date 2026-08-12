@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Provision operator-declared Chief-host smart-home tool grants through a
+  serialized central D23 transaction before serving. Exact unchanged records are
+  idempotent, stable grant IDs support durable revocation, and unknown tools,
+  future issuance times, persistence failures, or unavailable wall-clock time
+  fail startup closed.
 - Evaluate model-selected smart-home tools at their real Unix-millisecond
   invocation time. The injected clock now drives grant expiry, controller
   transactions, and durable authorization audit timestamps, and fails closed

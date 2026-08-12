@@ -49,6 +49,9 @@ romanization once the Urdu form is familiar.
 | `do-chashmi-he` | give **ھ** no sound of its own; let it aspirate the letter to its right | **سمجھنا** *samajhnā*, **لکھنا** *likhnā* |
 | `retroflex-flap-rre` | flick a curled-back tongue once for **ڑ**; do not roll it | **پڑھنا** *paṛhnā* |
 | `majhul-e` | read medial **ی** as long *e* where the learned word calls for it | **لینا** *lenā* |
+| `qaf-uvular` | draw the back of the tongue further back in the throat for **ق** than for **ک**; many speakers merge the two in casual speech | **قمیض** *qamīz* |
+| `te-dots-vs-tte-loop` | two dots above make plain dental **ت**; a small raised loop instead makes retroflex **ٹ** | **جوتا** *jūtā* against **ٹھیک** *ṭhīk* |
+| `gaf-stroke` | **گ** is **ک** with one extra stroke laid across the top | **گرمی** *garmī* |
 
 ## Shape families already in use
 
@@ -83,6 +86,17 @@ romanization once the Urdu form is familiar.
 - **ی** takes a **third** value in **لینا** *lenā*: a long *e*. With
   consonantal *y* in **کیا** and long *ī* in **جی**, and broad final **ے**
   beside it, the *ye* family covers *y*, *ī* and *e*; the learned word decides.
+- **ق** *qāf*, first read in **قمیض**, shares its throat position with
+  already-known **خ** but is a stop rather than a fricative — a plosive
+  version of the same back-of-the-mouth place. **ض** *zād*, in the same
+  word, joins **ظ** (from **حافظ**) as a second letter carrying the plain
+  **z** sound in Urdu, even though Arabic once told the two apart.
+- **ت** *te*, first read in **جوتا**, shares its base scoop with
+  already-known **ٹ**: two dots above make it plain dental *t*, where a
+  small raised loop instead makes **ٹ** retroflex.
+- **گ** *gāf*, first read in **گرمی**, is already-known **ک** with one
+  extra stroke laid across the top — the same dot-count logic that told
+  **ب** apart from **پ**, this time with a stroke instead of a dot.
 
 ## The Persian-Arabic and Indo-Aryan layers
 

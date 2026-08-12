@@ -226,7 +226,7 @@ describe("corpus snapshot", () => {
     // +1, and only ONE of chapter 39's four lessons: TA-W20-read-onru, which sits on
     // SPINE-MEET-GREET like every other writing lesson. The chapter's three speaking
     // lessons land at A2, because SPINE-SAY-WHAT-I-WANT is an A2 node — see below.
-    expect(summary.byLevel["pre-A1"]).toBe(937); // +3: HL-C97 adds the repair kit (no entiendo, mas despacio) at chapter 14 // +4: HL-C98 // +40: vocabulary wave 5 (persian 12, telugu 13, malayalam 15)
+    expect(summary.byLevel["pre-A1"]).toBe(991); // +3: HL-C97 adds the repair kit (no entiendo, mas despacio) at chapter 14 // +4: HL-C98 // +40: vocabulary wave 5 (persian 12, telugu 13, malayalam 15) // +54: vocabulary wave 6 (russian 14, persian 14, urdu 13, bengali 13)
     // Chapter 10 adds singular ir and possessives at A1. Chapter 11 adds one more
     // definite-reference lesson there; its other work is A2. Chapter 12 adds its
     // newly mapped terminal checkpoints at A2 on SPINE-SAY-WHAT-I-DO.
@@ -252,7 +252,7 @@ describe("corpus snapshot", () => {
     // teaching lessons. Chapter 10 closes two more gaps; Chapter 11 closes its
     // possessive and terminal-practice gaps; Chapters 12-13 close their payoff gaps.
     expect(summary.unmapped).toBe(86);
-    expect(summary.mappedPercent).toBe(95);
+    expect(summary.mappedPercent).toBe(96); // +1: vocabulary wave 6 grows the mapped corpus faster than the unmapped 86
   });
 
   it("shows twenty tracks have reached A2, and only two have not reached A1", () => {
@@ -310,7 +310,7 @@ describe("corpus snapshot", () => {
     // that joins, not inferred from the total.
     // +1, measured as a set difference: TA-W20-read-onru is the only lesson that
     // joins. The three A2 speaking lessons are above the A1 cut and do not.
-    expect(ramp).toHaveLength(1298); // +3: HL-C97 adds the repair kit (no entiendo, mas despacio) at chapter 14 // +40: vocabulary wave 5, all of it pre-A1
+    expect(ramp).toHaveLength(1352); // +3: HL-C97 adds the repair kit (no entiendo, mas despacio) at chapter 14 // +40: vocabulary wave 5, all of it pre-A1 // +54: vocabulary wave 6, all of it pre-A1
     expect(ramp.length).toBeLessThan(lessons.length);
   });
 });

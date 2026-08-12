@@ -1,0 +1,68 @@
+% ============================================================================
+% pond-zone — three named zones of a freshwater lake or pond and what each
+% actually is (adj-facts-stdlib, BIOLOGY).
+% ============================================================================
+% A lake or pond is not one uniform body of water — ecologists sort it into
+% named zones by where the water sits relative to the shore and to how deep
+% sunlight reaches. Recall is a binding query:
+%
+%     ? pond_zone(littoral_zone, $D)
+%       % close_to_the_shore
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground relation
+% `pond_zone(zone, description)` carrying the source citation, so the lookup
+% above is the ordinary SLD binding query — the engine returns the
+% description WITH its source, on the CPU, with zero model calls, and
+% abstains on a freshwater-zone term that is not one of these three. The
+% query also runs BACKWARD — bind a description and recall the zone it
+% names:
+%
+%     ? pond_zone($Z, deep_zone_located_below_the_range_of_effective_light_penetration)
+%       % profundal_zone
+%
+% The three zones, as a little truth table:
+%
+%     zone              description                                                             quote (verbatim)
+%     ----------------  ----------------------------------------------------------------------  -------------------------------------------------------------------------------------------------
+%     littoral_zone      close_to_the_shore                                                       "The littoral zone, also called litoral or nearshore, is the part of an ocean, sea, lake, or river, that is close to the shore."
+%     limnetic_zone      open_and_well_lit_area_of_a_freestanding_body_of_fresh_water              "The limnetic zone is the open and well-lit area of a freestanding body of fresh water, such as a lake or pond."
+%     profundal_zone     deep_zone_located_below_the_range_of_effective_light_penetration          "The profundal zone is the deep zone of a lake, located below the range of effective light penetration."
+%
+% Provenance: quoted verbatim from three separate Wikipedia articles ("Littoral
+% zone", "Limnetic zone", "Profundal zone"), each article's own opening
+% sentence. WebFetch-verified before writing. `trust consensus` — the same
+% tier this stdlib already reserves for other Wikipedia citations (e.g.
+% `soil-texture-class.adj`'s element-to-periodic-table-group-family
+% precedent in `chemistry/`). Because ADJ tables carry ONE shared provenance
+% envelope, the envelope below cites the littoral-zone article at its
+% `locator`, and each OTHER row's own distinct citation is documented above
+% in prose (the same discipline `ocean-observing-instruments.adj`/
+% `fable-moral.adj`/`rock-type.adj` already established for multi-source
+% tables).
+%
+% Distinct from the already-shipped `oceanography/ocean-zones.adj`, which
+% names three OCEAN depth zones (sunlight/twilight/midnight, ordered by how
+% far sunlight reaches down through open ocean water) — a completely
+% different body of water and a different organizing question (ocean depth
+% vs. freshwater lake/pond position). Picked using the mandatory
+% full-tree-grep-before-scoping discipline — `grep -rilE
+% "\blittoral\b|\blimnetic\b|\bprofundal\b|\bpond_zone\b"
+% code/specs/data/adj-facts-stdlib/` found ZERO hits before this file was
+% written. A freshwater-zone term that is NOT one of these three — e.g. a
+% deeper "benthic zone" some sources also name — is deliberately NOT a row
+% here, so a recall ABSTAINS on it rather than inventing a description.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table pond_zone {
+    columns zone, description
+
+    row (littoral_zone, close_to_the_shore)
+    row (limnetic_zone, open_and_well_lit_area_of_a_freestanding_body_of_fresh_water)
+    row (profundal_zone, deep_zone_located_below_the_range_of_effective_light_penetration)
+
+    source "The littoral zone, also called litoral or nearshore, is the part of an ocean, sea, lake, or river, that is close to the shore."
+    locator "https://en.wikipedia.org/wiki/Littoral_zone"
+    trust consensus
+}

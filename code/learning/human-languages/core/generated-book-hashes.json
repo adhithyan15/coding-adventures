@@ -432,6 +432,43 @@
       "tex": "bengali/book/chapters/ch12-eye-mouth-nose-heart.tex"
     },
     {
+      "language": "bengali",
+      "chapter": 13,
+      "sourceHash": "fnv1a64:2cc8d10a95ff36e5",
+      "lessonIds": [
+        "BN-C13-doya-kore",
+        "BN-C13-dukkhito",
+        "BN-C13-maf-korben",
+        "BN-C13-sbagotom"
+      ],
+      "tex": "bengali/book/chapters/ch13-please-sorry-welcome.tex"
+    },
+    {
+      "language": "bengali",
+      "chapter": 14,
+      "sourceHash": "fnv1a64:dfec40d016988583",
+      "lessonIds": [
+        "BN-C14-lal",
+        "BN-C14-nil",
+        "BN-C14-kalo",
+        "BN-C14-shada",
+        "BN-C14-shobuj"
+      ],
+      "tex": "bengali/book/chapters/ch14-five-colors.tex"
+    },
+    {
+      "language": "bengali",
+      "chapter": 15,
+      "sourceHash": "fnv1a64:bb12d12e0bdc9e26",
+      "lessonIds": [
+        "BN-C15-kapor",
+        "BN-C15-jama",
+        "BN-C15-shari",
+        "BN-C15-choshma"
+      ],
+      "tex": "bengali/book/chapters/ch15-cloth-shirt-sari-glasses.tex"
+    },
+    {
       "language": "chinese",
       "chapter": 1,
       "sourceHash": "fnv1a64:bdf9d6e995f6b71d",
@@ -2778,6 +2815,44 @@
       "tex": "persian/book/chapters/ch11-body.tex"
     },
     {
+      "language": "persian",
+      "chapter": 12,
+      "sourceHash": "fnv1a64:78d09fa60f45a70c",
+      "lessonIds": [
+        "FA-C12-nam",
+        "FA-C12-del",
+        "FA-C12-dar",
+        "FA-C12-ketab"
+      ],
+      "tex": "persian/book/chapters/ch12-name-heart-door-book.tex"
+    },
+    {
+      "language": "persian",
+      "chapter": 13,
+      "sourceHash": "fnv1a64:f9cced230ff54588",
+      "lessonIds": [
+        "FA-C13-aseman",
+        "FA-C13-khorshid",
+        "FA-C13-mah",
+        "FA-C13-setare",
+        "FA-C13-baran"
+      ],
+      "tex": "persian/book/chapters/ch13-sky-words.tex"
+    },
+    {
+      "language": "persian",
+      "chapter": 14,
+      "sourceHash": "fnv1a64:5da7cf393cf4ac91",
+      "lessonIds": [
+        "FA-C14-khahar",
+        "FA-C14-pesar",
+        "FA-C14-mard",
+        "FA-C14-zan",
+        "FA-C14-dust"
+      ],
+      "tex": "persian/book/chapters/ch14-people-words.tex"
+    },
+    {
       "language": "portuguese",
       "chapter": 2,
       "sourceHash": "fnv1a64:b0efef039678335d",
@@ -3249,6 +3324,44 @@
         "RU-C10-serdtse"
       ],
       "tex": "russian/book/chapters/ch10-heart.tex"
+    },
+    {
+      "language": "russian",
+      "chapter": 11,
+      "sourceHash": "fnv1a64:db2e96809a7ffd4b",
+      "lessonIds": [
+        "RU-C11-do-svidaniya",
+        "RU-C11-poka",
+        "RU-C11-do-skorogo",
+        "RU-C11-do-zavtra",
+        "RU-C11-do-vstrechi",
+        "RU-C11-spokoynoy-nochi"
+      ],
+      "tex": "russian/book/chapters/ch11-parting-words.tex"
+    },
+    {
+      "language": "russian",
+      "chapter": 12,
+      "sourceHash": "fnv1a64:77400bcf75b3f11e",
+      "lessonIds": [
+        "RU-C12-mama",
+        "RU-C12-papa",
+        "RU-C12-mat",
+        "RU-C12-otets"
+      ],
+      "tex": "russian/book/chapters/ch12-mother-and-father.tex"
+    },
+    {
+      "language": "russian",
+      "chapter": 13,
+      "sourceHash": "fnv1a64:e33f8fc7f6b068cb",
+      "lessonIds": [
+        "RU-C13-moloko",
+        "RU-C13-syr",
+        "RU-C13-sok",
+        "RU-C13-sup"
+      ],
+      "tex": "russian/book/chapters/ch13-milk-cheese-juice-soup.tex"
     },
     {
       "language": "sanskrit",
@@ -6070,6 +6183,43 @@
         "UR-C12-roti"
       ],
       "tex": "urdu/book/chapters/ch12-food-words.tex"
+    },
+    {
+      "language": "urdu",
+      "chapter": 13,
+      "sourceHash": "fnv1a64:fde7f58004def645",
+      "lessonIds": [
+        "UR-C13-lal",
+        "UR-C13-safed",
+        "UR-C13-kala",
+        "UR-C13-nila"
+      ],
+      "tex": "urdu/book/chapters/ch13-colors.tex"
+    },
+    {
+      "language": "urdu",
+      "chapter": 14,
+      "sourceHash": "fnv1a64:79ba217ced73dd76",
+      "lessonIds": [
+        "UR-C14-qamiz",
+        "UR-C14-juta",
+        "UR-C14-topi",
+        "UR-C14-koat"
+      ],
+      "tex": "urdu/book/chapters/ch14-clothing.tex"
+    },
+    {
+      "language": "urdu",
+      "chapter": 15,
+      "sourceHash": "fnv1a64:67d202f016620697",
+      "lessonIds": [
+        "UR-C15-barish",
+        "UR-C15-dhoop",
+        "UR-C15-hawa",
+        "UR-C15-garmi",
+        "UR-C15-sardi"
+      ],
+      "tex": "urdu/book/chapters/ch15-weather.tex"
     }
   ]
 }

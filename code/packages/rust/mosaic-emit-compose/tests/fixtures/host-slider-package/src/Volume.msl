@@ -1,0 +1,5 @@
+style Volume {
+  part volume {
+    width: 320;
+  }
+}

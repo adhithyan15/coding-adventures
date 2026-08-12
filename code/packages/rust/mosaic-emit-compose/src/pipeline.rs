@@ -108,6 +108,7 @@ pub fn from_pipeline(
     let part_styles = build_part_style_map(style);
     let uses_host_link = layout_contains_tag(&layout.root, "HostLink");
     let uses_host_dialog = layout_contains_tag(&layout.root, "HostDialog");
+    let uses_host_slider = layout_contains_tag(&layout.root, "HostSlider");
     let uses_native_table_semantics = layout_has_native_table_semantics(&layout.root);
     let uses_text_heading = layout_has_text_role(&layout.root, "heading");
     let uses_text_replacement_semantics = layout_has_text_replacement_semantics(&layout.root);
@@ -179,6 +180,7 @@ pub fn from_pipeline(
         writeln!(out, "import androidx.compose.material.LocalContentColor").unwrap();
     }
     writeln!(out, "import androidx.compose.material.RadioButton").unwrap();
+    writeln!(out, "import androidx.compose.material.Slider").unwrap();
     writeln!(out, "import androidx.compose.material.Surface").unwrap();
     writeln!(out, "import androidx.compose.material.Text").unwrap();
     writeln!(out, "import androidx.compose.material.TextField").unwrap();
@@ -190,16 +192,23 @@ pub fn from_pipeline(
         )
         .unwrap();
         writeln!(out, "import androidx.compose.runtime.DisposableEffect").unwrap();
+    }
+    if uses_drag || uses_host_slider {
         writeln!(out, "import androidx.compose.runtime.getValue").unwrap();
-        writeln!(out, "import androidx.compose.runtime.mutableStateOf").unwrap();
         writeln!(out, "import androidx.compose.runtime.remember").unwrap();
-        writeln!(out, "import androidx.compose.runtime.rememberUpdatedState").unwrap();
         writeln!(out, "import androidx.compose.runtime.setValue").unwrap();
+    }
+    if uses_drag {
+        writeln!(out, "import androidx.compose.runtime.mutableStateOf").unwrap();
+        writeln!(out, "import androidx.compose.runtime.rememberUpdatedState").unwrap();
         writeln!(
             out,
             "import androidx.compose.runtime.staticCompositionLocalOf"
         )
         .unwrap();
+    }
+    if uses_host_slider {
+        writeln!(out, "import androidx.compose.runtime.mutableFloatStateOf").unwrap();
     }
     if uses_host_dialog {
         writeln!(out, "import androidx.compose.runtime.LaunchedEffect").unwrap();
@@ -286,7 +295,11 @@ pub fn from_pipeline(
         writeln!(out, "import androidx.compose.ui.semantics.heading").unwrap();
     }
     if uses_text_replacement_semantics {
-        writeln!(out, "import androidx.compose.ui.semantics.clearAndSetSemantics").unwrap();
+        writeln!(
+            out,
+            "import androidx.compose.ui.semantics.clearAndSetSemantics"
+        )
+        .unwrap();
     }
     if uses_native_table_semantics {
         writeln!(out, "import androidx.compose.ui.semantics.CollectionInfo").unwrap();
@@ -363,6 +376,10 @@ pub fn from_pipeline(
         out.push_str(&emit_icon_helper());
         writeln!(out).unwrap();
     }
+    if uses_host_slider {
+        out.push_str(&emit_host_slider_helper());
+        writeln!(out).unwrap();
+    }
     if uses_drag {
         out.push_str(&emit_drag_helpers());
         writeln!(out).unwrap();
@@ -390,6 +407,43 @@ fn layout_contains_tag(node: &LayoutNode, tag: &str) -> bool {
             .children
             .iter()
             .any(|child| layout_contains_tag(child, tag))
+}
+
+/// Emit the shared slider wrapper used by generated components.
+///
+/// Compose's `onValueChangeFinished` callback carries no value. Keeping the
+/// live drag value inside this composable ensures a release-time Mosaic event
+/// receives the exact final thumb position even when the Rust-engine state
+/// update has not recomposed the controlled parent yet.
+fn emit_host_slider_helper() -> String {
+    r#"@Composable
+private fun _mosaicHostSlider(
+    value: Double,
+    valueRange: ClosedFloatingPointRange<Float>,
+    steps: Int,
+    enabled: Boolean,
+    modifier: Modifier = Modifier,
+    onValueChange: ((Double) -> Unit)? = null,
+    onValueChangeFinished: ((Double) -> Unit)? = null,
+) {
+    var liveValue by remember(value) { mutableFloatStateOf(value.toFloat()) }
+    Slider(
+        value = liveValue.coerceIn(valueRange.start, valueRange.endInclusive),
+        onValueChange = { nextValue ->
+            liveValue = nextValue
+            onValueChange?.invoke(nextValue.toDouble())
+        },
+        modifier = modifier,
+        enabled = enabled,
+        valueRange = valueRange,
+        steps = steps,
+        onValueChangeFinished = {
+            onValueChangeFinished?.invoke(liveValue.toDouble())
+        },
+    )
+}
+"#
+    .to_string()
 }
 
 /// Emit the shared Compose link primitive used by every generated component.
@@ -1386,8 +1440,7 @@ fn layout_has_text_replacement_semantics(node: &LayoutNode) -> bool {
         && (matches!(
             find_prop_value(node, "a11y-label"),
             Some(LayoutPropValue::String(_) | LayoutPropValue::SlotRef(_))
-        )
-            || layout_node_is_accessibility_hidden(node)))
+        ) || layout_node_is_accessibility_hidden(node)))
         || node
             .children
             .iter()
@@ -2040,11 +2093,7 @@ fn cell_text_style(inherited: &TextStyleCtx, style: &ComposeStyle) -> TextStyleC
     ctx
 }
 
-fn text_call(
-    value_expr: &str,
-    text_ctx: Option<&TextStyleCtx>,
-    modifier: Option<&str>,
-) -> String {
+fn text_call(value_expr: &str, text_ctx: Option<&TextStyleCtx>, modifier: Option<&str>) -> String {
     let args = text_ctx.map(TextStyleCtx::text_args).unwrap_or_default();
     let modifier_arg = modifier
         .map(|value| format!(", modifier = {value}"))
@@ -2262,6 +2311,7 @@ fn emit_compose_tree(
         "HostNumberInput" => {
             emit_host_number_input(node, depth, component_name, emits, part_styles, text_ctx)
         }
+        "HostSlider" => emit_host_slider(node, depth, component_name, emits, part_styles, text_ctx),
         "HostTooltip" => emit_host_tooltip(
             node,
             depth,
@@ -3485,12 +3535,7 @@ fn emit_host_button(
     } else {
         writeln!(out, "{pad}Button(onClick = {{ {on_click} }}) {{").unwrap();
     }
-    writeln!(
-        out,
-        "{inner}{}",
-        text_call(&label, Some(&label_text), None)
-    )
-    .unwrap();
+    writeln!(out, "{inner}{}", text_call(&label, Some(&label_text), None)).unwrap();
     writeln!(out, "{pad}}}").unwrap();
     Ok(out)
 }
@@ -3865,12 +3910,7 @@ fn emit_host_checkbox(
         for line in checkbox_lines {
             writeln!(out, "{line}").unwrap();
         }
-        writeln!(
-            out,
-            "{inner}{}",
-            text_call(&label, Some(&label_text), None)
-        )
-        .unwrap();
+        writeln!(out, "{inner}{}", text_call(&label, Some(&label_text), None)).unwrap();
         writeln!(out, "{pad}}}").unwrap();
         Ok(out)
     } else {
@@ -3959,12 +3999,7 @@ fn emit_host_radio(
         for line in radio_lines {
             writeln!(out, "{line}").unwrap();
         }
-        writeln!(
-            out,
-            "{inner}{}",
-            text_call(&label, Some(&label_text), None)
-        )
-        .unwrap();
+        writeln!(out, "{inner}{}", text_call(&label, Some(&label_text), None)).unwrap();
         writeln!(out, "{pad}}}").unwrap();
         Ok(out)
     } else {
@@ -3983,6 +4018,131 @@ fn emit_host_radio(
         writeln!(out, "{pad})").unwrap();
         Ok(out)
     }
+}
+
+/// Lower `HostSlider` to Compose Material's native adjustable range control.
+///
+/// Compose models slider values as `Float`, while Mosaic's portable `number`
+/// payload is a `Double`. The generated boundary converts in both directions:
+/// controlled slot/literal values become floats for the widget, and change or
+/// commit callbacks dispatch doubles back to the Rust engine. A positive
+/// Mosaic `step` becomes Compose's count of discrete interior stops; `step: 0`
+/// deliberately leaves the slider continuous.
+fn emit_host_slider(
+    node: &LayoutNode,
+    depth: usize,
+    component_name: &str,
+    emits: &[EmitDecl],
+    part_styles: &PartStyleMap,
+    text_ctx: Option<&TextStyleCtx>,
+) -> Result<String, PipelineEmitError> {
+    let pad = "    ".repeat(depth);
+    let inner = "    ".repeat(depth + 1);
+    let chain_indent = (depth + 2) * 4;
+    let inherited_color = text_ctx.and_then(|t| t.color.as_deref());
+    let style = compose_style_for_node(node, part_styles, None, chain_indent, inherited_color);
+
+    let number_expr = |name: &str, default: &str| -> Result<String, PipelineEmitError> {
+        match find_prop_value(node, name) {
+            Some(LayoutPropValue::SlotRef(slot)) => {
+                let camel = to_camel_case_first_lower(slot);
+                validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+                Ok(camel)
+            }
+            Some(LayoutPropValue::Number(number)) => Ok(number.to_string()),
+            Some(LayoutPropValue::Expr(expr)) => Ok(expr.clone()),
+            _ => Ok(default.to_string()),
+        }
+    };
+
+    let value_expr = number_expr("value", "0.0")?;
+    let min_expr = number_expr("min", "0.0")?;
+    let max_expr = number_expr("max", "100.0")?;
+
+    let on_value_change = if let Some(emit_name) = find_emit_ref_prop(node, "onChange") {
+        let case = pascalize(&strip_on_prefix(emit_name));
+        validate_safe_identifier(&case).map_err(PipelineEmitError::UnsafeEmitName)?;
+        let arity = emits
+            .iter()
+            .find(|emit| emit.name == *emit_name)
+            .map(|emit| emit.params.len())
+            .unwrap_or(0);
+        if arity == 0 {
+            format!("dispatch({component_name}Event.{case})")
+        } else {
+            format!("dispatch({component_name}Event.{case}(value))")
+        }
+    } else {
+        String::new()
+    };
+
+    let on_commit = find_emit_ref_prop(node, "onCommit")
+        .map(|emit_name| {
+            let case = pascalize(&strip_on_prefix(emit_name));
+            validate_safe_identifier(&case).map_err(PipelineEmitError::UnsafeEmitName)?;
+            let arity = emits
+                .iter()
+                .find(|emit| emit.name == emit_name)
+                .map(|emit| emit.params.len())
+                .unwrap_or(0);
+            if arity == 0 {
+                Ok(format!("dispatch({component_name}Event.{case})"))
+            } else {
+                Ok(format!("dispatch({component_name}Event.{case}(value))"))
+            }
+        })
+        .transpose()?;
+
+    let steps = match find_prop_value(node, "step") {
+        Some(LayoutPropValue::Number(step)) if *step == 0.0 => None,
+        Some(LayoutPropValue::Number(step)) if *step > 0.0 => {
+            let range = match (find_prop_value(node, "min"), find_prop_value(node, "max")) {
+                (Some(LayoutPropValue::Number(min)), Some(LayoutPropValue::Number(max))) => {
+                    max - min
+                }
+                _ => 100.0,
+            };
+            Some(((range / step).round() as i64 - 1).max(0))
+        }
+        Some(LayoutPropValue::Number(_)) => None,
+        _ => Some(99),
+    };
+
+    let mut out = String::new();
+    writeln!(out, "{pad}_mosaicHostSlider(").unwrap();
+    writeln!(out, "{inner}value = ({value_expr}).toDouble(),").unwrap();
+    if !on_value_change.is_empty() {
+        writeln!(
+            out,
+            "{inner}onValueChange = {{ value -> {on_value_change} }},"
+        )
+        .unwrap();
+    }
+    if let Some(on_commit) = on_commit {
+        writeln!(
+            out,
+            "{inner}onValueChangeFinished = {{ value -> {on_commit} }},"
+        )
+        .unwrap();
+    }
+    if let Some(style) = &style {
+        if !style.modifier.is_empty() {
+            writeln!(out, "{inner}modifier = Modifier{},", style.modifier).unwrap();
+        }
+    }
+    if let Some(enabled) = disabled_prop_enabled_expr(node)? {
+        writeln!(out, "{inner}enabled = {enabled},").unwrap();
+    } else {
+        writeln!(out, "{inner}enabled = true,").unwrap();
+    }
+    writeln!(
+        out,
+        "{inner}valueRange = ({min_expr}).toFloat()..({max_expr}).toFloat(),"
+    )
+    .unwrap();
+    writeln!(out, "{inner}steps = {},", steps.unwrap_or(0)).unwrap();
+    writeln!(out, "{pad})").unwrap();
+    Ok(out)
 }
 
 fn emit_host_number_input(
@@ -5147,9 +5307,9 @@ mod tests {
         )
         .unwrap()
         .output;
-        assert!(hidden_out.contains(
-            "Text(text = \"\", modifier = Modifier.clearAndSetSemantics { })"
-        ));
+        assert!(
+            hidden_out.contains("Text(text = \"\", modifier = Modifier.clearAndSetSemantics { })")
+        );
     }
 
     #[test]
@@ -5626,6 +5786,116 @@ mod tests {
         );
         assert!(out.contains("placeholder = { Text(text = \"20\") },"));
         assert!(out.contains("enabled = true,"));
+    }
+
+    #[test]
+    fn host_slider_lowers_range_steps_and_numeric_events() {
+        let m = component(
+            "Volume",
+            vec![
+                slot("value", SlotType::Number, true),
+                slot("locked", SlotType::Bool, true),
+            ],
+            vec![
+                emit_decl(
+                    "onVolumeChange",
+                    vec![param("value", EmitPayloadType::Number)],
+                ),
+                emit_decl(
+                    "onVolumeCommit",
+                    vec![param("value", EmitPayloadType::Number)],
+                ),
+            ],
+        );
+        let l = layout(
+            "Volume",
+            node(
+                "HostSlider",
+                vec![
+                    slot_prop("value", "value"),
+                    LayoutProp {
+                        name: "min".into(),
+                        value: LayoutPropValue::Number(0.0),
+                    },
+                    LayoutProp {
+                        name: "max".into(),
+                        value: LayoutPropValue::Number(100.0),
+                    },
+                    LayoutProp {
+                        name: "step".into(),
+                        value: LayoutPropValue::Number(5.0),
+                    },
+                    slot_prop("disabled", "locked"),
+                    LayoutProp {
+                        name: "onChange".into(),
+                        value: LayoutPropValue::EmitRef("onVolumeChange".into()),
+                    },
+                    LayoutProp {
+                        name: "onCommit".into(),
+                        value: LayoutPropValue::EmitRef("onVolumeCommit".into()),
+                    },
+                ],
+                vec![],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("Volume"))
+            .expect("emit native Compose slider")
+            .output;
+
+        assert!(out.contains("import androidx.compose.material.Slider"));
+        assert!(out.contains("import androidx.compose.runtime.mutableFloatStateOf"));
+        assert!(out.contains("private fun _mosaicHostSlider("));
+        assert!(out.contains("onValueChangeFinished?.invoke(liveValue.toDouble())"));
+        assert!(out.contains("Slider("));
+        assert!(out.contains("value = (value).toDouble(),"));
+        assert!(
+            out.contains("onValueChange = { value -> dispatch(VolumeEvent.VolumeChange(value)) },")
+        );
+        assert!(out.contains(
+            "onValueChangeFinished = { value -> dispatch(VolumeEvent.VolumeCommit(value)) },"
+        ));
+        assert!(out.contains("enabled = !_mosaicTruthy(locked),"));
+        assert!(out.contains("valueRange = (0).toFloat()..(100).toFloat(),"));
+        assert!(out.contains("steps = 19,"));
+    }
+
+    #[test]
+    fn host_slider_step_zero_is_continuous_and_change_can_be_unbound() {
+        let m = component("Opacity", vec![], vec![]);
+        let l = layout(
+            "Opacity",
+            node(
+                "HostSlider",
+                vec![
+                    LayoutProp {
+                        name: "value".into(),
+                        value: LayoutPropValue::Number(0.5),
+                    },
+                    LayoutProp {
+                        name: "min".into(),
+                        value: LayoutPropValue::Number(0.0),
+                    },
+                    LayoutProp {
+                        name: "max".into(),
+                        value: LayoutPropValue::Number(1.0),
+                    },
+                    LayoutProp {
+                        name: "step".into(),
+                        value: LayoutPropValue::Number(0.0),
+                    },
+                ],
+                vec![],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("Opacity"))
+            .expect("emit continuous Compose slider")
+            .output;
+
+        assert!(out.contains("value = (0.5).toDouble(),"));
+        assert!(out.contains("valueRange = (0).toFloat()..(1).toFloat(),"));
+        assert!(out.contains("steps = 0,"));
+        assert!(!out.contains("onValueChange = { value ->"));
+        assert!(!out.contains("onValueChangeFinished = { value ->"));
     }
 
     #[test]

@@ -310,6 +310,99 @@
           "FA-SCRIPT-ESM-MAN-AST"
         ]
       }
+    },
+    {
+      "chapter": 12,
+      "title": "Name, Heart, Door, Book",
+      "label": "ch:fa-name-heart-door-book",
+      "canDo": "I can say name, heart, door, and book in Persian, and I can tell which of the four is inherited and which is a later Arabic loan.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "FA-C12-ketab",
+        "kind": "production",
+        "summary": "The chapter closes on ketâb, an Arabic loan, then runs all four words back to back — nâm, del, dar, ketâb — sorts them by vocabulary layer, and rebuilds the earlier name exchange the reappearance of nâm reopens.",
+        "assesses": [
+          "FA-LEX-NAM",
+          "FA-ETYMON-NAM",
+          "FA-LEX-DEL",
+          "FA-ETYMON-DEL",
+          "FA-LEX-DAR",
+          "FA-ETYMON-DAR",
+          "FA-LEX-KETAB",
+          "FA-ETYMON-KETAB",
+          "FA-GRAMMAR-EZAFE-OWNER",
+          "FA-PHRASE-LOTFAN",
+          "FA-GRAMMAR-CHI-AST-FUSION",
+          "FA-GRAMMAR-NAME-QUESTION-ORDER",
+          "FA-LEX-KHOSHVAGHTAM",
+          "FA-SCRIPT-CHE-AND-YE",
+          "FA-SCRIPT-SHOMA-TO"
+        ]
+      }
+    },
+    {
+      "chapter": 13,
+      "title": "Sky, Sun, Moon, Star, Rain",
+      "label": "ch:fa-sky-words",
+      "canDo": "I can name the sky, sun, moon, star, and rain in Persian, and I can say which of those words has no established English cousin.",
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
+      "payoff": {
+        "lesson": "FA-C13-baran",
+        "kind": "production",
+        "summary": "The chapter closes on bârân, a word with no English cousin, then runs all five sky words back to back and rebuilds the careful wellbeing question the weather now follows in ordinary small talk.",
+        "assesses": [
+          "FA-LEX-ASEMAN",
+          "FA-ETYMON-ASEMAN",
+          "FA-LEX-KHORSHID",
+          "FA-ETYMON-KHORSHID",
+          "FA-LEX-MAH",
+          "FA-ETYMON-MAH",
+          "FA-LEX-SETARE",
+          "FA-ETYMON-SETARE",
+          "FA-LEX-BARAN",
+          "FA-ETYMON-BARAN",
+          "FA-GRAMMAR-HAL-E-SHOMA",
+          "FA-PRAGMATICS-WELLBEING-FORMAL",
+          "FA-LEX-CHETOR",
+          "FA-LEX-KHUBAM-REPLY",
+          "FA-SCRIPT-KHUBAM"
+        ]
+      }
+    },
+    {
+      "chapter": 14,
+      "title": "Sister, Son, Man, Woman, Friend",
+      "label": "ch:fa-people-words",
+      "canDo": "I can name my sister, son, and friend in Persian, tell man and woman apart, and open and close a short interaction with all of them.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "FA-C14-dust",
+        "kind": "production",
+        "summary": "The chapter and the tranche close on dust, friend, then run all five people-words back to back and rebuild a complete short interaction with a friend: a polite request for tea, a request for a key, and the standard farewell both voices share.",
+        "assesses": [
+          "FA-LEX-KHAHAR",
+          "FA-LEX-PESAR",
+          "FA-LEX-MARD",
+          "FA-LEX-ZAN",
+          "FA-LEX-DUST",
+          "FA-ETYMON-DUST",
+          "FA-LEX-KHODAHAFEZ",
+          "FA-GRAMMAR-KHODAHAFEZ-ELLIPSIS",
+          "FA-SCRIPT-KHODAHAFEZ-JOINED",
+          "FA-PRAGMATICS-STANDARD-FAREWELL",
+          "FA-DIALOGUE-TAKE-LEAVE",
+          "FA-LEX-HAFEZ",
+          "FA-SCRIPT-HAFEZ",
+          "FA-LEX-CHAY",
+          "FA-LEX-KELID"
+        ]
+      }
     }
   ]
 }
