@@ -1,0 +1,64 @@
+% ============================================================================
+% biome-type — four named biomes and what actually defines each
+% (adj-facts-stdlib, BIOLOGY).
+% ============================================================================
+% A biome is a large-scale climate zone, and each one is defined by a
+% different limiting condition: a desert by how little rain falls, a
+% forest by tree cover, a grassland by open grass-dominated terrain, a
+% tundra by extreme cold. Recall is a binding query:
+%
+%     ? biome_type(desert, $D)
+%       % dry_areas_where_rainfall_is_less_than_50_centimeters_20_inches_per_year
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `biome_type(biome, description)` carrying the source citation,
+% so the lookup above is the ordinary SLD binding query — the engine
+% returns the description WITH its source, on the CPU, with zero model
+% calls, and abstains on a biome-related term that is not one of these
+% four. The query also runs BACKWARD — bind a description and recall the
+% biome it names:
+%
+%     ? biome_type($B, dominated_by_trees_and_cover_about_one_third_of_the_earth)
+%       % forest
+%
+% The four biomes, as a little truth table:
+%
+%     biome        description                                                                         quote (verbatim)
+%     -----------  ----------------------------------------------------------------------------------  --------------------------------------------------------------------------------
+%     desert        dry_areas_where_rainfall_is_less_than_50_centimeters_20_inches_per_year               "Deserts are dry areas where rainfall is less than 50 centimeters (20 inches) per year."
+%     forest        dominated_by_trees_and_cover_about_one_third_of_the_earth                             "Forests are dominated by trees, and cover about one-third of the Earth."
+%     grassland     open_regions_dominated_by_grass_with_a_warm_dry_climate                                "Grasslands are open regions that are dominated by grass and have a warm, dry climate."
+%     tundra        has_extremely_inhospitable_conditions_with_the_lowest_measured_temperatures            "A tundra has extremely inhospitable conditions, with the lowest measured temperatures of any of the five major biomes."
+%
+% Provenance: quoted verbatim from National Geographic Education's "The
+% Five Major Types of Biomes" article, which introduces each of these
+% four biomes under its own subheading, each with a complete defining
+% sentence. WebFetch-verified before writing (twice — the second pass
+% specifically pulled the full surrounding paragraph for each candidate
+% sentence to confirm it stands alone grammatically and isn't qualified
+% or contradicted by an immediately adjacent sentence). `trust consensus`
+% — National Geographic Education is a reputable secondary reference,
+% the same tier already used for `map-type.adj`'s Geology.com citation
+% and `figurative-language-type.adj`'s Grammarly citation. A biome that
+% is NOT one of these four — "aquatic", the source's fifth major biome,
+% but one whose own section opens by deferring to its freshwater and
+% marine sub-categories ("Aquatic biomes include both freshwater and
+% marine biomes...") rather than stating a single, complete defining
+% sentence the way the four tabled here do — is deliberately NOT a row,
+% so a recall ABSTAINS on it rather than inventing a description.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table biome_type {
+    columns biome, description
+
+    row (desert, dry_areas_where_rainfall_is_less_than_50_centimeters_20_inches_per_year)
+    row (forest, dominated_by_trees_and_cover_about_one_third_of_the_earth)
+    row (grassland, open_regions_dominated_by_grass_with_a_warm_dry_climate)
+    row (tundra, has_extremely_inhospitable_conditions_with_the_lowest_measured_temperatures)
+
+    source "Deserts are dry areas where rainfall is less than 50 centimeters (20 inches) per year."
+    locator "https://education.nationalgeographic.org/resource/five-major-types-biomes/"
+    trust consensus
+}
