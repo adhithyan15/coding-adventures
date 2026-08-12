@@ -406,7 +406,8 @@ impl HostDataPlaneDispatcher for ScriptedDataPlane {
                 }
             }
             DataPlaneRequest::CompleteWithTools { id, .. }
-            | DataPlaneRequest::ExecuteTool { id, .. } => DataPlaneResponse::Failed {
+            | DataPlaneRequest::ExecuteTool { id, .. }
+            | DataPlaneRequest::ListModelTools { id } => DataPlaneResponse::Failed {
                 id: *id,
                 failure: DataPlaneFailure::Unavailable,
             },

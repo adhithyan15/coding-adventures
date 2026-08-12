@@ -1978,7 +1978,9 @@ smart-home authority:
   distinct execute-tool request and returns the exact structured result.
 - The authority-backed data plane requires the whole offered catalog to equal
   its injected dispatcher catalog, then invokes D18D outside the model gateway.
-- The process supervisor carries the sixth authenticated operation over the
+- An authorized child can discover the exact binding-aware catalog before a
+  tool turn; the completion must still echo that entire catalog exactly.
+- The process supervisor carries all seven authenticated operations over the
   real cross-platform child pipe.
 - The production daemon restores the central `SmartHomeControllerRuntime`,
   injects a bounded ten-tool `smart_home.*` catalog, and dispatches each call
@@ -1995,10 +1997,13 @@ The reusable central owner, discovery service transaction migration,
 production Hue mDNS composition, and Hue, ONVIF, Axis, ZoneMinder, Synology,
 and Reolink pairing migrations are complete. The remaining central-composition
 backlog takes priority over adding another isolated integration or Chief read
-model. The thread-safe Chief controller adapter, exact host catalog, D18D
-dispatcher, and production daemon injection are now complete:
+model. The thread-safe Chief controller adapter, exact host catalog, catalog
+discovery, D18D dispatcher, and production daemon injection are now complete:
 
-1. Prove one executable Chief host to `smart_home.*` to central D23 owner path,
+1. Add a bounded Level One host tool loop that discovers the exact catalog,
+   requests and executes a tool call, replays the structured result, and ends
+   with final text or a strict turn cap.
+2. Prove one executable Chief host to `smart_home.*` to central D23 owner path,
    including durable audit/state and Home Assistant API readback.
 
 The protocol- and vendor-specific backlog below remains valid after those

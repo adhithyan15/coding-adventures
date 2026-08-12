@@ -1,8 +1,8 @@
 use chief_of_staff_host_control_protocol::{
     ChannelBinding, ChannelBindingAccess, CompletionFinishReason, CompletionProvider,
     CompletionUsage, DataPlaneFailure, DataPlaneRequest, DataPlaneResponse, LaunchBindings,
-    LevelOneModelBinding, ModelToolCall, ModelToolResult, RequestId, ToolCompletionOutput,
-    ToolCompletionResult,
+    LevelOneModelBinding, ModelToolCall, ModelToolDefinition, ModelToolResult, RequestId,
+    ToolCompletionOutput, ToolCompletionResult,
 };
 use chief_of_staff_host_data_plane::HostDataPlaneDispatcher;
 use chief_of_staff_host_runtime::{
@@ -188,6 +188,14 @@ fn tool_completion_result() -> ToolCompletionResult {
         latency_ms: 1,
         polyfill_used: false,
     }
+}
+
+fn model_tools() -> Vec<ModelToolDefinition> {
+    vec![ModelToolDefinition {
+        name: "smart_home.list_entities".to_string(),
+        description: "List normalized entities".to_string(),
+        input_schema: serde_json::json!({"type": "object"}),
+    }]
 }
 
 fn keyring() -> PackageKeyring {
@@ -379,7 +387,7 @@ fn real_child_exchanges_all_authenticated_data_plane_operations() {
 
     let deadline = Instant::now() + Duration::from_secs(5);
     let mut operations = Vec::new();
-    while operations.len() < 6 {
+    while operations.len() < 7 {
         if let Some(request) = supervisor.pending_data_plane_request(&host_name).unwrap() {
             let response = match request {
                 DataPlaneRequest::Receive { id, .. } => {
@@ -407,6 +415,13 @@ fn real_child_exchanges_all_authenticated_data_plane_operations() {
                     DataPlaneResponse::Failed {
                         id,
                         failure: DataPlaneFailure::Unavailable,
+                    }
+                }
+                DataPlaneRequest::ListModelTools { id } => {
+                    operations.push("list_model_tools");
+                    DataPlaneResponse::ModelToolsListed {
+                        id,
+                        tools: model_tools(),
                     }
                 }
                 DataPlaneRequest::CompleteWithTools { id, .. } => {
@@ -441,6 +456,7 @@ fn real_child_exchanges_all_authenticated_data_plane_operations() {
             "publish",
             "acknowledge",
             "complete",
+            "list_model_tools",
             "complete_with_tools",
             "execute_tool"
         ]
@@ -491,6 +507,13 @@ impl HostDataPlaneDispatcher for TestDataPlaneDispatcher {
                     failure: DataPlaneFailure::Unavailable,
                 }
             }
+            DataPlaneRequest::ListModelTools { id } => {
+                self.operations.lock().unwrap().push("list_model_tools");
+                DataPlaneResponse::ModelToolsListed {
+                    id: *id,
+                    tools: model_tools(),
+                }
+            }
             DataPlaneRequest::CompleteWithTools { id, .. } => {
                 self.operations.lock().unwrap().push("complete_with_tools");
                 DataPlaneResponse::ToolCompleted {
@@ -530,7 +553,7 @@ fn injected_dispatcher_answers_authenticated_requests_automatically() {
     let deadline = Instant::now() + Duration::from_secs(5);
     loop {
         supervisor.inspect(&registration).unwrap();
-        if dispatcher.operations.lock().unwrap().len() == 6 {
+        if dispatcher.operations.lock().unwrap().len() == 7 {
             break;
         }
         assert!(Instant::now() < deadline, "timed out waiting for dispatch");
@@ -543,6 +566,7 @@ fn injected_dispatcher_answers_authenticated_requests_automatically() {
             "publish",
             "acknowledge",
             "complete",
+            "list_model_tools",
             "complete_with_tools",
             "execute_tool"
         ]

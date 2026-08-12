@@ -6,8 +6,9 @@ Every request reloads the exact durable pipeline binding, registration, immutabl
 channel claims, active topology, and directional membership. Receive and
 acknowledge require a read binding, publish requires a write binding, and model
 calls must exactly match the launch-time selector, temperature, and token cap.
-Tool-aware turns may offer only definitions that exactly match the injected
-D18D catalog, and returned calls execute only through that injected authority.
+Tool-aware turns may first discover definitions from the binding-aware injected
+D18D authority, may offer only a catalog exactly equal to those definitions,
+and returned calls execute only through that injected authority.
 
 The dispatcher redacts all failures into the stable host-control taxonomy and
 validates service responses before they re-enter the authenticated session.

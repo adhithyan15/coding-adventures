@@ -929,6 +929,15 @@ impl<R: Read, W: Write> ChildProcessControl<R, W> {
         self.exchange_data_plane(frame)
     }
 
+    /// Request the exact model tool catalog installed for this host binding.
+    pub fn request_model_tools(&mut self) -> Result<DataPlaneResponse, ProcessSupervisorError> {
+        let (_, frame) = self
+            .control
+            .request_model_tools()
+            .map_err(|_| ProcessSupervisorError::Control)?;
+        self.exchange_data_plane(frame)
+    }
+
     /// Request one provider-neutral tool-aware completion turn.
     pub fn request_tool_completion(
         &mut self,

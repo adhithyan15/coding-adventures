@@ -1,6 +1,6 @@
 use chief_of_staff_host_control_protocol::{
-    ChannelBindingAccess, CompletionCall, DataPlaneResponse, ModelToolChoice, ModelToolDefinition,
-    PromptMessage, PromptRole, ToolCompletionCall, ToolCompletionOutput,
+    ChannelBindingAccess, CompletionCall, DataPlaneResponse, ModelToolChoice, PromptMessage,
+    PromptRole, ToolCompletionCall, ToolCompletionOutput,
 };
 use chief_of_staff_host_runtime::{verify_agent_package, AgentPackageRuntime, PackageKeyring};
 use chief_of_staff_process_supervisor::ChildProcessControl;
@@ -58,6 +58,10 @@ fn exercise_data_plane(
     if !matches!(completed, DataPlaneResponse::Failed { .. }) {
         return Err("unexpected completion response".into());
     }
+    let listed = control.request_model_tools()?;
+    let DataPlaneResponse::ModelToolsListed { tools, .. } = listed else {
+        return Err("unexpected model tool catalog response".into());
+    };
     let tool_completed = control.request_tool_completion(ToolCompletionCall {
         completion: CompletionCall {
             model: "test-model".to_string(),
@@ -72,11 +76,7 @@ fn exercise_data_plane(
             seed: Some(0),
             metadata: BTreeMap::new(),
         },
-        tools: vec![ModelToolDefinition {
-            name: "smart_home.list_entities".to_string(),
-            description: "List normalized entities".to_string(),
-            input_schema: serde_json::json!({"type": "object"}),
-        }],
+        tools,
         choice: ModelToolChoice::Required,
         results: Vec::new(),
     })?;

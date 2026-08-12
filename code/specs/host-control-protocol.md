@@ -147,12 +147,16 @@ Kinds are:
 | 12  | child -> orchestrator | `Acknowledge` | request ID, channel and message UUID-v7 |
 | 13  | child -> orchestrator | `Complete` | request ID, provider-neutral completion call |
 | 14  | child -> orchestrator | `CompleteWithTools` | request ID, completion controls, tool catalog/choice, and prior calls/results |
+| 15  | child -> orchestrator | `ExecuteTool` | request ID and exact model-returned structured call |
+| 16  | child -> orchestrator | `ListModelTools` | request ID |
 | 20  | orchestrator -> child | `Received` | request ID and verified message page |
 | 21  | orchestrator -> child | `Published` | request ID, message UUID-v7, sequence, timestamp |
 | 22  | orchestrator -> child | `Acknowledged` | request ID and monotonic sequence |
 | 23  | orchestrator -> child | `Completed` | request ID and provider-neutral completion result |
 | 24  | orchestrator -> child | `Failed` | request ID and redacted stable failure code |
 | 25  | orchestrator -> child | `ToolCompleted` | request ID, final text or one structured call, and provider audit result |
+| 26  | orchestrator -> child | `ToolExecuted` | request ID and exact structured D18D result |
+| 27  | orchestrator -> child | `ModelToolsListed` | request ID and exact installed model-tool catalog |
 
 All multi-byte integers are big-endian. The package key ID and channel names use bounded `u8`
 length; data-plane variable bytes and UTF-8 strings use a `u32` length; vectors
@@ -162,7 +166,8 @@ or completion text at 512 KiB, a receive page and completion prompt at 64 items,
 and completion metadata at 32 unique canonically ordered keys. Text-completion calls
 remain byte-compatible with v1. Separate tool-aware records add at most 128 unique
 bounded declarations, auto/required/named choice, and at most 128 replayable prior
-calls/results. Schemas and arguments must be JSON objects, each JSON value is capped
+calls/results. The catalog-list response reuses the same non-empty, unique,
+bounded declaration encoding. Schemas and arguments must be JSON objects, each JSON value is capped
 at 64 KiB, and a response contains exactly final text or one structured call.
 Responses retain provider identity, usage, finish reason, latency, and tool-polyfill
 evidence for audit.

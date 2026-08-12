@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Expose the exact binding-aware installed D18D catalog through a separately
+  authorized data-plane operation while preserving exact-catalog enforcement
+  on every later tool completion.
 - Add an injected manifest-blind model-tool dispatcher, require the entire
   offered catalog to equal its installed catalog, and carry exact structured
   D18D execution results back to the authenticated child.
