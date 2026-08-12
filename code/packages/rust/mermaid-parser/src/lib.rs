@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.64.0";
+pub const VERSION: &str = "0.65.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -1733,6 +1733,8 @@ fn take_state_text(cursor: &mut TokenCursor) -> String {
         let token = cursor.advance();
         let value = if token_name(token) == "STRING" {
             strip_state_string(&token.value)
+        } else if token_name(token) == "ENTITY" {
+            decode_mermaid_entity(&token.value)
         } else {
             token.value.clone()
         };
@@ -1745,7 +1747,27 @@ fn take_state_text(cursor: &mut TokenCursor) -> String {
             text.push_str(&value);
         }
     }
-    text
+    decode_state_line_breaks(text)
+}
+
+fn decode_mermaid_entity(value: &str) -> String {
+    let inner = value.trim_start_matches('#').trim_end_matches(';');
+    let html_entity = if inner.chars().all(|character| character.is_ascii_digit()) {
+        format!("&#{inner};")
+    } else {
+        format!("&{inner};")
+    };
+    commonmark_parser::entities::decode_entity(&html_entity)
+}
+
+fn decode_state_line_breaks(text: String) -> String {
+    text.replace("<br/>", "\n")
+        .replace("<br />", "\n")
+        .replace("<br>", "\n")
+        .split('\n')
+        .map(str::trim)
+        .collect::<Vec<_>>()
+        .join("\n")
 }
 
 fn take_state_multiline_note_text(cursor: &mut TokenCursor) -> Result<String, ParseError> {
@@ -1760,6 +1782,8 @@ fn take_state_multiline_note_text(cursor: &mut TokenCursor) -> Result<String, Pa
             let token = cursor.advance();
             let value = if token_name(token) == "STRING" {
                 strip_state_string(&token.value)
+            } else if token_name(token) == "ENTITY" {
+                decode_mermaid_entity(&token.value)
             } else {
                 token.value.clone()
             };
@@ -1772,7 +1796,7 @@ fn take_state_multiline_note_text(cursor: &mut TokenCursor) -> Result<String, Pa
                 line.push_str(&value);
             }
         }
-        lines.push(line);
+        lines.push(decode_state_line_breaks(line));
         cursor.consume_if("NEWLINE");
     }
     cursor
@@ -4724,6 +4748,15 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     }
 
     #[test]
+    fn state_decodes_entities_and_line_breaks() {
+        let diagram =
+            parse_state_diagram("stateDiagram-v2\nReady: Metal #9829;<br/>native & shaped\n")
+                .expect("state text entities and line breaks");
+
+        assert_eq!(diagram.nodes[0].label.text, "Metal ♥\nnative & shaped");
+    }
+
+    #[test]
     fn sequence_parses_case_insensitive_keywords() {
         let diagram = parse_any_mermaid(
             "SeQuEnCeDiAgRaM\nPaRtIcIpAnT A As Alice\nA->>B: Hello\nAcTiVaTe B\nNoTe RiGhT Of B: WRAP: Ready\nDeAcTiVaTe B\n",
@@ -5494,7 +5527,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.64.0");
+        assert_eq!(crate::VERSION, "0.65.0");
     }
 
     #[test]

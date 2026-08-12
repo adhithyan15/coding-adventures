@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.65.0
+
+- Decode Mermaid entities and HTML line breaks in state text before layout.
+
 ## 0.64.0
 
 - Preserve grammar-backed `hide empty description` rendering semantics.

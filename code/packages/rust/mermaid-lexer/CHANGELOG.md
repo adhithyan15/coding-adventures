@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.40.0
+
+- Tokenize Mermaid state entities distinctly from hash colors.
+
 ## 0.39.0
 
 - Tokenize the pinned state `hide empty description` directive.

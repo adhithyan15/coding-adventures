@@ -1,4 +1,4 @@
-# @version 15
+# @version 16
 # @case_insensitive true
 # Mermaid 11.16.1 state diagram token grammar, derived from stateDiagram.jison.
 
@@ -26,6 +26,7 @@ COLON        = ":"
 COMMA        = ","
 LBRACE       = "{"
 RBRACE       = "}"
+ENTITY       = /#(?:[0-9]+|[A-Za-z][A-Za-z0-9]+);/
 HASH_COLOR   = /#[0-9A-Fa-f]{3,8}/
 STRING       = /"[^"\r\n]*"/
 DIRECTION    = /TB|BT|LR|RL/
