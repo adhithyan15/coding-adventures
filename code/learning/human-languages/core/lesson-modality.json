@@ -7,18 +7,18 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:4b2c6b3ce026852b",
+  "sourceHash": "fnv1a64:85f97f2ec632d847",
   "summary": {
-    "totalLessons": 1667,
-    "voice": 1076,
-    "sight": 535,
+    "totalLessons": 1680,
+    "voice": 1088,
+    "sight": 536,
     "pen": 56,
-    "drivableLessons": 1076,
+    "drivableLessons": 1088,
     "drivablePercent": 65,
     "trackCount": 22,
-    "chapterCount": 513,
-    "drivablePrefixTotal": 876,
-    "fullyDrivableChapters": 323,
+    "chapterCount": 519,
+    "drivablePrefixTotal": 888,
+    "fullyDrivableChapters": 328,
     "unstartableChapters": 142,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
@@ -8163,12 +8163,12 @@
     },
     {
       "language": "telugu",
-      "lessonCount": 74,
-      "voice": 39,
-      "sight": 35,
+      "lessonCount": 87,
+      "voice": 51,
+      "sight": 36,
       "pen": 0,
-      "drivablePercent": 53,
-      "drivablePrefixTotal": 31,
+      "drivablePercent": 59,
+      "drivablePrefixTotal": 43,
       "modalities": [
         "voice",
         "sight"
@@ -8709,6 +8709,109 @@
           "firstNonVoiceLesson": "TE-C34-tiisuko",
           "drivable": false,
           "drivableLessonIds": []
+        },
+        {
+          "chapter": 35,
+          "lessonCount": 2,
+          "voice": 2,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 2,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "TE-C35-kutumbam",
+            "TE-C35-snehitudu"
+          ]
+        },
+        {
+          "chapter": 36,
+          "lessonCount": 2,
+          "voice": 2,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 2,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "TE-C36-koduku",
+            "TE-C36-kuuturu"
+          ]
+        },
+        {
+          "chapter": 37,
+          "lessonCount": 4,
+          "voice": 4,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 4,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "TE-C37-kannu",
+            "TE-C37-cevi",
+            "TE-C37-mukku",
+            "TE-C37-noru"
+          ]
+        },
+        {
+          "chapter": 38,
+          "lessonCount": 2,
+          "voice": 1,
+          "sight": 1,
+          "pen": 0,
+          "modalities": [
+            "voice",
+            "sight"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": "TE-C38-hrudayam",
+          "drivable": false,
+          "drivableLessonIds": [
+            "TE-C38-gunde"
+          ]
+        },
+        {
+          "chapter": 39,
+          "lessonCount": 2,
+          "voice": 2,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 2,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "TE-C39-tii",
+            "TE-C39-paalu"
+          ]
+        },
+        {
+          "chapter": 40,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "TE-C40-bhojanam"
+          ]
         }
       ]
     },
@@ -39557,6 +39660,243 @@
       "detachableSegments": [
         "The letters in this word"
       ]
+    },
+    {
+      "id": "TE-C35-kutumbam",
+      "language": "telugu",
+      "chapter": 35,
+      "sequence": 750,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:cdb6224b3cde974f"
+    },
+    {
+      "id": "TE-C35-snehitudu",
+      "language": "telugu",
+      "chapter": 35,
+      "sequence": 760,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:9ba1d7bef6ba9fe3"
+    },
+    {
+      "id": "TE-C36-koduku",
+      "language": "telugu",
+      "chapter": 36,
+      "sequence": 770,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:b5535430af040be9"
+    },
+    {
+      "id": "TE-C36-kuuturu",
+      "language": "telugu",
+      "chapter": 36,
+      "sequence": 780,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:392e09f845366dd3"
+    },
+    {
+      "id": "TE-C37-kannu",
+      "language": "telugu",
+      "chapter": 37,
+      "sequence": 790,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:5e1b61d76f2abef3"
+    },
+    {
+      "id": "TE-C37-cevi",
+      "language": "telugu",
+      "chapter": 37,
+      "sequence": 800,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:9a3174f45d6690eb"
+    },
+    {
+      "id": "TE-C37-mukku",
+      "language": "telugu",
+      "chapter": 37,
+      "sequence": 810,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:a8bd254a8ad61331"
+    },
+    {
+      "id": "TE-C37-noru",
+      "language": "telugu",
+      "chapter": 37,
+      "sequence": 820,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:13e874173808302a"
+    },
+    {
+      "id": "TE-C38-gunde",
+      "language": "telugu",
+      "chapter": 38,
+      "sequence": 830,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:8ba33370891940c6"
+    },
+    {
+      "id": "TE-C38-hrudayam",
+      "language": "telugu",
+      "chapter": 38,
+      "sequence": 840,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:bf701edb2bcb2f70",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "TE-C39-tii",
+      "language": "telugu",
+      "chapter": 39,
+      "sequence": 850,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:66915f058e786773"
+    },
+    {
+      "id": "TE-C39-paalu",
+      "language": "telugu",
+      "chapter": 39,
+      "sequence": 860,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:3c06023aa18a68f7"
+    },
+    {
+      "id": "TE-C40-bhojanam",
+      "language": "telugu",
+      "chapter": 40,
+      "sequence": 870,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:03f55bf2712b9913"
     },
     {
       "id": "UR-C01-ji-han",

@@ -3238,6 +3238,54 @@
       "scriptSet": "telugu-comparisons"
     },
     {
+      "language": "telugu",
+      "chapter": 35,
+      "title": "Family and Friends",
+      "label": "ch:te-family-and-friends",
+      "output": "telugu/book/chapters/ch35-family-and-friends.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 36,
+      "title": "Son and Daughter, Two Different Roots",
+      "label": "ch:te-son-and-daughter",
+      "output": "telugu/book/chapters/ch36-son-and-daughter.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 37,
+      "title": "Four Words on the Face",
+      "label": "ch:te-face-words",
+      "output": "telugu/book/chapters/ch37-face-words.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 38,
+      "title": "The Heart, Two Ways",
+      "label": "ch:te-heart",
+      "output": "telugu/book/chapters/ch38-heart.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 39,
+      "title": "Tea and Milk, Two Roads",
+      "label": "ch:te-tea-and-milk",
+      "output": "telugu/book/chapters/ch39-tea-and-milk.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 40,
+      "title": "A Meal",
+      "label": "ch:te-a-meal",
+      "output": "telugu/book/chapters/ch40-a-meal.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
       "language": "urdu",
       "chapter": 3,
       "title": "Ask and Answer Names",
