@@ -516,7 +516,9 @@ unblocks multiple downstream targets; never count source generation as completio
   - [x] Ship the v0.1 core `Button` and single-line `Input` facade over proven
     toolkit primitives, with Foundation defaults and all-five-native package
     plus consuming-app acceptance.
-  - [ ] Add checkbox, radio, and number-input controls.
+  - [x] Add portable two-state checkbox and number-input controls.
+  - [ ] Add radio controls once native group and mutual-exclusion semantics are
+    complete on every backend.
   - [ ] Add native select/picker, switch, and slider contracts.
 - [ ] Ship `mosaic-std-navigation`: app shell, toolbar, sidebar/rail, tabs, routes.
 - [ ] Ship `mosaic-std-feedback`: alert, dialog, toast, progress, empty/error states.

@@ -1,0 +1,7 @@
+// Standard two-state checkbox with native semantics on every backend.
+component Checkbox {
+  slot label : text ;
+  slot checked : bool = false ;
+  slot disabled : bool = false ;
+  emit onChange ( checked : bool ) ;
+}
