@@ -29,6 +29,25 @@ import type {
 } from "./types.js";
 
 /** Default curriculum root: code/learning/human-languages, relative to this package. */
+/**
+ * Directory entries in a stable order.
+ *
+ * `readdirSync` returns whatever the filesystem hands back, which differs
+ * between APFS and ext4 and shifts as files are added. That leaked once
+ * already: the cross-track cousin join resolved ties by "whichever lesson the
+ * corpus yielded first", so reversing the corpus changed the printed cousin for
+ * 35 lessons. That module now carries a total order of its own — but every
+ * other consumer inherits this iteration order, and one of the chapter reads
+ * below was ALREADY sorting, so the convention existed and had simply not been
+ * applied everywhere. Sorting here removes the class of problem rather than the
+ * one instance that happened to be found.
+ */
+function sortedEntries(root: string) {
+  return readdirSync(root, { withFileTypes: true }).sort((a, b) =>
+    a.name < b.name ? -1 : a.name > b.name ? 1 : 0,
+  );
+}
+
 export function defaultCurriculumRoot(): string {
   const here = dirname(fileURLToPath(import.meta.url));
   // src/ -> human-language-data -> typescript -> packages -> code
@@ -79,7 +98,7 @@ export function loadTrackGrammarCells(
 /** Read each track's authored shared-spine realization map. */
 export function loadLanguageCurricula(root = defaultCurriculumRoot()): LanguageCurriculum[] {
   const out: LanguageCurriculum[] = [];
-  for (const track of readdirSync(root, { withFileTypes: true })) {
+  for (const track of sortedEntries(root)) {
     if (!track.isDirectory()) continue;
     const path = join(root, track.name, "curriculum.json");
     if (!existsSync(path)) continue;
@@ -98,7 +117,7 @@ export function loadLanguageCurricula(root = defaultCurriculumRoot()): LanguageC
  */
 export function loadTrackChapters(root = defaultCurriculumRoot()): TrackChapters[] {
   const out: TrackChapters[] = [];
-  for (const track of readdirSync(root, { withFileTypes: true })) {
+  for (const track of sortedEntries(root)) {
     if (!track.isDirectory()) continue;
     const path = join(root, track.name, "chapters.json");
     if (!existsSync(path)) continue;
@@ -176,7 +195,7 @@ export function chapterTitleFromTex(tex: string, fallback: string): string {
  */
 export function loadBookCorpus(root = defaultCurriculumRoot()): BookCorpus {
   const books: BookCorpus["books"] = [];
-  for (const track of readdirSync(root, { withFileTypes: true })) {
+  for (const track of sortedEntries(root)) {
     if (!track.isDirectory()) continue;
     const bookDir = join(root, track.name, "book");
     const entrypoint = join(bookDir, "book.tex");
@@ -226,12 +245,12 @@ export function trackScript(root: string, trackName: string): Script | undefined
 /** Read every track's lessons/*.md into parsed lessons. */
 export function loadLessons(root = defaultCurriculumRoot()): ParsedLesson[] {
   const out: ParsedLesson[] = [];
-  for (const track of readdirSync(root, { withFileTypes: true })) {
+  for (const track of sortedEntries(root)) {
     if (!track.isDirectory()) continue;
     const lessonsDir = join(root, track.name, "lessons");
     if (!existsSync(lessonsDir)) continue;
     const script = trackScript(root, track.name);
-    for (const file of readdirSync(lessonsDir)) {
+    for (const file of readdirSync(lessonsDir).sort()) {
       if (!file.endsWith(".md")) continue;
       const source = readFileSync(join(lessonsDir, file), "utf8");
       out.push(parseLesson(source, track.name, script));
@@ -283,7 +302,7 @@ export function loadScripts(root = defaultCurriculumRoot()): Record<string, Scri
   const dir = join(root, "data", "scripts");
   const out: Record<string, ScriptData> = Object.create(null);
   if (!existsSync(dir)) return out;
-  for (const file of readdirSync(dir)) {
+  for (const file of readdirSync(dir).sort()) {
     if (!file.endsWith(".json")) continue;
     const sd = JSON.parse(readFileSync(join(dir, file), "utf8")) as ScriptData;
     out[sd.script] = sd;
