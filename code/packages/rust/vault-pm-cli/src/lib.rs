@@ -48,7 +48,7 @@ const PRODUCTION_KDF_MEMORY_KIB: u32 = 64 * 1024;
 const PRODUCTION_KDF_ITERATIONS: u32 = 3;
 const PRODUCTION_KDF_LANES: u8 = 1;
 const ITEM_OPERATION_RANDOM_BYTES: usize = 32;
-const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm status [--json]\n  vault-pm audit enable\n  vault-pm audit verify\n  vault-pm audit list\n  vault-pm audit show TRACE\n  vault-pm doctor [--unlock]\n  vault-pm export FILE\n  vault-pm import FILE\n  vault-pm restore verify FILE\n  vault-pm item add login\n  vault-pm item add secure-note\n  vault-pm item edit ITEM\n  vault-pm item delete ITEM\n  vault-pm item list\n  vault-pm item show ITEM\n  vault-pm history list ITEM\n  vault-pm history restore ITEM REVISION\n";
+const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm vault create NAME\n  vault-pm [--vault NAME] status [--json]\n  vault-pm [--vault NAME] audit enable\n  vault-pm [--vault NAME] audit verify\n  vault-pm [--vault NAME] audit list\n  vault-pm [--vault NAME] audit show TRACE\n  vault-pm [--vault NAME] doctor [--unlock]\n  vault-pm [--vault NAME] export FILE\n  vault-pm [--vault NAME] import FILE\n  vault-pm [--vault NAME] restore verify FILE\n  vault-pm [--vault NAME] item add login\n  vault-pm [--vault NAME] item add secure-note\n  vault-pm [--vault NAME] item edit ITEM\n  vault-pm [--vault NAME] item delete ITEM\n  vault-pm [--vault NAME] item list\n  vault-pm [--vault NAME] item show ITEM\n  vault-pm [--vault NAME] history list ITEM\n  vault-pm [--vault NAME] history restore ITEM REVISION\n";
 
 /// Stable process exit classes defined by VLT-PM00.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -306,17 +306,23 @@ where
     I: IntoIterator<Item = S>,
     S: Into<OsString>,
 {
-    let command = match parse(arguments) {
-        Ok(command) => command,
+    let invocation = match parse(arguments) {
+        Ok(invocation) => invocation,
         Err(error) => return CliOutput::failure(error),
     };
-    if matches!(command, Command::Help) {
+    if matches!(invocation.command, Command::Help) {
         return CliOutput::success(USAGE);
     }
-    match execute(command, host) {
+    match execute(invocation, host) {
         Ok(output) => output,
         Err(error) => CliOutput::failure(error),
     }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+struct Invocation {
+    selected_vault: Option<ConfigName>,
+    command: Command,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -324,6 +330,9 @@ enum Command {
     Init {
         vault: ConfigName,
         storage: ConfigName,
+    },
+    VaultCreate {
+        vault: ConfigName,
     },
     Status {
         json: bool,
@@ -368,7 +377,7 @@ enum Command {
     Help,
 }
 
-fn parse<I, S>(arguments: I) -> Result<Command, CliFailure>
+fn parse<I, S>(arguments: I) -> Result<Invocation, CliFailure>
 where
     I: IntoIterator<Item = S>,
     S: Into<OsString>,
@@ -382,20 +391,50 @@ where
                 .map_err(|_| CliFailure::InvalidCommand)
         })
         .collect::<Result<Vec<_>, _>>()?;
-    let Some(name) = values.first().map(String::as_str) else {
+    let (selected_vault, command_index) = match values.as_slice() {
+        [selector, name, ..] if selector == "--vault" => (
+            Some(ConfigName::new(name.clone()).map_err(|_| CliFailure::InvalidCommand)?),
+            2,
+        ),
+        _ => (None, 0),
+    };
+    let Some(name) = values.get(command_index).map(String::as_str) else {
         return Err(CliFailure::InvalidCommand);
     };
-    match name {
-        "--help" | "-h" | "help" if values.len() == 1 => Ok(Command::Help),
-        "init" => parse_init(&values[1..]),
-        "status" => parse_status(&values[1..]),
-        "audit" => parse_audit(&values[1..]),
-        "doctor" => parse_doctor(&values[1..]),
-        "export" => parse_export(&values[1..]),
-        "import" => parse_import(&values[1..]),
-        "restore" => parse_restore(&values[1..]),
-        "item" => parse_item(&values[1..]),
-        "history" => parse_history(&values[1..]),
+    let tail = &values[command_index + 1..];
+    let command = match name {
+        "--help" | "-h" | "help" if tail.is_empty() => Ok(Command::Help),
+        "init" => parse_init(tail),
+        "vault" => parse_vault(tail),
+        "status" => parse_status(tail),
+        "audit" => parse_audit(tail),
+        "doctor" => parse_doctor(tail),
+        "export" => parse_export(tail),
+        "import" => parse_import(tail),
+        "restore" => parse_restore(tail),
+        "item" => parse_item(tail),
+        "history" => parse_history(tail),
+        _ => Err(CliFailure::InvalidCommand),
+    }?;
+    if selected_vault.is_some()
+        && matches!(
+            &command,
+            Command::Init { .. } | Command::VaultCreate { .. } | Command::Help
+        )
+    {
+        return Err(CliFailure::InvalidCommand);
+    }
+    Ok(Invocation {
+        selected_vault,
+        command,
+    })
+}
+
+fn parse_vault(arguments: &[String]) -> Result<Command, CliFailure> {
+    match arguments {
+        [action, name] if action == "create" => Ok(Command::VaultCreate {
+            vault: ConfigName::new(name.clone()).map_err(|_| CliFailure::InvalidCommand)?,
+        }),
         _ => Err(CliFailure::InvalidCommand),
     }
 }
@@ -514,38 +553,65 @@ fn parse_doctor(arguments: &[String]) -> Result<Command, CliFailure> {
     }
 }
 
-fn execute(command: Command, host: &dyn CliHost) -> Result<CliOutput, CliFailure> {
+fn execute(invocation: Invocation, host: &dyn CliHost) -> Result<CliOutput, CliFailure> {
     let paths = host.paths().map_err(map_host)?;
     let prepared = paths.prepare().map_err(map_local_host)?;
     let writer = prepared.try_acquire_writer().map_err(map_local_host)?;
-    match command {
+    let selected_vault = invocation.selected_vault.as_ref();
+    match invocation.command {
         Command::Init { vault, storage } => init(host, prepared.paths(), &writer, vault, storage),
-        Command::Status { json } => status(prepared.paths(), &writer, json),
-        Command::AuditEnable => audit_enable(host, prepared.paths(), &writer),
-        Command::AuditVerify => audit_verify(host, prepared.paths(), &writer),
-        Command::AuditList => audit_list(host, prepared.paths(), &writer),
-        Command::AuditShow { trace_id } => audit_show(host, prepared.paths(), &writer, trace_id),
-        Command::Doctor { unlock } => doctor(host, prepared.paths(), &writer, unlock),
-        Command::PortableExport { destination } => {
-            portable_export(host, prepared.paths(), &writer, &destination)
+        Command::VaultCreate { vault } => vault_create(host, prepared.paths(), &writer, vault),
+        Command::Status { json } => status(prepared.paths(), &writer, selected_vault, json),
+        Command::AuditEnable => audit_enable(host, prepared.paths(), &writer, selected_vault),
+        Command::AuditVerify => audit_verify(host, prepared.paths(), &writer, selected_vault),
+        Command::AuditList => audit_list(host, prepared.paths(), &writer, selected_vault),
+        Command::AuditShow { trace_id } => {
+            audit_show(host, prepared.paths(), &writer, selected_vault, trace_id)
         }
+        Command::Doctor { unlock } => {
+            doctor(host, prepared.paths(), &writer, selected_vault, unlock)
+        }
+        Command::PortableExport { destination } => portable_export(
+            host,
+            prepared.paths(),
+            &writer,
+            selected_vault,
+            &destination,
+        ),
         Command::PortableImport { source } => {
-            portable_import(host, prepared.paths(), &writer, &source)
+            portable_import(host, prepared.paths(), &writer, selected_vault, &source)
         }
         Command::PortableRestoreVerify { source } => {
-            portable_restore_verify(host, prepared.paths(), &writer, &source)
+            portable_restore_verify(host, prepared.paths(), &writer, selected_vault, &source)
         }
-        Command::ItemAddLogin => item_add_login(host, prepared.paths(), &writer),
-        Command::ItemAddSecureNote => item_add_secure_note(host, prepared.paths(), &writer),
-        Command::ItemEdit { item_id } => item_edit_login(host, prepared.paths(), &writer, item_id),
-        Command::ItemDelete { item_id } => item_delete(host, prepared.paths(), &writer, item_id),
-        Command::ItemList => item_list(host, prepared.paths(), &writer),
-        Command::ItemShow { item_id } => item_show(host, prepared.paths(), &writer, item_id),
-        Command::HistoryList { item_id } => history_list(host, prepared.paths(), &writer, item_id),
+        Command::ItemAddLogin => item_add_login(host, prepared.paths(), &writer, selected_vault),
+        Command::ItemAddSecureNote => {
+            item_add_secure_note(host, prepared.paths(), &writer, selected_vault)
+        }
+        Command::ItemEdit { item_id } => {
+            item_edit_login(host, prepared.paths(), &writer, selected_vault, item_id)
+        }
+        Command::ItemDelete { item_id } => {
+            item_delete(host, prepared.paths(), &writer, selected_vault, item_id)
+        }
+        Command::ItemList => item_list(host, prepared.paths(), &writer, selected_vault),
+        Command::ItemShow { item_id } => {
+            item_show(host, prepared.paths(), &writer, selected_vault, item_id)
+        }
+        Command::HistoryList { item_id } => {
+            history_list(host, prepared.paths(), &writer, selected_vault, item_id)
+        }
         Command::HistoryRestore {
             item_id,
             revision_id,
-        } => history_restore(host, prepared.paths(), &writer, item_id, revision_id),
+        } => history_restore(
+            host,
+            prepared.paths(),
+            &writer,
+            selected_vault,
+            item_id,
+            revision_id,
+        ),
         Command::Help => unreachable!("help returns before host access"),
     }
 }
@@ -554,16 +620,17 @@ fn authenticated_access(
     host: &dyn CliHost,
     paths: &LocalVaultPaths,
     writer: &LocalWriterGuard,
+    selected_vault: Option<&ConfigName>,
 ) -> Result<(VaultAccessV1, StorageCoreApplicationStore<FsStorageBackend>), CliFailure> {
     let exact_config = writer
         .load_config()
         .map_err(map_local_host)?
         .ok_or(CliFailure::InvalidCommand)?;
     let config = decode_config(&exact_config)?;
-    let vault = configured_vault(paths, &config)?;
+    let vault = configured_vault(paths, &config, selected_vault)?;
     let locator = application_locator(vault.locator());
     let application_store = application_store(paths);
-    let repository_factory = repository_factory(paths);
+    let repository_factory = configured_repository_factory(&config, vault)?;
     let mut access = VaultAccessV1::locked(locator);
     let passphrase = host.read_existing_passphrase().map_err(map_host)?;
     access
@@ -590,6 +657,7 @@ fn portable_export(
     host: &dyn CliHost,
     paths: &LocalVaultPaths,
     writer: &LocalWriterGuard,
+    selected_vault: Option<&ConfigName>,
     destination: &Path,
 ) -> Result<CliOutput, CliFailure> {
     let exact_config = writer
@@ -597,7 +665,7 @@ fn portable_export(
         .map_err(map_local_host)?
         .ok_or(CliFailure::InvalidCommand)?;
     let config = decode_config(&exact_config)?;
-    let vault = configured_vault(paths, &config)?;
+    let vault = configured_vault(paths, &config, selected_vault)?;
     let locator = application_locator(vault.locator());
     let application_store = application_store(paths);
     let exact_bootstrap = application_store
@@ -611,7 +679,7 @@ fn portable_export(
     let policy =
         PortableExportPolicyV1::new(memory_kib, iterations, lanes).map_err(map_application)?;
 
-    let repository_factory = repository_factory(paths);
+    let repository_factory = configured_repository_factory(&config, vault)?;
     let mut access = VaultAccessV1::locked(locator);
     let vault_passphrase = host.read_existing_passphrase().map_err(map_host)?;
     access
@@ -727,13 +795,15 @@ fn portable_import(
     host: &dyn CliHost,
     paths: &LocalVaultPaths,
     writer: &LocalWriterGuard,
+    selected_vault: Option<&ConfigName>,
     source: &Path,
 ) -> Result<CliOutput, CliFailure> {
     let (memory_kib, iterations, lanes) = host.portable_open_kdf();
     let open_policy =
         PortableOpenPolicyV1::new(memory_kib, iterations, lanes).map_err(map_application)?;
     let (wall_time_ms, failure_randomness) = audited_access_inputs(host)?;
-    let (mut access, application_store) = authenticated_access(host, paths, writer)?;
+    let (mut access, application_store) =
+        authenticated_access(host, paths, writer, selected_vault)?;
     if !access
         .as_unlocked()
         .map_err(map_application)?
@@ -828,13 +898,15 @@ fn portable_restore_verify(
     host: &dyn CliHost,
     paths: &LocalVaultPaths,
     writer: &LocalWriterGuard,
+    selected_vault: Option<&ConfigName>,
     source: &Path,
 ) -> Result<CliOutput, CliFailure> {
     let (memory_kib, iterations, lanes) = host.portable_open_kdf();
     let open_policy =
         PortableOpenPolicyV1::new(memory_kib, iterations, lanes).map_err(map_application)?;
     let (wall_time_ms, randomness) = audited_access_inputs(host)?;
-    let (mut access, application_store) = authenticated_access(host, paths, writer)?;
+    let (mut access, application_store) =
+        authenticated_access(host, paths, writer, selected_vault)?;
     if !access
         .as_unlocked()
         .map_err(map_application)?
@@ -937,6 +1009,7 @@ fn prepare_item_create(
     host: &dyn CliHost,
     paths: &LocalVaultPaths,
     writer: &LocalWriterGuard,
+    selected_vault: Option<&ConfigName>,
 ) -> Result<ItemCreateContext, CliFailure> {
     let now_ms = host.now_ms().map_err(map_host)?;
     let mut mutation_random = [0_u8; ADD_ITEM_RANDOM_BYTES];
@@ -948,7 +1021,7 @@ fn prepare_item_create(
     let mut failure_random = [0_u8; AUDITED_ACCESS_RANDOM_BYTES];
     host.fill_entropy(&mut failure_random).map_err(map_host)?;
     let failure_randomness = AuditedAccessRandomnessV1::new(failure_random);
-    let (access, application_store) = authenticated_access(host, paths, writer)?;
+    let (access, application_store) = authenticated_access(host, paths, writer, selected_vault)?;
     let audit_enabled = access
         .as_unlocked()
         .map_err(map_application)?
@@ -969,8 +1042,9 @@ fn item_add_login(
     host: &dyn CliHost,
     paths: &LocalVaultPaths,
     writer: &LocalWriterGuard,
+    selected_vault: Option<&ConfigName>,
 ) -> Result<CliOutput, CliFailure> {
-    let context = prepare_item_create(host, paths, writer)?;
+    let context = prepare_item_create(host, paths, writer, selected_vault)?;
     let input = (|| {
         Ok::<_, HostError>((
             host.read_login_title()?,
@@ -1004,8 +1078,9 @@ fn item_add_secure_note(
     host: &dyn CliHost,
     paths: &LocalVaultPaths,
     writer: &LocalWriterGuard,
+    selected_vault: Option<&ConfigName>,
 ) -> Result<CliOutput, CliFailure> {
-    let context = prepare_item_create(host, paths, writer)?;
+    let context = prepare_item_create(host, paths, writer, selected_vault)?;
     let input = (|| {
         Ok::<_, HostError>((
             host.read_secure_note_title()?,
@@ -1034,8 +1109,10 @@ fn item_list(
     host: &dyn CliHost,
     paths: &LocalVaultPaths,
     writer: &LocalWriterGuard,
+    selected_vault: Option<&ConfigName>,
 ) -> Result<CliOutput, CliFailure> {
-    let (mut access, application_store) = authenticated_access(host, paths, writer)?;
+    let (mut access, application_store) =
+        authenticated_access(host, paths, writer, selected_vault)?;
     let result = if access
         .as_unlocked()
         .map_err(map_application)?
@@ -1075,9 +1152,10 @@ fn item_edit_login(
     host: &dyn CliHost,
     paths: &LocalVaultPaths,
     writer: &LocalWriterGuard,
+    selected_vault: Option<&ConfigName>,
     item_id: ItemId,
 ) -> Result<CliOutput, CliFailure> {
-    let (access, application_store) = authenticated_access(host, paths, writer)?;
+    let (access, application_store) = authenticated_access(host, paths, writer, selected_vault)?;
     let audit_enabled = access
         .as_unlocked()
         .map_err(map_application)?
@@ -1159,9 +1237,11 @@ fn item_show(
     host: &dyn CliHost,
     paths: &LocalVaultPaths,
     writer: &LocalWriterGuard,
+    selected_vault: Option<&ConfigName>,
     item_id: ItemId,
 ) -> Result<CliOutput, CliFailure> {
-    let (mut access, application_store) = authenticated_access(host, paths, writer)?;
+    let (mut access, application_store) =
+        authenticated_access(host, paths, writer, selected_vault)?;
     let item = if access
         .as_unlocked()
         .map_err(map_application)?
@@ -1191,9 +1271,10 @@ fn item_delete(
     host: &dyn CliHost,
     paths: &LocalVaultPaths,
     writer: &LocalWriterGuard,
+    selected_vault: Option<&ConfigName>,
     item_id: ItemId,
 ) -> Result<CliOutput, CliFailure> {
-    let (access, application_store) = authenticated_access(host, paths, writer)?;
+    let (access, application_store) = authenticated_access(host, paths, writer, selected_vault)?;
     let audit_enabled = access
         .as_unlocked()
         .map_err(map_application)?
@@ -1241,9 +1322,11 @@ fn history_list(
     host: &dyn CliHost,
     paths: &LocalVaultPaths,
     writer: &LocalWriterGuard,
+    selected_vault: Option<&ConfigName>,
     item_id: ItemId,
 ) -> Result<CliOutput, CliFailure> {
-    let (mut access, application_store) = authenticated_access(host, paths, writer)?;
+    let (mut access, application_store) =
+        authenticated_access(host, paths, writer, selected_vault)?;
     let result = if access
         .as_unlocked()
         .map_err(map_application)?
@@ -1304,10 +1387,11 @@ fn history_restore(
     host: &dyn CliHost,
     paths: &LocalVaultPaths,
     writer: &LocalWriterGuard,
+    selected_vault: Option<&ConfigName>,
     item_id: ItemId,
     revision_id: RevisionId,
 ) -> Result<CliOutput, CliFailure> {
-    let (access, application_store) = authenticated_access(host, paths, writer)?;
+    let (access, application_store) = authenticated_access(host, paths, writer, selected_vault)?;
     let audit_enabled = access
         .as_unlocked()
         .map_err(map_application)?
@@ -1468,7 +1552,7 @@ fn begin_init(
         .create_config(render_config(&config).as_bytes())
         .map_err(map_local_host)?;
 
-    let repository_factory = repository_factory(paths);
+    let repository_factory = repository_factory(paths.object_root());
     complete_generation_zero(
         prepared,
         &application_store,
@@ -1490,7 +1574,7 @@ fn resume_init(
     if config.default_vault() != &vault_name {
         return Err(CliFailure::AlreadyInitialized);
     }
-    let vault = configured_vault(paths, &config)?;
+    let vault = configured_vault(paths, &config, None)?;
     if vault.local_store() != &storage_name {
         return Err(CliFailure::AlreadyInitialized);
     }
@@ -1510,7 +1594,7 @@ fn resume_init(
     };
     let passphrase = host.read_existing_passphrase().map_err(map_host)?;
     let prepared = rehydrate_prepared_init(passphrase, state).map_err(map_application)?;
-    let repository_factory = repository_factory(paths);
+    let repository_factory = configured_repository_factory(&config, vault)?;
     complete_generation_zero(
         prepared,
         &application_store,
@@ -1521,16 +1605,139 @@ fn resume_init(
     Ok(CliOutput::success("Vault initialized.\n"))
 }
 
+fn vault_create(
+    host: &dyn CliHost,
+    paths: &LocalVaultPaths,
+    writer: &LocalWriterGuard,
+    vault_name: ConfigName,
+) -> Result<CliOutput, CliFailure> {
+    let exact_config = writer
+        .load_config()
+        .map_err(map_local_host)?
+        .ok_or(CliFailure::InvalidCommand)?;
+    let config = decode_config(&exact_config)?;
+    if config.select_vault(Some(&vault_name)).is_some() {
+        return resume_vault_create(host, paths, &config, &vault_name);
+    }
+
+    let source = configured_vault(paths, &config, None)?;
+    let passphrase = host.read_new_passphrase().map_err(map_host)?;
+    let mut random_bytes = [0_u8; AUDITED_GENERATION_ZERO_RANDOM_BYTES];
+    host.fill_entropy(&mut random_bytes).map_err(map_host)?;
+    let (memory_kib, iterations, lanes) = host.generation_zero_kdf();
+    let policy = GenerationZeroPolicyV1::new(
+        memory_kib,
+        iterations,
+        lanes,
+        host.now_ms().map_err(map_host)?,
+    )
+    .map_err(map_application)?;
+    let prepared = prepare_audited_generation_zero(
+        passphrase,
+        policy,
+        AuditedGenerationZeroRandomness::new(random_bytes),
+    )
+    .map_err(map_application)?;
+    let locator = prepared.bootstrap_locator();
+    let exact_prepared = prepared.owner_state().encode().map_err(map_application)?;
+    let application_store = application_store(paths);
+
+    // The exact encrypted creation trace and retry journal become durable
+    // before the new random locator is made discoverable in configuration.
+    application_store
+        .compare_exchange(locator, None, &exact_prepared)
+        .map_err(map_local_state)?;
+
+    let target_root = target_object_root(paths, locator.as_bytes());
+    let target_location = target_root.to_str().ok_or(CliFailure::Unsupported)?;
+    let target_storage_name = target_storage_name(locator.as_bytes())?;
+    let target_storage = StorageConfigV1::new(
+        StorageKind::Filesystem,
+        StorageLocation::new(target_location).map_err(|_| CliFailure::Unsupported)?,
+        CredentialRef::none(),
+    );
+    let target = VaultConfigV1::new(
+        ConfigVaultLocator::new(*locator.as_bytes()),
+        target_storage_name.clone(),
+        Vec::new(),
+        source.auto_lock_seconds(),
+        source.clipboard_clear_seconds(),
+    )
+    .map_err(|_| CliFailure::Internal)?;
+    let mut vaults = config.vaults().clone();
+    if vaults.insert(vault_name, target).is_some() {
+        return Err(CliFailure::Conflict);
+    }
+    let mut storage = config.storage().clone();
+    if storage
+        .insert(target_storage_name, target_storage)
+        .is_some()
+    {
+        return Err(CliFailure::Conflict);
+    }
+    let replacement = VaultPmConfigV1::new(config.default_vault().clone(), vaults, storage)
+        .map_err(|_| CliFailure::Internal)?;
+    let rendered = render_config(&replacement);
+    writer
+        .compare_exchange_config(&exact_config, rendered.as_bytes())
+        .map_err(map_local_host)?;
+
+    let repository_factory = repository_factory(&target_root);
+    complete_generation_zero(
+        prepared,
+        &application_store,
+        &application_store,
+        &repository_factory,
+    )
+    .map_err(map_application)?;
+    Ok(CliOutput::success("Vault target created.\n"))
+}
+
+fn resume_vault_create(
+    host: &dyn CliHost,
+    paths: &LocalVaultPaths,
+    config: &VaultPmConfigV1,
+    vault_name: &ConfigName,
+) -> Result<CliOutput, CliFailure> {
+    let vault = configured_vault(paths, config, Some(vault_name))?;
+    let locator = application_locator(vault.locator());
+    let application_store = application_store(paths);
+    let exact_state = application_store
+        .load(locator)
+        .map_err(map_local_state)?
+        .ok_or(CliFailure::Integrity)?;
+    let state = LocalVaultStateV1::decode(&exact_state).map_err(map_application)?;
+    let LocalVaultStateV1::PreparedInit(_) = state else {
+        return Err(match state {
+            LocalVaultStateV1::Active(_) => CliFailure::AlreadyInitialized,
+            LocalVaultStateV1::PendingPublication { .. } => CliFailure::Conflict,
+            LocalVaultStateV1::PreparedInit(_) => unreachable!(),
+        });
+    };
+    let passphrase = host.read_existing_passphrase().map_err(map_host)?;
+    let prepared = rehydrate_prepared_init(passphrase, state).map_err(map_application)?;
+    let repository_factory = configured_repository_factory(config, vault)?;
+    complete_generation_zero(
+        prepared,
+        &application_store,
+        &application_store,
+        &repository_factory,
+    )
+    .map_err(map_application)?;
+    Ok(CliOutput::success("Vault target created.\n"))
+}
+
 fn status(
     paths: &LocalVaultPaths,
     writer: &LocalWriterGuard,
+    selected_vault: Option<&ConfigName>,
     json: bool,
 ) -> Result<CliOutput, CliFailure> {
     let Some(exact_config) = writer.load_config().map_err(map_local_host)? else {
         return Ok(render_status_label("uninitialized", json));
     };
     let config = decode_config(&exact_config)?;
-    let vault = configured_vault(paths, &config)?;
+    let vault = configured_vault(paths, &config, selected_vault)?;
     let locator = application_locator(vault.locator());
     let application_store = application_store(paths);
     let access = VaultAccessV1::locked(locator);
@@ -1549,8 +1756,10 @@ fn audit_enable(
     host: &dyn CliHost,
     paths: &LocalVaultPaths,
     writer: &LocalWriterGuard,
+    selected_vault: Option<&ConfigName>,
 ) -> Result<CliOutput, CliFailure> {
-    let (mut access, application_store) = authenticated_access(host, paths, writer)?;
+    let (mut access, application_store) =
+        authenticated_access(host, paths, writer, selected_vault)?;
     if access
         .as_unlocked()
         .map_err(map_application)?
@@ -1572,16 +1781,17 @@ fn audit_verify(
     host: &dyn CliHost,
     paths: &LocalVaultPaths,
     writer: &LocalWriterGuard,
+    selected_vault: Option<&ConfigName>,
 ) -> Result<CliOutput, CliFailure> {
     let exact_config = writer
         .load_config()
         .map_err(map_local_host)?
         .ok_or(CliFailure::InvalidCommand)?;
     let config = decode_config(&exact_config)?;
-    let vault = configured_vault(paths, &config)?;
+    let vault = configured_vault(paths, &config, selected_vault)?;
     let locator = application_locator(vault.locator());
     let application_store = application_store(paths);
-    let repository_factory = repository_factory(paths);
+    let repository_factory = configured_repository_factory(&config, vault)?;
     let mut access = VaultAccessV1::locked(locator);
     let passphrase = host.read_existing_passphrase().map_err(map_host)?;
     access
@@ -1619,8 +1829,9 @@ fn audit_list(
     host: &dyn CliHost,
     paths: &LocalVaultPaths,
     writer: &LocalWriterGuard,
+    selected_vault: Option<&ConfigName>,
 ) -> Result<CliOutput, CliFailure> {
-    let (access, application_store) = authenticated_access(host, paths, writer)?;
+    let (access, application_store) = authenticated_access(host, paths, writer, selected_vault)?;
     let (wall_time_ms, randomness) = audited_access_inputs(host)?;
     let events = access
         .into_unlocked()
@@ -1641,9 +1852,10 @@ fn audit_show(
     host: &dyn CliHost,
     paths: &LocalVaultPaths,
     writer: &LocalWriterGuard,
+    selected_vault: Option<&ConfigName>,
     trace_id: OperationId,
 ) -> Result<CliOutput, CliFailure> {
-    let (access, application_store) = authenticated_access(host, paths, writer)?;
+    let (access, application_store) = authenticated_access(host, paths, writer, selected_vault)?;
     let (wall_time_ms, randomness) = audited_access_inputs(host)?;
     let event = access
         .into_unlocked()
@@ -1660,6 +1872,7 @@ fn doctor(
     host: &dyn CliHost,
     paths: &LocalVaultPaths,
     writer: &LocalWriterGuard,
+    selected_vault: Option<&ConfigName>,
     unlock: bool,
 ) -> Result<CliOutput, CliFailure> {
     let Some(exact_config) = writer.load_config().map_err(map_local_host)? else {
@@ -1669,12 +1882,12 @@ fn doctor(
         ));
     };
     let config = decode_config(&exact_config)?;
-    let vault = configured_vault(paths, &config)?;
+    let vault = configured_vault(paths, &config, selected_vault)?;
     let locator = application_locator(vault.locator());
     let application_store = application_store(paths);
     let mut access = VaultAccessV1::locked(locator);
     if unlock {
-        let repository_factory = repository_factory(paths);
+        let repository_factory = configured_repository_factory(&config, vault)?;
         let passphrase = host.read_existing_passphrase().map_err(map_host)?;
         access
             .unlock(
@@ -1820,8 +2033,15 @@ fn decode_config(exact: &[u8]) -> Result<VaultPmConfigV1, CliFailure> {
 fn configured_vault<'a>(
     paths: &LocalVaultPaths,
     config: &'a VaultPmConfigV1,
+    selected_vault: Option<&ConfigName>,
 ) -> Result<&'a VaultConfigV1, CliFailure> {
-    let vault = config.select_vault(None).ok_or(CliFailure::Integrity)?;
+    let vault = config.select_vault(selected_vault).ok_or_else(|| {
+        if selected_vault.is_some() {
+            CliFailure::NotFound
+        } else {
+            CliFailure::Integrity
+        }
+    })?;
     if !vault.remote_stores().is_empty() {
         return Err(CliFailure::Unsupported);
     }
@@ -1829,12 +2049,27 @@ fn configured_vault<'a>(
         .storage()
         .get(vault.local_store())
         .ok_or(CliFailure::Integrity)?;
-    let expected = paths
+    if config.vaults().values().any(|candidate| {
+        candidate.locator() != vault.locator()
+            && config
+                .storage()
+                .get(candidate.local_store())
+                .is_some_and(|candidate_storage| {
+                    candidate_storage.kind() == StorageKind::Filesystem
+                        && candidate_storage.location() == storage.location()
+                })
+    }) {
+        return Err(CliFailure::Unsupported);
+    }
+    let root_location = paths
         .object_root()
         .to_str()
         .ok_or(CliFailure::Unsupported)?;
+    let target_location = target_object_root(paths, vault.locator().as_bytes());
+    let target_location = target_location.to_str().ok_or(CliFailure::Unsupported)?;
     if storage.kind() != StorageKind::Filesystem
-        || storage.location().as_str() != expected
+        || (storage.location().as_str() != root_location
+            && storage.location().as_str() != target_location)
         || storage.credential_ref().as_str() != "none"
     {
         return Err(CliFailure::Unsupported);
@@ -1851,11 +2086,44 @@ fn application_store(paths: &LocalVaultPaths) -> StorageCoreApplicationStore<FsS
 }
 
 fn repository_factory(
-    paths: &LocalVaultPaths,
+    object_root: &Path,
 ) -> V1ApplicationRepositoryFactory<StorageCoreObjectStore<FsStorageBackend>> {
     V1ApplicationRepositoryFactory::new(StorageCoreObjectStore::new(FsStorageBackend::new(
-        paths.object_root(),
+        object_root,
     )))
+}
+
+fn configured_repository_factory(
+    config: &VaultPmConfigV1,
+    vault: &VaultConfigV1,
+) -> Result<V1ApplicationRepositoryFactory<StorageCoreObjectStore<FsStorageBackend>>, CliFailure> {
+    let storage = config
+        .storage()
+        .get(vault.local_store())
+        .ok_or(CliFailure::Integrity)?;
+    Ok(repository_factory(Path::new(storage.location().as_str())))
+}
+
+fn target_object_root(paths: &LocalVaultPaths, locator: &[u8; 32]) -> PathBuf {
+    paths
+        .object_root()
+        .join("targets")
+        .join(locator_hex(locator))
+}
+
+fn target_storage_name(locator: &[u8; 32]) -> Result<ConfigName, CliFailure> {
+    let encoded = locator_hex(locator);
+    ConfigName::new(format!("v{}", &encoded[..63])).map_err(|_| CliFailure::Internal)
+}
+
+fn locator_hex(locator: &[u8; 32]) -> String {
+    const HEX: &[u8; 16] = b"0123456789abcdef";
+    let mut encoded = String::with_capacity(64);
+    for byte in locator {
+        encoded.push(char::from(HEX[usize::from(*byte >> 4)]));
+        encoded.push(char::from(HEX[usize::from(*byte & 0x0f)]));
+    }
+    encoded
 }
 
 #[derive(Clone, Copy, PartialEq, Eq)]
@@ -2068,6 +2336,7 @@ mod tests {
         secrets: Mutex<VecDeque<Vec<u8>>>,
         texts: Mutex<VecDeque<String>>,
         entropy_seed: u8,
+        entropy_available: bool,
     }
 
     impl TestHost {
@@ -2077,6 +2346,7 @@ mod tests {
                 secrets: Mutex::new(secrets.into_iter().collect()),
                 texts: Mutex::new(VecDeque::new()),
                 entropy_seed: 1,
+                entropy_available: true,
             }
         }
 
@@ -2090,6 +2360,7 @@ mod tests {
                 secrets: Mutex::new(secrets.into_iter().collect()),
                 texts: Mutex::new(VecDeque::new()),
                 entropy_seed,
+                entropy_available: true,
             }
         }
 
@@ -2103,6 +2374,20 @@ mod tests {
                 secrets: Mutex::new(secrets.into_iter().collect()),
                 texts: Mutex::new(texts.into_iter().collect()),
                 entropy_seed: 1,
+                entropy_available: true,
+            }
+        }
+
+        fn without_entropy(
+            paths: LocalVaultPaths,
+            secrets: impl IntoIterator<Item = Vec<u8>>,
+        ) -> Self {
+            Self {
+                paths,
+                secrets: Mutex::new(secrets.into_iter().collect()),
+                texts: Mutex::new(VecDeque::new()),
+                entropy_seed: 1,
+                entropy_available: false,
             }
         }
 
@@ -2189,6 +2474,9 @@ mod tests {
         }
 
         fn fill_entropy(&self, output: &mut [u8]) -> Result<(), HostError> {
+            if !self.entropy_available {
+                return Err(HostError::Unavailable);
+            }
             for (index, byte) in output.iter_mut().enumerate() {
                 *byte = u8::try_from(index % 251)
                     .unwrap()
@@ -2206,11 +2494,19 @@ mod tests {
         }
     }
 
+    fn default_invocation(command: Command) -> Result<Invocation, CliFailure> {
+        Ok(Invocation {
+            selected_vault: None,
+            command,
+        })
+    }
+
     fn activate_test_audit_epoch(paths: &LocalVaultPaths, passphrase: Vec<u8>) {
         let prepared = paths.prepare().unwrap();
         let writer = prepared.try_acquire_writer().unwrap();
         let host = TestHost::new(paths.clone(), [passphrase]);
-        let (mut access, application_store) = authenticated_access(&host, paths, &writer).unwrap();
+        let (mut access, application_store) =
+            authenticated_access(&host, paths, &writer, None).unwrap();
         if access.as_unlocked().unwrap().audit_enabled() {
             access.lock();
             return;
@@ -2230,6 +2526,16 @@ mod tests {
         for arguments in [
             vec!["init", "--passphrase", "secret"],
             vec!["init", "--vault=personal"],
+            vec!["vault"],
+            vec!["vault", "create"],
+            vec!["vault", "create", "work", "extra"],
+            vec!["vault", "create", "bad.name"],
+            vec!["--vault"],
+            vec!["--vault", "work"],
+            vec!["--vault", "work", "--vault", "personal", "status"],
+            vec!["--vault", "work", "init"],
+            vec!["--vault", "work", "vault", "create", "other"],
+            vec!["--vault", "work", "help"],
             vec!["status", "--unsafe-include-secrets"],
             vec!["doctor", "extra"],
             vec!["doctor", "--unlock", "extra"],
@@ -2266,6 +2572,24 @@ mod tests {
             assert_eq!(output.stderr(), "vault-pm: invalid command\n");
         }
         assert!(!root.0.join("config").exists());
+    }
+
+    #[test]
+    fn parser_separates_named_creation_from_command_scoped_selection() {
+        let work = ConfigName::new("work".to_owned()).unwrap();
+        assert_eq!(
+            parse(["vault", "create", "work"]),
+            default_invocation(Command::VaultCreate {
+                vault: work.clone(),
+            })
+        );
+        assert_eq!(
+            parse(["--vault", "work", "status", "--json"]),
+            Ok(Invocation {
+                selected_vault: Some(work),
+                command: Command::Status { json: true },
+            })
+        );
     }
 
     #[test]
@@ -2338,7 +2662,7 @@ mod tests {
         let canonical = item_id.to_user_string();
         assert_eq!(
             parse(["item", "show", canonical.as_str()]),
-            Ok(Command::ItemShow { item_id })
+            default_invocation(Command::ItemShow { item_id })
         );
         assert_eq!(
             parse(["item", "show", canonical.to_lowercase().as_str()]),
@@ -2346,21 +2670,21 @@ mod tests {
         );
         assert_eq!(
             parse(["item", "edit", canonical.as_str()]),
-            Ok(Command::ItemEdit { item_id })
+            default_invocation(Command::ItemEdit { item_id })
         );
         assert_eq!(
             parse(["item", "delete", canonical.as_str()]),
-            Ok(Command::ItemDelete { item_id })
+            default_invocation(Command::ItemDelete { item_id })
         );
         assert_eq!(
             parse(["history", "list", canonical.as_str()]),
-            Ok(Command::HistoryList { item_id })
+            default_invocation(Command::HistoryList { item_id })
         );
         let revision_id = RevisionId::new([0x6b; 32]);
         let revision = revision_id.to_user_string();
         assert_eq!(
             parse(["history", "restore", canonical.as_str(), revision.as_str(),]),
-            Ok(Command::HistoryRestore {
+            default_invocation(Command::HistoryRestore {
                 item_id,
                 revision_id,
             })
@@ -2382,7 +2706,7 @@ mod tests {
         let canonical = trace_id.to_user_string();
         assert_eq!(
             parse(["audit", "show", canonical.as_str()]),
-            Ok(Command::AuditShow { trace_id })
+            default_invocation(Command::AuditShow { trace_id })
         );
         assert_eq!(
             parse(["audit", "show", canonical.to_lowercase().as_str()]),
@@ -2394,7 +2718,7 @@ mod tests {
     fn portable_export_parser_accepts_exactly_one_explicit_destination() {
         assert_eq!(
             parse(["export", "backup.vpm"]),
-            Ok(Command::PortableExport {
+            default_invocation(Command::PortableExport {
                 destination: PathBuf::from("backup.vpm")
             })
         );
@@ -2409,7 +2733,7 @@ mod tests {
     fn portable_import_parser_accepts_exactly_one_explicit_source() {
         assert_eq!(
             parse(["import", "backup.vpm"]),
-            Ok(Command::PortableImport {
+            default_invocation(Command::PortableImport {
                 source: PathBuf::from("backup.vpm")
             })
         );
@@ -2424,7 +2748,7 @@ mod tests {
     fn portable_restore_verify_parser_accepts_exactly_one_explicit_source() {
         assert_eq!(
             parse(["restore", "verify", "backup.vpm"]),
-            Ok(Command::PortableRestoreVerify {
+            default_invocation(Command::PortableRestoreVerify {
                 source: PathBuf::from("backup.vpm")
             })
         );
@@ -2462,6 +2786,169 @@ mod tests {
         assert_eq!(doctor.exit_code(), ExitCode::Locked);
         assert_eq!(doctor.stdout(), "Doctor: authentication_required\n");
         assert!(doctor.stderr().is_empty());
+    }
+
+    #[test]
+    fn named_target_creation_preserves_default_and_selection_is_isolated() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let personal_passphrase = b"personal target passphrase".to_vec();
+        let work_passphrase = b"work target passphrase".to_vec();
+        let init_host =
+            TestHost::with_entropy_seed(paths.clone(), [personal_passphrase.clone()], 1);
+        assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
+
+        let layout = paths.prepare().unwrap();
+        let writer = layout.try_acquire_writer().unwrap();
+        let exact_before_failure = writer.load_config().unwrap().unwrap();
+        drop(writer);
+        drop(layout);
+        let failed_host =
+            TestHost::without_entropy(paths.clone(), [b"unused target passphrase".to_vec()]);
+        let failed = run(["vault", "create", "failed"], &failed_host);
+        assert_eq!(failed.exit_code(), ExitCode::Provider, "{failed:?}");
+        let layout = paths.prepare().unwrap();
+        let writer = layout.try_acquire_writer().unwrap();
+        assert_eq!(writer.load_config().unwrap().unwrap(), exact_before_failure);
+        drop(writer);
+        drop(layout);
+
+        let create_host = TestHost::with_entropy_seed(paths.clone(), [work_passphrase.clone()], 19);
+        let created = run(["vault", "create", "work"], &create_host);
+        assert_eq!(created.exit_code(), ExitCode::Success, "{created:?}");
+        assert_eq!(created.stdout(), "Vault target created.\n");
+
+        let layout = paths.prepare().unwrap();
+        let writer = layout.try_acquire_writer().unwrap();
+        let exact = writer.load_config().unwrap().unwrap();
+        let config = decode_config(&exact).unwrap();
+        let personal_name = ConfigName::new("personal".to_owned()).unwrap();
+        let work_name = ConfigName::new("work".to_owned()).unwrap();
+        assert_eq!(config.default_vault(), &personal_name);
+        assert_eq!(config.vaults().len(), 2);
+        let personal = config.select_vault(Some(&personal_name)).unwrap();
+        let work = config.select_vault(Some(&work_name)).unwrap();
+        assert_ne!(personal.locator(), work.locator());
+        assert_ne!(personal.local_store(), work.local_store());
+        let work_storage = config.storage().get(work.local_store()).unwrap();
+        assert_eq!(work_storage.kind(), StorageKind::Filesystem);
+        assert_eq!(
+            Path::new(work_storage.location().as_str()),
+            target_object_root(&paths, work.locator().as_bytes())
+        );
+        drop(writer);
+        drop(layout);
+
+        let locked = TestHost::new(paths.clone(), []);
+        assert_eq!(
+            run(["--vault", "work", "status"], &locked).stdout(),
+            "Status: locked\n"
+        );
+        let unknown = run(["--vault", "missing", "status"], &locked);
+        assert_eq!(unknown.exit_code(), ExitCode::NotFound, "{unknown:?}");
+
+        let verify_work = TestHost::with_entropy_seed(paths.clone(), [work_passphrase.clone()], 20);
+        let verified = run(["--vault", "work", "audit", "verify"], &verify_work);
+        assert_eq!(verified.exit_code(), ExitCode::Success, "{verified:?}");
+        assert!(verified.stdout().contains("audit_events=1"));
+
+        let add_work = TestHost::with_texts(
+            paths.clone(),
+            [work_passphrase.clone(), b"work-only secret".to_vec()],
+            [
+                "Work-only login".to_owned(),
+                "work@example.test".to_owned(),
+                String::new(),
+            ],
+        );
+        let added = run(["--vault", "work", "item", "add", "login"], &add_work);
+        assert_eq!(added.exit_code(), ExitCode::Success, "{added:?}");
+
+        let list_personal =
+            TestHost::with_entropy_seed(paths.clone(), [personal_passphrase.clone()], 21);
+        let personal_items = run(["item", "list"], &list_personal);
+        assert_eq!(personal_items.stdout(), "No items.\n", "{personal_items:?}");
+
+        let list_work = TestHost::with_entropy_seed(paths.clone(), [work_passphrase.clone()], 22);
+        let work_items = run(["--vault", "work", "item", "list"], &list_work);
+        assert_eq!(work_items.exit_code(), ExitCode::Success, "{work_items:?}");
+        assert!(work_items.stdout().contains("Work-only login"));
+
+        let audit_work = TestHost::with_entropy_seed(paths.clone(), [work_passphrase.clone()], 23);
+        let events = run(["--vault", "work", "audit", "list"], &audit_work);
+        assert_eq!(events.exit_code(), ExitCode::Success, "{events:?}");
+        assert!(events
+            .stdout()
+            .contains("\tcounter=1\taction=vault_initialize\toutcome=succeeded\t"));
+
+        let duplicate = TestHost::new(paths, []);
+        let repeated = run(["vault", "create", "work"], &duplicate);
+        assert_eq!(repeated.exit_code(), ExitCode::InvalidInput);
+        assert_eq!(repeated.stderr(), "vault-pm: already initialized\n");
+    }
+
+    #[test]
+    fn selected_uncomposed_provider_fails_closed_without_config_payloads() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let init_host = TestHost::new(paths.clone(), [b"provider test passphrase".to_vec()]);
+        assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
+
+        let layout = paths.prepare().unwrap();
+        let writer = layout.try_acquire_writer().unwrap();
+        let exact = writer.load_config().unwrap().unwrap();
+        let config = decode_config(&exact).unwrap();
+        let remote_store = ConfigName::new("remote".to_owned()).unwrap();
+        let mut storage = config.storage().clone();
+        storage.insert(
+            remote_store.clone(),
+            StorageConfigV1::new(
+                StorageKind::GoogleDrive,
+                StorageLocation::new("private-provider-folder").unwrap(),
+                CredentialRef::new("keychain:private-provider-token").unwrap(),
+            ),
+        );
+        let mut vaults = config.vaults().clone();
+        vaults.insert(
+            ConfigName::new("remote".to_owned()).unwrap(),
+            VaultConfigV1::new(
+                ConfigVaultLocator::new([0x91; 32]),
+                remote_store,
+                Vec::new(),
+                DEFAULT_AUTO_LOCK_SECONDS,
+                DEFAULT_CLIPBOARD_CLEAR_SECONDS,
+            )
+            .unwrap(),
+        );
+        vaults.insert(
+            ConfigName::new("shared".to_owned()).unwrap(),
+            VaultConfigV1::new(
+                ConfigVaultLocator::new([0x92; 32]),
+                config.select_vault(None).unwrap().local_store().clone(),
+                Vec::new(),
+                DEFAULT_AUTO_LOCK_SECONDS,
+                DEFAULT_CLIPBOARD_CLEAR_SECONDS,
+            )
+            .unwrap(),
+        );
+        let replacement =
+            VaultPmConfigV1::new(config.default_vault().clone(), vaults, storage).unwrap();
+        writer
+            .compare_exchange_config(&exact, render_config(&replacement).as_bytes())
+            .unwrap();
+        drop(writer);
+        drop(layout);
+
+        let host = TestHost::new(paths, []);
+        let output = run(["--vault", "remote", "status"], &host);
+        assert_eq!(output.exit_code(), ExitCode::Unsupported, "{output:?}");
+        assert_eq!(output.stderr(), "vault-pm: unsupported capability\n");
+        assert!(!output.stderr().contains("private-provider"));
+        assert!(!output.stderr().contains("keychain"));
+
+        let shared = run(["--vault", "shared", "status"], &host);
+        assert_eq!(shared.exit_code(), ExitCode::Unsupported, "{shared:?}");
+        assert_eq!(shared.stderr(), "vault-pm: unsupported capability\n");
     }
 
     #[test]
@@ -3209,7 +3696,7 @@ mod tests {
     fn secure_note_create_list_show_and_audit_never_render_the_body() {
         assert_eq!(
             parse(["item", "add", "secure-note"]),
-            Ok(Command::ItemAddSecureNote)
+            default_invocation(Command::ItemAddSecureNote)
         );
         let root = TestRoot::new();
         let paths = root.paths();
@@ -3466,6 +3953,78 @@ mod tests {
         let resumed = run(["init"], &host);
         assert_eq!(resumed.exit_code(), ExitCode::Success, "{resumed:?}");
         assert_eq!(run(["status"], &host).stdout(), "Status: locked\n");
+    }
+
+    #[test]
+    fn named_target_retry_rehydrates_the_original_audited_journal_without_entropy() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let personal_passphrase = b"existing personal passphrase".to_vec();
+        let target_passphrase = b"resumable target passphrase".to_vec();
+        let init_host = TestHost::new(paths.clone(), [personal_passphrase]);
+        assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
+
+        let mut random = [0_u8; AUDITED_GENERATION_ZERO_RANDOM_BYTES];
+        for (index, byte) in random.iter_mut().enumerate() {
+            *byte = u8::try_from(index % 251).unwrap().wrapping_add(31);
+        }
+        let prepared = prepare_audited_generation_zero(
+            Zeroizing::new(target_passphrase.clone()),
+            GenerationZeroPolicyV1::new(8 * 1024, 1, 1, 1_700_000_000_000).unwrap(),
+            AuditedGenerationZeroRandomness::new(random),
+        )
+        .unwrap();
+        let locator = prepared.bootstrap_locator();
+        let exact_prepared = prepared.owner_state().encode().unwrap();
+
+        let layout = paths.prepare().unwrap();
+        let writer = layout.try_acquire_writer().unwrap();
+        let application_store = application_store(&paths);
+        application_store
+            .compare_exchange(locator, None, &exact_prepared)
+            .unwrap();
+        let exact_config = writer.load_config().unwrap().unwrap();
+        let config = decode_config(&exact_config).unwrap();
+        let source = configured_vault(&paths, &config, None).unwrap();
+        let target_root = target_object_root(&paths, locator.as_bytes());
+        let target_storage_name = target_storage_name(locator.as_bytes()).unwrap();
+        let target = VaultConfigV1::new(
+            ConfigVaultLocator::new(*locator.as_bytes()),
+            target_storage_name.clone(),
+            Vec::new(),
+            source.auto_lock_seconds(),
+            source.clipboard_clear_seconds(),
+        )
+        .unwrap();
+        let mut vaults = config.vaults().clone();
+        vaults.insert(ConfigName::new("work".to_owned()).unwrap(), target);
+        let mut storage = config.storage().clone();
+        storage.insert(
+            target_storage_name,
+            StorageConfigV1::new(
+                StorageKind::Filesystem,
+                StorageLocation::new(target_root.to_str().unwrap()).unwrap(),
+                CredentialRef::none(),
+            ),
+        );
+        let replacement =
+            VaultPmConfigV1::new(config.default_vault().clone(), vaults, storage).unwrap();
+        writer
+            .compare_exchange_config(&exact_config, render_config(&replacement).as_bytes())
+            .unwrap();
+        drop(writer);
+        drop(layout);
+        drop(prepared);
+
+        let resume_host = TestHost::without_entropy(paths.clone(), [target_passphrase.clone()]);
+        let resumed = run(["vault", "create", "work"], &resume_host);
+        assert_eq!(resumed.exit_code(), ExitCode::Success, "{resumed:?}");
+        assert_eq!(resumed.stdout(), "Vault target created.\n");
+
+        let verify_host = TestHost::with_entropy_seed(paths, [target_passphrase], 41);
+        let verified = run(["--vault", "work", "audit", "verify"], &verify_host);
+        assert_eq!(verified.exit_code(), ExitCode::Success, "{verified:?}");
+        assert!(verified.stdout().contains("audit_events=1"));
     }
 
     #[test]

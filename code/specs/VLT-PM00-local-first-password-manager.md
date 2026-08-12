@@ -869,7 +869,8 @@ where the format explicitly defines an extension map.
 
 ```text
 vault-pm init [--vault NAME] [--storage NAME]
-vault-pm status [--json]
+vault-pm vault create NAME
+vault-pm [--vault NAME] status [--json]
 vault-pm shell
 
 vault-pm item add login|secure-note|card|totp|custom
@@ -906,6 +907,9 @@ vault-pm audit verify
 vault-pm doctor
 vault-pm gc plan|run
 ```
+
+The leading `--vault NAME` selector may prefix any command that operates on an
+existing vault. It is command-scoped and never rewrites `default_vault`.
 
 Phase 1A implements `init`, `status`, `shell`, item CRUD/list, search, history,
 password generation, portable export, audit verification, and `doctor`.
@@ -1552,9 +1556,12 @@ changelog, focused build, and downstream validation.
               initial commit, retry journal, and active owner head while
               retaining explicit legacy migration, using
               `VLT-PM21-audit-first-generation-zero.md`.
-9b-4b-2b-2. remaining explicit target creation/configuration switching and
-             automatic verifier composition before a fully verified-restore
-             claim.
+9b-4b-2b-2a. completed audit-first named target creation with a distinct
+              adapter namespace, trace-before-config crash recovery, and
+              command-scoped selection that preserves the source default,
+              using `VLT-PM22-cli-named-targets.md`.
+9b-4b-2b-2b. remaining automatic import-plus-verifier composition before a
+              fully verified-restore claim.
 9b-5. foreground interactive shell over the same command/use-case boundary.
 10. Crash/fault matrix and local restore drill.
 
@@ -1620,7 +1627,8 @@ The following are not allowed to block Phase 1A, but each needs a later spec:
   `VLT-PM17-cli-portable-export.md`, `VLT-PM18-cli-portable-import.md`, and
   `VLT-PM19-portable-restore-verification.md`, and
   `VLT-PM20-cli-portable-restore-verify.md`, and
-  `VLT-PM21-audit-first-generation-zero.md` —
+  `VLT-PM21-audit-first-generation-zero.md`, and
+  `VLT-PM22-cli-named-targets.md` —
   product repository wire,
   object-store, domain, verified-DAG, application, local-host, configuration,
   terminal/entropy, executable composition, authenticated verification, and
@@ -1629,7 +1637,7 @@ The following are not allowed to block Phase 1A, but each needs a later spec:
   secure-note CLI composition, audited encrypted recovery-artifact
   export/import, independently audited semantic restore verification, and its
   retryable local CLI ceremony, plus an initialization audit genesis for every
-  new CLI vault.
+  new CLI vault and independently selectable audited named targets.
 - `VLT12-vault-revision-history.md`, `VLT13-vault-encrypted-search.md`,
   `VLT14-vault-attachments.md`, `VLT15-vault-import-export.md`.
 - `STR01-storage-fs-backend.md` and `storage-core`.

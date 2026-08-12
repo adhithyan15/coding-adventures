@@ -10,6 +10,7 @@ use std::sync::atomic::{AtomicU64, Ordering};
 
 static NEXT_TEMP: AtomicU64 = AtomicU64::new(1);
 const PASSPHRASE: &[u8] = b"e2e correct horse battery staple";
+const TARGET_PASSPHRASE: &[u8] = b"e2e separate restore target passphrase";
 const ITEM_PASSWORD: &[u8] = b"e2e item password stays encrypted";
 const UPDATED_ITEM_PASSWORD: &[u8] = b"e2e updated password stays encrypted";
 const SECURE_NOTE_BODY: &[u8] = b"e2e secure note body stays encrypted";
@@ -328,22 +329,23 @@ fn real_cli_initializes_through_a_hidden_tty_and_survives_restart() {
         .windows(EXPORT_PASSPHRASE.len())
         .any(|value| value == EXPORT_PASSPHRASE));
 
-    let restore_home = TestHome::new();
-    let (restore_init_status, restore_init_transcript) = run_init_in_pty(&restore_home);
+    let (restore_init_status, restore_init_transcript) = run_target_create_in_pty(&home);
     assert!(
         restore_init_status.success(),
         "restore target init failed: {restore_init_transcript}"
     );
-    let (restore_audit_status, restore_audit_transcript) = run_unlock_in_pty(
-        &restore_home,
-        &["audit", "enable"],
+    assert!(restore_init_transcript.contains("Vault target created."));
+    let (restore_audit_status, restore_audit_transcript) = run_unlock_with_passphrase_in_pty(
+        &home,
+        &["--vault", "restore", "audit", "enable"],
         b"Audit: already enabled.",
+        TARGET_PASSPHRASE,
     );
     assert!(
         restore_audit_status.success(),
         "restore target audit enable failed: {restore_audit_transcript}"
     );
-    let (import_status, import_transcript) = run_import_in_pty(&restore_home, &export_path);
+    let (import_status, import_transcript) = run_import_in_pty(&home, &export_path);
     assert!(
         import_status.success(),
         "portable import failed: {import_transcript}"
@@ -355,7 +357,7 @@ fn real_cli_initializes_through_a_hidden_tty_and_survives_restart() {
         .windows(EXPORT_PASSPHRASE.len())
         .any(|value| value == EXPORT_PASSPHRASE));
     let (restore_verify_status, restore_verify_transcript) =
-        run_restore_verify_in_pty(&restore_home, &export_path);
+        run_restore_verify_in_pty(&home, &export_path);
     assert!(
         restore_verify_status.success(),
         "portable restore verification failed: {restore_verify_transcript}"
@@ -367,19 +369,26 @@ fn real_cli_initializes_through_a_hidden_tty_and_survives_restart() {
         .as_bytes()
         .windows(EXPORT_PASSPHRASE.len())
         .any(|value| value == EXPORT_PASSPHRASE));
-    let (restore_list_status, restore_list_transcript) = run_unlock_in_pty(
-        &restore_home,
-        &["item", "list"],
+    let (restore_list_status, restore_list_transcript) = run_unlock_with_passphrase_in_pty(
+        &home,
+        &["--vault", "restore", "item", "list"],
         b"vault/note/v1\t\"Recovery note\"",
+        TARGET_PASSPHRASE,
     );
     assert!(restore_list_status.success(), "{restore_list_transcript}");
     assert_transcript_excludes_secrets(&restore_list_transcript);
-    assert_tree_excludes(&restore_home.0, ITEM_PASSWORD);
-    assert_tree_excludes(&restore_home.0, UPDATED_ITEM_PASSWORD);
-    assert_tree_excludes(&restore_home.0, SECURE_NOTE_BODY);
-    assert_tree_excludes(&restore_home.0, EXPORT_PASSPHRASE);
+
+    let (source_list_status, source_list_transcript) = run_unlock_in_pty(
+        &home,
+        &["item", "list"],
+        b"vault/note/v1\t\"Recovery note\"",
+    );
+    assert!(source_list_status.success(), "{source_list_transcript}");
+    assert!(source_list_transcript.contains("vault/login/v1\t\"Example account\""));
+    assert_transcript_excludes_secrets(&source_list_transcript);
 
     assert_tree_excludes(&home.0, PASSPHRASE);
+    assert_tree_excludes(&home.0, TARGET_PASSPHRASE);
     assert_tree_excludes(&home.0, ITEM_PASSWORD);
     assert_tree_excludes(&home.0, UPDATED_ITEM_PASSWORD);
     assert_tree_excludes(&home.0, SECURE_NOTE_BODY);
@@ -432,7 +441,12 @@ fn run_export_in_pty(home: &TestHome, destination: &Path) -> (ExitStatus, String
 fn run_import_in_pty(home: &TestHome, source: &Path) -> (ExitStatus, String) {
     let (mut master, slave) = open_pty();
     let mut command = Command::new(env!("CARGO_BIN_EXE_vault-pm"));
-    command.args(["import", source.to_str().expect("UTF-8 test import source")]);
+    command.args([
+        "--vault",
+        "restore",
+        "import",
+        source.to_str().expect("UTF-8 test import source"),
+    ]);
     home.configure(&mut command);
     command
         .stdin(Stdio::piped())
@@ -455,7 +469,7 @@ fn run_import_in_pty(home: &TestHome, source: &Path) -> (ExitStatus, String) {
         .unwrap();
     let mut transcript = Vec::new();
     read_until(&mut master, &mut transcript, b"Vault passphrase: ");
-    master.write_all(PASSPHRASE).unwrap();
+    master.write_all(TARGET_PASSPHRASE).unwrap();
     master.write_all(b"\n").unwrap();
     read_until(&mut master, &mut transcript, b"Import passphrase: ");
     master.write_all(EXPORT_PASSPHRASE).unwrap();
@@ -474,6 +488,8 @@ fn run_restore_verify_in_pty(home: &TestHome, source: &Path) -> (ExitStatus, Str
     let (mut master, slave) = open_pty();
     let mut command = Command::new(env!("CARGO_BIN_EXE_vault-pm"));
     command.args([
+        "--vault",
+        "restore",
         "restore",
         "verify",
         source.to_str().expect("UTF-8 test restore source"),
@@ -500,7 +516,7 @@ fn run_restore_verify_in_pty(home: &TestHome, source: &Path) -> (ExitStatus, Str
         .unwrap();
     let mut transcript = Vec::new();
     read_until(&mut master, &mut transcript, b"Vault passphrase: ");
-    master.write_all(PASSPHRASE).unwrap();
+    master.write_all(TARGET_PASSPHRASE).unwrap();
     master.write_all(b"\n").unwrap();
     read_until(&mut master, &mut transcript, b"Import passphrase: ");
     master.write_all(EXPORT_PASSPHRASE).unwrap();
@@ -724,46 +740,22 @@ fn run_plain(home: &TestHome, arguments: &[&str]) -> std::process::Output {
 }
 
 fn run_init_in_pty(home: &TestHome) -> (ExitStatus, String) {
-    let (mut master, slave) = open_pty();
-    let mut command = Command::new(env!("CARGO_BIN_EXE_vault-pm"));
-    command.arg("init");
-    home.configure(&mut command);
-    command
-        .stdin(Stdio::piped())
-        .stdout(Stdio::from(slave.try_clone().unwrap()))
-        .stderr(Stdio::from(slave));
-    unsafe {
-        command.pre_exec(|| {
-            if libc::setsid() < 0 || libc::ioctl(libc::STDOUT_FILENO, tiocsctty_request(), 0) < 0 {
-                return Err(io::Error::last_os_error());
-            }
-            Ok(())
-        });
-    }
-    let mut child = command.spawn().unwrap();
-    drop(command);
-    child
-        .stdin
-        .take()
-        .unwrap()
-        .write_all(STDIN_INJECTION)
-        .unwrap();
-    let mut transcript = Vec::new();
-    read_until(&mut master, &mut transcript, b"New vault passphrase: ");
-    master.write_all(PASSPHRASE).unwrap();
-    master.write_all(b"\n").unwrap();
-    read_until(&mut master, &mut transcript, b"Confirm vault passphrase: ");
-    master.write_all(PASSPHRASE).unwrap();
-    master.write_all(b"\n").unwrap();
-    read_until(&mut master, &mut transcript, b"Vault initialized.");
-    drop(master);
-    let status = child.wait().unwrap();
-    (status, String::from_utf8_lossy(&transcript).into_owned())
+    run_new_vault_in_pty(home, &["init"], PASSPHRASE, b"Vault initialized.")
 }
 
-fn run_unlock_in_pty(
+fn run_target_create_in_pty(home: &TestHome) -> (ExitStatus, String) {
+    run_new_vault_in_pty(
+        home,
+        &["vault", "create", "restore"],
+        TARGET_PASSPHRASE,
+        b"Vault target created.",
+    )
+}
+
+fn run_new_vault_in_pty(
     home: &TestHome,
     arguments: &[&str],
+    passphrase: &[u8],
     expected_output: &[u8],
 ) -> (ExitStatus, String) {
     let (mut master, slave) = open_pty();
@@ -791,8 +783,59 @@ fn run_unlock_in_pty(
         .write_all(STDIN_INJECTION)
         .unwrap();
     let mut transcript = Vec::new();
+    read_until(&mut master, &mut transcript, b"New vault passphrase: ");
+    master.write_all(passphrase).unwrap();
+    master.write_all(b"\n").unwrap();
+    read_until(&mut master, &mut transcript, b"Confirm vault passphrase: ");
+    master.write_all(passphrase).unwrap();
+    master.write_all(b"\n").unwrap();
+    read_until(&mut master, &mut transcript, expected_output);
+    drop(master);
+    let status = child.wait().unwrap();
+    (status, String::from_utf8_lossy(&transcript).into_owned())
+}
+
+fn run_unlock_in_pty(
+    home: &TestHome,
+    arguments: &[&str],
+    expected_output: &[u8],
+) -> (ExitStatus, String) {
+    run_unlock_with_passphrase_in_pty(home, arguments, expected_output, PASSPHRASE)
+}
+
+fn run_unlock_with_passphrase_in_pty(
+    home: &TestHome,
+    arguments: &[&str],
+    expected_output: &[u8],
+    passphrase: &[u8],
+) -> (ExitStatus, String) {
+    let (mut master, slave) = open_pty();
+    let mut command = Command::new(env!("CARGO_BIN_EXE_vault-pm"));
+    command.args(arguments);
+    home.configure(&mut command);
+    command
+        .stdin(Stdio::piped())
+        .stdout(Stdio::from(slave.try_clone().unwrap()))
+        .stderr(Stdio::from(slave));
+    unsafe {
+        command.pre_exec(|| {
+            if libc::setsid() < 0 || libc::ioctl(libc::STDOUT_FILENO, tiocsctty_request(), 0) < 0 {
+                return Err(io::Error::last_os_error());
+            }
+            Ok(())
+        });
+    }
+    let mut child = command.spawn().unwrap();
+    drop(command);
+    child
+        .stdin
+        .take()
+        .unwrap()
+        .write_all(STDIN_INJECTION)
+        .unwrap();
+    let mut transcript = Vec::new();
     read_until(&mut master, &mut transcript, b"Vault passphrase: ");
-    master.write_all(PASSPHRASE).unwrap();
+    master.write_all(passphrase).unwrap();
     master.write_all(b"\n").unwrap();
     read_until(&mut master, &mut transcript, expected_output);
     drain_pty(&mut master, &mut transcript);
@@ -806,6 +849,10 @@ fn assert_transcript_excludes_secrets(transcript: &str) {
         .as_bytes()
         .windows(PASSPHRASE.len())
         .any(|value| value == PASSPHRASE));
+    assert!(!transcript
+        .as_bytes()
+        .windows(TARGET_PASSPHRASE.len())
+        .any(|value| value == TARGET_PASSPHRASE));
     assert!(!transcript.contains("stdin injected secret"));
 }
 

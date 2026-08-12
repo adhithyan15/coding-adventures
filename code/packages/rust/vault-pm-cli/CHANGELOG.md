@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Added audit-first `vault create NAME` with a distinct adapter namespace,
+  trace-before-config ordering, exact prepared-journal retry, and no replacement
+  of active targets.
+- Added command-scoped `--vault NAME` selection across existing vault commands;
+  it preserves `default_vault` and routes authenticated operations only through
+  the selected vault's independent state, repository, and audit chain.
 - New `init` operations use audit-first generation zero, making the encrypted
   signed `VaultInitialize` event the first repository commit and audit head.
 - `audit enable` is an idempotent no-write success on new vaults while the

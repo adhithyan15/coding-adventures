@@ -18,8 +18,9 @@ The driver composes the existing storage-neutral application over separately
 permission-checked application-state and encrypted-object filesystem roots.
 It acquires the persistent cross-process writer lock before loading
 configuration or constructing either backend. Configuration is parsed by the
-closed VLT-PM07 codec, and the configured filesystem location must exactly
-match the prepared platform object root before storage is touched.
+closed VLT-PM07 codec. The first vault's filesystem location must exactly match
+the prepared platform object root; named targets use only their
+locator-derived child roots before storage is touched.
 
 Initialization collects a new passphrase only through the injected fixed
 secret-input boundary, fills the complete generation-zero randomness block
@@ -31,6 +32,16 @@ owner journal before publishing the configuration that makes the random
 locator discoverable. A restart with a prepared journal collects the existing
 passphrase and resumes the exact journal without generating new identities,
 trace IDs, audit events, or ciphertext.
+
+`vault create NAME` repeats that audit-first ceremony for a separately keyed
+empty target. It durably installs the exact encrypted creation trace before a
+configuration compare-exchange makes the locator discoverable, allocates a
+distinct filesystem-adapter namespace, preserves the existing default, and
+resumes an exact prepared target after a crash without new entropy. A leading
+`--vault NAME` selects any configured target for one command without mutating
+configuration. Authenticated operations therefore advance only the selected
+vault's independent audit chain, while portable import and restore verification
+can target a new vault without overwriting or switching the source.
 
 Status and plain doctor do not prompt or unlock. Authenticated audit and doctor
 commands collect the existing passphrase through the controlling terminal,

@@ -9,23 +9,24 @@ The current command surface is:
 
 ```text
 vault-pm init [--vault NAME] [--storage NAME]
-vault-pm status [--json]
-vault-pm audit enable
-vault-pm audit verify
-vault-pm audit list
-vault-pm audit show TRACE
-vault-pm doctor [--unlock]
-vault-pm export FILE
-vault-pm import FILE
-vault-pm restore verify FILE
-vault-pm item add login
-vault-pm item add secure-note
-vault-pm item edit ITEM
-vault-pm item delete ITEM
-vault-pm item list
-vault-pm item show ITEM
-vault-pm history list ITEM
-vault-pm history restore ITEM REVISION
+vault-pm vault create NAME
+vault-pm [--vault NAME] status [--json]
+vault-pm [--vault NAME] audit enable
+vault-pm [--vault NAME] audit verify
+vault-pm [--vault NAME] audit list
+vault-pm [--vault NAME] audit show TRACE
+vault-pm [--vault NAME] doctor [--unlock]
+vault-pm [--vault NAME] export FILE
+vault-pm [--vault NAME] import FILE
+vault-pm [--vault NAME] restore verify FILE
+vault-pm [--vault NAME] item add login
+vault-pm [--vault NAME] item add secure-note
+vault-pm [--vault NAME] item edit ITEM
+vault-pm [--vault NAME] item delete ITEM
+vault-pm [--vault NAME] item list
+vault-pm [--vault NAME] item show ITEM
+vault-pm [--vault NAME] history list ITEM
+vault-pm [--vault NAME] history restore ITEM REVISION
 ```
 
 `init` and every authenticated command require a controlling terminal even
@@ -40,11 +41,11 @@ a later process, verify that failure event from another process, inspect the
 same verified history in newest-first order, select the failed edit by its
 canonical trace in another process, verify both history accesses became
 durable, produce a separately passphrase-encrypted portable artifact through
-two hidden prompts, initialize and audit-enable an independent application
-root, import the artifact through another hidden prompt, restart into redacted
-restored items, independently reopen the target again for audited semantic
-verification, and inspect both isolated filesystem trees for plaintext secret
-bytes.
+two hidden prompts, create a separately keyed named target in the same profile,
+select it without changing the source default, import the artifact through
+another hidden prompt, restart into redacted restored items, independently
+reopen the target again for audited semantic verification, reopen the untouched
+source, and inspect the shared profile tree for plaintext secret bytes.
 
 ## Verification
 
