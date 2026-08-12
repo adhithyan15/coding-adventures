@@ -29,14 +29,14 @@ variety: standard-colloquial
 reviews_of: [ML-C37-mookku, ML-C33-vaayikkuka]
 ---
 
-# വായ് (vāy) — "mouth," the word Chapter 33 named only to rule out
+# വായ് (vāy) — "mouth," the word an earlier lesson named only to rule out
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C33-VAAYIKKUKA-01] -->
 
-[PAUSE 2s] *Ñān malayāḷaṁ vāyikkunnu*, "I read Malayalam" — and Chapter 33
-told you the obvious-looking mouth-word inside it wasn't really there. Here,
-at last, is the real one.
+[PAUSE 2s] *Ñān malayāḷaṁ vāyikkunnu*, "I read Malayalam" — and an earlier
+lesson told you the obvious-looking mouth-word inside it wasn't really
+there. Here, at last, is the real one.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[ML-CONCEPT-C37-VAAY-01]; assesses=[] -->
@@ -55,7 +55,8 @@ softening *chevi* showed you, that turns up across the family's native
 vocabulary. Telugu's everyday word, **నోరు** (*nōru*), is a different root
 altogether.
 
-Chapter 33 already put **വായ്** on the table once — as the wrong answer.
+An earlier lesson already put **വായ്** on the table once — as the wrong
+answer.
 **വായിക്കുക** (*vāyikkuka*, "to read") looks built on this very word, and
 Gundert's dictionary says it isn't: the trail runs instead to Sanskrit
 **वच्** (*vac*), "to speak." That lesson named *vāy* only to set it aside.
@@ -75,8 +76,8 @@ This is the word itself, finally taught for what it actually means.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C37-VAAY-01, ML-CONCEPT-C37-VAAY-02, ML-CONCEPT-C37-MOOKKU-01, ML-CONCEPT-C37-MOOKKU-02, ML-CONCEPT-C37-CHEVI-01, ML-CONCEPT-C37-CHEVI-02, ML-CONCEPT-C37-KANNU-01, ML-CONCEPT-C33-VAAYIKKUKA-01, ML-CONCEPT-C33-VAAYIKKUKA-02] -->
 
-[PAUSE 3s] Say "my mouth." (*Ente vāy*.) Which chapter already mentioned
-*vāy*, and why? (**Chapter 33**, to rule out that *vāyikkuka*, "to read," is
-built on it.) What does Kannada's *bāyi* show? (**The family's *v*-to-*b*
+[PAUSE 3s] Say "my mouth." (*Ente vāy*.) Which earlier lesson already
+mentioned *vāy*, and why? (**The *vāyikkuka* lesson**, to rule out that
+*vāyikkuka*, "to read," is built on it.) What does Kannada's *bāyi* show? (**The family's *v*-to-*b*
 shift.**) Name all four face words. (*Kaṇṇŭ*, eye; *cevi*, ear; *mūkkŭ*,
 nose; *vāy*, mouth.)

@@ -55,8 +55,9 @@ for: **നെഞ്ചിടിപ്പ്** (*nenchiṭippŭ*), a heart poundi
 excitement, literally "chest-beat."
 
 Two hearts, then: one Sanskrit and formal, one native and physical. That is
-the same selective-borrowing pattern Chapter 2 already showed with
-**സന്തോഷം** beside **നന്ദി** — Malayalam does not simply prefer Sanskrit or
+the same selective-borrowing pattern **സന്തോഷം** beside **നന്ദി** already
+showed, back near the start of this book — Malayalam does not simply
+prefer Sanskrit or
 prefer native; it keeps both, and lets register decide which one a given
 sentence reaches for. **തല** and **കൈ**, this stretch's first two body
 words, were native throughout; **ഹൃദയം** and **നെഞ്ച്** show the same body
@@ -79,4 +80,5 @@ carrying one word of each kind, side by side.
 heart-words is native, and which is borrowed? (**നെഞ്ച്** native; **ഹൃദയം**
 Sanskrit.) What does *nenchiṭippŭ* mean, literally? (**"Chest-beat"** — a
 pounding heart.) Which earlier pair showed this same native-plus-Sanskrit
-side-by-side pattern? (**സന്തോഷം beside നന്ദി**, Chapter 2.)
+side-by-side pattern? (**സന്തോഷം beside നന്ദി**, back near the start of
+this book.)

@@ -34,8 +34,9 @@ reviews_of: [TE-C36-kuuturu, TE-C13-sharira-bhagalu]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C36-KUUTURU-01, TE-LEX-C13-SHARIRA-BHAGALU-01] -->
 
-[PAUSE 2s] Chapter 13 gave you two body words, head and hand. This chapter
-gives you four more — starting with one this book has secretly used before.
+[PAUSE 2s] Head and hand, taught earlier, gave you your first two body
+words. This chapter gives you four more — starting with one this book has
+secretly used before.
 
 ## You'll want to know: కన్ను
 <!-- hl-knowledge: introduces=[TE-LEX-C37-KANNU-01]; assesses=[TE-LEX-C13-SHARIRA-BHAGALU-01] -->
@@ -44,21 +45,21 @@ gives you four more — starting with one this book has secretly used before.
 
 > **నా కన్ను.** — *nā kannu.* — "My eye."
 
-Three body words now, with two from Chapter 13: *tala*, *ceyyi*, *kannu* —
-and Chapter 36's *koḍuku* still fresh, one lesson back.
+Three body words now, with two from that earlier lesson: *tala*, *ceyyi*,
+*kannu* — and *koḍuku*, "son," still fresh, one lesson back.
 
 ## The word, taken apart - the word this book used before teaching it
 <!-- hl-knowledge: introduces=[TE-ETYMON-C37-KANNU-02]; assesses=[] -->
 
-**కన్ను** already appeared in Chapter 32, inside the etymology note for
-**చూడు** — as proof that Tamil *pār*, Kannada *nōḍu*, Malayalam *kāṇuka*, and
+**కన్ను** already appeared earlier, inside the *cūḍu* lesson's own etymology
+note for **చూడు** — as proof that Tamil *pār*, Kannada *nōḍu*, Malayalam *kāṇuka*, and
 Telugu *cūḍu*, four completely unrelated everyday see-verbs, all sit beside
 the very same ancient eye-word: Telugu *kannu*, Tamil *kaṇ*, Kannada *kaṇṇu*,
 Malayalam *kaṇṇ*. That chapter named the word without ever teaching it. This
 lesson closes the loop.
 
-Like Chapter 13's *tala* ("head") and *ceyyi* ("hand," a cognate reshaped
-almost past recognition), *kannu* is native Dravidian, and here the whole
+Like *tala* ("head") and *ceyyi* ("hand," a cognate reshaped almost past
+recognition) before it, *kannu* is native Dravidian, and here the whole
 family agrees on it plainly — no reshaping required.
 
 ## Guided Practice
@@ -73,8 +74,8 @@ family agrees on it plainly — no reshaping required.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C37-KANNU-01, TE-ETYMON-C37-KANNU-02, TE-LEX-C36-KODUKU-01, TE-LEX-C36-KUUTURU-01, TE-ETYMON-C36-KUUTURU-02, TE-LEX-C13-SHARIRA-BHAGALU-01] -->
 
-[PAUSE 3s] Say "my eye." (*Nā kannu*.) Which earlier chapter already used
-this exact word, and what did it prove? (**Chapter 32's** *cūḍu* note — that
-all four Dravidian sisters share one eye-root behind four unrelated
-see-verbs.) Name Chapter 13's two body words. (**తల**, *tala*, and
-**చెయ్యి**, *ceyyi*.)
+[PAUSE 3s] Say "my eye." (*Nā kannu*.) Which earlier lesson already used
+this exact word, and what did it prove? (**The *cūḍu* lesson's** etymology
+note — that all four Dravidian sisters share one eye-root behind four
+unrelated see-verbs.) Name the two body words from that earlier lesson.
+(**తల**, *tala*, and **చెయ్యి**, *ceyyi*.)

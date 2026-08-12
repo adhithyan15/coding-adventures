@@ -34,8 +34,8 @@ reviews_of: [FA-C09-chay, FA-C09-nan, FA-C09-ab, FA-C02-esm-e-man]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-CHAY, FA-PHRASE-LOTFAN, FA-GRAMMAR-EZAFE-OWNER] -->
 
-[PAUSE 2s] Say **چای، لطفاً**. Then recall the small linking *-e* Chapter 2
-taught inside **اسمِ من** — you will need it again in a moment.
+[PAUSE 2s] Say **چای، لطفاً**. Then recall the small linking *-e* the first
+sentence taught inside **اسمِ من** — you will need it again in a moment.
 
 ## You'll want to know first — one word
 <!-- hl-knowledge: introduces=[FA-LEX-KELID]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 39,
   "title": "Tea and Milk, Two Roads",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:d451cc87fd725a8c",
+  "sourceHash": "fnv1a64:89b83c4589275a67",
   "lessons": [
     {
       "id": "TE-C39-tii",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:66915f058e786773",
+      "sourceHash": "fnv1a64:d81817b985e17547",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Two ways to say heart, done. Chapter 8's దయచేసి — please — is about to earn its keep again, in front of the drink you'd politely ask for first."
+              "text": "Two ways to say heart, done. దయచేసి — please, taught earlier — is about to earn its keep again, in front of the drink you'd politely ask for first."
             }
           ]
         },
@@ -54,7 +54,7 @@
             },
             {
               "kind": "speech",
-              "text": "Day to day, Telugu politeness usually rides on the -అండి verb ending Chapter 8 already named as the everyday carrier — but a bare request for a drink, with no verb at all, is exactly where దయచేసి itself does the work instead."
+              "text": "Day to day, Telugu politeness usually rides on the -అండి verb ending already named as the everyday carrier — but a bare request for a drink, with no verb at all, is exactly where దయచేసి itself does the work instead."
             }
           ]
         },

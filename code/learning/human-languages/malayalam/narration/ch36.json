@@ -4,7 +4,7 @@
   "chapter": 36,
   "title": "Child, Son, Daughter",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:f5f70e8053923a9b",
+  "sourceHash": "fnv1a64:014db59c41aead44",
   "lessons": [
     {
       "id": "ML-C36-kutti",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:53e7b0ab98eb29e4",
+      "sourceHash": "fnv1a64:fde1b043470849f6",
       "notice": null,
       "blocks": [
         {
@@ -65,7 +65,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "കുട്ടി is native Dravidian, matching Tamil's குட்டி (kuṭṭi) closely. Both languages let the same word cover two things: a human child, and the young of an animal — a പൂച്ചക്കുട്ടി (pūccakkuṭṭi) is a kitten, built on Chapter 21's പൂച്ച, \"cat,\" the same way kuṭṭi attaches to any animal name for its young. English does something similar with \"kid,\" which covers both a child and a baby goat — one small word, carrying the same double duty in two unrelated language families."
+              "text": "കുട്ടി is native Dravidian, matching Tamil's குட்டி (kuṭṭi) closely. Both languages let the same word cover two things: a human child, and the young of an animal — a പൂച്ചക്കുട്ടി (pūccakkuṭṭi) is a kitten, built on പൂച്ച, \"cat,\" met earlier in this book, the same way kuṭṭi attaches to any animal name for its young. English does something similar with \"kid,\" which covers both a child and a baby goat — one small word, carrying the same double duty in two unrelated language families."
             }
           ]
         },
@@ -110,11 +110,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "Chapter 12's six people-words, and the group word — \"acchan, amma … kuṭumbaṁ\"",
+              "instruction": "the six family people-words, and the group word — \"acchan, amma … kuṭumbaṁ\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: Chapter 12's six people-words, and the group word — \"acchan, amma … kuṭumbaṁ\"]"
+              "source": "[YOU SAY: the six family people-words, and the group word — \"acchan, amma … kuṭumbaṁ\"]"
             }
           ]
         },
@@ -131,7 +131,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"this is my child.\" (Ithu ente kuṭṭiyāṇŭ.) What two things can kuṭṭi mean? (A human child, or the young of an animal — like pūccakkuṭṭi, kitten.) Which English word carries the very same double duty? (Kid.) Name Chapter 12's six family people-words once more, and the group word none of them supplied. (Acchan, amma, cēṭṭan, aniyan, cēcci, aniyatti — and kuṭumbaṁ.)"
+              "text": "Say \"this is my child.\" (Ithu ente kuṭṭiyāṇŭ.) What two things can kuṭṭi mean? (A human child, or the young of an animal — like pūccakkuṭṭi, kitten.) Which English word carries the very same double duty? (Kid.) Name the six family people-words once more, and the group word none of them supplied. (Acchan, amma, cēṭṭan, aniyan, cēcci, aniyatti — and kuṭumbaṁ.)"
             }
           ]
         }
@@ -150,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3ebb239f66d79fe4",
+      "sourceHash": "fnv1a64:8f74ebcffed0c792",
       "notice": null,
       "blocks": [
         {
@@ -192,7 +192,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "മകൻ continues Proto-Dravidian makan, \"son.\" Tamil keeps almost the identical shape, மகன் (makan) — same consonants, same vowels, same final -n. Kannada moved further: the -k- between vowels softened to -g-, and the final -n dropped, giving ಮಗ (maga). So on this word it is Malayalam and Tamil that hold the older, more conservative shape, and Kannada that innovated — the same closeness Chapter 1 already found in nandi, athe, illa and śari, this time in a family word rather than a greeting."
+              "text": "മകൻ continues Proto-Dravidian makan, \"son.\" Tamil keeps almost the identical shape, மகன் (makan) — same consonants, same vowels, same final -n. Kannada moved further: the -k- between vowels softened to -g-, and the final -n dropped, giving ಮಗ (maga). So on this word it is Malayalam and Tamil that hold the older, more conservative shape, and Kannada that innovated — the same closeness the very first greetings already showed in nandi, athe, illa and śari, this time in a family word rather than a greeting."
             }
           ]
         },
@@ -277,7 +277,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:adb067f106ff1f6a",
+      "sourceHash": "fnv1a64:21a25656345c2de8",
       "notice": null,
       "blocks": [
         {
@@ -323,7 +323,7 @@
             },
             {
               "kind": "speech",
-              "text": "Now that you have a son and a daughter, Chapter 19's question comes back with someone new to ask it about: ninṟe makanŭ ethra vayassuṇṭŭ? — \"how old is your son?\" — the same dative-subject-plus-uṇṭŭ shape, unchanged."
+              "text": "Now that you have a son and a daughter, the age question comes back with someone new to ask it about: ninṟe makanŭ ethra vayassuṇṭŭ? — \"how old is your son?\" — the same dative-subject-plus-uṇṭŭ shape, unchanged."
             }
           ]
         },
@@ -398,7 +398,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"this is my daughter.\" (Ithu ente makaḷāṇŭ.) How closely does Tamil match this word, compared with makan? (Even closer — makaḷ is identical sound for sound, where makan only nearly matched.) Ask \"how old is your son?\" using Chapter 19's question shape. (Ninṟe makanŭ ethra vayassuṇṭŭ? — \"to your son, how much age exists?\") What is the general word for a child, before makan or makaḷ? (കുട്ടി, kuṭṭi.)"
+              "text": "Say \"this is my daughter.\" (Ithu ente makaḷāṇŭ.) How closely does Tamil match this word, compared with makan? (Even closer — makaḷ is identical sound for sound, where makan only nearly matched.) Ask \"how old is your son?\" using the age question's shape. (Ninṟe makanŭ ethra vayassuṇṭŭ? — \"to your son, how much age exists?\") What is the general word for a child, before makan or makaḷ? (കുട്ടി, kuṭṭi.)"
             }
           ]
         }

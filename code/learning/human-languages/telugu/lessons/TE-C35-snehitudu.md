@@ -57,7 +57,7 @@ catalogued in the Dravidian Etymological Dictionary alongside the related
 forms *neyyamu*, *neyyami*, and *neyyari* — all clustered around friendship,
 love, and tenderness. *Nēstaṁ* is real and still heard, but the everyday
 choice for "friend" is the borrowed one, *snēhituḍu* — the same pattern
-Chapter 34 found with *sahāyaṁ cēyu*, where the everyday verb is built on a
+already found with *sahāyaṁ cēyu*, where the everyday verb is built on a
 Sanskrit noun too.
 
 ## Guided Practice

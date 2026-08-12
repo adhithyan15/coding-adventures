@@ -4,7 +4,7 @@
   "chapter": 37,
   "title": "Face Words",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:df1cd201c376ec9f",
+  "sourceHash": "fnv1a64:799dc96cb57614a6",
   "lessons": [
     {
       "id": "ML-C37-kannu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e08f403eaa1af3db",
+      "sourceHash": "fnv1a64:2606586d13f68ed9",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "തല, കൈ — Chapter 13's head and hand, and nothing more of the body since, twenty-four chapters ago. This chapter adds four words to that short list, starting above the nose."
+              "text": "തല, കൈ — head and hand, taught long ago, and nothing more of the body since, twenty-four chapters ago. This chapter adds four words to that short list, starting above the nose."
             }
           ]
         },
@@ -61,7 +61,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "കണ്ണ് (kaṇṇŭ) continues Proto-Dravidian kaṇ, \"eye.\" Tamil கண் (kaṇ) sits right beside it; Telugu కన్ను (kannu) and Kannada ಕಣ್ಣು (kaṇṇu) sit closer still, both almost identical to Malayalam's own form. Four languages that otherwise pull apart on nearly everything — tense marking, half their everyday vocabulary, even the shape of their scripts — agree almost completely on this one word. It joins തല and കൈ from Chapter 13 as the third body word, and the first to show this exact, near-total four-way match."
+              "text": "കണ്ണ് (kaṇṇŭ) continues Proto-Dravidian kaṇ, \"eye.\" Tamil கண் (kaṇ) sits right beside it; Telugu కన్ను (kannu) and Kannada ಕಣ್ಣು (kaṇṇu) sit closer still, both almost identical to Malayalam's own form. Four languages that otherwise pull apart on nearly everything — tense marking, half their everyday vocabulary, even the shape of their scripts — agree almost completely on this one word. It joins തല and കൈ, met earlier, as the third body word, and the first to show this exact, near-total four-way match."
             }
           ]
         },
@@ -390,7 +390,7 @@
     {
       "id": "ML-C37-vaay",
       "sequence": 870,
-      "title": "വായ് (vāy) — \"mouth,\" the word Chapter 33 named only to rule out",
+      "title": "വായ് (vāy) — \"mouth,\" the word an earlier lesson named only to rule out",
       "headword": "വായ്",
       "romanization": "vāy",
       "gloss": "mouth — the word Chapter 33 already named, only to rule it out",
@@ -400,7 +400,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:4da9773663245cfd",
+      "sourceHash": "fnv1a64:e62438e27a72e689",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -423,7 +423,7 @@
             },
             {
               "kind": "speech",
-              "text": "Ñān malayāḷaṁ vāyikkunnu, \"I read Malayalam\" — and Chapter 33 told you the obvious-looking mouth-word inside it wasn't really there. Here, at last, is the real one."
+              "text": "Ñān malayāḷaṁ vāyikkunnu, \"I read Malayalam\" — and an earlier lesson told you the obvious-looking mouth-word inside it wasn't really there. Here, at last, is the real one."
             }
           ]
         },
@@ -453,7 +453,7 @@
             },
             {
               "kind": "speech",
-              "text": "Chapter 33 already put വായ് on the table once — as the wrong answer. വായിക്കുക (vāyikkuka, \"to read\") looks built on this very word, and Gundert's dictionary says it isn't: the trail runs instead to Sanskrit वच् (vac), \"to speak.\" That lesson named vāy only to set it aside. This is the word itself, finally taught for what it actually means."
+              "text": "An earlier lesson already put വായ് on the table once — as the wrong answer. വായിക്കുക (vāyikkuka, \"to read\") looks built on this very word, and Gundert's dictionary says it isn't: the trail runs instead to Sanskrit वच् (vac), \"to speak.\" That lesson named vāy only to set it aside. This is the word itself, finally taught for what it actually means."
             }
           ]
         },
@@ -519,7 +519,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"my mouth.\" (Ente vāy.) Which chapter already mentioned vāy, and why? (Chapter 33, to rule out that vāyikkuka, \"to read,\" is built on it.) What does Kannada's bāyi show? (The family's v-to-b shift.) Name all four face words. (Kaṇṇŭ, eye; cevi, ear; mūkkŭ, nose; vāy, mouth.)"
+              "text": "Say \"my mouth.\" (Ente vāy.) Which earlier lesson already mentioned vāy, and why? (The vāyikkuka lesson, to rule out that vāyikkuka, \"to read,\" is built on it.) What does Kannada's bāyi show? (The family's v-to-b shift.) Name all four face words. (Kaṇṇŭ, eye; cevi, ear; mūkkŭ, nose; vāy, mouth.)"
             }
           ]
         }

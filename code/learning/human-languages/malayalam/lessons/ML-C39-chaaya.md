@@ -35,7 +35,7 @@ reviews_of: [ML-C38-nenchu, ML-C08-dayavayi, ML-C38-hrudayam, ML-C06-dative-ikku
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C08-DAYAVAYI-01] -->
 
 [PAUSE 2s] Two hearts done. Now the drink you would politely ask for first,
-in any Kerala home — and a chance to put Chapter 8's **ദയവായി** back to
+in any Kerala home — and a chance to put the polite **ദയവായി** back to
 work.
 
 ## You'll want to know
@@ -45,8 +45,8 @@ work.
 
 > **ദയവായി ഒരു ചായ.** — *dayavāyi oru chāya.* — "A tea, please."
 
-*Dayavāyi* has been yours since Chapter 8; *oru*, "a/one," you have already
-met attached to *nāḷ* and *maṇi*.
+*Dayavāyi* has been yours since early in this book; *oru*, "a/one," you
+have already met attached to *nāḷ* and *maṇi*.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[ML-CONCEPT-C39-CHAAYA-02]; assesses=[ML-CONCEPT-C08-DAYAVAYI-02] -->
@@ -62,7 +62,7 @@ by land, tea by sea.
 ## Grammar Lens: the two hearts, and the spine node so far
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C38-HRUDAYAM-01, ML-CONCEPT-C38-HRUDAYAM-02, ML-CONCEPT-C38-NENCHU-01, ML-CONCEPT-C38-NENCHU-02, ML-CONCEPT-C06-DATIVE-IKKU-01, ML-CONCEPT-C06-DATIVE-IKKU-02, ML-CONCEPT-C06-DATIVE-SUBJECT-03, ML-CONCEPT-C09-KSHAMIKKANAM-01, ML-CONCEPT-C09-KSHAMIKKANAM-02, ML-CONCEPT-C09-KSHAMIKKANAM-03] -->
 
-**ദയവായി ഒരു ചായ** leans on the very dative Chapter 6 named,
+**ദയവായി ഒരു ചായ** leans on the very dative already named,
 **‑ikku/‑inu** — the same suffix beside Tamil's *‑ukku*, Telugu's *‑ku*,
 and Kannada's *‑ge*. This chapter carries both halves of the spine node
 **ദയവായി** and **ഹൃദയം**/**നെഞ്ച്** already opened: asking politely, and —
@@ -86,6 +86,6 @@ if you ask for the wrong thing — repairing with **ക്ഷമിക്കണ�
 languages *chāya* passed through, in order. (**Chinese**, then **Persian**,
 then **Hindi-Urdu**, into Malayalam.) Why does English say "tea" instead of
 "chai"? (**It arrived by sea**, carrying a different Chinese form.) Which
-Chapter 6 suffix does *dayavāyi ... enikku* share with Tamil, Telugu and
+dative suffix does *dayavāyi ... enikku* share with Tamil, Telugu and
 Kannada? (**The dative** — *‑ikku/‑ukku/‑ku/‑ge*.) What is the repair half
 of this spine node's word pair? (**ക്ഷമിക്കണം**, sorry.)

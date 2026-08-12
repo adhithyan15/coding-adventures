@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "Mother, Father, Brother, Daughter",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:2ccd4df1358c8385",
+  "sourceHash": "fnv1a64:6ccbfe0d3e71fe28",
   "lessons": [
     {
       "id": "FA-C10-madar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:60a7aff74bbf9445",
+      "sourceHash": "fnv1a64:72db23219bd79c11",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Chapter 6 traced بودن back to English be, and in passing named four plainest inherited cousins the track had not yet taught as their own lessons: مادر (mâdar), پدر (pedar), برادر (barâdar), دختر (dokhtar). This chapter and the next finally give each one its own lesson, starting here."
+              "text": "The بودن lesson traced it back to English be, and in passing named four plainest inherited cousins the track had not yet taught as their own lessons: مادر (mâdar), پدر (pedar), برادر (barâdar), دختر (dokhtar). This chapter and the next finally give each one its own lesson, starting here."
             }
           ]
         },
@@ -100,11 +100,11 @@
             {
               "kind": "prompt",
               "action": "NAME",
-              "instruction": "which four family words Chapter 6 promised, and which one this lesson delivers",
+              "instruction": "which four family words the بودن lesson promised, and which one this lesson delivers",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU NAME: which four family words Chapter 6 promised, and which one this lesson delivers]"
+              "source": "[YOU NAME: which four family words the **بودن** lesson promised, and which one this lesson delivers]"
             }
           ]
         },
@@ -121,7 +121,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does مادر (mâdar) mean? (Mother.) Which chapter first named it as an English cousin, without teaching it as its own word? (Chapter 6, inside the بودن lesson.) Which three family words does the track still owe you? (پدر (pedar), برادر (barâdar), دختر (dokhtar).)"
+              "text": "What does مادر (mâdar) mean? (Mother.) Which lesson first named it as an English cousin, without teaching it as its own word? (The بودن lesson, in passing.) Which three family words does the track still owe you? (پدر (pedar), برادر (barâdar), دختر (dokhtar).)"
             },
             {
               "kind": "speech",
@@ -308,7 +308,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:70a250db93c975dd",
+      "sourceHash": "fnv1a64:ed9d874f4126baf1",
       "notice": null,
       "blocks": [
         {
@@ -324,7 +324,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say مادر (mâdar) and پدر (pedar). One family word from Chapter 6's list is still owed to you, and it is the sibling one."
+              "text": "Say مادر (mâdar) and پدر (pedar). One family word from the بودن lesson's list is still owed to you, and it is the sibling one."
             }
           ]
         },
@@ -389,11 +389,11 @@
             {
               "kind": "prompt",
               "action": "NAME",
-              "instruction": "the one word Chapter 6 still owes you",
+              "instruction": "the one word the بودن lesson still owes you",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU NAME: the one word Chapter 6 still owes you]"
+              "source": "[YOU NAME: the one word the **بودن** lesson still owes you]"
             }
           ]
         },
@@ -410,7 +410,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does برادر (barâdar) mean? (Brother.) Which English word is it the direct cousin of? (Brother.) Which family word from Chapter 6's list is still owed? (دختر (dokhtar), daughter.)"
+              "text": "What does برادر (barâdar) mean? (Brother.) Which English word is it the direct cousin of? (Brother.) Which family word from the بودن lesson's list is still owed? (دختر (dokhtar), daughter.)"
             },
             {
               "kind": "speech",
@@ -443,7 +443,7 @@
     {
       "id": "FA-C10-dokhtar",
       "sequence": 410,
-      "title": "دختر (dokhtar) — daughter, and the family Chapter 6 promised is complete",
+      "title": "دختر (dokhtar) — daughter, and the family the بودن lesson promised is complete",
       "headword": "دختر",
       "romanization": "dokhtar",
       "gloss": "daughter — Chapter 6's last promised cousin, and the family closes",
@@ -453,7 +453,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:23f89be6d123733c",
+      "sourceHash": "fnv1a64:b858b653efb49cac",
       "notice": null,
       "blocks": [
         {
@@ -506,11 +506,11 @@
         {
           "index": 3,
           "type": "etymology",
-          "title": "The word, taken apart — the family Chapter 6 promised",
+          "title": "The word, taken apart — the family the بودن lesson promised",
           "segments": [
             {
               "kind": "speech",
-              "text": "دختر (dokhtar) continues Middle Persian duxtar, from Indo-European dʰugh₂tḗr — the direct cousin of English daughter and German Tochter. Chapter 6 named four inherited family cousins in passing — مادر (mâdar), پدر (pedar), برادر (barâdar), دختر (dokhtar) — while it was really teaching بودن. This chapter and the last have now taught all four as full lessons: a promise made early, kept three chapters later."
+              "text": "دختر (dokhtar) continues Middle Persian duxtar, from Indo-European dʰugh₂tḗr — the direct cousin of English daughter and German Tochter. An earlier lesson named four inherited family cousins in passing — مادر (mâdar), پدر (pedar), برادر (barâdar), دختر (dokhtar) — while it was really teaching بودن. This chapter and the last have now taught all four as full lessons: a promise made early, kept three chapters later."
             }
           ]
         },
@@ -579,7 +579,7 @@
             },
             {
               "kind": "speech",
-              "text": "Name all four family words this chapter and the last have taught, in order. (Mâdar, pedar, barâdar, dokhtar.) Say “my daughter.” (Dokhtar-e man.) Which earlier sentence used the same ezafe? (اسمِ من... است, from Chapter 2.)"
+              "text": "Name all four family words this chapter and the last have taught, in order. (Mâdar, pedar, barâdar, dokhtar.) Say “my daughter.” (Dokhtar-e man.) Which earlier sentence used the same ezafe? (اسمِ من... است, the very first sentence this track built.)"
             },
             {
               "kind": "speech",

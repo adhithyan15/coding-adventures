@@ -7,14 +7,14 @@ Lesson 1 of 4.
 
 Warm-up.
 [pause 2 seconds]
-തല, കൈ — Chapter 13's head and hand, and nothing more of the body since, twenty-four chapters ago. This chapter adds four words to that short list, starting above the nose.
+തല, കൈ — head and hand, taught long ago, and nothing more of the body since, twenty-four chapters ago. This chapter adds four words to that short list, starting above the nose.
 
 You'll want to know.
 കണ്ണ് — kaṇṇŭ — eye.
 എന്റെ കണ്ണ്. — ente kaṇṇŭ. — "My eye."
 
 The word, taken apart.
-കണ്ണ് (kaṇṇŭ) continues Proto-Dravidian kaṇ, "eye." Tamil கண் (kaṇ) sits right beside it; Telugu కన్ను (kannu) and Kannada ಕಣ್ಣು (kaṇṇu) sit closer still, both almost identical to Malayalam's own form. Four languages that otherwise pull apart on nearly everything — tense marking, half their everyday vocabulary, even the shape of their scripts — agree almost completely on this one word. It joins തല and കൈ from Chapter 13 as the third body word, and the first to show this exact, near-total four-way match.
+കണ്ണ് (kaṇṇŭ) continues Proto-Dravidian kaṇ, "eye." Tamil கண் (kaṇ) sits right beside it; Telugu కన్ను (kannu) and Kannada ಕಣ್ಣು (kaṇṇu) sit closer still, both almost identical to Malayalam's own form. Four languages that otherwise pull apart on nearly everything — tense marking, half their everyday vocabulary, even the shape of their scripts — agree almost completely on this one word. It joins തല and കൈ, met earlier, as the third body word, and the first to show this exact, near-total four-way match.
 
 Guided Practice.
 [pause 1 second]
@@ -93,13 +93,13 @@ Say "my nose." (Ente mūkkŭ.) What does Kannada's ಮೂಗു (mūgu) show, th
 
 
 Lesson 4 of 4.
-വായ് (vāy) — "mouth," the word Chapter 33 named only to rule out.
+വായ് (vāy) — "mouth," the word an earlier lesson named only to rule out.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
 
 Warm-up.
 [pause 2 seconds]
-Ñān malayāḷaṁ vāyikkunnu, "I read Malayalam" — and Chapter 33 told you the obvious-looking mouth-word inside it wasn't really there. Here, at last, is the real one.
+Ñān malayāḷaṁ vāyikkunnu, "I read Malayalam" — and an earlier lesson told you the obvious-looking mouth-word inside it wasn't really there. Here, at last, is the real one.
 
 You'll want to know.
 വായ് — vāy — mouth.
@@ -107,7 +107,7 @@ You'll want to know.
 
 The word, taken apart.
 വായ് is native Dravidian, matching Tamil வாய் (vāy) almost exactly. Kannada shows the family's own v‑to‑b shift here, ಬಾಯಿ (bāyi) — the same shift, in reverse direction from the k‑to‑c softening chevi showed you, that turns up across the family's native vocabulary. Telugu's everyday word, నోరు (nōru), is a different root altogether.
-Chapter 33 already put വായ് on the table once — as the wrong answer. വായിക്കുക (vāyikkuka, "to read") looks built on this very word, and Gundert's dictionary says it isn't: the trail runs instead to Sanskrit वच् (vac), "to speak." That lesson named vāy only to set it aside. This is the word itself, finally taught for what it actually means.
+An earlier lesson already put വായ് on the table once — as the wrong answer. വായിക്കുക (vāyikkuka, "to read") looks built on this very word, and Gundert's dictionary says it isn't: the trail runs instead to Sanskrit वच् (vac), "to speak." That lesson named vāy only to set it aside. This is the word itself, finally taught for what it actually means.
 
 Guided Practice.
 [pause 1 second]
@@ -122,4 +122,4 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Say "my mouth." (Ente vāy.) Which chapter already mentioned vāy, and why? (Chapter 33, to rule out that vāyikkuka, "to read," is built on it.) What does Kannada's bāyi show? (The family's v-to-b shift.) Name all four face words. (Kaṇṇŭ, eye; cevi, ear; mūkkŭ, nose; vāy, mouth.)
+Say "my mouth." (Ente vāy.) Which earlier lesson already mentioned vāy, and why? (The vāyikkuka lesson, to rule out that vāyikkuka, "to read," is built on it.) What does Kannada's bāyi show? (The family's v-to-b shift.) Name all four face words. (Kaṇṇŭ, eye; cevi, ear; mūkkŭ, nose; vāy, mouth.)

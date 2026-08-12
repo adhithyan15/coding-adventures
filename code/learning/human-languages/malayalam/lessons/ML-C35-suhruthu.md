@@ -52,8 +52,8 @@ The everyday spoken alternative is **കൂട്ടുകാരൻ** (*kūṭ�
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 **ഹൃ** is **ഹ** (*ha*) carrying the **ൃ** sign — the short vocalic *r*
-inherited straight from Sanskrit, the same vowel that opened Chapter 16's
-**വൃശ്ചികം**. Malayalam is the only one of the four literary Dravidian
+inherited straight from Sanskrit, the same vowel that opened **വൃശ്ചികം**
+several chapters back. Malayalam is the only one of the four literary Dravidian
 scripts that still writes it as a distinct vowel sign rather than
 respelling it away.
 
@@ -72,9 +72,10 @@ Everyday speech reaches just as often for **കൂട്ടുകാരൻ/ക�
 borrowed, from Sanskrit **कार** (*kāra*, "maker, doer") fused onto a
 Dravidian personal ending — so even Malayalam's more casual, native-rooted
 word for "friend" leans on a Sanskrit-derived ending to finish the job.
-Selective borrowing, as Chapter 2's *santōṣaṁ* already showed, does not
-always mean choosing one word wholesale over another; sometimes it means
-splicing a Dravidian root and a Sanskrit ending into a single new word.
+Selective borrowing, as *santōṣaṁ* already showed back near the start of
+this book, does not always mean choosing one word wholesale over another;
+sometimes it means splicing a Dravidian root and a Sanskrit ending into a
+single new word.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C35-SUHRUTHU-01, ML-CONCEPT-C35-SUHRUTHU-02, ML-CONCEPT-C35-KUDUMBAM-01, ML-CONCEPT-C35-KUDUMBAM-02] -->

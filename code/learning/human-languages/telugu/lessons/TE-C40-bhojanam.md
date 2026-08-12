@@ -45,23 +45,23 @@ the meal you would sit down to with both.
 > **భోజనం చేద్దాం.** — *bhōjanaṁ cēddāṁ.* — "Let's eat" (literally, "let's
 > do a meal").
 
-Chapter 32 already used this exact word, in passing, as the polite
+The *tinu* lesson already used this exact word, in passing, as the polite
 counterpart of native **తిండి** — without ever teaching it properly. This
 lesson finally does.
 
-## The word, taken apart - closing a loop Chapter 32 left open
+## The word, taken apart - closing a loop left open earlier
 <!-- hl-knowledge: introduces=[TE-ETYMON-C40-BHOJANAM-02]; assesses=[TE-LEX-C08-DAYACHESI-01, TE-ETYMON-C08-DAYACHESI-02] -->
 
 **భోజనం** is Sanskrit **भोजन**, built on **भुज्** (*bhuj*), "to enjoy, to
 partake of, to eat." It sits above native **తిండి** the same way
 **దయచేసి** sits above the everyday **-అండి** ending: a formal Sanskrit
-layer over a plain Dravidian floor. Chapter 37's **కన్ను** was a word this
+layer over a plain Dravidian floor. **కన్ను**, "eye," was a word this
 book had already used once, unglossed, inside an etymology note — this
-lesson does the very same thing for **భోజనం**, which Chapter 32 named
-without teaching.
+lesson does the very same thing for **భోజనం**, which was named earlier
+without ever being taught.
 
-If a meal runs late, Telugu reaches for Chapter 9's own word: **భోజనం
-ఆలస్యం అయింది, క్షమించండి** — "the meal is late, sorry" — the same
+If a meal runs late, Telugu reaches for the apology word taught earlier:
+**భోజనం ఆలస్యం అయింది, క్షమించండి** — "the meal is late, sorry" — the same
 respectful **-అండి** ending that first met you on **దయచేసి**'s own
 everyday alternative.
 
@@ -77,7 +77,7 @@ everyday alternative.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C40-BHOJANAM-01, TE-ETYMON-C40-BHOJANAM-02, TE-LEX-C39-PAALU-01, TE-ETYMON-C39-PAALU-02, TE-LEX-C32-TINU-01, TE-ETYMON-C32-TINU-02, TE-LEX-C08-DAYACHESI-01, TE-ETYMON-C08-DAYACHESI-02, TE-ETYMON-C09-KSHAMINCHANDI-01, TE-ETYMON-C09-KSHAMINCHANDI-02, TE-PRAGMATICS-C09-KSHAMINCHANDI-03] -->
 
-[PAUSE 3s] Say "let's eat." (*Bhōjanaṁ cēddāṁ*.) Which earlier chapter
-already used *bhōjanaṁ*, without teaching it as its own word? (**Chapter
-32's** *tinu* lesson.) Apologise for a late meal, using Chapter 9's word.
-(*Bhōjanaṁ ālasyaṁ ayindi, kṣamin̄caṇḍi*.)
+[PAUSE 3s] Say "let's eat." (*Bhōjanaṁ cēddāṁ*.) Which earlier lesson
+already used *bhōjanaṁ*, without teaching it as its own word? (**The
+*tinu* lesson.**) Apologise for a late meal, using the word you learned
+earlier. (*Bhōjanaṁ ālasyaṁ ayindi, kṣamin̄caṇḍi*.)

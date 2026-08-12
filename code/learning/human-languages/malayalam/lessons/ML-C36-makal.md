@@ -55,9 +55,9 @@ was already a close match, *makaḷ*/*makaḷ* is the closer one still — two
 sisters holding one Proto-Dravidian root letter for letter, four thousand
 years and a script apart.
 
-Now that you have a son and a daughter, Chapter 19's question comes back
-with someone new to ask it about: **ninṟe makanŭ ethra vayassuṇṭŭ?** — "how
-old is your son?" — the same dative-subject-plus-*uṇṭŭ* shape, unchanged.
+Now that you have a son and a daughter, the age question comes back with
+someone new to ask it about: **ninṟe makanŭ ethra vayassuṇṭŭ?** — "how old
+is your son?" — the same dative-subject-plus-*uṇṭŭ* shape, unchanged.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C36-MAKAL-01, ML-CONCEPT-C36-MAKAL-02, ML-CONCEPT-C36-MAKAN-01, ML-CONCEPT-C36-MAKAN-02, ML-CONCEPT-C19-VAYASSU-01, ML-CONCEPT-C36-KUTTI-01, ML-CONCEPT-C36-KUTTI-02] -->
@@ -78,7 +78,7 @@ old is your son?" — the same dative-subject-plus-*uṇṭŭ* shape, unchanged.
 [PAUSE 3s] Say "this is my daughter." (*Ithu ente makaḷāṇŭ*.) How closely
 does Tamil match this word, compared with *makan*? (**Even closer** —
 *makaḷ* is **identical** sound for sound, where *makan* only nearly
-matched.) Ask "how old is your son?" using Chapter 19's question shape.
+matched.) Ask "how old is your son?" using the age question's shape.
 (*Ninṟe makanŭ ethra vayassuṇṭŭ?* — "to your son, how much age exists?")
 What is the general word for a child, before *makan* or *makaḷ*?
 (**കുട്ടി**, *kuṭṭi*.)

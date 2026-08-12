@@ -44,8 +44,8 @@ expect.
 > **కొడుకు** — *koḍuku* — **son**
 
 > **వాడి కొడుకు వయసెంత?** — *vāḍi koḍuku vayasenta?* — "How old is his
-> son?" — Chapter 19's verbless age question, asked about someone else's
-> child.
+> son?" — the verbless age question you already know, asked about someone
+> else's child.
 
 ## The word, taken apart - the root that points sideways, not across
 <!-- hl-knowledge: introduces=[TE-ETYMON-C36-KODUKU-02]; assesses=[] -->

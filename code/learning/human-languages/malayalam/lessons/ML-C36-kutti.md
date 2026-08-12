@@ -53,8 +53,8 @@ daughter.
 **കുട്ടി** is native Dravidian, matching Tamil's **குட்டி** (*kuṭṭi*)
 closely. Both languages let the same word cover two things: a human child,
 and the young of an animal — a **പൂച്ചക്കുട്ടി** (*pūccakkuṭṭi*) is a
-kitten, built on Chapter 21's **പൂച്ച**, "cat," the same way **kuṭṭi**
-attaches to any animal name for its young. English does something similar
+kitten, built on **പൂച്ച**, "cat," met earlier in this book, the same way
+**kuṭṭi** attaches to any animal name for its young. English does something similar
 with "kid," which covers both a child and a baby goat — one small word,
 carrying the same double duty in two unrelated language families.
 
@@ -65,7 +65,7 @@ carrying the same double duty in two unrelated language families.
 - [YOU SAY: "ithu ente kuṭṭiyāṇŭ" — this is my child]
 - [YOU SAY: the animal sense — "pūcca … pūccakkuṭṭi" — cat, kitten]
 - [YOU SAY: the family and the friend, once more — "kuṭumbaṁ … suhṛttŭ"]
-- [YOU SAY: Chapter 12's six people-words, and the group word — "acchan,
+- [YOU SAY: the six family people-words, and the group word — "acchan,
   amma … kuṭumbaṁ"]
 
 ## Wrap-up Recall
@@ -74,6 +74,6 @@ carrying the same double duty in two unrelated language families.
 [PAUSE 3s] Say "this is my child." (*Ithu ente kuṭṭiyāṇŭ*.) What two things
 can *kuṭṭi* mean? (**A human child**, or **the young of an animal** — like
 *pūccakkuṭṭi*, kitten.) Which English word carries the very same double
-duty? (**Kid**.) Name Chapter 12's six family people-words once more, and
-the group word none of them supplied. (*Acchan, amma, cēṭṭan, aniyan,
+duty? (**Kid**.) Name the six family people-words once more, and the group
+word none of them supplied. (*Acchan, amma, cēṭṭan, aniyan,
 cēcci, aniyatti* — and **kuṭumbaṁ**.)

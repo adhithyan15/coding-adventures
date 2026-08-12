@@ -4,7 +4,7 @@
   "chapter": 38,
   "title": "The Heart, Two Ways",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:b709fab34f226240",
+  "sourceHash": "fnv1a64:d56eb8750d2c6131",
   "lessons": [
     {
       "id": "TE-C38-gunde",
@@ -137,7 +137,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:bf701edb2bcb2f70",
+      "sourceHash": "fnv1a64:43307899618fc6da",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -188,7 +188,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "హృ is హ (ha) carrying the vocalic-r vowel sign ృ — the dependent form of the same vowel Chapter 14 gave you as the independent letter ఋ, standing alone at the front of ఋతువు. Same vowel, two shapes: one when it opens a word, another when it rides on a consonant. దయం closes with the familiar అనుస్వార ం."
+              "text": "హృ is హ (ha) carrying the vocalic-r vowel sign ృ — the dependent form of the same vowel taught earlier as the independent letter ఋ, standing alone at the front of ఋతువు. Same vowel, two shapes: one when it opens a word, another when it rides on a consonant. దయం closes with the familiar అనుస్వార ం."
             }
           ]
         },
@@ -203,7 +203,7 @@
             },
             {
               "kind": "speech",
-              "text": "Telugu keeps hṛdayaṁ beside native guṇḍe the same way Chapter 32 kept Sanskrit bhōjanaṁ beside native tiṇḍi: the plain, physical word stays Dravidian; the word for ceremony, poetry, and feeling is layered on top from Sanskrit."
+              "text": "Telugu keeps hṛdayaṁ beside native guṇḍe the same way it keeps Sanskrit bhōjanaṁ beside native tiṇḍi: the plain, physical word stays Dravidian; the word for ceremony, poetry, and feeling is layered on top from Sanskrit."
             }
           ]
         },

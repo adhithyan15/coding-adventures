@@ -45,21 +45,21 @@ words for the people you would actually say that sentence to.
 
 > **ఇది నా కుటుంబం.** — *idi nā kuṭumbaṁ.* — "This is my family."
 
-**నా**, "my," has been yours since Chapter 2.
+**నా**, "my," has been yours since one of the very first words you learned.
 
-## The word, taken apart - the group word Chapter 12 never needed
+## The word, taken apart - the group word the six family words never needed
 <!-- hl-knowledge: introduces=[TE-ETYMON-C35-KUTUMBAM-02]; assesses=[TE-LEX-C12-KUTUMBAM-01, TE-ETYMON-C12-KUTUMBAM-02] -->
 
 **కుటుంబం** is Sanskrit **कुटुम्ब** (*kuṭumba*), "family, household," carried
 into Telugu whole — the same kind of tatsama loan as **నమస్కారం** and
 **సంతోషం**.
 
-Chapter 12 gave you six words: **నాన్న**, **అమ్మ**, and the four age-graded
+Your earlier family-words lesson gave you six words: **నాన్న**, **అమ్మ**, and the four age-graded
 siblings **అన్న/తమ్ముడు**, **అక్క/చెల్లి**. Every one is native Dravidian,
 and not one of them means "family" — each names a single specific person.
 Telugu never inherited a plain word for the group itself, so when it needed
 one, it reached for Sanskrit. The people came first, and stayed native; the
-collective came later, and came borrowed — the same split Chapter 32 found
+collective came later, and came borrowed — the same split you already met
 between *tinu* and *bhōjanaṁ*.
 
 ## Guided Practice
@@ -76,6 +76,6 @@ between *tinu* and *bhōjanaṁ*.
 
 [PAUSE 3s] Say "this is my family." (*Idi nā kuṭumbaṁ*.) Is *kuṭumbaṁ*
 native Dravidian or a loan? (**A Sanskrit loan**, like *namaskāram* and
-*santōṣam*.) Name Chapter 12's six family words. (*Nānna, amma, anna,
+*santōṣam*.) Name the six family words from that earlier lesson. (*Nānna, amma, anna,
 tammuḍu, akka, celli*.) Which of those six means "family" as a group?
 (**None of them** — that's exactly the gap *kuṭumbaṁ* fills.)

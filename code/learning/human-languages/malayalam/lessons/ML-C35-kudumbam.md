@@ -45,8 +45,8 @@ nouns of all: the people you would actually say it to.
 
 > **ഇത് എന്റെ കുടുംബമാണ്.** — *ithu ente kuṭumbamāṇŭ.* — "This is my family."
 
-*Ente*, "my," has been yours since Chapter 2; **‑ആണ്** is the same copula
-that closed *enikku malayāḷaṁ iṣṭamāṇŭ*.
+*Ente*, "my," has been yours since your very first sentences; **‑ആണ്** is
+the same copula that closed *enikku malayāḷaṁ iṣṭamāṇŭ*.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[ML-CONCEPT-C35-KUDUMBAM-02]; assesses=[ML-CONCEPT-C12-KUDUMBAM-01, ML-CONCEPT-C12-KUDUMBAM-02] -->
@@ -59,8 +59,8 @@ neuter stem in Malayalam's own **‑aṁ**. Kannada borrows the identical word
 leans harder into Sanskrit than its sisters do, this time in the shape of
 the loan rather than the fact of it.
 
-Chapter 12 gave you six words: **അച്ഛൻ**, **അമ്മ**, and the four age-graded
-siblings **ചേട്ടൻ/അനിയൻ**, **ചേച്ചി/അനിയത്തി**. Every one is native
+You already have six words for six specific people: **അച്ഛൻ**, **അമ്മ**,
+and the four age-graded siblings **ചേട്ടൻ/അനിയൻ**, **ചേച്ചി/അനിയത്തി**. Every one is native
 Dravidian, and not one of them means "family" — each names a single,
 specific person. Malayalam never inherited a word for the group itself, so
 when it needed one, it reached for Sanskrit. The people came first, and
@@ -81,7 +81,7 @@ stayed native; the collective came later, and came borrowed.
 
 [PAUSE 3s] Say "this is my family." (*Ithu ente kuṭumbamāṇŭ*.) Is *kuṭumbaṁ*
 native Dravidian or a loan? (**A Sanskrit loan**, like *iṣṭaṁ* and *sukhaṁ*
-— and dressed in the same **‑aṁ**.) Name Chapter 12's six family words.
-(*Acchan, amma, cēṭṭan, aniyan, cēcci, aniyatti*.) Which of those six means
+— and dressed in the same **‑aṁ**.) Name the six family words you already
+know. (*Acchan, amma, cēṭṭan, aniyan, cēcci, aniyatti*.) Which of those six means
 "family" as a group? (**None of them** — that's exactly the gap *kuṭumbaṁ*
 fills.)

@@ -27,7 +27,9 @@ describe("runCurriculumGapReport", () => {
   // the pair of builds is ~5.1s locally. It was ALREADY over the 5s default before any
   // one PR pushed it there, which is why two sessions hit it independently on the same
   // afternoon. When it next runs close, raise it — do not thin the report.
-  it("prints JSON or text reports for the real curriculum", { timeout: 20_000 }, () => {
+  // Raised 20s -> 35s at 1,878 lessons (vocabulary wave 5): the pair of builds now runs
+  // ~18.2s in isolation, so 20s was already failing under full-suite CPU contention.
+  it("prints JSON or text reports for the real curriculum", { timeout: 35_000 }, () => {
     const out = vi.spyOn(process.stdout, "write").mockImplementation(() => true);
     try {
       expect(runCurriculumGapReport(["--format", "json"])).toBe(0);

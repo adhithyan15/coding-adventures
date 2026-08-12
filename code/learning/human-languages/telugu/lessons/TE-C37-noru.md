@@ -58,7 +58,7 @@ one visible law.
 **నోరు** does not obviously belong to that set. It shows no trace of
 *vāy*, and no source consulted here states what its own deeper Proto-Dravidian
 root actually is — so nothing is invented for it, the same discipline
-Chapter 32 applied to *veḷḷu*'s own unresolved history. After three
+applied earlier to *veḷḷu*'s own unresolved history. After three
 straight matches — *kannu* plain, *cevi* nearly exact, *mukku* traceably
 contaminated but still clearly related — *nōru* is the one face word where
 this book cannot show you the family resemblance, only note honestly that

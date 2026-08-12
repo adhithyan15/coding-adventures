@@ -35,8 +35,8 @@ reviews_of: [FA-C10-dokhtar, FA-C04-chetor, FA-C04-hal]
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-DOKHTAR, FA-SCRIPT-CHETOR, FA-SCRIPT-HAL] -->
 
 [PAUSE 2s] Say **دختر**. Then read **حال شما چطور است؟** once more from the
-right edge — Chapter 4 asked about your **حال**, your state, but never once
-named the parts of you that state belongs to. This chapter does.
+right edge — an earlier lesson asked about your **حال**, your state, but
+never once named the parts of you that state belongs to. This chapter does.
 
 ## You'll want to know first — one word
 <!-- hl-knowledge: introduces=[FA-LEX-CHESHM]; assesses=[] -->
@@ -73,7 +73,7 @@ from a different ancient root entirely — but it kept \**spek'-* through Latin
 
 [PAUSE 3s] What does **چشم** mean? (**Eye.**) Which three English words share
 its root, none of them meaning “eye”? (**Spy, spectacle, species.**) Which
-Chapter 4 question could a body-part chapter actually answer? (**حال شما
+earlier question could a body-part chapter actually answer? (**حال شما
 چطور است؟**)
 
 Source: [Wiktionary: چشم](https://en.wiktionary.org/wiki/%DA%86%D8%B4%D9%85).

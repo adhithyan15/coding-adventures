@@ -34,9 +34,9 @@ reviews_of: [TE-C38-hrudayam, TE-C08-dayachesi]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C38-HRUDAYAM-01, TE-LEX-C08-DAYACHESI-01] -->
 
-[PAUSE 2s] Two ways to say heart, done. Chapter 8's **దయచేసి** — please —
-is about to earn its keep again, in front of the drink you'd politely ask
-for first.
+[PAUSE 2s] Two ways to say heart, done. **దయచేసి** — please, taught
+earlier — is about to earn its keep again, in front of the drink you'd
+politely ask for first.
 
 ## You'll want to know: టీ
 <!-- hl-knowledge: introduces=[TE-LEX-C39-TII-01]; assesses=[TE-LEX-C08-DAYACHESI-01, TE-PRAGMATICS-C08-DAYACHESI-03] -->
@@ -46,7 +46,7 @@ for first.
 > **దయచేసి టీ.** — *dayacēsi ṭī.* — "Tea, please."
 
 Day to day, Telugu politeness usually rides on the **-అండి** verb ending
-Chapter 8 already named as the everyday carrier — but a bare request for a
+already named as the everyday carrier — but a bare request for a
 drink, with no verb at all, is exactly where **దయచేసి** itself does the
 work instead.
 

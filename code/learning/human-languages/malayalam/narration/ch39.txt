@@ -7,18 +7,18 @@ Lesson 1 of 3.
 
 Warm-up.
 [pause 2 seconds]
-Two hearts done. Now the drink you would politely ask for first, in any Kerala home — and a chance to put Chapter 8's ദയവായി back to work.
+Two hearts done. Now the drink you would politely ask for first, in any Kerala home — and a chance to put the polite ദയവായി back to work.
 
 You'll want to know.
 ചായ (chaaya) — chāya — tea.
 ദയവായി ഒരു ചായ (chaaya). — dayavāyi oru chāya. — "A tea, please."
-Dayavāyi has been yours since Chapter 8; oru, "a/one," you have already met attached to nāḷ and maṇi.
+Dayavāyi has been yours since early in this book; oru, "a/one," you have already met attached to nāḷ and maṇi.
 
 The word, taken apart.
 ചായ (chaaya) traces to Northern Chinese chá, carried overland along Central Asian trade routes into Persian چای (chāy), and from there into Hindi-Urdu chāy and Malayalam chāya alike — the same land route most of North and South India took for their word for tea. Tea that instead reached Europe by sea kept a different, southern Chinese form, which is why English says tea and French says thé — one leaf, two roads: chai by land, tea by sea.
 
 Grammar Lens: the two hearts, and the spine node so far.
-ദയവായി ഒരു ചായ (chaaya) leans on the very dative Chapter 6 named, ‑ikku/‑inu — the same suffix beside Tamil's ‑ukku, Telugu's ‑ku, and Kannada's ‑ge. This chapter carries both halves of the spine node ദയവായി and ഹൃദയം/നെഞ്ച് already opened: asking politely, and — if you ask for the wrong thing — repairing with ക്ഷമിക്കണം.
+ദയവായി ഒരു ചായ (chaaya) leans on the very dative already named, ‑ikku/‑inu — the same suffix beside Tamil's ‑ukku, Telugu's ‑ku, and Kannada's ‑ge. This chapter carries both halves of the spine node ദയവായി and ഹൃദയം/നെഞ്ച് already opened: asking politely, and — if you ask for the wrong thing — repairing with ക്ഷമിക്കണം.
 
 Guided Practice.
 [pause 1 second]
@@ -35,7 +35,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Ask for tea, politely. (Dayavāyi oru chāya.) Name the three languages chāya passed through, in order. (Chinese, then Persian, then Hindi-Urdu, into Malayalam.) Why does English say "tea" instead of "chai"? (It arrived by sea, carrying a different Chinese form.) Which Chapter 6 suffix does dayavāyi... enikku share with Tamil, Telugu and Kannada? (The dative — ‑ikku/‑ukku/‑ku/‑ge.) What is the repair half of this spine node's word pair? (ക്ഷമിക്കണം, sorry.)
+Ask for tea, politely. (Dayavāyi oru chāya.) Name the three languages chāya passed through, in order. (Chinese, then Persian, then Hindi-Urdu, into Malayalam.) Why does English say "tea" instead of "chai"? (It arrived by sea, carrying a different Chinese form.) Which dative suffix does dayavāyi... enikku share with Tamil, Telugu and Kannada? (The dative — ‑ikku/‑ukku/‑ku/‑ge.) What is the repair half of this spine node's word pair? (ക്ഷമിക്കണം, sorry.)
 
 
 Lesson 2 of 3.
@@ -74,7 +74,7 @@ Lesson 3 of 3.
 
 Warm-up.
 [pause 2 seconds]
-Chapter 15's വെള്ളം broke away from Tamil's water-word entirely. This drink, the third in the chapter, does the opposite.
+വെള്ളം, the earlier water-word, broke away from Tamil's water-word entirely. This drink, the third in the chapter, does the opposite.
 
 You'll want to know.
 പാൽ (paal) — pāl — milk.
@@ -82,7 +82,7 @@ You'll want to know.
 
 The word, taken apart.
 പാൽ (paal) is native Dravidian, from Proto-South-Dravidian pāl, "milk." Tamil keeps the shape unchanged: பால் (pāl), letter for letter the same as Malayalam. Kannada shows its own regular p‑to‑h sound law here too, giving ಹಾಲು (hālu) — the identical shift that turns Malayalam's pōkuka into Kannada's hōgu.
-Set beside Chapter 15's finding, this is the mirror image: വെള്ളം (water) broke from Tamil's nīr entirely, choosing a completely different root; പാൽ (paal) (milk) shows the opposite — perfect three-way agreement in shape, with only Kannada's regular sound law setting its form apart. Two everyday liquids, two entirely different outcomes.
+Set beside the water-word's finding, this is the mirror image: വെള്ളം (water) broke from Tamil's nīr entirely, choosing a completely different root; പാൽ (paal) (milk) shows the opposite — perfect three-way agreement in shape, with only Kannada's regular sound law setting its form apart. Two everyday liquids, two entirely different outcomes.
 
 Guided Practice.
 [pause 1 second]
@@ -99,4 +99,4 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Ask for milk, politely. (Dayavāyi oru pāl.) Does Tamil's word for milk match Malayalam's? (Yes — exactly, pāl both.) What does Kannada's hālu show? (The regular p-to-h law.) Which earlier liquid word broke from Tamil entirely, unlike this one? (വെള്ളം, water — Chapter 15.)
+Ask for milk, politely. (Dayavāyi oru pāl.) Does Tamil's word for milk match Malayalam's? (Yes — exactly, pāl both.) What does Kannada's hālu show? (The regular p-to-h law.) Which earlier liquid word broke from Tamil entirely, unlike this one? (വെള്ളം, water.)

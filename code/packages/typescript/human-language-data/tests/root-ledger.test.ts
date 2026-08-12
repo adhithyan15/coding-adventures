@@ -189,9 +189,9 @@ describe("the committed corpus", () => {
 
   it("pins the first ledger, and it is the reason the rule exists", () => {
     const l = buildRootLedger(lessons, minReuse);
-    expect(l.summary.roots).toBe(2759); // +5: vos-latin slug and ES-ETYMON-VOS-03
-    expect(l.summary.underspent).toBe(2653); // +3: a payoff lesson re-spends a root // +1: the vos-latin slug is unspent; ES-ETYMON-VOS-03 is spent three times, so it is NOT latin-vos, spent once so far // -1: HL-C98 spends fabulari-latin a third time
-    expect(l.summary.neverSpent).toBe(1819); // -6: HL-C94 payoff lessons re-spend roots latin-vos, introduced and not yet re-spent // +1: HL-C98
+    expect(l.summary.roots).toBe(2837); // +5: vos-latin slug and ES-ETYMON-VOS-03 // +78: vocabulary wave 5
+    expect(l.summary.underspent).toBe(2729); // +3: a payoff lesson re-spends a root // +1: the vos-latin slug is unspent; ES-ETYMON-VOS-03 is spent three times, so it is NOT latin-vos, spent once so far // -1: HL-C98 spends fabulari-latin a third time // +76: vocabulary wave 5
+    expect(l.summary.neverSpent).toBe(1870); // -6: HL-C94 payoff lessons re-spend roots latin-vos, introduced and not yet re-spent // +1: HL-C98 // +51: vocabulary wave 5
     expect(l.summary.underspentPercent).toBe(96); // -1: HL-C98
 
     // Both namespaces contribute. If the etymon-atom count ever returns to
@@ -201,7 +201,8 @@ describe("the committed corpus", () => {
       return acc;
     }, {});
     // +1 roots: latin-vos, from ES-C03-vos.
-    expect(byNamespace).toEqual({ roots: 1985, "etymon-atom": 774 });
+    // +53 roots, +25 etymon-atom: vocabulary wave 5.
+    expect(byNamespace).toEqual({ roots: 2038, "etymon-atom": 799 });
   });
 
   it("pins Spanish, the pilot track", () => {

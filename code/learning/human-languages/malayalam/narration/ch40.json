@@ -4,7 +4,7 @@
   "chapter": 40,
   "title": "The Meal",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:d6b71fdac2f43300",
+  "sourceHash": "fnv1a64:e7d8b32e1ad3e0ea",
   "lessons": [
     {
       "id": "ML-C40-oon",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0645e3b215c21ce3",
+      "sourceHash": "fnv1a64:cd789335ab45db73",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -44,7 +44,7 @@
             },
             {
               "kind": "speech",
-              "text": "Chapter 32 taught തിന്നുക, \"to eat,\" for anything at all. It never taught the word for a proper, sit-down meal. Here it is."
+              "text": "An earlier chapter taught തിന്നുക, \"to eat,\" for anything at all. It never taught the word for a proper, sit-down meal. Here it is."
             }
           ]
         },
@@ -70,7 +70,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ഊ is the independent long‑ū vowel — the shape a word uses when it opens with this sound and there is no consonant in front of it to carry the small sign ൂ instead. It is the same kind of independent vowel letter as Chapter 1's inherent‑a opening; the sound only changes shape depending on what, if anything, comes before it."
+              "text": "ഊ is the independent long‑ū vowel — the shape a word uses when it opens with this sound and there is no consonant in front of it to carry the small sign ൂ instead. It is the same kind of independent vowel letter as the very first inherent‑a opening; the sound only changes shape depending on what, if anything, comes before it."
             }
           ]
         },
@@ -81,7 +81,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ഊണ് (ūṇ) is native Dravidian, sharing its root with the verb ഉണ്ണുക (uṇṇuka), \"to eat a meal\" — a second eat-verb this book has never taught, standing beside Chapter 32's everyday തിന്നുക. The difference is the same one English makes between \"eating\" in general and \"having a meal\": tinnuka covers a snack, a fruit, anything at all; uṇṇuka names sitting down to the real thing."
+              "text": "ഊണ് (ūṇ) is native Dravidian, sharing its root with the verb ഉണ്ണുക (uṇṇuka), \"to eat a meal\" — a second eat-verb this book has never taught, standing beside the everyday തിന്നുക. The difference is the same one English makes between \"eating\" in general and \"having a meal\": tinnuka covers a snack, a fruit, anything at all; uṇṇuka names sitting down to the real thing."
             },
             {
               "kind": "speech",
@@ -96,11 +96,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "എനിക്ക് ഊണ് ഇഷ്ടമാണ്. — enikku ūṇ iṣṭamāṇŭ. — \"I like having a meal\" — Chapter 6's dative ‑ikku, Chapter 34's frame, one more turn of the same machine."
+              "text": "എനിക്ക് ഊണ് ഇഷ്ടമാണ്. — enikku ūṇ iṣṭamāṇŭ. — \"I like having a meal\" — the familiar dative ‑ikku, the iṣṭaṁ liking-frame, one more turn of the same machine."
             },
             {
               "kind": "speech",
-              "text": "This chapter closes the spine node ദയവായി opened: ദയവായി asks; ക്ഷമിക്കണം repairs, the word for showing up after the ഊണ് (ūṇ) is already over. And ‑ikku is still the same cousin of Tamil's ‑ukku, Telugu's ‑ku, and Kannada's ‑ge that Chapter 6 first named."
+              "text": "This chapter closes the spine node ദയവായി opened: ദയവായി asks; ക്ഷമിക്കണം repairs, the word for showing up after the ഊണ് (ūṇ) is already over. And ‑ikku is still the same cousin of Tamil's ‑ukku, Telugu's ‑ku, and Kannada's ‑ge that was first named earlier in this book."
             }
           ]
         },
@@ -175,7 +175,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"I am having a meal.\" (Ñān ūṇ uṇṇunnu.) How does uṇṇuka differ from Chapter 32's tinnuka? (Tinnuka is eating in general; uṇṇuka is having a proper meal.) Which two chapters does this spine node run from? (Chapter 8's dayavāyi asks; Chapter 9's kṣamikkaṇaṁ repairs.)"
+              "text": "Say \"I am having a meal.\" (Ñān ūṇ uṇṇunnu.) How does uṇṇuka differ from the everyday tinnuka? (Tinnuka is eating in general; uṇṇuka is having a proper meal.) What are the two halves this spine node runs between? (ദയവായി asks; ക്ഷമിക്കണം repairs.)"
             }
           ]
         }

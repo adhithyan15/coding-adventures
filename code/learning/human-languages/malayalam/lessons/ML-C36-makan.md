@@ -52,9 +52,9 @@ the identical shape, **மகன்** (*makan*) — same consonants, same vowels
 same final *-n*. Kannada moved further: the *-k-* between vowels softened
 to *-g-*, and the final *-n* dropped, giving **ಮಗ** (*maga*). So on this
 word it is Malayalam and Tamil that hold the older, more conservative
-shape, and Kannada that innovated — the same closeness Chapter 1 already
-found in *nandi*, *athe*, *illa* and *śari*, this time in a family word
-rather than a greeting.
+shape, and Kannada that innovated — the same closeness the very first
+greetings already showed in *nandi*, *athe*, *illa* and *śari*, this time
+in a family word rather than a greeting.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C36-MAKAN-01, ML-CONCEPT-C36-MAKAN-02, ML-CONCEPT-C36-KUTTI-01, ML-CONCEPT-C36-KUTTI-02, ML-CONCEPT-C35-SUHRUTHU-01, ML-CONCEPT-C35-SUHRUTHU-02] -->

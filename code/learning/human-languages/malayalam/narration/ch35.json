@@ -4,7 +4,7 @@
   "chapter": 35,
   "title": "Family and Friend",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:2dbbdcacce4fd0a3",
+  "sourceHash": "fnv1a64:2a34a6c6df00e16e",
   "lessons": [
     {
       "id": "ML-C35-kudumbam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:44b8a8fb1056cca6",
+      "sourceHash": "fnv1a64:26fa2bb56fe8050a",
       "notice": null,
       "blocks": [
         {
@@ -54,7 +54,7 @@
             },
             {
               "kind": "speech",
-              "text": "Ente, \"my,\" has been yours since Chapter 2; ‑ആണ് is the same copula that closed enikku malayāḷaṁ iṣṭamāṇŭ."
+              "text": "Ente, \"my,\" has been yours since your very first sentences; ‑ആണ് is the same copula that closed enikku malayāḷaṁ iṣṭamāṇŭ."
             }
           ]
         },
@@ -69,7 +69,7 @@
             },
             {
               "kind": "speech",
-              "text": "Chapter 12 gave you six words: അച്ഛൻ, അമ്മ, and the four age-graded siblings ചേട്ടൻ/അനിയൻ, ചേച്ചി/അനിയത്തി. Every one is native Dravidian, and not one of them means \"family\" — each names a single, specific person. Malayalam never inherited a word for the group itself, so when it needed one, it reached for Sanskrit. The people came first, and stayed native; the collective came later, and came borrowed."
+              "text": "You already have six words for six specific people: അച്ഛൻ, അമ്മ, and the four age-graded siblings ചേട്ടൻ/അനിയൻ, ചേച്ചി/അനിയത്തി. Every one is native Dravidian, and not one of them means \"family\" — each names a single, specific person. Malayalam never inherited a word for the group itself, so when it needed one, it reached for Sanskrit. The people came first, and stayed native; the collective came later, and came borrowed."
             }
           ]
         },
@@ -126,7 +126,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"this is my family.\" (Ithu ente kuṭumbamāṇŭ.) Is kuṭumbaṁ native Dravidian or a loan? (A Sanskrit loan, like iṣṭaṁ and sukhaṁ — and dressed in the same ‑aṁ.) Name Chapter 12's six family words. (Acchan, amma, cēṭṭan, aniyan, cēcci, aniyatti.) Which of those six means \"family\" as a group? (None of them — that's exactly the gap kuṭumbaṁ fills.)"
+              "text": "Say \"this is my family.\" (Ithu ente kuṭumbamāṇŭ.) Is kuṭumbaṁ native Dravidian or a loan? (A Sanskrit loan, like iṣṭaṁ and sukhaṁ — and dressed in the same ‑aṁ.) Name the six family words you already know. (Acchan, amma, cēṭṭan, aniyan, cēcci, aniyatti.) Which of those six means \"family\" as a group? (None of them — that's exactly the gap kuṭumbaṁ fills.)"
             }
           ]
         }
@@ -145,7 +145,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:09b680090d7ccdd3",
+      "sourceHash": "fnv1a64:936becdfd0d822fb",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -200,7 +200,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ഹൃ is ഹ (ha) carrying the ൃ sign — the short vocalic r inherited straight from Sanskrit, the same vowel that opened Chapter 16's വൃശ്ചികം. Malayalam is the only one of the four literary Dravidian scripts that still writes it as a distinct vowel sign rather than respelling it away."
+              "text": "ഹൃ is ഹ (ha) carrying the ൃ sign — the short vocalic r inherited straight from Sanskrit, the same vowel that opened വൃശ്ചികം several chapters back. Malayalam is the only one of the four literary Dravidian scripts that still writes it as a distinct vowel sign rather than respelling it away."
             }
           ]
         },
@@ -215,7 +215,7 @@
             },
             {
               "kind": "speech",
-              "text": "Everyday speech reaches just as often for കൂട്ടുകാരൻ/കൂട്ടുകാരി — native കൂട്ട് (kūṭṭŭ, \"joining, group,\" the same root as the verb കൂടുക, \"to join, unite\") plus the agentive ‑കാരൻ/‑കാരി. That suffix is itself borrowed, from Sanskrit कार (kāra, \"maker, doer\") fused onto a Dravidian personal ending — so even Malayalam's more casual, native-rooted word for \"friend\" leans on a Sanskrit-derived ending to finish the job. Selective borrowing, as Chapter 2's santōṣaṁ already showed, does not always mean choosing one word wholesale over another; sometimes it means splicing a Dravidian root and a Sanskrit ending into a single new word."
+              "text": "Everyday speech reaches just as often for കൂട്ടുകാരൻ/കൂട്ടുകാരി — native കൂട്ട് (kūṭṭŭ, \"joining, group,\" the same root as the verb കൂടുക, \"to join, unite\") plus the agentive ‑കാരൻ/‑കാരി. That suffix is itself borrowed, from Sanskrit कार (kāra, \"maker, doer\") fused onto a Dravidian personal ending — so even Malayalam's more casual, native-rooted word for \"friend\" leans on a Sanskrit-derived ending to finish the job. Selective borrowing, as santōṣaṁ already showed back near the start of this book, does not always mean choosing one word wholesale over another; sometimes it means splicing a Dravidian root and a Sanskrit ending into a single new word."
             }
           ]
         },

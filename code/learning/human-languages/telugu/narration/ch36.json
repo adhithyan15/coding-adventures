@@ -4,7 +4,7 @@
   "chapter": 36,
   "title": "Son and Daughter, Two Different Roots",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:c1c16bb52871e671",
+  "sourceHash": "fnv1a64:b0b4ecc15cddc51d",
   "lessons": [
     {
       "id": "TE-C36-koduku",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b5535430af040be9",
+      "sourceHash": "fnv1a64:aa716d4eccd99801",
       "notice": null,
       "blocks": [
         {
@@ -50,7 +50,7 @@
             },
             {
               "kind": "speech",
-              "text": "వాడి కొడుకు వయసెంత? — vāḍi koḍuku vayasenta? — \"How old is his son?\" — Chapter 19's verbless age question, asked about someone else's child."
+              "text": "వాడి కొడుకు వయసెంత? — vāḍi koḍuku vayasenta? — \"How old is his son?\" — the verbless age question you already know, asked about someone else's child."
             }
           ]
         },

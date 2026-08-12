@@ -34,8 +34,8 @@ reviews_of: [FA-C08-dust-dashtan]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-DASHTAN, FA-STEM-DAR, FA-LEX-DUST-DASHTAN] -->
 
-[PAUSE 2s] Chapter 8 closed on **داشتن** *dâshtan*, “to have,” stem **دار**
-*dâr*. This chapter names what to ask for when you do not have it yet.
+[PAUSE 2s] The last chapter closed on **داشتن** *dâshtan*, “to have,” stem
+**دار** *dâr*. This chapter names what to ask for when you do not have it yet.
 
 ## You'll want to know first — one word
 <!-- hl-knowledge: introduces=[FA-LEX-AB]; assesses=[] -->

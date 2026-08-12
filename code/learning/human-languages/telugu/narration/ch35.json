@@ -4,7 +4,7 @@
   "chapter": 35,
   "title": "Family and Friends",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:9ba4a94c2488290c",
+  "sourceHash": "fnv1a64:1e423b14ffc05451",
   "lessons": [
     {
       "id": "TE-C35-kutumbam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cdb6224b3cde974f",
+      "sourceHash": "fnv1a64:c10beb602e5e1957",
       "notice": null,
       "blocks": [
         {
@@ -54,14 +54,14 @@
             },
             {
               "kind": "speech",
-              "text": "నా, \"my,\" has been yours since Chapter 2."
+              "text": "నా, \"my,\" has been yours since one of the very first words you learned."
             }
           ]
         },
         {
           "index": 2,
           "type": "etymology",
-          "title": "The word, taken apart - the group word Chapter 12 never needed",
+          "title": "The word, taken apart - the group word the six family words never needed",
           "segments": [
             {
               "kind": "speech",
@@ -69,7 +69,7 @@
             },
             {
               "kind": "speech",
-              "text": "Chapter 12 gave you six words: నాన్న, అమ్మ, and the four age-graded siblings అన్న/తమ్ముడు, అక్క/చెల్లి. Every one is native Dravidian, and not one of them means \"family\" — each names a single specific person. Telugu never inherited a plain word for the group itself, so when it needed one, it reached for Sanskrit. The people came first, and stayed native; the collective came later, and came borrowed — the same split Chapter 32 found between tinu and bhōjanaṁ."
+              "text": "Your earlier family-words lesson gave you six words: నాన్న, అమ్మ, and the four age-graded siblings అన్న/తమ్ముడు, అక్క/చెల్లి. Every one is native Dravidian, and not one of them means \"family\" — each names a single specific person. Telugu never inherited a plain word for the group itself, so when it needed one, it reached for Sanskrit. The people came first, and stayed native; the collective came later, and came borrowed — the same split you already met between tinu and bhōjanaṁ."
             }
           ]
         },
@@ -126,7 +126,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"this is my family.\" (Idi nā kuṭumbaṁ.) Is kuṭumbaṁ native Dravidian or a loan? (A Sanskrit loan, like namaskāram and santōṣam.) Name Chapter 12's six family words. (Nānna, amma, anna, tammuḍu, akka, celli.) Which of those six means \"family\" as a group? (None of them — that's exactly the gap kuṭumbaṁ fills.)"
+              "text": "Say \"this is my family.\" (Idi nā kuṭumbaṁ.) Is kuṭumbaṁ native Dravidian or a loan? (A Sanskrit loan, like namaskāram and santōṣam.) Name the six family words from that earlier lesson. (Nānna, amma, anna, tammuḍu, akka, celli.) Which of those six means \"family\" as a group? (None of them — that's exactly the gap kuṭumbaṁ fills.)"
             }
           ]
         }
@@ -145,7 +145,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:610659dc169a4347",
+      "sourceHash": "fnv1a64:d557405b344221e5",
       "notice": null,
       "blocks": [
         {
@@ -191,7 +191,7 @@
             },
             {
               "kind": "speech",
-              "text": "Telugu also has a native word for friendship: నేస్తం (nēstaṁ), catalogued in the Dravidian Etymological Dictionary alongside the related forms neyyamu, neyyami, and neyyari — all clustered around friendship, love, and tenderness. Nēstaṁ is real and still heard, but the everyday choice for \"friend\" is the borrowed one, snēhituḍu — the same pattern Chapter 34 found with sahāyaṁ cēyu, where the everyday verb is built on a Sanskrit noun too."
+              "text": "Telugu also has a native word for friendship: నేస్తం (nēstaṁ), catalogued in the Dravidian Etymological Dictionary alongside the related forms neyyamu, neyyami, and neyyari — all clustered around friendship, love, and tenderness. Nēstaṁ is real and still heard, but the everyday choice for \"friend\" is the borrowed one, snēhituḍu — the same pattern already found with sahāyaṁ cēyu, where the everyday verb is built on a Sanskrit noun too."
             }
           ]
         },

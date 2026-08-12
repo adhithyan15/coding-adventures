@@ -34,8 +34,8 @@ reviews_of: [ML-C36-makal, ML-C13-shareera-bhaagangal]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C13-SHAREERA-BHAAGANGAL-01] -->
 
-[PAUSE 2s] **തല**, **കൈ** — Chapter 13's head and hand, and nothing more of
-the body since, twenty-four chapters ago. This chapter adds four words to
+[PAUSE 2s] **തല**, **കൈ** — head and hand, taught long ago, and nothing
+more of the body since, twenty-four chapters ago. This chapter adds four words to
 that short list, starting above the nose.
 
 ## You'll want to know
@@ -53,8 +53,8 @@ sits right beside it; Telugu **కన్ను** (*kannu*) and Kannada **ಕಣ�
 (*kaṇṇu*) sit closer still, both almost identical to Malayalam's own form.
 Four languages that otherwise pull apart on nearly everything — tense
 marking, half their everyday vocabulary, even the shape of their scripts —
-agree almost completely on this one word. It joins **തല** and **കൈ** from
-Chapter 13 as the third body word, and the first to show this exact,
+agree almost completely on this one word. It joins **തല** and **കൈ**, met
+earlier, as the third body word, and the first to show this exact,
 near-total four-way match.
 
 ## Guided Practice

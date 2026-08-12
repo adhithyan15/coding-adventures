@@ -29,7 +29,7 @@ variety: contemporary-iranian-persian
 reviews_of: [FA-C10-baradar, FA-C10-pedar, FA-C10-madar, FA-C02-esm-e-man]
 ---
 
-# دختر — daughter, and the family Chapter 6 promised is complete
+# دختر — daughter, and the family the بودن lesson promised is complete
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-BARADAR, FA-SCRIPT-ESM-MAN-AST] -->
@@ -54,12 +54,12 @@ The same ezafe **-e** from **اسمِ من** and **کلیدِ من** links a fam
 its owner exactly the way it linked a name and a request. One grammar habit,
 three completely different kinds of noun.
 
-## The word, taken apart — the family Chapter 6 promised
+## The word, taken apart — the family the بودن lesson promised
 <!-- hl-knowledge: introduces=[FA-ETYMON-DOKHTAR]; assesses=[] -->
 
 **دختر** continues Middle Persian **duxtar**, from Indo-European
 \**dʰugh₂tḗr* — the direct cousin of English **daughter** and German
-*Tochter*. Chapter 6 named four inherited family cousins in passing —
+*Tochter*. An earlier lesson named four inherited family cousins in passing —
 **مادر**, **پدر**, **برادر**, **دختر** — while it was really teaching **بودن**.
 This chapter and the last have now taught all four as full lessons: a promise
 made early, kept three chapters later.
@@ -82,6 +82,6 @@ made early, kept three chapters later.
 [PAUSE 3s] Name all four family words this chapter and the last have taught,
 in order. (**Mâdar, pedar, barâdar, dokhtar.**) Say “my daughter.”
 (**Dokhtar-e man.**) Which earlier sentence used the same ezafe? (**اسمِ من
-... است**, from Chapter 2.)
+... است**, the very first sentence this track built.)
 
 Source: [Wiktionary: دختر](https://en.wiktionary.org/wiki/%D8%AF%D8%AE%D8%AA%D8%B1).

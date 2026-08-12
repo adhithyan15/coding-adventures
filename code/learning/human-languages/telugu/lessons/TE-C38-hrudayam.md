@@ -48,7 +48,7 @@ heart Telugu reaches for in a poem, a speech, or a love letter.
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
 **హృ** is **హ** (*ha*) carrying the **vocalic-r vowel sign** **ృ** — the
-*dependent* form of the same vowel Chapter 14 gave you as the *independent*
+*dependent* form of the same vowel taught earlier as the *independent*
 letter **ఋ**, standing alone at the front of **ఋతువు**. Same vowel, two
 shapes: one when it opens a word, another when it rides on a consonant.
 **దయం** closes with the familiar **అనుస్వార ం**.
@@ -63,7 +63,7 @@ sound — both descend from the same reconstructed Proto-Indo-European root,
 *cordial* and *courage*) and Greek's **kardía** (behind *cardiac*) come from
 that exact same root. Four languages, one ancient word.
 
-Telugu keeps *hṛdayaṁ* beside native *guṇḍe* the same way Chapter 32 kept
+Telugu keeps *hṛdayaṁ* beside native *guṇḍe* the same way it keeps
 Sanskrit *bhōjanaṁ* beside native *tiṇḍi*: the plain, physical word stays
 Dravidian; the word for ceremony, poetry, and feeling is layered on top from
 Sanskrit.

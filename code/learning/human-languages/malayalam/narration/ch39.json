@@ -4,7 +4,7 @@
   "chapter": 39,
   "title": "Tea, Coffee, Milk",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:e8554b428e920083",
+  "sourceHash": "fnv1a64:acc57fe426087d5b",
   "lessons": [
     {
       "id": "ML-C39-chaaya",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:472dad0ccbbb8205",
+      "sourceHash": "fnv1a64:e90f647d97f1ec95",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Two hearts done. Now the drink you would politely ask for first, in any Kerala home — and a chance to put Chapter 8's ദയവായി back to work."
+              "text": "Two hearts done. Now the drink you would politely ask for first, in any Kerala home — and a chance to put the polite ദയവായി back to work."
             }
           ]
         },
@@ -54,7 +54,7 @@
             },
             {
               "kind": "speech",
-              "text": "Dayavāyi has been yours since Chapter 8; oru, \"a/one,\" you have already met attached to nāḷ and maṇi."
+              "text": "Dayavāyi has been yours since early in this book; oru, \"a/one,\" you have already met attached to nāḷ and maṇi."
             }
           ]
         },
@@ -76,7 +76,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ദയവായി ഒരു ചായ (chaaya) leans on the very dative Chapter 6 named, ‑ikku/‑inu — the same suffix beside Tamil's ‑ukku, Telugu's ‑ku, and Kannada's ‑ge. This chapter carries both halves of the spine node ദയവായി and ഹൃദയം/നെഞ്ച് already opened: asking politely, and — if you ask for the wrong thing — repairing with ക്ഷമിക്കണം."
+              "text": "ദയവായി ഒരു ചായ (chaaya) leans on the very dative already named, ‑ikku/‑inu — the same suffix beside Tamil's ‑ukku, Telugu's ‑ku, and Kannada's ‑ge. This chapter carries both halves of the spine node ദയവായി and ഹൃദയം/നെഞ്ച് already opened: asking politely, and — if you ask for the wrong thing — repairing with ക്ഷമിക്കണം."
             }
           ]
         },
@@ -151,7 +151,7 @@
             },
             {
               "kind": "speech",
-              "text": "Ask for tea, politely. (Dayavāyi oru chāya.) Name the three languages chāya passed through, in order. (Chinese, then Persian, then Hindi-Urdu, into Malayalam.) Why does English say \"tea\" instead of \"chai\"? (It arrived by sea, carrying a different Chinese form.) Which Chapter 6 suffix does dayavāyi... enikku share with Tamil, Telugu and Kannada? (The dative — ‑ikku/‑ukku/‑ku/‑ge.) What is the repair half of this spine node's word pair? (ക്ഷമിക്കണം, sorry.)"
+              "text": "Ask for tea, politely. (Dayavāyi oru chāya.) Name the three languages chāya passed through, in order. (Chinese, then Persian, then Hindi-Urdu, into Malayalam.) Why does English say \"tea\" instead of \"chai\"? (It arrived by sea, carrying a different Chinese form.) Which dative suffix does dayavāyi... enikku share with Tamil, Telugu and Kannada? (The dative — ‑ikku/‑ukku/‑ku/‑ge.) What is the repair half of this spine node's word pair? (ക്ഷമിക്കണം, sorry.)"
             }
           ]
         }
@@ -301,7 +301,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:61f51f28f2a1de92",
+      "sourceHash": "fnv1a64:5a252e2a9f2e7190",
       "notice": null,
       "blocks": [
         {
@@ -317,7 +317,7 @@
             },
             {
               "kind": "speech",
-              "text": "Chapter 15's വെള്ളം broke away from Tamil's water-word entirely. This drink, the third in the chapter, does the opposite."
+              "text": "വെള്ളം, the earlier water-word, broke away from Tamil's water-word entirely. This drink, the third in the chapter, does the opposite."
             }
           ]
         },
@@ -347,7 +347,7 @@
             },
             {
               "kind": "speech",
-              "text": "Set beside Chapter 15's finding, this is the mirror image: വെള്ളം (water) broke from Tamil's nīr entirely, choosing a completely different root; പാൽ (paal) (milk) shows the opposite — perfect three-way agreement in shape, with only Kannada's regular sound law setting its form apart. Two everyday liquids, two entirely different outcomes."
+              "text": "Set beside the water-word's finding, this is the mirror image: വെള്ളം (water) broke from Tamil's nīr entirely, choosing a completely different root; പാൽ (paal) (milk) shows the opposite — perfect three-way agreement in shape, with only Kannada's regular sound law setting its form apart. Two everyday liquids, two entirely different outcomes."
             }
           ]
         },
@@ -422,7 +422,7 @@
             },
             {
               "kind": "speech",
-              "text": "Ask for milk, politely. (Dayavāyi oru pāl.) Does Tamil's word for milk match Malayalam's? (Yes — exactly, pāl both.) What does Kannada's hālu show? (The regular p-to-h law.) Which earlier liquid word broke from Tamil entirely, unlike this one? (വെള്ളം, water — Chapter 15.)"
+              "text": "Ask for milk, politely. (Dayavāyi oru pāl.) Does Tamil's word for milk match Malayalam's? (Yes — exactly, pāl both.) What does Kannada's hālu show? (The regular p-to-h law.) Which earlier liquid word broke from Tamil entirely, unlike this one? (വെള്ളം, water.)"
             }
           ]
         }

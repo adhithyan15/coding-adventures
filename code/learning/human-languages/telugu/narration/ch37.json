@@ -4,7 +4,7 @@
   "chapter": 37,
   "title": "Four Words on the Face",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:9c82dfc9859c9d6e",
+  "sourceHash": "fnv1a64:9d15a83b89defe09",
   "lessons": [
     {
       "id": "TE-C37-kannu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5e1b61d76f2abef3",
+      "sourceHash": "fnv1a64:ac2e527a7160c5c5",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Chapter 13 gave you two body words, head and hand. This chapter gives you four more — starting with one this book has secretly used before."
+              "text": "Head and hand, taught earlier, gave you your first two body words. This chapter gives you four more — starting with one this book has secretly used before."
             }
           ]
         },
@@ -54,7 +54,7 @@
             },
             {
               "kind": "speech",
-              "text": "Three body words now, with two from Chapter 13: tala, ceyyi, kannu — and Chapter 36's koḍuku still fresh, one lesson back."
+              "text": "Three body words now, with two from that earlier lesson: tala, ceyyi, kannu — and koḍuku, \"son,\" still fresh, one lesson back."
             }
           ]
         },
@@ -65,11 +65,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "కన్ను already appeared in Chapter 32, inside the etymology note for చూడు — as proof that Tamil pār, Kannada nōḍu, Malayalam kāṇuka, and Telugu cūḍu, four completely unrelated everyday see-verbs, all sit beside the very same ancient eye-word: Telugu kannu, Tamil kaṇ, Kannada kaṇṇu, Malayalam kaṇṇ. That chapter named the word without ever teaching it. This lesson closes the loop."
+              "text": "కన్ను already appeared earlier, inside the cūḍu lesson's own etymology note for చూడు — as proof that Tamil pār, Kannada nōḍu, Malayalam kāṇuka, and Telugu cūḍu, four completely unrelated everyday see-verbs, all sit beside the very same ancient eye-word: Telugu kannu, Tamil kaṇ, Kannada kaṇṇu, Malayalam kaṇṇ. That chapter named the word without ever teaching it. This lesson closes the loop."
             },
             {
               "kind": "speech",
-              "text": "Like Chapter 13's tala (\"head\") and ceyyi (\"hand,\" a cognate reshaped almost past recognition), kannu is native Dravidian, and here the whole family agrees on it plainly — no reshaping required."
+              "text": "Like tala (\"head\") and ceyyi (\"hand,\" a cognate reshaped almost past recognition) before it, kannu is native Dravidian, and here the whole family agrees on it plainly — no reshaping required."
             }
           ]
         },
@@ -135,7 +135,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"my eye.\" (Nā kannu.) Which earlier chapter already used this exact word, and what did it prove? (Chapter 32's cūḍu note — that all four Dravidian sisters share one eye-root behind four unrelated see-verbs.) Name Chapter 13's two body words. (తల, tala, and చెయ్యి, ceyyi.)"
+              "text": "Say \"my eye.\" (Nā kannu.) Which earlier lesson already used this exact word, and what did it prove? (The cūḍu lesson's etymology note — that all four Dravidian sisters share one eye-root behind four unrelated see-verbs.) Name the two body words from that earlier lesson. (తల, tala, and చెయ్యి, ceyyi.)"
             }
           ]
         }
@@ -399,7 +399,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:13e874173808302a",
+      "sourceHash": "fnv1a64:bf80f7c683a909aa",
       "notice": null,
       "blocks": [
         {
@@ -449,7 +449,7 @@
             },
             {
               "kind": "speech",
-              "text": "నోరు does not obviously belong to that set. It shows no trace of vāy, and no source consulted here states what its own deeper Proto-Dravidian root actually is — so nothing is invented for it, the same discipline Chapter 32 applied to veḷḷu's own unresolved history. After three straight matches — kannu plain, cevi nearly exact, mukku traceably contaminated but still clearly related — nōru is the one face word where this book cannot show you the family resemblance, only note honestly that it is not there to show."
+              "text": "నోరు does not obviously belong to that set. It shows no trace of vāy, and no source consulted here states what its own deeper Proto-Dravidian root actually is — so nothing is invented for it, the same discipline applied earlier to veḷḷu's own unresolved history. After three straight matches — kannu plain, cevi nearly exact, mukku traceably contaminated but still clearly related — nōru is the one face word where this book cannot show you the family resemblance, only note honestly that it is not there to show."
             }
           ]
         },

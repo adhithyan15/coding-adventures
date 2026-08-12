@@ -64,15 +64,15 @@ has been teaching you to use.
 One short scene, built entirely from independently learned pieces, chapter by
 chapter:
 
-- [YOU READ: **اسمِ من ... است** — the very first sentence, Chapter 2]
-- [YOU READ: **شما** against **تو** — the register Chapter 3 built]
-- [YOU READ: **حال شما چطور است؟** — Chapter 4's careful question]
-- [YOU SAY: **خوبم** — Chapter 4's reply]
+- [YOU READ: **اسمِ من ... است** — the very first sentence this track built]
+- [YOU READ: **شما** against **تو** — the register this track built next]
+- [YOU READ: **حال شما چطور است؟** — the careful question that followed]
+- [YOU SAY: **خوبم** — the reply that answered it]
 - [YOU SAY: **آب، لطفاً** / **کلیدِ من، لطفاً** — this chapter's own requests]
 - [YOU NAME: **مادر، پدر، برادر، دختر، چشم، دست، پا، زبان** — eight new words,
   three chapters]
 - [YOU READ: **خداحافظ**, and recall what it leaves unsaid — no verb, just the
-  two halves Chapter 5 joined]
+  two halves an earlier lesson joined]
 - [YOU CONNECT: **zabân** ← old “tongue” word → English **tongue**, Latin
   *lingua* → **language**, **linguistics**]
 

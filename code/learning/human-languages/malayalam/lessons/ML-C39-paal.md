@@ -34,8 +34,9 @@ reviews_of: [ML-C39-kaapi, ML-C15-vellam-ari]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C15-VELLAM-ARI-01] -->
 
-[PAUSE 2s] Chapter 15's **വെള്ളം** broke away from Tamil's water-word
-entirely. This drink, the third in the chapter, does the opposite.
+[PAUSE 2s] **വെള്ളം**, the earlier water-word, broke away from Tamil's
+water-word entirely. This drink, the third in the chapter, does the
+opposite.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[ML-CONCEPT-C39-PAAL-01]; assesses=[] -->
@@ -53,7 +54,7 @@ the same as Malayalam. Kannada shows its own regular **p‑to‑h** sound law
 here too, giving **ಹಾಲು** (*hālu*) — the identical shift that turns
 Malayalam's *pōkuka* into Kannada's *hōgu*.
 
-Set beside Chapter 15's finding, this is the mirror image: **വെള്ളം**
+Set beside the water-word's finding, this is the mirror image: **വെള്ളം**
 (water) broke from Tamil's *nīr* entirely, choosing a completely different
 root; **പാൽ** (milk) shows the opposite — perfect three-way agreement in
 shape, with only Kannada's regular sound law setting its form apart. Two
@@ -77,4 +78,4 @@ everyday liquids, two entirely different outcomes.
 Does Tamil's word for milk match Malayalam's? (**Yes — exactly**, *pāl*
 both.) What does Kannada's *hālu* show? (**The regular p-to-h law.**) Which
 earlier liquid word broke from Tamil entirely, unlike this one?
-(**വെള്ളം**, water — Chapter 15.)
+(**വെള്ളം**, water.)

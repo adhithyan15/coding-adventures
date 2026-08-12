@@ -34,8 +34,8 @@ reviews_of: [FA-C10-pedar, FA-C10-madar]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-PEDAR, FA-LEX-MADAR] -->
 
-[PAUSE 2s] Say **مادر** and **پدر**. One family word from Chapter 6's list is
-still owed to you, and it is the sibling one.
+[PAUSE 2s] Say **مادر** and **پدر**. One family word from the **بودن**
+lesson's list is still owed to you, and it is the sibling one.
 
 ## You'll want to know first — one word
 <!-- hl-knowledge: introduces=[FA-LEX-BARADAR]; assesses=[] -->
@@ -62,14 +62,14 @@ it: this is as clean an inheritance as the family survives with.
 - [YOU CONNECT: **barâdar** ← \**bʰréh₂tēr* → English **brother**, Latin
   **frāter**]
 - [YOU RUN: **mâdar, pedar, barâdar** — mother, father, brother]
-- [YOU NAME: the one word Chapter 6 still owes you]
+- [YOU NAME: the one word the **بودن** lesson still owes you]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-BARADAR, FA-ETYMON-BARADAR] -->
 <!-- hl-activity: {"id":"FA-C10-baradar-meaning","kind":"text","assesses":["FA-LEX-BARADAR"],"prompt":"Type the Persian word for 'brother'.","answer":"برادر","accepted":["baradar","barâdar","barādar"],"feedback":{"correct":"Right: برادر barâdar.","incorrect":"Use برادر — barâdar."},"response_seconds":8} -->
 
 [PAUSE 3s] What does **برادر** mean? (**Brother.**) Which English word is it
-the direct cousin of? (**Brother**.) Which family word from Chapter 6's list
-is still owed? (**دختر**, daughter.)
+the direct cousin of? (**Brother**.) Which family word from the **بودن**
+lesson's list is still owed? (**دختر**, daughter.)
 
 Source: [Wiktionary: برادر](https://en.wiktionary.org/wiki/%D8%A8%D8%B1%D8%A7%D8%AF%D8%B1).

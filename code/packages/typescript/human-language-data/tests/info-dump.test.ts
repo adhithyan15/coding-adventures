@@ -241,15 +241,15 @@ describe("the committed corpus", () => {
 
   it("pins the first measurement", () => {
     const report = measureInfoDump(lessons, budget);
-    expect(report.summary.lessons).toBe(1838); // +8: HL-C94 payoff lessons // +4: HL-C98
+    expect(report.summary.lessons).toBe(1878); // +8: HL-C94 payoff lessons // +4: HL-C98 // +40: vocabulary wave 5
 
     // The finding that reframed this gate: the PROSE is fine. Seventeen rule
     // statements across 1,694 lessons is a corpus whose writing is already
     // gentle, exactly as HL09 said. The dumps are in tables.
-    expect(report.summary.ruleStatements).toBe(23); // +1: ES-C02-concordancia states exactly ONE rule, which is the budget
+    expect(report.summary.ruleStatements).toBe(24); // +1: ES-C02-concordancia states exactly ONE rule, which is the budget // +1: vocabulary wave 5
     expect(report.summary.paradigmTables).toBe(95);
     expect(report.summary.fullParadigmGrids).toBe(22);
-    expect(report.summary.lessonsWithFindings).toBe(114);
+    expect(report.summary.lessonsWithFindings).toBe(115); // +1: vocabulary wave 5
   });
 
   it("flags the known full grids by name", () => {
