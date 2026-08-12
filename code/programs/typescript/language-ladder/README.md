@@ -174,7 +174,7 @@ all nine Persian starter letters — ا, ب, ت, س, ل, م, ن, ه, and و —,
 thirteen Urdu starter entries — ا, ج, ر, س, ش, ک, ل, م, ن, ں, ہ, ی, and ے —,
 all eighteen Arabic starter letters — ا, ب, ت, ج, ح, خ, د, ر, س, ش, ص, ض, ع, ك, ل, ه, و, and ي —,
 all twenty-two Hebrew starter letters א, ב, ג, ד, ה, ו, ז, ח, ט, י, כ, ל,
-מ, נ, ס, ע, פ, צ, ק, ר, ש, and ת, and Chinese 人, 亻, 口, 女, 子, and 日
+מ, נ, ס, ע, פ, צ, ק, ר, ש, and ת, and Chinese 人, 亻, 口, 女, 子, 日, and 讠
 have authored pen paths today.**
 `DUCTUS` admits no letter without a citation
 for its stroke order, and hand-drawing a letter is forbidden
@@ -494,6 +494,10 @@ descend the left side, lift for a top bar that turns down the right side without
 breaking, lift for the middle horizontal, then lift and close the bottom from
 left to right. The Noto Sans SC fit keeps the joined corner and the pinned
 inside-before-close order explicit.
+The four-frame **讠** filmstrip starts with its down-right dot, then lifts once
+for a short horizontal that turns down and rises to the upper right without
+breaking. The Noto Sans SC fit keeps both internal turns inside that one second
+stroke while recording the font's squarer middle geometry.
 The runtime resolves each cited path back to the owning script and lazily loads that
 script's font, while Tamil continues to use Noto Sans Tamil. Unverified letters
 still fall back to the numbered prose list, unchanged. Extending the coverage is HL-C09,
