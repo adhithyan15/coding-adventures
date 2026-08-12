@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C41-explicar
 spine_node: SPINE-GIVE-REASONS
-sequence: 2180
+sequence: 2190
 chapter: 170
 type: word
 headword: explicar

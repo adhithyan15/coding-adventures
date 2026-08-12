@@ -2,13 +2,13 @@
 schema_version: 2
 id: ES-C45-nos
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 1216
+sequence: 1226
 chapter: 83
 type: word
 headword: nos
 gloss: "us" — and the word hiding inside the verb ending you have used since hablamos
 concept_tag: ES-PRONOUN-NOS
-prerequisites: [ES-C42-sintesis-decirlo-una-vez]
+prerequisites: [ES-C42-sintesis-decirlo-una-vez, ES-C13-plurales-cambio, ES-C11-querer]
 sounds: []
 roots: [nos-latin]
 teaches_cells: []

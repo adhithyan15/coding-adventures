@@ -2,13 +2,13 @@
 schema_version: 2
 id: ES-C43-comida
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 1183
+sequence: 1193
 chapter: 72
 type: word
 headword: la comida
 gloss: food, a meal — a noun you can build yourself out of a verb you already own
 concept_tag: ES-FOOD-MEAL
-prerequisites: [ES-C43-libro]
+prerequisites: [ES-C43-libro, ES-C12-hacer]
 sounds: [d-soft]
 roots: [comedere-latin]
 teaches_cells: []

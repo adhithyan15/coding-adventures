@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C50-habla
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1487
+sequence: 1497
 chapter: 126
 type: grammar
 headword: habla · come · vive

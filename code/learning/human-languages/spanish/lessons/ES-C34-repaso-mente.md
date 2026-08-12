@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C34-repaso-mente
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1913
+sequence: 1923
 chapter: 152
 type: practice-mix
 headword: (review)

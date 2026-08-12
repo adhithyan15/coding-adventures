@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C50-no-hables
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1489
+sequence: 1499
 chapter: 128
 type: grammar
 headword: no hables

@@ -36,11 +36,14 @@ parent-owned D18D policy and execution.
 The production integration gate launches this executable with durable pipeline
 bindings, provisions its exact channel keys from owner-only files, sends its model
 request through the daemon's configured Ollama adapter, decrypts the published
-weather report as the authorized sink, verifies that the D18D smart-home catalog
-reaches the provider, and confirms that input acknowledgement is persisted only
-after publication. A separate process integration exercises one complete
-catalog-discovery, model-call, parent-execution, result-replay, final-publication
-cycle with exact authenticated operation ordering.
+weather report as the authorized sink, and confirms that input acknowledgement is
+persisted only after publication. Ollama first selects
+`smart_home.list_devices`; D18D attributes and authorizes that call as the signed
+host principal, commits its audit into the central durable D23 controller, and
+returns the result for a second model turn. The gate then reopens the controller
+from disk and reads the same entity plus allowed authorization decision through
+the Home Assistant-compatible web application. A separate process integration
+exercises the protocol operation ordering with a fully scripted parent.
 
 The executable rejects `--package-runtime deno` until a separately reviewed Deno
 adapter is composed. It uses no ambient environment configuration and inherits the

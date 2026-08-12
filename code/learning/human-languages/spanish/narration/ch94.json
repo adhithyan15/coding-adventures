@@ -4,11 +4,11 @@
   "chapter": 94,
   "title": "Se Lo --- The Pair That Does Not Exist",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:9a4f87921ae17813",
+  "sourceHash": "fnv1a64:2929fab10baca8c3",
   "lessons": [
     {
       "id": "ES-C47-se-lo",
-      "sequence": 1227,
+      "sequence": 1237,
       "title": "se lo — the pair that does not exist",
       "headword": "se lo",
       "romanization": "se lo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f72960e8d5d78286",
+      "sourceHash": "fnv1a64:2883fcf4fc90d29e",
       "notice": null,
       "blocks": [
         {

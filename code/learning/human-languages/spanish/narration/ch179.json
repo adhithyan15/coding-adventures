@@ -4,11 +4,11 @@
   "chapter": 179,
   "title": "Review --- The Three Se's",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:8b35212eff922b2a",
+  "sourceHash": "fnv1a64:82a42c1ce9351cf8",
   "lessons": [
     {
       "id": "ES-C52-tres-ses",
-      "sequence": 2189,
+      "sequence": 2199,
       "title": "Review — the three se's",
       "headword": "(review)",
       "romanization": "(review)",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:74995fe39f6720a7",
+      "sourceHash": "fnv1a64:aade33d2180464fc",
       "notice": null,
       "blocks": [
         {

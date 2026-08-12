@@ -137,12 +137,16 @@ epoch, both commands first make their exact signed access outcome durable.
 `item edit ITEM` asks the application for an opaque edit preparation that owns
 the authenticated current revision and wipe-on-drop secret document without
 returning either to CLI orchestration. It preserves immutable identity and
-unedited metadata, collects the complete bounded login form again, and consumes
-the preparation through the crash-resumable replacement compare-and-swap. In an
-active audit epoch, missing/conflicted/unsupported targets and prompt, entropy,
-or document-validation failures publish a failed `ItemUpdate` event before the
-CLI exposes their error; success publishes its event atomically with the new
-revision.
+unedited metadata, collects the complete bounded login form again—including a
+canonical zero-to-sixteen URL count, ordered URLs, and optional hidden
+notes—and consumes the preparation through the crash-resumable replacement
+compare-and-swap. Existing multi-URL records are accepted and the entire URL
+list and notes are replaced without implicit preservation. Show exposes only
+notes presence; `item reveal ITEM login-notes` uses the separate audited direct
+terminal ceremony. In an active audit epoch, missing/conflicted/unsupported
+targets and prompt, count, entropy, or document-validation failures publish a
+failed `ItemUpdate` event before the CLI exposes their error; success publishes
+its event atomically with the new revision.
 
 `history list ITEM` reopens the authenticated repository, traverses at most the
 application history bound, synchronously locks, and then renders each unique

@@ -13,6 +13,8 @@ const PASSPHRASE: &[u8] = b"e2e correct horse battery staple";
 const TARGET_PASSPHRASE: &[u8] = b"e2e separate restore target passphrase";
 const ITEM_PASSWORD: &[u8] = b"e2e item password stays encrypted";
 const UPDATED_ITEM_PASSWORD: &[u8] = b"e2e updated password stays encrypted";
+const LOGIN_NOTES: &[u8] = b"e2e login notes stay encrypted 91d603be";
+const UPDATED_LOGIN_NOTES: &[u8] = b"e2e updated login notes stay encrypted 7a425cd1";
 const SECURE_NOTE_BODY: &[u8] = b"e2e secure note body stays encrypted";
 const CARD_NUMBER: &[u8] = b"4242424242424242";
 const CARD_CVV: &[u8] = b"7391";
@@ -112,8 +114,11 @@ fn real_cli_initializes_through_a_hidden_tty_and_survives_restart() {
     assert!(add_transcript.contains("Title: "));
     assert!(add_transcript.contains("Username: "));
     assert!(add_transcript.contains("Password: "));
-    assert!(add_transcript.contains("URL (optional): "));
+    assert!(add_transcript.contains("URL count (0-16): "));
+    assert_eq!(add_transcript.matches("URL: ").count(), 2);
+    assert!(add_transcript.contains("Notes (optional): "));
     assert!(!add_transcript.contains("e2e item password"));
+    assert!(!add_transcript.contains("e2e login notes"));
     let item_id = extract_item_id(&add_transcript);
 
     let (note_status, note_transcript) = run_add_secure_note_in_pty(&home);
@@ -150,8 +155,11 @@ fn real_cli_initializes_through_a_hidden_tty_and_survives_restart() {
     assert!(show_status.success(), "item show failed: {show_transcript}");
     assert!(show_transcript.contains("Title: \"Example account\""));
     assert!(show_transcript.contains("Username: \"ada@example.test\""));
-    assert!(show_transcript.contains("URL: \"https://example.test\""));
+    assert!(show_transcript.contains("URL: \"https://example.test/login\""));
+    assert!(show_transcript.contains("URL: \"https://accounts.example.test\""));
+    assert!(show_transcript.contains("Notes: present"));
     assert!(!show_transcript.contains("e2e item password"));
+    assert!(!show_transcript.contains("e2e login notes"));
 
     let (edit_status, edit_transcript) = run_edit_login_in_pty(&home, &item_id);
     assert!(edit_status.success(), "item edit failed: {edit_transcript}");
@@ -166,8 +174,11 @@ fn real_cli_initializes_through_a_hidden_tty_and_survives_restart() {
     );
     assert!(updated_transcript.contains("Title: \"Updated account\""));
     assert!(updated_transcript.contains("Username: \"grace@example.test\""));
-    assert!(updated_transcript.contains("URL: none"));
+    assert!(updated_transcript.contains("URL: \"https://updated.example.test\""));
+    assert!(updated_transcript.contains("URL: \"https://backup.example.test\""));
+    assert!(updated_transcript.contains("Notes: present"));
     assert!(!updated_transcript.contains("e2e updated password"));
+    assert!(!updated_transcript.contains("e2e updated login notes"));
 
     let (reveal_status, reveal_transcript, reveal_stdout) =
         run_secret_reveal_in_pty(&home, &item_id, "login-password", UPDATED_ITEM_PASSWORD);
@@ -179,6 +190,21 @@ fn real_cli_initializes_through_a_hidden_tty_and_survives_restart() {
     assert!(reveal_transcript.contains("Secret: \"e2e updated password stays encrypted\""));
     assert!(reveal_stdout.is_empty(), "secret entered process stdout");
     assert_transcript_excludes_secrets(&reveal_transcript);
+
+    let (notes_status, notes_transcript, notes_stdout) =
+        run_secret_reveal_in_pty(&home, &item_id, "login-notes", UPDATED_LOGIN_NOTES);
+    assert!(
+        notes_status.success(),
+        "login notes reveal failed: {notes_transcript}"
+    );
+    assert!(
+        notes_transcript.contains("Secret: \"e2e updated login notes stay encrypted 7a425cd1\"")
+    );
+    assert!(
+        notes_stdout.is_empty(),
+        "login notes entered process stdout"
+    );
+    assert_transcript_excludes_secrets(&notes_transcript);
 
     let (history_status, history_transcript) = run_unlock_in_pty(
         &home,
@@ -241,6 +267,9 @@ fn real_cli_initializes_through_a_hidden_tty_and_survives_restart() {
         run_unlock_in_pty(&home, &["item", "show", &item_id], b"Password: <redacted>");
     assert!(restored_status.success());
     assert!(restored_transcript.contains("Title: \"Example account\""));
+    assert!(restored_transcript.contains("URL: \"https://example.test/login\""));
+    assert!(restored_transcript.contains("URL: \"https://accounts.example.test\""));
+    assert!(restored_transcript.contains("Notes: present"));
     assert_transcript_excludes_secrets(&restored_transcript);
     assert!(!restored_transcript.contains("e2e item password"));
     assert!(!restored_transcript.contains("e2e updated password"));
@@ -265,14 +294,16 @@ fn real_cli_initializes_through_a_hidden_tty_and_survives_restart() {
     assert!(failed_edit_transcript.contains("vault-pm: invalid command"));
     assert_transcript_excludes_secrets(&failed_edit_transcript);
 
-    let (post_failure_status, post_failure_transcript) = run_unlock_in_pty(
-        &home,
-        &["audit", "verify"],
-        b"commits=19 catalogs=6 revisions=5 items=2 audit_events=19",
-    );
+    let (post_failure_status, post_failure_transcript) =
+        run_unlock_in_pty(&home, &["audit", "verify"], b"Audit: verified (");
     assert!(
         post_failure_status.success(),
         "post-failure audit failed: {post_failure_transcript}"
+    );
+    assert!(
+        post_failure_transcript
+            .contains("commits=20 catalogs=6 revisions=5 items=2 audit_events=20"),
+        "unexpected post-failure audit totals: {post_failure_transcript}"
     );
     assert_transcript_excludes_secrets(&post_failure_transcript);
 
@@ -320,10 +351,14 @@ fn real_cli_initializes_through_a_hidden_tty_and_survives_restart() {
     assert_transcript_excludes_secrets(&audit_show_transcript);
 
     let (final_audit_status, final_audit_transcript) =
-        run_unlock_in_pty(&home, &["audit", "verify"], b"audit_events=23");
+        run_unlock_in_pty(&home, &["audit", "verify"], b"Audit: verified (");
     assert!(
         final_audit_status.success(),
         "final audit verification failed: {final_audit_transcript}"
+    );
+    assert!(
+        final_audit_transcript.contains("audit_events=24"),
+        "unexpected final audit total: {final_audit_transcript}"
     );
     assert_transcript_excludes_secrets(&final_audit_transcript);
 
@@ -397,6 +432,8 @@ fn real_cli_initializes_through_a_hidden_tty_and_survives_restart() {
     assert_tree_excludes(&home.0, TARGET_PASSPHRASE);
     assert_tree_excludes(&home.0, ITEM_PASSWORD);
     assert_tree_excludes(&home.0, UPDATED_ITEM_PASSWORD);
+    assert_tree_excludes(&home.0, LOGIN_NOTES);
+    assert_tree_excludes(&home.0, UPDATED_LOGIN_NOTES);
     assert_tree_excludes(&home.0, SECURE_NOTE_BODY);
     assert_tree_excludes(&home.0, EXPORT_PASSPHRASE);
 }
@@ -789,10 +826,16 @@ fn run_add_login_in_pty(home: &TestHome) -> (ExitStatus, String) {
     run_login_form_in_pty(
         home,
         &["item", "add", "login"],
-        b"Example account",
-        b"ada@example.test",
-        ITEM_PASSWORD,
-        b"https://example.test",
+        LoginFormInput {
+            title: b"Example account",
+            username: b"ada@example.test",
+            password: ITEM_PASSWORD,
+            urls: &[
+                b"https://example.test/login",
+                b"https://accounts.example.test",
+            ],
+            notes: LOGIN_NOTES,
+        },
         b"Item added: ",
     )
 }
@@ -1051,10 +1094,16 @@ fn run_edit_login_in_pty(home: &TestHome, item_id: &str) -> (ExitStatus, String)
     run_login_form_in_pty(
         home,
         &["item", "edit", item_id],
-        b"Updated account",
-        b"grace@example.test",
-        UPDATED_ITEM_PASSWORD,
-        b"",
+        LoginFormInput {
+            title: b"Updated account",
+            username: b"grace@example.test",
+            password: UPDATED_ITEM_PASSWORD,
+            urls: &[
+                b"https://updated.example.test",
+                b"https://backup.example.test",
+            ],
+            notes: UPDATED_LOGIN_NOTES,
+        },
         b"Item updated: ",
     )
 }
@@ -1168,13 +1217,18 @@ fn run_empty_title_form_in_pty(home: &TestHome, arguments: &[&str]) -> (ExitStat
     (status, String::from_utf8_lossy(&transcript).into_owned())
 }
 
+struct LoginFormInput<'a> {
+    title: &'a [u8],
+    username: &'a [u8],
+    password: &'a [u8],
+    urls: &'a [&'a [u8]],
+    notes: &'a [u8],
+}
+
 fn run_login_form_in_pty(
     home: &TestHome,
     arguments: &[&str],
-    title: &[u8],
-    username: &[u8],
-    password: &[u8],
-    url: &[u8],
+    input: LoginFormInput<'_>,
     completion: &[u8],
 ) -> (ExitStatus, String) {
     let (mut master, slave) = open_pty();
@@ -1206,16 +1260,26 @@ fn run_login_form_in_pty(
     master.write_all(PASSPHRASE).unwrap();
     master.write_all(b"\n").unwrap();
     read_until(&mut master, &mut transcript, b"Title: ");
-    master.write_all(title).unwrap();
+    master.write_all(input.title).unwrap();
     master.write_all(b"\n").unwrap();
     read_until(&mut master, &mut transcript, b"Username: ");
-    master.write_all(username).unwrap();
+    master.write_all(input.username).unwrap();
     master.write_all(b"\n").unwrap();
     read_until(&mut master, &mut transcript, b"Password: ");
-    master.write_all(password).unwrap();
+    master.write_all(input.password).unwrap();
     master.write_all(b"\n").unwrap();
-    read_until(&mut master, &mut transcript, b"URL (optional): ");
-    master.write_all(url).unwrap();
+    read_until(&mut master, &mut transcript, b"URL count (0-16): ");
+    master
+        .write_all(input.urls.len().to_string().as_bytes())
+        .unwrap();
+    master.write_all(b"\n").unwrap();
+    for url in input.urls {
+        read_until(&mut master, &mut transcript, b"URL: ");
+        master.write_all(url).unwrap();
+        master.write_all(b"\n").unwrap();
+    }
+    read_until(&mut master, &mut transcript, b"Notes (optional): ");
+    master.write_all(input.notes).unwrap();
     master.write_all(b"\n").unwrap();
     read_until(&mut master, &mut transcript, completion);
     let item_line = transcript.len() - completion.len();

@@ -4,11 +4,11 @@
   "chapter": 124,
   "title": "Ojala --- a Prayer That Outlived Its Religion",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:7315adbafdec3ae7",
+  "sourceHash": "fnv1a64:9f3b57ddbc83acfa",
   "lessons": [
     {
       "id": "ES-C18-ojala",
-      "sequence": 1478,
+      "sequence": 1488,
       "title": "ojalá + subjunctive — a wish borrowed through Arabic",
       "headword": "ojalá + subjunctive",
       "romanization": "ojalá + subjunctive",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:41157bc755a5ea97",
+      "sourceHash": "fnv1a64:5496f3ce47f908ee",
       "notice": null,
       "blocks": [
         {
@@ -155,7 +155,7 @@
     },
     {
       "id": "ES-C18-practice",
-      "sequence": 1482,
+      "sequence": 1492,
       "title": "Practice — assert the event or want it",
       "headword": "(practice)",
       "romanization": "(practice)",
@@ -166,7 +166,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ccf79bc1a91d6e9b",
+      "sourceHash": "fnv1a64:c8522e27f2bf09f6",
       "notice": null,
       "blocks": [
         {

@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C32-gato
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 1840
+sequence: 1850
 chapter: 145
 type: word
 headword: gato

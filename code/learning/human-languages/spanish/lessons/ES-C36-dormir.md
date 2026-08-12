@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C36-dormir
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1970
+sequence: 1980
 chapter: 160
 type: word
 headword: dormir

@@ -4,11 +4,11 @@
   "chapter": 180,
   "title": "Synthesis --- Reading the Window",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:89304070a9aa2646",
+  "sourceHash": "fnv1a64:85dc8bcdfde4cba1",
   "lessons": [
     {
       "id": "ES-C52-sintesis-el-letrero",
-      "sequence": 2190,
+      "sequence": 2200,
       "title": "Synthesis — reading the window",
       "headword": "(synthesis)",
       "romanization": "(synthesis)",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f5b8b5168cda710c",
+      "sourceHash": "fnv1a64:1ed9d27bba517ffc",
       "notice": null,
       "blocks": [
         {

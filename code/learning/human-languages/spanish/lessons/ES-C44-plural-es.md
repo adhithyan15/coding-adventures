@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C44-plural-es
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 1189
+sequence: 1199
 chapter: 75
 type: grammar
 headword: -es

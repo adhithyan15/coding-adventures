@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C18-ojala
 spine_node: SPINE-SAY-WHAT-I-WANT
-sequence: 1478
+sequence: 1488
 chapter: 124
 type: etymology
 headword: ojalá + subjunctive

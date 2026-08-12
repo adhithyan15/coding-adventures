@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C26-pan
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1730
+sequence: 1740
 chapter: 138
 type: word
 headword: el pan

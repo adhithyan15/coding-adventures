@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C29-la-hora
 spine_node: SPINE-TIME-OF-DAY
-sequence: 1760
+sequence: 1770
 chapter: 142
 type: word
 headword: la hora

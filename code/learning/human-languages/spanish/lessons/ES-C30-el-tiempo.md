@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C30-el-tiempo
 spine_node: SPINE-TIME-OF-DAY
-sequence: 1770
+sequence: 1780
 chapter: 143
 type: word
 headword: el tiempo

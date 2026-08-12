@@ -4,11 +4,11 @@
   "chapter": 102,
   "title": "The Imperfect --- What Used to Happen",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:cc6d6a88c675c9a7",
+  "sourceHash": "fnv1a64:9c0f9a1bb8ed53d8",
   "lessons": [
     {
       "id": "ES-C16-imperfecto",
-      "sequence": 1340,
+      "sequence": 1350,
       "title": "hablaba — let a past action stay open",
       "headword": "hablaba",
       "romanization": "hablaba",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a4e2613b2330ba5e",
+      "sourceHash": "fnv1a64:2f62a572a212c9d9",
       "notice": null,
       "blocks": [
         {
@@ -194,7 +194,7 @@
     },
     {
       "id": "ES-C16-comer-imperfecto",
-      "sequence": 1344,
+      "sequence": 1354,
       "title": "comía — hear both vowels",
       "headword": "comía",
       "romanization": "comía",
@@ -205,7 +205,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b2d4133af8fc0b5e",
+      "sourceHash": "fnv1a64:7fe8a2ac8ffbcc15",
       "notice": null,
       "blocks": [
         {
@@ -390,7 +390,7 @@
     },
     {
       "id": "ES-C16-vivir-imperfecto",
-      "sequence": 1348,
+      "sequence": 1358,
       "title": "vivía — reuse the complete -er row",
       "headword": "vivía",
       "romanization": "vivía",
@@ -401,7 +401,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a869bceb9688030e",
+      "sourceHash": "fnv1a64:c877f46cc3579063",
       "notice": null,
       "blocks": [
         {

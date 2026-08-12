@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C40-esperar
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 2120
+sequence: 2130
 chapter: 169
 type: word
 headword: esperar

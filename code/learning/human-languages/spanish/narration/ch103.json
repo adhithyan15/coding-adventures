@@ -4,11 +4,11 @@
   "chapter": 103,
   "title": "Ver --- Seeing",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:323b5e17856ce5e4",
+  "sourceHash": "fnv1a64:361b329004885029",
   "lessons": [
     {
       "id": "ES-C16-ver",
-      "sequence": 1352,
+      "sequence": 1362,
       "title": "ver — learn the verb before its past",
       "headword": "ver",
       "romanization": "ver",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:776ef7b4b040126a",
+      "sourceHash": "fnv1a64:d76d08e1dfd9642d",
       "notice": null,
       "blocks": [
         {

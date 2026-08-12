@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C49-haber-completo
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 1377
+sequence: 1387
 chapter: 113
 type: grammar
 headword: has · ha · hemos · habéis · han

@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Extended the real-process login lifecycle through two ordered URLs, hidden
+  notes creation and replacement, notes-presence redaction, separate audited
+  notes reveal, history restoration, and plaintext-tree exclusion.
 - Exposed audited TOTP creation with hidden canonical Base32 input,
   restart-backed metadata-only rendering, separate audited Base32 reveal,
   closed audit rows, and encoded/raw plaintext-tree exclusion in a real PTY

@@ -4,11 +4,11 @@
   "chapter": 110,
   "title": "Synthesis --- A Small Story",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:64a8f56dc7f33238",
+  "sourceHash": "fnv1a64:7a19ca5bca303ca1",
   "lessons": [
     {
       "id": "ES-C48-sintesis-una-historia",
-      "sequence": 1374,
+      "sequence": 1384,
       "title": "Synthesis — a small story",
       "headword": "(synthesis)",
       "romanization": "(synthesis)",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b204a1a2712b8d51",
+      "sourceHash": "fnv1a64:2ea4d88a6d9dbd4e",
       "notice": null,
       "blocks": [
         {

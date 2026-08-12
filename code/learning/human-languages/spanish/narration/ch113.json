@@ -4,11 +4,11 @@
   "chapter": 113,
   "title": "Has, Ha, Hemos, Habeis, Han",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:d7c7643f2a6694ca",
+  "sourceHash": "fnv1a64:0f83499daeaa388f",
   "lessons": [
     {
       "id": "ES-C49-haber-completo",
-      "sequence": 1377,
+      "sequence": 1387,
       "title": "has, ha, hemos, habéis, han",
       "headword": "has · ha · hemos · habéis · han",
       "romanization": "has · ha · hemos · habéis · han",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b8b96b7cb4e315d3",
+      "sourceHash": "fnv1a64:38b05532a1a9dade",
       "notice": null,
       "blocks": [
         {

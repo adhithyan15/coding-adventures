@@ -4,11 +4,11 @@
   "chapter": 106,
   "title": "Hablaba and Hablo --- Two Ways of Looking",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:b72b359fed203911",
+  "sourceHash": "fnv1a64:a85cb65157c72357",
   "lessons": [
     {
       "id": "ES-C48-dos-miradas",
-      "sequence": 1370,
+      "sequence": 1380,
       "title": "hablaba and habló — two ways of looking",
       "headword": "hablaba / habló",
       "romanization": "hablaba / habló",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:93244661765dac6f",
+      "sourceHash": "fnv1a64:f355c1690199536c",
       "notice": {
         "modality": "sight",
         "needs": [

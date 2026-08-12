@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C48-dos-miradas
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 1370
+sequence: 1380
 chapter: 106
 type: grammar
 headword: hablaba / habló

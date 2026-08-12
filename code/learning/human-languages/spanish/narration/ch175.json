@@ -4,11 +4,11 @@
   "chapter": 175,
   "title": "Synthesis --- The Gift and the Motive",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:78632b80002f0ccd",
+  "sourceHash": "fnv1a64:4d23ff085c69eebe",
   "lessons": [
     {
       "id": "ES-C51-sintesis-regalo-motivo",
-      "sequence": 2185,
+      "sequence": 2195,
       "title": "Synthesis — the gift and the motive",
       "headword": "(synthesis)",
       "romanization": "(synthesis)",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:200b86db5dce863d",
+      "sourceHash": "fnv1a64:feda9bd72d5cf752",
       "notice": null,
       "blocks": [
         {

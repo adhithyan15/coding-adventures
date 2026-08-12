@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C09-oso
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1025
-chapter: 59
+sequence: 1035
+chapter: 61
 type: grammar
 headword: -oso
 gloss: full of — the ending that hands you a shelf of describing words you were never taught

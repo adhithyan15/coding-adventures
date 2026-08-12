@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C23-hermano-hache
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 1670
+sequence: 1680
 chapter: 135
 type: etymology
 headword: hermano ← *ermano*

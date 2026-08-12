@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C51-para
 spine_node: SPINE-GIVE-REASONS
-sequence: 2181
+sequence: 2191
 chapter: 171
 type: word
 headword: para

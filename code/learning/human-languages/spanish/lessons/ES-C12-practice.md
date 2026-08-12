@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C12-practice
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1130
-chapter: 63
+sequence: 1140
+chapter: 65
 type: practice-mix
 headword: (practice)
 gloss: singular doing, making, saying, and the learned tengo · hago · digo comparison

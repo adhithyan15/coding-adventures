@@ -4,11 +4,11 @@
   "chapter": 139,
   "title": "La Bebo --- The Pronoun Tells the Truth",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:e04b2013d778115c",
+  "sourceHash": "fnv1a64:9d10aba4c876ae51",
   "lessons": [
     {
       "id": "ES-C55-la-bebo",
-      "sequence": 1735,
+      "sequence": 1745,
       "title": "la bebo — the pronoun tells the truth",
       "headword": "la bebo",
       "romanization": "la bebo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:887ffde60d036620",
+      "sourceHash": "fnv1a64:7c98de02dbf18f55",
       "notice": null,
       "blocks": [
         {

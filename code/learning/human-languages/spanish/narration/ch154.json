@@ -4,11 +4,11 @@
   "chapter": 154,
   "title": "Tomar — Taking, and a Word With No Past",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:258af34c3d980e0e",
+  "sourceHash": "fnv1a64:727bc9d418922760",
   "lessons": [
     {
       "id": "ES-C35-tomar",
-      "sequence": 1920,
+      "sequence": 1930,
       "title": "tomar — \"to take\", and nobody knows where it came from",
       "headword": "tomar",
       "romanization": "tomar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:06a2cbe9534b7579",
+      "sourceHash": "fnv1a64:2901ed0bd3cc47cc",
       "notice": null,
       "blocks": [
         {

@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C28-mediodia-medianoche
 spine_node: SPINE-TIME-OF-DAY
-sequence: 1750
+sequence: 1760
 chapter: 141
 type: word
 headword: mediodía, medianoche

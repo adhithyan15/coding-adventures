@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C37-abrir
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 2000
+sequence: 2010
 chapter: 161
 type: word
 headword: abrir

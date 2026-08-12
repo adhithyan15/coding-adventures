@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C50-sintesis-pedir-bien
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1492
+sequence: 1502
 chapter: 131
 type: practice-mix
 headword: (synthesis)

@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C40-sintesis-describir
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 1875
+sequence: 1885
 chapter: 147
 type: practice-mix
 headword: (synthesis)

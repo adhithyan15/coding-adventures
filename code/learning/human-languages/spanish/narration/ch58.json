@@ -2,32 +2,25 @@
   "version": 1,
   "language": "spanish",
   "chapter": 58,
-  "title": "Synthesis --- Describing Things",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:70b8f706251ab65c",
+  "title": "Grande --- the First Word for What a Thing Is Like",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:f72039c5d3c00ef3",
   "lessons": [
     {
-      "id": "ES-C09-sintesis-describir",
-      "sequence": 1020,
-      "title": "Synthesis — describing things",
-      "headword": "describing things",
-      "romanization": "describing things",
-      "gloss": "ser for what a thing is, estar for how it is right now — the contrast you learned before you had the words for it",
+      "id": "ES-C09-grande",
+      "sequence": 1010,
+      "title": "grande",
+      "headword": "grande",
+      "romanization": "grande",
+      "gloss": "big — the first word in this book for what something is like, and it does not change for gender",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:533681bd9ebbada1",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:55a0d7962c5affee",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -42,18 +35,69 @@
             },
             {
               "kind": "speech",
-              "text": "Two verbs for to be. Which is for what a thing is? (Ser.) Which is for how it is right now? (Estar.)"
+              "text": "Say \"she is.\" (Es.) You can say who someone is and what they do."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You still cannot say what anything is like. That starts here."
             }
           ]
         },
         {
           "index": 1,
-          "type": "notice",
-          "title": "What you've built",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "You met ser and estar as a pair long before this book had a single word to put after them. Now it does, and the pair finally does its job:"
+              "text": "grande — big."
+            },
+            {
+              "kind": "speech",
+              "text": "Latin grandis meant full-grown. English took it whole and never changed it: a grand piano is the big one, a grandiose plan is oversized, and a grandmother is — literally — the full-grown mother."
+            },
+            {
+              "kind": "speech",
+              "text": "grande from grandis becomes grand, grandiose, aggrandise."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: grande."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: where it goes, and what it does not do",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A describing word usually comes after the noun in Spanish."
+            },
+            {
+              "kind": "speech",
+              "text": "English puts it in front — a big house. Spanish puts it behind:"
+            },
+            {
+              "kind": "speech",
+              "text": "una casa grande — a big house."
+            },
+            {
+              "kind": "speech",
+              "text": "And grande does not change for a man or a woman:"
             },
             {
               "kind": "table",
@@ -62,46 +106,15 @@
                 ""
               ],
               "columns": 2,
-              "rowCount": 3,
+              "rowCount": 2,
               "utterances": [
-                "La casa es grande., The house is big — that is what it is.",
-                "Estoy cansado., I am tired — today.",
-                "Soy profesor., I am a teacher — and no un."
+                "el libro grande, the big book.",
+                "la casa grande, the big house."
               ]
             },
             {
               "kind": "speech",
-              "text": "Three sentences, three different jobs for to be, and nothing memorised as a phrase."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: which words shift",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "The ending tells you, and you now have one of each:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "ending",
-                "shifts?",
-                "example"
-              ],
-              "columns": 3,
-              "rowCount": 3,
-              "utterances": [
-                "ending: -o. shifts?: yes. example: cansado becomes cansada.",
-                "ending: -e. shifts?: no. example: grande stays grande.",
-                "ending: -ista, -ante. shifts?: no. example: artista, estudiante."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "So you never have to guess. Look at the last letter."
+              "text": "You have met that already. Estudiante and artista do not shift either. Some Spanish words agree with gender and some simply do not, and the ending tells you which: -o/-a words like bueno/buena shift, -e words like grande sit still."
             }
           ]
         },
@@ -119,20 +132,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "La casa es grande",
+              "instruction": "una casa grande",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *La casa es grande*]"
+              "source": "[YOU SAY: *una casa grande*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "Estoy cansado — and mean it",
+              "instruction": "el libro grande",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *Estoy cansado* — and mean it]"
+              "source": "[YOU SAY: *el libro grande*]"
             },
             {
               "kind": "repeat",
@@ -142,45 +155,8 @@
             {
               "kind": "activity",
               "scored": true,
-              "id": "ES-C09-sintesis-describir-both",
-              "prompt": "Say: the house is big, but I am tired.",
-              "assesses": [
-                "ES-GRAMMAR-STATE-LOCATION-ESTAR",
-                "ES-LEX-GRANDE"
-              ],
-              "responseSeconds": 18,
-              "acceptedResponses": [
-                "la casa es grande pero estoy cansado",
-                "la casa es grande pero estoy cansada"
-              ],
-              "feedback": {
-                "correct": "Ser for the house, estar for you.",
-                "incorrect": "La casa es grande, pero estoy cansado."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C09-sintesis-describir-shift",
-              "prompt": "A woman says she is tired. Which word changes?",
-              "assesses": [
-                "ES-MORPH-BUENO-BUENA"
-              ],
-              "responseSeconds": 12,
-              "acceptedResponses": [
-                "cansada",
-                "cansado becomes cansada"
-              ],
-              "feedback": {
-                "correct": "The -o did the work.",
-                "incorrect": "Cansada — because it ends in -o."
-              }
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "ES-C09-sintesis-describir-order",
-              "prompt": "Put the words in Spanish order: grande / casa / una.",
+              "id": "ES-C09-grande-order",
+              "prompt": "Say: a big house.",
               "assesses": [
                 "ES-GRAMMAR-ADJECTIVE-AFTER-NOUN"
               ],
@@ -190,8 +166,45 @@
                 "casa grande"
               ],
               "feedback": {
-                "correct": "Describing word last.",
-                "incorrect": "Una casa grande."
+                "correct": "Behind the noun, where Spanish keeps it.",
+                "incorrect": "Una casa grande — the describing word goes after."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C09-grande-invariant",
+              "prompt": "Does grande change for la casa?",
+              "assesses": [
+                "ES-LEX-GRANDE"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "no",
+                "no it stays grande"
+              ],
+              "feedback": {
+                "correct": "-e words sit still.",
+                "incorrect": "No — grande does not shift."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C09-grande-cousin",
+              "prompt": "What did Latin grandis mean?",
+              "assesses": [
+                "ES-ETYMON-GRANDIS"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "full-grown",
+                "fully grown",
+                "grown up"
+              ],
+              "feedback": {
+                "correct": "Which is still there in grandmother.",
+                "incorrect": "Full-grown."
               }
             }
           ]
@@ -203,13 +216,23 @@
           "segments": [
             {
               "kind": "pause",
-              "seconds": 3,
+              "seconds": 2,
               "perItem": false,
-              "source": "[PAUSE 3s]"
+              "source": "[PAUSE 2s]"
             },
             {
               "kind": "speech",
-              "text": "Ser or estar for tired? (Estar.) Where does the describing word go? (After the noun.) And what tells you whether it shifts? (Its last letter.)"
+              "text": "Where does a describing word go? (After the noun.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And which endings sit still? (-e ones, like grande.)"
             }
           ]
         }

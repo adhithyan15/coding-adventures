@@ -4,11 +4,11 @@
   "chapter": 97,
   "title": "Synthesis --- Two at a Time",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:46f896520974e654",
+  "sourceHash": "fnv1a64:5b5691aa35d7bdb9",
   "lessons": [
     {
       "id": "ES-C47-sintesis-dos-a-la-vez",
-      "sequence": 1230,
+      "sequence": 1240,
       "title": "Synthesis — two at a time",
       "headword": "(synthesis)",
       "romanization": "(synthesis)",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:0f35b13fde8caaf3",
+      "sourceHash": "fnv1a64:17e0f0e7f2acb76c",
       "notice": {
         "modality": "sight",
         "needs": [

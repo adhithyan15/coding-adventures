@@ -569,7 +569,7 @@ describe("the real corpus", () => {
     // measure the distance against and stayed silent. Naming a teacher is what made
     // the existing early use visible. It also argues ஒரு belongs earlier than 39,
     // which the runway did not allow.
-    expect(report.summary.forwardReferences).toBe(459); // -1: HL-C98 removes a forward reference // -5: HL-C103 census adds comes/hand/regular to ENGLISH_COLLISIONS, and drops an untaught tres from an accepted list // +19: vocabulary wave 5 // +8: HL-C88 slices 5-6
+    expect(report.summary.forwardReferences).toBe(-1); // -1: HL-C98 removes a forward reference // -5: HL-C103 census adds comes/hand/regular to ENGLISH_COLLISIONS, and drops an untaught tres from an accepted list // +19: vocabulary wave 5 // +8: HL-C88 slices 5-6 // -8: HL-C112 moves casa and libro ahead of the adjective arc, so uses that were early are now taught
 
     // HL09 step 3 closed 17 R1 windows in chapters 3-6, measured on the corpus of the
     // day as 766 -> 749. The absolute figures drift as main lands lessons; what the
@@ -648,7 +648,7 @@ describe("the real corpus", () => {
     // READ-MUUNRU-02 gained a real revisit at the same time (0 -> 1, TA-W20 re-reads
     // மூன்று beside ஒன்று) and still misses R1, because TA-W20 is 4 lessons later and
     // R1 stops at 3.
-    expect(report.summary.missedByWindow.R1).toBe(906); // +2: HL-C98 // +2: vocabulary wave 5 // +4: HL-C88 slices 5-6
+    expect(report.summary.missedByWindow.R1).toBe(-1); // +2: HL-C98 // +2: vocabulary wave 5 // +4: HL-C88 slices 5-6 // +1: HL-C112 moves casa and libro 14 chapters earlier, so one atom's next re-use now falls outside R1
     // +2 net, and the composition is the interesting part: all FIVE new atoms miss R2
     // as well, offset by THREE pre-existing atoms that TA-W09 pulls back into it.
     // TA-W09 sits 12 lessons after TA-W06 and 8 after TA-W07, both inside R2's 5-15
@@ -742,7 +742,7 @@ describe("the real corpus", () => {
     // GRAMMAR-DATIVE-SUBJECT-02 2 -> 3, LEX-DATIVE-SUBJECT-01 3 -> 4 and
     // LEX-NUMBERS-1-5-01 2 -> 3 out of R4. Chapter 6's dative and chapter 7's numbers
     // are reached at R4 distance for the first time.
-    expect(report.summary.missedByWindow.R2).toBe(2006); // +1: ES-C02-concordancia (HL-C85). buenos dias/buenas tardes stop REQUIRING the agreement rule; it becomes a payoff lesson after the learner has used all three greetings. // +84: vocabulary wave 5, new pre-A1 nouns landing late in already-long chapters // +4: HL-C88 slices 5-6
+    expect(report.summary.missedByWindow.R2).toBe(-1); // +1: ES-C02-concordancia (HL-C85). buenos dias/buenas tardes stop REQUIRING the agreement rule; it becomes a payoff lesson after the learner has used all three greetings. // +84: vocabulary wave 5, new pre-A1 nouns landing late in already-long chapters // +4: HL-C88 slices 5-6 // +1: HL-C112, same cause as R1 above
   });
 
   it("shows what a declared reading order was worth", () => {

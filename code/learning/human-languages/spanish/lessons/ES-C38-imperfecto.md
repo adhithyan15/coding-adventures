@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C38-imperfecto
 spine_node: SPINE-NARRATE-EVENTS
-sequence: 2060
+sequence: 2070
 chapter: 162
 type: word
 headword: llovía / llovió

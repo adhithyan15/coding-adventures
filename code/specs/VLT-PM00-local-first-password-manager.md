@@ -1549,7 +1549,10 @@ changelog, focused build, and downstream validation.
              input, closed algorithm/digit/period validation, metadata-only
              rendering, separately authorized audited Base32 reveal, and
              plaintext exclusion, using `VLT-PM29-cli-totp-create.md`.
-9b-3a-2b-5. remaining richer login notes and multiple-URL editing.
+9b-3a-2b-5. completed audited rich login creation/replacement with a bounded
+             ordered URL list, hidden optional notes, metadata-only rendering,
+             separate audited notes reveal, and plaintext exclusion, using
+             `VLT-PM30-cli-rich-login-edit.md`.
 9b-3b-1. reversible authenticated item deletion and exact historical restore
          using `VLT-PM14-cli-delete-restore.md`.
 9b-3b-2a. completed authenticated redacted current-conflict inspection and

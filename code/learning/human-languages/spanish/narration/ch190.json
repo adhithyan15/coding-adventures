@@ -4,11 +4,11 @@
   "chapter": 190,
   "title": "Synthesis --- Describing Where You Are",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f9a0f4353bf5da4a",
+  "sourceHash": "fnv1a64:172a520c203e45d6",
   "lessons": [
     {
       "id": "ES-C54-sintesis-lo-que-hay",
-      "sequence": 2200,
+      "sequence": 2210,
       "title": "Synthesis — describing where you are",
       "headword": "(synthesis)",
       "romanization": "(synthesis)",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e905ed4adac25f89",
+      "sourceHash": "fnv1a64:31b46e284a9de1de",
       "notice": null,
       "blocks": [
         {

@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C09-cansado
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1010
-chapter: 57
+sequence: 1020
+chapter: 59
 type: word
 headword: cansado
 gloss: tired — a state, not a quality, which is why it takes estar and never ser

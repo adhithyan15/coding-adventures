@@ -2,8 +2,8 @@
 schema_version: 2
 id: ES-C09-grande
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1000
-chapter: 56
+sequence: 1010
+chapter: 58
 type: word
 headword: grande
 gloss: big — the first word in this book for what something is like, and it does not change for gender

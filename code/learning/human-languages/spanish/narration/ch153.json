@@ -4,11 +4,11 @@
   "chapter": 153,
   "title": "Synthesis --- What You Understand, and What You Don't",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:8eaf8bde019ddf7d",
+  "sourceHash": "fnv1a64:d278c6b4f0e07b89",
   "lessons": [
     {
       "id": "ES-C34-sintesis-mente",
-      "sequence": 1916,
+      "sequence": 1926,
       "title": "Synthesis — what you understand, and what you don't",
       "headword": "(synthesis)",
       "romanization": "(synthesis)",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:841c0be2ff470bd8",
+      "sourceHash": "fnv1a64:430987212ff609c7",
       "notice": null,
       "blocks": [
         {

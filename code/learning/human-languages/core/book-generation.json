@@ -2655,82 +2655,82 @@
     {
       "language": "spanish",
       "chapter": 56,
-      "output": "spanish/book/chapters/ch56-grande.tex"
+      "output": "spanish/book/chapters/ch56-noun-casa.tex"
     },
     {
       "language": "spanish",
       "chapter": 57,
-      "output": "spanish/book/chapters/ch57-cansado.tex"
+      "output": "spanish/book/chapters/ch57-noun-libro.tex"
     },
     {
       "language": "spanish",
       "chapter": 58,
-      "output": "spanish/book/chapters/ch58-synthesis-describir.tex"
+      "output": "spanish/book/chapters/ch58-grande.tex"
     },
     {
       "language": "spanish",
       "chapter": 59,
-      "output": "spanish/book/chapters/ch59-oso.tex"
+      "output": "spanish/book/chapters/ch59-cansado.tex"
     },
     {
       "language": "spanish",
       "chapter": 60,
-      "output": "spanish/book/chapters/ch60-tener-plural.tex"
+      "output": "spanish/book/chapters/ch60-synthesis-describir.tex"
     },
     {
       "language": "spanish",
       "chapter": 61,
-      "output": "spanish/book/chapters/ch61-ir-plural.tex"
+      "output": "spanish/book/chapters/ch61-oso.tex"
     },
     {
       "language": "spanish",
       "chapter": 62,
-      "output": "spanish/book/chapters/ch62-stem-changes.tex"
+      "output": "spanish/book/chapters/ch62-tener-plural.tex"
     },
     {
       "language": "spanish",
       "chapter": 63,
-      "output": "spanish/book/chapters/ch63-yo-go-verbs.tex"
+      "output": "spanish/book/chapters/ch63-ir-plural.tex"
     },
     {
       "language": "spanish",
       "chapter": 64,
-      "output": "spanish/book/chapters/ch64-poner.tex"
+      "output": "spanish/book/chapters/ch64-stem-changes.tex"
     },
     {
       "language": "spanish",
       "chapter": 65,
-      "output": "spanish/book/chapters/ch65-salir.tex"
+      "output": "spanish/book/chapters/ch65-yo-go-verbs.tex"
     },
     {
       "language": "spanish",
       "chapter": 66,
-      "output": "spanish/book/chapters/ch66-venir.tex"
+      "output": "spanish/book/chapters/ch66-poner.tex"
     },
     {
       "language": "spanish",
       "chapter": 67,
-      "output": "spanish/book/chapters/ch67-review-yo-go.tex"
+      "output": "spanish/book/chapters/ch67-salir.tex"
     },
     {
       "language": "spanish",
       "chapter": 68,
-      "output": "spanish/book/chapters/ch68-synthesis-yo-go.tex"
+      "output": "spanish/book/chapters/ch68-venir.tex"
     },
     {
       "language": "spanish",
       "chapter": 69,
-      "output": "spanish/book/chapters/ch69-derive-plurals.tex"
+      "output": "spanish/book/chapters/ch69-review-yo-go.tex"
     },
     {
       "language": "spanish",
       "chapter": 70,
-      "output": "spanish/book/chapters/ch70-noun-casa.tex"
+      "output": "spanish/book/chapters/ch70-synthesis-yo-go.tex"
     },
     {
       "language": "spanish",
       "chapter": 71,
-      "output": "spanish/book/chapters/ch71-noun-libro.tex"
+      "output": "spanish/book/chapters/ch71-derive-plurals.tex"
     },
     {
       "language": "spanish",

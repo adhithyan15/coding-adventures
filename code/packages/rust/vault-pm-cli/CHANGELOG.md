@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Extended login add/edit to collect zero-to-sixteen ordered URLs plus optional
+  hidden notes, accept existing multi-URL records, replace the complete form,
+  redact notes presence, audit invalid counts before returning, and expose
+  notes only through the separate audited reveal ceremony.
 - Added audited `item add totp` with canonical hidden Base32 seed input, closed
   algorithm/digits/period validation, metadata-only rendering, durable failure
   events, and separately authorized publish-before-Base32 reveal.

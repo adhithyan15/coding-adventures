@@ -4,11 +4,11 @@
   "chapter": 125,
   "title": "Synthesis --- Claiming, and Not Claiming",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:106623fa750f2170",
+  "sourceHash": "fnv1a64:1d8139c97d6de42a",
   "lessons": [
     {
       "id": "ES-C18-sintesis-subjuntivo",
-      "sequence": 1486,
+      "sequence": 1496,
       "title": "Synthesis — claiming, and not claiming",
       "headword": "(synthesis)",
       "romanization": "(synthesis)",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:1855298b27d576ae",
+      "sourceHash": "fnv1a64:d07b6f58b9a13ab9",
       "notice": {
         "modality": "sight",
         "needs": [

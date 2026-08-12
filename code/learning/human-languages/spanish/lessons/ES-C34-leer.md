@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C34-leer
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1900
+sequence: 1910
 chapter: 150
 type: word
 headword: leer

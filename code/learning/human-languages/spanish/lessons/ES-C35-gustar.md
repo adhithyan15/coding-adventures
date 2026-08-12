@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C35-gustar
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1950
+sequence: 1960
 chapter: 158
 type: word
 headword: gustar

@@ -4,11 +4,11 @@
   "chapter": 92,
   "title": "Synthesis --- The Thing and the Person",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:ffa95b35a856416d",
+  "sourceHash": "fnv1a64:c7655cd5297a1254",
   "lessons": [
     {
       "id": "ES-C46-sintesis-dar-y-decir",
-      "sequence": 1225,
+      "sequence": 1235,
       "title": "Synthesis — the thing and the person, in one sentence",
       "headword": "(synthesis)",
       "romanization": "(synthesis)",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:90c48ce152553eca",
+      "sourceHash": "fnv1a64:4fe9b1ff3e39888c",
       "notice": null,
       "blocks": [
         {

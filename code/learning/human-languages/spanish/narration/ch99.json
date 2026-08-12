@@ -4,11 +4,11 @@
   "chapter": 99,
   "title": "The Regular Preterite",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:4882c6d448fb3384",
+  "sourceHash": "fnv1a64:a3cae8daba4da775",
   "lessons": [
     {
       "id": "ES-C15-comer-preterite",
-      "sequence": 1310,
+      "sequence": 1320,
       "title": "comí — one regular -er singular past",
       "headword": "comí",
       "romanization": "comí",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a1b4ad43d72a137e",
+      "sourceHash": "fnv1a64:5587408c283d81dd",
       "notice": null,
       "blocks": [
         {
@@ -219,7 +219,7 @@
     },
     {
       "id": "ES-C15-comer-vivir-preterite",
-      "sequence": 1315,
+      "sequence": 1325,
       "title": "viví — reuse one past pattern with an -ir verb",
       "headword": "viví",
       "romanization": "viví",
@@ -230,7 +230,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c9cc5e8a9fe2e66e",
+      "sourceHash": "fnv1a64:5e4895e4f05b7ee1",
       "notice": null,
       "blocks": [
         {

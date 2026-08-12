@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C39-sintesis-elegir
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 2116
+sequence: 2126
 chapter: 168
 type: practice-mix
 headword: (synthesis)

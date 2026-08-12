@@ -4,11 +4,11 @@
   "chapter": 80,
   "title": "Me and Te --- The Two People Talking",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:9c343d77ab415031",
+  "sourceHash": "fnv1a64:2f06ac2cd250dd29",
   "lessons": [
     {
       "id": "ES-C42-me-objeto",
-      "sequence": 1209,
+      "sequence": 1219,
       "title": "me quieres — \"you love me\"",
       "headword": "me quieres",
       "romanization": "me quieres",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aa572431dea1a64d",
+      "sourceHash": "fnv1a64:c4cf40a7d346c769",
       "notice": null,
       "blocks": [
         {
@@ -200,7 +200,7 @@
     },
     {
       "id": "ES-C42-te",
-      "sequence": 1211,
+      "sequence": 1221,
       "title": "te quiero — \"I love you\"",
       "headword": "te quiero",
       "romanization": "te quiero",
@@ -211,7 +211,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0106be943b709d55",
+      "sourceHash": "fnv1a64:dad872bcabc8a55b",
       "notice": null,
       "blocks": [
         {

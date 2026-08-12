@@ -4,11 +4,11 @@
   "chapter": 119,
   "title": "One Stem, Two Tenses",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:5ebf2d550607b19b",
+  "sourceHash": "fnv1a64:36aaa1d5100b3a3c",
   "lessons": [
     {
       "id": "ES-C17-irregulares",
-      "sequence": 1434,
+      "sequence": 1444,
       "title": "haré, tendré, podré — three stems, two ending sets",
       "headword": "haré · tendré · podré",
       "romanization": "haré · tendré · podré",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:facb12983a39cd4e",
+      "sourceHash": "fnv1a64:912ec3f484f54b21",
       "notice": null,
       "blocks": [
         {
@@ -245,7 +245,7 @@
     },
     {
       "id": "ES-C17-practice",
-      "sequence": 1438,
+      "sequence": 1448,
       "title": "Practice — one infinitive frame, two futures of thought",
       "headword": "(practice)",
       "romanization": "(practice)",
@@ -256,7 +256,7 @@
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:c758dc88b55ada02",
+      "sourceHash": "fnv1a64:eb207c9c5522c71d",
       "notice": {
         "modality": "sight",
         "needs": [

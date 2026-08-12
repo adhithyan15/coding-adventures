@@ -4,11 +4,11 @@
   "chapter": 78,
   "title": "Lo --- Saying It Without Naming It",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:1f8c49b4894d68ed",
+  "sourceHash": "fnv1a64:03eb366f4c8d531d",
   "lessons": [
     {
       "id": "ES-C42-lo",
-      "sequence": 1205,
+      "sequence": 1215,
       "title": "lo — \"it\"",
       "headword": "lo",
       "romanization": "lo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a05f7da30ebb3b93",
+      "sourceHash": "fnv1a64:0ed6dc28cf7d166c",
       "notice": null,
       "blocks": [
         {

@@ -4,11 +4,11 @@
   "chapter": 81,
   "title": "Review --- Four Pronouns, One Slot",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:cc5b0403f1b5f92a",
+  "sourceHash": "fnv1a64:805b71e34a13e29a",
   "lessons": [
     {
       "id": "ES-C42-repaso-objeto",
-      "sequence": 1213,
+      "sequence": 1223,
       "title": "Review — four pronouns, one slot",
       "headword": "(review)",
       "romanization": "(review)",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:510a863a42cdf12a",
+      "sourceHash": "fnv1a64:84bcda2d4bb5ac95",
       "notice": {
         "modality": "sight",
         "needs": [

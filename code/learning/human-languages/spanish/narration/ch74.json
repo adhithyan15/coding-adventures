@@ -4,11 +4,11 @@
   "chapter": 74,
   "title": "Los --- The One That Does Not Add -s",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:92bc12ad21419674",
+  "sourceHash": "fnv1a64:8af0d8426ef98f09",
   "lessons": [
     {
       "id": "ES-C44-los",
-      "sequence": 1187,
+      "sequence": 1197,
       "title": "los libros — \"the books\"",
       "headword": "los libros",
       "romanization": "los libros",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0f452559ed879ddc",
+      "sourceHash": "fnv1a64:e417b99eed15e095",
       "notice": null,
       "blocks": [
         {

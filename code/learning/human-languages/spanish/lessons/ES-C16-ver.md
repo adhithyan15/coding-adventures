@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C16-ver
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 1352
+sequence: 1362
 chapter: 103
 type: word
 headword: ver

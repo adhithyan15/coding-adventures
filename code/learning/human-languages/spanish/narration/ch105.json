@@ -4,11 +4,11 @@
   "chapter": 105,
   "title": "Synthesis --- Three Exceptions, and No Others",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:5441c01f648fa383",
+  "sourceHash": "fnv1a64:8d61968a002a1258",
   "lessons": [
     {
       "id": "ES-C16-practice",
-      "sequence": 1368,
+      "sequence": 1378,
       "title": "Practice — keep the past open or close it",
       "headword": "(practice)",
       "romanization": "(practice)",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3d18fbf311dfb6e7",
+      "sourceHash": "fnv1a64:42ae1d574997f680",
       "notice": null,
       "blocks": [
         {
@@ -319,7 +319,7 @@
     },
     {
       "id": "ES-C16-sintesis-imperfecto",
-      "sequence": 1369,
+      "sequence": 1379,
       "title": "Synthesis — three exceptions, and no others",
       "headword": "(synthesis)",
       "romanization": "(synthesis)",
@@ -330,7 +330,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:347aa3c3fb177497",
+      "sourceHash": "fnv1a64:625f56832bd26252",
       "notice": null,
       "blocks": [
         {

@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C14-practice
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 1300
+sequence: 1310
 chapter: 98
 type: practice-mix
 headword: (practice)

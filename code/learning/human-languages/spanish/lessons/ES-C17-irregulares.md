@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C17-irregulares
 spine_node: SPINE-TALK-ABOUT-FUTURE
-sequence: 1434
+sequence: 1444
 chapter: 119
 type: grammar
 headword: haré · tendré · podré

@@ -142,6 +142,8 @@ pub enum TextPrompt {
     LoginUsername,
     /// Optional primary login URL.
     LoginUrl,
+    /// Required count of login URLs collected by the fixed repeated prompt.
+    LoginUrlCount,
     /// Explicit confirmation before one audited terminal secret disclosure.
     SecretRevealConfirmation,
 }
@@ -170,7 +172,8 @@ impl TextPrompt {
             Self::TotpDigits => "Digits (6 or 8): ",
             Self::TotpPeriod => "Period seconds (1-3600): ",
             Self::LoginUsername => "Username: ",
-            Self::LoginUrl => "URL (optional): ",
+            Self::LoginUrl => "URL: ",
+            Self::LoginUrlCount => "URL count (0-16): ",
             Self::SecretRevealConfirmation => {
                 "Reveal secret on this terminal? Type yes to continue: "
             }
@@ -203,6 +206,7 @@ impl TextPrompt {
             Self::CardExpiryYear => 4,
             Self::LoginUsername => 1_024,
             Self::LoginUrl => MAX_TEXT_BYTES,
+            Self::LoginUrlCount => 2,
             Self::SecretRevealConfirmation => 16,
         }
     }
@@ -211,7 +215,6 @@ impl TextPrompt {
         matches!(
             self,
             Self::LoginUsername
-                | Self::LoginUrl
                 | Self::CardBillingPostalCode
                 | Self::ApiKeyScopes
                 | Self::ApiKeyExpiry
@@ -241,6 +244,8 @@ pub enum SecretPrompt {
     ImportPassphrase,
     /// Collect a login item's password without terminal echo.
     LoginPassword,
+    /// Collect optional private login notes without terminal echo.
+    LoginNotes,
     /// Collect a secure-note body without terminal echo.
     SecureNoteBody,
     /// Collect a payment-card number without terminal echo.
@@ -265,6 +270,7 @@ impl SecretPrompt {
             Self::ConfirmExportPassphrase => "Confirm export passphrase: ",
             Self::ImportPassphrase => "Import passphrase: ",
             Self::LoginPassword => "Password: ",
+            Self::LoginNotes => "Notes (optional): ",
             Self::SecureNoteBody => "Note: ",
             Self::CardNumber => "Card number: ",
             Self::CardCvv => "CVV: ",
@@ -290,6 +296,20 @@ impl ControllingTerminal {
         #[cfg(not(any(unix, windows)))]
         {
             let _ = prompt;
+            Err(CliHostError::UnsupportedPlatform)
+        }
+    }
+
+    /// Read optional private login notes with terminal echo disabled.
+    pub fn read_optional_login_notes(&self) -> Result<Option<Zeroizing<Vec<u8>>>, CliHostError> {
+        #[cfg(any(unix, windows))]
+        {
+            let secret =
+                platform::read_secret(SecretPrompt::LoginNotes.message(), MAX_SECRET_BYTES)?;
+            validate_optional_secret(secret)
+        }
+        #[cfg(not(any(unix, windows)))]
+        {
             Err(CliHostError::UnsupportedPlatform)
         }
     }
@@ -431,6 +451,18 @@ fn validate_secret(secret: Zeroizing<Vec<u8>>) -> Result<Zeroizing<Vec<u8>>, Cli
     }
 }
 
+fn validate_optional_secret(
+    secret: Zeroizing<Vec<u8>>,
+) -> Result<Option<Zeroizing<Vec<u8>>>, CliHostError> {
+    if secret.len() > MAX_SECRET_BYTES {
+        Err(CliHostError::SecretTooLong)
+    } else if secret.is_empty() {
+        Ok(None)
+    } else {
+        Ok(Some(secret))
+    }
+}
+
 fn validate_text(
     bytes: Zeroizing<Vec<u8>>,
     allows_empty: bool,
@@ -507,6 +539,7 @@ mod tests {
             "Import passphrase: "
         );
         assert_eq!(SecretPrompt::LoginPassword.message(), "Password: ");
+        assert_eq!(SecretPrompt::LoginNotes.message(), "Notes (optional): ");
         assert_eq!(SecretPrompt::SecureNoteBody.message(), "Note: ");
         assert_eq!(SecretPrompt::CardNumber.message(), "Card number: ");
         assert_eq!(SecretPrompt::CardCvv.message(), "CVV: ");
@@ -554,7 +587,8 @@ mod tests {
             "Period seconds (1-3600): "
         );
         assert_eq!(TextPrompt::LoginUsername.message(), "Username: ");
-        assert_eq!(TextPrompt::LoginUrl.message(), "URL (optional): ");
+        assert_eq!(TextPrompt::LoginUrl.message(), "URL: ");
+        assert_eq!(TextPrompt::LoginUrlCount.message(), "URL count (0-16): ");
         assert_eq!(
             TextPrompt::SecretRevealConfirmation.message(),
             "Reveal secret on this terminal? Type yes to continue: "
@@ -582,7 +616,8 @@ mod tests {
         assert!(!TextPrompt::TotpDigits.allows_empty());
         assert!(!TextPrompt::TotpPeriod.allows_empty());
         assert!(TextPrompt::LoginUsername.allows_empty());
-        assert!(TextPrompt::LoginUrl.allows_empty());
+        assert!(!TextPrompt::LoginUrl.allows_empty());
+        assert!(!TextPrompt::LoginUrlCount.allows_empty());
         assert!(TextPrompt::SecretRevealConfirmation.allows_empty());
         let expected = [
             (
@@ -677,6 +712,19 @@ mod tests {
             &*validate_secret(Zeroizing::new(vec![b'x'; MAX_SECRET_BYTES])).unwrap(),
             &vec![b'x'; MAX_SECRET_BYTES]
         );
+        assert!(validate_optional_secret(Zeroizing::new(Vec::new()))
+            .unwrap()
+            .is_none());
+        assert_eq!(
+            &**validate_optional_secret(Zeroizing::new(vec![b'x'; MAX_SECRET_BYTES]))
+                .unwrap()
+                .unwrap(),
+            &vec![b'x'; MAX_SECRET_BYTES]
+        );
+        assert!(matches!(
+            validate_optional_secret(Zeroizing::new(vec![b'x'; MAX_SECRET_BYTES + 1])),
+            Err(CliHostError::SecretTooLong)
+        ));
     }
 
     #[test]

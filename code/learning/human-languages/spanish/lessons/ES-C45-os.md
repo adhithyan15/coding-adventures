@@ -2,13 +2,13 @@
 schema_version: 2
 id: ES-C45-os
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 1218
+sequence: 1228
 chapter: 85
 type: word
 headword: os
 gloss: "you all" as the object — the shortest word in the set, and the one that stops at a border
 concept_tag: ES-PRONOUN-OS
-prerequisites: [ES-C45-los-las]
+prerequisites: [ES-C45-los-las, ES-C11-querer]
 sounds: []
 roots: [vos-latin]
 teaches_cells: []

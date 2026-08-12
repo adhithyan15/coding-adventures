@@ -4,11 +4,11 @@
   "chapter": 86,
   "title": "Review --- All Eight",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:30453a4387f27b1d",
+  "sourceHash": "fnv1a64:24f2f53f4945cc08",
   "lessons": [
     {
       "id": "ES-C45-repaso-ocho",
-      "sequence": 1219,
+      "sequence": 1229,
       "title": "Review — all eight",
       "headword": "(review)",
       "romanization": "(review)",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:35852c4d6e9f2eba",
+      "sourceHash": "fnv1a64:eb6c96cdad3f99e5",
       "notice": null,
       "blocks": [
         {

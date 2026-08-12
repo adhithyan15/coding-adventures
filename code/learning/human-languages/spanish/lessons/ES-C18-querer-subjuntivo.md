@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C18-querer-subjuntivo
 spine_node: SPINE-SAY-WHAT-I-WANT
-sequence: 1466
+sequence: 1476
 chapter: 123
 type: grammar
 headword: quiera · quieras · quiera

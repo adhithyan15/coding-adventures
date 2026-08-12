@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C39-traer
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 2080
+sequence: 2090
 chapter: 163
 type: word
 headword: traer

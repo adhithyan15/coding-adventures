@@ -1,80 +1,59 @@
-Spanish, chapter 61: Ir in the Plural --- a Verb That Is Not Ir.
-2 lessons. All 2 can be done entirely by ear.
+Spanish, chapter 61: -oso --- a Shelf of Words You Were Never Taught.
+1 lesson. All 1 can be done entirely by ear.
 
 
-Lesson 1 of 2.
-vamos — from a verb that is not ir.
-
-Warm-up.
-[pause 2 seconds]
-Say "I go." (Voy.) And "we speak." (Hablamos.)
-
-Grammar Lens: -amos and -áis, on a stem you have not seen.
-vamos — we go., vais — you all go.
-The endings are ordinary. -amos and -áis are the plain -ar endings from hablamos and habláis.
-What is strange is the stem. The infinitive is ir, and there is no v in it anywhere — yet every one of these forms begins with one.
-
-The word, taken apart.
-You met this shape two chapters ago and now you can use it as a tool.
-Ir is not one verb. Latin had īre, "to go", which gives the infinitive ir and little else. It also had vādere, "to advance, to make one's way", which gives voy, vas, va, vamos, vais and one more — the entire present tense.
-So the present of ir is not irregular. It is regular for a different verb, one whose infinitive Spanish stopped using. The endings behave perfectly; they are simply attached to a stem the dictionary form does not show you.
-That is the third time this pattern has explained something: ser from esse and sedēre, and now ir from īre and vādere. English does it too — go and went, where went is really the past of wend.
-The commonest verbs in a language are the likeliest to be made of more than one, because they are used so much that no single word's forms survive intact.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "hablamos, vamos" — the same ending, an unexpected stem]
-[pause 8 seconds for the answer]
-[your turn — say: "voy, vas, va, vamos, vais" — all one verb, and it is not ir]
-[pause 8 seconds for the answer]
-[question — say your answer, then pause 8 seconds]
-Say we go.
-[question — say your answer, then pause 10 seconds]
-Why does the present of ir begin with v when the infinitive has none?
-[question — say your answer, then pause 10 seconds]
-Name the English pair that works the same way.
-
-Wrap-up Recall.
-[pause 3 seconds]
-What is "we go"? (Vamos.) Which Latin verb do these forms come from? (Vādere.) And what does that make ir? (Two verbs, like ser — and like English go and went.)
-
-
-Lesson 2 of 2.
-van — and the four are done.
+Lesson 1 of 1.
+-oso — full of — the ending that hands you a shelf of describing words you were never taught.
 
 Warm-up.
 [pause 2 seconds]
-Say "we go." (Vamos.) And "they speak." (Hablan.)
+Name your two describing words. (Grande, cansado.)
+[pause 1 second]
+Two is a short shelf. You are about to have a long one.
 
-Grammar Lens: the last form.
-van — they go, and ustedes van, you all go.
-Latin's form was vadunt. Spanish wore it down to three letters, and the rule still holds visibly: a final -n, and the subject is plural and not you.
+Grammar Lens: full of.
+Spanish -oso is English -ous.
+Latin -ōsus meant full of. Stick it on a noun and you get an adjective: fāma is fame or report, so famōsus is full of fame.
+English holds the same suffix, worn down through French to -ous. Not a resemblance — the same ending, arriving by two roads, exactly like -ción and -tion.
+[a table of 5 rows, read aloud]
+famoso means famous.
+delicioso means delicious.
+curioso means curious.
+precioso means precious.
+nervioso means nervous.
+You were taught none of those. You can read all of them.
 
-What you've built.
-Four chapters ago you could conjugate any regular verb in the present, and none of the irregular ones. Now the four commonest verbs in Spanish are complete in every person:
-ser, estar, tener, ir — to be, to be, to have, to go.
-And each one taught something that outlives it:
-ser — two Latin verbs fused, so the seam shows at eres.
-estar — one verb, so it is regular; the accent only marks stress.
-tener — the stem breaks exactly where it is stressed, in every stem-changing verb, which is why nosotros and vosotros never break.
-ir — its present belongs to a different verb entirely.
-Three of those four are about the same underlying thing: a verb that looks chaotic is usually more than one word, and the places it looks regular are the places one word survived intact.
+Grammar Lens: and you already know what to do with it.
+An -oso word is an ordinary describing word, so every rule you just learned applies without being restated:
+it goes after the noun — un profesor famoso.
+it ends in -o, so it shifts — famoso / famosa.
+and the verb depends on what you mean:
+[a table of 2 rows, read aloud]
+Es famoso., He is famous — that is what he is.
+Estoy nervioso., I am nervous — right now.
+That last pair is the whole ser/estar contrast again, and you did not have to be told which verb to use. You worked it out from the meaning.
+
+Why it's said this way.
+The ending is reliable. The root still has to be shared.
+Hermoso is beautiful, not hermous — because the root is formōsus, from forma, and English simply never borrowed that one.
+So -oso tells you the word is an adjective and roughly how it is built. It only hands you the meaning when English took the same root. That is the same deal every rule in this book has offered: a lead, not a guarantee.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "somos, estamos, tenemos, vamos" — the four, in the we form]
+[your turn — say: famoso, delicioso, curioso]
 [pause 8 seconds for the answer]
-[your turn — say: "son, están, tienen, van" — the four, in the they form]
+[your turn — say: Estoy nervioso]
 [pause 8 seconds for the answer]
 [repeat that twice]
-Until all four run without a gap.
-[question — say your answer, then pause 6 seconds]
-Say they go.
 [question — say your answer, then pause 10 seconds]
-They are (permanently), and they are (right now): which two forms?
-[question — say your answer, then pause 10 seconds]
-What usually explains a Spanish verb that looks chaotic?
+You have never seen misterioso. What is it?
+[question — say your answer, then pause 14 seconds]
+Say: a famous teacher, about a woman.
+[question — say your answer, then pause 14 seconds]
+Ser or estar for nervioso, and why?
 
 Wrap-up Recall.
-[pause 3 seconds]
-What is "they go"? (Van.) Name the four verbs you have just completed. (Ser, estar, tener, ir.) And what do three of them have in common? (Each is more than one Latin verb, or its stem change follows the stress.)
+[pause 2 seconds]
+-oso in English? (-ous.) Does it shift for a woman? (Yes — it ends in -o.)
+[pause 2 seconds]
+And what does the ending not promise? (That English took the same root.)

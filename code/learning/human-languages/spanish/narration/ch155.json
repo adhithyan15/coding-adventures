@@ -4,11 +4,11 @@
   "chapter": 155,
   "title": "Preguntar — Asking, and Sounding a Depth",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:1b1dd9a9f5ce319b",
+  "sourceHash": "fnv1a64:e1b65538c9b79e2d",
   "lessons": [
     {
       "id": "ES-C35-preguntar",
-      "sequence": 1930,
+      "sequence": 1940,
       "title": "preguntar — \"to ask\", by sounding the water with a pole",
       "headword": "preguntar",
       "romanization": "preguntar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e65fe3f06ed1a730",
+      "sourceHash": "fnv1a64:5e959bdf0a481531",
       "notice": null,
       "blocks": [
         {

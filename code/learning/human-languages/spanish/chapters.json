@@ -1126,6 +1126,48 @@
     },
     {
       "chapter": 56,
+      "title": "La Casa --- Your First Everyday Noun",
+      "label": "ch:noun-casa",
+      "canDo": "I can say la casa and tengo una casa, using the article and gender rules I already hold.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C43-casa",
+        "kind": "task",
+        "summary": "Complete ES-C43-casa: produce la casa and tengo una casa, and say what casa meant in Latin.",
+        "assesses": [
+          "ES-LEX-CASA",
+          "ES-ETYMON-CASA",
+          "ES-GRAMMAR-NOUN-GENDER",
+          "ES-GRAMMAR-INDEFINITE-ARTICLE-FEMININE"
+        ],
+        "note": "The chapter adds a noun and no grammar: the article, gender and tener machinery were all in place, and had nothing ordinary to act on."
+      }
+    },
+    {
+      "chapter": 57,
+      "title": "El Libro --- And a Word Made of Tree Bark",
+      "label": "ch:noun-libro",
+      "canDo": "I can say el libro and tengo un libro, and contrast it with la casa as a gender pair.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C43-libro",
+        "kind": "task",
+        "summary": "Complete ES-C43-libro: produce el libro and tengo un libro, and say what Latin liber originally named.",
+        "assesses": [
+          "ES-LEX-LIBRO",
+          "ES-ETYMON-LIBER",
+          "ES-GRAMMAR-NOUN-GENDER",
+          "ES-GRAMMAR-INDEFINITE-ARTICLE-MASCULINE"
+        ],
+        "note": "Pairing one masculine and one feminine everyday noun is the point: from here every gender-dependent rule has two plain test cases."
+      }
+    },
+    {
+      "chapter": 58,
       "title": "Grande --- the First Word for What a Thing Is Like",
       "label": "ch:grande",
       "canDo": "I can describe a thing with an adjective after the noun.",
@@ -1142,7 +1184,7 @@
       }
     },
     {
-      "chapter": 57,
+      "chapter": 59,
       "title": "Cansado --- a State, Not a Quality",
       "label": "ch:cansado",
       "canDo": "I can say how I am right now with estar and an adjective.",
@@ -1159,7 +1201,7 @@
       }
     },
     {
-      "chapter": 58,
+      "chapter": 60,
       "title": "Synthesis --- Describing Things",
       "label": "ch:sintesis-describir",
       "canDo": "I can choose ser or estar with an adjective and make it agree.",
@@ -1176,7 +1218,7 @@
       }
     },
     {
-      "chapter": 59,
+      "chapter": 61,
       "title": "-oso --- a Shelf of Words You Were Never Taught",
       "label": "ch:oso",
       "canDo": "I can read an -oso word as English -ous, make it agree, and choose ser or estar for it.",
@@ -1193,7 +1235,7 @@
       }
     },
     {
-      "chapter": 60,
+      "chapter": 62,
       "title": "Tener in the Plural, and the Stem-Change Rule",
       "label": "ch:spanish-tener-plural",
       "canDo": "I can use tener in every person, and state when a stem changes and when it does not.",
@@ -1213,7 +1255,7 @@
       }
     },
     {
-      "chapter": 61,
+      "chapter": 63,
       "title": "Ir in the Plural --- a Verb That Is Not Ir",
       "label": "ch:spanish-ir-plural",
       "canDo": "I can use ir in every person, and say why its present belongs to a different verb.",
@@ -1232,7 +1274,7 @@
       }
     },
     {
-      "chapter": 62,
+      "chapter": 64,
       "title": "Verbs That Break in the Middle --- the Stem Changers",
       "label": "ch:stem-changes",
       "canDo": "I can express singular wanting and ability, compare the learned e-to-ie and o-to-ue changes, and say our with a known singular noun.",
@@ -1262,7 +1304,7 @@
       }
     },
     {
-      "chapter": 63,
+      "chapter": 65,
       "title": "Hacer, Decir, and the -go Verb Club",
       "label": "ch:yo-go-verbs",
       "canDo": "I can use the three learned singular forms of hacer and decir and compare tengo, hago, and digo without predicting unseen verbs.",
@@ -1287,7 +1329,7 @@
       }
     },
     {
-      "chapter": 64,
+      "chapter": 66,
       "title": "Poner --- Putting, and the Root Under Position",
       "label": "ch:spanish-poner",
       "canDo": "I can say what I put, with the -go yo form and regular forms elsewhere.",
@@ -1306,7 +1348,7 @@
       }
     },
     {
-      "chapter": 65,
+      "chapter": 67,
       "title": "Salir --- Leaving",
       "label": "ch:spanish-salir",
       "canDo": "I can say that I leave, and use the regular forms for anyone else.",
@@ -1324,7 +1366,7 @@
       }
     },
     {
-      "chapter": 66,
+      "chapter": 68,
       "title": "Venir --- Coming",
       "label": "ch:spanish-venir",
       "canDo": "I can say that I come, and hear the stem break in the other two forms.",
@@ -1342,7 +1384,7 @@
       }
     },
     {
-      "chapter": 67,
+      "chapter": 69,
       "title": "Review --- Six Verbs, One Ending",
       "label": "ch:spanish-review-yo-go",
       "canDo": "I can name all six -go verbs and say why the list is closed.",
@@ -1360,7 +1402,7 @@
       }
     },
     {
-      "chapter": 68,
+      "chapter": 70,
       "title": "Synthesis --- You, and Somebody Else",
       "label": "ch:spanish-synthesis-yo-go",
       "canDo": "I can say the same thing about myself and about someone else, and know which of the two is irregular.",
@@ -1378,7 +1420,7 @@
       }
     },
     {
-      "chapter": 69,
+      "chapter": 71,
       "title": "Deriving the Rest",
       "label": "ch:spanish-derive-plurals",
       "canDo": "I can produce the plural of any irregular verb in this book from rules, and conjugate a verb I was never shown.",
@@ -1394,48 +1436,6 @@
           "ES-GRAMMAR-STEM-CHANGE-STRESS-RULE",
           "ES-GRAMMAR-QUERER-PRESENT-PLURAL"
         ]
-      }
-    },
-    {
-      "chapter": 70,
-      "title": "La Casa --- Your First Everyday Noun",
-      "label": "ch:noun-casa",
-      "canDo": "I can say la casa and tengo una casa, using the article and gender rules I already hold.",
-      "spineNodes": [
-        "SPINE-DEFINITE-REFERENCE"
-      ],
-      "payoff": {
-        "lesson": "ES-C43-casa",
-        "kind": "task",
-        "summary": "Complete ES-C43-casa: produce la casa and tengo una casa, and say what casa meant in Latin.",
-        "assesses": [
-          "ES-LEX-CASA",
-          "ES-ETYMON-CASA",
-          "ES-GRAMMAR-NOUN-GENDER",
-          "ES-GRAMMAR-INDEFINITE-ARTICLE-FEMININE"
-        ],
-        "note": "The chapter adds a noun and no grammar: the article, gender and tener machinery were all in place, and had nothing ordinary to act on."
-      }
-    },
-    {
-      "chapter": 71,
-      "title": "El Libro --- And a Word Made of Tree Bark",
-      "label": "ch:noun-libro",
-      "canDo": "I can say el libro and tengo un libro, and contrast it with la casa as a gender pair.",
-      "spineNodes": [
-        "SPINE-DEFINITE-REFERENCE"
-      ],
-      "payoff": {
-        "lesson": "ES-C43-libro",
-        "kind": "task",
-        "summary": "Complete ES-C43-libro: produce el libro and tengo un libro, and say what Latin liber originally named.",
-        "assesses": [
-          "ES-LEX-LIBRO",
-          "ES-ETYMON-LIBER",
-          "ES-GRAMMAR-NOUN-GENDER",
-          "ES-GRAMMAR-INDEFINITE-ARTICLE-MASCULINE"
-        ],
-        "note": "Pairing one masculine and one feminine everyday noun is the point: from here every gender-dependent rule has two plain test cases."
       }
     },
     {

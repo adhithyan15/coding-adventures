@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C16-ir-imperfecto
 spine_node: SPINE-TALK-ABOUT-PAST
-sequence: 1360
+sequence: 1370
 chapter: 104
 type: grammar
 headword: iba

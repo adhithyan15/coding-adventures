@@ -29,7 +29,14 @@ chief-of-staff-tool-api = { path = "../chief-of-staff-tool-api" }
 coding_adventures_ed25519 = { path = "../ed25519" }
 coding_adventures_storage_fs = { path = "../storage-fs" }
 coding_adventures_x3dh = { path = "../x3dh" }
+embeddable-http-server = { path = "../embeddable-http-server" }
+http-core = { path = "../http-core" }
+smart-home-controller-runtime = { path = "../smart-home-controller-runtime" }
+smart-home-core = { path = "../smart-home-core" }
+smart-home-platform-http = { path = "../smart-home-platform-http" }
+smart-home-testkit = { path = "../smart-home-testkit" }
 storage-core = { path = "../storage-core" }
+tcp-runtime = { path = "../tcp-runtime" }
 
 [[bin]]
 name = "chief-of-staff-host"

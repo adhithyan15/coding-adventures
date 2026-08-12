@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C34-entender
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 1890
+sequence: 1900
 chapter: 149
 type: word
 headword: entender

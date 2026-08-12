@@ -4,11 +4,11 @@
   "chapter": 98,
   "title": "The Preterite --- Your First Past Tense",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:328f21fd70814934",
+  "sourceHash": "fnv1a64:2d5bd3e1dd83c371",
   "lessons": [
     {
       "id": "ES-C14-ser-ir-preterite",
-      "sequence": 1280,
+      "sequence": 1290,
       "title": "fui — one past set shared by ser and ir",
       "headword": "fui",
       "romanization": "fui",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:08075d68d0b3b283",
+      "sourceHash": "fnv1a64:d23a229fe128fe74",
       "notice": null,
       "blocks": [
         {
@@ -206,7 +206,7 @@
     },
     {
       "id": "ES-C14-hablar-preterite",
-      "sequence": 1290,
+      "sequence": 1300,
       "title": "hablé — a regular singular past from a known verb",
       "headword": "hablé",
       "romanization": "hablé",
@@ -217,7 +217,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6a1ecc0901788371",
+      "sourceHash": "fnv1a64:a815c8ded0b4b7f7",
       "notice": null,
       "blocks": [
         {
@@ -434,7 +434,7 @@
     },
     {
       "id": "ES-C14-practice",
-      "sequence": 1300,
+      "sequence": 1310,
       "title": "Practice — two singular ways to talk about a completed past",
       "headword": "(practice)",
       "romanization": "(practice)",
@@ -445,7 +445,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8f90166b75848575",
+      "sourceHash": "fnv1a64:ceb028d60c86d30a",
       "notice": null,
       "blocks": [
         {

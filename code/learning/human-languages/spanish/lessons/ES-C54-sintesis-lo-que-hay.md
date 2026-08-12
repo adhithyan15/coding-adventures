@@ -2,7 +2,7 @@
 schema_version: 2
 id: ES-C54-sintesis-lo-que-hay
 spine_node: SPINE-ASK-LOCATION
-sequence: 2200
+sequence: 2210
 chapter: 190
 type: practice-mix
 headword: (synthesis)
