@@ -106,6 +106,11 @@ class MosaicQtRuntimeCIAcceptanceTests(unittest.TestCase):
 
     def test_workflow_routes_rust_qt_and_acceptance(self) -> None:
         workflow = WORKFLOW.read_text(encoding="utf-8")
+        qt_runtime_step = workflow.split(
+            "- name: Round-trip Rust engine through standard Qt binding", 1
+        )[1].split(
+            "- name: Round-trip Rust engine through standard Flutter binding", 1
+        )[0]
         self.assertIn(
             "needs_mosaic_qt_runtime: "
             "${{ steps.mosaic-qt-runtime.outputs.required }}",
@@ -144,7 +149,7 @@ class MosaicQtRuntimeCIAcceptanceTests(unittest.TestCase):
         self.assertIn(
             "pkg code/programs/mosaic/task-app --backend qt", workflow
         )
-        self.assertNotIn('"accessibility.table-semantics-missing"', workflow)
+        self.assertNotIn('"accessibility.table-semantics-missing"', qt_runtime_step)
         self.assertIn(
             "pkg code/programs/mosaic/task-app --backend qt --output \"$taskapp_output\" --emit-project --profile native-complete --runtime-library \"$task_runtime_library\"",
             workflow,
@@ -153,7 +158,7 @@ class MosaicQtRuntimeCIAcceptanceTests(unittest.TestCase):
             "'.nativeComplete == true and (.degradations | length == 0)' \"$taskapp_output/qt/mosaic-degradations.json\"",
             workflow,
         )
-        self.assertNotIn('"runtime.sample-fallback"', workflow)
+        self.assertNotIn('"runtime.sample-fallback"', qt_runtime_step)
         self.assertIn('cmake --build "$taskapp_output/qt/build"', workflow)
         self.assertIn('QT_QPA_PLATFORM=offscreen timeout 5s "$installed_taskapp"', workflow)
         self.assertIn(

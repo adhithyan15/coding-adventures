@@ -95,13 +95,22 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
 
 ## Resolved (kept for traceability, not actionable)
 
+- **Native SwiftUI table semantics for the Sheet.** The canonical dynamic
+  UI31/Grid shape now uses native `Table` and runtime-sized
+  `TableColumnForEach` definitions with stable row identity, safe width/cell
+  bounds, and the existing interactive Cell body. macOS 13 and iOS 16 use a
+  native `List`/`Section` compatibility path until the dynamic-column API is
+  available. The full generated TaskApp compiles on macOS and for the iOS 16
+  deployment target; SwiftUI's permissive report now retains only the sample
+  runtime fallback, so the concrete Rust adapter promotion is next.
+
 - **Native SwiftUI drag support for HostDraggable/HostDropTarget.** The UI35
   family now uses native SwiftUI pointer/touch transfer and drop delegates,
   with component-scoped payloads, accepts/disabled filtering,
   before/into/after proposals, keyboard and assistive actions, RTL movement,
   and platform accessibility announcements. Both the macOS and iOS 16
-  generated TaskApp targets compile; SwiftUI's remaining strict TaskApp gap is
-  native table semantics, not board or calendar drag interaction.
+  generated TaskApp targets compile; board and calendar drag interaction no
+  longer blocks strict TaskApp emission.
 
 - **Concrete Rust TaskApp engine on strict Compose Desktop.** Compose CI keeps
   the counter ABI conformance distributable and harness independent, then emits

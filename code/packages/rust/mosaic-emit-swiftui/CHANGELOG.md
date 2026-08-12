@@ -4,6 +4,16 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added - native accessible dynamic tables
+
+Canonical UI31/Grid `HostTable` trees now lower to SwiftUI's native `Table`
+with runtime-sized `TableColumnForEach` definitions, stable row identity,
+bounds-safe cell and width lookup, and the authored interactive Cell subtree.
+Generated macOS 13 and iOS 16 packages use a native `List`/`Section` fallback
+before the dynamic-column API's macOS 14.4 / iOS 17.4 availability. Unsupported
+HostTable structures retain the visual fallback and remain explicit
+native-complete degradations.
+
 ### Added - native accessible drag and drop
 
 `HostDraggable` and `HostDropTarget` now lower to SwiftUI's native drag/drop

@@ -33,7 +33,7 @@ the selected backend has a known degradation.
 
 The inventory identifies the passive drag/drop lowering on XAML,
 native table lowerings without table semantics (excluding canonical UI31/Grid
-shapes on Flutter, Compose, and Qt), Flutter's
+shapes on Flutter, Compose, Qt, and SwiftUI), Flutter's
 dialog placeholder and missing URL effect
 host, ignored tri-state checkbox and radio-group properties, XAML dialog state
 that still requires code-behind, ignored XAML/SwiftUI dialog lifecycle events,
@@ -52,13 +52,16 @@ accepted-drop, component-scoping, and announcement contracts. XAML remains an
 explicit degradation until it ships equivalent behavior.
 
 The package-expanded TaskApp is the full strict-profile proof point for Flutter
-and Compose. Qt's same table is now native and accessible; its permissive
-acceptance report retains only the sample-runtime fallback. The strict Flutter
-and Compose outputs have no known degradations and require the standard
-Rust runtime. Flutter passes whole-project Dart analysis and a native desktop
-build; Compose passes Kotlin compilation and native desktop distribution
-packaging. This does not close the cross-backend milestone; SwiftUI still lacks
-native table semantics and XAML retains explicit TaskApp degradations.
+and Compose. Qt and SwiftUI now recognize the same canonical table as native
+and accessible; their permissive acceptance reports retain only the
+sample-runtime fallback. SwiftUI emits `Table` with dynamic columns on macOS
+14.4 / iOS 17.4 and a native `List` compatibility path on the package's older
+deployment targets. The strict Flutter and Compose outputs have no known
+degradations and require the standard Rust runtime. Flutter passes whole-project
+Dart analysis and a native desktop build; Compose passes Kotlin compilation and
+native desktop distribution packaging. This does not close the cross-backend
+milestone; XAML retains explicit TaskApp degradations and the concrete SwiftUI
+TaskApp adapter promotion remains separate.
 
 Property degradations carry the exact package-expanded node and property index.
 For example, Compose/Flutter/SwiftUI report an authored, non-false
