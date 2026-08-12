@@ -1,0 +1,64 @@
+% ============================================================================
+% sound-device-type — two named sound devices and what each actually does
+% (adj-facts-stdlib, LANGUAGE).
+% ============================================================================
+% Writers reach for sound, not just meaning, to make language memorable: an
+% onomatopoeia is a word that IS the sound it names, alliteration is the
+% SAME consonant sound repeated across nearby words. Recall is a binding
+% query:
+%
+%     ? sound_device_type(onomatopoeia, $D)
+%       % is_when_a_word_imitates_the_natural_sound_of_a_thing
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `sound_device_type(device, description)` carrying the source
+% citation, so the lookup above is the ordinary SLD binding query — the
+% engine returns the description WITH its source, on the CPU, with zero
+% model calls, and abstains on a device that is not one of these two. The
+% query also runs BACKWARD — bind a description and recall the device it
+% names:
+%
+%     ? sound_device_type($D, repeating_consonant_sounds_right_next_to_each_other)
+%       % alliteration
+%
+% The two devices, as a little truth table:
+%
+%     device          description                                                          quote (verbatim)
+%     --------------  -------------------------------------------------------------------  --------------------------------------------------------------------------------
+%     onomatopoeia     is_when_a_word_imitates_the_natural_sound_of_a_thing                  "Onomatopoeia is when a word imitates the natural sound of a thing, making the description more expressive and vivid."
+%     alliteration     repeating_consonant_sounds_right_next_to_each_other                   "Alliteration refers to repeating consonant sounds right next to each other, which creates a memorable or melodic effect."
+%
+% Provenance: quoted verbatim from Grammarly's "20 Types of Figures of
+% Speech: Definitions and Examples" article, which lists twenty devices in
+% total. WebFetch-verified before writing (twice — the second pass pulled
+% the full surrounding paragraph for each candidate sentence, plus the
+% complete list of all twenty device headings on the page, to confirm each
+% target sentence stands alone grammatically and to check whether any
+% OTHER device on the page also had an equally clean single defining
+% sentence). Only these two — onomatopoeia and alliteration — carry a
+% genuinely standalone, complete defining sentence; the article's other
+% eighteen devices are each introduced through a definition that leans on
+% a following example sentence, a comparison to a neighboring device, or
+% multiple clauses, rather than one clean single-fact sentence like the
+% two tabled here. `trust consensus` — Grammarly is a reputable secondary
+% reference, the same tier `figurative-language-type.adj` (a sibling
+% library in this directory, sourced from a DIFFERENT Grammarly article)
+% already uses. A figure of speech that is NOT one of these two — "simile",
+% a real device this same page also covers with its own write-up — is
+% deliberately NOT a row: simile is already grounded as its own
+% separately-shipped library in this directory (`simile-meaning.adj`), so
+% tabling it again here under a different predicate would duplicate
+% coverage rather than add to it. (See ../README.md;
+% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table sound_device_type {
+    columns device, description
+
+    row (onomatopoeia, is_when_a_word_imitates_the_natural_sound_of_a_thing)
+    row (alliteration, repeating_consonant_sounds_right_next_to_each_other)
+
+    source "Onomatopoeia is when a word imitates the natural sound of a thing, making the description more expressive and vivid."
+    locator "https://www.grammarly.com/blog/literary-devices/figure-of-speech/"
+    trust consensus
+}

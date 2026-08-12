@@ -1,0 +1,5 @@
+import "sound-device-type.adj"
+
+? sound_device_type(onomatopoeia, $D)                                                       % expect is_when_a_word_imitates_the_natural_sound_of_a_thing (direct)
+? sound_device_type($D, repeating_consonant_sounds_right_next_to_each_other)                % expect alliteration (reverse)
+? sound_device_type(simile, $D)                                                              % expect abstain -- a real figure of speech the same page also covers, but already separately shipped as simile-meaning.adj
