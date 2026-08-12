@@ -522,7 +522,7 @@ unblocks multiple downstream targets; never count source generation as completio
   - [ ] Add the native slider contract and standard facade.
     - [x] Register `HostSlider` in the compiler/resolver kernel rosters and
       make every unimplemented native lowering an explicit capability gap.
-    - [ ] Lower `HostSlider` to native widgets on all five backends.
+    - [x] Lower `HostSlider` to native widgets on all five backends.
       - [x] Compose Material `Slider`, including range, step, disabled,
         continuous change, and release-time commit semantics.
       - [x] Flutter Material `Slider`, including range, divisions, disabled,
@@ -531,8 +531,12 @@ unblocks multiple downstream targets; never count source generation as completio
         continuous movement, and release-time commit semantics.
       - [x] SwiftUI `Slider`, including range, step, disabled, continuous
         movement, and exact release-value commit semantics.
-      - [ ] XAML native lowering.
-    - [ ] Export the native-complete standard `Slider` facade.
+      - [x] WinUI `Slider`, including range, discrete or effectively continuous
+        step behavior, disabled state, user change dispatch, and exact
+        pointer/key/blur commit semantics.
+    - [ ] Export the native-complete standard `Slider` facade with an authored
+      accessible label and optional displayed value, so apps do not depend on a
+      raw `HostSlider` automation ID as the only human-readable name.
   - [ ] Add native select/picker and switch contracts.
 - [ ] Ship `mosaic-std-navigation`: app shell, toolbar, sidebar/rail, tabs, routes.
 - [ ] Ship `mosaic-std-feedback`: alert, dialog, toast, progress, empty/error states.
