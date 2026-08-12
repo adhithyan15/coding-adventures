@@ -605,6 +605,7 @@ fn layout_groups(diagram: &GraphDiagram, nodes: &[LayoutedGraphNode]) -> Vec<Lay
 /// let diagram = GraphDiagram {
 ///     direction: DiagramDirection::Lr,
 ///     requested_width: None,
+///     hide_empty_descriptions: false,
 ///     title: None,
 ///     accessibility_title: None,
 ///     accessibility_description: None,
@@ -740,6 +741,7 @@ pub fn layout_graph_diagram(
     let mut layout = LayoutedGraphDiagram {
         direction: diagram.direction.clone(),
         requested_width: diagram.requested_width,
+        hide_empty_descriptions: diagram.hide_empty_descriptions,
         title:     diagram.title.clone(),
         accessibility_title: diagram.accessibility_title.clone(),
         accessibility_description: diagram.accessibility_description.clone(),
@@ -824,6 +826,7 @@ mod tests {
         GraphDiagram {
             direction: dir,
             requested_width: None,
+            hide_empty_descriptions: false,
             title: None,
             accessibility_title: None,
             accessibility_description: None,
@@ -892,6 +895,7 @@ mod tests {
         let d = GraphDiagram {
             direction: DiagramDirection::Tb,
             requested_width: None,
+            hide_empty_descriptions: false,
             title: None,
             accessibility_title: None,
             accessibility_description: None,
@@ -924,6 +928,7 @@ mod tests {
         let d = GraphDiagram {
             direction: DiagramDirection::Tb,
             requested_width: None,
+            hide_empty_descriptions: false,
             title: None,
             accessibility_title: None,
             accessibility_description: None,
@@ -945,6 +950,7 @@ mod tests {
         let d = GraphDiagram {
             direction: DiagramDirection::Tb,
             requested_width: None,
+            hide_empty_descriptions: false,
             title: None,
             accessibility_title: None,
             accessibility_description: None,
@@ -972,6 +978,7 @@ mod tests {
         let d = GraphDiagram {
             direction: DiagramDirection::Tb,
             requested_width: None,
+            hide_empty_descriptions: false,
             title: None,
             accessibility_title: None,
             accessibility_description: None,

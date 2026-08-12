@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Omit empty graph-state shapes and labels when the semantic directive requests it.
 - Shape multiline graph-node descriptions without backend soft rewrapping.
 - Lower concurrent state-region dividers to backend-neutral Paint paths.
 - Lower resolved composite graph-group colors and stroke geometry to Paint.

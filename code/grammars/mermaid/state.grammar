@@ -1,9 +1,9 @@
-# @version 16
+# @version 17
 # Mermaid 11.16.1 state diagram grammar: initial graph-compatible slice.
 
 document = { terminator } HEADER body EOF ;
 body = { terminator | statement } ;
-statement = title_stmt | scale_stmt | accessibility_stmt | direction_stmt | composite_state_stmt | concurrent_stmt | state_stmt | style_stmt | class_def_stmt | class_stmt | click_stmt | note_stmt | description_stmt | transition_stmt | styled_state_stmt ;
+statement = title_stmt | scale_stmt | HIDE_EMPTY | accessibility_stmt | direction_stmt | composite_state_stmt | concurrent_stmt | state_stmt | style_stmt | class_def_stmt | class_stmt | click_stmt | note_stmt | description_stmt | transition_stmt | styled_state_stmt ;
 title_stmt = "title" [ COLON ] text ;
 scale_stmt = "scale" WORD "width" ;
 

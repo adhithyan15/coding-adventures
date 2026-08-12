@@ -408,6 +408,9 @@ where
 
     // ── 3. Node shapes — drawn over edges so endpoints are hidden ─────────────
     for node in &diagram.nodes {
+        if diagram.hide_empty_descriptions && node.label.text.is_empty() {
+            continue;
+        }
         instructions.push(node_shape_instruction(node));
     }
 
@@ -474,6 +477,9 @@ where
 
     // Node labels — vertically centred inside each node bounding box.
     for node in &diagram.nodes {
+        if diagram.hide_empty_descriptions && node.label.text.is_empty() {
+            continue;
+        }
         let line_count = node.label.text.lines().count().max(1) as f64;
         let text_height = line_count * label_size * 1.2;
         text_children.push(text_node_no_wrap(
@@ -2906,6 +2912,7 @@ mod tests {
         LayoutedGraphDiagram {
             direction: DiagramDirection::Lr,
             requested_width: None,
+            hide_empty_descriptions: false,
             title: None,
             accessibility_title: None,
             accessibility_description: None,
@@ -3364,6 +3371,29 @@ mod tests {
                 if path.stroke.as_deref() == Some("#b45309")
                     && path.stroke_width == Some(3.0))
         }));
+    }
+
+    #[test]
+    fn hide_empty_descriptions_omits_unlabeled_state_geometry() {
+        let mut layout = simple_layout();
+        layout.hide_empty_descriptions = true;
+        layout.nodes[0].label = DiagramLabel::new("");
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let opts = make_opts(&shaper, &metrics, &resolver);
+        let scene = diagram_to_paint(&layout, &opts);
+
+        let rectangles = scene
+            .instructions
+            .iter()
+            .filter(|instruction| matches!(instruction, PaintInstruction::Rect(_)))
+            .count();
+        assert_eq!(rectangles, 1);
+        assert!(scene
+            .instructions
+            .iter()
+            .any(|instruction| matches!(instruction, PaintInstruction::Path(_))));
     }
 
     #[test]

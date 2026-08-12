@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.64.0
+
+- Preserve grammar-backed `hide empty description` rendering semantics.
+
 ## 0.63.0
 
 - Preserve grammar-backed state `scale N width` requests in graph IR.

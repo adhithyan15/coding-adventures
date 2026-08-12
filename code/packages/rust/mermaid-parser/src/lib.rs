@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.63.0";
+pub const VERSION: &str = "0.64.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -295,6 +295,7 @@ pub fn parse_to_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
     Ok(GraphDiagram {
         direction,
         requested_width: None,
+        hide_empty_descriptions: false,
         title: None,
         accessibility_title: None,
         accessibility_description: None,
@@ -1060,6 +1061,7 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
 
     let mut direction = DiagramDirection::Tb;
     let mut requested_width = None;
+    let mut hide_empty_descriptions = false;
     let mut title = None;
     let mut accessibility_title = None;
     let mut accessibility_description = None;
@@ -1115,6 +1117,8 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
             group.regions.push(Vec::new());
             cursor.skip_terminators();
             continue;
+        } else if cursor.consume_if("HIDE_EMPTY").is_some() {
+            hide_empty_descriptions = true;
         } else if cursor.current().value.eq_ignore_ascii_case("scale") {
             cursor.advance();
             let width =
@@ -1502,6 +1506,7 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
     Ok(GraphDiagram {
         direction,
         requested_width,
+        hide_empty_descriptions,
         title,
         accessibility_title,
         accessibility_description,
@@ -4708,6 +4713,17 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     }
 
     #[test]
+    fn state_preserves_hide_empty_description_directive() {
+        let diagram = parse_state_diagram(
+            "stateDiagram-v2\nhide empty description\nstate Junction <<choice>>\n",
+        )
+        .expect("hide empty description directive");
+
+        assert!(diagram.hide_empty_descriptions);
+        assert!(diagram.nodes[0].label.text.is_empty());
+    }
+
+    #[test]
     fn sequence_parses_case_insensitive_keywords() {
         let diagram = parse_any_mermaid(
             "SeQuEnCeDiAgRaM\nPaRtIcIpAnT A As Alice\nA->>B: Hello\nAcTiVaTe B\nNoTe RiGhT Of B: WRAP: Ready\nDeAcTiVaTe B\n",
@@ -5478,7 +5494,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.63.0");
+        assert_eq!(crate::VERSION, "0.64.0");
     }
 
     #[test]
