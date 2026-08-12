@@ -6,17 +6,17 @@
 use coding_adventures_storage_fs::FsStorageBackend;
 use coding_adventures_vault_pm_application::{
     complete_generation_zero, open_portable_with_passphrase, portable_import_random_bytes,
-    prepare_generation_zero, rehydrate_prepared_init, AddItemRandomnessV1, ApplicationError,
-    AuditEventViewV1, AuditVerificationV1, AuditedAccessRandomnessV1, BootstrapLocator,
-    BootstrapStore, BootstrapStoreError, DeleteItemRandomnessV1, GenerationZeroPolicyV1,
-    GenerationZeroRandomness, ItemHistoryViewV1, LocalStateStore, LocalStateStoreError,
-    LocalVaultStateV1, LoginEditInputV1, PortableExportPolicyV1, PortableExportRandomnessV1,
-    PortableImportRandomnessV1, PortableOpenPolicyV1, ReplaceItemRandomnessV1,
-    RestoreItemRandomnessV1, V1ApplicationRepositoryFactory, VaultAccessV1, VaultDoctorStateV1,
-    VaultStatusStateV1, ADD_ITEM_RANDOM_BYTES, AUDITED_ACCESS_RANDOM_BYTES,
-    DEFAULT_AUDIT_HISTORY_LIMIT, DEFAULT_ITEM_HISTORY_LIMIT, DELETE_ITEM_RANDOM_BYTES,
-    GENERATION_ZERO_RANDOM_BYTES, MAX_PORTABLE_EXPORT_ARTIFACT_BYTES, PORTABLE_EXPORT_RANDOM_BYTES,
-    REPLACE_ITEM_RANDOM_BYTES, RESTORE_ITEM_RANDOM_BYTES,
+    prepare_audited_generation_zero, rehydrate_prepared_init, AddItemRandomnessV1,
+    ApplicationError, AuditEventViewV1, AuditVerificationV1, AuditedAccessRandomnessV1,
+    AuditedGenerationZeroRandomness, BootstrapLocator, BootstrapStore, BootstrapStoreError,
+    DeleteItemRandomnessV1, GenerationZeroPolicyV1, ItemHistoryViewV1, LocalStateStore,
+    LocalStateStoreError, LocalVaultStateV1, LoginEditInputV1, PortableExportPolicyV1,
+    PortableExportRandomnessV1, PortableImportRandomnessV1, PortableOpenPolicyV1,
+    ReplaceItemRandomnessV1, RestoreItemRandomnessV1, V1ApplicationRepositoryFactory,
+    VaultAccessV1, VaultDoctorStateV1, VaultStatusStateV1, ADD_ITEM_RANDOM_BYTES,
+    AUDITED_ACCESS_RANDOM_BYTES, AUDITED_GENERATION_ZERO_RANDOM_BYTES, DEFAULT_AUDIT_HISTORY_LIMIT,
+    DEFAULT_ITEM_HISTORY_LIMIT, DELETE_ITEM_RANDOM_BYTES, MAX_PORTABLE_EXPORT_ARTIFACT_BYTES,
+    PORTABLE_EXPORT_RANDOM_BYTES, REPLACE_ITEM_RANDOM_BYTES, RESTORE_ITEM_RANDOM_BYTES,
 };
 use coding_adventures_vault_pm_application_storage_core::StorageCoreApplicationStore;
 use coding_adventures_vault_pm_cli_host::{
@@ -1437,7 +1437,7 @@ fn begin_init(
     storage_name: ConfigName,
 ) -> Result<CliOutput, CliFailure> {
     let passphrase = host.read_new_passphrase().map_err(map_host)?;
-    let mut random_bytes = [0_u8; GENERATION_ZERO_RANDOM_BYTES];
+    let mut random_bytes = [0_u8; AUDITED_GENERATION_ZERO_RANDOM_BYTES];
     host.fill_entropy(&mut random_bytes).map_err(map_host)?;
     let (memory_kib, iterations, lanes) = host.generation_zero_kdf();
     let policy = GenerationZeroPolicyV1::new(
@@ -1447,10 +1447,10 @@ fn begin_init(
         host.now_ms().map_err(map_host)?,
     )
     .map_err(map_application)?;
-    let prepared = prepare_generation_zero(
+    let prepared = prepare_audited_generation_zero(
         passphrase,
         policy,
-        GenerationZeroRandomness::new(random_bytes),
+        AuditedGenerationZeroRandomness::new(random_bytes),
     )
     .map_err(map_application)?;
     let locator = prepared.bootstrap_locator();
@@ -1999,6 +1999,9 @@ fn map_native_local_host(error: LocalHostError) -> HostError {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use coding_adventures_vault_pm_application::{
+        prepare_generation_zero, GenerationZeroRandomness, GENERATION_ZERO_RANDOM_BYTES,
+    };
     use std::collections::VecDeque;
     use std::fs;
     use std::path::PathBuf;
@@ -2207,7 +2210,11 @@ mod tests {
         let prepared = paths.prepare().unwrap();
         let writer = prepared.try_acquire_writer().unwrap();
         let host = TestHost::new(paths.clone(), [passphrase]);
-        let (access, application_store) = authenticated_access(&host, paths, &writer).unwrap();
+        let (mut access, application_store) = authenticated_access(&host, paths, &writer).unwrap();
+        if access.as_unlocked().unwrap().audit_enabled() {
+            access.lock();
+            return;
+        }
         let (wall_time_ms, randomness) = audited_access_inputs(&host).unwrap();
         access
             .into_unlocked()
@@ -2262,7 +2269,7 @@ mod tests {
     }
 
     #[test]
-    fn audit_enable_installs_one_durable_epoch_and_is_idempotent() {
+    fn audit_enable_reports_audit_first_generation_zero_as_idempotently_enabled() {
         let root = TestRoot::new();
         let paths = root.paths();
         let passphrase = b"audit migration passphrase".to_vec();
@@ -2272,7 +2279,7 @@ mod tests {
         let enable_host = TestHost::new(paths.clone(), [passphrase.clone()]);
         let enabled = run(["audit", "enable"], &enable_host);
         assert_eq!(enabled.exit_code(), ExitCode::Success, "{enabled:?}");
-        assert_eq!(enabled.stdout(), "Audit: enabled.\n");
+        assert_eq!(enabled.stdout(), "Audit: already enabled.\n");
 
         let repeated_host = TestHost::new(paths.clone(), [passphrase.clone()]);
         let repeated = run(["audit", "enable"], &repeated_host);
@@ -2282,7 +2289,7 @@ mod tests {
         let verify_host = TestHost::new(paths, [passphrase]);
         let verified = run(["audit", "verify"], &verify_host);
         assert_eq!(verified.exit_code(), ExitCode::Success, "{verified:?}");
-        assert!(verified.stdout().contains("commits=2"), "{verified:?}");
+        assert!(verified.stdout().contains("commits=1"), "{verified:?}");
         assert!(verified.stdout().contains("audit_events=1"), "{verified:?}");
     }
 
@@ -2300,8 +2307,8 @@ mod tests {
         assert_eq!(listed.exit_code(), ExitCode::Success, "{listed:?}");
         let rows = listed.stdout().lines().collect::<Vec<_>>();
         assert_eq!(rows.len(), 2, "{listed:?}");
-        assert!(rows[0].contains("\tcounter=3\taction=audit_read\toutcome=succeeded\t"));
-        assert!(rows[1].contains("\tcounter=2\taction=audit_epoch_start\toutcome=succeeded\t"));
+        assert!(rows[0].contains("\tcounter=2\taction=audit_read\toutcome=succeeded\t"));
+        assert!(rows[1].contains("\tcounter=1\taction=vault_initialize\toutcome=succeeded\t"));
         let listed_trace = rows[0].split('\t').next().unwrap();
         assert!(OperationId::from_user_string(listed_trace).is_ok());
         assert!(!listed.stdout().contains("traceable audit passphrase"));
@@ -2470,7 +2477,7 @@ mod tests {
         assert_eq!(audit.exit_code(), ExitCode::Success, "{audit:?}");
         assert_eq!(
             audit.stdout(),
-            "Audit: verified (announcements=1 commits=1 catalogs=1 revisions=0 items=0 audit_events=0)\n"
+            "Audit: verified (announcements=1 commits=1 catalogs=1 revisions=0 items=0 audit_events=1)\n"
         );
         assert!(audit.stderr().is_empty());
 
@@ -2522,8 +2529,8 @@ mod tests {
         let audit_host = TestHost::new(paths.clone(), [passphrase.clone()]);
         let audit = run(["audit", "verify"], &audit_host);
         assert_eq!(audit.exit_code(), ExitCode::Success, "{audit:?}");
-        assert!(audit.stdout().contains("commits=6"), "{audit:?}");
-        assert!(audit.stdout().contains("audit_events=4"), "{audit:?}");
+        assert!(audit.stdout().contains("commits=5"), "{audit:?}");
+        assert!(audit.stdout().contains("audit_events=5"), "{audit:?}");
 
         let doctor_host = TestHost::new(paths.clone(), [passphrase.clone()]);
         let doctor = run(["doctor", "--unlock"], &doctor_host);
@@ -2537,11 +2544,11 @@ mod tests {
             "{final_audit:?}"
         );
         assert!(
-            final_audit.stdout().contains("commits=8"),
+            final_audit.stdout().contains("commits=7"),
             "{final_audit:?}"
         );
         assert!(
-            final_audit.stdout().contains("audit_events=6"),
+            final_audit.stdout().contains("audit_events=7"),
             "{final_audit:?}"
         );
     }
@@ -2671,7 +2678,7 @@ mod tests {
     }
 
     #[test]
-    fn portable_import_requires_auditing_logs_failure_then_restores_independently() {
+    fn portable_import_logs_failure_then_restores_audit_first_target_independently() {
         let source_root = TestRoot::new();
         let source_paths = source_root.paths();
         let source_passphrase = b"portable source vault passphrase".to_vec();
@@ -2714,38 +2721,6 @@ mod tests {
         let init_target =
             TestHost::with_entropy_seed(target_paths.clone(), [target_passphrase.clone()], 23);
         assert_eq!(run(["init"], &init_target).exit_code(), ExitCode::Success);
-
-        let pre_audit = TestHost::new(
-            target_paths.clone(),
-            [target_passphrase.clone(), export_passphrase.clone()],
-        );
-        let rejected = run(
-            [
-                "import",
-                artifact_path.to_str().expect("UTF-8 test artifact path"),
-            ],
-            &pre_audit,
-        );
-        assert_eq!(rejected.exit_code(), ExitCode::InvalidInput, "{rejected:?}");
-        let pre_audit_verify = TestHost::with_entropy_seed(
-            target_paths.clone(),
-            [target_passphrase.clone(), export_passphrase.clone()],
-            31,
-        );
-        let verify_rejected = run(
-            [
-                "restore",
-                "verify",
-                artifact_path.to_str().expect("UTF-8 test artifact path"),
-            ],
-            &pre_audit_verify,
-        );
-        assert_eq!(
-            verify_rejected.exit_code(),
-            ExitCode::InvalidInput,
-            "{verify_rejected:?}"
-        );
-        activate_test_audit_epoch(&target_paths, target_passphrase.clone());
 
         let mismatched_target_host = TestHost::with_entropy_seed(
             target_paths.clone(),
@@ -2918,8 +2893,8 @@ mod tests {
         let audit_host = TestHost::new(paths, [passphrase]);
         let audit = run(["audit", "verify"], &audit_host);
         assert_eq!(audit.exit_code(), ExitCode::Success, "{audit:?}");
-        assert!(audit.stdout().contains("commits=5"), "{audit:?}");
-        assert!(audit.stdout().contains("audit_events=3"), "{audit:?}");
+        assert!(audit.stdout().contains("commits=4"), "{audit:?}");
+        assert!(audit.stdout().contains("audit_events=4"), "{audit:?}");
     }
 
     #[test]
@@ -3007,8 +2982,8 @@ mod tests {
         let audit_host = TestHost::new(paths, [passphrase]);
         let audit = run(["audit", "verify"], &audit_host);
         assert_eq!(audit.exit_code(), ExitCode::Success, "{audit:?}");
-        assert!(audit.stdout().contains("commits=6"), "{audit:?}");
-        assert!(audit.stdout().contains("audit_events=3"), "{audit:?}");
+        assert!(audit.stdout().contains("commits=7"), "{audit:?}");
+        assert!(audit.stdout().contains("audit_events=7"), "{audit:?}");
     }
 
     #[test]
@@ -3058,8 +3033,8 @@ mod tests {
         let audit_host = TestHost::new(paths, [passphrase]);
         let audit = run(["audit", "verify"], &audit_host);
         assert_eq!(audit.exit_code(), ExitCode::Success, "{audit:?}");
-        assert!(audit.stdout().contains("commits=5"), "{audit:?}");
-        assert!(audit.stdout().contains("audit_events=3"), "{audit:?}");
+        assert!(audit.stdout().contains("commits=4"), "{audit:?}");
+        assert!(audit.stdout().contains("audit_events=4"), "{audit:?}");
     }
 
     #[test]

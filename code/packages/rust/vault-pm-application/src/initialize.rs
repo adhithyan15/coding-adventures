@@ -1,16 +1,19 @@
 use crate::{
-    decode_device_certificate, encode_device_certificate, encode_signed_commit, open_local_secret,
-    open_object, seal_local_secret, seal_object, ActiveStateV1, ApplicationError,
-    ApplicationRepositoryError, ApplicationRepositoryFactory, AuthorityFingerprint,
-    BootstrapLocator, BootstrapStore, BootstrapStoreError, CatalogV1, LocalSecretRandomness,
-    LocalSecretV1, LocalStateStore, LocalStateStoreError, LocalVaultStateV1, ObjectKind,
-    ObjectRandomness, PreparedInitV1, PublicationJournalV1, V1Keys, V1SingleDeviceVerifier,
+    decode_device_certificate, encode_device_certificate, encode_signed_audit_event,
+    encode_signed_commit, open_local_secret, open_object, seal_local_secret, seal_object,
+    ActiveStateV1, ApplicationError, ApplicationRepositoryError, ApplicationRepositoryFactory,
+    AuthorityFingerprint, BootstrapLocator, BootstrapStore, BootstrapStoreError, CatalogV1,
+    LocalSecretRandomness, LocalSecretV1, LocalStateStore, LocalStateStoreError, LocalVaultStateV1,
+    ObjectKind, ObjectRandomness, PreparedInitV1, PublicationJournalV1, V1Keys,
+    V1SingleDeviceVerifier,
 };
 use coding_adventures_argon2id::{argon2id, Options as Argon2idOptions};
 use coding_adventures_chacha20_poly1305::{
     xchacha20_poly1305_aead_decrypt, xchacha20_poly1305_aead_encrypt,
 };
 use coding_adventures_ed25519::{generate_keypair, is_valid_public_key, sign, verify};
+use coding_adventures_vault_pm_audit::{AuditActionV1, AuditEventV1, AuditOutcomeV1};
+use coding_adventures_vault_pm_domain::OperationId;
 use coding_adventures_vault_pm_format::{
     AeadEnvelopeV1, AnnouncementV1, Argon2idParametersV1, BootstrapV1, CommitV1,
     DeviceCertificateV1, DeviceId, FormatError, PublicKey, Signature, VaultId, CRYPTO_SUITE_V1,
@@ -31,6 +34,7 @@ const DEVICE_ID_BYTES: usize = 16;
 const DEVICE_SIGNING_SEED_BYTES: usize = 32;
 const DEVICE_X25519_SECRET_BYTES: usize = 32;
 const LOCAL_SECRET_NONCE_BYTES: usize = 24;
+const OPERATION_ID_BYTES: usize = 32;
 const OBJECT_RANDOM_BYTES: usize = 32 + 24 + 24;
 
 /// Exact caller-filled CSPRNG bytes consumed by generation-zero preparation.
@@ -45,6 +49,10 @@ pub const GENERATION_ZERO_RANDOM_BYTES: usize = BOOTSTRAP_LOCATOR_BYTES
     + DEVICE_X25519_SECRET_BYTES
     + LOCAL_SECRET_NONCE_BYTES
     + 3 * OBJECT_RANDOM_BYTES;
+
+/// Exact caller-filled CSPRNG bytes consumed by audited generation zero.
+pub const AUDITED_GENERATION_ZERO_RANDOM_BYTES: usize =
+    GENERATION_ZERO_RANDOM_BYTES + OPERATION_ID_BYTES + OBJECT_RANDOM_BYTES;
 
 /// Bounded password-KDF policy and advisory time for generation zero.
 #[derive(Clone, Copy, PartialEq, Eq)]
@@ -141,6 +149,36 @@ impl Debug for GenerationZeroRandomness {
     }
 }
 
+/// One owned, wipe-on-drop CSPRNG block for audit-first generation zero.
+pub struct AuditedGenerationZeroRandomness {
+    bytes: [u8; AUDITED_GENERATION_ZERO_RANDOM_BYTES],
+}
+
+impl AuditedGenerationZeroRandomness {
+    /// Take one exact block filled by the host's cryptographic entropy source.
+    pub const fn new(bytes: [u8; AUDITED_GENERATION_ZERO_RANDOM_BYTES]) -> Self {
+        Self { bytes }
+    }
+}
+
+impl Zeroize for AuditedGenerationZeroRandomness {
+    fn zeroize(&mut self) {
+        self.bytes.zeroize();
+    }
+}
+
+impl Drop for AuditedGenerationZeroRandomness {
+    fn drop(&mut self) {
+        self.zeroize();
+    }
+}
+
+impl Debug for AuditedGenerationZeroRandomness {
+    fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
+        formatter.write_str("AuditedGenerationZeroRandomness(<redacted>)")
+    }
+}
+
 /// Complete pure preparation result consumed by crash-resumable side effects.
 pub struct PreparedGenerationZero {
     bootstrap_locator: BootstrapLocator,
@@ -202,25 +240,53 @@ pub fn prepare_generation_zero(
     policy: GenerationZeroPolicyV1,
     randomness: GenerationZeroRandomness,
 ) -> Result<PreparedGenerationZero, ApplicationError> {
+    prepare_generation_zero_inner(passphrase, policy, &randomness.bytes, None)
+}
+
+/// Deterministically prepare an audit-first generation zero whose initial
+/// commit contains the signed, encrypted `VaultInitialize` genesis event.
+pub fn prepare_audited_generation_zero(
+    passphrase: Zeroizing<Vec<u8>>,
+    policy: GenerationZeroPolicyV1,
+    randomness: AuditedGenerationZeroRandomness,
+) -> Result<PreparedGenerationZero, ApplicationError> {
+    let mut audit_offset = GENERATION_ZERO_RANDOM_BYTES;
+    let trace_id = OperationId::new(take(&randomness.bytes, &mut audit_offset));
+    let audit_randomness = take_object_randomness(&randomness.bytes, &mut audit_offset);
+    debug_assert_eq!(audit_offset, AUDITED_GENERATION_ZERO_RANDOM_BYTES);
+    prepare_generation_zero_inner(
+        passphrase,
+        policy,
+        &randomness.bytes[..GENERATION_ZERO_RANDOM_BYTES],
+        Some((trace_id, audit_randomness)),
+    )
+}
+
+fn prepare_generation_zero_inner(
+    passphrase: Zeroizing<Vec<u8>>,
+    policy: GenerationZeroPolicyV1,
+    randomness: &[u8],
+    audit_randomness: Option<(OperationId, ObjectRandomness)>,
+) -> Result<PreparedGenerationZero, ApplicationError> {
     let mut offset = 0;
-    let bootstrap_locator = BootstrapLocator::new(take(&randomness.bytes, &mut offset));
-    let vault_id = VaultId::new(take(&randomness.bytes, &mut offset));
-    let vault_root_key = Zeroizing::new(take(&randomness.bytes, &mut offset));
+    let bootstrap_locator = BootstrapLocator::new(take(randomness, &mut offset));
+    let vault_id = VaultId::new(take(randomness, &mut offset));
+    let vault_root_key = Zeroizing::new(take(randomness, &mut offset));
     let kdf = Argon2idParametersV1 {
         memory_kib: policy.memory_kib,
         iterations: policy.iterations,
         lanes: policy.lanes,
-        salt: take(&randomness.bytes, &mut offset),
+        salt: take(randomness, &mut offset),
     };
-    let root_wrap_nonce = take(&randomness.bytes, &mut offset);
-    let authority_seed = Zeroizing::new(take(&randomness.bytes, &mut offset));
-    let device_id = DeviceId::new(take(&randomness.bytes, &mut offset));
-    let device_signing_seed = Zeroizing::new(take(&randomness.bytes, &mut offset));
-    let device_x25519_secret = Zeroizing::new(take(&randomness.bytes, &mut offset));
-    let local_secret_randomness = LocalSecretRandomness::new(take(&randomness.bytes, &mut offset));
-    let certificate_randomness = take_object_randomness(&randomness.bytes, &mut offset);
-    let catalog_randomness = take_object_randomness(&randomness.bytes, &mut offset);
-    let commit_randomness = take_object_randomness(&randomness.bytes, &mut offset);
+    let root_wrap_nonce = take(randomness, &mut offset);
+    let authority_seed = Zeroizing::new(take(randomness, &mut offset));
+    let device_id = DeviceId::new(take(randomness, &mut offset));
+    let device_signing_seed = Zeroizing::new(take(randomness, &mut offset));
+    let device_x25519_secret = Zeroizing::new(take(randomness, &mut offset));
+    let local_secret_randomness = LocalSecretRandomness::new(take(randomness, &mut offset));
+    let certificate_randomness = take_object_randomness(randomness, &mut offset);
+    let catalog_randomness = take_object_randomness(randomness, &mut offset);
+    let commit_randomness = take_object_randomness(randomness, &mut offset);
     debug_assert_eq!(offset, GENERATION_ZERO_RANDOM_BYTES);
 
     let keys = V1Keys::derive(vault_id, &vault_root_key)?;
@@ -298,7 +364,38 @@ pub fn prepare_generation_zero(
         .id()
         .map_err(|_| ApplicationError::InternalInvariant)?;
 
+    let audit_frame = audit_randomness
+        .map(|(trace_id, randomness)| {
+            let event = AuditEventV1::new(
+                vault_id,
+                device_id,
+                1,
+                trace_id,
+                AuditActionV1::VaultInitialize,
+                AuditOutcomeV1::Succeeded,
+                None,
+                None,
+                None,
+                None,
+                Vec::new(),
+                policy.created_at_ms,
+            )
+            .map_err(|_| ApplicationError::InternalInvariant)?
+            .sign(&device_signing_seed)
+            .map_err(|_| ApplicationError::InternalInvariant)?;
+            let plaintext = Zeroizing::new(encode_signed_audit_event(&event)?);
+            seal_object(&keys, ObjectKind::AuditEvent, &plaintext, &randomness)
+        })
+        .transpose()?;
+    let audit_id = audit_frame
+        .as_ref()
+        .map(|frame| frame.id().map_err(|_| ApplicationError::InternalInvariant))
+        .transpose()?;
+
     let mut added_objects = vec![certificate_id, catalog_id];
+    if let Some(audit_id) = audit_id {
+        added_objects.push(audit_id);
+    }
     added_objects.sort_unstable();
     let commit = sign_commit(
         CommitV1 {
@@ -349,8 +446,12 @@ pub fn prepare_generation_zero(
     let sealed_local_secret = seal_local_secret(&keys, &local_secret, &local_secret_randomness)?;
     let expected_heads =
         PinnedHeads::new([commit_id]).map_err(|_| ApplicationError::InternalInvariant)?;
+    let mut objects = vec![certificate_frame.clone(), catalog_frame];
+    if let Some(frame) = audit_frame {
+        objects.push(frame);
+    }
     let publication = PublicationJournalV1::new(
-        vec![certificate_frame.clone(), catalog_frame],
+        objects,
         commit_frame,
         announcement,
         PinnedHeads::empty(),
@@ -358,6 +459,10 @@ pub fn prepare_generation_zero(
         1,
         catalog_id,
     )?;
+    let publication = match audit_id {
+        Some(audit_id) => publication.with_audit_event_head(audit_id)?,
+        None => publication,
+    };
     let intended_active = ActiveStateV1::new(
         bootstrap_locator,
         vault_id,
@@ -371,6 +476,10 @@ pub fn prepare_generation_zero(
         1,
         catalog_id,
     )?;
+    let intended_active = match audit_id {
+        Some(audit_id) => intended_active.with_audit_event_head(audit_id)?,
+        None => intended_active,
+    };
     let prepared = PreparedInitV1::new(bootstrap_bytes, intended_active, publication)?;
     let verifier = V1SingleDeviceVerifier::authorize(
         keys,
@@ -786,10 +895,7 @@ fn sign_announcement(
     Ok(value.with_signature(Signature::new(sign(&preimage, secret))))
 }
 
-fn take_object_randomness(
-    bytes: &[u8; GENERATION_ZERO_RANDOM_BYTES],
-    offset: &mut usize,
-) -> ObjectRandomness {
+fn take_object_randomness(bytes: &[u8], offset: &mut usize) -> ObjectRandomness {
     ObjectRandomness::new(
         take(bytes, offset),
         take(bytes, offset),
@@ -797,7 +903,7 @@ fn take_object_randomness(
     )
 }
 
-fn take<const N: usize>(bytes: &[u8; GENERATION_ZERO_RANDOM_BYTES], offset: &mut usize) -> [u8; N] {
+fn take<const N: usize>(bytes: &[u8], offset: &mut usize) -> [u8; N] {
     let end = *offset + N;
     let value = bytes[*offset..end]
         .try_into()
@@ -946,6 +1052,14 @@ mod tests {
         GenerationZeroRandomness::new(bytes)
     }
 
+    fn fixture_audited_randomness() -> AuditedGenerationZeroRandomness {
+        let mut bytes = [0; AUDITED_GENERATION_ZERO_RANDOM_BYTES];
+        for (index, byte) in bytes.iter_mut().enumerate() {
+            *byte = (index as u8).wrapping_mul(17).wrapping_add(1);
+        }
+        AuditedGenerationZeroRandomness::new(bytes)
+    }
+
     fn policy() -> GenerationZeroPolicyV1 {
         GenerationZeroPolicyV1::new(8 * 1024, 1, 1, 1_700_000_000_000).unwrap()
     }
@@ -1044,6 +1158,50 @@ mod tests {
             )
             .unwrap();
         assert_eq!(receipt.heads(), journal.publication().expected_heads());
+    }
+
+    #[test]
+    fn audited_preparation_binds_vault_initialize_as_generation_zero_head() {
+        let prepared = prepare_audited_generation_zero(
+            Zeroizing::new(b"audit first passphrase".to_vec()),
+            policy(),
+            fixture_audited_randomness(),
+        )
+        .unwrap();
+        let LocalVaultStateV1::PreparedInit(journal) = prepared.owner_state() else {
+            panic!("generation zero must be prepared")
+        };
+        let audit_head = journal.intended_active().audit_event_head().unwrap();
+        assert_eq!(journal.publication().audit_event_head(), Some(audit_head));
+        assert_eq!(journal.publication().objects().len(), 3);
+        assert!(journal
+            .publication()
+            .objects()
+            .iter()
+            .any(|frame| frame.id().unwrap() == audit_head));
+        let material = unlock_active_material(
+            Zeroizing::new(b"audit first passphrase".to_vec()),
+            journal.intended_active(),
+            journal.bootstrap(),
+        )
+        .unwrap();
+        let audit_frame = journal
+            .publication()
+            .objects()
+            .iter()
+            .find(|frame| frame.id().unwrap() == audit_head)
+            .unwrap();
+        let plaintext = open_object(&material.keys, ObjectKind::AuditEvent, audit_frame).unwrap();
+        let signed = crate::decode_signed_audit_event(&plaintext).unwrap();
+        assert_eq!(signed.event().device_counter(), 1);
+        assert_eq!(signed.event().action(), AuditActionV1::VaultInitialize);
+        assert_eq!(signed.event().outcome(), AuditOutcomeV1::Succeeded);
+        assert_eq!(signed.event().previous_event(), None);
+        assert!(signed.event().basis_heads().is_empty());
+        assert_eq!(
+            format!("{:?}", fixture_audited_randomness()),
+            "AuditedGenerationZeroRandomness(<redacted>)"
+        );
     }
 
     #[test]
@@ -1443,5 +1601,12 @@ mod tests {
         );
         randomness.zeroize();
         assert!(randomness.bytes.iter().all(|byte| *byte == 0));
+        let mut audited = fixture_audited_randomness();
+        assert_eq!(
+            format!("{audited:?}"),
+            "AuditedGenerationZeroRandomness(<redacted>)"
+        );
+        audited.zeroize();
+        assert!(audited.bytes.iter().all(|byte| *byte == 0));
     }
 }
