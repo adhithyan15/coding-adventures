@@ -1,0 +1,15 @@
+% ============================================================================
+% cell-division-daughter-cells.query.adj — worked recall over the cell-
+% division-daughter-cells library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "how many daughter
+% cells does this process yield?" (direct) or "which process yields this
+% many?" (reverse) — it states no fact of its own — it only `import`s the
+% grounded table and asks binding queries.
+% ============================================================================
+
+import "cell-division-daughter-cells.adj"
+
+? cell_division_daughter_cells(mitosis, $Count)     % expect 2 (direct: mitosis yields two daughter cells)
+? cell_division_daughter_cells($Process, 4)          % expect meiosis (reverse: which process yields four?)
+? cell_division_daughter_cells(binary_fission, $Count)  % expect abstain -- a prokaryotic process, not tabled here

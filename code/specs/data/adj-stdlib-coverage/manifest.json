@@ -1489,6 +1489,21 @@
       "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
     },
     {
+      "id": "adj.science.6to8.cell_division_daughter_cells",
+      "title": "Recall how many daughter cells mitosis and meiosis each produce",
+      "band": "6-8",
+      "domain": "science",
+      "competency": "recall",
+      "coverage_roots": ["ngss"],
+      "standards": [],
+      "prerequisites": [],
+      "libraries": ["code/specs/data/adj-facts-stdlib/biology/cell-division-daughter-cells.adj"],
+      "modalities": ["text"],
+      "source_cas_hashes": [],
+      "benchmark_paths": [],
+      "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
+    },
+    {
       "id": "adj.literacy.k2.initial_sound",
       "title": "Recall a word's beginning sound (phoneme), the canonical phoneme-identity example",
       "band": "K-2",

@@ -1,0 +1,96 @@
+% ============================================================================
+% cell-division-daughter-cells — the two named eukaryotic cell-division
+% processes and how many daughter cells each one produces
+% (adj-facts-stdlib, BIOLOGY).
+% ============================================================================
+% Mitosis is already tabled here in detail (`mitosis-phases.adj`, its phase
+% order, its ordinal-position bridge), but nowhere yet does this stdlib state
+% the single headline number that distinguishes mitosis from its sister
+% process, MEIOSIS: how many daughter cells each one actually produces. This
+% is a genuinely NEW library, not an extension of `mitosis-phases.adj` --
+% meiosis is a wholly different biological process (the one that makes
+% gametes), not another phase or row of mitosis. A BIOLOGY / genetics agent
+% reasons UP from this rung: before you can explain why a sperm and egg cell
+% each carry half the usual chromosome number, or why mitosis keeps a cell
+% line genetically identical across every ordinary division, you must first
+% know HOW MANY cells each process yields. Recall is a binding query:
+%
+%     ? cell_division_daughter_cells(mitosis, $Count)   % 2
+%
+% This is a native `table` (ADJ-TABLES RS-5, a numeric-cell table like
+% `geology/mineral-hardness.adj`): each `row` lowers to a ground relation
+% `cell_division_daughter_cells(process, count)` carrying the table's
+% citation, so the lookup above is the ordinary SLD binding query — the
+% engine returns the count WITH its source, on the CPU, with zero model
+% calls, and abstains on any process that is not one of these two (it never
+% invents a count).
+%
+% Both processes and the daughter-cell count the source states for each, as a
+% little truth table:
+%
+%     process    daughter cells   a beginner's cue
+%     --------   --------------   -----------------------------------------
+%     mitosis    2                one diploid cell -> two identical cells
+%     meiosis    4                one diploid cell -> four haploid gametes
+%
+% Because `count` is a NUMBER (not a label), a recalled value composes
+% straight into a comparison: meiosis yields MORE daughter cells than mitosis
+% exactly when count(meiosis) > count(mitosis) — the concrete bridge from
+% RECALL to COMPUTE, the same property `mineral-hardness.adj` established for
+% its own numeric cells. The query also runs BACKWARD — bind a count and
+% recall the process that produces it:
+%
+%     ? cell_division_daughter_cells($Process, 4)   % meiosis
+%
+% A word that is NOT one of these two named eukaryotic cell-division
+% processes -- `binary_fission` (a real process, but the one PROKARYOTES /
+% bacteria use to divide, not a eukaryotic process this table names at all)
+% -- is deliberately NOT a row, so a recall on it ABSTAINS rather than
+% inventing a count. That honest-abstention property is what makes the table
+% safe to build a reasoner on: it answers exactly the process->count pairs it
+% can ground, and only those.
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — both counts below were
+% read out of fetched NIH National Human Genome Research Institute (NHGRI)
+% "Genetics Glossary" pages this session, and either pair whose count could
+% not be verified there would have been dropped). Each pair, with the
+% verbatim sentence that states it (each sentence's OTHER clause -- "have
+% identical genomes" for mitosis, "haploid... the gametes" for meiosis -- is
+% quoted in full for honesty but is NOT what this table extracts; only the
+% single daughter-cell COUNT each sentence states is tabled):
+%
+%   mitosis → 2
+%     https://www.genome.gov/genetics-glossary/Mitosis
+%     (NIH National Human Genome Research Institute — Genetics Glossary)
+%     "Mitosis is generally followed by equal division of the cell's content
+%      into two daughter cells that have identical genomes."
+%
+%   meiosis → 4
+%     https://www.genome.gov/genetics-glossary/Meiosis
+%     (NIH National Human Genome Research Institute — Genetics Glossary)
+%     "During meiosis, each diploid cell undergoes two rounds of division to
+%      yield four haploid daughter cells — the gametes."
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single cleanest span: the NHGRI mitosis sentence
+% that fixes the first row (mitosis → 2). The OTHER row's own distinct
+% citation is documented above, so each count remains independently
+% checkable. Both sources are the same NIH NHGRI Genetics Glossary
+% (genome.gov), already the trust tier `dna-base-pairs.adj` and
+% `anatomy/body-counts.adj` establish in this stdlib, a primary U.S.
+% government reference, so `trust authoritative`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
+% ============================================================================
+
+table cell_division_daughter_cells {
+    columns process, count
+
+    row (mitosis, 2)
+    row (meiosis, 4)
+
+    source "Mitosis is generally followed by equal division of the cell's content into two daughter cells that have identical genomes."
+    locator "https://www.genome.gov/genetics-glossary/Mitosis"
+    trust authoritative
+}
