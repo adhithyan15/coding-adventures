@@ -138,7 +138,7 @@ describe("corpus snapshot", () => {
     // newly measurable teaching lessons carry the corpus across one point, and the
     // five-step Chapter-15 migration carries it across the next. Chapter 18's eight
     // measurable teaching lessons carry the current corpus across another point.
-    expect(report.summary.measurablePercent).toBe(68); // +1: HL-C98
+    expect(report.summary.measurablePercent).toBe(69); // +1: HL-C98 // +1: vocabulary wave 5 added 40 schema-v2 lessons, all measurable
   });
 
   it("names the steepest lesson, which is where a burn-down starts", () => {
@@ -309,7 +309,9 @@ describe("the script ramp against the real corpus", () => {
     // visually skippable, so a reader who knows no sister language can pass it by.
     // 170 -> 173: vocabulary wave 4's Sanskrit lessons cite Devanagari daughter-language
     // cousin forms the same way earlier waves did.
-    expect(report.summary.lessonsWithForeignScript).toBe(173);
+    // 173 -> 184: vocabulary wave 5's telugu/malayalam lessons cite Dravidian cousin
+    // forms in cousin scripts the same way.
+    expect(report.summary.lessonsWithForeignScript).toBe(184);
     expect(report.summary.maxForeignGlyphsInALesson).toBe(26);
   });
 

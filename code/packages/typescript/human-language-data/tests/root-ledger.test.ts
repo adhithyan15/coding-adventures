@@ -189,9 +189,9 @@ describe("the committed corpus", () => {
 
   it("pins the first ledger, and it is the reason the rule exists", () => {
     const l = buildRootLedger(lessons, minReuse);
-    expect(l.summary.roots).toBe(2765); // +5: vos-latin slug and ES-ETYMON-VOS-03
-    expect(l.summary.underspent).toBe(2659); // +3: a payoff lesson re-spends a root // +1: the vos-latin slug is unspent; ES-ETYMON-VOS-03 is spent three times, so it is NOT latin-vos, spent once so far // -1: HL-C98 spends fabulari-latin a third time
-    expect(l.summary.neverSpent).toBe(1825); // -6: HL-C94 payoff lessons re-spend roots latin-vos, introduced and not yet re-spent // +1: HL-C98
+    expect(l.summary.roots).toBe(2843); // +5: vos-latin slug and ES-ETYMON-VOS-03 // +78: vocabulary wave 5 // +6: HL-C88 slices 5-6
+    expect(l.summary.underspent).toBe(2735); // +3: a payoff lesson re-spends a root // +1: the vos-latin slug is unspent; ES-ETYMON-VOS-03 is spent three times, so it is NOT latin-vos, spent once so far // -1: HL-C98 spends fabulari-latin a third time // +76: vocabulary wave 5 // +6: HL-C88 slices 5-6
+    expect(l.summary.neverSpent).toBe(1876); // -6: HL-C94 payoff lessons re-spend roots latin-vos, introduced and not yet re-spent // +1: HL-C98 // +51: vocabulary wave 5 // +6: HL-C88 slices 5-6
     expect(l.summary.underspentPercent).toBe(96); // -1: HL-C98
 
     // Both namespaces contribute. If the etymon-atom count ever returns to
@@ -201,7 +201,8 @@ describe("the committed corpus", () => {
       return acc;
     }, {});
     // +1 roots: latin-vos, from ES-C03-vos.
-    expect(byNamespace).toEqual({ roots: 1988, "etymon-atom": 777 });
+    // +53 roots, +25 etymon-atom: vocabulary wave 5.
+    expect(byNamespace).toEqual({ roots: 2041, "etymon-atom": 802 });
   });
 
   it("pins Spanish, the pilot track", () => {
@@ -210,9 +211,9 @@ describe("the committed corpus", () => {
       minReuse,
     );
     expect(l.summary).toMatchObject({
-      roots: 351, // +2: HL-C88 slice 6 adds osus-latin and ES-ETYMON-OSUS
-      underspent: 325, // +2: HL-C88 slice 6
-      neverSpent: 208, // +2: HL-C88 slice 6 introduces two not yet re-spent
+      roots: 351, // +3: HL-C88 slice 4 adds profiteri-latin, istes-greek and ES-ETYMON-PROFITERI // +6: HL-C88 slices 5-6
+      underspent: 325, // +2: HL-C88 slice 4 // +6: HL-C88 slices 5-6
+      neverSpent: 208, // +3: HL-C88 slice 4 introduces three roots not yet re-spent // +6: HL-C88 slices 5-6
       underspentPercent: 93,
     });
   });

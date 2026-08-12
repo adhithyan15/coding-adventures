@@ -1,0 +1,269 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 36,
+  "title": "Son and Daughter, Two Different Roots",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:b0b4ecc15cddc51d",
+  "lessons": [
+    {
+      "id": "TE-C36-koduku",
+      "sequence": 770,
+      "title": "కొడుకు (koḍuku) — \"son,\" and the unexpected word it shares a root with",
+      "headword": "కొడుకు",
+      "romanization": "koḍuku",
+      "gloss": "son — a native Dravidian root that shares its shape with a word already met in this book, and not with the next lesson's word for daughter",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aa716d4eccd99801",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Kuṭumbaṁ, family; snēhituḍu, friend. Now the two words for your own children — and Telugu does not build them the tidy way you might expect."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: కొడుకు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కొడుకు — koḍuku — son."
+            },
+            {
+              "kind": "speech",
+              "text": "వాడి కొడుకు వయసెంత? — vāḍi koḍuku vayasenta? — \"How old is his son?\" — the verbless age question you already know, asked about someone else's child."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart - the root that points sideways, not across",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కొడుకు is inherited from Proto-Dravidian kōẓ-, \"young, tender.\" You might expect \"daughter,\" Telugu's other child-word, to share that same root with a different ending — that is exactly the shape Kannada's magu/maga/ magalu takes. Telugu does not do that. The very same kōẓ- root instead gives Telugu కోడలు (kōḍalu), \"daughter-in-law\" — the woman a son marries, not the daughter a parent has. So koḍuku and kōḍalu are true cognates, one root apart; koḍuku and kūturu — son and daughter — are not related to each other at all. The next lesson takes up kūturu's own, separate root."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"koḍuku\" — son",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"koḍuku\" — son]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"vāḍi koḍuku vayasenta?\" — how old is his son?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"vāḍi koḍuku vayasenta?\" — how old is his son?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the unexpected cognate — \"koḍuku … kōḍalu\" — son, daughter-in-law",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the unexpected cognate — \"koḍuku … kōḍalu\" — son, daughter-in-law]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "three words for people — \"kuṭumbaṁ … snēhituḍu … koḍuku\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: three words for people — \"kuṭumbaṁ … snēhituḍu … koḍuku\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"son.\" (Koḍuku.) What Proto-Dravidian root does it come from, and what other Telugu word shares that exact root? (kōẓ-, \"young, tender\" — shared with కోడలు, \"daughter-in-law,\" not with \"daughter\" itself.) Ask \"how old is his son?\" (Vāḍi koḍuku vayasenta?)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C36-kuuturu",
+      "sequence": 780,
+      "title": "కూతురు (kūturu) — \"daughter,\" on a root all its own",
+      "headword": "కూతురు",
+      "romanization": "kūturu",
+      "gloss": "daughter — a second, separate Proto-Dravidian root, cognate across the family with a word for \"infant\" rather than with Telugu's own word for son",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:392e09f845366dd3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Koḍuku's root turned up again inside a completely different Telugu word. This word's root does something even less expected: it turns up inside a different language."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: కూతురు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కూతురు — kūturu — daughter."
+            },
+            {
+              "kind": "speech",
+              "text": "నా కూతురు. — nā kūturu. — \"My daughter.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart - a second root, and an unexpected cousin",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కూతురు (kūturu) is inherited from Proto-Dravidian kūnttu — a root with no connection to koḍuku's kōẓ-. Telugu's two child-words are not a matched pair; they are two separate inheritances that happen to sit side by side in the same sentence."
+            },
+            {
+              "kind": "speech",
+              "text": "Kūturu's cousin is not in Telugu at all. Kannada ಕೂಸು (kūsu), \"infant, maiden,\" answers to the very same root. So the word a Telugu speaker uses for \"my daughter\" and the word a Kannada speaker uses for \"the baby\" are, underneath, one and the same — a reminder that a cognate does not have to keep the same sense as it crosses a language boundary, only the same root."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"nā kūturu\" — my daughter",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"nā kūturu\" — my daughter]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "son, then daughter — \"koḍuku … kūturu\" — two unrelated roots",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: son, then daughter — \"koḍuku … kūturu\" — two unrelated roots]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the cross-language cousin — \"kūturu … kūsu\" — daughter, infant",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the cross-language cousin — \"kūturu … kūsu\" — daughter, infant]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "friend, son, daughter — \"snēhituḍu … koḍuku … kūturu\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: friend, son, daughter — \"snēhituḍu … koḍuku … kūturu\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"my daughter.\" (Nā kūturu.) Does kūturu share a root with koḍuku? (No — two separate Proto-Dravidian roots.) What word in another Dravidian language answers to kūturu's own root, and what does it mean there? (Kannada కూసు kūsu, \"infant, maiden.\")"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

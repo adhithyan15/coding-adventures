@@ -365,6 +365,87 @@
         "ML-EXT-028-DOING-VERBS"
       ],
       "after": []
+    },
+    {
+      "id": "ML-PATH-029",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "ML-C35-kudumbam",
+        "ML-C35-suhruthu"
+      ],
+      "before": [],
+      "inline": [
+        "ML-EXT-029-FAMILY-FRIEND"
+      ],
+      "after": []
+    },
+    {
+      "id": "ML-PATH-030",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "ML-C36-kutti",
+        "ML-C36-makan",
+        "ML-C36-makal"
+      ],
+      "before": [],
+      "inline": [
+        "ML-EXT-030-CHILD-SON-DAUGHTER"
+      ],
+      "after": []
+    },
+    {
+      "id": "ML-PATH-031",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "ML-C37-kannu",
+        "ML-C37-chevi",
+        "ML-C37-mookku",
+        "ML-C37-vaay"
+      ],
+      "before": [],
+      "inline": [
+        "ML-EXT-031-FACE-WORDS"
+      ],
+      "after": []
+    },
+    {
+      "id": "ML-PATH-032",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "ML-C38-hrudayam",
+        "ML-C38-nenchu"
+      ],
+      "before": [],
+      "inline": [
+        "ML-EXT-032-TWO-HEARTS"
+      ],
+      "after": []
+    },
+    {
+      "id": "ML-PATH-033",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "ML-C39-chaaya",
+        "ML-C39-kaapi",
+        "ML-C39-paal"
+      ],
+      "before": [],
+      "inline": [
+        "ML-EXT-033-TEA-COFFEE-MILK"
+      ],
+      "after": []
+    },
+    {
+      "id": "ML-PATH-034",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "ML-C40-oon"
+      ],
+      "before": [],
+      "inline": [
+        "ML-EXT-034-MEAL"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -405,7 +486,9 @@
         "ML-PATH-007",
         "ML-PATH-011",
         "ML-PATH-016",
-        "ML-PATH-021"
+        "ML-PATH-021",
+        "ML-PATH-029",
+        "ML-PATH-030"
       ],
       "omits": [
         "PRONOUN-ME"
@@ -416,7 +499,9 @@
       "segments": [
         "ML-PATH-006",
         "ML-PATH-009",
-        "ML-PATH-017"
+        "ML-PATH-017",
+        "ML-PATH-031",
+        "ML-PATH-032"
       ],
       "omits": [
         "WORD-GOOD",
@@ -427,7 +512,9 @@
     "SPINE-POLITE-REQUEST-REPAIR": {
       "segments": [
         "ML-PATH-013",
-        "ML-PATH-019"
+        "ML-PATH-019",
+        "ML-PATH-033",
+        "ML-PATH-034"
       ],
       "omits": [],
       "relocates": {}
@@ -948,6 +1035,81 @@
         "ML-C34-codikkuka",
         "ML-C34-sahaayikkuka",
         "ML-C34-ishtam"
+      ]
+    },
+    {
+      "id": "ML-EXT-029-FAMILY-FRIEND",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can name my family as a group and name a friend in Malayalam, and say which of the two words is a Sanskrit loan.",
+      "prerequisites": [],
+      "lessons": [
+        "ML-C35-kudumbam",
+        "ML-C35-suhruthu"
+      ]
+    },
+    {
+      "id": "ML-EXT-030-CHILD-SON-DAUGHTER",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can say child, son and daughter in Malayalam, and say which of the three matches Tamil most closely.",
+      "prerequisites": [],
+      "lessons": [
+        "ML-C36-kutti",
+        "ML-C36-makan",
+        "ML-C36-makal"
+      ]
+    },
+    {
+      "id": "ML-EXT-031-FACE-WORDS",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can name my eye, ear, nose and mouth in Malayalam, and say which of the four the family agrees on and which it splits.",
+      "prerequisites": [],
+      "lessons": [
+        "ML-C37-kannu",
+        "ML-C37-chevi",
+        "ML-C37-mookku",
+        "ML-C37-vaay"
+      ]
+    },
+    {
+      "id": "ML-EXT-032-TWO-HEARTS",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can name my heart in Malayalam two ways, one Sanskrit and one native, and say which one everyday idiom actually uses.",
+      "prerequisites": [],
+      "lessons": [
+        "ML-C38-hrudayam",
+        "ML-C38-nenchu"
+      ]
+    },
+    {
+      "id": "ML-EXT-033-TEA-COFFEE-MILK",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can politely ask for tea, coffee or milk in Malayalam, and trace each word back along the road it travelled to get here.",
+      "prerequisites": [],
+      "lessons": [
+        "ML-C39-chaaya",
+        "ML-C39-kaapi",
+        "ML-C39-paal"
+      ]
+    },
+    {
+      "id": "ML-EXT-034-MEAL",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can say I am having a meal in Malayalam, using a second eat-verb this book never taught until now.",
+      "prerequisites": [],
+      "lessons": [
+        "ML-C40-oon"
       ]
     },
     {

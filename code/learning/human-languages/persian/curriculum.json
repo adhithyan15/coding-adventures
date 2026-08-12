@@ -135,6 +135,51 @@
       "before": [],
       "inline": [],
       "after": []
+    },
+    {
+      "id": "FA-PATH-010",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "FA-C09-ab",
+        "FA-C09-nan",
+        "FA-C09-chay",
+        "FA-C09-kelid"
+      ],
+      "before": [],
+      "inline": [
+        "FA-EXT-017-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "FA-PATH-011",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "FA-C10-madar",
+        "FA-C10-pedar",
+        "FA-C10-baradar",
+        "FA-C10-dokhtar"
+      ],
+      "before": [],
+      "inline": [
+        "FA-EXT-018-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "FA-PATH-012",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "FA-C11-cheshm",
+        "FA-C11-dast",
+        "FA-C11-pa",
+        "FA-C11-zaban"
+      ],
+      "before": [],
+      "inline": [
+        "FA-EXT-019-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -171,7 +216,8 @@
     },
     "SPINE-EXCHANGE-NAMES": {
       "segments": [
-        "FA-PATH-004"
+        "FA-PATH-004",
+        "FA-PATH-011"
       ],
       "omits": [
         "PRONOUN-I",
@@ -184,7 +230,8 @@
     },
     "SPINE-CHECK-WELLBEING": {
       "segments": [
-        "FA-PATH-005"
+        "FA-PATH-005",
+        "FA-PATH-012"
       ],
       "omits": [
         "WORD-WELL",
@@ -193,7 +240,9 @@
       "relocates": {}
     },
     "SPINE-POLITE-REQUEST-REPAIR": {
-      "segments": [],
+      "segments": [
+        "FA-PATH-010"
+      ],
       "omits": [
         "COURTESY-PLEASE",
         "COURTESY-SORRY"
@@ -694,6 +743,48 @@
       ],
       "lessons": [
         "FA-C05-practice"
+      ]
+    },
+    {
+      "id": "FA-EXT-017-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can politely ask for water, bread, tea, or my key in Persian using the request pattern this chapter builds.",
+      "prerequisites": [],
+      "lessons": [
+        "FA-C09-ab",
+        "FA-C09-nan",
+        "FA-C09-chay",
+        "FA-C09-kelid"
+      ]
+    },
+    {
+      "id": "FA-EXT-018-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can name my mother, father, brother, and daughter in Persian, the four family cousins Chapter 6 named in passing.",
+      "prerequisites": [],
+      "lessons": [
+        "FA-C10-madar",
+        "FA-C10-pedar",
+        "FA-C10-baradar",
+        "FA-C10-dokhtar"
+      ]
+    },
+    {
+      "id": "FA-EXT-019-LANGUAGE-SPECIFIC",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "language-specific",
+      "canDo": "I can name my eye, hand, foot, and tongue in Persian, and say zabân for both tongue and language.",
+      "prerequisites": [],
+      "lessons": [
+        "FA-C11-cheshm",
+        "FA-C11-dast",
+        "FA-C11-pa",
+        "FA-C11-zaban"
       ]
     }
   ]

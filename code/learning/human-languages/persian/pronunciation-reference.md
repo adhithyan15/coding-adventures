@@ -42,6 +42,7 @@ lessons will introduce them only when a useful word needs them.
 | `persian-gaf` | read **گ** *gâf* as English *g* in “go”; it is a Persian addition to the Arabic set | **گفتن** *goftan* |
 | `persian-pe` | read **پ** *pe* as English *p*; a **ب** shape with three dots beneath, and the third of Persian's four additions | **پرسیدن** *porsidan* |
 | `silent-vav` | after **خ** and before **ا**, leave **و** unpronounced — it is written, never said | **خواندن** *khândan* |
+| `ze` | read **ز** as English *z*; an ordinary letter from the inherited Arabic set | **زبان** *zabân* |
 
 ## Read the current word before the whole alphabet
 
@@ -63,6 +64,11 @@ lessons will introduce them only when a useful word needs them.
   chapter adds only **آ** (alef wearing a *madde*, for a word opening on long
   *â*) inside **آمدن**, and **گ** *gâf* inside **گفتن** — the second of the four
   Persian additions **پ چ ژ گ** the learner has now met.
+- The requests, family, and body chapters need only one new letter across all
+  twelve words: **ز** *ze*, an ordinary member of the inherited Arabic set,
+  inside **زبان** *zabân*. Every other word in those three chapters — **آب**,
+  **نان**, **چای**, **کلید**, **مادر**, **پدر**, **برادر**, **دختر**, **چشم**,
+  **دست**, **پا** — reuses letters already met.
 
 One spelling symbol can do more than one job in later words—especially **و**
 and **ی**—so read from the word and context rather than assigning each shape one

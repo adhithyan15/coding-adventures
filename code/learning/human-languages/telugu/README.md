@@ -87,6 +87,34 @@ pieces taught before the whole; and a book you can read straight through.
   with **no verb in it at all** — the fourth dative-subject sentence the track
   has built, and the sixth language in the corpus to build liking backwards.
   Telugu now covers **14 of the canonical 40**. In the book.
+- **Chapter 35 — Family and Friends** ([`lessons/TE-C35-*`](./lessons/)):
+  kuṭumbaṁ (the Sanskrit collective "family" none of Chapter 12's six
+  specific-person words supplied), snēhituḍu (the everyday Sanskrit-derived
+  "friend," beside the native DEDR-attested nēstaṁ). In the book.
+- **Chapter 36 — Son and Daughter, Two Different Roots**
+  ([`lessons/TE-C36-*`](./lessons/)): koḍuku ("son," Proto-Dravidian *\*kōẓ-*,
+  cognate not with "daughter" but with kōḍalu, "daughter-in-law"), kūturu
+  ("daughter," an unrelated root *\*kūnttu*, cognate with Kannada kūsu,
+  "infant, maiden"). Telugu does not build son/daughter on one shared root the
+  way Kannada does. In the book.
+- **Chapter 37 — Four Words on the Face** ([`lessons/TE-C37-*`](./lessons/)):
+  kannu ("eye," closing a loop Chapter 32 left open), cevi ("ear," a
+  near-exact match with Tamil), mukku ("nose," a regular root with an
+  irregular Telugu reflex), noru ("mouth," the one face word with no
+  confirmed root of its own, unlike the shared *vāy*/*bāyi* its three sisters
+  carry). In the book.
+- **Chapter 38 — The Heart, Two Ways** ([`lessons/TE-C38-*`](./lessons/)):
+  guṇḍe (the everyday native word, cognate with Kannada's own guṇḍige) and
+  hṛdayaṁ (the literary Sanskrit loan, a genuine Proto-Indo-European cousin of
+  English *heart*). In the book.
+- **Chapter 39 — Tea and Milk, Two Roads** ([`lessons/TE-C39-*`](./lessons/)):
+  ṭī ("tea," a direct English loan that travelled by sea, unlike the overland
+  *chai* most neighbouring languages carry) and pālu ("milk," Proto-Dravidian
+  *\*pāl* unchanged — here Kannada's *hālu* is the odd one out, not Telugu).
+  In the book.
+- **Chapter 40 — A Meal** ([`lessons/TE-C40-*`](./lessons/)): bhōjanaṁ, the
+  Sanskrit word for "a meal" that Chapter 32 already named and never taught.
+  In the book.
 
 ---
 
@@ -105,7 +133,7 @@ someone the time on the hour in Telugu, in the singular and the plural"), the
 shared spine nodes it realises, and the `payoff` lesson that proves the claim,
 with the exact knowledge atoms that payoff exercises.
 
-Chapters **6–31** are authored — twenty-six entries. Chapters **1–5 are absent
+Chapters **6–40** are authored — thirty-five entries. Chapters **1–5 are absent
 on purpose**: their lessons are still schema v1 with no `practises.knowledge`
 and no `core/book-generation.json` target, so a payoff for them could only be
 invented. That absence is measurable debt, not a placeholder.
@@ -114,6 +142,9 @@ Because no chapter after 5 has a terminal `practice` lesson, each payoff is the
 chapter's last lesson by `sequence`. Chapter 31 is the one place where that rule
 picks a `culture` lesson rather than a word or phrase lesson — and correctly so,
 since that chapter's promise is judging when శుభ మధ్యాహ్నం fits the setting.
+Chapters 35–40 are a pre-A1 vocabulary-depth tranche (family, face, heart, tea,
+and a meal) rather than a new grammar arc; every payoff there closes its own
+chapter's atoms at full representativeness.
 
 ## Handwriting — not taught yet, and why
 
