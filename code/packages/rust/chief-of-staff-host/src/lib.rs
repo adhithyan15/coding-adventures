@@ -17,13 +17,14 @@ use chief_of_staff_host_runtime::{
 };
 use chief_of_staff_process_supervisor::{ChildProcessControl, ProcessSupervisorError};
 use chief_of_staff_skill_runtime::{
-    LevelOneLaunchPlan, LevelOneRuntimeError, LevelOneSkillRuntime, LEVEL_ONE_RESPONSE_CONTENT_TYPE,
+    LevelOneLaunchPlan, LevelOneResponse, LevelOneRuntimeError, LevelOneSkillRuntime,
+    LevelOneToolTurn, LEVEL_ONE_RESPONSE_CONTENT_TYPE,
 };
 use llm_gateway::{
     Capabilities, CompletionJsonResponse, CompletionRequest, CompletionResponse, FinishReason,
     JsonSchema, LlmClient, LlmError, MessageContent, ModelToolCall, ModelToolChoice,
-    ProviderIdentity, Role, TokenUsage, ToolCompletionOutput, ToolCompletionRequest,
-    ToolCompletionResponse,
+    ModelToolDefinition, ModelToolResult, ProviderIdentity, Role, TokenUsage, ToolCompletionOutput,
+    ToolCompletionRequest, ToolCompletionResponse,
 };
 use std::collections::BTreeMap;
 use std::ffi::OsString;
@@ -39,6 +40,7 @@ const PACKAGE_RUNTIME_ARGUMENT: &str = "--package-runtime";
 const SKILL_RUNTIME_LABEL: &str = "skill";
 const IDLE_POLL_INTERVAL: Duration = Duration::from_millis(250);
 const HEARTBEAT_INTERVAL: Duration = Duration::from_secs(1);
+const MAX_LEVEL_ONE_MODEL_TURNS: usize = 8;
 
 /// Normal terminal condition for one concrete host process.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -66,6 +68,8 @@ pub enum HostError {
     DataPlane(DataPlaneFailure),
     /// A successful response did not have the exact locally required shape.
     ResponseShape,
+    /// The model exhausted the bounded tool-turn budget without final text.
+    ToolTurnLimit,
     /// An internal control lock was poisoned by an earlier failure.
     ControlPoisoned,
 }
@@ -81,6 +85,7 @@ impl Display for HostError {
             Self::Control(_) => "chief-host: authenticated control failed",
             Self::DataPlane(_) => "chief-host: data-plane operation failed",
             Self::ResponseShape => "chief-host: invalid data-plane response",
+            Self::ToolTurnLimit => "chief-host: model tool-turn limit reached",
             Self::ControlPoisoned => "chief-host: control state is unavailable",
         })
     }
@@ -232,12 +237,12 @@ where
     };
     let input =
         std::str::from_utf8(&message.payload).map_err(|_| LevelOneRuntimeError::NonUtf8Input)?;
-    let response = match runtime.respond(input, &message.content_type) {
+    let response = match respond_level_one(control, runtime, input, &message.content_type) {
         Ok(response) => response,
         Err(_error) if terminated.load(Ordering::SeqCst) => {
             return Err(HostError::Control(ProcessSupervisorError::Terminated))
         }
-        Err(error) => return Err(error.into()),
+        Err(error) => return Err(error),
     };
     let published = lock_control(control)?.request_publish(
         write_channel,
@@ -255,6 +260,83 @@ where
         DataPlaneResponse::Acknowledged { .. } => Ok(HostStep::Processed),
         DataPlaneResponse::Failed { failure, .. } => Err(HostError::DataPlane(failure)),
         _ => Err(HostError::ResponseShape),
+    }
+}
+
+fn respond_level_one<R, W>(
+    control: &Mutex<ChildProcessControl<R, W>>,
+    runtime: &LevelOneSkillRuntime<'_>,
+    input: &str,
+    input_content_type: &str,
+) -> Result<LevelOneResponse, HostError>
+where
+    R: Read + Send,
+    W: Write + Send,
+{
+    let catalog = match lock_control(control)?.request_model_tools()? {
+        DataPlaneResponse::ModelToolsListed { tools, .. } => tools,
+        DataPlaneResponse::Failed {
+            failure: DataPlaneFailure::Unavailable,
+            ..
+        } => {
+            return runtime
+                .respond(input, input_content_type)
+                .map_err(Into::into)
+        }
+        DataPlaneResponse::Failed { failure, .. } => return Err(HostError::DataPlane(failure)),
+        _ => return Err(HostError::ResponseShape),
+    };
+    let tools = catalog
+        .iter()
+        .cloned()
+        .map(|tool| ModelToolDefinition {
+            name: tool.name,
+            description: tool.description,
+            input_schema: tool.input_schema,
+        })
+        .collect::<Vec<_>>();
+    let mut results = Vec::new();
+    for turn in 0..MAX_LEVEL_ONE_MODEL_TURNS {
+        match runtime.respond_with_tools(
+            input,
+            input_content_type,
+            tools.clone(),
+            results.clone(),
+        )? {
+            LevelOneToolTurn::Final(response) => return Ok(response),
+            LevelOneToolTurn::ToolCall(call) => {
+                require_tool_execution_budget(turn)?;
+                let wire_call = WireModelToolCall {
+                    call_id: call.call_id.clone(),
+                    name: call.name.clone(),
+                    arguments: call.arguments.clone(),
+                };
+                let response = lock_control(control)?.request_tool_execution(wire_call.clone())?;
+                let result = match response {
+                    DataPlaneResponse::ToolExecuted { result, .. } if result.call == wire_call => {
+                        *result
+                    }
+                    DataPlaneResponse::Failed { failure, .. } => {
+                        return Err(HostError::DataPlane(failure));
+                    }
+                    _ => return Err(HostError::ResponseShape),
+                };
+                results.push(ModelToolResult {
+                    call,
+                    output: result.output,
+                    is_error: result.is_error,
+                });
+            }
+        }
+    }
+    Err(HostError::ToolTurnLimit)
+}
+
+fn require_tool_execution_budget(turn: usize) -> Result<(), HostError> {
+    if turn >= MAX_LEVEL_ONE_MODEL_TURNS - 1 {
+        Err(HostError::ToolTurnLimit)
+    } else {
+        Ok(())
     }
 }
 
@@ -672,6 +754,16 @@ mod tests {
             &WireToolCompletionOutput::FinalText("done".to_string()),
             &tools,
             &WireModelToolChoice::Named("smart_home.list_entities".to_string())
+        ));
+    }
+
+    #[test]
+    fn eighth_model_turn_cannot_execute_another_tool() {
+        assert!(require_tool_execution_budget(0).is_ok());
+        assert!(require_tool_execution_budget(6).is_ok());
+        assert!(matches!(
+            require_tool_execution_budget(7),
+            Err(HostError::ToolTurnLimit)
         ));
     }
 }
