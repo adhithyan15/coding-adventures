@@ -2138,7 +2138,18 @@ impl Compiler {
     /// slot that holds the result.  Used from `emit_expr`.
     fn emit_proc_call(&mut self, node: &GrammarASTNode) -> Result<ExprValue, CompileError> {
         self.set_loc(node);
-        self.disable_static_real_tracking();
+        let source_name = direct_tokens(node)
+            .into_iter()
+            .find(|token| token.effective_type_name() == "NAME")
+            .map(|token| token.value.clone());
+        let is_pure_standard_function = source_name.is_some_and(|name| {
+            let target_name = self.resolve_procedure_identity(&name);
+            !self.proc_sigs.contains_key(&target_name)
+                && is_supported_standard_function(&target_name)
+        });
+        if !is_pure_standard_function {
+            self.disable_static_real_tracking();
+        }
         self.emit_call_common(node, true)?.ok_or_else(|| {
             CompileError::Type("proper procedure call has no return value".into())
         })
@@ -2406,6 +2417,9 @@ impl Compiler {
     }
 
     fn static_integer_scalar_value(&self, node: &GrammarASTNode) -> Option<i64> {
+        if let Some(value) = self.static_standard_integer_value(node) {
+            return Some(value);
+        }
         if let Some(name) = expr_variable_name(node) {
             let binding = self.require_var(&name).ok()?;
             if binding.ty == ScalarType::Integer && !binding.is_global {
@@ -2505,6 +2519,41 @@ impl Compiler {
             index += 2;
         }
         Some(value)
+    }
+
+    fn static_standard_integer_value(&self, node: &GrammarASTNode) -> Option<i64> {
+        if node.rule_name != "proc_call" {
+            return None;
+        }
+        let name = direct_tokens(node)
+            .into_iter()
+            .find(|token| token.effective_type_name() == "NAME")?
+            .value
+            .clone();
+        let target_name = self.resolve_procedure_identity(&name);
+        if self.proc_sigs.contains_key(&target_name) {
+            return None;
+        }
+        let actuals = self.standard_fn_actuals(node);
+        if actuals.len() != 1 {
+            return None;
+        }
+        match target_name.as_str() {
+            "abs" => self.static_integer_scalar_value(actuals[0])?.checked_abs(),
+            "sign" => {
+                if let Some(value) = self.static_integer_scalar_value(actuals[0]) {
+                    return Some(value.signum());
+                }
+                let value = self.static_real_arithmetic_value(actuals[0])?;
+                Some(if value < 0.0 { -1 } else if value > 0.0 { 1 } else { 0 })
+            }
+            "entier" => {
+                let value = self.static_real_arithmetic_value(actuals[0])?.floor();
+                (value.is_finite() && value.abs() <= 9_007_199_254_740_992.0)
+                    .then_some(value as i64)
+            }
+            _ => None,
+        }
     }
 
     /// Evaluate deterministic real standard-function calls inside the static
@@ -7526,6 +7575,30 @@ mod tests {
             "test",
         )
         .expect_err("overflowing integer powers must invalidate the static snapshot");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_print_static_integer_functions_snapshot_in_real_expression() {
+        let module = compile_source(
+            "begin integer n, saved; n := abs(-40) + sign(-2) + entier(3.9); saved := n; n := 9; output(saved + 0.5) end",
+            "test",
+        )
+        .expect("static integer-valued functions participate in snapshots");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "42.5")
+        }));
+    }
+
+    #[test]
+    fn al4_print_static_integer_functions_respect_user_override() {
+        let err = compile_source(
+            "begin integer procedure sign(x); value x; integer x; sign := x; integer n; n := sign(40); output(n + 0.5) end",
+            "test",
+        )
+        .expect_err("a user-defined sign call must not become static metadata");
         assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
