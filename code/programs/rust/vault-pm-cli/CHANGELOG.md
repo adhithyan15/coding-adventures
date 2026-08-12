@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Exposed `vault create NAME` and command-scoped `--vault NAME`, and moved the
+  real-process restore drill onto a separately keyed named target in the same
+  profile with a final restart-backed source-isolation check.
 - Exposed retryable audited `restore verify FILE` and extended the real-process
   PTY drill through another independent target reopen and hidden artifact
   prompt before aggregate verification output.
