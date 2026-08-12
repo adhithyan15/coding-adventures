@@ -78,6 +78,11 @@ export function createTaskEngine(wasmBytes, options = {}) {
     setCompleted: op("set_completed"),
     setPercentComplete: op("set_percent_complete"),
     setStatus: op("set_status"),
+    // Seeds the project's default 4-status workflow (idempotent) and
+    // backfills any task that has never had a status — see
+    // `ProjectState::ensure_default_workflow`'s own doc comment. Board calls
+    // this once before its first `kanban(...)` query each time it's shown.
+    ensureDefaultWorkflow: op("ensure_default_workflow"),
     setSchedule: op("set_schedule"),
     setDuration: op("set_duration"),
     setConstraint: op("set_constraint"),

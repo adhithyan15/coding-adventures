@@ -6,6 +6,32 @@ All notable changes to `task-core` are documented here.
 
 ### Added
 
+- **`ProjectState::ensure_default_workflow`** — seeds a project's first
+  `Workflow` (4 statuses: `next`/"Up next", `doing`/"In progress",
+  `review`/"In review", `done`/"Done") the first time one is needed, and
+  backfills every task with `status.is_none()` from its current
+  `completed`/`percent_complete` so nothing regresses. Both halves are
+  idempotent — safe to call unconditionally. Closes the gap task-app's
+  Board view hit: `Workflow`/`Status`/`Projections::kanban()` have existed
+  since the Phase-6 Board work, fully wired through `task-wasm`, but
+  **nothing ever created a `Workflow`** — `engine.kanban(id)` always
+  returned "workflow not found". See
+  `code/programs/mosaic/task-app/BACKLOG.md`'s Board design-fidelity item.
+
+### Fixed
+
+- **`set_status` now cascades `completed`** — entering a status that some
+  workflow marks as its `done_status` sets `completed = true`; leaving one
+  sets it `false`. `Workflow.done_status`'s own doc comment ("entering this
+  status marks a task `completed`") already promised this; the op just
+  didn't implement it. Looks the status up against every workflow the
+  project has rather than taking a workflow id, so the existing 2-arg call
+  shape (already used by the Sheet's editable Status column) is unchanged.
+  **Known, disclosed limitation**: the cascade is one-directional.
+  `set_completed` (the checkbox path) does not cascade back into `status` —
+  syncing that direction too would touch a much older, far more widely used
+  op, out of scope for this fix.
+
 - **`GanttBar.kind: TaskKind`** — the `gantt()` projection now reports
   whether each bar is a Leaf/Summary/Milestone task, the same shape of
   addition `depth`/`percent_complete` already were on the struct. Lets a

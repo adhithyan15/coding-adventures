@@ -4,6 +4,18 @@ All notable changes to `task-wasm` are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added - `ensureDefaultWorkflow`
+
+- **`ensure_default_workflow`** export (`EnsureDefaultWorkflowArgs {}` — no
+  meaningful payload, mirrors the JS `op()` helper always sending `{}`),
+  wired to `js/task-engine.mjs` as `ensureDefaultWorkflow`. Calls
+  `ProjectState::ensure_default_workflow`, the task-core op that seeds a
+  project's first `Workflow` and backfills task statuses — see that crate's
+  CHANGELOG for the full story. This makes the pre-existing but previously
+  unreachable `kanban` export (already bound in `task-engine.mjs`, never
+  callable because no project ever had a workflow) actually usable —
+  covered by a new test, `ensure_default_workflow_then_kanban_round_trips`.
+
 ### Added - `set_project_complexity` (task-app Phase 9, wasm half)
 
 - **`set_project_complexity`** — set the active project's

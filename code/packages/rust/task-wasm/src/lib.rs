@@ -469,6 +469,20 @@ export_op!(
     )
 );
 
+/// No meaningful payload — mirrors `run_op`'s expectation of a deserializable
+/// args type while carrying nothing, since `ensure_default_workflow` takes no
+/// input. The JS binding's `op()` helper always sends `{}`.
+#[derive(Deserialize)]
+struct EnsureDefaultWorkflowArgs {}
+export_op!(
+    /// Seed the project's default 4-status workflow (idempotent) and backfill
+    /// any task that has never had a status set. See
+    /// `ProjectState::ensure_default_workflow`'s own doc comment.
+    ensure_default_workflow,
+    EnsureDefaultWorkflowArgs,
+    |s, _a: EnsureDefaultWorkflowArgs| s.ensure_default_workflow()
+);
+
 #[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]
 struct ScheduleArgs {
@@ -1440,6 +1454,38 @@ mod tests {
         let c = call1(calendar, &cal_json);
         assert!(c.contains(r#""ok":true"#), "{c}");
         assert!(c.contains("Alpha"), "{c}");
+    }
+
+    #[test]
+    fn ensure_default_workflow_then_kanban_round_trips() {
+        // `kanban` was exported but unreachable before `ensure_default_workflow`
+        // existed — no code path ever populated `workflows`, so it always errored
+        // "workflow not found". This is the first test exercising it end-to-end.
+        reset();
+        call1(create_task, r#"{"id":"a","name":"Alpha"}"#);
+        call1(set_completed, r#"{"id":"a","completed":true}"#);
+        call1(create_task, r#"{"id":"b","name":"Bravo"}"#);
+
+        let ensured = call1(ensure_default_workflow, "{}");
+        assert!(ensured.contains(r#""ok":true"#), "{ensured}");
+
+        let (ptr, len) = put("default");
+        let out = unsafe { kanban(ptr, len) };
+        unsafe { dealloc(ptr, len) };
+        let k = take(out);
+        assert!(k.contains(r#""ok":true"#), "{k}");
+        assert!(k.contains("\"name\":\"Up next\""), "{k}");
+        assert!(k.contains("\"name\":\"In progress\""), "{k}");
+        assert!(k.contains("\"name\":\"In review\""), "{k}");
+        assert!(k.contains("\"name\":\"Done\""), "{k}");
+        // "a" was completed before the workflow existed, so it backfilled into "done".
+        assert!(k.contains("Alpha"), "{k}");
+        assert!(k.contains("Bravo"), "{k}");
+
+        // A second call must not reset the workflow or re-derive statuses that were
+        // already backfilled once.
+        let ensured2 = call1(ensure_default_workflow, "{}");
+        assert!(ensured2.contains(r#""ok":true"#), "{ensured2}");
     }
 
     #[test]
