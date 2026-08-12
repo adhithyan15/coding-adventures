@@ -14,6 +14,7 @@ use chief_of_staff_daemon_secret_file::{read_owner_only_secret, SecretFileError}
 use coding_adventures_csprng::random_array;
 use coding_adventures_vault_sealed_store::SealedStore;
 use coding_adventures_zeroize::Zeroizing;
+use smart_home_controller_runtime::{ControllerPersistenceError, SmartHomeControllerRuntime};
 use smart_home_core::{
     AgentId, Bridge, BridgeId, CapabilityId, EntityKind, IntegrationId, Metadata, ProtocolFamily,
     VaultRef,
@@ -33,9 +34,6 @@ use smart_home_reolink_snapshot_host::{
 use smart_home_runtime::{
     PairingSessionStatus, RuntimeCompletePairingToolRequest, RuntimeError, RuntimePairingSessionId,
     SmartHomeRuntime,
-};
-use smart_home_runtime_store::{
-    DurableAutomationDefinition, RestoredSmartHomeRuntime, RuntimeStoreError, SmartHomeRuntimeStore,
 };
 use storage_core::{Revision, StorageBackend};
 use url_parser::Url;
@@ -64,7 +62,7 @@ pub enum ReolinkPairingServiceError {
     Reolink(ReolinkError),
     CredentialEncoding(ReolinkSnapshotHostError),
     Runtime(RuntimeError),
-    RuntimeStore(RuntimeStoreError),
+    Controller(ControllerPersistenceError),
     Transaction(PairingTransactionError),
     Entropy(String),
     MissingDurableRuntime,
@@ -113,7 +111,7 @@ impl fmt::Display for ReolinkPairingServiceError {
                 formatter.write_str("Reolink credential envelope encoding failed")
             }
             Self::Runtime(error) => write!(formatter, "Reolink runtime completion failed: {error}"),
-            Self::RuntimeStore(error) => write!(formatter, "Reolink runtime store failed: {error}"),
+            Self::Controller(error) => write!(formatter, "Reolink controller failed: {error}"),
             Self::Transaction(error) => write!(formatter, "Reolink pairing transaction failed: {error}"),
             Self::Entropy(message) => write!(
                 formatter,
@@ -154,9 +152,9 @@ impl From<RuntimeError> for ReolinkPairingServiceError {
     }
 }
 
-impl From<RuntimeStoreError> for ReolinkPairingServiceError {
-    fn from(error: RuntimeStoreError) -> Self {
-        Self::RuntimeStore(error)
+impl From<ControllerPersistenceError> for ReolinkPairingServiceError {
+    fn from(error: ControllerPersistenceError) -> Self {
+        Self::Controller(error)
     }
 }
 
@@ -597,12 +595,8 @@ pub struct ReolinkPairingReport {
 }
 
 pub struct ReolinkPairingServiceActorState<I, V, J, R> {
-    runtime: SmartHomeRuntime,
-    automation_definitions: Vec<DurableAutomationDefinition>,
-    automation_state: Option<serde_json::Value>,
-    runtime_revision: Revision,
+    controller: SmartHomeControllerRuntime<R>,
     journal_backend: J,
-    runtime_store: SmartHomeRuntimeStore<R>,
     vault: Arc<SealedStore>,
     credential_input: I,
     verifier: V,
@@ -620,30 +614,20 @@ where
     pub fn restore(
         journal_backend: J,
         vault: Arc<SealedStore>,
-        runtime_store: SmartHomeRuntimeStore<R>,
+        controller: SmartHomeControllerRuntime<R>,
         credential_input: I,
         verifier: V,
     ) -> Result<Self, ReolinkPairingServiceError> {
-        let mut restored = runtime_store
-            .load()?
+        controller
+            .durable_snapshot()?
             .ok_or(ReolinkPairingServiceError::MissingDurableRuntime)?;
         let recovered_transaction_count = {
             let coordinator =
-                PairingTransactionCoordinator::new(&journal_backend, &vault, &runtime_store);
+                PairingTransactionCoordinator::new(&journal_backend, &vault, &controller);
             let pending = coordinator.pending_transaction_ids()?;
             let recovered_count = pending.len() as u64;
             for transaction_id in pending {
-                match coordinator.recover(&transaction_id)? {
-                    PairingTransactionOutcome::Committed {
-                        restored: committed,
-                        ..
-                    } => restored = *committed,
-                    PairingTransactionOutcome::RolledBack { .. } => {
-                        restored = runtime_store
-                            .load()?
-                            .ok_or(ReolinkPairingServiceError::MissingDurableRuntime)?;
-                    }
-                }
+                let _ = coordinator.recover(&transaction_id)?;
             }
             if !coordinator.pending_transaction_ids()?.is_empty() {
                 return Err(ReolinkPairingServiceError::InvalidRequest(
@@ -653,12 +637,8 @@ where
             recovered_count
         };
         Ok(Self {
-            runtime: restored.runtime,
-            automation_definitions: restored.automation_definitions,
-            automation_state: restored.automation_state,
-            runtime_revision: restored.revision,
+            controller,
             journal_backend,
-            runtime_store,
             vault,
             credential_input,
             verifier,
@@ -670,12 +650,18 @@ where
         })
     }
 
-    pub fn runtime(&self) -> &SmartHomeRuntime {
-        &self.runtime
+    pub fn runtime(&self) -> Result<SmartHomeRuntime, ReolinkPairingServiceError> {
+        Ok(self
+            .controller
+            .durable_snapshot()?
+            .ok_or(ReolinkPairingServiceError::MissingDurableRuntime)?
+            .runtime)
     }
 
-    pub fn runtime_revision(&self) -> &Revision {
-        &self.runtime_revision
+    pub fn runtime_revision(&self) -> Result<Revision, ReolinkPairingServiceError> {
+        self.controller
+            .revision()?
+            .ok_or(ReolinkPairingServiceError::MissingDurableRuntime)
     }
 
     pub fn snapshot(&self) -> &ReolinkPairingServiceSnapshot {
@@ -715,7 +701,11 @@ where
         &mut self,
         request: ReolinkPairingRequest,
     ) -> Result<ReolinkPairingReport, ReolinkPairingServiceError> {
-        let session = self
+        let restored = self
+            .controller
+            .durable_snapshot()?
+            .ok_or(ReolinkPairingServiceError::MissingDurableRuntime)?;
+        let session = restored
             .runtime
             .pairing_session(&request.session_id)
             .cloned()
@@ -728,7 +718,7 @@ where
                 status: session.status,
             });
         }
-        let bridge = self
+        let bridge = restored
             .runtime
             .registry()
             .bridge(&session.bridge_id)
@@ -740,13 +730,13 @@ where
             ));
         }
         let https_endpoint = self.verifier.preflight(&bridge)?;
-        let expected_identity = installed_camera_identity(&self.runtime, &bridge)?;
+        let expected_identity = installed_camera_identity(&restored.runtime, &bridge)?;
         ReolinkConfig::new(
             bridge.bridge_id.clone(),
             https_endpoint.as_str(),
             VaultRef::trusted("vault://smart-home/reolink/validation-only"),
         )?;
-        if request.expected_runtime_revision != self.runtime_revision {
+        if request.expected_runtime_revision != restored.revision {
             return Err(ReolinkPairingServiceError::InvalidRequest(
                 "expected runtime revision is stale".to_string(),
             ));
@@ -757,7 +747,7 @@ where
             VaultRef::trusted("vault://smart-home/reolink/authorization-preflight"),
             request.completed_at_ms,
         );
-        self.runtime.clone().execute_complete_pairing_tool(
+        restored.runtime.clone().execute_complete_pairing_tool(
             request.principal_id.clone(),
             authorization_probe,
             request.completed_at_ms,
@@ -810,15 +800,14 @@ where
         let outcome = PairingTransactionCoordinator::new(
             &self.journal_backend,
             &self.vault,
-            &self.runtime_store,
+            &self.controller,
         )
         .execute(transaction, payload.as_bytes())?;
-        let PairingTransactionOutcome::Committed { restored, .. } = outcome else {
+        let PairingTransactionOutcome::Committed { .. } = outcome else {
             return Err(ReolinkPairingServiceError::TransactionRolledBack(
                 transaction_id,
             ));
         };
-        self.install_restored_runtime(*restored);
         Ok(ReolinkPairingReport {
             session_id: request.session_id,
             bridge_id: bridge.bridge_id,
@@ -828,13 +817,6 @@ where
             channel_count: verified.channel_count,
             snapshot_channel_count: verified.snapshot_channel_count,
         })
-    }
-
-    fn install_restored_runtime(&mut self, restored: RestoredSmartHomeRuntime) {
-        self.runtime = restored.runtime;
-        self.automation_definitions = restored.automation_definitions;
-        self.automation_state = restored.automation_state;
-        self.runtime_revision = restored.revision;
     }
 }
 
@@ -1039,6 +1021,7 @@ mod tests {
         ValueKind,
     };
     use smart_home_runtime::RuntimePairingSession;
+    use smart_home_runtime_store::SmartHomeRuntimeStore;
     use storage_core::{
         StorageError, StorageLease, StorageListOptions, StoragePage, StoragePutInput,
         StorageRecord, StorageStat,
@@ -1187,17 +1170,21 @@ mod tests {
         LocalFolderStorageBackend,
         LocalFolderStorageBackend,
     >;
+    type LocalController = SmartHomeControllerRuntime<LocalFolderStorageBackend>;
 
-    fn restore_service(
+    fn restore_service_with_controller(
         root: &Path,
         vault: Arc<SealedStore>,
         input_calls: Arc<AtomicUsize>,
         verifier_calls: Arc<AtomicUsize>,
-    ) -> Result<LocalService, ReolinkPairingServiceError> {
-        ReolinkPairingServiceActorState::restore(
+    ) -> Result<(LocalService, LocalController), ReolinkPairingServiceError> {
+        let controller =
+            SmartHomeControllerRuntime::restore(LocalFolderStorageBackend::new(runtime_root(root)))
+                .expect("test controller must restore");
+        let service = ReolinkPairingServiceActorState::restore(
             LocalFolderStorageBackend::new(journal_root(root)),
             vault,
-            SmartHomeRuntimeStore::new(LocalFolderStorageBackend::new(runtime_root(root))),
+            controller.clone(),
             FixedInput {
                 calls: input_calls,
                 username: "camera-user",
@@ -1206,14 +1193,25 @@ mod tests {
             ExactVerifier {
                 calls: verifier_calls,
             },
-        )
+        )?;
+        Ok((service, controller))
+    }
+
+    fn restore_service(
+        root: &Path,
+        vault: Arc<SealedStore>,
+        input_calls: Arc<AtomicUsize>,
+        verifier_calls: Arc<AtomicUsize>,
+    ) -> Result<LocalService, ReolinkPairingServiceError> {
+        restore_service_with_controller(root, vault, input_calls, verifier_calls)
+            .map(|(service, _)| service)
     }
 
     fn request(service: &LocalService) -> ReolinkPairingRequest {
         ReolinkPairingRequest::new(
             RuntimePairingSessionId::trusted("reolink-pairing-1"),
             AgentId::trusted("operator"),
-            service.runtime_revision().clone(),
+            service.runtime_revision().unwrap(),
             2_000,
         )
     }
@@ -1225,7 +1223,7 @@ mod tests {
         let initial_revision = persist_runtime(&root, &runtime_for_bridge(true, None));
         let input_calls = Arc::new(AtomicUsize::new(0));
         let verifier_calls = Arc::new(AtomicUsize::new(0));
-        let mut service = restore_service(
+        let (mut service, controller) = restore_service_with_controller(
             &root,
             vault.clone(),
             input_calls.clone(),
@@ -1241,10 +1239,21 @@ mod tests {
         assert_eq!(report.serial_number, "ACCC8EAF8C30");
         assert_eq!(report.channel_count, 1);
         assert_eq!(report.snapshot_channel_count, 1);
-        assert_ne!(service.runtime_revision(), &initial_revision);
+        assert_ne!(service.runtime_revision().unwrap(), initial_revision);
+        let committed_runtime = service.runtime().unwrap();
         assert_eq!(
-            service
-                .runtime()
+            committed_runtime
+                .registry()
+                .bridge(&BridgeId::trusted("reolink-camera-front"))
+                .unwrap()
+                .auth_ref,
+            Some(report.vault_ref.clone())
+        );
+        let central = controller.durable_snapshot().unwrap().unwrap();
+        assert_eq!(central.revision, service.runtime_revision().unwrap());
+        assert_eq!(
+            central
+                .runtime
                 .registry()
                 .bridge(&BridgeId::trusted("reolink-camera-front"))
                 .unwrap()
@@ -1264,6 +1273,7 @@ mod tests {
         assert_eq!(envelope["password"], "camera-password");
         let durable_text = service
             .runtime()
+            .unwrap()
             .registry()
             .events()
             .flat_map(|event| event.metadata.iter())
@@ -1283,7 +1293,7 @@ mod tests {
         persist_runtime(&root, &runtime_for_bridge(false, None));
         let input_calls = Arc::new(AtomicUsize::new(0));
         let verifier_calls = Arc::new(AtomicUsize::new(0));
-        let mut service = restore_service(
+        let (mut service, controller) = restore_service_with_controller(
             &root,
             vault.clone(),
             input_calls.clone(),
@@ -1301,12 +1311,15 @@ mod tests {
 
         let mut different_target = service
             .runtime()
+            .unwrap()
             .registry()
             .bridge(&BridgeId::trusted("reolink-camera-front"))
             .unwrap()
             .clone();
         different_target.address = Some("https://other-reolink.local".to_string());
-        service.runtime.upsert_bridge(different_target).unwrap();
+        controller
+            .transaction(1_900, |runtime, _| runtime.upsert_bridge(different_target))
+            .unwrap();
         let current = request(&service);
         assert!(matches!(
             service.pair(current).unwrap_err(),
@@ -1328,35 +1341,71 @@ mod tests {
     }
 
     #[test]
-    fn stale_revision_and_ambiguous_identity_fail_before_secret_input() {
-        let root = test_directory("preflight");
+    fn intervening_central_commit_rejects_stale_request_before_external_io() {
+        let root = test_directory("central-revision-drift");
         let vault = open_vault(&root.join("vault"));
         persist_runtime(&root, &runtime_for_bridge(true, None));
         let input_calls = Arc::new(AtomicUsize::new(0));
         let verifier_calls = Arc::new(AtomicUsize::new(0));
-        let mut service =
-            restore_service(&root, vault, input_calls.clone(), verifier_calls.clone()).unwrap();
-        let stale = ReolinkPairingRequest::new(
-            RuntimePairingSessionId::trusted("reolink-pairing-1"),
-            AgentId::trusted("operator"),
-            Revision::new("stale-runtime").unwrap(),
-            2_000,
-        );
+        let (mut service, controller) = restore_service_with_controller(
+            &root,
+            vault.clone(),
+            input_calls.clone(),
+            verifier_calls.clone(),
+        )
+        .unwrap();
+        let stale = request(&service);
+
+        controller.save_snapshot(1_900).unwrap();
+
         assert!(matches!(
             service.pair(stale).unwrap_err(),
-            ReolinkPairingServiceError::InvalidRequest(_)
+            ReolinkPairingServiceError::InvalidRequest(message)
+                if message == "expected runtime revision is stale"
         ));
         assert_eq!(input_calls.load(Ordering::SeqCst), 0);
         assert_eq!(verifier_calls.load(Ordering::SeqCst), 0);
+        assert!(vault
+            .list(REOLINK_VAULT_NAMESPACE, Default::default())
+            .unwrap()
+            .is_empty());
+        assert!(LocalFolderStorageBackend::new(journal_root(&root))
+            .list("smart-home-pairing-transactions", Default::default())
+            .unwrap()
+            .records
+            .is_empty());
+
+        fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
+    fn credential_bearing_endpoint_fails_before_secret_input() {
+        let root = test_directory("credential-bearing-endpoint");
+        let vault = open_vault(&root.join("vault"));
+        persist_runtime(&root, &runtime_for_bridge(true, None));
+        let input_calls = Arc::new(AtomicUsize::new(0));
+        let verifier_calls = Arc::new(AtomicUsize::new(0));
+        let (mut service, controller) = restore_service_with_controller(
+            &root,
+            vault,
+            input_calls.clone(),
+            verifier_calls.clone(),
+        )
+        .unwrap();
 
         let mut embedded_credentials = service
             .runtime()
+            .unwrap()
             .registry()
             .bridge(&BridgeId::trusted("reolink-camera-front"))
             .unwrap()
             .clone();
         embedded_credentials.address = Some("https://operator:password@reolink.local".to_string());
-        service.runtime.upsert_bridge(embedded_credentials).unwrap();
+        controller
+            .transaction(1_900, |runtime, _| {
+                runtime.upsert_bridge(embedded_credentials)
+            })
+            .unwrap();
         let current = request(&service);
         assert!(matches!(
             service.pair(current).unwrap_err(),
@@ -1878,6 +1927,7 @@ mod tests {
         assert_eq!(
             service
                 .runtime()
+                .unwrap()
                 .pairing_session(&RuntimePairingSessionId::trusted("reolink-pairing-1"))
                 .unwrap()
                 .status,
@@ -1930,6 +1980,7 @@ mod tests {
         assert_eq!(
             service
                 .runtime()
+                .unwrap()
                 .registry()
                 .bridge(&BridgeId::trusted("reolink-camera-front"))
                 .unwrap()
