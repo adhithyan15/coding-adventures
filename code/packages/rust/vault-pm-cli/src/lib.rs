@@ -37,7 +37,8 @@ use coding_adventures_vault_pm_domain::{
 use coding_adventures_vault_pm_local_host::{LocalHostError, LocalVaultPaths, LocalWriterGuard};
 use coding_adventures_vault_pm_storage_storage_core::StorageCoreObjectStore;
 use coding_adventures_vault_records::{
-    AnyRecord, ApiKey, Card, Login, SecureNote, API_KEY_V1, CARD_V1, LOGIN_V1, SECURE_NOTE_V1,
+    AnyRecord, ApiKey, Card, DatabaseCredential, Login, SecureNote, API_KEY_V1, CARD_V1,
+    DATABASE_CREDENTIAL_V1, LOGIN_V1, SECURE_NOTE_V1,
 };
 use coding_adventures_zeroize::Zeroizing;
 use core::fmt::{self, Debug, Formatter};
@@ -52,7 +53,7 @@ const PRODUCTION_KDF_MEMORY_KIB: u32 = 64 * 1024;
 const PRODUCTION_KDF_ITERATIONS: u32 = 3;
 const PRODUCTION_KDF_LANES: u8 = 1;
 const ITEM_OPERATION_RANDOM_BYTES: usize = 32;
-const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm vault create NAME\n  vault-pm [--vault NAME] status [--json]\n  vault-pm [--vault NAME] audit enable\n  vault-pm [--vault NAME] audit verify\n  vault-pm [--vault NAME] audit list\n  vault-pm [--vault NAME] audit show TRACE\n  vault-pm [--vault NAME] doctor [--unlock]\n  vault-pm [--vault NAME] export FILE\n  vault-pm [--vault NAME] import FILE\n  vault-pm --vault NAME restore FILE\n  vault-pm [--vault NAME] restore verify FILE\n  vault-pm [--vault NAME] item add login\n  vault-pm [--vault NAME] item add secure-note\n  vault-pm [--vault NAME] item add card\n  vault-pm [--vault NAME] item add api-key\n  vault-pm [--vault NAME] item edit ITEM\n  vault-pm [--vault NAME] item delete ITEM\n  vault-pm [--vault NAME] item list\n  vault-pm [--vault NAME] item show ITEM\n  vault-pm [--vault NAME] item reveal ITEM FIELD\n  vault-pm [--vault NAME] history list ITEM\n  vault-pm [--vault NAME] history restore ITEM REVISION\n  vault-pm [--vault NAME] conflict list ITEM\n  vault-pm [--vault NAME] conflict choose ITEM REVISION\n";
+const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm vault create NAME\n  vault-pm [--vault NAME] status [--json]\n  vault-pm [--vault NAME] audit enable\n  vault-pm [--vault NAME] audit verify\n  vault-pm [--vault NAME] audit list\n  vault-pm [--vault NAME] audit show TRACE\n  vault-pm [--vault NAME] doctor [--unlock]\n  vault-pm [--vault NAME] export FILE\n  vault-pm [--vault NAME] import FILE\n  vault-pm --vault NAME restore FILE\n  vault-pm [--vault NAME] restore verify FILE\n  vault-pm [--vault NAME] item add login\n  vault-pm [--vault NAME] item add secure-note\n  vault-pm [--vault NAME] item add card\n  vault-pm [--vault NAME] item add api-key\n  vault-pm [--vault NAME] item add database-credential\n  vault-pm [--vault NAME] item edit ITEM\n  vault-pm [--vault NAME] item delete ITEM\n  vault-pm [--vault NAME] item list\n  vault-pm [--vault NAME] item show ITEM\n  vault-pm [--vault NAME] item reveal ITEM FIELD\n  vault-pm [--vault NAME] history list ITEM\n  vault-pm [--vault NAME] history restore ITEM REVISION\n  vault-pm [--vault NAME] conflict list ITEM\n  vault-pm [--vault NAME] conflict choose ITEM REVISION\n";
 
 /// Stable process exit classes defined by VLT-PM00.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -186,6 +187,21 @@ pub trait CliHost {
 
     /// Collect an optional API-key expiry in Unix seconds.
     fn read_api_key_expiry(&self) -> Result<Zeroizing<String>, HostError>;
+
+    /// Collect a database-credential display label.
+    fn read_database_label(&self) -> Result<Zeroizing<String>, HostError>;
+    /// Collect a database engine identifier.
+    fn read_database_engine(&self) -> Result<Zeroizing<String>, HostError>;
+    /// Collect a database host.
+    fn read_database_host(&self) -> Result<Zeroizing<String>, HostError>;
+    /// Collect a database TCP port.
+    fn read_database_port(&self) -> Result<Zeroizing<String>, HostError>;
+    /// Collect an optional database or catalog name.
+    fn read_database_name(&self) -> Result<Option<Zeroizing<String>>, HostError>;
+    /// Collect a database username.
+    fn read_database_username(&self) -> Result<Zeroizing<String>, HostError>;
+    /// Collect a database password with terminal echo disabled.
+    fn read_database_password(&self) -> Result<Zeroizing<String>, HostError>;
 
     /// Require explicit interactive confirmation before revealing a secret.
     fn confirm_secret_reveal(&self) -> Result<bool, HostError>;
@@ -357,6 +373,41 @@ impl CliHost for NativeCliHost {
             .map_err(map_native_cli_host)
     }
 
+    fn read_database_label(&self) -> Result<Zeroizing<String>, HostError> {
+        ControllingTerminal
+            .read_text(TextPrompt::DatabaseLabel)
+            .map_err(map_native_cli_host)
+    }
+    fn read_database_engine(&self) -> Result<Zeroizing<String>, HostError> {
+        ControllingTerminal
+            .read_text(TextPrompt::DatabaseEngine)
+            .map_err(map_native_cli_host)
+    }
+    fn read_database_host(&self) -> Result<Zeroizing<String>, HostError> {
+        ControllingTerminal
+            .read_text(TextPrompt::DatabaseHost)
+            .map_err(map_native_cli_host)
+    }
+    fn read_database_port(&self) -> Result<Zeroizing<String>, HostError> {
+        ControllingTerminal
+            .read_text(TextPrompt::DatabasePort)
+            .map_err(map_native_cli_host)
+    }
+    fn read_database_name(&self) -> Result<Option<Zeroizing<String>>, HostError> {
+        let value = ControllingTerminal
+            .read_text(TextPrompt::DatabaseName)
+            .map_err(map_native_cli_host)?;
+        Ok((!value.is_empty()).then_some(value))
+    }
+    fn read_database_username(&self) -> Result<Zeroizing<String>, HostError> {
+        ControllingTerminal
+            .read_text(TextPrompt::DatabaseUsername)
+            .map_err(map_native_cli_host)
+    }
+    fn read_database_password(&self) -> Result<Zeroizing<String>, HostError> {
+        self.read_utf8_secret(SecretPrompt::DatabasePassword)
+    }
+
     fn confirm_secret_reveal(&self) -> Result<bool, HostError> {
         ControllingTerminal
             .confirm_secret_reveal()
@@ -487,6 +538,7 @@ enum Command {
     ItemAddSecureNote,
     ItemAddCard,
     ItemAddApiKey,
+    ItemAddDatabaseCredential,
     ItemEdit {
         item_id: ItemId,
     },
@@ -665,6 +717,9 @@ fn parse_item(arguments: &[String]) -> Result<Command, CliFailure> {
         }
         [action, kind] if action == "add" && kind == "card" => Ok(Command::ItemAddCard),
         [action, kind] if action == "add" && kind == "api-key" => Ok(Command::ItemAddApiKey),
+        [action, kind] if action == "add" && kind == "database-credential" => {
+            Ok(Command::ItemAddDatabaseCredential)
+        }
         [action, item] if action == "edit" => Ok(Command::ItemEdit {
             item_id: ItemId::from_user_string(item).map_err(|_| CliFailure::InvalidCommand)?,
         }),
@@ -773,6 +828,9 @@ fn execute(invocation: Invocation, host: &dyn CliHost) -> Result<CliOutput, CliF
         }
         Command::ItemAddCard => item_add_card(host, prepared.paths(), &writer, selected_vault),
         Command::ItemAddApiKey => item_add_api_key(host, prepared.paths(), &writer, selected_vault),
+        Command::ItemAddDatabaseCredential => {
+            item_add_database_credential(host, prepared.paths(), &writer, selected_vault)
+        }
         Command::ItemEdit { item_id } => {
             item_edit_login(host, prepared.paths(), &writer, selected_vault, item_id)
         }
@@ -1570,6 +1628,83 @@ fn parse_optional_unix_seconds(value: &str) -> Result<Option<u64>, CliFailure> {
         .ok_or(CliFailure::InvalidCommand)
 }
 
+fn item_add_database_credential(
+    host: &dyn CliHost,
+    paths: &LocalVaultPaths,
+    writer: &LocalWriterGuard,
+    selected_vault: Option<&ConfigName>,
+) -> Result<CliOutput, CliFailure> {
+    let context = prepare_item_create(host, paths, writer, selected_vault)?;
+    let input = (|| {
+        Ok::<_, HostError>((
+            host.read_database_label()?,
+            host.read_database_engine()?,
+            host.read_database_host()?,
+            host.read_database_port()?,
+            host.read_database_name()?,
+            host.read_database_username()?,
+            host.read_database_password()?,
+        ))
+    })();
+    let (label, engine, database_host, port, database, username, password) = match input {
+        Ok(input) => input,
+        Err(error) => return context.fail(map_host(error)),
+    };
+    if validate_database_engine(&engine).is_err() {
+        return context.fail(CliFailure::InvalidCommand);
+    }
+    let port = match parse_database_port(&port) {
+        Ok(port) => port,
+        Err(error) => return context.fail(error),
+    };
+    let document = context.document(
+        DATABASE_CREDENTIAL_V1,
+        AnyRecord::DatabaseCredential(DatabaseCredential {
+            label: label.into_inner(),
+            engine: engine.into_inner(),
+            host: database_host.into_inner(),
+            port,
+            database: database.map(Zeroizing::into_inner),
+            username: username.into_inner(),
+            password: password.into_inner(),
+            lease_id: None,
+            expires_at: None,
+        }),
+    );
+    let document = match document {
+        Ok(document) => document,
+        Err(error) => return context.fail(error),
+    };
+    context.complete(document)
+}
+
+fn validate_database_engine(value: &str) -> Result<(), CliFailure> {
+    let mut bytes = value.bytes();
+    let Some(first) = bytes.next() else {
+        return Err(CliFailure::InvalidCommand);
+    };
+    if value.len() > 32
+        || !first.is_ascii_lowercase()
+        || !bytes
+            .all(|byte| byte.is_ascii_lowercase() || byte.is_ascii_digit() || b"-_".contains(&byte))
+    {
+        return Err(CliFailure::InvalidCommand);
+    }
+    Ok(())
+}
+
+fn parse_database_port(value: &str) -> Result<u16, CliFailure> {
+    if value.starts_with('0') || !value.bytes().all(|byte| byte.is_ascii_digit()) {
+        return Err(CliFailure::InvalidCommand);
+    }
+    let port = value
+        .parse::<u16>()
+        .map_err(|_| CliFailure::InvalidCommand)?;
+    (port != 0 && port.to_string() == value)
+        .then_some(port)
+        .ok_or(CliFailure::InvalidCommand)
+}
+
 fn validate_ascii_digits(value: &str, min: usize, max: usize) -> Result<(), CliFailure> {
     if (min..=max).contains(&value.len()) && value.bytes().all(|byte| byte.is_ascii_digit()) {
         Ok(())
@@ -2126,6 +2261,39 @@ fn render_item(item: RedactedItemView) -> Result<CliOutput, CliFailure> {
                 None => output.push_str("none"),
             }
             output.push_str("\nToken: <redacted>\n");
+        }
+        RedactedRecordView::DatabaseCredential {
+            label,
+            engine,
+            host,
+            port,
+            database,
+            username,
+            expires_at,
+            has_lease_id,
+            ..
+        } => {
+            output.push_str("Label: ");
+            output.push_str(&quoted(label));
+            output.push_str("\nEngine: ");
+            output.push_str(&quoted(engine));
+            output.push_str("\nHost: ");
+            output.push_str(&quoted(host));
+            output.push_str(&format!("\nPort: {port}\nDatabase: "));
+            match database {
+                Some(database) => output.push_str(&quoted(database)),
+                None => output.push_str("none"),
+            }
+            output.push_str("\nUsername: ");
+            output.push_str(&quoted(username));
+            output.push_str("\nLease: ");
+            output.push_str(if *has_lease_id { "present" } else { "absent" });
+            output.push_str("\nExpiry: ");
+            match expires_at {
+                Some(seconds) => output.push_str(&seconds.to_string()),
+                None => output.push_str("none"),
+            }
+            output.push_str("\nPassword: <redacted>\n");
         }
         _ => return Err(CliFailure::Unsupported),
     }
@@ -3177,6 +3345,31 @@ mod tests {
 
         fn read_api_key_expiry(&self) -> Result<Zeroizing<String>, HostError> {
             self.text()
+        }
+
+        fn read_database_label(&self) -> Result<Zeroizing<String>, HostError> {
+            self.text()
+        }
+        fn read_database_engine(&self) -> Result<Zeroizing<String>, HostError> {
+            self.text()
+        }
+        fn read_database_host(&self) -> Result<Zeroizing<String>, HostError> {
+            self.text()
+        }
+        fn read_database_port(&self) -> Result<Zeroizing<String>, HostError> {
+            self.text()
+        }
+        fn read_database_name(&self) -> Result<Option<Zeroizing<String>>, HostError> {
+            self.text()
+                .map(|value| (!value.is_empty()).then_some(value))
+        }
+        fn read_database_username(&self) -> Result<Zeroizing<String>, HostError> {
+            self.text()
+        }
+        fn read_database_password(&self) -> Result<Zeroizing<String>, HostError> {
+            let value = self.secret()?;
+            let text = core::str::from_utf8(&value).map_err(|_| HostError::Invalid)?;
+            Ok(Zeroizing::new(text.to_owned()))
         }
 
         fn confirm_secret_reveal(&self) -> Result<bool, HostError> {
@@ -5208,6 +5401,170 @@ mod tests {
             "write:comments",
             "1893456000",
             core::str::from_utf8(&token).unwrap(),
+        ] {
+            assert!(!audit.stdout().contains(value));
+        }
+    }
+
+    #[test]
+    fn database_create_failures_and_success_are_audited_without_password_rendering() {
+        assert_eq!(
+            parse(["item", "add", "database-credential"]),
+            default_invocation(Command::ItemAddDatabaseCredential)
+        );
+        assert_eq!(
+            parse(["--vault", "work", "item", "add", "database-credential"]),
+            Ok(Invocation {
+                selected_vault: Some(ConfigName::new("work".to_owned()).unwrap()),
+                command: Command::ItemAddDatabaseCredential,
+            })
+        );
+        assert_eq!(
+            parse(["item", "add", "database-credential", "password"]),
+            Err(CliFailure::InvalidCommand)
+        );
+        for valid in ["postgres", "mysql8", "cockroach-db", "sql_server"] {
+            assert_eq!(validate_database_engine(valid), Ok(()));
+        }
+        for invalid in ["", "Postgres", "9postgres", "postgres.db"] {
+            assert_eq!(
+                validate_database_engine(invalid),
+                Err(CliFailure::InvalidCommand)
+            );
+        }
+        assert_eq!(
+            validate_database_engine(&"p".repeat(33)),
+            Err(CliFailure::InvalidCommand)
+        );
+        assert_eq!(parse_database_port("5432"), Ok(5432));
+        for invalid in ["", "0", "05432", "+5432", "65536"] {
+            assert_eq!(
+                parse_database_port(invalid),
+                Err(CliFailure::InvalidCommand)
+            );
+        }
+
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"database create passphrase".to_vec();
+        let password = b"db_e2e_9f82ac14d76943ffac06b43a7d9c58de".to_vec();
+        let init_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
+
+        let unavailable_host = TestHost::with_entropy_seed(paths.clone(), [passphrase.clone()], 11);
+        assert_eq!(
+            run(["item", "add", "database-credential"], &unavailable_host).exit_code(),
+            ExitCode::Provider
+        );
+
+        let texts = || {
+            [
+                "Production reporting".to_owned(),
+                "postgres".to_owned(),
+                "db.internal.example".to_owned(),
+                "5432".to_owned(),
+                "analytics".to_owned(),
+                "reporter".to_owned(),
+            ]
+        };
+        let invalid_utf8_host = TestHost::with_texts_and_entropy_seed(
+            paths.clone(),
+            [passphrase.clone(), vec![0xff]],
+            texts(),
+            19,
+        );
+        assert_eq!(
+            run(["item", "add", "database-credential"], &invalid_utf8_host).exit_code(),
+            ExitCode::InvalidInput
+        );
+
+        let invalid_attempt = |seed, engine: &str, port: &str| {
+            let mut values = texts();
+            values[1] = engine.to_owned();
+            values[3] = port.to_owned();
+            let host = TestHost::with_texts_and_entropy_seed(
+                paths.clone(),
+                [passphrase.clone(), password.clone()],
+                values,
+                seed,
+            );
+            let output = run(["item", "add", "database-credential"], &host);
+            assert_eq!(output.exit_code(), ExitCode::InvalidInput, "{output:?}");
+            assert!(output.stdout().is_empty());
+        };
+        invalid_attempt(23, "Postgres", "5432");
+        invalid_attempt(31, "postgres", "05432");
+
+        let add_host = TestHost::with_texts_and_entropy_seed(
+            paths.clone(),
+            [passphrase.clone(), password.clone()],
+            texts(),
+            43,
+        );
+        let added = run(["item", "add", "database-credential"], &add_host);
+        assert_eq!(added.exit_code(), ExitCode::Success, "{added:?}");
+        let item = added
+            .stdout()
+            .strip_prefix("Item added: ")
+            .and_then(|value| value.strip_suffix('\n'))
+            .unwrap();
+
+        let listed = run(
+            ["item", "list"],
+            &TestHost::new(paths.clone(), [passphrase.clone()]),
+        );
+        assert_eq!(
+            listed.stdout(),
+            format!("{item}\t{DATABASE_CREDENTIAL_V1}\t\"Production reporting\"\n")
+        );
+
+        let shown = run(
+            ["item", "show", item],
+            &TestHost::new(paths.clone(), [passphrase.clone()]),
+        );
+        assert_eq!(shown.exit_code(), ExitCode::Success, "{shown:?}");
+        assert_eq!(
+            shown.stdout(),
+            format!(
+                "Item: {item}\nType: {DATABASE_CREDENTIAL_V1}\nLabel: \"Production reporting\"\nEngine: \"postgres\"\nHost: \"db.internal.example\"\nPort: 5432\nDatabase: \"analytics\"\nUsername: \"reporter\"\nLease: absent\nExpiry: none\nPassword: <redacted>\nFavorite: no\nUpdated: 1700000000000\n"
+            )
+        );
+        assert!(!shown
+            .stdout()
+            .contains(core::str::from_utf8(&password).unwrap()));
+
+        let reveal_host = TestHost::with_texts_and_entropy_seed(
+            paths.clone(),
+            [passphrase.clone()],
+            ["yes".to_owned()],
+            47,
+        );
+        let revealed = run(["item", "reveal", item, "database-password"], &reveal_host);
+        assert_eq!(revealed.exit_code(), ExitCode::Success, "{revealed:?}");
+        assert!(revealed.stdout().is_empty());
+        assert!(reveal_host.revealed_equals(&password));
+
+        let audit = run(
+            ["audit", "list"],
+            &TestHost::with_entropy_seed(paths, [passphrase], 59),
+        );
+        assert_eq!(audit.exit_code(), ExitCode::Success, "{audit:?}");
+        assert_eq!(
+            audit
+                .stdout()
+                .lines()
+                .filter(|line| line.contains("action=item_create\toutcome=failed"))
+                .count(),
+            4,
+            "{audit:?}"
+        );
+        for value in [
+            "Production reporting",
+            "postgres",
+            "db.internal.example",
+            "analytics",
+            "reporter",
+            core::str::from_utf8(&password).unwrap(),
         ] {
             assert!(!audit.stdout().contains(value));
         }

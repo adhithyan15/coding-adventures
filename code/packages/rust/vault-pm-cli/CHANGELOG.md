@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Added audited `item add database-credential` with canonical static engine and
+  port validation, hidden password input, metadata-only rendering, durable
+  failure events, and separate VLT-PM25 password reveal reuse.
 - Added audited `item add api-key` with a hidden token prompt, closed scope and
   expiry validation, redacted metadata rendering, durable failure events, and
   separate VLT-PM25 token reveal reuse.

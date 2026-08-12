@@ -116,6 +116,18 @@ pub enum TextPrompt {
     ApiKeyScopes,
     /// Optional API-key expiry in Unix seconds.
     ApiKeyExpiry,
+    /// Required database-credential display label.
+    DatabaseLabel,
+    /// Required database engine identifier.
+    DatabaseEngine,
+    /// Required database host.
+    DatabaseHost,
+    /// Required database TCP port.
+    DatabasePort,
+    /// Optional database or catalog name.
+    DatabaseName,
+    /// Required database username.
+    DatabaseUsername,
     /// Optional login username or account handle.
     LoginUsername,
     /// Optional primary login URL.
@@ -136,6 +148,12 @@ impl TextPrompt {
             Self::ApiKeyService => "Service: ",
             Self::ApiKeyScopes => "Scopes (comma-separated, optional): ",
             Self::ApiKeyExpiry => "Expiry Unix seconds (optional): ",
+            Self::DatabaseLabel => "Label: ",
+            Self::DatabaseEngine => "Engine: ",
+            Self::DatabaseHost => "Host: ",
+            Self::DatabasePort => "Port: ",
+            Self::DatabaseName => "Database (optional): ",
+            Self::DatabaseUsername => "Username: ",
             Self::LoginUsername => "Username: ",
             Self::LoginUrl => "URL (optional): ",
             Self::SecretRevealConfirmation => {
@@ -152,9 +170,15 @@ impl TextPrompt {
             | Self::CardHolder
             | Self::CardBillingPostalCode
             | Self::ApiKeyLabel
-            | Self::ApiKeyService => 256,
+            | Self::ApiKeyService
+            | Self::DatabaseLabel
+            | Self::DatabaseEngine
+            | Self::DatabaseHost
+            | Self::DatabaseName
+            | Self::DatabaseUsername => 256,
             Self::ApiKeyScopes => MAX_TEXT_BYTES,
             Self::ApiKeyExpiry => 20,
+            Self::DatabasePort => 5,
             Self::CardExpiryMonth => 2,
             Self::CardExpiryYear => 4,
             Self::LoginUsername => 1_024,
@@ -171,6 +195,7 @@ impl TextPrompt {
                 | Self::CardBillingPostalCode
                 | Self::ApiKeyScopes
                 | Self::ApiKeyExpiry
+                | Self::DatabaseName
                 | Self::SecretRevealConfirmation
         )
     }
@@ -203,6 +228,8 @@ pub enum SecretPrompt {
     CardCvv,
     /// Collect an API-key token without terminal echo.
     ApiKeyToken,
+    /// Collect a database password without terminal echo.
+    DatabasePassword,
 }
 
 impl SecretPrompt {
@@ -219,6 +246,7 @@ impl SecretPrompt {
             Self::CardNumber => "Card number: ",
             Self::CardCvv => "CVV: ",
             Self::ApiKeyToken => "Token: ",
+            Self::DatabasePassword => "Password: ",
         }
     }
 }
@@ -459,6 +487,7 @@ mod tests {
         assert_eq!(SecretPrompt::CardNumber.message(), "Card number: ");
         assert_eq!(SecretPrompt::CardCvv.message(), "CVV: ");
         assert_eq!(SecretPrompt::ApiKeyToken.message(), "Token: ");
+        assert_eq!(SecretPrompt::DatabasePassword.message(), "Password: ");
         assert_eq!(TextPrompt::LoginTitle.message(), "Title: ");
         assert_eq!(TextPrompt::SecureNoteTitle.message(), "Title: ");
         assert_eq!(TextPrompt::CardTitle.message(), "Title: ");
@@ -482,6 +511,12 @@ mod tests {
             TextPrompt::ApiKeyExpiry.message(),
             "Expiry Unix seconds (optional): "
         );
+        assert_eq!(TextPrompt::DatabaseLabel.message(), "Label: ");
+        assert_eq!(TextPrompt::DatabaseEngine.message(), "Engine: ");
+        assert_eq!(TextPrompt::DatabaseHost.message(), "Host: ");
+        assert_eq!(TextPrompt::DatabasePort.message(), "Port: ");
+        assert_eq!(TextPrompt::DatabaseName.message(), "Database (optional): ");
+        assert_eq!(TextPrompt::DatabaseUsername.message(), "Username: ");
         assert_eq!(TextPrompt::LoginUsername.message(), "Username: ");
         assert_eq!(TextPrompt::LoginUrl.message(), "URL (optional): ");
         assert_eq!(
@@ -499,6 +534,12 @@ mod tests {
         assert!(!TextPrompt::ApiKeyService.allows_empty());
         assert!(TextPrompt::ApiKeyScopes.allows_empty());
         assert!(TextPrompt::ApiKeyExpiry.allows_empty());
+        assert!(!TextPrompt::DatabaseLabel.allows_empty());
+        assert!(!TextPrompt::DatabaseEngine.allows_empty());
+        assert!(!TextPrompt::DatabaseHost.allows_empty());
+        assert!(!TextPrompt::DatabasePort.allows_empty());
+        assert!(TextPrompt::DatabaseName.allows_empty());
+        assert!(!TextPrompt::DatabaseUsername.allows_empty());
         assert!(TextPrompt::LoginUsername.allows_empty());
         assert!(TextPrompt::LoginUrl.allows_empty());
         assert!(TextPrompt::SecretRevealConfirmation.allows_empty());

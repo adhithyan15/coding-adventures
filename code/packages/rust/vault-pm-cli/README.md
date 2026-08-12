@@ -5,8 +5,9 @@ manager. It owns strict parsing, stable exit classes, redacted rendering, and
 the bounded `init`, locked `status`/`doctor`, authenticated `audit enable` and
 `audit verify`, explicit `audit list`/`audit show TRACE`, and opt-in full
 `doctor --unlock` workflows. It now also owns the first usable item vertical:
-authenticated login, secure-note, payment-card, and API-key creation plus durable
-redacted list/show. The same one-shot boundary now supports revision-safe login
+authenticated login, secure-note, payment-card, API-key, and static
+database-credential creation plus durable redacted list/show. The same one-shot
+boundary now supports revision-safe login
 replacement. The
 newest-first `history list ITEM` projection exposes canonical revision
 selectors plus safe causal metadata without opening historical secrets. The
@@ -113,9 +114,17 @@ validation failures become durable failed `ItemCreate` events; success
 atomically publishes the encrypted record and succeeded event. Show renders
 only label, service, scopes, expiry, and explicit token redaction. Complete
 token access remains a separate audited `item reveal ITEM api-key-token`.
+`item add database-credential` uses that boundary for static connection
+metadata and one hidden password. It admits only a canonical local engine
+identifier and nonzero decimal TCP port, assigns no dynamic lease metadata,
+and publishes validation failures before returning. Show receives only the
+redacted domain projection: label, engine, host, port, optional database,
+username, absent lease/expiry, and a password omission marker. Password access
+requires `item reveal ITEM database-password`.
 `item list` and `item show ITEM` reopen in separate one-shot sessions and
 render only escaped redacted projections; login passwords, note bodies, PANs,
-CVVs, postal values, and API-key tokens are never available to the renderer. In an active
+CVVs, postal values, API-key tokens, and database passwords are never available
+to the renderer. In an active
 epoch, both commands first make their exact signed access outcome durable.
 
 `item edit ITEM` asks the application for an opaque edit preparation that owns
