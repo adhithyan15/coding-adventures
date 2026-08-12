@@ -2,6 +2,19 @@
 
 All notable changes to this package are documented here.
 
+## [0.56.0] - 2026-08-12
+
+### Added
+
+- Add an opaque audited authored secure-note conflict merge preparation with a
+  complete title/body input and shared exact-current base validation.
+
+### Security
+
+- Publish wrong-schema and host failures before release and publish success
+  atomically with an all-current-parent revision that retains base non-form
+  metadata without returning the prior note body to the host.
+
 ## [0.55.0] - 2026-08-12
 
 ### Added

@@ -168,6 +168,12 @@ base's favorite, collection, tag, and attachment state, names every current
 candidate as a direct parent, and atomically publishes a succeeded merge event
 without claiming that one candidate was selected as the winner.
 
+The same exact-current opaque-base validation now supports secure-note merges.
+Its preparation releases neither the prior title/body nor the base document,
+records precondition and host failures as item-scoped `ItemConflictMerge`, and
+accepts a complete owned title/body form. Success preserves base non-form
+metadata and immutable history while publishing one all-current-parent note.
+
 Compare-and-replace is available through the same session-consuming boundary.
 It requires the requested item to have exactly one current live candidate equal
 to the caller's expected revision, then writes a new revision whose sole direct
