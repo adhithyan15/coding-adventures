@@ -15,7 +15,7 @@ use diagram_ir::{
     Point, SeriesKind,
 };
 
-pub const VERSION: &str = "0.5.0";
+pub const VERSION: &str = "0.6.0";
 
 const MARGIN: f64 = 24.0;
 const TITLE_H: f64 = 32.0;
@@ -316,10 +316,11 @@ fn layout_quadrant(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDia
     };
     let y_axis_right = diagram.quadrant_config.y_axis_position.as_deref() == Some("right");
     let x_axis_top = diagram.quadrant_config.x_axis_position.as_deref() == Some("top");
-    let left = MARGIN + if y_axis_right { 0.0 } else { 56.0 };
-    let right = cw - MARGIN - if y_axis_right { 56.0 } else { 0.0 };
-    let top = MARGIN + title_height;
-    let bottom = ch - MARGIN - 36.0;
+    let padding = diagram.quadrant_config.quadrant_padding.unwrap_or(0.0);
+    let left = MARGIN + if y_axis_right { 0.0 } else { 56.0 } + padding;
+    let right = cw - MARGIN - if y_axis_right { 56.0 } else { 0.0 } - padding;
+    let top = MARGIN + title_height + padding;
+    let bottom = ch - MARGIN - 36.0 - padding;
     let width = (right - left).max(1.0);
     let height = (bottom - top).max(1.0);
     let half_width = width / 2.0;
@@ -351,6 +352,15 @@ fn layout_quadrant(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDia
             label: diagram.quadrant_labels[index].clone(),
         });
     }
+    items.push(LayoutedChartItem::QuadrantBorder {
+        x: left,
+        y: top,
+        width,
+        height,
+        color: "#64748b".to_string(),
+        internal_width: diagram.quadrant_config.internal_border_width.unwrap_or(1.0),
+        external_width: diagram.quadrant_config.external_border_width.unwrap_or(1.0),
+    });
 
     if let Some(axis) = &diagram.x_axis {
         if let Some(label) = axis.categories.first() {
@@ -472,7 +482,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.5.0");
+        assert_eq!(crate::VERSION, "0.6.0");
     }
 
     #[test]
@@ -669,6 +679,9 @@ mod tests {
             x_axis_position: Some("top".into()),
             y_axis_position: Some("right".into()),
             point_radius: Some(11.0),
+            quadrant_padding: Some(18.0),
+            internal_border_width: Some(3.0),
+            external_border_width: Some(5.0),
         };
 
         let layout = layout_chart_diagram(&diagram, 400.0, 300.0);
@@ -678,6 +691,16 @@ mod tests {
             _ => None,
         });
         assert_eq!(point_radius, Some(11.0));
+        let border = layout.items.iter().find_map(|item| match item {
+            LayoutedChartItem::QuadrantBorder {
+                x,
+                internal_width,
+                external_width,
+                ..
+            } => Some((*x, *internal_width, *external_width)),
+            _ => None,
+        });
+        assert_eq!(border, Some((42.0, 3.0, 5.0)));
         let low = layout
             .items
             .iter()

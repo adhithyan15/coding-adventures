@@ -1,6 +1,6 @@
-//! diagram-ir v0.40.0 - DG00/DG04 semantic IR
+//! diagram-ir v0.41.0 - DG00/DG04 semantic IR
 
-pub const VERSION: &str = "0.40.0";
+pub const VERSION: &str = "0.41.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramDirection {
@@ -553,6 +553,9 @@ pub struct QuadrantConfig {
     pub x_axis_position: Option<String>,
     pub y_axis_position: Option<String>,
     pub point_radius: Option<f64>,
+    pub quadrant_padding: Option<f64>,
+    pub internal_border_width: Option<f64>,
+    pub external_border_width: Option<f64>,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -648,6 +651,15 @@ pub enum LayoutedChartItem {
         height: f64,
         color: String,
         label: Option<String>,
+    },
+    QuadrantBorder {
+        x: f64,
+        y: f64,
+        width: f64,
+        height: f64,
+        color: String,
+        internal_width: f64,
+        external_width: f64,
     },
     ScatterPoint {
         x: f64,
@@ -1061,7 +1073,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.40.0");
+        assert_eq!(VERSION, "0.41.0");
     }
     #[test]
     fn default_direction_is_tb() {

@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Lower quadrant external frames and internal dividers to independent backend-neutral instructions.
 - Lower chart accessibility title and description to `PaintScene` metadata.
 - Lower authored quadrant point fill, radius, and stroke geometry to backend-neutral ellipses.
 - Lower quadrant-chart regions and scatter points to backend-neutral rectangles, ellipses, and shaped labels.

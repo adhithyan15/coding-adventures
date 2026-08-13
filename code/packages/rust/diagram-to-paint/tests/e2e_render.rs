@@ -414,7 +414,7 @@ mod apple {
     #[test]
     fn render_mermaid_quadrant_to_png() {
         let diagram = parse_quadrant_chart(
-            "%%{init: {\"quadrantChart\": {\"chartWidth\": 680, \"chartHeight\": 560, \"xAxisPosition\": \"top\", \"yAxisPosition\": \"right\", \"pointRadius\": 7}}}%%\n\
+            "%%{init: {\"quadrantChart\": {\"chartWidth\": 680, \"chartHeight\": 560, \"xAxisPosition\": \"top\", \"yAxisPosition\": \"right\", \"pointRadius\": 7, \"quadrantPadding\": 18, \"quadrantInternalBorderStrokeWidth\": 3, \"quadrantExternalBorderStrokeWidth\": 5}}}%%\n\
              QuAdRaNtChArT\n\
              title Native rendering portfolio\n\
              X-AxIs \"Low reach 📉\" ---> \"`High reach Ω`\" %% axis comment\n\
@@ -461,7 +461,7 @@ mod apple {
                 .iter()
                 .filter(|instruction| matches!(instruction, PaintInstruction::Rect(_)))
                 .count(),
-            4
+            5
         );
         assert_eq!(
             scene
@@ -487,6 +487,18 @@ mod apple {
         assert_eq!(ellipses[1].stroke_width, Some(3.0));
         assert_eq!(ellipses[2].rx, 7.0);
         assert_eq!((scene.width, scene.height), (680.0, 560.0));
+        let border = scene
+            .instructions
+            .iter()
+            .find_map(|instruction| match instruction {
+                PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("none") => Some(rect),
+                _ => None,
+            })
+            .expect("external quadrant border");
+        assert_eq!(border.stroke_width, Some(5.0));
+        assert!(scene.instructions.iter().filter(|instruction| {
+            matches!(instruction, PaintInstruction::Path(path) if path.stroke_width == Some(3.0))
+        }).count() >= 2);
 
         let pixels = render(&scene);
         write_png(&pixels, "/tmp/mermaid_quadrant_e2e.png").expect("PNG write failed");
