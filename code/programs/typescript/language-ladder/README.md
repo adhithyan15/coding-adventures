@@ -717,6 +717,12 @@ finishing stem without lifting. RussianIrina's native-teacher all-letter lesson
 demonstrates the one-run lowercase school hand at 00:50–00:55; the Noto Sans
 Cyrillic fit preserves its zero-lift single-storey motion while routing the
 entry through the bundled font's extra double-storey printed shoulder.
+The two-frame Cyrillic **б** filmstrip circles the lower body counterclockwise,
+then continues through the rising shoulder into the rightward top flag without
+lifting. The same native-teacher lesson demonstrates that one-run school hand
+at 01:13–01:18; the Noto Sans Cyrillic fit preserves its body-to-flag order
+while routing the handwritten diagonal transition through the printed glyph's
+upper-left shoulder.
 The runtime resolves each cited path back to the owning script and lazily loads that
 script's font, while Tamil continues to use Noto Sans Tamil. Unverified letters
 still fall back to the numbered prose list, unchanged. Extending the coverage is HL-C09,

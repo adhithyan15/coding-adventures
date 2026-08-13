@@ -77,6 +77,7 @@ const DEVANAGARI_SHA = DUCTUS[ductusKey("devanagari", "श")];
 const DEVANAGARI_SA = DUCTUS[ductusKey("devanagari", "स")];
 const DEVANAGARI_HA = DUCTUS[ductusKey("devanagari", "ह")];
 const CYRILLIC_A = DUCTUS[ductusKey("cyrillic", "а")];
+const CYRILLIC_BE = DUCTUS[ductusKey("cyrillic", "б")];
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
@@ -1183,6 +1184,21 @@ describe("handwriting ductus", () => {
     expect(stem[0].y).toBeGreaterThan(stem.at(-1)!.y);
   });
 
+  it("Cyrillic б closes its lower body before rising into the top flag", () => {
+    expect(CYRILLIC_BE.script).toBe("cyrillic");
+    expect(penLifts(CYRILLIC_BE)).toBe(0);
+    expect(CYRILLIC_BE.strokes).toHaveLength(1);
+    expect(CYRILLIC_BE.strokes[0].segments).toHaveLength(2);
+    const body = CYRILLIC_BE.strokes[0].segments[0].path;
+    const flag = CYRILLIC_BE.strokes[0].segments[1].path;
+    expect(body.at(-1)).toEqual(flag[0]);
+    expect(body.at(-1)).toEqual(body[0]);
+    expect(Math.min(...body.map((point) => point.x))).toBeLessThan(body[0].x);
+    expect(Math.min(...body.map((point) => point.y))).toBeLessThan(body[0].y);
+    expect(flag.at(-1)!.y).toBeGreaterThan(flag[0].y);
+    expect(flag.at(-1)!.x).toBeGreaterThan(flag[0].x);
+  });
+
   it("Hebrew א uses two crossed pen-down runs with one lift", () => {
     expect(HEBREW_ALEF.script).toBe("hebrew");
     expect(penLifts(HEBREW_ALEF)).toBe(1);
@@ -2217,6 +2233,9 @@ describe("handwriting ductus", () => {
     expect(verifiedLetterFont("а", CYRILLIC_A.source.url)).toBe(
       "_fonts/NotoSansCyrillic-Static.ttf",
     );
+    expect(verifiedLetterFont("б", CYRILLIC_BE.source.url)).toBe(
+      "_fonts/NotoSansCyrillic-Static.ttf",
+    );
     expect(verifiedLetterFont("א", HEBREW_ALEF.source.url)).toBe(
       "_fonts/NotoSansHebrew-Static.ttf",
     );
@@ -2980,6 +2999,17 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /all 33 Russian letters.*classic handwritten form taught at school.*00:50–00:55.*rounded body.*right-hand finishing stem.*one continuous pen-down run.*zero intervening lifts.*single-storey.*Noto Sans Cyrillic.*double-storey printed form.*extra upper shoulder.*one-run body-to-stem motion.*entry into the lower loop.*connected cursive.*entry and exit joins/i,
+    );
+  });
+
+  it("Cyrillic б traces its joined body and flag to the all-letter native lesson", () => {
+    const src = CYRILLIC_BE.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=tqDLDfYoO2o");
+    expect(src.citation).toMatch(
+      /RussianIrina.*Learning Russian - Alphabet letters, handwriting.*lowercase б.*01:13–01:18.*5 February 2013/i,
+    );
+    expect(src.variation).toMatch(
+      /all 33 Russian letters.*classic handwritten form taught at school.*01:13–01:18.*lower body counterclockwise.*upper-right junction.*rising shoulder.*rightward top flag.*one continuous pen-down run.*zero intervening lifts.*crosses diagonally.*bundled Noto Sans Cyrillic.*upper-left shoulder.*uninterrupted body-to-flag order.*printed upper shoulder.*font's ink.*connected cursive.*top flag.*exit join/i,
     );
   });
 
