@@ -902,8 +902,9 @@ backend immediately) come before the enabler-dependent items.
   ordinary local scalars that
   the body does not change. Read-only body uses and exact scalar
   self-assignments are permitted; computed assignment targets and nested
-  controlled variables count as writes. A variable-free static body condition
-  scans only its selected branch; dynamic and variable-dependent conditions
+  controlled variables count as writes. A variable-free static body condition,
+  or a statically known bare boolean local that the body never writes, scans
+  only its selected branch; dynamic, written, nonlocal, and compound selectors
   scan both paths. The proof is limited to
   4,096 iterations; globals, arrays, by-name values, written dependencies,
   unknown expressions, rounded-away real progress, and nonterminating or
