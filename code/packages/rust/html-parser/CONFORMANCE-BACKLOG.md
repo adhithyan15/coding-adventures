@@ -412,7 +412,14 @@ Prioritized work items:
    mismatch and ordinary-scope error at those same integration boundaries
    without clearing the active-formatting marker or moving following text;
    nearer matching foreign marker-named elements still close in foreign mode.
-   Continue with generic fallback, button, and form endings.
+   Generic "any other end tag" recovery now stops at the full ordinary-scope
+   boundary instead of closing an older authored HTML target through `object`,
+   `select`, template, table-cell, SVG, or MathML integration points. Foreign
+   integration endings report both the mismatch and generic in-body parse
+   error while preserving following text; nearer matching foreign same-name
+   elements, foreign `select` names, ordinary matching endings, and seeded
+   fragments retain their existing paths. Continue with button and form
+   endings.
 3. **Diagnostic positions and error taxonomy.** Carry source positions into
    tree construction and map diagnostics to current WHATWG concepts. Legacy
    WPT/html5lib error labels are evidence hints, not a normative public API.
