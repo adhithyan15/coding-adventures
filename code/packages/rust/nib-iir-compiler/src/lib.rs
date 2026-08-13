@@ -1524,6 +1524,12 @@ fn fold_const_binary(
             }
             fold_width(lhs / rhs, declared)
         }
+        ("%", _) | (_, "PERCENT") => {
+            if rhs == 0 {
+                return Err("remainder by zero in const-expression".to_string());
+            }
+            fold_width(lhs % rhs, declared)
+        }
         ("+?", _) | (_, "SAT_ADD") => {
             let max = match declared {
                 Some(NibType::U4) => 0xF,
@@ -1889,6 +1895,7 @@ fn cir_op_for(text: &str, type_name: &str) -> Option<&'static str> {
         ("-", _) | (_, "MINUS") => Some("sub"),
         ("*", _) | (_, "STAR") => Some("mul"),
         ("/", _) | (_, "SLASH") => Some("div"),
+        ("%", _) | (_, "PERCENT") => Some("mod"),
         // Bitwise (LANG-FULL N3). The grammar's `bitwise_expr` level already
         // produces these; they lower to the shared IIR `and`/`or`/`xor` ops, which
         // every backend implements directly. (Unary `~` (TILDE) lowers to the IIR
@@ -1991,6 +1998,21 @@ mod tests {
         assert!(
             !body.iter().any(|i| i.op == "call_builtin"),
             "regression: `/` leaked a call_builtin; got body: {body:?}"
+        );
+    }
+
+    #[test]
+    fn compiles_remainder() {
+        let src = "fn main() -> u8 { return 86 % 7; }";
+        let m = compile_source(src, "test").expect("ok");
+        let body = &m.functions[0].instructions;
+        assert!(
+            body.iter().any(|i| i.op == "mod"),
+            "expected typed `mod` op; got body: {body:?}"
+        );
+        assert!(
+            !body.iter().any(|i| i.op == "call_builtin"),
+            "regression: `%` leaked a call_builtin; got body: {body:?}"
         );
     }
 

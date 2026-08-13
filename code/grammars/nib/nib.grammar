@@ -228,7 +228,7 @@ type          = "u4" | "u8" | "bcd" | "bool" ;
 #   Level 3 — Equality     (==, !=)    eq_expr
 #   Level 4 — Comparison   (<,>,<=,>=) cmp_expr
 #   Level 5 — Additive       (+,-,+%,+?) add_expr
-#   Level 6 — Multiplicative (*, /)      mul_expr
+#   Level 6 — Multiplicative (*, /, %)   mul_expr
 #   Level 7 — Bitwise        (&, |, ^)   bitwise_expr
 #   Level 8 — Unary          (!, ~)      unary_expr
 #   Level 9 — Primary                    primary
@@ -297,15 +297,15 @@ add_expr      = shift_expr { ( PLUS | MINUS | WRAP_ADD | SAT_ADD ) shift_expr } 
 # Both are left-associative: `x << 1 << 2` is `(x << 1) << 2`.
 shift_expr    = mul_expr { ( SHL | SHR ) mul_expr } ;
 
-# Multiplicative operators: *, /.
+# Multiplicative operators: *, /, %.
 # Bind tighter than additive (so `2 + 3 * 4` is `2 + (3 * 4)`) and looser than
 # bitwise — slotted just above add_expr in the cascade. Left-associative:
 # `a / b / c` = `(a / b) / c`.
-# The 4004 has no multiply/divide instruction, so STAR/SLASH were reserved in v1.
-# They now lower to the shared IIR `mul`/`div` ops, which every general backend
+# The 4004 has no multiply/divide instruction, so STAR/SLASH/PERCENT were reserved in v1.
+# They now lower to the shared IIR `mul`/`div`/`mod` ops, which every general backend
 # (VM / JIT / native / LLVM / WASM / JVM / CLR) implements directly; a 4004
 # backend would synthesise them from repeated ADD / shift-subtract.
-mul_expr      = bitwise_expr { ( STAR | SLASH ) bitwise_expr } ;
+mul_expr      = bitwise_expr { ( STAR | SLASH | PERCENT ) bitwise_expr } ;
 
 # Bitwise operators: &, |, ^.
 # Maps directly to 4004 ANL, ORL, XRL instructions.
