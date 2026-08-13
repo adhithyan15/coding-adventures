@@ -541,6 +541,14 @@ unblocks multiple downstream targets; never count source generation as completio
       accessible label and optional displayed value, so apps do not depend on a
       raw `HostSlider` automation ID as the only human-readable name.
   - [ ] Add native select/picker and switch contracts.
+    - [ ] Add the native select/picker contract and standard facade.
+    - [ ] Add the native switch contract and standard facade.
+      - [x] Register `HostSwitch` in the compiler/resolver kernel rosters and
+        make every unimplemented native lowering an explicit capability gap.
+      - [ ] Lower `HostSwitch` to native widgets on all five backends without
+        substituting checkbox semantics or custom-painted tracks.
+      - [ ] Export the native-complete standard `Switch` facade with a required
+        human-readable label, controlled state, disabled state, and change event.
 - [ ] Ship `mosaic-std-navigation`: app shell, toolbar, sidebar/rail, tabs, routes.
 - [ ] Ship `mosaic-std-feedback`: alert, dialog, toast, progress, empty/error states.
 - [ ] Ship `mosaic-std-data`: list, virtualized list, table, form and field patterns.

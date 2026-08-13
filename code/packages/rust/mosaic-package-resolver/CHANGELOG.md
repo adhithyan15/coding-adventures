@@ -8,6 +8,8 @@
   package components; explicit call-site bindings continue to take precedence.
 
 ### Added
+- Registered `HostSwitch` as a kernel primitive so package expansion preserves
+  native on/off controls for backend lowering.
 - Registered `HostSlider` as a kernel primitive so package expansion preserves
   native range controls for backend lowering.
 - Default UI29-2 authored children are spliced into a dependency component's
