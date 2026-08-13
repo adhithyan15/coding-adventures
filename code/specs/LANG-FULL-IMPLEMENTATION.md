@@ -900,12 +900,14 @@ backend immediately) come before the enabler-dependent items.
   first integer or finite binary64 control value whose predicate is false when
   its value and predicate reference only the control and statically known
   ordinary local scalars that
-  the body does not change. Read-only body uses and exact scalar
-  self-assignments are permitted; computed assignment targets and nested
+  the body does not change. Read-only body uses, exact scalar
+  self-assignments, and conditional assignments whose leaves are all that same
+  bare scalar are permitted; computed assignment targets and nested
   controlled variables count as writes. A variable-free static body condition,
   or a statically known predicate whose referenced dependencies are all local
   boolean, integer, or real scalars that the body never changes, scans only its
-  selected branch; exact scalar self-assignments preserve such dependencies;
+  selected branch; exact and equal-leaf conditional scalar self-assignments
+  preserve such dependencies;
   dynamic, computed-written, nonlocal, array, by-name, controlled,
   string, and otherwise unknown dependency sets scan both paths. The proof is
   limited to

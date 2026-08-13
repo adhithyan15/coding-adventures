@@ -5374,8 +5374,7 @@ impl Compiler {
                 });
             if writes_name {
                 let preserves_name = first_direct_node(node, "expression")
-                    .and_then(expr_variable_name)
-                    .is_some_and(|source_name| source_name == name);
+                    .is_some_and(|expression| expression_preserves_name(expression, name));
                 return !preserves_name;
             }
         }
@@ -7184,9 +7183,8 @@ fn for_body_changes_name(node: &GrammarASTNode, name: &str) -> bool {
                     })
             });
         if writes_name {
-            return first_direct_node(node, "expression")
-                .and_then(expr_variable_name)
-                .is_none_or(|source_name| source_name != name);
+            return !first_direct_node(node, "expression")
+                .is_some_and(|expression| expression_preserves_name(expression, name));
         }
     }
     if node.rule_name == "for_stmt"
@@ -7202,6 +7200,25 @@ fn for_body_changes_name(node: &GrammarASTNode, name: &str) -> bool {
     direct_nodes(node)
         .into_iter()
         .any(|child| for_body_changes_name(child, name))
+}
+
+fn expression_preserves_name(node: &GrammarASTNode, name: &str) -> bool {
+    if expr_variable_name(node).as_deref() == Some(name) {
+        return true;
+    }
+    if !matches!(node.rule_name.as_str(), "expression" | "arith_expr")
+        || !direct_tokens(node).iter().any(|token| token.value == "if")
+    {
+        return false;
+    }
+    let branches: Vec<&GrammarASTNode> = direct_nodes(node)
+        .into_iter()
+        .filter(|child| child.rule_name == node.rule_name)
+        .collect();
+    branches.len() == 2
+        && branches
+            .into_iter()
+            .all(|branch| expression_preserves_name(branch, name))
 }
 
 fn collect_tokens<'a>(node: &'a GrammarASTNode, out: &mut Vec<&'a Token>) {
@@ -9459,6 +9476,15 @@ mod tests {
     }
 
     #[test]
+    fn al4_static_while_allows_conditional_self_assignment_dependency() {
+        compile_source(
+            "begin integer i, n, guard; boolean choose; n := 3; guard := 1; i := 0; for i := i + 1 while i < n do begin if guard = 0 then n := n + 1; guard := if choose then guard else guard end; print(i + 0.25) end",
+            "test",
+        )
+        .expect("equal conditional leaves preserve a body predicate dependency");
+    }
+
+    #[test]
     fn al4_static_while_preserves_standard_function_dependency() {
         compile_source(
             "begin integer i, n; n := -3; i := 0; for i := i + 1 while i < abs(n) do print(''); print(i + 0.25) end",
@@ -9554,6 +9580,16 @@ mod tests {
             "test",
         )
         .expect_err("a computed assignment may change a body predicate dependency");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_differing_conditional_assignment_dependency_remains_conservative() {
+        let err = compile_source(
+            "begin integer i, n, guard; boolean choose; n := 3; guard := 1; i := 0; for i := i + 1 while i < n do begin if guard = 0 then n := n + 1; guard := if choose then guard else 0 end; print(i + 0.25) end",
+            "test",
+        )
+        .expect_err("a differing conditional leaf may change the predicate dependency");
         assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
