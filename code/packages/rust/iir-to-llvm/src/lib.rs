@@ -1747,8 +1747,13 @@ fn lower_instr_with_slots(
         lower_instr(&renamed, state, out)?;
 
         // 3a. Post-store the produced value into the original slot.
-        if let Some(val) = state.env.get(&fresh).cloned() {
-            let ty = state.slot_ty(orig);
+        let ty = state.slot_ty(orig);
+        let stored_value = if ty == "i1" {
+            state.env_i1.get(&fresh).cloned()
+        } else {
+            state.env.get(&fresh).cloned()
+        };
+        if let Some(val) = stored_value {
             // E4-dyn: a `str` value is carried in `env` as a global-symbol
             // pointer (e.g. `@.str.3`), but its slot stores the runtime *handle*
             // (an `i64` block address).  Convert the symbol to an integer first —
@@ -1816,6 +1821,13 @@ fn lower_instr(
             let src_operand =
                 resolve_operand(instr.srcs.first(), &state.env, &instr.type_hint, fn_name)?;
             state.env.insert(dest.to_string(), src_operand);
+            if matches!(instr.type_hint.as_str(), "bool" | "i1") {
+                if let Some(Operand::Var(src)) = instr.srcs.first() {
+                    if let Some(value) = state.env_i1.get(src).cloned() {
+                        state.env_i1.insert(dest.to_string(), value);
+                    }
+                }
+            }
             Ok(())
         }
 

@@ -875,7 +875,10 @@ backend immediately) come before the enabler-dependent items.
   compose through `not`, `and`, `or`, `impl`, and `eqv`; bare literals,
   unsupported shapes, and dynamic predicates preserve the entry set. A
   conditional predicate with a statically known selector evaluates only its
-  selected branch; dynamic selectors remain conservative.
+  selected branch; dynamic selectors remain conservative. The conditional
+  predicate proof runs on native/LLVM/WASM/JVM/CLR/VM/JIT. LLVM preserves the
+  comparison's `i1` sidecar when moving into a boolean merge slot, and WASM
+  narrows an operand-width `i64` comparison local before an `i32` boolean move.
   Local string slots use an empty verifier seed on typed backends without
   changing source semantics; reads still require membership in the separate
   definite-initialization set.
