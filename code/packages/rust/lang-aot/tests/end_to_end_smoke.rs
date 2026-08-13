@@ -1014,6 +1014,27 @@ fn end_to_end_twig_42_emits_riscv32_bin_via_lang_aot() {
     assert_eq!(run.return_value, 42, "Twig 42 must return 42 through a0");
 }
 
+#[test]
+fn end_to_end_nib_if_else_executes_in_the_riscv_simulator() {
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("conditional.nib");
+    let bin = dir.path().join("conditional.bin");
+    std::fs::write(
+        &src,
+        b"fn main() -> u8 { if 1 == 1 { return 42; } else { return 0; } }\n",
+    )
+    .unwrap();
+
+    lang_aot::compile_file_to_riscv32_bin(&src, &bin, lang_aot::Language::Nib)
+        .expect("Nib if/else must compile through the RV32I control-flow core");
+
+    let bytes = std::fs::read(&bin).expect("read .bin");
+    let run = riscv_backend::run_binary(&bytes, &[])
+        .expect("the Nib RV32I binary must execute in the in-tree simulator");
+    assert!(run.halted, "the simulator return trampoline must halt");
+    assert_eq!(run.return_value, 42);
+}
+
 // ===========================================================================
 // A2+++ — source -> IIR -> Intel 8008 machine code (.bin) via lang-aot
 // ===========================================================================

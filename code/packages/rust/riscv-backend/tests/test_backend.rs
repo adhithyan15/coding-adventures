@@ -257,6 +257,127 @@ fn rejects_calls_until_the_linker_and_frame_abi_exist() {
 }
 
 #[test]
+fn executes_conditional_and_unconditional_control_flow() {
+    let conditional = vec![
+        ci(
+            "const_bool",
+            Some("condition"),
+            vec![CIROperand::Bool(true)],
+            "bool",
+        ),
+        ci(
+            "jmp_if_false",
+            None,
+            vec![
+                CIROperand::Var("condition".into()),
+                CIROperand::Var("otherwise".into()),
+            ],
+            "void",
+        ),
+        ci(
+            "const_i32",
+            Some("answer"),
+            vec![CIROperand::Int(42)],
+            "i32",
+        ),
+        ci(
+            "ret_i32",
+            None,
+            vec![CIROperand::Var("answer".into())],
+            "i32",
+        ),
+        ci(
+            "label",
+            None,
+            vec![CIROperand::Var("otherwise".into())],
+            "void",
+        ),
+        ci("const_i32", Some("wrong"), vec![CIROperand::Int(0)], "i32"),
+        ci(
+            "ret_i32",
+            None,
+            vec![CIROperand::Var("wrong".into())],
+            "i32",
+        ),
+    ];
+    assert_eq!(compile_and_run(&conditional), 42);
+
+    let jump = vec![
+        ci("jmp", None, vec![CIROperand::Var("end".into())], "void"),
+        ci("const_i32", Some("dead"), vec![CIROperand::Int(0)], "i32"),
+        ci("label", None, vec![CIROperand::Var("end".into())], "void"),
+        ci(
+            "const_i32",
+            Some("answer"),
+            vec![CIROperand::Int(42)],
+            "i32",
+        ),
+        ci(
+            "ret_i32",
+            None,
+            vec![CIROperand::Var("answer".into())],
+            "i32",
+        ),
+    ];
+    assert_eq!(compile_and_run(&jump), 42);
+}
+
+#[test]
+fn rejects_control_flow_to_an_undefined_label() {
+    let cir = vec![ci(
+        "jmp",
+        None,
+        vec![CIROperand::Var("missing".into())],
+        "void",
+    )];
+    let err = compile(&ctx("bad_jump", &[], "void"), &cir)
+        .expect_err("an unresolved label must be reported");
+    assert_eq!(err, BackendError::UndefinedLabel("missing".to_owned()));
+}
+
+#[test]
+fn executes_jmp_if_true_when_its_branch_is_taken() {
+    let cir = vec![
+        ci(
+            "const_bool",
+            Some("condition"),
+            vec![CIROperand::Bool(true)],
+            "bool",
+        ),
+        ci(
+            "jmp_if_true",
+            None,
+            vec![
+                CIROperand::Var("condition".into()),
+                CIROperand::Var("taken".into()),
+            ],
+            "void",
+        ),
+        ci("const_i32", Some("missed"), vec![CIROperand::Int(0)], "i32"),
+        ci(
+            "ret_i32",
+            None,
+            vec![CIROperand::Var("missed".into())],
+            "i32",
+        ),
+        ci("label", None, vec![CIROperand::Var("taken".into())], "void"),
+        ci(
+            "const_i32",
+            Some("answer"),
+            vec![CIROperand::Int(42)],
+            "i32",
+        ),
+        ci(
+            "ret_i32",
+            None,
+            vec![CIROperand::Var("answer".into())],
+            "i32",
+        ),
+    ];
+    assert_eq!(compile_and_run(&cir), 42);
+}
+
+#[test]
 fn rejects_more_live_values_than_the_starter_allocator_can_hold() {
     let cir: Vec<CIRInstr> = (0..7)
         .map(|index| {
