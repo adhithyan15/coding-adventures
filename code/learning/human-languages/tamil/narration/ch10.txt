@@ -1,8 +1,8 @@
 Tamil, chapter 10: Days of the Week.
-2 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
+3 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 2.
+Lesson 1 of 3.
 திங்கள்–ஞாயிறு — a home-grown and borrowed week.
 
 Warm-up.
@@ -37,7 +37,47 @@ Wrap-up Recall.
 What does every Tamil weekday end in, and where does that word come from? (கிழமை kizhamai, "day" — Tamil's own word, not Sanskrit vāra.) Which four planet-names are Tamil's own, and which three are Sanskrit borrowings? (Moon, Mars, Venus, Sun are native; Mercury, Jupiter, Saturn are Sanskrit — Budha, Bṛhaspati, Śani.)
 
 
-Lesson 2 of 2.
+Lesson 2 of 3.
+ற (ṟa) — the last of the family, and the one that drops below the line.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ற and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 1 second]
+Before the new one: say the sound of ந.
+[pause 2 seconds]
+One letter this time. Just one.
+The fourth member of this top-bar family, and the one with a habit none of the others have: its right leg keeps going below the baseline and sweeps left into a long descender. Tamil letters mostly sit on the line. This one hangs off it.
+
+Script you'll notice: ற.
+ற — ṟa.
+What it is made of:
+two arches side by side, giving three legs down to the baseline.
+the right leg continues BELOW the baseline, sweeps left, and drops into a long descender.
+It is the ṟ in நன்றி — and with it, every consonant of thank you.
+
+Writing: ற.
+1. start at the lower left, climb the left side, and arch to the middle.
+2. without lifting, descend the first middle upright — then lift once.
+3. set the pen at the adjacent middle upright and descend — then lift a second time.
+4. set the pen at the middle top, arch over, and descend the right side.
+5. without lifting again, sweep left below the baseline and drop into the long descender — and only now lift.
+Pen lifts: 2. The pen comes up 2 times and no more.
+Stroke order is one attested teaching order, not a national standard — Tamil handwriting is taught with school-to-school variation. Source: Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 10, ற (ṟa) (Univ. of Texas at Austin), p. 194.
+
+Guided Practice.
+[pause 1 second]
+[once you have stopped driving — trace: ற (ṟa) once, slowly, following the steps above]
+[your turn — say: "ṟa" as you finish it]
+[pause 8 seconds for the answer]
+[once you have stopped driving — trace: it twice more, without looking back at the steps]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does ற (ṟa) do that ண, ன and ந do not? (Drops below the baseline.) Which word have you now met all the consonants of? (நன்றி.)
+
+
+Lesson 3 of 3.
 ந, ன, ற (na, ṉa, ṟa) — the letter bodies inside நன்றி.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: The two remaining n's, Script you'll notice: ற — "ṟa", the hard r and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -63,15 +103,15 @@ With Lesson 2's ண (retroflex), that completes the set. Same consonant to an En
 Script you'll notice: ற — "ṟa", the hard r.
 two arches side by side — giving it three legs down to the baseline.
 the right leg keeps going below the baseline, sweeps left, and drops into a long descender.
-It is the tallest thing you have drawn: most Tamil letters sit on the baseline, and ற hangs well beneath it.
+It is the tallest thing you have drawn: most Tamil letters sit on the baseline, and ற (ṟa) hangs well beneath it.
 The dot under ṟ marks it as the hard or trilled r, distinct from Tamil's other r. You'll meet the contrast properly later; for now, learn the shape.
 
 Guided Practice.
 [pause 1 second]
 [once you have stopped driving — write: ந — "top bar, two verticals, then the curl that sweeps left"]
 [once you have stopped driving — write: ன — "top bar, left loop, one arch, straight vertical"]
-[once you have stopped driving — write: ற — "two arches, then the leg that sweeps left and drops"]
+[once you have stopped driving — write: ற (ṟa) — "two arches, then the leg that sweeps left and drops"]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Name Tamil's three n-letters and their tongue positions. (ந dental, ன alveolar, ண retroflex.) What are a consonant's three possibilities so far? (Keep the built-in a or remove it with the puḷḷi.) Which letter hangs below the baseline? (ற, the hard ṟ.) Next: the colours — black, white, red and blue.
+Name Tamil's three n-letters and their tongue positions. (ந dental, ன alveolar, ண retroflex.) What are a consonant's three possibilities so far? (Keep the built-in a or remove it with the puḷḷi.) Which letter hangs below the baseline? (ற (ṟa), the hard ṟ.) Next: the colours — black, white, red and blue.

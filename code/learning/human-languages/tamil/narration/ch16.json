@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "Tamil Months",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:9aa25237c1a7fa85",
+  "sourceHash": "fnv1a64:d69456a2a09e1144",
   "lessons": [
     {
       "id": "TA-C16-thamizh-maadangal",
@@ -119,6 +119,191 @@
             {
               "kind": "speech",
               "text": "What kind of calendar is the Tamil month system — solar, lunar, or lunisolar? (Solar — a genuinely separate calendar from both Gregorian and Hindu lunisolar.) What are the twelve months traditionally named for? (Nakshatras, lunar-mansion star groups.) What two important occasions are dated by this calendar? (Tamil New Year (Chithirai 1) and Pongal (Thai 1).)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-S07-ma",
+      "sequence": 605,
+      "title": "ம (ma) — upright on the left, curve on the right",
+      "headword": "ம",
+      "romanization": "ma",
+      "gloss": "the single letter ம — met, then written",
+      "script": "tamil",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:119ab23920501a81",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ம",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ம and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the sound of க."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One letter this time. Just one."
+            },
+            {
+              "kind": "speech",
+              "text": "One unbroken stroke again, like வ. The only thing to get right is which way round it goes: the upright is on the LEFT and the curve on the right. Most people guess the reverse, because that is the habit Devanagari teaches — hanging a shape off a right-hand spine."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ம",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ம — ma."
+            },
+            {
+              "kind": "speech",
+              "text": "What it is made of:"
+            },
+            {
+              "kind": "speech",
+              "text": "a straight vertical stroke on the LEFT."
+            },
+            {
+              "kind": "speech",
+              "text": "a horizontal along the bottom."
+            },
+            {
+              "kind": "speech",
+              "text": "a rounded arch closing it on the RIGHT."
+            },
+            {
+              "kind": "speech",
+              "text": "It is the last consonant of வணக்கம்."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ம",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "1. start at the top left and draw the left upright straight DOWN to the baseline."
+            },
+            {
+              "kind": "speech",
+              "text": "2. without lifting, turn right and run along the bottom to the far right."
+            },
+            {
+              "kind": "speech",
+              "text": "3. without lifting, turn up and rise up the right side."
+            },
+            {
+              "kind": "speech",
+              "text": "4. without lifting, curve over the top and back towards the left."
+            },
+            {
+              "kind": "speech",
+              "text": "5. without lifting, come down the middle to the bottom bar — and only now lift."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 0. The pen never leaves the paper."
+            },
+            {
+              "kind": "speech",
+              "text": "Stroke order is one attested teaching order, not a national standard — Tamil handwriting is taught with school-to-school variation. Source: Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 1 (Univ. of Texas at Austin)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ம (ma) once, slowly, following the steps above",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ம once, slowly, following the steps above]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ma\" as you finish it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ma\" as you finish it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "it twice more, without looking back at the steps",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: it twice more, without looking back at the steps]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which side is the upright on? (The left.) How many pen lifts? (None.)"
             }
           ]
         }
@@ -242,7 +427,7 @@
               "rowCount": 2,
               "utterances": [
                 "piece: ஆ, ā, this lesson — independent.",
-                "piece: ம், m — ம with the puḷḷi, the dot you already know."
+                "piece: ம், m — ம (ma) with the puḷḷi, the dot you already know."
               ]
             },
             {
@@ -287,7 +472,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "ம் — ம with the dot",
+              "instruction": "ம் — ம (ma) with the dot",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -317,7 +502,7 @@
             },
             {
               "kind": "speech",
-              "text": "Write ஆம் (ām). When does a Tamil vowel get a full letter instead of a sign? (When it starts a word — nothing precedes it to hook onto.) What closes the word? (ம் — the puḷḷi on ம.) Next: noon and midnight."
+              "text": "Write ஆம் (ām). When does a Tamil vowel get a full letter instead of a sign? (When it starts a word — nothing precedes it to hook onto.) What closes the word? (ம் — the puḷḷi on ம (ma).) Next: noon and midnight."
             }
           ]
         }

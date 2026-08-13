@@ -1,8 +1,8 @@
 Tamil, chapter 6: Dative Case and Dative Subjects.
-6 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
+8 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 6.
+Lesson 1 of 8.
 -உக்கு (-ukku) — "to, for".
 
 Warm-up.
@@ -30,11 +30,50 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does -உக்கு mean? ("To" or "for.") Where does it go? (On the end of the noun — Tamil adds, it doesn't put a word in front.) What is "to me"? (எனக்கு enakku — the pronoun's body changes to en- first.) Why does the suffix show up as -ukku and -kku? (One case, two shapes, chosen by the noun's ending.) Next: two more letters — ம and retroflex ண.
+What does -உக்கு mean? ("To" or "for.") Where does it go? (On the end of the noun — Tamil adds, it doesn't put a word in front.) What is "to me"? (எனக்கு enakku — the pronoun's body changes to en- first.) Why does the suffix show up as -ukku and -kku? (One case, two shapes, chosen by the noun's ending.) Next: two more letters — ம and retroflex ண (ṇa).
 
 
-Lesson 2 of 6.
-ம and ண — a loop, and a curled tongue.
+Lesson 2 of 8.
+வ (va) — one spiral, one motion.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: வ and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+One letter this time. Just one.
+It is the first letter of the first word you learned, and it is the easiest one in this book to write: the pen never leaves the paper.
+
+Script you'll notice: வ.
+வ — va.
+What it is made of:
+a spiral loop on the left.
+a bottom bar.
+a tall right upright.
+வணக்கம் starts with it, and so does வாழ் — to live.
+
+Writing: வ.
+1. start at the inner curl and spiral outward, climbing the left side.
+2. without lifting, arch over the top and descend on the right.
+3. without lifting, turn down to the baseline.
+4. without lifting, carry the bottom bar to the right.
+5. without lifting, rise up the right upright — and only now lift.
+Pen lifts: 0. The pen never leaves the paper.
+Stroke order is one attested teaching order, not a national standard — Tamil handwriting is taught with school-to-school variation. Source: Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 9, வ (Univ. of Texas at Austin), p. 194.
+
+Guided Practice.
+[pause 1 second]
+[once you have stopped driving — trace: வ (va) once, slowly, following the steps above]
+[your turn — say: "va" as you finish it]
+[pause 8 seconds for the answer]
+[once you have stopped driving — trace: it twice more, without looking back at the steps]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How many times does the pen lift while writing வ? (None — one unbroken motion.) What sound does it carry on its own? (va.)
+
+
+Lesson 3 of 8.
+ம and ண (ṇa) — a loop, and a curled tongue.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ம, Script you'll notice: ண and Guided Practice until you have stopped, and I will say so again when we reach it.
 
@@ -64,16 +103,16 @@ Retroflex sounds are a signature of the languages of India — they show up acro
 Guided Practice.
 [pause 1 second]
 [once you have stopped driving — write: ம — "left upright, bottom, right arch"]
-[once you have stopped driving — write: ண — "top bar, left loop, two arches, straight vertical"]
+[once you have stopped driving — write: ண (ṇa) — "top bar, left loop, two arches, straight vertical"]
 [your turn — say: plain n, then curl the tongue back — ṇ]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Draw ம — which side is the upright on? (The left; the arch closes it on the right.) Draw ண — what makes it not ன? (One extra arch: ண has two arches where ன has one. Both end in the same straight vertical.) What does the dot in ṇ mean? (Retroflex — the tongue curls back to the roof of the mouth.) Why can't you hear it yet? (English has no such sound; the ear learns it after the hand.) Next: stacking that dative suffix where Latin would fuse several meanings.
+Draw ம — which side is the upright on? (The left; the arch closes it on the right.) Draw ண (ṇa) — what makes it not ன? (One extra arch: ண (ṇa) has two arches where ன has one. Both end in the same straight vertical.) What does the dot in ṇ mean? (Retroflex — the tongue curls back to the roof of the mouth.) Why can't you hear it yet? (English has no such sound; the ear learns it after the hand.) Next: stacking that dative suffix where Latin would fuse several meanings.
 
 
-Lesson 3 of 6.
+Lesson 4 of 8.
 -உக்கு (-ukku) — one carriage in a suffix train.
 
 Warm-up.
@@ -103,7 +142,7 @@ Wrap-up Recall.
 What does -ukku contribute? (Dative to/for, one meaning.) What does Latin -īs fuse? (Case, plural number, and declension class.) Which system leaves the seam visible? (Tamil's agglutinative stack.)
 
 
-Lesson 4 of 6.
+Lesson 5 of 8.
 எனக்குத் தமிழ் தெரியும் (enakkut tamiḻ teriyum) — "I know Tamil".
 
 Warm-up.
@@ -143,7 +182,7 @@ Wrap-up Recall.
 What does எனக்குத் தமிழ் தெரியும் (enakkut tamiḻ teriyum) literally say? ("To-me Tamil is-known.") Which word has English got that Tamil hasn't? (A nominative "I" — nāṉ is replaced by the dative enakku.) Why does Tamil use the dative here? (Because knowing happens to you; you don't do it.) Which English word preserves the same idea? (Methinks — "it seems to me".) Next: watch all four Dravidian sisters use the same experiencer shape.
 
 
-Lesson 5 of 6.
+Lesson 6 of 8.
 -ukku, -ku, -ge, -ikku — the family shows its bones.
 
 Warm-up.
@@ -172,7 +211,51 @@ Wrap-up Recall.
 Do the four sisters agree on dative experiencers? (Yes.) Which four suffix shapes reveal the relationship? (-ukku, -ku, -ge, -ikku.) What stays plain in the sentence? (The thing known or experienced.)
 
 
-Lesson 6 of 6.
+Lesson 7 of 8.
+ண (ṇa) — the first of three n's.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ண and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 1 second]
+Before the new one: say the sound of வ (va).
+[pause 2 seconds]
+One letter this time. Just one.
+Tamil has three different letters for sounds English hears as one n. This is the first, and the dot under its romanization — ṇ, not plain n — is doing real work: the tongue curls back to the roof of the mouth. Words genuinely differ by it.
+
+Script you'll notice: ண.
+ண — ṇa.
+What it is made of:
+a spiral loop on the left.
+TWO rounded inner arches.
+a straight top bar.
+a separate straight vertical on the right, down to the baseline.
+It is the second letter of வணக்கம்.
+
+Writing: ண.
+1. start in the lower-left curl and spiral outward, climbing the outer left side.
+2. without lifting, arch over the top of the left loop to the first junction.
+3. without lifting, descend around the outside of the first inner arch.
+4. without lifting, turn through its bottom and climb the inside back to the first junction.
+5. without lifting, sweep through the extra inner arch — over its top, around its outside and bottom, then up its inside to the right junction.
+6. without lifting, carry the top bar to the right edge — then lift once.
+7. set the pen at the top of the separate right upright and draw straight down — and only now lift.
+Pen lifts: 1. The pen comes up 1 time and no more.
+Stroke order is one attested teaching order, not a national standard — Tamil handwriting is taught with school-to-school variation. Source: Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 13, ண (ṇa) (Univ. of Texas at Austin), p. 195.
+
+Guided Practice.
+[pause 1 second]
+[once you have stopped driving — trace: ண (ṇa) once, slowly, following the steps above]
+[your turn — say: "ṇa" as you finish it]
+[pause 8 seconds for the answer]
+[once you have stopped driving — trace: it twice more, without looking back at the steps]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Where does the tongue go for ண (ṇa)? (Curled back, to the roof of the mouth.) How many pen lifts? (One — the body, then the upright.)
+
+
+Lesson 8 of 8.
 ந, ன, ண (na, ṉa, ṇa) — three stops on one tongue-map.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: The backward walk and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -187,7 +270,7 @@ letter: ந. sound: na. tongue: against the teeth (dental).
 letter: ன. sound: ṉa. tongue: on the ridge behind the teeth (alveolar).
 letter: ண. sound: ṇa. tongue: curled back to the roof (retroflex).
 Move backward: teeth becomes ridge becomes curled roof. English spells all three with one letter and initially hears them as the same sound; Tamil uses separate letters because its words depend on the contrast.
-You will draw ந and ன when nandri needs them. For now compare the last pair: ண is ன with one extra arch. Both open with a top bar and loop and finish with the same vertical. ன has one middle arch; ண has two.
+You will draw ந and ன when nandri needs them. For now compare the last pair: ண (ṇa) is ன with one extra arch. Both open with a top bar and loop and finish with the same vertical. ன has one middle arch; ண (ṇa) has two.
 Retroflex sounds occur across unrelated South Asian language families. That shared geography makes the region a linguistic area: neighbors can borrow a sound pattern without inheriting it from one ancestor.
 
 Guided Practice.
@@ -196,10 +279,10 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: alveolar ன at the ridge]
 [pause 8 seconds for the answer]
-[your turn — say: retroflex ண with the tongue curled back]
+[your turn — say: retroflex ண (ṇa) with the tongue curled back]
 [pause 8 seconds for the answer]
-[once you have stopped driving — trace: one arch in ன, two arches in ண]
+[once you have stopped driving — trace: one arch in ன, two arches in ண (ṇa)]
 
 Wrap-up Recall.
 [pause 3 seconds]
-How many n-letters does Tamil have? (Three.) What separates them? (Tongue position: dental, alveolar, retroflex.) Which two differ by one arch? (ன has one; ண has two.) Next: the numbers one to five.
+How many n-letters does Tamil have? (Three.) What separates them? (Tongue position: dental, alveolar, retroflex.) Which two differ by one arch? (ன has one; ண (ṇa) has two.) Next: the numbers one to five.

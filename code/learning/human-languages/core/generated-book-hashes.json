@@ -5585,13 +5585,15 @@
     {
       "language": "tamil",
       "chapter": 6,
-      "sourceHash": "fnv1a64:c0940889d5248bc5",
+      "sourceHash": "fnv1a64:5f56402811418e13",
       "lessonIds": [
         "TA-C06-dative-ukku",
+        "TA-S01-va",
         "TA-W02-ma-retroflex-na",
         "TA-C06-dative-stacking",
         "TA-C06-dative-subject",
         "TA-C06-dative-subject-family",
+        "TA-S02-nna",
         "TA-W02-three-ns"
       ],
       "tex": "tamil/book/chapters/ch06-dative-case.tex"
@@ -5599,11 +5601,12 @@
     {
       "language": "tamil",
       "chapter": 7,
-      "sourceHash": "fnv1a64:d9c130f5e50a68b7",
+      "sourceHash": "fnv1a64:9fe953b07bcd5a3b",
       "lessonIds": [
         "TA-C07-numbers-1-5",
         "TA-C07-numbers-1-5-family",
         "TA-C07-numbers-6-10",
+        "TA-S03-nnna",
         "TA-W03-pulli-vanakkam",
         "TA-C07-numbers-6-10-family"
       ],
@@ -5612,10 +5615,11 @@
     {
       "language": "tamil",
       "chapter": 8,
-      "sourceHash": "fnv1a64:11c3c341bacf36b8",
+      "sourceHash": "fnv1a64:2547ae38aeb747a7",
       "lessonIds": [
         "TA-C08-tayavuseytu",
         "TA-C08-please-register",
+        "TA-S04-na",
         "TA-W03-write-vanakkam"
       ],
       "tex": "tamil/book/chapters/ch08-please.tex"
@@ -5633,9 +5637,10 @@
     {
       "language": "tamil",
       "chapter": 10,
-      "sourceHash": "fnv1a64:16fcb07e44522303",
+      "sourceHash": "fnv1a64:f0dd5006214be908",
       "lessonIds": [
         "TA-C10-vaara-kizhamai",
+        "TA-S05-rra",
         "TA-W04-vowel-signs-nandri"
       ],
       "tex": "tamil/book/chapters/ch10-days.tex"
@@ -5661,9 +5666,10 @@
     {
       "language": "tamil",
       "chapter": 13,
-      "sourceHash": "fnv1a64:09b677bc02795704",
+      "sourceHash": "fnv1a64:38ac70dde10466f4",
       "lessonIds": [
         "TA-C13-udal-uruppugal",
+        "TA-S06-ka",
         "TA-W04-i-sign-write-nandri"
       ],
       "tex": "tamil/book/chapters/ch13-body-parts.tex"
@@ -5689,9 +5695,10 @@
     {
       "language": "tamil",
       "chapter": 16,
-      "sourceHash": "fnv1a64:8cf99e4c1d2e2d6d",
+      "sourceHash": "fnv1a64:0012c8e3590a2a69",
       "lessonIds": [
         "TA-C16-thamizh-maadangal",
+        "TA-S07-ma",
         "TA-W05-write-aam"
       ],
       "tex": "tamil/book/chapters/ch16-months.tex"
@@ -5709,9 +5716,10 @@
     {
       "language": "tamil",
       "chapter": 18,
-      "sourceHash": "fnv1a64:3705b02629d09c49",
+      "sourceHash": "fnv1a64:32c27fd92f29695a",
       "lessonIds": [
         "TA-C18-mani",
+        "TA-S08-pulli",
         "TA-W06-write-illai",
         "TA-C18-mani-homophone-time"
       ],
@@ -5720,10 +5728,11 @@
     {
       "language": "tamil",
       "chapter": 19,
-      "sourceHash": "fnv1a64:308f0d81c1370836",
+      "sourceHash": "fnv1a64:f613ef1c51a73ec0",
       "lessonIds": [
         "TA-C19-vayathu",
         "TA-C19-age-register-grammar",
+        "TA-S09-i-sign",
         "TA-W07-write-sari"
       ],
       "tex": "tamil/book/chapters/ch19-age.tex"

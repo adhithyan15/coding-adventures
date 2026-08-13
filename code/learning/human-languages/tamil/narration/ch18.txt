@@ -1,8 +1,8 @@
 Tamil, chapter 18: Telling Time.
-3 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
+4 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 3.
+Lesson 1 of 4.
 மணி (maṇi) — Tamil's native "bell," and a real homophone trap.
 
 Warm-up.
@@ -22,7 +22,39 @@ Wrap-up Recall.
 Is Tamil's மணி (maṇi) ("hour") from the same Sanskrit root as Kannada/Telugu/Hindi's hour-words? (Most likely no — it's treated as a native Dravidian "bell" word that independently reached "hour" the same way, though even DEDR flags this as not fully settled.) What semantic path links the meanings? (A bell announces the hour.) Next: writing இல்லை (illai) — a second independent vowel, ல, and the ai sign.
 
 
-Lesson 2 of 3.
+Lesson 2 of 4.
+் (puḷḷi) — the dot that takes the vowel away.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: ் and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Not a letter this time — a mark that changes the letter under it.
+
+Script you'll notice: ்.
+Every Tamil consonant you have written so far carries a hidden a. வ is not v, it is va. ம is ma. That is what an abugida is: the vowel is built in.
+The puḷḷi is how you take it back. One dot above the letter, and வ becomes plain v.
+Here is what Tamil does that Devanagari does not: the dot stays visible and both letters keep their full shape. Devanagari fuses two consonants into a single new conjunct you have to learn separately. Tamil just writes the dot. There is nothing extra to memorise.
+Where it sits: a DOT written above the letter, removing the inherent vowel; unlike Devanagari's virama it does not trigger a conjunct — both letters keep their full shape and the dot stays visible.
+
+Writing: ்.
+With this you can write வணக்கம் — every letter, in order:
+வ + ண + க + ் (puḷḷi) + க + ம + ் (puḷḷi).
+Seven marks on the page, and you have written hello.
+
+Guided Practice.
+[pause 1 second]
+[once you have stopped driving — trace: the mark on a letter you already know]
+[your turn — say: the letter's sound with the mark, then without it]
+[pause 8 seconds for the answer]
+[once you have stopped driving — write: the whole word above, one mark at a time]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does the puḷḷi do? (Removes the built-in vowel.) What is வ with a puḷḷi? (v, not va.) What does Tamil NOT do that Devanagari does? (Fuse the letters into a new shape.)
+
+
+Lesson 3 of 4.
 இல்லை (illai) — a vowel in front, a vowel sign behind.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: இ and ல, Script you'll notice: build the word and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -66,7 +98,7 @@ Wrap-up Recall.
 Write இல்லை (illai). Why does it open with இ rather than a sign? (The word starts on a vowel.) Which side of its consonant does ை sit on? (The left — written first, spoken second.) Next: the gem-word homophone, and telling clock time.
 
 
-Lesson 3 of 3.
+Lesson 4 of 4.
 மணி (maṇi) — hour or jewel? Context decides.
 
 Warm-up.

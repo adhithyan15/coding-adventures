@@ -239,11 +239,11 @@ describe("the committed corpus", () => {
     const { lessons } = loadEverything();
     const r = measureMetalanguage(lessons, loadMetalanguage());
     expect(r.summary.terms).toBe(54);
-    expect(r.summary.lessonsUsingTerms).toBe(1950); // +8: HL-C94 // +4: HL-C98 // +40: vocabulary wave 5 // +4: HL-C88 slices 5-6 // +3: HL-C88 slice 8 // +54: vocabulary wave 6 // +3: HL-C113 preterite plural // HL-C113 preterite close // HL-C113: HL-C113 imperfect subjunctive
+    expect(r.summary.lessonsUsingTerms).toBe(1959); // +8: HL-C94 // +4: HL-C98 // +40: vocabulary wave 5 // +4: HL-C88 slices 5-6 // +3: HL-C88 slice 8 // +54: vocabulary wave 6 // +3: HL-C113 preterite plural // HL-C113 preterite close // HL-C113: HL-C113 imperfect subjunctive
 
     // No lesson declares an introduction yet, so every use is early. The total
     // says how pervasive the assumption is; the technical count says what to fix.
-    expect(r.summary.usesBeforeIntroduction).toBe(8992); // +5: ES-C03-vos and the two practice edits use ordinary terms (word, plural, ending) // +15: HL-C98's four lessons use ordinary terms (ending, verb, form) // +112: vocabulary wave 5 // +17: HL-C88 slices 5-6 // +11: HL-C88 slice 8 // +235: vocabulary wave 6 // HL-C113: grammar chapters cite tense and person names heavily, so these move in steps of ten rather than ones
+    expect(r.summary.usesBeforeIntroduction).toBe(9015); // +5: ES-C03-vos and the two practice edits use ordinary terms (word, plural, ending) // +15: HL-C98's four lessons use ordinary terms (ending, verb, form) // +112: vocabulary wave 5 // +17: HL-C88 slices 5-6 // +11: HL-C88 slice 8 // +235: vocabulary wave 6 // HL-C113: grammar chapters cite tense and person names heavily, so these move in steps of ten rather than ones // HL11: +23. The nine letter segments talk about letters -- vowel, consonant, baseline, stroke, abugida -- and none of those terms is introduced first. Exactly the debt HL10 section 7.5 exists to burn down, now visible in new content rather than only in old
     expect(r.summary.technicalUsesBeforeIntroduction).toBe(2728); // +4: HL-C98 // +26: vocabulary wave 5 // +7: HL-C88 slices 5-6 // +3: HL-C88 slice 8 // +49: vocabulary wave 6 // HL-C113: grammar chapters cite tense and person names heavily, so these move in steps of ten rather than ones
     expect(r.summary.technicalLessons).toBe(1354); // +4: HL-C98 // +21: vocabulary wave 5 // +4: HL-C88 slices 5-6 // +2: HL-C88 slice 8 // +27: vocabulary wave 6 // HL-C113: grammar chapters cite tense and person names heavily, so these move in steps of ten rather than ones
 

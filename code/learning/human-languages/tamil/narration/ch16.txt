@@ -1,8 +1,8 @@
 Tamil, chapter 16: Tamil Months.
-2 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
+3 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 2.
+Lesson 1 of 3.
 சித்திரை to பங்குனி — Tamil's own solar calendar.
 
 Warm-up.
@@ -30,7 +30,48 @@ Wrap-up Recall.
 What kind of calendar is the Tamil month system — solar, lunar, or lunisolar? (Solar — a genuinely separate calendar from both Gregorian and Hindu lunisolar.) What are the twelve months traditionally named for? (Nakshatras, lunar-mansion star groups.) What two important occasions are dated by this calendar? (Tamil New Year (Chithirai 1) and Pongal (Thai 1).)
 
 
-Lesson 2 of 2.
+Lesson 2 of 3.
+ம (ma) — upright on the left, curve on the right.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ம and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 1 second]
+Before the new one: say the sound of க.
+[pause 2 seconds]
+One letter this time. Just one.
+One unbroken stroke again, like வ. The only thing to get right is which way round it goes: the upright is on the LEFT and the curve on the right. Most people guess the reverse, because that is the habit Devanagari teaches — hanging a shape off a right-hand spine.
+
+Script you'll notice: ம.
+ம — ma.
+What it is made of:
+a straight vertical stroke on the LEFT.
+a horizontal along the bottom.
+a rounded arch closing it on the RIGHT.
+It is the last consonant of வணக்கம்.
+
+Writing: ம.
+1. start at the top left and draw the left upright straight DOWN to the baseline.
+2. without lifting, turn right and run along the bottom to the far right.
+3. without lifting, turn up and rise up the right side.
+4. without lifting, curve over the top and back towards the left.
+5. without lifting, come down the middle to the bottom bar — and only now lift.
+Pen lifts: 0. The pen never leaves the paper.
+Stroke order is one attested teaching order, not a national standard — Tamil handwriting is taught with school-to-school variation. Source: Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 1 (Univ. of Texas at Austin).
+
+Guided Practice.
+[pause 1 second]
+[once you have stopped driving — trace: ம (ma) once, slowly, following the steps above]
+[your turn — say: "ma" as you finish it]
+[pause 8 seconds for the answer]
+[once you have stopped driving — trace: it twice more, without looking back at the steps]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which side is the upright on? (The left.) How many pen lifts? (None.)
+
+
+Lesson 3 of 3.
 ஆம் (ām) — writing a word that starts with a vowel.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: a vowel standing alone, Script you'll notice: build the word and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -56,7 +97,7 @@ That is a rule, not a special case: any Tamil word that opens on a vowel opens w
 Script you'll notice: build the word.
 [a table of 2 rows, read aloud]
 piece: ஆ, ā, this lesson — independent.
-piece: ம், m — ம with the puḷḷi, the dot you already know.
+piece: ம், m — ம (ma) with the puḷḷi, the dot you already know.
 ஆ, ம் becomes ஆம் (ām).
 Two pieces only. The puḷḷi on ம் closes the word on a bare m, exactly as it did at the end of வணக்கம்.
 
@@ -64,9 +105,9 @@ Guided Practice.
 [pause 1 second]
 [once you have stopped driving — write: அ — curl, horizontal, right vertical]
 [once you have stopped driving — write: ஆ — the same three parts, then the right-hand tail]
-[once you have stopped driving — write: ம் — ம with the dot]
+[once you have stopped driving — write: ம் — ம (ma) with the dot]
 [once you have stopped driving — write: ஆம் (ām) — two pieces, left to right]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Write ஆம் (ām). When does a Tamil vowel get a full letter instead of a sign? (When it starts a word — nothing precedes it to hook onto.) What closes the word? (ம் — the puḷḷi on ம.) Next: noon and midnight.
+Write ஆம் (ām). When does a Tamil vowel get a full letter instead of a sign? (When it starts a word — nothing precedes it to hook onto.) What closes the word? (ம் — the puḷḷi on ம (ma).) Next: noon and midnight.
