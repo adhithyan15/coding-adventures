@@ -24,25 +24,44 @@
 % Each classic plant tropism and the stimulus the source states it responds to,
 % as a little truth table:
 %
-%     tropism          stimulus     a beginner's cue
-%     --------------   ----------   -------------------------------------
-%     phototropism     light        shoots bend toward light
-%     gravitropism     gravity      roots grow down, shoots grow up
-%     thigmotropism    touch        tendrils coil around what they touch
-%     hydrotropism     water        roots curve toward moisture
-%     chemotropism     chemicals    pollen tubes grow toward a chemical cue
+%     tropism          stimulus         a beginner's cue
+%     --------------   --------------   -------------------------------------
+%     phototropism     light            shoots bend toward light
+%     gravitropism     gravity          roots grow down, shoots grow up
+%     thigmotropism    touch            tendrils coil around what they touch
+%     hydrotropism     water            roots curve toward moisture
+%     chemotropism     chemicals        pollen tubes grow toward a chemical cue
+%     aerotropism      wind             plants grow toward or away from wind
+%     electrotropism   electric_field   growth responds to an electric field
+%     heliotropism     sun_direction    plant parts track the Sun's direction
+%     magnetotropism   magnetic_fields  growth responds to magnetic fields
+%     selenotropism    moon_direction   plant parts track the Moon's direction
+%     thermotropism    temperature      growth responds to temperature
+%     traumatotropism  wounding         orientation shifts after a wounding
+%
+% EXTENDED this cycle from 5 to 12 rows: the SAME already-cited Wikipedia
+% "Tropism" article's own "Types of tropism" list names seven MORE tropisms
+% beyond the original five, each with its own clean single-fact definition
+% sentence, WebFetch-verified (including a targeted second pass re-fetching
+% all seven new terms' raw definition text directly) before writing — zero
+% new source page needed.
 %
 % The query also runs BACKWARD — bind a stimulus and recall its tropism:
 %
 %     ? tropism_stimulus($Tropism, gravity)   % gravitropism
 %
-% A word that is NOT one of these tropisms — `sound`, `heat`, `wind` — is
-% deliberately NOT a row, so a tropism recall ABSTAINS on it rather than
-% inventing a stimulus. (There are named tropisms for some of those — an
-% anemotropism is a response to wind — but they are not rows here, so the table
-% answers exactly the tropism→stimulus pairs it can ground, and only those.)
-% That honest-abstention property is what makes the table safe to build a
-% reasoner on.
+% A word that is NOT one of these twelve tropisms — `inotropism` (a real term
+% on the SAME Wikipedia page, but naming a MUSCLE's contraction response to
+% drugs, not a plant's growth response to an environmental stimulus — the
+% wrong domain entirely) — is deliberately NOT a row, so a tropism recall
+% ABSTAINS on it rather than inventing a stimulus. (The page's lead paragraph
+% also uses "anemotropism" as its own naming-convention EXAMPLE for a
+% wind-response, a different name for the same wind-response the page's own
+% "Types of tropism" list separately calls "Aerotropism" — this table uses
+% the types-list's own canonical name, `aerotropism`, mirroring how it
+% already uses `gravitropism` rather than the page's noted synonym
+% `geotropism`.) That honest-abstention property is what makes the table safe
+% to build a reasoner on.
 %
 % The `stimulus` value of every row is a SINGLE lowercase atom, chosen to be the
 % stimulus word the source EXPLICITLY names for that tropism — never one the
@@ -81,6 +100,37 @@
 %     https://en.wikipedia.org/wiki/Tropism
 %     "Chemotropism: the movement or growth in response to chemicals"
 %
+%   aerotropism → wind
+%     https://en.wikipedia.org/wiki/Tropism
+%     "Aerotropism: the growth of plants towards or away from a source of wind"
+%
+%   electrotropism → electric_field
+%     https://en.wikipedia.org/wiki/Tropism
+%     "Electrotropism/Galvanotropism: the movement or growth in response to an
+%      electric field"
+%
+%   heliotropism → sun_direction
+%     https://en.wikipedia.org/wiki/Tropism
+%     "Heliotropism: the diurnal motion or seasonal motion of plant parts in
+%      response to the direction of the Sun, (e.g. the sunflower)"
+%
+%   magnetotropism → magnetic_fields
+%     https://en.wikipedia.org/wiki/Tropism
+%     "Magnetotropism: movement or growth in response to magnetic fields"
+%
+%   selenotropism → moon_direction
+%     https://en.wikipedia.org/wiki/Tropism
+%     "Selenotropism: motion of plant parts in response to the direction of
+%      the Moon"
+%
+%   thermotropism → temperature
+%     https://en.wikipedia.org/wiki/Tropism
+%     "Thermotropism: movement or growth in response to temperature"
+%
+%   traumatotropism → wounding
+%     https://en.wikipedia.org/wiki/Tropism
+%     "Traumatotropism: orientation deviation after suffering a wounding"
+%
 % (The naming principle itself is stated in the article's lead — "Tropisms are
 % usually named for the stimulus involved; for example, a phototropism is a
 % movement to the light source" — which is why the tropism name and its stimulus
@@ -105,6 +155,13 @@ table tropism_stimulus {
     row (thigmotropism, touch)
     row (hydrotropism, water)
     row (chemotropism, chemicals)
+    row (aerotropism, wind)
+    row (electrotropism, electric_field)
+    row (heliotropism, sun_direction)
+    row (magnetotropism, magnetic_fields)
+    row (selenotropism, moon_direction)
+    row (thermotropism, temperature)
+    row (traumatotropism, wounding)
 
     source "Phototropism: movement or growth in response to lights or colors of light"
     locator "https://en.wikipedia.org/wiki/Tropism"
