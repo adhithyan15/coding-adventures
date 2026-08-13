@@ -505,6 +505,30 @@ orders letters by payoff and records the order as a per-script letter ledger.
   is weaker payoff than one that is a greeting, and the authoring in HL-C120
   should improve it rather than the measurement hiding it.
 
+## Open from HL-C116 — the OTHER way a track disappears
+
+`measureScriptClosure` now names a track whose declared script it does not
+recognise, instead of silently dropping it. That closes the mistyped-`track.json`
+path. It does **not** close the path the historical Gujarati bug actually took.
+
+`parse.ts` resolves an unregistered language to `"latin"` when `LANGUAGE_SCRIPT`
+has no entry and the track ships no `track.json`. A `thai/` directory added
+tomorrow would therefore resolve to Latin, be skipped as "reader already knows
+this alphabet", and appear in neither `tracks` nor `unknownScriptTracks` — zero
+violations, zero trace. `constants.ts` already carries a comment recording that
+exact failure shipping once.
+
+Not fixed here deliberately: the fallback lives upstream of this module and every
+consumer of `ParsedLesson.script` inherits it, so changing it is its own change
+with its own blast radius — not a line to slip into a measurement PR. The shape
+of the fix is to resolve to a sentinel (`"unknown"`) rather than to `"latin"`
+when a language is unregistered AND has no `track.json`, or to carry a
+`scriptWasDefaulted` flag that closure routes into `unknownScriptTracks`.
+
+Harmless today: all 15 non-Latin tracks are registered, `unknownScriptTracks` is
+empty, and the module is report-only. It is written down because "no track can
+vanish from this report" is currently true by luck rather than by construction.
+
 ## Findings from HL-C116
 
 - **932 lessons across 16 non-Latin tracks ask the reader to decode a glyph
@@ -538,7 +562,7 @@ orders letters by payoff and records the order as a per-script letter ledger.
   word, and the reader genuinely gains from it. Hindi alone has 88, Tamil 68.
 
 - **The exposure rule is doing far more work than a lesson count shows.** Only 49
-  lessons corpus-wide are clean *because of* it — but it removed **1,974 glyphs**
+  lessons corpus-wide are clean *because of* it — but it removed **1,997 glyphs**
   from load-bearing sets, most of them from lessons that violate anyway. A lesson
   reporting five untaught glyphs while fifteen more were exempted is not a lesson
   with five problems, and the per-lesson counter cannot see that. Both numbers are

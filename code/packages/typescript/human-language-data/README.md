@@ -382,7 +382,7 @@ const closure = measureScriptClosure(lessons);
 closure.summary.violations;                    // 932
 closure.summary.tracksTeachingNothing;         // 12 of 16 non-Latin tracks
 closure.summary.headwordsWithoutRomanization;  // 489
-closure.summary.exposureExemptedGlyphs;        // 1974 — what the rule removed
+closure.summary.exposureExemptedGlyphs;        // 1997 — what the rule removed
 closure.unknownScriptTracks;                   // [] — unmeasured, never "clean"
 closure.violations[0];                         // { lessonId: "TE-C16-nelalu", count: 30, … }
 ```
@@ -411,7 +411,7 @@ hiding from the measurement. 489 lessons are one romanization away.
 
 Two numbers watch the exemption, not one. `exposureOnly` counts lessons the
 rule flipped to clean — 49. `exposureExemptedGlyphs` counts what it actually
-removed, including from lessons that violate anyway — **1,974**. The second is
+removed, including from lessons that violate anyway — **1,997**. The second is
 the one that matters: a lesson reporting five untaught glyphs while fifteen more
 were exempted is not a lesson with five problems, and a per-lesson count cannot
 see that. It is also the number that would move if an author started laundering

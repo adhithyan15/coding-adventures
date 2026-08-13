@@ -261,8 +261,14 @@ export function measureScriptClosure(lessons: ParsedLesson[]): ScriptClosureRepo
       // 931 becomes a burn-down target, because moving text into the headword
       // is the cheapest way to make the count fall without improving anything.
       if (headwordIsExposure) {
+        // The whole untaught headword set, not just its intersection with the
+        // body. Under the symmetric construction above, a non-exempt headword is
+        // ADDED to the load-bearing set -- so what the exemption removes is
+        // everything in that set, including glyphs that appear nowhere else in
+        // the lesson. Guarding on `bodyGlyphs` would suppress exactly the case
+        // whose omission was the bug fixed directly above it.
         for (const ch of headwordGlyphs) {
-          if (bodyGlyphs.has(ch) && !taught.has(ch)) track.exposureExemptedGlyphs += 1;
+          if (!taught.has(ch)) track.exposureExemptedGlyphs += 1;
         }
       }
 

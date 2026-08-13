@@ -52,7 +52,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   carry none. Each becomes exempt the moment somebody writes down how to say it —
   the rule names its own remediation, which is why it is the right one.
 - Two numbers watch the exemption rather than one. 49 lessons are clean *because
-  of* it; **1,974 glyphs** were removed by it, counting the ones it shaved off
+  of* it; **1,997 glyphs** were removed by it, counting the ones it shaved off
   lessons that violate anyway. The lesson count alone cannot see a lesson
   reporting five untaught glyphs while fifteen more were exempted, and the glyph
   count is what would move if an author started laundering script through the

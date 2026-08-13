@@ -50,7 +50,7 @@
   say it, which is a real improvement rather than a way to hide from the number.
 - Two numbers watch the exemption. `exposureOnly` counts lessons it flipped to
   clean (49); `exposureExemptedGlyphs` counts what it actually removed, including
-  from lessons that violate anyway (**1,974**). The lesson count alone cannot see
+  from lessons that violate anyway (**1,997**). The lesson count alone cannot see
   a lesson reporting five untaught glyphs while fifteen more were exempted.
 - A track whose declared script is unknown is reported as UNMEASURED by name,
   never skipped. Both "genuinely Latin" and "unrecognised" used to fall out of

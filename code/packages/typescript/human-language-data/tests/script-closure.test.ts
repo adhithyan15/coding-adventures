@@ -271,6 +271,20 @@ describe("the exemption's real size is reported, not just its lesson count", () 
     expect(report.summary.exposureOnly).toBe(0);
   });
 
+  it("counts a headword glyph that appears nowhere else in the lesson", () => {
+    // The mirror of the bug above. A non-exempt headword is ADDED to the
+    // load-bearing set, so what the exemption removes is the whole untaught
+    // headword -- including glyphs the body never repeats. Guarding on the body
+    // would suppress exactly the case whose omission was the first finding.
+    const report = measureScriptClosure([
+      lesson("TA-1", 10, {
+        headword: `${KA}${MA}`, romanization: "kama", body: "all romanized",
+      }),
+    ]);
+    expect(report.summary.violations).toBe(0);
+    expect(report.summary.exposureExemptedGlyphs).toBe(2);
+  });
+
   it("does not count a glyph as exempted once it has been taught", () => {
     const report = measureScriptClosure([
       lesson("TA-W1", 10, { type: "writing", body: `${KA}` }),

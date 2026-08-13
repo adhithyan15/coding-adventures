@@ -161,10 +161,16 @@ export function systemOf(ch: string): string | null {
  *
  * `systemOf` returns the FIRST match in map order, which is the right answer for
  * "what is this glyph" and the wrong one for "is this glyph mine".
- * `Script_Extensions` is set-valued: the shared Vedic and Indic combining marks
- * (U+0951, U+0952, U+1CD0, U+1CF4, U+A8E0) belong to Devanagari AND to Bengali,
- * Kannada, Malayalam, Tamil and Telugu at once, and `systemOf` attributes every
- * one of them to Devanagari because that is where the map happens to start.
+ * `Script_Extensions` is set-valued, and several marks a learner must read belong
+ * to many scripts at once. U+0951 and U+0952, the Vedic tone marks, carry
+ * Devanagari, Bengali, Gujarati, Gurmukhi, Kannada, Malayalam, Oriya, Tamil,
+ * Telugu and Grantha between them; U+1CD0 carries Devanagari, Bengali, Kannada
+ * and Grantha. `systemOf` attributes every one of them to Devanagari, because
+ * that is simply where the map happens to start.
+ *
+ * (Not every mark in that block is shared -- U+A8E0 is Devanagari alone. The
+ * membership is per-character, which is the reason to ask the regex rather than
+ * to keep a list.)
  *
  * In a non-Devanagari Indic track those marks would then be neither shown nor
  * load-bearing -- silently dropped, an undercount in exactly the abugidas the
