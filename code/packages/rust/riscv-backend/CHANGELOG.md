@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Added signature-aware direct-call argument lowering. Module calls stage
+  scalar and `i64`/`u64` pair values in the caller frame before loading
+  `a0` through `a7`, so ABI-register moves cannot overwrite a later argument.
+  Narrow CIR operations may consume the low word of an ABI-normalized wide
+  parameter, enabling Nib functions such as `add(left: u8, right: u8)` to run
+  end to end in the simulator.
 - Added module-local direct-call linking for zero-argument CIR calls.
   `compile_module` puts the entry function at address zero, patches `jal`
   targets after layout, and saves `ra` in every caller frame. `lang-aot` now
