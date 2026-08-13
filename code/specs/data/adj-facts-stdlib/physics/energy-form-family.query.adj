@@ -1,0 +1,20 @@
+% ============================================================================
+% energy-form-family.query.adj — a worked recall over the physics
+% energy-form-family library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "is chemical energy
+% potential or kinetic?": it states no physics fact of its own — it only
+% `import`s the grounded table and asks binding queries. The engine resolves
+% each `?` against the `energy_form_family` rows and returns the family + the
+% table's source/locator/trust. A form the source does not classify abstains
+% honestly — the engine never invents a family.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli energy-form-family.query.adj
+% ============================================================================
+
+import "energy-form-family.adj"
+
+? energy_form_family(chemical, $Family)   % expect potential
+? energy_form_family($Form, kinetic)      % reverse bind — expect one of: radiant, thermal, motion, electrical
+? energy_form_family(sound, $Family)      % expect abstain — sound energy is not one of energy-forms.adj's eight tabled forms
