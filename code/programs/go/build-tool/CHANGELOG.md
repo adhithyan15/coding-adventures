@@ -6,6 +6,39 @@ All notable changes to the Go build tool will be documented in this file.
 
 ### Added
 
+- **Reject BUILD commands that silently run less than they say.** A BUILD file
+  is not a shell script: `discovery.readLines` splits it on newlines and the
+  executor runs each line as its own shell invocation, so a line-continuation
+  character truncates the command instead of continuing it. The failure was
+  silent and partial — `lang-aot`'s first BUILD wrapped one `cargo test` over 40
+  lines, so CI ran only the bare `cargo test -p lang-aot --lib` head (15 tests
+  instead of the ~1200 in the 39 listed targets) and then failed 40 bogus
+  commands with `sh: --: invalid option`. Every listed target looked watched;
+  none were. `validateNoSilentlyTruncatedCommands` now rejects two shapes:
+
+  - A trailing continuation character, chosen by the shell that will actually
+    run the line rather than by the validating host — `cmd /C` for
+    `BUILD_windows` (continuation `^`, where `\` is the PATH SEPARATOR) and
+    `sh -c` for everything else. Applying the `sh` rule everywhere would have
+    rejected three correct Perl `BUILD_windows` lines ending `prove -l -v t\`
+    and taken the Windows CI gate down with them.
+  - A trailing bare `&`. `sh -c 'false &'` exits 0 — the command is backgrounded
+    and its real status discarded, so a failing build is recorded as passing.
+    `&&`, `|` and unbalanced quotes are all loud, so `&` was the only other
+    quiet shape.
+
+  Diagnostics quote the offending command rather than an index into
+  `BuildCommands`, which is the comment-stripped list and not the file line.
+  Verified against all 8280 BUILD and BUILD_windows files: zero trip the rules.
+
+### Fixed
+
+- **A Starlark BUILD that declares no targets is no longer labelled Starlark.**
+  On that path `BuildCommands` is still the raw file lines, which the executor
+  runs through the shell exactly as for a shell BUILD, so keeping `IsStarlark`
+  set exempted them from the validator's shell-shape checks. It now falls back
+  the same way the eval-error path already did.
+
 - **Canonical discovery identity registry.** Go discovery now consumes the
   shared language-registry and duplicate-identity fixtures, recognizes every
   canonical package/program bucket including Mosaic, Twig, OCaml, and retained

@@ -901,3 +901,132 @@ prove -l -I../draw-instructions/lib -v t/
 		t.Fatalf("expected Perl bootstrap warning, got %v", err)
 	}
 }
+
+// A BUILD file is not a shell script: `discovery.readLines` splits it on
+// newlines and each line runs as its own `sh -c`. A trailing backslash
+// therefore truncates the command silently rather than continuing it — the
+// shape that made lang-aot's BUILD run 15 lib tests while appearing to watch
+// 39 test targets. It must be rejected, not quietly executed.
+func TestValidateBuildFilesRejectsBackslashLineContinuation(t *testing.T) {
+	pkgs := makePackages(t, []struct {
+		name     string
+		relPath  string
+		lang     string
+		commands []string
+	}{
+		{
+			name:    "rust/wrapped",
+			relPath: "code/packages/rust/wrapped",
+			lang:    "rust",
+			commands: []string{
+				`cargo test -p wrapped --lib \`,
+				`--test alpha \`,
+				`--test beta`,
+			},
+		},
+	})
+
+	err := ValidateBuildFiles(pkgs, graphWithEdges())
+	if err == nil {
+		t.Fatal("expected a backslash-continued BUILD command to be rejected, got nil")
+	}
+	if !strings.Contains(err.Error(), "line-continuation") {
+		t.Fatalf("error should name the continuation as the problem, got %v", err)
+	}
+}
+
+// A trailing bare `&` backgrounds the command: `sh -c 'false &'` exits 0, so a
+// failing build is recorded as passing. Same silent-green class as the
+// continuation, so it is rejected the same way. `&&` is a normal separator and
+// must NOT be caught.
+func TestValidateBuildFilesRejectsTrailingBackgroundAmpersand(t *testing.T) {
+	pkgs := makePackages(t, []struct {
+		name     string
+		relPath  string
+		lang     string
+		commands []string
+	}{
+		{
+			name:     "rust/backgrounded",
+			relPath:  "code/packages/rust/backgrounded",
+			lang:     "rust",
+			commands: []string{`cargo test -p backgrounded &`},
+		},
+	})
+
+	err := ValidateBuildFiles(pkgs, graphWithEdges())
+	if err == nil {
+		t.Fatal("expected a backgrounded BUILD command to be rejected, got nil")
+	}
+	if !strings.Contains(err.Error(), "exit status") {
+		t.Fatalf("error should explain the discarded exit status, got %v", err)
+	}
+}
+
+// The guard keys on the trailing continuation of an executed command. Comment
+// lines never become commands (readLines drops them), and `&&` is an ordinary
+// separator — neither may trip it.
+func TestValidateBuildFilesAllowsPlainSingleLineCommands(t *testing.T) {
+	pkgs := makePackages(t, []struct {
+		name     string
+		relPath  string
+		lang     string
+		commands []string
+	}{
+		{
+			name:     "rust/flat",
+			relPath:  "code/packages/rust/flat",
+			lang:     "rust",
+			commands: []string{`cargo test -p flat --lib --test alpha --test beta`},
+		},
+		{
+			name:     "rust/chained",
+			relPath:  "code/packages/rust/chained",
+			lang:     "rust",
+			commands: []string{`cargo build && cargo test -p chained`},
+		},
+	})
+
+	if err := ValidateBuildFiles(pkgs, graphWithEdges()); err != nil {
+		t.Fatalf("expected single-line commands to pass, got %v", err)
+	}
+}
+
+// The continuation character belongs to the shell that will run the line, not
+// to the host doing the validating. `cmd /C` continues with `^` and treats `\`
+// as the path separator — three real Perl BUILD_windows files end their command
+// `prove -l -v t\`, so applying the sh rule there would reject correct code and
+// break the Windows CI gate. This is host-independent on purpose: the macOS and
+// Linux runners must still prove the Windows branch is right.
+func TestContinuationCharFollowsTheShellNotTheHost(t *testing.T) {
+	cases := []struct {
+		buildFile        string
+		wantContinuation string
+	}{
+		{"code/packages/rust/x/BUILD", `\`},
+		{"code/packages/perl/hmac/BUILD_windows", "^"},
+		{`code\packages\perl\hmac\BUILD_windows`, "^"},
+	}
+	for _, c := range cases {
+		got, _ := continuationCharForBuildFile(c.buildFile)
+		if got != c.wantContinuation {
+			t.Errorf("%s: continuation = %q, want %q", c.buildFile, got, c.wantContinuation)
+		}
+	}
+}
+
+// The concrete regression: the real Perl BUILD_windows command must pass under
+// the cmd rule, and would fail under the sh rule.
+func TestWindowsPathSeparatorIsNotAContinuation(t *testing.T) {
+	const cmd = `set "PERL5LIB=lib;..\hyperloglog\lib;%PERL5LIB%" && prove -l -v t\`
+
+	continuation, _ := continuationCharForBuildFile("code/packages/perl/hmac/BUILD_windows")
+	if strings.HasSuffix(strings.TrimSpace(cmd), continuation) {
+		t.Fatalf("a trailing Windows path separator must not read as a continuation: %q", cmd)
+	}
+
+	shContinuation, _ := continuationCharForBuildFile("code/packages/perl/hmac/BUILD")
+	if !strings.HasSuffix(strings.TrimSpace(cmd), shContinuation) {
+		t.Fatal("guard is not proving anything: this command should trip the sh rule")
+	}
+}

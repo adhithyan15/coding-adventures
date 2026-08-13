@@ -29,10 +29,18 @@
 // their matching CI runner; suppress the host-specific dead_code noise here.
 #![allow(dead_code)]
 
-// `Write` is only needed by the `writeln!` calls inside the Windows-gated
-// tests below, so importing it unconditionally is an unused import on every
-// other host (and `-D warnings` is a blocking CI gate).
-#[cfg(target_os = "windows")]
+// `Write` is needed by the `writeln!` calls in the OS-gated fixture writers
+// below — and there are TWO sets of them, Windows AND Linux. Importing it
+// unconditionally is an unused import on macOS, and `-D warnings` is a blocking
+// CI gate; but gating it to Windows alone (the first attempt) broke the Linux
+// build outright, because `writeln!` needs the trait in scope there too:
+//
+//     error[E0599]: cannot write into `std::fs::File`
+//     help: trait `Write` ... is implemented but not in scope
+//
+// That went unnoticed because `lang-aot` had no BUILD file, so CI never
+// compiled these targets. The cfg must name every platform that writes.
+#[cfg(any(target_os = "windows", target_os = "linux"))]
 use std::io::Write;
 use std::process::Command;
 
