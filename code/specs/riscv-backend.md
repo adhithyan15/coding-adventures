@@ -83,7 +83,7 @@ the RISC-V spec. Per-function byte streams can be concatenated directly;
 | `InvalidOperand(String)` | Malformed CIR operands or destinations |
 | `UndefinedVariable(String)` | A variable has no allocated source register |
 | `ImmediateOutOfRange(i64)` | A compatibility `i64` literal cannot fit in RV32 |
-| `OutOfRegisters` | Linear allocator exhausted its six value registers |
+| `OutOfRegisters` | A wide register-pair allocation cannot fit the starter pool |
 | `TooManyArguments(usize)` | More than eight starter-ABI parameters or arguments |
 | `ExecutionDidNotHalt` | Simulator step limit was exceeded |
 
@@ -91,9 +91,8 @@ the RISC-V spec. Per-function byte streams can be concatenated directly;
 
 Focused tests pin the Twig `42` byte sequence, execute its actual `lang-aot`
 output through the simulator, and cover arithmetic, comparisons, 32-bit
-literals, narrow integer masking, starter-ABI parameters, unsupported wide
-arithmetic, unsupported calls, temporary exhaustion, and bounded simulator
-execution.
+literals, narrow integer masking, starter-ABI parameters, scalar stack spills,
+unsupported wide arithmetic, unsupported calls, and bounded simulator execution.
 
 ## Executable scalar core
 
@@ -139,15 +138,17 @@ implemented.
    source-to-RISC-V-simulator fixture to keep that end-to-end path covered.
 13. [x] **Nib modulo frontend:** `%` lowers to typed `mod`, with a
    source-to-RISC-V-simulator fixture.
-14. [ ] **Register allocation:** spill live values to stack slots and emit a proper
-   frame, removing the six-temporary limit.
-15. [ ] **Calls and modules:** lower direct calls, add relocations/linking for flat
+14. [x] **Scalar register allocation:** spill live RV32 values to stack slots and
+   emit a frame, removing the six-temporary limit for scalar CIR.
+15. [ ] **Wide register allocation:** spill live 64-bit register pairs and add
+   pair-aware reloads, extending the scalar frame allocator to wide CIR values.
+16. [ ] **Calls and modules:** lower direct calls, add relocations/linking for flat
    binaries, and preserve the RISC-V calling convention across calls.
-16. [ ] **Host runtime ABI:** define simulator `ecall` services for exit and integer
+17. [ ] **Host runtime ABI:** define simulator `ecall` services for exit and integer
    output, then lower language print primitives through that ABI.
-17. [ ] **Memory and data:** globals, addresses, loads/stores, and a data-image
+18. [ ] **Memory and data:** globals, addresses, loads/stores, and a data-image
    loader for programs needing strings or arrays.
-18. [ ] **BASIC real values:** Dartmouth BASIC currently lowers numeric values
+19. [ ] **BASIC real values:** Dartmouth BASIC currently lowers numeric values
    such as `PRINT 42` through `f64`; direct RISC-V execution needs either a
    floating-point ABI or an integer-only lowering path before those programs
    can run on the simulator.

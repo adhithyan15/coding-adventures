@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Added scalar register spilling: live values evict to aligned `sp`-relative
+  stack slots, reload through dedicated operand registers, and restore the
+  frame on every return. The simulator fixture now executes seven live scalar
+  values and returns their sum instead of failing after six temporaries.
 - Added scalar RV32M `div` / `divu` / `rem` / `remu` lowering and pair-aware
   restoring `div_u64` / `mod_u64` lowering, including cross-word and
   zero-divisor simulator fixtures.
