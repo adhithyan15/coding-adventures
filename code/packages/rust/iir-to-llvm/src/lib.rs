@@ -1352,12 +1352,37 @@ fn collect_global_types(
             let Some(Operand::Str(name)) = instr.srcs.first() else {
                 continue;
             };
+            // A global's storage type comes from the INSTRUCTION's type hint on
+            // both sides. The store arm used to take it from the stored VALUE's
+            // register instead, which disagrees whenever a narrower value is
+            // written into a wider slot — exactly what Nib and Oct do:
+            //
+            //     global_load  [Str("counter")] -> _n0 : i64     (hint i64)
+            //     add          [_n0, step]      -> _n1 : u8      (value is u8)
+            //     global_store [Str("counter"), _n1] : i64       (hint i64)
+            //
+            // Both hints already say `i64`; only the value was narrower, and
+            // deriving the slot from it produced "global \"counter\" has
+            // incompatible LLVM storage types i64 and i8" and refused the module.
+            // The declared hint is the authority — the value is coerced to it at
+            // the store (see the `global_store` lowering) — so read it there too.
             let ty = if instr.op == "global_load" {
                 llvm_type_for(&instr.type_hint, &func.name)?
             } else {
-                match instr.srcs.get(1) {
-                    Some(Operand::Var(value)) => registers.get(value.as_str()).copied().unwrap_or("i64"),
-                    _ => "i64",
+                // A `global_store` produces no value, so some frontends type it
+                // `void` — that names no storage. Use the hint when it names a
+                // real value type (Nib/Oct say `i64`), and only then fall back to
+                // the stored value's register.
+                let hinted = llvm_type_for(&instr.type_hint, &func.name)?;
+                if hinted == "void" {
+                    match instr.srcs.get(1) {
+                        Some(Operand::Var(value)) => {
+                            registers.get(value.as_str()).copied().unwrap_or("i64")
+                        }
+                        _ => "i64",
+                    }
+                } else {
+                    hinted
                 }
             };
             if let Some(previous) = types.insert(name.clone(), ty) {
