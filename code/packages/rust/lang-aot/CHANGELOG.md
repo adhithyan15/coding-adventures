@@ -1,5 +1,10 @@
 # Changelog — `lang-aot`
 
+## 0.225.10 - 2026-08-13 (ALGOL idempotent while dependencies)
+
+The seven-backend ALGOL matrix now proves that an exact scalar self-assignment
+does not invalidate a stable local dependency of capped `while` analysis.
+
 ## 0.225.9 - 2026-08-13 (ALGOL real while-control snapshots)
 
 The seven-backend ALGOL matrix now proves that capped binary64 `while` control
