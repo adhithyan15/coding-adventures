@@ -1,0 +1,20 @@
+% ============================================================================
+% simple-machine-alt-example.query.adj — a worked recall over the physics
+% simple-machine-alt-example library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what's another example
+% of a lever?": it states no physics fact of its own — it only `import`s the
+% grounded table and asks binding queries. The engine resolves each `?`
+% against the `simple_machine_alt_example` rows and returns the alternate
+% example + the table's source/locator/trust. A machine the cited spans give
+% no second example for abstains honestly — the engine never invents one.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli simple-machine-alt-example.query.adj
+% ============================================================================
+
+import "simple-machine-alt-example.adj"
+
+? simple_machine_alt_example(lever, $AltEx)     % expect scissors
+? simple_machine_alt_example($M, stairs)        % reverse bind — expect inclined_plane
+? simple_machine_alt_example(screw, $AltEx)     % expect abstain — screw's own first-listed example ("screw") is not a distinct everyday object, and its second ("bottle caps") is already simple-machines.adj's primary row

@@ -1,0 +1,76 @@
+% ============================================================================
+% simple-machine-alt-example — for the simple machines where NASA lists a
+% SECOND everyday example, that second example (adj-facts-stdlib, PHYSICS).
+% ============================================================================
+% A sibling to the already-shipped `simple-machines.adj`
+% (`simple_machine_example(machine, example)`, ONE everyday example per
+% simple machine): a new `simple_machine_alt_example(machine, alt_example)`
+% table names the SECOND everyday example the SAME already-cited NASA
+% educator-notes page lists for a machine, decoded from spans already sitting
+% unused inside `simple-machines.adj`'s own header and provenance block — no
+% new WebFetch. That table's `example` column has room for only the FIRST
+% everyday example; the SAME already-quoted NASA sentences also name a
+% second everyday object for five of the six machines that never made it
+% into a row:
+%
+%   lever → scissors
+%     "Lever: ... (examples: seesaw, scissors)"
+%   inclined_plane → stairs
+%     "Inclined Plane: ... (examples: ramp, stairs)"
+%   wedge → knife
+%     "Wedge: ... (examples: door stop, knife)"
+%   wheel_and_axle → clock
+%     "Wheel and axle: ... (examples: bicycle, clock)"
+%   pulley → water_well
+%     "Pulley: ... (examples: elevator, water well)"
+%
+% Recall is a binding query:
+%
+%     ? simple_machine_alt_example(lever, $AltEx)      % scissors
+%
+% This is a native `table` (ADJ-TABLES RS-5, a TWO-column table like
+% `simple-machines.adj`'s own `simple_machine_example`): each `row` lowers to
+% a ground relation `simple_machine_alt_example(machine, alt_example)`
+% carrying the citation, so the lookup above is the ordinary SLD binding
+% query — the engine returns the alternate example WITH its source, on the
+% CPU, with zero model calls, and abstains on `screw` (the machine's own
+% `simple-machines.adj` row already uses NASA's SECOND listed example,
+% "bottle caps", as the primary example — because the FIRST listed example
+% for screw is literally the word "screw" itself, not a distinct everyday
+% object — so screw has no unused second example left to decode here).
+%
+% Only FIVE of `simple-machines.adj`'s six machines have a genuinely
+% second, distinct everyday example in the ALREADY-cited spans; this table
+% is deliberately narrow rather than inventing an example the source does
+% not state. The query also runs BACKWARD — bind an alternate example and
+% recall which machine it is an instance of:
+%
+%     ? simple_machine_alt_example($M, stairs)   % inclined_plane
+%
+% Provenance: reproduces, byte-for-byte, the SAME lever span already quoted
+% inside `simple-machines.adj`'s own provenance block, from the SAME NASA
+% Next Gen STEM "Simple Machines" classroom-connection educator notes that
+% table already cites — no new WebFetch, only a different schema decoding a
+% part of each already-verified quote. An ADJ `table` carries ONE provenance
+% envelope (per `simple-machines.adj`'s own convention), so
+% `source`/`locator`/`trust` below hold the lever span; the other four rows'
+% own spans are listed above for independent auditability. `trust
+% authoritative` — the same tier `simple-machines.adj` already carries (a
+% primary U.S. government NASA education page).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table simple_machine_alt_example {
+    columns machine, alt_example
+
+    row (lever, scissors)
+    row (inclined_plane, stairs)
+    row (wedge, knife)
+    row (wheel_and_axle, clock)
+    row (pulley, water_well)
+
+    source "Lever: uses a surface situated on a fulcrum (pivoting point) to move an object (examples: seesaw, scissors)"
+    locator "https://www.nasa.gov/wp-content/uploads/2022/06/simple_machines_classroom_connection_508.pdf"
+    trust authoritative
+}
