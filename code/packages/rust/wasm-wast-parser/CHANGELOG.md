@@ -95,6 +95,26 @@ uses, so the two passes can no longer silently disagree on where the
 leading region ends. 1 more regression test reproducing the reordered
 bypass directly.
 
+**A fourth (final) round of security review, after re-verifying the
+round-3 fix genuinely closed the OOB class, found a functional
+regression the mismatch check itself had introduced**: it compared
+against `param_count`'s `0` fallback for an out-of-range numeric `(type
+N)` reference, silently violating this file's own documented contract
+(`func_with_out_of_range_numeric_type_reference_does_not_panic`) that an
+unresolvable type reference must NOT be rejected here — that's
+`wasm-validator`'s job. `(func (type 0) (param i32))` — ordinary,
+spec-legal literal params alongside an unresolvable type index — got
+hard-rejected instead of passed through. Fixed by gating the check on
+the type reference actually resolving to a real type first. Also
+extracted `count_literal_param` (the named-vs-unnamed param-counting
+arithmetic) as a single function shared by the pre-scan and the main
+loop, the same way `is_leading_field` already is — the review flagged
+two independently-maintained copies of that arithmetic as exactly the
+drift pattern that produced rounds 2 and 3's findings, even though the
+two copies were still identical today. 2 more regression tests: the
+false-positive case now confirmed fixed, plus the legitimate
+"out-of-range type, no literal params" case re-confirmed unaffected.
+
 ## 0.1.1 — 2026-08-13 — 4 grammar bugs found running the real testsuite (W05 PR-4)
 
 `wasm-conformance` (W05 PR-4) is this crate's first real workout: running

@@ -545,6 +545,32 @@ fn resolve_func_signature_ref(desc_rest: &[SExpr], ctx: &mut ModuleCtx) -> Resul
     Ok(dedup_type(&mut ctx.module, ty))
 }
 
+/// Whether `f` belongs to a WASM function's leading `param`/`result`/
+/// `type`/`local` region -- shared verbatim by `build_func`'s mismatch
+/// pre-scan and its main index-assignment loop so the two can never
+/// silently disagree on where that region ends (a round-3 security
+/// review found they'd drifted apart once already).
+fn is_leading_field(f: &SExpr) -> bool {
+    f.is_keyword_list("param") || f.is_keyword_list("result") || f.is_keyword_list("type") || f.is_keyword_list("local")
+}
+
+/// Count how many params one `(param ...)` s-expression's `items` (the
+/// full list, including the leading `"param"` atom) declares, and the
+/// name of the ONE it declares if it's the named form -- `(param $x i32)`
+/// is a single named param (a name + its type), not two; `(param i32
+/// i32)` is two unnamed ones. Shared by `build_func`'s mismatch pre-scan
+/// and its main index-assignment loop for the same reason `is_leading_field`
+/// is: a round-4 security review flagged two independently-maintained
+/// copies of this same arithmetic as exactly the kind of drift that
+/// produced this bug's first two rounds.
+fn count_literal_param(items: &[SExpr]) -> (u32, Option<String>) {
+    if items.len() == 3 && items[1].as_atom().is_some_and(|s| s.starts_with('$')) {
+        (1, Some(items[1].as_atom().unwrap().to_string()))
+    } else {
+        ((items.len() - 1) as u32, None)
+    }
+}
+
 fn build_func(fields: &[SExpr], ctx: &mut ModuleCtx, func_idx: usize) -> Result<(), WastParseError> {
     // Inline export shorthand: `(func $f (export "e") ...)`.
     let (after_export, _) = handle_inline_export(fields, "func", func_idx, ctx)?;
@@ -571,15 +597,27 @@ fn build_func(fields: &[SExpr], ctx: &mut ModuleCtx, func_idx: usize) -> Result<
     // present) to capture their OPTIONAL `$name`s at the correct
     // POSITIONAL index, which is unaffected by this fix either way.
     //
-    // `.get()`, not direct indexing: an out-of-range numeric `(type N)`
-    // reference (no `(type ...)` section entry at all) is a real, already
+    // `resolved_type` is `None` for an out-of-range numeric `(type N)`
+    // reference (no `(type ...)` section entry at all) -- a real, already
     // regression-tested case (`func_with_out_of_range_numeric_type_reference_does_not_panic`)
-    // this text-level parser deliberately does NOT reject -- bounds-checking
-    // a type index is `wasm-validator`'s job, not this parser's. Falling
-    // back to 0 here just means this already-structurally-invalid module's
-    // local indices come out the same (wrong) way they always did; it will
-    // fail validation regardless, for the missing type, not for this.
-    let param_count = ctx.module.types.get(type_idx as usize).map(|t| t.params.len()).unwrap_or(0) as u32;
+    // this text-level parser deliberately does NOT reject: bounds-checking
+    // a type index is `wasm-validator`'s job, not this parser's, and this
+    // already-structurally-invalid module will fail validation regardless,
+    // for the missing type, not for anything computed here. `param_count`
+    // falls back to 0 for local-index purposes in that case (unaffected
+    // either way, since there's no real type to disagree with).
+    //
+    // A round-4 security review found the mismatch check just below this
+    // had DRIFTED from that same documented contract: it compared against
+    // `param_count`'s 0-fallback too, so `(func (type 0) (param i32))`
+    // with NO `(type ...)` section at all got hard-rejected at parse time
+    // instead of the "still parses, fails validation instead" behavior
+    // the crate promises for an out-of-range type index. Gating the check
+    // on `resolved_type.is_some()` restores that contract: an unresolvable
+    // type reference is `wasm-validator`'s problem either way, never this
+    // check's.
+    let resolved_type = ctx.module.types.get(type_idx as usize);
+    let param_count = resolved_type.map(|t| t.params.len()).unwrap_or(0) as u32;
 
     // Reject a func that gives BOTH an explicit `(type $sig)` reference
     // AND its own literal `(param ...)` forms whose arity disagrees with
@@ -602,31 +640,23 @@ fn build_func(fields: &[SExpr], ctx: &mut ModuleCtx, func_idx: usize) -> Result<
     // this scan stop early, undercounting `literal_param_count` (or never
     // even setting `saw_literal_param`) and silently skipping the check
     // below -- while the main loop still processed those later params,
-    // seeding `next_local` from a stale, too-small count. This is `is_leading_field`
-    // below, shared verbatim by both this pre-scan and (implicitly, by
-    // using the identical four-keyword test) the main loop's own
-    // `else if`/`else { break }` structure, so the two can no longer
-    // silently disagree on where the leading region ends.
-    fn is_leading_field(f: &SExpr) -> bool {
-        f.is_keyword_list("param") || f.is_keyword_list("result") || f.is_keyword_list("type") || f.is_keyword_list("local")
-    }
+    // seeding `next_local` from a stale, too-small count. `is_leading_field`
+    // below is shared verbatim by both this pre-scan and the main loop's
+    // own `else if`/`else { break }` structure, so the two can no longer
+    // silently disagree on where the leading region ends. `count_literal_param`
+    // is likewise the SAME function both this pre-scan and the main loop
+    // call for the named-vs-unnamed counting logic, for the same reason:
+    // two independently-maintained copies of "the same" arithmetic is
+    // exactly the pattern that produced this bug's first two rounds.
     let mut literal_param_count = 0u32;
     let mut saw_literal_param = false;
     for f in fields.iter().take_while(|f| is_leading_field(f)) {
         if f.is_keyword_list("param") {
             saw_literal_param = true;
-            let items = f.as_list().unwrap();
-            // `(param $x i32)` is ONE named param (a name + its type), not
-            // two -- matches the identical named-vs-unnamed distinction
-            // the main loop below makes when it actually assigns indices.
-            if items.len() == 3 && items[1].as_atom().is_some_and(|s| s.starts_with('$')) {
-                literal_param_count += 1;
-            } else {
-                literal_param_count += (items.len() - 1) as u32;
-            }
+            literal_param_count += count_literal_param(f.as_list().unwrap()).0;
         }
     }
-    if saw_literal_param && literal_param_count != param_count {
+    if resolved_type.is_some() && saw_literal_param && literal_param_count != param_count {
         return Err(WastParseError::TypeUseParamCountMismatch {
             pos: fields.first().map(|f| f.pos()).unwrap_or(0),
             declared: literal_param_count as usize,
@@ -643,13 +673,11 @@ fn build_func(fields: &[SExpr], ctx: &mut ModuleCtx, func_idx: usize) -> Result<
     let mut instr_start = 0usize;
     for (i, f) in fields.iter().enumerate() {
         if f.is_keyword_list("param") {
-            let items = f.as_list().unwrap();
-            if items.len() == 3 && items[1].as_atom().is_some_and(|s| s.starts_with('$')) {
-                local_names.insert(items[1].as_atom().unwrap().to_string(), param_position);
-                param_position += 1;
-            } else {
-                param_position += (items.len() - 1) as u32;
+            let (count, name) = count_literal_param(f.as_list().unwrap());
+            if let Some(name) = name {
+                local_names.insert(name, param_position);
             }
+            param_position += count;
             instr_start = i + 1;
         } else if f.is_keyword_list("result") || f.is_keyword_list("type") {
             instr_start = i + 1;
@@ -1648,6 +1676,27 @@ mod tests {
             result,
             Err(WastParseError::TypeUseParamCountMismatch { declared: 3, referenced: 1, .. })
         ));
+    }
+
+    /// A FOURTH round of security review found the `TypeUseParamCountMismatch`
+    /// check itself had drifted from this file's own documented contract:
+    /// an out-of-range numeric `(type N)` reference (no `(type ...)`
+    /// section entry at all) must NOT be rejected here -- see
+    /// `func_with_out_of_range_numeric_type_reference_does_not_panic`
+    /// above, which is this exact promise, already regression-tested for
+    /// the no-literal-params case. But `(func (type 0) (param i32))`
+    /// (ordinary, spec-legal literal params, alongside an unresolvable
+    /// type reference) compared against `param_count`'s `0` FALLBACK for
+    /// the missing type and got hard-rejected -- a real functional
+    /// regression, not a security bug (it only makes the parser MORE
+    /// conservative), but still a false positive against input this
+    /// crate's own design says it should still accept and pass through to
+    /// `wasm-validator`. Fixed by gating the check on the type reference
+    /// actually having resolved to a real type in the first place.
+    #[test]
+    fn out_of_range_type_reference_with_ordinary_literal_params_still_does_not_panic_or_reject() {
+        let result = parse_module("(module (func (type 0) (param i32)))");
+        assert!(result.is_ok());
     }
 
     #[test]
