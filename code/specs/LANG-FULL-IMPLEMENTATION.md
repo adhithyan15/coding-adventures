@@ -912,8 +912,8 @@ backend immediately) come before the enabler-dependent items.
   unknown expressions, rounded-away real progress, and nonterminating or
   longer loops leave the final controlled value unknown. Exact supported
   standard-function calls may wrap these dependencies in the value or
-  predicate; user declarations still shadow the built-ins and make that call
-  dynamic.
+  loop predicate or a statically selected body predicate; user declarations
+  still shadow the built-ins and make that call dynamic.
   Known comparison leaves
   compose through `not`, `and`, `or`, `impl`, and `eqv`; bare literals,
   including direct `true` and `false`, compose through those operators;

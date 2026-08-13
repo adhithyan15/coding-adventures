@@ -5319,11 +5319,9 @@ impl Compiler {
                     .any(|token| token.effective_type_name() == "NAME")
             });
             let stable_scalar_condition = condition.is_some_and(|condition| {
-                let dependencies: HashSet<String> = recursive_tokens(condition)
-                    .into_iter()
-                    .filter(|token| token.effective_type_name() == "NAME")
-                    .map(|token| token.value.clone())
-                    .collect();
+                let Some(dependencies) = self.static_predicate_dependencies(condition) else {
+                    return false;
+                };
                 !dependencies.is_empty()
                     && dependencies.iter().all(|dependency| {
                         dependency != target_name
@@ -5392,6 +5390,46 @@ impl Compiler {
         direct_nodes(node)
             .into_iter()
             .any(|child| self.for_body_writes_name(child, name, target_name, effect_root))
+    }
+
+    fn static_predicate_dependencies(&self, node: &GrammarASTNode) -> Option<HashSet<String>> {
+        let mut dependencies = HashSet::new();
+        self.collect_static_predicate_dependencies(node, &mut dependencies)?;
+        Some(dependencies)
+    }
+
+    fn collect_static_predicate_dependencies(
+        &self,
+        node: &GrammarASTNode,
+        dependencies: &mut HashSet<String>,
+    ) -> Option<()> {
+        let call_name = (node.rule_name == "proc_call")
+            .then(|| {
+                direct_tokens(node)
+                    .into_iter()
+                    .find(|token| token.effective_type_name() == "NAME")
+                    .map(|token| token.value.clone())
+            })
+            .flatten();
+        if let Some(name) = &call_name {
+            let target = self.resolve_procedure_identity(name);
+            if self.proc_sigs.contains_key(&target) || !is_supported_standard_function(&target) {
+                return None;
+            }
+        }
+        dependencies.extend(
+            direct_tokens(node)
+                .into_iter()
+                .filter(|token| {
+                    token.effective_type_name() == "NAME"
+                        && call_name.as_deref() != Some(token.value.as_str())
+                })
+                .map(|token| token.value.clone()),
+        );
+        for child in direct_nodes(node) {
+            self.collect_static_predicate_dependencies(child, dependencies)?;
+        }
+        Some(())
     }
 
     fn static_boolean_value(&self, node: &GrammarASTNode) -> Option<bool> {
@@ -9400,6 +9438,15 @@ mod tests {
     }
 
     #[test]
+    fn al4_static_while_selects_stable_standard_function_body_predicate() {
+        compile_source(
+            "begin integer i, n, guard; n := 3; guard := -1; i := 0; for i := i + 1 while i < n do if abs(guard) = 0 then n := n + 1; print(i + 0.25) end",
+            "test",
+        )
+        .expect("a supported standard function may wrap a stable body predicate dependency");
+    }
+
+    #[test]
     fn al4_static_while_preserves_standard_function_dependency() {
         compile_source(
             "begin integer i, n; n := -3; i := 0; for i := i + 1 while i < abs(n) do print(''); print(i + 0.25) end",
@@ -9475,6 +9522,16 @@ mod tests {
             "test",
         )
         .expect_err("a scalar predicate dependency written by the body may change its branch");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_user_function_body_predicate_remains_conservative() {
+        let err = compile_source(
+            "begin integer procedure abs(x); value x; integer x; abs := 1; integer i, n, guard; n := 3; guard := -1; i := 0; for i := i + 1 while i < n do if abs(guard) = 0 then n := n + 1; print(i + 0.25) end",
+            "test",
+        )
+        .expect_err("a user function body predicate is not statically pure");
         assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
