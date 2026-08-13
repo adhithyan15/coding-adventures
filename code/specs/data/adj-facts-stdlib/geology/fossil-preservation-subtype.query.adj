@@ -1,0 +1,23 @@
+% ============================================================================
+% fossil-preservation-subtype.query.adj — a worked recall over the geology
+% fossil-preservation-subtype library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what kind of cast is a
+% steinkern?": it states no earth-science fact of its own — it only
+% `import`s the grounded table and asks binding queries. The engine resolves
+% each `?` against the `fossil_preservation_subtype` rows and returns the
+% parent type + description + the table's source/locator/trust. The second
+% query runs the relation BACKWARD (bind the parent type `cast`, recall
+% which sub-category belongs to it — steinkern). A peer-level type from the
+% parent table (`mold`) is not itself a sub-category, so a recall on it
+% abstains honestly — the engine never invents a sub-category relationship.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli fossil-preservation-subtype.query.adj
+% ============================================================================
+
+import "fossil-preservation-subtype.adj"
+
+? fossil_preservation_subtype(steinkern, $ParentType, $Description)  % expect cast, ...
+? fossil_preservation_subtype($Subtype, cast, $Description)          % reverse bind — expect steinkern
+? fossil_preservation_subtype(mold, $ParentType, $Description)       % expect abstain — mold is a peer type, not a subtype

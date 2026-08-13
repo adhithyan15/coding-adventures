@@ -1,0 +1,67 @@
+% ============================================================================
+% fossil-preservation-subtype — a named SUB-CATEGORY of one of
+% `fossil-preservation-type.adj`'s three preservation structures, where the
+% same source defines one (adj-facts-stdlib, GEOLOGY).
+% ============================================================================
+% A sibling to the already-shipped `fossil-preservation-type.adj`
+% (`fossil_preservation_type(type, description)`, THREE peer-level
+% preservation structures: mold, cast, trace_fossil): a new
+% `fossil_preservation_subtype(subtype, parent_type, description)` table
+% names a SPECIFIC KIND of one of those three structures, decoded from a
+% span already sitting unused inside that table's own header — no new
+% WebFetch. `fossil-preservation-type.adj`'s header already quotes, in full,
+% the National Park Service's own definition of a `steinkern`, but
+% deliberately does not table it as a fourth peer-level row: the SAME source
+% page frames a steinkern as a SPECIFIC KIND of `cast` (an internal cast),
+% not a fourth preservation structure standing alongside mold/cast/
+% trace_fossil. That is a classificatory/scope decision, not a correctness
+% one — the fact is fully grounded, it just does not fit that table's
+% single-axis schema. This table gives it its own axis: subtype → parent
+% type.
+%
+% Recall is a binding query:
+%
+%     ? fossil_preservation_subtype(steinkern, $ParentType, $Description)
+%       % cast, stony_cast_of_the_interior_of_a_shell_or_other_hollow_organic_structure_made_by_sediment_infilling
+%
+% This is a native `table` (ADJ-TABLES RS-5, a THREE-column table like
+% `animal-baby-sex.adj`'s own `animal_baby_sex`): each `row` lowers to a
+% ground relation `fossil_preservation_subtype(subtype, parent_type,
+% description)` carrying the citation, so the lookup above is the ordinary
+% SLD binding query — the engine returns the parent type and description
+% WITH the source, on the CPU, with zero model calls, and abstains on a
+% term that is not itself a named sub-category (`mold`, `cast`, and
+% `trace_fossil` are the three PEER types this table's parent already
+% covers — recalling them here, rather than as a subtype, honestly
+% abstains, since none of them is itself a sub-category of another).
+%
+% The query also runs BACKWARD — bind a parent type and recall which
+% sub-category belongs to it:
+%
+%     ? fossil_preservation_subtype($Subtype, cast, $Description)   % steinkern
+%
+% Only ONE sub-category is grounded in the cited page's own definitions;
+% this table is deliberately narrow rather than inventing sub-categories
+% the source does not define with their own clean, standalone sentence.
+%
+% Provenance: reproduces, byte-for-byte, the SAME steinkern definition
+% already quoted inside `fossil-preservation-type.adj`'s own header, from
+% the SAME National Park Service "Mold Casts and Steinkerns" article that
+% table already cites — no new WebFetch, only a different schema for a fact
+% that table's own header had already verified but structurally excluded.
+% `trust authoritative` — the same tier `fossil-preservation-type.adj`
+% already carries (National Park Service, a primary U.S. government
+% source).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table fossil_preservation_subtype {
+    columns subtype, parent_type, description
+
+    row (steinkern, cast, stony_cast_of_the_interior_of_a_shell_or_other_hollow_organic_structure_made_by_sediment_infilling)
+
+    source "A stony three-dimensional cast of the interior of a shell or other hollow organic structure made by sediment infilling prior to the shell being dissolved."
+    locator "https://www.nps.gov/articles/000/mold-casts-and-steinkerns.htm"
+    trust authoritative
+}
