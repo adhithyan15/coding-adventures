@@ -1,6 +1,6 @@
 //! Grammar-driven lexers for Mermaid diagram families.
 
-pub const VERSION: &str = "0.41.0";
+pub const VERSION: &str = "0.42.0";
 
 use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
@@ -244,7 +244,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.41.0");
+        assert_eq!(VERSION, "0.42.0");
     }
 
     #[test]
@@ -355,6 +355,20 @@ mod tests {
         assert!(tokens
             .iter()
             .any(|token| token.type_ == TokenType::String && token.value == "Floating"));
+    }
+
+    #[test]
+    fn tokenizes_state_line_break_variants_as_single_tokens() {
+        let tokens = tokenize_mermaid_state(
+            "stateDiagram-v2\nReady: One<br>Two<br/>Three<br />Four<br\t/>Five\n",
+        );
+        let breaks: Vec<_> = tokens
+            .iter()
+            .filter(|token| token.type_name.as_deref() == Some("LINE_BREAK"))
+            .map(|token| token.value.as_str())
+            .collect();
+
+        assert_eq!(breaks, ["<br>", "<br/>", "<br />", "<br\t/>"]);
     }
 
     #[test]

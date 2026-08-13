@@ -1,9 +1,9 @@
-# @version 24
+# @version 26
 # Mermaid 11.16.1 state diagram grammar: initial graph-compatible slice.
 
 document = { terminator } HEADER body EOF ;
 body = { terminator | statement } ;
-statement = title_stmt | scale_stmt | HIDE_EMPTY | accessibility_stmt | direction_stmt | composite_state_stmt | concurrent_stmt | state_stmt | style_stmt | class_def_stmt | class_stmt | click_stmt | note_stmt | description_stmt | transition_stmt | styled_state_stmt ;
+statement = title_stmt | scale_stmt | HIDE_EMPTY | accessibility_stmt | direction_stmt | composite_state_stmt | concurrent_stmt | state_stmt | style_stmt | class_def_stmt | class_stmt | click_stmt | note_stmt | description_stmt | transition_stmt | styled_state_stmt | bare_state_stmt ;
 title_stmt = "title" [ COLON ] text ;
 scale_stmt = "scale" WORD "width" ;
 
@@ -14,6 +14,7 @@ composite_state_stmt = "state" composite_state_header LBRACE body RBRACE ;
 composite_state_header = state_ref | STRING "as" state_ref ;
 concurrent_stmt = CONCURRENT ;
 state_stmt = "state" ( state_ref ( CHOICE | FORK_JOIN ) | STRING "as" state_ref [ COLON text ] | state_ref [ COLON text ] ) ;
+bare_state_stmt = state_ref ;
 description_stmt = state_ref COLON text ;
 transition_stmt = styled_endpoint ARROW styled_endpoint [ COLON text ] ;
 styled_state_stmt = endpoint STYLE_SEPARATOR state_ref ;
@@ -33,5 +34,5 @@ endpoint = EDGE_STATE | state_ref ;
 styled_endpoint = endpoint [ STYLE_SEPARATOR state_ref ] ;
 state_ref = ID | WORD ;
 text = text_atom { text_atom } ;
-text_atom = ID | WORD | STRING | EDGE_STATE | DIRECTION | HASH_COLOR | ENTITY | COMMA | COLON | "title" | "scale" | "width" | "state" | "style" | "classDef" | "class" | "click" | "href" | "note" | "left" | "right" | "of" | "direction" | "as" ;
+text_atom = ID | WORD | STRING | EDGE_STATE | DIRECTION | HASH_COLOR | ENTITY | LINE_BREAK | COMMA | COLON | "title" | "scale" | "width" | "state" | "style" | "classDef" | "class" | "click" | "href" | "note" | "left" | "right" | "of" | "direction" | "as" ;
 terminator = NEWLINE | SEMICOLON ;

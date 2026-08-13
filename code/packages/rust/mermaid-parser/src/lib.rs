@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.76.0";
+pub const VERSION: &str = "0.77.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -1453,6 +1453,15 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
                     continue;
                 }
             }
+            if !from_is_edge_state
+                && matches!(
+                    token_name(cursor.current()),
+                    "NEWLINE" | "SEMICOLON" | "EOF" | "RBRACE"
+                )
+            {
+                cursor.skip_terminators();
+                continue;
+            }
             cursor
                 .consume_if("ARROW")
                 .ok_or_else(|| token_error(cursor.current(), "expected state transition arrow"))?;
@@ -1865,6 +1874,8 @@ fn take_state_text(cursor: &mut TokenCursor) -> String {
             strip_state_string(&token.value)
         } else if token_name(token) == "ENTITY" {
             decode_mermaid_entity(&token.value)
+        } else if token_name(token) == "LINE_BREAK" {
+            "\n".to_string()
         } else {
             token.value.clone()
         };
@@ -1893,9 +1904,28 @@ fn decode_mermaid_entity(value: &str) -> String {
 }
 
 fn decode_state_line_breaks(text: String) -> String {
-    text.replace("<br/>", "\n")
-        .replace("<br />", "\n")
-        .replace("<br>", "\n")
+    let mut decoded = String::with_capacity(text.len());
+    let mut remaining = text.as_str();
+    while let Some(start) = remaining.find('<') {
+        decoded.push_str(&remaining[..start]);
+        let candidate = &remaining[start..];
+        let Some(end) = candidate.find('>') else {
+            decoded.push_str(candidate);
+            remaining = "";
+            break;
+        };
+        let inner = candidate[1..end].trim();
+        let tag_name = inner.strip_suffix('/').unwrap_or(inner).trim();
+        if tag_name.eq_ignore_ascii_case("br") {
+            decoded.push('\n');
+            remaining = &candidate[end + 1..];
+        } else {
+            decoded.push('<');
+            remaining = &candidate[1..];
+        }
+    }
+    decoded.push_str(remaining);
+    decoded
         .split('\n')
         .map(str::trim)
         .collect::<Vec<_>>()
@@ -1916,6 +1946,8 @@ fn take_state_multiline_note_text(cursor: &mut TokenCursor) -> Result<String, Pa
                 strip_state_string(&token.value)
             } else if token_name(token) == "ENTITY" {
                 decode_mermaid_entity(&token.value)
+            } else if token_name(token) == "LINE_BREAK" {
+                "\n".to_string()
             } else {
                 token.value.clone()
             };
@@ -4921,11 +4953,31 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
 
     #[test]
     fn state_decodes_entities_and_line_breaks() {
-        let diagram =
-            parse_state_diagram("stateDiagram-v2\nReady: Metal #9829;<br/>native & shaped\n")
-                .expect("state text entities and line breaks");
+        let diagram = parse_state_diagram(
+            "stateDiagram-v2\nReady: Metal #9829;<br>native<br/>and<br />GPU<br\t/>shaped\nQuoted: \"One<BR \t/>Two\"\n",
+        )
+        .expect("state text entities and line breaks");
 
-        assert_eq!(diagram.nodes[0].label.text, "Metal ♥\nnative & shaped");
+        assert_eq!(
+            diagram.nodes[0].label.text,
+            "Metal ♥\nnative\nand\nGPU\nshaped"
+        );
+        assert_eq!(diagram.nodes[1].label.text, "One\nTwo");
+    }
+
+    #[test]
+    fn state_decodes_line_break_variants_in_multiline_notes() {
+        let diagram = parse_state_diagram(
+            "stateDiagram-v2\nState1\nnote right of State1\nLine1<br>Line2<br/>Line3<br />Line4<br\t/>Line5\nend note\n",
+        )
+        .expect("state note line breaks");
+        let note = diagram
+            .nodes
+            .iter()
+            .find(|node| node.shape == Some(DiagramShape::Note))
+            .expect("note node");
+
+        assert_eq!(note.label.text, "Line1\nLine2\nLine3\nLine4\nLine5");
     }
 
     #[test]
@@ -5790,7 +5842,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.76.0");
+        assert_eq!(crate::VERSION, "0.77.0");
     }
 
     #[test]
