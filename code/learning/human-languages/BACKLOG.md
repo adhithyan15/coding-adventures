@@ -466,6 +466,54 @@ reader's brain can connect, and write for someone who knows no grammar
 vocabulary at all. Both are specified in HL10 §6.7, §7.4 and §7.5 and carried by
 HL-C88 and HL-C89 below.
 
+## P0 — The Indic ladder, pre-A1 to C2 (HL12)
+
+**2026-08-13.** [HL12](../../specs/HL12-indic-pre-a1-to-c2.md) is HL10's
+counterpart for the six Indic tracks. HL11 fixed how the *script* arrives; HL12
+fixes where the whole book is going, and the measurement that opens it is worse
+than the tracks' own claims:
+
+| track | touches | **attained** | vocabulary at or below pre-A1 | script lessons |
+|---|---|---|---:|---:|
+| tamil | A2 | **none** | 86 | 24 |
+| hindi | A2 | **none** | 86 | 11 |
+| telugu | A2 | **none** | 79 | **0** |
+| kannada | A2 | **none** | 80 | **0** |
+| malayalam | A2 | **none** | 84 | **0** |
+| sanskrit | A2 | **none** | 53 | **0** |
+| *spanish, for scale* | *B2* | *none* | *153* | *n/a* |
+
+Every one of the six **points at** A2 and has **attained nothing** — not even
+pre-A1, which HL09 §3.1 sets at roughly 300 words. The ladder has not been
+climbed at all, and the first rung is four times taller than what exists.
+
+**The owner's direction, 2026-08-13**, and it is the most useful sentence written
+about this curriculum: *"I assume after a sizable number of lessons, reading the
+script would become second nature. But what the script means will become a
+problem."* That is two ramps, and they behave differently — decoding is finite
+and **ends**; meaning is unbounded and is the whole climb to C2. HL12 §2.1 turns
+it into a rule: **a lesson may sit at the frontier of decoding or of meaning, not
+both**, because a reader who fails a lesson that is new in both cannot tell which
+one they failed, and the two need opposite remedies. Measured over the six
+tracks' 577 lessons: **59 ask for both at once**, and that number is small today
+only because four of the six teach no script at all.
+
+Two further directives, same day. Every handwritten chapter in these tracks is an
+**unpublished draft and may be rewritten** — which removes the constraint that
+forced HL11's Tamil placement. And **page count is never a constraint**: *"Write
+as many chapters as you need. Even if the book is 10000 pages long, it is fine.
+We can chop it up into pre-A1, A1...C2 in the future."* No rule may be relaxed
+and no lessons merged to keep a book short; `HI-W01-shirorekha-na-ma`, twelve
+Devanagari glyphs in one lesson, is exactly what economising looks like.
+
+| ID | Status | Work item | Completion signal |
+|---|---|---|---|
+| HL-C123 | Not started | Measure the both-ramps-steep set in `ramp.ts`, report-only beside the closure numbers: per track, the lessons whose new glyphs and new atoms arrive together, and which of the two frontiers each lesson sits at. | The 59 appear in the gap report, attributed per track and per lesson id; the list is a burn-down, and nothing throws. |
+| HL-C124 | Not started | Name the lesson in each track where the decoding ladder **closes** — after which the script is never a topic again — and say so on the page, reframing what comes next as meaning. | Each track declares one closing lesson; the book prints the reframing; a track with no closing lesson is reported, not silently accepted. |
+| HL-C125 | Not started | Schedule romanization's removal: present on every headword at pre-A1, first use only at A1, absent at A2 and above, with closure becoming a **gate** exactly as the exemption is withdrawn. | The schedule is measured per track and per level; no A2+ lesson carries a headword romanization; closure violations at A2+ are zero, and gating is on. |
+| HL-C126 | Not started | Rewrite the handwritten draft chapters into the generated pipeline for all six tracks, carrying the prose across intact. This is what unblocks placement, ordering and every gate at once. | No track has a protected handwritten chapter; every lesson has a `sequence`; Hindi's 11 writing lessons reach the page rather than only the answer key. |
+| HL-C127 | Not started | Author the pre-A1 rung honestly for all six — the ~300-word floor — in lockstep, splitting rather than compressing. | `runLevelGate` reports pre-A1 **attained** for all six; the A2 *touches* claim is withdrawn until it is earned. |
+
 ## P0 — The drizzled script ramp for the six Indic tracks (HL11)
 
 **2026-08-12.** [HL11](../../specs/HL11-drizzled-script-ramp.md) covers the ramp
@@ -511,13 +559,10 @@ orders letters by payoff and records the order as a per-script letter ledger.
 | HL-C122 | Not started | Add `image-codec-png` under `code/packages/typescript/`: a zero-dep PNG encoder over the existing `deflate` and `pixel-container` packages, mirroring `image-codec-bmp`'s `ImageCodec` shape. PNG rather than BMP because the books are XeLaTeX and XeLaTeX embeds PNG. | `encodePng`/`decodePng`/`PngCodec` round-trip; the package carries BUILD, README, CHANGELOG and >95% coverage; an encoded strip opens in XeLaTeX. | *(Renumbered from HL-C113 on 2026-08-12: that id was already carrying the CEFR B1-to-C2 climb, which eight merged PRs cite in their commit messages. The climb keeps the id; this row moves.)*
 | HL-C114 | Not started | Extract `script-ductus` from the app. `language-ladder/src/{strokes,ductusview,truetype}.ts` hold `DUCTUS`, the font-outline reader, and the filmstrip builder; nothing under `code/packages/` may depend on something under `code/programs/`, so the book generator cannot reach them today. `ductusview.ts`'s own header already anticipates the move. | The three modules live in a package, `language-ladder` imports it with no behaviour change, and the font-verification tests (`fractionOnInk`, segment-meeting, whole-ink coverage) move across intact and still pass. |
 | HL-C115 | Not started | Add the `letter-ductus` figure kind beside `etymology-route` — the only kind that exists today. One letter renders *n* panels, panel *k* showing strokes 1…*k*, the font's own outline behind in grey, the travelled path in ink, a dot at the pen, one caption per panel from the segment labels. | Declared in `core/figure-generation.json`, rasterised through HL-C113, byte-gated in `core/generated-figure-hashes.json`; proved on Tamil's eleven already-verified letters before any new research lands. |
-| HL-C116 | Not started | Measure the script ramp's missing half in `ramp.ts`, report-only: load-bearing versus exposure target-script text, closure violations, `firstWritableWord`, the writable-word curve, letters per script segment, and unspent letters. | Every number appears in the gap report; the corpus's real closure debt is published per track; nothing throws, per the HL05/HL08 precedent. |
-| HL-C117 | **Done** (letter ledgers, drizzle budget); spine nodes deferred to HL-C120 so they land with lessons that realize them | Add the `SCRIPT` strand and its pre-A1 nodes to `core/spine.json`, a drizzle budget to `core/chapter-policy.json` beside `maxNewGlyphsPerLesson`, and the per-script **letter ledger** — ordered by word payoff, authored intent, never rewritten by a validator. | Each of the five scripts has a ledger; every ledger entry names the words its letter completes; a letter that completes nothing for a long stretch is reported as unspent (the Root Ledger rule, applied to glyphs). |
-
 | HL-C116 | **Done** — first measurement published; the number is 931 | Measure the script ramp's missing half in `ramp.ts`, report-only: load-bearing versus exposure target-script text, closure violations, `firstWritableWord`, the writable-word curve, letters per script segment, and unspent letters. | Every number appears in the gap report; the corpus's real closure debt is published per track; nothing throws, per the HL05/HL08 precedent. |
-| HL-C117 | Not started | Add the `SCRIPT` strand and its pre-A1 nodes to `core/spine.json`, a drizzle budget to `core/chapter-policy.json` beside `maxNewGlyphsPerLesson`, and the per-script **letter ledger** — ordered by word payoff, authored intent, never rewritten by a validator. | Each of the five scripts has a ledger; every ledger entry names the words its letter completes; a letter that completes nothing for a long stretch is reported as unspent (the Root Ledger rule, applied to glyphs). |
+| HL-C117 | **Done** (letter ledgers, drizzle budget); spine nodes deferred to HL-C120 so they land with lessons that realize them | Add the `SCRIPT` strand and its pre-A1 nodes to `core/spine.json`, a drizzle budget to `core/chapter-policy.json` beside `maxNewGlyphsPerLesson`, and the per-script **letter ledger** — ordered by word payoff, authored intent, never rewritten by a validator. | Each of the five scripts has a ledger; every ledger entry names the words its letter completes; a letter that completes nothing for a long stretch is reported as unspent (the Root Ledger rule, applied to glyphs). |
 | HL-C118 | Not started | Research and author cited ductus for the five scripts in letter-ledger order — Tamil outward from its eleven, and Telugu, Kannada, Malayalam and Devanagari from zero. Base letters and vowel signs only; composed syllables derive from theirs. | Every authored pen path is font-verified and carries a `strokeOrderSource` with `citation`, `url` and `variation`. **No citation → no pen path → no figure**, and the gap is reported rather than filled. Telugu has a plausible academic candidate (Vemuri, *The Shapes of Telugu*, UC Davis); Kannada, Malayalam and Devanagari are unproven and may land partly prose-only. |
-| HL-C119 | Not started | Redistribute the script strands that already exist. Tamil's twenty `TA-W*` lessons are good material clustered at `sequence: 270`; Hindi's eleven include `HI-W01-shirorekha-na-ma`, the steepest lesson in the corpus at twelve glyphs. Both are re-cut into one-letter segments across the early sequences. | The prose survives the re-cut; each segment teaches exactly one letter; `drivablePercent` **does not fall** when the detachable writing segments land, which is the design's own falsification test. |
+| HL-C119 | **In progress** — nine Tamil one-letter segments authored and rendering (#11188); Hindi not started | Redistribute the script strands that already exist. Tamil's twenty `TA-W*` lessons are good material clustered at `sequence: 270`; Hindi's eleven include `HI-W01-shirorekha-na-ma`, the steepest lesson in the corpus at twelve glyphs. Both are re-cut into one-letter segments across the early sequences. | The prose survives the re-cut; each segment teaches exactly one letter; `drivablePercent` **does not fall** when the detachable writing segments land, which is the design's own falsification test. |
 | HL-C120 | Not started | Author the missing script strand for Telugu, Kannada, Malayalam and Sanskrit, which have none, and migrate the six tracks' 233 schema-v1 lessons so they enter the gates at all. Fix the 30–34 lessons per track that carry no `sequence` — until that is done, no claim in HL11 is verifiable, because every one of them is a claim about order. | Closure violations reach zero per track; `firstWritableWord` lands near sequence 50; every book still builds and every `check:*` still passes. |
 
 ## Findings from HL-C117

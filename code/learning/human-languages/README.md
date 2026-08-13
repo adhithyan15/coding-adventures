@@ -22,7 +22,13 @@ narration export a voice assistant reads aloud on a commute.
 others can express — the one climbed by a reader who does not already know the
 alphabet: the book stays useful from page 1 while the script drizzles in one letter
 at a time behind it, and no lesson may ask the reader to decode a glyph it has not
-taught. This page is just an index.
+taught.
+[`HL12`](../../specs/HL12-indic-pre-a1-to-c2.md) carries those six Indic tracks the
+rest of the way, pre-A1 to C2, and turns on the observation that decoding and
+meaning are two different ramps: the script one is finite and *ends*, the meaning
+one is the whole climb. A lesson may sit at the frontier of one or the other,
+never both, because a reader who fails a lesson that is new in both cannot tell
+which one they failed. This page is just an index.
 
 Every track shares the same shape:
 
