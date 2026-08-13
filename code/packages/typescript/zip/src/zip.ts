@@ -700,6 +700,15 @@ class ByteSink {
     // matters more than it looks: a caller that passes the exact expected size
     // as its ceiling -- which PNG does, from IHDR -- hits this path every time,
     // so the peak drops from three copies of the image to two.
+    //
+    // Handing out the INTERNAL buffer is safe only because of three invariants,
+    // and they are worth stating because a refactor could quietly break one:
+    // this class is module-private, a fresh instance is built per decompress
+    // call, and `finish` is called exactly once as the last statement, after
+    // which the sink is unreachable. So the caller holds the only reference,
+    // and `buf` is always freshly allocated so it can never alias the input.
+    // Pool or reuse a sink, or call this twice, and the fast path becomes an
+    // aliasing bug while the slice below would not.
     if (this.len === this.buf.length) return this.buf;
     return this.buf.slice(0, this.len);
   }
