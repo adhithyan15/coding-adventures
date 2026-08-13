@@ -2507,6 +2507,39 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: devanagariAlphabetSource("त"),
   },
+  // Opiaterein's animation descends the short stem, then joins the outer body
+  // directly through the inward curl and tail before the final headline. The
+  // Central Hindi Directorate deskbook corroborates component order while
+  // staging the body and curl-tail separately: three animated strokes, two lifts.
+  [ductusKey("devanagari", "द")]: {
+    script: "devanagari",
+    glyph: "द",
+    strokes: [
+      { segments: [{ label: "descend the short stem", path: [
+        { x: 395, y: 551 }, { x: 395, y: 505 }, { x: 395, y: 460 },
+        { x: 395, y: 420 },
+      ] }] },
+      { segments: [{ label: "lift, then sweep around the body, inner curl, and tail", path: [
+        { x: 395, y: 420 }, { x: 350, y: 420 }, { x: 300, y: 420 },
+        { x: 245, y: 418 }, { x: 190, y: 400 }, { x: 145, y: 370 },
+        { x: 110, y: 335 }, { x: 90, y: 295 }, { x: 90, y: 255 },
+        { x: 95, y: 210 }, { x: 125, y: 170 }, { x: 170, y: 140 },
+        { x: 215, y: 115 }, { x: 260, y: 110 }, { x: 300, y: 112 },
+        { x: 340, y: 118 }, { x: 385, y: 130 }, { x: 420, y: 155 },
+        { x: 440, y: 185 }, { x: 435, y: 215 }, { x: 410, y: 235 },
+        { x: 380, y: 235 }, { x: 355, y: 220 }, { x: 348, y: 195 },
+        { x: 355, y: 170 }, { x: 375, y: 150 }, { x: 400, y: 128 },
+        { x: 415, y: 98 }, { x: 435, y: 55 }, { x: 458, y: 10 },
+        { x: 482, y: -38 },
+      ] }] },
+      { segments: [{ label: "lift, then draw the shirorekha left-to-right", path: [
+        { x: 5, y: 585 }, { x: 80, y: 585 }, { x: 155, y: 585 },
+        { x: 230, y: 585 }, { x: 305, y: 585 }, { x: 380, y: 585 },
+        { x: 455, y: 585 }, { x: 536, y: 585 },
+      ] }] },
+    ],
+    source: devanagariAlphabetSource("द"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the
