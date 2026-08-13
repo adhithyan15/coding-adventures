@@ -109,18 +109,19 @@ arithmetic is deliberately rejected until register-pair lowering exists.
 
 ## Prioritized backlog
 
-1. **Control flow:** label binding and branch backpatching for CIR conditional
-   jumps, followed by source-language conditional end-to-end tests.
-2. **Register allocation:** spill live values to stack slots and emit a proper
+1. [x] **Control flow:** label binding and branch backpatching for CIR conditional
+   jumps, followed by boolean source-language conditional end-to-end tests.
+2. [ ] **Wider arithmetic:** RV32I helper sequences or RV32M support, plus
+   register-pair lowering for full-width `i64`/`u64` values. This is the next
+   language-unblocking item because Nib materializes numeric values as `i64`.
+3. [ ] **Register allocation:** spill live values to stack slots and emit a proper
    frame, removing the six-temporary limit.
-3. **Calls and modules:** lower direct calls, add relocations/linking for flat
+4. [ ] **Calls and modules:** lower direct calls, add relocations/linking for flat
    binaries, and preserve the RISC-V calling convention across calls.
-4. **Host runtime ABI:** define simulator `ecall` services for exit and integer
+5. [ ] **Host runtime ABI:** define simulator `ecall` services for exit and integer
    output, then lower language print primitives through that ABI.
-5. **Memory and data:** globals, addresses, loads/stores, and a data-image
+6. [ ] **Memory and data:** globals, addresses, loads/stores, and a data-image
    loader for programs needing strings or arrays.
-6. **Wider arithmetic:** RV32I helper sequences or RV32M support, plus
-   register-pair lowering for full-width `i64`/`u64` values.
 
 Each item should land as a focused PR with an end-to-end fixture from the
 highest-level language it enables. New constraints discovered while carrying

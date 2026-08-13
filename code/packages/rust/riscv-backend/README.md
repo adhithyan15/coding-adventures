@@ -24,8 +24,9 @@ tests passing byte-for-byte.
 | `const_*` | ✓ signed/unsigned values that fit RV32I |
 | Integer scalar ops | ✓ `add`, `sub`, `and`, `or`, `xor`, `shl`, `shr`, `neg`, `not` |
 | Comparisons | ✓ signed/unsigned `eq ne lt le gt ge` |
+| Control flow | ✓ `label`, `jmp`, `jmp_if_true`, `jmp_if_false` |
 | `ret_*`, `ret_void` | ✓ result in `a0`, standard `ret` |
-| `i64` / `u64` arithmetic, floats, calls, branches, memory, I/O | not yet supported |
+| `i64` / `u64` arithmetic, floats, calls, memory, I/O | not yet supported |
 
 `run_binary` executes a produced function binary in `riscv-simulator` and
 reports the `a0` return value, halt state, and instruction count. It installs a
@@ -49,7 +50,10 @@ assert_eq!(result.return_value, 42);
 
 For compatibility with existing scalar source smoke tests, `const_i64` /
 `ret_i64` are accepted when the literal fits in an RV32 register. Wide
-arithmetic remains a validation error rather than silently truncating.
+arithmetic remains a validation error rather than silently truncating. `i64` /
+`u64` comparisons are accepted only when both operands are constants proven to
+fit in one RV32 register; this unlocks simple Nib literal conditionals without
+claiming to implement arbitrary 64-bit comparisons.
 
 ## Why this is the FINAL lane
 

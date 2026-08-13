@@ -4,14 +4,15 @@
 //! small but executable scalar lane: supported functions lower to real RV32I
 //! bytes and `run_binary` executes those bytes in the in-tree simulator.
 
+use std::collections::{HashMap, HashSet};
 use std::fmt;
 
 use jit_core::backend::{Backend, FunctionContext};
 use jit_core::cir::{CIRInstr, CIROperand};
 use riscv_encoder::{
-    assemble, encode_add, encode_addi, encode_and, encode_andi, encode_ecall, encode_lui,
-    encode_or, encode_sll, encode_slt, encode_sltu, encode_sra, encode_srl, encode_sub, encode_xor,
-    encode_xori, A0, RET_WORD, X0_ZERO, X1_RA,
+    assemble, encode_add, encode_addi, encode_and, encode_andi, encode_beq, encode_bne,
+    encode_ecall, encode_jal, encode_lui, encode_or, encode_sll, encode_slt, encode_sltu,
+    encode_sra, encode_srl, encode_sub, encode_xor, encode_xori, A0, RET_WORD, X0_ZERO, X1_RA,
 };
 use riscv_simulator::RiscVSimulator;
 use vm_core::value::Value;
@@ -47,9 +48,11 @@ pub enum BackendError {
     UnsupportedType(String),
     InvalidOperand(String),
     UndefinedVariable(String),
+    UndefinedLabel(String),
     ImmediateOutOfRange(i64),
     OutOfRegisters,
     TooManyArguments(usize),
+    BranchOutOfRange { label: String, offset: i64 },
     ExecutionDidNotHalt { steps: usize },
 }
 
@@ -64,6 +67,7 @@ impl fmt::Display for BackendError {
             Self::UndefinedVariable(name) => {
                 write!(f, "riscv-backend: undefined variable {name:?}")
             }
+            Self::UndefinedLabel(name) => write!(f, "riscv-backend: undefined label {name:?}"),
             Self::ImmediateOutOfRange(value) => {
                 write!(f, "riscv-backend: {value} does not fit in an RV32I integer")
             }
@@ -76,6 +80,10 @@ impl fmt::Display for BackendError {
                 f,
                 "riscv-backend: {count} arguments exceed the RV32I starter ABI limit of {}",
                 ARG_REGISTERS.len()
+            ),
+            Self::BranchOutOfRange { label, offset } => write!(
+                f,
+                "riscv-backend: branch to label {label:?} has out-of-range offset {offset}"
             ),
             Self::ExecutionDidNotHalt { steps } => write!(
                 f,
@@ -93,6 +101,7 @@ pub fn compile(ctx: &FunctionContext<'_>, cir: &[CIRInstr]) -> Result<Vec<u8>, B
     for instr in cir {
         lowerer.lower(instr)?;
     }
+    lowerer.resolve_branches()?;
     if lowerer.words.is_empty() {
         lowerer.words.push(RET_WORD);
     }
@@ -142,6 +151,24 @@ pub fn run_binary(binary: &[u8], args: &[Value]) -> Result<RunResult, BackendErr
 struct Lowerer {
     words: Vec<u32>,
     env: Vec<(String, u32)>,
+    /// Values known to fit in one RV32 register despite an `i64`/`u64` CIR type.
+    word_sized_values: HashSet<String>,
+    labels: HashMap<String, usize>,
+    branches: Vec<PendingBranch>,
+}
+
+#[derive(Debug, Clone, Copy)]
+enum BranchKind {
+    EqZero { rs1: u32 },
+    NeZero { rs1: u32 },
+    Jump,
+}
+
+#[derive(Debug, Clone)]
+struct PendingBranch {
+    word_index: usize,
+    label: String,
+    kind: BranchKind,
 }
 
 impl Lowerer {
@@ -159,6 +186,9 @@ impl Lowerer {
         Ok(Self {
             words: Vec::new(),
             env,
+            word_sized_values: HashSet::new(),
+            labels: HashMap::new(),
+            branches: Vec::new(),
         })
     }
 
@@ -180,6 +210,38 @@ impl Lowerer {
             let rd = self.dest(instr, op)?;
             self.load_constant(rd, literal_word(instr.srcs.first(), ty)?);
             self.mask_unsigned(rd, ty);
+            if matches!(ty, "i64" | "u64") {
+                self.word_sized_values.insert(
+                    instr
+                        .dest
+                        .as_ref()
+                        .expect("const_* destinations are required above")
+                        .clone(),
+                );
+            }
+            return Ok(());
+        }
+
+        if op == "label" {
+            let label = self.label_src(instr, 0, op)?;
+            self.labels.insert(label, self.words.len() * 4);
+            return Ok(());
+        }
+
+        if op == "jmp" {
+            self.record_branch(instr, 0, BranchKind::Jump, op)?;
+            return Ok(());
+        }
+
+        if matches!(op, "jmp_if_false" | "br_false_bool") {
+            let condition = self.var_src(instr, 0, op)?;
+            self.record_branch(instr, 1, BranchKind::EqZero { rs1: condition }, op)?;
+            return Ok(());
+        }
+
+        if matches!(op, "jmp_if_true" | "br_true_bool") {
+            let condition = self.var_src(instr, 0, op)?;
+            self.record_branch(instr, 1, BranchKind::NeZero { rs1: condition }, op)?;
             return Ok(());
         }
 
@@ -222,7 +284,7 @@ impl Lowerer {
         }
 
         if let Some((relation, ty)) = comparison_parts(op) {
-            self.require_operation_type(ty)?;
+            self.require_comparison_type(instr, ty, op)?;
             let rd = self.dest(instr, op)?;
             let lhs = self.var_src(instr, 0, op)?;
             let rhs = self.var_src(instr, 1, op)?;
@@ -271,6 +333,60 @@ impl Lowerer {
         Err(BackendError::UnsupportedOp(op.to_string()))
     }
 
+    fn resolve_branches(&mut self) -> Result<(), BackendError> {
+        for branch in &self.branches {
+            let target = self
+                .labels
+                .get(&branch.label)
+                .copied()
+                .ok_or_else(|| BackendError::UndefinedLabel(branch.label.clone()))?;
+            let offset = target as i64 - (branch.word_index * 4) as i64;
+            let word = match branch.kind {
+                BranchKind::EqZero { rs1 } => {
+                    Self::check_branch_offset(&branch.label, offset, 4096)?;
+                    encode_beq(rs1, X0_ZERO, offset as i32)
+                }
+                BranchKind::NeZero { rs1 } => {
+                    Self::check_branch_offset(&branch.label, offset, 4096)?;
+                    encode_bne(rs1, X0_ZERO, offset as i32)
+                }
+                BranchKind::Jump => {
+                    Self::check_branch_offset(&branch.label, offset, 1 << 20)?;
+                    encode_jal(X0_ZERO, offset as i32)
+                }
+            };
+            self.words[branch.word_index] = word;
+        }
+        Ok(())
+    }
+
+    fn check_branch_offset(label: &str, offset: i64, max: i64) -> Result<(), BackendError> {
+        if offset < -max || offset >= max {
+            return Err(BackendError::BranchOutOfRange {
+                label: label.to_owned(),
+                offset,
+            });
+        }
+        Ok(())
+    }
+
+    fn record_branch(
+        &mut self,
+        instr: &CIRInstr,
+        label_index: usize,
+        kind: BranchKind,
+        op: &str,
+    ) -> Result<(), BackendError> {
+        let label = self.label_src(instr, label_index, op)?;
+        self.branches.push(PendingBranch {
+            word_index: self.words.len(),
+            label,
+            kind,
+        });
+        self.words.push(0);
+        Ok(())
+    }
+
     fn dest(&mut self, instr: &CIRInstr, op: &str) -> Result<u32, BackendError> {
         let name = instr
             .dest
@@ -289,6 +405,15 @@ impl Lowerer {
             }
         };
         self.lookup(name)
+    }
+
+    fn label_src(&self, instr: &CIRInstr, index: usize, op: &str) -> Result<String, BackendError> {
+        match instr.srcs.get(index) {
+            Some(CIROperand::Var(name)) => Ok(name.clone()),
+            _ => Err(BackendError::InvalidOperand(format!(
+                "{op} srcs[{index}] must be a label Var"
+            ))),
+        }
     }
 
     fn allocate(&mut self, name: &str) -> Result<u32, BackendError> {
@@ -354,6 +479,35 @@ impl Lowerer {
         } else {
             Err(BackendError::UnsupportedType(ty.to_owned()))
         }
+    }
+
+    fn require_comparison_type(
+        &self,
+        instr: &CIRInstr,
+        ty: &str,
+        op: &str,
+    ) -> Result<(), BackendError> {
+        if is_rv32_operation_type(ty) {
+            return Ok(());
+        }
+        if !matches!(ty, "i64" | "u64") {
+            return Err(BackendError::UnsupportedType(ty.to_owned()));
+        }
+
+        for index in 0..2 {
+            let name = match instr.srcs.get(index) {
+                Some(CIROperand::Var(name)) => name,
+                _ => {
+                    return Err(BackendError::InvalidOperand(format!(
+                        "{op} srcs[{index}] must be Var"
+                    )))
+                }
+            };
+            if !self.word_sized_values.contains(name) {
+                return Err(BackendError::UnsupportedType(ty.to_owned()));
+            }
+        }
+        Ok(())
     }
 }
 

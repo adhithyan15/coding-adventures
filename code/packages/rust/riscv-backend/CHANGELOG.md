@@ -8,6 +8,11 @@
   `riscv-simulator` and reports its `a0` return value and instruction count.
 - Preserved the canonical Twig `42` byte sequence while proving that the
   emitted bytes execute and return `42` in the simulator.
+- Added two-pass control-flow lowering for CIR `label`, `jmp`,
+  `jmp_if_true`, and `jmp_if_false`, including a Nib conditional
+  source-to-simulator fixture.
+- Permit `i64`/`u64` comparisons only for constant values proven to fit in one
+  RV32 register, keeping arbitrary wide values unsupported.
 
 ## v0.1.0 — 2026-06-03 — Phase 7 (FINAL lane) of historical-arch backend migration
 
