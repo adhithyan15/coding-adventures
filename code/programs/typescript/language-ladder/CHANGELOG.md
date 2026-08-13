@@ -2,6 +2,12 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Devanagari द ductus (HL-C09DL)
+
+- Render **द** in three source-aligned movements across three strokes.
+- Descend the short stem before one continuous outer-body, inward-curl, and down-right-tail run, then finish with the left-to-right shirorekhā.
+- Preserve the source's two lifts, fit the path to Noto Sans Devanagari, and reduce measured HL-C09 debt to 116 entries.
+
 ### Added — cited Devanagari त ductus (HL-C09DK)
 
 - Render **त** in three source-aligned movements across three strokes.
