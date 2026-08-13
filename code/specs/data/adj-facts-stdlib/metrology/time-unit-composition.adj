@@ -1,0 +1,62 @@
+% ============================================================================
+% time-unit-composition — for the two time units whose SAME cited source
+% also states the unit it is COMPOSED OF, that composition
+% (adj-facts-stdlib, METROLOGY).
+% ============================================================================
+% A sibling to the already-shipped `time-units.adj` (`time_unit_seconds(unit,
+% seconds)`, ONE seconds-length per time unit: minute 60, hour 3600, day
+% 86400). That table's own `source` field already quotes, VERBATIM, a
+% unit-to-unit relation for two of the three units — how many of the NEXT
+% smaller unit each one is composed of — but the `seconds`-only schema
+% (which reduces every row to the SI base unit) had no room for it:
+%
+%   hour → 60 minutes
+%     "1 h = 60 min = 3600 s"
+%
+%   day → 24 hours
+%     "1 d = 24 h = 86 400 s"
+%
+% Recall is a binding query:
+%
+%     ? time_unit_composition(hour, $SubUnit, $Count)   % minute, 60
+%
+% This is a native `table` (ADJ-TABLES RS-5, a THREE-column table unlike
+% `time-units.adj`'s own two-column `time_unit_seconds`, since a
+% composition relation needs both the sub-unit's NAME and its COUNT): each
+% `row` lowers to a ground relation `time_unit_composition(unit, sub_unit,
+% count)` carrying the citation, so the lookup above is the ordinary SLD
+% binding query — the engine returns the composition WITH its source, on
+% the CPU, with zero model calls, and abstains on minute, since minute's
+% own cited span ("1 min = 60 s") states only its seconds-length, with no
+% unit-to-unit relation to a smaller unit on this page.
+%
+% Only TWO of `time-units.adj`'s three time units have a genuinely distinct
+% unit-to-unit composition in the ALREADY-cited span; this table is
+% deliberately narrow rather than inventing a composition the source does
+% not state. Minute → 60 seconds is deliberately OMITTED as a row here: it
+% would only restate `time_unit_seconds(minute, 60)`, not a new fact (the
+% smaller unit it composes into, the second, is the same SI base unit the
+% parent table already keys every row to). The query also runs BACKWARD —
+% bind a sub-unit and count and recall which unit it composes:
+%
+%     ? time_unit_composition($Unit, minute, 60)   % hour
+%
+% Provenance: reproduces, byte-for-byte, the SAME NIST Special Publication
+% 811 span already quoted inside `time-units.adj`'s own `source` field —
+% no new WebFetch, only a different schema decoding the unit-to-unit half
+% of an already-verified quote. `trust authoritative` — the same tier
+% `time-units.adj` already carries (NIST, a U.S. federal .gov source).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table time_unit_composition {
+    columns unit, sub_unit, count
+
+    row (hour, minute, 60)   % NIST SP 811: 1 h = 60 min = 3600 s
+    row (day, hour, 24)      % NIST SP 811: 1 d = 24 h = 86 400 s
+
+    source "1 h = 60 min = 3600 s | 1 d = 24 h = 86 400 s"
+    locator "https://www.nist.gov/pml/special-publication-811/nist-guide-si-chapter-5-units-outside-si"
+    trust authoritative
+}

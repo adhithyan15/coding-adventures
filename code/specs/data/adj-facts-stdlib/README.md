@@ -107,6 +107,7 @@ per rotation, in parallel):
 | `chemistry/` | named gas law → the pair of quantities it relates (boyle → pressure_volume, charles → volume_temperature, avogadro → volume_moles) | Chemistry LibreTexts CK-12 (consensus) |
 | `chemistry/` | element category → defining electrical property (metal → good_conductor, nonmetal → poor_conductor, metalloid → semiconductor) | Chemistry LibreTexts (consensus) |
 | `metrology/` | SI prefix → power of ten | NIST |
+| `metrology/` | time unit → the smaller unit it is composed of and the count, the SAME NIST span also states (`time_unit_composition(unit, sub_unit, count)`, hour → (minute, 60), day → (hour, 24)) — a sibling to `time-units.adj`, decoding a second fact already sitting unused in that table's own `source` field for two of its three units; honest abstention on minute, whose own cited span states only its seconds-length, no unit-to-unit relation | NIST Special Publication 811 (authoritative; see `time-unit-composition.adj`'s header — same source `time-units.adj` already cites) |
 | `mathematics/` | Roman numeral → value | (consensus) |
 | `calendar/` | day / month → number | ISO 8601 |
 | `money/` | US coin → cents | US Mint |

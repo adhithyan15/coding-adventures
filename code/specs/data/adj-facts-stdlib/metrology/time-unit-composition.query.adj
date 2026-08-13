@@ -1,0 +1,21 @@
+% ============================================================================
+% time-unit-composition.query.adj — a worked recall over the metrology
+% time-unit-composition library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "how many minutes are
+% in an hour?": it states no metrology fact of its own — it only `import`s
+% the grounded table and asks binding queries. The engine resolves each `?`
+% against the `time_unit_composition` rows and returns the sub-unit/count +
+% the table's source/locator/trust. A unit the cited spans give no
+% unit-to-unit composition for abstains honestly — the engine never
+% invents one.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli time-unit-composition.query.adj
+% ============================================================================
+
+import "time-unit-composition.adj"
+
+? time_unit_composition(hour, $SubUnit, $Count)   % expect minute, 60
+? time_unit_composition($Unit, minute, 60)        % reverse bind — expect hour
+? time_unit_composition(minute, $SubUnit, $Count) % expect abstain — minute's own cited span states no unit-to-unit composition
