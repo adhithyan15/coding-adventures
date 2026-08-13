@@ -2232,6 +2232,44 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: devanagariAlphabetSource("ए"),
   },
+  // The four Commons panels reuse ए's long body and shorter hooked stem,
+  // then add the upper arc and headline as two separately placed runs.
+  [ductusKey("devanagari", "ऐ")]: {
+    script: "devanagari",
+    glyph: "ऐ",
+    strokes: [
+      {
+        segments: [
+          { label: "descend the long left stem from the headline", path: [
+            { x: 120, y: 585 }, { x: 120, y: 530 }, { x: 120, y: 470 },
+            { x: 120, y: 410 }, { x: 120, y: 350 }, { x: 125, y: 290 },
+          ] },
+          { label: "curve right through the lower shoulder and sweep down the tail without lifting", path: [
+            { x: 125, y: 290 }, { x: 145, y: 245 }, { x: 185, y: 205 },
+            { x: 235, y: 175 }, { x: 285, y: 145 }, { x: 335, y: 115 },
+            { x: 380, y: 85 }, { x: 415, y: 50 }, { x: 435, y: 10 },
+            { x: 435, y: -30 }, { x: 420, y: -70 },
+          ] },
+        ],
+      },
+      { segments: [{ label: "lift, then descend the shorter right stem into its inward hook", path: [
+        { x: 435, y: 585 }, { x: 435, y: 530 }, { x: 435, y: 470 },
+        { x: 435, y: 410 }, { x: 430, y: 350 }, { x: 410, y: 300 },
+        { x: 380, y: 260 }, { x: 350, y: 235 },
+      ] }] },
+      { segments: [{ label: "lift, then sweep the upper arc upward and left", path: [
+        { x: 430, y: 620 }, { x: 415, y: 680 }, { x: 390, y: 745 },
+        { x: 360, y: 800 }, { x: 325, y: 840 }, { x: 285, y: 860 },
+        { x: 245, y: 865 }, { x: 205, y: 855 }, { x: 170, y: 835 },
+      ] }] },
+      { segments: [{ label: "lift, then draw the shirorekha left-to-right", path: [
+        { x: 5, y: 585 }, { x: 95, y: 585 }, { x: 185, y: 585 },
+        { x: 275, y: 585 }, { x: 365, y: 585 }, { x: 455, y: 585 },
+        { x: 563, y: 585 },
+      ] }] },
+    ],
+    source: devanagariAlphabetSource("ऐ"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the

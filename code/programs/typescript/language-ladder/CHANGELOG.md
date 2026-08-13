@@ -2,6 +2,12 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Devanagari ऐ ductus (HL-C09DE)
+
+- Render **ऐ** in five source-aligned movements across four strokes.
+- Reuse ए's long stem and tail plus its shorter hooked stem before the separate upper arc and final shirorekhā.
+- Preserve the source's three lifts, fit the path to Noto Sans Devanagari, and reduce measured HL-C09 debt to 123 entries.
+
 ### Added — cited Devanagari ए ductus (HL-C09DD)
 
 - Render **ए** in four source-aligned movements across three strokes.

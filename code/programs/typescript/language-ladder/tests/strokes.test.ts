@@ -55,6 +55,7 @@ const DEVANAGARI_II = DUCTUS[ductusKey("devanagari", "ई")];
 const DEVANAGARI_U = DUCTUS[ductusKey("devanagari", "उ")];
 const DEVANAGARI_UU = DUCTUS[ductusKey("devanagari", "ऊ")];
 const DEVANAGARI_E = DUCTUS[ductusKey("devanagari", "ए")];
+const DEVANAGARI_AI = DUCTUS[ductusKey("devanagari", "ऐ")];
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
@@ -763,6 +764,20 @@ describe("handwriting ductus", () => {
     expect(shortStem[0].y).toBeGreaterThan(shortStem.at(-1)!.y);
     expect(shortStem.at(-1)!.x).toBeLessThan(shortStem[0].x);
     const headline = penPath(DEVANAGARI_E.strokes[2]);
+    expect(headline[0].x).toBeLessThan(headline.at(-1)!.x);
+  });
+
+  it("Devanagari ऐ reuses the ए base before its upper arc and headline", () => {
+    expect(DEVANAGARI_AI.script).toBe("devanagari");
+    expect(penLifts(DEVANAGARI_AI)).toBe(3);
+    expect(DEVANAGARI_AI.strokes).toHaveLength(4);
+    expect(DEVANAGARI_AI.strokes.map((stroke) => stroke.segments.length)).toEqual([2, 1, 1, 1]);
+    expect(penPath(DEVANAGARI_AI.strokes[0])).toEqual(penPath(DEVANAGARI_E.strokes[0]));
+    expect(penPath(DEVANAGARI_AI.strokes[1])).toEqual(penPath(DEVANAGARI_E.strokes[1]));
+    const arc = penPath(DEVANAGARI_AI.strokes[2]);
+    expect(arc.at(-1)!.x).toBeLessThan(arc[0].x);
+    expect(Math.max(...arc.map((point) => point.y))).toBeGreaterThan(arc[0].y);
+    const headline = penPath(DEVANAGARI_AI.strokes[3]);
     expect(headline[0].x).toBeLessThan(headline.at(-1)!.x);
   });
 
@@ -1752,6 +1767,9 @@ describe("handwriting ductus", () => {
     expect(verifiedLetterFont("ए", DEVANAGARI_E.source.url)).toBe(
       "_fonts/NotoSansDevanagari-Static.ttf",
     );
+    expect(verifiedLetterFont("ऐ", DEVANAGARI_AI.source.url)).toBe(
+      "_fonts/NotoSansDevanagari-Static.ttf",
+    );
     expect(verifiedLetterFont("א", HEBREW_ALEF.source.url)).toBe(
       "_fonts/NotoSansHebrew-Static.ttf",
     );
@@ -2231,6 +2249,19 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /three-panel diagram.*three ordered pen-down runs.*panel 1.*headline junction.*long left stem.*lower shoulder.*down through the tail.*without lifting.*panel 2.*shorter right stem's headline junction.*descends.*inward.*open hook.*panel 3.*headline's left edge.*shirorekhā left-to-right.*two intervening lifts.*modern printed teaching form.*Noto Sans Devanagari.*rather than.*universal standard/i,
+    );
+  });
+
+  it("Devanagari ऐ traces the shared ए base, upper arc, and final headline", () => {
+    const src = DEVANAGARI_AI.source;
+    expect(src.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Devanagari_%E0%A4%90_stroke_order.svg",
+    );
+    expect(src.citation).toMatch(
+      /Saurmandal.*Devanagari ऐ stroke order\.svg.*panels 1–4.*Wikimedia Commons.*5 August 2023/i,
+    );
+    expect(src.variation).toMatch(
+      /four-panel diagram.*four ordered pen-down runs.*panels 1 and 2.*same continuous long left stem and tail.*shorter inward-hooked right stem.*ए.*panel 3.*right headline junction.*upper arc upward and left.*open tip.*panel 4.*headline's left edge.*shirorekhā left-to-right.*three intervening lifts.*modern printed teaching form.*Noto Sans Devanagari.*rather than.*universal standard/i,
     );
   });
 

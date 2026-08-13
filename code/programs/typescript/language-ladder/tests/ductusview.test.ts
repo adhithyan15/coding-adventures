@@ -151,6 +151,8 @@ const DEVANAGARI_UU = ductusFor("ऊ", "devanagari")!;
 const devanagariUuOutline = devanagariOutline("ऊ");
 const DEVANAGARI_E = ductusFor("ए", "devanagari")!;
 const devanagariEOutline = devanagariOutline("ए");
+const DEVANAGARI_AI = ductusFor("ऐ", "devanagari")!;
+const devanagariAiOutline = devanagariOutline("ऐ");
 const HEBREW_ALEF = ductusFor("א", "hebrew")!;
 const hebrewAlefOutline = hebrewOutline("א");
 const HEBREW_BET = ductusFor("ב", "hebrew")!;
@@ -1685,6 +1687,36 @@ describe("Devanagari ए — long stem and tail before short stem and headline",
     );
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(DEVANAGARI_E.strokes[2], 1),
+    );
+  });
+});
+
+describe("Devanagari ऐ — shared ए base before upper arc and headline", () => {
+  const steps = ductusSteps(DEVANAGARI_AI);
+  const strip = ductusFilmstrip(DEVANAGARI_AI, devanagariAiOutline);
+
+  it("shows five movements across four sourced strokes", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "descend the long left stem from the headline",
+      "curve right through the lower shoulder and sweep down the tail without lifting",
+      "lift, then descend the shorter right stem into its inward hook",
+      "lift, then sweep the upper arc upward and left",
+      "lift, then draw the shirorekha left-to-right",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, true, true, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 1, 2, 3]);
+    expect(strip.frames).toHaveLength(5);
+    expect(strip.penLifts).toBe(3);
+    expect(strip.summary).toBe("4 strokes · 3 pen lifts · 5 movements");
+  });
+
+  it("draws the exact Noto Sans Devanagari character behind the headline", () => {
+    const paths = byTag(strip.frames[4], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      devanagariAiOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(DEVANAGARI_AI.strokes[3], 1),
     );
   });
 });
