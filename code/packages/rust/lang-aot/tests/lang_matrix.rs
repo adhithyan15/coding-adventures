@@ -2178,7 +2178,7 @@ const PROGRAMS: &[Prog] = &[
     Prog {
         lang: Language::Algol60,
         ext: "alg",
-        src: "begin integer i, result; string s; i := 0; for i := i + 1 while i < 2 do s := 'OK'; if s = 'OK' then result := 42 else result := 0 end",
+        src: "begin integer i, result; string s; i := 0; for i := i + 1 while i > 0 and i < 2 do s := 'OK'; if s = 'OK' then result := 42 else result := 0 end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
@@ -8672,7 +8672,9 @@ fn algol_static_initial_while_condition_runs_on_every_available_standard_backend
         .iter()
         .find(|program| {
             program.lang == Language::Algol60
-                && program.src.contains("for i := i + 1 while i < 2")
+                && program
+                    .src
+                    .contains("for i := i + 1 while i > 0 and i < 2")
                 && program.src.contains("string s")
         })
         .expect("the ALGOL initial while-condition program must remain in the matrix");
@@ -8688,7 +8690,7 @@ fn algol_static_initial_while_condition_runs_on_every_available_standard_backend
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
-                "{backend:?} toolchain is present but static initial while condition did not run"
+                "{backend:?} toolchain is present but composed static while condition did not run"
             );
             continue;
         };

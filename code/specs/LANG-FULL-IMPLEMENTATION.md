@@ -871,8 +871,9 @@ backend immediately) come before the enabler-dependent items.
   dynamic, and `while` elements preserve their entry set.
   A `while` element also retains body initialization when a bounded static
   numeric comparison, evaluated after abstractly assigning its initial
-  controlled value, proves the first condition true; unsupported or dynamic
-  predicates preserve the entry set.
+  controlled value, proves the first condition true. Known comparison leaves
+  compose through `not`, `and`, `or`, `impl`, and `eqv`; bare literals,
+  unsupported shapes, and dynamic predicates preserve the entry set.
   Local string slots use an empty verifier seed on typed backends without
   changing source semantics; reads still require membership in the separate
   definite-initialization set.

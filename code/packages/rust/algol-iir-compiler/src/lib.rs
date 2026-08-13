@@ -4869,6 +4869,13 @@ impl Compiler {
     }
 
     fn static_boolean_value(&self, node: &GrammarASTNode) -> Option<bool> {
+        if direct_tokens(node).iter().any(|token| token.value == "not") {
+            let children = direct_nodes(node);
+            if children.len() != 1 {
+                return None;
+            }
+            return self.static_boolean_value(children[0]).map(|value| !value);
+        }
         let sequence = pieces(node);
         if sequence.len() == 1 {
             return match sequence[0] {
@@ -4884,6 +4891,17 @@ impl Compiler {
         else {
             return None;
         };
+        if matches!(op.as_str(), "and" | "or" | "impl" | "eqv") {
+            let lhs = self.static_boolean_value(lhs)?;
+            let rhs = self.static_boolean_value(rhs)?;
+            return Some(match op.as_str() {
+                "and" => lhs && rhs,
+                "or" => lhs || rhs,
+                "impl" => !lhs || rhs,
+                "eqv" => lhs == rhs,
+                _ => unreachable!(),
+            });
+        }
         if !matches!(op.as_str(), "=" | "!=" | "<>" | "<" | "<=" | ">" | ">=") {
             return None;
         }
@@ -8631,6 +8649,25 @@ mod tests {
             "test",
         )
         .expect_err("only bounded numeric while comparisons establish initialization");
+        assert!(format!("{err:?}").contains("requires initialized string variable"));
+    }
+
+    #[test]
+    fn al4_composed_static_initial_while_condition_initializes_string() {
+        compile_source(
+            "begin integer i; string s; i := 0; for i := i + 1 while i > 0 and not (i >= 2) do s := 'OK'; print(s) end",
+            "test",
+        )
+        .expect("known comparison leaves compose through boolean operators");
+    }
+
+    #[test]
+    fn al4_composed_dynamic_initial_while_condition_remains_conservative() {
+        let err = compile_source(
+            "begin integer i, n; string s; i := 0; for i := i + 1 while i > 0 and i < n do s := 'OK'; print(s) end",
+            "test",
+        )
+        .expect_err("a composed condition with an unknown leaf must fail closed");
         assert!(format!("{err:?}").contains("requires initialized string variable"));
     }
 
