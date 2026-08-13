@@ -11,7 +11,7 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": 11354,
   "last_inventory": {
     "revision": "0d608f5054c9723e9df05f1c59941bee2ba5c3bf",
     "schema_version": 3,
@@ -3222,12 +3222,15 @@
     {
       "id": "zip-raw-rfc1951-go-lane-parity",
       "title": "Expose ZIP raw RFC 1951 conformance in Go",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["zip-raw-rfc1951-language-neutral-conformance"],
       "branch": "codex/go-zip-raw-rfc1951",
-      "pr_number": null,
+      "pr_number": 11354,
       "selection_revision": "d4da597ab710e300598bb213e1a475c69eb01d71",
       "selection_notes": "Selected after PR #11334 merged externally and the live collision-clean inventory discovered and classified the two new TypeScript path-raster and script-ductus singleton roots before reprioritization. Go is the safest next dependency-ready ZIP child: it is one isolated package/toolchain with no live or stale branch overlap, while the historical cross-lane ZIP residue touches only .NET, Haskell, and JVM paths. The existing Go ZIP codec already owns stored/fixed encode and decode, so this coherent tranche adds dynamic Huffman decoding, counted consumption, caller caps, typed payload-blind errors, strict malformed-stream behavior, all 34 neutral fixtures, ZIP suffix-cavity rejection, and empty capability metadata without creating a second codec.",
+      "implementation_revision": "ca344c4f104f6989a6b820b7e168f2b328f51619",
+      "validation_notes": "The Go ZIP BUILD front door and direct go test -race suite pass at 90.9% statement coverage; gofmt, go vet, trimmed build, and module verification pass. All 34 neutral raw RFC 1951 cases are consumed, and the independent neutral fixture validator passes 9 tests. Capability taxonomy passes 7 tests, package-parity reporter tests pass 10, and the Go build-tool validates all 302 Go packages while identifying only ZIP and its LZSS prerequisite as affected. The collision gate reports 1,308 identities, 4,464 slots, 858 singletons, 12,012 singleton gaps, 659 Rust singletons, zero collisions, and zero unknown buckets. Strict state DAG/JSON, diff, credential, runtime-dependency, and production-authority scans pass. No other Go package imports go/zip, so the ZIP reader itself is the direct hardened integration boundary.",
+      "publication_notes": "Ready-for-review PR #11354 opened from implementation commit ca344c4f10 after a clean rebase onto exact origin/main 0d608f5054 and full recertification. GitHub reports it open, non-draft, and mergeable; required CI, CodeQL, and auxiliary checks are queued, so later heartbeat runs are monitor-only while they remain pending.",
       "notes": "Portable Go child of the ZIP raw-codec completion umbrella. Consume CMP09 and every closed zip-raw-rfc1951-v1 case, expose the ZIP-owned raw primitives without duplicating DEFLATE, preserve pure in-memory operation, and add explicit empty capability metadata."
     },
     {

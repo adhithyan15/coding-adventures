@@ -3342,6 +3342,11 @@ notification, biometric, hardware-key, clock, and platform adapters remain
 outside that portable core. This dependency-shaped discovery does not displace
 the already in-progress Go ZIP child.
 
+Ready-for-review PR #11354 publishes the validated Go tranche from
+`ca344c4f104f6989a6b820b7e168f2b328f51619`. GitHub reports the PR open,
+non-draft, and mergeable; CI, CodeQL, and auxiliary checks are queued, so the
+loop returns to monitor-only behavior until those checks reach a terminal state.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
