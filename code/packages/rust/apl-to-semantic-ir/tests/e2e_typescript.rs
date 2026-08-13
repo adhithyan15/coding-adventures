@@ -116,28 +116,83 @@ fn ts_package_path(name: &str) -> PathBuf {
 /// worktrees was never possible anyway: the `file:` dependency paths below
 /// are absolute and worktree-specific.
 ///
-/// SECURITY: namespaced by the current user (`$USER`/`%USERNAME%`, falling
-/// back to the process ID if neither is set), not a bare fixed name — a
-/// bare fixed name under a shared temp root (e.g. a multi-user Linux box's
-/// world-writable `/tmp`) would let another local account pre-create this
-/// exact path and plant a symlink inside it before this process's first
-/// write, so a later `fs::write` here could follow that symlink and
-/// overwrite a file the OTHER account doesn't have permission to touch but
-/// this process's user does. Namespacing means a different local user's
-/// directory is always a different, unpredictable-to-them path.
+/// Namespaced by the current user (`$USER`/`%USERNAME%`, falling back to
+/// the process ID) so two different local accounts never collide on the
+/// same path — login names are enumerable on a shared machine, though, so
+/// this alone is NOT the security boundary (an attacker can still guess
+/// or look up the victim's username); `ensure_dir_secure` below is what
+/// actually refuses to reuse a directory this process doesn't own. Only
+/// alphanumeric/`-`/`_` bytes are kept from the env var before it goes
+/// into a path — an env var (unlike a real login shell's `$USER`) is not
+/// guaranteed free of path separators in every environment this might run
+/// in, and a `/`-containing value would otherwise silently relocate `dir`
+/// outside `temp_dir()` entirely via `PathBuf::join`.
 fn project_dir() -> PathBuf {
     let owner = std::env::var("USER")
         .or_else(|_| std::env::var("USERNAME"))
-        .unwrap_or_else(|_| std::process::id().to_string());
+        .ok()
+        .filter(|s| !s.is_empty() && s.chars().all(|c| c.is_ascii_alphanumeric() || c == '-' || c == '_'))
+        .unwrap_or_else(|| std::process::id().to_string());
     std::env::temp_dir().join(format!("sir_apl_ts_e2e_project_{owner}"))
 }
 
+/// Ensure `dir` exists, is a real directory (not a symlink), and — on
+/// Unix, where a shared multi-user `/tmp` is the realistic threat model —
+/// is owned by the current user. Refuses (panics) rather than silently
+/// reusing a pre-existing entry that fails either check.
+///
+/// SECURITY: this is the actual defense `project_dir`'s per-user
+/// namespacing alone is not — a different local account on a shared
+/// machine could still learn or guess this process's username and
+/// pre-create `dir` (as a real directory, or worse, a symlink to
+/// somewhere the victim can write but the planting account cannot)
+/// *before* the victim's first run. `fs::create_dir` either creates it
+/// fresh (unambiguously safe — nobody else touched it) or fails with
+/// `AlreadyExists`, in which case `symlink_metadata` (which does NOT
+/// follow a symlink, unlike `metadata`) plus a uid check confirm the
+/// existing entry is genuinely ours before any file inside it is
+/// touched — closing the same class of attack `write_new` closes at the
+/// individual-file level, but at the directory (and its ancestor-path
+/// resolution) level instead.
+fn ensure_dir_secure(dir: &Path) {
+    match fs::create_dir(dir) {
+        Ok(()) => return,
+        Err(e) if e.kind() == std::io::ErrorKind::AlreadyExists => {}
+        Err(e) => panic!("create {}: {e}", dir.display()),
+    }
+    let meta = fs::symlink_metadata(dir).unwrap_or_else(|e| panic!("stat {}: {e}", dir.display()));
+    assert!(
+        !meta.file_type().is_symlink(),
+        "refusing to reuse {} — it is a symlink, possibly planted by another \
+         local account; remove it manually and retry",
+        dir.display()
+    );
+    assert!(
+        meta.is_dir(),
+        "{} exists and is not a directory",
+        dir.display()
+    );
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::MetadataExt;
+        let current_uid = unsafe { libc::getuid() };
+        assert_eq!(
+            meta.uid(),
+            current_uid,
+            "refusing to reuse {} — owned by a different user (uid {}, we are uid {}), \
+             possibly planted by another local account; remove it manually and retry",
+            dir.display(),
+            meta.uid(),
+            current_uid
+        );
+    }
+}
+
 /// Write `contents` to `path`, refusing to follow a pre-existing symlink —
-/// mirrors the same `remove_file` + `create_new` discipline already used
-/// for the per-case `.ts` source files below, applied here to
-/// `package.json`/`tsconfig.json` too (defense in depth alongside
-/// `project_dir`'s per-user namespacing: a stale entry from an unrelated
-/// prior process should never be silently written through).
+/// mirrors the same `remove_file` + `create_new` discipline `write_new`'s
+/// only caller sites need, applied here to `package.json`/`tsconfig.json`
+/// too (defense in depth alongside `ensure_dir_secure`: a stale entry from
+/// an unrelated prior process should never be silently written through).
 fn write_new(path: &Path, contents: &str) {
     let _ = fs::remove_file(path);
     let mut file = OpenOptions::new()
@@ -162,7 +217,8 @@ fn ensure_project_ready() -> bool {
         return false;
     }
     let dir = project_dir();
-    fs::create_dir_all(dir.join("src")).expect("create scratch project dir");
+    ensure_dir_secure(&dir);
+    ensure_dir_secure(&dir.join("src"));
 
     let package_json = format!(
         r#"{{

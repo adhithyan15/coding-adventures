@@ -38,3 +38,8 @@ semantic-ir-to-javascript = { path = "../semantic-ir-to-javascript" }
 # this test file needs it, for comparison purposes only.
 coding-adventures-apl-runtime = { path = "../apl-runtime" }
 semantic-ir-to-typescript = { path = "../semantic-ir-to-typescript" }
+# `tests/e2e_typescript.rs`'s scratch-directory ownership check (SECURITY:
+# refuses to reuse a pre-existing temp directory not owned by the current
+# user) needs the process's own uid, which stable std does not expose.
+[target.'cfg(unix)'.dev-dependencies]
+libc = "0.2"
