@@ -1,4 +1,4 @@
-# @version 2
+# @version 3
 #
 # Mermaid 11.16.1 quadrant-chart token grammar.
 #
@@ -12,6 +12,9 @@ skip:
 NEWLINE            = /\r?\n/
 SEMICOLON          = ";"
 HEADER             = /quadrantChart/
+ACC_DESCR_BLOCK    = /accDescr[ \t]*\{[^}]*\}/
+ACC_TITLE_STATEMENT = /accTitle[ \t]*:[^\r\n;]+/
+ACC_DESCR_STATEMENT = /accDescr[ \t]*:[^\r\n;]+/
 TITLE_STATEMENT    = /title[ \t]+[^\r\n;]+/
 AXIS_STATEMENT     = /[xy]-axis[ \t]+[^\r\n;]+/
 QUADRANT_STATEMENT = /quadrant-[1-4][ \t]+[^\r\n;]+/

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.46.0
+
+- Tokenize single-line and multiline quadrant accessibility metadata.
+
 ## 0.45.0
 
 - Tokenize quadrant point class definitions, class references, and inline styles.

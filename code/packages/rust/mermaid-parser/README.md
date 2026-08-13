@@ -35,9 +35,9 @@ Mermaid
 ```
 
 The `quadrantChart` subset covers titles, x/y endpoint labels, all four
-quadrant labels, normalized points, point classes, and inline point radius,
-fill, and stroke styles. Accessibility statements and remaining pinned lexical
-edge cases remain compatibility gaps and therefore keep the family at
+quadrant labels, normalized points, point classes, inline point radius, fill,
+and stroke styles, plus accessibility titles and descriptions. Remaining pinned lexical
+edge cases keep the family at
 `partial` rather than `full`.
 
 The sequence subset includes participants and actors, aliases, standard solid

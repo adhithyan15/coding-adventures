@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.39.0
+
+- Preserve chart accessibility title and description through semantic and layout IR.
+
 ## 0.38.0
 
 - Preserve Mermaid quadrant point radius, fill, stroke color, and stroke width through semantic and layout IR.
