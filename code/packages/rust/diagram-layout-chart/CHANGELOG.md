@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.5.0 — 2026-08-13
+
+### Added
+- Apply authored quadrant dimensions, axis positions, and default point radius
+
 ## 0.4.0 — 2026-08-13
 
 ### Added

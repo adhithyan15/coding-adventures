@@ -414,7 +414,8 @@ mod apple {
     #[test]
     fn render_mermaid_quadrant_to_png() {
         let diagram = parse_quadrant_chart(
-            "QuAdRaNtChArT\n\
+            "%%{init: {\"quadrantChart\": {\"chartWidth\": 680, \"chartHeight\": 560, \"xAxisPosition\": \"top\", \"yAxisPosition\": \"right\", \"pointRadius\": 7}}}%%\n\
+             QuAdRaNtChArT\n\
              title Native rendering portfolio\n\
              X-AxIs \"Low reach 📉\" ---> \"`High reach Ω`\" %% axis comment\n\
              y-axis Low impact --> High impact\n\
@@ -484,6 +485,8 @@ mod apple {
         assert_eq!(ellipses[0].stroke_width, Some(4.0));
         assert_eq!(ellipses[1].rx, 9.0);
         assert_eq!(ellipses[1].stroke_width, Some(3.0));
+        assert_eq!(ellipses[2].rx, 7.0);
+        assert_eq!((scene.width, scene.height), (680.0, 560.0));
 
         let pixels = render(&scene);
         write_png(&pixels, "/tmp/mermaid_quadrant_e2e.png").expect("PNG write failed");
