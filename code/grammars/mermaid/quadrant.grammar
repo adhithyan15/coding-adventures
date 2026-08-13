@@ -1,0 +1,11 @@
+# @version 1
+#
+# Mermaid 11.16.1 quadrant-chart parser grammar.
+#
+# This first native slice covers titles, axis endpoint labels, quadrant labels,
+# and normalized points. Point classes/styles and accessibility statements are
+# intentionally deferred while the semantic/layout/Paint pipeline is proven.
+
+document = { terminator } HEADER { terminator | statement } EOF ;
+terminator = NEWLINE | SEMICOLON ;
+statement = TITLE_STATEMENT | AXIS_STATEMENT | QUADRANT_STATEMENT | POINT_STATEMENT ;
