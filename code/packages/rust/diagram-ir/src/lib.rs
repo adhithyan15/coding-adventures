@@ -1,6 +1,6 @@
-//! diagram-ir v0.41.0 - DG00/DG04 semantic IR
+//! diagram-ir v0.42.0 - DG00/DG04 semantic IR
 
-pub const VERSION: &str = "0.41.0";
+pub const VERSION: &str = "0.42.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramDirection {
@@ -556,6 +556,16 @@ pub struct QuadrantConfig {
     pub quadrant_padding: Option<f64>,
     pub internal_border_width: Option<f64>,
     pub external_border_width: Option<f64>,
+    pub title_font_size: Option<f64>,
+    pub title_padding: Option<f64>,
+    pub x_axis_label_font_size: Option<f64>,
+    pub x_axis_label_padding: Option<f64>,
+    pub y_axis_label_font_size: Option<f64>,
+    pub y_axis_label_padding: Option<f64>,
+    pub quadrant_label_font_size: Option<f64>,
+    pub quadrant_text_top_padding: Option<f64>,
+    pub point_label_font_size: Option<f64>,
+    pub point_text_padding: Option<f64>,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -651,6 +661,8 @@ pub enum LayoutedChartItem {
         height: f64,
         color: String,
         label: Option<String>,
+        label_font_size: Option<f64>,
+        label_top_padding: f64,
     },
     QuadrantBorder {
         x: f64,
@@ -669,11 +681,14 @@ pub enum LayoutedChartItem {
         stroke_color: String,
         stroke_width: f64,
         label: String,
+        label_font_size: Option<f64>,
+        label_padding: f64,
     },
     DataLabel {
         x: f64,
         y: f64,
         text: String,
+        font_size: Option<f64>,
     },
     Legend {
         x: f64,
@@ -1073,7 +1088,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.41.0");
+        assert_eq!(VERSION, "0.42.0");
     }
     #[test]
     fn default_direction_is_tb() {

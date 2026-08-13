@@ -15,7 +15,7 @@ use diagram_ir::{
     Point, SeriesKind,
 };
 
-pub const VERSION: &str = "0.6.0";
+pub const VERSION: &str = "0.7.0";
 
 const MARGIN: f64 = 24.0;
 const TITLE_H: f64 = 32.0;
@@ -102,6 +102,7 @@ fn layout_xy(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagram {
             x: cw / 2.0,
             y: MARGIN + TITLE_H * 0.5,
             text: t.clone(),
+            font_size: None,
         });
     }
 
@@ -239,6 +240,7 @@ fn layout_pie(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagram 
             x: cw / 2.0,
             y: MARGIN + TITLE_H * 0.5,
             text: t.clone(),
+            font_size: None,
         });
     }
 
@@ -291,6 +293,7 @@ fn layout_sankey(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagr
             x: MARGIN + 4.0,
             y: y_off + band_h / 2.0,
             text: format!("{} → {} ({})", flow.source, flow.target, flow.weight),
+            font_size: None,
         });
         y_off += band_h + 4.0;
     }
@@ -309,8 +312,9 @@ fn layout_sankey(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagr
 fn layout_quadrant(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagram {
     let cw = diagram.quadrant_config.chart_width.unwrap_or(cw);
     let ch = diagram.quadrant_config.chart_height.unwrap_or(ch);
+    let title_padding = diagram.quadrant_config.title_padding.unwrap_or(0.0);
     let title_height = if diagram.title.is_some() {
-        TITLE_H
+        diagram.quadrant_config.title_font_size.unwrap_or(TITLE_H) + title_padding * 2.0
     } else {
         0.0
     };
@@ -337,8 +341,11 @@ fn layout_quadrant(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDia
     if let Some(title) = &diagram.title {
         items.push(LayoutedChartItem::DataLabel {
             x: cw / 2.0,
-            y: MARGIN + TITLE_H / 2.0,
+            y: MARGIN
+                + title_padding
+                + diagram.quadrant_config.title_font_size.unwrap_or(TITLE_H) / 2.0,
             text: title.clone(),
+            font_size: diagram.quadrant_config.title_font_size,
         });
     }
 
@@ -350,6 +357,11 @@ fn layout_quadrant(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDia
             height: half_height,
             color: colors[index].to_string(),
             label: diagram.quadrant_labels[index].clone(),
+            label_font_size: diagram.quadrant_config.quadrant_label_font_size,
+            label_top_padding: diagram
+                .quadrant_config
+                .quadrant_text_top_padding
+                .unwrap_or(8.0),
         });
     }
     items.push(LayoutedChartItem::QuadrantBorder {
@@ -367,38 +379,50 @@ fn layout_quadrant(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDia
             items.push(LayoutedChartItem::DataLabel {
                 x: left,
                 y: if x_axis_top {
-                    top - 16.0
+                    top - diagram.quadrant_config.x_axis_label_padding.unwrap_or(16.0)
                 } else {
-                    bottom + 20.0
+                    bottom + diagram.quadrant_config.x_axis_label_padding.unwrap_or(20.0)
                 },
                 text: label.clone(),
+                font_size: diagram.quadrant_config.x_axis_label_font_size,
             });
         }
         if let Some(label) = axis.categories.get(1) {
             items.push(LayoutedChartItem::DataLabel {
                 x: right,
                 y: if x_axis_top {
-                    top - 16.0
+                    top - diagram.quadrant_config.x_axis_label_padding.unwrap_or(16.0)
                 } else {
-                    bottom + 20.0
+                    bottom + diagram.quadrant_config.x_axis_label_padding.unwrap_or(20.0)
                 },
                 text: label.clone(),
+                font_size: diagram.quadrant_config.x_axis_label_font_size,
             });
         }
     }
     if let Some(axis) = &diagram.y_axis {
         if let Some(label) = axis.categories.first() {
             items.push(LayoutedChartItem::DataLabel {
-                x: if y_axis_right { cw - MARGIN } else { MARGIN },
+                x: if y_axis_right {
+                    right + diagram.quadrant_config.y_axis_label_padding.unwrap_or(24.0)
+                } else {
+                    left - diagram.quadrant_config.y_axis_label_padding.unwrap_or(56.0)
+                },
                 y: bottom,
                 text: label.clone(),
+                font_size: diagram.quadrant_config.y_axis_label_font_size,
             });
         }
         if let Some(label) = axis.categories.get(1) {
             items.push(LayoutedChartItem::DataLabel {
-                x: if y_axis_right { cw - MARGIN } else { MARGIN },
+                x: if y_axis_right {
+                    right + diagram.quadrant_config.y_axis_label_padding.unwrap_or(24.0)
+                } else {
+                    left - diagram.quadrant_config.y_axis_label_padding.unwrap_or(56.0)
+                },
                 y: top,
                 text: label.clone(),
+                font_size: diagram.quadrant_config.y_axis_label_font_size,
             });
         }
     }
@@ -418,6 +442,8 @@ fn layout_quadrant(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDia
                 .unwrap_or_else(|| "#1e3a8a".to_string()),
             stroke_width: point.stroke_width.unwrap_or(1.5),
             label: point.label.clone(),
+            label_font_size: diagram.quadrant_config.point_label_font_size,
+            label_padding: diagram.quadrant_config.point_text_padding.unwrap_or(4.0),
         });
     }
 
@@ -482,7 +508,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.6.0");
+        assert_eq!(crate::VERSION, "0.7.0");
     }
 
     #[test]
@@ -682,6 +708,16 @@ mod tests {
             quadrant_padding: Some(18.0),
             internal_border_width: Some(3.0),
             external_border_width: Some(5.0),
+            title_font_size: Some(22.0),
+            title_padding: Some(12.0),
+            x_axis_label_font_size: Some(15.0),
+            x_axis_label_padding: Some(21.0),
+            y_axis_label_font_size: Some(16.0),
+            y_axis_label_padding: Some(23.0),
+            quadrant_label_font_size: Some(17.0),
+            quadrant_text_top_padding: Some(19.0),
+            point_label_font_size: Some(14.0),
+            point_text_padding: Some(9.0),
         };
 
         let layout = layout_chart_diagram(&diagram, 400.0, 300.0);
@@ -691,6 +727,15 @@ mod tests {
             _ => None,
         });
         assert_eq!(point_radius, Some(11.0));
+        let point_text = layout.items.iter().find_map(|item| match item {
+            LayoutedChartItem::ScatterPoint {
+                label_font_size,
+                label_padding,
+                ..
+            } => Some((*label_font_size, *label_padding)),
+            _ => None,
+        });
+        assert_eq!(point_text, Some((Some(14.0), 9.0)));
         let border = layout.items.iter().find_map(|item| match item {
             LayoutedChartItem::QuadrantBorder {
                 x,
@@ -705,7 +750,7 @@ mod tests {
             .items
             .iter()
             .find_map(|item| match item {
-                LayoutedChartItem::DataLabel { x, y, text } if text == "Low" => Some((*x, *y)),
+                LayoutedChartItem::DataLabel { x, y, text, .. } if text == "Low" => Some((*x, *y)),
                 _ => None,
             })
             .unwrap();
@@ -713,13 +758,15 @@ mod tests {
             .items
             .iter()
             .find_map(|item| match item {
-                LayoutedChartItem::DataLabel { x, y, text } if text == "Bottom" => Some((*x, *y)),
+                LayoutedChartItem::DataLabel { x, y, text, .. } if text == "Bottom" => {
+                    Some((*x, *y))
+                }
                 _ => None,
             })
             .unwrap();
         assert!(low.1 < 100.0, "top x-axis label should be above the plot");
         assert!(
-            bottom.0 > 650.0,
+            bottom.0 > 640.0,
             "right y-axis label should be right of the plot"
         );
     }

@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.7.0 — 2026-08-13
+
+### Added
+- Resolve quadrant typography and label padding into chart layout items
+
 ## 0.6.0 — 2026-08-13
 
 ### Added
