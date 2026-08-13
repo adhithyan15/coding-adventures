@@ -2,6 +2,11 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Chinese 么 ductus (HL-C09CU)
+
+- Render **么** in four source-aligned movements across three strokes.
+- Preserve its joined falling-to-rightward sweep and two lifts in Noto Sans SC.
+
 ### Added — cited Chinese 什 ductus (HL-C09CT)
 
 - Render **什** in four source-aligned movements across four strokes.
