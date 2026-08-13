@@ -2233,6 +2233,30 @@
         "ES-EXT-B1-SYNTH-PRET"
       ],
       "after": []
+    },
+    {
+      "id": "ES-PATH-B1-HABLARA",
+      "spine_node": "SPINE-EXPRESS-CONDITION",
+      "lessons": [
+        "ES-C56-hablara"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-B1-HABLARA"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-B1-TUVIERA",
+      "spine_node": "SPINE-EXPRESS-CONDITION",
+      "lessons": [
+        "ES-C56-tuviera"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-B1-TUVIERA"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -2576,7 +2600,9 @@
       "segments": [
         "ES-PATH-B1-SI",
         "ES-PATH-B1-SI-FUTURO",
-        "ES-PATH-B1-SYNTH-CONDICION"
+        "ES-PATH-B1-SYNTH-CONDICION",
+        "ES-PATH-B1-HABLARA",
+        "ES-PATH-B1-TUVIERA"
       ],
       "omits": [
         "CONDITIONAL-REAL",
@@ -4942,6 +4968,28 @@
       "prerequisites": [],
       "lessons": [
         "ES-C55-sintesis-preterito-completo"
+      ]
+    },
+    {
+      "id": "ES-EXT-B1-HABLARA",
+      "stage": "B1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C56-hablara"
+      ]
+    },
+    {
+      "id": "ES-EXT-B1-TUVIERA",
+      "stage": "B1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C56-tuviera"
       ]
     }
   ]

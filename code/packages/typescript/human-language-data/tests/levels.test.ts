@@ -245,7 +245,7 @@ describe("corpus snapshot", () => {
     // sentence that used to stand here, "the only B1 nodes any track has
     // touched", stopped being true the moment chapters 196-198 landed.
     // B2-C2 remain authored-but-unrealized, in every track.
-    expect(summary.byLevel.B1).toBe(26); // +3: HL-C113 realizes SPINE-EXPRESS-CONDITION, the third B1 node
+    expect(summary.byLevel.B1).toBe(28); // +3: HL-C113 realizes SPINE-EXPRESS-CONDITION, the third B1 node // +2: HL-C113 imperfect subjunctive (2 lessons)
     expect(summary.byLevel.B2).toBe(0);
     expect(summary.byLevel.C1).toBe(0);
     expect(summary.byLevel.C2).toBe(0);

@@ -5448,6 +5448,24 @@
       "tex": "spanish/book/chapters/ch205-synthesis-preterito.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 206,
+      "sourceHash": "fnv1a64:835ca099723c51b7",
+      "lessonIds": [
+        "ES-C56-hablara"
+      ],
+      "tex": "spanish/book/chapters/ch206-hablara.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 207,
+      "sourceHash": "fnv1a64:88a63516076d7311",
+      "lessonIds": [
+        "ES-C56-tuviera"
+      ],
+      "tex": "spanish/book/chapters/ch207-tuviera.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "sourceHash": "fnv1a64:c0940889d5248bc5",
