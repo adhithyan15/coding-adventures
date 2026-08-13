@@ -13,9 +13,9 @@ use jit_core::cir::{CIRInstr, CIROperand};
 use riscv_encoder::{
     assemble, encode_add, encode_addi, encode_and, encode_andi, encode_beq, encode_bne,
     encode_div, encode_divu, encode_ecall, encode_jal, encode_lui, encode_mul, encode_mulhu,
-    encode_or, encode_ori, encode_rem, encode_remu, encode_sll, encode_slli, encode_slt,
+    encode_lw, encode_or, encode_ori, encode_rem, encode_remu, encode_sll, encode_slli, encode_slt,
     encode_sltu, encode_sra, encode_srai, encode_srl, encode_srli, encode_sub, encode_xor,
-    encode_xori, A0, RET_WORD,
+    encode_xori, encode_sw, A0, RET_WORD,
     X0_ZERO, X1_RA,
 };
 use riscv_simulator::RiscVSimulator;
@@ -36,6 +36,9 @@ const DIVISION_LHS_SIGN_REGISTER: u32 = 23;
 const DIVISION_QUOTIENT_SIGN_REGISTER: u32 = 24;
 const DIVISION_DIVISOR_NONZERO_REGISTER: u32 = 25;
 const VALUE_REGISTERS: [u32; 6] = [5, 6, 7, 28, 29, 30];
+const STACK_POINTER: u32 = 2;
+const SPILLED_LHS_REGISTER: u32 = 26;
+const SPILLED_RHS_REGISTER: u32 = 27;
 
 /// The RV32I backend.  Stateless — every compilation gets fresh allocation.
 #[derive(Debug, Default, Clone, Copy)]
@@ -193,18 +196,22 @@ struct Lowerer {
     remaining_uses: HashMap<String, usize>,
     next_value_register: usize,
     next_internal_label: usize,
+    frame_size: i32,
+    next_spill_slot: usize,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 enum ValueLocation {
     Word(u32),
     Pair { lo: u32, hi: u32 },
+    Spill { offset: i32 },
 }
 
 impl ValueLocation {
     fn low(self) -> u32 {
         match self {
             Self::Word(register) | Self::Pair { lo: register, .. } => register,
+            Self::Spill { .. } => unreachable!("wide lowering cannot use a scalar spill slot"),
         }
     }
 }
@@ -254,8 +261,21 @@ impl Lowerer {
             };
             env.push((name.clone(), location));
         }
+        let destination_count = cir.iter().filter(|instr| instr.dest.is_some()).count();
+        let frame_size = if destination_count > VALUE_REGISTERS.len() {
+            ((destination_count as i32) * 4 + 15) & !15
+        } else {
+            0
+        };
+        if frame_size > 2048 {
+            return Err(BackendError::ImmediateOutOfRange(frame_size as i64));
+        }
+        let mut words = Vec::new();
+        if frame_size != 0 {
+            words.push(encode_addi(STACK_POINTER, STACK_POINTER, -frame_size));
+        }
         Ok(Self {
-            words: Vec::new(),
+            words,
             env,
             word_sized_values: HashSet::new(),
             labels: HashMap::new(),
@@ -263,12 +283,15 @@ impl Lowerer {
             remaining_uses: count_value_uses(cir),
             next_value_register: 0,
             next_internal_label: 0,
+            frame_size,
+            next_spill_slot: 0,
         })
     }
 
     fn lower(&mut self, instr: &CIRInstr) -> Result<(), BackendError> {
         let op = instr.op.as_str();
         if op == "ret_void" {
+            self.restore_stack_frame();
             self.words.push(RET_WORD);
             return Ok(());
         }
@@ -280,7 +303,11 @@ impl Lowerer {
                     self.words.push(encode_addi(A0, lo, 0));
                     self.words.push(encode_addi(A1, hi, 0));
                 }
+                ValueLocation::Spill { offset } => {
+                    self.words.push(encode_lw(A0, STACK_POINTER, offset));
+                }
             }
+            self.restore_stack_frame();
             self.words.push(RET_WORD);
             return Ok(());
         }
@@ -570,7 +597,7 @@ impl Lowerer {
         self.allocate_pair(destination)
     }
 
-    fn var_src(&self, instr: &CIRInstr, index: usize, op: &str) -> Result<u32, BackendError> {
+    fn var_src(&mut self, instr: &CIRInstr, index: usize, op: &str) -> Result<u32, BackendError> {
         let name = match instr.srcs.get(index) {
             Some(CIROperand::Var(name)) => name,
             _ => {
@@ -579,7 +606,21 @@ impl Lowerer {
                 )))
             }
         };
-        self.lookup(name)
+        match self.lookup_location(name)? {
+            ValueLocation::Word(register) => Ok(register),
+            ValueLocation::Pair { .. } => Err(BackendError::InvalidOperand(format!(
+                "{name:?} is a 64-bit value where a 32-bit value is required"
+            ))),
+            ValueLocation::Spill { offset } => {
+                let register = if index == 0 {
+                    SPILLED_LHS_REGISTER
+                } else {
+                    SPILLED_RHS_REGISTER
+                };
+                self.words.push(encode_lw(register, STACK_POINTER, offset));
+                Ok(register)
+            }
+        }
     }
 
     fn var_location(
@@ -615,13 +656,12 @@ impl Lowerer {
                 ValueLocation::Pair { .. } => Err(BackendError::InvalidOperand(format!(
                     "{name:?} is already bound as a 64-bit value"
                 ))),
+                ValueLocation::Spill { .. } => Err(BackendError::InvalidOperand(format!(
+                    "{name:?} is already bound in a stack slot"
+                ))),
             };
         }
-        if self.next_value_register >= VALUE_REGISTERS.len() {
-            return Err(BackendError::OutOfRegisters);
-        }
-        let reg = VALUE_REGISTERS[self.next_value_register];
-        self.next_value_register += 1;
+        let reg = self.allocate_value_register()?;
         self.env.push((name.to_owned(), ValueLocation::Word(reg)));
         Ok(reg)
     }
@@ -632,6 +672,9 @@ impl Lowerer {
                 ValueLocation::Pair { lo, hi } => Ok(ValueLocation::Pair { lo: *lo, hi: *hi }),
                 ValueLocation::Word(_) => Err(BackendError::InvalidOperand(format!(
                     "{name:?} is already bound as a 32-bit value"
+                ))),
+                ValueLocation::Spill { .. } => Err(BackendError::InvalidOperand(format!(
+                    "{name:?} is already bound in a scalar stack slot"
                 ))),
             };
         }
@@ -647,12 +690,46 @@ impl Lowerer {
         Ok(location)
     }
 
-    fn lookup(&self, name: &str) -> Result<u32, BackendError> {
-        match self.lookup_location(name)? {
-            ValueLocation::Word(reg) => Ok(reg),
-            ValueLocation::Pair { .. } => Err(BackendError::InvalidOperand(format!(
-                "{name:?} is a 64-bit value where a 32-bit value is required"
-            ))),
+    fn allocate_value_register(&mut self) -> Result<u32, BackendError> {
+        if self.next_value_register < VALUE_REGISTERS.len() {
+            let register = VALUE_REGISTERS[self.next_value_register];
+            self.next_value_register += 1;
+            return Ok(register);
+        }
+
+        if let Some(index) = self.env.iter().position(|(name, location)| {
+            matches!(location, ValueLocation::Word(register) if VALUE_REGISTERS.contains(register))
+                && self.remaining_uses.get(name).copied().unwrap_or_default() == 0
+        }) {
+            let (_, location) = self.env.remove(index);
+            return match location {
+                ValueLocation::Word(register) => Ok(register),
+                _ => unreachable!("dead value-register entry must be a word"),
+            };
+        }
+
+        let index = self
+            .env
+            .iter()
+            .position(|(_, location)| {
+                matches!(location, ValueLocation::Word(register) if VALUE_REGISTERS.contains(register))
+            })
+            .ok_or(BackendError::OutOfRegisters)?;
+        let register = match self.env[index].1 {
+            ValueLocation::Word(register) => register,
+            _ => unreachable!("value-register entry must be a word"),
+        };
+        let offset = (self.next_spill_slot * 4) as i32;
+        self.next_spill_slot += 1;
+        self.words.push(encode_sw(register, STACK_POINTER, offset));
+        self.env[index].1 = ValueLocation::Spill { offset };
+        Ok(register)
+    }
+
+    fn restore_stack_frame(&mut self) {
+        if self.frame_size != 0 {
+            self.words
+                .push(encode_addi(STACK_POINTER, STACK_POINTER, self.frame_size));
         }
     }
 
@@ -891,6 +968,9 @@ impl Lowerer {
         let rhs_hi = match rhs {
             ValueLocation::Pair { hi, .. } => hi,
             ValueLocation::Word(_) => X0_ZERO,
+            ValueLocation::Spill { .. } => {
+                unreachable!("wide division cannot use a scalar spill slot")
+            }
         };
 
         self.words.push(encode_addi(SCRATCH_REGISTER, X0_ZERO, 0));
@@ -1088,6 +1168,11 @@ impl Lowerer {
                     "{op} requires a shift count that fits in one RV32 register"
                 )))
             }
+            ValueLocation::Spill { .. } => {
+                return Err(BackendError::UnsupportedType(
+                    "spilled wide shift count".to_owned(),
+                ))
+            }
         };
         let signed_value = arithmetic_right;
         self.copy_or_extend_high(SECOND_SCRATCH_REGISTER, value, signed_value);
@@ -1277,6 +1362,9 @@ impl Lowerer {
             ValueLocation::Pair { hi, .. } => self.words.push(encode_addi(dest, hi, 0)),
             ValueLocation::Word(lo) if signed => self.words.push(encode_srai(dest, lo, 31)),
             ValueLocation::Word(_) => self.words.push(encode_addi(dest, X0_ZERO, 0)),
+            ValueLocation::Spill { .. } => {
+                unreachable!("wide arithmetic cannot use a scalar spill slot")
+            }
         }
     }
 
@@ -1288,6 +1376,9 @@ impl Lowerer {
                 self.words.push(encode_add(dest, dest, SCRATCH_REGISTER));
             }
             ValueLocation::Word(_) => {}
+            ValueLocation::Spill { .. } => {
+                unreachable!("wide arithmetic cannot use a scalar spill slot")
+            }
         }
     }
 
@@ -1299,6 +1390,9 @@ impl Lowerer {
                 self.words.push(encode_sub(dest, dest, SCRATCH_REGISTER));
             }
             ValueLocation::Word(_) => {}
+            ValueLocation::Spill { .. } => {
+                unreachable!("wide arithmetic cannot use a scalar spill slot")
+            }
         }
     }
 

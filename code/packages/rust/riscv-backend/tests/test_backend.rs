@@ -1069,17 +1069,25 @@ fn executes_jmp_if_true_when_its_branch_is_taken() {
 }
 
 #[test]
-fn rejects_more_live_values_than_the_starter_allocator_can_hold() {
-    let cir: Vec<CIRInstr> = (0..7)
-        .map(|index| {
+fn spills_live_scalar_values_to_a_stack_frame() {
+    let mut cir: Vec<CIRInstr> = (1..=7)
+        .map(|value| {
             CIRInstr::new(
                 "const_i32",
-                Some(format!("v{index}")),
-                vec![CIROperand::Int(index)],
+                Some(format!("v{value}")),
+                vec![CIROperand::Int(value)],
                 "i32",
             )
         })
         .collect();
-    let err = compile(&ctx("many", &[], "void"), &cir).expect_err("six value registers only");
-    assert_eq!(err, BackendError::OutOfRegisters);
+    cir.extend([
+        ci("add_i32", Some("ab"), vec![CIROperand::Var("v1".into()), CIROperand::Var("v2".into())], "i32"),
+        ci("add_i32", Some("cd"), vec![CIROperand::Var("v3".into()), CIROperand::Var("v4".into())], "i32"),
+        ci("add_i32", Some("ef"), vec![CIROperand::Var("v5".into()), CIROperand::Var("v6".into())], "i32"),
+        ci("add_i32", Some("abcd"), vec![CIROperand::Var("ab".into()), CIROperand::Var("cd".into())], "i32"),
+        ci("add_i32", Some("total"), vec![CIROperand::Var("abcd".into()), CIROperand::Var("ef".into())], "i32"),
+        ci("add_i32", Some("answer"), vec![CIROperand::Var("total".into()), CIROperand::Var("v7".into())], "i32"),
+        ci("ret_i32", None, vec![CIROperand::Var("answer".into())], "i32"),
+    ]);
+    assert_eq!(compile_and_run(&cir), 28);
 }
