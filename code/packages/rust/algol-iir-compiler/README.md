@@ -194,6 +194,8 @@ gotos, calls, dynamic reassignment, and captured globals invalidate that shortcu
 For definite string initialization, a `step`/`until` element may establish an
 initialized local when finite static start, step, and limit values prove that
 its body executes at least once; zero-trip and dynamic bounds fail closed.
+Those static values may come from straight-line tracked numeric locals; their
+metadata is consumed before loop lowering disables snapshot propagation.
 Local string slots carry an empty verifier seed, but this is not a source-level
 initial value: reads remain gated by the compiler's definite-initialization set.
 Real literal bases also accept the existing
