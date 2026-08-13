@@ -1,5 +1,133 @@
 # Changelog — `twig-aot`
 
+## Unreleased - CI actually runs this crate's tests now
+
+One latent breakage, fixed in three parts: the crate's test targets did not
+compile on any non-macOS host, and nothing in CI was positioned to notice —
+because nothing in CI compiled them at all.
+
+**`tests/macos_arm64_smoke.rs` no longer breaks the `-D warnings` build.**
+The file carried a top-level `use std::io::Write;`. The only `writeln!` in it
+lives inside `end_to_end_typed_twig_arithmetic_and_branches`, which imports the
+trait in its own body — so the file-level import was unused on *every* host,
+including Apple Silicon, where the inner `use` shadows it. CI compiles test
+targets with `-D warnings`, which makes an unused import a hard error, not a
+nag:
+
+```
+error: unused import: `std::io::Write`
+  --> twig-aot/tests/macos_arm64_smoke.rs:44:5
+```
+
+The import is deleted (not silenced with `#[allow(unused_imports)]`) and
+replaced with a note explaining where `Write` belongs if a future test outside
+that function needs it.
+
+**Added a `BUILD` file.** `twig-aot` had none, so the repo's build tool never
+discovered the package and never executed a single one of its assertions — the
+same gap that hid three red suites in `lang-aot`. A workspace-wide `cargo check`
+elsewhere kept the crate *compiling*, which is precisely why an unused import in
+a test target could sit on main: nothing was compiling the test targets. The
+BUILD file runs, on one line (the build tool executes each BUILD line as its own
+`sh -c`; backslash continuations are silently truncated, not honoured):
+
+```
+cargo test -p twig-aot --lib --test e4d_str_helpers --test linux_x86_64_smoke --test windows_x86_64_smoke
+```
+
+Three of those targets are whole-file host-gated, so each CI leg runs a different
+subset and the rest compile to zero tests. Note that only the ubuntu and macOS
+legs build Rust at all — the windows leg's build job runs `-language swift` plus
+the Venture/ADJ containment steps and never enters the Rust path, so
+`windows_x86_64_smoke` is listed for developers on a Windows host but is not
+actually watched by CI.
+
+**All three file-level `std` imports in `tests/macos_arm64_smoke.rs` are now
+gated to `#[cfg(all(target_os = "macos", target_arch = "aarch64"))]`.** Making
+the crate discoverable meant CI compiled its test targets on Linux for the first
+time, which immediately surfaced the rest of the same bug — on a non-macOS host
+every one of the file's fourteen gated tests vanishes while the imports remain:
+
+```
+error: unused import: `std::os::unix::fs::PermissionsExt`
+error: unused import: `std::path::PathBuf`
+error: unused import: `std::process::Command`
+```
+
+Unlike its `linux_x86_64_smoke.rs` / `windows_x86_64_smoke.rs` siblings, this
+file has no file-level `#![cfg(...)]` — by design, since two of its tests check
+byte production on every runner — so each import has to carry its own gate. The
+gates were chosen by reading the cfg on every use site: `PermissionsExt` has two
+`set_mode` sites, `PathBuf` two bare-name bindings (all other mentions are
+already fully qualified), and `Command` seventeen `Command::new` sites, every one
+of them inside a macOS+aarch64 test. `PermissionsExt`'s previous `#[cfg(unix)]`
+was the specific mistake: it answers "does this module exist here?" but not "is
+it used here?", and Linux is unix. The `target_arch` half matters too — on an
+Intel Mac every use site is still cfg'd out, so gating on `target_os` alone would
+just relocate the error.
+
+**Every remaining warning in the OS-gated code is cleared, found by sweeping the
+whole surface at once.** Fixing one CI error per round trip was a loop with no
+visible end: these files had never been compiled by CI, so each fix only revealed
+the next. Instead, `target_os` values were swapped so the gated code compiles on
+a macOS host (`macos` ↔ `linux`, then `macos` ↔ `windows`), with clippy run
+*without* `-D warnings` so warnings do not abort the compile and every diagnostic
+is collected in one pass. A third, stricter Windows pass also rewrites
+`cfg(unix)` → `cfg(windows)` and `cfg(not(unix))` → `cfg(not(windows))`, closing
+the blind spot where the host being Unix hides what Windows would see. Found and
+fixed:
+
+| where | diagnostic |
+|---|---|
+| `linux_x86_64_smoke.rs:202` | `unused_mut` — `let mut con = \|…\|`; the closure captures nothing mutable, so it is a plain `Fn` |
+| `windows_x86_64_smoke.rs:281` | the same `let mut con` in that file's copy of `build_heap_byte_io_module` |
+| `src/lib.rs` `invoke_ld` | `dead_code` on Windows — ungated, but its only caller is `#[cfg(unix)]` |
+| `src/lib.rs` `sdk_lib_path` | `dead_code` on Windows — same, called only from `invoke_ld` |
+
+Both lib functions are now `#[cfg(unix)]`, matching their callers; they are
+private and referenced nowhere else in the workspace. The Windows-side findings
+could not have come from CI at all, since Rust is never built on Windows. Nothing
+the sweep turned up was a behavioural bug — all four are hygiene.
+
+**`linux_x86_64_smoke` is excluded too, for the same reason as `macos_arm64_smoke`.**
+Once the warnings were cleared the ubuntu leg got *past* compilation and reached
+the assertions, where 6 of 8 pass and 2 fail — this file's own copies of the
+precise-GC differentials:
+
+- `gc_stress_live_bytes_differential_on_linux` — precise leaves 64 bytes live
+  where the test expects 0 (the object is reachable only through a non-reference
+  i64 slot; conservative also keeps 64).
+- `gc_recursive_frame_live_bytes_differential_on_linux` — precise leaves 64 bytes
+  live where the test expects 0; the intermediate self-recursive frame is not
+  precisely mapped at the recursive-call return address (conservative keeps 128).
+
+Both are the known precise-stackmap-roots gap (`ref<>` refness erased to `any`
+before the backend sees it), pre-existing and not caused by this PR. The other 6
+tests — ELF framing, putchar / heap byte I/O, the machine field, stackmap
+registration — all pass, so the ELF end-to-end path itself is healthy. The tests
+were **not** `#[ignore]`d and their assertions were **not** relaxed: they are
+correctly detecting that precise GC does not yet reclaim what it claims to, and a
+weakened test would be a silent regression. Excluded, named, and to be re-added
+the moment the gap closes.
+
+That leaves `--lib` and `e4d_str_helpers` as the only targets executing assertions
+in CI, which the BUILD file now says plainly rather than implying broader coverage.
+
+`macos_arm64_smoke` is **deliberately excluded and named in the BUILD file**
+rather than silently dropped — 13 of its 16 tests pass on Apple Silicon, and the
+3 that fail are all in the precise-GC-roots area: `end_to_end_typed_twig_returns_42`
+(link failure, `___gc_register_stackmap` undefined in `smoke.o`),
+`end_to_end_gc_precise_keeps_ref_reclaims_lookalike` (look-alike not reclaimed;
+precise and conservative both report 80 bytes), and
+`end_to_end_gc_recursive_frame_live_bytes_differential` (intermediate
+self-recursive frame not precisely mapped at the recursive-call return address).
+`macos-latest` is an Apple Silicon runner and *is* in the pull-request matrix, so
+this is a real CI failure, not just a laptop one. Excluding a target skips only
+its run, never its compile — the check step still compiles it with
+`-D warnings`, which is why the unused-import fix was a prerequisite for adding
+the BUILD file rather than an unrelated tidy-up. The exclusion should be lifted
+the moment those three go green.
+
 ## 0.52.0 - 2026-08-12 - Windows stdout CRLF fix + GC-precision/recursion-boxing investigation notes
 
 Fixes a confirmed bug: `runtime/twig_runtime.c`'s `__twig_print_i64`,
