@@ -2,6 +2,12 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Devanagari र ductus (HL-C09DT)
+
+- Render **र** in three source-aligned movements across three strokes.
+- Descend the stem and curl clockwise around the lower loop before the restarted down-right diagonal tail and final shirorekhā.
+- Preserve the three-run animation/deskbook agreement and JackPotte's joined-body variation, fit the path to Noto Sans Devanagari, and reduce measured HL-C09 debt to 108 entries.
+
 ### Added — cited Devanagari य ductus (HL-C09DS)
 
 - Render **य** in four source-aligned movements across four strokes.
