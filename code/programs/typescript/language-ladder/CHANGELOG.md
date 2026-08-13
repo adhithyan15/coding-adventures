@@ -2,6 +2,12 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Devanagari म ductus (HL-C09DR)
+
+- Render **म** in three source-aligned movements across three strokes.
+- Descend the left stem, curl clockwise around the lower loop, and sweep right through the crossbar before the top-to-bottom right stem and final shirorekhā.
+- Preserve the source's two lifts, fit the path to Noto Sans Devanagari, and reduce measured HL-C09 debt to 110 entries.
+
 ### Added — cited Devanagari भ ductus (HL-C09DQ)
 
 - Render **भ** in three source-aligned movements across three strokes.

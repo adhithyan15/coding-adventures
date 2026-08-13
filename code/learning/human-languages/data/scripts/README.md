@@ -646,10 +646,16 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   path follows the animated three-run form with two lifts. The Directorate's
   deskbook confirms component order but stages the upper loop and trunk before
   the lower bowl and crossbar, so it corroborates order rather than the
-  animation's continuous body join. The remaining **111** prose part
-  orders across five scripts
+  animation's continuous body join. **म** then descends the left stem, curls
+  left and clockwise around the lower loop, and continues right through the
+  crossbar before two lifted runs descend the right stem and finish the
+  shirorekhā. Its three-frame Noto Sans Devanagari path follows the animated
+  three-run form with two lifts. The Directorate's deskbook confirms component
+  order but stages the left stem before the lower loop and crossbar, so it
+  corroborates order rather than the animation's continuous join. The remaining
+  **110** prose part orders across five scripts
   (`arabic` 3,
-  `cyrillic` 33, `devanagari` 8,
+  `cyrillic` 33, `devanagari` 7,
   `gujarati` 33, `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a
   citation without a count), and Language Ladder's ductus test proves every
