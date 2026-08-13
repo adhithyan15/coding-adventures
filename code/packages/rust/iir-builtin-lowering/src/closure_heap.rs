@@ -249,8 +249,11 @@ fn rewrite_closure_ops(
 /// interim contract until closure lowering grows a tag-directed extraction.
 /// An invariant that holds by accident is one nobody notices breaking, so it is
 /// asserted rather than described: the moment a raw-model closure captures a
-/// string, a cons, or another closure, this fires in any debug build instead of
-/// silently producing a dangling reference at runtime.
+/// string, a cons, or another closure, this fires — in every build, not just
+/// debug — instead of silently producing a dangling reference at runtime. The
+/// guard is only as good as its predicate, and `may_hold_a_pointer` documents
+/// the one case it cannot see (a bare-`any` destination that happens to hold a
+/// handle); read the two together.
 fn store(
     out: &mut Vec<IIRInstr>,
     v: Operand,
