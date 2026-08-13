@@ -91,11 +91,13 @@ boundary before generic closure. Authored HTML block elements below `applet`,
 and the token is diagnosed and ignored, while matching, implied-descendant,
 unmatched, foreign same-name, and synthetic fragment paths retain their existing
 recovery.
-Foreign-content dispatch still returns early when a grouped block end tag meets
-an SVG or MathML integration-point boundary. The focused SVG `foreignObject`
-probe both misses the required mismatch diagnostic and places following text
-differently from the browser, so that path remains a separate foreign-content
-DOM and diagnostic item.
+Foreign-content dispatch now preserves the ordinary-scope boundary when a
+grouped block end tag meets an SVG or MathML integration point. The blocked
+token reports both the foreign mismatch and the in-body scope error while
+remaining ignored, so following text stays inside the integration point and
+the older HTML block. SVG `foreignObject`, `desc`, and `title`, MathML text and
+HTML integration points, matching foreign endings, foreign `select` names, and
+synthetic foreign fragments are covered.
 
 There are no residual malformed tree-construction cases without a lexer or
 parser diagnostic. HTML `p` and `br` start tags recovered from seeded foreign
@@ -387,6 +389,12 @@ Prioritized work items:
    are popped with an in-scope heading, and foreign `select` names, template
    insertion mode, matching and mismatched headings, and synthetic fragments
    retain their existing recovery.
+   Grouped block end tags dispatched from foreign content now report the
+   foreign mismatch before honoring an SVG or MathML ordinary-scope boundary.
+   The token remains ignored and following content stays inside the foreign
+   integration point, matching browser recovery. Continue sampling adjacent
+   namespace-aware scope checks and foreign-content fallback branches before
+   moving beyond the in-body recovery family.
 3. **Diagnostic positions and error taxonomy.** Carry source positions into
    tree construction and map diagnostics to current WHATWG concepts. Legacy
    WPT/html5lib error labels are evidence hints, not a normative public API.
