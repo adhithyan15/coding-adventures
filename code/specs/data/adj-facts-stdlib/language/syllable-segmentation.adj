@@ -1,0 +1,83 @@
+% ============================================================================
+% syllable-segmentation — breaking a word into its two syllables, a TWELFTH
+% literacy sub-skill in the ADJ stdlib (adj-facts-stdlib, LANGUAGE).
+% ============================================================================
+% A sibling to the already-shipped `syllable-count.adj` (which recalls only
+% HOW MANY syllables a word has): a new `syllable_segmentation(word,
+% syllable_one, syllable_two)` table names the actual TWO PARTS each word
+% breaks into, not just their count. Discovered via a header-revisit:
+% `syllable-count.adj`'s own header already quotes, verbatim, the exact
+% syllable split for every one of its four words ("I say each syllable and
+% put down a card: 'pea' [place a card] 'nut' [place a card]", etc.) — but
+% that table's `syllable_count(word, count)` schema has no room for the
+% actual syllable text, only the count. Since the split IS cleanly grounded
+% in the SAME already-cited sentences, it earns its own sibling table with a
+% DIFFERENT schema, the same "sibling table, different schema" shape already
+% used for `comet-part.adj`/`comet-tail-type.adj`, `lung-lobes.adj`/
+% `lung-lobe-names.adj`, and `chemical-bonds.adj`/`chemical-bond-family.adj`.
+% Recall is a binding query:
+%
+%     ? syllable_segmentation(peanut, $S1, $S2)   % pea, nut
+%
+% A native `table` (ADJ-TABLES RS-5, a THREE-column table like
+% `phoneme-segmentation.adj`): each `row` lowers to a ground relation
+% `syllable_segmentation(word, syllable_one, syllable_two)` carrying the
+% Reading Rockets citation, so the lookup above is the ordinary SLD binding
+% query — the engine returns the two syllables WITH their source, on the
+% CPU, with zero model calls, and abstains on any word not one of the four
+% the cited page's card-placement demonstration walks through. The query
+% also runs BACKWARD — bind the two syllables and recall the word:
+%
+%     ? syllable_segmentation($Word, pea, nut)   % peanut
+%
+% The four segmentations this table carries, as a little truth table (the
+% SAME four words `syllable-count.adj` already tables, this time carrying
+% their actual parts instead of just a count):
+%
+%     word     syllable_one   syllable_two
+%     ------   ------------   ------------
+%     peanut   pea            nut
+%     pencil   pen            cil
+%     sunset   sun            set
+%     laptop   lap            top
+%
+% Provenance: quoted verbatim from Reading Rockets' "Phonological and
+% Phonemic Awareness: In Practice" module — the SAME already-vetted page,
+% and the exact SAME four verbatim spans `syllable-count.adj`'s own header
+% already quotes in full (re-used here rather than re-typed, since they are
+% the same cited sentences grounding a different axis of the same source
+% material) — WebFetch re-verified TWICE more this cycle for consistency,
+% both byte-identical to `syllable-count.adj`'s existing quotes:
+%
+%   peanut -> pea, nut
+%     "I say the whole word: 'Peanut'. I say each syllable and put down a
+%      card: 'pea' [place a card] 'nut' [place a card]."
+%   pencil -> pen, cil
+%     "The word is: 'pencil'. 'Pen' 'cil' [place a card for each syllable]."
+%   sunset -> sun, set
+%     "I say the whole word: 'sunset'. I say each syllable and put down a
+%      card: 'sun' [place a card] 'set' [place a card]."
+%   laptop -> lap, top
+%     "I say each syllable and put down a card: 'lap' [place a card] 'top'
+%      [place a card]."
+%
+% `trust consensus` — the same tier `syllable-count.adj` already uses for
+% this same page. Deliberately scoped to ONLY these four segmentations the
+% cited page walks through step by step — honestly narrow (mirroring
+% `syllable-count.adj`'s own precedent) rather than inventing a segmentation
+% the source does not demonstrate. (See ../README.md;
+% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table syllable_segmentation {
+    columns word, syllable_one, syllable_two
+
+    row (peanut, pea, nut)
+    row (pencil, pen, cil)
+    row (sunset, sun, set)
+    row (laptop, lap, top)
+
+    source "I say the whole word: 'Peanut'. I say each syllable and put down a card: 'pea' [place a card] 'nut' [place a card]."
+    locator "https://www.readingrockets.org/reading-101/reading-101-learning-modules/course-modules/phonological-and-phonemic-awareness/practice"
+    trust consensus
+}

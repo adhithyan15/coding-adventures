@@ -1654,6 +1654,21 @@
       "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
     },
     {
+      "id": "adj.literacy.k2.syllable_segmentation",
+      "title": "Recall the two syllables a word breaks into",
+      "band": "K-2",
+      "domain": "literacy",
+      "competency": "recall",
+      "coverage_roots": ["ccss.ela"],
+      "standards": [],
+      "prerequisites": [],
+      "libraries": ["code/specs/data/adj-facts-stdlib/language/syllable-segmentation.adj"],
+      "modalities": ["text"],
+      "source_cas_hashes": [],
+      "benchmark_paths": [],
+      "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
+    },
+    {
       "id": "adj.science.3to5.weather_instruments",
       "title": "Recall which quantity each common weather-observing instrument measures",
       "band": "3-5",
