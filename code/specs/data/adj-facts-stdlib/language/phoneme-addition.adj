@@ -1,0 +1,66 @@
+% ============================================================================
+% phoneme-addition — combining two separate sounds to say a word, a TENTH
+% literacy sub-skill in the ADJ stdlib (adj-facts-stdlib, LANGUAGE).
+% ============================================================================
+% Deliberately DIFFERENT in shape from all nine prior literacy libraries,
+% and the narrowest sibling of `phoneme-blending.adj`: `phoneme-blending.adj`
+% recalls the word formed by blending THREE separate sounds together
+% (sound_one, sound_two, sound_three, word). This library recalls the SAME
+% direction — sounds combining INTO a word, not a word decomposing OUT — but
+% for exactly TWO sounds, a distinct arity the cited page treats as its own
+% named skill ("Adding sounds," distinct from "Blending sounds"): grounding
+% it as a pure lookup, `phoneme_addition(sound_one, sound_two, word)`. Recall
+% is a binding query:
+%
+%     ? phoneme_addition(i, s, $Word)   % ice
+%
+% A native `table` (ADJ-TABLES RS-5, a THREE-column table like
+% `phoneme-deletion.adj`): each `row` lowers to a ground relation
+% `phoneme_addition(sound_one, sound_two, word)` carrying the Reading
+% Rockets citation, so the lookup above is the ordinary SLD binding query —
+% the engine returns the word WITH its source, on the CPU, with zero model
+% calls, and abstains on any sound pair not the one the cited page walks
+% through. The query also runs BACKWARD — bind the word and recall the two
+% sounds that combine into it:
+%
+%     ? phoneme_addition($S1, $S2, ice)   % i, s
+%
+% The one addition this table carries, as a little truth table:
+%
+%     sound_one   sound_two   word
+%     ---------   ---------   ----
+%     i           s           ice
+%
+% Provenance: quoted verbatim from Reading Rockets' "Phonological and
+% Phonemic Awareness: In Practice" module — the SAME already-vetted page
+% `syllable-count.adj`, `phoneme-substitution.adj`, `phoneme-deletion.adj`,
+% `syllable-substitution.adj`, `syllable-deletion.adj`, `onset-rime.adj`, and
+% `phoneme-blending.adj` all already cite, a different section of it (its
+% "Adding sounds" demonstration) — WebFetch-verified THREE separate times
+% for consistency across this session, all byte-identical. The exact span
+% (one sentence, stating both the two sounds and the word they form):
+%
+%   "I can add sounds to make new word. Watch me. I say the first sound and
+%    slide a cap: /ī/ [slide a cap]. I add the last sound: /s/ [slide a cap
+%    so it appears left-to-right for students]. I touch and say the
+%    syllables: /ī/, /s/, 'ice' [sweep finger below the caps left-to-right]."
+%
+% `trust consensus` — the same tier this page's sibling sections already
+% earned. Deliberately scoped to ONLY this ONE addition the cited page walks
+% through step by step — honestly narrow (mirroring `phoneme-blending.adj`'s
+% and `phoneme-deletion.adj`'s precedent of one clean row) rather than
+% inventing an addition the source does not demonstrate. A future slice can
+% add a second addition to this table once a comparably clean two-sound
+% citation is found. (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table phoneme_addition {
+    columns sound_one, sound_two, word
+
+    row (i, s, ice)
+
+    source "I can add sounds to make new word. Watch me. I say the first sound and slide a cap: /ī/ [slide a cap]. I add the last sound: /s/ [slide a cap so it appears left-to-right for students]. I touch and say the syllables: /ī/, /s/, 'ice' [sweep finger below the caps left-to-right]."
+    locator "https://www.readingrockets.org/reading-101/reading-101-learning-modules/course-modules/phonological-and-phonemic-awareness/practice"
+    trust consensus
+}
