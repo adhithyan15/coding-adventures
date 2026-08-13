@@ -36,6 +36,7 @@ const DIVISION_LHS_SIGN_REGISTER: u32 = 23;
 const DIVISION_QUOTIENT_SIGN_REGISTER: u32 = 24;
 const DIVISION_DIVISOR_NONZERO_REGISTER: u32 = 25;
 const VALUE_REGISTERS: [u32; 6] = [5, 6, 7, 28, 29, 30];
+const VALUE_REGISTER_PAIRS: [(u32, u32); 3] = [(5, 6), (7, 28), (29, 30)];
 /// Reserved for scalar results when every temporary pair is live. No current
 /// lowering sequence uses `x9`, and direct calls are still unsupported.
 const MIXED_WIDTH_REGISTER: u32 = 9;
@@ -195,10 +196,9 @@ struct Lowerer {
     word_sized_values: HashSet<String>,
     labels: HashMap<String, usize>,
     branches: Vec<PendingBranch>,
-    /// Value uses still to be lowered. This supports the small in-place reuse
-    /// path below without claiming to be a complete register allocator.
+    /// Value uses still to be lowered. The allocator uses this to reclaim dead
+    /// scalar values and register pairs before it spills live values.
     remaining_uses: HashMap<String, usize>,
-    next_value_register: usize,
     next_internal_label: usize,
     frame_size: i32,
     next_spill_slot: usize,
@@ -298,7 +298,6 @@ impl Lowerer {
             labels: HashMap::new(),
             branches: Vec::new(),
             remaining_uses: count_value_uses(cir),
-            next_value_register: 0,
             next_internal_label: 0,
             frame_size,
             next_spill_slot: 0,
@@ -717,21 +716,15 @@ impl Lowerer {
     }
 
     fn allocate_value_register(&mut self) -> Result<u32, BackendError> {
-        if self.next_value_register < VALUE_REGISTERS.len() {
-            let register = VALUE_REGISTERS[self.next_value_register];
-            self.next_value_register += 1;
-            return Ok(register);
-        }
+        self.release_dead_pair_values();
+        self.release_dead_scalar_values();
 
-        if let Some(index) = self.env.iter().position(|(name, location)| {
-            matches!(location, ValueLocation::Word(register) if is_scalar_value_register(*register))
-                && self.remaining_uses.get(name).copied().unwrap_or_default() == 0
-        }) {
-            let (_, location) = self.env.remove(index);
-            return match location {
-                ValueLocation::Word(register) => Ok(register),
-                _ => unreachable!("dead value-register entry must be a word"),
-            };
+        if let Some(register) = VALUE_REGISTERS
+            .iter()
+            .copied()
+            .find(|register| !self.register_is_live(*register))
+        {
+            return Ok(register);
         }
 
         let index = self.env.iter().position(|(_, location)| {
@@ -739,10 +732,16 @@ impl Lowerer {
         });
         let index = if let Some(index) = index {
             index
-        } else if self.env.iter().any(|(_, location)| {
-            matches!(location, ValueLocation::Pair { .. } | ValueLocation::PairSpill { .. })
-        }) {
-            return Ok(MIXED_WIDTH_REGISTER);
+        } else if self.env.iter().any(|(_, location)| matches!(location, ValueLocation::Pair { .. })) {
+            if !self.register_is_live(MIXED_WIDTH_REGISTER) {
+                return Ok(MIXED_WIDTH_REGISTER);
+            }
+            self.env
+                .iter()
+                .position(|(_, location)| {
+                    matches!(location, ValueLocation::Word(register) if *register == MIXED_WIDTH_REGISTER)
+                })
+                .expect("live mixed-width register must have an environment entry")
         } else {
             return Err(BackendError::OutOfRegisters);
         };
@@ -758,81 +757,95 @@ impl Lowerer {
     }
 
     fn allocate_pair_registers(&mut self) -> Result<ValueLocation, BackendError> {
-        if self.next_value_register + 1 < VALUE_REGISTERS.len() {
-            let location = ValueLocation::Pair {
-                lo: VALUE_REGISTERS[self.next_value_register],
-                hi: VALUE_REGISTERS[self.next_value_register + 1],
-            };
-            self.next_value_register += 2;
-            return Ok(location);
-        }
+        self.release_dead_pair_values();
+        self.release_dead_scalar_values();
 
-        if let Some(index) = self.env.iter().position(|(name, location)| {
-            matches!(location, ValueLocation::Pair { .. })
-                && self.remaining_uses.get(name).copied().unwrap_or_default() == 0
+        if let Some((lo, hi)) = VALUE_REGISTER_PAIRS.iter().copied().find(|(lo, hi)| {
+            !self.pair_has_live_value(*lo, *hi)
+                && !self.register_is_live(*lo)
+                && !self.register_is_live(*hi)
         }) {
-            let (_, location) = self.env.remove(index);
-            return match location {
-                ValueLocation::Pair { lo, hi } => Ok(ValueLocation::Pair { lo, hi }),
-                _ => unreachable!("dead pair entry must be a register pair"),
-            };
+            return Ok(ValueLocation::Pair { lo, hi });
         }
 
-        if let Some(location) = self.allocate_pair_from_scalar_registers() {
-            return Ok(location);
-        }
-
-        let index = self
-            .env
+        if let Some((lo, hi)) = VALUE_REGISTER_PAIRS
             .iter()
-            .position(|(_, location)| matches!(location, ValueLocation::Pair { .. }))
+            .copied()
+            .find(|(lo, hi)| !self.pair_has_live_value(*lo, *hi))
+        {
+            self.spill_scalar_values_in_pair(lo, hi);
+            return Ok(ValueLocation::Pair { lo, hi });
+        }
+
+        let (lo, hi) = VALUE_REGISTER_PAIRS
+            .iter()
+            .copied()
+            .find(|(lo, hi)| self.pair_has_live_value(*lo, *hi))
             .ok_or(BackendError::OutOfRegisters)?;
-        let ValueLocation::Pair { lo, hi } = self.env[index].1 else {
-            unreachable!("pair allocator selected a non-pair value")
-        };
+        self.spill_pair_value(lo, hi);
+        Ok(ValueLocation::Pair { lo, hi })
+    }
+
+    fn release_dead_scalar_values(&mut self) {
+        self.env.retain(|(name, location)| {
+            !matches!(location, ValueLocation::Word(register)
+                if is_scalar_value_register(*register)
+                    && self.remaining_uses.get(name).copied().unwrap_or_default() == 0)
+        });
+    }
+
+    fn release_dead_pair_values(&mut self) {
+        self.env.retain(|(name, location)| {
+            !matches!(location, ValueLocation::Pair { .. }
+                if self.remaining_uses.get(name).copied().unwrap_or_default() == 0)
+        });
+    }
+
+    fn register_is_live(&self, register: u32) -> bool {
+        self.env.iter().any(|(_, location)| {
+            matches!(location, ValueLocation::Word(current) if *current == register)
+                || matches!(location, ValueLocation::Pair { lo, hi }
+                    if *lo == register || *hi == register)
+        })
+    }
+
+    fn pair_has_live_value(&self, lo: u32, hi: u32) -> bool {
+        self.env.iter().any(|(_, location)| {
+            matches!(location, ValueLocation::Pair { lo: pair_lo, hi: pair_hi }
+                if *pair_lo == lo || *pair_lo == hi || *pair_hi == lo || *pair_hi == hi)
+        })
+    }
+
+    fn spill_scalar_values_in_pair(&mut self, lo: u32, hi: u32) {
+        for register in [lo, hi] {
+            let Some(index) = self.env.iter().position(|(_, location)| {
+                matches!(location, ValueLocation::Word(current) if *current == register)
+            }) else {
+                continue;
+            };
+            let offset = (self.next_spill_slot * 4) as i32;
+            self.next_spill_slot += 1;
+            self.words.push(encode_sw(register, STACK_POINTER, offset));
+            self.env[index].1 = ValueLocation::Spill { offset };
+        }
+    }
+
+    fn spill_pair_value(&mut self, lo: u32, hi: u32) {
         let lo_offset = (self.next_spill_slot * 4) as i32;
         let hi_offset = lo_offset + 4;
         self.next_spill_slot += 2;
         self.words.push(encode_sw(lo, STACK_POINTER, lo_offset));
         self.words.push(encode_sw(hi, STACK_POINTER, hi_offset));
-        self.env[index].1 = ValueLocation::PairSpill {
-            lo_offset,
-            hi_offset,
-        };
-        Ok(ValueLocation::Pair { lo, hi })
-    }
-
-    fn allocate_pair_from_scalar_registers(&mut self) -> Option<ValueLocation> {
-        for pair_index in (0..VALUE_REGISTERS.len()).step_by(2) {
-            let lo = VALUE_REGISTERS[pair_index];
-            let hi = VALUE_REGISTERS[pair_index + 1];
-            if self.env.iter().any(|(_, location)| {
-                matches!(location, ValueLocation::Pair { lo: pair_lo, hi: pair_hi }
-                    if *pair_lo == lo || *pair_lo == hi || *pair_hi == lo || *pair_hi == hi)
-            }) {
-                continue;
-            }
-
-            self.env.retain(|(name, location)| {
-                !matches!(location, ValueLocation::Word(register)
-                    if (*register == lo || *register == hi)
-                        && self.remaining_uses.get(name).copied().unwrap_or_default() == 0)
-            });
-
-            for register in [lo, hi] {
-                let Some(index) = self.env.iter().position(|(_, location)| {
-                    matches!(location, ValueLocation::Word(current) if *current == register)
-                }) else {
-                    continue;
+        for (_, location) in &mut self.env {
+            if matches!(location, ValueLocation::Pair { lo: pair_lo, hi: pair_hi }
+                if *pair_lo == lo && *pair_hi == hi)
+            {
+                *location = ValueLocation::PairSpill {
+                    lo_offset,
+                    hi_offset,
                 };
-                let offset = (self.next_spill_slot * 4) as i32;
-                self.next_spill_slot += 1;
-                self.words.push(encode_sw(register, STACK_POINTER, offset));
-                self.env[index].1 = ValueLocation::Spill { offset };
             }
-            return Some(ValueLocation::Pair { lo, hi });
         }
-        None
     }
 
     fn wide_var_location(

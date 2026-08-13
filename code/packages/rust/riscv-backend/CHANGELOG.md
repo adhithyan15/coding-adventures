@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Reworked mixed-width temporary allocation around three non-overlapping RV32
+  register-pair slots. Scalars and full-width values can now interleave without
+  constructing overlapping pairs; dead occupants are reclaimed and live scalar
+  or pair values spill through the existing frame/reload paths. Added a direct
+  simulator test that keeps interleaved scalar and 64-bit values live under
+  register pressure.
 - Added aligned stack spilling and pair-aware reloads for live 64-bit values in
   wide arithmetic and bitwise lowering, with a simulator fixture that exceeds
   the three-pair register pool.

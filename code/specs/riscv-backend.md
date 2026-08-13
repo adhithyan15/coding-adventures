@@ -140,16 +140,14 @@ implemented.
    source-to-RISC-V-simulator fixture.
 14. [x] **Scalar register allocation:** spill live RV32 values to stack slots and
    emit a frame, removing the six-temporary limit for scalar CIR.
-15. [ ] **Wide register allocation:** spill live 64-bit register pairs and add
+15. [x] **Wide register allocation:** spill live 64-bit register pairs and add
    pair-aware reloads, extending the scalar frame allocator to wide CIR values.
    Pair arithmetic, bitwise operations, shifts, division, and comparisons reload
-   live spills today. Pair destinations can also evict scalar words from a
-   pair slot, and scalar values use a reserved mixed-width register when all
-   three pairs are live. Arbitrary mixed scalar/pair pressure still needs a
-   general allocator.
-16. [ ] **Complete wide spill coverage:** generalize mixed scalar/pair register
-   allocation beyond pair destinations evicting scalar words and the reserved
-   scalar register.
+   live spills. Allocation tracks the three physical pair slots, evicts scalar
+   occupants when necessary, and preserves live aliases when a pair spills.
+16. [x] **Complete wide spill coverage:** mixed scalar/pair allocation uses
+   coherent pair slots, reclaims dead values of either width, and spills live
+   scalar or wide values as needed under arbitrary temporary pressure.
 17. [ ] **Calls and modules:** lower direct calls, add relocations/linking for flat
    binaries, and preserve the RISC-V calling convention across calls.
 18. [ ] **Host runtime ABI:** define simulator `ecall` services for exit and integer
