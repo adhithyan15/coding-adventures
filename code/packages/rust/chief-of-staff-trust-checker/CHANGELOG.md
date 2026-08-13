@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Raise the bounded resource count to represent the complete maximum-size D18 channel membership.
+- Add validated request context for authoritative resource-resolution adapters.
+
 ## 0.1.0
 
 - Add bounded exact-resource validation and canonical maximum-tier evaluation.

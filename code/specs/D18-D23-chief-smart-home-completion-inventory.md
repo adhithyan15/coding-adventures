@@ -2013,6 +2013,32 @@ are orchestrator-core composition followed by authenticated daemon API and CLI
 wire/unwire operations; this primitive does not weaken the current fail-closed
 production default.
 
+## Current Chief Trust-Checked Channel Mutation Slice
+
+This slice connects the reusable Trust Checker to the existing durable channel
+topology boundary without enabling an unreviewed production approval path:
+
+- Channel create and irreversible destroy calls now require validated request
+  identity and requester context before entering the authorization boundary.
+- `TrustCheckingChannelWiring` resolves the current tier of the exact channel,
+  originator, and every receiver through an injected authoritative resolver;
+  callers cannot supply their own effective tier.
+- A domain-separated SHA-256 resource fingerprint covers the operation,
+  channel UUID, originator and receiver identifiers and public keys, creation
+  time, key epoch, and lifecycle. Create, destroy, or any topology/key change
+  therefore produces a different approval-bound resource.
+- The Trust Checker resource bound now covers the channel contract's maximum
+  1,024 receivers plus originator and channel. That remains a finite 1,026-row
+  request instead of rejecting otherwise valid maximum membership.
+- Tier-resolution errors, invalid trust requests, denials, weak assurance, and
+  provider failures all occur before durable channel storage mutation and keep
+  nested diagnostics out of display output.
+
+Production continues to compose `DenyChannelWiring`. The next P0 is to expose
+bounded pipeline wire/unwire requests through the authenticated daemon API and
+CLI with an explicit reviewed provider/tier-policy composition; this adapter
+does not treat the loopback bearer token as approval.
+
 ## Current Chief HTTP Request Clock Slice
 
 This slice closes the remaining request-time ambiguity in the shared

@@ -13,5 +13,8 @@ chief-of-staff-host-data-plane = { path = "../chief-of-staff-host-data-plane" }
 chief-of-staff-process-supervisor = { path = "../chief-of-staff-process-supervisor" }
 chief-of-staff-service-reconciler = { path = "../chief-of-staff-service-reconciler" }
 chief-of-staff-service-registry = { path = "../chief-of-staff-service-registry" }
+chief-of-staff-tool-api = { path = "../chief-of-staff-tool-api" }
+chief-of-staff-trust-checker = { path = "../chief-of-staff-trust-checker" }
+coding_adventures_sha256 = { path = "../sha256" }
 coding_adventures_x3dh = { path = "../x3dh" }
 storage-core = { path = "../storage-core" }
