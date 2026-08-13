@@ -1,0 +1,93 @@
+% ============================================================================
+% lung-lobe-names — each individual named lung lobe and which lung it belongs
+% to (adj-facts-stdlib, ANATOMY).
+% ============================================================================
+% A sibling to the already-shipped `lung-lobes.adj`, which recalls only the
+% COUNT of lobes per lung (right_lung -> 3, left_lung -> 2). This table
+% recalls a finer-grained fact: each lobe has its OWN name, and each name
+% belongs to exactly one lung. The right lung's three lobes are the right
+% upper, middle, and lower lobes; the left lung's two lobes are the left
+% upper and lower lobes (the left lung has no middle lobe -- the heart's
+% cardiac notch takes that space, as `lung-lobes.adj`'s header already
+% explains). Recall is a binding query:
+%
+%     ? lung_lobe_name(right_upper_lobe, $Lung)   % right_lung
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `lung_lobe_name(lobe, lung)` carrying the table's citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the
+% owning lung WITH its source, on the CPU, with zero model calls, and
+% abstains on anything that is not one of these five named lobes. The query
+% also runs BACKWARD — bind a lung and recall every lobe it has (a genuine
+% one-to-MANY reverse recall, unlike `lung-lobes.adj`'s one-to-one count):
+%
+%     ? lung_lobe_name($Lobe, right_lung)   % right_upper_lobe ; right_middle_lobe ; right_lower_lobe
+%
+% Discovered via a header-revisit: `lung-lobes.adj`'s own header already
+% quotes the StatPearls corroborating sentence naming all five lobes
+% ("The right lung is comprised of the right upper (RUL), middle (RML), and
+% lower (RLL) lobes. The left lung consists of the left upper (LUL) and
+% lower (LLL) lobes.") but that table's `lung_lobe_count(lung, count)` schema
+% has no room for individual lobe names — a genuinely new predicate, not an
+% extend of the existing table, the same "sibling table, different schema"
+% shape already used for `comet-part.adj`/`comet-tail-type.adj`. WebFetch
+% re-verified the sentence live, THREE separate passes, all byte-identical
+% to what `lung-lobes.adj`'s header already quoted.
+%
+% The five lobes, as a little truth table:
+%
+%     lobe                lung          the cited assignment
+%     -----------------   -----------   -------------------------------------
+%     right_upper_lobe    right_lung    "the right upper (RUL) ... lobes"
+%     right_middle_lobe   right_lung    "... middle (RML) ... lobes"
+%     right_lower_lobe    right_lung    "... and lower (RLL) lobes"
+%     left_upper_lobe     left_lung     "the left upper (LUL) ... lobes"
+%     left_lower_lobe     left_lung     "... and lower (LLL) lobes"
+%
+% Something that is not one of these five named lobes — the trachea, a whole
+% lung, a bronchus — has no row, so a recall on it ABSTAINS rather than
+% inventing a lung assignment. That honest-abstention property is what makes
+% the table safe to reason from: a radiology note describing a "right middle
+% lobe" finding on the LEFT is suspect precisely because the left lung has
+% no middle lobe (the SAME cardiac-notch fact `lung-lobes.adj` already
+% grounds — this table makes the individual-lobe-to-lung mapping explicit).
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — both sentences were read
+% out of a fetched NIH / NCBI Bookshelf page this session, and any lobe that
+% could not be grounded there would have been dropped). Both spans come from
+% the SAME primary reference `lung-lobes.adj` already corroborates against,
+% the NIH National Library of Medicine's NCBI Bookshelf StatPearls chapter
+% "Anatomy, Thorax, Lungs" (NBK470197), quoted here character-for-character:
+%
+%   right_upper_lobe, right_middle_lobe, right_lower_lobe -> right_lung
+%     "The right lung is comprised of the right upper (RUL), middle (RML),
+%      and lower (RLL) lobes."
+%
+%   left_upper_lobe, left_lower_lobe -> left_lung
+%     "The left lung consists of the left upper (LUL) and lower (LLL)
+%      lobes."
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single span that fixes the right lung's three lobes;
+% the left lung's span is listed above, so each assignment remains
+% independently checkable. The source is a primary U.S. government NIH /
+% National Library of Medicine reference (ncbi.nlm.nih.gov), the same source
+% `lung-lobes.adj` already cites at this tier, so `trust authoritative`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
+% ============================================================================
+
+table lung_lobe_name {
+    columns lobe, lung
+
+    row (right_upper_lobe, right_lung)
+    row (right_middle_lobe, right_lung)
+    row (right_lower_lobe, right_lung)
+    row (left_upper_lobe, left_lung)
+    row (left_lower_lobe, left_lung)
+
+    source "The right lung is comprised of the right upper (RUL), middle (RML), and lower (RLL) lobes."
+    locator "https://www.ncbi.nlm.nih.gov/books/NBK470197/"
+    trust authoritative
+}
