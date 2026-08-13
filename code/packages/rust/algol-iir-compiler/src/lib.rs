@@ -4919,9 +4919,19 @@ impl Compiler {
                 ("and", Some(false)) => Some(false),
                 ("or", Some(true)) | ("impl", Some(false)) => Some(true),
                 ("and", Some(true)) | ("or" | "impl", Some(false | true)) => {
-                    self.static_boolean_value(rhs)
+                    let rhs = self.static_boolean_value(rhs);
+                    match (op.as_str(), rhs) {
+                        ("and", Some(false)) => Some(false),
+                        ("or" | "impl", Some(true)) => Some(true),
+                        (_, value) => value,
+                    }
                 }
                 ("eqv", Some(lhs)) => self.static_boolean_value(rhs).map(|rhs| lhs == rhs),
+                (_, None) => match (op.as_str(), self.static_boolean_value(rhs)) {
+                    ("and", Some(false)) => Some(false),
+                    ("or" | "impl", Some(true)) => Some(true),
+                    _ => None,
+                },
                 _ => None,
             };
         }
@@ -8715,6 +8725,16 @@ mod tests {
             "test",
         )
         .expect("false implies an unknown predicate is unconditionally true");
+        compile_source(
+            "begin integer i, n; string s; for i := 1 while i < n or true do s := 'OK'; print(s) end",
+            "test",
+        )
+        .expect("an unknown predicate or true is unconditionally true");
+        compile_source(
+            "begin integer i, n; string s; for i := 1 while i < n impl true do s := 'OK'; print(s) end",
+            "test",
+        )
+        .expect("an unknown predicate implies true is unconditionally true");
     }
 
     #[test]
@@ -8722,6 +8742,9 @@ mod tests {
         for source in [
             "begin integer i, n; string s; for i := 1 while false or i < n do s := 'OK'; print(s) end",
             "begin integer i, n; string s; for i := 1 while true and i < n do s := 'OK'; print(s) end",
+            "begin integer i, n; string s; for i := 1 while i < n and false do s := 'OK'; print(s) end",
+            "begin integer i, n; string s; for i := 1 while i < n or false do s := 'OK'; print(s) end",
+            "begin integer i, n; string s; for i := 1 while i < n impl false do s := 'OK'; print(s) end",
         ] {
             let err = compile_source(source, "test")
                 .expect_err("a non-dominating literal still requires the unknown predicate");
