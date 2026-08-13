@@ -875,7 +875,8 @@ backend immediately) come before the enabler-dependent items.
   compose through `not`, `and`, `or`, `impl`, and `eqv`; bare literals,
   including direct `true` and `false`, compose through those operators;
   truth-dominating `false and x`, `true or x`, and `false impl x` do not
-  require the other operand to be statically known;
+  require the other operand to be statically known, nor do their symmetric
+  `x and false`, `x or true`, and `x impl true` forms;
   unsupported shapes and dynamic predicates preserve the entry set. A
   conditional predicate with a statically known selector evaluates only its
   selected branch; dynamic selectors remain conservative. The conditional
