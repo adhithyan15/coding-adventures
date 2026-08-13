@@ -149,6 +149,8 @@ const DEVANAGARI_U = ductusFor("उ", "devanagari")!;
 const devanagariUOutline = devanagariOutline("उ");
 const DEVANAGARI_UU = ductusFor("ऊ", "devanagari")!;
 const devanagariUuOutline = devanagariOutline("ऊ");
+const DEVANAGARI_E = ductusFor("ए", "devanagari")!;
+const devanagariEOutline = devanagariOutline("ए");
 const HEBREW_ALEF = ductusFor("א", "hebrew")!;
 const hebrewAlefOutline = hebrewOutline("א");
 const HEBREW_BET = ductusFor("ב", "hebrew")!;
@@ -1654,6 +1656,35 @@ describe("Devanagari ऊ — shared body before the right loop and headline", ()
     );
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(DEVANAGARI_UU.strokes[2], 1),
+    );
+  });
+});
+
+describe("Devanagari ए — long stem and tail before short stem and headline", () => {
+  const steps = ductusSteps(DEVANAGARI_E);
+  const strip = ductusFilmstrip(DEVANAGARI_E, devanagariEOutline);
+
+  it("shows four movements across three sourced strokes", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "descend the long left stem from the headline",
+      "curve right through the lower shoulder and sweep down the tail without lifting",
+      "lift, then descend the shorter right stem into its inward hook",
+      "lift, then draw the shirorekha left-to-right",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, true, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 1, 2]);
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(2);
+    expect(strip.summary).toBe("3 strokes · 2 pen lifts · 4 movements");
+  });
+
+  it("draws the exact Noto Sans Devanagari character behind the headline", () => {
+    const paths = byTag(strip.frames[3], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      devanagariEOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(DEVANAGARI_E.strokes[2], 1),
     );
   });
 });
