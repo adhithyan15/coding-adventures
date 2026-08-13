@@ -2161,6 +2161,44 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: devanagariAlphabetSource("उ"),
   },
+  // The three Commons panels reuse उ's continuous body, then add the
+  // right-hand loop and headline as two separately placed runs.
+  [ductusKey("devanagari", "ऊ")]: {
+    script: "devanagari",
+    glyph: "ऊ",
+    strokes: [
+      {
+        segments: [
+          { label: "curve down and left around the upper bowl", path: [
+            { x: 350, y: 555 }, { x: 390, y: 530 }, { x: 420, y: 500 },
+            { x: 435, y: 460 }, { x: 420, y: 420 }, { x: 380, y: 380 },
+            { x: 330, y: 345 }, { x: 275, y: 325 }, { x: 235, y: 320 },
+          ] },
+          { label: "sweep back through the waist and around the lower loop without lifting", path: [
+            { x: 235, y: 320 }, { x: 280, y: 325 }, { x: 330, y: 335 },
+            { x: 380, y: 325 }, { x: 420, y: 290 }, { x: 450, y: 240 },
+            { x: 465, y: 180 }, { x: 450, y: 125 }, { x: 420, y: 85 },
+            { x: 375, y: 55 }, { x: 325, y: 40 }, { x: 275, y: 45 },
+            { x: 225, y: 65 }, { x: 180, y: 95 }, { x: 140, y: 135 },
+            { x: 110, y: 180 }, { x: 85, y: 230 }, { x: 70, y: 280 },
+          ] },
+        ],
+      },
+      { segments: [{ label: "lift, then sweep the right-hand loop up, around, and down-left", path: [
+        { x: 455, y: 250 }, { x: 490, y: 280 }, { x: 535, y: 305 },
+        { x: 585, y: 310 }, { x: 630, y: 295 }, { x: 670, y: 270 },
+        { x: 700, y: 235 }, { x: 715, y: 195 }, { x: 715, y: 150 },
+        { x: 705, y: 105 }, { x: 685, y: 65 }, { x: 660, y: 25 },
+        { x: 635, y: -5 },
+      ] }] },
+      { segments: [{ label: "lift, then draw the shirorekha left-to-right", path: [
+        { x: 5, y: 585 }, { x: 135, y: 585 }, { x: 265, y: 585 },
+        { x: 395, y: 585 }, { x: 525, y: 585 }, { x: 655, y: 585 },
+        { x: 795, y: 585 },
+      ] }] },
+    ],
+    source: devanagariAlphabetSource("ऊ"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the

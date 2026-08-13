@@ -71,6 +71,12 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
 
 ## [Unreleased]
 
+### Added - source-verified Devanagari ऊ (HL-C09DC)
+
+- Verify ऊ as three ordered strokes with two lifts against a three-panel modern printed source.
+- Reuse उ's continuous body before the separate right-hand loop and final left-to-right shirorekhā in a Noto Sans Devanagari fit.
+- Keep the sourced teaching form distinct from universal handwriting practice and reduce HL-C09 debt to 125 entries.
+
 ### Added - source-verified Devanagari उ (HL-C09DB)
 
 - Verify उ as two ordered strokes with one lift against a two-panel modern printed source.

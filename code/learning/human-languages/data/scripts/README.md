@@ -575,10 +575,13 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   **उ** then curves down and left around its upper bowl before sweeping back
   through the waist and around the lower loop in the same run; a separate
   left-to-right shirorekhā follows. Its three-frame Noto Sans Devanagari path
-  follows the cited two-run form with one lift. The remaining **126** prose part
+  follows the cited two-run form with one lift. **ऊ** reuses that body, then
+  separately sweeps its right-hand loop upward, around, and down-left before
+  adding the left-to-right shirorekhā. Its four-frame Noto Sans Devanagari path
+  follows the cited three-run form with two lifts. The remaining **125** prose part
   orders across five scripts
   (`arabic` 3,
-  `cyrillic` 33, `devanagari` 23,
+  `cyrillic` 33, `devanagari` 22,
   `gujarati` 33, `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a
   citation without a count), and Language Ladder's ductus test proves every
