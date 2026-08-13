@@ -108,15 +108,45 @@ fn ts_package_path(name: &str) -> PathBuf {
         .unwrap_or_else(|e| panic!("resolve real path of typescript/{name}: {e}"))
 }
 
-/// A FIXED (not per-run/PID-suffixed) scratch npm project directory, so
-/// `npm install` is idempotent and cached across repeated `cargo test`
-/// invocations within one worktree — unlike `tests/e2e_node.rs`'s
-/// `run_via_node`, which writes one unique throwaway `.js` file per test and
-/// needs no such caching. Caching across DIFFERENT worktrees was never
-/// possible anyway: the `file:` dependency paths below are absolute and
-/// worktree-specific.
+/// A FIXED-per-user (not per-run/PID-suffixed) scratch npm project
+/// directory, so `npm install` is idempotent and cached across repeated
+/// `cargo test` invocations within one worktree — unlike
+/// `tests/e2e_node.rs`'s `run_via_node`, which writes one unique throwaway
+/// `.js` file per test and needs no such caching. Caching across DIFFERENT
+/// worktrees was never possible anyway: the `file:` dependency paths below
+/// are absolute and worktree-specific.
+///
+/// SECURITY: namespaced by the current user (`$USER`/`%USERNAME%`, falling
+/// back to the process ID if neither is set), not a bare fixed name — a
+/// bare fixed name under a shared temp root (e.g. a multi-user Linux box's
+/// world-writable `/tmp`) would let another local account pre-create this
+/// exact path and plant a symlink inside it before this process's first
+/// write, so a later `fs::write` here could follow that symlink and
+/// overwrite a file the OTHER account doesn't have permission to touch but
+/// this process's user does. Namespacing means a different local user's
+/// directory is always a different, unpredictable-to-them path.
 fn project_dir() -> PathBuf {
-    std::env::temp_dir().join("sir_apl_ts_e2e_project")
+    let owner = std::env::var("USER")
+        .or_else(|_| std::env::var("USERNAME"))
+        .unwrap_or_else(|_| std::process::id().to_string());
+    std::env::temp_dir().join(format!("sir_apl_ts_e2e_project_{owner}"))
+}
+
+/// Write `contents` to `path`, refusing to follow a pre-existing symlink —
+/// mirrors the same `remove_file` + `create_new` discipline already used
+/// for the per-case `.ts` source files below, applied here to
+/// `package.json`/`tsconfig.json` too (defense in depth alongside
+/// `project_dir`'s per-user namespacing: a stale entry from an unrelated
+/// prior process should never be silently written through).
+fn write_new(path: &Path, contents: &str) {
+    let _ = fs::remove_file(path);
+    let mut file = OpenOptions::new()
+        .write(true)
+        .create_new(true)
+        .open(path)
+        .unwrap_or_else(|e| panic!("create {}: {e}", path.display()));
+    file.write_all(contents.as_bytes())
+        .unwrap_or_else(|e| panic!("write {}: {e}", path.display()));
 }
 
 /// Materialise the scratch project's `package.json`/`tsconfig.json` and run
@@ -158,7 +188,7 @@ fn ensure_project_ready() -> bool {
         exceptions = ts_package_path("sir-runtime-exceptions").display(),
         pairs = ts_package_path("sir-runtime-pairs").display(),
     );
-    fs::write(dir.join("package.json"), package_json).expect("write package.json");
+    write_new(&dir.join("package.json"), &package_json);
 
     // `preserveSymlinks`: npm installs a `file:` dependency as a symlink
     // into `node_modules`, and Node's default ESM resolution walks up from
@@ -183,7 +213,7 @@ fn ensure_project_ready() -> bool {
   "include": ["src"]
 }
 "#;
-    fs::write(dir.join("tsconfig.json"), tsconfig).expect("write tsconfig.json");
+    write_new(&dir.join("tsconfig.json"), tsconfig);
 
     let install = Command::new("npm")
         .arg("install")
@@ -287,22 +317,7 @@ fn apl_array_matrix_programs_execute_correctly_under_real_typescript_toolchain()
         let artifact = compile(&module).expect("backend emit should succeed");
 
         let path = dir.join("src").join(format!("{}.ts", case.name));
-        // Remove any stale entry from a prior run first, then create with
-        // `create_new` — refuses to follow an existing symlink at this
-        // path (mirrors `tests/e2e_node.rs`'s `run_via_node` discipline).
-        // Unlike that file's PID-suffixed unique names, this project
-        // directory is deliberately fixed/reused across runs (see
-        // `project_dir`'s doc comment), so a stale file is expected on a
-        // second run and simply cleared first rather than treated as a
-        // collision.
-        let _ = fs::remove_file(&path);
-        let mut file = OpenOptions::new()
-            .write(true)
-            .create_new(true)
-            .open(&path)
-            .unwrap_or_else(|e| panic!("create {}: {e}", path.display()));
-        file.write_all(artifact.source.as_bytes())
-            .expect("write ts source");
+        write_new(&path, &artifact.source);
     }
 
     // Real `tsc --strict`, against the REAL runtime packages — this is
