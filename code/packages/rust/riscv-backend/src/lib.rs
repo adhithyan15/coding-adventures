@@ -205,13 +205,16 @@ enum ValueLocation {
     Word(u32),
     Pair { lo: u32, hi: u32 },
     Spill { offset: i32 },
+    PairSpill { lo_offset: i32, hi_offset: i32 },
 }
 
 impl ValueLocation {
     fn low(self) -> u32 {
         match self {
             Self::Word(register) | Self::Pair { lo: register, .. } => register,
-            Self::Spill { .. } => unreachable!("wide lowering cannot use a scalar spill slot"),
+            Self::Spill { .. } | Self::PairSpill { .. } => {
+                unreachable!("wide lowering must materialize a spill slot")
+            }
         }
     }
 }
@@ -261,9 +264,19 @@ impl Lowerer {
             };
             env.push((name.clone(), location));
         }
-        let destination_count = cir.iter().filter(|instr| instr.dest.is_some()).count();
-        let frame_size = if destination_count > VALUE_REGISTERS.len() {
-            ((destination_count as i32) * 4 + 15) & !15
+        let value_word_count: usize = cir
+            .iter()
+            .filter(|instr| instr.dest.is_some())
+            .map(|instr| {
+                if instr.op.ends_with("_i64") || instr.op.ends_with("_u64") {
+                    2
+                } else {
+                    1
+                }
+            })
+            .sum();
+        let frame_size = if value_word_count > VALUE_REGISTERS.len() {
+            ((value_word_count as i32) * 4 + 15) & !15
         } else {
             0
         };
@@ -305,6 +318,13 @@ impl Lowerer {
                 }
                 ValueLocation::Spill { offset } => {
                     self.words.push(encode_lw(A0, STACK_POINTER, offset));
+                }
+                ValueLocation::PairSpill {
+                    lo_offset,
+                    hi_offset,
+                } => {
+                    self.words.push(encode_lw(A0, STACK_POINTER, lo_offset));
+                    self.words.push(encode_lw(A1, STACK_POINTER, hi_offset));
                 }
             }
             self.restore_stack_frame();
@@ -620,6 +640,9 @@ impl Lowerer {
                 self.words.push(encode_lw(register, STACK_POINTER, offset));
                 Ok(register)
             }
+            ValueLocation::PairSpill { .. } => Err(BackendError::InvalidOperand(format!(
+                "{name:?} is a spilled 64-bit value where a 32-bit value is required"
+            ))),
         }
     }
 
@@ -659,6 +682,9 @@ impl Lowerer {
                 ValueLocation::Spill { .. } => Err(BackendError::InvalidOperand(format!(
                     "{name:?} is already bound in a stack slot"
                 ))),
+                ValueLocation::PairSpill { .. } => Err(BackendError::InvalidOperand(format!(
+                    "{name:?} is already bound in a wide stack slot"
+                ))),
             };
         }
         let reg = self.allocate_value_register()?;
@@ -676,16 +702,12 @@ impl Lowerer {
                 ValueLocation::Spill { .. } => Err(BackendError::InvalidOperand(format!(
                     "{name:?} is already bound in a scalar stack slot"
                 ))),
+                ValueLocation::PairSpill { .. } => Err(BackendError::InvalidOperand(format!(
+                    "{name:?} is already bound in a wide stack slot"
+                ))),
             };
         }
-        if self.next_value_register + 1 >= VALUE_REGISTERS.len() {
-            return Err(BackendError::OutOfRegisters);
-        }
-        let location = ValueLocation::Pair {
-            lo: VALUE_REGISTERS[self.next_value_register],
-            hi: VALUE_REGISTERS[self.next_value_register + 1],
-        };
-        self.next_value_register += 2;
+        let location = self.allocate_pair_registers()?;
         self.env.push((name.to_owned(), location));
         Ok(location)
     }
@@ -726,6 +748,74 @@ impl Lowerer {
         Ok(register)
     }
 
+    fn allocate_pair_registers(&mut self) -> Result<ValueLocation, BackendError> {
+        if self.next_value_register + 1 < VALUE_REGISTERS.len() {
+            let location = ValueLocation::Pair {
+                lo: VALUE_REGISTERS[self.next_value_register],
+                hi: VALUE_REGISTERS[self.next_value_register + 1],
+            };
+            self.next_value_register += 2;
+            return Ok(location);
+        }
+
+        if let Some(index) = self.env.iter().position(|(name, location)| {
+            matches!(location, ValueLocation::Pair { .. })
+                && self.remaining_uses.get(name).copied().unwrap_or_default() == 0
+        }) {
+            let (_, location) = self.env.remove(index);
+            return match location {
+                ValueLocation::Pair { lo, hi } => Ok(ValueLocation::Pair { lo, hi }),
+                _ => unreachable!("dead pair entry must be a register pair"),
+            };
+        }
+
+        let index = self
+            .env
+            .iter()
+            .position(|(_, location)| matches!(location, ValueLocation::Pair { .. }))
+            .ok_or(BackendError::OutOfRegisters)?;
+        let ValueLocation::Pair { lo, hi } = self.env[index].1 else {
+            unreachable!("pair allocator selected a non-pair value")
+        };
+        let lo_offset = (self.next_spill_slot * 4) as i32;
+        let hi_offset = lo_offset + 4;
+        self.next_spill_slot += 2;
+        self.words.push(encode_sw(lo, STACK_POINTER, lo_offset));
+        self.words.push(encode_sw(hi, STACK_POINTER, hi_offset));
+        self.env[index].1 = ValueLocation::PairSpill {
+            lo_offset,
+            hi_offset,
+        };
+        Ok(ValueLocation::Pair { lo, hi })
+    }
+
+    fn wide_var_location(
+        &mut self,
+        instr: &CIRInstr,
+        index: usize,
+        op: &str,
+    ) -> Result<ValueLocation, BackendError> {
+        match self.var_location(instr, index, op)? {
+            ValueLocation::PairSpill {
+                lo_offset,
+                hi_offset,
+            } => {
+                let (lo, hi) = if index == 0 {
+                    (SPILLED_LHS_REGISTER, SPILLED_RHS_REGISTER)
+                } else {
+                    (DIVISION_TEMP_REGISTER, DIVISION_BORROW_REGISTER)
+                };
+                self.words.push(encode_lw(lo, STACK_POINTER, lo_offset));
+                self.words.push(encode_lw(hi, STACK_POINTER, hi_offset));
+                Ok(ValueLocation::Pair { lo, hi })
+            }
+            ValueLocation::Spill { .. } => Err(BackendError::InvalidOperand(format!(
+                "{op} requires a wide value at srcs[{index}]"
+            ))),
+            location => Ok(location),
+        }
+    }
+
     fn restore_stack_frame(&mut self) {
         if self.frame_size != 0 {
             self.words
@@ -763,8 +853,8 @@ impl Lowerer {
         let ValueLocation::Pair { lo, hi } = self.dest_pair(instr, op)? else {
             unreachable!("dest_pair always returns a pair")
         };
-        let lhs = self.var_location(instr, 0, op)?;
-        let rhs = self.var_location(instr, 1, op)?;
+        let lhs = self.wide_var_location(instr, 0, op)?;
+        let rhs = self.wide_var_location(instr, 1, op)?;
         let lhs_lo = lhs.low();
         self.words.push(encode_add(lo, lhs_lo, rhs.low()));
         self.words.push(encode_sltu(SCRATCH_REGISTER, lo, lhs_lo));
@@ -783,8 +873,8 @@ impl Lowerer {
         let ValueLocation::Pair { lo, hi } = self.dest_pair(instr, op)? else {
             unreachable!("dest_pair always returns a pair")
         };
-        let lhs = self.var_location(instr, 0, op)?;
-        let rhs = self.var_location(instr, 1, op)?;
+        let lhs = self.wide_var_location(instr, 0, op)?;
+        let rhs = self.wide_var_location(instr, 1, op)?;
         let lhs_lo = lhs.low();
         self.words.push(encode_sub(lo, lhs_lo, rhs.low()));
         self.copy_or_extend_high(hi, lhs, signed);
@@ -804,8 +894,8 @@ impl Lowerer {
         let ValueLocation::Pair { lo, hi } = self.dest_pair(instr, op)? else {
             unreachable!("dest_pair always returns a pair")
         };
-        let lhs = self.var_location(instr, 0, op)?;
-        let rhs = self.var_location(instr, 1, op)?;
+        let lhs = self.wide_var_location(instr, 0, op)?;
+        let rhs = self.wide_var_location(instr, 1, op)?;
 
         // (a_hi * 2^32 + a_lo) * (b_hi * 2^32 + b_lo), modulo 2^64.
         // Only the low word of each cross product contributes to the result.
@@ -971,6 +1061,9 @@ impl Lowerer {
             ValueLocation::Spill { .. } => {
                 unreachable!("wide division cannot use a scalar spill slot")
             }
+            ValueLocation::PairSpill { .. } => {
+                unreachable!("wide division must materialize a pair spill slot")
+            }
         };
 
         self.words.push(encode_addi(SCRATCH_REGISTER, X0_ZERO, 0));
@@ -1113,8 +1206,8 @@ impl Lowerer {
         let ValueLocation::Pair { lo, hi } = self.dest_pair(instr, op)? else {
             unreachable!("dest_pair always returns a pair")
         };
-        let lhs = self.var_location(instr, 0, op)?;
-        let rhs = self.var_location(instr, 1, op)?;
+        let lhs = self.wide_var_location(instr, 0, op)?;
+        let rhs = self.wide_var_location(instr, 1, op)?;
         let encode = |rd, left, right| match family {
             "and" => encode_and(rd, left, right),
             "or" => encode_or(rd, left, right),
@@ -1138,7 +1231,7 @@ impl Lowerer {
         let ValueLocation::Pair { lo, hi } = self.dest_pair(instr, op)? else {
             unreachable!("dest_pair always returns a pair")
         };
-        let src = self.var_location(instr, 0, op)?;
+        let src = self.wide_var_location(instr, 0, op)?;
         self.words.push(encode_xori(lo, src.low(), -1));
         self.copy_or_extend_high(SCRATCH_REGISTER, src, signed);
         self.words.push(encode_xori(hi, SCRATCH_REGISTER, -1));
@@ -1172,6 +1265,11 @@ impl Lowerer {
                 return Err(BackendError::UnsupportedType(
                     "spilled wide shift count".to_owned(),
                 ))
+            }
+            ValueLocation::PairSpill { .. } => {
+                return Err(BackendError::InvalidOperand(format!(
+                    "{op} requires a shift count that fits in one RV32 register"
+                )))
             }
         };
         let signed_value = arithmetic_right;
@@ -1365,6 +1463,9 @@ impl Lowerer {
             ValueLocation::Spill { .. } => {
                 unreachable!("wide arithmetic cannot use a scalar spill slot")
             }
+            ValueLocation::PairSpill { .. } => {
+                unreachable!("wide arithmetic must materialize a pair spill slot")
+            }
         }
     }
 
@@ -1379,6 +1480,9 @@ impl Lowerer {
             ValueLocation::Spill { .. } => {
                 unreachable!("wide arithmetic cannot use a scalar spill slot")
             }
+            ValueLocation::PairSpill { .. } => {
+                unreachable!("wide arithmetic must materialize a pair spill slot")
+            }
         }
     }
 
@@ -1392,6 +1496,9 @@ impl Lowerer {
             ValueLocation::Word(_) => {}
             ValueLocation::Spill { .. } => {
                 unreachable!("wide arithmetic cannot use a scalar spill slot")
+            }
+            ValueLocation::PairSpill { .. } => {
+                unreachable!("wide arithmetic must materialize a pair spill slot")
             }
         }
     }

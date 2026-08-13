@@ -1091,3 +1091,85 @@ fn spills_live_scalar_values_to_a_stack_frame() {
     ]);
     assert_eq!(compile_and_run(&cir), 28);
 }
+
+#[test]
+fn spills_live_wide_pairs_to_a_stack_frame() {
+    let mut cir: Vec<CIRInstr> = (1..=4)
+        .map(|value| {
+            ci(
+                "const_u64",
+                Some(&format!("v{value}")),
+                vec![CIROperand::Int(4_294_967_296 + value)],
+                "u64",
+            )
+        })
+        .collect();
+    cir.extend([
+        ci(
+            "add_u64",
+            Some("first"),
+            vec![CIROperand::Var("v1".into()), CIROperand::Var("v4".into())],
+            "u64",
+        ),
+        ci(
+            "add_u64",
+            Some("answer"),
+            vec![CIROperand::Var("first".into()), CIROperand::Var("v2".into())],
+            "u64",
+        ),
+        ci(
+            "ret_u64",
+            None,
+            vec![CIROperand::Var("answer".into())],
+            "u64",
+        ),
+    ]);
+    assert_eq!(compile_and_run(&cir), 7);
+}
+
+#[test]
+fn reloads_spilled_pairs_for_wide_arithmetic_and_bitwise_ops() {
+    let mut cir: Vec<CIRInstr> = (1..=4)
+        .map(|value| {
+            ci(
+                "const_u64",
+                Some(&format!("v{value}")),
+                vec![CIROperand::Int(4_294_967_296 + value)],
+                "u64",
+            )
+        })
+        .collect();
+    cir.extend([
+        ci(
+            "sub_u64",
+            Some("difference"),
+            vec![CIROperand::Var("v1".into()), CIROperand::Var("v4".into())],
+            "u64",
+        ),
+        ci(
+            "mul_u64",
+            Some("product"),
+            vec![CIROperand::Var("v2".into()), CIROperand::Var("v4".into())],
+            "u64",
+        ),
+        ci(
+            "xor_u64",
+            Some("bits"),
+            vec![CIROperand::Var("v2".into()), CIROperand::Var("v1".into())],
+            "u64",
+        ),
+        ci(
+            "not_u64",
+            Some("answer"),
+            vec![CIROperand::Var("v1".into())],
+            "u64",
+        ),
+        ci(
+            "ret_u64",
+            None,
+            vec![CIROperand::Var("answer".into())],
+            "u64",
+        ),
+    ]);
+    assert_eq!(compile_and_run(&cir), -2);
+}
