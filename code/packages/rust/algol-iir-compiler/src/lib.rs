@@ -5318,19 +5318,25 @@ impl Compiler {
                     .iter()
                     .any(|token| token.effective_type_name() == "NAME")
             });
-            let stable_boolean_selector = condition
-                .and_then(expr_variable_name)
-                .filter(|selector| selector != target_name)
-                .filter(|selector| {
-                    self.require_var(selector).is_ok_and(|binding| {
-                        binding.ty == ScalarType::Boolean
-                            && !binding.is_global
-                            && binding.array.is_none()
-                            && self.active_by_name_binding(selector).is_none()
+            let stable_boolean_condition = condition.is_some_and(|condition| {
+                let selectors: HashSet<String> = recursive_tokens(condition)
+                    .into_iter()
+                    .filter(|token| token.effective_type_name() == "NAME")
+                    .map(|token| token.value.clone())
+                    .collect();
+                !selectors.is_empty()
+                    && selectors.iter().all(|selector| {
+                        selector != target_name
+                            && self.require_var(selector).is_ok_and(|binding| {
+                                binding.ty == ScalarType::Boolean
+                                    && !binding.is_global
+                                    && binding.array.is_none()
+                                    && self.active_by_name_binding(selector).is_none()
+                            })
+                            && !for_body_assigns_name(effect_root, selector)
                     })
-                })
-                .filter(|selector| !for_body_assigns_name(effect_root, selector));
-            if condition_is_variable_free || stable_boolean_selector.is_some() {
+            });
+            if condition_is_variable_free || stable_boolean_condition {
                 let branches: Vec<&GrammarASTNode> = children
                     .into_iter()
                     .filter(|child| {
@@ -9373,6 +9379,15 @@ mod tests {
     }
 
     #[test]
+    fn al4_static_while_selects_stable_composed_boolean_body_condition() {
+        compile_source(
+            "begin integer i, n; boolean flag, guard; n := 3; flag := false; guard := true; i := 0; for i := i + 1 while i < n do if flag and guard then n := n + 1; print(i + 0.25) end",
+            "test",
+        )
+        .expect("unwritten known boolean locals may compose a body condition");
+    }
+
+    #[test]
     fn al4_static_while_preserves_standard_function_dependency() {
         compile_source(
             "begin integer i, n; n := -3; i := 0; for i := i + 1 while i < abs(n) do print(''); print(i + 0.25) end",
@@ -9428,6 +9443,16 @@ mod tests {
             "test",
         )
         .expect_err("a selector written by the body may choose another branch later");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_written_composed_selector_while_effect_remains_conservative() {
+        let err = compile_source(
+            "begin integer i, n; boolean flag, guard; n := 3; flag := false; guard := true; i := 0; for i := i + 1 while i < n do begin if flag and guard then n := n + 1; flag := true end; print(i + 0.25) end",
+            "test",
+        )
+        .expect_err("every selector in a composed condition must remain stable");
         assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
