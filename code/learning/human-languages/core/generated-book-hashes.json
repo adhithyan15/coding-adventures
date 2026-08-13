@@ -5385,6 +5385,33 @@
       "tex": "spanish/book/chapters/ch198-synthesis-condicion.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 199,
+      "sourceHash": "fnv1a64:df2c19f0c34344e3",
+      "lessonIds": [
+        "ES-C55-hablaron"
+      ],
+      "tex": "spanish/book/chapters/ch199-hablaron.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 200,
+      "sourceHash": "fnv1a64:781517dba0eea28f",
+      "lessonIds": [
+        "ES-C55-hablamos-dos"
+      ],
+      "tex": "spanish/book/chapters/ch200-hablamos-dos.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 201,
+      "sourceHash": "fnv1a64:ded230441d05d88d",
+      "lessonIds": [
+        "ES-C55-comieron"
+      ],
+      "tex": "spanish/book/chapters/ch201-comieron.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "sourceHash": "fnv1a64:c0940889d5248bc5",
