@@ -4163,6 +4163,57 @@
           "ES-GRAMMAR-SI-UNREAL-CONDITION"
         ]
       }
+    },
+    {
+      "chapter": 211,
+      "title": "Dice Que --- Someone Else's Sentence, Inside Yours",
+      "label": "ch:dice-que",
+      "canDo": "I can report what someone says right now.",
+      "spineNodes": [
+        "SPINE-ASK-LOCATION"
+      ],
+      "payoff": {
+        "lesson": "ES-C57-dice-que",
+        "kind": "task",
+        "summary": "I can report what someone says right now.",
+        "assesses": [
+          "ES-GRAMMAR-REPORTED-QUE-OBLIGATORY"
+        ]
+      }
+    },
+    {
+      "chapter": 212,
+      "title": "Dijo --- The Stem That Breaks Its Own Rule",
+      "label": "ch:dijo",
+      "canDo": "I can say what someone said, and say it in the plural without inventing a syllable.",
+      "spineNodes": [
+        "SPINE-ASK-LOCATION"
+      ],
+      "payoff": {
+        "lesson": "ES-C57-dijo",
+        "kind": "task",
+        "summary": "I can say what someone said, and say it in the plural without inventing a syllable.",
+        "assesses": [
+          "ES-GRAMMAR-DECIR-PRETERITE"
+        ]
+      }
+    },
+    {
+      "chapter": 213,
+      "title": "Dijo Que --- Both Verbs Step Back",
+      "label": "ch:dijo-que",
+      "canDo": "I can report what someone said, with the tense the report actually needs.",
+      "spineNodes": [
+        "SPINE-ASK-LOCATION"
+      ],
+      "payoff": {
+        "lesson": "ES-C57-dijo-que",
+        "kind": "task",
+        "summary": "I can report what someone said, with the tense the report actually needs.",
+        "assesses": [
+          "ES-GRAMMAR-REPORTED-BACKSHIFT"
+        ]
+      }
     }
   ]
 }

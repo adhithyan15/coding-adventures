@@ -1,0 +1,231 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 211,
+  "title": "Dice Que --- Someone Else's Sentence, Inside Yours",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:eb07a56515e6a0fe",
+  "lessons": [
+    {
+      "id": "ES-C57-dice-que",
+      "sequence": 2290,
+      "title": "dice que",
+      "headword": "dice que",
+      "romanization": "dice que",
+      "gloss": "he says that — putting someone else's sentence inside your own, with a word English is allowed to drop and Spanish is not",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:de84e9977e716fac",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Decir, in the present, for one person. (Digo, dices, dice.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And one thing you can say about someone. (Está cansado.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: one sentence inside another",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You already have two whole sentences:"
+            },
+            {
+              "kind": "speech",
+              "text": "Dice. — he says. Está cansado. — he is tired."
+            },
+            {
+              "kind": "speech",
+              "text": "Reporting is nothing more than putting the second one inside the first, and the joint between them is que:"
+            },
+            {
+              "kind": "speech",
+              "text": "Dice que está cansado."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Notice what did not happen. The inner sentence was not taken apart. Está cansado went in whole, exactly as it would be said on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "English lets the joint vanish. He says he's tired is ordinary English, and so is He says that he's tired — both are available."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish has only one of those. Dice que está cansado is the sentence; the version without que is not a shorter way of saying it, it is not a sentence at all."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "This is the second time you have met that refusal. When que joined a noun to a clause — el libro que compré — it could not be dropped either, while English happily says the book I bought. Same word, same job description: que is the piece that tells you a clause is arriving. Spanish will not begin a clause without announcing it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Dice que está cansado",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Dice que está cansado*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same thing about yourself",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same thing about yourself]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C57-dice-que-build",
+              "prompt": "Report it: he says he is tired.",
+              "assesses": [
+                "ES-GRAMMAR-REPORTED-QUE-OBLIGATORY"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "dice que esta cansado",
+                "el dice que esta cansado"
+              ],
+              "feedback": {
+                "correct": "Whole sentence in, que at the joint.",
+                "incorrect": "Dice que esta cansado."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C57-dice-que-drop",
+              "prompt": "Can you leave que out, the way English leaves out that?",
+              "assesses": [
+                "ES-GRAMMAR-REPORTED-QUE-OBLIGATORY"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "no",
+                "no, que is required"
+              ],
+              "feedback": {
+                "correct": "Spanish will not start a clause unannounced.",
+                "incorrect": "No. Que is not optional here."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C57-dice-que-echo",
+              "prompt": "Which word did you change to report your own words instead of his?",
+              "assesses": [
+                "ES-GRAMMAR-DECIR-PRESENT-SINGULAR"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "digo",
+                "dice becomes digo"
+              ],
+              "feedback": {
+                "correct": "Only the outer verb moves; the inner sentence sits still.",
+                "incorrect": "Digo que estoy cansado."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What sits at the joint between the two sentences? (Que.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And may it be left out, as English leaves out that? (No — and you have now seen que refuse to vanish twice.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

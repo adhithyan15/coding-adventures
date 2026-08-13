@@ -2293,6 +2293,42 @@
         "ES-EXT-B1-SYNTH-COND"
       ],
       "after": []
+    },
+    {
+      "id": "ES-PATH-B2-DICE-QUE",
+      "spine_node": "SPINE-REPORT-WHAT-OTHERS-SAID",
+      "lessons": [
+        "ES-C57-dice-que"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-B2-DICE-QUE"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-B2-DIJO",
+      "spine_node": "SPINE-REPORT-WHAT-OTHERS-SAID",
+      "lessons": [
+        "ES-C57-dijo"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-B2-DIJO"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-B2-DIJO-QUE",
+      "spine_node": "SPINE-REPORT-WHAT-OTHERS-SAID",
+      "lessons": [
+        "ES-C57-dijo-que"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-B2-DIJO-QUE"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -2662,7 +2698,11 @@
       "relocates": {}
     },
     "SPINE-REPORT-WHAT-OTHERS-SAID": {
-      "segments": [],
+      "segments": [
+        "ES-PATH-B2-DICE-QUE",
+        "ES-PATH-B2-DIJO",
+        "ES-PATH-B2-DIJO-QUE"
+      ],
       "omits": [
         "REPORTED-SPEECH",
         "TENSE-BACKSHIFT",
@@ -5062,6 +5102,39 @@
       "prerequisites": [],
       "lessons": [
         "ES-C56-sintesis-condiciones"
+      ]
+    },
+    {
+      "id": "ES-EXT-B2-DICE-QUE",
+      "stage": "B2",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C57-dice-que"
+      ]
+    },
+    {
+      "id": "ES-EXT-B2-DIJO",
+      "stage": "B2",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C57-dijo"
+      ]
+    },
+    {
+      "id": "ES-EXT-B2-DIJO-QUE",
+      "stage": "B2",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C57-dijo-que"
       ]
     }
   ]

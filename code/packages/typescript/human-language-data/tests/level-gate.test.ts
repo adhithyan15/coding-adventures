@@ -37,9 +37,11 @@ describe("the gate that would have caught the A2 claim", () => {
     const spanish = gate.tracks.find((t) => t.language === "spanish")!;
 
     // The number that misled: one lesson pointing at one node moves `touches`, and
-    // chapter 38 has now moved it to B1 on the strength of four lessons. `attained`
-    // is unmoved at null, which is exactly the distinction this module exists for.
-    expect(spanish.touches).toBe("B1");
+    // three lessons on `SPINE-REPORT-WHAT-OTHERS-SAID` have now moved it to B2 --
+    // out of a track whose vocabulary has not cleared pre-A1. `attained` is unmoved
+    // at null, which is exactly the distinction this module exists for, and the gap
+    // between the two numbers widens every time the ladder is climbed.
+    expect(spanish.touches).toBe("B2");
     // The number that does not: Spanish has not met even pre-A1's criteria.
     expect(spanish.attained).toBeNull();
     expect(spanish.inProgressAt).toBe("pre-A1");

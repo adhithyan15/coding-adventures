@@ -244,9 +244,10 @@ describe("corpus snapshot", () => {
     // HL-C113 makes SPINE-EXPRESS-CONDITION the THIRD realized B1 node -- the
     // sentence that used to stand here, "the only B1 nodes any track has
     // touched", stopped being true the moment chapters 196-198 landed.
-    // B2-C2 remain authored-but-unrealized, in every track.
+    // B2 opened with HL-C113 step 6: three lessons on SPINE-REPORT-WHAT-OTHERS-SAID.
+    // C1 and C2 remain authored-but-unrealized, in every track.
     expect(summary.byLevel.B1).toBe(31); // +3: HL-C113 realizes SPINE-EXPRESS-CONDITION, the third B1 node // +2: HL-C113 imperfect subjunctive (2 lessons)
-    expect(summary.byLevel.B2).toBe(0);
+    expect(summary.byLevel.B2).toBe(3); // +3: HL-C113 step 6 opens B2 with reported speech
     expect(summary.byLevel.C1).toBe(0);
     expect(summary.byLevel.C2).toBe(0);
 

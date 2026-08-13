@@ -104,7 +104,7 @@ describe("real curriculum", () => {
     // 40 (esperar, contestar, comprar). Two sessions authored a chapter 38 in parallel;
     // the collision surfaced as a merge conflict on chapters.json rather than silently,
     // because both sides must edit it.
-    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(210); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis // +3: HL-C88 slice 8 // +1: HL-C88 slice 9 (falsos amigos) // +3: HL-C113 (B1 si-condition rung) // +3: HL-C113 preterite plural // HL-C113: HL-C113 imperfect subjunctive
+    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(213); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis // +3: HL-C88 slice 8 // +1: HL-C88 slice 9 (falsos amigos) // +3: HL-C113 (B1 si-condition rung) // +3: HL-C113 preterite plural // HL-C113: HL-C113 imperfect subjunctive
     expect(
       books.books
         .find((book) => book.language === "persian")
@@ -844,6 +844,15 @@ describe("real curriculum", () => {
       "ES-C56-tuviera-build",
       "ES-C56-tuviera-cost",
       "ES-C56-tuviera-ser",
+      "ES-C57-dice-que-build",
+      "ES-C57-dice-que-drop",
+      "ES-C57-dice-que-echo",
+      "ES-C57-dijo-letter",
+      "ES-C57-dijo-plural",
+      "ES-C57-dijo-que-shift",
+      "ES-C57-dijo-que-why",
+      "ES-C57-dijo-que-work",
+      "ES-C57-dijo-say",
       "ES-C57-f-a-h-decode",
       "ES-C57-f-a-h-hablar",
       "ES-C57-f-a-h-limit",
