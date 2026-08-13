@@ -904,8 +904,9 @@ backend immediately) come before the enabler-dependent items.
   self-assignments are permitted; computed assignment targets and nested
   controlled variables count as writes. A variable-free static body condition,
   or a statically known predicate whose referenced dependencies are all local
-  boolean, integer, or real scalars that the body never writes, scans only its
-  selected branch; dynamic, written, nonlocal, array, by-name, controlled,
+  boolean, integer, or real scalars that the body never changes, scans only its
+  selected branch; exact scalar self-assignments preserve such dependencies;
+  dynamic, computed-written, nonlocal, array, by-name, controlled,
   string, and otherwise unknown dependency sets scan both paths. The proof is
   limited to
   4,096 iterations; globals, arrays, by-name values, written dependencies,
