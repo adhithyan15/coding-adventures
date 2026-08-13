@@ -50,6 +50,7 @@ smart-home-discovery-service = { path = "../smart-home-discovery-service" }
 smart-home-hue-pairing-service = { path = "../smart-home-hue-pairing-service" }
 smart-home-onvif-pairing-service = { path = "../smart-home-onvif-pairing-service" }
 smart-home-platform-http = { path = "../smart-home-platform-http" }
+smart-home-reolink-pairing-service = { path = "../smart-home-reolink-pairing-service" }
 smart-home-runtime = { path = "../smart-home-runtime" }
 smart-home-zoneminder-pairing-service = { path = "../smart-home-zoneminder-pairing-service" }
 transport-platform = { path = "../transport-platform" }

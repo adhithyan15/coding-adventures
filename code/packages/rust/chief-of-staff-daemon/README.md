@@ -120,6 +120,19 @@ hosts remain outside this composition. The worker shares the controller used
 by HTTP and model tools and participates in the same coordinated failure and
 shutdown path.
 
+The eight-field `reolink_pairing_*` tuple enables one supervised Reolink
+credential worker for one exact installed camera or NVR bridge. It names the
+bridge, canonical host, pinned socket address, an owner-only 32-byte Vault KEK,
+and owner-only username and password files with their exact byte lengths. Chief
+rejects partial tuples and containerized Vault custody, selects only an
+unexpired pending session for that bridge, and delegates endpoint pinning,
+installed camera/channel identity validation, authenticated native inspection,
+and recoverable sealed credential handoff to
+`smart-home-reolink-pairing-service`. Authentication remains process-local and
+only the opaque Vault reference enters durable runtime state. The worker shares
+the controller used by HTTP and model tools and participates in the same
+coordinated failure and shutdown path.
+
 The shared HTTP adapter receives the same fallible Unix-millisecond clock as the
 model-tool dispatcher. It samples that source once for every matched request
 and reuses the result for grant activation/expiry, authorization audit,

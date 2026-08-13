@@ -13,8 +13,8 @@ use chief_of_staff_daemon_authority_provisioning::{
 };
 use chief_of_staff_daemon_config::{
     parse_config, AxisPairingConfig, ChiefConfig, ConfigError, OnvifPairingConfig,
-    SmartHomeListenerConfig, SmartHomeToolGrantConfig, SmartHomeToolGrantStatus,
-    ZoneMinderPairingConfig,
+    ReolinkPairingConfig, SmartHomeListenerConfig, SmartHomeToolGrantConfig,
+    SmartHomeToolGrantStatus, ZoneMinderPairingConfig,
 };
 use chief_of_staff_daemon_credential::{load_or_create_credential, CredentialFileError};
 use chief_of_staff_daemon_keyring::{load_package_keyring, KeyringLoadError};
@@ -81,6 +81,11 @@ use smart_home_onvif_pairing_service::{
 use smart_home_platform_http::{
     home_assistant_runtime_web_app, SmartHomePlatformHttpConfig, SmartHomePlatformHttpRuntime,
 };
+use smart_home_reolink_pairing_service::{
+    install_reolink_pairing_service_actor, NativeReolinkPairingVerifier,
+    OwnerOnlyReolinkCredentialInput, ReolinkPairingConnectionTarget, ReolinkPairingRequest,
+    ReolinkPairingServiceActorState, ReolinkPairingServiceError,
+};
 use smart_home_runtime::{
     MdnsDiscoveryRunAdapter, PairingSessionStatus, RuntimePairingSessionQuery,
     ScheduledDiscoveryWorker,
@@ -137,6 +142,10 @@ const ZONEMINDER_PAIRING_ACTOR_ID: &str = "chief-zoneminder-pairing";
 const ZONEMINDER_PAIRING_SENDER_ID: &str = "chief-of-staff-daemon";
 const ZONEMINDER_PAIRING_TICK_INTERVAL_MS: u64 = 1_000;
 const ZONEMINDER_INTEGRATION_ID: &str = "zoneminder";
+const REOLINK_PAIRING_ACTOR_ID: &str = "chief-reolink-pairing";
+const REOLINK_PAIRING_SENDER_ID: &str = "chief-of-staff-daemon";
+const REOLINK_PAIRING_TICK_INTERVAL_MS: u64 = 1_000;
+const REOLINK_INTEGRATION_ID: &str = "reolink";
 
 /// Stable payload-blind startup, serving, and teardown failure.
 #[derive(Debug)]
@@ -237,6 +246,20 @@ pub enum ChiefDaemonError {
     SmartHomeZoneMinderPairingWorkerUnavailable,
     /// The ZoneMinder pairing worker thread panicked.
     SmartHomeZoneMinderPairingWorkerPanicked,
+    /// The configured Reolink pairing KEK file could not be loaded safely.
+    SmartHomeReolinkPairingSecret(SecretFileError),
+    /// The configured Reolink pairing Vault could not initialize or unseal.
+    SmartHomeReolinkPairingVault(SealedStoreError),
+    /// The Reolink pairing service could not recover or execute its transaction state.
+    SmartHomeReolinkPairing(ReolinkPairingServiceError),
+    /// The Reolink pairing actor could not be installed or driven.
+    SmartHomeReolinkPairingActor(ActorError),
+    /// The production wall clock was unavailable to the Reolink pairing worker.
+    SmartHomeReolinkPairingClock,
+    /// The operating system could not create the Reolink pairing worker thread.
+    SmartHomeReolinkPairingWorkerUnavailable,
+    /// The Reolink pairing worker thread panicked.
+    SmartHomeReolinkPairingWorkerPanicked,
     /// The local operator credential could not be loaded or created safely.
     Credential(CredentialFileError),
     /// Local bearer policy construction failed.
@@ -347,6 +370,19 @@ impl Display for ChiefDaemonError {
             }
             Self::SmartHomeZoneMinderPairingWorkerPanicked => {
                 "chief daemon: ZoneMinder pairing worker panicked"
+            }
+            Self::SmartHomeReolinkPairingSecret(_) => {
+                "chief daemon: Reolink pairing secret file failed"
+            }
+            Self::SmartHomeReolinkPairingVault(_) => "chief daemon: Reolink pairing vault failed",
+            Self::SmartHomeReolinkPairing(_) => "chief daemon: Reolink pairing failed",
+            Self::SmartHomeReolinkPairingActor(_) => "chief daemon: Reolink pairing actor failed",
+            Self::SmartHomeReolinkPairingClock => "chief daemon: Reolink pairing clock unavailable",
+            Self::SmartHomeReolinkPairingWorkerUnavailable => {
+                "chief daemon: Reolink pairing worker unavailable"
+            }
+            Self::SmartHomeReolinkPairingWorkerPanicked => {
+                "chief daemon: Reolink pairing worker panicked"
             }
             Self::Credential(_) => "chief daemon: operator credential failed",
             Self::Authentication(_) => "chief daemon: local authentication policy failed",
@@ -591,6 +627,21 @@ pub fn run(config: ChiefConfig, home: &Path) -> Result<(), ChiefDaemonError> {
                     .resolve(home)
                     .map_err(ChiefDaemonError::Config)?;
                 service.zoneminder_pairing = Some(configure_zoneminder_pairing_service(
+                    controller.clone(),
+                    &state_dir,
+                    &vault_dir,
+                    pairing,
+                    home,
+                    Arc::clone(&unix_clock),
+                )?);
+            }
+            if let Some(pairing) = listener.reolink_pairing() {
+                let vault_dir = config
+                    .vault()
+                    .storage_path()
+                    .resolve(home)
+                    .map_err(ChiefDaemonError::Config)?;
+                service.reolink_pairing = Some(configure_reolink_pairing_service(
                     controller,
                     &state_dir,
                     &vault_dir,
@@ -794,6 +845,7 @@ struct SmartHomeHttpService {
     onvif_pairing: Option<ChiefOnvifPairingService>,
     axis_pairing: Option<ChiefAxisPairingService>,
     zoneminder_pairing: Option<ChiefZoneMinderPairingService>,
+    reolink_pairing: Option<ChiefReolinkPairingService>,
 }
 
 type ChiefHueDiscoveryState = DiscoveryServiceActorState<
@@ -860,6 +912,20 @@ struct ChiefZoneMinderPairingService {
     bridge_id: smart_home_core::BridgeId,
 }
 
+type ChiefReolinkPairingState = ReolinkPairingServiceActorState<
+    OwnerOnlyReolinkCredentialInput,
+    NativeReolinkPairingVerifier,
+    FsStorageBackend,
+    FsStorageBackend,
+>;
+
+struct ChiefReolinkPairingService {
+    state: ChiefReolinkPairingState,
+    controller: SmartHomeControllerRuntime<FsStorageBackend>,
+    clock: Arc<dyn UnixTimeClock>,
+    bridge_id: smart_home_core::BridgeId,
+}
+
 #[derive(Debug, Default)]
 struct ChiefHueMdnsRunAdapter;
 
@@ -903,6 +969,7 @@ fn compose_smart_home_http_service(
         onvif_pairing: None,
         axis_pairing: None,
         zoneminder_pairing: None,
+        reolink_pairing: None,
     })
 }
 
@@ -1157,6 +1224,82 @@ fn configure_zoneminder_pairing_service(
     )
     .map_err(ChiefDaemonError::SmartHomeZoneMinderPairing)?;
     Ok(ChiefZoneMinderPairingService {
+        state,
+        controller,
+        clock,
+        bridge_id,
+    })
+}
+
+fn configure_reolink_pairing_service(
+    controller: SmartHomeControllerRuntime<FsStorageBackend>,
+    state_dir: &Path,
+    vault_dir: &Path,
+    config: &ReolinkPairingConfig,
+    home: &Path,
+    clock: Arc<dyn UnixTimeClock>,
+) -> Result<ChiefReolinkPairingService, ChiefDaemonError> {
+    let vault_backend: Arc<dyn StorageBackend> =
+        Arc::new(FsStorageBackend::new(vault_dir.to_path_buf()));
+    vault_backend
+        .initialize()
+        .map_err(ChiefDaemonError::Storage)?;
+    let vault = Arc::new(SealedStore::new(vault_backend));
+    let kek_path = config
+        .kek_path()
+        .resolve(home)
+        .map_err(ChiefDaemonError::Config)?;
+    let kek = read_owner_only_secret(&kek_path, SMART_HOME_PAIRING_KEK_BYTES)
+        .map_err(ChiefDaemonError::SmartHomeReolinkPairingSecret)?;
+    let kek: &[u8; SMART_HOME_PAIRING_KEK_BYTES] = kek.as_slice().try_into().map_err(|_| {
+        ChiefDaemonError::SmartHomeReolinkPairingSecret(SecretFileError::InvalidLength)
+    })?;
+    if vault
+        .status()
+        .map_err(ChiefDaemonError::SmartHomeReolinkPairingVault)?
+        .initialized
+    {
+        vault
+            .unseal_with_kek(kek)
+            .map_err(ChiefDaemonError::SmartHomeReolinkPairingVault)?;
+    } else {
+        vault
+            .init_with_kek(kek)
+            .map_err(ChiefDaemonError::SmartHomeReolinkPairingVault)?;
+    }
+    let bridge_id = smart_home_core::BridgeId::new(config.bridge_id()).map_err(|error| {
+        ChiefDaemonError::SmartHomeReolinkPairing(ReolinkPairingServiceError::InvalidRequest(
+            error.to_string(),
+        ))
+    })?;
+    let credential_input = OwnerOnlyReolinkCredentialInput::new(
+        bridge_id.clone(),
+        config
+            .username_path()
+            .resolve(home)
+            .map_err(ChiefDaemonError::Config)?,
+        config.username_length(),
+        config
+            .password_path()
+            .resolve(home)
+            .map_err(ChiefDaemonError::Config)?,
+        config.password_length(),
+    );
+    let target = ReolinkPairingConnectionTarget::new(
+        bridge_id.clone(),
+        config.canonical_host(),
+        config.pinned_address(),
+    )
+    .map_err(ChiefDaemonError::SmartHomeReolinkPairing)?;
+    let state = ReolinkPairingServiceActorState::restore(
+        FsStorageBackend::new(state_dir),
+        vault,
+        controller.clone(),
+        credential_input,
+        NativeReolinkPairingVerifier::new(target),
+    )
+    .map_err(ChiefDaemonError::SmartHomeReolinkPairing)?;
+    Ok(ChiefReolinkPairingService {
         state,
         controller,
         clock,
@@ -1926,6 +2069,151 @@ fn drive_zoneminder_pairing_tick(
     Ok(())
 }
 
+struct OwnedReolinkPairingWorker {
+    stop: Arc<AtomicBool>,
+    thread: Option<JoinHandle<Result<(), ChiefDaemonError>>>,
+}
+
+impl OwnedReolinkPairingWorker {
+    fn start(
+        service: ChiefReolinkPairingService,
+        on_failure: Arc<dyn Fn() + Send + Sync>,
+    ) -> Result<Self, ChiefDaemonError> {
+        Self::start_with_interval(
+            service,
+            on_failure,
+            Duration::from_millis(REOLINK_PAIRING_TICK_INTERVAL_MS),
+        )
+    }
+
+    fn start_with_interval(
+        service: ChiefReolinkPairingService,
+        on_failure: Arc<dyn Fn() + Send + Sync>,
+        tick_interval: Duration,
+    ) -> Result<Self, ChiefDaemonError> {
+        let stop = Arc::new(AtomicBool::new(false));
+        let worker_stop = Arc::clone(&stop);
+        let (startup_sender, startup_receiver) = std::sync::mpsc::sync_channel(0);
+        let thread = thread::Builder::new()
+            .name("chief-reolink-pairing".to_string())
+            .spawn(move || {
+                let ChiefReolinkPairingService {
+                    state,
+                    controller,
+                    clock,
+                    bridge_id,
+                } = service;
+                let mut system = ActorSystem::new();
+                if let Err(error) = install_reolink_pairing_service_actor(
+                    &mut system,
+                    REOLINK_PAIRING_ACTOR_ID,
+                    state,
+                ) {
+                    let _ = startup_sender.send(Err(error));
+                    return Ok(());
+                }
+                if startup_sender.send(Ok(())).is_err() {
+                    return Ok(());
+                }
+                while !worker_stop.load(Ordering::Acquire) {
+                    thread::park_timeout(tick_interval);
+                    if worker_stop.load(Ordering::Acquire) {
+                        break;
+                    }
+                    if let Err(error) = drive_reolink_pairing_tick(
+                        &mut system,
+                        &controller,
+                        clock.as_ref(),
+                        &bridge_id,
+                    ) {
+                        on_failure();
+                        return Err(error);
+                    }
+                }
+                Ok(())
+            })
+            .map_err(|_| ChiefDaemonError::SmartHomeReolinkPairingWorkerUnavailable)?;
+        match startup_receiver.recv() {
+            Ok(Ok(())) => {}
+            Ok(Err(error)) => {
+                let _ = thread.join();
+                return Err(ChiefDaemonError::SmartHomeReolinkPairingActor(error));
+            }
+            Err(_) => {
+                let _ = thread.join();
+                return Err(ChiefDaemonError::SmartHomeReolinkPairingWorkerUnavailable);
+            }
+        }
+        Ok(Self {
+            stop,
+            thread: Some(thread),
+        })
+    }
+
+    fn stop_and_join(&mut self) -> Result<(), ChiefDaemonError> {
+        self.stop.store(true, Ordering::Release);
+        let Some(thread) = self.thread.take() else {
+            return Ok(());
+        };
+        thread.thread().unpark();
+        thread
+            .join()
+            .map_err(|_| ChiefDaemonError::SmartHomeReolinkPairingWorkerPanicked)?
+    }
+}
+
+impl Drop for OwnedReolinkPairingWorker {
+    fn drop(&mut self) {
+        let _ = self.stop_and_join();
+    }
+}
+
+fn drive_reolink_pairing_tick(
+    system: &mut ActorSystem,
+    controller: &SmartHomeControllerRuntime<FsStorageBackend>,
+    clock: &dyn UnixTimeClock,
+    bridge_id: &smart_home_core::BridgeId,
+) -> Result<(), ChiefDaemonError> {
+    let now_ms = clock
+        .now_ms()
+        .ok_or(ChiefDaemonError::SmartHomeReolinkPairingClock)?;
+    let restored = controller
+        .durable_snapshot()
+        .map_err(ReolinkPairingServiceError::from)
+        .map_err(ChiefDaemonError::SmartHomeReolinkPairing)?
+        .ok_or(ChiefDaemonError::SmartHomeReolinkPairing(
+            ReolinkPairingServiceError::MissingDurableRuntime,
+        ))?;
+    let query = RuntimePairingSessionQuery::new()
+        .for_integration(smart_home_core::IntegrationId::trusted(
+            REOLINK_INTEGRATION_ID,
+        ))
+        .with_status(PairingSessionStatus::PendingUserPresence);
+    let Some(session) = restored
+        .runtime
+        .query_pairing_sessions(&query)
+        .into_iter()
+        .find(|session| session.bridge_id == *bridge_id && !session.is_expired_at(now_ms))
+    else {
+        return Ok(());
+    };
+    let message = ReolinkPairingRequest::new(
+        session.session_id.clone(),
+        session.requested_by.clone(),
+        restored.revision,
+        now_ms,
+    )
+    .into_message(REOLINK_PAIRING_SENDER_ID)
+    .map_err(ChiefDaemonError::SmartHomeReolinkPairing)?;
+    system
+        .send(REOLINK_PAIRING_ACTOR_ID, message)
+        .map_err(ChiefDaemonError::SmartHomeReolinkPairingActor)?;
+    system
+        .process_next(REOLINK_PAIRING_ACTOR_ID)
+        .map_err(ChiefDaemonError::SmartHomeReolinkPairingActor)?;
+    Ok(())
+}
+
 fn compose_smart_home_http_runtime<B: StorageBackend + 'static>(
     config: &SmartHomeListenerConfig,
     controller: SmartHomeControllerRuntime<B>,
@@ -2217,6 +2505,7 @@ where
         onvif_pairing,
         axis_pairing,
         zoneminder_pairing,
+        reolink_pairing,
     ) = match smart_home {
         Some((platform, service)) => {
             let SmartHomeHttpService {
@@ -2227,6 +2516,7 @@ where
                 onvif_pairing,
                 axis_pairing,
                 zoneminder_pairing,
+                reolink_pairing,
             } = service;
             let server = WebServer::bind(
                 platform,
@@ -2242,9 +2532,10 @@ where
                 onvif_pairing,
                 axis_pairing,
                 zoneminder_pairing,
+                reolink_pairing,
             )
         }
-        None => (None, None, None, None, None, None),
+        None => (None, None, None, None, None, None, None),
     };
     let daemon_stop = runtime.stop_handle();
     let smart_home_stop = smart_home_server.as_ref().map(WebServer::stop_handle);
@@ -2313,6 +2604,19 @@ where
             OwnedZoneMinderPairingWorker::start(service, on_failure)
         })
         .transpose()?;
+    let mut reolink_pairing_worker = reolink_pairing
+        .map(|service| {
+            let failure_daemon_stop = daemon_stop.clone();
+            let failure_smart_home_stop = smart_home_stop.clone();
+            let on_failure: Arc<dyn Fn() + Send + Sync> = Arc::new(move || {
+                failure_daemon_stop.stop();
+                if let Some(stop) = failure_smart_home_stop.as_ref() {
+                    stop.stop();
+                }
+            });
+            OwnedReolinkPairingWorker::start(service, on_failure)
+        })
+        .transpose()?;
     let listener_daemon_stop = daemon_stop.clone();
     let listener_smart_home_stop = smart_home_stop.clone();
     let listener = match ShutdownListener::install(move |_| {
@@ -2340,6 +2644,9 @@ where
                 let _ = worker.stop_and_join();
             }
             if let Some(worker) = zoneminder_pairing_worker.as_mut() {
+                let _ = worker.stop_and_join();
+            }
+            if let Some(worker) = reolink_pairing_worker.as_mut() {
                 let _ = worker.stop_and_join();
             }
             return Err(ChiefDaemonError::Shutdown(error));
@@ -2382,6 +2689,10 @@ where
         .as_mut()
         .map(OwnedZoneMinderPairingWorker::stop_and_join)
         .transpose();
+    let reolink_pairing_result = reolink_pairing_worker
+        .as_mut()
+        .map(OwnedReolinkPairingWorker::stop_and_join)
+        .transpose();
     let smart_home_result = smart_home_thread
         .map(|thread| {
             thread
@@ -2404,6 +2715,7 @@ where
     onvif_pairing_result?;
     axis_pairing_result?;
     zoneminder_pairing_result?;
+    reolink_pairing_result?;
     smart_home_result?;
     shutdown_result.map_err(ChiefDaemonError::Shutdown)?;
     recovery_result
@@ -2567,6 +2879,10 @@ mod tests {
     };
     use smart_home_onvif_pairing_service::{
         OnvifCredentialInput, OnvifCredentialSecret, OnvifPairingVerifier, VerifiedOnvifCamera,
+    };
+    use smart_home_reolink_pairing_service::{
+        InstalledReolinkIdentity, ReolinkCredentialInput, ReolinkCredentialSecret,
+        ReolinkPairingVerifier, VerifiedReolinkCamera,
     };
     use smart_home_runtime::{RuntimePairingSession, RuntimePairingSessionId};
     use smart_home_zoneminder_pairing_service::{
@@ -3863,6 +4179,215 @@ hardware_key_timeout = 60
         assert!(matches!(
             worker.stop_and_join(),
             Err(ChiefDaemonError::SmartHomeZoneMinderPairingClock)
+        ));
+        assert!(failure_seen.load(Ordering::Acquire));
+    }
+
+    struct TestReolinkCredentialInput;
+
+    impl ReolinkCredentialInput for TestReolinkCredentialInput {
+        fn take_for_bridge(
+            &mut self,
+            bridge: &Bridge,
+        ) -> Result<ReolinkCredentialSecret, ReolinkPairingServiceError> {
+            assert_eq!(bridge.bridge_id.as_str(), "reolink-camera-front");
+            ReolinkCredentialSecret::new("chief-reolink-user", "chief-reolink-password")
+        }
+    }
+
+    struct TestReolinkVerifier;
+
+    impl ReolinkPairingVerifier for TestReolinkVerifier {
+        fn preflight(&self, bridge: &Bridge) -> Result<String, ReolinkPairingServiceError> {
+            bridge.address.clone().ok_or_else(|| {
+                ReolinkPairingServiceError::MissingBridgeAddress(bridge.bridge_id.clone())
+            })
+        }
+
+        fn verify(
+            &mut self,
+            bridge: &Bridge,
+            _credentials: &ReolinkCredentialSecret,
+            expected: &InstalledReolinkIdentity,
+        ) -> Result<VerifiedReolinkCamera, ReolinkPairingServiceError> {
+            assert_eq!(
+                bridge.address.as_deref(),
+                Some("https://reolink-camera-front.local")
+            );
+            assert_eq!(expected, &InstalledReolinkIdentity::default());
+            Ok(VerifiedReolinkCamera {
+                serial_number: "ACCC8EAF8C30".to_string(),
+                channel_count: 1,
+                snapshot_channel_count: 1,
+            })
+        }
+    }
+
+    #[test]
+    fn chief_reolink_pairing_tick_commits_only_the_bound_bridge_through_shared_controller() {
+        let directory = TestDir::new();
+        let state_dir = directory.0.join("smart-home-reolink-pairing-state");
+        let controller =
+            SmartHomeControllerRuntime::restore(FsStorageBackend::new(&state_dir)).unwrap();
+        controller
+            .transaction(1_500, |runtime, _| {
+                let principal = AgentId::trusted("operator:reolink-pairing");
+                for (bridge_id, session_id) in [
+                    ("reolink-camera-other", "pairing-chief-reolink-other"),
+                    ("reolink-camera-front", "pairing-chief-reolink-front"),
+                ] {
+                    let mut bridge = Bridge::new(
+                        BridgeId::trusted(bridge_id),
+                        IntegrationId::trusted(REOLINK_INTEGRATION_ID),
+                        BridgeTransport::LanHttp,
+                    );
+                    bridge.address = Some(format!("https://{bridge_id}.local"));
+                    bridge.health = Health::Unpaired;
+                    runtime.upsert_bridge(bridge.clone()).unwrap();
+                    runtime
+                        .start_pairing_session(RuntimePairingSession::pending(
+                            RuntimePairingSessionId::trusted(session_id),
+                            &bridge,
+                            principal.clone(),
+                            1_500,
+                            30_000,
+                            vec![SmartHomeMetadata::new(
+                                "pairing.mode",
+                                "explicit_credentials",
+                            )],
+                        ))
+                        .unwrap();
+                }
+                runtime
+                    .registry_mut()
+                    .upsert_capability_grant(CapabilityGrant::for_capability(
+                        CapabilityGrantId::trusted("grant-chief-reolink-pairing"),
+                        principal,
+                        CapabilityId::trusted("smart_home.pair"),
+                        PrivilegeTier::HumanApproval,
+                        "operator:test",
+                        1_500,
+                    ));
+                Ok::<(), Infallible>(())
+            })
+            .unwrap();
+        let vault_backend: Arc<dyn StorageBackend> = Arc::new(FsStorageBackend::new(
+            directory.0.join("smart-home-reolink-vault"),
+        ));
+        vault_backend.initialize().unwrap();
+        let vault = Arc::new(SealedStore::new(vault_backend));
+        vault
+            .init_with_kek(&[0x88; SMART_HOME_PAIRING_KEK_BYTES])
+            .unwrap();
+        let state = ReolinkPairingServiceActorState::restore(
+            FsStorageBackend::new(&state_dir),
+            vault,
+            controller.clone(),
+            TestReolinkCredentialInput,
+            TestReolinkVerifier,
+        )
+        .unwrap();
+        let mut system = ActorSystem::new();
+        install_reolink_pairing_service_actor(&mut system, REOLINK_PAIRING_ACTOR_ID, state)
+            .unwrap();
+
+        drive_reolink_pairing_tick(
+            &mut system,
+            &controller,
+            &TestUnixTimeClock::new(2_000),
+            &BridgeId::trusted("reolink-camera-front"),
+        )
+        .unwrap();
+
+        let restored = controller.durable_snapshot().unwrap().unwrap();
+        let completed = restored
+            .runtime
+            .pairing_session(&RuntimePairingSessionId::trusted(
+                "pairing-chief-reolink-front",
+            ))
+            .unwrap();
+        assert_eq!(completed.status, PairingSessionStatus::Completed);
+        assert!(completed
+            .vault_ref
+            .as_ref()
+            .unwrap()
+            .as_str()
+            .starts_with("vault://smart-home/reolink/"));
+        assert_eq!(
+            restored
+                .runtime
+                .pairing_session(&RuntimePairingSessionId::trusted(
+                    "pairing-chief-reolink-other",
+                ))
+                .unwrap()
+                .status,
+            PairingSessionStatus::PendingUserPresence
+        );
+        let durable_text = format!("{restored:?}");
+        assert!(!durable_text.contains("chief-reolink-user"));
+        assert!(!durable_text.contains("chief-reolink-password"));
+    }
+
+    #[test]
+    fn chief_reolink_pairing_worker_stops_and_propagates_clock_failure() {
+        let directory = TestDir::new();
+        let state_dir = directory.0.join("smart-home-reolink-worker-state");
+        let controller =
+            SmartHomeControllerRuntime::restore(FsStorageBackend::new(&state_dir)).unwrap();
+        controller
+            .transaction(1_500, |_, _| Ok::<(), Infallible>(()))
+            .unwrap();
+        let vault_backend: Arc<dyn StorageBackend> = Arc::new(FsStorageBackend::new(
+            directory.0.join("smart-home-reolink-worker-vault"),
+        ));
+        vault_backend.initialize().unwrap();
+        let vault = Arc::new(SealedStore::new(vault_backend));
+        vault
+            .init_with_kek(&[0x98; SMART_HOME_PAIRING_KEK_BYTES])
+            .unwrap();
+        let bridge_id = BridgeId::trusted("reolink-camera-front");
+        let state = ReolinkPairingServiceActorState::restore(
+            FsStorageBackend::new(&state_dir),
+            vault,
+            controller.clone(),
+            OwnerOnlyReolinkCredentialInput::new(
+                bridge_id.clone(),
+                directory.0.join("unused-user"),
+                1,
+                directory.0.join("unused-password"),
+                1,
+            ),
+            NativeReolinkPairingVerifier::new(
+                ReolinkPairingConnectionTarget::new(
+                    bridge_id.clone(),
+                    "127.0.0.1",
+                    "127.0.0.1:443".parse().unwrap(),
+                )
+                .unwrap(),
+            ),
+        )
+        .unwrap();
+        let service = ChiefReolinkPairingService {
+            state,
+            controller,
+            clock: Arc::new(UnavailableUnixTimeClock),
+            bridge_id,
+        };
+        let failure_seen = Arc::new(AtomicBool::new(false));
+        let failure_probe = Arc::clone(&failure_seen);
+        let on_failure: Arc<dyn Fn() + Send + Sync> = Arc::new(move || {
+            failure_probe.store(true, Ordering::Release);
+        });
+        let mut worker = OwnedReolinkPairingWorker::start_with_interval(
+            service,
+            on_failure,
+            Duration::from_millis(1),
+        )
+        .unwrap();
+        thread::sleep(Duration::from_millis(20));
+        assert!(matches!(
+            worker.stop_and_join(),
+            Err(ChiefDaemonError::SmartHomeReolinkPairingClock)
         ));
         assert!(failure_seen.load(Ordering::Acquire));
     }
