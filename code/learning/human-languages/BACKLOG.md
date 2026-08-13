@@ -466,6 +466,108 @@ reader's brain can connect, and write for someone who knows no grammar
 vocabulary at all. Both are specified in HL10 §6.7, §7.4 and §7.5 and carried by
 HL-C88 and HL-C89 below.
 
+## P0 — THE INDIC DRIVE ORDER: pre-A1 to C2, all six in lockstep
+
+**2026-08-13.** This is the standing work order for Tamil, Telugu, Kannada,
+Malayalam, Hindi and Sanskrit. It exists because the gap is not a difficulty
+problem, it is an allocation problem, and the allocation is visible in the log.
+
+### Where the six actually are, against Spanish
+
+| track | lessons | atoms | vs Spanish |
+|---|---:|---:|---:|
+| **spanish** | **366** | **562** | — |
+| tamil | 141 | 206 | 39% |
+| hindi | 117 | 160 | 32% |
+| malayalam | 101 | 135 | 28% |
+| kannada | 96 | 136 | 26% |
+| telugu | 95 | 132 | 26% |
+| sanskrit | 65 | 73 | 18% |
+
+### Why they are there, stated as an accounting fact
+
+**Spanish has a drive loop. The six have a queue slot.** In the last seven days:
+85 content commits to Spanish, 29 across all six Indic tracks combined. Over the
+whole history: 85 lesson-adding commits for Spanish, 8-23 each for the others.
+
+The six are fed by rotating vocabulary waves, and the rotation is the problem:
+
+| wave | tracks served |
+|---|---|
+| 2 | French, German, Portuguese, Italian |
+| 3 | Russian, Bengali, Gujarati, **Kannada** |
+| 4 | Marathi, Punjabi, **Sanskrit**, Urdu |
+| 5 | Persian, **Telugu**, **Malayalam** |
+| 6 | Russian, Persian, Urdu, Bengali |
+
+Four tracks per wave out of ~16, ~14 lessons each. **Kannada's last wave was #3.
+Tamil and Hindi have never had one.** At 14 lessons a wave, closing a 250-lesson
+gap takes ~18 waves for one track, and a track gets a wave about one time in
+four. That is not slow progress, it is an arithmetic that never arrives.
+
+The fix is this order: **the six get their own loop, and every tranche serves all
+six.** Not a slot in a rotation.
+
+### The shape of the climb
+
+Two ramps, per HL12 §2, and only one of them ends:
+
+```
+DECODING  letters -> vowel signs -> vowel-killer -> conjuncts -> running text
+          -> speed -> "you can read anything now"          <- IT CLOSES, at A1
+
+MEANING   pre-A1 -> A1 -> A2 -> B1 -> B2 -> C1 -> C2       <- the whole climb
+```
+
+Never steepen both in one lesson (HL12 §2.1). Script segments ride inside the
+meaning tranches rather than forming their own front, which is what "drizzled"
+means and what keeps the book useful from page 1.
+
+### Sizing, stated honestly and not used as a constraint
+
+HL09 §3 puts a complete track at ~8,000 lessons; six is ~48,000. The pre-A1 floor
+alone is ~300 words against today's 53-86, so roughly **230 words x 6 tracks =
+1,400 lessons** before a single track can honestly claim its first rung. At ~12
+words per track per tranche that is ~19 tranches. Those are the real numbers.
+Per the owner's standing rule, page count is never a reason to compress: the
+answer to 19 tranches is 19 tranches, not 8 fatter ones.
+
+### The order
+
+Priority is by what unblocks the most, then by what a reader feels soonest.
+LEXICON leads because it is what the six are actually short of, and because
+HL12 §4.2 names it as what carries the weight once the script retires.
+
+| ID | Status | Work item | Completion signal |
+|---|---|---|---|
+| HL-C136 | **NEXT** | **pre-A1 LEXICON drive, wave I of ~19.** ~12 headwords per track, all six, chosen by the HL10 §9 selection order (function first, frequency second, cognate leverage third). Every headword carries a `romanization`, so it is usable before its letters exist. | +72 lessons; `runLevelGate` pre-A1 vocabulary rises for all six in one tranche; every book still builds; no chapter crosses its atom budget. |
+| HL-C137 | Not started | **Repeat HL-C136 to the floor** — waves II..~XIX, same shape, until every track holds ~300 pre-A1 words. Each wave is one PR. | pre-A1 **attained** for all six on `runLevelGate` (this is HL-C135's completion signal, reached by this route). |
+| HL-C138 | Not started | **Finish the letter ledgers.** Each of the five scripts has 24 authored positions; 6-8 are taught. Author the remainder as one-character segments, drizzled into the meaning tranches at one per chapter. | 24 of 24 positions taught per script; `unspent letters` 0; closure violations fall per track. |
+| HL-C139 | Not started | **Conjuncts and ligatures** — the decoding rung after the vowel-killer, and the one where these scripts stop being decomposable letter by letter. | Each track teaches its script's conjunct formation; a reader can decode a conjunct they have not seen. |
+| HL-C140 | Not started | **Running text, speed, and the closing lesson.** Names the moment the decoding ladder ends (HL-C132) and prints the reframing: from here on the difficulty is meaning. | One named closing lesson per track; the book says so on the page; SCRIPT is silent after it. |
+| HL-C141 | Not started | **A1 rung, all six.** ~1,000 words cumulative per HL09 §3, plus the A1 can-do descriptors. | A1 attained for all six; the script strand has closed underneath it. |
+| HL-C142 | Not started | **A2 rung**, all six. Romanization now absent (HL-C133), closure strict and gating. | A2 attained; no A2+ lesson carries a headword romanization; closure violations 0. |
+| HL-C143 | Not started | **B1 rung**, all six. | B1 attained. |
+| HL-C144 | Not started | **B2 rung**, all six. | B2 attained. |
+| HL-C145 | Not started | **C1 rung**, all six. | C1 attained. |
+| HL-C146 | Not started | **C2 rung**, all six. The top of the ladder. | C2 attained for all six. |
+| HL-C147 | Not started | **Split each track into pre-A1 … C2 editions** — one curriculum, N derived books, filtered by level. Deferred on purpose: the split is a filter over the source and must not shape it. | Each track emits per-level books from the same lessons; the driving edition is unaffected. |
+
+Riding alongside, not blocking the rungs:
+
+| ID | Status | Work item | Completion signal |
+|---|---|---|---|
+| HL-C115 | Not started | `letter-ductus` filmstrip figures. **Both blockers merged**: `script-ductus` exposes the filmstrip to the book generator and `path-raster` renders it to PNG. | Declared in `core/figure-generation.json`, byte-gated, proved on Tamil's cited letters and Devanagari's अ and आ. |
+| HL-C118 | Not started | Cited ductus for Telugu, Kannada, Malayalam and the rest of Devanagari. **No citation → no pen path → no figure**; the gap is reported, never filled by invention. | Every authored pen path font-verified and carrying a `strokeOrderSource`. |
+| HL-C134 | Not started | Rewrite the handwritten chapters 1-5 into the generated pipeline for all six. Bites when a tranche needs to place a word or a letter in the opening chapters. | No protected handwritten chapter; Hindi's 11 writing lessons reach the page. |
+| HL-C148 | Not started | **Migrate the six tracks' schema-v1 lessons** (233) and give every lesson a `sequence`. Until then those lessons are invisible to every gate, so the measurements understate the debt. | `measurablePercent` rises; 0 lessons without `sequence` in the six. |
+
+### The loop this order is executed by
+
+One work item per PR. Push, watch CI and mergeability, auto-merge when green,
+then take the next item. New work discovered mid-item is logged here and the
+order re-prioritized before the next item is picked up — not deferred to memory.
+
 ## P0 — The Indic ladder, pre-A1 to C2 (HL12)
 
 **2026-08-13.** [HL12](../../specs/HL12-indic-pre-a1-to-c2.md) is HL10's
@@ -506,13 +608,19 @@ We can chop it up into pre-A1, A1...C2 in the future."* No rule may be relaxed
 and no lessons merged to keep a book short; `HI-W01-shirorekha-na-ma`, twelve
 Devanagari glyphs in one lesson, is exactly what economising looks like.
 
+*(Renumbered on 2026-08-13: this section first claimed HL-C123–127, which
+HL-C126 and HL-C127 were already carrying for Spanish — `SPINE-DESCRIBE-EXPERIENCE`
+and the `vosotros` rung, both cited in merged commits. Those keep the ids; these
+rows moved. A work-item id is a name two commits can agree on, so a duplicate is
+worse than a gap.)*
+
 | ID | Status | Work item | Completion signal |
 |---|---|---|---|
-| HL-C123 | Not started | Measure the both-ramps-steep set in `ramp.ts`, report-only beside the closure numbers: per track, the lessons whose new glyphs and new atoms arrive together, and which of the two frontiers each lesson sits at. | The 59 appear in the gap report, attributed per track and per lesson id; the list is a burn-down, and nothing throws. |
-| HL-C124 | Not started | Name the lesson in each track where the decoding ladder **closes** — after which the script is never a topic again — and say so on the page, reframing what comes next as meaning. | Each track declares one closing lesson; the book prints the reframing; a track with no closing lesson is reported, not silently accepted. |
-| HL-C125 | Not started | Schedule romanization's removal: present on every headword at pre-A1, first use only at A1, absent at A2 and above, with closure becoming a **gate** exactly as the exemption is withdrawn. | The schedule is measured per track and per level; no A2+ lesson carries a headword romanization; closure violations at A2+ are zero, and gating is on. |
-| HL-C126 | Not started | Rewrite the handwritten draft chapters into the generated pipeline for all six tracks, carrying the prose across intact. This is what unblocks placement, ordering and every gate at once. | No track has a protected handwritten chapter; every lesson has a `sequence`; Hindi's 11 writing lessons reach the page rather than only the answer key. |
-| HL-C127 | Not started | Author the pre-A1 rung honestly for all six — the ~300-word floor — in lockstep, splitting rather than compressing. | `runLevelGate` reports pre-A1 **attained** for all six; the A2 *touches* claim is withdrawn until it is earned. |
+| HL-C131 | Not started | Measure the both-ramps-steep set in `ramp.ts`, report-only beside the closure numbers: per track, the lessons whose new glyphs and new atoms arrive together, and which of the two frontiers each lesson sits at. | The 59 appear in the gap report, attributed per track and per lesson id; the list is a burn-down, and nothing throws. |
+| HL-C132 | Not started | Name the lesson in each track where the decoding ladder **closes** — after which the script is never a topic again — and say so on the page, reframing what comes next as meaning. | Each track declares one closing lesson; the book prints the reframing; a track with no closing lesson is reported, not silently accepted. |
+| HL-C133 | Not started | Schedule romanization's removal: present on every headword at pre-A1, first use only at A1, absent at A2 and above, with closure becoming a **gate** exactly as the exemption is withdrawn. | The schedule is measured per track and per level; no A2+ lesson carries a headword romanization; closure violations at A2+ are zero, and gating is on. |
+| HL-C134 | Not started | Rewrite the handwritten draft chapters into the generated pipeline for all six tracks, carrying the prose across intact. This is what unblocks placement, ordering and every gate at once. | No track has a protected handwritten chapter; every lesson has a `sequence`; Hindi's 11 writing lessons reach the page rather than only the answer key. |
+| HL-C135 | Not started | Author the pre-A1 rung honestly for all six — the ~300-word floor — in lockstep, splitting rather than compressing. | `runLevelGate` reports pre-A1 **attained** for all six; the A2 *touches* claim is withdrawn until it is earned. |
 
 ## P0 — The drizzled script ramp for the six Indic tracks (HL11)
 
