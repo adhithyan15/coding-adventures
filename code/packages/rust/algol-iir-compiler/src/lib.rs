@@ -4868,7 +4868,7 @@ impl Compiler {
                     )?;
                 }
             } else if tracks_step_body && !self.static_real_tracking_disabled {
-                if !step_executes_exactly_once {
+                if !step_executes_exactly_once && !self.for_body_avoids_target(target, body) {
                     self.static_real_slots.clear();
                     self.static_integer_slots.clear();
                     self.static_boolean_slots.clear();
@@ -9253,12 +9253,30 @@ mod tests {
     }
 
     #[test]
-    fn al4_multi_iteration_step_loop_remains_conservative() {
-        let err = compile_source(
+    fn al4_multi_iteration_step_loop_preserves_path_independent_snapshot() {
+        compile_source(
             "begin integer i; real r; for i := 1 step 1 until 3 do r := 6.25; print(r) end",
             "test",
         )
-        .expect_err("multiple iterations remain conservative without a fixed-point proof");
+        .expect("every iteration establishes the same static real value");
+    }
+
+    #[test]
+    fn al4_finite_step_loop_preserves_path_independent_body_snapshots() {
+        compile_source(
+            "begin integer i, n; real r; boolean flag; for i := 1 step 1 until 3 do begin n := 40; r := 6.25; flag := true end; if flag then print(r + n + 2.5) end",
+            "test",
+        )
+        .expect("every finite iteration establishes the same body snapshots");
+    }
+
+    #[test]
+    fn al4_finite_step_loop_rejects_control_dependent_body_snapshots() {
+        let err = compile_source(
+            "begin integer i; real r; for i := 1 step 1 until 3 do r := i + 0.25; print(r) end",
+            "test",
+        )
+        .expect_err("a control-dependent body requires iteration-specific analysis");
         assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
