@@ -119,18 +119,20 @@ implemented.
    numeric Nib conditional source-to-simulator fixture.
 4. [x] **Wide bitwise operations:** pair-aware `and`, `or`, `xor`, and `not`,
    plus a Nib bitwise source-to-simulator fixture.
-5. [ ] **Wide shifts:** pair-aware logical and arithmetic shifts for an RV32I
+5. [x] **Wide shifts:** pair-aware logical and arithmetic shifts for an RV32I
    shift count, including counts crossing the 32-bit word boundary.
-6. [ ] **Wide multiplication, division, and modulo:** helper sequences or RV32M
+6. [ ] **Nib shift frontend:** add shift syntax and IIR lowering; Nib currently
+   has no shift operators, so it cannot exercise the backend capability.
+7. [ ] **Wide multiplication, division, and modulo:** helper sequences or RV32M
    lowering for full-width values. Nib needs these for its ordinary numeric
    expressions.
-7. [ ] **Register allocation:** spill live values to stack slots and emit a proper
+8. [ ] **Register allocation:** spill live values to stack slots and emit a proper
    frame, removing the six-temporary limit.
-8. [ ] **Calls and modules:** lower direct calls, add relocations/linking for flat
+9. [ ] **Calls and modules:** lower direct calls, add relocations/linking for flat
    binaries, and preserve the RISC-V calling convention across calls.
-9. [ ] **Host runtime ABI:** define simulator `ecall` services for exit and integer
+10. [ ] **Host runtime ABI:** define simulator `ecall` services for exit and integer
    output, then lower language print primitives through that ABI.
-10. [ ] **Memory and data:** globals, addresses, loads/stores, and a data-image
+11. [ ] **Memory and data:** globals, addresses, loads/stores, and a data-image
    loader for programs needing strings or arrays.
 
 Each item should land as a focused PR with an end-to-end fixture from the

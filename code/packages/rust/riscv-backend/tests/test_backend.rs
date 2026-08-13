@@ -514,6 +514,122 @@ fn executes_pair_aware_64_bit_bitwise_operations() {
 }
 
 #[test]
+fn executes_pair_aware_64_bit_shifts_across_word_boundaries() {
+    let left = vec![
+        ci("const_u64", Some("one"), vec![CIROperand::Int(1)], "u64"),
+        ci("const_u64", Some("count"), vec![CIROperand::Int(40)], "u64"),
+        ci(
+            "shl_u64",
+            Some("result"),
+            vec![
+                CIROperand::Var("one".into()),
+                CIROperand::Var("count".into()),
+            ],
+            "u64",
+        ),
+        ci(
+            "ret_u64",
+            None,
+            vec![CIROperand::Var("result".into())],
+            "u64",
+        ),
+    ];
+    let left_bytes =
+        compile(&ctx("wide_left_shift", &[], "u64"), &left).expect("wide shift lowering");
+    let left_result = run_binary(&left_bytes, &[]).expect("wide shift execution");
+    assert_eq!(left_result.return_value, 0);
+    assert_eq!(left_result.return_value_high, 256);
+
+    let logical_right = vec![
+        ci(
+            "const_u64",
+            Some("value"),
+            vec![CIROperand::Int(1_099_511_627_776)],
+            "u64",
+        ),
+        ci("const_u64", Some("count"), vec![CIROperand::Int(32)], "u64"),
+        ci(
+            "shr_u64",
+            Some("result"),
+            vec![
+                CIROperand::Var("value".into()),
+                CIROperand::Var("count".into()),
+            ],
+            "u64",
+        ),
+        ci(
+            "ret_u64",
+            None,
+            vec![CIROperand::Var("result".into())],
+            "u64",
+        ),
+    ];
+    let right_bytes = compile(&ctx("wide_logical_right_shift", &[], "u64"), &logical_right)
+        .expect("wide shift lowering");
+    let right_result = run_binary(&right_bytes, &[]).expect("wide shift execution");
+    assert_eq!(right_result.return_value, 256);
+    assert_eq!(right_result.return_value_high, 0);
+
+    let arithmetic_right = vec![
+        ci(
+            "const_i64",
+            Some("minus_one"),
+            vec![CIROperand::Int(-1)],
+            "i64",
+        ),
+        ci("const_i64", Some("count"), vec![CIROperand::Int(40)], "i64"),
+        ci(
+            "shr_i64",
+            Some("result"),
+            vec![
+                CIROperand::Var("minus_one".into()),
+                CIROperand::Var("count".into()),
+            ],
+            "i64",
+        ),
+        ci(
+            "ret_i64",
+            None,
+            vec![CIROperand::Var("result".into())],
+            "i64",
+        ),
+    ];
+    let arithmetic_bytes = compile(
+        &ctx("wide_arithmetic_right_shift", &[], "i64"),
+        &arithmetic_right,
+    )
+    .expect("wide shift lowering");
+    let arithmetic_result = run_binary(&arithmetic_bytes, &[]).expect("wide shift execution");
+    assert_eq!(arithmetic_result.return_value as u32, u32::MAX);
+    assert_eq!(arithmetic_result.return_value_high, u32::MAX);
+
+    let oversized = vec![
+        ci("const_u64", Some("one"), vec![CIROperand::Int(1)], "u64"),
+        ci("const_u64", Some("count"), vec![CIROperand::Int(64)], "u64"),
+        ci(
+            "shl_u64",
+            Some("result"),
+            vec![
+                CIROperand::Var("one".into()),
+                CIROperand::Var("count".into()),
+            ],
+            "u64",
+        ),
+        ci(
+            "ret_u64",
+            None,
+            vec![CIROperand::Var("result".into())],
+            "u64",
+        ),
+    ];
+    let oversized_bytes =
+        compile(&ctx("wide_oversized_shift", &[], "u64"), &oversized).expect("wide shift lowering");
+    let oversized_result = run_binary(&oversized_bytes, &[]).expect("wide shift execution");
+    assert_eq!(oversized_result.return_value, 0);
+    assert_eq!(oversized_result.return_value_high, 0);
+}
+
+#[test]
 fn rejects_calls_until_the_linker_and_frame_abi_exist() {
     let cir = vec![ci(
         "call",
