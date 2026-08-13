@@ -3,7 +3,7 @@
 // This is the only module that needs the `filesystem` capability.
 
 import { readFileSync, readdirSync, existsSync } from "node:fs";
-import { join, dirname } from "node:path";
+import { join, dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
   MODALITY_MANIFEST_PATH,
@@ -426,17 +426,56 @@ export function loadEverything(root = defaultCurriculumRoot()): {
  * every one of which is trivially present, so the point would score as covered
  * while demonstrating nothing. That is the one shape this file must refuse.
  */
+const SAFE_INVENTORY_SEGMENT = /^[A-Za-z0-9]+$/;
+
 export function loadExamInventory(
   language: string,
   level: string,
   root = defaultCurriculumRoot(),
 ): ExamInventory {
-  const file = join(root, "core", `exam-inventory-${language === "spanish" ? "es" : language}-${level.toLowerCase()}.json`);
-  const inventory = JSON.parse(readFileSync(file, "utf8")) as ExamInventory;
+  // Both parameters are interpolated into a filename, and `join` NORMALISES
+  // `..` inside the interpolated part rather than rejecting it — so
+  // `level = "../../../../etc/shadow"` resolves to `/etc/shadow.json` and the
+  // trailing `.json` is no protection at all (`.docker/config.json` holds
+  // registry credentials). Today the only callers pass literals, which is
+  // exactly when a guard is cheap; the moment this is wired to a `--level`
+  // flag, as the A2 work will, it stops being cheap.
+  if (!SAFE_INVENTORY_SEGMENT.test(language) || !SAFE_INVENTORY_SEGMENT.test(level)) {
+    throw new Error(`exam inventory: refusing unsafe language/level '${language}'/'${level}'`);
+  }
+  const code = language === "spanish" ? "es" : language;
+  const directory = resolve(root, "core");
+  const file = resolve(directory, `exam-inventory-${code}-${level.toLowerCase()}.json`);
+  // Belt and braces: the allowlist above already excludes separators, so this
+  // can only fire if that regex is ever loosened. It is here so that loosening
+  // it fails loudly rather than silently reopening the hole.
+  if (dirname(file) !== directory) {
+    throw new Error("exam inventory: resolved path escapes the curriculum root");
+  }
+
+  const parsed = JSON.parse(readFileSync(file, "utf8")) as unknown;
+  if (
+    typeof parsed !== "object" ||
+    parsed === null ||
+    !Array.isArray((parsed as ExamInventory).points) ||
+    (parsed as ExamInventory).points.length === 0
+  ) {
+    // An unchecked cast would defer this to `TypeError: points is not iterable`
+    // somewhere downstream, which reads like a crash rather than a refusal.
+    throw new Error(`exam inventory: ${file} has no non-empty 'points' array`);
+  }
+  const inventory = parsed as ExamInventory;
   const seen = new Set<string>();
   for (const point of inventory.points) {
     if (seen.has(point.id)) throw new Error(`exam inventory: duplicate point id '${point.id}'`);
     seen.add(point.id);
+    // `__proto__` and friends as a category would pollute the accumulator in
+    // `measureExamCoverage`. That function is defended independently with a
+    // null-prototype object; this refusal keeps a malformed file from reaching
+    // it at all, and names the file rather than leaving a silent NaN behind.
+    if (point.category === "__proto__" || point.category === "constructor" || point.category === "prototype") {
+      throw new Error(`exam inventory: point '${point.id}' uses a reserved category name`);
+    }
     if (Array.isArray(point.probe) && point.probe.length === 0) {
       throw new Error(
         `exam inventory: point '${point.id}' has an empty probe; use null to mean "nothing in the corpus covers this"`,

@@ -152,6 +152,60 @@ describe("the committed A1 inventory", () => {
   });
 });
 
+describe("the loader refuses what would move the number the wrong way", () => {
+  it("refuses a language or level that could escape the curriculum root", () => {
+    // `join` NORMALISES `..` inside an interpolated filename rather than
+    // rejecting it, so before the guard `level = "../../../../etc/shadow"`
+    // resolved to `/etc/shadow.json`. The trailing `.json` was no protection:
+    // `.docker/config.json` holds registry credentials. Found by a security
+    // review of this very PR, while the only callers still passed literals.
+    expect(() => loadExamInventory("../../../../../../etc/passwd", "a1")).toThrow(/unsafe/);
+    expect(() => loadExamInventory("spanish", "../../../../../../root/.docker/config")).toThrow(/unsafe/);
+    expect(() => loadExamInventory("spanish", "A1/../A1")).toThrow(/unsafe/);
+    // The control: the legitimate call still works, so the guard is not simply
+    // refusing everything.
+    expect(loadExamInventory("spanish", "A1").points.length).toBeGreaterThan(0);
+  });
+});
+
+describe("a hostile inventory cannot corrupt the process", () => {
+  function hostile(category: string): ExamInventory {
+    return {
+      version: 1,
+      language: "spanish",
+      level: "A1",
+      about: "fixture",
+      source: "fixture",
+      probeSemantics: "fixture",
+      points: [{ id: "X", category, label: "attack", probe: null }],
+    };
+  }
+
+  it("does not write onto Object.prototype through a category name", () => {
+    // With a plain `{}` accumulator, `byCategory["__proto__"] ??= {...}` finds
+    // Object.prototype (truthy), skips the assignment, and `+= 1` lands on the
+    // prototype itself — after which EVERY object in the process inherits
+    // `enumerated: NaN`. The accumulator is `Object.create(null)` for this
+    // reason, and this test is what stops that turning back into `{}`.
+    const coverage = measureExamCoverage(hostile("__proto__"), []);
+    expect(Object.prototype.hasOwnProperty.call(Object.prototype, "enumerated")).toBe(false);
+    expect(({} as Record<string, unknown>).enumerated).toBeUndefined();
+
+    // And the report stays self-consistent: the category is a real own key, so
+    // the per-category lines still sum to the total. Under the old accumulator
+    // the point vanished from `byCategory` while still counting in `enumerated`.
+    expect(Object.keys(coverage.byCategory)).toEqual(["__proto__"]);
+    const summed = Object.values(coverage.byCategory).reduce((total, entry) => total + entry.enumerated, 0);
+    expect(summed).toBe(coverage.enumerated);
+  });
+
+  it("reports 0% rather than NaN% for an inventory with no points", () => {
+    const coverage = measureExamCoverage({ ...hostile("Uno"), points: [] }, []);
+    expect(coverage.percent).toBe(0);
+    expect(Number.isNaN(coverage.percent)).toBe(false);
+  });
+});
+
 describe("what the corpus actually covers", () => {
   it("pins A1 coverage, which is the number this project is judged on", () => {
     const { lessons } = loadEverything();

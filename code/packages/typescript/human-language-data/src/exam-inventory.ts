@@ -149,7 +149,15 @@ export function measureExamCoverage(
     };
   });
 
-  const byCategory: Record<string, { enumerated: number; covered: number }> = {};
+  // `Object.create(null)`, not `{}`. `byCategory[point.category] ??= ...` on a
+  // normal object literal is a prototype-pollution sink: with
+  // `category: "__proto__"` the lookup returns `Object.prototype`, which is
+  // truthy, so `??=` never assigns and `bucket.enumerated += 1` writes onto
+  // `Object.prototype` — every object built afterwards in the process inherits
+  // `enumerated: NaN`. It also corrupts this very report, because the polluting
+  // category vanishes from the own keys while still counting toward the totals,
+  // so the per-category lines and the summary would disagree.
+  const byCategory: Record<string, { enumerated: number; covered: number }> = Object.create(null);
   for (const point of points) {
     const bucket = (byCategory[point.category] ??= { enumerated: 0, covered: 0 });
     bucket.enumerated += 1;
@@ -164,7 +172,10 @@ export function measureExamCoverage(
     covered,
     unmapped: points.filter((point) => point.unmapped).length,
     partial: points.filter((point) => !point.unmapped && !point.covered).length,
-    percent: Math.round((covered / points.length) * 100),
+    // Guarded because `0/0` is `NaN`, and `NaN >= 60` is false — fail-safe
+    // against a threshold, but a percentage that renders as "NaN%" in a report
+    // is a bug wearing the costume of a finding.
+    percent: points.length === 0 ? 0 : Math.round((covered / points.length) * 100),
     byCategory,
     points,
   };
