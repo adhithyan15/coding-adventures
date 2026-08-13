@@ -1276,3 +1276,39 @@ fn divides_spilled_wide_pairs_for_signed_and_unsigned_values() {
         assert_eq!(result.return_value_high, 0, "{name}");
     }
 }
+
+#[test]
+fn compares_two_spilled_wide_pairs_under_mixed_width_pressure() {
+    let cir = vec![
+        ci("const_u64", Some("v1"), vec![CIROperand::Int(4_294_967_297)], "u64"),
+        ci("const_u64", Some("v2"), vec![CIROperand::Int(8_589_934_592)], "u64"),
+        ci("const_u64", Some("v3"), vec![CIROperand::Int(4_294_967_299)], "u64"),
+        ci("const_u64", Some("v4"), vec![CIROperand::Int(4_294_967_300)], "u64"),
+        ci("const_u64", Some("v5"), vec![CIROperand::Int(4_294_967_301)], "u64"),
+        ci(
+            "cmp_lt_u64",
+            Some("answer"),
+            vec![CIROperand::Var("v1".into()), CIROperand::Var("v2".into())],
+            "bool",
+        ),
+        ci(
+            "add_u64",
+            Some("sum34"),
+            vec![CIROperand::Var("v3".into()), CIROperand::Var("v4".into())],
+            "u64",
+        ),
+        ci(
+            "add_u64",
+            Some("sink"),
+            vec![CIROperand::Var("sum34".into()), CIROperand::Var("v5".into())],
+            "u64",
+        ),
+        ci(
+            "ret_bool",
+            None,
+            vec![CIROperand::Var("answer".into())],
+            "bool",
+        ),
+    ];
+    assert_eq!(compile_and_run(&cir), 1);
+}

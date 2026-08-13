@@ -9,6 +9,8 @@
   fixture that shifts a stack-resident full-width value.
 - Added dedicated pair-spill reloads for signed and unsigned restoring division,
   with simulator coverage for stack-resident dividends and divisors.
+- Added pair-spill reloads for wide comparisons and reserved a scalar register
+  for mixed-width pressure when all pair temporaries are live.
 - Added scalar register spilling: live values evict to aligned `sp`-relative
   stack slots, reload through dedicated operand registers, and restore the
   frame on every return. The simulator fixture now executes seven live scalar

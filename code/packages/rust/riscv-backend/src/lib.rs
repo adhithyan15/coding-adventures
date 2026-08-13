@@ -36,6 +36,10 @@ const DIVISION_LHS_SIGN_REGISTER: u32 = 23;
 const DIVISION_QUOTIENT_SIGN_REGISTER: u32 = 24;
 const DIVISION_DIVISOR_NONZERO_REGISTER: u32 = 25;
 const VALUE_REGISTERS: [u32; 6] = [5, 6, 7, 28, 29, 30];
+/// Reserved for scalar results when every temporary pair is live. No current
+/// lowering sequence uses `x9`, and direct calls are still unsupported.
+const MIXED_WIDTH_REGISTER: u32 = 9;
+const COMPARISON_HIGH_REGISTER: u32 = 20;
 const STACK_POINTER: u32 = 2;
 const SPILLED_LHS_REGISTER: u32 = 26;
 const SPILLED_RHS_REGISTER: u32 = 27;
@@ -720,7 +724,7 @@ impl Lowerer {
         }
 
         if let Some(index) = self.env.iter().position(|(name, location)| {
-            matches!(location, ValueLocation::Word(register) if VALUE_REGISTERS.contains(register))
+            matches!(location, ValueLocation::Word(register) if is_scalar_value_register(*register))
                 && self.remaining_uses.get(name).copied().unwrap_or_default() == 0
         }) {
             let (_, location) = self.env.remove(index);
@@ -730,13 +734,18 @@ impl Lowerer {
             };
         }
 
-        let index = self
-            .env
-            .iter()
-            .position(|(_, location)| {
-                matches!(location, ValueLocation::Word(register) if VALUE_REGISTERS.contains(register))
-            })
-            .ok_or(BackendError::OutOfRegisters)?;
+        let index = self.env.iter().position(|(_, location)| {
+            matches!(location, ValueLocation::Word(register) if is_scalar_value_register(*register))
+        });
+        let index = if let Some(index) = index {
+            index
+        } else if self.env.iter().any(|(_, location)| {
+            matches!(location, ValueLocation::Pair { .. } | ValueLocation::PairSpill { .. })
+        }) {
+            return Ok(MIXED_WIDTH_REGISTER);
+        } else {
+            return Err(BackendError::OutOfRegisters);
+        };
         let register = match self.env[index].1 {
             ValueLocation::Word(register) => register,
             _ => unreachable!("value-register entry must be a word"),
@@ -1406,17 +1415,17 @@ impl Lowerer {
         signed: bool,
     ) -> Result<(), BackendError> {
         let rd = self.dest(instr, op)?;
-        let lhs = self.var_location(instr, 0, op)?;
-        let rhs = self.var_location(instr, 1, op)?;
+        let lhs = self.wide_var_location(instr, 0, op)?;
+        let rhs = self.wide_var_location(instr, 1, op)?;
 
         if matches!(relation, "eq" | "ne") {
             self.words.push(encode_xor(rd, lhs.low(), rhs.low()));
             self.copy_or_extend_high(SCRATCH_REGISTER, lhs, signed);
-            self.copy_or_extend_high(SECOND_SCRATCH_REGISTER, rhs, signed);
+            self.copy_or_extend_high(COMPARISON_HIGH_REGISTER, rhs, signed);
             self.words.push(encode_xor(
                 SCRATCH_REGISTER,
                 SCRATCH_REGISTER,
-                SECOND_SCRATCH_REGISTER,
+                COMPARISON_HIGH_REGISTER,
             ));
             self.words.push(encode_or(rd, rd, SCRATCH_REGISTER));
             self.words.push(match relation {
@@ -1430,28 +1439,26 @@ impl Lowerer {
         let different_label = self.internal_label("different");
         let end_label = self.internal_label("end");
         self.copy_or_extend_high(SCRATCH_REGISTER, lhs, signed);
-        self.copy_or_extend_high(SECOND_SCRATCH_REGISTER, rhs, signed);
+        self.copy_or_extend_high(COMPARISON_HIGH_REGISTER, rhs, signed);
         self.words.push(encode_xor(
+            rd,
             SCRATCH_REGISTER,
-            SCRATCH_REGISTER,
-            SECOND_SCRATCH_REGISTER,
+            COMPARISON_HIGH_REGISTER,
         ));
         self.record_named_branch(
             different_label.clone(),
             BranchKind::NeZero {
-                rs1: SCRATCH_REGISTER,
+                rs1: rd,
             },
         );
 
         self.emit_compare_words(rd, lhs.low(), rhs.low(), relation, false);
         self.record_named_branch(end_label.clone(), BranchKind::Jump);
         self.mark_label(different_label);
-        self.copy_or_extend_high(SCRATCH_REGISTER, lhs, signed);
-        self.copy_or_extend_high(SECOND_SCRATCH_REGISTER, rhs, signed);
         self.emit_compare_words(
             rd,
             SCRATCH_REGISTER,
-            SECOND_SCRATCH_REGISTER,
+            COMPARISON_HIGH_REGISTER,
             relation,
             signed,
         );
@@ -1705,6 +1712,10 @@ fn is_rv32_operation_type(ty: &str) -> bool {
         ty,
         "u4" | "u8" | "u16" | "u32" | "i8" | "i16" | "i32" | "bool"
     )
+}
+
+fn is_scalar_value_register(register: u32) -> bool {
+    VALUE_REGISTERS.contains(&register) || register == MIXED_WIDTH_REGISTER
 }
 
 fn literal_word(operand: Option<&CIROperand>, ty: &str) -> Result<u32, BackendError> {
