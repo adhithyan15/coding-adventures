@@ -4839,9 +4839,13 @@ impl Compiler {
             };
             let tracks_step_body =
                 static_step_exit_real.is_some() || static_step_exit_integer.is_some();
+            let tracks_while_body = is_while_element
+                && executes == Some(true)
+                && !entry_tracking_disabled
+                && self.for_body_avoids_target(target, body);
             let step_executes_exactly_once = is_step_element
                 && self.for_step_executes_exactly_once(var_ty, elem);
-            if tracks_step_body {
+            if tracks_step_body || tracks_while_body {
                 self.static_real_slots.clear();
                 self.static_integer_slots.clear();
                 self.static_boolean_slots.clear();
@@ -4878,6 +4882,8 @@ impl Compiler {
                     static_step_exit_real,
                     static_step_exit_integer,
                 )?;
+            } else if tracks_while_body && !self.static_real_tracking_disabled {
+                self.update_for_target_snapshot(target, None, None)?;
             }
         }
         Ok(())
@@ -9060,6 +9066,25 @@ mod tests {
             "test",
         )
         .expect("the initial controlled value makes the while condition true");
+    }
+
+    #[test]
+    fn al4_static_initial_while_preserves_path_independent_body_snapshots() {
+        compile_source(
+            "begin integer i, n; real r; boolean flag; i := 0; for i := i + 1 while i < 3 do begin n := 40; r := 6.25; flag := true end; if flag then print(r + n + 2.5) end",
+            "test",
+        )
+        .expect("every reached while body establishes the same snapshots");
+    }
+
+    #[test]
+    fn al4_static_initial_while_rejects_control_dependent_body_snapshots() {
+        let err = compile_source(
+            "begin integer i; real r; i := 0; for i := i + 1 while i < 3 do r := i + 0.25; print(r) end",
+            "test",
+        )
+        .expect_err("a control-dependent while body requires iteration-specific analysis");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
     #[test]

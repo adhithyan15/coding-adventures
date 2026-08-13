@@ -894,7 +894,10 @@ backend immediately) come before the enabler-dependent items.
   conservative.
   A `while` element also retains body initialization when a bounded static
   numeric comparison, evaluated after abstractly assigning its initial
-  controlled value, proves the first condition true. Known comparison leaves
+  controlled value, proves the first condition true. Such an element also
+  retains path-independent integer, real, and boolean constants established by
+  a body that avoids the control; its final controlled value remains unknown.
+  Known comparison leaves
   compose through `not`, `and`, `or`, `impl`, and `eqv`; bare literals,
   including direct `true` and `false`, compose through those operators;
   truth-dominating `false and x`, `true or x`, and `false impl x` do not
