@@ -863,9 +863,14 @@ backend immediately) come before the enabler-dependent items.
   closed. Conditional statements intersect equal outgoing snapshots, including
   the unmodified path when `else` is absent, and definite string initialization
   intersects both branch exits. Loop joins are computed per list element:
-  single-value elements retain body initialization because they execute once,
-  while `while` and `step`/`until` elements preserve their entry set because
-  their body may execute zero times. All-single-value lists also retain static
+  single-value elements retain body initialization because they execute once.
+  A `step`/`until` element also retains body initialization when finite static
+  start, step, and limit values prove at least one ascending or descending
+  iteration; zero-trip, dynamic, and `while` elements preserve their entry set.
+  Local string slots use an empty verifier seed on typed backends without
+  changing source semantics; reads still require membership in the separate
+  definite-initialization set.
+  All-single-value lists also retain static
   integer and real snapshots as straight-line repetitions; any dynamic loop
   element keeps snapshot tracking disabled. Each plain element updates the
   controlled local's snapshot before its body is analyzed. Labels, gotos, calls, dynamic

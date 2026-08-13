@@ -847,13 +847,26 @@ impl Compiler {
             // level it would be a dead register write shadowing the global.
             // A plain (register) scalar keeps its zero-init `const`.
             let is_global = is_own || self.block_captured.contains(&name);
-            if !is_global && ty != ScalarType::String {
-                self.emit(IIRInstr::new(
-                    "const",
-                    Some(slot.clone()),
-                    vec![ty.default_operand()],
-                    ty.iir(),
-                ));
+            if !is_global {
+                if ty == ScalarType::String {
+                    // Give every control-flow predecessor a verifier-safe
+                    // reference value. Definite-initialization checks remain
+                    // governed by `initialized_string_slots`, so source reads
+                    // before assignment still fail during lowering.
+                    self.emit(IIRInstr::new(
+                        "str_const",
+                        Some(slot.clone()),
+                        vec![Operand::Str(String::new())],
+                        "str",
+                    ));
+                } else {
+                    self.emit(IIRInstr::new(
+                        "const",
+                        Some(slot.clone()),
+                        vec![ty.default_operand()],
+                        ty.iir(),
+                    ));
+                }
             }
             if is_own && ty == ScalarType::String {
                 // A string handle cannot use the all-zero scalar default: the
@@ -4741,15 +4754,70 @@ impl Compiler {
 
         for elem in elems {
             let entry_initialized_string_slots = self.initialized_string_slots.clone();
-            let executes_once = !direct_tokens(elem)
-                .iter()
-                .any(|token| token.value == "while" || token.value == "step");
+            let executes_at_least_once = self.for_element_executes_at_least_once(var_ty, elem);
             self.emit_for_element(target, var_ty, elem, body)?;
-            if !executes_once {
+            if !executes_at_least_once {
                 self.initialized_string_slots = entry_initialized_string_slots;
             }
         }
         Ok(())
+    }
+
+    fn for_element_executes_at_least_once(
+        &self,
+        target_ty: ScalarType,
+        elem: &GrammarASTNode,
+    ) -> bool {
+        let tokens = direct_tokens(elem);
+        if tokens.iter().any(|token| token.value == "while") {
+            return false;
+        }
+        if !tokens.iter().any(|token| token.value == "step") {
+            return true;
+        }
+
+        let values: Vec<&GrammarASTNode> = direct_nodes(elem)
+            .into_iter()
+            .filter(|node| node.rule_name == "arith_expr")
+            .collect();
+        if values.len() != 3 {
+            return false;
+        }
+        match target_ty {
+            ScalarType::Integer => {
+                let Some(start) = self.static_assigned_integer_value(values[0]) else {
+                    return false;
+                };
+                let Some(step) = self.static_assigned_integer_value(values[1]) else {
+                    return false;
+                };
+                let Some(limit) = self.static_assigned_integer_value(values[2]) else {
+                    return false;
+                };
+                if step >= 0 {
+                    start <= limit
+                } else {
+                    start >= limit
+                }
+            }
+            ScalarType::Real => {
+                let Some(start) = self.static_assigned_real_value(values[0]) else {
+                    return false;
+                };
+                let Some(step) = self.static_assigned_real_value(values[1]) else {
+                    return false;
+                };
+                let Some(limit) = self.static_assigned_real_value(values[2]) else {
+                    return false;
+                };
+                if step >= 0.0 {
+                    start <= limit
+                } else {
+                    start >= limit
+                }
+            }
+            ScalarType::Boolean | ScalarType::String => false,
+        }
     }
 
     fn for_target_type(&self, target: &GrammarASTNode) -> Result<ScalarType, CompileError> {
@@ -8380,6 +8448,44 @@ mod tests {
     }
 
     #[test]
+    fn al4_static_ascending_step_loop_definitely_initializes_string() {
+        compile_source(
+            "begin integer i; string s; for i := 1 step 1 until 2 do s := 'OK'; print(s) end",
+            "test",
+        )
+        .expect("a statically nonempty ascending step loop executes its body");
+    }
+
+    #[test]
+    fn al4_static_descending_step_loop_definitely_initializes_string() {
+        compile_source(
+            "begin integer i; string s; for i := 2 step -1 until 1 do s := 'OK'; print(s) end",
+            "test",
+        )
+        .expect("a statically nonempty descending step loop executes its body");
+    }
+
+    #[test]
+    fn al4_static_zero_trip_step_loop_does_not_initialize_string() {
+        let err = compile_source(
+            "begin integer i; string s; for i := 2 step 1 until 1 do s := 'OK'; print(s) end",
+            "test",
+        )
+        .expect_err("a statically empty step loop cannot initialize a string");
+        assert!(format!("{err:?}").contains("requires initialized string variable"));
+    }
+
+    #[test]
+    fn al4_dynamic_step_loop_does_not_initialize_string() {
+        let err = compile_source(
+            "begin integer i, n; string s; for i := 1 step 1 until n do s := 'OK'; print(s) end",
+            "test",
+        )
+        .expect_err("a dynamic step-loop bound must fail closed");
+        assert!(format!("{err:?}").contains("requires initialized string variable"));
+    }
+
+    #[test]
     fn al4_mixed_loop_list_uses_later_definite_initialization() {
         compile_source(
             "begin integer i; string s; for i := 1 while false, 2 do s := 'OK'; print(s) end",
@@ -8583,23 +8689,30 @@ mod tests {
             .iter()
             .find(|f| f.name == "main")
             .expect("has main");
-        let empty_slot = main.instructions.iter()
-            .find(|i| {
-                i.op == "str_const"
-                    && matches!(i.srcs.first(), Some(Operand::Str(text)) if text.is_empty())
+        let copy_suffix = main
+            .instructions
+            .iter()
+            .find_map(|i| {
+                if i.op == "str_concat"
+                    && i.dest.as_deref() == Some("t")
+                    && matches!(i.srcs.first(), Some(Operand::Var(left)) if left == "s")
+                {
+                    match i.srcs.get(1) {
+                        Some(Operand::Var(right)) => Some(right.as_str()),
+                        _ => None,
+                    }
+                } else {
+                    None
+                }
             })
-            .and_then(|i| i.dest.as_deref())
-            .expect("copy should materialize an empty suffix");
+            .expect("t := s should copy through E4 str_concat");
         assert!(
             main.instructions.iter().any(|i| {
-                i.op == "str_concat"
-                    && i.dest.as_deref() == Some("t")
-                    && matches!(i.srcs.as_slice(), [
-                        Operand::Var(left),
-                        Operand::Var(right)
-                    ] if left == "s" && right == empty_slot)
+                i.op == "str_const"
+                    && i.dest.as_deref() == Some(copy_suffix)
+                    && matches!(i.srcs.first(), Some(Operand::Str(text)) if text.is_empty())
             }),
-            "t := s should copy through E4 str_concat with an empty suffix"
+            "the copy suffix must be an empty string"
         );
         assert!(
             main.instructions.iter().any(|i| {
