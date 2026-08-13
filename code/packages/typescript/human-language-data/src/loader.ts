@@ -11,6 +11,7 @@ import {
   type ModalityManifestLesson,
 } from "./modality-manifest.js";
 import { buildDataset, parseLesson, type ParsedLesson } from "./parse.js";
+import type { ExamInventory } from "./exam-inventory.js";
 import type { LedgerLetter, LetterLedger } from "./letter-ledger.js";
 import type {
   BookChapter,
@@ -414,4 +415,33 @@ export function loadEverything(root = defaultCurriculumRoot()): {
     letterLedgers,
     dataset: buildDataset(taxonomy, lessons),
   };
+}
+
+/**
+ * The exam inventory for one language and level.
+ *
+ * Validated on load rather than trusted, for the same reason `loadChapterPolicy`
+ * validates its budgets: a malformed probe would make the gate read HIGHER, not
+ * lower. `probe: []` — an empty array rather than `null` — asks for zero atoms,
+ * every one of which is trivially present, so the point would score as covered
+ * while demonstrating nothing. That is the one shape this file must refuse.
+ */
+export function loadExamInventory(
+  language: string,
+  level: string,
+  root = defaultCurriculumRoot(),
+): ExamInventory {
+  const file = join(root, "core", `exam-inventory-${language === "spanish" ? "es" : language}-${level.toLowerCase()}.json`);
+  const inventory = JSON.parse(readFileSync(file, "utf8")) as ExamInventory;
+  const seen = new Set<string>();
+  for (const point of inventory.points) {
+    if (seen.has(point.id)) throw new Error(`exam inventory: duplicate point id '${point.id}'`);
+    seen.add(point.id);
+    if (Array.isArray(point.probe) && point.probe.length === 0) {
+      throw new Error(
+        `exam inventory: point '${point.id}' has an empty probe; use null to mean "nothing in the corpus covers this"`,
+      );
+    }
+  }
+  return inventory;
 }

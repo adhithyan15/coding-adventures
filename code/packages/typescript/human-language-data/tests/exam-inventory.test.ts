@@ -1,0 +1,192 @@
+// ---------------------------------------------------------------------------
+// The gate that answers the owner's question (HL-C128).
+//
+//     "The goal is not whether something touches some level. The goal is can
+//      someone pass that level of exam with just reading the book and slowly
+//      following its gentle ramp."
+//
+// Every other measurement in this package walks our own lessons, so every one
+// of them rises when a lesson is added — including a lesson on something the
+// exam does not test. This one resolves the corpus against an external, finite
+// list, so it can fall, and it can stay flat while the corpus grows.
+// ---------------------------------------------------------------------------
+import { describe, expect, it } from "vitest";
+import { loadEverything, loadExamInventory } from "../src/loader.js";
+import {
+  measureExamCoverage,
+  formatExamCoverage,
+  trackIntroducedAtoms,
+  type ExamInventory,
+} from "../src/exam-inventory.js";
+import { parseLesson } from "../src/parse.js";
+
+function lesson(id: string, introduces: string[]) {
+  return parseLesson(
+    `---
+schema_version: 2
+id: ${id}
+spine_node: HELLO
+sequence: 10
+chapter: 1
+type: grammar
+headword: prueba
+gloss: a fixture
+concept_tag: ES-TEST
+prerequisites: []
+duration:
+  max_seconds: 60
+requires:
+  knowledge: []
+introduces:
+  knowledge: [${introduces.join(", ")}]
+practises:
+  knowledge: []
+skills: [reading]
+modes: [interpretive]
+strands: [language-focus]
+register: neutral
+variety: general
+---
+
+# prueba
+
+## Warm-up
+
+[PAUSE 2s] Recall it.
+`,
+    "spanish",
+  );
+}
+
+const FIXTURE: ExamInventory = {
+  version: 1,
+  language: "spanish",
+  level: "A1",
+  about: "fixture",
+  source: "fixture",
+  probeSemantics: "fixture",
+  points: [
+    { id: "P-1", category: "Uno", label: "both atoms present", probe: ["ES-A", "ES-B"] },
+    { id: "P-2", category: "Uno", label: "one atom missing", probe: ["ES-A", "ES-MISSING"] },
+    { id: "P-3", category: "Dos", label: "nothing corresponds", probe: null },
+  ],
+};
+
+describe("probe semantics", () => {
+  const corpus = [lesson("ES-1", ["ES-A"]), lesson("ES-2", ["ES-B"])];
+
+  it("covers a point only when EVERY atom of its probe is introduced", () => {
+    const coverage = measureExamCoverage(FIXTURE, corpus);
+    const byId = new Map(coverage.points.map((point) => [point.id, point]));
+
+    expect(byId.get("P-1")!.covered).toBe(true);
+    // Half a paradigm is not half a mark in an exam, so it is not half a point
+    // here. P-2 holds ES-A and is still uncovered.
+    expect(byId.get("P-2")!.covered).toBe(false);
+    expect(byId.get("P-2")!.missingAtoms).toEqual(["ES-MISSING"]);
+  });
+
+  it("counts an unmapped point as UNCOVERED rather than skipping it", () => {
+    // The tempting reading of `probe: null` is "not yet classified, exclude from
+    // the denominator". That would let the percentage be improved by deleting
+    // the mapping — the one edit that changes nothing about what a reader knows.
+    const coverage = measureExamCoverage(FIXTURE, corpus);
+    expect(coverage.enumerated).toBe(3);
+    expect(coverage.points.find((point) => point.id === "P-3")!.covered).toBe(false);
+    expect(coverage.unmapped).toBe(1);
+    expect(coverage.covered).toBe(1);
+  });
+
+  it("falls when a probed atom stops being introduced", () => {
+    // The property an annotation cannot have. Retire the lesson that introduces
+    // ES-B and P-1 must stop counting, with no edit to the inventory.
+    const before = measureExamCoverage(FIXTURE, corpus);
+    const after = measureExamCoverage(FIXTURE, [lesson("ES-1", ["ES-A"])]);
+    expect(before.covered).toBe(1);
+    expect(after.covered).toBe(0);
+  });
+
+  it("reads atoms through the shared helper, so the flat dotted key is honoured", () => {
+    // `introduces.knowledge` is a FLAT frontmatter key. Reading it as a nested
+    // object returns undefined for every lesson in the corpus and would report
+    // 0% coverage — which looks like a devastating finding rather than a bug.
+    expect(trackIntroducedAtoms(corpus, "spanish")).toEqual(new Set(["ES-A", "ES-B"]));
+    expect(trackIntroducedAtoms(corpus, "french").size).toBe(0);
+  });
+});
+
+describe("the committed A1 inventory", () => {
+  const inventory = loadExamInventory("spanish", "A1");
+
+  it("refuses an empty probe, because an empty probe scores as covered", () => {
+    // `probe: []` asks for zero atoms, every one of which is trivially present,
+    // so the point would be reported covered while demonstrating nothing. It is
+    // the one malformed shape that moves the number in the flattering direction,
+    // which is why the loader rejects it rather than tolerating it.
+    for (const point of inventory.points) {
+      expect(Array.isArray(point.probe) ? point.probe.length : 1).toBeGreaterThan(0);
+    }
+  });
+
+  it("names every probe atom in the corpus convention, so a typo is visible", () => {
+    // A misspelt atom resolves to "not introduced", which is fail-safe but
+    // silent. Shape-checking the name catches the common half of that.
+    for (const point of inventory.points) {
+      for (const atom of point.probe ?? []) {
+        expect(atom, `${point.id} probes '${atom}'`).toMatch(/^ES-[A-Z0-9-]+$/);
+      }
+    }
+  });
+
+  it("gives every unmapped point a reason where one is worth having", () => {
+    // Not every null needs prose — "the gerund is not taught" is self-evident.
+    // But the ones that are PARTLY there are the misleading ones, so they carry
+    // a note saying which half exists.
+    const partiallyTrue = ["A1-ART-03", "A1-POS-02", "A1-ADV-01", "A1-ADV-02", "A1-V-04", "A1-V-06", "A1-V-08"];
+    for (const id of partiallyTrue) {
+      const point = inventory.points.find((candidate) => candidate.id === id);
+      expect(point, id).toBeDefined();
+      expect(point!.probe).toBeNull();
+      expect(point!.note, id).toBeTruthy();
+    }
+  });
+});
+
+describe("what the corpus actually covers", () => {
+  it("pins A1 coverage, which is the number this project is judged on", () => {
+    const { lessons } = loadEverything();
+    const coverage = measureExamCoverage(loadExamInventory("spanish", "A1"), lessons);
+
+    // 220 chapters, a curriculum that had climbed to a B2 node, and 62% of the
+    // A1 grammar an examiner may ask for. The gaps are not exotic: the
+    // demonstratives are absent ENTIRELY (este/ese/aquel, all three points),
+    // `muy` is untaught, `al`/`del` are untaught, the gerund is untaught, and
+    // the personal `a` is untaught.
+    //
+    // This number is allowed to move only two ways. Up, when a lesson teaches
+    // something the inventory lists. Down, when one is retired. It must NOT
+    // move because a probe was loosened or a point deleted — if this assertion
+    // fails alongside an edit to exam-inventory-es-a1.json, read that edit
+    // before re-pinning.
+    expect(coverage.enumerated).toBe(85);
+    expect(coverage.covered).toBe(53);
+    expect(coverage.percent).toBe(62);
+
+    // Whole categories missing is a different failure from thin coverage, and
+    // the report has to keep them distinguishable.
+    expect(coverage.byCategory["Los demostrativos"]).toEqual({ enumerated: 3, covered: 0 });
+    expect(coverage.byCategory["El sintagma adjetival"]).toEqual({ enumerated: 1, covered: 0 });
+    expect(coverage.byCategory["La oracion simple"]).toEqual({ enumerated: 6, covered: 6 });
+  });
+
+  it("reports the shortfall in a form somebody can act on", () => {
+    const { lessons } = loadEverything();
+    const report = formatExamCoverage(
+      measureExamCoverage(loadExamInventory("spanish", "A1"), lessons),
+    );
+    expect(report).toContain("spanish A1: 53/85 points covered (62%)");
+    // Worst category first: the line after the summary should be the emptiest
+    // category, not the alphabetically first one.
+    expect(report.split("\n")[2]).toContain("0/1  El sintagma adjetival");
+  });
+});
