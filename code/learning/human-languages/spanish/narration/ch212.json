@@ -1,0 +1,261 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 212,
+  "title": "Dijo --- The Stem That Breaks Its Own Rule",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:9e24eba18f57a2ff",
+  "lessons": [
+    {
+      "id": "ES-C57-dijo",
+      "sequence": 2295,
+      "title": "dijo",
+      "headword": "dijo",
+      "romanization": "dijo",
+      "gloss": "he said — a new strong stem, which obeys the pattern in the singular and then breaks it in the plural",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:15ee2519458b6462",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The strong pattern, once more: a stem that changed shape, and then endings that carry no stress. (Tuve, tuvo.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One more stem is about to join them."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the stem is dij-",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Decir builds its past on dij-, and in the singular nothing is new at all:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "tuve, tuvo, the stem you know.",
+                "dije, dijo, the same endings, on a new stem."
+              ]
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Unstressed at the end, exactly like the others. Dijo, not dijó."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin said dīxit. That x stood for a [ks] — the sound at the end of English box."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Old Spanish kept the letter and softened the sound: dixo, with the x said roughly like English sh. Centuries later that sound hardened at the back of the mouth into the one j spells today, and the spelling followed the sound. dīxit becomes dixo becomes dijo."
+            },
+            {
+              "kind": "speech",
+              "text": "So the j in dijo is not a decoration. It is a Latin x, wearing modern clothes."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: where it breaks the pattern",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You learned the strong plural as stem plus -ieron: tuvieron, hicieron, estuvieron. Apply that here and you would get dijieron."
+            },
+            {
+              "kind": "speech",
+              "text": "It is dijeron. The i is gone."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The i in -ieron is not a full vowel — it is a glide, the y sound of English yes, leaning on the vowel after it. And Spanish does not keep a glide next to a sound already made in that part of the mouth. The j was there first, so the glide goes."
+            },
+            {
+              "kind": "speech",
+              "text": "This is not a fact about decir. Any strong stem ending in j does it, and you will meet more of them; when you do, the ending will already be familiar."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dije, dijo, dijeron",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dije*, *dijo*, *dijeron*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tuvieron, then dijeron, and hear the difference",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tuvieron*, then *dijeron*, and hear the difference]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C57-dijo-say",
+              "prompt": "He said.",
+              "assesses": [
+                "ES-GRAMMAR-DECIR-PRETERITE"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "dijo",
+                "el dijo"
+              ],
+              "feedback": {
+                "correct": "Stem dij-, ending unstressed.",
+                "incorrect": "Dijo."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C57-dijo-plural",
+              "prompt": "They said. Careful — the ending is not the one you learned for tuvieron.",
+              "assesses": [
+                "ES-GRAMMAR-J-STEM-PRETERITE-PLURAL"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "dijeron",
+                "ellos dijeron"
+              ],
+              "feedback": {
+                "correct": "The i is absorbed after the j.",
+                "incorrect": "Dijeron, not dijieron."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C57-dijo-letter",
+              "prompt": "Which Latin letter is the j of dijo descended from?",
+              "assesses": [
+                "ES-ETYMON-DIJO-DIXIT"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "x",
+                "the x of dixit"
+              ],
+              "feedback": {
+                "correct": "A [ks] that softened, then hardened again.",
+                "incorrect": "The x of dixit."
+              }
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The stem? (Dij-.) The they form? (Dijeron — no i.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And is that an exception you must memorise for this one verb, or a rule? (A rule, for every strong stem that ends in j.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

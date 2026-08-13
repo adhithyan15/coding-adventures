@@ -5493,6 +5493,33 @@
       "tex": "spanish/book/chapters/ch210-synthesis-condiciones.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 211,
+      "sourceHash": "fnv1a64:789fb7efc1ad22ad",
+      "lessonIds": [
+        "ES-C57-dice-que"
+      ],
+      "tex": "spanish/book/chapters/ch211-dice-que.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 212,
+      "sourceHash": "fnv1a64:d9583c5e61dc0145",
+      "lessonIds": [
+        "ES-C57-dijo"
+      ],
+      "tex": "spanish/book/chapters/ch212-dijo.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 213,
+      "sourceHash": "fnv1a64:f97c0dfc3a890b81",
+      "lessonIds": [
+        "ES-C57-dijo-que"
+      ],
+      "tex": "spanish/book/chapters/ch213-dijo-que.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "sourceHash": "fnv1a64:c0940889d5248bc5",

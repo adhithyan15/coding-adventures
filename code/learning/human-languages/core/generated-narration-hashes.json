@@ -9690,6 +9690,48 @@
       "jsonHash": "fnv1a64:2c215a467d2ae6a9"
     },
     {
+      "language": "spanish",
+      "chapter": 211,
+      "sourceHash": "fnv1a64:eb07a56515e6a0fe",
+      "lessonIds": [
+        "ES-C57-dice-que"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch211.txt",
+      "json": "spanish/narration/ch211.json",
+      "textHash": "fnv1a64:53e195273c85fbd8",
+      "jsonHash": "fnv1a64:f3ff0cf2b753c132"
+    },
+    {
+      "language": "spanish",
+      "chapter": 212,
+      "sourceHash": "fnv1a64:9e24eba18f57a2ff",
+      "lessonIds": [
+        "ES-C57-dijo"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch212.txt",
+      "json": "spanish/narration/ch212.json",
+      "textHash": "fnv1a64:761cc726dde48247",
+      "jsonHash": "fnv1a64:33474d86d8659361"
+    },
+    {
+      "language": "spanish",
+      "chapter": 213,
+      "sourceHash": "fnv1a64:dae0c456f3e7aa9f",
+      "lessonIds": [
+        "ES-C57-dijo-que"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch213.txt",
+      "json": "spanish/narration/ch213.json",
+      "textHash": "fnv1a64:ed936d4a12d3bcae",
+      "jsonHash": "fnv1a64:67285529d2b85bdb"
+    },
+    {
       "language": "tamil",
       "chapter": 1,
       "sourceHash": "fnv1a64:4ba983e1f562762e",
