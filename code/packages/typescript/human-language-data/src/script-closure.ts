@@ -54,7 +54,7 @@
 // Report-only, per the HL05 and HL08 precedent.
 
 import type { ParsedLesson } from "./parse.js";
-import { SCRIPT_SYSTEMS, systemOf, readingOrder } from "./ramp.js";
+import { SCRIPT_SYSTEMS, belongsToAny, readingOrder } from "./ramp.js";
 import { hasOwn } from "./constants.js";
 
 /** One lesson asking the reader to decode glyphs nobody taught them. */
@@ -66,8 +66,6 @@ export interface ClosureViolation {
   glyphs: string;
   /** How many. Sorting on this makes the list a work queue. */
   count: number;
-  /** Whether the lesson is itself a script lesson (it should not be). */
-  isScriptLesson: boolean;
 }
 
 /** What one track's closure looks like. */
@@ -94,6 +92,15 @@ export interface TrackClosure {
    */
   exposureOnly: number;
   /**
+   * GLYPHS the exposure rule removed from a lesson's load-bearing set.
+   *
+   * `exposureOnly` counts lessons the rule flipped to clean; this counts what it
+   * actually took out, including from lessons that still violate. The second
+   * number is much larger than the first, and it is the one that would move if
+   * an author started laundering script through the headword.
+   */
+  exposureExemptedGlyphs: number;
+  /**
    * Lessons showing a headword in target script with NO romanization declared.
    *
    * The remediation queue: each one is a lesson whose headword would become
@@ -106,12 +113,23 @@ export interface ScriptClosureReport {
   tracks: TrackClosure[];
   /** Every violation, steepest first, as a work queue. */
   violations: ClosureViolation[];
+  /**
+   * Tracks whose declared script is not one this module knows.
+   *
+   * Named rather than counted, because the fix is per-track. These are NOT
+   * reported as clean: they are reported as unmeasured, which is a different
+   * claim and the only honest one.
+   */
+  unknownScriptTracks: string[];
   summary: {
     tracksWithScript: number;
     tracksTeachingNothing: number;
     violations: number;
     exposureOnly: number;
+    exposureExemptedGlyphs: number;
     headwordsWithoutRomanization: number;
+    /** Tracks skipped because their declared script is not one we know. */
+    tracksWithUnknownScript: number;
   };
 }
 
@@ -132,6 +150,7 @@ function isScriptLesson(lesson: ParsedLesson): boolean {
 export function measureScriptClosure(lessons: ParsedLesson[]): ScriptClosureReport {
   const tracks: TrackClosure[] = [];
   const violations: ClosureViolation[] = [];
+  const unknownScriptTracks: string[] = [];
 
   const byTrack = new Map<string, ParsedLesson[]>();
   for (const lesson of lessons) {
@@ -145,7 +164,25 @@ export function measureScriptClosure(lessons: ParsedLesson[]): ScriptClosureRepo
     // `hasOwn`, not `??`: an unknown script name reaching Object.prototype is
     // not nullish, so the fallback never fires and the Set constructor throws.
     // The same trap `measureScriptRamp` already documents.
-    const target = new Set(hasOwn(SCRIPT_SYSTEMS, script) ? SCRIPT_SYSTEMS[script]! : ["Latin"]);
+    const known = hasOwn(SCRIPT_SYSTEMS, script);
+
+    // "Genuinely Latin" and "we do not recognise this script" must not look the
+    // same. Both used to `continue`, so a track with a mistyped or unregistered
+    // script simply vanished from the report -- its lessons uncounted, its debt
+    // unreported, and nothing anywhere saying so. That is the silent zero this
+    // module exists to prevent, reached through the module itself.
+    //
+    // This is not hypothetical. `constants.ts` records that exact bug already
+    // having shipped once, for Gujarati: an unknown script read as having no
+    // script to learn.
+    if (!known) {
+      unknownScriptTracks.push(language);
+      continue;
+    }
+
+    const target = new Set(SCRIPT_SYSTEMS[script]!);
+    // A Latin-script track is skipped on purpose: its reader arrives already
+    // knowing the alphabet, which is the whole reason this exists for the rest.
     if (target.has("Latin")) continue;
 
     const ordered = [...group].sort(readingOrder);
@@ -161,6 +198,7 @@ export function measureScriptClosure(lessons: ParsedLesson[]): ScriptClosureRepo
       neverTaughtGlyphs: 0,
       violations: 0,
       exposureOnly: 0,
+      exposureExemptedGlyphs: 0,
       headwordsWithoutRomanization: 0,
     };
 
@@ -175,8 +213,7 @@ export function measureScriptClosure(lessons: ParsedLesson[]): ScriptClosureRepo
 
       const headwordGlyphs = new Set<string>();
       for (const ch of headword) {
-        const system = systemOf(ch);
-        if (system !== null && target.has(system)) headwordGlyphs.add(ch);
+        if (belongsToAny(ch, target)) headwordGlyphs.add(ch);
       }
       if (headwordGlyphs.size > 0 && !headwordIsExposure) {
         track.headwordsWithoutRomanization += 1;
@@ -184,8 +221,7 @@ export function measureScriptClosure(lessons: ParsedLesson[]): ScriptClosureRepo
 
       const bodyGlyphs = new Set<string>();
       for (const ch of new Set(lesson.body)) {
-        const system = systemOf(ch);
-        if (system !== null && target.has(system)) bodyGlyphs.add(ch);
+        if (belongsToAny(ch, target)) bodyGlyphs.add(ch);
       }
       for (const ch of headwordGlyphs) shown.add(ch);
       for (const ch of bodyGlyphs) shown.add(ch);
@@ -198,14 +234,36 @@ export function measureScriptClosure(lessons: ParsedLesson[]): ScriptClosureRepo
         continue;
       }
 
-      // Load-bearing: the body, minus the headword when the headword is exempt.
-      // The headword text usually also appears in the body — it is the lesson's
-      // subject — so subtracting the exempt glyph SET is what makes the
-      // exemption mean anything.
-      const loadBearing = new Set<string>();
-      for (const ch of bodyGlyphs) {
-        if (headwordIsExposure && headwordGlyphs.has(ch)) continue;
-        loadBearing.add(ch);
+      // Load-bearing = everything the lesson puts in front of the reader, MINUS
+      // the headword when the headword is exempt.
+      //
+      // The headword has to be seeded in, not just subtracted out. An earlier
+      // version built this set from the body alone, which silently dropped the
+      // debt of any lesson whose headword glyphs do not also appear verbatim in
+      // its body -- and then, worse, counted that lesson as clean BECAUSE of an
+      // exemption it had never claimed.
+      const loadBearing = new Set(bodyGlyphs);
+      if (headwordIsExposure) {
+        for (const ch of headwordGlyphs) loadBearing.delete(ch);
+      } else {
+        for (const ch of headwordGlyphs) loadBearing.add(ch);
+      }
+
+      // What the exemption actually removed, in glyphs rather than in lessons.
+      //
+      // `exposureOnly` counts lessons the exemption FLIPPED from violating to
+      // clean, and that turns out to be a small number sitting on top of a much
+      // larger one: the exemption also shaves glyphs off lessons that violate
+      // anyway, and those are invisible in a per-lesson count. A lesson
+      // reporting five untaught glyphs while fifteen more were exempted is not
+      // a lesson with five problems. Counting the glyphs is what makes the
+      // exemption's real size visible -- and it is the number that matters once
+      // 931 becomes a burn-down target, because moving text into the headword
+      // is the cheapest way to make the count fall without improving anything.
+      if (headwordIsExposure) {
+        for (const ch of headwordGlyphs) {
+          if (bodyGlyphs.has(ch) && !taught.has(ch)) track.exposureExemptedGlyphs += 1;
+        }
       }
 
       const untaughtLoadBearing = [...loadBearing].filter((ch) => !taught.has(ch)).sort();
@@ -224,10 +282,12 @@ export function measureScriptClosure(lessons: ParsedLesson[]): ScriptClosureRepo
               : null,
           glyphs: untaughtLoadBearing.join(""),
           count: untaughtLoadBearing.length,
-          isScriptLesson: false,
         });
-      } else if (untaughtAnywhere.length > 0) {
-        // Untaught glyphs, but every one of them behind the exposure rule.
+      } else if (headwordIsExposure && untaughtAnywhere.length > 0) {
+        // Untaught glyphs, every one of them behind the exposure rule. Gated on
+        // the exemption having actually been claimed: a lesson with no
+        // romanization has nothing to be exempt BY, and counting it here read as
+        // "the exposure rule saved this lesson" when the rule never applied.
         track.exposureOnly += 1;
       }
     }
@@ -249,8 +309,11 @@ export function measureScriptClosure(lessons: ParsedLesson[]): ScriptClosureRepo
       tracksTeachingNothing: tracks.filter((t) => t.scriptLessons === 0).length,
       violations: violations.length,
       exposureOnly: tracks.reduce((n, t) => n + t.exposureOnly, 0),
+      exposureExemptedGlyphs: tracks.reduce((n, t) => n + t.exposureExemptedGlyphs, 0),
       headwordsWithoutRomanization: tracks.reduce(
         (n, t) => n + t.headwordsWithoutRomanization, 0),
+      tracksWithUnknownScript: unknownScriptTracks.length,
     },
+    unknownScriptTracks: unknownScriptTracks.sort(),
   };
 }

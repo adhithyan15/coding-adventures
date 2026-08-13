@@ -227,3 +227,106 @@ describe("the real corpus", () => {
     }
   });
 });
+
+// --- Regressions from security review ---------------------------------------
+
+describe("a headword's debt is not silently dropped", () => {
+  it("counts an untaught headword whose glyphs are NOT in the body", () => {
+    // The load-bearing set was built from the body alone, so a lesson whose
+    // headword glyphs do not also appear verbatim in its body had its headword
+    // debt vanish -- and then, worse, was counted as clean BECAUSE of an
+    // exemption it had never claimed.
+    const report = measureScriptClosure([
+      lesson("TA-1", 10, { headword: `${KA}${MA}`, body: "All romanized here." }),
+    ]);
+    expect(report.summary.violations).toBe(1);
+    expect(report.violations[0]?.glyphs).toBe([KA, MA].sort().join(""));
+    expect(report.tracks[0]?.exposureOnly).toBe(0);
+  });
+
+  it("never credits the exposure rule to a lesson with no romanization", () => {
+    const report = measureScriptClosure([
+      lesson("TA-1", 10, { headword: `${KA}`, body: "nothing in script" }),
+    ]);
+    expect(report.tracks[0]?.exposureOnly).toBe(0);
+    expect(report.tracks[0]?.headwordsWithoutRomanization).toBe(1);
+  });
+});
+
+describe("the exemption's real size is reported, not just its lesson count", () => {
+  it("counts glyphs exempted even from a lesson that still violates", () => {
+    // `exposureOnly` only counts lessons the rule FLIPPED to clean. A lesson
+    // reporting five untaught glyphs while fifteen more were exempted is not a
+    // lesson with five problems, and per-lesson counting cannot see that.
+    const report = measureScriptClosure([
+      lesson("TA-1", 10, {
+        headword: `${KA}${MA}`, romanization: "kama",
+        body: `${KA}${MA} then decode ${NA}`,
+      }),
+    ]);
+    expect(report.summary.violations).toBe(1);
+    expect(report.violations[0]?.glyphs).toBe(NA);
+    // The two exempted glyphs are visible even though the lesson still violates.
+    expect(report.summary.exposureExemptedGlyphs).toBe(2);
+    expect(report.summary.exposureOnly).toBe(0);
+  });
+
+  it("does not count a glyph as exempted once it has been taught", () => {
+    const report = measureScriptClosure([
+      lesson("TA-W1", 10, { type: "writing", body: `${KA}` }),
+      lesson("TA-2", 20, { headword: `${KA}`, romanization: "ka", body: `${KA}` }),
+    ]);
+    expect(report.summary.exposureExemptedGlyphs).toBe(0);
+  });
+});
+
+describe("an unknown script is unmeasured, not clean", () => {
+  it("names the track instead of silently dropping it", () => {
+    // Both "genuinely Latin" and "we do not recognise this" used to `continue`,
+    // so a mistyped script made a whole track vanish from the report with
+    // nothing anywhere saying so. That is the silent zero this module exists to
+    // prevent, reached through the module itself.
+    const odd = parseLesson(
+      "---\nschema_version: 2\nid: XX-1\nsequence: 10\nchapter: 1\ntype: word\n" +
+        "headword: x\ngloss: x\nconcept_tag: GREETING-HELLO\n---\n\n# XX-1\n\nx\n",
+      "not-a-real-track",
+    );
+    // `parseLesson` falls back to "latin" for an unregistered language, so drive
+    // the unknown-script path directly by overriding the resolved script.
+    const forged = { ...odd, script: "klingon" } as typeof odd;
+    const report = measureScriptClosure([forged]);
+    expect(report.unknownScriptTracks).toEqual(["not-a-real-track"]);
+    expect(report.summary.tracksWithUnknownScript).toBe(1);
+    expect(report.tracks).toEqual([]);
+  });
+
+  it("reports zero unknown scripts for the real corpus", () => {
+    const { lessons } = loadEverything();
+    expect(measureScriptClosure(lessons).unknownScriptTracks).toEqual([]);
+  });
+});
+
+describe("shared Indic marks are not all attributed to Devanagari", () => {
+  it("counts a mark whose Script_Extensions include the track's script", () => {
+    // U+0951 (DEVANAGARI STRESS SIGN UDATTA) has Script_Extensions covering
+    // Bengali, Kannada, Malayalam, Tamil, Telugu and more. Asking "what script
+    // is this glyph" returns Devanagari because that is where the map starts;
+    // asking "does it belong to Tamil" is the question the caller means.
+    const report = measureScriptClosure([
+      lesson("TA-1", 10, { body: `${KA}॑` }),
+    ]);
+    expect(report.violations[0]?.count).toBe(2);
+    expect(report.violations[0]?.glyphs).toContain("॑");
+  });
+});
+
+describe("SCRIPT_SYSTEMS is frozen", () => {
+  it("cannot be mutated into disagreeing with the matchers derived from it", async () => {
+    // The matchers are built once at module load. A consumer adding a script
+    // afterwards would pass membership tests while `belongsToAny` never learned
+    // it, so the track would report ZERO debt while appearing measured.
+    const { SCRIPT_SYSTEMS } = await import("../src/ramp.js");
+    expect(Object.isFrozen(SCRIPT_SYSTEMS)).toBe(true);
+    expect(Object.isFrozen(SCRIPT_SYSTEMS["tamil"])).toBe(true);
+  });
+});

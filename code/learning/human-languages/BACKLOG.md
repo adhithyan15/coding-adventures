@@ -507,7 +507,7 @@ orders letters by payoff and records the order as a per-script letter ledger.
 
 ## Findings from HL-C116
 
-- **931 lessons across 16 non-Latin tracks ask the reader to decode a glyph
+- **932 lessons across 16 non-Latin tracks ask the reader to decode a glyph
   nobody taught them.** HL08's glyph budget flags 61. That gap is the whole
   argument for the measurement: the budget caps how FAST glyphs arrive, and a
   track satisfies it perfectly while teaching no letters at all.
@@ -537,9 +537,16 @@ orders letters by payoff and records the order as a per-script letter ledger.
   program: each one becomes exempt the moment somebody writes down how to say the
   word, and the reader genuinely gains from it. Hindi alone has 88, Tamil 68.
 
-- Only **50** lessons corpus-wide are clean *because of* the exposure rule. It is
-  reported beside the violations deliberately, so an exemption that starts doing
-  too much work is visible rather than flattering.
+- **The exposure rule is doing far more work than a lesson count shows.** Only 49
+  lessons corpus-wide are clean *because of* it — but it removed **1,974 glyphs**
+  from load-bearing sets, most of them from lessons that violate anyway. A lesson
+  reporting five untaught glyphs while fifteen more were exempted is not a lesson
+  with five problems, and the per-lesson counter cannot see that. Both numbers are
+  now published; the glyph count is the one that would move if an author started
+  laundering script through the headword once 932 becomes a burn-down target.
+  Malayalam (168), Bengali (179), Telugu (158) and Kannada (144) lean on it
+  hardest; Hindi (7) and Tamil (10) barely at all, because those two mostly lack
+  the romanizations that would trigger it.
 
 - The steepest single lessons are Telugu `TE-C16-nelalu` (30 untaught glyphs),
   Kannada `KA-C16-tingalugalu` (29) and Malayalam `ML-C16-kollavarsham-maasangal`

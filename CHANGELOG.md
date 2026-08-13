@@ -39,7 +39,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - `measureScriptClosure` asks what HL08's glyph budget cannot. That budget caps
   how FAST new glyphs arrive; a track satisfies it perfectly while teaching no
   letters at all, and most non-Latin tracks do exactly that.
-- First measurement, now in the gap report: **931 lessons across 16 non-Latin
+- First measurement, now in the gap report: **932 lessons across 16 non-Latin
   tracks ask the reader to decode a glyph nobody taught them**, and **12 of those
   16 tracks teach no letters at all**. The pace budget flags 61 lessons. The gap
   between 61 and 931 is the argument for the measurement.
@@ -51,8 +51,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   the reader can use the word without reading it. **489** native-script headwords
   carry none. Each becomes exempt the moment somebody writes down how to say it —
   the rule names its own remediation, which is why it is the right one.
-- `exposureOnly` is reported beside the violations so the exemption cannot
-  quietly become the reason the number looks good.
+- Two numbers watch the exemption rather than one. 49 lessons are clean *because
+  of* it; **1,974 glyphs** were removed by it, counting the ones it shaved off
+  lessons that violate anyway. The lesson count alone cannot see a lesson
+  reporting five untaught glyphs while fifteen more were exempted, and the glyph
+  count is what would move if an author started laundering script through the
+  headword once 932 becomes a burn-down target.
 
 ### Added — HL11: The Drizzled Script Ramp
 - `code/specs/HL11-drizzled-script-ramp.md` specifies the curriculum ramp for a

@@ -123,6 +123,14 @@ export interface CurriculumGapReport {
      * tracks do, so a pace cap reports them as gentle.
      */
     scriptClosureViolations: number;
+    /**
+     * HL11: glyphs the exposure rule removed from load-bearing sets.
+     *
+     * Reported beside the violations, because the lesson count alone cannot see
+     * the exemption's real size: it counts lessons the rule FLIPPED to clean,
+     * and misses everything it shaved off lessons that violate anyway.
+     */
+    scriptExposureExemptedGlyphs: number;
     /** HL11: non-Latin tracks with no script lesson at all. */
     tracksTeachingNoScript: number;
     /**
@@ -571,6 +579,7 @@ export function buildCurriculumGapReport(input: CurriculumGapReportInput): Curri
       scriptRampOverBudgetLessons: ramp?.script.summary.lessonViolations ?? null,
       lessonsOpeningMultipleScripts: ramp?.script.summary.systemViolations ?? null,
       scriptClosureViolations: scriptClosure.summary.violations,
+      scriptExposureExemptedGlyphs: scriptClosure.summary.exposureExemptedGlyphs,
       tracksTeachingNoScript: scriptClosure.summary.tracksTeachingNothing,
       headwordsWithoutRomanization: scriptClosure.summary.headwordsWithoutRomanization,
       lessonsWithoutSequence: continuity.summary.lessonsWithoutSequence,
@@ -640,8 +649,13 @@ export function renderCurriculumGapReport(report: CurriculumGapReport): string {
       `a glyph nobody taught them, across ${report.scriptClosure.summary.tracksWithScript} non-Latin tracks; ` +
       `${report.scriptClosure.summary.tracksTeachingNothing} of those tracks teach NO letters at all`,
     `exposure: ${report.scriptClosure.summary.headwordsWithoutRomanization} native-script headwords carry no ` +
-      `romanization, so they are load-bearing rather than exposure; ` +
-      `${report.scriptClosure.summary.exposureOnly} lessons are clean only because of the exposure rule`,
+      `romanization, so they are load-bearing rather than exposure; the rule exempts ` +
+      `${report.scriptClosure.summary.exposureExemptedGlyphs} glyphs and makes ` +
+      `${report.scriptClosure.summary.exposureOnly} lessons clean on its own` +
+      (report.scriptClosure.summary.tracksWithUnknownScript > 0
+        ? `; ${report.scriptClosure.summary.tracksWithUnknownScript} tracks UNMEASURED (unknown script: ` +
+          `${report.scriptClosure.unknownScriptTracks.join(", ")})`
+        : ""),
     `order: ${report.continuity.summary.lessonsWithoutSequence} lessons with no declared sequence ` +
       `across ${report.continuity.summary.tracksWithUnorderedLessons} tracks; ` +
       `${report.continuity.summary.forwardPrerequisites} prerequisites and ` +

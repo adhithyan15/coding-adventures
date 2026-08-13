@@ -379,9 +379,11 @@ import { loadEverything, measureScriptClosure } from "@coding-adventures/human-l
 const { lessons } = loadEverything();
 const closure = measureScriptClosure(lessons);
 
-closure.summary.violations;                    // 931
+closure.summary.violations;                    // 932
 closure.summary.tracksTeachingNothing;         // 12 of 16 non-Latin tracks
 closure.summary.headwordsWithoutRomanization;  // 489
+closure.summary.exposureExemptedGlyphs;        // 1974 — what the rule removed
+closure.unknownScriptTracks;                   // [] — unmeasured, never "clean"
 closure.violations[0];                         // { lessonId: "TE-C16-nelalu", count: 30, … }
 ```
 
@@ -391,7 +393,7 @@ measurement:
 | | flagged lessons |
 |---|---:|
 | script **ramp** — glyphs arriving faster than the budget | **61** |
-| script **closure** — glyphs arriving untaught | **931** |
+| script **closure** — glyphs arriving untaught | **932** |
 
 **Exposure is what keeps this from being absurd.** A word the reader is merely
 *shown* — the headword printed beside its romanization, so the eye starts
@@ -407,8 +409,13 @@ its own remediation. Adding a romanization converts a headword from load-bearing
 to exposure, and that is a real improvement to the lesson rather than a way of
 hiding from the measurement. 489 lessons are one romanization away.
 
-`exposureOnly` is published beside `violations` so the exemption cannot quietly
-become the reason the number looks good.
+Two numbers watch the exemption, not one. `exposureOnly` counts lessons the
+rule flipped to clean — 49. `exposureExemptedGlyphs` counts what it actually
+removed, including from lessons that violate anyway — **1,974**. The second is
+the one that matters: a lesson reporting five untaught glyphs while fifteen more
+were exempted is not a lesson with five problems, and a per-lesson count cannot
+see that. It is also the number that would move if an author started laundering
+script through the headword once 932 becomes a burn-down target.
 
 A glyph counts as **taught** by any `type: writing` or `delivery: script` lesson
 that contains it. That is coarser than naming each letter in frontmatter, and

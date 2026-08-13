@@ -67,7 +67,7 @@ import { hasOwn } from "./constants.js";
  * `perso-arabic` and `urdu-nastaliq` are Arabic script in different hands, so
  * they resolve to the same Unicode script.
  */
-export const SCRIPT_SYSTEMS: Record<string, string[]> = {
+const SCRIPT_SYSTEMS_MUTABLE: Record<string, string[]> = {
   latin: ["Latin"],
   devanagari: ["Devanagari"],
   bengali: ["Bengali"],
@@ -85,6 +85,23 @@ export const SCRIPT_SYSTEMS: Record<string, string[]> = {
   chinese: ["Han"],
   japanese: ["Hiragana", "Katakana", "Han"],
 };
+
+/**
+ * The track-to-scripts map, frozen.
+ *
+ * `ALL_SYSTEMS` and `SYSTEM_MATCHERS` below are computed ONCE at module load
+ * from this object. Exporting it mutable would let a consumer add a script
+ * afterwards: membership tests would see the new script, `systemOf` would never
+ * learn it, and every glyph of it would classify as null -- so the track would
+ * report ZERO debt while appearing measured. That is this module's own failure
+ * mode, reachable from outside the package, so the map and the tables derived
+ * from it are pinned together.
+ */
+export const SCRIPT_SYSTEMS: Readonly<Record<string, readonly string[]>> = Object.freeze(
+  Object.fromEntries(
+    Object.entries(SCRIPT_SYSTEMS_MUTABLE).map(([k, v]) => [k, Object.freeze(v)]),
+  ),
+);
 
 /** Every Unicode script this curriculum can name, for classifying a stray glyph. */
 const ALL_SYSTEMS = [
@@ -137,6 +154,29 @@ export function systemOf(ch: string): string | null {
     if (matcher.test(ch)) return system;
   }
   return null;
+}
+
+/**
+ * Does this character belong to ANY of these scripts?
+ *
+ * `systemOf` returns the FIRST match in map order, which is the right answer for
+ * "what is this glyph" and the wrong one for "is this glyph mine".
+ * `Script_Extensions` is set-valued: the shared Vedic and Indic combining marks
+ * (U+0951, U+0952, U+1CD0, U+1CF4, U+A8E0) belong to Devanagari AND to Bengali,
+ * Kannada, Malayalam, Tamil and Telugu at once, and `systemOf` attributes every
+ * one of them to Devanagari because that is where the map happens to start.
+ *
+ * In a non-Devanagari Indic track those marks would then be neither shown nor
+ * load-bearing -- silently dropped, an undercount in exactly the abugidas the
+ * script measurements exist to serve. So a caller asking about a specific target
+ * asks this instead, and gets an answer that does not depend on iteration order.
+ */
+export function belongsToAny(ch: string, systems: ReadonlySet<string>): boolean {
+  if (/[\s\p{P}\p{C}]/u.test(ch)) return false;
+  for (const [system, matcher] of SYSTEM_MATCHERS) {
+    if (systems.has(system) && matcher.test(ch)) return true;
+  }
+  return false;
 }
 
 /**
