@@ -3188,6 +3188,59 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: cyrillicAlphabetSource("е"),
   },
+  // RussianIrina writes lowercase ё by completing the same looped body as е,
+  // then lifting for the left dot and once more for the right dot. The Noto
+  // Sans Cyrillic fit reuses the printed e route and places both circular dots
+  // as separate runs in the demonstrated left-to-right order.
+  [ductusKey("cyrillic", "ё")]: {
+    script: "cyrillic",
+    glyph: "ё",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "curve around the upper bowl and sweep through the middle",
+            path: [
+              { x: 430, y: 380 }, { x: 390, y: 455 }, { x: 320, y: 505 },
+              { x: 245, y: 505 }, { x: 175, y: 470 }, { x: 115, y: 410 },
+              { x: 85, y: 340 }, { x: 85, y: 285 }, { x: 150, y: 285 },
+              { x: 240, y: 285 }, { x: 330, y: 285 }, { x: 440, y: 285 },
+            ],
+          },
+          {
+            label: "reverse through the middle and circle the lower bowl",
+            path: [
+              { x: 440, y: 285 }, { x: 330, y: 285 }, { x: 240, y: 285 },
+              { x: 150, y: 285 }, { x: 85, y: 260 }, { x: 80, y: 185 },
+              { x: 105, y: 115 }, { x: 160, y: 55 }, { x: 230, y: 25 },
+              { x: 305, y: 25 }, { x: 375, y: 40 }, { x: 440, y: 70 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift and place the left dot",
+            path: [
+              { x: 197, y: 674 }, { x: 203, y: 674 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift again and place the right dot",
+            path: [
+              { x: 379, y: 674 }, { x: 385, y: 674 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: cyrillicAlphabetSource("ё"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the

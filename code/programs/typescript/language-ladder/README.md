@@ -746,6 +746,11 @@ counterclockwise around the lower bowl without lifting. The same lesson
 demonstrates the tall looped school hand at 02:26–02:30; the Noto Sans Cyrillic
 fit preserves its zero-lift upper-loop-to-middle-to-lower-bowl order while
 routing it through the compact printed glyph's long middle bar.
+The four-frame Cyrillic **ё** filmstrip completes that same joined body, then
+lifts for the left dot and lifts again for the right dot. The native-teacher
+lesson demonstrates this body-before-left-dot-before-right-dot order at
+02:51–02:56; the Noto Sans Cyrillic fit preserves its two-lift evidence while
+tracing the compact printed e body and both circular dots.
 The runtime resolves each cited path back to the owning script and lazily loads that
 script's font, while Tamil continues to use Noto Sans Tamil. Unverified letters
 still fall back to the numbered prose list, unchanged. Extending the coverage is HL-C09,
