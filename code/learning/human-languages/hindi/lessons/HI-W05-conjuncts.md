@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-W05-conjuncts
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 190
+sequence: 240
 chapter: 2
 type: writing
 headword: "स्त"

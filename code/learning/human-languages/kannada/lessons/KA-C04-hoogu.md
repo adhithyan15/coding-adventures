@@ -1,5 +1,6 @@
 ---
 id: KA-C04-hoogu
+sequence: 210
 chapter: 4
 type: word
 headword: ಹೋಗು

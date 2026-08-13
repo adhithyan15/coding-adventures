@@ -2,7 +2,7 @@
 schema_version: 2
 id: SA-C08-likhati
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 460
+sequence: 430
 chapter: 8
 type: word
 headword: लिखति

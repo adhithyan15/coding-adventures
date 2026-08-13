@@ -1,5 +1,6 @@
 ---
 id: SA-C05-vadami
+sequence: 260
 chapter: 5
 type: word
 headword: वदामि

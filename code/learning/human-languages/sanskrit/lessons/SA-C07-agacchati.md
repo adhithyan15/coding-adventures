@@ -2,7 +2,7 @@
 schema_version: 2
 id: SA-C07-agacchati
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 390
+sequence: 360
 chapter: 7
 type: word
 headword: आगच्छति

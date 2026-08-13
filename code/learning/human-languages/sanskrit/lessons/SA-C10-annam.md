@@ -2,7 +2,7 @@
 schema_version: 2
 id: SA-C10-annam
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 530
+sequence: 500
 chapter: 10
 type: word
 headword: अन्नम्

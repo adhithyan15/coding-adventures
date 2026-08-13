@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-C23-kutta-billi
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 470
+sequence: 720
 chapter: 23
 type: word
 headword: कुत्ता

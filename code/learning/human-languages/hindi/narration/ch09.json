@@ -4,11 +4,11 @@
   "chapter": 9,
   "title": "Sorry",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:42c3b5981fc5bf8e",
+  "sourceHash": "fnv1a64:4ee99f9ff6cad537",
   "lessons": [
     {
       "id": "HI-C09-maaf-kijiye",
-      "sequence": 270,
+      "sequence": 520,
       "title": "माफ़ कीजिए (māf kījiye) — please forgive me / sorry",
       "headword": "माफ़ कीजिए",
       "romanization": "",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cbf06c6cdc56aa64",
+      "sourceHash": "fnv1a64:75a32a4c24a81888",
       "notice": null,
       "blocks": [
         {

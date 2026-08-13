@@ -1,5 +1,6 @@
 ---
 id: KA-C04-naale-sigona
+sequence: 230
 chapter: 4
 type: phrase
 headword: ನಾಳೆ ಸಿಗೋಣ

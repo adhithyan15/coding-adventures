@@ -1,5 +1,6 @@
 ---
 id: KA-C05-naanu-kannada-maatanaaduttene
+sequence: 270
 chapter: 5
 type: phrase
 headword: ನಾನು ಕನ್ನಡ ಮಾತನಾಡುತ್ತೇನೆ

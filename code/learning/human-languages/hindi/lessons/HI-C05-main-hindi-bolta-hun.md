@@ -1,5 +1,6 @@
 ---
 id: HI-C05-main-hindi-bolta-hun
+sequence: 410
 chapter: 5
 type: phrase
 headword: मैं हिंदी बोलता हूँ

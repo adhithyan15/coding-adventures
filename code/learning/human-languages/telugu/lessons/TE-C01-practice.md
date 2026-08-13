@@ -1,5 +1,6 @@
 ---
 id: TE-C01-practice
+sequence: 60
 chapter: 1
 type: practice
 headword: (recap)

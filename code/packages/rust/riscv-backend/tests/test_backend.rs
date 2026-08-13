@@ -1,11 +1,9 @@
-//! Byte-pinning tests for `riscv-backend` v0.1.0.
-//!
-//! Every emitted byte sequence the lang-aot RV32I e2e smoke test
-//! pins is asserted here as a unit-level regression invariant.
+//! End-to-end byte and simulator tests for the RV32I CIR backend.
 
 use jit_core::backend::{Backend, FunctionContext};
 use jit_core::cir::{CIRInstr, CIROperand};
-use riscv_backend::{compile, BackendError, Riscv32Backend};
+use riscv_backend::{compile, run_binary, BackendError, Riscv32Backend};
+use vm_core::value::Value;
 
 fn ctx<'a>(name: &'a str, params: &'a [(String, String)], ret_ty: &'a str) -> FunctionContext<'a> {
     FunctionContext {
@@ -19,9 +17,16 @@ fn ci(op: &str, dest: Option<&str>, srcs: Vec<CIROperand>, ty: &str) -> CIRInstr
     CIRInstr::new(op, dest, srcs, ty)
 }
 
+fn compile_and_run(cir: &[CIRInstr]) -> i32 {
+    let binary = compile(&ctx("main", &[], "i32"), cir).expect("lowering");
+    let run = run_binary(&binary, &[]).expect("simulator execution");
+    assert!(run.halted);
+    assert!(run.steps > 0);
+    run.return_value
+}
+
 #[test]
 fn empty_cir_emits_canonical_ret() {
-    // Empty body falls through to a bare `jalr x0, x1, 0`.
     let bytes = compile(&ctx("empty", &[], "void"), &[]).expect("lowering");
     assert_eq!(bytes, vec![0x67, 0x80, 0x00, 0x00]);
 }
@@ -32,26 +37,30 @@ fn backend_name_is_riscv32() {
 }
 
 #[test]
-#[should_panic(expected = "riscv32 backend is emit-only")]
-fn backend_run_panics_per_spec() {
-    Riscv32Backend.run(&[], &[]);
+fn backend_run_executes_the_binary_in_the_simulator() {
+    let binary = compile(
+        &ctx("answer", &[], "i32"),
+        &[
+            ci(
+                "const_i32",
+                Some("answer"),
+                vec![CIROperand::Int(42)],
+                "i32",
+            ),
+            ci(
+                "ret_i32",
+                None,
+                vec![CIROperand::Var("answer".into())],
+                "i32",
+            ),
+        ],
+    )
+    .unwrap();
+    assert_eq!(Riscv32Backend.run(&binary, &[]), Value::Int(42));
 }
 
-/// Twig `42` canonical:
-///   addi t0, x0, 42      ; 0x02A0_0293
-///   addi a0, t0, 0       ; 0x0002_8513
-///   jalr x0, x1, 0       ; 0x0000_8067
-///
-/// Stored little-endian on disk:
-///   [0x93, 0x02, 0xA0, 0x02,
-///    0x13, 0x85, 0x02, 0x00,
-///    0x67, 0x80, 0x00, 0x00]
-///
-/// This is the EXACT byte sequence the lang-aot RV32I e2e smoke
-/// test pins for the Twig `42` program.  Byte-for-byte parity
-/// invariant against any future encoder drift.
 #[test]
-fn canonical_const_42_then_ret_twig_42() {
+fn canonical_twig_42_bytes_are_preserved_and_execute() {
     let cir = vec![
         ci("const_i64", Some("v"), vec![CIROperand::Int(42)], "i64"),
         ci("ret_i64", None, vec![CIROperand::Var("v".into())], "i64"),
@@ -59,153 +68,412 @@ fn canonical_const_42_then_ret_twig_42() {
     let bytes = compile(&ctx("fortytwo", &[], "i64"), &cir).expect("lowering");
     assert_eq!(
         bytes,
-        vec![
-            0x93, 0x02, 0xA0, 0x02, // addi t0, x0, 42
-            0x13, 0x85, 0x02, 0x00, // addi a0, t0, 0  (mv a0, t0)
-            0x67, 0x80, 0x00, 0x00, // jalr x0, x1, 0  (ret)
-        ]
+        vec![0x93, 0x02, 0xA0, 0x02, 0x13, 0x85, 0x02, 0x00, 0x67, 0x80, 0x00, 0x00,]
     );
+    assert_eq!(run_binary(&bytes, &[]).unwrap().return_value, 42);
 }
 
 #[test]
-fn const_zero_then_ret_emits_addi_zero() {
+fn executes_large_32_bit_constants() {
     let cir = vec![
-        ci("const_i64", Some("v"), vec![CIROperand::Int(0)], "i64"),
-        ci("ret_i64", None, vec![CIROperand::Var("v".into())], "i64"),
+        ci(
+            "const_i32",
+            Some("value"),
+            vec![CIROperand::Int(1_000_000)],
+            "i32",
+        ),
+        ci(
+            "ret_i32",
+            None,
+            vec![CIROperand::Var("value".into())],
+            "i32",
+        ),
     ];
-    let bytes = compile(&ctx("zero", &[], "i64"), &cir).expect("lowering");
-    // addi t0, x0, 0 = (0 << 20) | (0 << 15) | (0 << 12) | (5 << 7) | 0x13
-    //                = 0x0000_0293
-    // addi a0, t0, 0 = 0x0002_8513
-    // jalr x0, x1, 0 = 0x0000_8067
-    assert_eq!(
-        bytes,
-        vec![
-            0x93, 0x02, 0x00, 0x00,
-            0x13, 0x85, 0x02, 0x00,
-            0x67, 0x80, 0x00, 0x00,
-        ]
-    );
+    assert_eq!(compile_and_run(&cir), 1_000_000);
 }
 
 #[test]
-fn const_bool_true_acts_as_imm_one() {
+fn executes_parameterized_cir_functions_via_the_rv32i_abi() {
+    let params = vec![
+        ("left".to_owned(), "i32".to_owned()),
+        ("right".to_owned(), "i32".to_owned()),
+    ];
     let cir = vec![
-        ci("const_bool", Some("b"), vec![CIROperand::Bool(true)], "bool"),
-        ci("ret_bool", None, vec![CIROperand::Var("b".into())], "bool"),
+        ci(
+            "add_i32",
+            Some("sum"),
+            vec![
+                CIROperand::Var("left".into()),
+                CIROperand::Var("right".into()),
+            ],
+            "i32",
+        ),
+        ci("ret_i32", None, vec![CIROperand::Var("sum".into())], "i32"),
     ];
-    let bytes = compile(&ctx("btrue", &[], "bool"), &cir).expect("lowering");
-    // addi t0, x0, 1 = 0x0010_0293 → [0x93, 0x02, 0x10, 0x00]
-    assert_eq!(
-        bytes,
-        vec![
-            0x93, 0x02, 0x10, 0x00,
-            0x13, 0x85, 0x02, 0x00,
-            0x67, 0x80, 0x00, 0x00,
-        ]
-    );
+    let binary = compile(&ctx("sum", &params, "i32"), &cir).expect("lowering");
+    let result =
+        run_binary(&binary, &[Value::Int(19), Value::Int(23)]).expect("simulator execution");
+    assert_eq!(result.return_value, 42);
 }
 
 #[test]
-fn const_negative_imm_in_range() {
-    // imm = -1 is within `[-2048, 2047]`.
+fn masks_u16_results_without_sign_extending_the_mask() {
     let cir = vec![
-        ci("const_i64", Some("v"), vec![CIROperand::Int(-1)], "i64"),
-        ci("ret_i64", None, vec![CIROperand::Var("v".into())], "i64"),
+        ci("const_u16", Some("a"), vec![CIROperand::Int(65_535)], "u16"),
+        ci("const_u16", Some("b"), vec![CIROperand::Int(1)], "u16"),
+        ci(
+            "add_u16",
+            Some("sum"),
+            vec![CIROperand::Var("a".into()), CIROperand::Var("b".into())],
+            "u16",
+        ),
+        ci("ret_u16", None, vec![CIROperand::Var("sum".into())], "u16"),
     ];
-    let bytes = compile(&ctx("neg", &[], "i64"), &cir).expect("lowering");
-    // addi t0, x0, -1:  imm[11:0] for -1 is 0xFFF, so word
-    //   = (0xFFF << 20) | 0 | 0 | (5 << 7) | 0x13
-    //   = 0xFFF0_0293
-    // little-endian: [0x93, 0x02, 0xF0, 0xFF]
-    assert_eq!(&bytes[0..4], &[0x93, 0x02, 0xF0, 0xFF]);
-    // and ends with mv + ret
-    assert_eq!(&bytes[4..], &[0x13, 0x85, 0x02, 0x00, 0x67, 0x80, 0x00, 0x00]);
+    assert_eq!(compile_and_run(&cir), 0);
 }
 
 #[test]
-fn const_out_of_range_errors() {
-    // imm=2048 is outside the 12-bit signed `addi` window.
+fn executes_integer_arithmetic_and_bitwise_ops() {
     let cir = vec![
-        ci("const_i64", Some("v"), vec![CIROperand::Int(2048)], "i64"),
-        ci("ret_void", None, vec![], "void"),
+        ci("const_i32", Some("a"), vec![CIROperand::Int(40)], "i32"),
+        ci("const_i32", Some("b"), vec![CIROperand::Int(2)], "i32"),
+        ci(
+            "add_i32",
+            Some("sum"),
+            vec![CIROperand::Var("a".into()), CIROperand::Var("b".into())],
+            "i32",
+        ),
+        ci("const_i32", Some("mask"), vec![CIROperand::Int(15)], "i32"),
+        ci(
+            "xor_i32",
+            Some("mixed"),
+            vec![
+                CIROperand::Var("sum".into()),
+                CIROperand::Var("mask".into()),
+            ],
+            "i32",
+        ),
+        ci(
+            "ret_i32",
+            None,
+            vec![CIROperand::Var("mixed".into())],
+            "i32",
+        ),
     ];
-    let err = compile(&ctx("big", &[], "void"), &cir)
-        .expect_err("2048 overflows 12-bit signed addi imm");
-    assert!(matches!(err, BackendError::ImmediateOutOfRange(2048)));
+    assert_eq!(compile_and_run(&cir), 37);
 }
 
 #[test]
-fn ret_void_alone_is_just_ret() {
-    let cir = vec![ci("ret_void", None, vec![], "void")];
-    let bytes = compile(&ctx("noop", &[], "void"), &cir).expect("lowering");
-    assert_eq!(bytes, vec![0x67, 0x80, 0x00, 0x00]);
+fn executes_signed_and_unsigned_comparisons() {
+    let signed = vec![
+        ci("const_i32", Some("a"), vec![CIROperand::Int(-3)], "i32"),
+        ci("const_i32", Some("b"), vec![CIROperand::Int(2)], "i32"),
+        ci(
+            "cmp_lt_i32",
+            Some("result"),
+            vec![CIROperand::Var("a".into()), CIROperand::Var("b".into())],
+            "bool",
+        ),
+        ci(
+            "ret_bool",
+            None,
+            vec![CIROperand::Var("result".into())],
+            "bool",
+        ),
+    ];
+    assert_eq!(compile_and_run(&signed), 1);
+
+    let unsigned = vec![
+        ci("const_u32", Some("a"), vec![CIROperand::Int(-1)], "u32"),
+        ci("const_u32", Some("b"), vec![CIROperand::Int(1)], "u32"),
+        ci(
+            "cmp_gt_u32",
+            Some("result"),
+            vec![CIROperand::Var("a".into()), CIROperand::Var("b".into())],
+            "bool",
+        ),
+        ci(
+            "ret_bool",
+            None,
+            vec![CIROperand::Var("result".into())],
+            "bool",
+        ),
+    ];
+    assert_eq!(compile_and_run(&unsigned), 1);
 }
 
 #[test]
-fn unsupported_op_reports_unsupportedop() {
+fn preserves_narrow_unsigned_wrap_semantics() {
+    let cir = vec![
+        ci("const_u8", Some("a"), vec![CIROperand::Int(250)], "u8"),
+        ci("const_u8", Some("b"), vec![CIROperand::Int(10)], "u8"),
+        ci(
+            "add_u8",
+            Some("sum"),
+            vec![CIROperand::Var("a".into()), CIROperand::Var("b".into())],
+            "u8",
+        ),
+        ci("ret_u8", None, vec![CIROperand::Var("sum".into())], "u8"),
+    ];
+    assert_eq!(compile_and_run(&cir), 4);
+}
+
+#[test]
+fn executes_wide_integer_addition_and_subtraction_with_register_pairs() {
+    let add = vec![
+        ci(
+            "const_i64",
+            Some("base"),
+            vec![CIROperand::Int(4_294_967_296)],
+            "i64",
+        ),
+        ci(
+            "const_i64",
+            Some("offset"),
+            vec![CIROperand::Int(42)],
+            "i64",
+        ),
+        ci(
+            "add_i64",
+            Some("sum"),
+            vec![
+                CIROperand::Var("base".into()),
+                CIROperand::Var("offset".into()),
+            ],
+            "i64",
+        ),
+        ci("ret_i64", None, vec![CIROperand::Var("sum".into())], "i64"),
+    ];
+    let add_bytes = compile(&ctx("wide_add", &[], "i64"), &add).expect("wide add lowering");
+    let add_result = run_binary(&add_bytes, &[]).expect("wide add execution");
+    assert_eq!(add_result.return_value as u32, 42);
+    assert_eq!(add_result.return_value_high, 1);
+
+    let subtract = vec![
+        ci(
+            "const_i64",
+            Some("base"),
+            vec![CIROperand::Int(4_294_967_296)],
+            "i64",
+        ),
+        ci("const_i64", Some("one"), vec![CIROperand::Int(1)], "i64"),
+        ci(
+            "sub_i64",
+            Some("difference"),
+            vec![
+                CIROperand::Var("base".into()),
+                CIROperand::Var("one".into()),
+            ],
+            "i64",
+        ),
+        ci(
+            "ret_i64",
+            None,
+            vec![CIROperand::Var("difference".into())],
+            "i64",
+        ),
+    ];
+    let subtract_bytes =
+        compile(&ctx("wide_sub", &[], "i64"), &subtract).expect("wide sub lowering");
+    let subtract_result = run_binary(&subtract_bytes, &[]).expect("wide sub execution");
+    assert_eq!(subtract_result.return_value as u32, u32::MAX);
+    assert_eq!(subtract_result.return_value_high, 0);
+
+    let signed = vec![
+        ci(
+            "const_i64",
+            Some("minus_one"),
+            vec![CIROperand::Int(-1)],
+            "i64",
+        ),
+        ci("const_i64", Some("one"), vec![CIROperand::Int(1)], "i64"),
+        ci(
+            "add_i64",
+            Some("zero"),
+            vec![
+                CIROperand::Var("minus_one".into()),
+                CIROperand::Var("one".into()),
+            ],
+            "i64",
+        ),
+        ci("ret_i64", None, vec![CIROperand::Var("zero".into())], "i64"),
+    ];
+    let signed_bytes =
+        compile(&ctx("signed_wide_add", &[], "i64"), &signed).expect("signed wide add lowering");
+    let signed_result = run_binary(&signed_bytes, &[]).expect("signed wide add execution");
+    assert_eq!(signed_result.return_value, 0);
+    assert_eq!(signed_result.return_value_high, 0);
+}
+
+#[test]
+fn executes_unsigned_64_bit_wraparound() {
+    let cir = vec![
+        ci("const_u64", Some("max"), vec![CIROperand::Int(-1)], "u64"),
+        ci("const_u64", Some("one"), vec![CIROperand::Int(1)], "u64"),
+        ci(
+            "add_u64",
+            Some("wrapped"),
+            vec![CIROperand::Var("max".into()), CIROperand::Var("one".into())],
+            "u64",
+        ),
+        ci(
+            "ret_u64",
+            None,
+            vec![CIROperand::Var("wrapped".into())],
+            "u64",
+        ),
+    ];
+    let bytes = compile(&ctx("wide_wrap", &[], "u64"), &cir).expect("wide add lowering");
+    let result = run_binary(&bytes, &[]).expect("wide add execution");
+    assert_eq!(result.return_value, 0);
+    assert_eq!(result.return_value_high, 0);
+}
+
+#[test]
+fn rejects_calls_until_the_linker_and_frame_abi_exist() {
     let cir = vec![ci(
-        "add_i64",
-        Some("c"),
-        vec![CIROperand::Var("a".into()), CIROperand::Var("b".into())],
-        "i64",
+        "call",
+        Some("result"),
+        vec![CIROperand::Var("helper".into())],
+        "i32",
     )];
-    let err = compile(&ctx("addtest", &[], "i64"), &cir).expect_err("add not yet supported");
-    assert!(matches!(err, BackendError::UnsupportedOp(s) if s == "add_i64"));
+    let err = compile(&ctx("main", &[], "i32"), &cir).expect_err("calls are a later backend slice");
+    assert!(matches!(err, BackendError::UnsupportedOp(op) if op == "call"));
 }
 
 #[test]
-fn multi_const_uses_distinct_temps() {
-    // Two distinct vars get TEMP_REGISTERS[0] (t0=5) and
-    // TEMP_REGISTERS[1] (t1=6).
-    let cir = vec![
-        ci("const_i64", Some("a"), vec![CIROperand::Int(1)], "i64"),
-        ci("const_i64", Some("b"), vec![CIROperand::Int(2)], "i64"),
-        ci("ret_i64", None, vec![CIROperand::Var("b".into())], "i64"),
+fn executes_conditional_and_unconditional_control_flow() {
+    let conditional = vec![
+        ci(
+            "const_bool",
+            Some("condition"),
+            vec![CIROperand::Bool(true)],
+            "bool",
+        ),
+        ci(
+            "jmp_if_false",
+            None,
+            vec![
+                CIROperand::Var("condition".into()),
+                CIROperand::Var("otherwise".into()),
+            ],
+            "void",
+        ),
+        ci(
+            "const_i32",
+            Some("answer"),
+            vec![CIROperand::Int(42)],
+            "i32",
+        ),
+        ci(
+            "ret_i32",
+            None,
+            vec![CIROperand::Var("answer".into())],
+            "i32",
+        ),
+        ci(
+            "label",
+            None,
+            vec![CIROperand::Var("otherwise".into())],
+            "void",
+        ),
+        ci("const_i32", Some("wrong"), vec![CIROperand::Int(0)], "i32"),
+        ci(
+            "ret_i32",
+            None,
+            vec![CIROperand::Var("wrong".into())],
+            "i32",
+        ),
     ];
-    let bytes = compile(&ctx("two", &[], "i64"), &cir).expect("lowering");
-    // addi t0, x0, 1  = 0x0010_0293  → [0x93, 0x02, 0x10, 0x00]
-    // addi t1, x0, 2  = 0x0020_0313  → [0x13, 0x03, 0x20, 0x00]
-    // addi a0, t1, 0  = 0x0003_0513  → [0x13, 0x05, 0x03, 0x00]
-    // jalr x0, x1, 0  = 0x0000_8067  → [0x67, 0x80, 0x00, 0x00]
-    assert_eq!(
-        bytes,
-        vec![
-            0x93, 0x02, 0x10, 0x00,
-            0x13, 0x03, 0x20, 0x00,
-            0x13, 0x05, 0x03, 0x00,
-            0x67, 0x80, 0x00, 0x00,
-        ]
-    );
+    assert_eq!(compile_and_run(&conditional), 42);
+
+    let jump = vec![
+        ci("jmp", None, vec![CIROperand::Var("end".into())], "void"),
+        ci("const_i32", Some("dead"), vec![CIROperand::Int(0)], "i32"),
+        ci("label", None, vec![CIROperand::Var("end".into())], "void"),
+        ci(
+            "const_i32",
+            Some("answer"),
+            vec![CIROperand::Int(42)],
+            "i32",
+        ),
+        ci(
+            "ret_i32",
+            None,
+            vec![CIROperand::Var("answer".into())],
+            "i32",
+        ),
+    ];
+    assert_eq!(compile_and_run(&jump), 42);
 }
 
 #[test]
-fn out_of_registers_after_seven_consts() {
-    // 8 distinct vars exceeds TEMP_REGISTERS.len() == 7.
-    let cir: Vec<CIRInstr> = (0..8)
-        .map(|i| {
-            let name = format!("v{i}");
-            ci(
-                "const_i64",
-                Some(&name),
-                vec![CIROperand::Int(i as i64)],
-                "i64",
+fn rejects_control_flow_to_an_undefined_label() {
+    let cir = vec![ci(
+        "jmp",
+        None,
+        vec![CIROperand::Var("missing".into())],
+        "void",
+    )];
+    let err = compile(&ctx("bad_jump", &[], "void"), &cir)
+        .expect_err("an unresolved label must be reported");
+    assert_eq!(err, BackendError::UndefinedLabel("missing".to_owned()));
+}
+
+#[test]
+fn executes_jmp_if_true_when_its_branch_is_taken() {
+    let cir = vec![
+        ci(
+            "const_bool",
+            Some("condition"),
+            vec![CIROperand::Bool(true)],
+            "bool",
+        ),
+        ci(
+            "jmp_if_true",
+            None,
+            vec![
+                CIROperand::Var("condition".into()),
+                CIROperand::Var("taken".into()),
+            ],
+            "void",
+        ),
+        ci("const_i32", Some("missed"), vec![CIROperand::Int(0)], "i32"),
+        ci(
+            "ret_i32",
+            None,
+            vec![CIROperand::Var("missed".into())],
+            "i32",
+        ),
+        ci("label", None, vec![CIROperand::Var("taken".into())], "void"),
+        ci(
+            "const_i32",
+            Some("answer"),
+            vec![CIROperand::Int(42)],
+            "i32",
+        ),
+        ci(
+            "ret_i32",
+            None,
+            vec![CIROperand::Var("answer".into())],
+            "i32",
+        ),
+    ];
+    assert_eq!(compile_and_run(&cir), 42);
+}
+
+#[test]
+fn rejects_more_live_values_than_the_starter_allocator_can_hold() {
+    let cir: Vec<CIRInstr> = (0..7)
+        .map(|index| {
+            CIRInstr::new(
+                "const_i32",
+                Some(format!("v{index}")),
+                vec![CIROperand::Int(index)],
+                "i32",
             )
         })
         .collect();
-    let err = compile(&ctx("toomany", &[], "void"), &cir)
-        .expect_err("8 distinct vars exhausts 7-temp pool");
-    assert!(matches!(err, BackendError::OutOfRegisters));
-}
-
-#[test]
-fn ret_undefined_var_errors() {
-    let cir = vec![ci(
-        "ret_i64",
-        None,
-        vec![CIROperand::Var("nope".into())],
-        "i64",
-    )];
-    let err = compile(&ctx("bad_ret", &[], "i64"), &cir).expect_err("undef var");
-    assert!(matches!(err, BackendError::UndefinedVariable(s) if s == "nope"));
+    let err = compile(&ctx("many", &[], "void"), &cir).expect_err("six value registers only");
+    assert_eq!(err, BackendError::OutOfRegisters);
 }

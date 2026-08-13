@@ -4,11 +4,11 @@
   "chapter": 34,
   "title": "Four Verbs of the Mind",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:98c0474e95403a85",
+  "sourceHash": "fnv1a64:4b57f7f3ccbc871d",
   "lessons": [
     {
       "id": "HI-C34-sochna",
-      "sequence": 610,
+      "sequence": 860,
       "title": "सोचना (sochnā) — \"to think,\" and it used to mean \"to grieve\"",
       "headword": "सोचना",
       "romanization": "",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b6dca6cd5e0e436f",
+      "sourceHash": "fnv1a64:a54a146eaf65a464",
       "notice": null,
       "blocks": [
         {
@@ -138,7 +138,7 @@
     },
     {
       "id": "HI-C34-samajhna",
-      "sequence": 620,
+      "sequence": 870,
       "title": "समझना (samajhnā) — \"to understand,\" which is to say \"to wake up\"",
       "headword": "समझना",
       "romanization": "",
@@ -149,7 +149,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:fe18b61235e1be5b",
+      "sourceHash": "fnv1a64:b02badb7a3afc2ae",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -300,7 +300,7 @@
     },
     {
       "id": "HI-C34-padhna",
-      "sequence": 630,
+      "sequence": 880,
       "title": "पढ़ना (paṛhnā) — \"to read,\" and just as often \"to study\"",
       "headword": "पढ़ना",
       "romanization": "",
@@ -311,7 +311,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:868c856e36706e86",
+      "sourceHash": "fnv1a64:8d36cce84049da6d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -454,7 +454,7 @@
     },
     {
       "id": "HI-C34-likhna",
-      "sequence": 640,
+      "sequence": 890,
       "title": "लिखना (likhnā) — \"to write,\" which everywhere means \"to scratch\"",
       "headword": "लिखना",
       "romanization": "",
@@ -465,7 +465,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:281996bb41433226",
+      "sourceHash": "fnv1a64:64feb143228bd45b",
       "notice": {
         "modality": "sight",
         "needs": [

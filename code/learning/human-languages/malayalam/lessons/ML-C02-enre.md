@@ -1,5 +1,6 @@
 ---
 id: ML-C02-enre
+sequence: 80
 chapter: 2
 type: word
 headword: എന്റെ

@@ -1,0 +1,72 @@
+% ============================================================================
+% phoneme-blending — combining separate sounds to say a word, a NINTH
+% literacy sub-skill in the ADJ stdlib (adj-facts-stdlib, LANGUAGE).
+% ============================================================================
+% Deliberately DIFFERENT in shape from all eight prior literacy libraries:
+% `word-families.adj` derives RHYMING, `syllable-count.adj` recalls a
+% SYLLABLE COUNT, `initial-sound.adj` recalls a BEGINNING sound,
+% `onset-rime.adj` recalls an ONSET/RIME split, `phoneme-substitution.adj`
+% recalls the word formed by SWAPPING one sound for another,
+% `phoneme-deletion.adj` recalls the word formed by REMOVING one sound, and
+% `syllable-deletion.adj`/`syllable-substitution.adj` do the same at the
+% SYLLABLE level. This library goes the OPPOSITE direction from deletion and
+% substitution: it recalls the word formed by BLENDING three separate sounds
+% together, grounding the same phonemic-awareness continuum's blending skill
+% as a pure lookup: `phoneme_blending(sound_one, sound_two, sound_three,
+% word)`. Recall is a binding query:
+%
+%     ? phoneme_blending(s, o, p, $Word)   % soap
+%
+% A native `table` (ADJ-TABLES RS-5, a FOUR-column table like
+% `phoneme-substitution.adj`): each `row` lowers to a ground relation
+% `phoneme_blending(sound_one, sound_two, sound_three, word)` carrying the
+% Reading Rockets citation, so the lookup above is the ordinary SLD binding
+% query — the engine returns the blended word WITH its source, on the CPU,
+% with zero model calls, and abstains on any sound triple not the one the
+% cited page walks through. The query also runs BACKWARD — bind the word and
+% recall the three sounds that blend into it:
+%
+%     ? phoneme_blending($S1, $S2, $S3, soap)   % s, o, p
+%
+% The one blend this table carries, as a little truth table:
+%
+%     sound_one   sound_two   sound_three   word
+%     ---------   ---------   -----------   ----
+%     s           o           p             soap
+%
+% Provenance: quoted verbatim from Reading Rockets' "Phonological and
+% Phonemic Awareness: In Practice" module — the SAME already-vetted page
+% `syllable-count.adj`, `phoneme-substitution.adj`, `phoneme-deletion.adj`,
+% `syllable-substitution.adj`, and `syllable-deletion.adj` all already cite,
+% a different section of it (its "Blending sounds" demonstration) —
+% WebFetch-verified THREE separate times for consistency before writing, all
+% byte-identical. The exact span (one sentence, stating both the three sounds
+% and the word they blend into):
+%
+%   "We can blend sounds to say a word. Watch me. The sounds are /s/ [slide a
+%    cap], /ō/ [slide a cap], /p/ [slide a cap]. I will touch and say, then
+%    blend. /s/ [touch first cap], /ō/ [touch middle cap], /p/ [touch last
+%    cap], soap [sweeping a finger below the caps]."
+%
+% `trust consensus` — the same tier this page's sibling sections already
+% earned. Deliberately scoped to ONLY this ONE blend the cited page walks
+% through step by step — honestly narrow (mirroring `phoneme-deletion.adj`'s
+% and `phoneme-substitution.adj`'s precedent of one clean row) rather than
+% inventing a blend the source does not demonstrate. This same page also has
+% an "Adding sounds" section (/ī/ + /s/ -> "ice") that blends only TWO sounds
+% rather than three — a distinct two-column arity, left as a future
+% phoneme-addition.adj candidate rather than force-fit into this table. A
+% future slice can add a second blend to this table once a comparably clean
+% three-sound citation is found. (See ../README.md;
+% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table phoneme_blending {
+    columns sound_one, sound_two, sound_three, word
+
+    row (s, o, p, soap)
+
+    source "We can blend sounds to say a word. Watch me. The sounds are /s/ [slide a cap], /ō/ [slide a cap], /p/ [slide a cap]. I will touch and say, then blend. /s/ [touch first cap], /ō/ [touch middle cap], /p/ [touch last cap], soap [sweeping a finger below the caps]."
+    locator "https://www.readingrockets.org/reading-101/reading-101-learning-modules/course-modules/phonological-and-phonemic-awareness/practice"
+    trust consensus
+}

@@ -2,7 +2,7 @@
 schema_version: 2
 id: SA-C10-kshiram
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 520
+sequence: 490
 chapter: 10
 type: word
 headword: क्षीरम्

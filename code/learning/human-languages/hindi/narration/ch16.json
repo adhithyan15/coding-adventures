@@ -4,11 +4,11 @@
   "chapter": 16,
   "title": "Months",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f36135079a7a332d",
+  "sourceHash": "fnv1a64:ed57765b0d177947",
   "lessons": [
     {
       "id": "HI-C16-mahine",
-      "sequence": 380,
+      "sequence": 630,
       "title": "जनवरी to दिसंबर — borrowed names, and a second calendar underneath",
       "headword": "जनवरी फ़रवरी मार्च अप्रैल मई जून जुलाई अगस्त सितंबर अक्टूबर नवंबर दिसंबर",
       "romanization": "",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5a00ca773944ed59",
+      "sourceHash": "fnv1a64:84f9c9861f1a5815",
       "notice": null,
       "blocks": [
         {

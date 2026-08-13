@@ -2,7 +2,7 @@
 schema_version: 2
 id: SA-C09-snihyati
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 500
+sequence: 470
 chapter: 9
 type: word
 headword: स्निह्यति · प्रियम्

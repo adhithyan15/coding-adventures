@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Added bounded `run_loaded_with_limit` execution with an observable
+  `ExecutionResult`, allowing compiler backends to distinguish a halted guest
+  from one that exhausted its instruction budget.
+
 ## [0.1.0] - 2026-03-19
 
 ### Added

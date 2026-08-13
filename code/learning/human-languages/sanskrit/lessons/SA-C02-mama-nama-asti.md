@@ -1,5 +1,6 @@
 ---
 id: SA-C02-mama-nama-asti
+sequence: 100
 chapter: 2
 type: phrase
 headword: मम नाम … अस्ति

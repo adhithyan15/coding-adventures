@@ -1,5 +1,6 @@
 ---
 id: SA-C01-am-na
+sequence: 50
 chapter: 1
 type: word
 headword: आम् / न

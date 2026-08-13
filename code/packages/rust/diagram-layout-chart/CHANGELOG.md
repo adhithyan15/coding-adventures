@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.0 — 2026-08-13
+
+### Added
+- Native quadrant regions, endpoint labels, and normalized scatter-point layout
+
 ## 0.1.0 — 2026-04-24
 
 ### Added

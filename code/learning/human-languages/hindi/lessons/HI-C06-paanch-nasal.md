@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-C06-paanch-nasal
 spine_node: SPINE-COUNT-ONE-TO-FIVE
-sequence: 230
+sequence: 480
 chapter: 6
 type: etymology
 headword: पाँच

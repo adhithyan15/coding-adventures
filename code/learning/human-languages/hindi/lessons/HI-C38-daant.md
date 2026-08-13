@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-C38-daant
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 780
+sequence: 1030
 chapter: 38
 type: word
 headword: दाँत

@@ -2,7 +2,7 @@
 schema_version: 2
 id: SA-C07-asti
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 370
+sequence: 340
 chapter: 7
 type: word
 headword: अस्ति · भवति

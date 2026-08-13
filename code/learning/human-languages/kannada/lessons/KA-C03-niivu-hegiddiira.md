@@ -1,5 +1,6 @@
 ---
 id: KA-C03-niivu-hegiddiira
+sequence: 160
 chapter: 3
 type: phrase
 headword: ನೀವು ಹೇಗಿದ್ದೀರಾ?

@@ -1,5 +1,90 @@
 # Changelog — iir-to-wasm
 
+## [0.47.0] — 2026-08-13 (stale literal on a runtime-reassigned string)
+
+Fix a **silent wrong answer**: a `str` variable that was declared with a literal
+and then reassigned a *runtime* string kept the dead literal, and every later
+reader answered from it.
+
+`string_literals` is keyed by destination variable with last-writer-wins
+semantics — exact only while every write to a variable folds to a compile-time
+literal. ALGOL 60's `string procedure` produces a program where it does not:
+
+```text
+begin string s; integer result;
+  string procedure pick(n); value n; integer n;
+    if n > 0 then pick := 'HI' else pick := 'LO';
+  s := pick(1);
+  if s = 'HI' then result := 42 else result := 0;
+  print(s) end
+```
+
+`string s;` lowers to `str_const s ""` (the declaration's empty initialiser) and
+`s := pick(1)` to `call _t3 = pick(…)` then `str_concat s = _t3, ""`. That
+concatenation cannot fold — `_t3` is a live handle — so the feature pass bailed
+out and `continue`d, **leaving the stale `s → ""` entry in place**. Everything
+downstream then took the compile-time fast path over the dead initialiser:
+
+- `str_eq s, 'HI'` constant-folded to `0`, so `result` was `0` instead of `42`;
+- `print_str s` used the folded length `0` and printed nothing;
+- the `str_concat` itself matched `string_literals.get(dest)` and took the
+  literal fast path, so the runtime concatenation never ran at all.
+
+None of this failed loudly — the module emitted cleanly and computed the wrong
+answer, the worst failure mode for a backend. (Same bug *class* as the
+`iir-to-llvm` `str_lens`/`str_values` fix, but a different table: this backend
+does not share that mechanism, so it needed its own fix.)
+
+The invariant restored: **a variable that ever holds a runtime string never
+carries a compile-time literal entry**, so every reader uses the runtime path
+(`[i32 len][bytes]` header read back at run time) uniformly for that variable.
+
+- New `collect_runtime_valued_str_vars()` computes, to a fixpoint, which string
+  variables ever hold a value no fold can reach: `str` parameters and the
+  destination of any `str`-typed op that is not one of the three folding
+  producers (a `call` result, `input_str`, a `global_load`, an `array_get`),
+  plus everything derived from one through `str_concat`/`str_slice`/`mov`.
+- Those variables no longer get a `string_literals` entry from a `str_const`,
+  and their `str_concat`/`str_slice` destinations are forced onto the runtime
+  path even when the individual operands happen to fold — one representation per
+  variable, decided once.
+- `collect_runtime_str_vars()` promotes them to runtime handles, so the
+  `str_const` writing the declaration's initialiser stores the offset of a real
+  length-prefixed block rather than a header-less raw data offset, and it no
+  longer counts them as "folding" destinations (which had made the
+  string-operation grouping skip promoting their literal comparison partners).
+
+Security review of the first version of this fix caught that making
+runtime-valued variables *always* read their length back at run time raises the
+stakes on every write into one — a raw, header-less data offset left in such a
+local is no longer a bounded wrong answer but a length read out of the string
+bytes themselves (`"HELL"` → 1280066888), which `print_str`/`memory.copy`/
+`$__ensure_capacity` would then use as a byte count. Two holes were closed:
+
+- **`mov`**: a str-producing op now groups its **destination** with its operands
+  for promotion, not just its operands with each other. `mov d = a` with `d`
+  runtime-valued and `a` a folded literal previously copied `a`'s raw offset;
+  `a` is now promoted to a real block first. (This also removes a scan-order
+  dependence in the newly-non-foldable `str_concat` operand promotion: a
+  `str_const` appearing later in the instruction list than the concat that uses
+  it was silently skipped.)
+- **`ret`**: a `str` handed back to the caller is now a promotion site, exactly
+  like a call argument. The caller's call-result local is a runtime handle by
+  definition, so a callee whose result variable is assigned in a *single* basic
+  block — ALGOL's unconditional `string procedure pick; pick := 'HI';` — used to
+  return the literal's raw offset and the caller read its first four bytes as a
+  length. This one is a pre-existing bug, not a regression from this change, but
+  it is the same invariant and the same ALGOL shape, so it is fixed here.
+
+Regressions in `tests/str_runtime_reassignment.rs` run the exact IIR shape on
+`wasm-runtime` and assert `str_eq`/`str_cmp`/`str_len` against the live value
+(the `str_eq` and `str_len` cases fail on the pre-fix backend with `0`), plus a
+literal-only control proving pure literal algebra still folds at compile time.
+This also turns `lang-aot`'s `algol_runtime_string_local_emits_and_runs_on_wasm`
+and `algol_runtime_string_ordering_emits_and_runs_on_wasm` green. The **native
+AOT** half of the same ALGOL cell still prints `""` — a separate, pre-existing
+bug in `twig-aot`'s own literal map, untouched here.
+
 ## [0.46.0] — 2026-08-12 (boolean conditional merge moves)
 
 `mov : bool` now wraps an i64 comparison-result local to WASM's i32 boolean

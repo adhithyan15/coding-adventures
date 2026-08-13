@@ -22,10 +22,11 @@ mod apple {
     use dot_parser::parse_to_diagram;
     use layout_ir::font_spec;
     use mermaid_parser::{
-        parse_c4_diagram, parse_er_diagram, parse_gitgraph, parse_pie, parse_sankey,
+        parse_c4_diagram, parse_er_diagram, parse_gitgraph, parse_pie, parse_quadrant_chart, parse_sankey,
         parse_sequence_diagram, parse_state_diagram, parse_to_diagram as parse_mermaid_to_diagram,
     };
     use paint_codec_png::write_png;
+    use paint_instructions::PaintInstruction;
     use paint_metal::render;
     use text_native_coretext::{CoreTextMetrics, CoreTextResolver, CoreTextShaper};
 
@@ -320,6 +321,57 @@ mod apple {
     }
 
     #[test]
+    fn render_mermaid_single_percent_states_to_png() {
+        let graph = parse_state_diagram(
+            "stateDiagram-v2\n% not a comment\nMoving --> Still %inline\nStill%Active\n",
+        )
+        .expect("single-percent state syntax should parse");
+        assert_eq!(graph.nodes.len(), 8);
+
+        let layout = layout_graph_diagram(&graph, None, None);
+        for (index, node) in layout.nodes.iter().enumerate() {
+            for other in layout.nodes.iter().skip(index + 1) {
+                let separated = node.x + node.width <= other.x
+                    || other.x + other.width <= node.x
+                    || node.y + node.height <= other.y
+                    || other.y + other.height <= node.y;
+                assert!(
+                    separated,
+                    "layout nodes {} and {} must not overlap",
+                    node.id, other.id
+                );
+            }
+        }
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint(
+            &layout,
+            &DiagramToPaintOptions {
+                background: layout_ir::Color {
+                    r: 255,
+                    g: 255,
+                    b: 255,
+                    a: 255,
+                },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 14.0),
+                title_font: font_spec("Helvetica", 18.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            },
+        );
+        assert!(!scene.instructions.is_empty());
+
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_single_percent_states_e2e.png")
+            .expect("PNG write failed");
+        assert!(pixels.width > 0);
+        assert!(pixels.height > 0);
+    }
+
+    #[test]
     fn render_mermaid_pie_to_png() {
         let diagram = parse_pie(
             r#"pie showData
@@ -356,6 +408,53 @@ mod apple {
         assert!(pixels.width > 0);
         assert!(pixels.height > 0);
         assert!(!scene.instructions.is_empty());
+    }
+
+    #[test]
+    fn render_mermaid_quadrant_to_png() {
+        let diagram = parse_quadrant_chart(
+            "quadrantChart\n\
+             title Native rendering portfolio\n\
+             x-axis Low reach --> High reach\n\
+             y-axis Low impact --> High impact\n\
+             quadrant-1 Invest\n\
+             quadrant-2 Explore\n\
+             quadrant-3 Retire\n\
+             quadrant-4 Maintain\n\
+             Metal: [0.78, 0.82]\n\
+             Direct2D: [0.58, 0.67]\n\
+             SVG: [0.34, 0.45]\n",
+        )
+        .expect("quadrant chart should parse");
+        let layout = layout_chart_diagram(&diagram, 640.0, 520.0);
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint_chart(
+            &layout,
+            &DiagramToPaintOptions {
+                background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 14.0),
+                title_font: font_spec("Helvetica", 18.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            },
+        );
+        assert_eq!(
+            scene.instructions.iter().filter(|instruction| matches!(instruction, PaintInstruction::Rect(_))).count(),
+            4
+        );
+        assert_eq!(
+            scene.instructions.iter().filter(|instruction| matches!(instruction, PaintInstruction::Ellipse(_))).count(),
+            3
+        );
+
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_quadrant_e2e.png").expect("PNG write failed");
+        assert!(pixels.width > 0);
+        assert!(pixels.height > 0);
     }
 
     #[test]

@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-C06-numbers-1-5
 spine_node: SPINE-COUNT-ONE-TO-FIVE
-sequence: 210
+sequence: 460
 chapter: 6
 type: word
 headword: एक दो तीन चार पाँच

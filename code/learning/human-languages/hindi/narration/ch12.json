@@ -4,11 +4,11 @@
   "chapter": 12,
   "title": "Family",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:77993917c3517139",
+  "sourceHash": "fnv1a64:9c5f31520227b2da",
   "lessons": [
     {
       "id": "HI-C12-pitaa-maataa",
-      "sequence": 320,
+      "sequence": 570,
       "title": "पिता, माता (pitā, mātā) — father and mother, cousins across a huge family",
       "headword": "पिता माता",
       "romanization": "",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b2d82d11b91b5eca",
+      "sourceHash": "fnv1a64:33ad9c61c7bf4d19",
       "notice": null,
       "blocks": [
         {
@@ -130,7 +130,7 @@
     },
     {
       "id": "HI-C12-bhaai-bahin",
-      "sequence": 330,
+      "sequence": 580,
       "title": "भाई, बहन (bhāī, bahin) — one cousin word, one different word entirely",
       "headword": "भाई बहन",
       "romanization": "",
@@ -141,7 +141,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e21e48816a8e2a81",
+      "sourceHash": "fnv1a64:7062d33ca437dbb6",
       "notice": null,
       "blocks": [
         {

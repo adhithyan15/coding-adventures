@@ -2,7 +2,7 @@
 schema_version: 2
 id: SA-C11-bhagini
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 570
+sequence: 540
 chapter: 11
 type: word
 headword: भगिनी

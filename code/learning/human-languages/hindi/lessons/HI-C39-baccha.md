@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-C39-baccha
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 820
+sequence: 1070
 chapter: 39
 type: word
 headword: बच्चा

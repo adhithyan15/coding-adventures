@@ -1007,6 +1007,50 @@ fn end_to_end_twig_42_emits_riscv32_bin_via_lang_aot() {
         ],
         "Twig 42 -> RV32I byte sequence is the migration-pinned regression invariant for Phase 7"
     );
+
+    let run = riscv_backend::run_binary(&bytes, &[])
+        .expect("the emitted RV32I binary must execute in the in-tree simulator");
+    assert!(run.halted, "the simulator return trampoline must halt");
+    assert_eq!(run.return_value, 42, "Twig 42 must return 42 through a0");
+}
+
+#[test]
+fn end_to_end_nib_if_else_executes_in_the_riscv_simulator() {
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("conditional.nib");
+    let bin = dir.path().join("conditional.bin");
+    std::fs::write(
+        &src,
+        b"fn main() -> u8 { if 1 == 1 { return 42; } else { return 0; } }\n",
+    )
+    .unwrap();
+
+    lang_aot::compile_file_to_riscv32_bin(&src, &bin, lang_aot::Language::Nib)
+        .expect("Nib if/else must compile through the RV32I control-flow core");
+
+    let bytes = std::fs::read(&bin).expect("read .bin");
+    let run = riscv_backend::run_binary(&bytes, &[])
+        .expect("the Nib RV32I binary must execute in the in-tree simulator");
+    assert!(run.halted, "the simulator return trampoline must halt");
+    assert_eq!(run.return_value, 42);
+}
+
+#[test]
+fn end_to_end_nib_integer_arithmetic_executes_in_the_riscv_simulator() {
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("arithmetic.nib");
+    let bin = dir.path().join("arithmetic.bin");
+    std::fs::write(&src, b"fn main() -> u8 { return 30 + 12; }\n").unwrap();
+
+    lang_aot::compile_file_to_riscv32_bin(&src, &bin, lang_aot::Language::Nib)
+        .expect("Nib arithmetic must compile through the RV32I register-pair core");
+
+    let bytes = std::fs::read(&bin).expect("read .bin");
+    let run = riscv_backend::run_binary(&bytes, &[])
+        .expect("the Nib RV32I arithmetic binary must execute in the simulator");
+    assert!(run.halted, "the simulator return trampoline must halt");
+    assert_eq!(run.return_value, 42);
+    assert_eq!(run.return_value_high, 0);
 }
 
 // ===========================================================================

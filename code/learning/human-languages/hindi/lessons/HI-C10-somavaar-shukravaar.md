@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-C10-somavaar-shukravaar
 spine_node: SPINE-TIME-OF-DAY
-sequence: 280
+sequence: 530
 chapter: 10
 type: word
 headword: सोमवार मंगलवार बुधवार गुरुवार शुक्रवार

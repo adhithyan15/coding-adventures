@@ -10,5 +10,6 @@ path = "src/lib.rs"
 
 [dependencies]
 riscv-encoder = { path = "../riscv-encoder" }
+riscv-simulator = { path = "../riscv-simulator" }
 jit-core      = { path = "../jit-core" }
 vm-core       = { path = "../vm-core" }

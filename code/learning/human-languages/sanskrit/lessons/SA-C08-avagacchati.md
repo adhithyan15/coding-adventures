@@ -2,7 +2,7 @@
 schema_version: 2
 id: SA-C08-avagacchati
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 440
+sequence: 410
 chapter: 8
 type: word
 headword: अवगच्छति · बुध्यते

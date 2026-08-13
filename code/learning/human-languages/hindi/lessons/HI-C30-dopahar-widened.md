@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-C30-dopahar-widened
 spine_node: SPINE-TIME-OF-DAY
-sequence: 560
+sequence: 810
 chapter: 30
 type: word
 headword: दोपहर

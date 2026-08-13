@@ -1,4 +1,4 @@
-# @version 18
+# @version 19
 # @case_insensitive true
 # Mermaid 11.16.1 state diagram token grammar, derived from stateDiagram.jison.
 
@@ -32,7 +32,7 @@ HASH_COMMENT = /#[^\r\n]*/
 STRING       = /"[^"\r\n]*"/
 LINE_BREAK   = /<br[ \t]*\/?>/
 DIRECTION    = /TB|BT|LR|RL/
-ID           = /[A-Za-z_][A-Za-z0-9_-]*/
+ID           = /[A-Za-z_][A-Za-z0-9_%-]*/
 WORD         = /[^ \t\r\n;:,]+/
 
 keywords:

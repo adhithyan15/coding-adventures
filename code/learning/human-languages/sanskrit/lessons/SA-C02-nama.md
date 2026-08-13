@@ -1,5 +1,6 @@
 ---
 id: SA-C02-nama
+sequence: 70
 chapter: 2
 type: word
 headword: नाम

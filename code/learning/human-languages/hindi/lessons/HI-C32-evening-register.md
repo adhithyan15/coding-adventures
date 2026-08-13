@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-C32-evening-register
 spine_node: SPINE-TIME-OF-DAY
-sequence: 590
+sequence: 840
 chapter: 32
 type: grammar
 headword: शुभ संध्या / नमस्ते

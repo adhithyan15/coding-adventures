@@ -1,5 +1,6 @@
 ---
 id: TE-C05-pani-ceyu
+sequence: 290
 chapter: 5
 type: word
 headword: పని చేయు

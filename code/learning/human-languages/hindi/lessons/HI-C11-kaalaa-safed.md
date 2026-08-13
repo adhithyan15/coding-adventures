@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-C11-kaalaa-safed
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 300
+sequence: 550
 chapter: 11
 type: word
 headword: काला सफ़ेद

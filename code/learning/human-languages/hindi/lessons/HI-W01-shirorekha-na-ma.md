@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-W01-shirorekha-na-ma
 spine_node: SPINE-MEET-GREET
-sequence: 100
+sequence: 60
 chapter: 1
 type: writing
 headword: "शिरोरेखा"

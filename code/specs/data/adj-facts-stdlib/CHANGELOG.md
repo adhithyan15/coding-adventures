@@ -5,6 +5,43 @@ landed and why, not a semver-tracked API.
 
 ## Unreleased
 
+- `language/phoneme-addition.adj` (new) — a new TENTH literacy sub-skill library, the narrowest
+  sibling of `phoneme-blending.adj`: `phoneme_addition(sound_one, sound_two, word)`. Same
+  direction as `phoneme-blending.adj` (sounds combining INTO a word), but for exactly TWO sounds
+  rather than three, a distinct arity the cited page treats as its own named skill ("Adding
+  sounds," distinct from "Blending sounds"). One row: (i, s, ice). Discovered via the SAME
+  already-vetted Reading Rockets "In Practice" page's "Adding sounds" section, explicitly flagged
+  as a future candidate in `phoneme-blending.adj`'s own header when that library shipped.
+  WebFetch-verified THREE separate times across this session for consistency, all byte-identical.
+  New e2e test file `facts_phonemeaddition_e2e.rs` (3 tests: direct recall, reverse binding into
+  both sounds, honest abstention on an untabled addition). New manifest objective
+  `adj.literacy.k2.phoneme_addition` (170 -> 171 total).
+- `language/phoneme-blending.adj` (new) — a new NINTH literacy sub-skill library:
+  `phoneme_blending(sound_one, sound_two, sound_three, word)`, the OPPOSITE direction from
+  `phoneme-deletion.adj`/`phoneme-substitution.adj` (which decompose or swap sounds in a word):
+  this recalls the word formed by BLENDING three separate sounds together. One row: (s, o, p,
+  soap). Discovered by re-visiting the SAME already-vetted Reading Rockets "In Practice" page
+  (already cited by `syllable-count.adj`/`phoneme-substitution.adj`/`phoneme-deletion.adj`/
+  `syllable-substitution.adj`/`syllable-deletion.adj`/`onset-rime.adj`) for its "Blending sounds"
+  section, distinct from its "Adding sounds" section (which blends only TWO sounds, a different
+  arity, left as a future `phoneme-addition.adj` candidate). WebFetch-verified THREE separate
+  times for consistency before writing, all byte-identical. New e2e test file
+  `facts_phonemeblending_e2e.rs` (3 tests: direct recall, reverse binding into all three sounds,
+  honest abstention on an untabled blend). New manifest objective
+  `adj.literacy.k2.phoneme_blending` (169 -> 170 total).
+- `chemistry/acids-bases.adj` (extended) — extended the already-shipped `acid_or_base(substance,
+  classification)` table from 12 to 16 rows. This table's own header had ALWAYS explicitly stated
+  that the source's acid column also lists HClO3 (chloric_acid) and its base column also lists
+  RbOH (rubidium_hydroxide), CsOH (caesium_hydroxide), and Sr(OH)2 (strontium_hydroxide),
+  explicitly noting they were "omitted only to keep the set balanced at six acids and six bases --
+  nothing about them was uncertain." Since the header itself already confirmed these four are
+  grounded in the same already-cited LibreTexts table, adding them is a pure addition sharing the
+  existing acid/base classification -- the same header-revisit extend-pattern shape already proven
+  on `element-groups.adj`. WebFetch re-verified the full source table live, TWO separate passes,
+  both confirming all sixteen rows byte-identical. New e2e test
+  `chemistry_acid_or_base_recalls_the_four_substances_added_this_cycle`. No new manifest objective
+  (this library has never had one, matching the no-manifest precedent already established for
+  sibling chemistry tables).
 - `chemistry/chemical-bond-family.adj` (new) — a new sibling to the already-shipped
   `chemical-bonds.adj` (which recalls only each bond's single defining TOKEN): a new
   `bond_family(bond, family)` table names which of the source's two families -- PRIMARY (strong)

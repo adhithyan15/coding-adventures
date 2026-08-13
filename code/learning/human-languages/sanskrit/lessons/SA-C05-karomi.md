@@ -1,5 +1,6 @@
 ---
 id: SA-C05-karomi
+sequence: 290
 chapter: 5
 type: word
 headword: करोमि

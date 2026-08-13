@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-C20-mausam
 spine_node: SPINE-TIME-OF-DAY
-sequence: 430
+sequence: 680
 chapter: 20
 type: phrase
 headword: मौसम

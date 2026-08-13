@@ -2,7 +2,7 @@
 schema_version: 2
 id: SA-C12-karnah
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 590
+sequence: 560
 chapter: 12
 type: word
 headword: कर्णः

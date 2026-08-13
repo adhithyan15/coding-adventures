@@ -1,5 +1,6 @@
 ---
 id: HI-C02-kya
+sequence: 160
 chapter: 2
 type: word
 headword: क्या

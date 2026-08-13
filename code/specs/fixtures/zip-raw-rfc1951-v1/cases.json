@@ -1,0 +1,259 @@
+{
+  "schema_version": 1,
+  "profile": "zip-owned-raw-rfc1951-v1",
+  "limits": {
+    "default_max_output": 268435456,
+    "hard_max_output": 268435456
+  },
+  "error_ids": [
+    "invalid-output-limit",
+    "unexpected-eof",
+    "reserved-block-type",
+    "stored-length-mismatch",
+    "huffman-oversubscribed",
+    "incomplete-code-length-tree",
+    "incomplete-literal-length-tree",
+    "incomplete-distance-tree",
+    "repeat-without-previous",
+    "repeat-overrun",
+    "invalid-literal-length-symbol",
+    "reserved-distance-symbol",
+    "invalid-back-reference",
+    "output-limit-exceeded"
+  ],
+  "cases": [
+    {
+      "id": "zip-raw-v1-inflate-empty-stored",
+      "operation": "inflate",
+      "input_hex": "010000ffff",
+      "oracle": "python-zlib",
+      "expected": { "output": { "hex": "" }, "bytes_consumed": 5 }
+    },
+    {
+      "id": "zip-raw-v1-inflate-stored-hello",
+      "operation": "inflate",
+      "input_hex": "010500faff68656c6c6f",
+      "oracle": "python-zlib",
+      "expected": { "output": { "hex": "68656c6c6f" }, "bytes_consumed": 10 }
+    },
+    {
+      "id": "zip-raw-v1-inflate-fixed-hello",
+      "operation": "inflate",
+      "input_hex": "cb48cdc9c957c8409000",
+      "oracle": "python-zlib",
+      "expected": {
+        "output": { "hex": "68656c6c6f2068656c6c6f2068656c6c6f" },
+        "bytes_consumed": 10
+      }
+    },
+    {
+      "id": "zip-raw-v1-inflate-dynamic-foreign",
+      "operation": "inflate",
+      "input_hex": "0dc28911c0200c03b0d8f97028ec3f6ed129cab7dd96a0c2445bdb93809663a5d303f6b265e20c2b79ea03379d227e",
+      "oracle": "python-zlib",
+      "expected": {
+        "output": { "hex": "0406030b000e070909010906010a04070007000000000501010908030108050302030401000401000207090009020a0a020605020d060c01020b020302090201" },
+        "bytes_consumed": 47
+      }
+    },
+    {
+      "id": "zip-raw-v1-inflate-length-symbol-285",
+      "operation": "inflate",
+      "input_hex": "73741c0500",
+      "oracle": "python-zlib",
+      "expected": { "output": { "repeat_hex": "41", "count": 260 }, "bytes_consumed": 5 }
+    },
+    {
+      "id": "zip-raw-v1-inflate-multi-block-cross-reference",
+      "operation": "inflate",
+      "input_hex": "7274a40c0046290000",
+      "oracle": "python-zlib",
+      "expected": { "output": { "repeat_hex": "41", "count": 128 }, "bytes_consumed": 9 }
+    },
+    {
+      "id": "zip-raw-v1-inflate-hdist-32-zero-reserved-slots",
+      "operation": "inflate",
+      "input_hex": "05ff81000000000010f8afb612",
+      "oracle": "rfc1951-hdist-32-zero-slots",
+      "expected": { "output": { "hex": "" }, "bytes_consumed": 13 }
+    },
+    {
+      "id": "zip-raw-v1-inflate-trailing-suffix-counted",
+      "operation": "inflate",
+      "input_hex": "cb48cdc9c957c8409000deadbeef",
+      "oracle": "python-zlib",
+      "expected": {
+        "output": { "hex": "68656c6c6f2068656c6c6f2068656c6c6f" },
+        "bytes_consumed": 10
+      }
+    },
+    {
+      "id": "zip-raw-v1-inflate-exact-output-cap",
+      "operation": "inflate",
+      "input_hex": "cb48cdc9c957c8409000",
+      "max_output": 17,
+      "oracle": "python-zlib",
+      "expected": {
+        "output": { "hex": "68656c6c6f2068656c6c6f2068656c6c6f" },
+        "bytes_consumed": 10
+      }
+    },
+    {
+      "id": "zip-raw-v1-error-empty-input",
+      "operation": "inflate-error",
+      "input_hex": "",
+      "expected": { "error_id": "unexpected-eof" }
+    },
+    {
+      "id": "zip-raw-v1-error-truncated-stored-header",
+      "operation": "inflate-error",
+      "input_hex": "01",
+      "expected": { "error_id": "unexpected-eof" }
+    },
+    {
+      "id": "zip-raw-v1-error-reserved-block-type",
+      "operation": "inflate-error",
+      "input_hex": "07",
+      "expected": { "error_id": "reserved-block-type" }
+    },
+    {
+      "id": "zip-raw-v1-error-stored-length-mismatch",
+      "operation": "inflate-error",
+      "input_hex": "010100000041",
+      "expected": { "error_id": "stored-length-mismatch" }
+    },
+    {
+      "id": "zip-raw-v1-error-huffman-oversubscribed",
+      "operation": "inflate-error",
+      "input_hex": "05e001080000088220fcffffffffffffff03",
+      "expected": { "error_id": "huffman-oversubscribed" }
+    },
+    {
+      "id": "zip-raw-v1-error-incomplete-code-length-tree",
+      "operation": "inflate-error",
+      "input_hex": "05e001080000000000fcffffffffffffff03",
+      "expected": { "error_id": "incomplete-code-length-tree" }
+    },
+    {
+      "id": "zip-raw-v1-error-incomplete-literal-length-tree",
+      "operation": "inflate-error",
+      "input_hex": "05e081040000000000fc6f03",
+      "expected": { "error_id": "incomplete-literal-length-tree" }
+    },
+    {
+      "id": "zip-raw-v1-error-repeat-without-previous",
+      "operation": "inflate-error",
+      "input_hex": "05000224",
+      "expected": { "error_id": "repeat-without-previous" }
+    },
+    {
+      "id": "zip-raw-v1-error-repeat-overrun",
+      "operation": "inflate-error",
+      "input_hex": "050080e4ffff1f",
+      "expected": { "error_id": "repeat-overrun" }
+    },
+    {
+      "id": "zip-raw-v1-error-incomplete-distance-tree",
+      "operation": "inflate-error",
+      "input_hex": "05e081000000008020e44fdd",
+      "expected": { "error_id": "incomplete-distance-tree" }
+    },
+    {
+      "id": "zip-raw-v1-error-hlit-288",
+      "operation": "inflate-error",
+      "input_hex": "fd0000",
+      "expected": { "error_id": "invalid-literal-length-symbol" }
+    },
+    {
+      "id": "zip-raw-v1-error-fixed-reserved-literal-length",
+      "operation": "inflate-error",
+      "input_hex": "1b03",
+      "expected": { "error_id": "invalid-literal-length-symbol" }
+    },
+    {
+      "id": "zip-raw-v1-error-fixed-reserved-distance",
+      "operation": "inflate-error",
+      "input_hex": "033e",
+      "expected": { "error_id": "reserved-distance-symbol" }
+    },
+    {
+      "id": "zip-raw-v1-error-dynamic-reserved-distance-30",
+      "operation": "inflate-error",
+      "input_hex": "0ddf010400000080a000000000000000000000000000000000000000000000000000000000000000001f000000c801",
+      "expected": { "error_id": "reserved-distance-symbol" }
+    },
+    {
+      "id": "zip-raw-v1-error-dynamic-reserved-distance-31",
+      "operation": "inflate-error",
+      "input_hex": "0ddf010400000080a000000000000000000000000000000000000000000000000000000000000000001f000000d001",
+      "expected": { "error_id": "reserved-distance-symbol" }
+    },
+    {
+      "id": "zip-raw-v1-error-back-reference-before-output",
+      "operation": "inflate-error",
+      "input_hex": "0302",
+      "expected": { "error_id": "invalid-back-reference" }
+    },
+    {
+      "id": "zip-raw-v1-error-output-cap",
+      "operation": "inflate-error",
+      "input_hex": "cb48cdc9c957c8409000",
+      "max_output": 16,
+      "expected": { "error_id": "output-limit-exceeded" }
+    },
+    {
+      "id": "zip-raw-v1-error-negative-output-cap",
+      "operation": "inflate-error",
+      "input_hex": "010000ffff",
+      "max_output": -1,
+      "expected": { "error_id": "invalid-output-limit" }
+    },
+    {
+      "id": "zip-raw-v1-error-output-cap-above-hard-limit",
+      "operation": "inflate-error",
+      "input_hex": "010000ffff",
+      "max_output": 268435457,
+      "expected": { "error_id": "invalid-output-limit" }
+    },
+    {
+      "id": "zip-raw-v1-deflate-empty",
+      "operation": "deflate-interoperability",
+      "input_hex": "",
+      "expected": { "output": { "hex": "" } }
+    },
+    {
+      "id": "zip-raw-v1-deflate-text",
+      "operation": "deflate-interoperability",
+      "input_hex": "68656c6c6f2068656c6c6f2068656c6c6f",
+      "expected": { "output": { "hex": "68656c6c6f2068656c6c6f2068656c6c6f" } }
+    },
+    {
+      "id": "zip-raw-v1-deflate-all-byte-values",
+      "operation": "deflate-interoperability",
+      "input_hex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff",
+      "expected": {
+        "output": {
+          "hex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff"
+        }
+      }
+    },
+    {
+      "id": "zip-raw-v1-crc32-empty",
+      "operation": "crc32",
+      "chunks_hex": [""],
+      "expected": { "crc32_hex": "00000000" }
+    },
+    {
+      "id": "zip-raw-v1-crc32-check-value",
+      "operation": "crc32",
+      "chunks_hex": ["313233343536373839"],
+      "expected": { "crc32_hex": "cbf43926" }
+    },
+    {
+      "id": "zip-raw-v1-crc32-incremental",
+      "operation": "crc32",
+      "chunks_hex": ["68656c6c6f20", "776f726c64"],
+      "expected": { "crc32_hex": "0d4a1185" }
+    }
+  ]
+}

@@ -15,7 +15,7 @@ use diagram_ir::{
     LayoutedChartDiagram, LayoutedChartItem, Orientation, Point, SeriesKind,
 };
 
-pub const VERSION: &str = "0.1.0";
+pub const VERSION: &str = "0.2.0";
 
 const MARGIN: f64 = 24.0;
 const TITLE_H: f64 = 32.0;
@@ -35,6 +35,7 @@ pub fn layout_chart_diagram(diagram: &ChartDiagram, cw: f64, ch: f64) -> Layoute
         ChartKind::Xy     => layout_xy(diagram, cw, ch),
         ChartKind::Pie    => layout_pie(diagram, cw, ch),
         ChartKind::Sankey => layout_sankey(diagram, cw, ch),
+        ChartKind::Quadrant => layout_quadrant(diagram, cw, ch),
     }
 }
 
@@ -221,6 +222,92 @@ fn layout_sankey(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagr
     LayoutedChartDiagram { width: cw, height: ch, title_box: None, items }
 }
 
+// ── Quadrant layout ──────────────────────────────────────────────────────
+
+fn layout_quadrant(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagram {
+    let title_height = if diagram.title.is_some() { TITLE_H } else { 0.0 };
+    let left = MARGIN + 56.0;
+    let right = cw - MARGIN;
+    let top = MARGIN + title_height;
+    let bottom = ch - MARGIN - 36.0;
+    let width = (right - left).max(1.0);
+    let height = (bottom - top).max(1.0);
+    let half_width = width / 2.0;
+    let half_height = height / 2.0;
+    let colors = ["#dbeafe", "#dcfce7", "#fef3c7", "#fee2e2"];
+    let regions = [
+        (left + half_width, top),
+        (left, top),
+        (left, top + half_height),
+        (left + half_width, top + half_height),
+    ];
+    let mut items = Vec::new();
+
+    if let Some(title) = &diagram.title {
+        items.push(LayoutedChartItem::DataLabel {
+            x: cw / 2.0,
+            y: MARGIN + TITLE_H / 2.0,
+            text: title.clone(),
+        });
+    }
+
+    for (index, (x, y)) in regions.into_iter().enumerate() {
+        items.push(LayoutedChartItem::QuadrantRegion {
+            x,
+            y,
+            width: half_width,
+            height: half_height,
+            color: colors[index].to_string(),
+            label: diagram.quadrant_labels[index].clone(),
+        });
+    }
+
+    if let Some(axis) = &diagram.x_axis {
+        if let Some(label) = axis.categories.first() {
+            items.push(LayoutedChartItem::DataLabel {
+                x: left,
+                y: bottom + 20.0,
+                text: label.clone(),
+            });
+        }
+        if let Some(label) = axis.categories.get(1) {
+            items.push(LayoutedChartItem::DataLabel {
+                x: right,
+                y: bottom + 20.0,
+                text: label.clone(),
+            });
+        }
+    }
+    if let Some(axis) = &diagram.y_axis {
+        if let Some(label) = axis.categories.first() {
+            items.push(LayoutedChartItem::DataLabel {
+                x: MARGIN,
+                y: bottom,
+                text: label.clone(),
+            });
+        }
+        if let Some(label) = axis.categories.get(1) {
+            items.push(LayoutedChartItem::DataLabel {
+                x: MARGIN,
+                y: top,
+                text: label.clone(),
+            });
+        }
+    }
+
+    for point in &diagram.quadrant_points {
+        items.push(LayoutedChartItem::ScatterPoint {
+            x: left + point.x * width,
+            y: bottom - point.y * height,
+            radius: 6.0,
+            color: "#2563eb".to_string(),
+            label: point.label.clone(),
+        });
+    }
+
+    LayoutedChartDiagram { width: cw, height: ch, title_box: None, items }
+}
+
 // ── Tests ─────────────────────────────────────────────────────────────────
 
 #[cfg(test)]
@@ -247,11 +334,12 @@ mod tests {
                 ChartSeries { kind: SeriesKind::Line, label: Some("B".into()), data: vec![35.0, 55.0, 48.0] },
             ],
             slices: vec![], sankey_nodes: vec![], flows: vec![],
+            quadrant_labels: [None, None, None, None], quadrant_points: vec![],
             orientation: ChartOrientation::Vertical,
         }
     }
 
-    #[test] fn version_exists() { assert_eq!(crate::VERSION, "0.1.0"); }
+    #[test] fn version_exists() { assert_eq!(crate::VERSION, "0.2.0"); }
 
     #[test]
     fn xy_layout_produces_items() {
@@ -278,6 +366,7 @@ mod tests {
                 PieSlice { label: "B".into(), value: 40.0 },
             ],
             sankey_nodes: vec![], flows: vec![],
+            quadrant_labels: [None, None, None, None], quadrant_points: vec![],
             orientation: ChartOrientation::Vertical,
         };
         let d = layout_chart_diagram(&diagram, 400.0, 400.0);
@@ -298,10 +387,49 @@ mod tests {
                 SankeyFlow { source: "a".into(), target: "b".into(), weight: 10.0 },
                 SankeyFlow { source: "a".into(), target: "c".into(), weight: 5.0 },
             ],
+            quadrant_labels: [None, None, None, None],
+            quadrant_points: vec![],
             orientation: ChartOrientation::Horizontal,
         };
         let d = layout_chart_diagram(&diagram, 600.0, 400.0);
         let bands: Vec<_> = d.items.iter().filter(|it| matches!(it, LayoutedChartItem::SankeyBand{..})).collect();
         assert_eq!(bands.len(), 2);
+    }
+
+    #[test]
+    fn quadrant_layout_produces_regions_and_points() {
+        let diagram = ChartDiagram {
+            title: Some("Portfolio".into()),
+            kind: ChartKind::Quadrant,
+            x_axis: Some(Axis {
+                kind: AxisKind::Numeric,
+                title: None,
+                categories: vec!["Low".into(), "High".into()],
+                min: 0.0,
+                max: 1.0,
+            }),
+            y_axis: None,
+            series: vec![],
+            slices: vec![],
+            sankey_nodes: vec![],
+            flows: vec![],
+            quadrant_labels: [Some("Invest".into()), None, None, None],
+            quadrant_points: vec![QuadrantPoint {
+                label: "Metal".into(),
+                x: 0.75,
+                y: 0.8,
+            }],
+            orientation: ChartOrientation::Vertical,
+        };
+        let layout = layout_chart_diagram(&diagram, 500.0, 500.0);
+
+        assert_eq!(
+            layout.items.iter().filter(|item| matches!(item, LayoutedChartItem::QuadrantRegion { .. })).count(),
+            4
+        );
+        assert_eq!(
+            layout.items.iter().filter(|item| matches!(item, LayoutedChartItem::ScatterPoint { .. })).count(),
+            1
+        );
     }
 }

@@ -4814,34 +4814,82 @@ impl Compiler {
 
         for elem in elems {
             let entry_initialized_string_slots = self.initialized_string_slots.clone();
-            let executes_at_least_once =
-                self.for_element_executes_at_least_once(target, var_ty, elem);
-            if direct_tokens(elem)
+            let entry_real_slots = self.static_real_slots.clone();
+            let entry_integer_slots = self.static_integer_slots.clone();
+            let entry_boolean_slots = self.static_boolean_slots.clone();
+            let entry_tracking_disabled = self.static_real_tracking_disabled;
+            let executes = self.for_element_execution(target, var_ty, elem);
+            let tokens = direct_tokens(elem);
+            let is_step_element = tokens.iter().any(|token| token.value == "step");
+            let (static_initial_real, static_initial_integer) = if is_step_element
+                && !entry_tracking_disabled
+            {
+                self.for_step_initial_snapshot(var_ty, elem)
+            } else {
+                (None, None)
+            };
+            if tokens
                 .iter()
                 .any(|token| token.value == "while" || token.value == "step")
             {
                 self.disable_static_tracking();
             }
             self.emit_for_element(target, var_ty, elem, body)?;
-            if !executes_at_least_once {
+            if executes != Some(true) {
                 self.initialized_string_slots = entry_initialized_string_slots;
+            }
+            if is_step_element && executes == Some(false) {
+                self.static_real_slots = entry_real_slots;
+                self.static_integer_slots = entry_integer_slots;
+                self.static_boolean_slots = entry_boolean_slots;
+                self.static_real_tracking_disabled = entry_tracking_disabled;
+                if !entry_tracking_disabled {
+                    self.update_for_target_snapshot(
+                        target,
+                        static_initial_real,
+                        static_initial_integer,
+                    )?;
+                }
             }
         }
         Ok(())
     }
 
-    fn for_element_executes_at_least_once(
+    fn for_step_initial_snapshot(
+        &self,
+        target_ty: ScalarType,
+        elem: &GrammarASTNode,
+    ) -> (Option<String>, Option<i64>) {
+        let Some(initial) = direct_nodes(elem)
+            .into_iter()
+            .find(|node| node.rule_name == "arith_expr")
+        else {
+            return (None, None);
+        };
+        match target_ty {
+            ScalarType::Real => (
+                self.static_assigned_real_value(initial)
+                    .filter(|value| value.is_finite())
+                    .map(|value| value.to_string()),
+                None,
+            ),
+            ScalarType::Integer => (None, self.static_assigned_integer_value(initial)),
+            ScalarType::Boolean | ScalarType::String => (None, None),
+        }
+    }
+
+    fn for_element_execution(
         &mut self,
         target: &GrammarASTNode,
         target_ty: ScalarType,
         elem: &GrammarASTNode,
-    ) -> bool {
+    ) -> Option<bool> {
         let tokens = direct_tokens(elem);
         if tokens.iter().any(|token| token.value == "while") {
-            return self.for_while_executes_at_least_once(target, target_ty, elem);
+            return self.for_while_execution(target, target_ty, elem);
         }
         if !tokens.iter().any(|token| token.value == "step") {
-            return true;
+            return Some(true);
         }
 
         let values: Vec<&GrammarASTNode> = direct_nodes(elem)
@@ -4849,72 +4897,56 @@ impl Compiler {
             .filter(|node| node.rule_name == "arith_expr")
             .collect();
         if values.len() != 3 {
-            return false;
+            return None;
         }
         match target_ty {
             ScalarType::Integer => {
-                let Some(start) = self.static_assigned_integer_value(values[0]) else {
-                    return false;
-                };
-                let Some(step) = self.static_assigned_integer_value(values[1]) else {
-                    return false;
-                };
-                let Some(limit) = self.static_assigned_integer_value(values[2]) else {
-                    return false;
-                };
+                let start = self.static_assigned_integer_value(values[0])?;
+                let step = self.static_assigned_integer_value(values[1])?;
+                let limit = self.static_assigned_integer_value(values[2])?;
                 if step >= 0 {
-                    start <= limit
+                    Some(start <= limit)
                 } else {
-                    start >= limit
+                    Some(start >= limit)
                 }
             }
             ScalarType::Real => {
-                let Some(start) = self.static_assigned_real_value(values[0]) else {
-                    return false;
-                };
-                let Some(step) = self.static_assigned_real_value(values[1]) else {
-                    return false;
-                };
-                let Some(limit) = self.static_assigned_real_value(values[2]) else {
-                    return false;
-                };
+                let start = self.static_assigned_real_value(values[0])?;
+                let step = self.static_assigned_real_value(values[1])?;
+                let limit = self.static_assigned_real_value(values[2])?;
                 if step >= 0.0 {
-                    start <= limit
+                    Some(start <= limit)
                 } else {
-                    start >= limit
+                    Some(start >= limit)
                 }
             }
-            ScalarType::Boolean | ScalarType::String => false,
+            ScalarType::Boolean | ScalarType::String => None,
         }
     }
 
-    fn for_while_executes_at_least_once(
+    fn for_while_execution(
         &mut self,
         target: &GrammarASTNode,
         target_ty: ScalarType,
         elem: &GrammarASTNode,
-    ) -> bool {
+    ) -> Option<bool> {
         if array_subscripts(target).is_some() {
-            return false;
+            return None;
         }
         let Ok(target_name) = self.simple_variable_name(target) else {
-            return false;
+            return None;
         };
         let Ok(target_binding) = self.require_var(&target_name) else {
-            return false;
+            return None;
         };
         if self.active_by_name_binding(&target_name).is_some() || target_binding.is_global {
-            return false;
+            return None;
         }
-        let Some(value) = direct_nodes(elem)
+        let value = direct_nodes(elem)
             .into_iter()
             .find(|node| node.rule_name == "arith_expr")
-        else {
-            return false;
-        };
-        let Some(condition) = first_direct_node(elem, "bool_expr") else {
-            return false;
-        };
+            ?;
+        let condition = first_direct_node(elem, "bool_expr")?;
 
         let saved_reals = self.static_real_slots.clone();
         let saved_integers = self.static_integer_slots.clone();
@@ -4930,7 +4962,7 @@ impl Compiler {
         let updated = self
             .update_for_target_snapshot(target, static_real, static_integer)
             .is_ok();
-        let executes = updated && self.static_boolean_value(condition) == Some(true);
+        let executes = updated.then(|| self.static_boolean_value(condition)).flatten();
         self.static_real_slots = saved_reals;
         self.static_integer_slots = saved_integers;
         self.static_boolean_slots = saved_booleans;
@@ -8972,6 +9004,49 @@ mod tests {
             "test",
         )
         .expect_err("a step loop may execute zero times and cannot establish a snapshot");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_static_zero_trip_loop_preserves_scalar_snapshots() {
+        compile_source(
+            "begin integer i, n; real r; boolean flag; string s; n := 40; r := 42.0; flag := true; for i := 2 step 1 until 1 do begin n := 1; r := 1.5; flag := false end; if flag then s := 'OK'; output(n + 2.5, r, s) end",
+            "test",
+        )
+        .expect("a proven zero-trip loop preserves entry scalar snapshots");
+    }
+
+    #[test]
+    fn al4_zero_trip_step_updates_controlled_variable_snapshot() {
+        let module = compile_source(
+            "begin real x; x := 9.0; for x := 2.0 step 1.0 until 1.0 do x := 1.5; print(x) end",
+            "test",
+        )
+        .expect("a zero-trip step loop leaves its controlled variable at the initial value");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "2")
+        }));
+    }
+
+    #[test]
+    fn al4_zero_trip_step_does_not_reenable_disabled_tracking() {
+        let err = compile_source(
+            "begin integer n; real x; x := 9.0; for x := 1.0 while n > 0, 2.0 step 1.0 until 1.0 do x := 1.5; print(x) end",
+            "test",
+        )
+        .expect_err("a prior dynamic element keeps later snapshot tracking disabled");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_zero_trip_while_still_invalidates_scalar_snapshots() {
+        let err = compile_source(
+            "begin integer i; real r; r := 42.0; for i := 1 while false do r := 1.5; print(r) end",
+            "test",
+        )
+        .expect_err("evaluating a while condition keeps scalar snapshots conservative");
         assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 

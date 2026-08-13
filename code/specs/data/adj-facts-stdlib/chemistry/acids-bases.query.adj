@@ -8,7 +8,9 @@
 % The fourth query runs the relation BACKWARD (bind the class `base`, recall a
 % substance in it — lithium_hydroxide sits first among the bases in the table).
 % Vinegar is not in the table, so a recall on it abstains honestly — the engine
-% never invents a class.
+% never invents a class. The last two queries exercise chloric_acid and
+% rubidium_hydroxide — two of the four substances added this cycle via a
+% header-revisit extend (see the source `.adj` file's header note).
 %
 % Run (from this directory so the relative import resolves):
 %     ../../../../packages/rust/target/debug/adj-lang-cli acids-bases.query.adj
@@ -21,3 +23,5 @@ import "acids-bases.adj"
 ? acid_or_base(sulfuric_acid, $Class)        % expect acid
 ? acid_or_base($S, base)                      % expect lithium_hydroxide — reverse recall into the bases
 ? acid_or_base(vinegar, $Class)              % expect abstain — vinegar is not in the table
+? acid_or_base(chloric_acid, $Class)         % expect acid — added this cycle
+? acid_or_base(rubidium_hydroxide, $Class)   % expect base — added this cycle

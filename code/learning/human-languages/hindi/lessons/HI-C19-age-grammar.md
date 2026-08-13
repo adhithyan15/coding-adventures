@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-C19-age-grammar
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 420
+sequence: 670
 chapter: 19
 type: grammar
 headword: कितने साल के हो?

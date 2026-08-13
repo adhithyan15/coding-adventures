@@ -4,11 +4,11 @@
   "chapter": 31,
   "title": "Good Morning",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:4d8acd5386e31a83",
+  "sourceHash": "fnv1a64:1c5480f813e94c2b",
   "lessons": [
     {
       "id": "HI-C31-suprabhat",
-      "sequence": 570,
+      "sequence": 820,
       "title": "सुप्रभात (suprabhāt) — \"good morning,\" a different root than the noun",
       "headword": "सुप्रभात",
       "romanization": "",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c0ee5a92398ef914",
+      "sourceHash": "fnv1a64:57363ed5674d335a",
       "notice": null,
       "blocks": [
         {

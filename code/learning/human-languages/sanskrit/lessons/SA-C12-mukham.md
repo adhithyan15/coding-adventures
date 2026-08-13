@@ -2,7 +2,7 @@
 schema_version: 2
 id: SA-C12-mukham
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 600
+sequence: 570
 chapter: 12
 type: word
 headword: मुखम्

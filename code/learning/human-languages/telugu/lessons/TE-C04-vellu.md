@@ -1,5 +1,6 @@
 ---
 id: TE-C04-vellu
+sequence: 210
 chapter: 4
 type: word
 headword: వెళ్ళు

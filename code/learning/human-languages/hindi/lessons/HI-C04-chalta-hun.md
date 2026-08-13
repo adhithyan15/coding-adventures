@@ -1,5 +1,6 @@
 ---
 id: HI-C04-chalta-hun
+sequence: 380
 chapter: 4
 type: phrase
 headword: चलता हूँ

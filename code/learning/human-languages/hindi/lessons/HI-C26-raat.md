@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-C26-raat
 spine_node: SPINE-TIME-OF-DAY
-sequence: 520
+sequence: 770
 chapter: 26
 type: word
 headword: रात

@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.79.0
+
+- Parse an initial grammar-backed Mermaid 11.16.1 quadrant-chart slice into chart IR.
+
+## 0.78.0
+
+- Lower whitespace-adjacent bare states and single-percent identifiers without treating them as comments.
+
 ## 0.77.0
 
 - Parse bare state declarations and normalize all pinned HTML line-break variants in labels and notes before layout.

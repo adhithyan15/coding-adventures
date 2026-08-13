@@ -4,11 +4,11 @@
   "chapter": 25,
   "title": "Day",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f9422ee3db11cac4",
+  "sourceHash": "fnv1a64:866d523f59639e08",
   "lessons": [
     {
       "id": "HI-C25-din",
-      "sequence": 510,
+      "sequence": 760,
       "title": "दिन (din) — \"day,\" the same root as diēs, a different branch",
       "headword": "दिन",
       "romanization": "",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9b2bf263fd107dca",
+      "sourceHash": "fnv1a64:5098d795834bba77",
       "notice": null,
       "blocks": [
         {

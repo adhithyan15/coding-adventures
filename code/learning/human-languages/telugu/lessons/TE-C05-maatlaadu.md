@@ -1,5 +1,6 @@
 ---
 id: TE-C05-maatlaadu
+sequence: 260
 chapter: 5
 type: word
 headword: మాట్లాడు

@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.77.0";
+pub const VERSION: &str = "0.79.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -19,7 +19,7 @@ use grammar_tools::parser_grammar::parse_parser_grammar;
 use lexer::token::{Token, TokenType};
 use mermaid_lexer::{
     tokenize_mermaid, tokenize_mermaid_c4, tokenize_mermaid_er, tokenize_mermaid_gitgraph,
-    tokenize_mermaid_pie, tokenize_mermaid_sankey, tokenize_mermaid_sequence,
+    tokenize_mermaid_pie, tokenize_mermaid_quadrant, tokenize_mermaid_sankey, tokenize_mermaid_sequence,
     tokenize_mermaid_state,
 };
 use parser::grammar_parser::{GrammarASTNode, GrammarParser, DEFAULT_MAX_RULE_DEPTH};
@@ -36,6 +36,8 @@ const SEQUENCE_PARSER_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/sequence.grammar");
 const STATE_PARSER_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/state.grammar");
+const QUADRANT_PARSER_GRAMMAR_SOURCE: &str =
+    include_str!("../../../../grammars/mermaid/quadrant.grammar");
 
 /// Recursion-depth cap for the Mermaid [`GrammarParser`] — see
 /// [`GrammarParser::with_max_depth`] for why this guard exists at all (deep
@@ -278,6 +280,18 @@ pub fn parse_mermaid_state_ast(source: &str) -> Result<GrammarASTNode, ParseErro
     })
 }
 
+pub fn parse_mermaid_quadrant_ast(source: &str) -> Result<GrammarASTNode, ParseError> {
+    let tokens = tokenize_mermaid_quadrant(source);
+    let grammar = parse_parser_grammar(QUADRANT_PARSER_GRAMMAR_SOURCE)
+        .unwrap_or_else(|e| panic!("Failed to parse quadrant.grammar: {e}"));
+    let mut parser = GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH);
+    parser.parse().map_err(|e| ParseError {
+        message: e.message,
+        line: e.token.line,
+        col: e.token.column,
+    })
+}
+
 pub fn parse_to_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
     let mut cursor = TokenCursor::new(tokenize_mermaid(source));
     cursor.skip_terminators();
@@ -471,7 +485,7 @@ fn token_name(token: &Token) -> &str {
 use diagram_ir::{
     Axis, AxisKind, ChartDiagram, ChartKind, ChartOrientation, ChartSeries, Compartment,
     CompartmentKind, GanttDiagram, GanttSection, GanttTask, GitBranch, GitCommitType, GitDiagram,
-    GitEvent, PieSlice, RelKind, SankeyFlow, SankeyNode, SequenceArrowhead, SequenceBlockKind,
+    GitEvent, PieSlice, QuadrantPoint, RelKind, SankeyFlow, SankeyNode, SequenceArrowhead, SequenceBlockKind,
     SequenceCentralConnection, SequenceDiagram, SequenceEvent, SequenceLineStyle, SequenceLink,
     SequenceNotePlacement, SequenceParticipant, SequenceParticipantGroup, SequenceParticipantKind,
     SequenceProperty, SequenceTextWrap, SeriesKind, StructuralDiagram, StructuralGroup,
@@ -563,6 +577,7 @@ impl MermaidDiagramType {
                 | Self::Gantt
                 | Self::GitGraph
                 | Self::Pie
+                | Self::Quadrant
                 | Self::Sequence
                 | Self::State
                 | Self::Sankey
@@ -648,6 +663,7 @@ pub fn parse_any_mermaid(source: &str) -> Result<MermaidDiagram, ParseError> {
         MermaidDiagramType::Er => parse_er_diagram(source).map(MermaidDiagram::Structural),
         MermaidDiagramType::XyChart => parse_xychart(source).map(MermaidDiagram::Chart),
         MermaidDiagramType::Pie => parse_pie(source).map(MermaidDiagram::Chart),
+        MermaidDiagramType::Quadrant => parse_quadrant_chart(source).map(MermaidDiagram::Chart),
         MermaidDiagramType::Sequence => {
             parse_sequence_diagram(source).map(MermaidDiagram::Sequence)
         }
@@ -1012,6 +1028,105 @@ pub fn parse_xychart(source: &str) -> Result<ChartDiagram, ParseError> {
         slices: vec![],
         sankey_nodes: vec![],
         flows: vec![],
+        quadrant_labels: [None, None, None, None],
+        quadrant_points: vec![],
+        orientation: ChartOrientation::Vertical,
+    })
+}
+
+/// Parse the grammar-backed native subset of Mermaid `quadrantChart`.
+pub fn parse_quadrant_chart(source: &str) -> Result<ChartDiagram, ParseError> {
+    parse_mermaid_quadrant_ast(source)?;
+
+    let mut cursor = TokenCursor::new(tokenize_mermaid_quadrant(source));
+    cursor.skip_terminators();
+    cursor
+        .consume_if("HEADER")
+        .ok_or_else(|| token_error(cursor.current(), "expected quadrantChart header"))?;
+    cursor.skip_terminators();
+
+    let mut title = None;
+    let mut x_labels = Vec::new();
+    let mut y_labels = Vec::new();
+    let mut quadrant_labels: [Option<String>; 4] = [None, None, None, None];
+    let mut quadrant_points = Vec::new();
+
+    while !cursor.at_eof() {
+        let token = cursor.advance().clone();
+        match token_name(&token) {
+            "TITLE_STATEMENT" => {
+                title = Some(token.value["title".len()..].trim().to_string());
+            }
+            "AXIS_STATEMENT" => {
+                let is_x = token.value[..6].eq_ignore_ascii_case("x-axis");
+                let value = token.value[6..].trim();
+                let mut labels = value
+                    .splitn(2, "-->")
+                    .map(|part| unquote_mermaid_string(part.trim()))
+                    .collect::<Vec<_>>();
+                labels.retain(|label| !label.is_empty());
+                if is_x {
+                    x_labels = labels;
+                } else {
+                    y_labels = labels;
+                }
+            }
+            "QUADRANT_STATEMENT" => {
+                let index = token.value.as_bytes()[9] as usize - b'1' as usize;
+                let label = token.value[10..].trim();
+                quadrant_labels[index] = Some(unquote_mermaid_string(label));
+            }
+            "POINT_STATEMENT" => {
+                let open = token.value.find('[').ok_or_else(|| {
+                    token_error(&token, "expected '[' before quadrant point coordinates")
+                })?;
+                let close = token.value.rfind(']').ok_or_else(|| {
+                    token_error(&token, "expected ']' after quadrant point coordinates")
+                })?;
+                let label = token.value[..open]
+                    .trim()
+                    .strip_suffix(':')
+                    .map(str::trim)
+                    .ok_or_else(|| token_error(&token, "expected ':' before quadrant point"))?;
+                let coordinates = token.value[open + 1..close]
+                    .split(',')
+                    .map(str::trim)
+                    .collect::<Vec<_>>();
+                let [x, y] = coordinates.as_slice() else {
+                    return Err(token_error(&token, "expected two quadrant point coordinates"));
+                };
+                quadrant_points.push(QuadrantPoint {
+                    label: unquote_mermaid_string(label),
+                    x: x.parse().map_err(|_| token_error(&token, "invalid quadrant x value"))?,
+                    y: y.parse().map_err(|_| token_error(&token, "invalid quadrant y value"))?,
+                });
+            }
+            _ => return Err(token_error(&token, "unsupported quadrant-chart statement")),
+        }
+        cursor.skip_terminators();
+    }
+
+    let axis = |categories: Vec<String>| {
+        (!categories.is_empty()).then_some(Axis {
+            kind: AxisKind::Numeric,
+            title: None,
+            categories,
+            min: 0.0,
+            max: 1.0,
+        })
+    };
+
+    Ok(ChartDiagram {
+        title,
+        kind: ChartKind::Quadrant,
+        x_axis: axis(x_labels),
+        y_axis: axis(y_labels),
+        series: vec![],
+        slices: vec![],
+        sankey_nodes: vec![],
+        flows: vec![],
+        quadrant_labels,
+        quadrant_points,
         orientation: ChartOrientation::Vertical,
     })
 }
@@ -1460,6 +1575,9 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
                 )
             {
                 cursor.skip_terminators();
+                continue;
+            }
+            if !from_is_edge_state && matches!(token_name(cursor.current()), "ID" | "WORD") {
                 continue;
             }
             cursor
@@ -3294,6 +3412,8 @@ pub fn parse_pie(source: &str) -> Result<ChartDiagram, ParseError> {
         slices,
         sankey_nodes: vec![],
         flows: vec![],
+        quadrant_labels: [None, None, None, None],
+        quadrant_points: vec![],
         orientation: ChartOrientation::Vertical,
     })
 }
@@ -3386,6 +3506,8 @@ pub fn parse_sankey(source: &str) -> Result<ChartDiagram, ParseError> {
         slices: vec![],
         sankey_nodes: nodes,
         flows,
+        quadrant_labels: [None, None, None, None],
+        quadrant_points: vec![],
         orientation: ChartOrientation::Horizontal,
     })
 }
@@ -4296,6 +4418,32 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     }
 
     #[test]
+    fn quadrant_parses_labels_and_normalized_points() {
+        let diagram = parse_quadrant_chart(
+            "quadrantChart\n\
+             title Native portfolio\n\
+             x-axis Low reach --> High reach\n\
+             y-axis Low impact --> High impact\n\
+             quadrant-1 Invest\n\
+             quadrant-2 Explore\n\
+             quadrant-3 Retire\n\
+             quadrant-4 Maintain\n\
+             Metal: [0.75, 0.80]\n\
+             Direct2D: [0.35, 0.45]\n",
+        )
+        .unwrap();
+
+        assert_eq!(diagram.kind, ChartKind::Quadrant);
+        assert_eq!(diagram.title.as_deref(), Some("Native portfolio"));
+        assert_eq!(diagram.quadrant_labels[0].as_deref(), Some("Invest"));
+        assert_eq!(diagram.x_axis.unwrap().categories, ["Low reach", "High reach"]);
+        assert_eq!(diagram.quadrant_points.len(), 2);
+        assert_eq!(diagram.quadrant_points[0].label, "Metal");
+        assert_eq!(diagram.quadrant_points[0].x, 0.75);
+        assert_eq!(diagram.quadrant_points[0].y, 0.8);
+    }
+
+    #[test]
     fn gantt_parses_sections() {
         let d = parse_gantt(GANTT_SRC).unwrap();
         assert_eq!(d.sections.len(), 1);
@@ -4465,6 +4613,15 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         match parse_any_mermaid(PIE_SRC).unwrap() {
             MermaidDiagram::Chart(chart) => assert_eq!(chart.kind, ChartKind::Pie),
             _ => panic!("expected Chart"),
+        }
+    }
+
+    #[test]
+    fn dispatch_quadrant() {
+        let src = "quadrantChart\nquadrant-1 Invest\nMetal: [0.75, 0.8]";
+        match parse_any_mermaid(src).unwrap() {
+            MermaidDiagram::Chart(chart) => assert_eq!(chart.kind, ChartKind::Quadrant),
+            _ => panic!("expected chart diagram"),
         }
     }
 
@@ -4978,6 +5135,32 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
             .expect("note node");
 
         assert_eq!(note.label.text, "Line1\nLine2\nLine3\nLine4\nLine5");
+    }
+
+    #[test]
+    fn state_treats_single_percent_and_adjacent_words_as_bare_states() {
+        let diagram = parse_state_diagram(
+            "stateDiagram-v2\n% not a comment\nMoving --> Still %inline\nStill%Active\n",
+        )
+        .expect("single-percent state syntax should parse");
+        let ids: Vec<_> = diagram.nodes.iter().map(|node| node.id.as_str()).collect();
+
+        assert_eq!(
+            ids,
+            [
+                "%",
+                "not",
+                "a",
+                "comment",
+                "Moving",
+                "Still",
+                "%inline",
+                "Still%Active"
+            ]
+        );
+        assert_eq!(diagram.edges.len(), 1);
+        assert_eq!(diagram.edges[0].from, "Moving");
+        assert_eq!(diagram.edges[0].to, "Still");
     }
 
     #[test]
@@ -5842,7 +6025,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.77.0");
+        assert_eq!(crate::VERSION, "0.79.0");
     }
 
     #[test]

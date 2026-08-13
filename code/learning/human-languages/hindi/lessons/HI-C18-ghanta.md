@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-C18-ghanta
 spine_node: SPINE-TIME-OF-DAY
-sequence: 400
+sequence: 650
 chapter: 18
 type: word
 headword: घंटा

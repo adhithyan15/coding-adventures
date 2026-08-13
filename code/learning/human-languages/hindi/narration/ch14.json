@@ -4,11 +4,11 @@
   "chapter": 14,
   "title": "Seasons",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:13b1ba42e4613deb",
+  "sourceHash": "fnv1a64:f78d287372fc6be1",
   "lessons": [
     {
       "id": "HI-C14-ritu",
-      "sequence": 360,
+      "sequence": 610,
       "title": "वसंत, ग्रीष्म, वर्षा, शरद्, हेमंत, शिशिर — six seasons, not four",
       "headword": "वसंत ग्रीष्म वर्षा शरद् हेमंत शिशिर",
       "romanization": "",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3cf3287daf0ef18b",
+      "sourceHash": "fnv1a64:d74609398efe0e53",
       "notice": null,
       "blocks": [
         {

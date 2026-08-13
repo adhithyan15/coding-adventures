@@ -4,22 +4,22 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:fd193962437549d4",
+  "sourceHash": "fnv1a64:a66aaf8cd8aac20c",
   "lessons": [
     {
-      "id": "HI-C04-chalta-hun",
-      "sequence": null,
-      "title": "चलता हूँ (chaltā hūṁ) — \"I'll be off\"",
-      "headword": "चलता हूँ",
+      "id": "HI-C04-phir",
+      "sequence": 340,
+      "title": "फिर (phir) — \"again,\" the seed of \"see you again\"",
+      "headword": "फिर",
       "romanization": "",
-      "gloss": "I'll be off (lit. \"I go\"), gendered",
+      "gloss": "again, then",
       "script": "devanagari",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1bfbb5b02a0d294f",
+      "sourceHash": "fnv1a64:32c724acfff1840f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -44,7 +44,7 @@
             },
             {
               "kind": "speech",
-              "text": "The casual \"I'm heading out\" — and your first taste of how a Hindi verb changes for a man or a woman speaking."
+              "text": "One small word turns a goodbye from \"farewell\" into \"till next time.\" Here it is."
             }
           ]
         },
@@ -55,7 +55,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "च (ca) + ल (la) + the long-ā mātrā becomes चलता (caltā); with हूँ (hūṁ, \"am,\" from Chapter 3). Read caltā hūṁ."
+              "text": "फ (pha, an aspirated p — a puff of breath) + ि (the i-mātrā, written before the consonant but read after) + र (ra) becomes फिर (phir)."
             }
           ]
         },
@@ -66,26 +66,132 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "चलता हूँ literally means \"I go / I move,\" used the way English says \"I'll be off / I'll get going.\" The verb is चलना (calnā, \"to move, walk, go\"), from Sanskrit चल् (cal-, \"to move, stir\") — the root behind cal (\"move!\"), calan (\"circulation\"), and cañcal (\"restless\"). Like Bengali āshi (\"I come\") and Marathi yeto, Hindi prefers to leave by saying \"I'm moving,\" never a blunt \"I'm leaving.\""
+              "text": "फिर (phir) means \"again, then, afterwards.\" It is a native Indo-Aryan adverb (from Prakrit, ultimately tied to the sense \"back, return\") with no tidy English cognate — but its job is one English shares: it turns a parting into a promise. English \"see you again,\" Hindi phir milenge (\"we'll meet again\"). The optimism is the same; only the word is Indian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"phir\" — mind the aspirated ph",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"phir\" — mind the aspirated *ph*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what it adds to a goodbye (\"again / then\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what it adds to a goodbye (\"again / then\")]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does phir mean, and what does it do to a farewell? (\"Again / then\"; it makes the parting a promise of return.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C04-milenge",
+      "sequence": 350,
+      "title": "मिलेंगे (milenge) — \"(we) will meet\"",
+      "headword": "मिलेंगे",
+      "romanization": "milenge",
+      "gloss": "(we) will meet",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:e42e10d13c4e5c65",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Your first future-tense verb — and the other half of \"see you again.\""
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "म (ma) + ि becomes मि (mi); ल (la) + े becomes ले (le); the anusvāra ं nasalises; गे (ge). Read मि, ले, ं, गे becomes milenge."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मिलेंगे (milenge, \"we/they will meet\") is the future of the verb मिलना (milnā, \"to meet, to be found, to get\"), from Sanskrit मिल् (mil-, \"to join, unite\") — the root behind milan (\"a union, a meeting\"), a common word and name. The ending -एंगे (-enge) is the plural future: milenge = \"(we) will meet.\""
             }
           ]
         },
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: the verb agrees with the speaker's gender",
+          "title": "Grammar Lens: how Hindi builds the future",
           "segments": [
             {
               "kind": "speech",
-              "text": "a man says चलता हूँ (caltā hūṁ)."
-            },
-            {
-              "kind": "speech",
-              "text": "a woman says चलती हूँ (caltī hūṁ)."
-            },
-            {
-              "kind": "speech",
-              "text": "The -tā / -tī ending marks the speaker's gender — a feature English has no trace of, and one you will meet again and again. (Compare Marathi yeto m. / yete f.)"
+              "text": "Hindi marks the future with an ending on the verb stem: mil- (\"meet\") + -enge (\"we/they will\") becomes milenge. No helper-word like English \"will\" — the tense lives in the ending, the way Hindi's person lives in hūṁ/hai/haiṁ."
             }
           ]
         },
@@ -101,26 +207,31 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "[YOU SAY (m.): caltā hūṁ, (f.): caltī hūṁ]."
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"milenge\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"milenge\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the verb and root (calnā \"to move,\" Sanskrit cal-)",
+              "instruction": "the root and its cousin-noun (mil- \"to join,\" milan \"a meeting\")",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the verb and root (*calnā* \"to move,\" Sanskrit *cal-*)]"
+              "source": "[YOU SAY: the root and its cousin-noun (*mil-* \"to join,\" *milan* \"a meeting\")]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "why Hindi says \"I move\" and not \"I leave\" (the softer, non-final parting)",
+              "instruction": "how the future is marked (an ending on the stem, not a helper-word)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: why Hindi says \"I move\" and not \"I leave\" (the softer, non-final parting)]"
+              "source": "[YOU SAY: how the future is marked (an ending on the stem, not a helper-word)]"
             }
           ]
         },
@@ -137,7 +248,125 @@
             },
             {
               "kind": "speech",
-              "text": "What does chaltā hūṁ literally mean, and how does a woman say it? (\"I go/move\" = I'll be off; caltī hūṁ, with the feminine -tī.)"
+              "text": "What verb is milenge from, and how does Hindi show \"will\"? (Milnā \"to meet,\" from Sanskrit mil-; with the ending -enge, not a separate word.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C04-phir-milenge",
+      "sequence": 360,
+      "title": "फिर मिलेंगे (phir milenge) — \"we'll meet again\"",
+      "headword": "फिर मिलेंगे",
+      "romanization": "",
+      "gloss": "we'll meet again (goodbye)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:33f727db88431000",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The warm, everyday goodbye — the one you actually hear, far more than Chapter 1's formal alvidā."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फिर मिलेंगे = फिर (phir, \"again\") + मिलेंगे (milenge, \"we will meet\") — \"we'll meet again.\" Where Chapter 1's अलविदा (alvidā) is a grave, final farewell (and, fittingly, a Perso-Arabic word — al-widā, \"the farewell\"), phir milenge is native, everyday, and hopeful. It is the exact sibling of the \"promise of return\" goodbyes across South Asia — Tamil, Bengali, Marathi all say \"I'll come again\" rather than \"goodbye.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: two registers of goodbye",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अलविदा (alvidā) — formal, final, Perso-Arabic; for long or last partings."
+            },
+            {
+              "kind": "speech",
+              "text": "फिर मिलेंगे (phir milenge) — everyday, warm, native; \"till we meet again.\" Even more casual: phir milte haiṁ (\"(we) meet again,\" present for a near future)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the warm goodbye — phir milenge",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the warm goodbye — *phir milenge*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "how it differs from alvidā (everyday/hopeful vs. formal/final)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: how it differs from *alvidā* (everyday/hopeful vs. formal/final)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two words it's built from (phir + milenge)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two words it's built from (*phir* + *milenge*)]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does phir milenge literally say, and when would you use it over alvidā? (\"We'll meet again\"; for everyday partings, where alvidā is formal and final.)"
             }
           ]
         }
@@ -145,7 +374,7 @@
     },
     {
       "id": "HI-C04-kal-milte-hain",
-      "sequence": null,
+      "sequence": 370,
       "title": "कल मिलते हैं (kal milte haiṁ) — \"see you tomorrow\"",
       "headword": "कल मिलते हैं",
       "romanization": "",
@@ -156,7 +385,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f9d45fa8e08e7d18",
+      "sourceHash": "fnv1a64:43e3bf0c3fb91599",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -282,19 +511,19 @@
       ]
     },
     {
-      "id": "HI-C04-milenge",
-      "sequence": null,
-      "title": "मिलेंगे (milenge) — \"(we) will meet\"",
-      "headword": "मिलेंगे",
-      "romanization": "milenge",
-      "gloss": "(we) will meet",
+      "id": "HI-C04-chalta-hun",
+      "sequence": 380,
+      "title": "चलता हूँ (chaltā hūṁ) — \"I'll be off\"",
+      "headword": "चलता हूँ",
+      "romanization": "",
+      "gloss": "I'll be off (lit. \"I go\"), gendered",
       "script": "devanagari",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:960b0dfacf3f0eb0",
+      "sourceHash": "fnv1a64:e11b43de65274417",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -319,7 +548,7 @@
             },
             {
               "kind": "speech",
-              "text": "Your first future-tense verb — and the other half of \"see you again.\""
+              "text": "The casual \"I'm heading out\" — and your first taste of how a Hindi verb changes for a man or a woman speaking."
             }
           ]
         },
@@ -330,7 +559,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "म (ma) + ि becomes मि (mi); ल (la) + े becomes ले (le); the anusvāra ं nasalises; गे (ge). Read मि, ले, ं, गे becomes milenge."
+              "text": "च (ca) + ल (la) + the long-ā mātrā becomes चलता (caltā); with हूँ (hūṁ, \"am,\" from Chapter 3). Read caltā hūṁ."
             }
           ]
         },
@@ -341,18 +570,26 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "मिलेंगे (milenge, \"we/they will meet\") is the future of the verb मिलना (milnā, \"to meet, to be found, to get\"), from Sanskrit मिल् (mil-, \"to join, unite\") — the root behind milan (\"a union, a meeting\"), a common word and name. The ending -एंगे (-enge) is the plural future: milenge = \"(we) will meet.\""
+              "text": "चलता हूँ literally means \"I go / I move,\" used the way English says \"I'll be off / I'll get going.\" The verb is चलना (calnā, \"to move, walk, go\"), from Sanskrit चल् (cal-, \"to move, stir\") — the root behind cal (\"move!\"), calan (\"circulation\"), and cañcal (\"restless\"). Like Bengali āshi (\"I come\") and Marathi yeto, Hindi prefers to leave by saying \"I'm moving,\" never a blunt \"I'm leaving.\""
             }
           ]
         },
         {
           "index": 3,
           "type": "grammar",
-          "title": "Grammar Lens: how Hindi builds the future",
+          "title": "Grammar Lens: the verb agrees with the speaker's gender",
           "segments": [
             {
               "kind": "speech",
-              "text": "Hindi marks the future with an ending on the verb stem: mil- (\"meet\") + -enge (\"we/they will\") becomes milenge. No helper-word like English \"will\" — the tense lives in the ending, the way Hindi's person lives in hūṁ/hai/haiṁ."
+              "text": "a man says चलता हूँ (caltā hūṁ)."
+            },
+            {
+              "kind": "speech",
+              "text": "a woman says चलती हूँ (caltī hūṁ)."
+            },
+            {
+              "kind": "speech",
+              "text": "The -tā / -tī ending marks the speaker's gender — a feature English has no trace of, and one you will meet again and again. (Compare Marathi yeto m. / yete f.)"
             }
           ]
         },
@@ -368,31 +605,26 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"milenge\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"milenge\"]"
+              "kind": "speech",
+              "text": "[YOU SAY (m.): caltā hūṁ, (f.): caltī hūṁ]."
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the root and its cousin-noun (mil- \"to join,\" milan \"a meeting\")",
+              "instruction": "the verb and root (calnā \"to move,\" Sanskrit cal-)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the root and its cousin-noun (*mil-* \"to join,\" *milan* \"a meeting\")]"
+              "source": "[YOU SAY: the verb and root (*calnā* \"to move,\" Sanskrit *cal-*)]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "how the future is marked (an ending on the stem, not a helper-word)",
+              "instruction": "why Hindi says \"I move\" and not \"I leave\" (the softer, non-final parting)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: how the future is marked (an ending on the stem, not a helper-word)]"
+              "source": "[YOU SAY: why Hindi says \"I move\" and not \"I leave\" (the softer, non-final parting)]"
             }
           ]
         },
@@ -409,239 +641,7 @@
             },
             {
               "kind": "speech",
-              "text": "What verb is milenge from, and how does Hindi show \"will\"? (Milnā \"to meet,\" from Sanskrit mil-; with the ending -enge, not a separate word.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "HI-C04-phir",
-      "sequence": null,
-      "title": "फिर (phir) — \"again,\" the seed of \"see you again\"",
-      "headword": "फिर",
-      "romanization": "",
-      "gloss": "again, then",
-      "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:aedfba61a69ddd3b",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "One small word turns a goodbye from \"farewell\" into \"till next time.\" Here it is."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "फ (pha, an aspirated p — a puff of breath) + ि (the i-mātrā, written before the consonant but read after) + र (ra) becomes फिर (phir)."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "फिर (phir) means \"again, then, afterwards.\" It is a native Indo-Aryan adverb (from Prakrit, ultimately tied to the sense \"back, return\") with no tidy English cognate — but its job is one English shares: it turns a parting into a promise. English \"see you again,\" Hindi phir milenge (\"we'll meet again\"). The optimism is the same; only the word is Indian."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"phir\" — mind the aspirated ph",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"phir\" — mind the aspirated *ph*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "what it adds to a goodbye (\"again / then\")",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: what it adds to a goodbye (\"again / then\")]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What does phir mean, and what does it do to a farewell? (\"Again / then\"; it makes the parting a promise of return.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "HI-C04-phir-milenge",
-      "sequence": null,
-      "title": "फिर मिलेंगे (phir milenge) — \"we'll meet again\"",
-      "headword": "फिर मिलेंगे",
-      "romanization": "",
-      "gloss": "we'll meet again (goodbye)",
-      "script": "devanagari",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:da855bd5bbd3b332",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "The warm, everyday goodbye — the one you actually hear, far more than Chapter 1's formal alvidā."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "etymology",
-          "title": "The phrase, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "फिर मिलेंगे = फिर (phir, \"again\") + मिलेंगे (milenge, \"we will meet\") — \"we'll meet again.\" Where Chapter 1's अलविदा (alvidā) is a grave, final farewell (and, fittingly, a Perso-Arabic word — al-widā, \"the farewell\"), phir milenge is native, everyday, and hopeful. It is the exact sibling of the \"promise of return\" goodbyes across South Asia — Tamil, Bengali, Marathi all say \"I'll come again\" rather than \"goodbye.\""
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: two registers of goodbye",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "अलविदा (alvidā) — formal, final, Perso-Arabic; for long or last partings."
-            },
-            {
-              "kind": "speech",
-              "text": "फिर मिलेंगे (phir milenge) — everyday, warm, native; \"till we meet again.\" Even more casual: phir milte haiṁ (\"(we) meet again,\" present for a near future)."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the warm goodbye — phir milenge",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the warm goodbye — *phir milenge*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "how it differs from alvidā (everyday/hopeful vs. formal/final)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: how it differs from *alvidā* (everyday/hopeful vs. formal/final)]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the two words it's built from (phir + milenge)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the two words it's built from (*phir* + *milenge*)]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What does phir milenge literally say, and when would you use it over alvidā? (\"We'll meet again\"; for everyday partings, where alvidā is formal and final.)"
+              "text": "What does chaltā hūṁ literally mean, and how does a woman say it? (\"I go/move\" = I'll be off; caltī hūṁ, with the feminine -tī.)"
             }
           ]
         }
@@ -649,7 +649,7 @@
     },
     {
       "id": "HI-C04-practice",
-      "sequence": null,
+      "sequence": 390,
       "title": "Chapter 4 — The farewells",
       "headword": "(dialogue)",
       "romanization": "",
@@ -660,7 +660,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3f48527045e33a5d",
+      "sourceHash": "fnv1a64:70d3d737ef40dfc4",
       "notice": null,
       "blocks": [
         {

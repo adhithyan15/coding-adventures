@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-C37-chai
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 730
+sequence: 980
 chapter: 37
 type: word
 headword: चाय

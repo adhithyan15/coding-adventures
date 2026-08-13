@@ -4,11 +4,393 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:b82e4987c74a6ba1",
+  "sourceHash": "fnv1a64:fbe7fccaa7539a91",
   "lessons": [
     {
+      "id": "KA-C03-hege",
+      "sequence": 150,
+      "title": "ಹೇಗೆ (hēge) — \"how,\" another of the ē- questions",
+      "headword": "ಹೇಗೆ",
+      "romanization": "hēge",
+      "gloss": "how",
+      "script": "kannada",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:a4a41b92f23d7d03",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You met ಏನು (ēnu, \"what\") in Chapter 2. Here is its sibling in Kannada's question family."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "(Skim if you read Kannada.) ಹೇ (hē, ha + the long-ē sign) + ಗೆ (ge) becomes ಹೇಗೆ (hēge)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹೇಗೆ (hēge, \"how\") is native Dravidian, on the interrogative base ē-/yā- you met in ēnu. Kannada gathers its questions here: ēnu (what), hēge (how), yāru (who), elli (where), yāvāga (when), yāke (why). It is the same Dravidian question-root heading Tamil's eppaḍi and Telugu's elā — a family far older than the Sanskrit words Kannada, like its sisters, borrows so readily."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"hēge\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"hēge\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the question family — ēnu, hēge, yāru, elli, yāvāga",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the question family — *ēnu, hēge, yāru, elli, yāvāga*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What base do Kannada's question-words share, and which cousins head their own? (The interrogative ē-/yā-; Tamil's eppaḍi, Telugu's elā.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C03-niivu-hegiddiira",
+      "sequence": 160,
+      "title": "ನೀವು ಹೇಗಿದ್ದೀರಾ? (nīvu hēgiddīrā?)",
+      "headword": "ನೀವು ಹೇಗಿದ್ದೀರಾ?",
+      "romanization": "nīvu hēgiddīrā",
+      "gloss": "how are you? (respectful)",
+      "script": "kannada",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:afb0cd5376b8c018",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The everyday \"how are you?\" — and the verb \"to be\" that carries it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The new word is ಹೇಗಿದ್ದೀರಾ (hēgiddīrā): hēge (\"how\") fused with ಇದ್ದೀರಾ (iddīrā, \"are you\"), from the verb ಇರು (iru, \"to be, exist, stay\") + the respectful-you ending. Note the doubled ದ್ದ (dd)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನೀವು ಹೇಗಿದ್ದೀರಾ? (nīvu hēgiddīrā) = ನೀವು (nīvu, \"you,\" respectful) + ಹೇಗಿದ್ದೀರಾ (hēgiddīrā, \"how are you\") — the verb last, as always. The verb is ಇರು (iru, \"to be / exist / stay\") — the same native Dravidian iru that Tamil uses for \"how are you,\" and (in Chapter 5) the verb for \"I live.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: the verb carries \"you\"",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The ending already means \"you (respectful),\" so nīvu can be dropped: hēgiddīrā? alone is a complete \"how are you?\" To a friend (nīnu), it shifts: ನೀನು ಹೇಗಿದ್ದೀಯಾ? (nīnu hēgiddīyā?). Match the \"you\" to the verb-ending, as Kannada always does."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the respectful question — nīvu hēgiddīrā?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the respectful question — *nīvu hēgiddīrā?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the familiar version — nīnu hēgiddīyā?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the familiar version — *nīnu hēgiddīyā?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the verb and its meaning (iru — \"to be / exist / stay\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the verb and its meaning (*iru* — \"to be / exist / stay\")]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What verb powers \"how are you?\", and which Dravidian sister uses the same one? (Iru, \"to be\"; Tamil — its iru is the same word.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C03-naanu",
+      "sequence": 170,
+      "title": "ನಾನು (nānu) — \"I,\" the Dravidian first person",
+      "headword": "ನಾನು",
+      "romanization": "nānu",
+      "gloss": "I",
+      "script": "kannada",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:f6d70070c39ff951",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To answer \"how are you?\" you first need \"I.\" In Chapter 2 you learned nanna (\"my\"); here is its owner."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನಾ (nā, na + long-ā sign) + ನು (nu) becomes ನಾನು (nānu)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನಾನು (nānu, \"I\") from Proto-Dravidian yāṉ / nāṉ — native, and (unlike Hindi's maiṁ, cousin of English me) not related to the European \"I/me\" family. Its possessive is the ನನ್ನ (nanna, \"my\") you already met: nānu \"I,\" nanna \"my.\" Kannada borrows Sanskrit words freely for higher vocabulary, but its bedrock pronouns stayed Dravidian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: \"I\" you can drop",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Kannada verbs carry the person in their ending — iddēne already means \"I am\" — so nānu is often left out. You still learn it first, because the answer to hēgiddīrā? begins with it."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"nānu\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"nānu\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pair — nānu (I), nanna (my)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pair — *nānu* (I), *nanna* (my)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "is it related to English me? (No — native Dravidian)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: is it related to English *me*? (No — native Dravidian)]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is nānu's possessive, and is Kannada's \"I\" cousin to English me? (Nanna, \"my\"; no — it is native Dravidian.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "KA-C03-cennaagi",
-      "sequence": null,
+      "sequence": 180,
       "title": "ಚೆನ್ನಾಗಿ (cennāgi) — \"well,\" and how to answer",
       "headword": "ಚೆನ್ನಾಗಿ",
       "romanization": "cennāgi",
@@ -19,7 +401,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d40b6e622cb63c30",
+      "sourceHash": "fnv1a64:88d5dd6c8c4fa046",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -145,390 +527,8 @@
       ]
     },
     {
-      "id": "KA-C03-hege",
-      "sequence": null,
-      "title": "ಹೇಗೆ (hēge) — \"how,\" another of the ē- questions",
-      "headword": "ಹೇಗೆ",
-      "romanization": "hēge",
-      "gloss": "how",
-      "script": "kannada",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:1fd541f9cd0d8d12",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "You met ಏನು (ēnu, \"what\") in Chapter 2. Here is its sibling in Kannada's question family."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "(Skim if you read Kannada.) ಹೇ (hē, ha + the long-ē sign) + ಗೆ (ge) becomes ಹೇಗೆ (hēge)."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ಹೇಗೆ (hēge, \"how\") is native Dravidian, on the interrogative base ē-/yā- you met in ēnu. Kannada gathers its questions here: ēnu (what), hēge (how), yāru (who), elli (where), yāvāga (when), yāke (why). It is the same Dravidian question-root heading Tamil's eppaḍi and Telugu's elā — a family far older than the Sanskrit words Kannada, like its sisters, borrows so readily."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"hēge\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"hēge\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the question family — ēnu, hēge, yāru, elli, yāvāga",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the question family — *ēnu, hēge, yāru, elli, yāvāga*]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What base do Kannada's question-words share, and which cousins head their own? (The interrogative ē-/yā-; Tamil's eppaḍi, Telugu's elā.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "KA-C03-naanu",
-      "sequence": null,
-      "title": "ನಾನು (nānu) — \"I,\" the Dravidian first person",
-      "headword": "ನಾನು",
-      "romanization": "nānu",
-      "gloss": "I",
-      "script": "kannada",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:7896e47ea2eaa584",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "To answer \"how are you?\" you first need \"I.\" In Chapter 2 you learned nanna (\"my\"); here is its owner."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ನಾ (nā, na + long-ā sign) + ನು (nu) becomes ನಾನು (nānu)."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ನಾನು (nānu, \"I\") from Proto-Dravidian yāṉ / nāṉ — native, and (unlike Hindi's maiṁ, cousin of English me) not related to the European \"I/me\" family. Its possessive is the ನನ್ನ (nanna, \"my\") you already met: nānu \"I,\" nanna \"my.\" Kannada borrows Sanskrit words freely for higher vocabulary, but its bedrock pronouns stayed Dravidian."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: \"I\" you can drop",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Kannada verbs carry the person in their ending — iddēne already means \"I am\" — so nānu is often left out. You still learn it first, because the answer to hēgiddīrā? begins with it."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"nānu\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"nānu\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the pair — nānu (I), nanna (my)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the pair — *nānu* (I), *nanna* (my)]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "is it related to English me? (No — native Dravidian)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: is it related to English *me*? (No — native Dravidian)]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What is nānu's possessive, and is Kannada's \"I\" cousin to English me? (Nanna, \"my\"; no — it is native Dravidian.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "KA-C03-niivu-hegiddiira",
-      "sequence": null,
-      "title": "ನೀವು ಹೇಗಿದ್ದೀರಾ? (nīvu hēgiddīrā?)",
-      "headword": "ನೀವು ಹೇಗಿದ್ದೀರಾ?",
-      "romanization": "nīvu hēgiddīrā",
-      "gloss": "how are you? (respectful)",
-      "script": "kannada",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:61040d9467373d4e",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "The everyday \"how are you?\" — and the verb \"to be\" that carries it."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "The new word is ಹೇಗಿದ್ದೀರಾ (hēgiddīrā): hēge (\"how\") fused with ಇದ್ದೀರಾ (iddīrā, \"are you\"), from the verb ಇರು (iru, \"to be, exist, stay\") + the respectful-you ending. Note the doubled ದ್ದ (dd)."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The phrase, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ನೀವು ಹೇಗಿದ್ದೀರಾ? (nīvu hēgiddīrā) = ನೀವು (nīvu, \"you,\" respectful) + ಹೇಗಿದ್ದೀರಾ (hēgiddīrā, \"how are you\") — the verb last, as always. The verb is ಇರು (iru, \"to be / exist / stay\") — the same native Dravidian iru that Tamil uses for \"how are you,\" and (in Chapter 5) the verb for \"I live.\""
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: the verb carries \"you\"",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "The ending already means \"you (respectful),\" so nīvu can be dropped: hēgiddīrā? alone is a complete \"how are you?\" To a friend (nīnu), it shifts: ನೀನು ಹೇಗಿದ್ದೀಯಾ? (nīnu hēgiddīyā?). Match the \"you\" to the verb-ending, as Kannada always does."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the respectful question — nīvu hēgiddīrā?",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the respectful question — *nīvu hēgiddīrā?*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the familiar version — nīnu hēgiddīyā?",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the familiar version — *nīnu hēgiddīyā?*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the verb and its meaning (iru — \"to be / exist / stay\")",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the verb and its meaning (*iru* — \"to be / exist / stay\")]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What verb powers \"how are you?\", and which Dravidian sister uses the same one? (Iru, \"to be\"; Tamil — its iru is the same word.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "KA-C03-paravaagilla",
-      "sequence": null,
+      "sequence": 190,
       "title": "ಪರವಾಗಿಲ್ಲ (paravāgilla) — \"no problem\"",
       "headword": "ಪರವಾಗಿಲ್ಲ",
       "romanization": "paravāgilla",
@@ -539,7 +539,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:039860644f0adf38",
+      "sourceHash": "fnv1a64:48c56a038ffecc8b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -662,7 +662,7 @@
     },
     {
       "id": "KA-C03-practice",
-      "sequence": null,
+      "sequence": 200,
       "title": "Chapter 3 — The how-are-you exchange",
       "headword": "(dialogue)",
       "romanization": "",
@@ -673,7 +673,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d57f4b0e1d1c241e",
+      "sourceHash": "fnv1a64:1fecb2f556191bd3",
       "notice": null,
       "blocks": [
         {

@@ -4,22 +4,22 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:3a7f9d32e7c9d098",
+  "sourceHash": "fnv1a64:a0d835215e394c54",
   "lessons": [
     {
-      "id": "TE-C02-emiti",
-      "sequence": null,
-      "title": "ఏమిటి (ēmiṭi) — \"what\"",
-      "headword": "ఏమిటి",
-      "romanization": "ēmiṭi",
-      "gloss": "what",
+      "id": "TE-C02-peru",
+      "sequence": 70,
+      "title": "పేరు (pēru) — \"name,\" the native Dravidian word",
+      "headword": "పేరు",
+      "romanization": "pēru",
+      "gloss": "name",
       "script": "telugu",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:22da1b54135c12bf",
+      "sourceHash": "fnv1a64:86f63c9dfd7b83c6",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -44,7 +44,7 @@
             },
             {
               "kind": "speech",
-              "text": "The last piece of the question: \"what.\""
+              "text": "\"Name\" — native Dravidian, even in Sanskrit-loving Telugu."
             }
           ]
         },
@@ -55,7 +55,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "(Skim if you read Telugu.) ఏ (independent long ē) + మి (mi) + టి (ṭi, retroflex) becomes ēmiṭi."
+              "text": "(Skim if you read Telugu.) ప (pa) + ే (the ē-sign) becomes పే (pē); రు (ru). Read పే, రు becomes pēru."
             }
           ]
         },
@@ -66,7 +66,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ఏమిటి (ēmiṭi, \"what\") is native Dravidian, on the interrogative stem yā-/e- — the same Dravidian question-root as Tamil eṉṉa and Kannada ēnu, heading Telugu's question family: ēmiṭi (what), evaru (who), ekkaḍa (where), enduku (why)."
+              "text": "పేరు (pēru, \"name\") is native Dravidian, from Proto-Dravidian pēr — the same word as Tamil peyar and Malayalam pēr, and a cousin of Kannada hesaru (which softened p becomes h). It is not Sanskrit nāma (Hindi nām, English name). Even Telugu — the most Sanskritised of the Dravidian tongues — kept its home-grown word for \"name.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Across the family: Telugu pēru, Tamil peyar, Malayalam pēr, Kannada hesaru — one Dravidian word; only Hindi nām / English name are Indo-European."
             }
           ]
         },
@@ -84,20 +88,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ēmiṭi\"",
+              "instruction": "\"pēru\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ēmiṭi\"]"
+              "source": "[YOU SAY: \"pēru\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the question family — ēmiṭi, evaru, ekkaḍa",
+              "instruction": "its Dravidian cousins — pēru / peyar / pēr",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the question family — ēmiṭi, evaru, ekkaḍa]"
+              "source": "[YOU SAY: its Dravidian cousins — *pēru* / *peyar* / *pēr*]"
             }
           ]
         },
@@ -114,120 +118,7 @@
             },
             {
               "kind": "speech",
-              "text": "What Dravidian stem heads ఏమిటి (ēmiṭi) and the other Telugu question-words? (yā-/e-, same as Tamil eṉṉa, Kannada ēnu.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "TE-C02-mii-peru-emiti",
-      "sequence": null,
-      "title": "మీ పేరు ఏమిటి? (mī pēru ēmiṭi?) — \"what's your name?\"",
-      "headword": "మీ పేరు ఏమిటి?",
-      "romanization": "",
-      "gloss": "what's your name?",
-      "script": "telugu",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:e6f916bbadd82ce2",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Assemble the question — your + name + what — still no \"is.\""
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "unknown",
-          "title": "The phrase, assembled",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "మీ (mī, \"your\") = the possessive of mīru (\"you,\" respectful)."
-            },
-            {
-              "kind": "speech",
-              "text": "మీ పేరు (pēru) ఏమిటి (ēmiṭi)? = literally \"your name what?\" = \"what's your name?\""
-            },
-            {
-              "kind": "speech",
-              "text": "Three words, no verb — the zero copula holds for questions too."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: answer, and the familiar version",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Answer with the sentence you built: Nā pēru Arun. The familiar \"your\" is nī (from nuvvu): nī pēru ēmiṭi?"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"mī pēru ēmiṭi?\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"mī pēru ēmiṭi?\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "ask, then answer — \"mī pēru ēmiṭi?\" / \"nā pēru …\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: ask, then answer — \"mī pēru ēmiṭi?\" / \"nā pēru …\"]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What does మీ పేరు (pēru) ఏమిటి (ēmiṭi)? literally say, and what's missing vs. English? (\"Your name what?\"; no \"is\" — zero copula.)"
+              "text": "Is పేరు (pēru) native or a Sanskrit loan, and what Tamil word is its twin? (Native Dravidian, pēr; Tamil peyar.)"
             }
           ]
         }
@@ -235,7 +126,7 @@
     },
     {
       "id": "TE-C02-naa",
-      "sequence": null,
+      "sequence": 80,
       "title": "నా (nā) — \"my\"",
       "headword": "నా",
       "romanization": "nā",
@@ -246,7 +137,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:158c3faffcf1ccea",
+      "sourceHash": "fnv1a64:72e6efc58ce83149",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -349,7 +240,7 @@
     },
     {
       "id": "TE-C02-naa-peru",
-      "sequence": null,
+      "sequence": 90,
       "title": "నా పేరు … (nā pēru …) — \"my name is…,\" with no \"is\"",
       "headword": "నా పేరు …",
       "romanization": "",
@@ -360,7 +251,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:efa61e58af98b59d",
+      "sourceHash": "fnv1a64:a7b1f9c467dedf25",
       "notice": null,
       "blocks": [
         {
@@ -462,7 +353,7 @@
     },
     {
       "id": "TE-C02-nuvvu-miiru",
-      "sequence": null,
+      "sequence": 100,
       "title": "నువ్వు / మీరు (nuvvu / mīru) — \"you,\" familiar and respectful",
       "headword": "నువ్వు / మీరు",
       "romanization": "nuvvu / mīru",
@@ -473,7 +364,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a67661a7bebb1e06",
+      "sourceHash": "fnv1a64:cb4d4d321ab7e74c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -581,19 +472,19 @@
       ]
     },
     {
-      "id": "TE-C02-peru",
-      "sequence": null,
-      "title": "పేరు (pēru) — \"name,\" the native Dravidian word",
-      "headword": "పేరు",
-      "romanization": "pēru",
-      "gloss": "name",
+      "id": "TE-C02-emiti",
+      "sequence": 110,
+      "title": "ఏమిటి (ēmiṭi) — \"what\"",
+      "headword": "ఏమిటి",
+      "romanization": "ēmiṭi",
+      "gloss": "what",
       "script": "telugu",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e13824c836ce17c0",
+      "sourceHash": "fnv1a64:0925085da1c2fbc2",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -618,7 +509,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"Name\" — native Dravidian, even in Sanskrit-loving Telugu."
+              "text": "The last piece of the question: \"what.\""
             }
           ]
         },
@@ -629,7 +520,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "(Skim if you read Telugu.) ప (pa) + ే (the ē-sign) becomes పే (pē); రు (ru). Read పే, రు becomes pēru."
+              "text": "(Skim if you read Telugu.) ఏ (independent long ē) + మి (mi) + టి (ṭi, retroflex) becomes ēmiṭi."
             }
           ]
         },
@@ -640,11 +531,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "పేరు (pēru, \"name\") is native Dravidian, from Proto-Dravidian pēr — the same word as Tamil peyar and Malayalam pēr, and a cousin of Kannada hesaru (which softened p becomes h). It is not Sanskrit nāma (Hindi nām, English name). Even Telugu — the most Sanskritised of the Dravidian tongues — kept its home-grown word for \"name.\""
-            },
-            {
-              "kind": "speech",
-              "text": "Across the family: Telugu pēru, Tamil peyar, Malayalam pēr, Kannada hesaru — one Dravidian word; only Hindi nām / English name are Indo-European."
+              "text": "ఏమిటి (ēmiṭi, \"what\") is native Dravidian, on the interrogative stem yā-/e- — the same Dravidian question-root as Tamil eṉṉa and Kannada ēnu, heading Telugu's question family: ēmiṭi (what), evaru (who), ekkaḍa (where), enduku (why)."
             }
           ]
         },
@@ -662,20 +549,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"pēru\"",
+              "instruction": "\"ēmiṭi\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"pēru\"]"
+              "source": "[YOU SAY: \"ēmiṭi\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "its Dravidian cousins — pēru / peyar / pēr",
+              "instruction": "the question family — ēmiṭi, evaru, ekkaḍa",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: its Dravidian cousins — *pēru* / *peyar* / *pēr*]"
+              "source": "[YOU SAY: the question family — ēmiṭi, evaru, ekkaḍa]"
             }
           ]
         },
@@ -692,7 +579,225 @@
             },
             {
               "kind": "speech",
-              "text": "Is పేరు (pēru) native or a Sanskrit loan, and what Tamil word is its twin? (Native Dravidian, pēr; Tamil peyar.)"
+              "text": "What Dravidian stem heads ఏమిటి (ēmiṭi) and the other Telugu question-words? (yā-/e-, same as Tamil eṉṉa, Kannada ēnu.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C02-mii-peru-emiti",
+      "sequence": 120,
+      "title": "మీ పేరు ఏమిటి? (mī pēru ēmiṭi?) — \"what's your name?\"",
+      "headword": "మీ పేరు ఏమిటి?",
+      "romanization": "",
+      "gloss": "what's your name?",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:44afe157adc3e10c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Assemble the question — your + name + what — still no \"is.\""
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "The phrase, assembled",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మీ (mī, \"your\") = the possessive of mīru (\"you,\" respectful)."
+            },
+            {
+              "kind": "speech",
+              "text": "మీ పేరు (pēru) ఏమిటి (ēmiṭi)? = literally \"your name what?\" = \"what's your name?\""
+            },
+            {
+              "kind": "speech",
+              "text": "Three words, no verb — the zero copula holds for questions too."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: answer, and the familiar version",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Answer with the sentence you built: Nā pēru Arun. The familiar \"your\" is nī (from nuvvu): nī pēru ēmiṭi?"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"mī pēru ēmiṭi?\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"mī pēru ēmiṭi?\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ask, then answer — \"mī pēru ēmiṭi?\" / \"nā pēru …\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: ask, then answer — \"mī pēru ēmiṭi?\" / \"nā pēru …\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does మీ పేరు (pēru) ఏమిటి (ēmiṭi)? literally say, and what's missing vs. English? (\"Your name what?\"; no \"is\" — zero copula.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C02-santosham",
+      "sequence": 130,
+      "title": "సంతోషం (santōṣam) — \"joy,\" and \"pleased to meet you\"",
+      "headword": "సంతోషం",
+      "romanization": "",
+      "gloss": "joy / pleased to meet you",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:521ae1bcf1d7f5de",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The warm close — and, as in Kannada, a Sanskrit word."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "The phrase",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The full form is మిమ్మల్ని కలిసినందుకు సంతోషం (mimmalni kalisinanduku santōṣam) — \"joy at having met you.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సంతోషం (santōṣam, \"joy, gladness\") is Sanskrit — sam- (\"fully\") + toṣa (\"satisfaction\") — the same loan Kannada uses (santōṣa). Both reach for Sanskrit where Tamil keeps its native magiḻcci. Telugu — the most Sanskritised of the four Dravidian tongues — does so most readily of all."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"santōṣam\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"santōṣam\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the split — Telugu/Kannada santōṣa(m) (Sanskrit) vs. Tamil magiḻcci (native)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the split — Telugu/Kannada *santōṣa(m)* (Sanskrit) vs. Tamil *magiḻcci* (native)]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Is సంతోషం native or borrowed, and what does the contrast with Tamil show? (Sanskrit; Telugu borrows Sanskrit — here for \"pleased\" — where Tamil keeps native magiḻcci.)"
             }
           ]
         }
@@ -700,7 +805,7 @@
     },
     {
       "id": "TE-C02-practice",
-      "sequence": null,
+      "sequence": 140,
       "title": "Chapter 2 — the introduction, whole",
       "headword": "(dialogue)",
       "romanization": "",
@@ -711,7 +816,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:12280a991b01ad5a",
+      "sourceHash": "fnv1a64:cc83a822e1466024",
       "notice": null,
       "blocks": [
         {
@@ -818,111 +923,6 @@
             {
               "kind": "speech",
               "text": "Next chapter: elā unnāru? (\"how are you?\") and answering with bāgunnānu — the responding cycle."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "TE-C02-santosham",
-      "sequence": null,
-      "title": "సంతోషం (santōṣam) — \"joy,\" and \"pleased to meet you\"",
-      "headword": "సంతోషం",
-      "romanization": "",
-      "gloss": "joy / pleased to meet you",
-      "script": "telugu",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:7d919f075065847b",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "The warm close — and, as in Kannada, a Sanskrit word."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "unknown",
-          "title": "The phrase",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "The full form is మిమ్మల్ని కలిసినందుకు సంతోషం (mimmalni kalisinanduku santōṣam) — \"joy at having met you.\""
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "సంతోషం (santōṣam, \"joy, gladness\") is Sanskrit — sam- (\"fully\") + toṣa (\"satisfaction\") — the same loan Kannada uses (santōṣa). Both reach for Sanskrit where Tamil keeps its native magiḻcci. Telugu — the most Sanskritised of the four Dravidian tongues — does so most readily of all."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"santōṣam\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"santōṣam\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the split — Telugu/Kannada santōṣa(m) (Sanskrit) vs. Tamil magiḻcci (native)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the split — Telugu/Kannada *santōṣa(m)* (Sanskrit) vs. Tamil *magiḻcci* (native)]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Is సంతోషం native or borrowed, and what does the contrast with Tamil show? (Sanskrit; Telugu borrows Sanskrit — here for \"pleased\" — where Tamil keeps native magiḻcci.)"
             }
           ]
         }

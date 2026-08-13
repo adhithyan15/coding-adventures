@@ -1,5 +1,6 @@
 ---
 id: HI-C05-karna
+sequence: 430
 chapter: 5
 type: word
 headword: करना

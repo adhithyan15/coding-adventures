@@ -1,5 +1,6 @@
 ---
 id: KA-C05-iru
+sequence: 280
 chapter: 5
 type: word
 headword: ಇರು

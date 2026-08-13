@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-C36-kamra
 spine_node: SPINE-MEET-GREET
-sequence: 710
+sequence: 960
 chapter: 36
 type: word
 headword: कमरा

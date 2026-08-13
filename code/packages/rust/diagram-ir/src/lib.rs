@@ -1,6 +1,6 @@
-//! diagram-ir v0.36.0 - DG00/DG04 semantic IR
+//! diagram-ir v0.37.0 - DG00/DG04 semantic IR
 
-pub const VERSION: &str = "0.36.0";
+pub const VERSION: &str = "0.37.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramDirection {
@@ -478,6 +478,7 @@ pub enum ChartKind {
     Xy,
     Pie,
     Sankey,
+    Quadrant,
 }
 
 #[derive(Clone, Debug, PartialEq, Default)]
@@ -535,6 +536,13 @@ pub struct SankeyFlow {
 }
 
 #[derive(Clone, Debug, PartialEq)]
+pub struct QuadrantPoint {
+    pub label: String,
+    pub x: f64,
+    pub y: f64,
+}
+
+#[derive(Clone, Debug, PartialEq)]
 pub struct ChartDiagram {
     pub title: Option<String>,
     pub kind: ChartKind,
@@ -544,6 +552,8 @@ pub struct ChartDiagram {
     pub slices: Vec<PieSlice>,
     pub sankey_nodes: Vec<SankeyNode>,
     pub flows: Vec<SankeyFlow>,
+    pub quadrant_labels: [Option<String>; 4],
+    pub quadrant_points: Vec<QuadrantPoint>,
     pub orientation: ChartOrientation,
 }
 
@@ -614,6 +624,21 @@ pub enum LayoutedChartItem {
         to_y: f64,
         width: f64,
         color: String,
+    },
+    QuadrantRegion {
+        x: f64,
+        y: f64,
+        width: f64,
+        height: f64,
+        color: String,
+        label: Option<String>,
+    },
+    ScatterPoint {
+        x: f64,
+        y: f64,
+        radius: f64,
+        color: String,
+        label: String,
     },
     DataLabel {
         x: f64,
@@ -1016,7 +1041,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.36.0");
+        assert_eq!(VERSION, "0.37.0");
     }
     #[test]
     fn default_direction_is_tb() {
@@ -1108,6 +1133,8 @@ mod tests {
             slices: vec![],
             sankey_nodes: vec![],
             flows: vec![],
+            quadrant_labels: [None, None, None, None],
+            quadrant_points: vec![],
             orientation: ChartOrientation::Vertical,
         };
         assert_eq!(d.series[0].data.len(), 2);

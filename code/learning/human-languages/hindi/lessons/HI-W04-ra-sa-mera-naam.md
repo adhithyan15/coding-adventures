@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-W04-ra-sa-mera-naam
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 160
+sequence: 210
 chapter: 2
 type: writing
 headword: "र, स"

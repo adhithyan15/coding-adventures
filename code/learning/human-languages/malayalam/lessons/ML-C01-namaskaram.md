@@ -1,5 +1,6 @@
 ---
 id: ML-C01-namaskaram
+sequence: 10
 chapter: 1
 type: word
 headword: നമസ്കാരം

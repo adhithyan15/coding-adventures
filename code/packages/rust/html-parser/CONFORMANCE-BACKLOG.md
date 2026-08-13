@@ -392,9 +392,16 @@ Prioritized work items:
    Grouped block end tags dispatched from foreign content now report the
    foreign mismatch before honoring an SVG or MathML ordinary-scope boundary.
    The token remains ignored and following content stays inside the foreign
-   integration point, matching browser recovery. Continue sampling adjacent
+   integration point, matching browser recovery. Heading end tags now apply
+   the same boundary recovery: matching and mismatched endings report both the
+   foreign mismatch and heading-scope error without popping the integration
+   point or the older authored HTML heading. Continue sampling adjacent
    namespace-aware scope checks and foreign-content fallback branches before
-   moving beyond the in-body recovery family.
+   moving beyond the in-body recovery family. List-item endings now report the
+   foreign mismatch and list-item-scope error at those same integration
+   boundaries while preserving the ignored token and following boundary
+   content. Description-item endings are the leading adjacent probe, followed
+   by paragraph, marker-element, and generic fallback endings.
 3. **Diagnostic positions and error taxonomy.** Carry source positions into
    tree construction and map diagnostics to current WHATWG concepts. Legacy
    WPT/html5lib error labels are evidence hints, not a normative public API.

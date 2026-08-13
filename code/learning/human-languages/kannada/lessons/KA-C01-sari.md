@@ -1,5 +1,6 @@
 ---
 id: KA-C01-sari
+sequence: 50
 chapter: 1
 type: word
 headword: ಸರಿ

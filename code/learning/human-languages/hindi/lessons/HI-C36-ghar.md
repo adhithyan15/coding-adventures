@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-C36-ghar
 spine_node: SPINE-MEET-GREET
-sequence: 690
+sequence: 940
 chapter: 36
 type: word
 headword: घर

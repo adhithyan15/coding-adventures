@@ -1,5 +1,6 @@
 ---
 id: TE-C02-nuvvu-miiru
+sequence: 100
 chapter: 2
 type: word
 headword: నువ్వు / మీరు

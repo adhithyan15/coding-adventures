@@ -15,6 +15,18 @@ pub struct RiscVSimulator {
     pub halted: bool,
 }
 
+/// Observable outcome of a bounded simulator run.
+///
+/// The simulator intentionally does not impose a guest ABI.  Callers decide
+/// which registers carry arguments and results; this result only reports the
+/// architectural execution state needed to inspect a run safely.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ExecutionResult {
+    pub halted: bool,
+    pub steps: usize,
+    pub pc: i32,
+}
+
 impl RiscVSimulator {
     /// Create a new simulator with the given memory size.
     pub fn new(memory_size: usize) -> Self {
@@ -35,22 +47,29 @@ impl RiscVSimulator {
     /// Run until halted or 10000 steps (safety limit).
     pub fn run(&mut self, program: &[u8]) {
         self.load_program(program);
-        for _ in 0..10000 {
-            if self.halted {
-                break;
-            }
-            self.step();
-        }
+        self.run_loaded_with_limit(10000);
     }
 
     /// Run instructions from already loaded program.
     pub fn run_loaded(&mut self) {
-        for _ in 0..10000 {
+        self.run_loaded_with_limit(10000);
+    }
+
+    /// Run the already-loaded program for at most `max_steps` instructions.
+    ///
+    /// A non-halting result means the budget was exhausted.  This makes the
+    /// execution limit visible to compiler tests instead of silently treating
+    /// an infinite loop as a successful run.
+    pub fn run_loaded_with_limit(&mut self, max_steps: usize) -> ExecutionResult {
+        let mut steps = 0;
+        while steps < max_steps {
             if self.halted {
                 break;
             }
             self.step();
+            steps += 1;
         }
+        ExecutionResult { halted: self.halted, steps, pc: self.pc }
     }
 
     /// Execute a single instruction.
@@ -91,6 +110,16 @@ mod tests {
         let mut sim = RiscVSimulator::new(65536);
         sim.run_instructions(instructions);
         sim
+    }
+
+    #[test]
+    fn bounded_run_reports_halt_and_instruction_count() {
+        let mut sim = RiscVSimulator::new(65536);
+        sim.load_program(&assemble(&[encode_addi(1, 0, 42), encode_ecall()]));
+        let result = sim.run_loaded_with_limit(10);
+        assert!(result.halted);
+        assert_eq!(result.steps, 2);
+        assert_eq!(result.pc, 4);
     }
 
     // I-type arithmetic

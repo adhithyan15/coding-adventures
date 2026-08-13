@@ -2,7 +2,7 @@
 schema_version: 2
 id: SA-C13-nasika
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 610
+sequence: 580
 chapter: 13
 type: word
 headword: नासिका

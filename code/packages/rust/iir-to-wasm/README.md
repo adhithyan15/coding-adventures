@@ -113,6 +113,16 @@ through a deprecated intermediate.
   + 4 + idx)` (skipping the header; the literal path loads `offset + idx` with no
   header) — read-only, so no bump-alloc. This **closes the E4d-3b runtime string
   surface**: every `str_*` op now has a runtime path over promoted operands.
+- **One representation per string variable (v0.47.0)**: the compile-time literal
+  table is keyed by *destination variable*, last-writer-wins — exact only while
+  every write to a variable folds. A variable that ever holds a **runtime**
+  string (a `call` result, a parameter, `input_str`, a `global_load`, an
+  `array_get`, or anything derived from one) therefore gets **no** literal entry
+  at all, not even from a `str_const` that writes it earlier: it carries a
+  `[i32 len][bytes]` handle everywhere and every reader takes the runtime path.
+  Before this, ALGOL's `string s; … s := pick(1)` left the declaration's empty
+  initialiser in the table, so `str_eq`/`str_len`/`print_str` silently answered
+  from the dead `""` and the non-foldable `str_concat` never even ran.
 - **Growable linear memory (v0.45.0 — Twig GC completion, Part 3 stage 1)**:
   every bump-allocation site (`alloc_array`, runtime `str_concat`, runtime
   `str_slice`, `call_builtin "input_str"`) calls a shared, in-module

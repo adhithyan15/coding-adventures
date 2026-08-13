@@ -1,5 +1,6 @@
 ---
 id: HI-C02-hai
+sequence: 130
 chapter: 2
 type: word
 headword: है

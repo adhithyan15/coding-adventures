@@ -4,11 +4,11 @@
   "chapter": 17,
   "title": "Noon and Midnight",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:9c78b121b2e9a9b7",
+  "sourceHash": "fnv1a64:d7dcff0eb539c5f8",
   "lessons": [
     {
       "id": "HI-C17-dopahar-aadhi-raat",
-      "sequence": 390,
+      "sequence": 640,
       "title": "दोपहर, आधी रात — noon by an old clock, midnight fully transparent",
       "headword": "दोपहर आधी रात",
       "romanization": "",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b45448090d1af146",
+      "sourceHash": "fnv1a64:21a36ec06af8f804",
       "notice": null,
       "blocks": [
         {

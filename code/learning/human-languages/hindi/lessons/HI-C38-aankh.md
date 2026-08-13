@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-C38-aankh
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 770
+sequence: 1020
 chapter: 38
 type: word
 headword: आँख

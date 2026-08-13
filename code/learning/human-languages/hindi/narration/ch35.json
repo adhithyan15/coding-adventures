@@ -4,11 +4,11 @@
   "chapter": 35,
   "title": "Taking, Asking, Helping — and Liking",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:23178830e6f6dc4d",
+  "sourceHash": "fnv1a64:6d1e198f9be4d685",
   "lessons": [
     {
       "id": "HI-C35-lena",
-      "sequence": 650,
+      "sequence": 900,
       "title": "लेना (lenā) — \"to take,\" a verb that lost a consonant",
       "headword": "लेना",
       "romanization": "lenā",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9d066242cb4bddce",
+      "sourceHash": "fnv1a64:744260e37c808ee2",
       "notice": null,
       "blocks": [
         {
@@ -138,7 +138,7 @@
     },
     {
       "id": "HI-C35-puchna",
-      "sequence": 660,
+      "sequence": 910,
       "title": "पूछना (pūchnā) — \"to ask,\" and the reason English says \"pray\"",
       "headword": "पूछना",
       "romanization": "",
@@ -149,7 +149,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:8279a3a4b8c92b74",
+      "sourceHash": "fnv1a64:41174f32d288a6fe",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -300,7 +300,7 @@
     },
     {
       "id": "HI-C35-madad",
-      "sequence": 670,
+      "sequence": 920,
       "title": "मदद करना (madad karnā) — \"to help,\" and the machine that builds it",
       "headword": "मदद करना",
       "romanization": "",
@@ -311,7 +311,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:235e467083ddf21d",
+      "sourceHash": "fnv1a64:f77b783868f665c9",
       "notice": null,
       "blocks": [
         {
@@ -442,7 +442,7 @@
     },
     {
       "id": "HI-C35-pasand",
-      "sequence": 680,
+      "sequence": 930,
       "title": "पसंद (pasand) — Hindi does not like things; things please Hindi",
       "headword": "पसंद",
       "romanization": "",
@@ -453,7 +453,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4625fc75bef6bc43",
+      "sourceHash": "fnv1a64:563ca26024494765",
       "notice": null,
       "blocks": [
         {

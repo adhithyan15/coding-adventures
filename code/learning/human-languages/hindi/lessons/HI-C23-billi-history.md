@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-C23-billi-history
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 480
+sequence: 730
 chapter: 23
 type: etymology
 headword: बिल्ली

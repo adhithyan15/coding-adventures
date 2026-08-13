@@ -352,14 +352,14 @@ describe("deflate error paths via crafted ZIP", () => {
     // out of bits inside the dynamic header rather than from refusing the type.
     const zip = makeDeflateZip(new Uint8Array([0x05]));
     const reader = new ZipReader(zip);
-    expect(() => reader.read(reader.entries()[0]!)).toThrow(/EOF|Huffman/);
+    expect(() => reader.read(reader.entries()[0]!)).toThrow(/ended before/);
   });
 
   it("BTYPE=11 (reserved) throws reserved error", () => {
     // byte 0x07 = bits: bfinal=1 (bit0), btype=11 (bits1-2 = 1,1) = BTYPE=3
     const zip = makeDeflateZip(new Uint8Array([0x07]));
     const reader = new ZipReader(zip);
-    expect(() => reader.read(reader.entries()[0]!)).toThrow(/reserved BTYPE/);
+    expect(() => reader.read(reader.entries()[0]!)).toThrow(/reserved block type/);
   });
 });
 
@@ -568,7 +568,7 @@ describe("rawInflate malformed-stream guards", () => {
     cl[0] = 2;
     const bits = dynamicHeader(cl);
     for (let i = 0; i < 64; i++) bits.push(1);
-    expect(() => rawInflate(bitsToBytes(bits))).toThrow(/incomplete code-length/);
+    expect(() => rawInflate(bitsToBytes(bits))).toThrow(/code-length tree is incomplete/);
   });
 
   it("rejects an OVER-SUBSCRIBED code-length table", () => {
@@ -597,21 +597,17 @@ describe("rawInflate malformed-stream guards", () => {
       bits.push(1);
       for (let i = 0; i < 7; i++) bits.push((extra >> i) & 1);
     }
-    expect(() => rawInflate(bitsToBytes(bits))).toThrow(/incomplete literal\/length/);
+    expect(() => rawInflate(bitsToBytes(bits))).toThrow(/literal-length tree is incomplete/);
   });
 
-  it("rejects HDIST claiming more distance codes than RFC 1951 defines", () => {
-    // HDIST is five bits, so it can say 32; the spec defines 30.
-    const bits: number[] = [];
-    const push = (value: number, n: number) => {
-      for (let i = 0; i < n; i++) bits.push((value >> i) & 1);
-    };
-    push(1, 1);  // BFINAL
-    push(2, 2);  // BTYPE = 10
-    push(0, 5);  // HLIT  -> 257
-    push(31, 5); // HDIST -> 32, two more than exist
-    push(0, 4);
-    expect(() => rawInflate(bitsToBytes(bits))).toThrow(/distance codes exceeds/);
+  it("accepts all 32 advertised distance slots when reserved slots are unused", () => {
+    // RFC 1951 section 3.2.7 defines HDIST + 1 as 1..32. Symbols 30 and 31
+    // are reserved from actual use, but their code-length slots may be present
+    // with zero lengths. This valid empty block advertises 32 such slots.
+    const stream = Uint8Array.from(
+      Buffer.from("05ff81000000000010f8afb612", "hex"),
+    );
+    expect(rawInflate(stream)).toEqual(new Uint8Array());
   });
 
   it("rejects HLIT claiming more literal/length codes than RFC 1951 defines", () => {
@@ -624,7 +620,7 @@ describe("rawInflate malformed-stream guards", () => {
     push(31, 5); // HLIT -> 288, two more than exist
     push(0, 5);
     push(0, 4);
-    expect(() => rawInflate(bitsToBytes(bits))).toThrow(/literal\/length codes exceeds/);
+    expect(() => rawInflate(bitsToBytes(bits))).toThrow(/literal-length symbol is invalid/);
   });
 });
 
@@ -652,6 +648,9 @@ describe("rawInflate output cap", () => {
     const compressed = rawDeflate(enc.encode("x"));
     expect(() => rawInflate(compressed, -1)).toThrow(/non-negative/);
     expect(() => rawInflate(compressed, Number.NaN)).toThrow(/non-negative/);
+    expect(() => rawInflate(compressed, 1.5)).toThrow(/integer/);
+    expect(() => rawInflate(compressed, Number.MAX_SAFE_INTEGER + 1)).toThrow(/integer/);
+    expect(() => rawInflate(compressed, 256 * 1024 * 1024 + 1)).toThrow(/hard ceiling/);
   });
 
   it("counts the cap in BYTES, so a real bomb is stopped at the stated size", () => {
@@ -774,7 +773,7 @@ describe("the distance-table exception is keyed on code LENGTH, not symbol count
     const bytes = new Uint8Array(Math.ceil(bits.length / 8));
     bits.forEach((b, i) => { if (b) bytes[i >> 3]! |= 1 << (i & 7); });
 
-    expect(() => rawInflate(bytes)).toThrow(/incomplete distance Huffman table/);
+    expect(() => rawInflate(bytes)).toThrow(/distance tree is incomplete/);
   });
 });
 
@@ -788,12 +787,14 @@ describe("ZipReaderOptions.maxOutput is validated where it enters", () => {
     // that survives Math.min against the declared size -- handing the ceiling
     // back to the input. It must not be a quiet way to undo the clamp.
     expect(() => new ZipReader(archive, { maxOutput: Infinity }))
-      .toThrow(/non-negative finite/);
+      .toThrow(/non-negative safe integer/);
   });
 
   it("rejects NaN and negative ceilings", () => {
-    expect(() => new ZipReader(archive, { maxOutput: Number.NaN })).toThrow(/non-negative finite/);
-    expect(() => new ZipReader(archive, { maxOutput: -1 })).toThrow(/non-negative finite/);
+    expect(() => new ZipReader(archive, { maxOutput: Number.NaN }))
+      .toThrow(/non-negative safe integer/);
+    expect(() => new ZipReader(archive, { maxOutput: -1 }))
+      .toThrow(/non-negative safe integer/);
   });
 
   it("accepts zero, which caps everything", () => {
@@ -847,5 +848,48 @@ describe("rawInflateCounted reports where the stream actually ended", () => {
     for (let i = 0; i < data.length; i++) data[i] = (i * 13) & 0xff;
     const foreign = new Uint8Array(deflateRawSync(data));
     expect(rawInflateCounted(foreign).output).toEqual(rawInflate(foreign));
+  });
+});
+
+describe("ZipReader enforces the declared DEFLATE payload boundary", () => {
+  it("rejects suffix bytes hidden inside compressedSize", () => {
+    const original = zipBytes([["cavity.txt", enc.encode("hidden cavity regression ".repeat(20))]], true);
+    const source = Array.from(original);
+    const read16 = (offset: number) => source[offset]! | (source[offset + 1]! << 8);
+    const read32 = (offset: number) => (
+      source[offset]! |
+      (source[offset + 1]! << 8) |
+      (source[offset + 2]! << 16) |
+      (source[offset + 3]! << 24)
+    ) >>> 0;
+    const findSignature = (signature: number, start = 0) => {
+      for (let offset = start; offset <= source.length - 4; offset++) {
+        if (read32(offset) === signature) return offset;
+      }
+      throw new Error("test ZIP signature not found");
+    };
+    const write32 = (target: number[], offset: number, value: number) => {
+      target[offset] = value & 0xff;
+      target[offset + 1] = (value >>> 8) & 0xff;
+      target[offset + 2] = (value >>> 16) & 0xff;
+      target[offset + 3] = (value >>> 24) & 0xff;
+    };
+
+    const compressedSize = read32(18);
+    const dataStart = 30 + read16(26) + read16(28);
+    const suffix = [0xde, 0xad, 0xbe, 0xef];
+    const patched = [
+      ...source.slice(0, dataStart + compressedSize),
+      ...suffix,
+      ...source.slice(dataStart + compressedSize),
+    ];
+    const centralOffset = findSignature(0x02014b50) + suffix.length;
+    const eocdOffset = findSignature(0x06054b50) + suffix.length;
+    write32(patched, 18, compressedSize + suffix.length);
+    write32(patched, centralOffset + 20, compressedSize + suffix.length);
+    write32(patched, eocdOffset + 16, centralOffset);
+
+    const reader = new ZipReader(new Uint8Array(patched));
+    expect(() => reader.read(reader.entries()[0]!)).toThrow(/declared compressed payload/);
   });
 });

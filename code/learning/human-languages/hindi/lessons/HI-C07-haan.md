@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-C07-haan
 spine_node: SPINE-RESPOND-BASIC
-sequence: 240
+sequence: 490
 chapter: 7
 type: word
 headword: हाँ

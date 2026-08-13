@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-C34-likhna
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 640
+sequence: 890
 chapter: 34
 type: word
 headword: लिखना

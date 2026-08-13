@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-C34-samajhna
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 620
+sequence: 870
 chapter: 34
 type: word
 headword: समझना

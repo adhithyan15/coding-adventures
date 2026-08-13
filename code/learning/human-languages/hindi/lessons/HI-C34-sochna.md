@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-C34-sochna
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 610
+sequence: 860
 chapter: 34
 type: word
 headword: सोचना

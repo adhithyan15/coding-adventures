@@ -1,5 +1,6 @@
 ---
 id: SA-C03-katham
+sequence: 150
 chapter: 3
 type: word
 headword: कथम्

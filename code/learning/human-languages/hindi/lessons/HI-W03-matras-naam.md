@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-W03-matras-naam
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 140
+sequence: 190
 chapter: 2
 type: writing
 headword: "ा, े"

@@ -1,5 +1,6 @@
 ---
 id: HI-C03-thik
+sequence: 310
 chapter: 3
 type: word
 headword: ठीक

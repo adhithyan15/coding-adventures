@@ -24,7 +24,7 @@
 % of the two tokens `acid` or `base` — never a strength ("strong"/"weak"), a
 % formula, or an interpretation the source does not support.
 %
-% The twelve substances, grouped by class (a little truth table — read down each
+% The sixteen substances, grouped by class (a little truth table — read down each
 % class to see which familiar compounds share it):
 %
 %     substance             class   everyday identity
@@ -34,34 +34,49 @@
 %     hydroiodic_acid       acid    HI
 %     nitric_acid           acid    HNO3 — used in fertilisers and explosives
 %     sulfuric_acid         acid    H2SO4 — the acid in a car battery
+%     chloric_acid          acid    HClO3 (added this cycle)
 %     perchloric_acid       acid    HClO4
 %     lithium_hydroxide     base    LiOH
 %     sodium_hydroxide      base    NaOH — lye / caustic soda, in drain cleaner
 %     potassium_hydroxide   base    KOH — caustic potash
+%     rubidium_hydroxide    base    RbOH (added this cycle)
+%     caesium_hydroxide     base    CsOH (added this cycle)
 %     calcium_hydroxide     base    Ca(OH)2 — slaked lime, in limewater
+%     strontium_hydroxide   base    Sr(OH)2 (added this cycle)
 %     barium_hydroxide      base    Ba(OH)2
 %     magnesium_hydroxide   base    Mg(OH)2 — the base in milk of magnesia
 %
-% A substance that is not one of these twelve — vinegar, baking soda, table salt —
-% has no row, so a recall on it ABSTAINS rather than inventing a class. That
-% honest-abstention property is what makes the table safe to reason from. (The
-% source lists these as the STRONG acids and bases; this table keeps only the
-% coarser fact each entry states outright — that the substance IS an acid, or IS
-% a base — dropping the strength, which a two-token acid/base classification does
-% not carry.)
+% EXTENDED this cycle from 12 to 16 rows: this table's own header always
+% documented that the source's acid column also lists HClO3 and its base
+% column also lists RbOH, CsOH, and Sr(OH)2, explicitly noting they were
+% "omitted only to keep the set balanced at six acids and six bases --
+% nothing about them was uncertain." Since the header ITSELF already
+% confirmed these four are grounded in the same already-cited table, adding
+% them is a pure addition sharing the existing acid/base classification --
+% the same header-revisit extend-pattern shape already proven on
+% `element-groups.adj`. WebFetch re-verified the full table live, TWO
+% separate passes, both confirming all sixteen rows byte-identical.
+%
+% A substance that is not one of these sixteen — vinegar, baking soda, table
+% salt — has no row, so a recall on it ABSTAINS rather than inventing a class.
+% That honest-abstention property is what makes the table safe to reason from.
+% (The source lists these as the STRONG acids and bases; this table keeps only
+% the coarser fact each entry states outright — that the substance IS an acid,
+% or IS a base — dropping the strength, which a two-token acid/base
+% classification does not carry.)
 %
 % ---------------------------------------------------------------------------
 % Provenance (nothing here is asserted from memory — every substance→class pair
 % was read out of a fetched teaching-reference page this session, and any
-% substance that could not be grounded there was dropped). All twelve rows come
+% substance that could not be grounded there was dropped). All sixteen rows come
 % from the SAME source: the LibreTexts Chemistry table "Table 14.7.1: Strong
 % Acids and Bases" (chem.libretexts.org, Introductory Chemistry (LibreTexts),
 % §14.7 "Strong and Weak Acids and Bases"), whose two columns list the acids and
 % the bases by name; each name is copied character-for-character from that table:
 %
 %   ACIDS  (left column of Table 14.7.1)
-%     HCl (hydrochloric acid)     HNO3 (nitric acid)
-%     HBr (hydrobromic acid)      H2SO4 (sulfuric acid)
+%     HCl (hydrochloric acid)     HNO3 (nitric acid)      HClO3 (chloric acid,
+%     HBr (hydrobromic acid)      H2SO4 (sulfuric acid)    added this cycle)
 %     HI  (hydroiodic acid)       HClO4 (perchloric acid)
 %
 %   BASES  (right column of Table 14.7.1 — the page notes "All strong bases are
@@ -69,10 +84,9 @@
 %     LiOH (lithium hydroxide)    Ca(OH)2 (calcium hydroxide)
 %     NaOH (sodium hydroxide)     Ba(OH)2 (barium hydroxide)
 %     KOH  (potassium hydroxide)  Mg(OH)2 (magnesium hydroxide)
-%
-% (The source's acid column also lists HClO3 (chloric acid) and its base column
-% RbOH, CsOH, and Sr(OH)2; those are omitted only to keep the set balanced at six
-% acids and six bases — nothing about them was uncertain.)
+%     RbOH (rubidium hydroxide, added this cycle)
+%     CsOH (caesium hydroxide, added this cycle)
+%     Sr(OH)2 (strontium hydroxide, added this cycle)
 %
 % An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
 % `trust` below hold that single source's table caption plus two representative
@@ -93,11 +107,15 @@ table acid_or_base {
     row (hydroiodic_acid, acid)
     row (nitric_acid, acid)
     row (sulfuric_acid, acid)
+    row (chloric_acid, acid)
     row (perchloric_acid, acid)
     row (lithium_hydroxide, base)
     row (sodium_hydroxide, base)
     row (potassium_hydroxide, base)
+    row (rubidium_hydroxide, base)
+    row (caesium_hydroxide, base)
     row (calcium_hydroxide, base)
+    row (strontium_hydroxide, base)
     row (barium_hydroxide, base)
     row (magnesium_hydroxide, base)
 

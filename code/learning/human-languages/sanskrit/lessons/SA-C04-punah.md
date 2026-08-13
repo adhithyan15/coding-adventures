@@ -1,5 +1,6 @@
 ---
 id: SA-C04-punah
+sequence: 220
 chapter: 4
 type: word
 headword: पुनः

@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-C22-gyarah-bees
 spine_node: SPINE-COUNT-ONE-TO-FIVE
-sequence: 460
+sequence: 710
 chapter: 22
 type: word
 headword: ग्यारह — बीस

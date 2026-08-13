@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-C37-khaana
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 750
+sequence: 1000
 chapter: 37
 type: word
 headword: खाना

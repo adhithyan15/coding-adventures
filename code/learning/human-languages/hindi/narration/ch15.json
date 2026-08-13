@@ -4,11 +4,11 @@
   "chapter": 15,
   "title": "Water and Bread",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:5cbc086480042fbe",
+  "sourceHash": "fnv1a64:e88b68179b59245a",
   "lessons": [
     {
       "id": "HI-C15-paani-roti",
-      "sequence": 370,
+      "sequence": 620,
       "title": "पानी, रोटी (pānī, roṭī) — water (the \"drinkable thing\") and bread",
       "headword": "पानी रोटी",
       "romanization": "pānī roṭī",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fcf4941c9c48d2d2",
+      "sourceHash": "fnv1a64:9f7a3b97ebcbcc04",
       "notice": null,
       "blocks": [
         {

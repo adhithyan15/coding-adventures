@@ -1,5 +1,6 @@
 ---
 id: SA-C01-namaskara
+sequence: 20
 chapter: 1
 type: word
 headword: नमस्कारः

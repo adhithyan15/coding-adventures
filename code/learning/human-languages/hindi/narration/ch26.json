@@ -4,11 +4,11 @@
   "chapter": 26,
   "title": "Night",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:71df9fc06faf5b68",
+  "sourceHash": "fnv1a64:647517f166ff3077",
   "lessons": [
     {
       "id": "HI-C26-raat",
-      "sequence": 520,
+      "sequence": 770,
       "title": "रात (raat) — \"night,\" and an honest false cousin of Latin's nox",
       "headword": "रात",
       "romanization": "",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:84a06d8d7ba7297e",
+      "sourceHash": "fnv1a64:ddafaefead3d8649",
       "notice": null,
       "blocks": [
         {

@@ -3,33 +3,6 @@ Kannada, chapter 2: Introducing Yourself.
 
 
 Lesson 1 of 8.
-ಏನು (ēnu) — "what".
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-The last piece of the question: "what."
-
-The letters in this word.
-(Skim if you read Kannada.) ಏ (independent long ē, word-initial) + ನು (nu) becomes ēnu.
-
-The word, taken apart.
-ಏನು (ēnu, "what") is native Dravidian, on the interrogative stem yā- / e- — the same Dravidian question-root as Tamil eṉṉa, heading Kannada's question family: ēnu (what), yāru (who), elli (where), yāke (why).
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "ēnu"]
-[pause 8 seconds for the answer]
-[your turn — say: the question family — ēnu, yāru, elli]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What Dravidian stem heads ಏನು (ēnu) and Kannada's other question-words? (yā-/e-, the same as Tamil eṉṉa.)
-
-
-Lesson 2 of 8.
 ಹೆಸರು (hesaru) — "name," and the p becomes h shift.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -59,7 +32,7 @@ Wrap-up Recall.
 What sound-law turned pesar into hesaru, and what Tamil word is its cousin? (p becomes h; Tamil peyar.) Is it related to English name? (No — native Dravidian.)
 
 
-Lesson 3 of 8.
+Lesson 2 of 8.
 ನನ್ನ (nanna) — "my".
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -86,7 +59,7 @@ Wrap-up Recall.
 What word is ನನ್ನ (nanna) the possessive of? (nānu, "I".) Which Tamil pronoun shares its root? (nāṉ.)
 
 
-Lesson 4 of 8.
+Lesson 3 of 8.
 ನನ್ನ ಹೆಸರು … (nanna hesaru …) — "my name is…," with no "is".
 
 Warm-up.
@@ -113,7 +86,7 @@ Wrap-up Recall.
 Give your name in Kannada. (Nanna hesaru ….) What does Kannada leave out that English needs? (The verb "is" — zero copula.)
 
 
-Lesson 5 of 8.
+Lesson 4 of 8.
 ನೀನು / ನೀವು (nīnu / nīvu) — "you," familiar and respectful.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -139,6 +112,33 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 How does Kannada make "you" respectful, and which languages use the same trick? (By the plural — nīvu; Tamil nīṅgaḷ, French vous.)
+
+
+Lesson 5 of 8.
+ಏನು (ēnu) — "what".
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+The last piece of the question: "what."
+
+The letters in this word.
+(Skim if you read Kannada.) ಏ (independent long ē, word-initial) + ನು (nu) becomes ēnu.
+
+The word, taken apart.
+ಏನು (ēnu, "what") is native Dravidian, on the interrogative stem yā- / e- — the same Dravidian question-root as Tamil eṉṉa, heading Kannada's question family: ēnu (what), yāru (who), elli (where), yāke (why).
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "ēnu"]
+[pause 8 seconds for the answer]
+[your turn — say: the question family — ēnu, yāru, elli]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What Dravidian stem heads ಏನು (ēnu) and Kannada's other question-words? (yā-/e-, the same as Tamil eṉṉa.)
 
 
 Lesson 6 of 8.
@@ -169,6 +169,31 @@ What does ನಿಮ್ಮ ಹೆಸರು (hesaru) ಏನು (ēnu)? literally s
 
 
 Lesson 7 of 8.
+ಸಂತೋಷ (santōṣa) — "joy," and "pleased to meet you".
+
+Warm-up.
+[pause 2 seconds]
+The warm close — and, true to Kannada, a Sanskrit word where Tamil used a native one.
+
+The phrase.
+The full form is ನಿಮ್ಮನ್ನು ಭೇಟಿಯಾಗಿ ಸಂತೋಷ (nimmannu bhēṭiyāgi santōṣa) — "having met you, joy."
+
+The word, taken apart.
+ಸಂತೋಷ (santōṣa, "joy, contentment") is Sanskrit — sam- ("fully") + toṣa ("satisfaction") — not native. Where Tamil reaches for its home-grown magiḻcci, Kannada uses a Sanskrit word even for "pleased." The same split you saw over "hello" (namaskāra) and "thanks" (dhanyavāda) runs right through the introductions: Kannada borrows, Tamil keeps its own.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "santōṣa"]
+[pause 8 seconds for the answer]
+[your turn — say: the split — Kannada santōṣa (Sanskrit) vs. Tamil magiḻcci (native)]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Is ಸಂತೋಷ (santōṣa) native or borrowed, and what does the contrast with Tamil show? (Sanskrit; Kannada borrows Sanskrit — here for "pleased" — where Tamil keeps native magiḻcci.)
+
+
+Lesson 8 of 8.
 Chapter 2 — the introduction, whole.
 
 Warm-up.
@@ -201,28 +226,3 @@ Wrap-up Recall.
 [pause 3 seconds]
 Give your name, ask someone else's, say you're pleased. (Nanna hesaru …. / Nimma hesaru ēnu? / Santōṣa.) Which word here is Sanskrit, not native? (santōṣa — "pleased.")
 Next chapter: hēgiddīra? ("how are you?") and answering with chennāgiddēne — the responding cycle.
-
-
-Lesson 8 of 8.
-ಸಂತೋಷ (santōṣa) — "joy," and "pleased to meet you".
-
-Warm-up.
-[pause 2 seconds]
-The warm close — and, true to Kannada, a Sanskrit word where Tamil used a native one.
-
-The phrase.
-The full form is ನಿಮ್ಮನ್ನು ಭೇಟಿಯಾಗಿ ಸಂತೋಷ (nimmannu bhēṭiyāgi santōṣa) — "having met you, joy."
-
-The word, taken apart.
-ಸಂತೋಷ (santōṣa, "joy, contentment") is Sanskrit — sam- ("fully") + toṣa ("satisfaction") — not native. Where Tamil reaches for its home-grown magiḻcci, Kannada uses a Sanskrit word even for "pleased." The same split you saw over "hello" (namaskāra) and "thanks" (dhanyavāda) runs right through the introductions: Kannada borrows, Tamil keeps its own.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "santōṣa"]
-[pause 8 seconds for the answer]
-[your turn — say: the split — Kannada santōṣa (Sanskrit) vs. Tamil magiḻcci (native)]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Is ಸಂತೋಷ (santōṣa) native or borrowed, and what does the contrast with Tamil show? (Sanskrit; Kannada borrows Sanskrit — here for "pleased" — where Tamil keeps native magiḻcci.)

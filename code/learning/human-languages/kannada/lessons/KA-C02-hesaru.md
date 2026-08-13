@@ -1,5 +1,6 @@
 ---
 id: KA-C02-hesaru
+sequence: 70
 chapter: 2
 type: word
 headword: ಹೆಸರು

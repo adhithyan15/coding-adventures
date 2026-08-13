@@ -29,32 +29,31 @@ correctness win — every arch backend uses the same
 pipeline — is delivered as Phase 7 lands, closing the historical
 migration.
 
-## v0.1.0 scope — minimal viable
+## Current scope - executable scalar core
 
-Per the GUIDING CONSTRAINT of the migration spec, "minimal-viable
-backend op coverage (only what the e2e test pins) is acceptable".
-v0.1.0 ships the smallest op set needed to keep the existing
-lang-aot RV32I e2e smoke test passing byte-for-byte:
+The initial migration shipped a minimal emitter. The current increment keeps
+its byte-for-byte compatibility while adding an executable scalar RV32I core:
 
 | CIR op family | Lowering |
 |---------------|----------|
-| `const_*` (12-bit signed immediate) | `addi rd, x0, n` |
-| `ret_*` (value matches the last `const_*` dest) | `addi a0, src_reg, 0` + `jalr x0, x1, 0` |
+| `const_*` (RV32-width literal) | `addi` or `lui` + `addi` |
+| Scalar integer ops | `add`, `sub`, `and`, `or`, `xor`, shifts, `neg`, and `not` |
+| Scalar comparisons | Signed or unsigned RV32I comparison sequences |
+| `ret_*` | `addi a0, src_reg, 0` + `jalr x0, x1, 0` |
 | `ret_void` | `jalr x0, x1, 0` |
 | Empty CIR body | `jalr x0, x1, 0` |
 
-Anything else returns `BackendError::UnsupportedOp(op)` from the
-inherent `compile()`, or `None` from `Backend::compile` (the trait
-method).  AOT treats `None` as a per-function compile failure
-(same error path as any backend); JIT treats it as "stay on the
-interpreter tier".
+The backend accepts up to eight integer parameters through the standard
+`a0` through `a7` starter ABI. Unsupported CIR operations and types return a
+`BackendError` from the inherent `compile()` method, or `None` from the
+`Backend::compile` trait method. AOT treats `None` as a per-function compile
+failure; JIT keeps execution on the interpreter tier.
 
 ## Wire format
 
-Each instruction is a 32-bit RV32I word, flattened to little-
-endian bytes per the RISC-V spec.  Per-function byte streams can
-be concatenated directly — `lang-aot` writes them straight to disk
-as a flat `.bin`.
+Each instruction is a 32-bit RV32I word, flattened to little-endian bytes per
+the RISC-V spec. Per-function byte streams can be concatenated directly;
+`lang-aot` writes them straight to disk as a flat `.bin`.
 
 ## Pinned byte sequences
 
@@ -63,7 +62,7 @@ as a flat `.bin`.
 | Twig `42` | `const_i64 v=42; ret_i64 v` | `[0x93, 0x02, 0xA0, 0x02, 0x13, 0x85, 0x02, 0x00, 0x67, 0x80, 0x00, 0x00]` |
 | `ret_void` only | `ret_void` | `[0x67, 0x80, 0x00, 0x00]` |
 | Empty CIR | (none) | `[0x67, 0x80, 0x00, 0x00]` |
-| BASIC `PRINT 42` | `… call_builtin_print_i64 … ret_void` | (returns `UnsupportedOp` — test treats as expected gap) |
+| BASIC `PRINT 42` | `call_builtin_print_i64; ret_void` | (unsupported until the host runtime ABI increment) |
 
 ## Backend trait surface
 
@@ -71,47 +70,63 @@ as a flat `.bin`.
 |--------------|-----------|
 | `name()` | returns `"riscv32"` |
 | `compile(ir)` | returns `Some(bytes)` for supported CIR ops; `None` otherwise |
-| `compile_function(ctx, ir)` | identical to `compile(ir)` — v0.1.0 doesn't yet use the `FunctionContext` |
-| `run(binary, args)` | **panics** with `"riscv32 backend is emit-only…"` — per the GUIDING CONSTRAINT, JIT execution is best-effort and a future increment can wire this to `riscv-simulator::Simulator::run` |
+| `compile_function(ctx, ir)` | Uses `FunctionContext` parameters to map integer arguments to `a0` through `a7` |
+| `run(binary, args)` | Loads the flat binary into `riscv-simulator`, passes up to eight integer arguments in `a0` through `a7`, and returns the final `a0` value |
 
 ## Error variants
 
 | `BackendError` variant | Trigger |
 |------------------------|---------|
-| `UnsupportedOp(String)` | CIR op outside v0.1.0's coverage |
-| `InvalidOperand(String)` | `ret_*` srcs[0] isn't a `Var`, `const_*` missing a dest, etc. |
-| `UndefinedVariable(String)` | `ret_*` references a name never seen via `const_*` |
-| `ImmediateOutOfRange(i64)` | `const_*` value outside `[-2048, 2047]` (the 12-bit signed `addi` window) |
-| `OutOfRegisters` | Linear allocator exhausted the 7-temp pool (`TEMP_REGISTERS`) |
+| `UnsupportedOp(String)` | CIR operation outside the scalar core |
+| `UnsupportedType(String)` | Type needing a representation beyond one RV32 register |
+| `InvalidOperand(String)` | Malformed CIR operands or destinations |
+| `UndefinedVariable(String)` | A variable has no allocated source register |
+| `ImmediateOutOfRange(i64)` | A compatibility `i64` literal cannot fit in RV32 |
+| `OutOfRegisters` | Linear allocator exhausted its six value registers |
+| `TooManyArguments(usize)` | More than eight starter-ABI parameters or arguments |
+| `ExecutionDidNotHalt` | Simulator step limit was exceeded |
 
-## Tests (11 byte-pinned unit tests)
+## Tests
 
-* Empty CIR emits the canonical 4-byte ret.
-* Backend name is `"riscv32"`.
-* `Backend::run` panics with the documented message.
-* Twig `42` canonical produces the 12-byte sequence above.
-* `const_i64 0` lowers to `addi t0, x0, 0`.
-* `const_bool true` acts as immediate-1.
-* Negative immediates in range work (`-1` → 0xFFF in 12-bit two's complement).
-* Out-of-range immediate (2048) reports `ImmediateOutOfRange`.
-* `ret_void`-only program is just `jalr x0, x1, 0`.
-* Unsupported op (`add_i64`) reports `UnsupportedOp`.
-* Two distinct `const_*` vars use `TEMP_REGISTERS[0..1]` (t0, t1).
-* 8 distinct vars triggers `OutOfRegisters`.
-* `ret_*` on an undefined name reports `UndefinedVariable`.
+Focused tests pin the Twig `42` byte sequence, execute its actual `lang-aot`
+output through the simulator, and cover arithmetic, comparisons, 32-bit
+literals, narrow integer masking, starter-ABI parameters, unsupported wide
+arithmetic, unsupported calls, temporary exhaustion, and bounded simulator
+execution.
 
-## Out of scope (future increments)
+## Executable scalar core
 
-* Arithmetic, comparison, branches, calls, locals — everything
-  `iir-to-riscv` v0.3.3 had can be ported back in if richer RV32I
-  coverage is wanted.
-* `ecall print_i64` lowering — the IIR primitive for printing
-  integers via the RISC-V syscall ABI.
-* Stack-spilling allocator — current backend caps at 7
-  simultaneous vars.
-* i64 register-pair support — RV32I is 32-bit; `i64` values that
-  don't fit in 12-bit immediates trigger `ImmediateOutOfRange`
-  today.
-* Real JIT execution via `riscv-simulator` (per the GUIDING
-  CONSTRAINT, this is best-effort and `Backend::run` panics for
-  now).
+The first post-migration increment expands the minimal emitter into an
+executable scalar RV32I core. It supports 32-bit integer and boolean
+constants, arithmetic, bitwise operations, shifts, comparisons, up to eight
+ABI arguments, and return values. `run_binary` and `Backend::run` execute the
+generated bytes in `riscv-simulator`; the simulator now reports whether the
+program halted and how many instructions it executed.
+
+Word-sized `i64` and `u64` constants preserve the historical Twig `42` byte
+sequence. Wider constants and `add` / `sub` now use low/high register pairs;
+the simulator runner exposes the pair through `a0` and `a1`. Other wide
+operations remain intentionally rejected until their pair-aware sequences are
+implemented.
+
+## Prioritized backlog
+
+1. [x] **Control flow:** label binding and branch backpatching for CIR conditional
+   jumps, followed by boolean source-language conditional end-to-end tests.
+2. [x] **Wide value core:** register-pair lowering for full-width `i64`/`u64`
+   constants, addition, subtraction, returns, and a Nib arithmetic fixture.
+3. [ ] **Wide integer operations:** pair-aware comparisons, bitwise operations,
+   shifts, multiplication, division, and modulo. This is next because Nib
+   materializes numeric values as `i64`.
+4. [ ] **Register allocation:** spill live values to stack slots and emit a proper
+   frame, removing the six-temporary limit.
+5. [ ] **Calls and modules:** lower direct calls, add relocations/linking for flat
+   binaries, and preserve the RISC-V calling convention across calls.
+6. [ ] **Host runtime ABI:** define simulator `ecall` services for exit and integer
+   output, then lower language print primitives through that ABI.
+7. [ ] **Memory and data:** globals, addresses, loads/stores, and a data-image
+   loader for programs needing strings or arrays.
+
+Each item should land as a focused PR with an end-to-end fixture from the
+highest-level language it enables. New constraints discovered while carrying
+an item out belong in this list before the next item is selected.

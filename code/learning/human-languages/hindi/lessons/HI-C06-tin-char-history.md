@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-C06-tin-char-history
 spine_node: SPINE-COUNT-ONE-TO-FIVE
-sequence: 220
+sequence: 470
 chapter: 6
 type: etymology
 headword: तीन, चार

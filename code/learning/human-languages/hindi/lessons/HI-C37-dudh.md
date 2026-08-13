@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-C37-dudh
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 740
+sequence: 990
 chapter: 37
 type: word
 headword: दूध

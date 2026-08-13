@@ -1,5 +1,6 @@
 ---
 id: TE-C05-practice
+sequence: 300
 chapter: 5
 type: practice
 headword: (dialogue)

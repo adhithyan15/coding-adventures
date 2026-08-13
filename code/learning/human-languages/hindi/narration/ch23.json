@@ -4,11 +4,11 @@
   "chapter": 23,
   "title": "Dog and Cat",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:969a9d3c654bd977",
+  "sourceHash": "fnv1a64:bf9bb056e218a1cd",
   "lessons": [
     {
       "id": "HI-C23-kutta-billi",
-      "sequence": 470,
+      "sequence": 720,
       "title": "कुत्ता (kuttā) — a third mystery dog-word",
       "headword": "कुत्ता",
       "romanization": "kuttā",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3a0be63459204cd5",
+      "sourceHash": "fnv1a64:39afc849c1dbfaf1",
       "notice": null,
       "blocks": [
         {
@@ -102,7 +102,7 @@
     },
     {
       "id": "HI-C23-billi-history",
-      "sequence": 480,
+      "sequence": 730,
       "title": "बिल्ली (billī) — a probable fourth cat-word family",
       "headword": "बिल्ली",
       "romanization": "billī",
@@ -113,7 +113,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9763bc9d616f87fa",
+      "sourceHash": "fnv1a64:3787c74399f43ebc",
       "notice": null,
       "blocks": [
         {

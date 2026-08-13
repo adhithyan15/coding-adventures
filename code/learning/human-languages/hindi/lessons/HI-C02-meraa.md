@@ -1,5 +1,6 @@
 ---
 id: HI-C02-meraa
+sequence: 120
 chapter: 2
 type: word
 headword: मेरा
