@@ -1,0 +1,19 @@
+% ============================================================================
+% start-codon.query.adj — a worked recall over the biology start-codon library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "which codons can start
+% translation?": it states no biology fact — it only `import`s the grounded
+% table and asks binding queries. The engine resolves each `?` against the
+% `start_codon` rows and returns the role + the table's source/locator/trust.
+% A codon the source's `Starts` line does not mark abstains honestly — the
+% engine never invents a start site.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli start-codon.query.adj
+% ============================================================================
+
+import "start-codon.adj"
+
+? start_codon(atg, $Role)   % expect start — the primary/most common start codon
+? start_codon(ctg, $Role)   % expect start — one of the two alternative start codons
+? start_codon(gcc, $Role)   % expect abstain — not flagged by the source's Starts line
