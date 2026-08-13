@@ -1,6 +1,6 @@
 //! Grammar-driven lexers for Mermaid diagram families.
 
-pub const VERSION: &str = "0.42.0";
+pub const VERSION: &str = "0.43.0";
 
 use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
@@ -244,7 +244,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.42.0");
+        assert_eq!(VERSION, "0.43.0");
     }
 
     #[test]
@@ -369,6 +369,16 @@ mod tests {
             .collect();
 
         assert_eq!(breaks, ["<br>", "<br/>", "<br />", "<br\t/>"]);
+    }
+
+    #[test]
+    fn tokenizes_internal_percent_state_identifiers_without_splitting() {
+        let tokens =
+            tokenize_mermaid_state("stateDiagram-v2\nMoving --> Still%Active\n% standalone\n");
+        let values: Vec<_> = tokens.iter().map(|token| token.value.as_str()).collect();
+
+        assert!(values.contains(&"Still%Active"));
+        assert!(values.contains(&"%"));
     }
 
     #[test]

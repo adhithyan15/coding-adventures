@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.77.0";
+pub const VERSION: &str = "0.78.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -1460,6 +1460,9 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
                 )
             {
                 cursor.skip_terminators();
+                continue;
+            }
+            if !from_is_edge_state && matches!(token_name(cursor.current()), "ID" | "WORD") {
                 continue;
             }
             cursor
@@ -4981,6 +4984,32 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     }
 
     #[test]
+    fn state_treats_single_percent_and_adjacent_words_as_bare_states() {
+        let diagram = parse_state_diagram(
+            "stateDiagram-v2\n% not a comment\nMoving --> Still %inline\nStill%Active\n",
+        )
+        .expect("single-percent state syntax should parse");
+        let ids: Vec<_> = diagram.nodes.iter().map(|node| node.id.as_str()).collect();
+
+        assert_eq!(
+            ids,
+            [
+                "%",
+                "not",
+                "a",
+                "comment",
+                "Moving",
+                "Still",
+                "%inline",
+                "Still%Active"
+            ]
+        );
+        assert_eq!(diagram.edges.len(), 1);
+        assert_eq!(diagram.edges[0].from, "Moving");
+        assert_eq!(diagram.edges[0].to, "Still");
+    }
+
+    #[test]
     fn state_applies_inline_style_to_multiple_targets() {
         let diagram = parse_state_diagram(
             "stateDiagram-v2\nstate Active {\nA --> B\n}\nstyle A,B,Active fill:#dcfce7,stroke:#166534\n",
@@ -5842,7 +5871,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.77.0");
+        assert_eq!(crate::VERSION, "0.78.0");
     }
 
     #[test]
