@@ -7,18 +7,18 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:c5f0a1da8758e29a",
+  "sourceHash": "fnv1a64:975414adf300218e",
   "summary": {
-    "totalLessons": 1963,
-    "voice": 1333,
+    "totalLessons": 1966,
+    "voice": 1336,
     "sight": 561,
     "pen": 69,
-    "drivableLessons": 1333,
+    "drivableLessons": 1336,
     "drivablePercent": 68,
     "trackCount": 22,
-    "chapterCount": 717,
-    "drivablePrefixTotal": 1133,
-    "fullyDrivableChapters": 486,
+    "chapterCount": 720,
+    "drivablePrefixTotal": 1136,
+    "fullyDrivableChapters": 489,
     "unstartableChapters": 173,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
@@ -7062,12 +7062,12 @@
     },
     {
       "language": "spanish",
-      "lessonCount": 363,
-      "voice": 321,
+      "lessonCount": 366,
+      "voice": 324,
       "sight": 35,
       "pen": 7,
-      "drivablePercent": 88,
-      "drivablePrefixTotal": 308,
+      "drivablePercent": 89,
+      "drivablePrefixTotal": 311,
       "modalities": [
         "voice",
         "sight",
@@ -10618,6 +10618,54 @@
           "drivable": true,
           "drivableLessonIds": [
             "ES-C57-sintesis-reportar"
+          ]
+        },
+        {
+          "chapter": 218,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C58-pero"
+          ]
+        },
+        {
+          "chapter": 219,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C58-tambien"
+          ]
+        },
+        {
+          "chapter": 220,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C58-tampoco"
           ]
         }
       ]
@@ -43775,6 +43823,60 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:3a874d09bbaaee0a"
+    },
+    {
+      "id": "ES-C58-pero",
+      "language": "spanish",
+      "chapter": 218,
+      "sequence": 2325,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:95d92ad375ca4533"
+    },
+    {
+      "id": "ES-C58-tambien",
+      "language": "spanish",
+      "chapter": 219,
+      "sequence": 2330,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:0321215bd1bc7850"
+    },
+    {
+      "id": "ES-C58-tampoco",
+      "language": "spanish",
+      "chapter": 220,
+      "sequence": 2335,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:b449e45ff9771482"
     },
     {
       "id": "TA-C01-vanakkam",

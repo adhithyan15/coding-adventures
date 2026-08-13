@@ -4282,6 +4282,57 @@
           "ES-GRAMMAR-REPORTED-BACKSHIFT"
         ]
       }
+    },
+    {
+      "chapter": 218,
+      "title": "Pero --- Two True Things at Once",
+      "label": "ch:pero",
+      "canDo": "I can hold two facts against each other without denying either.",
+      "spineNodes": [
+        "SPINE-ARGUE-A-VIEW"
+      ],
+      "payoff": {
+        "lesson": "ES-C58-pero",
+        "kind": "task",
+        "summary": "I can hold two facts against each other without denying either.",
+        "assesses": [
+          "ES-LEX-PERO"
+        ]
+      }
+    },
+    {
+      "chapter": 219,
+      "title": "También --- Your First Word, Hidden Inside",
+      "label": "ch:tambien",
+      "canDo": "I can agree with what somebody just said, in two words.",
+      "spineNodes": [
+        "SPINE-ARGUE-A-VIEW"
+      ],
+      "payoff": {
+        "lesson": "ES-C58-tambien",
+        "kind": "task",
+        "summary": "I can agree with what somebody just said, in two words.",
+        "assesses": [
+          "ES-LEX-TAMBIEN"
+        ]
+      }
+    },
+    {
+      "chapter": 220,
+      "title": "Tampoco --- The Same Frame, the Other Half",
+      "label": "ch:tampoco",
+      "canDo": "I can agree with a no as easily as with a yes.",
+      "spineNodes": [
+        "SPINE-ARGUE-A-VIEW"
+      ],
+      "payoff": {
+        "lesson": "ES-C58-tampoco",
+        "kind": "task",
+        "summary": "I can agree with a no as easily as with a yes.",
+        "assesses": [
+          "ES-LEX-TAMPOCO"
+        ]
+      }
     }
   ]
 }

@@ -9788,6 +9788,48 @@
       "jsonHash": "fnv1a64:5584f1495e0bcf61"
     },
     {
+      "language": "spanish",
+      "chapter": 218,
+      "sourceHash": "fnv1a64:c5ddb83f592f20ce",
+      "lessonIds": [
+        "ES-C58-pero"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch218.txt",
+      "json": "spanish/narration/ch218.json",
+      "textHash": "fnv1a64:028cb244af2fce67",
+      "jsonHash": "fnv1a64:cec8859cd03d0f6c"
+    },
+    {
+      "language": "spanish",
+      "chapter": 219,
+      "sourceHash": "fnv1a64:99f1d1991b3e327c",
+      "lessonIds": [
+        "ES-C58-tambien"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch219.txt",
+      "json": "spanish/narration/ch219.json",
+      "textHash": "fnv1a64:d3ec5d539620aee7",
+      "jsonHash": "fnv1a64:27c793ea7bf99068"
+    },
+    {
+      "language": "spanish",
+      "chapter": 220,
+      "sourceHash": "fnv1a64:04c87d7850de7de1",
+      "lessonIds": [
+        "ES-C58-tampoco"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch220.txt",
+      "json": "spanish/narration/ch220.json",
+      "textHash": "fnv1a64:d47c47f761ae6e7f",
+      "jsonHash": "fnv1a64:b0a6c031fa741ab2"
+    },
+    {
       "language": "tamil",
       "chapter": 1,
       "sourceHash": "fnv1a64:3c0d5e6c060b7723",

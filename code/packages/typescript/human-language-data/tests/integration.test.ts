@@ -104,7 +104,7 @@ describe("real curriculum", () => {
     // 40 (esperar, contestar, comprar). Two sessions authored a chapter 38 in parallel;
     // the collision surfaced as a merge conflict on chapters.json rather than silently,
     // because both sides must edit it.
-    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(217); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis // +3: HL-C88 slice 8 // +1: HL-C88 slice 9 (falsos amigos) // +3: HL-C113 (B1 si-condition rung) // +3: HL-C113 preterite plural // HL-C113: HL-C113 imperfect subjunctive
+    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(220); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis // +3: HL-C88 slice 8 // +1: HL-C88 slice 9 (falsos amigos) // +3: HL-C113 (B1 si-condition rung) // +3: HL-C113 preterite plural // HL-C113: HL-C113 imperfect subjunctive
     expect(
       books.books
         .find((book) => book.language === "persian")
@@ -877,6 +877,15 @@ describe("real curriculum", () => {
       "ES-C57-sintesis-reportar-one",
       "ES-C57-sintesis-reportar-three",
       "ES-C57-sintesis-reportar-two",
+      "ES-C58-pero-keeps",
+      "ES-C58-pero-origin",
+      "ES-C58-pero-say",
+      "ES-C58-tambien-agree",
+      "ES-C58-tambien-parts",
+      "ES-C58-tambien-tan",
+      "ES-C58-tampoco-agree",
+      "ES-C58-tampoco-choose",
+      "ES-C58-tampoco-parts",
       "ES-W03-question-span-roberto-outside",
       "FA-C02-esm-e-man-sara",
       "FA-C03-chist-fusion",
