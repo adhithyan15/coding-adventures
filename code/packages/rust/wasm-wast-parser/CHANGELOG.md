@@ -94,4 +94,18 @@ and the official spec testsuite's `.wast` script dialect — into
   this text-parser's, so this module now correctly parses to a
   (structurally invalid) `WasmModule` instead of panicking or duplicating
   validation this crate doesn't own.
-- 79 unit tests across all five modules, ~95%+ line coverage.
+- **Hardening pass, round 4**: `sexpr::MAX_NESTING_DEPTH` only bounds
+  `(...)` parenthesis nesting — but WAT's **flat** instruction syntax lets
+  `block`/`loop`/`if` nest with NO parentheses at all (`block block
+  block ... end end end`, all sibling atoms in one unnested list), driving
+  unbounded `encode_one` <-> `encode_stream_structured_instr` recursion
+  the S-expression-level guard never sees. Empirically confirmed as a real
+  stack-overflow abort (not a catchable panic) before this fix. Added a
+  second, independent `InstrCtx::depth` counter (`enter_block`/
+  `exit_block`, covering both the flat and folded structured-instruction
+  encoders uniformly) capped by a NEW, deliberately lower
+  `MAX_INSTR_NESTING_DEPTH` (100, not 512) — this recursion carries more
+  per-frame state than the lightweight S-expression tree-builder, so 512
+  levels of it measurably overflows a real thread's stack around depth
+  ~487, well before the counter would ever stop it.
+- 80 unit tests across all five modules, ~95%+ line coverage.

@@ -591,7 +591,7 @@ fn build_func(fields: &[SExpr], ctx: &mut ModuleCtx, func_idx: usize) -> Result<
         }
     }
 
-    let mut icx = InstrCtx { module: ctx, locals: local_names, labels: Vec::new() };
+    let mut icx = InstrCtx { module: ctx, locals: local_names, labels: Vec::new(), depth: 0 };
     let mut code = Vec::new();
     encode_instr_list(&fields[instr_start..], &mut icx, &mut code)?;
     code.push(0x0B);
@@ -672,6 +672,20 @@ fn build_data(fields: &[SExpr], ctx: &mut ModuleCtx) -> Result<(), WastParseErro
 // Instruction encoding — folded or flat, identical code path.
 // ─────────────────────────────────────────────────────────────────────────
 
+/// Nesting depth ceiling for `block`/`loop`/`if` BODIES specifically —
+/// deliberately much lower than [`crate::sexpr::MAX_NESTING_DEPTH`] (512).
+/// That guard bounds `(...)` nesting in the lightweight S-expression
+/// tree-builder; `encode_one`/`encode_stream_structured_instr` recurse
+/// through a heavier call chain (each level carries several locals,
+/// including an owned `Vec<u8>`/`Option<String>`), so 512 levels of THIS
+/// recursion measurably overflows a real thread's stack well before the
+/// counter would ever stop it (empirically, around depth ~487 on a
+/// standard `cargo test` worker thread). Still far above any real hand-
+/// written or official-testsuite `.wat` file's actual control-flow
+/// nesting (a few dozen levels at most, even for a deliberately deep
+/// `if`/`block` tower).
+const MAX_INSTR_NESTING_DEPTH: usize = 100;
+
 struct InstrCtx<'a> {
     module: &'a mut ModuleCtx,
     locals: HashMap<String, u32>,
@@ -680,11 +694,36 @@ struct InstrCtx<'a> {
     /// resolve either a plain depth number or a `$name` by scanning from
     /// the innermost label outward.
     labels: Vec<Option<String>>,
+    /// Nesting depth of `block`/`loop`/`if` bodies currently being encoded.
+    /// See [`InstrCtx::enter_block`].
+    depth: usize,
 }
 
 impl<'a> InstrCtx<'a> {
     fn empty(module: &'a mut ModuleCtx) -> Self {
-        InstrCtx { module, locals: HashMap::new(), labels: Vec::new() }
+        InstrCtx { module, locals: HashMap::new(), labels: Vec::new(), depth: 0 }
+    }
+
+    /// Guard against unbounded Rust call-stack recursion through nested
+    /// `block`/`loop`/`if` bodies. `sexpr::MAX_NESTING_DEPTH` only bounds
+    /// S-expression `(...)` nesting, but WAT's **flat** instruction syntax
+    /// lets these three nest with no parentheses at all (`block block
+    /// block ... end end end`, all sibling atoms in one unnested list) --
+    /// each one drives one more level of `encode_one` <-> `encode_*_instr`
+    /// recursion that the S-expression-level guard never sees. This is a
+    /// second, independent depth counter for exactly that case (folded
+    /// structured instructions go through here too, uniformly, even though
+    /// they're additionally caught by the S-expression guard).
+    fn enter_block(&mut self, pos: usize) -> Result<(), WastParseError> {
+        if self.depth >= MAX_INSTR_NESTING_DEPTH {
+            return Err(WastParseError::TooDeeplyNested { pos });
+        }
+        self.depth += 1;
+        Ok(())
+    }
+
+    fn exit_block(&mut self) {
+        self.depth -= 1;
     }
 
     fn resolve_label(&self, expr: &SExpr) -> Result<u32, WastParseError> {
@@ -929,6 +968,7 @@ fn encode_stream_structured_instr(
         vec![0x40]
     };
 
+    icx.enter_block(pos)?;
     out.push(opcode);
     out.extend(&blocktype_byte);
     icx.labels.push(label_name);
@@ -980,6 +1020,7 @@ fn encode_stream_structured_instr(
     }
 
     icx.labels.pop();
+    icx.exit_block();
     out.push(0x0B);
     let _ = pos;
     Ok(i)
@@ -1234,6 +1275,7 @@ fn encode_structured_instr(
         let then_start = args[i..].iter().position(|a| a.is_keyword_list("then")).map(|p| p + i);
         let cond_end = then_start.unwrap_or(args.len());
         encode_instr_list(&args[i..cond_end], icx, out)?;
+        icx.enter_block(pos)?;
         out.push(opcode);
         out.extend(&blocktype_byte);
         icx.labels.push(label_name);
@@ -1265,11 +1307,13 @@ fn encode_structured_instr(
             }
         }
         icx.labels.pop();
+        icx.exit_block();
         out.push(0x0B);
         return Ok(());
     }
 
     // block / loop.
+    icx.enter_block(pos)?;
     out.push(opcode);
     out.extend(&blocktype_byte);
     icx.labels.push(label_name);
@@ -1277,6 +1321,7 @@ fn encode_structured_instr(
     let end_pos = body.iter().position(|a| matches!(a, SExpr::Atom(s, _) if s == "end")).unwrap_or(body.len());
     encode_instr_list(&body[..end_pos], icx, out)?;
     icx.labels.pop();
+    icx.exit_block();
     out.push(0x0B);
     let _ = pos;
     Ok(())
@@ -1541,6 +1586,23 @@ mod tests {
         // `WasmModule`, which is the correct division of responsibility.
         let result = parse_module("(module (func (type 0)))");
         assert!(result.is_ok());
+    }
+
+    // ── Round 4 security-review regression ──────────────────────────────
+
+    #[test]
+    fn deeply_nested_flat_blocks_error_cleanly_not_stack_overflow() {
+        // WAT's FLAT instruction syntax lets `block`/`loop`/`if` nest with
+        // no parentheses at all (`block block block ... end end end`, all
+        // sibling atoms in one unnested list) -- each one drives one more
+        // level of `encode_one` <-> `encode_stream_structured_instr`
+        // recursion that `sexpr::MAX_NESTING_DEPTH` (which only bounds
+        // `(...)` nesting) never sees. `InstrCtx::enter_block`/`exit_block`
+        // is a second, independent depth counter for exactly this case.
+        let body = "block ".repeat(MAX_INSTR_NESTING_DEPTH + 1);
+        let src = format!("(module (func {body}))");
+        let err = parse_module(&src).unwrap_err();
+        assert!(matches!(err, WastParseError::TooDeeplyNested { .. }));
     }
 
     /// Folded `call` with arguments -- catches the exact bug found during
