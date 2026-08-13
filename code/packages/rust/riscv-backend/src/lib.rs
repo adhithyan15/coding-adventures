@@ -30,6 +30,11 @@ const SECOND_SCRATCH_REGISTER: u32 = 27;
 const DIVISION_TEMP_REGISTER: u32 = 18;
 const DIVISION_BORROW_REGISTER: u32 = 19;
 const DIVISION_COUNTER_REGISTER: u32 = 20;
+const DIVISION_DIVISOR_LOW_REGISTER: u32 = 21;
+const DIVISION_DIVISOR_HIGH_REGISTER: u32 = 22;
+const DIVISION_LHS_SIGN_REGISTER: u32 = 23;
+const DIVISION_QUOTIENT_SIGN_REGISTER: u32 = 24;
+const DIVISION_DIVISOR_NONZERO_REGISTER: u32 = 25;
 const VALUE_REGISTERS: [u32; 6] = [5, 6, 7, 28, 29, 30];
 
 /// The RV32I backend.  Stateless — every compilation gets fresh allocation.
@@ -338,6 +343,7 @@ impl Lowerer {
                         "div" | "mod" if !is_signed(ty) => {
                             self.lower_wide_unsigned_divmod(instr, op, family)
                         }
+                        "div" | "mod" => self.lower_wide_signed_divmod(instr, op, family),
                         "and" | "or" | "xor" => {
                             self.lower_wide_bitwise(instr, op, family, is_signed(ty))
                         }
@@ -755,13 +761,138 @@ impl Lowerer {
         };
         let lhs = self.var_location(instr, 0, op)?;
         let rhs = self.var_location(instr, 1, op)?;
+
+        self.words.push(encode_addi(lo, lhs.low(), 0));
+        self.copy_or_extend_high(hi, lhs, false);
+        self.lower_wide_unsigned_divmod_values(ValueLocation::Pair { lo, hi }, rhs, family);
+        Ok(())
+    }
+
+    fn lower_wide_signed_divmod(
+        &mut self,
+        instr: &CIRInstr,
+        op: &str,
+        family: &str,
+    ) -> Result<(), BackendError> {
+        let ValueLocation::Pair { lo, hi } = self.dest_pair(instr, op)? else {
+            unreachable!("dest_pair always returns a pair")
+        };
+        let lhs = self.var_location(instr, 0, op)?;
+        let rhs = self.var_location(instr, 1, op)?;
+
+        self.words.push(encode_addi(lo, lhs.low(), 0));
+        self.copy_or_extend_high(hi, lhs, true);
+        self.copy_or_extend_high(DIVISION_LHS_SIGN_REGISTER, lhs, true);
+        self.words.push(encode_srai(
+            DIVISION_LHS_SIGN_REGISTER,
+            DIVISION_LHS_SIGN_REGISTER,
+            31,
+        ));
+
+        self.words
+            .push(encode_addi(DIVISION_DIVISOR_LOW_REGISTER, rhs.low(), 0));
+        self.copy_or_extend_high(DIVISION_DIVISOR_HIGH_REGISTER, rhs, true);
+        self.words.push(encode_srai(
+            DIVISION_QUOTIENT_SIGN_REGISTER,
+            DIVISION_DIVISOR_HIGH_REGISTER,
+            31,
+        ));
+        self.words.push(encode_xor(
+            DIVISION_QUOTIENT_SIGN_REGISTER,
+            DIVISION_QUOTIENT_SIGN_REGISTER,
+            DIVISION_LHS_SIGN_REGISTER,
+        ));
+        self.words.push(encode_or(
+            DIVISION_TEMP_REGISTER,
+            DIVISION_DIVISOR_LOW_REGISTER,
+            DIVISION_DIVISOR_HIGH_REGISTER,
+        ));
+        self.words.push(encode_sltu(
+            DIVISION_DIVISOR_NONZERO_REGISTER,
+            X0_ZERO,
+            DIVISION_TEMP_REGISTER,
+        ));
+
+        let lhs_magnitude = self.internal_label("sdiv_lhs_magnitude");
+        self.record_named_branch(
+            lhs_magnitude.clone(),
+            BranchKind::EqZero {
+                rs1: DIVISION_LHS_SIGN_REGISTER,
+            },
+        );
+        self.negate_pair(lo, hi);
+        self.mark_label(lhs_magnitude);
+
+        let rhs_magnitude = self.internal_label("sdiv_rhs_magnitude");
+        // Preserve the quotient sign above, then reconstruct the divisor sign
+        // from its original high word before normalization.
+        self.words.push(encode_srai(
+            DIVISION_TEMP_REGISTER,
+            DIVISION_DIVISOR_HIGH_REGISTER,
+            31,
+        ));
+        self.record_named_branch(
+            rhs_magnitude.clone(),
+            BranchKind::EqZero {
+                rs1: DIVISION_TEMP_REGISTER,
+            },
+        );
+        self.negate_pair(
+            DIVISION_DIVISOR_LOW_REGISTER,
+            DIVISION_DIVISOR_HIGH_REGISTER,
+        );
+        self.mark_label(rhs_magnitude);
+
+        self.lower_wide_unsigned_divmod_values(
+            ValueLocation::Pair { lo, hi },
+            ValueLocation::Pair {
+                lo: DIVISION_DIVISOR_LOW_REGISTER,
+                hi: DIVISION_DIVISOR_HIGH_REGISTER,
+            },
+            family,
+        );
+
+        let sign_done = self.internal_label("sdiv_sign_done");
+        if family == "div" {
+            self.record_named_branch(
+                sign_done.clone(),
+                BranchKind::EqZero {
+                    rs1: DIVISION_DIVISOR_NONZERO_REGISTER,
+                },
+            );
+            self.record_named_branch(
+                sign_done.clone(),
+                BranchKind::EqZero {
+                    rs1: DIVISION_QUOTIENT_SIGN_REGISTER,
+                },
+            );
+        } else {
+            self.record_named_branch(
+                sign_done.clone(),
+                BranchKind::EqZero {
+                    rs1: DIVISION_LHS_SIGN_REGISTER,
+                },
+            );
+        }
+        self.negate_pair(lo, hi);
+        self.mark_label(sign_done);
+        Ok(())
+    }
+
+    fn lower_wide_unsigned_divmod_values(
+        &mut self,
+        destination: ValueLocation,
+        rhs: ValueLocation,
+        family: &str,
+    ) {
+        let ValueLocation::Pair { lo, hi } = destination else {
+            unreachable!("wide division always has a pair destination")
+        };
         let rhs_hi = match rhs {
             ValueLocation::Pair { hi, .. } => hi,
             ValueLocation::Word(_) => X0_ZERO,
         };
 
-        self.words.push(encode_addi(lo, lhs.low(), 0));
-        self.copy_or_extend_high(hi, lhs, false);
         self.words.push(encode_addi(SCRATCH_REGISTER, X0_ZERO, 0));
         self.words
             .push(encode_addi(SECOND_SCRATCH_REGISTER, X0_ZERO, 0));
@@ -881,7 +1012,15 @@ impl Lowerer {
             self.words
                 .push(encode_addi(hi, SECOND_SCRATCH_REGISTER, 0));
         }
-        Ok(())
+    }
+
+    fn negate_pair(&mut self, lo: u32, hi: u32) {
+        self.words.push(encode_sub(lo, X0_ZERO, lo));
+        self.words
+            .push(encode_sltu(DIVISION_TEMP_REGISTER, X0_ZERO, lo));
+        self.words.push(encode_sub(hi, X0_ZERO, hi));
+        self.words
+            .push(encode_sub(hi, hi, DIVISION_TEMP_REGISTER));
     }
 
     fn lower_wide_bitwise(

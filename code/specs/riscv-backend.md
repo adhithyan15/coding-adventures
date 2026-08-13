@@ -133,7 +133,7 @@ implemented.
    `div` / `divu` / `rem` / `remu`, including defined zero-divisor behavior.
 10. [x] **Wide unsigned division and modulo:** pair-aware restoring division for
    `u64`, including RV32M-compatible zero-divisor results.
-11. [ ] **Wide signed division and modulo:** normalize signs around the unsigned
+11. [x] **Wide signed division and modulo:** normalize signs around the unsigned
    pair loop, including `i64::MIN / -1` behavior.
 12. [ ] **Nib divide/modulo frontend:** Nib has no `/` or `%` grammar lowering
    today; add typed IIR emission and source-to-simulator fixtures once the
