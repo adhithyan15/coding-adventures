@@ -1112,6 +1112,7 @@ fn end_to_end_nib_bitwise_arithmetic_executes_in_the_riscv_simulator() {
     assert_eq!(run.return_value_high, 0);
 }
 
+
 // ===========================================================================
 // A2+++ — source -> IIR -> Intel 8008 machine code (.bin) via lang-aot
 // ===========================================================================

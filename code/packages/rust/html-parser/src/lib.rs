@@ -7054,6 +7054,24 @@ impl HtmlParser {
             ));
             return;
         }
+        if self.current_namespace().is_some()
+            && !self.current_element_is(name)
+            && name == "p"
+            && self.open_html_element_in_button_scope_index("p").is_none()
+            && !self.current_element_is_marked_foreign_fragment_context()
+            && self.has_open_foreign_integration_point()
+        {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-end-tag-in-foreign-content",
+                "end tag `</p>` did not match the current foreign element",
+            ));
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-p-end-tag",
+                "end tag `</p>` created and closed an implied `p` element",
+            ));
+            self.append_node(Node::element("p".to_string(), Vec::new()));
+            return;
+        }
         if self.has_open_svg_html_integration_point()
             && name != "template"
             && name != "p"
@@ -9797,6 +9815,24 @@ impl HtmlParser {
                     )
             })
         })
+    }
+
+    fn has_open_foreign_integration_point(&self) -> bool {
+        self.has_open_svg_html_integration_point()
+            || self.open_elements.iter().any(|path| {
+                element_ref_at_path(&self.document, path).is_some_and(|element| {
+                    element.namespace.as_deref() == Some("math")
+                        && (matches!(
+                            element.name.as_str(),
+                            "mi" | "mo" | "mn" | "ms" | "mtext"
+                        )
+                            || (element.name == "annotation-xml"
+                                && element.attribute("encoding").is_some_and(|value| {
+                                    value.eq_ignore_ascii_case("text/html")
+                                        || value.eq_ignore_ascii_case("application/xhtml+xml")
+                                })))
+                })
+            })
     }
 
     fn replacement_text_is_ignorable_in_current_context(&self, text: &str) -> bool {
@@ -31585,6 +31621,112 @@ mod tests {
                 "end tag `</p>` targeted a seeded fragment context element"
             )]
         );
+    }
+
+    #[test]
+    fn paragraph_end_tags_respect_foreign_integration_button_scope() {
+        for (root_name, boundary_start, boundary_name) in [
+            ("svg", "foreignObject", "foreignObject"),
+            ("svg", "desc", "desc"),
+            ("svg", "title", "title"),
+            ("math", "mi", "mi"),
+            ("math", "mtext", "mtext"),
+            (
+                "math",
+                "annotation-xml encoding=text/html",
+                "annotation-xml",
+            ),
+        ] {
+            let source = format!(
+                "<!doctype html><p id=outer><{root_name}><{boundary_start} id=boundary></p>X</{boundary_name}></{root_name}></p>"
+            );
+            let output = parse_html_with_diagnostics(&source).unwrap();
+            assert_eq!(
+                output.parser_diagnostics,
+                vec![
+                    ParserDiagnostic::new(
+                        "unexpected-end-tag-in-foreign-content",
+                        "end tag `</p>` did not match the current foreign element"
+                    ),
+                    ParserDiagnostic::new(
+                        "unexpected-p-end-tag",
+                        "end tag `</p>` created and closed an implied `p` element"
+                    ),
+                ],
+                "source {source:?}"
+            );
+            let outer = find_element_by_id(&output.document.children, "outer").unwrap();
+            let boundary = find_element_by_id(&outer.children, "boundary").unwrap();
+            assert_eq!(
+                boundary.children,
+                vec![Node::element("p", Vec::new()), Node::text("X")],
+                "source {source:?}"
+            );
+        }
+
+        let foreign_select =
+            parse_html_with_diagnostics("<!doctype html><p id=outer><svg><select id=foreign></p>X")
+                .unwrap();
+        assert!(foreign_select
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "unexpected-p-end-tag"));
+        assert_eq!(
+            body(&foreign_select.document).children.last(),
+            Some(&Node::text("X"))
+        );
+
+        let no_html_paragraph = parse_html_with_diagnostics(
+            "<!doctype html><svg><foreignObject id=boundary></p>X</foreignObject></svg>",
+        )
+        .unwrap();
+        assert_eq!(
+            no_html_paragraph.parser_diagnostics,
+            vec![
+                ParserDiagnostic::new(
+                    "unexpected-end-tag-in-foreign-content",
+                    "end tag `</p>` did not match the current foreign element"
+                ),
+                ParserDiagnostic::new(
+                    "unexpected-p-end-tag",
+                    "end tag `</p>` created and closed an implied `p` element"
+                ),
+            ]
+        );
+        let boundary =
+            find_element_by_id(&no_html_paragraph.document.children, "boundary").unwrap();
+        assert_eq!(
+            boundary.children,
+            vec![Node::element("p", Vec::new()), Node::text("X")]
+        );
+
+        let matching_foreign =
+            parse_html_fragment_for_context_with_diagnostics("</p>X", "svg p").unwrap();
+        assert_eq!(matching_foreign.nodes, vec![Node::text("X")]);
+        assert_eq!(
+            matching_foreign.parser_diagnostics,
+            vec![ParserDiagnostic::new(
+                "unexpected-fragment-context-end-tag",
+                "end tag `</p>` targeted a seeded fragment context element"
+            )]
+        );
+
+        let fragment =
+            parse_html_fragment_for_context_with_diagnostics("</p>X", "svg svg").unwrap();
+        assert_eq!(
+            fragment.nodes,
+            vec![Node::element("p", Vec::new()), Node::text("X")]
+        );
+        assert!(fragment
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "unexpected-p-end-tag"));
+
+        let plain_foreign = parse_html_with_diagnostics("<!doctype html><svg></p><foo>").unwrap();
+        let body = body(&plain_foreign.document);
+        assert_eq!(element(&body.children[0]).name, "svg");
+        assert_eq!(element(&body.children[1]).name, "p");
+        assert_eq!(element(&body.children[2]).name, "foo");
     }
 
     #[test]

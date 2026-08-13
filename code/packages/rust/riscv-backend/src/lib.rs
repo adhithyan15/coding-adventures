@@ -326,6 +326,8 @@ impl Lowerer {
                         "and" | "or" | "xor" => {
                             self.lower_wide_bitwise(instr, op, family, is_signed(ty))
                         }
+                        "shl" => self.lower_wide_shift(instr, op, true, false),
+                        "shr" => self.lower_wide_shift(instr, op, false, is_signed(ty)),
                         _ => Err(BackendError::UnsupportedType(ty.to_owned())),
                     };
                 }
@@ -686,6 +688,124 @@ impl Lowerer {
         self.words.push(encode_xori(lo, src.low(), -1));
         self.copy_or_extend_high(SCRATCH_REGISTER, src, signed);
         self.words.push(encode_xori(hi, SCRATCH_REGISTER, -1));
+        Ok(())
+    }
+
+    fn lower_wide_shift(
+        &mut self,
+        instr: &CIRInstr,
+        op: &str,
+        left: bool,
+        arithmetic_right: bool,
+    ) -> Result<(), BackendError> {
+        let ValueLocation::Pair { lo, hi } = self.dest_pair(instr, op)? else {
+            unreachable!("dest_pair always returns a pair")
+        };
+        let value = self.var_location(instr, 0, op)?;
+        let count = match self.var_location(instr, 1, op)? {
+            ValueLocation::Word(register) => register,
+            ValueLocation::Pair { .. } => {
+                return Err(BackendError::InvalidOperand(format!(
+                    "{op} requires a shift count that fits in one RV32 register"
+                )))
+            }
+        };
+        let signed_value = arithmetic_right;
+        self.copy_or_extend_high(SECOND_SCRATCH_REGISTER, value, signed_value);
+
+        let in_range_label = self.internal_label("shift_in_range");
+        let under_word_label = self.internal_label("shift_under_word");
+        let zero_label = self.internal_label("shift_zero");
+        let end_label = self.internal_label("shift_end");
+
+        self.words
+            .push(riscv_encoder::encode_sltiu(SCRATCH_REGISTER, count, 64));
+        self.record_named_branch(
+            in_range_label.clone(),
+            BranchKind::NeZero {
+                rs1: SCRATCH_REGISTER,
+            },
+        );
+        if arithmetic_right {
+            self.words
+                .push(encode_srai(lo, SECOND_SCRATCH_REGISTER, 31));
+            self.words
+                .push(encode_srai(hi, SECOND_SCRATCH_REGISTER, 31));
+        } else {
+            self.words.push(encode_addi(lo, X0_ZERO, 0));
+            self.words.push(encode_addi(hi, X0_ZERO, 0));
+        }
+        self.record_named_branch(end_label.clone(), BranchKind::Jump);
+
+        self.mark_label(in_range_label);
+        self.words
+            .push(riscv_encoder::encode_sltiu(SCRATCH_REGISTER, count, 32));
+        self.record_named_branch(
+            under_word_label.clone(),
+            BranchKind::NeZero {
+                rs1: SCRATCH_REGISTER,
+            },
+        );
+        self.words.push(encode_addi(SCRATCH_REGISTER, count, -32));
+        if left {
+            self.words
+                .push(encode_sll(hi, value.low(), SCRATCH_REGISTER));
+            self.words.push(encode_addi(lo, X0_ZERO, 0));
+        } else {
+            let shift = if arithmetic_right {
+                encode_sra
+            } else {
+                encode_srl
+            };
+            self.words
+                .push(shift(lo, SECOND_SCRATCH_REGISTER, SCRATCH_REGISTER));
+            if arithmetic_right {
+                self.words
+                    .push(encode_srai(hi, SECOND_SCRATCH_REGISTER, 31));
+            } else {
+                self.words.push(encode_addi(hi, X0_ZERO, 0));
+            }
+        }
+        self.record_named_branch(end_label.clone(), BranchKind::Jump);
+
+        self.mark_label(under_word_label);
+        self.record_named_branch(zero_label.clone(), BranchKind::EqZero { rs1: count });
+        if left {
+            self.words.push(encode_sll(lo, value.low(), count));
+            self.words
+                .push(encode_sll(hi, SECOND_SCRATCH_REGISTER, count));
+            self.words
+                .push(encode_sub(SCRATCH_REGISTER, X0_ZERO, count));
+            self.words
+                .push(encode_addi(SCRATCH_REGISTER, SCRATCH_REGISTER, 32));
+            self.words
+                .push(encode_srl(SCRATCH_REGISTER, value.low(), SCRATCH_REGISTER));
+            self.words.push(encode_or(hi, hi, SCRATCH_REGISTER));
+        } else {
+            let shift = if arithmetic_right {
+                encode_sra
+            } else {
+                encode_srl
+            };
+            self.words.push(shift(lo, value.low(), count));
+            self.words
+                .push(encode_sub(SCRATCH_REGISTER, X0_ZERO, count));
+            self.words
+                .push(encode_addi(SCRATCH_REGISTER, SCRATCH_REGISTER, 32));
+            self.words.push(encode_sll(
+                SCRATCH_REGISTER,
+                SECOND_SCRATCH_REGISTER,
+                SCRATCH_REGISTER,
+            ));
+            self.words.push(encode_or(lo, lo, SCRATCH_REGISTER));
+            self.words.push(shift(hi, SECOND_SCRATCH_REGISTER, count));
+        }
+        self.record_named_branch(end_label.clone(), BranchKind::Jump);
+
+        self.mark_label(zero_label);
+        self.words.push(encode_addi(lo, value.low(), 0));
+        self.words.push(encode_addi(hi, SECOND_SCRATCH_REGISTER, 0));
+        self.mark_label(end_label);
         Ok(())
     }
 

@@ -22,8 +22,9 @@ mod apple {
     use dot_parser::parse_to_diagram;
     use layout_ir::font_spec;
     use mermaid_parser::{
-        parse_c4_diagram, parse_er_diagram, parse_gitgraph, parse_pie, parse_quadrant_chart, parse_sankey,
-        parse_sequence_diagram, parse_state_diagram, parse_to_diagram as parse_mermaid_to_diagram,
+        parse_c4_diagram, parse_er_diagram, parse_gitgraph, parse_pie, parse_quadrant_chart,
+        parse_sankey, parse_sequence_diagram, parse_state_diagram,
+        parse_to_diagram as parse_mermaid_to_diagram,
     };
     use paint_codec_png::write_png;
     use paint_instructions::PaintInstruction;
@@ -259,8 +260,7 @@ mod apple {
         }));
 
         let pixels = render(&scene);
-        write_png(&pixels, "/tmp/mermaid_composite_state_note_e2e.png")
-            .expect("PNG write failed");
+        write_png(&pixels, "/tmp/mermaid_composite_state_note_e2e.png").expect("PNG write failed");
         assert!(pixels.width > 0);
         assert!(pixels.height > 0);
     }
@@ -271,7 +271,10 @@ mod apple {
             "stateDiagram-v2\nReady: First<br>Second<br/>Third<br />Fourth<br\t/>Fifth\nReady --> Done\n",
         )
         .expect("Mermaid state line-break variants should parse");
-        assert_eq!(graph.nodes[0].label.text, "First\nSecond\nThird\nFourth\nFifth");
+        assert_eq!(
+            graph.nodes[0].label.text,
+            "First\nSecond\nThird\nFourth\nFifth"
+        );
 
         let layout = layout_graph_diagram(&graph, None, None);
         let ready = layout
@@ -314,8 +317,7 @@ mod apple {
         assert!(glyph_runs >= 6, "five label lines plus the Done label");
 
         let pixels = render(&scene);
-        write_png(&pixels, "/tmp/mermaid_state_line_breaks_e2e.png")
-            .expect("PNG write failed");
+        write_png(&pixels, "/tmp/mermaid_state_line_breaks_e2e.png").expect("PNG write failed");
         assert!(pixels.width > 0);
         assert!(pixels.height > 0);
     }
@@ -365,8 +367,7 @@ mod apple {
         assert!(!scene.instructions.is_empty());
 
         let pixels = render(&scene);
-        write_png(&pixels, "/tmp/mermaid_single_percent_states_e2e.png")
-            .expect("PNG write failed");
+        write_png(&pixels, "/tmp/mermaid_single_percent_states_e2e.png").expect("PNG write failed");
         assert!(pixels.width > 0);
         assert!(pixels.height > 0);
     }
@@ -434,7 +435,12 @@ mod apple {
         let scene = diagram_to_paint_chart(
             &layout,
             &DiagramToPaintOptions {
-                background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                background: layout_ir::Color {
+                    r: 255,
+                    g: 255,
+                    b: 255,
+                    a: 255,
+                },
                 device_pixel_ratio: 2.0,
                 label_font: font_spec("Helvetica", 14.0),
                 title_font: font_spec("Helvetica", 18.0),
@@ -444,17 +450,29 @@ mod apple {
             },
         );
         assert_eq!(
-            scene.instructions.iter().filter(|instruction| matches!(instruction, PaintInstruction::Rect(_))).count(),
+            scene
+                .instructions
+                .iter()
+                .filter(|instruction| matches!(instruction, PaintInstruction::Rect(_)))
+                .count(),
             4
         );
         assert_eq!(
-            scene.instructions.iter().filter(|instruction| matches!(instruction, PaintInstruction::Ellipse(_))).count(),
+            scene
+                .instructions
+                .iter()
+                .filter(|instruction| matches!(instruction, PaintInstruction::Ellipse(_)))
+                .count(),
             3
         );
-        let ellipses = scene.instructions.iter().filter_map(|instruction| match instruction {
-            PaintInstruction::Ellipse(ellipse) => Some(ellipse),
-            _ => None,
-        }).collect::<Vec<_>>();
+        let ellipses = scene
+            .instructions
+            .iter()
+            .filter_map(|instruction| match instruction {
+                PaintInstruction::Ellipse(ellipse) => Some(ellipse),
+                _ => None,
+            })
+            .collect::<Vec<_>>();
         assert_eq!(ellipses[0].rx, 12.0);
         assert_eq!(ellipses[0].fill.as_deref(), Some("#ff3300"));
         assert_eq!(ellipses[0].stroke.as_deref(), Some("#310085"));

@@ -59,6 +59,8 @@ make bytes appear.  A loud refusal beats a silent wrong answer.
   comparisons, including a numeric Nib conditional simulator fixture.
 - Added pair-aware `and`, `or`, `xor`, and `not` lowering for `i64`/`u64`,
   including a Nib bitwise source-to-simulator fixture.
+- Added pair-aware left, logical-right, and arithmetic-right shifts with
+  correct zero, cross-word, and `>= 64` count handling.
 
 ## v0.1.0 — 2026-06-03 — Phase 7 (FINAL lane) of historical-arch backend migration
 
