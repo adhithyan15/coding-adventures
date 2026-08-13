@@ -7183,17 +7183,21 @@ impl HtmlParser {
         }
         match name {
             "button"
-                if self.open_elements.iter().any(|path| {
-                    element_ref_at_path(&self.document, path).is_some_and(|element| {
-                        element.namespace.is_none()
-                            && element.name == "button"
-                            && !has_fragment_context_marker(element)
-                    })
-                }) && self.open_html_element_in_scope_index("button").is_none() =>
+                if self.has_authored_open_html_element("button")
+                    && self.open_html_element_in_scope_index("button").is_none() =>
             {
                 self.diagnostics.push(ParserDiagnostic::new(
                     "unexpected-button-end-tag-outside-scope",
                     "end tag `</button>` targeted a button outside button scope",
+                ));
+            }
+            name @ ("applet" | "marquee" | "object")
+                if self.has_authored_open_html_element(name)
+                    && self.open_html_element_in_scope_index(name).is_none() =>
+            {
+                self.diagnostics.push(ParserDiagnostic::new(
+                    "unexpected-marker-element-end-tag-outside-scope",
+                    format!("end tag `</{name}>` targeted an element outside ordinary scope"),
                 ));
             }
             "head" if !self.has_open_element("head") && !self.has_open_element("body") => {
@@ -9313,6 +9317,16 @@ impl HtmlParser {
             }
         }
         None
+    }
+
+    fn has_authored_open_html_element(&self, target_name: &str) -> bool {
+        self.open_elements.iter().any(|path| {
+            element_ref_at_path(&self.document, path).is_some_and(|element| {
+                element.namespace.is_none()
+                    && element.name == target_name
+                    && !has_fragment_context_marker(element)
+            })
+        })
     }
 
     fn current_parent_has_element_in_table_scope(&self, target_name: &str) -> bool {
@@ -31315,6 +31329,112 @@ mod tests {
         assert!(fragment.parser_diagnostics.iter().all(|diagnostic| {
             diagnostic.code != "unexpected-button-end-tag-outside-scope"
         }));
+    }
+
+    #[test]
+    fn reports_marker_element_end_tags_blocked_by_scope() {
+        let marquee = parse_html_with_diagnostics(
+            "<!doctype html><marquee id=m><table id=t></marquee><tr><td>X</table>Y",
+        )
+        .unwrap();
+        assert_eq!(
+            marquee
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| {
+                    diagnostic.code == "unexpected-marker-element-end-tag-outside-scope"
+                })
+                .count(),
+            1
+        );
+        let marquee_element = find_element_by_id(&marquee.document.children, "m")
+            .expect("the blocked end tag should leave the marquee open");
+        let table = find_element_by_id(&marquee_element.children, "t")
+            .expect("the original table should receive the following row");
+        let cell = find_first_element_in_nodes(&table.children, "td")
+            .expect("the row should remain in the original table");
+        assert_eq!(cell.children, vec![Node::text("X")]);
+        assert_eq!(marquee_element.children.last(), Some(&Node::text("Y")));
+
+        for (source, outer_id, inner_id) in [
+            (
+                "<!doctype html><object id=o><applet id=a></object>X</applet>Y",
+                "o",
+                "a",
+            ),
+            (
+                "<!doctype html><applet id=a><object id=o></applet>X</object>Y",
+                "a",
+                "o",
+            ),
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .filter(|diagnostic| {
+                        diagnostic.code == "unexpected-marker-element-end-tag-outside-scope"
+                    })
+                    .count(),
+                1,
+                "source {source:?}: {:?}",
+                output.parser_diagnostics
+            );
+            let outer = find_element_by_id(&output.document.children, outer_id)
+                .expect("the outer marker element should remain open");
+            let inner = find_element_by_id(&outer.children, inner_id)
+                .expect("the inner scope boundary should remain nested");
+            assert_eq!(inner.children, vec![Node::text("X")]);
+            assert_eq!(outer.children.last(), Some(&Node::text("Y")));
+        }
+
+        let template_blocked = parse_html_with_diagnostics(
+            "<!doctype html><object id=o><template></object>X</template>Y",
+        )
+        .unwrap();
+        assert_eq!(
+            template_blocked
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| {
+                    diagnostic.code == "unexpected-marker-element-end-tag-outside-scope"
+                })
+                .count(),
+            1
+        );
+        let object = find_element_by_id(&template_blocked.document.children, "o")
+            .expect("the template boundary should leave the outer object open");
+        assert_eq!(object.children.last(), Some(&Node::text("Y")));
+
+        for source in [
+            "<!doctype html><applet></applet>",
+            "<!doctype html><marquee><p></marquee>",
+            "<!doctype html><object><p></object>",
+            "<!doctype html><table><tr><td><object></object></td></tr></table>",
+            "<!doctype html><table><object></object></table>",
+            "<!doctype html><template><object></object></template>",
+            "<!doctype html></applet></marquee></object>",
+            "<!doctype html><svg><object><table></object></table></svg>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(
+                output.parser_diagnostics.iter().all(|diagnostic| {
+                    diagnostic.code != "unexpected-marker-element-end-tag-outside-scope"
+                }),
+                "source {source:?}: {:?}",
+                output.parser_diagnostics
+            );
+        }
+
+        for context in ["applet", "marquee", "object"] {
+            let source = format!("</{context}>");
+            let fragment =
+                parse_html_fragment_for_context_with_diagnostics(&source, context).unwrap();
+            assert!(fragment.parser_diagnostics.iter().all(|diagnostic| {
+                diagnostic.code != "unexpected-marker-element-end-tag-outside-scope"
+            }));
+        }
     }
 
     #[test]
