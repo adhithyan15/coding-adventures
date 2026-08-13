@@ -200,6 +200,8 @@ const DEVANAGARI_HA = ductusFor("ह", "devanagari")!;
 const devanagariHaOutline = devanagariOutline("ह");
 const CYRILLIC_A = ductusFor("а", "cyrillic")!;
 const cyrillicAOutline = cyrillicOutline("а");
+const CYRILLIC_BE = ductusFor("б", "cyrillic")!;
+const cyrillicBeOutline = cyrillicOutline("б");
 const HEBREW_ALEF = ductusFor("א", "hebrew")!;
 const hebrewAlefOutline = hebrewOutline("א");
 const HEBREW_BET = ductusFor("ב", "hebrew")!;
@@ -2406,6 +2408,33 @@ describe("Cyrillic а — one joined body and finishing stem", () => {
     );
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(CYRILLIC_A.strokes[0], 1),
+    );
+  });
+});
+
+describe("Cyrillic б — one joined lower body and top flag", () => {
+  const steps = ductusSteps(CYRILLIC_BE);
+  const strip = ductusFilmstrip(CYRILLIC_BE, cyrillicBeOutline);
+
+  it("shows the body and top flag within one sourced pen-down run", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "circle counterclockwise around the rounded lower body",
+      "continue through the rising shoulder and sweep the top flag right",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0]);
+    expect(strip.frames).toHaveLength(2);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 2 movements");
+  });
+
+  it("draws the exact Noto Sans Cyrillic character behind the top flag", () => {
+    const paths = byTag(strip.frames[1], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      cyrillicBeOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(CYRILLIC_BE.strokes[0], 1),
     );
   });
 });

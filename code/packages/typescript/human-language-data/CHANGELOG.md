@@ -90,6 +90,12 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
 
 ## [Unreleased]
 
+### Added - source-verified Cyrillic б (HL-C09EA)
+
+- Verify lowercase б as one continuous counterclockwise-body-to-top-flag run with zero lifts against RussianIrina's native-teacher all-letter handwriting lesson.
+- Preserve the source's handwritten diagonal transition while routing the Noto Sans Cyrillic fit through the printed glyph's upper-left shoulder.
+- Reduce measured HL-C09 debt to 101 entries and queue Cyrillic в next.
+
 ### Added - the demonstratives, and the first movement of the exam gate (HL-C128)
 - Add Spanish chapters 221-225. `Los demostrativos` was the only A1 category
   reading **0 of 3**, in a book that had already taught the imperfect
@@ -117,7 +123,6 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
   The gate worked as designed on the way through: the number would not move
   until the three probes were wired to real atoms, and the pin had to be
   changed deliberately rather than drifting.
-
 ### Added - source-verified Cyrillic а (HL-C09DZ)
 - Verify lowercase а as one continuous body-to-stem run with zero lifts against RussianIrina's native-teacher all-letter handwriting lesson.
 - Preserve the source's single-storey school-hand motion while fitting the upper entry through Noto Sans Cyrillic's extra double-storey printed shoulder.

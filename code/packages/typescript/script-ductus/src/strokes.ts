@@ -266,6 +266,10 @@ export const ductusKey = (script: string, glyph: string): string => `${script}:$
 // handwritten form is single-storey; this learner path preserves that one-run
 // motion while widening the entry to cover Noto Sans Cyrillic's extra printed
 // upper shoulder before circling the lower bowl and descending the right stem.
+// The same lesson writes lowercase Cyrillic б without lifting: a
+// counterclockwise lower body closes before the pen rises into its rightward
+// top flag. The handwritten diagonal transition is routed through Noto Sans
+// Cyrillic's upper-left printed shoulder so the fitted path stays on its ink.
 // Arabic ا opens the smallest remaining starter inventory from the University
 // of Oregon's instructional video: one top-to-bottom movement with no lift.
 // Its scoped key preserves Arabic provenance separately from the Persian and
@@ -3005,6 +3009,44 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       },
     ],
     source: cyrillicAlphabetSource("а"),
+  },
+  // RussianIrina closes the rounded lowercase б body and immediately climbs
+  // into its top flag. The source's direct diagonal crossing is a handwritten
+  // form; Noto Sans Cyrillic joins the ascender at the upper-left shoulder, so
+  // this one-run fit carries the pen left along the printed shoulder first.
+  [ductusKey("cyrillic", "б")]: {
+    script: "cyrillic",
+    glyph: "б",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "circle counterclockwise around the rounded lower body",
+            path: [
+              { x: 430, y: 480 }, { x: 350, y: 495 }, { x: 270, y: 495 },
+              { x: 190, y: 470 }, { x: 125, y: 420 }, { x: 90, y: 340 },
+              { x: 85, y: 250 }, { x: 105, y: 165 }, { x: 155, y: 95 },
+              { x: 225, y: 45 }, { x: 305, y: 25 }, { x: 380, y: 45 },
+              { x: 445, y: 90 }, { x: 490, y: 155 }, { x: 510, y: 235 },
+              { x: 505, y: 315 }, { x: 480, y: 400 }, { x: 430, y: 480 },
+            ],
+          },
+          {
+            label: "continue through the rising shoulder and sweep the top flag right",
+            path: [
+              { x: 430, y: 480 }, { x: 350, y: 490 }, { x: 270, y: 490 },
+              { x: 195, y: 485 }, { x: 195, y: 465 }, { x: 195, y: 450 },
+              { x: 170, y: 445 }, { x: 140, y: 445 }, { x: 140, y: 480 },
+              { x: 140, y: 520 }, { x: 150, y: 545 }, { x: 165, y: 585 },
+              { x: 185, y: 620 }, { x: 215, y: 660 }, { x: 260, y: 690 },
+              { x: 320, y: 710 }, { x: 390, y: 720 }, { x: 460, y: 730 },
+              { x: 500, y: 735 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: cyrillicAlphabetSource("б"),
   },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner

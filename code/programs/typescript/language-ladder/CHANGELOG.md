@@ -21,6 +21,12 @@ at the package. `scriptdata` stays out of that chunk on purpose — the shell ne
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Cyrillic б ductus (HL-C09EA)
+
+- Render **б** in two joined movements across one source-aligned stroke.
+- Circle the lower body counterclockwise, then continue through the rising shoulder and rightward top flag without lifting.
+- Preserve the native-teacher lesson's zero-lift body-to-flag order, fit its handwritten diagonal transition to Noto Sans Cyrillic's printed upper-left shoulder, and reduce measured HL-C09 debt to 101 entries.
+
 ### Added — cited Cyrillic а ductus (HL-C09DZ)
 
 - Render **а** in two joined movements across one source-aligned stroke.
