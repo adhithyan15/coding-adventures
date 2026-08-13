@@ -79,6 +79,12 @@ boundaries synthesize and close the required empty paragraph instead of closing
 an older paragraph across the boundary. Current and implied-descendant
 paragraphs, real cells, foreign namespace names, template insertion mode, and
 synthetic fragment contexts retain their existing recovery.
+Heading end tags now use the full namespace-aware ordinary-scope boundary, so
+an authored HTML heading below `select`, `applet`, `object`, `marquee`, or the
+other scope boundaries remains open and the token is ignored. Ordinary
+intervening elements are still popped with an in-scope heading, while matching,
+mismatched, foreign namespace, template, and synthetic fragment paths preserve
+their current-Standard recovery.
 
 There are no residual malformed tree-construction cases without a lexer or
 parser diagnostic. HTML `p` and `br` start tags recovered from seeded foreign
@@ -364,6 +370,12 @@ Prioritized work items:
    end tags remain ignored, foreign names do not act as HTML scope boundaries,
    and current, implied-descendant, cell, unmatched, and synthetic-fragment
    paths preserve their existing behavior.
+   Heading end tags now find only authored HTML headings before the complete
+   ordinary-scope boundary, including HTML `select`. Blocked headings remain
+   open and retain following boundary content; intervening ordinary elements
+   are popped with an in-scope heading, and foreign `select` names, template
+   insertion mode, matching and mismatched headings, and synthetic fragments
+   retain their existing recovery.
 3. **Diagnostic positions and error taxonomy.** Carry source positions into
    tree construction and map diagnostics to current WHATWG concepts. Legacy
    WPT/html5lib error labels are evidence hints, not a normative public API.

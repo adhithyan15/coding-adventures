@@ -8041,21 +8041,9 @@ impl HtmlParser {
     }
 
     fn close_open_heading_if_in_scope(&mut self, expected_name: Option<&str>) -> bool {
-        let Some(index) = self.open_elements.iter().rposition(|path| {
-            element_at_path(&self.document, path).is_some_and(is_heading_element)
-        }) else {
+        let Some(index) = self.open_html_heading_in_scope_index() else {
             return false;
         };
-        if self.has_special_element_above(index) {
-            while self
-                .current_element_name()
-                .is_some_and(is_formatting_element)
-            {
-                self.open_elements.pop();
-            }
-            self.pop_current_if(is_heading_element);
-            return false;
-        }
         if expected_name.is_some() {
             self.generate_implied_end_tags_above(index);
         }
@@ -8063,6 +8051,24 @@ impl HtmlParser {
             expected_name.is_none_or(|expected| self.current_element_is(expected));
         self.open_elements.truncate(index);
         matched_current
+    }
+
+    fn open_html_heading_in_scope_index(&self) -> Option<usize> {
+        for (index, path) in self.open_elements.iter().enumerate().rev() {
+            let Some(element) = element_ref_at_path(&self.document, path) else {
+                continue;
+            };
+            if element.namespace.is_none()
+                && is_heading_element(&element.name)
+                && !has_fragment_context_marker(element)
+            {
+                return Some(index);
+            }
+            if is_ordinary_scope_boundary(element) {
+                return None;
+            }
+        }
+        None
     }
 
     fn close_open_formatting_element_silently(&mut self, name: &str) -> bool {
@@ -11772,6 +11778,7 @@ fn is_ordinary_scope_boundary(element: &Element) -> bool {
                 | "th"
                 | "marquee"
                 | "object"
+                | "select"
                 | "template"
         ))
         || (element.namespace.as_deref() == Some("math")
@@ -35345,6 +35352,98 @@ mod tests {
         let matching =
             parse_html_with_diagnostics("<!doctype html><h3><li>abc</h3>foo").unwrap();
         assert!(matching.parser_diagnostics.is_empty());
+    }
+
+    #[test]
+    fn heading_end_tags_respect_select_scope() {
+        for (boundary_name, end_tag) in [
+            ("select", "h1"),
+            ("select", "h2"),
+            ("object", "h1"),
+            ("marquee", "h1"),
+            ("applet", "h1"),
+        ] {
+            let source = format!(
+                "<!doctype html><h1 id=outer><{boundary_name} id=boundary></{end_tag}>X</{boundary_name}></h1>"
+            );
+            let output = parse_html_with_diagnostics(&source).unwrap();
+            assert_eq!(
+                output.parser_diagnostics,
+                vec![ParserDiagnostic::new(
+                    "unexpected-heading-end-tag",
+                    format!("end tag `</{end_tag}>` did not match the current heading element")
+                )],
+                "source {source:?}"
+            );
+            let outer = find_element_by_id(&output.document.children, "outer").unwrap();
+            let boundary = find_element_by_id(&outer.children, "boundary").unwrap();
+            assert_eq!(boundary.children, vec![Node::text("X")]);
+        }
+
+        let ordinary =
+            parse_html_with_diagnostics("<!doctype html><h1 id=outer><div id=boundary></h1>X")
+                .unwrap();
+        assert_eq!(
+            ordinary.parser_diagnostics,
+            vec![ParserDiagnostic::new(
+                "unexpected-heading-end-tag",
+                "end tag `</h1>` did not match the current heading element"
+            )]
+        );
+        let boundary = find_element_by_id(&ordinary.document.children, "boundary").unwrap();
+        assert!(boundary.children.is_empty());
+        assert_eq!(
+            body(&ordinary.document).children.last(),
+            Some(&Node::text("X"))
+        );
+
+        let matching = parse_html_with_diagnostics("<!doctype html><h1 id=outer>X</h1>Y").unwrap();
+        assert!(matching.parser_diagnostics.is_empty());
+        assert_eq!(
+            body(&matching.document).children.last(),
+            Some(&Node::text("Y"))
+        );
+
+        let descendant =
+            parse_html_with_diagnostics("<!doctype html><h1 id=outer><span>X</h1>Y").unwrap();
+        assert_eq!(
+            descendant.parser_diagnostics,
+            vec![ParserDiagnostic::new(
+                "unexpected-heading-end-tag",
+                "end tag `</h1>` did not match the current heading element"
+            )]
+        );
+        assert_eq!(
+            body(&descendant.document).children.last(),
+            Some(&Node::text("Y"))
+        );
+
+        let foreign = parse_html_with_diagnostics(
+            "<!doctype html><h1 id=outer><svg><select id=foreign></h1>X",
+        )
+        .unwrap();
+        assert_eq!(
+            body(&foreign.document).children.last(),
+            Some(&Node::text("X"))
+        );
+
+        let template = parse_html_with_diagnostics(
+            "<!doctype html><h1 id=outer><template id=boundary></h1>X</template>",
+        )
+        .unwrap();
+        let outer = find_element_by_id(&template.document.children, "outer").unwrap();
+        let boundary = find_element_by_id(&outer.children, "boundary").unwrap();
+        assert_eq!(boundary.children, vec![Node::text("X")]);
+
+        let fragment = parse_html_fragment_for_context_with_diagnostics("</h1>X", "h1").unwrap();
+        assert_eq!(fragment.nodes, vec![Node::text("X")]);
+        assert_eq!(
+            fragment.parser_diagnostics,
+            vec![ParserDiagnostic::new(
+                "unexpected-fragment-context-end-tag",
+                "end tag `</h1>` targeted a seeded fragment context element"
+            )]
+        );
     }
 
     #[test]
