@@ -82,8 +82,8 @@
         "not_yet_supported": 46
       },
       "assert_return": {
-        "pass": 12,
-        "fail": 35,
+        "pass": 47,
+        "fail": 0,
         "trap": 0,
         "not_yet_supported": 0
       },
@@ -1090,8 +1090,8 @@
         "not_yet_supported": 0
       },
       "assert_return": {
-        "pass": 21,
-        "fail": 4,
+        "pass": 25,
+        "fail": 0,
         "trap": 0,
         "not_yet_supported": 0
       },
@@ -1650,8 +1650,8 @@
         "not_yet_supported": 0
       },
       "assert_return": {
-        "pass": 21,
-        "fail": 5,
+        "pass": 26,
+        "fail": 0,
         "trap": 0,
         "not_yet_supported": 0
       },
@@ -1819,8 +1819,8 @@
       "not_yet_supported": 46
     },
     "assert_return": {
-      "pass": 12171,
-      "fail": 67,
+      "pass": 12215,
+      "fail": 23,
       "trap": 0,
       "not_yet_supported": 0
     },

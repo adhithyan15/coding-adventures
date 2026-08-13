@@ -1,5 +1,61 @@
 # Changelog — iir-to-wasm
 
+## [0.48.0] — 2026-08-13 (dispatch-loop branch depths were tuned to a `wasm-execution` bug)
+
+Fix a **backend disagreement**: the dispatch-loop control-flow strategy (used
+for any function with labels/jumps — e.g. a multi-clause `COND`) computed WASM
+branch depths that were one label too shallow for every branch that re-enters
+the dispatch `loop` from a basic block other than the last. For deeply nested
+cases this produced a wrong answer instead of a trap — e.g.
+`(COND ((ATOM (CONS 1 2)) 11) ((EQ 5 5) 22))` compiled to WASM and evaluated to
+`0` instead of `22`, while every other backend (native, LLVM, CLR, …) agreed on
+`22`. Caught by `lang-aot`'s `mccarthy_is_uniform_across_every_backend`
+cross-backend conformance test.
+
+Root cause: `wasm-execution`'s `execute_branch` had a double-pop bug (fixed
+separately, WASM11) — branching to a `block`/`if` target removed that target's
+own label from `label_stack` *before* jumping to it, even though the target PC
+is that block's own `end` opcode, whose handler unconditionally pops a label
+on arrival. Landing there therefore triggered a second, unintended pop of
+whatever label was next. This was invisible for the common "target block is
+the last thing in the function" shape, but wrong for anything with real code
+after the target block closes.
+
+This backend's dispatch-loop branch-depth formulas were derived against that
+buggy interpreter, not the WASM spec: the comments explicitly modeled "each
+successive END pops one label" as the label_stack shrinking by an extra label
+per already-closed nested block, which only holds under the old double-pop
+behavior. With `execute_branch` now spec-correct, every "re-enter the LOOP to
+redispatch" branch computed by the old formulas landed one level too shallow
+(on the next-outer per-block `block` instead of the `loop`), which — for a
+still-open outer block — silently fell into the *wrong* basic block's code
+with whatever value happened to be in the result local, rather than
+redispatching.
+
+Fixed all four sites in `lower.rs` that compute this depth (`jmp`,
+`jmp_if_true`, `jmp_if_false`, and the auto-redispatch emitted after a block
+that falls through without an explicit `ret`/`jmp`) by deriving the depth from
+the actual static nesting structure instead: from `body[block_idx]`, the
+labels still open are the `n_blocks - 1 - block_idx` remaining per-block
+wrapper blocks, then the `loop`, then the outer exit block — so
+`depth(LOOP) = n_blocks - block_idx - 1` outside an emitted `if`, and one more
+(`n_blocks - block_idx`) inside one. Both are one deeper than the previous
+`n_blocks - block_idx - 2` / `n_blocks - block_idx - 1` formulas. The
+already-present "last block" fallback constants (`0` for `jmp`, `1` for
+`jmp_if_*`) were untouched — they already coincided with the corrected general
+formula at that boundary, so only the `block_idx + 1 < n_blocks` branch of
+each needed the `+ 1`.
+
+Verified by decoding the compiled function body for the `COND` example above
+with `wasm_execution::decode_function_body` and tracing branch resolution
+against the fixed `execute_branch`, then confirming
+`mccarthy_is_uniform_across_every_backend` passes and the full downstream WASM
+backend suites (`twig-to-wasm`, `nib-wasm-compiler`, `brainfuck-wasm-compiler`,
+`ir-to-wasm-compiler`, `lang-aot`, `twig-demo`, `iir-to-wasm`) show no new
+failures (some pre-existing, unrelated failures remain in non-WASM backends —
+NativeAot string handling, CLR COBOL literal range, Nib type mismatch — all
+reproduce identically on `origin/main` before this change).
+
 ## [0.47.0] — 2026-08-13 (stale literal on a runtime-reassigned string)
 
 Fix a **silent wrong answer**: a `str` variable that was declared with a literal
