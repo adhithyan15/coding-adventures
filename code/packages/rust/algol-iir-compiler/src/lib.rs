@@ -5301,6 +5301,37 @@ impl Compiler {
     }
 
     fn for_body_writes_name(&self, node: &GrammarASTNode, name: &str) -> bool {
+        if node.rule_name == "cond_stmt" {
+            let children = direct_nodes(node);
+            let condition = children
+                .iter()
+                .find(|child| child.rule_name == "bool_expr")
+                .copied();
+            let condition_is_variable_free = condition.is_some_and(|condition| {
+                !recursive_tokens(condition)
+                    .iter()
+                    .any(|token| token.effective_type_name() == "NAME")
+            });
+            if condition_is_variable_free {
+                let branches: Vec<&GrammarASTNode> = children
+                    .into_iter()
+                    .filter(|child| {
+                        child.rule_name == "unlabeled_stmt" || child.rule_name == "statement"
+                    })
+                    .collect();
+                return match condition.and_then(|condition| self.static_boolean_value(condition)) {
+                    Some(true) => branches
+                        .first()
+                        .is_some_and(|branch| self.for_body_writes_name(branch, name)),
+                    Some(false) => branches
+                        .get(1)
+                        .is_some_and(|branch| self.for_body_writes_name(branch, name)),
+                    None => direct_nodes(node)
+                        .into_iter()
+                        .any(|child| self.for_body_writes_name(child, name)),
+                };
+            }
+        }
         if node.rule_name == "assign_stmt" {
             let writes_name = direct_nodes(node)
                 .into_iter()
@@ -9270,6 +9301,15 @@ mod tests {
     }
 
     #[test]
+    fn al4_static_while_ignores_unreachable_conditional_dependency_write() {
+        compile_source(
+            "begin integer i, n; n := 3; i := 0; for i := i + 1 while i < n do if false then n := n + 1; print(i + 0.25) end",
+            "test",
+        )
+        .expect("a variable-free false branch cannot mutate the dependency");
+    }
+
+    #[test]
     fn al4_static_while_preserves_standard_function_dependency() {
         compile_source(
             "begin integer i, n; n := -3; i := 0; for i := i + 1 while i < abs(n) do print(''); print(i + 0.25) end",
@@ -9305,6 +9345,16 @@ mod tests {
             "test",
         )
         .expect_err("only an exact bare self-assignment is treated as idempotent");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_variable_conditional_while_dependency_write_remains_conservative() {
+        let err = compile_source(
+            "begin integer i, n; boolean flag; n := 3; i := 0; for i := i + 1 while i < n do if flag then n := n + 1; print(i + 0.25) end",
+            "test",
+        )
+        .expect_err("a variable-dependent body condition must scan both paths");
         assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 

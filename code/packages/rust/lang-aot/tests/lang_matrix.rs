@@ -2299,6 +2299,15 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — a variable-free false body condition makes its dependency
+    // write unreachable, so capped while analysis keeps the stable local.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, n; n := 3; i := 0; for i := i + 1 while i < n do if false then n := n + 1; print(i + 0.25) end",
+        expect: Expect::Stdout("3.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — an exactly-one-iteration step loop with a static controlled
     // assignment may retain the post-body increment when that value exits.
     Prog {
@@ -9822,6 +9831,37 @@ fn algol_idempotent_while_dependency_runs_on_every_available_standard_backend() 
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the idempotent while dependency did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_static_conditional_while_effect_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("while i < n do if false then n := n + 1")
+        })
+        .expect("the ALGOL static conditional while-effect program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the static conditional while effect did not run"
             );
             continue;
         };
