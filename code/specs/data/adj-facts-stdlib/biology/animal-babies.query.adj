@@ -16,4 +16,6 @@ import "animal-babies.adj"
 ? animal_baby(dog, $Baby)          % expect puppy
 ? animal_baby(kangaroo, $Baby)     % expect joey
 ? animal_baby(horse, $Baby)        % expect foal
+? animal_baby(deer, $Baby)         % expect fawn (added this cycle)
+? animal_baby($Animal, cub)        % reverse bind on a shared value -- expect bear ; cheetah ; lion ; tiger ; wolf (added this cycle)
 ? animal_baby(rock, $Baby)         % expect abstain — a rock is not an animal

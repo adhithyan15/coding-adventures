@@ -5,9 +5,9 @@
 % One of the very first vocabulary lessons a small child learns: baby animals
 % have SPECIAL NAMES. A baby dog is not a "baby dog" — it is a PUPPY. A baby cat
 % is a KITTEN, a baby cow (cattle) is a CALF, a baby horse is a FOAL, a baby
-% sheep is a LAMB, a baby kangaroo is a JOEY, and a baby goat is a KID. This tiny
-% library records, for a handful of familiar animals, what its young is called.
-% Recall is a binding query:
+% sheep is a LAMB, a baby kangaroo is a JOEY, and a baby goat is a KID. This
+% library records, for a large set of familiar animals, what its young is
+% called. Recall is a binding query:
 %
 %     ? animal_baby(dog, $Baby)            % puppy
 %     ? animal_baby(kangaroo, $Baby)       % joey
@@ -21,23 +21,48 @@
 %
 % The baby names, as a truth table over the animals shipped here:
 %
-%     animal    baby      a beginner's cue
-%     --------  --------  -------------------------------------------------
-%     dog       puppy     a young dog; "pup" is the short form
-%     cat       kitten    a young cat
-%     cattle    calf      a young cow or bull (cattle) — also called a calf
-%     horse     foal      a young horse (a colt if male, a filly if female)
-%     sheep     lamb      a young sheep
-%     kangaroo  joey      a young kangaroo, carried in its mother's pouch
-%     goat      kid       a young goat — yes, the word "kid" comes from this!
+%     animal    baby       a beginner's cue
+%     --------  ---------  -------------------------------------------------
+%     dog       puppy      a young dog; "pup" is the short form
+%     cat       kitten     a young cat
+%     cattle    calf       a young cow or bull (cattle) — also called a calf
+%     horse     foal       a young horse (a colt if male, a filly if female)
+%     sheep     lamb       a young sheep
+%     kangaroo  joey       a young kangaroo, carried in its mother's pouch
+%     goat      kid        a young goat — yes, the word "kid" comes from this!
+%     bear      cub        a young bear
+%     cheetah   cub        a young cheetah
+%     deer      fawn       a young deer
+%     eagle     eaglet     a young eagle
+%     elephant  calf       a young elephant — same word as a baby cow
+%     fox       kit        a young fox
+%     frog      tadpole    the swimming, tailed larval stage of a frog
+%     lion      cub        a young lion
+%     owl       owlet      a young owl
+%     penguin   chick      a young penguin
+%     pig       piglet     a young pig
+%     rabbit    bunny      a young rabbit
+%     seal      pup        a young seal
+%     swan      cygnet     a young swan
+%     tiger     cub        a young tiger
+%     whale     calf       a young whale — same word as a baby cow
+%     wolf      cub        a young wolf
 %
 % The animals were chosen to be FAMILIAR and to have ONE clear, well-known baby
 % name each. Note "cattle": the general word for cows and bulls is *cattle*, and
 % that is the exact word the source uses, so we keep it as the animal here (a
-% baby cow is still a calf). A word that is NOT one of these animals — `rock`,
-% `banana`, `oak` — is deliberately NOT a row, so a baby-name recall ABSTAINS on
-% it rather than fabricating a name. That honest-abstention property is what
-% makes a recall table safe to build a reasoner on.
+% baby cow is still a calf). The relation is many-to-one on purpose — several
+% animals genuinely share the same baby word in the source (calf for cattle,
+% elephant, AND whale; cub for bear, cheetah, lion, tiger, AND wolf) — so the
+% query also runs BACKWARD and can recall MORE than one animal for a shared
+% baby word:
+%
+%     ? animal_baby($Animal, cub)   % bear ; cheetah ; lion ; tiger ; wolf
+%
+% A word that is NOT one of these animals — `rock`, `banana`, `oak` — is
+% deliberately NOT a row, so a baby-name recall ABSTAINS on it rather than
+% fabricating a name. That honest-abstention property is what makes a recall
+% table safe to build a reasoner on.
 %
 % ----------------------------------------------------------------------------
 % Provenance (byte-quotable, per the ADJ-facts standard).
@@ -60,8 +85,34 @@
 %   sheep     — "cosset, lamb, lambkin"                              → lamb
 %   kangaroo  — "joey"                                               → joey
 %   goat      — "kid"                                                → kid
+%   bear      — "cub"                                                → cub
+%   cheetah   — "cub, kitten"                                        → cub
+%   deer      — "calf, fawn"                                         → fawn
+%   eagle     — "eaglet, fledgling"                                  → eaglet
+%   elephant  — "calf"                                               → calf
+%   fox       — "cub, kit, pup"                                      → kit
+%   frog      — "froglet, polliwog, tadpole"                         → tadpole
+%   lion      — "cub"                                                → cub
+%   owl       — "fledgling, owlet"                                   → owlet
+%   penguin   — "chick, nestling"                                    → chick
+%   pig       — "farrow, piglet, shoat/shote (just weaned)"          → piglet
+%   rabbit    — "bunny, kit, kitten, nestling"                       → bunny
+%   seal      — "pup"                                                → pup
+%   swan      — "cygnet, flapper"                                    → cygnet
+%   tiger     — "cub, whelp"                                         → cub
+%   whale     — "calf"                                               → calf
+%   wolf      — "cub, pup, puppy, whelp"                             → cub
 %
 %   https://en.wikipedia.org/wiki/List_of_animal_names
+%
+% EXTENDED this cycle from 7 to 24 rows: the SAME already-cited Wikipedia "List
+% of animal names" table names dozens more familiar animals; seventeen more were
+% added here, each choosing the single most common, child-recognizable baby
+% term from its "Young" cell (mirroring how the original seven rows already
+% picked a generic term over a sex-specific or rare variant, e.g. horse's
+% "foal" over "colt"/"filly"). WebFetch-verified with a targeted second pass
+% re-fetching the raw "Young"-cell text for all seventeen new rows directly,
+% confirming the extraction wasn't paraphrased.
 %
 % (See ../README.md; feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
 % ============================================================================
@@ -76,6 +127,23 @@ table animal_baby {
     row (sheep, lamb)
     row (kangaroo, joey)
     row (goat, kid)
+    row (bear, cub)
+    row (cheetah, cub)
+    row (deer, fawn)
+    row (eagle, eaglet)
+    row (elephant, calf)
+    row (fox, kit)
+    row (frog, tadpole)
+    row (lion, cub)
+    row (owl, owlet)
+    row (penguin, chick)
+    row (pig, piglet)
+    row (rabbit, bunny)
+    row (seal, pup)
+    row (swan, cygnet)
+    row (tiger, cub)
+    row (whale, calf)
+    row (wolf, cub)
 
     source "colt (male), filly (female), foal, weanling, yearling"
     locator "https://en.wikipedia.org/wiki/List_of_animal_names"
