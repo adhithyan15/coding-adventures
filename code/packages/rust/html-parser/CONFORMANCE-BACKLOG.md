@@ -85,6 +85,17 @@ other scope boundaries remains open and the token is ignored. Ordinary
 intervening elements are still popped with an in-scope heading, while matching,
 mismatched, foreign namespace, template, and synthetic fragment paths preserve
 their current-Standard recovery.
+The grouped in-body block end-tag branch now uses that same full ordinary-scope
+boundary before generic closure. Authored HTML block elements below `applet`,
+`object`, `marquee`, `select`, template, or table-cell boundaries remain open
+and the token is diagnosed and ignored, while matching, implied-descendant,
+unmatched, foreign same-name, and synthetic fragment paths retain their existing
+recovery.
+Foreign-content dispatch still returns early when a grouped block end tag meets
+an SVG or MathML integration-point boundary. The focused SVG `foreignObject`
+probe both misses the required mismatch diagnostic and places following text
+differently from the browser, so that path remains a separate foreign-content
+DOM and diagnostic item.
 
 There are no residual malformed tree-construction cases without a lexer or
 parser diagnostic. HTML `p` and `br` start tags recovered from seeded foreign
