@@ -2,8 +2,9 @@
 
 ## Unreleased - CI actually runs this crate's tests now
 
-Two fixes to a single latent breakage: the crate's tests were red *and*
-unbuildable on some hosts, and nothing in CI was positioned to notice either.
+One latent breakage, fixed in three parts: the crate's test targets did not
+compile on any non-macOS host, and nothing in CI was positioned to notice —
+because nothing in CI compiled them at all.
 
 **`tests/macos_arm64_smoke.rs` no longer breaks the `-D warnings` build.**
 The file carried a top-level `use std::io::Write;`. The only `writeln!` in it
