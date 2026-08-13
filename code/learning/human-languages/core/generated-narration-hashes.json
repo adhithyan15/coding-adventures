@@ -9648,6 +9648,48 @@
       "jsonHash": "fnv1a64:e8d079377c6fdf66"
     },
     {
+      "language": "spanish",
+      "chapter": 208,
+      "sourceHash": "fnv1a64:1c31f9536ca2a7dd",
+      "lessonIds": [
+        "ES-C56-si-tuviera"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch208.txt",
+      "json": "spanish/narration/ch208.json",
+      "textHash": "fnv1a64:019de89219f406e0",
+      "jsonHash": "fnv1a64:ee9d06c3db5ba520"
+    },
+    {
+      "language": "spanish",
+      "chapter": 209,
+      "sourceHash": "fnv1a64:83a894dd1e94f378",
+      "lessonIds": [
+        "ES-C56-repaso-condiciones"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch209.txt",
+      "json": "spanish/narration/ch209.json",
+      "textHash": "fnv1a64:e00e8d277d1ba89e",
+      "jsonHash": "fnv1a64:e70a711a23ef25e0"
+    },
+    {
+      "language": "spanish",
+      "chapter": 210,
+      "sourceHash": "fnv1a64:c9a47b1a7916bfa3",
+      "lessonIds": [
+        "ES-C56-sintesis-condiciones"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch210.txt",
+      "json": "spanish/narration/ch210.json",
+      "textHash": "fnv1a64:ba2ab7c67c238745",
+      "jsonHash": "fnv1a64:2c215a467d2ae6a9"
+    },
+    {
       "language": "tamil",
       "chapter": 1,
       "sourceHash": "fnv1a64:4ba983e1f562762e",

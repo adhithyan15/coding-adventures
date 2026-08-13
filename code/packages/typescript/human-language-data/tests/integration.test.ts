@@ -104,7 +104,7 @@ describe("real curriculum", () => {
     // 40 (esperar, contestar, comprar). Two sessions authored a chapter 38 in parallel;
     // the collision surfaced as a merge conflict on chapters.json rather than silently,
     // because both sides must edit it.
-    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(207); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis // +3: HL-C88 slice 8 // +1: HL-C88 slice 9 (falsos amigos) // +3: HL-C113 (B1 si-condition rung) // +3: HL-C113 preterite plural // HL-C113: HL-C113 imperfect subjunctive
+    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(210); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis // +3: HL-C88 slice 8 // +1: HL-C88 slice 9 (falsos amigos) // +3: HL-C113 (B1 si-condition rung) // +3: HL-C113 preterite plural // HL-C113: HL-C113 imperfect subjunctive
     expect(
       books.books
         .find((book) => book.language === "persian")
@@ -828,6 +828,15 @@ describe("real curriculum", () => {
       "ES-C56-repaso-amigos-gender",
       "ES-C56-repaso-amigos-kinds",
       "ES-C56-repaso-amigos-three",
+      "ES-C56-repaso-condiciones-bans",
+      "ES-C56-repaso-condiciones-shift",
+      "ES-C56-repaso-condiciones-si",
+      "ES-C56-si-tuviera-implies",
+      "ES-C56-si-tuviera-say",
+      "ES-C56-si-tuviera-trap",
+      "ES-C56-sintesis-condiciones-cost",
+      "ES-C56-sintesis-condiciones-own",
+      "ES-C56-sintesis-condiciones-ser",
       "ES-C56-sintesis-leer-count",
       "ES-C56-sintesis-leer-limit",
       "ES-C56-sintesis-leer-read",

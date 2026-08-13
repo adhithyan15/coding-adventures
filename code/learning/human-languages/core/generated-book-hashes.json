@@ -5466,6 +5466,33 @@
       "tex": "spanish/book/chapters/ch207-tuviera.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 208,
+      "sourceHash": "fnv1a64:447e2e1cbb8c83a9",
+      "lessonIds": [
+        "ES-C56-si-tuviera"
+      ],
+      "tex": "spanish/book/chapters/ch208-si-tuviera.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 209,
+      "sourceHash": "fnv1a64:c99ebc9186442076",
+      "lessonIds": [
+        "ES-C56-repaso-condiciones"
+      ],
+      "tex": "spanish/book/chapters/ch209-review-condiciones.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 210,
+      "sourceHash": "fnv1a64:0ca90db333988a0e",
+      "lessonIds": [
+        "ES-C56-sintesis-condiciones"
+      ],
+      "tex": "spanish/book/chapters/ch210-synthesis-condiciones.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "sourceHash": "fnv1a64:c0940889d5248bc5",
