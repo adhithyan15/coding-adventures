@@ -816,6 +816,33 @@ impl Lowerer {
         }
     }
 
+    fn wide_divmod_var_location(
+        &mut self,
+        instr: &CIRInstr,
+        index: usize,
+        op: &str,
+    ) -> Result<ValueLocation, BackendError> {
+        match self.var_location(instr, index, op)? {
+            ValueLocation::PairSpill {
+                lo_offset,
+                hi_offset,
+            } => {
+                let (lo, hi) = if index == 0 {
+                    (SPILLED_LHS_REGISTER, SPILLED_RHS_REGISTER)
+                } else {
+                    (DIVISION_DIVISOR_LOW_REGISTER, DIVISION_DIVISOR_HIGH_REGISTER)
+                };
+                self.words.push(encode_lw(lo, STACK_POINTER, lo_offset));
+                self.words.push(encode_lw(hi, STACK_POINTER, hi_offset));
+                Ok(ValueLocation::Pair { lo, hi })
+            }
+            ValueLocation::Spill { .. } => Err(BackendError::InvalidOperand(format!(
+                "{op} requires a wide value at srcs[{index}]"
+            ))),
+            location => Ok(location),
+        }
+    }
+
     fn restore_stack_frame(&mut self) {
         if self.frame_size != 0 {
             self.words
@@ -926,8 +953,8 @@ impl Lowerer {
         let ValueLocation::Pair { lo, hi } = self.dest_pair(instr, op)? else {
             unreachable!("dest_pair always returns a pair")
         };
-        let lhs = self.var_location(instr, 0, op)?;
-        let rhs = self.var_location(instr, 1, op)?;
+        let lhs = self.wide_divmod_var_location(instr, 0, op)?;
+        let rhs = self.wide_divmod_var_location(instr, 1, op)?;
 
         self.words.push(encode_addi(lo, lhs.low(), 0));
         self.copy_or_extend_high(hi, lhs, false);
@@ -944,8 +971,8 @@ impl Lowerer {
         let ValueLocation::Pair { lo, hi } = self.dest_pair(instr, op)? else {
             unreachable!("dest_pair always returns a pair")
         };
-        let lhs = self.var_location(instr, 0, op)?;
-        let rhs = self.var_location(instr, 1, op)?;
+        let lhs = self.wide_divmod_var_location(instr, 0, op)?;
+        let rhs = self.wide_divmod_var_location(instr, 1, op)?;
 
         self.words.push(encode_addi(lo, lhs.low(), 0));
         self.copy_or_extend_high(hi, lhs, true);

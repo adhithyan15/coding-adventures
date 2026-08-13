@@ -1230,3 +1230,49 @@ fn shifts_a_spilled_wide_pair_with_a_parameterized_count() {
     assert_eq!(result.return_value, 7);
     assert_eq!(result.return_value_high, 4);
 }
+
+#[test]
+fn divides_spilled_wide_pairs_for_signed_and_unsigned_values() {
+    for (name, op, ty, dividend, divisor) in [
+        (
+            "unsigned_spill_division",
+            "div_u64",
+            "u64",
+            4_294_967_304,
+            4_294_967_298,
+        ),
+        (
+            "signed_spill_division",
+            "div_i64",
+            "i64",
+            -4_294_967_304,
+            -4_294_967_298,
+        ),
+    ] {
+        let const_op = format!("const_{ty}");
+        let ret_op = format!("ret_{ty}");
+        let cir = vec![
+            ci(&const_op, Some("a"), vec![CIROperand::Int(dividend)], ty),
+            ci(&const_op, Some("b"), vec![CIROperand::Int(divisor)], ty),
+            ci(&const_op, Some("c"), vec![CIROperand::Int(4_294_967_299)], ty),
+            ci(&const_op, Some("d"), vec![CIROperand::Int(4_294_967_300)], ty),
+            ci(
+                op,
+                Some("quotient"),
+                vec![CIROperand::Var("a".into()), CIROperand::Var("b".into())],
+                ty,
+            ),
+            ci(
+                &format!("add_{ty}"),
+                Some("sink"),
+                vec![CIROperand::Var("c".into()), CIROperand::Var("d".into())],
+                ty,
+            ),
+            ci(&ret_op, None, vec![CIROperand::Var("quotient".into())], ty),
+        ];
+        let bytes = compile(&ctx(name, &[], ty), &cir).expect("spilled wide division lowering");
+        let result = run_binary(&bytes, &[]).expect("spilled wide division execution");
+        assert_eq!(result.return_value, 1, "{name}");
+        assert_eq!(result.return_value_high, 0, "{name}");
+    }
+}
