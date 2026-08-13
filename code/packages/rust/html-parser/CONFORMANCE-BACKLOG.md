@@ -422,7 +422,16 @@ Prioritized work items:
    endings now follow the same SVG/MathML integration-boundary dispatch:
    recovery reports the foreign mismatch and ordinary-scope error while
    preserving the older button and following text, and nearer matching foreign
-   buttons still close in foreign mode. Continue with form endings.
+   buttons still close in foreign mode. Dedicated `form` endings now follow
+   the same SVG/MathML integration-boundary dispatch. A blocked pointer-owned
+   form reports the foreign mismatch and ordinary-scope error, remains in the
+   DOM, and clears only the form pointer so a later form start is accepted. A
+   blocked template-owned form preserves an outer form pointer, a nearer
+   matching foreign `form` closes in foreign mode, and no-pointer and seeded
+   fragment paths retain their distinct diagnostics. Continue the form audit
+   with ordinary `object`/`marquee` and table-cell scope boundaries, where
+   ignored-token stack state must remain observable after the pointer clears,
+   and with HTML `select`, where in-select recovery must not clear the pointer.
 3. **Diagnostic positions and error taxonomy.** Carry source positions into
    tree construction and map diagnostics to current WHATWG concepts. Legacy
    WPT/html5lib error labels are evidence hints, not a normative public API.
