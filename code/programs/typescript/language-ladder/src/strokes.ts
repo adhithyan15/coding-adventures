@@ -9,6 +9,7 @@
 
 import arabic from "../../../../learning/human-languages/data/scripts/arabic.json";
 import chinese from "../../../../learning/human-languages/data/scripts/chinese.json";
+import devanagari from "../../../../learning/human-languages/data/scripts/devanagari.json";
 import hebrew from "../../../../learning/human-languages/data/scripts/hebrew.json";
 import persoArabic from "../../../../learning/human-languages/data/scripts/perso-arabic.json";
 import urduNastaliq from "../../../../learning/human-languages/data/scripts/urdu-nastaliq.json";
@@ -204,6 +205,14 @@ const chineseCharacterSource = (glyph: string): StrokeSource => {
   const letter = chinese.letters.find((candidate) => candidate.glyph === glyph);
   if (!letter || !("strokeOrderSource" in letter) || !letter.strokeOrderSource) {
     throw new Error(`Chinese ${glyph} has no verified source`);
+  }
+  return letter.strokeOrderSource;
+};
+
+const devanagariAlphabetSource = (glyph: string): StrokeSource => {
+  const letter = devanagari.letters.find((candidate) => candidate.glyph === glyph);
+  if (!letter || !("strokeOrderSource" in letter) || !letter.strokeOrderSource) {
+    throw new Error(`Devanagari ${glyph} has no verified source`);
   }
   return letter.strokeOrderSource;
 };
@@ -1943,6 +1952,48 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       ] }] },
     ],
     source: chineseCharacterSource("上"),
+  },
+  // The four-frame Commons sequence writes the complete left body in one
+  // continuous run, lifts for the middle shoulder, descends the right stem,
+  // then closes with the short shirorekha: four strokes and three lifts.
+  [ductusKey("devanagari", "अ")]: {
+    script: "devanagari",
+    glyph: "अ",
+    strokes: [
+      {
+        segments: [
+          { label: "curve right around the upper bowl", path: [
+            { x: 165, y: 545 }, { x: 205, y: 575 }, { x: 250, y: 595 },
+            { x: 300, y: 596 }, { x: 350, y: 580 }, { x: 395, y: 550 },
+            { x: 420, y: 510 }, { x: 420, y: 470 }, { x: 400, y: 430 },
+            { x: 360, y: 400 }, { x: 315, y: 375 }, { x: 275, y: 355 },
+          ] },
+          { label: "continue down and around the lower bowl without lifting", path: [
+            { x: 275, y: 355 }, { x: 335, y: 330 }, { x: 395, y: 295 },
+            { x: 430, y: 250 }, { x: 435, y: 205 }, { x: 415, y: 160 },
+            { x: 375, y: 125 }, { x: 325, y: 105 }, { x: 275, y: 100 },
+            { x: 225, y: 115 }, { x: 180, y: 145 }, { x: 140, y: 190 },
+            { x: 105, y: 245 }, { x: 80, y: 305 },
+          ] },
+        ],
+      },
+      { segments: [{ label: "lift, then sweep the middle shoulder right", path: [
+        { x: 290, y: 350 }, { x: 350, y: 340 }, { x: 410, y: 325 },
+        { x: 470, y: 317 }, { x: 530, y: 320 }, { x: 585, y: 330 },
+        { x: 625, y: 342 },
+      ] }] },
+      { segments: [{ label: "lift, then descend the right stem", path: [
+        { x: 635, y: 590 }, { x: 635, y: 500 }, { x: 635, y: 410 },
+        { x: 635, y: 320 }, { x: 635, y: 230 }, { x: 635, y: 140 },
+        { x: 635, y: 50 }, { x: 635, y: 5 },
+      ] }] },
+      { segments: [{ label: "lift, then draw the shirorekha left-to-right", path: [
+        { x: 525, y: 585 }, { x: 570, y: 585 }, { x: 615, y: 585 },
+        { x: 660, y: 585 }, { x: 705, y: 585 }, { x: 750, y: 585 },
+        { x: 775, y: 585 },
+      ] }] },
+    ],
+    source: devanagariAlphabetSource("अ"),
   },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner

@@ -556,9 +556,15 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   the joined top-right turn and five lifts. **上** then descends its vertical,
   places the short middle horizontal, and finishes with the long base; its
   three-frame Noto Sans SC path preserves both lifts and completes Chinese.
-  The remaining **131** prose part orders across five scripts
+  Devanagari **अ** then opens the next actionable inventory with a source audit:
+  its upper curve continues around the lower bowl without lifting, then three
+  lifted runs add the middle shoulder, top-to-bottom right stem, and
+  left-to-right shirorekhā. Its five-frame Noto Sans Devanagari path follows the
+  cited four-run modern printed form while recording a published six-stroke
+  traditional Sanskrit form as real variation. The remaining **130** prose part
+  orders across five scripts
   (`arabic` 3,
-  `cyrillic` 33, `devanagari` 28,
+  `cyrillic` 33, `devanagari` 27,
   `gujarati` 33, `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a
   citation without a count), and Language Ladder's ductus test proves every
