@@ -17,4 +17,8 @@ import "animal-classes.adj"
 ? animal_class(cat, $Class)        % expect mammal
 ? animal_class(snake, $Class)      % expect reptile
 ? animal_class(shark, $Class)      % expect fish
+? animal_class(fox, $Class)        % expect mammal (added this cycle -- named in the mammals source's own list)
+? animal_class(ray, $Class)        % expect fish (added this cycle -- named in the fishes source's own list)
+? animal_class(cassowary, $Class)  % expect bird (added this cycle -- named in the birds source's own list)
 ? animal_class(rock, $Class)       % expect abstain — a rock is not an animal
+? animal_class(bat, $Class)        % expect abstain — a real mammal, but deliberately excluded (surprises beginners)

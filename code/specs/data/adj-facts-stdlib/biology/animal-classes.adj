@@ -20,25 +20,42 @@
 %
 % The five vertebrate classes, as a truth table over the animals shipped here:
 %
-%     animal     class        why (a beginner's cue)
-%     ---------  ----------   --------------------------------------------
-%     cat        mammal       has fur, feeds its young milk
-%     kangaroo   mammal       a marsupial mammal (a pouched mammal)
-%     emu        bird         has feathers, lays hard-shelled eggs
-%     ostrich    bird         a huge flightless bird
-%     frog       amphibian    lives part in water, part on land
-%     snake      reptile      cold-blooded, has scales
-%     turtle     reptile      a shelled reptile
-%     shark      fish         cold-blooded, has gills and fins
+%     animal       class        why (a beginner's cue)
+%     -----------  ----------   --------------------------------------------
+%     cat          mammal       has fur, feeds its young milk
+%     kangaroo     mammal       a marsupial mammal (a pouched mammal)
+%     fox          mammal       an introduced mammal (per the source's own list)
+%     rabbit       mammal       an introduced mammal (per the source's own list)
+%     bandicoot    mammal       a marsupial mammal (per the source's own list)
+%     quoll        mammal       a marsupial mammal (per the source's own list)
+%     koala        mammal       a marsupial mammal (per the source's own list)
+%     emu          bird         has feathers, lays hard-shelled eggs
+%     ostrich      bird         a huge flightless bird
+%     cassowary    bird         one of the largest flightless birds
+%     hummingbird  bird         a tiny bird (per the source's own size range)
+%     frog         amphibian    lives part in water, part on land
+%     snake        reptile      cold-blooded, has scales
+%     turtle       reptile      a shelled reptile
+%     lizard       reptile      a scaled reptile (per the source's own list)
+%     crocodile    reptile      a large reptile (per the source's own list)
+%     shark        fish         cold-blooded, has gills and fins
+%     ray          fish         a cartilaginous fish (per the source's own list)
 %
-% All five classes appear, so a learner sees the whole family: two mammals, two
-% birds, one amphibian, two reptiles and one fish. The animals were chosen to be
-% FAMILIAR and to have ONE clear class each — no tricky borderline cases (a whale
-% is a mammal and a bat is a mammal, but those surprise beginners, so they are
-% left out of this first library). A word that is not one of these animals —
-% `rock`, `banana`, `oak` — is deliberately NOT a row, so a class recall ABSTAINS
-% on it rather than fabricating an answer. That honest-abstention property is what
-% makes a recall table safe to build a reasoner on.
+% All five classes appear, so a learner sees the whole family. Extended this
+% cycle beyond the original 8 rows — the ADDITIONAL 10 rows (fox, rabbit,
+% bandicoot, quoll, koala, cassowary, hummingbird, lizard, crocodile, ray) name
+% NO new source page: every one of them is ALREADY named in this table's own
+% header quotes below (e.g. "introduced mammals such as cats, foxes and
+% rabbits" already names fox and rabbit, not just cat), so this extension
+% required zero new WebFetch, mirroring the "extend an existing table" pattern
+% already used for `cloud-types.adj` and `noun-type.adj`. The animals were
+% chosen to be FAMILIAR and to have ONE clear class each — no tricky borderline
+% cases (a whale is a mammal and a BAT is a mammal, but those surprise
+% beginners, so they remain deliberately left out). A word that is not one of
+% these animals — `rock`, `banana`, `oak`, `bat` — is deliberately NOT a row,
+% so a class recall ABSTAINS on it rather than fabricating an answer. That
+% honest-abstention property is what makes a recall table safe to build a
+% reasoner on.
 %
 % ----------------------------------------------------------------------------
 % Provenance (byte-quotable, per the ADJ-facts standard).
@@ -54,12 +71,12 @@
 %
 %   mammals  — "introduced mammals such as cats, foxes and rabbits" and
 %              "marsupials like kangaroos, bandicoots, quolls and the Koala"
-%              → cat, kangaroo are mammals.
+%              → cat, fox, rabbit, kangaroo, bandicoot, quoll, koala are mammals.
 %              https://australian.museum/learn/animals/mammals/
 %
 %   birds    — "Australia is home to two of the largest flightless birds- the
 %              Emu and Southern Cassowary" and "ranging from tiny hummingbirds up
-%              to huge ostriches" → emu, ostrich are birds.
+%              to huge ostriches" → emu, cassowary, hummingbird, ostrich are birds.
 %              https://australian.museum/learn/animals/birds/
 %
 %   amphibs  — "Frogs are the only remaining amphibians in Australia."
@@ -67,11 +84,11 @@
 %              https://australian.museum/learn/animals/frogs/
 %
 %   reptiles — "A diverse group of animals including turtles, lizards, snakes
-%              and crocodiles." → snake, turtle are reptiles.
+%              and crocodiles." → snake, turtle, lizard, crocodile are reptiles.
 %              https://australian.museum/learn/animals/reptiles/
 %
 %   fishes   — "Cartilaginous fish are characterised by their bones made of
-%              cartilage, this include sharks and rays." → shark is a fish.
+%              cartilage, this include sharks and rays." → shark, ray are fish.
 %              https://australian.museum/learn/animals/fishes/
 %
 % (See ../README.md; feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
@@ -82,12 +99,22 @@ table animal_class {
 
     row (cat, mammal)
     row (kangaroo, mammal)
+    row (fox, mammal)
+    row (rabbit, mammal)
+    row (bandicoot, mammal)
+    row (quoll, mammal)
+    row (koala, mammal)
     row (emu, bird)
     row (ostrich, bird)
+    row (cassowary, bird)
+    row (hummingbird, bird)
     row (frog, amphibian)
     row (snake, reptile)
     row (turtle, reptile)
+    row (lizard, reptile)
+    row (crocodile, reptile)
     row (shark, fish)
+    row (ray, fish)
 
     source "turtles, lizards, snakes and crocodiles, including the largest living reptile in the world: the Australian Crocodile"
     locator "https://australian.museum/learn/animals/"
