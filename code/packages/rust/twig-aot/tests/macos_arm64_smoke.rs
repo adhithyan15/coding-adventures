@@ -41,7 +41,14 @@
 // which is a strict subset of unix, so the cfg is safe.
 #[cfg(unix)]
 use std::os::unix::fs::PermissionsExt;
-use std::io::Write;
+// NOTE: there is deliberately no top-level `use std::io::Write;` here.  The one
+// `writeln!` in this file lives inside `end_to_end_typed_twig_arithmetic_and_branches`,
+// which imports the trait itself in its own body, so a file-level import is
+// unused on EVERY host — including Apple Silicon, where the inner `use` shadows
+// it.  CI compiles test targets with `-D warnings`, so an unused import is a
+// hard build error, not a nag.  If a future test outside that function needs
+// `writeln!`, import `Write` in that test's body too rather than re-adding a
+// file-level import that only some cfg combinations can justify.
 use std::path::PathBuf;
 use std::process::Command;
 

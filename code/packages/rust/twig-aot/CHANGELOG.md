@@ -1,5 +1,59 @@
 # Changelog — `twig-aot`
 
+## Unreleased - CI actually runs this crate's tests now
+
+Two fixes to a single latent breakage: the crate's tests were red *and*
+unbuildable on some hosts, and nothing in CI was positioned to notice either.
+
+**`tests/macos_arm64_smoke.rs` no longer breaks the `-D warnings` build.**
+The file carried a top-level `use std::io::Write;`. The only `writeln!` in it
+lives inside `end_to_end_typed_twig_arithmetic_and_branches`, which imports the
+trait in its own body — so the file-level import was unused on *every* host,
+including Apple Silicon, where the inner `use` shadows it. CI compiles test
+targets with `-D warnings`, which makes an unused import a hard error, not a
+nag:
+
+```
+error: unused import: `std::io::Write`
+  --> twig-aot/tests/macos_arm64_smoke.rs:44:5
+```
+
+The import is deleted (not silenced with `#[allow(unused_imports)]`) and
+replaced with a note explaining where `Write` belongs if a future test outside
+that function needs it.
+
+**Added a `BUILD` file.** `twig-aot` had none, so the repo's build tool never
+discovered the package and never executed a single one of its assertions — the
+same gap that hid three red suites in `lang-aot`. A workspace-wide `cargo check`
+elsewhere kept the crate *compiling*, which is precisely why an unused import in
+a test target could sit on main: nothing was compiling the test targets. The
+BUILD file runs, on one line (the build tool executes each BUILD line as its own
+`sh -c`; backslash continuations are silently truncated, not honoured):
+
+```
+cargo test -p twig-aot --lib --test e4d_str_helpers --test linux_x86_64_smoke --test windows_x86_64_smoke
+```
+
+Three of those targets are whole-file host-gated, so each pull-request CI leg
+(ubuntu / macOS / windows) runs a different subset and the rest compile to zero
+tests. `--lib` (58 tests, including the `dynval_runtime_golden` divergence
+guard) runs everywhere.
+
+`macos_arm64_smoke` is **deliberately excluded and named in the BUILD file**
+rather than silently dropped — 13 of its 16 tests pass on Apple Silicon, and the
+3 that fail are all in the precise-GC-roots area: `end_to_end_typed_twig_returns_42`
+(link failure, `___gc_register_stackmap` undefined in `smoke.o`),
+`end_to_end_gc_precise_keeps_ref_reclaims_lookalike` (look-alike not reclaimed;
+precise and conservative both report 80 bytes), and
+`end_to_end_gc_recursive_frame_live_bytes_differential` (intermediate
+self-recursive frame not precisely mapped at the recursive-call return address).
+`macos-latest` is an Apple Silicon runner and *is* in the pull-request matrix, so
+this is a real CI failure, not just a laptop one. Excluding a target skips only
+its run, never its compile — the check step still compiles it with
+`-D warnings`, which is why the unused-import fix was a prerequisite for adding
+the BUILD file rather than an unrelated tidy-up. The exclusion should be lifted
+the moment those three go green.
+
 ## 0.52.0 - 2026-08-12 - Windows stdout CRLF fix + GC-precision/recursion-boxing investigation notes
 
 Fixes a confirmed bug: `runtime/twig_runtime.c`'s `__twig_print_i64`,
