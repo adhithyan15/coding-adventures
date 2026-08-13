@@ -1,0 +1,20 @@
+% ============================================================================
+% radius-definition.query.adj — a worked recall over the geometry
+% radius-definition library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what does radius mean
+% for a sphere?": it states no geometry fact of its own — it only `import`s
+% the grounded table and asks binding queries. The engine resolves each `?`
+% against the `radius_definition` rows and returns the defining phrase + the
+% table's source/locator/trust. A shape the cited sentence does not name
+% abstains honestly — the engine never invents a definition.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli radius-definition.query.adj
+% ============================================================================
+
+import "radius-definition.adj"
+
+? radius_definition(sphere, $D)                       % expect center_to_surface
+? radius_definition($Shape, center_to_perimeter)      % reverse bind — expect circle
+? radius_definition(cube, $D)                         % expect abstain — the cited sentence names only circle and sphere

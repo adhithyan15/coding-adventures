@@ -1,0 +1,73 @@
+% ============================================================================
+% radius-definition — what "radius" measures for a circle vs. a sphere, per
+% the SAME already-cited MathWorld sentence (adj-facts-stdlib, GEOMETRY).
+% ============================================================================
+% A sibling to the already-shipped `circle-parts.adj` (`circle_part(part,
+% description)`, keyed by PART of a circle: radius, diameter, circumference,
+% chord). This table recalls a DIFFERENT axis the SAME already-cited
+% MathWorld "Radius" page states in ONE sentence: what "radius" measures for
+% each of TWO shapes — not just the circle `circle-parts.adj` already tables,
+% but the sphere the same sentence also names. `circle-parts.adj`'s own
+% `source` field already quotes the full sentence — "The distance from the
+% center of a circle to its perimeter, OR FROM THE CENTER OF A SPHERE TO ITS
+% SURFACE" — but that table's `part`-keyed schema has no row for a shape
+% other than circle, so the sphere half never became a row. Recall is a
+% binding query:
+%
+%     ? radius_definition(sphere, $D)      % center_to_surface
+%
+% This is a native `table` (ADJ-TABLES RS-5, a TWO-column table keyed by
+% SHAPE rather than by circle-part): each `row` lowers to a ground relation
+% `radius_definition(shape, description)` carrying the citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the
+% defining phrase WITH its source, on the CPU, with zero model calls, and
+% abstains on any solid this source's own sentence does not name (a cube, a
+% cone, a cylinder — a radius is not even the standard measure for those
+% shapes, and this sentence never claims otherwise).
+%
+% The two shapes and the defining phrase the SAME sentence states for each,
+% as a little truth table:
+%
+%     shape    what "radius" measures (MathWorld)          token
+%     ------   ------------------------------------------  -------------------
+%     circle   "from the center of a circle to its         center_to_perimeter
+%              perimeter"
+%     sphere   "from the center of a sphere to its         center_to_surface
+%              surface"
+%
+% The query also runs BACKWARD — bind a description and recall the shape it
+% defines:
+%
+%     ? radius_definition($Shape, center_to_perimeter)   % circle
+%
+% Only these two shapes appear in the cited sentence; a solid this sentence
+% does not name — cube, cone, cylinder — has no row here, so a recall on it
+% ABSTAINS rather than inventing a definition. That honest-abstention
+% property is what makes the table safe to reason from.
+%
+% ---------------------------------------------------------------------------
+% Provenance: reproduces, byte-for-byte, the SAME sentence already quoted
+% inside `circle-parts.adj`'s own provenance block (its `source` field, in
+% fact — not even the header), from the SAME MathWorld "Radius" page that
+% table already cites — no new WebFetch, only a different schema (shape →
+% description, not part → description) decoding the SECOND clause of a
+% sentence that table's first row already used the FIRST clause of. An ADJ
+% `table` carries ONE provenance envelope, so `source`/`locator`/`trust`
+% below hold the full two-clause sentence — the single span that fixes both
+% rows at once. MathWorld (mathworld.wolfram.com) is a primary mathematics
+% reference, the same tier `circle-parts.adj` already uses, so `trust
+% authoritative`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table radius_definition {
+    columns shape, description
+
+    row (circle, center_to_perimeter)
+    row (sphere, center_to_surface)
+
+    source "The distance from the center of a circle to its perimeter, or from the center of a sphere to its surface."
+    locator "https://mathworld.wolfram.com/Radius.html"
+    trust authoritative
+}
