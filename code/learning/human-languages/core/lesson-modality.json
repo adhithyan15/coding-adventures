@@ -7,19 +7,19 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:68330a774265fea2",
+  "sourceHash": "fnv1a64:c5f0a1da8758e29a",
   "summary": {
-    "totalLessons": 1959,
-    "voice": 1331,
-    "sight": 559,
+    "totalLessons": 1963,
+    "voice": 1333,
+    "sight": 561,
     "pen": 69,
-    "drivableLessons": 1331,
+    "drivableLessons": 1333,
     "drivablePercent": 68,
     "trackCount": 22,
-    "chapterCount": 713,
-    "drivablePrefixTotal": 1131,
-    "fullyDrivableChapters": 484,
-    "unstartableChapters": 171,
+    "chapterCount": 717,
+    "drivablePrefixTotal": 1133,
+    "fullyDrivableChapters": 486,
+    "unstartableChapters": 173,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
   },
@@ -7062,12 +7062,12 @@
     },
     {
       "language": "spanish",
-      "lessonCount": 359,
-      "voice": 319,
-      "sight": 33,
+      "lessonCount": 363,
+      "voice": 321,
+      "sight": 35,
       "pen": 7,
-      "drivablePercent": 89,
-      "drivablePrefixTotal": 306,
+      "drivablePercent": 88,
+      "drivablePrefixTotal": 308,
       "modalities": [
         "voice",
         "sight",
@@ -10558,6 +10558,66 @@
           "drivable": true,
           "drivableLessonIds": [
             "ES-C57-dijo-que"
+          ]
+        },
+        {
+          "chapter": 214,
+          "lessonCount": 1,
+          "voice": 0,
+          "sight": 1,
+          "pen": 0,
+          "modalities": [
+            "sight"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "ES-C57-pregunto-si",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 215,
+          "lessonCount": 1,
+          "voice": 0,
+          "sight": 1,
+          "pen": 0,
+          "modalities": [
+            "sight"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "ES-C57-pregunto-donde",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 216,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C57-repaso-reportar"
+          ]
+        },
+        {
+          "chapter": 217,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C57-sintesis-reportar"
           ]
         }
       ]
@@ -43643,6 +43703,78 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:9ae14677f1a6748b"
+    },
+    {
+      "id": "ES-C57-pregunto-si",
+      "language": "spanish",
+      "chapter": 214,
+      "sequence": 2305,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "sight-cue"
+      ],
+      "coreModality": "sight",
+      "coreReasons": [
+        "sight-cue"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:f74100b5d63a54de"
+    },
+    {
+      "id": "ES-C57-pregunto-donde",
+      "language": "spanish",
+      "chapter": 215,
+      "sequence": 2310,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "sight-cue"
+      ],
+      "coreModality": "sight",
+      "coreReasons": [
+        "sight-cue"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:9b1818a953f20d93"
+    },
+    {
+      "id": "ES-C57-repaso-reportar",
+      "language": "spanish",
+      "chapter": 216,
+      "sequence": 2315,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:e17f0f7b146772d0"
+    },
+    {
+      "id": "ES-C57-sintesis-reportar",
+      "language": "spanish",
+      "chapter": 217,
+      "sequence": 2320,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:3a874d09bbaaee0a"
     },
     {
       "id": "TA-C01-vanakkam",
