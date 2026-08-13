@@ -871,7 +871,9 @@ backend immediately) come before the enabler-dependent items.
   dynamic, and `while` elements preserve their entry set.
   A statically proven zero-trip `step`/`until` element also preserves entry
   integer, real, and boolean snapshots; unknown, `while`, and potentially
-  repeating elements still invalidate them.
+  repeating elements still invalidate them. The controlled scalar is updated
+  to the element's static initial value, matching the runtime preheader
+  assignment that occurs even when the first bound check rejects the body.
   A `while` element also retains body initialization when a bounded static
   numeric comparison, evaluated after abstractly assigning its initial
   controlled value, proves the first condition true. Known comparison leaves

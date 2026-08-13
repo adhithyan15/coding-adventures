@@ -4821,6 +4821,13 @@ impl Compiler {
             let executes = self.for_element_execution(target, var_ty, elem);
             let tokens = direct_tokens(elem);
             let is_step_element = tokens.iter().any(|token| token.value == "step");
+            let (static_initial_real, static_initial_integer) = if is_step_element
+                && !entry_tracking_disabled
+            {
+                self.for_step_initial_snapshot(var_ty, elem)
+            } else {
+                (None, None)
+            };
             if tokens
                 .iter()
                 .any(|token| token.value == "while" || token.value == "step")
@@ -4836,9 +4843,39 @@ impl Compiler {
                 self.static_integer_slots = entry_integer_slots;
                 self.static_boolean_slots = entry_boolean_slots;
                 self.static_real_tracking_disabled = entry_tracking_disabled;
+                if !entry_tracking_disabled {
+                    self.update_for_target_snapshot(
+                        target,
+                        static_initial_real,
+                        static_initial_integer,
+                    )?;
+                }
             }
         }
         Ok(())
+    }
+
+    fn for_step_initial_snapshot(
+        &self,
+        target_ty: ScalarType,
+        elem: &GrammarASTNode,
+    ) -> (Option<String>, Option<i64>) {
+        let Some(initial) = direct_nodes(elem)
+            .into_iter()
+            .find(|node| node.rule_name == "arith_expr")
+        else {
+            return (None, None);
+        };
+        match target_ty {
+            ScalarType::Real => (
+                self.static_assigned_real_value(initial)
+                    .filter(|value| value.is_finite())
+                    .map(|value| value.to_string()),
+                None,
+            ),
+            ScalarType::Integer => (None, self.static_assigned_integer_value(initial)),
+            ScalarType::Boolean | ScalarType::String => (None, None),
+        }
     }
 
     fn for_element_execution(
@@ -8977,6 +9014,30 @@ mod tests {
             "test",
         )
         .expect("a proven zero-trip loop preserves entry scalar snapshots");
+    }
+
+    #[test]
+    fn al4_zero_trip_step_updates_controlled_variable_snapshot() {
+        let module = compile_source(
+            "begin real x; x := 9.0; for x := 2.0 step 1.0 until 1.0 do x := 1.5; print(x) end",
+            "test",
+        )
+        .expect("a zero-trip step loop leaves its controlled variable at the initial value");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "2")
+        }));
+    }
+
+    #[test]
+    fn al4_zero_trip_step_does_not_reenable_disabled_tracking() {
+        let err = compile_source(
+            "begin integer n; real x; x := 9.0; for x := 1.0 while n > 0, 2.0 step 1.0 until 1.0 do x := 1.5; print(x) end",
+            "test",
+        )
+        .expect_err("a prior dynamic element keeps later snapshot tracking disabled");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
     #[test]
