@@ -9,15 +9,20 @@
 # SKIPS when absent, so a CI host without them reports skips, not failures; the
 # in-process suites (VM / JIT / WASM) always run.
 #
-# THREE TARGETS ARE DELIBERATELY EXCLUDED because they are red today. Each is
+# TWO TARGETS ARE DELIBERATELY EXCLUDED because they are red today. Each is
 # tracked, and each should be added here the moment it goes green — an excluded
 # target is an unprotected one:
 #
-#   lang_matrix           15 confirmed cross-language cell failures (the
+#   lang_matrix           12 confirmed cross-language cell failures (the
 #                         matrix-repair campaign). Add when it reaches zero.
 #   e6d7a_wasm_closures   2 failures — Twig closures on wasm (unbox width).
-#   end_to_end_smoke      1 failure — BASIC -> RV32I; fixed by PR #11241, so add
-#                         this back as soon as that lands.
+#
+# EXCLUSION ONLY SKIPS THE RUN, NOT THE BUILD. The check step compiles every
+# target in the crate with `-D warnings`, so an excluded suite that fails to
+# COMPILE still fails CI — only its failing assertions are excluded. This bit
+# the first revision of this file: `end_to_end_smoke` (excluded here at the
+# time) broke the macOS build on an unused import. Exclusion buys time on a
+# red assertion; it buys nothing on a red compile.
 #
 # Listing targets explicitly rather than running the whole crate is what makes
 # the exclusions visible. A bare `cargo test -p lang-aot` would hide them.
@@ -39,6 +44,7 @@ cargo test -p lang-aot --lib \
   --test clr_real_symbols \
   --test conformance \
   --test e6d2b_dynamic_arith \
+  --test end_to_end_smoke \
   --test e6d6_llvm_records \
   --test e6d6b_union_match_tagged \
   --test historical_round_trip \
