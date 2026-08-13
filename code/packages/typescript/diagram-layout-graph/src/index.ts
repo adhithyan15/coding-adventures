@@ -1,4 +1,4 @@
-export const VERSION = "0.1.0";
+export const VERSION = "0.2.0";
 
 import { CycleError, Graph } from "@coding-adventures/directed-graph";
 import {
@@ -89,44 +89,49 @@ function placeNodes(
   const direction = diagram.direction;
   const ranks = orderedRanks(diagram);
   const topInset = diagram.title ? options.titleGap : 0;
-  const rankSizes = ranks.map((rank) =>
+  const rankMajorSizes = ranks.map((rank) =>
     Math.max(
       ...rank.map((id) => {
         const node = diagram.nodes.find((candidate) => candidate.id === id)!;
-        return nodeWidth(node.label.text, options);
+        return direction === "lr" || direction === "rl"
+          ? nodeWidth(node.label.text, options)
+          : options.nodeHeight;
       }),
     ),
   );
+  const rankMajorOffsets = new Array<number>(ranks.length).fill(0);
+  const rankOrder = Array.from(ranks.keys());
+  if (direction === "rl" || direction === "bt") {
+    rankOrder.reverse();
+  }
+  let majorOffset = 0;
+  for (const rankIndex of rankOrder) {
+    rankMajorOffsets[rankIndex] = majorOffset;
+    majorOffset += rankMajorSizes[rankIndex] + options.rankGap;
+  }
 
   const nodes: LayoutedGraphNode[] = [];
 
   for (let rankIndex = 0; rankIndex < ranks.length; rankIndex++) {
     const rank = ranks[rankIndex];
+    let minorOffset = 0;
     for (let itemIndex = 0; itemIndex < rank.length; itemIndex++) {
       const nodeId = rank[itemIndex];
       const node = diagram.nodes.find((candidate) => candidate.id === nodeId)!;
       const width = nodeWidth(node.label.text, options);
       const height = options.nodeHeight;
 
-      const majorIndex =
-        direction === "rl" || direction === "bt"
-          ? ranks.length - rankIndex - 1
-          : rankIndex;
-
       let x: number;
       let y: number;
 
       if (direction === "lr" || direction === "rl") {
-        x =
-          options.margin +
-          majorIndex * (Math.max(...rankSizes) + options.rankGap);
-        y = options.margin + topInset + itemIndex * (height + options.nodeGap);
+        x = options.margin + rankMajorOffsets[rankIndex];
+        y = options.margin + topInset + minorOffset;
+        minorOffset += height + options.nodeGap;
       } else {
-        x = options.margin + itemIndex * (width + options.nodeGap);
-        y =
-          options.margin +
-          topInset +
-          majorIndex * (height + options.rankGap);
+        x = options.margin + minorOffset;
+        y = options.margin + topInset + rankMajorOffsets[rankIndex];
+        minorOffset += width + options.nodeGap;
       }
 
       nodes.push({
