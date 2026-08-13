@@ -118,6 +118,7 @@ per rotation, in parallel):
 | `earth-science/` | cause of rock metamorphism → its shared effect (`metamorphism_cause(cause, effect)`, heat/pressure/hot_mineral_rich_fluids → denser_more_compact_rock) — a sibling library to `rock-types.adj`, but a finer-grained causal axis, confirmed distinct via the mandatory full-tree-grep-before-scoping check | USGS "What are metamorphic rocks?" (authoritative; see `metamorphism-cause.adj`'s header) |
 | `nutrition/` | common food → MyPlate food group | USDA MyPlate |
 | `agriculture/` | farm animal → product it gives | Iowa State University (CFSPH) |
+| `agriculture/` | farm animal → the second product the SAME CFSPH span also states (`farm_animal_secondary_product(animal, product)`, chicken → meat, duck → meat, sheep → meat, sheep → milk) — a sibling to `farm-animals.adj`, decoding a second product already sitting unused in each row's own already-quoted provenance span; honest abstention on rabbit and goat, whose own cited spans state only a use or processing note for their already-recorded product, not a genuinely different second product | Iowa State University CFSPH (authoritative; see `farm-animal-secondary-product.adj`'s header — same source `farm-animals.adj` already cites) |
 | `biology/` | common bone → body region | NIH / MedlinePlus |
 | `biology/` | macronutrient → energy (kcal) per gram | NIH / MedlinePlus |
 | `biology/` | basic tissue type → representative example | NCI SEER Training |

@@ -1,0 +1,21 @@
+% ============================================================================
+% farm-animal-secondary-product.query.adj — a worked recall over the
+% agriculture farm-animal-secondary-product library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what else does a
+% chicken give us, besides eggs?": it states no agriculture fact of its
+% own — it only `import`s the grounded table and asks binding queries. The
+% engine resolves each `?` against the `farm_animal_secondary_product` rows
+% and returns the secondary product + the table's source/locator/trust. An
+% animal the cited spans give no secondary product for abstains honestly —
+% the engine never invents one.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli farm-animal-secondary-product.query.adj
+% ============================================================================
+
+import "farm-animal-secondary-product.adj"
+
+? farm_animal_secondary_product(chicken, $Product)   % expect meat
+? farm_animal_secondary_product(sheep, $Product)     % expect meat (and milk on backtrack)
+? farm_animal_secondary_product(goat, $Product)      % expect abstain — goat's own cited span states only a processing note for its already-recorded milk, no second product
