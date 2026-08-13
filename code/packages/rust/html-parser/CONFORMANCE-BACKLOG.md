@@ -397,9 +397,11 @@ Prioritized work items:
    foreign mismatch and heading-scope error without popping the integration
    point or the older authored HTML heading. Continue sampling adjacent
    namespace-aware scope checks and foreign-content fallback branches before
-   moving beyond the in-body recovery family. List-item endings at those same
-   integration boundaries are the leading adjacent probe, followed by
-   description-item, paragraph, marker-element, and generic fallback endings.
+   moving beyond the in-body recovery family. List-item endings now report the
+   foreign mismatch and list-item-scope error at those same integration
+   boundaries while preserving the ignored token and following boundary
+   content. Description-item endings are the leading adjacent probe, followed
+   by paragraph, marker-element, and generic fallback endings.
 3. **Diagnostic positions and error taxonomy.** Carry source positions into
    tree construction and map diagnostics to current WHATWG concepts. Legacy
    WPT/html5lib error labels are evidence hints, not a normative public API.
