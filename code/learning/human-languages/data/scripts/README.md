@@ -585,10 +585,13 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   lifts. **ऐ** reuses both base strokes, then separately sweeps its upper arc
   upward and left before adding the left-to-right shirorekhā. Its five-frame
   Noto Sans Devanagari path follows the cited four-run form with three lifts.
-  The remaining **123** prose part
+  **ओ** reuses आ's joined left body, separate shoulder, and two stems, then
+  separately sweeps its upper arc upward and left before adding the
+  left-to-right shirorekhā. Its seven-frame Noto Sans Devanagari path follows
+  the cited six-run form with five lifts. The remaining **122** prose part
   orders across five scripts
   (`arabic` 3,
-  `cyrillic` 33, `devanagari` 20,
+  `cyrillic` 33, `devanagari` 19,
   `gujarati` 33, `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a
   citation without a count), and Language Ladder's ductus test proves every
