@@ -32,6 +32,24 @@ panicking on the out-of-range index.
 reproducing `func.wast`'s exact shape in isolation. Baseline: `assert_return`
 12169/12238 (99.4%) → 12171/12238 (99.5%).
 
+**A security review of this fix found a residual edge case**: it split
+one shared counter into two independent ones (literal `(param ...)`
+forms counted as written, vs. the referenced type's real param count),
+which only agree when a function's literal params match its `(type
+$sig)` reference exactly — not something `resolve_func_signature_ref`
+itself enforces. A syntactically-valid but semantically-inconsistent
+module (literal params disagreeing in count with a same-function `(type
+$sig)` reference — deliberately adversarial input, not something a real
+`.wat` file produces) could make a declared local alias whichever count
+was smaller. Fixed by seeding the local-index counter from
+`max(literal param count, the type's real param count)` the first time a
+`(local ...)` form is actually reached, so a declared local can never
+collide with a position either count considers a parameter. 1 more
+regression test
+(`local_index_never_collides_with_a_param_even_if_literal_params_and_the_type_disagree`).
+No conformance-baseline change (the real testsuite never disagrees with
+its own type references).
+
 ## 0.1.1 — 2026-08-13 — 4 grammar bugs found running the real testsuite (W05 PR-4)
 
 `wasm-conformance` (W05 PR-4) is this crate's first real workout: running

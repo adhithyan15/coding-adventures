@@ -582,7 +582,9 @@ fn build_func(fields: &[SExpr], ctx: &mut ModuleCtx, func_idx: usize) -> Result<
     let param_count = ctx.module.types.get(type_idx as usize).map(|t| t.params.len()).unwrap_or(0) as u32;
     let mut local_names: HashMap<String, u32> = HashMap::new();
     let mut param_position = 0u32;
-    let mut next_local = param_count;
+    // `next_local` isn't seeded until the FIRST `(local ...)` form is
+    // actually reached -- see below for why.
+    let mut next_local: Option<u32> = None;
     let mut locals_decl: Vec<ValueType> = Vec::new();
     let mut instr_start = 0usize;
     for (i, f) in fields.iter().enumerate() {
@@ -598,15 +600,34 @@ fn build_func(fields: &[SExpr], ctx: &mut ModuleCtx, func_idx: usize) -> Result<
         } else if f.is_keyword_list("result") || f.is_keyword_list("type") {
             instr_start = i + 1;
         } else if f.is_keyword_list("local") {
+            // A security review found a residual edge case in the fix
+            // above: `param_position` (literal `(param ...)` forms
+            // counted as written) and `param_count` (the type's real,
+            // resolved param count) are only guaranteed to agree when a
+            // function's literal params match its `(type $sig)`
+            // reference exactly -- `resolve_func_signature_ref` doesn't
+            // enforce that itself (that's `wasm-validator`'s job, same
+            // division of responsibility as the out-of-range `(type N)`
+            // case above). A syntactically-valid but semantically
+            // inconsistent module (literal params disagreeing in count
+            // with a same-function `(type $sig)` reference) could
+            // otherwise make a declared local alias whichever of the two
+            // counts was smaller. Seeding from `max` the first time a
+            // `(local ...)` is actually reached (not the loop iteration
+            // that resolves `type_idx`) guarantees a declared local can
+            // never collide with a position either count considers a
+            // parameter, in every case -- including the ordinary one
+            // this fix exists for, where `param_position` stays 0.
+            let next_local = next_local.get_or_insert_with(|| param_position.max(param_count));
             let items = f.as_list().unwrap();
             if items.len() == 3 && items[1].as_atom().is_some_and(|s| s.starts_with('$')) {
-                local_names.insert(items[1].as_atom().unwrap().to_string(), next_local);
+                local_names.insert(items[1].as_atom().unwrap().to_string(), *next_local);
                 locals_decl.push(parse_value_type(&items[2])?);
-                next_local += 1;
+                *next_local += 1;
             } else {
                 for t in &items[1..] {
                     locals_decl.push(parse_value_type(t)?);
-                    next_local += 1;
+                    *next_local += 1;
                 }
             }
             instr_start = i + 1;
@@ -1482,6 +1503,38 @@ mod tests {
         // The param occupies local 0 (from $sig, never spelled out here);
         // $var must be local 1, NOT local 0 again.
         assert_eq!(code_of(&m, 0), &[0x20, 0x01, 0x0B]);
+    }
+
+    /// A security review of the WASM14 fix above found a residual edge
+    /// case: it split one shared counter into two independent ones
+    /// (literal `(param ...)` forms counted as written, vs. the
+    /// referenced type's real param count), which only agree when a
+    /// function's literal params match its `(type $sig)` reference
+    /// exactly. `resolve_func_signature_ref` doesn't enforce that itself
+    /// (that's `wasm-validator`'s job) -- confirmed empirically that a
+    /// syntactically-valid module with MORE literal params than its
+    /// `(type $sig)` reference declares could make a declared local
+    /// silently alias one of the "extra" literal params instead of
+    /// getting its own free index. Fixed by seeding the local-index
+    /// counter from `max(literal param count, the type's real param
+    /// count)` the first time a `(local ...)` form is actually reached.
+    /// This case is deliberately adversarial/malformed input (a real
+    /// `.wat` file never disagrees with its own type reference), but the
+    /// fix must not let it alias a local onto a parameter's storage no
+    /// matter which count was smaller.
+    #[test]
+    fn local_index_never_collides_with_a_param_even_if_literal_params_and_the_type_disagree() {
+        let m = parse_module(
+            "(module
+               (type $sig (func (param i32) (result i32)))
+               (func (export \"f\") (type $sig) (param i32) (param i32) (local $x i32)
+                 (local.get $x)))",
+        )
+        .unwrap();
+        // $sig declares 1 param; the literal (param i32) (param i32) forms
+        // above declare 2 -- deliberately inconsistent. $x must land at
+        // index 2 (past BOTH counts), never at 0 or 1.
+        assert_eq!(code_of(&m, 0), &[0x20, 0x02, 0x0B]);
     }
 
     #[test]
