@@ -1,0 +1,81 @@
+% ============================================================================
+% syllable-deletion — removing one whole syllable from a word to form a new
+% word, an EIGHTH literacy sub-skill in the ADJ stdlib (adj-facts-stdlib,
+% LANGUAGE).
+% ============================================================================
+% Deliberately DIFFERENT in shape from all seven prior literacy libraries:
+% `word-families.adj` derives RHYMING, `syllable-count.adj` recalls a
+% SYLLABLE COUNT, `onset-rime.adj` recalls an ONSET/RIME split,
+% `initial-sound.adj` recalls a BEGINNING sound, `phoneme-substitution.adj`
+% recalls the new word formed by swapping one SOUND, `phoneme-deletion.adj`
+% recalls the new word formed by removing one SOUND, and
+% `syllable-substitution.adj` recalls the position changed when one whole
+% SYLLABLE is swapped. This library recalls what happens when you DELETE
+% (remove) one whole SYLLABLE from a word — the syllable-level analogue of
+% `phoneme-deletion.adj`, the same way `syllable-substitution.adj` is the
+% syllable-level analogue of `phoneme-substitution.adj` — grounding the same
+% phonemic/phonological-awareness continuum's deletion skill at the coarser
+% syllable grain, as a pure lookup:
+% `syllable_deletion(original_word, removed_syllable, new_word)`. Recall is
+% a binding query:
+%
+%     ? syllable_deletion(pencil, cil, $New)   % pen
+%
+% A native `table` (ADJ-TABLES RS-5, a THREE-column table shaped exactly
+% like `phoneme-deletion.adj` and `onset-rime.adj`): each `row` lowers to a
+% ground relation `syllable_deletion(original_word, removed_syllable,
+% new_word)` carrying the Reading Rockets citation, so the lookup above is
+% the ordinary SLD binding query — the engine returns the new word WITH its
+% source, on the CPU, with zero model calls, and abstains on any deletion
+% not the one the cited page walks through. The query also runs BACKWARD —
+% bind the new word and recall which word it came from and which syllable
+% was removed:
+%
+%     ? syllable_deletion($Orig, $Syllable, pen)   % pencil, cil
+%
+% The one deletion this table carries, as a little truth table:
+%
+%     original_word   removed_syllable   new_word
+%     -------------   ----------------   --------
+%     pencil          cil                pen
+%
+% Provenance: quoted verbatim from Reading Rockets' "Phonological and
+% Phonemic Awareness: In Practice" module — the SAME already-vetted page
+% `syllable-count.adj`, `phoneme-substitution.adj`, `phoneme-deletion.adj`,
+% and `syllable-substitution.adj` already cite (its "Deleting syllables"
+% section, distinct from the "Deleting Sounds" section `phoneme-deletion.adj`
+% already draws from) — WebFetch-verified THREE separate times for
+% consistency before writing, all byte-identical. The exact spans, composed
+% together the same way `phoneme-deletion.adj`'s row already is (two
+% distinct clean-prose fragments from the same cited section, each stating
+% one fact — deliberately NOT drawing from the section's bracketed
+% stage-direction text or its generic closing instruction, "Repeat these
+% steps with as many as 15 two-syllable words," which names no further
+% concrete word and so grounds nothing beyond this one worked example):
+%
+%   "The word is: 'pencil'."
+%     (states the original word: pencil)
+%   "I take away 'cil' [remove the card]. 'Pen' is left [touch remaining
+%    card]."
+%     (states which syllable was removed and what remains: cil -> pen)
+%
+% `trust consensus` — the same tier `phoneme-deletion.adj`'s,
+% `syllable-substitution.adj`'s, and `syllable-count.adj`'s sibling sections
+% of this page already earned. Deliberately scoped to ONLY this ONE
+% deletion the cited page walks through step by step — honestly narrow
+% (mirroring `phoneme-deletion.adj`'s and `syllable-substitution.adj`'s
+% precedent) rather than inventing a deletion the source does not
+% demonstrate. A future slice can add a second deletion once a comparably
+% clean citation is found. (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table syllable_deletion {
+    columns original_word, removed_syllable, new_word
+
+    row (pencil, cil, pen)
+
+    source "The word is: 'pencil'. I take away 'cil'. 'Pen' is left."
+    locator "https://www.readingrockets.org/reading-101/reading-101-learning-modules/course-modules/phonological-and-phonemic-awareness/practice"
+    trust consensus
+}

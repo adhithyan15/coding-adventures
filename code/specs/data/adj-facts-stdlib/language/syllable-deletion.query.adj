@@ -1,0 +1,15 @@
+% ============================================================================
+% syllable-deletion.query.adj — worked recall over the syllable-deletion
+% library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what word do I get if
+% I remove this syllable?" (direct) or "what was the original word and which
+% syllable was removed?" (reverse) — it states no fact of its own — it only
+% `import`s the grounded table and asks binding queries.
+% ============================================================================
+
+import "syllable-deletion.adj"
+
+? syllable_deletion(pencil, cil, $New)              % expect pen (direct: remove pencil's second syllable "cil")
+? syllable_deletion($Orig, $Syllable, pen)          % expect pencil, cil (reverse: what changed into "pen"?)
+? syllable_deletion(basket, bas, $New)               % expect abstain -- this deletion is not tabled
