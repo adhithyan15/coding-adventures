@@ -7072,6 +7072,26 @@ impl HtmlParser {
             self.append_node(Node::element("p".to_string(), Vec::new()));
             return;
         }
+        if self.current_namespace().is_some()
+            && !self.current_element_is(name)
+            && matches!(name, "applet" | "marquee" | "object")
+            && self.has_open_foreign_integration_point()
+        {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-end-tag-in-foreign-content",
+                format!("end tag `</{name}>` did not match the current foreign element"),
+            ));
+            if self.close_open_foreign_element_before_html_boundary(name) {
+                return;
+            }
+            if self.open_html_element_in_scope_index(name).is_none() {
+                self.diagnostics.push(ParserDiagnostic::new(
+                    "unexpected-marker-element-end-tag-outside-scope",
+                    format!("end tag `</{name}>` targeted an element outside ordinary scope"),
+                ));
+            }
+            return;
+        }
         if self.has_open_svg_html_integration_point()
             && name != "template"
             && name != "p"
@@ -31832,6 +31852,125 @@ mod tests {
             assert!(fragment.parser_diagnostics.iter().all(|diagnostic| {
                 diagnostic.code != "unexpected-marker-element-end-tag-outside-scope"
             }));
+        }
+    }
+
+    #[test]
+    fn marker_element_end_tags_respect_foreign_integration_scope() {
+        for (marker_name, root_name, boundary_start, boundary_name) in [
+            ("applet", "svg", "foreignObject", "foreignObject"),
+            ("marquee", "svg", "desc", "desc"),
+            ("object", "svg", "title", "title"),
+            ("applet", "math", "mi", "mi"),
+            ("marquee", "math", "mtext", "mtext"),
+            (
+                "object",
+                "math",
+                "annotation-xml encoding=text/html",
+                "annotation-xml",
+            ),
+        ] {
+            let source = format!(
+                "<!doctype html><{marker_name} id=outer><b id=before><{root_name}><{boundary_start} id=boundary></{marker_name}>X</{boundary_name}></{root_name}></b>Y</{marker_name}>"
+            );
+            let output = parse_html_with_diagnostics(&source).unwrap();
+            assert_eq!(
+                output.parser_diagnostics,
+                vec![
+                    ParserDiagnostic::new(
+                        "unexpected-end-tag-in-foreign-content",
+                        format!(
+                            "end tag `</{marker_name}>` did not match the current foreign element"
+                        )
+                    ),
+                    ParserDiagnostic::new(
+                        "unexpected-marker-element-end-tag-outside-scope",
+                        format!(
+                            "end tag `</{marker_name}>` targeted an element outside ordinary scope"
+                        )
+                    ),
+                ],
+                "source {source:?}"
+            );
+            let outer = find_element_by_id(&output.document.children, "outer").unwrap();
+            let boundary = find_element_by_id(&outer.children, "boundary").unwrap();
+            assert_eq!(boundary.children, vec![Node::text("X")], "source {source:?}");
+            assert_eq!(outer.children.last(), Some(&Node::text("Y")));
+        }
+
+        let matching_foreign = parse_html_with_diagnostics(
+            "<!doctype html><object id=outer><svg><foreignObject><svg id=inner><object id=foreign><g></object>X</svg></foreignObject></svg></object>",
+        )
+        .unwrap();
+        assert_eq!(
+            matching_foreign.parser_diagnostics,
+            vec![ParserDiagnostic::new(
+                "unexpected-end-tag-in-foreign-content",
+                "end tag `</object>` did not match the current foreign element"
+            )]
+        );
+        let foreign = find_element_by_id(&matching_foreign.document.children, "foreign").unwrap();
+        assert_eq!(element(&foreign.children[0]).name, "g");
+        let inner = find_element_by_id(&matching_foreign.document.children, "inner").unwrap();
+        assert_eq!(inner.children.last(), Some(&Node::text("X")));
+
+        let unmatched = parse_html_with_diagnostics(
+            "<!doctype html><svg><foreignObject id=boundary></marquee>X</foreignObject></svg>",
+        )
+        .unwrap();
+        assert_eq!(
+            unmatched.parser_diagnostics,
+            vec![
+                ParserDiagnostic::new(
+                    "unexpected-end-tag-in-foreign-content",
+                    "end tag `</marquee>` did not match the current foreign element"
+                ),
+                ParserDiagnostic::new(
+                    "unexpected-marker-element-end-tag-outside-scope",
+                    "end tag `</marquee>` targeted an element outside ordinary scope"
+                ),
+            ]
+        );
+        let boundary = find_element_by_id(&unmatched.document.children, "boundary").unwrap();
+        assert_eq!(boundary.children, vec![Node::text("X")]);
+
+        let foreign_select = parse_html_with_diagnostics(
+            "<!doctype html><object id=outer><svg><select id=foreign></object>X",
+        )
+        .unwrap();
+        assert!(foreign_select.parser_diagnostics.iter().all(|diagnostic| {
+            diagnostic.code != "unexpected-marker-element-end-tag-outside-scope"
+        }));
+        assert_eq!(
+            body(&foreign_select.document).children.last(),
+            Some(&Node::text("X"))
+        );
+
+        for source in [
+            "<!doctype html><applet></applet>",
+            "<!doctype html><marquee><b></marquee>X<b>Y",
+            "<!doctype html><object><p></object>X",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output.parser_diagnostics.iter().all(|diagnostic| {
+                diagnostic.code != "unexpected-marker-element-end-tag-outside-scope"
+                    && diagnostic.code != "unexpected-end-tag-in-foreign-content"
+            }));
+        }
+
+        for context in ["svg applet", "svg marquee", "svg object"] {
+            let name = context.split_once(' ').unwrap().1;
+            let source = format!("</{name}>X");
+            let fragment =
+                parse_html_fragment_for_context_with_diagnostics(&source, context).unwrap();
+            assert_eq!(fragment.nodes, vec![Node::text("X")]);
+            assert_eq!(
+                fragment.parser_diagnostics,
+                vec![ParserDiagnostic::new(
+                    "unexpected-fragment-context-end-tag",
+                    format!("end tag `</{name}>` targeted a seeded fragment context element")
+                )]
+            );
         }
     }
 

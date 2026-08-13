@@ -408,8 +408,11 @@ Prioritized work items:
    authored HTML paragraph blocked by SVG or MathML button scope remains open,
    the foreign mismatch and paragraph-scope errors are reported, and the
    required empty paragraph is synthesized inside the foreign boundary without
-   moving following text. Continue with marker-element and generic fallback
-   endings.
+   moving following text. Marker-element endings now report the foreign
+   mismatch and ordinary-scope error at those same integration boundaries
+   without clearing the active-formatting marker or moving following text;
+   nearer matching foreign marker-named elements still close in foreign mode.
+   Continue with generic fallback, button, and form endings.
 3. **Diagnostic positions and error taxonomy.** Carry source positions into
    tree construction and map diagnostics to current WHATWG concepts. Legacy
    WPT/html5lib error labels are evidence hints, not a normative public API.
