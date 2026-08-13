@@ -326,6 +326,13 @@ Prioritized work items:
    WPT `tests16.dat`; template-owned forms blocked by the same boundary are
    covered, while ordinary, foreign-content, cell, and fragment paths keep
    their existing behavior.
+   Button end tags blocked by a table, object, marquee, or template scope
+   boundary now report and remain ignored, preserving the open button and
+   table insertion state required by the current Standard. WPT `tests20.dat`
+   supplies the open button/table shape; a browser differential with a blocked
+   ending, following row, and trailing text makes the recovery state
+   observable. In-scope, unmatched, cell, foreign-content, and synthetic
+   fragment endings remain on their existing paths.
 3. **Diagnostic positions and error taxonomy.** Carry source positions into
    tree construction and map diagnostics to current WHATWG concepts. Legacy
    WPT/html5lib error labels are evidence hints, not a normative public API.
