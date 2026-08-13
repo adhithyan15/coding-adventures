@@ -862,6 +862,122 @@ fn linked_module_executes_a_zero_argument_direct_call() {
     assert_eq!(result.return_value, 42);
 }
 
+#[test]
+fn linked_module_marshals_scalar_call_arguments() {
+    let params = vec![
+        ("left".to_owned(), "i32".to_owned()),
+        ("right".to_owned(), "i32".to_owned()),
+    ];
+    let helper = vec![
+        ci(
+            "add_i32",
+            Some("sum"),
+            vec![
+                CIROperand::Var("left".into()),
+                CIROperand::Var("right".into()),
+            ],
+            "i32",
+        ),
+        ci("ret_i32", None, vec![CIROperand::Var("sum".into())], "i32"),
+    ];
+    let main = vec![
+        ci("const_i32", Some("left"), vec![CIROperand::Int(19)], "i32"),
+        ci("const_i32", Some("right"), vec![CIROperand::Int(23)], "i32"),
+        ci(
+            "call",
+            Some("answer"),
+            vec![
+                CIROperand::Var("add".into()),
+                CIROperand::Var("left".into()),
+                CIROperand::Var("right".into()),
+            ],
+            "i32",
+        ),
+        ci(
+            "ret_i32",
+            None,
+            vec![CIROperand::Var("answer".into())],
+            "i32",
+        ),
+    ];
+    let functions = [
+        ModuleFunction {
+            context: ctx("add", &params, "i32"),
+            cir: &helper,
+        },
+        ModuleFunction {
+            context: ctx("main", &[], "i32"),
+            cir: &main,
+        },
+    ];
+
+    let binary = compile_module(&functions, Some("main")).expect("module linking");
+    let result = run_binary(&binary, &[]).expect("linked module execution");
+    assert!(result.halted);
+    assert_eq!(result.return_value, 42);
+}
+
+#[test]
+fn linked_module_marshals_wide_call_arguments() {
+    let params = vec![
+        ("left".to_owned(), "u64".to_owned()),
+        ("right".to_owned(), "u64".to_owned()),
+    ];
+    let helper = vec![
+        ci(
+            "add_u64",
+            Some("sum"),
+            vec![
+                CIROperand::Var("left".into()),
+                CIROperand::Var("right".into()),
+            ],
+            "u64",
+        ),
+        ci("ret_u64", None, vec![CIROperand::Var("sum".into())], "u64"),
+    ];
+    let main = vec![
+        ci(
+            "const_u64",
+            Some("high_word"),
+            vec![CIROperand::Int(4_294_967_296)],
+            "u64",
+        ),
+        ci("const_u64", Some("low_word"), vec![CIROperand::Int(42)], "u64"),
+        ci(
+            "call",
+            Some("answer"),
+            vec![
+                CIROperand::Var("add".into()),
+                CIROperand::Var("high_word".into()),
+                CIROperand::Var("low_word".into()),
+            ],
+            "u64",
+        ),
+        ci(
+            "ret_u64",
+            None,
+            vec![CIROperand::Var("answer".into())],
+            "u64",
+        ),
+    ];
+    let functions = [
+        ModuleFunction {
+            context: ctx("add", &params, "u64"),
+            cir: &helper,
+        },
+        ModuleFunction {
+            context: ctx("main", &[], "u64"),
+            cir: &main,
+        },
+    ];
+
+    let binary = compile_module(&functions, Some("main")).expect("module linking");
+    let result = run_binary(&binary, &[]).expect("linked module execution");
+    assert!(result.halted);
+    assert_eq!(result.return_value, 42);
+    assert_eq!(result.return_value_high, 1);
+}
+
 // ---------------------------------------------------------------------------
 // Floating point: a refusal with a reason, never bytes.
 //

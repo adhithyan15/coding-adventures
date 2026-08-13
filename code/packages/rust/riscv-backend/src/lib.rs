@@ -172,9 +172,9 @@ pub fn compile(ctx: &FunctionContext<'_>, cir: &[CIRInstr]) -> Result<Vec<u8>, B
 /// Lower and link a module of CIR functions into one executable RV32I image.
 ///
 /// The entry function begins at address zero so [`run_binary`] can execute the
-/// image directly. The initial call slice supports direct, zero-argument calls
-/// returning an RV32-width value (or `void`); argument marshaling and values live
-/// across a call remain deliberately refused until their ABI lowering lands.
+/// image directly. Direct calls marshal scalar and 64-bit pair values through
+/// the starter RV32 ABI. Values that remain live in the caller are deliberately
+/// refused until caller-save spilling lands.
 pub fn compile_module(
     functions: &[ModuleFunction<'_>],
     entry_point: Option<&str>,
@@ -191,12 +191,20 @@ pub fn compile_module(
         ordered.swap(0, entry_index);
     }
 
-    let mut function_return_types = HashMap::with_capacity(ordered.len());
+    let mut function_signatures = HashMap::with_capacity(ordered.len());
     for function in &ordered {
-        if function_return_types
+        if function_signatures
             .insert(
                 function.context.name.to_owned(),
-                function.context.return_type.to_owned(),
+                FunctionSignature {
+                    params: function
+                        .context
+                        .params
+                        .iter()
+                        .map(|(_, ty)| ty.clone())
+                        .collect(),
+                    return_type: function.context.return_type.to_owned(),
+                },
             )
             .is_some()
         {
@@ -223,7 +231,7 @@ pub fn compile_module(
             &function.context,
             function.cir,
             true,
-            Some(&function_return_types),
+            Some(&function_signatures),
             direct_call_targets.contains(function.context.name),
         )?;
         for instr in function.cir {
@@ -323,12 +331,18 @@ struct Lowerer {
     /// scalar values and register pairs before it spills live values.
     remaining_uses: HashMap<String, usize>,
     allow_direct_calls: bool,
-    call_return_types: HashMap<String, String>,
+    call_signatures: HashMap<String, FunctionSignature>,
     canonicalize_wide_return: bool,
     next_internal_label: usize,
     frame_size: i32,
     return_address_offset: Option<i32>,
     next_spill_slot: usize,
+}
+
+#[derive(Debug, Clone)]
+struct FunctionSignature {
+    params: Vec<String>,
+    return_type: String,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -375,12 +389,9 @@ impl Lowerer {
         ctx: &FunctionContext<'_>,
         cir: &[CIRInstr],
         allow_direct_calls: bool,
-        call_return_types: Option<&HashMap<String, String>>,
+        call_signatures: Option<&HashMap<String, FunctionSignature>>,
         canonicalize_wide_return: bool,
     ) -> Result<Self, BackendError> {
-        if ctx.params.len() > ARG_REGISTERS.len() {
-            return Err(BackendError::TooManyArguments(ctx.params.len()));
-        }
         let mut env = Vec::with_capacity(ctx.params.len());
         let mut next_argument = 0;
         for (name, ty) in ctx.params {
@@ -389,7 +400,7 @@ impl Lowerer {
             }
             let location = if matches!(ty.as_str(), "i64" | "u64") {
                 if next_argument + 1 >= ARG_REGISTERS.len() {
-                    return Err(BackendError::TooManyArguments(ctx.params.len()));
+                    return Err(BackendError::TooManyArguments(next_argument + 2));
                 }
                 let pair = ValueLocation::Pair {
                     lo: ARG_REGISTERS[next_argument],
@@ -399,7 +410,7 @@ impl Lowerer {
                 pair
             } else {
                 if next_argument >= ARG_REGISTERS.len() {
-                    return Err(BackendError::TooManyArguments(ctx.params.len()));
+                    return Err(BackendError::TooManyArguments(next_argument + 1));
                 }
                 let word = ValueLocation::Word(ARG_REGISTERS[next_argument]);
                 next_argument += 1;
@@ -418,8 +429,14 @@ impl Lowerer {
                 }
             })
             .sum();
+        let call_argument_words = match (allow_direct_calls, call_signatures) {
+            (true, Some(signatures)) => max_call_argument_words(cir, signatures)?,
+            _ => 0,
+        };
         let needs_return_address_slot = allow_direct_calls && cir.iter().any(|instr| instr.op == "call");
-        let frame_words = value_word_count + usize::from(needs_return_address_slot);
+        let frame_words = value_word_count
+            + call_argument_words
+            + usize::from(needs_return_address_slot);
         let frame_size = if frame_words > VALUE_REGISTERS.len() || needs_return_address_slot {
             ((frame_words as i32) * 4 + 15) & !15
         } else {
@@ -445,12 +462,12 @@ impl Lowerer {
             calls: Vec::new(),
             remaining_uses: count_value_uses(cir),
             allow_direct_calls,
-            call_return_types: call_return_types.cloned().unwrap_or_default(),
+            call_signatures: call_signatures.cloned().unwrap_or_default(),
             canonicalize_wide_return,
             next_internal_label: 0,
             frame_size,
             return_address_offset,
-            next_spill_slot: 0,
+            next_spill_slot: call_argument_words,
         })
     }
 
@@ -726,17 +743,48 @@ impl Lowerer {
                 "call srcs[0] must be Var(function_name)".to_owned(),
             ));
         };
-        if instr.srcs.len() != 1 {
-            return Err(BackendError::UnsupportedOp(
-                "call arguments (RV32 call ABI argument marshaling is pending)".to_owned(),
-            ));
+        let signature = self
+            .call_signatures
+            .get(function)
+            .cloned()
+            .ok_or_else(|| BackendError::UndefinedLabel(function.clone()))?;
+        let arguments = &instr.srcs[1..];
+        if arguments.len() != signature.params.len() {
+            return Err(BackendError::InvalidOperand(format!(
+                "call to {function:?} supplies {} arguments, but its signature requires {}",
+                arguments.len(),
+                signature.params.len()
+            )));
+        }
+        let argument_words: usize = signature.params.iter().map(|ty| abi_word_count(ty)).sum();
+        if argument_words > ARG_REGISTERS.len() {
+            return Err(BackendError::TooManyArguments(argument_words));
         }
         if let Some((name, _)) = self.env.iter().find(|(name, _)| {
-            self.remaining_uses.get(name).copied().unwrap_or_default() != 0
+            self.remaining_uses.get(name).copied().unwrap_or_default()
+                > value_source_occurrences(instr, name)
         }) {
             return Err(BackendError::UnsupportedOp(format!(
                 "call with value {name:?} live across it (caller-save spilling is pending)"
             )));
+        }
+
+        let mut argument_word = 0;
+        for (index, ty) in signature.params.iter().enumerate() {
+            self.stage_call_argument(instr, index + 1, ty, argument_word)?;
+            argument_word += abi_word_count(ty);
+        }
+        for (argument_word, register) in ARG_REGISTERS
+            .iter()
+            .copied()
+            .enumerate()
+            .take(argument_words)
+        {
+            self.words.push(encode_lw(
+                register,
+                STACK_POINTER,
+                (argument_word * 4) as i32,
+            ));
         }
 
         self.calls.push(PendingCall {
@@ -746,10 +794,7 @@ impl Lowerer {
         self.words.push(0);
 
         let return_type = if instr.ty == "any" {
-            self.call_return_types
-                .get(function)
-                .cloned()
-                .ok_or_else(|| BackendError::UndefinedLabel(function.clone()))?
+            signature.return_type
         } else {
             instr.ty.clone()
         };
@@ -776,6 +821,67 @@ impl Lowerer {
                 "non-void call requires a destination".to_owned(),
             )),
         }
+    }
+
+    fn stage_call_argument(
+        &mut self,
+        instr: &CIRInstr,
+        index: usize,
+        ty: &str,
+        word_index: usize,
+    ) -> Result<(), BackendError> {
+        self.require_scalar_type(ty, "call argument")?;
+        let offset = (word_index * 4) as i32;
+        match (self.var_location(instr, index, "call")?, abi_word_count(ty)) {
+            (ValueLocation::Word(register), 1) => {
+                self.words.push(encode_sw(register, STACK_POINTER, offset));
+            }
+            (ValueLocation::Spill { offset: source }, 1) => {
+                self.words.push(encode_lw(SCRATCH_REGISTER, STACK_POINTER, source));
+                self.words.push(encode_sw(SCRATCH_REGISTER, STACK_POINTER, offset));
+            }
+            (ValueLocation::Pair { lo, hi }, 2) => {
+                self.words.push(encode_sw(lo, STACK_POINTER, offset));
+                self.words.push(encode_sw(hi, STACK_POINTER, offset + 4));
+            }
+            (
+                ValueLocation::PairSpill {
+                    lo_offset,
+                    hi_offset,
+                },
+                2,
+            ) => {
+                self.words.push(encode_lw(SCRATCH_REGISTER, STACK_POINTER, lo_offset));
+                self.words.push(encode_sw(SCRATCH_REGISTER, STACK_POINTER, offset));
+                self.words.push(encode_lw(SCRATCH_REGISTER, STACK_POINTER, hi_offset));
+                self.words.push(encode_sw(SCRATCH_REGISTER, STACK_POINTER, offset + 4));
+            }
+            (ValueLocation::Word(register), 2) => {
+                self.words.push(encode_sw(register, STACK_POINTER, offset));
+                self.words.push(if is_signed(ty) {
+                    encode_srai(SCRATCH_REGISTER, register, 31)
+                } else {
+                    encode_addi(SCRATCH_REGISTER, X0_ZERO, 0)
+                });
+                self.words.push(encode_sw(SCRATCH_REGISTER, STACK_POINTER, offset + 4));
+            }
+            (ValueLocation::Spill { offset: source }, 2) => {
+                self.words.push(encode_lw(SCRATCH_REGISTER, STACK_POINTER, source));
+                self.words.push(encode_sw(SCRATCH_REGISTER, STACK_POINTER, offset));
+                self.words.push(if is_signed(ty) {
+                    encode_srai(SCRATCH_REGISTER, SCRATCH_REGISTER, 31)
+                } else {
+                    encode_addi(SCRATCH_REGISTER, X0_ZERO, 0)
+                });
+                self.words.push(encode_sw(SCRATCH_REGISTER, STACK_POINTER, offset + 4));
+            }
+            (location, words) => {
+                return Err(BackendError::InvalidOperand(format!(
+                    "call argument at srcs[{index}] has location {location:?}, incompatible with {words}-word type {ty:?}"
+                )));
+            }
+        }
+        Ok(())
     }
 
     fn check_branch_offset(label: &str, offset: i64, max: i64) -> Result<(), BackendError> {
@@ -880,9 +986,10 @@ impl Lowerer {
         };
         match self.lookup_location(name)? {
             ValueLocation::Word(register) => Ok(register),
-            ValueLocation::Pair { .. } => Err(BackendError::InvalidOperand(format!(
-                "{name:?} is a 64-bit value where a 32-bit value is required"
-            ))),
+            // Source frontends such as Nib normalize function signatures to
+            // i64, while CIR retains narrow body operations (`add_u8`, etc.).
+            // A narrow operation intentionally consumes the low ABI word.
+            ValueLocation::Pair { lo, .. } => Ok(lo),
             ValueLocation::Spill { offset } => {
                 let register = if index == 0 {
                     SPILLED_LHS_REGISTER
@@ -892,9 +999,15 @@ impl Lowerer {
                 self.words.push(encode_lw(register, STACK_POINTER, offset));
                 Ok(register)
             }
-            ValueLocation::PairSpill { .. } => Err(BackendError::InvalidOperand(format!(
-                "{name:?} is a spilled 64-bit value where a 32-bit value is required"
-            ))),
+            ValueLocation::PairSpill { lo_offset, .. } => {
+                let register = if index == 0 {
+                    SPILLED_LHS_REGISTER
+                } else {
+                    SPILLED_RHS_REGISTER
+                };
+                self.words.push(encode_lw(register, STACK_POINTER, lo_offset));
+                Ok(register)
+            }
         }
     }
 
@@ -1928,6 +2041,33 @@ fn count_value_uses(cir: &[CIRInstr]) -> HashMap<String, usize> {
         }
     }
     uses
+}
+
+fn abi_word_count(ty: &str) -> usize {
+    usize::from(matches!(ty, "i64" | "u64")) + 1
+}
+
+fn max_call_argument_words(
+    cir: &[CIRInstr],
+    signatures: &HashMap<String, FunctionSignature>,
+) -> Result<usize, BackendError> {
+    let mut maximum = 0;
+    for instr in cir.iter().filter(|instr| instr.op == "call") {
+        let Some(CIROperand::Var(function)) = instr.srcs.first() else {
+            return Err(BackendError::InvalidOperand(
+                "call srcs[0] must be Var(function_name)".to_owned(),
+            ));
+        };
+        let signature = signatures
+            .get(function)
+            .ok_or_else(|| BackendError::UndefinedLabel(function.clone()))?;
+        let words: usize = signature.params.iter().map(|ty| abi_word_count(ty)).sum();
+        if words > ARG_REGISTERS.len() {
+            return Err(BackendError::TooManyArguments(words));
+        }
+        maximum = maximum.max(words);
+    }
+    Ok(maximum)
 }
 
 fn value_source_occurrences(instr: &CIRInstr, name: &str) -> usize {
