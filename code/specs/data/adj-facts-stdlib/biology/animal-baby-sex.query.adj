@@ -1,0 +1,20 @@
+% ============================================================================
+% animal-baby-sex.query.adj — a worked recall over the animal-baby-sex
+% library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what is a male baby
+% horse called?": it states no fact — it only `import`s the grounded table
+% and asks binding queries. The engine resolves each `?` against the
+% `animal_baby_sex` rows and returns the sex-specific name + the table's
+% source/locator/trust. An animal/sex pair the source does not distinguish
+% abstains honestly — the engine never invents a name.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli animal-baby-sex.query.adj
+% ============================================================================
+
+import "animal-baby-sex.adj"
+
+? animal_baby_sex(horse, male, $Baby)     % expect colt
+? animal_baby_sex(horse, female, $Baby)   % expect filly
+? animal_baby_sex(dog, male, $Baby)       % expect abstain — dog has no sex-specific baby name in the source
