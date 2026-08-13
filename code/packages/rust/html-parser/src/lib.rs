@@ -5096,12 +5096,15 @@ impl HtmlParser {
 
         if !in_foreign_content
             && self.current_element_is("frameset")
-            && !matches!(name.as_str(), "frame" | "frameset" | "noframes")
+            && !matches!(name.as_str(), "frame" | "frameset" | "html" | "noframes")
         {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-start-tag-in-frameset",
-                format!("start tag `<{name}>` in a frameset was ignored"),
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-start-tag-in-frameset",
+                    format!("start tag `<{name}>` in a frameset was ignored"),
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             return;
         }
         if !in_foreign_content
@@ -35376,7 +35379,7 @@ mod tests {
         .unwrap();
         assert!(in_frameset.parser_diagnostics.iter().any(|diagnostic| {
             diagnostic.code == "unexpected-start-tag-in-frameset"
-                && diagnostic.position.is_none()
+                && diagnostic.position.is_some()
         }));
         assert!(in_frameset.parser_diagnostics.iter().all(|diagnostic| {
             diagnostic.code != "unexpected-start-tag-after-frameset"
@@ -35401,6 +35404,76 @@ mod tests {
         assert!(allowed.parser_diagnostics.iter().all(|diagnostic| {
             diagnostic.code != "unexpected-start-tag-after-frameset"
         }));
+    }
+
+    #[test]
+    fn positions_in_frameset_start_tag_diagnostics_at_token_emission() {
+        for target in ["main", "div", "body"] {
+            let source = format!("<!doctype html><frameset><!--é-->\r\n<{target}>");
+            let output = parse_html_with_diagnostics(&source).unwrap();
+            let diagnostics = output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-start-tag-in-frameset")
+                .collect::<Vec<_>>();
+            let final_delimiter = source.rfind('>').unwrap();
+
+            assert_eq!(diagnostics.len(), 1, "target {target:?}");
+            assert_eq!(
+                diagnostics[0].position,
+                Some(SourcePosition {
+                    byte_offset: final_delimiter,
+                    char_offset: source[..final_delimiter].chars().count(),
+                    line: 2,
+                    column: target.chars().count() + 2,
+                })
+            );
+            assert!(final_delimiter > source[..final_delimiter].chars().count());
+        }
+
+        let mut parser = HtmlParser::new();
+        for token in [
+            Token::StartTag {
+                name: "html".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "frameset".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "main".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Eof,
+        ] {
+            parser.process_token(token);
+        }
+        let diagnostics = parser
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "unexpected-start-tag-in-frameset")
+            .collect::<Vec<_>>();
+        assert_eq!(diagnostics.len(), 1);
+        assert_eq!(diagnostics[0].position, None);
+
+        for source in [
+            "<!doctype html><frameset><frame>",
+            "<!doctype html><frameset><frameset></frameset>",
+            "<!doctype html><frameset><noframes>x</noframes>",
+            "<!doctype html><frameset><html>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(
+                output.parser_diagnostics.iter().all(|diagnostic| {
+                    diagnostic.code != "unexpected-start-tag-in-frameset"
+                }),
+                "source {source:?}"
+            );
+        }
     }
 
     #[test]

@@ -485,7 +485,9 @@ Prioritized work items:
    and directly supplied token streams remain unpositioned. Ignored start tags
    in the after-frameset insertion mode likewise carry their token emission
    point exactly once across repeated `frameset`, `frame`, and generic starts,
-   while in-frameset and after-after-frameset dispatch remain distinct.
+   while after-after-frameset dispatch remains distinct. Direct in-frameset
+   ignored start tags also carry their proven emission point exactly once,
+   without folding character or end-tag diagnostics into the same contract.
    Continue migrating one evidence-backed diagnostic family at a time;
    synthetic or directly supplied tokens must remain explicitly unpositioned.
 4. **Input boundary review.** Document the Unicode-code-point parser boundary
