@@ -2,6 +2,12 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Devanagari ओ ductus (HL-C09DF)
+
+- Render **ओ** in seven source-aligned movements across six strokes.
+- Reuse आ's joined left body, separate shoulder, and two stems before the separate upper arc and final shirorekhā.
+- Preserve the source's five lifts, fit the path to Noto Sans Devanagari, and reduce measured HL-C09 debt to 122 entries.
+
 ### Added — cited Devanagari ऐ ductus (HL-C09DE)
 
 - Render **ऐ** in five source-aligned movements across four strokes.
