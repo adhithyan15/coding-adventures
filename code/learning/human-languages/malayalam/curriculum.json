@@ -36,6 +36,25 @@
       "after": []
     },
     {
+      "id": "ML-PATH-100",
+      "spine_node": "SPINE-MEET-GREET",
+      "lessons": [
+        "ML-S01-letter-ka",
+        "ML-S02-sign-virama",
+        "ML-S03-vowel-sign-i",
+        "ML-S04-vowel-sign-aa",
+        "ML-S05-letter-na",
+        "ML-S06-letter-chillu-ll",
+        "ML-S07-vowel-sign-u",
+        "ML-S08-letter-ta"
+      ],
+      "before": [],
+      "inline": [
+        "ML-EXT-100-SCRIPT-RECOGNITION"
+      ],
+      "after": []
+    },
+    {
       "id": "ML-PATH-004",
       "spine_node": "SPINE-RESPOND-BASIC",
       "lessons": [
@@ -451,7 +470,8 @@
   "spine": {
     "SPINE-MEET-GREET": {
       "segments": [
-        "ML-PATH-001"
+        "ML-PATH-001",
+        "ML-PATH-100"
       ],
       "omits": [
         "GREETING-FORMAL",
@@ -810,6 +830,24 @@
     }
   },
   "extensions": [
+    {
+      "id": "ML-EXT-100-SCRIPT-RECOGNITION",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can pick out each of these Malayalam characters inside the words I already say, and copy its shape by tracing.",
+      "prerequisites": [],
+      "lessons": [
+        "ML-S01-letter-ka",
+        "ML-S02-sign-virama",
+        "ML-S03-vowel-sign-i",
+        "ML-S04-vowel-sign-aa",
+        "ML-S05-letter-na",
+        "ML-S06-letter-chillu-ll",
+        "ML-S07-vowel-sign-u",
+        "ML-S08-letter-ta"
+      ]
+    },
     {
       "id": "ML-EXT-010-LANGUAGE-SPECIFIC",
       "stage": "pre-A1",

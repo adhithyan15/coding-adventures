@@ -1,8 +1,8 @@
 Sanskrit, chapter 12: The Face, Part One.
-3 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+4 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 3.
+Lesson 1 of 4.
 अक्षि (akṣi) — "eye," and the number Sanskrit built for it.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -38,7 +38,7 @@ Wrap-up Recall.
 Name two English words from the same root as अक्षि (akṣi). (Eye, and, through Latin, ocular or monocle.) What is the dual form for "two eyes," and what grammatical number is that? (अक्षिणी; the dual, the same category as dvau.) And what did you learn just before this? (Bhaginī, sister.)
 
 
-Lesson 2 of 3.
+Lesson 2 of 4.
 कर्णः (karṇaḥ) — "ear," a word without a settled parent.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -74,7 +74,7 @@ Wrap-up Recall.
 Is कर्णः (karṇaḥ)'s root settled or disputed? (Disputed — four guesses, no winner.) What ending marks it masculine, and where did you meet that sound before? (-अः, a visarga, first heard on नमस्ते.) What gender does the Gujarati descendant kān take, and is that the same as Sanskrit's? (Feminine — it changed.)
 
 
-Lesson 3 of 3.
+Lesson 3 of 4.
 मुखम् (mukham) — "mouth," a word two families both claim.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -108,3 +108,41 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Which two language families both claim मुखम्? (Dravidian, and Indo-European — unsettled.) Name मुखम्'s two Gujarati descendants and which is तत्सम, which तद्भव. (mukh, तत्सम; moḍhũ, तद्भव.) Name this chapter's three words for the face. (Akṣi, karṇaḥ, mukham.)
+
+
+Lesson 4 of 4.
+◌् (virama) — one character, met inside words you already say.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌् and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 1 second]
+Before the new one: आ — what does it do?
+[pause 2 seconds]
+One character this time. Just one — and you have been saying it for pages without knowing which mark on the page it was.
+
+Script you'll notice: ◌्.
+◌् (virama) — no sound of its own — it takes one away.
+It is a vowel-killer. Every consonant in this script arrives with an a already inside it — that is what an abugida is. This mark takes the a back, leaving the bare consonant. It is how the script writes two consonants in a row.
+You already say these, and every one of them has ◌् (virama) somewhere inside it:
+नमस्ते namaste — hello (lit. "a bow to you") (namaste).
+नमस्कारः namaskāraḥ — hello (lit. "the making of a bow") (namaskāraḥ).
+धन्यवादः — thank you (dhanyavādaḥ).
+स्वागतम् svāgatam — welcome (lit. "well come") (svāgatam).
+
+Writing: ◌् — copy what you see.
+Put your pen on ◌् (virama) and follow its line. Copy the shape you can see — slowly, and larger than it is printed.
+This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime.
+
+Guided Practice.
+[pause 1 second]
+[your turn — look: at these words, and find ◌् (virama) in the ones that have it]
+[pause 8 seconds for the answer]
+नमस्ते, नमस्कारः, —.
+[once you have stopped driving — trace: ◌् (virama) three times, and each time say what it does: it kills the built-in a]
+[your turn — look: back at any page of this chapter and find ◌् (virama) once more]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which character is this — ◌् (virama)? What does it do to the consonant it sits on? (Takes away the built-in a.) Name one word you already say that contains it.

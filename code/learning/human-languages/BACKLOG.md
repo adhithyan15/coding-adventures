@@ -565,6 +565,43 @@ orders letters by payoff and records the order as a per-script letter ledger.
 | HL-C119 | **In progress** — nine Tamil one-letter segments authored and rendering (#11188); Hindi not started | Redistribute the script strands that already exist. Tamil's twenty `TA-W*` lessons are good material clustered at `sequence: 270`; Hindi's eleven include `HI-W01-shirorekha-na-ma`, the steepest lesson in the corpus at twelve glyphs. Both are re-cut into one-letter segments across the early sequences. | The prose survives the re-cut; each segment teaches exactly one letter; `drivablePercent` **does not fall** when the detachable writing segments land, which is the design's own falsification test. |
 | HL-C120 | Not started | Author the missing script strand for Telugu, Kannada, Malayalam and Sanskrit, which have none, and migrate the six tracks' 233 schema-v1 lessons so they enter the gates at all. Fix the 30–34 lessons per track that carry no `sequence` — until that is done, no claim in HL11 is verifiable, because every one of them is a claim about order. | Closure violations reach zero per track; `firstWritableWord` lands near sequence 50; every book still builds and every `check:*` still passes. |
 
+| HL-C119 | Not started | Redistribute the script strands that already exist. Tamil's twenty `TA-W*` lessons are good material clustered at `sequence: 270`; Hindi's eleven include `HI-W01-shirorekha-na-ma`, the steepest lesson in the corpus at twelve glyphs. Both are re-cut into one-letter segments across the early sequences. | The prose survives the re-cut; each segment teaches exactly one letter; `drivablePercent` **does not fall** when the detachable writing segments land, which is the design's own falsification test. |
+| HL-C120 | **In progress** — 30 recognition segments landed for Telugu, Kannada, Malayalam and Sanskrit (the four that taught nothing); schema-v1 migration and the missing `sequence` values not started | Author the missing script strand for Telugu, Kannada, Malayalam and Sanskrit, which have none, and migrate the six tracks' 233 schema-v1 lessons so they enter the gates at all. Fix the 30–34 lessons per track that carry no `sequence` — until that is done, no claim in HL11 is verifiable, because every one of them is a claim about order. | Closure violations reach zero per track; `firstWritableWord` lands near sequence 50; every book still builds and every `check:*` still passes. |
+
+## Findings from HL-C120, payment one — the four silent tracks
+
+- **What was actually wrong was worse than "no writing lessons."** Telugu,
+  Kannada and Malayalam do not merely lack a writing strand; their script files
+  carry no stroke order at all (0 of 455, 455 and 468 letters) and no component
+  decomposition — every `components` entry is the syllable restating itself. So
+  there was nothing to build a writing lesson out of, which is why four tracks
+  had none rather than a few.
+- **Recognition is a rung, not a consolation prize.** HL12 §2.2's decoding ladder
+  is recognition before production at every step, so the 30 segments teach the
+  eye and ask the pen only to trace a printed shape. Tracing needs no citation;
+  "start here, go this way" does. When HL-C118 sources the stroke orders, writing
+  segments slot in behind these without moving them.
+- **The corpus already had the placement answer and nobody had asked it.**
+  Measured both ways rather than argued: second-in-chapter costs 11 lessons from
+  the drivable prefixes, last-in-chapter costs zero. The drivable prefix ends at
+  the first lesson needing eyes, so a segment at the front truncates its whole
+  chapter and one at the back truncates nothing.
+- **A gentleness budget caught a real regression before it shipped.** Sanskrit's
+  chapter 7 sat at exactly 12 atoms of 12, and a segment tipped it to 13. The
+  generator now refuses any chapter that cannot afford one more atom, so Sanskrit
+  takes six segments and its chapters 6 and 7 take none. The first version of
+  that check silently passed everything because it read `introduces.knowledge` as
+  an unindented key — the frontmatter nests one level in the FILE and only the
+  parser flattens it to a dotted key.
+- **A missing glyph is invisible in a passing build.** All four books built with
+  exit 0, zero overfull and zero underfull — and 184 `Missing character`
+  warnings, every one of them U+25CC, printing nothing where the character being
+  taught should have been. Caught by grepping the log for the one warning class
+  the usual three do not cover.
+- **Still open on this row**: the six tracks' schema-v1 lessons, the 30-34
+  per track carrying no `sequence`, and the rest of each letter ledger — 24
+  positions authored, 6-8 taught.
+
 ## Findings from HL-C117
 
 - The ledgers exist for all five scripts and the validator runs clean against the
@@ -770,7 +807,7 @@ direction, and no gate may penalise page, lesson, or chapter count.
 | HL-C06 | Complete (#10219) | Add the figure pipeline: SVG generation, `graphicx`, SVG→PDF in CI, and a `--check` hash gate. | A generated figure round-trips from canonical data into a compiled PDF and fails CI on drift, reusing `paint-vm-svg`'s `renderToSvgString`. |
 | HL-C07 | Complete (#9963) | Add the log-scanning warning gate with recorded per-track baselines. | Overfull/underfull boxes, missing glyphs, hyperref warnings, duplicate destinations, and font substitutions are machine-checked by `scan_latex_log_warnings.py` after the `latexmk` loop, against `core/latex-warning-baseline.json`. Baselines ship unseeded — `null` means unmeasured, never zero — so the gate reports today and fails the moment a seeded track regresses. The first CI run on main emits the real counts into the job summary for a human to paste back. |
 | HL-C08 | Complete (#9974) | Render the ductus in Language Ladder. | `penPathD`/`penTip` drive the tested SVG stroke build-up in the app; the currently authored ductus is shared with validation and script practice. |
-| HL-C09 | Queued — 109 of 228 verified | Expand `DUCTUS` to cover the ten scripts with prose stroke-order entries. | Add cited, font-checked ductus and verified pen-lift metadata for the remaining 119 entries measured by HL-C19; each passes the on-ink, join-tolerance, coverage, citation, and source-agreement invariants. Hebrew and Chinese are complete. Arabic's three remaining entries are deferred for mismatched or unavailable sources, so Devanagari is now the smallest actionable inventory with 16 entries. |
+| HL-C09 | Queued — 110 of 228 verified | Expand `DUCTUS` to cover the ten scripts with prose stroke-order entries. | Add cited, font-checked ductus and verified pen-lift metadata for the remaining 118 entries measured by HL-C19; each passes the on-ink, join-tolerance, coverage, citation, and source-agreement invariants. Hebrew and Chinese are complete. Arabic's three remaining entries are deferred for mismatched or unavailable sources, so Devanagari is now the smallest actionable inventory with 15 entries. |
 | HL-C09A | Complete (#10222) | Verify Tamil அ as the first post-HL-C19 expansion tranche, using the primer already cited for Tamil handwriting. | அ carries a source-aligned two-stroke path with exactly one lift; its five movements, learner prose, source metadata, font-outline geometry, and rendered filmstrip agree. |
 | HL-C09B | Complete (#10223) | Verify Tamil ஆ as the next source-backed expansion tranche from Frame 4 of the same primer. | ஆ carries a font-checked path for the அ body plus its long-vowel right-hand loop; its learner prose states every verified lift, and source, geometry, and filmstrip tests agree. |
 | HL-C09C | Complete (#10226) | Verify Tamil இ as Frame 4's third source-backed vowel tranche. | இ carries a seven-movement, font-checked path whose learner prose states each evidenced lift; the cited order, Noto outline geometry, source metadata, and real filmstrip agree. |
@@ -884,6 +921,7 @@ direction, and no gate may penalise page, lesson, or chapter count.
 | HL-C09DG | [Complete (PR #11199)](https://github.com/adhithyan15/coding-adventures/pull/11199) | Verify Devanagari औ by preserving आ's four base strokes before adding its two separate upper arcs and final headline. | Saurmandal's seven-panel modern printed diagram reuses the joined upper-and-lower अ body, separate middle shoulder, inner stem, and trailing stem of आ, before separately sweeping the lower and taller upper arcs upward and left and finishing with the left-to-right shirorekhā. The eight-frame learner path fits those seven runs to Noto Sans Devanagari, preserves six lifts, and identifies the diagram as one sourced teaching form rather than a universal handwriting standard. Devanagari क is next. |
 | HL-C09DH | [Complete (PR #11208)](https://github.com/adhithyan15/coding-adventures/pull/11208) | Audit beyond the vowel-only SVG source boundary, then verify Devanagari क from the older animated stroke-order collection. | Wikimedia Commons' older GIF category covers every remaining Devanagari starter consonant even though its newer SVG category covers none of them. Opiaterein's 27-frame क animation writes the counterclockwise left bowl, top-to-bottom central stem, clockwise right-hand arch, and left-to-right shirorekhā as four separate runs; the Central Hindi Directorate's 2019 deskbook independently shows the same four-part buildup. The four-frame learner path fits those runs to Noto Sans Devanagari and preserves three lifts. Devanagari ग is next. |
 | HL-C09DI | [Complete (PR #11217)](https://github.com/adhithyan15/coding-adventures/pull/11217) | Verify Devanagari ग by preserving its loop-to-ascending-stem join before the separate right stem and headline. | Opiaterein's 18-frame animation carries the counterclockwise loop directly up its joined stem, lifts once for the top-to-bottom right stem, then lifts again for the left-to-right shirorekhā. The Central Hindi Directorate's 2019 deskbook independently shows the same three-part buildup. The three-frame learner path fits those runs to Noto Sans Devanagari and preserves two lifts. Devanagari च is next. |
+| HL-C09DJ | [Complete (PR #11226)](https://github.com/adhithyan15/coding-adventures/pull/11226) | Verify Devanagari च while distinguishing source-backed joins from component-order corroboration. | Opiaterein's 22-frame animation draws the short upper bar left-to-right and turns directly through the shoulder into the rounded open body, then separately descends the right stem and draws the shirorekhā. The Central Hindi Directorate's 2019 deskbook confirms the same component order but stages the upper bar and rounded body separately, so the two-lift claim remains explicitly animation-backed. The three-frame learner path fits those runs to Noto Sans Devanagari. Devanagari त is next. |
 | HL-C10 | Complete (#10010, #10013, #10067) | Complete A1 and add the A2-through-C2 spine tranches with all registered realization ledgers. | All seven declared stages carry nodes; every one of the 22 registered tracks has a non-drifting ledger entry for every node. |
 | HL-C11 | Queued — capability and closure coverage complete | Finish representative chapter payoffs across all 22 tracks. | #10128 brought all 513 chapters to an authored `canDo`, spine mapping, known payoff lesson, and closed assessment. Remediate the remaining 27 payoffs below the 0.5 representativeness floor across ten tracks, then enforce the clean tracks instead of leaving their gates report-only. |
 | HL-C12 | Queued — licensing decided, pipeline outstanding | Add the Class C illustration pipeline with provenance sidecars and a size budget. Licensing is settled and recorded in [`_assets/LICENSE.md`](./_assets/LICENSE.md); the remaining work is the pipeline itself. | Every asset carries `license`, `rightsAsserted`, `generator`, `model`, `prompt`, `date`, and `sha256`; CI fails any asset without a provenance sidecar or a recorded licence, and enforces the per-track size budget. |

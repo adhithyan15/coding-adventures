@@ -1,0 +1,66 @@
+% ============================================================================
+% phoneme-segmentation — breaking a word into its individual sounds, an
+% ELEVENTH literacy sub-skill in the ADJ stdlib (adj-facts-stdlib, LANGUAGE).
+% ============================================================================
+% The exact OPPOSITE direction from `phoneme-blending.adj`: `phoneme-blending.adj`
+% recalls the WORD formed by blending three separate sounds together
+% (sound_one, sound_two, sound_three, word). This library recalls the reverse
+% — given a word, what three sounds does it break into? — grounding the
+% cited page's own "Segmenting sounds in a syllable" skill as a pure lookup:
+% `phoneme_segmentation(word, sound_one, sound_two, sound_three)`. Recall is
+% a binding query:
+%
+%     ? phoneme_segmentation(feet, $S1, $S2, $S3)   % f, ee, t
+%
+% A native `table` (ADJ-TABLES RS-5, a FOUR-column table like
+% `phoneme-blending.adj`, with the word and sounds swapped in role): each
+% `row` lowers to a ground relation `phoneme_segmentation(word, sound_one,
+% sound_two, sound_three)` carrying the Reading Rockets citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the
+% three sounds WITH their source, on the CPU, with zero model calls, and
+% abstains on any word not the one the cited page walks through. The query
+% also runs BACKWARD — bind the three sounds and recall the word they
+% segment from:
+%
+%     ? phoneme_segmentation($Word, f, ee, t)   % feet
+%
+% The one segmentation this table carries, as a little truth table:
+%
+%     word   sound_one   sound_two   sound_three
+%     ----   ---------   ---------   -----------
+%     feet   f           ee          t
+%
+% Provenance: quoted verbatim from Reading Rockets' "Phonological and
+% Phonemic Awareness: In Practice" module — the SAME already-vetted page
+% `syllable-count.adj`, `phoneme-substitution.adj`, `phoneme-deletion.adj`,
+% `syllable-substitution.adj`, `syllable-deletion.adj`, `onset-rime.adj`,
+% `phoneme-blending.adj`, and `phoneme-addition.adj` all already cite, a
+% different section of it (its "Segmenting sounds in a syllable"
+% demonstration) — WebFetch-verified THREE separate times for consistency
+% before writing, all byte-identical. The exact span (one sentence, stating
+% both the word and the three sounds it segments into):
+%
+%   "Now I will segment sounds in a word, and I will use the caps to show
+%    each sound. Watch me. The word is 'feet', /f/ [slide a cap], /ee/
+%    [slide a cap], /t/ [slide a cap], feet [sweep finger below the caps
+%    blending the sounds]."
+%
+% `trust consensus` — the same tier this page's sibling sections already
+% earned. Deliberately scoped to ONLY this ONE segmentation the cited page
+% walks through step by step — honestly narrow (mirroring
+% `phoneme-blending.adj`'s and `phoneme-addition.adj`'s precedent of one
+% clean row) rather than inventing a segmentation the source does not
+% demonstrate. A future slice can add a second segmentation to this table
+% once a comparably clean citation is found. (See ../README.md;
+% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table phoneme_segmentation {
+    columns word, sound_one, sound_two, sound_three
+
+    row (feet, f, ee, t)
+
+    source "Now I will segment sounds in a word, and I will use the caps to show each sound. Watch me. The word is 'feet', /f/ [slide a cap], /ee/ [slide a cap], /t/ [slide a cap], feet [sweep finger below the caps blending the sounds]."
+    locator "https://www.readingrockets.org/reading-101/reading-101-learning-modules/course-modules/phonological-and-phonemic-awareness/practice"
+    trust consensus
+}

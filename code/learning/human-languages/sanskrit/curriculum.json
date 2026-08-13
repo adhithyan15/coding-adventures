@@ -36,6 +36,23 @@
       "after": []
     },
     {
+      "id": "SA-PATH-100",
+      "spine_node": "SPINE-MEET-GREET",
+      "lessons": [
+        "SA-S01-letter-ma",
+        "SA-S02-letter-na",
+        "SA-S03-letter-a",
+        "SA-S04-letter-aa",
+        "SA-S05-sign-virama",
+        "SA-S06-vowel-sign-aa"
+      ],
+      "before": [],
+      "inline": [
+        "SA-EXT-100-SCRIPT-RECOGNITION"
+      ],
+      "after": []
+    },
+    {
       "id": "SA-PATH-004",
       "spine_node": "SPINE-RESPOND-BASIC",
       "lessons": [
@@ -233,7 +250,8 @@
     "SPINE-MEET-GREET": {
       "segments": [
         "SA-PATH-001",
-        "SA-PATH-003"
+        "SA-PATH-003",
+        "SA-PATH-100"
       ],
       "omits": [
         "GREETING-PEACE"
@@ -582,6 +600,22 @@
     }
   },
   "extensions": [
+    {
+      "id": "SA-EXT-100-SCRIPT-RECOGNITION",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can pick out each of these Devanagari characters inside the words I already say, and copy its shape by tracing.",
+      "prerequisites": [],
+      "lessons": [
+        "SA-S01-letter-ma",
+        "SA-S02-letter-na",
+        "SA-S03-letter-a",
+        "SA-S04-letter-aa",
+        "SA-S05-sign-virama",
+        "SA-S06-vowel-sign-aa"
+      ]
+    },
     {
       "id": "SA-EXT-008-LANGUAGE-SPECIFIC",
       "stage": "pre-A1",

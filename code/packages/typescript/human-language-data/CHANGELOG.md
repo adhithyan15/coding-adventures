@@ -2,6 +2,25 @@
 
 ## Unreleased
 
+### Fixed
+- A dotted circle carrying a combining mark now joins that mark's script run when
+  inline markdown is rendered to LaTeX. U+25CC DOTTED CIRCLE has
+  `Script_Extensions=Common`, so it matched no script and was emitted outside the
+  run — handing it to the Latin body font, which has no such glyph. The first
+  build of HL12's Indic recognition segments logged 184 `Missing character`
+  warnings, one per use, and printed nothing where the character being taught
+  should have been. The dotted circle exists precisely to be the base a combining
+  mark is shown on, so when the next character belongs to a run, it belongs to
+  that run too.
+
+### Changed
+- `tests/script-closure.ts`'s corpus assertion no longer pins Telugu, Kannada and
+  Malayalam at **zero** script lessons. That was true and was the defect; it now
+  asserts every Indic track teaches letters, with Tamil still teaching the most
+  because Tamil is the only one of them with a cited stroke order.
+
+## Unreleased
+
 ### Added — Letter ledgers (HL11 section 4)
 
 - `loadLetterLedgers()` reads `data/scripts/<script>-ledger.json`: the order a
@@ -70,6 +89,12 @@
 All notable changes to `@coding-adventures/human-language-data` are documented here.
 
 ## [Unreleased]
+
+### Added - source-verified Devanagari च (HL-C09DJ)
+
+- Verify च as three ordered strokes with two lifts against a 22-frame animated source.
+- Join the short left-to-right upper bar directly to the rounded open body before the top-to-bottom right stem and final shirorekhā in a Noto Sans Devanagari fit.
+- Record that the Central Hindi Directorate deskbook corroborates component order but not the animation's first join, reduce HL-C09 debt to 118 entries, and queue Devanagari त next.
 
 ### Added - source-verified Devanagari ग (HL-C09DI)
 

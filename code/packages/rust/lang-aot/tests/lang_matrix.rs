@@ -2217,6 +2217,15 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("2"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — static bounds prove exactly one body execution, which
+    // establishes a real constant independently of incoming snapshots.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i; real r; for i := 1 step 1 until 1 do r := 6.25; print(r) end",
+        expect: Expect::Stdout("6.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a list containing only single-value elements is straight-line
     // repetition with no zero-trip path or backedge. Its final static real
     // assignment therefore remains available to the portable output path.
@@ -9420,6 +9429,37 @@ fn algol_zero_trip_controlled_snapshot_runs_on_every_available_standard_backend(
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the zero-trip controlled snapshot did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_static_step_body_snapshot_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("for i := 1 step 1 until 1 do r := 6.25")
+        })
+        .expect("the ALGOL static step-body snapshot program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the static step-body snapshot did not run"
             );
             continue;
         };

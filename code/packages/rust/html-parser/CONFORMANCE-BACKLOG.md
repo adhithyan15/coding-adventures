@@ -400,8 +400,12 @@ Prioritized work items:
    moving beyond the in-body recovery family. List-item endings now report the
    foreign mismatch and list-item-scope error at those same integration
    boundaries while preserving the ignored token and following boundary
-   content. Description-item endings are the leading adjacent probe, followed
-   by paragraph, marker-element, and generic fallback endings.
+   content. Same-name and cross-name description-item endings now report the
+   foreign mismatch and ordinary-scope error at those same integration
+   boundaries while keeping following content inside the foreign boundary and
+   older authored HTML item.
+   Paragraph endings are the leading adjacent probe, followed by marker-element
+   and generic fallback endings.
 3. **Diagnostic positions and error taxonomy.** Carry source positions into
    tree construction and map diagnostics to current WHATWG concepts. Legacy
    WPT/html5lib error labels are evidence hints, not a normative public API.

@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.0 — 2026-08-13
+
+### Added
+- Resolve authored quadrant point radius and paint styles into scatter-point geometry
+
 ## 0.2.0 — 2026-08-13
 
 ### Added

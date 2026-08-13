@@ -1,8 +1,8 @@
 Telugu, chapter 6: Case Endings and Dative Subjects.
-2 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+3 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 2.
+Lesson 1 of 3.
 -కు (-ku) — "to, for".
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
@@ -45,7 +45,7 @@ Wrap-up Recall.
 What does -కు (-ku) mean? ("To" or "for.") Where does it go? (On the end of the noun.) What is "to me"? (నాకు nāku — nēnu shrinks to nā- first.) Why does it sometimes appear as -కి? (It adjusts to the preceding vowel — same suffix.) How does that differ from Latin? (Latin fuses case+number+declension into one ending — and -īs doesn't even fix which case; Telugu's carries one meaning, unambiguously, with the seam visible.) Next: the sentence where Telugu leaves out the subject entirely.
 
 
-Lesson 2 of 2.
+Lesson 2 of 3.
 నాకు తెలుగు వచ్చు (nāku telugu vaccu) — "I know Telugu".
 
 Warm-up.
@@ -90,3 +90,41 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 What does నాకు తెలుగు వచ్చు (nāku telugu vaccu) literally say? ("To-me Telugu comes.") Which verb is doing the work, and where did you meet it? (వచ్చు "to come" — Chapter 4.) What has English got that Telugu hasn't? (A nominative "I" — nēnu is replaced by the dative nāku.) Why the dative? (Knowing happens to you.) Which English word keeps the same idea? (Methinks.)
+
+
+Lesson 3 of 3.
+త (ta) — one character, met inside words you already say.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: త and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 1 second]
+Rounded, curvy letters, most crowned with a small tick or check-mark headstroke; no continuous top line.
+[pause 2 seconds]
+One character this time. Just one — and you have been saying it for pages without knowing which mark on the page it was.
+
+Script you'll notice: త.
+త — ta.
+It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not t, it is ta.
+You already say these, and every one of them has త (ta) somewhere inside it:
+సంతోషం — joy / pleased to meet you.
+వెళ్ళి వస్తాను veḷḷi vastānu — goodbye (lit. "I'll go and come back").
+నేను తెలుగు మాట్లాడతాను — I speak Telugu.
+నాకు తెలుగు వచ్చు nāku telugu vaccu — 'I know Telugu'.
+
+Writing: త — copy what you see.
+Put your pen on త (ta) and follow its line. Copy the shape you can see — slowly, and larger than it is printed.
+This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime.
+
+Guided Practice.
+[pause 1 second]
+[your turn — look: at these words, and find త (ta) in the ones that have it]
+[pause 8 seconds for the answer]
+సంతోషం, వెళ్ళి వస్తాను, నమస్కారం.
+[once you have stopped driving — trace: త three times, saying ta as you finish each one]
+[your turn — look: back at any page of this chapter and find త (ta) once more]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which character is this — త? What sound does it carry? (ta.) Name one word you already say that contains it.

@@ -28,6 +28,12 @@ Also: a program's exit code is a machine integer, and the entry's declared
 return type now says so. That used to work by accident — the frontend typed the
 entry `any`, and every backend's type map has no entry for bare `any` and falls
 through to its integer default.
+## 0.222.16 - 2026-08-13 (ALGOL single-iteration step-loop snapshots)
+
+The ALGOL matrix now proves across all seven standard backends that a
+statically single-iteration step loop may establish a formatter-free real
+snapshot when its body does not reference the controlled variable.
+
 ## 0.222.15 - 2026-08-13 (ALGOL zero-trip controlled-variable snapshot)
 
 The ALGOL matrix now proves across all seven standard backends that a

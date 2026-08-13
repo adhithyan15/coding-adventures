@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.80.0
+
+- Resolve quadrant point classes and inline radius/fill/stroke styles into chart IR.
+
 ## 0.79.0
 
 - Parse an initial grammar-backed Mermaid 11.16.1 quadrant-chart slice into chart IR.

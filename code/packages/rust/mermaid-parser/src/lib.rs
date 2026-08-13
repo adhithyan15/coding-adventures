@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.79.0";
+pub const VERSION: &str = "0.80.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -1035,6 +1035,43 @@ pub fn parse_xychart(source: &str) -> Result<ChartDiagram, ParseError> {
 }
 
 /// Parse the grammar-backed native subset of Mermaid `quadrantChart`.
+#[derive(Clone, Debug, Default)]
+struct QuadrantPointStyle {
+    radius: Option<f64>,
+    color: Option<String>,
+    stroke_color: Option<String>,
+    stroke_width: Option<f64>,
+}
+
+impl QuadrantPointStyle {
+    fn overlay(&mut self, other: &Self) {
+        if other.radius.is_some() { self.radius = other.radius; }
+        if other.color.is_some() { self.color.clone_from(&other.color); }
+        if other.stroke_color.is_some() { self.stroke_color.clone_from(&other.stroke_color); }
+        if other.stroke_width.is_some() { self.stroke_width = other.stroke_width; }
+    }
+}
+
+fn parse_quadrant_point_style(raw: &str, token: &Token) -> Result<QuadrantPointStyle, ParseError> {
+    let mut style = QuadrantPointStyle::default();
+    for declaration in raw.split(',').map(str::trim).filter(|value| !value.is_empty()) {
+        let (property, value) = declaration
+            .split_once(':')
+            .ok_or_else(|| token_error(token, format!("invalid quadrant point style {declaration:?}")))?;
+        let property = property.trim();
+        let value = value.trim();
+        let number = |raw: &str| raw.trim_end_matches("px").trim().parse::<f64>();
+        match property {
+            "radius" => style.radius = Some(number(value).map_err(|_| token_error(token, "invalid quadrant point radius"))?),
+            "color" => style.color = Some(value.to_string()),
+            "stroke-color" => style.stroke_color = Some(value.to_string()),
+            "stroke-width" => style.stroke_width = Some(number(value).map_err(|_| token_error(token, "invalid quadrant point stroke width"))?),
+            _ => return Err(token_error(token, format!("unsupported quadrant point style {property:?}"))),
+        }
+    }
+    Ok(style)
+}
+
 pub fn parse_quadrant_chart(source: &str) -> Result<ChartDiagram, ParseError> {
     parse_mermaid_quadrant_ast(source)?;
 
@@ -1049,7 +1086,8 @@ pub fn parse_quadrant_chart(source: &str) -> Result<ChartDiagram, ParseError> {
     let mut x_labels = Vec::new();
     let mut y_labels = Vec::new();
     let mut quadrant_labels: [Option<String>; 4] = [None, None, None, None];
-    let mut quadrant_points = Vec::new();
+    let mut point_classes: HashMap<String, QuadrantPointStyle> = HashMap::new();
+    let mut pending_points = Vec::new();
 
     while !cursor.at_eof() {
         let token = cursor.advance().clone();
@@ -1076,6 +1114,13 @@ pub fn parse_quadrant_chart(source: &str) -> Result<ChartDiagram, ParseError> {
                 let label = token.value[10..].trim();
                 quadrant_labels[index] = Some(unquote_mermaid_string(label));
             }
+            "CLASSDEF_STATEMENT" => {
+                let rest = token.value["classDef".len()..].trim();
+                let (name, declarations) = rest.split_once(char::is_whitespace).ok_or_else(|| {
+                    token_error(&token, "expected class name and quadrant point styles")
+                })?;
+                point_classes.insert(name.to_string(), parse_quadrant_point_style(declarations, &token)?);
+            }
             "POINT_STATEMENT" => {
                 let open = token.value.find('[').ok_or_else(|| {
                     token_error(&token, "expected '[' before quadrant point coordinates")
@@ -1083,11 +1128,15 @@ pub fn parse_quadrant_chart(source: &str) -> Result<ChartDiagram, ParseError> {
                 let close = token.value.rfind(']').ok_or_else(|| {
                     token_error(&token, "expected ']' after quadrant point coordinates")
                 })?;
-                let label = token.value[..open]
+                let point_ref = token.value[..open]
                     .trim()
                     .strip_suffix(':')
                     .map(str::trim)
                     .ok_or_else(|| token_error(&token, "expected ':' before quadrant point"))?;
+                let (label, class_name) = point_ref
+                    .split_once(":::")
+                    .map(|(label, class_name)| (label.trim(), Some(class_name.trim().to_string())))
+                    .unwrap_or((point_ref, None));
                 let coordinates = token.value[open + 1..close]
                     .split(',')
                     .map(str::trim)
@@ -1095,11 +1144,14 @@ pub fn parse_quadrant_chart(source: &str) -> Result<ChartDiagram, ParseError> {
                 let [x, y] = coordinates.as_slice() else {
                     return Err(token_error(&token, "expected two quadrant point coordinates"));
                 };
-                quadrant_points.push(QuadrantPoint {
-                    label: unquote_mermaid_string(label),
-                    x: x.parse().map_err(|_| token_error(&token, "invalid quadrant x value"))?,
-                    y: y.parse().map_err(|_| token_error(&token, "invalid quadrant y value"))?,
-                });
+                let inline_style = parse_quadrant_point_style(&token.value[close + 1..], &token)?;
+                pending_points.push((
+                    unquote_mermaid_string(label),
+                    class_name,
+                    x.parse().map_err(|_| token_error(&token, "invalid quadrant x value"))?,
+                    y.parse().map_err(|_| token_error(&token, "invalid quadrant y value"))?,
+                    inline_style,
+                ));
             }
             _ => return Err(token_error(&token, "unsupported quadrant-chart statement")),
         }
@@ -1115,6 +1167,26 @@ pub fn parse_quadrant_chart(source: &str) -> Result<ChartDiagram, ParseError> {
             max: 1.0,
         })
     };
+    let quadrant_points = pending_points
+        .into_iter()
+        .map(|(label, class_name, x, y, inline_style)| {
+            let mut style = class_name
+                .as_ref()
+                .and_then(|name| point_classes.get(name))
+                .cloned()
+                .unwrap_or_default();
+            style.overlay(&inline_style);
+            QuadrantPoint {
+                label,
+                x,
+                y,
+                radius: style.radius,
+                color: style.color,
+                stroke_color: style.stroke_color,
+                stroke_width: style.stroke_width,
+            }
+        })
+        .collect();
 
     Ok(ChartDiagram {
         title,
@@ -4444,6 +4516,26 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     }
 
     #[test]
+    fn quadrant_resolves_point_classes_and_inline_style_precedence() {
+        let diagram = parse_quadrant_chart(
+            "quadrantChart\n\
+             Metal:::native: [0.75, 0.80] color: #ff3300\n\
+             Direct2D: [0.55, 0.60] radius: 8, stroke-width: 2px\n\
+             classDef native color: #109060, radius: 12, stroke-color: #310085, stroke-width: 4px\n",
+        )
+        .unwrap();
+
+        let metal = &diagram.quadrant_points[0];
+        assert_eq!(metal.color.as_deref(), Some("#ff3300"));
+        assert_eq!(metal.radius, Some(12.0));
+        assert_eq!(metal.stroke_color.as_deref(), Some("#310085"));
+        assert_eq!(metal.stroke_width, Some(4.0));
+        let direct2d = &diagram.quadrant_points[1];
+        assert_eq!(direct2d.radius, Some(8.0));
+        assert_eq!(direct2d.stroke_width, Some(2.0));
+    }
+
+    #[test]
     fn gantt_parses_sections() {
         let d = parse_gantt(GANTT_SRC).unwrap();
         assert_eq!(d.sections.len(), 1);
@@ -6025,7 +6117,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.79.0");
+        assert_eq!(crate::VERSION, "0.80.0");
     }
 
     #[test]

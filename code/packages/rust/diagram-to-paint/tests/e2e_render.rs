@@ -421,9 +421,10 @@ mod apple {
              quadrant-2 Explore\n\
              quadrant-3 Retire\n\
              quadrant-4 Maintain\n\
-             Metal: [0.78, 0.82]\n\
-             Direct2D: [0.58, 0.67]\n\
-             SVG: [0.34, 0.45]\n",
+             Metal:::native: [0.78, 0.82] color: #ff3300\n\
+             Direct2D: [0.58, 0.67] radius: 9, stroke-color: #166534, stroke-width: 3px\n\
+             SVG: [0.34, 0.45]\n\
+             classDef native color: #109060, radius: 12, stroke-color: #310085, stroke-width: 4px\n",
         )
         .expect("quadrant chart should parse");
         let layout = layout_chart_diagram(&diagram, 640.0, 520.0);
@@ -450,6 +451,16 @@ mod apple {
             scene.instructions.iter().filter(|instruction| matches!(instruction, PaintInstruction::Ellipse(_))).count(),
             3
         );
+        let ellipses = scene.instructions.iter().filter_map(|instruction| match instruction {
+            PaintInstruction::Ellipse(ellipse) => Some(ellipse),
+            _ => None,
+        }).collect::<Vec<_>>();
+        assert_eq!(ellipses[0].rx, 12.0);
+        assert_eq!(ellipses[0].fill.as_deref(), Some("#ff3300"));
+        assert_eq!(ellipses[0].stroke.as_deref(), Some("#310085"));
+        assert_eq!(ellipses[0].stroke_width, Some(4.0));
+        assert_eq!(ellipses[1].rx, 9.0);
+        assert_eq!(ellipses[1].stroke_width, Some(3.0));
 
         let pixels = render(&scene);
         write_png(&pixels, "/tmp/mermaid_quadrant_e2e.png").expect("PNG write failed");

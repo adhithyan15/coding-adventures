@@ -1,8 +1,8 @@
 Malayalam, chapter 7: Numbers One to Ten.
-2 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+3 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 2.
+Lesson 1 of 3.
 ഒന്ന്, രണ്ട്, മൂന്ന്, നാല്, അഞ്ച് — one to five.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called You'll want to know until you have stopped, and I will say so again when we reach it.
@@ -25,7 +25,7 @@ Where Telugu breaks the family with okaṭi, Malayalam stays loyal: its one is o
 The one that moved most is five: Tamil aintu softened its nt to a palatal, giving Malayalam añcu — the same shift English feels between nature said stiffly and said naturally.
 
 The word, taken apart.
-Every word here ends in chandrakkala — the little hook ് on the last letter (ഒന്ന്, നാല്) — which trims the final vowel down to a half-heard ŭ. It's why these read onn', nāl' rather than a full onnu, nālu. And the doubled letters (onnu, mūnnu) are real held consonants — linger on the nn.
+Every word here ends in chandrakkala — the little hook ് (virama) on the last letter (ഒന്ന്, നാല്) — which trims the final vowel down to a half-heard ŭ. It's why these read onn', nāl' rather than a full onnu, nālu. And the doubled letters (onnu, mūnnu) are real held consonants — linger on the nn.
 
 Guided Practice.
 [pause 1 second]
@@ -38,10 +38,10 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Count to five in Malayalam. (Onnu, raṇṭu, mūnnu, nālu, añcu.) Does Malayalam's one follow Tamil or break away like Telugu? (Follows Tamil — onnu corresponds to oṉṟu.) Which number changed most from Tamil, and how? (Five — aintu's nt palatalised to añcu.) What does the chandrakkala ് do to a word's last sound? (Trims its vowel to a half-heard ŭ.) Next: six to ten.
+Count to five in Malayalam. (Onnu, raṇṭu, mūnnu, nālu, añcu.) Does Malayalam's one follow Tamil or break away like Telugu? (Follows Tamil — onnu corresponds to oṉṟu.) Which number changed most from Tamil, and how? (Five — aintu's nt palatalised to añcu.) What does the chandrakkala ് (virama) do to a word's last sound? (Trims its vowel to a half-heard ŭ.) Next: six to ten.
 
 
-Lesson 2 of 2.
+Lesson 2 of 3.
 ആറ്, ഏഴ്, എട്ട്, ഒമ്പത്, പത്ത് — six to ten.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called You'll want to know until you have stopped, and I will say so again when we reach it.
@@ -77,3 +77,41 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Count six to ten in Malayalam. (Āṟu, ēḻu, eṭṭu, onpatu, pattu.) Which sister languages keep Tamil's rare ḻ in seven, and which hardened it? (Malayalam keeps it; Kannada becomes ḷ, Telugu becomes ḍ.) How is ompatu built, and why the m? (oṉ "one" + patu "ten"; the n becomes m before p.) Which of these numbers is furthest from Tamil? (None much — this is the closest cousin-set.)
+
+
+Lesson 3 of 3.
+◌് (virama) — one character, met inside words you already say.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌് and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 1 second]
+Before the new one: ക — what does it do?
+[pause 2 seconds]
+One character this time. Just one — and you have been saying it for pages without knowing which mark on the page it was.
+
+Script you'll notice: ◌്.
+◌് (virama) — no sound of its own — it takes one away.
+It is a vowel-killer. Every consonant in this script arrives with an a already inside it — that is what an abugida is. This mark takes the a back, leaving the bare consonant. It is how the script writes two consonants in a row.
+You already say these, and every one of them has ◌് (virama) somewhere inside it:
+നമസ്കാരം namaskāram — hello / greetings (namaskāram — "a making of a bow").
+നന്ദി nandi — thank you.
+ഇല്ല illa — no / there isn't (illa — the negative).
+പേര് pēr — name.
+
+Writing: ◌് — copy what you see.
+Put your pen on ◌് (virama) and follow its line. Copy the shape you can see — slowly, and larger than it is printed.
+This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime.
+
+Guided Practice.
+[pause 1 second]
+[your turn — look: at these words, and find ◌് (virama) in the ones that have it]
+[pause 8 seconds for the answer]
+നമസ്കാരം, നന്ദി, അതെ.
+[once you have stopped driving — trace: ◌് (virama) three times, and each time say what it does: it kills the built-in a]
+[your turn — look: back at any page of this chapter and find ◌് (virama) once more]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which character is this — ◌് (virama)? What does it do to the consonant it sits on? (Takes away the built-in a.) Name one word you already say that contains it.

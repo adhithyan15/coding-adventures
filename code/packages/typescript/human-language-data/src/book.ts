@@ -332,6 +332,14 @@ function markdownImageAt(markdown: string, cursor: number): {
   };
 }
 
+/**
+ * U+25CC DOTTED CIRCLE — the placeholder base a combining mark is shown on when
+ * it is presented by itself. Written as an escape because the Write tool has
+ * stripped non-ASCII literals from TypeScript sources before, and a silently
+ * emptied string here would put the mark back on nothing.
+ */
+const DOTTED_CIRCLE = "\u25CC";
+
 function scriptMatchers(options: InlineRenderOptionsInput | undefined): Array<{
   matcher: RegExp;
   scriptCommand: string;
@@ -777,13 +785,31 @@ export function renderInlineMarkdown(
       cursor = image.end;
       continue;
     }
-    const script = scripts.find((candidate) => candidate.matcher.test(character));
+    // U+25CC DOTTED CIRCLE has Script_Extensions=Common, so on its own it joins
+    // no script run — and printed outside one it is handed to the Latin body
+    // font, which has no such glyph. That is not hypothetical: the first build of
+    // the Indic recognition segments logged 184 "Missing character" warnings,
+    // every one of them this character, leaving a hole in the PDF exactly where
+    // the mark being taught should have been.
+    //
+    // The dotted circle exists for one purpose: to be the base a combining mark
+    // sits on when the mark is shown by itself. So when it is followed by a
+    // character that DOES belong to a run, it belongs to that run — that is what
+    // it is for, and the script's own font is the one that has the glyph.
+    const runOpener =
+      character === DOTTED_CIRCLE
+        ? String.fromCodePoint(markdown.codePointAt(cursor + character.length) ?? 0)
+        : character;
+    const script = scripts.find((candidate) => candidate.matcher.test(runOpener));
     if (script) {
       const run: string[] = [];
       while (cursor < markdown.length) {
         const nextCodePoint = markdown.codePointAt(cursor);
         const next = nextCodePoint === undefined ? "" : String.fromCodePoint(nextCodePoint);
-        if (!script.matcher.test(next)) break;
+        const carriesAMark =
+          next === DOTTED_CIRCLE &&
+          script.matcher.test(String.fromCodePoint(markdown.codePointAt(cursor + next.length) ?? 0));
+        if (!script.matcher.test(next) && !carriesAMark) break;
         run.push(escapeLatexCharacter(next));
         cursor += next.length;
       }

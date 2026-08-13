@@ -1021,7 +1021,7 @@ fn end_to_end_nib_if_else_executes_in_the_riscv_simulator() {
     let bin = dir.path().join("conditional.bin");
     std::fs::write(
         &src,
-        b"fn main() -> u8 { if 1 == 1 { return 42; } else { return 0; } }\n",
+        b"fn main() -> u8 { if 30 < 42 { return 42; } else { return 0; } }\n",
     )
     .unwrap();
 
