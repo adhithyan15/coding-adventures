@@ -134,12 +134,23 @@ export function validateLetterLedger(
   });
 
   const seen = new Set<string>();
+  const names = new Set<string>();
   for (const letter of ledger.letters) {
     if (seen.has(letter.glyph)) {
       add("error", "ledger-duplicate-glyph",
         `${letter.unicodeName} appears more than once`, letter.position);
     }
     seen.add(letter.glyph);
+
+    // Two rows sharing a name is the copy-paste failure. The code point below
+    // pins each row to a character; this pins each NAME to one row, so a row
+    // duplicated and half-edited cannot leave two positions claiming to be the
+    // same letter while holding different glyphs.
+    if (names.has(letter.unicodeName)) {
+      add("error", "ledger-duplicate-name",
+        `'${letter.unicodeName}' names more than one position`, letter.position);
+    }
+    names.add(letter.unicodeName);
   }
 
   // 2. Every glyph belongs to the script the ledger names.

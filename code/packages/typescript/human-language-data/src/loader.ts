@@ -11,7 +11,7 @@ import {
   type ModalityManifestLesson,
 } from "./modality-manifest.js";
 import { buildDataset, parseLesson, type ParsedLesson } from "./parse.js";
-import type { LetterLedger } from "./letter-ledger.js";
+import type { LedgerLetter, LetterLedger } from "./letter-ledger.js";
 import type {
   BookChapter,
   BookCorpus,
@@ -357,6 +357,27 @@ export function loadLetterLedgers(root = defaultCurriculumRoot()): LetterLedger[
         `${file}: a letter ledger needs 'letters' and 'tracks' arrays`,
       );
     }
+    // And the rows, not just the two arrays. The validator reads `glyph`,
+    // `unicodeName` and `unlocks` off every row before it checks anything, so a
+    // row missing one of them fails as an unhandled TypeError out of
+    // `loadEverything` rather than as an error anyone can read. Checking the top
+    // level alone moved that failure down a level; it did not remove it.
+    raw.letters.forEach((row, index) => {
+      const letter = row as Partial<LedgerLetter> | null;
+      if (
+        !letter ||
+        typeof letter !== "object" ||
+        typeof letter.glyph !== "string" ||
+        typeof letter.unicodeName !== "string" ||
+        typeof letter.codePoint !== "string" ||
+        !Array.isArray(letter.unlocks)
+      ) {
+        throw new Error(
+          `${file}: letters[${index}] needs string 'glyph', 'codePoint' and ` +
+          `'unicodeName', and an 'unlocks' array`,
+        );
+      }
+    });
     out.push(raw as LetterLedger);
   }
   return out;

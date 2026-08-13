@@ -373,3 +373,65 @@ describe("a row is pinned numerically, not by how it looks", () => {
     }
   });
 });
+
+describe("a malformed ledger fails readably, not as a TypeError", () => {
+  it("rejects a row missing the fields the validator reads", async () => {
+    // The validator reads glyph, unicodeName and unlocks off every row before
+    // it checks anything, so a row without one of them dies partway through
+    // with an unhandled TypeError out of loadEverything. Guarding the two top
+    // level arrays alone moved that failure down a level; it did not remove it.
+    const { mkdtempSync, writeFileSync, mkdirSync, rmSync } = await import("node:fs");
+    const { join } = await import("node:path");
+    const { tmpdir } = await import("node:os");
+    const { loadLetterLedgers } = await import("../src/loader.js");
+
+    const root = mkdtempSync(join(tmpdir(), "ledger-shape-"));
+    const dir = join(root, "data", "scripts");
+    mkdirSync(dir, { recursive: true });
+
+    const write = (name: string, body: unknown) =>
+      writeFileSync(join(dir, name), JSON.stringify(body), "utf8");
+
+    try {
+      write("tamil-ledger.json", { script: "tamil", tracks: ["tamil"], letters: [{}] });
+      expect(() => loadLetterLedgers(root)).toThrow(/letters\[0\] needs string/);
+
+      write("tamil-ledger.json", { script: "tamil", tracks: ["tamil"], letters: [null] });
+      expect(() => loadLetterLedgers(root)).toThrow(/letters\[0\]/);
+
+      write("tamil-ledger.json", {
+        script: "tamil", tracks: ["tamil"],
+        letters: [{ glyph: KA, codePoint: "U+0B95", unicodeName: "TAMIL LETTER KA", unlocks: "no" }],
+      });
+      expect(() => loadLetterLedgers(root)).toThrow(/'unlocks' array/);
+
+      write("tamil-ledger.json", { script: "tamil", letters: [] });
+      expect(() => loadLetterLedgers(root)).toThrow(/'letters' and 'tracks' arrays/);
+
+      // The well-formed case still loads, so the guard is not just rejecting.
+      write("tamil-ledger.json", {
+        script: "tamil", version: 1, note: "", tracks: ["tamil"],
+        openingLessons: 40, openingWords: 1,
+        letters: [{
+          position: 1, glyph: KA, codePoint: "U+0B95",
+          unicodeName: "TAMIL LETTER KA", kind: "letter",
+          family: null, familySource: null, unlocks: [],
+        }],
+      });
+      expect(loadLetterLedgers(root)).toHaveLength(1);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it("rejects two positions claiming the same letter name", () => {
+    // The copy-paste failure: a row duplicated and half-edited, so two
+    // positions carry the same name while holding different glyphs.
+    const letters = [
+      letter(1, KA, { unicodeName: "TAMIL LETTER KA" }),
+      letter(2, MA, { unicodeName: "TAMIL LETTER KA" }),
+    ];
+    expect(codes(validateLetterLedger(ledgerOf(letters), corpus([]))))
+      .toContain("ledger-duplicate-name");
+  });
+});
