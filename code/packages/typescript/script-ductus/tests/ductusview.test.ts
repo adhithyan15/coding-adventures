@@ -206,6 +206,8 @@ const CYRILLIC_VE = ductusFor("в", "cyrillic")!;
 const cyrillicVeOutline = cyrillicOutline("в");
 const CYRILLIC_GE = ductusFor("г", "cyrillic")!;
 const cyrillicGeOutline = cyrillicOutline("г");
+const CYRILLIC_DE = ductusFor("д", "cyrillic")!;
+const cyrillicDeOutline = cyrillicOutline("д");
 const HEBREW_ALEF = ductusFor("א", "hebrew")!;
 const hebrewAlefOutline = hebrewOutline("א");
 const HEBREW_BET = ductusFor("ב", "hebrew")!;
@@ -2493,6 +2495,33 @@ describe("Cyrillic г — one zero-lift printed fit for the cursive humps", () =
     );
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(CYRILLIC_GE.strokes[0], 1),
+    );
+  });
+});
+
+describe("Cyrillic д — one zero-lift body and retraced printed base", () => {
+  const steps = ductusSteps(CYRILLIC_DE);
+  const strip = ductusFilmstrip(CYRILLIC_DE, cyrillicDeOutline);
+
+  it("shows the closed body before the joined base-and-feet movement", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "circle counterclockwise around the closed body",
+      "descend, retrace both feet, and finish along the base shelf",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0]);
+    expect(strip.frames).toHaveLength(2);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 2 movements");
+  });
+
+  it("draws the exact Noto Sans Cyrillic character behind the joined path", () => {
+    const paths = byTag(strip.frames[1], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      cyrillicDeOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(CYRILLIC_DE.strokes[0], 1),
     );
   });
 });

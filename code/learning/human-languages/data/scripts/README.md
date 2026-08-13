@@ -720,6 +720,13 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   descend and turn there, then continue through a smaller exit arch without
   lifting. Its two-frame Noto fit preserves that zero-lift evidence by climbing
   the block glyph's upright, sweeping and retracing its top bar, and descending;
+  it records that the printed form omits the cursive exit arch. Lowercase **д**
+  follows at 02:14–02:19: its rounded body closes counterclockwise before the
+  same run descends below the baseline, loops left, and rises into a rightward
+  exit. Its two-frame Noto fit preserves that body-before-descender order and
+  zero-lift evidence while tracing the block glyph's trapezoidal body, joined
+  base shelf, and two retraced feet; it records that the printed form replaces
+  the cursive descender loop with those feet.
   the variation note records the absent cursive exit arch. The remaining **99** prose part
   orders across four scripts
   (`arabic` 3,
