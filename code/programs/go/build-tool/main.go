@@ -378,6 +378,14 @@ func run() int {
 					pkg.DeclaredDeps = t.Deps
 					pkg.BuildCommands = starlarkeval.GenerateCommands(t)
 					starlarkCount++
+				} else {
+					// Evaluated cleanly but declared no targets, so
+					// BuildCommands is still the raw file lines — which the
+					// executor runs through the shell exactly as for a shell
+					// BUILD. Drop the Starlark label to match: keeping it
+					// exempts those lines from the shell-shape checks in the
+					// validator, the same way the eval-error path above does.
+					pkg.IsStarlark = false
 				}
 			}
 		}

@@ -133,6 +133,7 @@ func ValidateBuildFiles(packages []discovery.Package, graph *directedgraph.Graph
 	if ciProblem := validateCIFullBuildToolchains(packages); ciProblem != "" {
 		problems = append(problems, ciProblem)
 	}
+	problems = append(problems, validateNoSilentlyTruncatedCommands(packages)...)
 	problems = append(problems, validateLuaIsolatedBuildFiles(packages)...)
 	problems = append(problems, validatePerlBuildFiles(packages)...)
 	problems = append(problems, validateRustWorkspaceMembers(packages)...)
@@ -470,6 +471,99 @@ func validateCIFullBuildToolchains(packages []discovery.Package) string {
 		filepath.ToSlash(ciPath),
 		strings.Join(parts, "; "),
 	)
+}
+
+// validateNoSilentlyTruncatedCommands rejects BUILD commands that do not run
+// the whole thing the author wrote, without saying so.
+//
+// A BUILD file is not a shell script. `discovery.readLines` splits it on
+// newlines and the executor runs EACH LINE as its own shell invocation, so a
+// line-continuation character does not continue anything — it is handed to the
+// shell as part of an otherwise-truncated command, and the following lines run
+// as commands of their own.
+//
+// The failure mode is the dangerous kind: quiet and partial. `lang-aot`'s first
+// BUILD file wrapped a `cargo test` invocation over 40 lines, so CI ran only
+// the bare `cargo test -p lang-aot --lib` head of it — 15 tests instead of the
+// ~1200 in the 39 listed targets — and then failed 40 bogus commands with
+// `sh: --: invalid option`. Every listed target LOOKED watched; none were.
+//
+// Two shapes are rejected:
+//
+//   - A trailing continuation character. Which one it is depends on the shell
+//     that will actually run the line: `executor.shellCommandForOS` sends
+//     `BUILD_windows` through `cmd /C` (continuation `^`, and `\` is the PATH
+//     SEPARATOR) and everything else through `sh -c` (continuation `\`).
+//     Checking `\` unconditionally would reject three correct Perl
+//     `BUILD_windows` lines that legitimately end `prove -l -v t\` and take the
+//     Windows CI gate down with them.
+//
+//   - A trailing bare `&`. `sh -c 'false &'` exits 0 — the command is
+//     backgrounded and its real status discarded, so `executor.runCommands`
+//     records a build that never passed. `&&`, `|` and unbalanced quotes are
+//     all loud (syntax error, non-zero exit), so `&` is the only other quiet
+//     shape.
+//
+// Both are reported with the offending command text rather than a line number:
+// `BuildCommands` is the comment- and blank-stripped list, so its index is not
+// the file line and would point somewhere misleading.
+func validateNoSilentlyTruncatedCommands(packages []discovery.Package) []string {
+	var problems []string
+	for _, pkg := range packages {
+		if pkg.IsStarlark {
+			continue
+		}
+		buildFile := buildFileLabel(pkg.Path)
+		continuation, shell := continuationCharForBuildFile(buildFile)
+
+		for _, command := range pkg.BuildCommands {
+			trimmed := strings.TrimSpace(command)
+			switch {
+			case strings.HasSuffix(trimmed, continuation):
+				problems = append(problems, fmt.Sprintf(
+					"%s (%s): command ends with the %s line-continuation character %q: %q. "+
+						"A BUILD file is not a shell script — each line is run as its own "+
+						"%s, so this silently truncates the command instead of continuing "+
+						"it. Put the whole command on one line.",
+					pkg.Name, buildFile, shell, continuation, truncateForMessage(trimmed), shell,
+				))
+			case strings.HasSuffix(trimmed, "&") && !strings.HasSuffix(trimmed, "&&"):
+				problems = append(problems, fmt.Sprintf(
+					"%s (%s): command ends with a bare `&`: %q. That backgrounds it and "+
+						"discards its exit status, so a failing build reports success. "+
+						"Run it in the foreground.",
+					pkg.Name, buildFile, truncateForMessage(trimmed),
+				))
+			}
+		}
+	}
+	return problems
+}
+
+// continuationCharForBuildFile returns the line-continuation character of the
+// shell that will actually run this BUILD file's lines, and a label for it.
+//
+// This distinction is load-bearing, not pedantry. `executor.shellCommandForOS`
+// runs `BUILD_windows` through `cmd /C`, where the continuation character is
+// `^` and `\` is the PATH SEPARATOR. Three Perl `BUILD_windows` files
+// legitimately end their command `prove -l -v t\` — checking `\` there would
+// reject correct code and take the Windows CI gate down with it.
+func continuationCharForBuildFile(buildFile string) (continuation, shell string) {
+	if strings.HasSuffix(filepath.ToSlash(buildFile), "BUILD_windows") {
+		return "^", "`cmd /C`"
+	}
+	return `\`, "`sh -c`"
+}
+
+// truncateForMessage keeps a diagnostic readable when the offending command is
+// a very long single line — which, given this check exists to force long
+// commands onto one line, is the normal case.
+func truncateForMessage(command string) string {
+	const limit = 120
+	if len(command) <= limit {
+		return command
+	}
+	return command[:limit] + "…"
 }
 
 func validateLuaIsolatedBuildFiles(packages []discovery.Package) []string {

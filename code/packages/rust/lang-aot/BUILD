@@ -9,8 +9,16 @@
 # SKIPS when absent, so a CI host without them reports skips, not failures; the
 # in-process suites (VM / JIT / WASM) always run.
 #
+# ONE COMMAND, ONE LINE — DO NOT REFORMAT WITH BACKSLASH CONTINUATIONS. The
+# build tool reads a BUILD file with `readLines` (build-tool/internal/discovery),
+# which splits on newlines and runs EACH LINE as its own `sh -c`. A trailing `\`
+# is not honoured: the first revision of this file wrapped the target list over
+# 40 lines, so CI silently ran only `cargo test -p lang-aot --lib` (15 tests) and
+# then failed ~40 bogus commands with `sh: --: invalid option`. It looked like
+# the suites were being watched when none of them were.
+#
 # TWO TARGETS ARE DELIBERATELY EXCLUDED because they are red today. Each is
-# tracked, and each should be added here the moment it goes green — an excluded
+# tracked, and each should be added the moment it goes green — an excluded
 # target is an unprotected one:
 #
 #   lang_matrix           12 confirmed cross-language cell failures (the
@@ -20,50 +28,10 @@
 # EXCLUSION ONLY SKIPS THE RUN, NOT THE BUILD. The check step compiles every
 # target in the crate with `-D warnings`, so an excluded suite that fails to
 # COMPILE still fails CI — only its failing assertions are excluded. This bit
-# the first revision of this file: `end_to_end_smoke` (excluded here at the
-# time) broke the macOS build on an unused import. Exclusion buys time on a
-# red assertion; it buys nothing on a red compile.
+# the first revision too: `end_to_end_smoke` (excluded at the time) broke the
+# macOS build on an unused import. Exclusion buys time on a red assertion; it
+# buys nothing on a red compile.
 #
 # Listing targets explicitly rather than running the whole crate is what makes
 # the exclusions visible. A bare `cargo test -p lang-aot` would hide them.
-cargo test -p lang-aot --lib \
-  --test array_ref_tracing \
-  --test beam_cons \
-  --test beam_emit \
-  --test beam_predicates \
-  --test beam_symbols_lambda \
-  --test cil_cons \
-  --test cil_emit \
-  --test cil_lambda \
-  --test cil_predicates \
-  --test cil_symbols \
-  --test clr_real_cons \
-  --test clr_real_lambda \
-  --test clr_real_predicates \
-  --test clr_real_scalar \
-  --test clr_real_symbols \
-  --test conformance \
-  --test e6d2b_dynamic_arith \
-  --test end_to_end_smoke \
-  --test e6d6_llvm_records \
-  --test e6d6b_union_match_tagged \
-  --test historical_round_trip \
-  --test jit_mccarthy \
-  --test jvm_cons \
-  --test jvm_emit \
-  --test jvm_lambda \
-  --test jvm_predicates \
-  --test jvm_symbols \
-  --test llvm_cond \
-  --test llvm_cons \
-  --test llvm_gc_completion \
-  --test llvm_gc_write_barrier \
-  --test llvm_lambda \
-  --test llvm_predicates \
-  --test llvm_scalar \
-  --test llvm_symbols \
-  --test macos_native_lisp \
-  --test metacircular \
-  --test vm_gc_reclamation \
-  --test wasm_emit \
-  --test wasm_memory_growth
+cargo test -p lang-aot --lib --test array_ref_tracing --test beam_cons --test beam_emit --test beam_predicates --test beam_symbols_lambda --test cil_cons --test cil_emit --test cil_lambda --test cil_predicates --test cil_symbols --test clr_real_cons --test clr_real_lambda --test clr_real_predicates --test clr_real_scalar --test clr_real_symbols --test conformance --test e6d2b_dynamic_arith --test end_to_end_smoke --test e6d6_llvm_records --test e6d6b_union_match_tagged --test historical_round_trip --test jit_mccarthy --test jvm_cons --test jvm_emit --test jvm_lambda --test jvm_predicates --test jvm_symbols --test llvm_cond --test llvm_cons --test llvm_gc_completion --test llvm_gc_write_barrier --test llvm_lambda --test llvm_predicates --test llvm_scalar --test llvm_symbols --test macos_native_lisp --test metacircular --test vm_gc_reclamation --test wasm_emit --test wasm_memory_growth
