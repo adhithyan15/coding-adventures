@@ -1,12 +1,16 @@
 import { defineConfig } from "vitest/config";
-import path from "node:path";
 
 // The canonical script JSON lives outside this package, at
 // code/learning/human-languages/data/scripts/, and `scriptdata.ts` imports it
 // directly rather than copying it — so the pen paths here can never drift from
 // the data the lessons teach from. Vite guards reads outside the project root,
 // so the repo root has to be declared legal, exactly as the app's config does.
-const repoRoot = path.resolve(__dirname, "../../../..");
+//
+// Resolved from `import.meta.url` rather than `node:path` + `__dirname` on
+// purpose: nothing this package ships touches a Node API, and importing one
+// here would classify the whole project as Node-only in the repository's
+// TypeScript portability contract. The URL form is standard and needs no types.
+const repoRoot = new URL("../../../..", import.meta.url).pathname;
 
 export default defineConfig({
   server: {
