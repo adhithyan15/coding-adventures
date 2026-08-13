@@ -7250,15 +7250,6 @@ impl HtmlParser {
                     "end tag `</p>` before body content was ignored",
                 ));
             }
-            "p" if self.current_parent_has_element_ancestor("button")
-                && !self.current_parent_has_element_in_button_scope("p") =>
-            {
-                self.diagnostics.push(ParserDiagnostic::new(
-                    "unexpected-p-end-tag",
-                    "end tag `</p>` created and closed an implied `p` element",
-                ));
-                self.append_node(Node::element("p".to_string(), Vec::new()));
-            }
             "p" if self.current_parent_has_table_cell_ancestor()
                 && !self.current_parent_has_element_in_table_scope("p") =>
             {
@@ -7279,6 +7270,17 @@ impl HtmlParser {
             }
             "p" if self.has_open_element("p")
                 && !self.has_open_element_before_namespace_boundary("p") =>
+            {
+                self.diagnostics.push(ParserDiagnostic::new(
+                    "unexpected-p-end-tag",
+                    "end tag `</p>` created and closed an implied `p` element",
+                ));
+                self.append_node(Node::element("p".to_string(), Vec::new()));
+            }
+            "p" if self.has_authored_open_html_element("p")
+                && self.current_template_insertion_mode()
+                    != Some(TemplateInsertionMode::Template)
+                && self.open_html_element_in_button_scope_index("p").is_none() =>
             {
                 self.diagnostics.push(ParserDiagnostic::new(
                     "unexpected-p-end-tag",
@@ -9276,23 +9278,6 @@ impl HtmlParser {
         })
     }
 
-    fn current_parent_has_element_in_button_scope(&self, target_name: &str) -> bool {
-        let current_parent_path = self.current_parent_path();
-        let Some(button_index) = self.open_elements.iter().rposition(|path| {
-            current_parent_path.starts_with(path)
-                && element_at_path(&self.document, path).is_some_and(|name| name == "button")
-        }) else {
-            return false;
-        };
-        self.open_elements
-            .iter()
-            .skip(button_index + 1)
-            .any(|path| {
-                current_parent_path.starts_with(path)
-                    && element_at_path(&self.document, path).is_some_and(|name| name == target_name)
-            })
-    }
-
     fn current_parent_has_open_element_in_button_scope(&self, target_name: &str) -> bool {
         let current_parent_path = self.current_parent_path();
         for path in self.open_elements.iter().rev() {
@@ -9324,6 +9309,26 @@ impl HtmlParser {
                 return Some(index);
             }
             if is_ordinary_scope_boundary(element) {
+                return None;
+            }
+        }
+        None
+    }
+
+    fn open_html_element_in_button_scope_index(&self, target_name: &str) -> Option<usize> {
+        for (index, path) in self.open_elements.iter().enumerate().rev() {
+            let Some(element) = element_ref_at_path(&self.document, path) else {
+                continue;
+            };
+            if element.namespace.is_none()
+                && element.name == target_name
+                && !has_fragment_context_marker(element)
+            {
+                return Some(index);
+            }
+            if is_ordinary_scope_boundary(element)
+                || (element.namespace.is_none() && element.name == "button")
+            {
                 return None;
             }
         }
@@ -31359,6 +31364,103 @@ mod tests {
         assert!(fragment.parser_diagnostics.iter().all(|diagnostic| {
             diagnostic.code != "unexpected-button-end-tag-outside-scope"
         }));
+    }
+
+    #[test]
+    fn paragraph_end_tags_respect_full_button_scope() {
+        for (boundary_name, source) in [
+            (
+                "object",
+                "<!doctype html><p id=outer><object id=boundary></p>X",
+            ),
+            (
+                "marquee",
+                "<!doctype html><p id=outer><marquee id=boundary></p>X",
+            ),
+            (
+                "button",
+                "<!doctype html><p id=outer><button id=boundary></p>X",
+            ),
+            (
+                "applet",
+                "<!doctype html><p id=outer><applet id=boundary></p>X",
+            ),
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .filter(|diagnostic| diagnostic.code == "unexpected-p-end-tag")
+                    .count(),
+                1,
+                "boundary {boundary_name:?}: {:?}",
+                output.parser_diagnostics
+            );
+            let outer = find_element_by_id(&output.document.children, "outer")
+                .expect("the blocked end tag should leave the outer paragraph open");
+            let boundary = find_element_by_id(&outer.children, "boundary")
+                .expect("the scope boundary should remain inside the outer paragraph");
+            assert_eq!(element(&boundary.children[0]).name, "p");
+            assert_eq!(boundary.children[1], Node::text("X"));
+        }
+
+        for (source, expected_count) in [
+            ("<!doctype html><p></p>", 0),
+            ("<!doctype html><p><span></p>", 0),
+            ("<!doctype html><div></p>", 1),
+            ("<!doctype html><table><tr><td><p></p></td></tr></table>", 0),
+            (
+                "<!doctype html><svg><foreignObject><p></p></foreignObject></svg>",
+                0,
+            ),
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .filter(|diagnostic| diagnostic.code == "unexpected-p-end-tag")
+                    .count(),
+                expected_count,
+                "source {source:?}: {:?}",
+                output.parser_diagnostics
+            );
+        }
+
+        let template = parse_html_with_diagnostics(
+            "<!doctype html><p id=outer><template id=boundary></p>X</template>",
+        )
+        .unwrap();
+        let outer = find_element_by_id(&template.document.children, "outer").unwrap();
+        let boundary = find_element_by_id(&outer.children, "boundary").unwrap();
+        assert_eq!(boundary.children, vec![Node::text("X")]);
+        assert!(template
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "unexpected-p-end-tag"));
+
+        let foreign =
+            parse_html_with_diagnostics("<!doctype html><p id=outer><svg><object id=foreign></p>X")
+                .unwrap();
+        let body = body(&foreign.document);
+        let outer = find_element_by_id(&body.children, "outer").unwrap();
+        assert!(find_element_by_id(&outer.children, "foreign").is_some());
+        assert_eq!(body.children.last(), Some(&Node::text("X")));
+        assert!(foreign
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "unexpected-p-end-tag"));
+
+        let fragment = parse_html_fragment_for_context_with_diagnostics("</p>X", "p").unwrap();
+        assert_eq!(fragment.nodes, vec![Node::text("X")]);
+        assert_eq!(
+            fragment.parser_diagnostics,
+            vec![ParserDiagnostic::new(
+                "unexpected-fragment-context-end-tag",
+                "end tag `</p>` targeted a seeded fragment context element"
+            )]
+        );
     }
 
     #[test]
