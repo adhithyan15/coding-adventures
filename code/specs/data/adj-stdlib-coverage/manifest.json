@@ -2134,6 +2134,21 @@
       "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
     },
     {
+      "id": "adj.science.3to5.ocean_zone_depth",
+      "title": "Recall the approximate depth in meters an ocean zone reaches down to",
+      "band": "3-5",
+      "domain": "science",
+      "competency": "recall",
+      "coverage_roots": ["ngss"],
+      "standards": [],
+      "prerequisites": ["adj.science.3to5.ocean_zone"],
+      "libraries": ["code/specs/data/adj-facts-stdlib/oceanography/ocean-zone-depth.adj"],
+      "modalities": ["text"],
+      "source_cas_hashes": [],
+      "benchmark_paths": [],
+      "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
+    },
+    {
       "id": "adj.literacy.k2.capitalization_rule",
       "title": "Recall what a common English capitalization rule actually requires",
       "band": "K-2",

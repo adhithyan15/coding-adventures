@@ -1,0 +1,70 @@
+% ============================================================================
+% ocean-zone-depth — each of the ocean's first three depth zones → the
+% approximate depth in meters the SAME WHOI source states it reaches down
+% to (adj-facts-stdlib, OCEANOGRAPHY).
+% ============================================================================
+% A sibling to the already-shipped `ocean-zones.adj` (`ocean_zone(zone,
+% order)`, ONE ordinal position per zone: sunlight_zone=1, twilight_zone=2,
+% midnight_zone=3): a new `ocean_zone_depth(zone, max_depth_meters)` table
+% names the approximate depth in meters the SAME already-cited WHOI "Ocean
+% Zones" page states for each zone, decoded from spans already sitting
+% unused inside `ocean-zones.adj`'s own header truth table — no new
+% WebFetch. That table's `order` column has room for only the SEQUENCE
+% position; the SAME already-quoted WHOI sentences also carry a depth
+% figure for each zone that never made it into a row:
+%
+%   sunlight_zone → 200
+%     "sunlight penetrates only to depths of about 200 meters (656 feet)"
+%   twilight_zone → 1000
+%     "It lies 200 to 1,000 meters below the ocean surface"
+%   midnight_zone → 4000
+%     "The midnight zone, or bathypelagic, extends to about 4,000 meters
+%      (about 13,100 feet)"
+%
+% Recall is a binding query:
+%
+%     ? ocean_zone_depth(twilight_zone, $MaxDepthMeters)      % 1000
+%
+% This is a native `table` (ADJ-TABLES RS-5, a TWO-column table like
+% `ocean-zones.adj`'s own `ocean_zone`): each `row` lowers to a ground
+% relation `ocean_zone_depth(zone, max_depth_meters)` carrying the
+% citation, so the lookup above is the ordinary SLD binding query — the
+% engine returns the depth WITH its source, on the CPU, with zero model
+% calls, and abstains on any zone that is not one of the three tabled here
+% (it never invents a depth). The query also runs BACKWARD — bind a depth
+% and recall which zone reaches down to it:
+%
+%     ? ocean_zone_depth($Zone, 4000)   % midnight_zone
+%
+% Each value is the approximate LOWER boundary depth the source states for
+% that zone (sunlight zone's own depth is a single ceiling figure;
+% twilight and midnight zones' quotes give a range or "extends to" figure,
+% and this table tables the DEEPER end of each, matching the ordering
+% already fixed by the parent table's `order` column: 200 < 1000 < 4000).
+%
+% Provenance: reproduces, byte-for-byte, the SAME sunlight-zone span
+% already quoted inside `ocean-zones.adj`'s own header/provenance section,
+% from the SAME Woods Hole Oceanographic Institution (WHOI) "Ocean Zones"
+% page that table already cites — no new WebFetch, only a different
+% schema decoding a part of each already-verified quote. An ADJ `table`
+% carries ONE provenance envelope (per `ocean-zones.adj`'s own
+% convention), so `source`/`locator`/`trust` below hold the sunlight-zone
+% span; the twilight/midnight rows' own spans are listed above for
+% independent auditability. `trust consensus` — the same tier
+% `ocean-zones.adj` already carries (WHOI is a reputable, long-running
+% oceanographic research institution but not a .gov domain).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table ocean_zone_depth {
+    columns zone, max_depth_meters
+
+    row (sunlight_zone, 200)
+    row (twilight_zone, 1000)
+    row (midnight_zone, 4000)
+
+    source "Because water strongly absorbs light, sunlight penetrates only to depths of about 200 meters (656 feet)."
+    locator "https://www.whoi.edu/know-your-ocean/ocean-topics/how-the-ocean-works/ocean-zones/"
+    trust consensus
+}
