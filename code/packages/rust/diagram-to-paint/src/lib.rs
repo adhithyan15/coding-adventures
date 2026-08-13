@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.37.0";
+pub const VERSION: &str = "0.38.0";
 
 use std::collections::HashMap;
 
@@ -771,7 +771,9 @@ where
                     ));
                 }
             }
-            LayoutedChartItem::ScatterPoint { x, y, radius, color, label } => {
+            LayoutedChartItem::ScatterPoint {
+                x, y, radius, color, stroke_color, stroke_width, label,
+            } => {
                 instructions.push(PaintInstruction::Ellipse(PaintEllipse {
                     base: PaintBase::default(),
                     cx: *x,
@@ -779,8 +781,8 @@ where
                     rx: *radius,
                     ry: *radius,
                     fill: Some(color.clone()),
-                    stroke: Some("#1e3a8a".into()),
-                    stroke_width: Some(1.5),
+                    stroke: Some(stroke_color.clone()),
+                    stroke_width: Some(*stroke_width),
                     stroke_dash: None,
                     stroke_dash_offset: None,
                 }));
@@ -3031,7 +3033,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.37.0");
+        assert_eq!(crate::VERSION, "0.38.0");
     }
 
     #[test]

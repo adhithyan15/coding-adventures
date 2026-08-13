@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.45.0
+
+- Tokenize quadrant point class definitions, class references, and inline styles.
+
 ## 0.44.0
 
 - Add a portable Mermaid 11.16.1 quadrant-chart token grammar and lexer.

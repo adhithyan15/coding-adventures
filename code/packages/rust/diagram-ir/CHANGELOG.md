@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.38.0
+
+- Preserve Mermaid quadrant point radius, fill, stroke color, and stroke width through semantic and layout IR.
+
 ## 0.37.0
 
 - Add semantic quadrant-chart labels and points plus backend-neutral layout regions and scatter points.

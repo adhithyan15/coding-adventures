@@ -34,10 +34,11 @@ Mermaid
   -> Metal / SVG / Direct2D / other Paint VM backends
 ```
 
-The initial `quadrantChart` subset covers titles, x/y endpoint labels, all four
-quadrant labels, and normalized points. Point classes and inline styles plus
-accessibility statements remain compatibility gaps and therefore keep the
-family at `partial` rather than `full`.
+The `quadrantChart` subset covers titles, x/y endpoint labels, all four
+quadrant labels, normalized points, point classes, and inline point radius,
+fill, and stroke styles. Accessibility statements and remaining pinned lexical
+edge cases remain compatibility gaps and therefore keep the family at
+`partial` rather than `full`.
 
 The sequence subset includes participants and actors, aliases, standard solid
 and dotted message arrows, bidirectional/cross/point arrowheads, notes,
