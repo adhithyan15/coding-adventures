@@ -330,6 +330,129 @@ fn executes_unsigned_64_bit_wraparound() {
 }
 
 #[test]
+fn executes_pair_aware_signed_and_unsigned_64_bit_comparisons() {
+    let signed = vec![
+        ci(
+            "const_i64",
+            Some("low"),
+            vec![CIROperand::Int(-4_294_967_296)],
+            "i64",
+        ),
+        ci("const_i64", Some("high"), vec![CIROperand::Int(-1)], "i64"),
+        ci(
+            "cmp_lt_i64",
+            Some("result"),
+            vec![
+                CIROperand::Var("low".into()),
+                CIROperand::Var("high".into()),
+            ],
+            "bool",
+        ),
+        ci(
+            "ret_bool",
+            None,
+            vec![CIROperand::Var("result".into())],
+            "bool",
+        ),
+    ];
+    assert_eq!(compile_and_run(&signed), 1);
+
+    let unsigned = vec![
+        ci(
+            "const_u64",
+            Some("large"),
+            vec![CIROperand::Int(4_294_967_296)],
+            "u64",
+        ),
+        ci("const_u64", Some("small"), vec![CIROperand::Int(1)], "u64"),
+        ci(
+            "cmp_gt_u64",
+            Some("result"),
+            vec![
+                CIROperand::Var("large".into()),
+                CIROperand::Var("small".into()),
+            ],
+            "bool",
+        ),
+        ci(
+            "ret_bool",
+            None,
+            vec![CIROperand::Var("result".into())],
+            "bool",
+        ),
+    ];
+    assert_eq!(compile_and_run(&unsigned), 1);
+
+    let equality = vec![
+        ci(
+            "const_u64",
+            Some("left"),
+            vec![CIROperand::Int(4_294_967_297)],
+            "u64",
+        ),
+        ci(
+            "const_u64",
+            Some("right"),
+            vec![CIROperand::Int(4_294_967_297)],
+            "u64",
+        ),
+        ci(
+            "cmp_eq_u64",
+            Some("result"),
+            vec![
+                CIROperand::Var("left".into()),
+                CIROperand::Var("right".into()),
+            ],
+            "bool",
+        ),
+        ci(
+            "ret_bool",
+            None,
+            vec![CIROperand::Var("result".into())],
+            "bool",
+        ),
+    ];
+    assert_eq!(compile_and_run(&equality), 1);
+
+    for (relation, left_value, right_value) in [
+        ("cmp_ne_u64", 4_294_967_296, 4_294_967_297),
+        ("cmp_le_u64", 4_294_967_296, 4_294_967_297),
+        ("cmp_ge_u64", 4_294_967_297, 4_294_967_296),
+    ] {
+        let cir = vec![
+            ci(
+                "const_u64",
+                Some("left"),
+                vec![CIROperand::Int(left_value)],
+                "u64",
+            ),
+            ci(
+                "const_u64",
+                Some("right"),
+                vec![CIROperand::Int(right_value)],
+                "u64",
+            ),
+            ci(
+                relation,
+                Some("result"),
+                vec![
+                    CIROperand::Var("left".into()),
+                    CIROperand::Var("right".into()),
+                ],
+                "bool",
+            ),
+            ci(
+                "ret_bool",
+                None,
+                vec![CIROperand::Var("result".into())],
+                "bool",
+            ),
+        ];
+        assert_eq!(compile_and_run(&cir), 1, "{relation} must compare pairs");
+    }
+}
+
+#[test]
 fn rejects_calls_until_the_linker_and_frame_abi_exist() {
     let cir = vec![ci(
         "call",

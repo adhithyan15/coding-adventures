@@ -16,6 +16,8 @@
 - Added low/high register-pair lowering for full-width `i64`/`u64` constants,
   addition, subtraction, and returns; `RunResult` now exposes the returned
   `a1` high word for simulator assertions.
+- Added pair-aware signed and unsigned `eq`, `ne`, `lt`, `le`, `gt`, and `ge`
+  comparisons, including a numeric Nib conditional simulator fixture.
 
 ## v0.1.0 — 2026-06-03 — Phase 7 (FINAL lane) of historical-arch backend migration
 

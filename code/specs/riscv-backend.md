@@ -115,16 +115,18 @@ implemented.
    jumps, followed by boolean source-language conditional end-to-end tests.
 2. [x] **Wide value core:** register-pair lowering for full-width `i64`/`u64`
    constants, addition, subtraction, returns, and a Nib arithmetic fixture.
-3. [ ] **Wide integer operations:** pair-aware comparisons, bitwise operations,
-   shifts, multiplication, division, and modulo. This is next because Nib
-   materializes numeric values as `i64`.
-4. [ ] **Register allocation:** spill live values to stack slots and emit a proper
+3. [x] **Wide comparisons:** pair-aware signed and unsigned comparisons plus a
+   numeric Nib conditional source-to-simulator fixture.
+4. [ ] **Wide integer operations:** pair-aware bitwise operations, shifts,
+   multiplication, division, and modulo. This is next because Nib materializes
+   numeric values as `i64`.
+5. [ ] **Register allocation:** spill live values to stack slots and emit a proper
    frame, removing the six-temporary limit.
-5. [ ] **Calls and modules:** lower direct calls, add relocations/linking for flat
+6. [ ] **Calls and modules:** lower direct calls, add relocations/linking for flat
    binaries, and preserve the RISC-V calling convention across calls.
-6. [ ] **Host runtime ABI:** define simulator `ecall` services for exit and integer
+7. [ ] **Host runtime ABI:** define simulator `ecall` services for exit and integer
    output, then lower language print primitives through that ABI.
-7. [ ] **Memory and data:** globals, addresses, loads/stores, and a data-image
+8. [ ] **Memory and data:** globals, addresses, loads/stores, and a data-image
    loader for programs needing strings or arrays.
 
 Each item should land as a focused PR with an end-to-end fixture from the
