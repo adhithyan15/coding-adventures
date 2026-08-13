@@ -2648,13 +2648,18 @@ mod tests {
     fn compiles_shift_operators_to_typed_iir() {
         let m = compile_source("fn main() -> u8 { return (1 << 5) >> 1; }", "test")
             .expect("shift expression must compile");
-        let ops: Vec<&str> = m.functions[0]
+        let shifts: Vec<_> = m.functions[0]
             .instructions
             .iter()
-            .map(|instr| instr.op.as_str())
+            .filter(|instr| matches!(instr.op.as_str(), "shl" | "shr"))
             .collect();
-        assert!(ops.contains(&"shl"), "missing shl; got {ops:?}");
-        assert!(ops.contains(&"shr"), "missing shr; got {ops:?}");
+        assert_eq!(shifts.len(), 2, "expected both shifts; got {shifts:?}");
+        assert!(shifts.iter().any(|instr| instr.op == "shl"));
+        assert!(shifts.iter().any(|instr| instr.op == "shr"));
+        assert!(
+            shifts.iter().all(|instr| instr.type_hint == "u8"),
+            "parenthesized u8 shifts must stay narrow; got {shifts:?}"
+        );
     }
 
     #[test]

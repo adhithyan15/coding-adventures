@@ -6991,6 +6991,35 @@ impl HtmlParser {
         }
         if self.current_namespace().is_some()
             && !self.current_element_is(name)
+            && name == "button"
+            && self.has_open_foreign_integration_point()
+        {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-end-tag-in-foreign-content",
+                "end tag `</button>` did not match the current foreign element",
+            ));
+            if self.close_open_foreign_element_before_html_boundary(name) {
+                return;
+            }
+            if self.current_element_is_marked_foreign_fragment_context() {
+                return;
+            }
+            let (code, message) = if self.has_authored_open_html_element(name) {
+                (
+                    "unexpected-block-end-tag-outside-scope",
+                    "end tag `</button>` targeted an element outside ordinary scope",
+                )
+            } else {
+                (
+                    "unexpected-end-tag",
+                    "end tag `</button>` did not match an open element",
+                )
+            };
+            self.diagnostics.push(ParserDiagnostic::new(code, message));
+            return;
+        }
+        if self.current_namespace().is_some()
+            && !self.current_element_is(name)
             && is_scoped_block_end_tag(name)
             && self.has_authored_open_html_element(name)
             && self.open_html_element_in_scope_index(name).is_none()
@@ -31817,6 +31846,134 @@ mod tests {
         assert_eq!(element(&body.children[0]).name, "svg");
         assert_eq!(element(&body.children[1]).name, "p");
         assert_eq!(element(&body.children[2]).name, "foo");
+    }
+
+    #[test]
+    fn button_end_tags_respect_foreign_integration_scope() {
+        for (root_name, boundary_start, boundary_name) in [
+            ("svg", "foreignObject", "foreignObject"),
+            ("svg", "desc", "desc"),
+            ("svg", "title", "title"),
+            ("math", "mi", "mi"),
+            ("math", "mtext", "mtext"),
+            (
+                "math",
+                "annotation-xml encoding=text/html",
+                "annotation-xml",
+            ),
+        ] {
+            let source = format!(
+                "<!doctype html><button id=outer><{root_name}><{boundary_start} id=boundary></button>X</{boundary_name}></{root_name}>Y</button>"
+            );
+            let output = parse_html_with_diagnostics(&source).unwrap();
+            assert_eq!(
+                output.parser_diagnostics,
+                vec![
+                    ParserDiagnostic::new(
+                        "unexpected-end-tag-in-foreign-content",
+                        "end tag `</button>` did not match the current foreign element"
+                    ),
+                    ParserDiagnostic::new(
+                        "unexpected-block-end-tag-outside-scope",
+                        "end tag `</button>` targeted an element outside ordinary scope"
+                    ),
+                ],
+                "source {source:?}"
+            );
+            let outer = find_element_by_id(&output.document.children, "outer").unwrap();
+            let boundary = find_element_by_id(&outer.children, "boundary").unwrap();
+            assert_eq!(boundary.children, vec![Node::text("X")], "source {source:?}");
+            assert_eq!(outer.children.last(), Some(&Node::text("Y")));
+        }
+
+        for source in [
+            "<!doctype html><button id=outer><object id=boundary></button>X</object>Y</button>",
+            "<!doctype html><button id=outer><select id=boundary></button>X</select>Y</button>",
+            "<!doctype html><button id=outer><template id=boundary></button>X</template>Y</button>",
+            "<!doctype html><button id=outer><table><tr><td id=boundary></button>X</td></tr></table>Y</button>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .filter(|diagnostic| {
+                        diagnostic.code == "unexpected-button-end-tag-outside-scope"
+                    })
+                    .count(),
+                1,
+                "source {source:?}: {:?}",
+                output.parser_diagnostics
+            );
+            let outer = find_element_by_id(&output.document.children, "outer").unwrap();
+            let boundary = find_element_by_id(&outer.children, "boundary").unwrap();
+            assert_eq!(boundary.children, vec![Node::text("X")], "source {source:?}");
+            assert_eq!(outer.children.last(), Some(&Node::text("Y")));
+        }
+
+        let matching_foreign = parse_html_with_diagnostics(
+            "<!doctype html><button id=outer><svg id=root><button id=foreign><foreignObject id=boundary></button>X</svg>Y</button>",
+        )
+        .unwrap();
+        assert_eq!(
+            matching_foreign.parser_diagnostics,
+            vec![ParserDiagnostic::new(
+                "unexpected-end-tag-in-foreign-content",
+                "end tag `</button>` did not match the current foreign element"
+            )]
+        );
+        let root = find_element_by_id(&matching_foreign.document.children, "root").unwrap();
+        assert_eq!(root.children.last(), Some(&Node::text("X")));
+
+        let unmatched = parse_html_with_diagnostics(
+            "<!doctype html><svg><foreignObject id=boundary></button>X</foreignObject></svg>",
+        )
+        .unwrap();
+        assert_eq!(
+            unmatched.parser_diagnostics,
+            vec![
+                ParserDiagnostic::new(
+                    "unexpected-end-tag-in-foreign-content",
+                    "end tag `</button>` did not match the current foreign element"
+                ),
+                ParserDiagnostic::new(
+                    "unexpected-end-tag",
+                    "end tag `</button>` did not match an open element"
+                ),
+            ]
+        );
+        let boundary = find_element_by_id(&unmatched.document.children, "boundary").unwrap();
+        assert_eq!(boundary.children, vec![Node::text("X")]);
+
+        let foreign_select = parse_html_with_diagnostics(
+            "<!doctype html><button id=outer><svg><select id=foreign></button>X",
+        )
+        .unwrap();
+        assert!(foreign_select.parser_diagnostics.iter().all(|diagnostic| {
+            diagnostic.code != "unexpected-end-tag-in-foreign-content"
+        }));
+        assert_eq!(
+            body(&foreign_select.document).children.last(),
+            Some(&Node::text("X"))
+        );
+
+        let ordinary = parse_html_with_diagnostics("<!doctype html><button>X</button>Y").unwrap();
+        assert!(ordinary.parser_diagnostics.is_empty());
+        assert_eq!(body(&ordinary.document).children.last(), Some(&Node::text("Y")));
+
+        let fragment = parse_html_fragment_for_context_with_diagnostics(
+            "</button>X",
+            "svg foreignObject",
+        )
+        .unwrap();
+        assert_eq!(fragment.nodes, vec![Node::text("X")]);
+        assert_eq!(
+            fragment.parser_diagnostics,
+            vec![ParserDiagnostic::new(
+                "unexpected-end-tag-in-foreign-content",
+                "end tag `</button>` did not match the current foreign element"
+            )]
+        );
     }
 
     #[test]

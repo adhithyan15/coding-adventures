@@ -53,6 +53,7 @@ use hue_core::{
     HUE_MDNS_SERVICE_TYPE,
 };
 use process_shutdown::{ShutdownError, ShutdownListener};
+use smart_home_automation_runtime::AutomationTriggerInput;
 use smart_home_axis_pairing_service::{
     install_axis_pairing_service_actor, AxisPairingRequest, AxisPairingServiceActorState,
     AxisPairingServiceError, NativeAxisPairingVerifier, OwnerOnlyAxisCredentialInput,
@@ -130,6 +131,7 @@ const HUE_MDNS_RUN_TIMEOUT_MS: u64 = 2_000;
 const HUE_MDNS_RETRY_DELAY_MS: u64 = 5_000;
 const HUE_MDNS_TTL_MS: u64 = 120_000;
 const DISCOVERY_TICK_INTERVAL_MS: u64 = 500;
+const AUTOMATION_TICK_INTERVAL_MS: u64 = 500;
 const HUE_PAIRING_ACTOR_ID: &str = "chief-hue-pairing";
 const HUE_PAIRING_SENDER_ID: &str = "chief-of-staff-daemon";
 const HUE_PAIRING_APP_NAME: &str = "coding-adventures";
@@ -199,6 +201,12 @@ pub enum ChiefDaemonError {
     SmartHomeDiscoveryWorkerUnavailable,
     /// The Hue discovery worker thread panicked.
     SmartHomeDiscoveryWorkerPanicked,
+    /// The Chief-owned automation schedule evaluation failed closed.
+    SmartHomeAutomation,
+    /// The operating system could not create the automation schedule worker thread.
+    SmartHomeAutomationWorkerUnavailable,
+    /// The automation schedule worker thread panicked.
+    SmartHomeAutomationWorkerPanicked,
     /// The configured Hue pairing KEK file could not be loaded safely.
     SmartHomePairingSecret(SecretFileError),
     /// The configured Hue pairing Vault could not initialize or unseal.
@@ -337,6 +345,13 @@ impl Display for ChiefDaemonError {
             }
             Self::SmartHomeDiscoveryWorkerPanicked => {
                 "chief daemon: smart-home discovery worker panicked"
+            }
+            Self::SmartHomeAutomation => "chief daemon: smart-home automation failed",
+            Self::SmartHomeAutomationWorkerUnavailable => {
+                "chief daemon: smart-home automation worker unavailable"
+            }
+            Self::SmartHomeAutomationWorkerPanicked => {
+                "chief daemon: smart-home automation worker panicked"
             }
             Self::SmartHomePairingSecret(_) => {
                 "chief daemon: smart-home pairing secret file failed"
@@ -893,6 +908,7 @@ const PRODUCTION_SMART_HOME_MODEL_TOOLS: &[&str] = &[
 struct SmartHomeHttpService {
     address: SocketAddr,
     app: Arc<WebApp>,
+    automation: SmartHomePlatformHttpRuntime,
     hue_discovery: Option<ChiefHueDiscoveryService>,
     hue_pairing: Option<ChiefHuePairingService>,
     onvif_pairing: Option<ChiefOnvifPairingService>,
@@ -1031,7 +1047,8 @@ fn compose_smart_home_http_service(
         .transpose()?;
     Ok(SmartHomeHttpService {
         address: SocketAddr::new(config.bind(), config.port()),
-        app: Arc::new(home_assistant_runtime_web_app(runtime)),
+        app: Arc::new(home_assistant_runtime_web_app(runtime.clone())),
+        automation: runtime,
         hue_discovery,
         hue_pairing: None,
         onvif_pairing: None,
@@ -1635,6 +1652,77 @@ fn drive_discovery_tick(
         .process_next(HUE_MDNS_ACTOR_ID)
         .map_err(ChiefDaemonError::SmartHomeDiscoveryActor)?;
     Ok(())
+}
+
+struct OwnedAutomationWorker {
+    stop: Arc<AtomicBool>,
+    thread: Option<JoinHandle<Result<(), ChiefDaemonError>>>,
+}
+
+impl OwnedAutomationWorker {
+    fn start(
+        runtime: SmartHomePlatformHttpRuntime,
+        on_failure: Arc<dyn Fn() + Send + Sync>,
+    ) -> Result<Self, ChiefDaemonError> {
+        Self::start_with_interval(
+            runtime,
+            on_failure,
+            Duration::from_millis(AUTOMATION_TICK_INTERVAL_MS),
+        )
+    }
+
+    fn start_with_interval(
+        runtime: SmartHomePlatformHttpRuntime,
+        on_failure: Arc<dyn Fn() + Send + Sync>,
+        tick_interval: Duration,
+    ) -> Result<Self, ChiefDaemonError> {
+        let stop = Arc::new(AtomicBool::new(false));
+        let worker_stop = Arc::clone(&stop);
+        let thread = thread::Builder::new()
+            .name("chief-smart-home-automation".to_string())
+            .spawn(move || {
+                while !worker_stop.load(Ordering::Acquire) {
+                    thread::park_timeout(tick_interval);
+                    if worker_stop.load(Ordering::Acquire) {
+                        break;
+                    }
+                    if let Err(error) = drive_automation_tick(&runtime) {
+                        on_failure();
+                        return Err(error);
+                    }
+                }
+                Ok(())
+            })
+            .map_err(|_| ChiefDaemonError::SmartHomeAutomationWorkerUnavailable)?;
+        Ok(Self {
+            stop,
+            thread: Some(thread),
+        })
+    }
+
+    fn stop_and_join(&mut self) -> Result<(), ChiefDaemonError> {
+        self.stop.store(true, Ordering::Release);
+        let Some(thread) = self.thread.take() else {
+            return Ok(());
+        };
+        thread.thread().unpark();
+        thread
+            .join()
+            .map_err(|_| ChiefDaemonError::SmartHomeAutomationWorkerPanicked)?
+    }
+}
+
+impl Drop for OwnedAutomationWorker {
+    fn drop(&mut self) {
+        let _ = self.stop_and_join();
+    }
+}
+
+fn drive_automation_tick(runtime: &SmartHomePlatformHttpRuntime) -> Result<(), ChiefDaemonError> {
+    runtime
+        .evaluate_automations(AutomationTriggerInput::Schedule, false)
+        .map(|_| ())
+        .map_err(|_| ChiefDaemonError::SmartHomeAutomation)
 }
 
 struct OwnedHuePairingWorker {
@@ -2790,6 +2878,7 @@ where
     .map_err(ChiefDaemonError::Runtime)?;
     let (
         mut smart_home_server,
+        automation,
         hue_discovery,
         hue_pairing,
         onvif_pairing,
@@ -2802,6 +2891,7 @@ where
             let SmartHomeHttpService {
                 address,
                 app,
+                automation,
                 hue_discovery,
                 hue_pairing,
                 onvif_pairing,
@@ -2819,6 +2909,7 @@ where
             .map_err(ChiefDaemonError::SmartHomeHttp)?;
             (
                 Some(server),
+                Some(automation),
                 hue_discovery,
                 hue_pairing,
                 onvif_pairing,
@@ -2828,7 +2919,7 @@ where
                 synology_pairing,
             )
         }
-        None => (None, None, None, None, None, None, None, None),
+        None => (None, None, None, None, None, None, None, None, None),
     };
     let daemon_stop = runtime.stop_handle();
     let smart_home_stop = smart_home_server.as_ref().map(WebServer::stop_handle);
@@ -2923,6 +3014,19 @@ where
             OwnedSynologyPairingWorker::start(service, on_failure)
         })
         .transpose()?;
+    let mut automation_worker = automation
+        .map(|runtime| {
+            let failure_daemon_stop = daemon_stop.clone();
+            let failure_smart_home_stop = smart_home_stop.clone();
+            let on_failure: Arc<dyn Fn() + Send + Sync> = Arc::new(move || {
+                failure_daemon_stop.stop();
+                if let Some(stop) = failure_smart_home_stop.as_ref() {
+                    stop.stop();
+                }
+            });
+            OwnedAutomationWorker::start(runtime, on_failure)
+        })
+        .transpose()?;
     let listener_daemon_stop = daemon_stop.clone();
     let listener_smart_home_stop = smart_home_stop.clone();
     let listener = match ShutdownListener::install(move |_| {
@@ -2956,6 +3060,9 @@ where
                 let _ = worker.stop_and_join();
             }
             if let Some(worker) = synology_pairing_worker.as_mut() {
+                let _ = worker.stop_and_join();
+            }
+            if let Some(worker) = automation_worker.as_mut() {
                 let _ = worker.stop_and_join();
             }
             return Err(ChiefDaemonError::Shutdown(error));
@@ -3006,6 +3113,10 @@ where
         .as_mut()
         .map(OwnedSynologyPairingWorker::stop_and_join)
         .transpose();
+    let automation_result = automation_worker
+        .as_mut()
+        .map(OwnedAutomationWorker::stop_and_join)
+        .transpose();
     let smart_home_result = smart_home_thread
         .map(|thread| {
             thread
@@ -3030,6 +3141,7 @@ where
     zoneminder_pairing_result?;
     reolink_pairing_result?;
     synology_pairing_result?;
+    automation_result?;
     smart_home_result?;
     shutdown_result.map_err(ChiefDaemonError::Shutdown)?;
     recovery_result
@@ -3182,14 +3294,17 @@ mod tests {
     use chief_of_staff_host_control_protocol::{LaunchBindings, LevelOneModelBinding};
     use chief_of_staff_pipeline_bindings::{HostPipelineBinding, PipelineId};
     use chief_of_staff_service_registry::{HostName, HostRegistration, PackagePath, RestartPolicy};
+    use smart_home_automation_runtime::{
+        AutomationAction, AutomationCondition, AutomationDefinition, AutomationTrigger,
+    };
     use smart_home_axis_pairing_service::{
         AxisCredentialInput, AxisCredentialSecret, AxisPairingVerifier, VerifiedAxisCamera,
     };
     use smart_home_core::{
         AgentId, AuthorizationOutcome, Bridge, BridgeId, BridgeTransport, CapabilityGrant,
-        CapabilityGrantId, CapabilityId, Device, DeviceId, Entity, EntityId, EntityKind, Health,
-        IntegrationId, Metadata as SmartHomeMetadata, ProtocolFamily, ProtocolIdentifier,
-        SmartHomeTool,
+        CapabilityGrantId, CapabilityId, CommandType, Device, DeviceId, Entity, EntityId,
+        EntityKind, Health, IntegrationId, Metadata as SmartHomeMetadata, ProtocolFamily,
+        ProtocolIdentifier, SmartHomeTool, Value,
     };
     use smart_home_onvif_pairing_service::{
         OnvifCredentialInput, OnvifCredentialSecret, OnvifPairingVerifier, VerifiedOnvifCamera,
@@ -3730,6 +3845,121 @@ hardware_key_timeout = 60
         let mut worker = OwnedDiscoveryWorker::start_with_interval(
             service,
             Arc::new(TestUnixTimeClock::new(1_500)),
+            on_failure,
+            Duration::from_secs(60),
+        )
+        .unwrap();
+        worker.stop_and_join().unwrap();
+    }
+
+    #[test]
+    fn chief_automation_schedule_tick_is_shared_durable_and_restart_safe() {
+        let directory = TestDir::new();
+        let state_dir = directory.0.join("smart-home-automation-state");
+        let controller =
+            SmartHomeControllerRuntime::restore(FsStorageBackend::new(&state_dir)).unwrap();
+        let config = smart_home_listener_config();
+        let clock: Arc<dyn UnixTimeClock> = Arc::new(TestUnixTimeClock::new(1_500));
+        let service = compose_smart_home_http_service(
+            config.smart_home().unwrap(),
+            controller.clone(),
+            &state_dir,
+            Arc::clone(&clock),
+        )
+        .unwrap();
+        service
+            .automation
+            .upsert_automation_definition(AutomationDefinition {
+                automation_id: "chief-schedule".to_string(),
+                enabled: true,
+                trigger: AutomationTrigger::Schedule {
+                    every_ms: 1_000,
+                    offset_ms: 0,
+                },
+                conditions: vec![AutomationCondition::StateEquals {
+                    entity_id: EntityId::trusted("missing-condition-entity"),
+                    expected: Value::Bool(true),
+                }],
+                actions: vec![AutomationAction::Command {
+                    entity_id: EntityId::trusted("missing-action-entity"),
+                    command_type: CommandType::TurnOff,
+                    arguments: Value::Null,
+                    timeout_ms: None,
+                }],
+            })
+            .unwrap();
+
+        drive_automation_tick(&service.automation).unwrap();
+        let first_revision = controller.revision().unwrap().unwrap();
+        {
+            let automations = controller.automation_runtime_handle();
+            let automations = automations.lock().unwrap();
+            assert_eq!(automations.audit_records().len(), 1);
+            assert_eq!(
+                automations.audit_records()[0].automation_id,
+                "chief-schedule"
+            );
+        }
+
+        drive_automation_tick(&service.automation).unwrap();
+        assert_eq!(controller.revision().unwrap(), Some(first_revision.clone()));
+        drop(service);
+        drop(controller);
+
+        let restored =
+            SmartHomeControllerRuntime::restore(FsStorageBackend::new(&state_dir)).unwrap();
+        let restarted = compose_smart_home_http_service(
+            config.smart_home().unwrap(),
+            restored.clone(),
+            &state_dir,
+            clock,
+        )
+        .unwrap();
+        assert_eq!(restored.revision().unwrap(), Some(first_revision.clone()));
+        drive_automation_tick(&restarted.automation).unwrap();
+        assert_eq!(restored.revision().unwrap(), Some(first_revision));
+        let automations = restored.automation_runtime_handle();
+        assert_eq!(automations.lock().unwrap().audit_records().len(), 1);
+    }
+
+    #[test]
+    fn chief_automation_worker_stops_cooperatively_and_propagates_failure() {
+        let controller =
+            SmartHomeControllerRuntime::restore(InMemoryStorageBackend::new()).unwrap();
+        let config = smart_home_listener_config();
+        let clock = Arc::new(TestUnixTimeClock::new(1_500));
+        let runtime = compose_smart_home_http_runtime(
+            config.smart_home().unwrap(),
+            controller.clone(),
+            clock.clone(),
+        )
+        .unwrap();
+        clock.set_unavailable();
+        let failure_seen = Arc::new(AtomicBool::new(false));
+        let failure_probe = Arc::clone(&failure_seen);
+        let on_failure: Arc<dyn Fn() + Send + Sync> = Arc::new(move || {
+            failure_probe.store(true, Ordering::Release);
+        });
+        let mut worker = OwnedAutomationWorker::start_with_interval(
+            runtime,
+            on_failure,
+            Duration::from_millis(1),
+        )
+        .unwrap();
+        thread::sleep(Duration::from_millis(20));
+        assert!(matches!(
+            worker.stop_and_join(),
+            Err(ChiefDaemonError::SmartHomeAutomation)
+        ));
+        assert!(failure_seen.load(Ordering::Acquire));
+
+        clock.set(2_000);
+        let runtime =
+            compose_smart_home_http_runtime(config.smart_home().unwrap(), controller, clock)
+                .unwrap();
+        let on_failure: Arc<dyn Fn() + Send + Sync> = Arc::new(|| {});
+        let mut worker = OwnedAutomationWorker::start_with_interval(
+            runtime,
             on_failure,
             Duration::from_secs(60),
         )

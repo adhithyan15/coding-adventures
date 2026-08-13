@@ -418,8 +418,11 @@ Prioritized work items:
    integration endings report both the mismatch and generic in-body parse
    error while preserving following text; nearer matching foreign same-name
    elements, foreign `select` names, ordinary matching endings, and seeded
-   fragments retain their existing paths. Continue with button and form
-   endings.
+   fragments retain their existing paths. Dedicated authored HTML `button`
+   endings now follow the same SVG/MathML integration-boundary dispatch:
+   recovery reports the foreign mismatch and ordinary-scope error while
+   preserving the older button and following text, and nearer matching foreign
+   buttons still close in foreign mode. Continue with form endings.
 3. **Diagnostic positions and error taxonomy.** Carry source positions into
    tree construction and map diagnostics to current WHATWG concepts. Legacy
    WPT/html5lib error labels are evidence hints, not a normative public API.

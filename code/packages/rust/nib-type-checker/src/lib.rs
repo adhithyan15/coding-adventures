@@ -367,7 +367,16 @@ impl Checker {
                     _ => None,
                 }
             }
-            "primary" => infer_primary(node, env, expected),
+            "primary" => {
+                // Parentheses contain an `expr` child. Route it through the
+                // checker rather than the literal-only primary helper so every
+                // nested expression receives a stable type annotation.
+                child_nodes(node)
+                    .into_iter()
+                    .find(|child| child.rule_name == "expr")
+                    .and_then(|child| self.infer_expr(child, env, expected))
+                    .or_else(|| infer_primary(node, env, expected))
+            }
             "type" => parse_type(node),
             _ => {
                 let children = child_nodes(node);
@@ -664,6 +673,12 @@ mod tests {
     #[test]
     fn check_source_accepts_numeric_shifts() {
         let result = check_source("fn main() -> u8 { return 1 << 5; }");
+        assert!(result.ok, "expected success, got {:?}", result.errors);
+    }
+
+    #[test]
+    fn check_source_accepts_parenthesized_shift_chains() {
+        let result = check_source("fn main() -> u8 { return (1 << 6) >> 1; }");
         assert!(result.ok, "expected success, got {:?}", result.errors);
     }
 }
