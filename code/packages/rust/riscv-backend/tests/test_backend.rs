@@ -1121,6 +1121,40 @@ fn allocates_a_wide_pair_by_spilling_live_scalar_values() {
 }
 
 #[test]
+fn interleaves_scalar_and_wide_values_under_register_pressure() {
+    let cir = vec![
+        ci("const_u64", Some("wide1"), vec![CIROperand::Int(4_294_967_297)], "u64"),
+        ci("const_i32", Some("scalar1"), vec![CIROperand::Int(20)], "i32"),
+        ci("const_u64", Some("wide2"), vec![CIROperand::Int(4_294_967_298)], "u64"),
+        ci("const_i32", Some("scalar2"), vec![CIROperand::Int(22)], "i32"),
+        ci("const_u64", Some("wide3"), vec![CIROperand::Int(4_294_967_299)], "u64"),
+        ci(
+            "add_u64",
+            Some("sum"),
+            vec![CIROperand::Var("wide1".into()), CIROperand::Var("wide2".into())],
+            "u64",
+        ),
+        ci(
+            "add_u64",
+            Some("sink"),
+            vec![CIROperand::Var("sum".into()), CIROperand::Var("wide3".into())],
+            "u64",
+        ),
+        ci(
+            "add_i32",
+            Some("answer"),
+            vec![
+                CIROperand::Var("scalar1".into()),
+                CIROperand::Var("scalar2".into()),
+            ],
+            "i32",
+        ),
+        ci("ret_i32", None, vec![CIROperand::Var("answer".into())], "i32"),
+    ];
+    assert_eq!(compile_and_run(&cir), 42);
+}
+
+#[test]
 fn spills_live_wide_pairs_to_a_stack_frame() {
     let mut cir: Vec<CIRInstr> = (1..=4)
         .map(|value| {
