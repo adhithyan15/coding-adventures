@@ -46,8 +46,20 @@ harness's core "never silently skip / never silently pass" property:
   without Erlang no longer reports its legitimate skips as a runner opting out,
   and a transient spawn failure cannot silently turn the column off.
 
+Also collapses **102 copies** of the per-test `toolchain_available` match into
+one `toolchain_available(backend)` function. Every test block carried its own
+identical copy, so adding a `Backend` variant meant editing them all — and any
+block landing on main while a backend branch was open broke that branch's build
+on merge, which happened three times while this one was open. A new variant now
+needs exactly one edit.
+
 The executed matrix stays at 4 confirmed failures (ALGOL strings on
 NativeAot/Clr, COBOL COMPUTE on Clr/Jvm); the new column adds none.
+## 0.225.13 - 2026-08-13 (ALGOL composed stable while effects)
+
+The seven-backend ALGOL matrix now proves that a known composition of unwritten
+boolean locals can make a dependency-writing body branch unreachable.
+
 ## 0.225.12 - 2026-08-13 (ALGOL stable conditional while effects)
 
 The seven-backend ALGOL matrix now proves that an unreachable dependency write

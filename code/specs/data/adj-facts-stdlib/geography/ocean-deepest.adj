@@ -1,0 +1,58 @@
+% ============================================================================
+% ocean-deepest — for the ocean basin whose SAME cited source also names it
+% the deepest, that superlative (adj-facts-stdlib, GEOGRAPHY).
+% ============================================================================
+% A sibling to the already-shipped `oceans.adj` (`ocean_size_rank(ocean,
+% rank)`, ONE size-rank per ocean basin: pacific 1, atlantic 2, indian 3,
+% southern 4, arctic 5). That table's own `source` field already quotes,
+% VERBATIM, a SECOND superlative in the very same opening sentence used to
+% fix the Pacific's rank — but the `rank`-only schema (a size ordering) had
+% no room for it:
+%
+%   pacific → deepest
+%     "The Pacific Ocean is the largest and deepest of the world ocean
+%      basins."
+%
+% Recall is a binding query:
+%
+%     ? ocean_is_deepest(pacific, $Superlative)   % deepest
+%
+% This is a native `table` (ADJ-TABLES RS-5, a TWO-column table like
+% `oceans.adj`'s own `ocean_size_rank`): each `row` lowers to a ground
+% relation `ocean_is_deepest(ocean, superlative)` carrying the citation, so
+% the lookup above is the ordinary SLD binding query — the engine returns
+% the depth superlative WITH its source, on the CPU, with zero model calls,
+% and abstains on every other ocean `oceans.adj` carries, since the cited
+% sentence names a depth superlative for the Pacific alone — the rest of the
+% span ("The Atlantic basin is the second largest basin, followed by the
+% Indian Ocean basin, the Southern Ocean, and finally the Arctic Ocean
+% basin") states ONLY a size ranking, never a depth claim, for the other
+% four basins.
+%
+% Only ONE of `oceans.adj`'s five ocean basins has a genuinely distinct
+% depth superlative in the ALREADY-cited span; this table is deliberately
+% narrow rather than inventing a depth rank the source does not state. The
+% query also runs BACKWARD — bind a superlative and recall which ocean it
+% names:
+%
+%     ? ocean_is_deepest($Ocean, deepest)   % pacific
+%
+% Provenance: reproduces, byte-for-byte, the SAME opening sentence already
+% quoted inside `oceans.adj`'s own `source` field, from the SAME NOAA
+% National Ocean Service page that table already cites — no new WebFetch,
+% only a different schema decoding the depth-superlative half of an
+% already-verified quote. `trust authoritative` — the same tier `oceans.adj`
+% already carries (NOAA, a U.S. federal .gov source).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table ocean_is_deepest {
+    columns ocean, superlative
+
+    row (pacific, deepest)
+
+    source "The Pacific Ocean is the largest and deepest of the world ocean basins."
+    locator "https://oceanservice.noaa.gov/facts/biggestocean.html"
+    trust authoritative
+}

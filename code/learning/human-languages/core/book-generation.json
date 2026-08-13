@@ -3588,6 +3588,36 @@
       "output": "spanish/book/chapters/ch229-review-grado.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 230,
+      "output": "spanish/book/chapters/ch230-al.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 231,
+      "output": "spanish/book/chapters/ch231-del.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 232,
+      "output": "spanish/book/chapters/ch232-quien.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 233,
+      "output": "spanish/book/chapters/ch233-o.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 234,
+      "output": "spanish/book/chapters/ch234-ni.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 235,
+      "output": "spanish/book/chapters/ch235-review-juntores.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "output": "tamil/book/chapters/ch06-dative-case.tex",

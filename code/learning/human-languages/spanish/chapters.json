@@ -4486,6 +4486,108 @@
           "ES-GRAMMAR-APOCOPE-PATTERN"
         ]
       }
+    },
+    {
+      "chapter": 230,
+      "title": "Al --- Two Words Spanish Will Not Keep Apart",
+      "label": "ch:al",
+      "canDo": "I can say where I am going, with the article fused on.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C61-al",
+        "kind": "task",
+        "summary": "I can say where I am going, with the article fused on.",
+        "assesses": [
+          "ES-GRAMMAR-CONTRACTION-AL"
+        ]
+      }
+    },
+    {
+      "chapter": 231,
+      "title": "Del --- And Then the List Stops",
+      "label": "ch:del",
+      "canDo": "I can say whose something is, and I know both contractions exist.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C61-del",
+        "kind": "task",
+        "summary": "I can say whose something is, and I know both contractions exist.",
+        "assesses": [
+          "ES-GRAMMAR-CONTRACTION-DEL"
+        ]
+      }
+    },
+    {
+      "chapter": 232,
+      "title": "Quién --- The Asking Word for People",
+      "label": "ch:quien",
+      "canDo": "I can ask who somebody is.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C61-quien",
+        "kind": "task",
+        "summary": "I can ask who somebody is.",
+        "assesses": [
+          "ES-LEX-QUIEN"
+        ]
+      }
+    },
+    {
+      "chapter": 233,
+      "title": "O --- One Letter, One Catch",
+      "label": "ch:o",
+      "canDo": "I can offer a choice between two things.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C61-o",
+        "kind": "task",
+        "summary": "I can offer a choice between two things.",
+        "assesses": [
+          "ES-LEX-O"
+        ]
+      }
+    },
+    {
+      "chapter": 234,
+      "title": "Ni --- Joining Two Absences",
+      "label": "ch:ni",
+      "canDo": "I can say I want neither of two things.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C61-ni",
+        "kind": "task",
+        "summary": "I can say I want neither of two things.",
+        "assesses": [
+          "ES-LEX-NI"
+        ]
+      }
+    },
+    {
+      "chapter": 235,
+      "title": "Review --- Four Small Words, One Instinct",
+      "label": "ch:repaso-juntores",
+      "canDo": "I can use the small joining words without hesitating.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C61-repaso-juntores",
+        "kind": "task",
+        "summary": "I can use the small joining words without hesitating.",
+        "assesses": [
+          "ES-GRAMMAR-CONTRACTION-ONLY-TWO"
+        ]
+      }
     }
   ]
 }

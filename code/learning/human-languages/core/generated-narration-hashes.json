@@ -9986,6 +9986,90 @@
       "jsonHash": "fnv1a64:229adc43e001b837"
     },
     {
+      "language": "spanish",
+      "chapter": 230,
+      "sourceHash": "fnv1a64:cbace5daee5ed0c1",
+      "lessonIds": [
+        "ES-C61-al"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch230.txt",
+      "json": "spanish/narration/ch230.json",
+      "textHash": "fnv1a64:5d55440fb2cc1c01",
+      "jsonHash": "fnv1a64:ebafc227e78f8bc3"
+    },
+    {
+      "language": "spanish",
+      "chapter": 231,
+      "sourceHash": "fnv1a64:7920ede0bf513631",
+      "lessonIds": [
+        "ES-C61-del"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch231.txt",
+      "json": "spanish/narration/ch231.json",
+      "textHash": "fnv1a64:70cf2a0eeb578284",
+      "jsonHash": "fnv1a64:de16a581508d5952"
+    },
+    {
+      "language": "spanish",
+      "chapter": 232,
+      "sourceHash": "fnv1a64:15565afa851e3c2b",
+      "lessonIds": [
+        "ES-C61-quien"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch232.txt",
+      "json": "spanish/narration/ch232.json",
+      "textHash": "fnv1a64:6bd79f787562e6b2",
+      "jsonHash": "fnv1a64:ea272a87ce536cf8"
+    },
+    {
+      "language": "spanish",
+      "chapter": 233,
+      "sourceHash": "fnv1a64:2397e74b8bdc3694",
+      "lessonIds": [
+        "ES-C61-o"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch233.txt",
+      "json": "spanish/narration/ch233.json",
+      "textHash": "fnv1a64:f35e6eace0eff875",
+      "jsonHash": "fnv1a64:6303787c5c05e31a"
+    },
+    {
+      "language": "spanish",
+      "chapter": 234,
+      "sourceHash": "fnv1a64:c4bab23d76f47b77",
+      "lessonIds": [
+        "ES-C61-ni"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch234.txt",
+      "json": "spanish/narration/ch234.json",
+      "textHash": "fnv1a64:eafe6e67af6800f4",
+      "jsonHash": "fnv1a64:460827701ddbd154"
+    },
+    {
+      "language": "spanish",
+      "chapter": 235,
+      "sourceHash": "fnv1a64:19acd77f81640095",
+      "lessonIds": [
+        "ES-C61-repaso-juntores"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch235.txt",
+      "json": "spanish/narration/ch235.json",
+      "textHash": "fnv1a64:b8273280d62256ee",
+      "jsonHash": "fnv1a64:f70088c477cb9626"
+    },
+    {
       "language": "tamil",
       "chapter": 1,
       "sourceHash": "fnv1a64:3c0d5e6c060b7723",

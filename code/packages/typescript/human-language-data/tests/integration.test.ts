@@ -104,7 +104,7 @@ describe("real curriculum", () => {
     // 40 (esperar, contestar, comprar). Two sessions authored a chapter 38 in parallel;
     // the collision surfaced as a merge conflict on chapters.json rather than silently,
     // because both sides must edit it.
-    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(229); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis // +3: HL-C88 slice 8 // +1: HL-C88 slice 9 (falsos amigos) // +3: HL-C113 (B1 si-condition rung) // +3: HL-C113 preterite plural // HL-C113: HL-C113 imperfect subjunctive
+    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(235); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis // +3: HL-C88 slice 8 // +1: HL-C88 slice 9 (falsos amigos) // +3: HL-C113 (B1 si-condition rung) // +3: HL-C113 preterite plural // HL-C113: HL-C113 imperfect subjunctive
     expect(
       books.books
         .find((book) => book.language === "persian")
@@ -912,6 +912,24 @@ describe("real curriculum", () => {
       "ES-C60-repaso-grado-ante",
       "ES-C60-repaso-grado-scale",
       "ES-C60-repaso-grado-short",
+      "ES-C61-al-must",
+      "ES-C61-al-name",
+      "ES-C61-al-say",
+      "ES-C61-del-count",
+      "ES-C61-del-la",
+      "ES-C61-del-say",
+      "ES-C61-ni-count",
+      "ES-C61-ni-mean",
+      "ES-C61-ni-say",
+      "ES-C61-o-ask",
+      "ES-C61-o-swap",
+      "ES-C61-o-why",
+      "ES-C61-quien-ask",
+      "ES-C61-quien-latin",
+      "ES-C61-quien-which",
+      "ES-C61-repaso-juntores-count",
+      "ES-C61-repaso-juntores-u",
+      "ES-C61-repaso-juntores-who",
       "ES-W03-question-span-roberto-outside",
       "FA-C02-esm-e-man-sara",
       "FA-C03-chist-fusion",

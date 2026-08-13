@@ -2521,6 +2521,78 @@
         "ES-EXT-A1-REVIEW-GRADO"
       ],
       "after": []
+    },
+    {
+      "id": "ES-PATH-A1-AL",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C61-al"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-AL"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-A1-DEL",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C61-del"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-DEL"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-A1-QUIEN",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C61-quien"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-QUIEN"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-A1-O",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C61-o"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-O"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-A1-NI",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C61-ni"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-NI"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-A1-REVIEW-JUNT",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C61-repaso-juntores"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-REVIEW-JUNT"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -2678,7 +2750,13 @@
         "ES-PATH-A1-MUY",
         "ES-PATH-A1-BASTANTE",
         "ES-PATH-A1-MAL",
-        "ES-PATH-A1-REVIEW-GRADO"
+        "ES-PATH-A1-REVIEW-GRADO",
+        "ES-PATH-A1-AL",
+        "ES-PATH-A1-DEL",
+        "ES-PATH-A1-QUIEN",
+        "ES-PATH-A1-O",
+        "ES-PATH-A1-NI",
+        "ES-PATH-A1-REVIEW-JUNT"
       ],
       "omits": [],
       "relocates": {}
@@ -5520,6 +5598,72 @@
       "prerequisites": [],
       "lessons": [
         "ES-C60-repaso-grado"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-AL",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C61-al"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-DEL",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C61-del"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-QUIEN",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C61-quien"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-O",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C61-o"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-NI",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C61-ni"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-REVIEW-JUNT",
+      "stage": "A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C61-repaso-juntores"
       ]
     }
   ]
