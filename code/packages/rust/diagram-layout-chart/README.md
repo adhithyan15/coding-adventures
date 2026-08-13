@@ -1,6 +1,6 @@
 # diagram-layout-chart
 
-Layout engine for chart-family diagrams (DG04): XY bar/line, pie, and Sankey.
+Layout engine for chart-family diagrams (DG04): XY bar/line, pie, Sankey, and quadrant charts.
 
 ## Position in pipeline
 
@@ -35,3 +35,4 @@ let layout = layout_chart_diagram(&diagram, 600.0, 400.0);
 | `Xy`   | Categorical x-axis with bar/line series |
 | `Pie`  | Angular slices starting at 12 o'clock |
 | `Sankey` | Left-to-right proportional bands |
+| `Quadrant` | Four labeled regions with normalized scatter points |

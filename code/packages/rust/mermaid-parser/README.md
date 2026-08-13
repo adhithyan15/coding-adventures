@@ -19,6 +19,7 @@ The current native pipeline supports documented subsets of:
 - `pie`
 - `sankey`
 - `xychart`
+- `quadrantChart`
 
 Each supported family lowers into the shared Diagram IR and can continue
 through its family layout package:
@@ -32,6 +33,11 @@ Mermaid
   -> PaintScene
   -> Metal / SVG / Direct2D / other Paint VM backends
 ```
+
+The initial `quadrantChart` subset covers titles, x/y endpoint labels, all four
+quadrant labels, and normalized points. Point classes and inline styles plus
+accessibility statements remain compatibility gaps and therefore keep the
+family at `partial` rather than `full`.
 
 The sequence subset includes participants and actors, aliases, standard solid
 and dotted message arrows, bidirectional/cross/point arrowheads, notes,

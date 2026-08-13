@@ -1,6 +1,6 @@
 //! Grammar-driven lexers for Mermaid diagram families.
 
-pub const VERSION: &str = "0.43.0";
+pub const VERSION: &str = "0.44.0";
 
 use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
@@ -17,6 +17,8 @@ const C4_TOKEN_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid
 const SEQUENCE_TOKEN_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/sequence.tokens");
 const STATE_TOKEN_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/state.tokens");
+const QUADRANT_TOKEN_GRAMMAR_SOURCE: &str =
+    include_str!("../../../../grammars/mermaid/quadrant.tokens");
 
 fn create_lexer<'a>(source: &'a str, grammar_source: &str, grammar_name: &str) -> GrammarLexer<'a> {
     let grammar = parse_token_grammar(grammar_source)
@@ -54,6 +56,10 @@ pub fn create_mermaid_sequence_lexer(source: &str) -> GrammarLexer<'_> {
 
 pub fn create_mermaid_state_lexer(source: &str) -> GrammarLexer<'_> {
     create_lexer(source, STATE_TOKEN_GRAMMAR_SOURCE, "state.tokens")
+}
+
+pub fn create_mermaid_quadrant_lexer(source: &str) -> GrammarLexer<'_> {
+    create_lexer(source, QUADRANT_TOKEN_GRAMMAR_SOURCE, "quadrant.tokens")
 }
 
 pub fn tokenize_mermaid(source: &str) -> Vec<Token> {
@@ -233,6 +239,13 @@ pub fn tokenize_mermaid_state(source: &str) -> Vec<Token> {
     filtered
 }
 
+pub fn tokenize_mermaid_quadrant(source: &str) -> Vec<Token> {
+    let mut lexer = create_mermaid_quadrant_lexer(source);
+    lexer
+        .tokenize()
+        .unwrap_or_else(|e| panic!("Mermaid quadrant tokenization failed: {e}"))
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -244,7 +257,20 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.43.0");
+        assert_eq!(VERSION, "0.44.0");
+    }
+
+    #[test]
+    fn quadrant_tokenizes_native_statements() {
+        let tokens = tokenize_mermaid_quadrant(
+            "quadrantChart\ntitle Native portfolio\nx-axis Low --> High\nquadrant-1 Invest\nMetal: [0.75, 0.8]\n",
+        );
+        let names: Vec<_> = tokens.iter().filter_map(custom_name).collect();
+        assert!(names.contains(&"HEADER"));
+        assert!(names.contains(&"TITLE_STATEMENT"));
+        assert!(names.contains(&"AXIS_STATEMENT"));
+        assert!(names.contains(&"QUADRANT_STATEMENT"));
+        assert!(names.contains(&"POINT_STATEMENT"));
     }
 
     #[test]

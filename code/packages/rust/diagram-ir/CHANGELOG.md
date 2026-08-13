@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.37.0
+
+- Add semantic quadrant-chart labels and points plus backend-neutral layout regions and scatter points.
+
 ## 0.36.0
 
 - Preserve optional and resolved graph text font families.

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.44.0
+
+- Add a portable Mermaid 11.16.1 quadrant-chart token grammar and lexer.
+
 ## 0.43.0
 
 - Preserve internal percent signs in Mermaid state identifiers while retaining single-percent bare states.

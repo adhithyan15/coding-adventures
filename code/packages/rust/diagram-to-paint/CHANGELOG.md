@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Lower quadrant-chart regions and scatter points to backend-neutral rectangles, ellipses, and shaped labels.
+- Keep shared chart data-label boxes wide enough for titles and clamp them to canvas bounds.
 - Shape graph node, group, and edge text using resolved font families.
 - Shape graph node, group, and edge text using resolved italic styling.
 - Shape graph node, group, and edge text using resolved font weights.

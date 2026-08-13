@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.35.0";
+pub const VERSION: &str = "0.37.0";
 
 use std::collections::HashMap;
 
@@ -738,12 +738,70 @@ where
                     stroke_dash_offset: None,
                 }));
             }
+            LayoutedChartItem::QuadrantRegion {
+                x,
+                y,
+                width,
+                height,
+                color,
+                label,
+            } => {
+                instructions.push(PaintInstruction::Rect(PaintRect {
+                    base: PaintBase::default(),
+                    x: *x,
+                    y: *y,
+                    width: *width,
+                    height: *height,
+                    fill: Some(color.clone()),
+                    stroke: Some("#64748b".into()),
+                    stroke_width: Some(1.0),
+                    corner_radius: None,
+                    stroke_dash: None,
+                    stroke_dash_offset: None,
+                }));
+                if let Some(label) = label {
+                    text_children.push(text_node(
+                        label,
+                        x + width / 2.0 - 60.0,
+                        y + 8.0,
+                        120.0,
+                        ls * 1.2,
+                        lf.clone(),
+                        Color { r: 51, g: 65, b: 85, a: 255 },
+                    ));
+                }
+            }
+            LayoutedChartItem::ScatterPoint { x, y, radius, color, label } => {
+                instructions.push(PaintInstruction::Ellipse(PaintEllipse {
+                    base: PaintBase::default(),
+                    cx: *x,
+                    cy: *y,
+                    rx: *radius,
+                    ry: *radius,
+                    fill: Some(color.clone()),
+                    stroke: Some("#1e3a8a".into()),
+                    stroke_width: Some(1.5),
+                    stroke_dash: None,
+                    stroke_dash_offset: None,
+                }));
+                text_children.push(text_node(
+                    label,
+                    x - 50.0,
+                    y + radius + 4.0,
+                    100.0,
+                    ls * 1.2,
+                    lf.clone(),
+                    Color { r: 30, g: 41, b: 59, a: 255 },
+                ));
+            }
             LayoutedChartItem::DataLabel { x, y, text } => {
+                let width = diagram.width.min(240.0);
+                let label_x = (x - width / 2.0).clamp(0.0, diagram.width - width);
                 text_children.push(text_node(
                     text,
-                    x - 40.0,
+                    label_x,
                     y - ls / 2.0,
-                    80.0,
+                    width,
                     ls * 1.2,
                     lf.clone(),
                     Color {
@@ -2973,7 +3031,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.35.0");
+        assert_eq!(crate::VERSION, "0.37.0");
     }
 
     #[test]
