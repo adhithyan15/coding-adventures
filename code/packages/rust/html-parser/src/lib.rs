@@ -7369,6 +7369,16 @@ impl HtmlParser {
         if name == "body" && self.has_open_element("body") && self.current_element_is("bdy") {
             return;
         }
+        if matches!(name, "body" | "html")
+            && self.has_authored_open_html_element("body")
+            && self.open_html_element_in_scope_index("body").is_none()
+        {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-shell-end-tag-outside-scope",
+                format!("end tag `</{name}>` targeted a body element outside ordinary scope"),
+            ));
+            return;
+        }
         if (!self.is_fragment || self.open_fragment_context_name() == Some("html"))
             && !self.document_has_closed_frameset()
             && name == "body"
@@ -36509,8 +36519,8 @@ mod tests {
             table.parser_diagnostics,
             vec![
                 ParserDiagnostic::new(
-                    "shell-end-tag-with-unclosed-elements",
-                    "end tag `</body>` was seen with disallowed open elements"
+                    "unexpected-shell-end-tag-outside-scope",
+                    "end tag `</body>` targeted a body element outside ordinary scope"
                 ),
                 ParserDiagnostic::new(
                     "eof-with-unclosed-elements",
@@ -36521,6 +36531,106 @@ mod tests {
 
         let allowed = parse_html_with_diagnostics("<!doctype html><p></body>").unwrap();
         assert!(allowed.parser_diagnostics.is_empty());
+    }
+
+    #[test]
+    fn shell_end_tags_respect_ordinary_scope_boundaries() {
+        for end_tag in ["body", "html"] {
+            for (source, boundary_id) in [
+                (
+                    format!(
+                        "<!doctype html><object id=boundary></{end_tag}>X</object>Y"
+                    ),
+                    "boundary",
+                ),
+                (
+                    format!(
+                        "<!doctype html><marquee id=boundary></{end_tag}>X</marquee>Y"
+                    ),
+                    "boundary",
+                ),
+                (
+                    format!(
+                        "<!doctype html><select id=boundary></{end_tag}>X</select>Y"
+                    ),
+                    "boundary",
+                ),
+                (
+                    format!(
+                        "<!doctype html><div></div><template id=boundary></{end_tag}>X</template>Y"
+                    ),
+                    "boundary",
+                ),
+                (
+                    format!(
+                        "<!doctype html><table><tr><td id=boundary></{end_tag}>X</td></tr></table>Y"
+                    ),
+                    "boundary",
+                ),
+            ] {
+                let output = parse_html_with_diagnostics(&source).unwrap();
+                assert_eq!(
+                    output
+                        .parser_diagnostics
+                        .iter()
+                        .filter(|diagnostic| {
+                            matches!(
+                                diagnostic.code.as_str(),
+                                "unexpected-shell-end-tag-outside-scope"
+                                    | "shell-end-tag-with-unclosed-elements"
+                            )
+                        })
+                        .cloned()
+                        .collect::<Vec<_>>(),
+                    vec![ParserDiagnostic::new(
+                        "unexpected-shell-end-tag-outside-scope",
+                        format!(
+                            "end tag `</{end_tag}>` targeted a body element outside ordinary scope"
+                        )
+                    )],
+                    "source {source:?}: {:?}",
+                    output.parser_diagnostics
+                );
+                let boundary = find_element_by_id(&output.document.children, boundary_id)
+                    .expect("the ordinary scope boundary should remain open");
+                assert_eq!(element_text(boundary), "X", "source {source:?}");
+                assert_eq!(body(&output.document).children.last(), Some(&Node::text("Y")));
+            }
+        }
+
+        for source in [
+            "<!doctype html><menuitem></body>",
+            "<!doctype html><div></html>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output.parser_diagnostics.iter().any(|diagnostic| {
+                diagnostic.code == "shell-end-tag-with-unclosed-elements"
+            }));
+            assert!(output.parser_diagnostics.iter().all(|diagnostic| {
+                diagnostic.code != "unexpected-shell-end-tag-outside-scope"
+            }));
+        }
+
+        for source in [
+            "<!doctype html><p></body>",
+            "<!doctype html><body></body></body>",
+            "<!doctype html><frameset></frameset></html>",
+            "<!doctype html><svg><body><g></body>X",
+            "<!doctype html><svg><html><g></html>X",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output.parser_diagnostics.iter().all(|diagnostic| {
+                diagnostic.code != "unexpected-shell-end-tag-outside-scope"
+            }));
+        }
+
+        for context in ["body", "html", "svg path"] {
+            let output =
+                parse_html_fragment_for_context_with_diagnostics("</body>X", context).unwrap();
+            assert!(output.parser_diagnostics.iter().all(|diagnostic| {
+                diagnostic.code != "unexpected-shell-end-tag-outside-scope"
+            }));
+        }
     }
 
     #[test]
