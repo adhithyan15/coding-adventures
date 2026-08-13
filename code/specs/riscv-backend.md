@@ -122,22 +122,25 @@ implemented.
    plus a Nib bitwise source-to-simulator fixture.
 5. [x] **Wide shifts:** pair-aware logical and arithmetic shifts for an RV32I
    shift count, including counts crossing the 32-bit word boundary.
-6. [ ] **Nib shift frontend:** add shift syntax and IIR lowering; Nib currently
-   has no shift operators, so it cannot exercise the backend capability.
+6. [x] **Nib shift frontend:** `<<` / `>>` syntax lowers to typed IIR shifts,
+   with a Nib source-to-RV32I-simulator fixture covering both operations.
 7. [x] **Wide multiplication:** RV32M `mul` / `mulhu` lowering for full-width
    signed and unsigned values, including a Nib source-to-simulator fixture.
-8. [ ] **Wide division and modulo:** pair-aware restoring division or a larger
+8. [ ] **Chained wide operations:** reuse or spill register-pair results so a
+   wide operation can feed another one; `(1 << 6) >> 1` currently exceeds the
+   six-temporary RV32I allocator despite each shift working independently.
+9. [ ] **Wide division and modulo:** pair-aware restoring division or a larger
    RV32M lowering pass for full-width values. Nib still needs these for all of
    its ordinary numeric expressions.
-9. [ ] **Register allocation:** spill live values to stack slots and emit a proper
+10. [ ] **Register allocation:** spill live values to stack slots and emit a proper
    frame, removing the six-temporary limit.
-10. [ ] **Calls and modules:** lower direct calls, add relocations/linking for flat
+11. [ ] **Calls and modules:** lower direct calls, add relocations/linking for flat
    binaries, and preserve the RISC-V calling convention across calls.
-11. [ ] **Host runtime ABI:** define simulator `ecall` services for exit and integer
+12. [ ] **Host runtime ABI:** define simulator `ecall` services for exit and integer
    output, then lower language print primitives through that ABI.
-12. [ ] **Memory and data:** globals, addresses, loads/stores, and a data-image
+13. [ ] **Memory and data:** globals, addresses, loads/stores, and a data-image
    loader for programs needing strings or arrays.
-13. [ ] **BASIC real values:** Dartmouth BASIC currently lowers numeric values
+14. [ ] **BASIC real values:** Dartmouth BASIC currently lowers numeric values
    such as `PRINT 42` through `f64`; direct RISC-V execution needs either a
    floating-point ABI or an integer-only lowering path before those programs
    can run on the simulator.

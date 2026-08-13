@@ -47,4 +47,15 @@ mod tests {
         let fn_token = tokens.iter().find(|token| token.value == "fn").unwrap();
         assert_eq!(fn_token.type_name.as_deref(), Some("fn"));
     }
+
+    #[test]
+    fn tokenizes_shift_operators_before_comparisons() {
+        let tokens = tokenize_nib("fn main() { let x: u8 = 1 << 2 >> 1; }");
+        let kinds: Vec<_> = tokens
+            .iter()
+            .filter_map(|token| token.type_name.as_deref())
+            .collect();
+        assert!(kinds.contains(&"SHL"));
+        assert!(kinds.contains(&"SHR"));
+    }
 }
