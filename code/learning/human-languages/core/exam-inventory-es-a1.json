@@ -116,7 +116,10 @@
       "id": "A1-ART-02",
       "category": "El articulo",
       "label": "contractions al and del",
-      "probe": null
+      "probe": [
+        "ES-GRAMMAR-CONTRACTION-AL",
+        "ES-GRAMMAR-CONTRACTION-DEL"
+      ]
     },
     {
       "id": "A1-ART-03",
@@ -268,8 +271,11 @@
       "id": "A1-PRON-06",
       "category": "El pronombre",
       "label": "interrogative pronouns: que, quien, cuanto",
-      "probe": null,
-      "note": "que and cuantos are taught; quien is not."
+      "probe": [
+        "ES-LEX-QUE",
+        "ES-LEX-QUIEN",
+        "ES-LEX-CUANTOS-ANOS"
+      ]
     },
     {
       "id": "A1-PRON-07",
@@ -615,14 +621,17 @@
       "id": "A1-CO-02",
       "category": "Coordinacion",
       "label": "negative coordination with ni",
-      "probe": null
+      "probe": [
+        "ES-LEX-NI"
+      ]
     },
     {
       "id": "A1-CO-03",
       "category": "Coordinacion",
       "label": "disjunctive coordination with o",
-      "probe": null,
-      "note": "o appears in a chapter-5 headword but is never taught as a coordinator."
+      "probe": [
+        "ES-LEX-O"
+      ]
     },
     {
       "id": "A1-CO-04",

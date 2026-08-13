@@ -5694,6 +5694,60 @@
       "tex": "spanish/book/chapters/ch229-review-grado.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 230,
+      "sourceHash": "fnv1a64:39c3d8b2984502df",
+      "lessonIds": [
+        "ES-C61-al"
+      ],
+      "tex": "spanish/book/chapters/ch230-al.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 231,
+      "sourceHash": "fnv1a64:d7616a0d10fcd6e1",
+      "lessonIds": [
+        "ES-C61-del"
+      ],
+      "tex": "spanish/book/chapters/ch231-del.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 232,
+      "sourceHash": "fnv1a64:37771abb164fbb1c",
+      "lessonIds": [
+        "ES-C61-quien"
+      ],
+      "tex": "spanish/book/chapters/ch232-quien.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 233,
+      "sourceHash": "fnv1a64:04f090cfe8809ea5",
+      "lessonIds": [
+        "ES-C61-o"
+      ],
+      "tex": "spanish/book/chapters/ch233-o.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 234,
+      "sourceHash": "fnv1a64:e64681626d2b0f37",
+      "lessonIds": [
+        "ES-C61-ni"
+      ],
+      "tex": "spanish/book/chapters/ch234-ni.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 235,
+      "sourceHash": "fnv1a64:a41df72dcff87e68",
+      "lessonIds": [
+        "ES-C61-repaso-juntores"
+      ],
+      "tex": "spanish/book/chapters/ch235-review-juntores.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "sourceHash": "fnv1a64:5f56402811418e13",

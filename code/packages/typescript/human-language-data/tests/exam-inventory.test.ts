@@ -283,8 +283,11 @@ describe("what the corpus actually covers", () => {
     // -- closing four more points across three categories, and taking
     // `El sintagma adjetival` off the floor at last.
     //
-    // Still untaught and still counted against us: the `al`/`del` contractions,
-    // the gerund, `quien`, `ni`/`o`, and the personal `a`.
+    // Chapters 230-235 then closed the contractions, `quien`, and both missing
+    // coordinators -- which finished `Coordinacion` outright.
+    //
+    // Still untaught and still counted against us: the ordinals, the gerund,
+    // the personal `a`, the vocative, and the stressed pronouns.
     //
     // This number is allowed to move only two ways. Up, when a lesson teaches
     // something the inventory lists. Down, when one is retired. It must NOT
@@ -292,8 +295,8 @@ describe("what the corpus actually covers", () => {
     // fails alongside an edit to exam-inventory-es-a1.json, read that edit
     // before re-pinning.
     expect(coverage.enumerated).toBe(85);
-    expect(coverage.covered).toBe(60);
-    expect(coverage.percent).toBe(71);
+    expect(coverage.covered).toBe(64); // +3: chapters 221-225 teach the demonstratives // +4: chapters 226-229 teach muy, bastante and mal // +4: chapters 230-235 teach al/del, quien, o and ni
+    expect(coverage.percent).toBe(75); // 53/85 -> 56 -> 60 -> 64/85
 
     // Whole categories missing is a different failure from thin coverage, and
     // the report has to keep them distinguishable.
@@ -307,7 +310,7 @@ describe("what the corpus actually covers", () => {
     const report = formatExamCoverage(
       measureExamCoverage(loadExamInventory("spanish", "A1"), lessons),
     );
-    expect(report).toContain("spanish A1: 60/85 points covered (71%)");
+    expect(report).toContain("spanish A1: 64/85 points covered (75%)");
     // Worst category first: the line after the summary should be the emptiest
     // category, not the alphabetically first one. It USED to be
     // `El sintagma adjetival` at 0/1; chapters 226-229 closed that, and the
