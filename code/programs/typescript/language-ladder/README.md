@@ -740,6 +740,12 @@ left foot, and finishes rightward without lifting. The same lesson demonstrates
 a looped cursive д at 02:14–02:19; the Noto Sans Cyrillic fit preserves its
 body-before-descender order and zero-lift evidence while documenting that the
 isolated block glyph has a shelf and two feet instead of a descender loop.
+The two-frame Cyrillic **е** filmstrip curves around the upper bowl and sweeps
+right through the middle, then reverses through the junction and continues
+counterclockwise around the lower bowl without lifting. The same lesson
+demonstrates the tall looped school hand at 02:26–02:30; the Noto Sans Cyrillic
+fit preserves its zero-lift upper-loop-to-middle-to-lower-bowl order while
+routing it through the compact printed glyph's long middle bar.
 The runtime resolves each cited path back to the owning script and lazily loads that
 script's font, while Tamil continues to use Noto Sans Tamil. Unverified letters
 still fall back to the numbered prose list, unchanged. Extending the coverage is HL-C09,

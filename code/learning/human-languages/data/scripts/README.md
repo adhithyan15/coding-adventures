@@ -726,7 +726,12 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   exit. Its two-frame Noto fit preserves that body-before-descender order and
   zero-lift evidence while tracing the block glyph's trapezoidal body, joined
   base shelf, and two retraced feet; it records that the printed form replaces
-  the cursive descender loop with those feet.
+  the cursive descender loop with those feet. Lowercase **е** follows at
+  02:26–02:30: the pen begins at the upper right, curves left around the upper
+  loop, crosses through the middle, and continues counterclockwise around the
+  rounded lower bowl without lifting. Its two-frame Noto fit preserves that
+  upper-loop-to-middle-to-lower-bowl order while routing the tall open school
+  hand through the compact printed glyph's upper bowl and long middle bar.
   the variation note records the absent cursive exit arch. The remaining **99** prose part
   orders across four scripts
   (`arabic` 3,
