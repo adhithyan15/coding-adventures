@@ -444,6 +444,42 @@ fn executes_pair_aware_unsigned_64_bit_division_and_modulo() {
 }
 
 #[test]
+fn executes_pair_aware_signed_64_bit_division_and_modulo() {
+    let evaluate = |op: &str, dividend: i64, divisor: i64| {
+        let cir = vec![
+            ci("const_i64", Some("dividend"), vec![CIROperand::Int(dividend)], "i64"),
+            ci("const_i64", Some("divisor"), vec![CIROperand::Int(divisor)], "i64"),
+            ci(
+                op,
+                Some("result"),
+                vec![
+                    CIROperand::Var("dividend".into()),
+                    CIROperand::Var("divisor".into()),
+                ],
+                "i64",
+            ),
+            ci("ret_i64", None, vec![CIROperand::Var("result".into())], "i64"),
+        ];
+        let bytes = compile(&ctx("wide_signed_divmod", &[], "i64"), &cir)
+            .expect("wide signed div/mod lowering");
+        let result = run_binary(&bytes, &[]).expect("wide signed div/mod execution");
+        (u64::from(result.return_value_high) << 32 | u64::from(result.return_value as u32)) as i64
+    };
+
+    for (dividend, divisor, quotient, remainder) in [
+        (-20, 6, -3, -2),
+        (-20, -6, 3, -2),
+        (20, -6, -3, 2),
+        (-1_099_511_627_776, 3, -366_503_875_925, -1),
+        (i64::MIN, -1, i64::MIN, 0),
+        (-20, 0, -1, -20),
+    ] {
+        assert_eq!(evaluate("div_i64", dividend, divisor), quotient);
+        assert_eq!(evaluate("mod_i64", dividend, divisor), remainder);
+    }
+}
+
+#[test]
 fn executes_pair_aware_signed_and_unsigned_64_bit_comparisons() {
     let signed = vec![
         ci(
