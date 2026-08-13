@@ -461,6 +461,11 @@ Prioritized work items:
    template element remains in the body instead of sending later comments or
    processing instructions to `html`. Direct after-body placement,
    after-after-body reentry, and seeded HTML fragments remain distinct.
+   Repeated authored `frameset` start tags after a top-level frameset has
+   closed are now diagnosed and ignored in the document-only after-frameset
+   state, preserving the first frameset and its following tail nodes. Valid
+   nested framesets, after-after-frameset ignored-token recovery, and seeded
+   HTML fragment behavior remain distinct.
    Continue with the remaining after-body and after-after-body token classes,
    frameset tail modes, and trailing-token recovery.
 3. **Diagnostic positions and error taxonomy.** Carry source positions into
