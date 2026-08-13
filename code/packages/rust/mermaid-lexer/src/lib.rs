@@ -1,6 +1,6 @@
 //! Grammar-driven lexers for Mermaid diagram families.
 
-pub const VERSION: &str = "0.47.0";
+pub const VERSION: &str = "0.48.0";
 
 use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
@@ -257,7 +257,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.47.0");
+        assert_eq!(VERSION, "0.48.0");
     }
 
     #[test]
@@ -308,6 +308,20 @@ mod tests {
         ] {
             assert!(names.contains(&expected), "missing {expected}");
         }
+    }
+
+    #[test]
+    fn quadrant_skips_leading_and_inline_comments() {
+        let tokens = tokenize_mermaid_quadrant(
+            "%% chart comment\nquadrantChart\nx-axis Low --> High %% axis comment\nMetal: [0.75, 0.8] %% point comment\n",
+        );
+        assert!(!tokens.iter().any(|token| token.value.contains("comment")));
+        assert!(tokens
+            .iter()
+            .any(|token| token.type_name.as_deref() == Some("AXIS_STATEMENT")));
+        assert!(tokens
+            .iter()
+            .any(|token| token.type_name.as_deref() == Some("POINT_STATEMENT")));
     }
 
     #[test]

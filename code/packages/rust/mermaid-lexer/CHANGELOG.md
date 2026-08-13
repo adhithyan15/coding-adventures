@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.48.0
+
+- Terminate quadrant statements at leading or inline `%%` comments.
+
 ## 0.47.0
 
 - Match quadrant-chart tokens case-insensitively, following the pinned upstream lexer.

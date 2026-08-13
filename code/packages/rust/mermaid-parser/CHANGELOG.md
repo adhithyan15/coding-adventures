@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.83.0
+
+- Parse inline quadrant comments, empty charts, one-sided axes, dangling arrows, and quoted point labels containing brackets.
+
 ## 0.82.0
 
 - Parse case-insensitive quadrant keywords, extended axis arrows, Unicode labels, and Mermaid markdown strings.
