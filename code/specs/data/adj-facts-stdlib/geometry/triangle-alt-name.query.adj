@@ -1,0 +1,21 @@
+% ============================================================================
+% triangle-alt-name.query.adj — a worked recall over the geometry
+% triangle-alt-name library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what's another word
+% for an equilateral triangle?": it states no geometry fact of its own — it
+% only `import`s the grounded table and asks binding queries. The engine
+% resolves each `?` against the `triangle_alt_name` rows and returns the
+% alternate name + the table's source/locator/trust. A side-class the
+% cited spans give no alternate name for abstains honestly — the engine
+% never invents one.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli triangle-alt-name.query.adj
+% ============================================================================
+
+import "triangle-alt-name.adj"
+
+? triangle_alt_name(equilateral, $AltName)          % expect regular
+? triangle_alt_name($Triangle, regular)             % reverse bind — expect equilateral
+? triangle_alt_name(isosceles, $AltName)            % expect abstain — isosceles's own cited span names no alternate word

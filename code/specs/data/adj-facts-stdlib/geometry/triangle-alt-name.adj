@@ -1,0 +1,60 @@
+% ============================================================================
+% triangle-alt-name — for the triangle side-class where the SAME source
+% names an alternate word, the alternate name (adj-facts-stdlib, GEOMETRY).
+% ============================================================================
+% A sibling to the already-shipped `triangle-types.adj`
+% (`triangle_sides(triangle, condition)`, ONE defining side-condition per
+% triangle side-class: equilateral, isosceles, scalene). That table's
+% `condition` column has room for only the defining CONDITION; the SAME
+% already-quoted MathWorld equilateral sentence also states an ALTERNATE
+% NAME for it that never made it into a row:
+%
+%   equilateral → regular
+%     "An equilateral triangle is a triangle with all three sides of equal
+%      length a, corresponding to what could also be known as a 'regular'
+%      triangle."
+%
+% Recall is a binding query:
+%
+%     ? triangle_alt_name(equilateral, $AltName)      % regular
+%
+% This is a native `table` (ADJ-TABLES RS-5, a TWO-column table like
+% `triangle-types.adj`'s own `triangle_sides`): each `row` lowers to a
+% ground relation `triangle_alt_name(triangle, alt_name)` carrying the
+% citation, so the lookup above is the ordinary SLD binding query — the
+% engine returns the alternate name WITH its source, on the CPU, with zero
+% model calls, and abstains on isosceles and scalene, whose own
+% already-cited spans in `triangle-types.adj` state no alternate name to
+% decode here.
+%
+% Only ONE of `triangle-types.adj`'s three side-classes has a genuinely
+% distinct alternate name in the ALREADY-cited spans; this table is
+% deliberately narrow rather than inventing a name the source does not
+% state. The query also runs BACKWARD — bind an alternate name and recall
+% which side-class it names:
+%
+%     ? triangle_alt_name($Triangle, regular)   % equilateral
+%
+% Provenance: reproduces, byte-for-byte, the SAME equilateral sentence
+% already quoted inside `triangle-types.adj`'s own provenance block, from
+% the SAME MathWorld "Equilateral Triangle" page that table already cites
+% — no new WebFetch, only a different schema decoding a clause of an
+% already-verified quote. An ADJ `table` carries ONE provenance envelope
+% (per `triangle-types.adj`'s own convention), so `source`/`locator`/
+% `trust` below hold that full sentence — the single span that fixes this
+% table's only row. `trust authoritative` — the same tier
+% `triangle-types.adj` already carries (Wolfram MathWorld, a widely-cited
+% mathematics reference).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table triangle_alt_name {
+    columns triangle, alt_name
+
+    row (equilateral, regular)
+
+    source "An equilateral triangle is a triangle with all three sides of equal length a, corresponding to what could also be known as a 'regular' triangle."
+    locator "https://mathworld.wolfram.com/EquilateralTriangle.html"
+    trust authoritative
+}
