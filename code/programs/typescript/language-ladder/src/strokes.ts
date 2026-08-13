@@ -1769,6 +1769,53 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: chineseCharacterSource("再"),
   },
+  // 见 completes its open upper frame before drawing the two lower runs:
+  // four strokes, three lifts, seven movements.
+  [ductusKey("chinese", "见")]: {
+    script: "chinese",
+    glyph: "见",
+    strokes: [
+      { segments: [{ label: "descend the frame's left side", path: [
+        { x: 215, y: 755 }, { x: 215, y: 670 }, { x: 215, y: 585 },
+        { x: 215, y: 500 }, { x: 215, y: 415 }, { x: 215, y: 330 },
+        { x: 215, y: 235 },
+      ] }] },
+      { segments: [
+        { label: "lift, then draw the frame's top horizontal", path: [
+          { x: 220, y: 745 }, { x: 310, y: 745 }, { x: 400, y: 745 },
+          { x: 490, y: 745 }, { x: 580, y: 745 }, { x: 670, y: 745 },
+          { x: 780, y: 745 },
+        ] },
+        { label: "turn and descend the right side without lifting", path: [
+          { x: 780, y: 745 }, { x: 780, y: 660 }, { x: 780, y: 575 },
+          { x: 780, y: 490 }, { x: 780, y: 405 }, { x: 780, y: 320 },
+          { x: 780, y: 235 },
+        ] },
+      ] },
+      { segments: [{ label: "lift, then draw the inner left-falling leg", path: [
+        { x: 490, y: 600 }, { x: 490, y: 520 }, { x: 485, y: 430 },
+        { x: 475, y: 340 }, { x: 450, y: 250 }, { x: 420, y: 170 },
+        { x: 380, y: 100 }, { x: 325, y: 45 }, { x: 260, y: 0 },
+        { x: 180, y: -40 }, { x: 90, y: -65 },
+      ] }] },
+      { segments: [
+        { label: "lift, then descend the second leg", path: [
+          { x: 555, y: 285 }, { x: 555, y: 235 }, { x: 555, y: 185 },
+          { x: 555, y: 135 }, { x: 555, y: 85 }, { x: 555, y: 55 },
+        ] },
+        { label: "bend right along the base without lifting", path: [
+          { x: 555, y: 55 }, { x: 570, y: 20 }, { x: 610, y: -10 },
+          { x: 665, y: -20 }, { x: 725, y: -20 }, { x: 785, y: -15 },
+          { x: 835, y: 5 }, { x: 885, y: 40 },
+        ] },
+        { label: "finish with an upward hook without lifting", path: [
+          { x: 885, y: 40 }, { x: 895, y: 70 }, { x: 905, y: 100 },
+          { x: 915, y: 125 }, { x: 925, y: 145 }, { x: 930, y: 150 },
+        ] },
+      ] },
+    ],
+    source: chineseCharacterSource("见"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the

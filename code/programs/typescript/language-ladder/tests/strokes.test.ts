@@ -43,6 +43,7 @@ const CHINESE_CHARACTER = DUCTUS[ductusKey("chinese", "字")];
 const CHINESE_THANK = DUCTUS[ductusKey("chinese", "谢")];
 const CHINESE_PLEASE = DUCTUS[ductusKey("chinese", "请")];
 const CHINESE_AGAIN = DUCTUS[ductusKey("chinese", "再")];
+const CHINESE_SEE = DUCTUS[ductusKey("chinese", "见")];
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
@@ -568,6 +569,21 @@ describe("handwriting ductus", () => {
       expect(CHINESE_AGAIN.strokes[2].segments[segmentIndex].path.at(-1)).toEqual(
         CHINESE_AGAIN.strokes[2].segments[segmentIndex + 1].path[0],
       );
+    }
+  });
+
+  it("Chinese 见 completes its open frame before both lower runs", () => {
+    expect(CHINESE_SEE.script).toBe("chinese");
+    expect(penLifts(CHINESE_SEE)).toBe(3);
+    expect(CHINESE_SEE.strokes).toHaveLength(4);
+    expect(CHINESE_SEE.strokes.map((stroke) => stroke.segments.length)).toEqual([1, 2, 1, 3]);
+    for (const strokeIndex of [1, 3]) {
+      const stroke = CHINESE_SEE.strokes[strokeIndex];
+      for (let segmentIndex = 0; segmentIndex + 1 < stroke.segments.length; segmentIndex++) {
+        expect(stroke.segments[segmentIndex].path.at(-1)).toEqual(
+          stroke.segments[segmentIndex + 1].path[0],
+        );
+      }
     }
   });
 
@@ -1525,6 +1541,7 @@ describe("handwriting ductus", () => {
     expect(verifiedLetterFont("谢", CHINESE_THANK.source.url)).toBe("_fonts/NotoSansSC-Subset.ttf");
     expect(verifiedLetterFont("请", CHINESE_PLEASE.source.url)).toBe("_fonts/NotoSansSC-Subset.ttf");
     expect(verifiedLetterFont("再", CHINESE_AGAIN.source.url)).toBe("_fonts/NotoSansSC-Subset.ttf");
+    expect(verifiedLetterFont("见", CHINESE_SEE.source.url)).toBe("_fonts/NotoSansSC-Subset.ttf");
     expect(verifiedLetterFont("א", HEBREW_ALEF.source.url)).toBe(
       "_fonts/NotoSansHebrew-Static.ttf",
     );
@@ -1858,6 +1875,17 @@ describe("handwriting ductus", () => {
     expect(src.citation).toMatch(/Hanzi Writer Data 再\.json.*medians 1–6.*snapshot 68d10a4/i);
     expect(src.variation).toMatch(
       /six ordered strokes.*top horizontal left-to-right.*left side.*Median 3.*frame's top.*right side.*hooks left.*central vertical.*inner horizontal.*closes with the long bottom horizontal left-to-right.*People's Republic of China stroke order.*Noto Sans SC.*both turns.*close-last rule.*five intervening lifts/i,
+    );
+  });
+
+  it("Chinese 见 traces its frame-before-legs order to the pinned PRC-order dataset", () => {
+    const src = CHINESE_SEE.source;
+    expect(src.url).toBe(
+      "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E8%A7%81.json",
+    );
+    expect(src.citation).toMatch(/Hanzi Writer Data 见\.json.*medians 1–4.*snapshot 68d10a4/i);
+    expect(src.variation).toMatch(
+      /four ordered strokes.*left side.*Median 2.*top horizontal.*right side.*left-falling leg.*Median 4.*second leg.*bends right.*upward hook.*People's Republic of China stroke order.*Noto Sans SC.*frame-before-legs.*three joined turns.*three intervening lifts/i,
     );
   });
 

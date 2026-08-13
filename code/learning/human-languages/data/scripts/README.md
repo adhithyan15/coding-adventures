@@ -544,9 +544,11 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   before 青 in ten strokes; its fourteen-frame Noto Sans SC path preserves all
   four joined turns and nine lifts. **再** builds its central frame before the
   long closing bottom horizontal; its eight-frame Noto Sans SC path preserves
-  both joined turns and five lifts.
-  The remaining **136** prose part orders across six scripts
-  (`arabic` 3, `chinese` 5,
+  both joined turns and five lifts. **见** completes the open upper frame before
+  its two lower runs; its seven-frame Noto Sans SC path preserves all three
+  joined turns and three lifts.
+  The remaining **135** prose part orders across six scripts
+  (`arabic` 3, `chinese` 4,
   `cyrillic` 33, `devanagari` 28,
   `gujarati` 33, `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a
