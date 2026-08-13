@@ -300,11 +300,17 @@ Prioritized work items:
    before preserving the existing implied closure, matching WPT `tests6.dat`
    and `tests20.dat`. First buttons in ordinary and real-cell contexts,
    already-closed buttons, marker-separated buttons, and synthetic button
-   fragment contexts remain quiet. A heading start tag now reports when its
-   current node is another heading before popping that heading, matching WPT
-   `tests1.dat`'s `<h1><h2>` rows. A non-current heading separated by an inline
-   or special element remains open, matching the current Standard and browser
-   behavior. Ruby annotation starts now generate the required implied end tags
+   fragment contexts remain quiet. Authored HTML `applet`, `marquee`, and
+   `object` end tags now report and remain ignored when the matching element is
+   blocked by an ordinary-scope boundary. This preserves the scoped element,
+   its intervening table or marker element, and follow-on content while keeping
+   in-scope endings, implied descendants, real cells, foreign elements, and
+   synthetic fragment contexts on their existing paths. A heading start tag
+   now reports when its current node is another heading before popping that
+   heading, matching WPT `tests1.dat`'s `<h1><h2>` rows. A non-current heading
+   separated by an inline or special element remains open, matching the current
+   Standard and browser behavior. Ruby annotation starts now generate the
+   required implied end tags
    when an authored HTML `ruby` is in scope and report when a non-ruby node
    remains current, matching WPT `tests19.dat` and `webkit01.dat` while keeping
    valid annotation transitions, outside-ruby starts, and synthetic ruby
