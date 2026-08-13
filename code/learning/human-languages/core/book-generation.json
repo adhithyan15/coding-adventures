@@ -3418,6 +3418,21 @@
       "output": "spanish/book/chapters/ch195-synthesis-hay.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 196,
+      "output": "spanish/book/chapters/ch196-si.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 197,
+      "output": "spanish/book/chapters/ch197-si-futuro.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 198,
+      "output": "spanish/book/chapters/ch198-synthesis-condicion.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "output": "tamil/book/chapters/ch06-dative-case.tex",

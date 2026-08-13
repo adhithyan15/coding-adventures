@@ -7,18 +7,18 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:f63957f583cc1959",
+  "sourceHash": "fnv1a64:fbdf3af8c271e226",
   "summary": {
-    "totalLessons": 1941,
-    "voice": 1313,
+    "totalLessons": 1944,
+    "voice": 1316,
     "sight": 559,
     "pen": 69,
-    "drivableLessons": 1313,
+    "drivableLessons": 1316,
     "drivablePercent": 68,
     "trackCount": 22,
-    "chapterCount": 695,
-    "drivablePrefixTotal": 1113,
-    "fullyDrivableChapters": 466,
+    "chapterCount": 698,
+    "drivablePrefixTotal": 1116,
+    "fullyDrivableChapters": 469,
     "unstartableChapters": 171,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
@@ -7062,12 +7062,12 @@
     },
     {
       "language": "spanish",
-      "lessonCount": 341,
-      "voice": 301,
+      "lessonCount": 344,
+      "voice": 304,
       "sight": 33,
       "pen": 7,
       "drivablePercent": 88,
-      "drivablePrefixTotal": 288,
+      "drivablePrefixTotal": 291,
       "modalities": [
         "voice",
         "sight",
@@ -10270,6 +10270,54 @@
           "drivable": true,
           "drivableLessonIds": [
             "ES-C54-sintesis-lo-que-hay"
+          ]
+        },
+        {
+          "chapter": 196,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C55-si"
+          ]
+        },
+        {
+          "chapter": 197,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C55-si-futuro"
+          ]
+        },
+        {
+          "chapter": 198,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C55-sintesis-condicion"
           ]
         }
       ]
@@ -43031,6 +43079,60 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:f880e30194bf14e9"
+    },
+    {
+      "id": "ES-C55-si",
+      "language": "spanish",
+      "chapter": 196,
+      "sequence": 2215,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:b9423788974ef675"
+    },
+    {
+      "id": "ES-C55-si-futuro",
+      "language": "spanish",
+      "chapter": 197,
+      "sequence": 2220,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:9a1e57ae01b7cc04"
+    },
+    {
+      "id": "ES-C55-sintesis-condicion",
+      "language": "spanish",
+      "chapter": 198,
+      "sequence": 2225,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:8fdd76452ba3424e"
     },
     {
       "id": "TA-C01-vanakkam",

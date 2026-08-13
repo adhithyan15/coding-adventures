@@ -2113,6 +2113,42 @@
         "ES-EXT-015-SYNTH-HAY"
       ],
       "after": []
+    },
+    {
+      "id": "ES-PATH-B1-SI",
+      "spine_node": "SPINE-EXPRESS-CONDITION",
+      "lessons": [
+        "ES-C55-si"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-B1-SI"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-B1-SI-FUTURO",
+      "spine_node": "SPINE-EXPRESS-CONDITION",
+      "lessons": [
+        "ES-C55-si-futuro"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-B1-SI-FUTURO"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-B1-SYNTH-CONDICION",
+      "spine_node": "SPINE-EXPRESS-CONDITION",
+      "lessons": [
+        "ES-C55-sintesis-condicion"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-B1-SYNTH-CONDICION"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -2446,7 +2482,11 @@
       "relocates": {}
     },
     "SPINE-EXPRESS-CONDITION": {
-      "segments": [],
+      "segments": [
+        "ES-PATH-B1-SI",
+        "ES-PATH-B1-SI-FUTURO",
+        "ES-PATH-B1-SYNTH-CONDICION"
+      ],
       "omits": [
         "CONDITIONAL-REAL",
         "CONNECTIVE-IF",
@@ -4701,6 +4741,39 @@
       "prerequisites": [],
       "lessons": [
         "ES-C09-falsos-amigos"
+      ]
+    },
+    {
+      "id": "ES-EXT-B1-SI",
+      "stage": "B1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C55-si"
+      ]
+    },
+    {
+      "id": "ES-EXT-B1-SI-FUTURO",
+      "stage": "B1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C55-si-futuro"
+      ]
+    },
+    {
+      "id": "ES-EXT-B1-SYNTH-CONDICION",
+      "stage": "B1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C55-sintesis-condicion"
       ]
     }
   ]
