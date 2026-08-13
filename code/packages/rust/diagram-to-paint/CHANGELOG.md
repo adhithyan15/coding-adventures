@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Validate multiline labels from quoted state aliases with trailing descriptions through native Metal PNG rendering.
 - Validate state hash comments alongside semantic colors through native Metal PNG rendering.
 - Omit empty graph-state shapes and labels when the semantic directive requests it.
 - Shape multiline graph-node descriptions without backend soft rewrapping.
