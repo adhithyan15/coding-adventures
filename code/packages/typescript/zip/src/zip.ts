@@ -194,6 +194,174 @@ function fixedLLDecode(br: BitReader): number | null {
 }
 
 // =============================================================================
+// RFC 1951 DEFLATE — Canonical Huffman decoding (for BTYPE=10)
+// =============================================================================
+//
+// A fixed-Huffman block (BTYPE=01) uses the one table baked into the spec, so
+// `fixedLLDecode` above can hard-code it. A DYNAMIC block (BTYPE=10) carries
+// its own table, and it carries it in the most compact way imaginable: not the
+// codes, just the LENGTH of each symbol's code. Everything else is recoverable,
+// because a canonical Huffman code is fully determined by its lengths:
+//
+//   - sort the symbols by (code length, then symbol number);
+//   - hand out codes in that order, counting up in binary;
+//   - step the counter left by one bit each time the length increases.
+//
+// So the whole table is reconstructible from a list of small integers. That is
+// why DEFLATE can afford to ship a custom table with every block.
+//
+// `HuffTable` stores exactly what decoding needs: how many symbols have each
+// code length, and the symbols themselves in canonical order.
+
+interface HuffTable {
+  /** count[len] = how many symbols use a code of `len` bits. count[0] is unused. */
+  count: Int32Array;
+  /** Symbols ordered by (length, symbol) -- the canonical assignment order. */
+  symbols: Int32Array;
+}
+
+/** The longest code RFC 1951 allows in either alphabet. */
+const MAX_CODE_BITS = 15;
+
+/**
+ * Build a canonical decode table from one code length per symbol.
+ *
+ * A length of 0 means "this symbol does not appear in this block" and takes no
+ * code at all, which is why `count[0]` is deliberately never consulted.
+ */
+function buildHuffTable(lengths: ArrayLike<number>): HuffTable {
+  const count = new Int32Array(MAX_CODE_BITS + 1);
+  for (let i = 0; i < lengths.length; i++) {
+    const len = lengths[i]!;
+    if (len < 0 || len > MAX_CODE_BITS) throw new Error(`deflate: code length ${len} out of range`);
+    if (len > 0) count[len]!++;
+  }
+
+  // Offset of each length's first symbol inside `symbols`.
+  const offsets = new Int32Array(MAX_CODE_BITS + 2);
+  for (let len = 1; len <= MAX_CODE_BITS; len++) {
+    offsets[len + 1] = offsets[len]! + count[len]!;
+  }
+
+  const symbols = new Int32Array(offsets[MAX_CODE_BITS + 1]!);
+  for (let sym = 0; sym < lengths.length; sym++) {
+    const len = lengths[sym]!;
+    if (len > 0) symbols[offsets[len]!++] = sym;
+  }
+
+  return { count, symbols };
+}
+
+/**
+ * Decode one symbol, reading the stream one bit at a time.
+ *
+ * This walks lengths from 1 upward, accumulating bits into `code` and asking at
+ * each length "is this code inside the block of codes of this length?" -- the
+ * canonical layout is what makes that a subtraction rather than a search. The
+ * shape of the loop follows Mark Adler's `puff` reference decoder, which is the
+ * clearest published statement of it.
+ *
+ * DEFLATE packs Huffman codes most-significant-bit first, even though it packs
+ * everything else LSB-first, which is why the bits are read singly and shifted
+ * in from the bottom rather than pulled out in one `readLSB(n)`.
+ */
+function huffDecode(br: BitReader, table: HuffTable): number {
+  let code = 0;   // the bits read so far, as a number
+  let first = 0;  // the first canonical code of the current length
+  let index = 0;  // where this length's symbols start in table.symbols
+
+  for (let len = 1; len <= MAX_CODE_BITS; len++) {
+    const bit = br.readLSB(1);
+    if (bit === null) throw new Error("deflate: EOF decoding Huffman symbol");
+    code |= bit;
+    const n = table.count[len]!;
+    if (code - first < n) {
+      const sym = table.symbols[index + (code - first)];
+      if (sym === undefined) throw new Error("deflate: incomplete Huffman table");
+      return sym;
+    }
+    index += n;
+    first = (first + n) << 1;
+    code <<= 1;
+  }
+  throw new Error("deflate: over-long Huffman code (no symbol within 15 bits)");
+}
+
+// The order in which the code-length alphabet's own code lengths are written.
+// It is not 0..18 but this permutation, so that the lengths most likely to be
+// zero sit at the end and can be omitted entirely via HCLEN.
+const CODE_LENGTH_ORDER = [
+  16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15,
+] as const;
+
+/**
+ * Read a dynamic block's header and return its literal/length and distance
+ * tables (RFC 1951 section 3.2.7).
+ */
+function readDynamicTables(br: BitReader): { ll: HuffTable; dist: HuffTable } {
+  const hlit = br.readLSB(5);
+  const hdist = br.readLSB(5);
+  const hclen = br.readLSB(4);
+  if (hlit === null || hdist === null || hclen === null) {
+    throw new Error("deflate: EOF reading dynamic block header");
+  }
+  const numLL = hlit + 257;
+  const numDist = hdist + 1;
+  const numCodeLen = hclen + 4;
+
+  // Stage 1: the code-length alphabet, three bits per entry, in permuted order.
+  const clLengths = new Int32Array(19);
+  for (let i = 0; i < numCodeLen; i++) {
+    const v = br.readLSB(3);
+    if (v === null) throw new Error("deflate: EOF reading code-length code lengths");
+    clLengths[CODE_LENGTH_ORDER[i]!] = v;
+  }
+  const clTable = buildHuffTable(clLengths);
+
+  // Stage 2: use it to read the real alphabets' lengths, which are themselves
+  // run-length coded -- symbol 16 repeats the previous length, 17 and 18 repeat
+  // zero. The two alphabets are read as ONE stream and split afterwards,
+  // because a run is allowed to straddle the boundary between them.
+  const lengths = new Int32Array(numLL + numDist);
+  let i = 0;
+  while (i < lengths.length) {
+    const sym = huffDecode(br, clTable);
+    if (sym < 16) {
+      lengths[i++] = sym;
+      continue;
+    }
+    let repeat: number;
+    let value: number;
+    if (sym === 16) {
+      if (i === 0) throw new Error("deflate: code-length repeat with no previous length");
+      value = lengths[i - 1]!;
+      const extra = br.readLSB(2);
+      if (extra === null) throw new Error("deflate: EOF reading repeat count");
+      repeat = 3 + extra;
+    } else if (sym === 17) {
+      value = 0;
+      const extra = br.readLSB(3);
+      if (extra === null) throw new Error("deflate: EOF reading zero-repeat count");
+      repeat = 3 + extra;
+    } else if (sym === 18) {
+      value = 0;
+      const extra = br.readLSB(7);
+      if (extra === null) throw new Error("deflate: EOF reading long zero-repeat count");
+      repeat = 11 + extra;
+    } else {
+      throw new Error(`deflate: invalid code-length symbol ${sym}`);
+    }
+    if (i + repeat > lengths.length) throw new Error("deflate: code-length repeat overruns alphabet");
+    for (let r = 0; r < repeat; r++) lengths[i++] = value;
+  }
+
+  return {
+    ll: buildHuffTable(lengths.subarray(0, numLL)),
+    dist: buildHuffTable(lengths.subarray(numLL)),
+  };
+}
+
+// =============================================================================
 // RFC 1951 DEFLATE — Length / Distance Tables
 // =============================================================================
 
@@ -206,7 +374,21 @@ const LENGTH_TABLE: ReadonlyArray<TableEntry> = [
   [35, 3], [43, 3], [51, 3], [59, 3],                                 // 273-276
   [67, 4], [83, 4], [99, 4], [115, 4],                                // 277-280
   [131, 5], [163, 5], [195, 5], [227, 5],                             // 281-284
+  [258, 0],                                                           // 285
 ];
+
+// Symbol 285 is the odd one out, and leaving it off the table used to make this
+// decoder reject perfectly legal streams. RFC 1951 gives length 258 -- the
+// longest match DEFLATE can express -- TWO encodings: symbol 284 with five
+// extra bits all set (227 + 31), and symbol 285 with no extra bits at all.
+// Symbol 285 is the cheaper one, so most encoders in the world emit it, and a
+// 258-byte match is exactly what a long run of identical bytes produces. Our
+// own writer keeps using 284 (see `encodeLength`, which stops one entry short)
+// so its output stays byte-stable; the reader accepts both, because it has to
+// read what other people wrote.
+
+/** Number of length symbols the ENCODER will emit: 257-284, never 285. */
+const ENCODER_LENGTH_SYMBOLS = 28;
 
 const DIST_TABLE: ReadonlyArray<TableEntry> = [
   [1, 0], [2, 0], [3, 0], [4, 0],
@@ -220,7 +402,7 @@ const DIST_TABLE: ReadonlyArray<TableEntry> = [
 ];
 
 function encodeLength(length: number): [number, number, number] {
-  for (let i = LENGTH_TABLE.length - 1; i >= 0; i--) {
+  for (let i = ENCODER_LENGTH_SYMBOLS - 1; i >= 0; i--) {
     const [base, extra] = LENGTH_TABLE[i]!;
     if (length >= base) return [257 + i, base, extra];
   }
@@ -238,6 +420,40 @@ function encodeDist(offset: number): [number, number, number] {
 // =============================================================================
 // RFC 1951 DEFLATE — Compress (fixed Huffman, BTYPE=01)
 // =============================================================================
+
+/**
+ * Compress `data` into a raw RFC 1951 DEFLATE stream -- no ZIP framing, no
+ * zlib wrapper, no gzip header. One final fixed-Huffman block (BTYPE=01), or a
+ * single empty stored block when there is nothing to compress.
+ *
+ * Exported because DEFLATE is not a ZIP feature that happens to live here; it
+ * is the compressor half of `zlib`, `gzip`, and PNG's `IDAT`. A second copy
+ * elsewhere in the repository would be a second place for a bit-packing bug to
+ * hide. Wrap it yourself for those formats -- zlib adds a two-byte header and a
+ * trailing Adler-32, gzip a ten-byte header and a trailing CRC-32 plus length.
+ *
+ * @example
+ * const raw = rawDeflate(new TextEncoder().encode("hello hello hello"));
+ * rawInflate(raw); // the original bytes
+ */
+export function rawDeflate(data: Uint8Array): Uint8Array {
+  return deflateCompress(data);
+}
+
+/**
+ * Decompress a raw RFC 1951 DEFLATE stream produced by `rawDeflate` or by any
+ * other conforming encoder.
+ *
+ * All three block types are read: stored (BTYPE=00), fixed Huffman (BTYPE=01),
+ * and dynamic Huffman (BTYPE=10), which is what general-purpose encoders such
+ * as zlib emit for anything but the smallest inputs.
+ *
+ * @example
+ * rawInflate(rawDeflate(bytes)); // round-trips
+ */
+export function rawInflate(data: Uint8Array): Uint8Array {
+  return deflateDecompress(data);
+}
 
 function deflateCompress(data: Uint8Array): Uint8Array {
   const bw = new BitWriter();
@@ -284,6 +500,57 @@ function deflateCompress(data: Uint8Array): Uint8Array {
 
 const MAX_OUTPUT = 256 * 1024 * 1024;
 
+/**
+ * Decode the body of one compressed block, given whatever pair of decoders the
+ * block type supplies.
+ *
+ * Fixed and dynamic blocks differ ONLY in how a symbol is read off the bit
+ * stream. Everything after that -- literal, end-of-block, or a length followed
+ * by a distance and a copy from the output already produced -- is identical, so
+ * it is written once here and handed the two readers.
+ */
+function decodeHuffmanBlock(
+  br: BitReader,
+  out: number[],
+  readSymbol: () => number,
+  readDistCode: () => number,
+): void {
+  for (;;) {
+    const sym = readSymbol();
+    if (sym < 256) {
+      if (out.length >= MAX_OUTPUT) throw new Error("deflate: output size limit exceeded");
+      out.push(sym);
+    } else if (sym === 256) {
+      return;
+    } else if (sym >= 257 && sym <= 285) {
+      const entry = LENGTH_TABLE[sym - 257];
+      if (!entry) throw new Error(`deflate: invalid length sym ${sym}`);
+      const [baseLen, extraLenBits] = entry;
+      const extraLen = br.readLSB(extraLenBits);
+      if (extraLen === null) throw new Error("deflate: EOF reading length extra bits");
+      const length = baseLen + extraLen;
+
+      const distCode = readDistCode();
+      const distEntry = DIST_TABLE[distCode];
+      if (!distEntry) throw new Error(`deflate: invalid dist code ${distCode}`);
+      const [baseDist, extraDistBits] = distEntry;
+      const extraDist = br.readLSB(extraDistBits);
+      if (extraDist === null) throw new Error("deflate: EOF reading distance extra bits");
+      const offset = baseDist + extraDist;
+
+      if (offset > out.length) {
+        throw new Error(`deflate: back-reference offset ${offset} > output len ${out.length}`);
+      }
+      if (out.length + length > MAX_OUTPUT) throw new Error("deflate: output size limit exceeded");
+      // Copied one byte at a time on purpose: an overlapping copy (offset less
+      // than length) is legal and is how DEFLATE expresses a run.
+      for (let i = 0; i < length; i++) out.push(out[out.length - offset]!);
+    } else {
+      throw new Error(`deflate: invalid LL symbol ${sym}`);
+    }
+  }
+}
+
 function deflateDecompress(data: Uint8Array): Uint8Array {
   const br = new BitReader(data);
   const out: number[] = [];
@@ -309,42 +576,26 @@ function deflateDecompress(data: Uint8Array): Uint8Array {
         out.push(b);
       }
     } else if (btype === 1) {
-      // Fixed Huffman block
-      for (;;) {
-        const sym = fixedLLDecode(br);
-        if (sym === null) throw new Error("deflate: EOF decoding fixed Huffman symbol");
-        if (sym < 256) {
-          if (out.length >= MAX_OUTPUT) throw new Error("deflate: output size limit exceeded");
-          out.push(sym);
-        } else if (sym === 256) {
-          break;
-        } else if (sym >= 257 && sym <= 285) {
-          const idx = sym - 257;
-          const entry = LENGTH_TABLE[idx];
-          if (!entry) throw new Error(`deflate: invalid length sym ${sym}`);
-          const [baseLen, extraLenBits] = entry;
-          const extraLen = br.readLSB(extraLenBits);
-          if (extraLen === null) throw new Error("deflate: EOF reading length extra bits");
-          const length = baseLen + extraLen;
-
+      // Fixed Huffman block: the table is the one in the spec, and distance
+      // codes are a plain 5-bit value rather than a Huffman code.
+      decodeHuffmanBlock(
+        br,
+        out,
+        () => {
+          const sym = fixedLLDecode(br);
+          if (sym === null) throw new Error("deflate: EOF decoding fixed Huffman symbol");
+          return sym;
+        },
+        () => {
           const distCode = br.readMSB(5);
           if (distCode === null) throw new Error("deflate: EOF reading distance code");
-          const distEntry = DIST_TABLE[distCode];
-          if (!distEntry) throw new Error(`deflate: invalid dist code ${distCode}`);
-          const [baseDist, extraDistBits] = distEntry;
-          const extraDist = br.readLSB(extraDistBits);
-          if (extraDist === null) throw new Error("deflate: EOF reading distance extra bits");
-          const offset = baseDist + extraDist;
-
-          if (offset > out.length) throw new Error(`deflate: back-reference offset ${offset} > output len ${out.length}`);
-          if (out.length + length > MAX_OUTPUT) throw new Error("deflate: output size limit exceeded");
-          for (let i = 0; i < length; i++) out.push(out[out.length - offset]!);
-        } else {
-          throw new Error(`deflate: invalid LL symbol ${sym}`);
-        }
-      }
+          return distCode;
+        },
+      );
     } else if (btype === 2) {
-      throw new Error("deflate: dynamic Huffman blocks (BTYPE=10) not supported");
+      // Dynamic Huffman block: both alphabets are described in the block header.
+      const { ll, dist } = readDynamicTables(br);
+      decodeHuffmanBlock(br, out, () => huffDecode(br, ll), () => huffDecode(br, dist));
     } else {
       throw new Error("deflate: reserved BTYPE=11");
     }

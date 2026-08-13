@@ -5,8 +5,11 @@
  */
 
 import { describe, it, expect } from "vitest";
+import { deflateRawSync } from "node:zlib";
 import {
   crc32,
+  rawDeflate,
+  rawInflate,
   dosDatetime,
   DOS_EPOCH,
   ZipWriter,
@@ -342,11 +345,13 @@ function makeDeflateZip(deflateBytes: Uint8Array): Uint8Array {
 // ─── DEFLATE error paths ──────────────────────────────────────────────────────
 
 describe("deflate error paths via crafted ZIP", () => {
-  it("BTYPE=10 (dynamic Huffman) throws not-supported error", () => {
-    // byte 0x05 = bits: bfinal=1 (bit0), btype=10 (bits1-2 = 1,0) = BTYPE=2
+  it("BTYPE=10 (dynamic Huffman) with a truncated header throws, not silently succeeds", () => {
+    // byte 0x05 = bits: bfinal=1 (bit0), btype=10 (bits1-2 = 1,0) = BTYPE=2.
+    // The block type is now supported, so the failure must come from running
+    // out of bits inside the dynamic header rather than from refusing the type.
     const zip = makeDeflateZip(new Uint8Array([0x05]));
     const reader = new ZipReader(zip);
-    expect(() => reader.read(reader.entries()[0]!)).toThrow(/dynamic Huffman/);
+    expect(() => reader.read(reader.entries()[0]!)).toThrow(/EOF|Huffman/);
   });
 
   it("BTYPE=11 (reserved) throws reserved error", () => {
@@ -415,5 +420,134 @@ describe("ZipWriter direct API", () => {
     expect(entries.length).toBe(2);
     expect(entries[0]!.isDirectory).toBe(true);
     expect(dec.decode(reader.readByName("docs/readme.txt"))).toBe("Read me");
+  });
+});
+
+// --- Raw DEFLATE: the compressor half, exported for zlib/gzip/PNG ------------
+//
+// These use Node's own zlib as an ORACLE. Round-tripping our encoder through
+// our decoder only proves the two agree with each other; the question that
+// matters for PNG is whether we can read what the rest of the world writes,
+// and only a foreign encoder can answer it.
+
+describe("rawDeflate / rawInflate", () => {
+  it("round-trips text through our own encoder", () => {
+    const data = enc.encode("hello hello hello hello world world world");
+    expect(rawInflate(rawDeflate(data))).toEqual(data);
+  });
+
+  it("round-trips empty input", () => {
+    expect(rawInflate(rawDeflate(new Uint8Array(0)))).toEqual(new Uint8Array(0));
+  });
+
+  it("round-trips every byte value", () => {
+    const data = new Uint8Array(256);
+    for (let i = 0; i < 256; i++) data[i] = i;
+    expect(rawInflate(rawDeflate(data))).toEqual(data);
+  });
+
+  it("reads a DYNAMIC Huffman stream written by zlib", () => {
+    // Structured, repetitive, and long enough that zlib picks BTYPE=10.
+    const parts: string[] = [];
+    for (let i = 0; i < 400; i++) parts.push(`line ${i}: the quick brown fox jumps over the lazy dog\n`);
+    const data = enc.encode(parts.join(""));
+
+    const foreign = new Uint8Array(deflateRawSync(data));
+    // Confirm the oracle really did emit a dynamic block: BFINAL is bit 0 and
+    // BTYPE is bits 1-2 of the first byte, LSB-first, so BTYPE = (b >> 1) & 3.
+    expect((foreign[0]! >> 1) & 3).toBe(2);
+
+    expect(rawInflate(foreign)).toEqual(data);
+  });
+
+  it("reads a zlib stream containing length symbol 285 (a 258-byte match)", () => {
+    // A long run of one byte is exactly what produces maximum-length matches,
+    // and 258 is the longest DEFLATE can express. zlib encodes those as symbol
+    // 285, which this decoder used to reject outright.
+    const data = new Uint8Array(4096).fill(0x41);
+    const foreign = new Uint8Array(deflateRawSync(data));
+    expect(rawInflate(foreign)).toEqual(data);
+  });
+
+  it("reads a zlib stream of incompressible random-ish bytes", () => {
+    // Deterministic pseudo-random: no Math.random, so a failure reproduces.
+    const data = new Uint8Array(3000);
+    let x = 123456789;
+    for (let i = 0; i < data.length; i++) {
+      x = (x * 1103515245 + 12345) & 0x7fffffff;
+      data[i] = (x >>> 16) & 0xff;
+    }
+    const foreign = new Uint8Array(deflateRawSync(data));
+    expect(rawInflate(foreign)).toEqual(data);
+  });
+
+  it("reads a zlib stream at every compression level", () => {
+    const data = enc.encode("abcabcabcabc".repeat(200));
+    for (let level = 0; level <= 9; level++) {
+      const foreign = new Uint8Array(deflateRawSync(data, { level }));
+      expect(rawInflate(foreign), `level ${level}`).toEqual(data);
+    }
+  });
+
+  it("rejects a code-length repeat that overruns the alphabet", () => {
+    // Dynamic header claiming the minimum alphabets, then a repeat long enough
+    // to run past their combined length. Built by hand because no encoder emits
+    // it: the point is that a malformed stream fails loudly rather than
+    // reading off the end of the buffer.
+    const bits: number[] = [];
+    const push = (value: number, n: number) => {
+      for (let i = 0; i < n; i++) bits.push((value >> i) & 1);
+    };
+    push(1, 1); // BFINAL
+    push(2, 2); // BTYPE = 10
+    push(0, 5); // HLIT  -> 257 literal/length codes
+    push(0, 5); // HDIST -> 1 distance code
+    push(0, 4); // HCLEN -> 4 code-length codes
+    // Code-length code lengths, in permuted order 16, 17, 18, 0:
+    // give symbol 18 (long zero-run) a 1-bit code and symbol 0 a 1-bit code.
+    push(0, 3); // 16 -> unused
+    push(0, 3); // 17 -> unused
+    push(1, 3); // 18 -> 1 bit
+    push(1, 3); //  0 -> 1 bit
+    // Canonical: symbol 0 gets code 0, symbol 18 gets code 1.
+    bits.push(1);   // symbol 18
+    push(127, 7);   // repeat 11 + 127 = 138 zeros, twice over the 258 slots
+    bits.push(1);
+    push(127, 7);
+    bits.push(1);
+    push(127, 7);
+
+    const bytes = new Uint8Array(Math.ceil(bits.length / 8));
+    bits.forEach((b, i) => { if (b) bytes[i >> 3]! |= 1 << (i & 7); });
+
+    expect(() => rawInflate(bytes)).toThrow(/overruns/);
+  });
+});
+
+describe("rawInflate guards", () => {
+  it("gives up after 15 bits rather than looping on an incomplete table", () => {
+    // RFC 1951 caps every Huffman code at 15 bits. A malformed block can
+    // describe a table where some bit patterns match no symbol at all; without
+    // the cap the decoder would read forever. Build exactly that: a code-length
+    // alphabet in which only symbol 0 has a code, then feed it all ones.
+    const bits: number[] = [];
+    const push = (value: number, n: number) => {
+      for (let i = 0; i < n; i++) bits.push((value >> i) & 1);
+    };
+    push(1, 1); // BFINAL
+    push(2, 2); // BTYPE = 10 (dynamic)
+    push(0, 5); // HLIT  -> 257
+    push(0, 5); // HDIST -> 1
+    push(0, 4); // HCLEN -> 4, i.e. lengths for symbols 16, 17, 18, 0
+    push(0, 3); // 16 -> absent
+    push(0, 3); // 17 -> absent
+    push(0, 3); // 18 -> absent
+    push(2, 3); //  0 -> 2 bits, so only the code "00" resolves
+    for (let i = 0; i < 64; i++) bits.push(1);
+
+    const bytes = new Uint8Array(Math.ceil(bits.length / 8));
+    bits.forEach((b, i) => { if (b) bytes[i >> 3]! |= 1 << (i & 7); });
+
+    expect(() => rawInflate(bytes)).toThrow(/over-long Huffman code/);
   });
 });

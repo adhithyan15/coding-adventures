@@ -1,5 +1,43 @@
 # Changelog
 
+## [0.2.0] - 2026-08-12
+
+### Added
+
+- `rawDeflate(data)` and `rawInflate(data)`: the RFC 1951 codec on its own, with
+  no ZIP framing. DEFLATE is the compressor inside `zlib`, `gzip`, and PNG's
+  `IDAT`; exporting it keeps those formats from each carrying a second copy of
+  the same bit-packing code.
+- **Dynamic Huffman decoding (BTYPE=10).** Previously rejected outright, which
+  meant this reader failed on most archives produced by zlib or Info-ZIP, since
+  those emit dynamic blocks for anything but the smallest inputs. Adds a
+  canonical Huffman table builder, the code-length alphabet with its 16/17/18
+  run-length escapes, and the permuted code-length order.
+- **Length symbol 285.** RFC 1951 encodes length 258 either as symbol 284 with
+  five extra bits or as symbol 285 with none; the table stopped at 284, so any
+  stream using the cheaper form — which a run of identical bytes reliably
+  produces — was rejected as an invalid length symbol.
+
+### Changed
+
+- The fixed and dynamic block bodies now share one `decodeHuffmanBlock` routine
+  parameterised by its symbol and distance readers, since the two differ only in
+  how a symbol comes off the bit stream.
+- The encoder is unchanged and its output stays byte-identical: it still emits
+  one fixed-Huffman block and still spells length 258 as symbol 284. Only the
+  reader grew.
+
+### Tests
+
+- Decoder conformance is now checked against Node's `zlib` as an **oracle** —
+  round-tripping our encoder through our decoder only proves the two agree with
+  each other. Covers every compression level, incompressible input, a 4 KB run
+  that forces symbol 285, and an assertion that the oracle really did emit a
+  dynamic block.
+- Malformed-stream guards: a code-length repeat that overruns the alphabet, and
+  a table where no symbol resolves within RFC 1951's 15-bit cap.
+- 43 tests; 98% line coverage.
+
 ## [0.1.0] - 2026-04-23
 
 ### Added

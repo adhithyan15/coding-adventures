@@ -81,12 +81,53 @@ crc32(new TextEncoder().encode("hello world")); // 0x0D4A1185
 | `zipBytes(entries, compress?)` | One-shot compress. |
 | `unzip(data)` | One-shot decompress → `Map<string, Uint8Array>`. |
 | `crc32(data, initial?)` | CRC-32 (polynomial 0xEDB88320). |
+| `rawDeflate(data)` | Compress to a raw RFC 1951 stream — no ZIP, zlib, or gzip framing. |
+| `rawInflate(data)` | Decompress a raw RFC 1951 stream. Reads all three block types. |
 | `dosDatetime(...)` | Encode MS-DOS timestamp. |
 | `DOS_EPOCH` | Constant `0x00210000` — 1980-01-01 00:00:00. |
+
+### Raw DEFLATE, on its own
+
+DEFLATE is not a ZIP feature that happens to live here. It is the compressor
+inside `zlib`, `gzip`, and PNG's `IDAT` chunk, and those three differ from ZIP
+only in what they wrap around it — zlib a two-byte header and a trailing
+Adler-32, gzip a ten-byte header and a trailing CRC-32, ZIP nothing at all.
+
+```typescript
+import { rawDeflate, rawInflate } from "@coding-adventures/zip";
+
+const raw = rawDeflate(new TextEncoder().encode("hello hello hello"));
+rawInflate(raw); // the original bytes
+```
+
+A second copy of this in another package would be a second place for a
+bit-packing bug to hide, which is why it is exported rather than duplicated.
 
 ## Design notes
 
 **Why inline DEFLATE?** The repo's `@coding-adventures/deflate` package uses a custom non-RFC-1951 wire format for educational isolation. ZIP requires raw RFC 1951 DEFLATE with no zlib wrapper, so DEFLATE is reimplemented inline here.
+
+**Writing and reading are deliberately asymmetric.** The encoder emits one
+fixed-Huffman block (BTYPE=01); the decoder reads stored (00), fixed (01) *and*
+dynamic (10) blocks. That is not an oversight in either direction. Fixed
+Huffman is simple, fast, and produces a perfectly legal archive that every tool
+accepts — so writing more is optional. But dynamic Huffman is what zlib and
+Info-ZIP emit for anything but the smallest inputs, so *reading* less means
+failing on most archives the world actually produces. The rule of thumb is
+Postel's: be conservative in what you write, liberal in what you accept.
+
+The same asymmetry shows up one level down, in length symbol **285**. RFC 1951
+gives length 258 — the longest match DEFLATE can express — two encodings:
+symbol 284 with five extra bits, and symbol 285 with none. The encoder keeps
+using 284 so its output stays byte-stable; the decoder accepts both, because a
+258-byte match is exactly what a long run of one byte produces and most
+encoders reach for the cheaper symbol.
+
+The decoder's conformance is checked against **Node's own `zlib` as an oracle**
+rather than against itself: round-tripping our encoder through our decoder only
+proves the two agree with each other. The tests inflate streams produced by
+`deflateRawSync` at every compression level, including incompressible input and
+a 4 KB run that forces symbol 285.
 
 **BigInt accumulator.** JavaScript's bitwise operators are 32-bit. The DEFLATE bit buffer can hold up to ~48 bits, so `BitWriter`/`BitReader` use a `bigint` accumulator to avoid silent truncation.
 

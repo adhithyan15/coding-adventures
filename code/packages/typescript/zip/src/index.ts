@@ -1,5 +1,7 @@
 export {
   crc32,
+  rawDeflate,
+  rawInflate,
   dosDatetime,
   DOS_EPOCH,
   ZipWriter,

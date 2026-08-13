@@ -22,6 +22,28 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   verified against the shipped font, its order must be cited, and no citation means
   no pen path and no figure, with the gap reported as debt rather than invented.
 
+### Fixed — TypeScript ZIP Reads Real-World DEFLATE
+- `zip`'s inflater rejected dynamic Huffman blocks (BTYPE=10) outright, which is
+  what zlib and Info-ZIP emit for anything but the smallest input — so the reader
+  failed on most archives the world actually produces. It now decodes all three
+  RFC 1951 block types via a canonical Huffman table builder, the code-length
+  alphabet with its run-length escapes, and the permuted code-length order.
+- Length symbol 285 was missing from the length table. RFC 1951 spells length 258
+  either as symbol 284 with five extra bits or as symbol 285 with none, and a run
+  of identical bytes reliably produces the cheaper form, which was rejected as an
+  invalid symbol.
+- Decoder conformance is now checked against Node's `zlib` as an oracle, because
+  round-tripping our own encoder through our own decoder only proves the two
+  agree with each other.
+
+### Added — Raw RFC 1951 DEFLATE, Exported
+- `zip` now exports `rawDeflate` / `rawInflate`: the DEFLATE codec with no ZIP
+  framing. The same bit stream sits inside `zlib`, `gzip`, and PNG's `IDAT`, so
+  exporting it keeps those formats from each carrying a second copy of the same
+  bit-packing code. The encoder is unchanged and byte-stable; only the reader grew.
+- CMP09 records the export as optional-per-port, and states the asymmetry as a
+  rule: an encoder may emit fixed blocks only, but a decoder must read all three.
+
 ### Added — Chief Host Authenticated Data Plane
 - The existing per-spawn secure host session now carries bounded, serialized
   channel receive/publish/acknowledge and provider-neutral text completion
