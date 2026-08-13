@@ -1,5 +1,9 @@
 # Changelog — diagram-to-paint
 
+## 0.47.0
+
+- Shape Journey titles with their resolved font size, family, and color.
+
 ## 0.46.0
 
 - Shape Journey task labels with their resolved font size and family.

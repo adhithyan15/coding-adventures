@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.49.0
+
+- Preserve Journey title font size, family, and color through semantic and resolved IR.
+
 ## 0.48.0
 
 - Preserve configured Journey task font size and family through semantic and resolved IR.

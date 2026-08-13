@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.93.0";
+pub const VERSION: &str = "0.94.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -719,14 +719,7 @@ pub fn parse_any_mermaid(source: &str) -> Result<MermaidDiagram, ParseError> {
 
 pub fn parse_journey(source: &str) -> Result<(Option<String>, JourneyDiagram), ParseError> {
     let number = |key| quadrant_directive_value(source, key).and_then(|value| value.parse().ok());
-    let font_size = |key| {
-        quadrant_directive_value(source, key).and_then(|value| {
-            value
-                .trim_end_matches(|character: char| character.is_ascii_alphabetic())
-                .parse()
-                .ok()
-        })
-    };
+    let font_size = |key| quadrant_directive_value(source, key).and_then(parse_mermaid_font_size);
     let config = JourneyConfig {
         diagram_margin_x: number("diagramMarginX"),
         diagram_margin_y: number("diagramMarginY"),
@@ -735,6 +728,9 @@ pub fn parse_journey(source: &str) -> Result<(Option<String>, JourneyDiagram), P
         task_margin: number("taskMargin"),
         task_font_size: font_size("taskFontSize"),
         task_font_family: quadrant_directive_value(source, "taskFontFamily"),
+        title_font_size: font_size("titleFontSize"),
+        title_font_family: quadrant_directive_value(source, "titleFontFamily"),
+        title_color: quadrant_directive_value(source, "titleColor"),
     };
     let preprocessed = preprocess_mermaid_source(source)?;
     let tokens =
@@ -833,6 +829,16 @@ pub fn parse_journey(source: &str) -> Result<(Option<String>, JourneyDiagram), P
             sections,
         },
     ))
+}
+
+fn parse_mermaid_font_size(value: String) -> Option<f64> {
+    let value = value.trim();
+    for (suffix, scale) in [("rem", 16.0), ("px", 1.0), ("em", 16.0), ("ex", 8.0)] {
+        if let Some(number) = value.strip_suffix(suffix) {
+            return number.trim().parse::<f64>().ok().map(|size| size * scale);
+        }
+    }
+    value.parse().ok()
 }
 
 fn normalize_journey_label(source: &str) -> String {
@@ -6617,7 +6623,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.93.0");
+        assert_eq!(crate::VERSION, "0.94.0");
     }
 
     #[test]
