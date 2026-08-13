@@ -2,6 +2,11 @@
 
 ## 2026-08-12
 
+- Expanded the canonical discovery registry with a Dart program identity and
+  a generated `.dart_tool` decoy so consumers must preserve the `programs`
+  segment while excluding generated Dart package trees.
+- Strengthened Dart resolution with a declared-name versus canonical-directory
+  collision that must fail closed rather than redirecting a dependency edge.
 - Expanded the canonical discovery registry with paired C# and F# package and
   program identities so every consumer must preserve the `programs` segment
   before exposing the established .NET lanes as filters.

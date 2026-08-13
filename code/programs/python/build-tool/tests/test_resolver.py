@@ -16,13 +16,14 @@ from build_tool.resolver import (
     _dependency_scope,
     _in_dependency_scope,
     _parse_build_tool_deps,
-    _parse_python_deps,
-    _parse_ruby_deps,
+    _parse_dart_deps,
     _parse_go_deps,
     _parse_lua_deps,
-    _parse_typescript_deps,
+    _parse_python_deps,
+    _parse_ruby_deps,
     _parse_rust_deps,
     _parse_swift_deps,
+    _parse_typescript_deps,
     resolve_dependencies,
 )
 
@@ -127,6 +128,84 @@ class TestBuildKnownNames:
         )
         known = _build_known_names([pkg])
         assert known["coding_adventures_logic_gates"] == "ruby/logic_gates"
+
+    def test_dart_directory_legacy_and_declared_aliases(self, tmp_path):
+        package_path = tmp_path / "beta-helper"
+        package_path.mkdir()
+        (package_path / "pubspec.yaml").write_text(
+            "name: exact_beta_name\nenvironment:\n  sdk: ^3.0.0\n",
+            encoding="utf-8",
+        )
+        package = Package(
+            name="dart/beta-helper",
+            path=package_path,
+            language="dart",
+        )
+
+        known = _build_known_names_for_language([package], "dart")
+
+        assert known["beta_helper"] == package.name
+        assert known["coding_adventures_beta_helper"] == package.name
+        assert known["exact_beta_name"] == package.name
+
+    def test_dart_ambiguous_declared_alias_fails_closed(self, tmp_path):
+        attacker_path = tmp_path / "attacker"
+        attacker_path.mkdir()
+        (attacker_path / "pubspec.yaml").write_text(
+            "name: victim\n",
+            encoding="utf-8",
+        )
+        victim_path = tmp_path / "victim"
+        victim_path.mkdir()
+        (victim_path / "pubspec.yaml").write_text(
+            "name: victim\n",
+            encoding="utf-8",
+        )
+        packages = [
+            Package(name="dart/attacker", path=attacker_path, language="dart"),
+            Package(name="dart/victim", path=victim_path, language="dart"),
+        ]
+
+        known = _build_known_names_for_language(packages, "dart")
+
+        assert "victim" not in known
+        assert known["attacker"] == "dart/attacker"
+        assert known["coding_adventures_victim"] == "dart/victim"
+
+
+class TestParseDartDeps:
+    """Tests for the closed root pubspec dependency grammar."""
+
+    def test_reads_only_direct_root_dependency_keys(self, tmp_path):
+        package_path = tmp_path / "alpha"
+        package_path.mkdir()
+        (package_path / "pubspec.yaml").write_text(
+            "name: alpha\n"
+            "description: 'gamma: any is prose'\n"
+            "dependencies:\n"
+            "  beta_helper:\n"
+            "    path: ../beta-helper\n"
+            "  external_git:\n"
+            "    git:\n"
+            "      coding_adventures_gamma: any\n"
+            "dev_dependencies:\n"
+            "  delta_name: any\n"
+            "dependency_overrides:\n"
+            "  gamma: any\n",
+            encoding="utf-8",
+        )
+        package = Package(name="dart/alpha", path=package_path, language="dart")
+        known = {
+            "beta_helper": "dart/beta-helper",
+            "delta_name": "dart/delta_name",
+            "coding_adventures_gamma": "dart/gamma",
+            "gamma": "dart/gamma",
+        }
+
+        assert _parse_dart_deps(package, known) == [
+            "dart/beta-helper",
+            "dart/delta_name",
+        ]
 
 
 class TestParsePythonDeps:
@@ -477,6 +556,7 @@ class TestFieldAwareManifestResolution:
             "resolution-dotnet-csharp-field-aware.json",
             "resolution-dotnet-fsharp-field-aware.json",
             "resolution-dotnet-cross-language-field-aware.json",
+            "resolution-dart-field-aware.json",
         ],
     )
     def test_shared_resolution_fixture(self, tmp_path, fixture_name):
@@ -520,6 +600,11 @@ class TestFieldAwareManifestResolution:
                 "resolution-dotnet-fsharp-field-aware.json",
                 "fsharp/gamma",
                 "fsharp/alpha",
+            ),
+            (
+                "resolution-dart-field-aware.json",
+                "dart/gamma",
+                "dart/alpha",
             ),
         ],
     )

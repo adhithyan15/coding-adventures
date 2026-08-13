@@ -34,6 +34,10 @@
         "content_utf8": "echo dart\n"
       },
       {
+        "path": "code/packages/dart/.dart_tool/generated/BUILD",
+        "content_utf8": "echo generated-dart-output\n"
+      },
+      {
         "path": "code/packages/fsharp/demo-fsharp/BUILD",
         "content_utf8": "echo fsharp\n"
       },
@@ -72,6 +76,10 @@
       {
         "path": "code/programs/elixir/ircd/BUILD",
         "content_utf8": "echo elixir program\n"
+      },
+      {
+        "path": "code/programs/dart/demo-dart/BUILD",
+        "content_utf8": "echo dart program\n"
       },
       {
         "path": "code/programs/csharp/demo-csharp/BUILD",
@@ -158,6 +166,13 @@
           "language": "dart",
           "name": "dart/demo-dart",
           "rel_path": "code/packages/dart/demo-dart"
+        },
+        {
+          "build_file": "code/programs/dart/demo-dart/BUILD",
+          "is_starlark": false,
+          "language": "dart",
+          "name": "dart/programs/demo-dart",
+          "rel_path": "code/programs/dart/demo-dart"
         },
         {
           "build_file": "code/programs/elixir/ircd/BUILD",

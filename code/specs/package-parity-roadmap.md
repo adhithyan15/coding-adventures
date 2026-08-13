@@ -3097,6 +3097,46 @@ and do not overlap this work. The collision-checked counts remain exactly 1,302
 identities, 4,458 slots, 852 singletons, 11,928 singleton gaps, 656 Rust
 singletons, zero collisions, and zero unknown buckets.
 
+## Post-#10936 Refresh and Dart Resolver Selection
+
+External review merged ready-for-review PR #10936 as
+`ec9182513348ad5850a94bb28cb6ffd503dbd224` after all 20 required, neutral, and
+expected skipped checks reached a terminal success state. The collision-checked
+refresh at `86f47eb4c343e4b9b29039fc62282919d42e1bf8` covers 15 established
+lanes, 1,303 normalized implementation identities, and 4,459 established
+slots. It reports 173 high-consensus identities with 269 missing slots, 853
+singletons with 11,942 missing singleton slots, 656 Rust singletons, zero
+canonical collisions, and zero unknown buckets.
+
+A late pre-publication rebase onto
+`8f1b3a4f04fbf483f6af73ecb4f245fa3d542cff` added only unrelated curriculum,
+Wasm-specification, and ADJ fact rows. The collision-checked inventory was
+regenerated there with the same counts and no newly unowned parity topology.
+Two further unrelated human-language and ALGOL commits advanced the final base
+to `3786127cf65f09be93a374dfcb8c9b3f3d7c0dda`; a second collision-checked
+refresh again produced exactly the same topology and counts.
+
+The sole established-lane topology addition is TypeScript `image-codec-png`
+from merged PR #11088. IC18 makes the bounded byte-array codec portable, but it
+also exposes a prerequisite contract gap: CMP09 records TypeScript as the only
+ZIP lane that exports raw RFC 1951 encode, counted decode, output caps, and
+CRC-32. New pending owners therefore first fixture and expose those ZIP-owned
+primitives across all established lanes, then consume them with the all-lane
+`pixel-container` contract and a language-neutral PNG corpus to close the
+fourteen missing codec slots. New Mosaic standard-foundation and control
+packages remain domain-language identities outside the established denominator
+and continue under their existing UI38 owners.
+
+The dependency/leverage pass selected
+`build-tool-python-dart-field-aware-resolution-and-filter`. Python's build tool
+now handles every established implementation lane except Dart, while the shared
+fixture already closes the permitted root `dependencies` and
+`dev_dependencies` grammar and the Go oracle resolves all 83 Dart roots. This
+bounded tranche adds safe discovery, alias resolution, graph equality, and a
+real `--language dart` filter without widening the independently owned Windows
+plan-overwrite path. The new ZIP primitive owner is broader fifteen-lane work,
+and direct PNG parity remains blocked on that prerequisite.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

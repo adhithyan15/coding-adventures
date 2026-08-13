@@ -50,6 +50,22 @@ def test_analyze_ci_workflow_patch_allows_shared_jvm_toolchain_changes():
     assert change.toolchains == frozenset({"java", "kotlin"})
 
 
+def test_analyze_ci_workflow_patch_allows_dart_toolchain_changes():
+    change = analyze_ci_workflow_patch(
+        """
+@@ -345,0 +346,6 @@
++      - name: Set up Dart
++        if: needs.detect.outputs.needs_dart == 'true'
++        uses: dart-lang/setup-dart@v1
++      - name: Verify Dart
++        run: dart --version
+"""
+    )
+
+    assert not change.requires_full_rebuild
+    assert change.toolchains == frozenset({"dart"})
+
+
 def test_analyze_ci_workflow_patch_allows_verified_lua_cache_and_fallback():
     change = analyze_ci_workflow_patch(
         """
@@ -170,3 +186,18 @@ def test_compute_languages_needed_collapses_csharp_and_fsharp_to_dotnet():
     assert needed["dotnet"] is True
     assert "csharp" not in needed
     assert "fsharp" not in needed
+
+
+def test_compute_languages_needed_includes_affected_dart_toolchain():
+    package = Package(
+        name="dart/demo",
+        path=Path("/repo/code/packages/dart/demo"),
+        build_commands=[],
+        language="dart",
+    )
+
+    needed = _compute_languages_needed(
+        [package], {package.name}, False, frozenset()
+    )
+
+    assert needed["dart"] is True

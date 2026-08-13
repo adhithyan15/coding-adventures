@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.6] - 2026-08-12
+
+### Fixed
+
+- **Field-aware Dart resolution**: root `pubspec.yaml` files now contribute
+  only direct keys from `dependencies` and `dev_dependencies`, while nested
+  `path`, `git`, `url`, `ref`, and `sdk` source metadata remains inert.
+- **Closed Dart aliases**: directory snake-case, the legacy
+  `coding_adventures_` prefix, and the exact unquoted root `name` value resolve
+  only to already discovered Dart packages; ambiguous, unknown, duplicate, and
+  self references cannot create edges.
+- **Safe Dart filter and toolchain**: `--language dart` now preserves package
+  and program identities, skips generated `.dart_tool` trees, and maps to
+  Dart-aware CI workflow markers.
+
 ## [0.3.5] - 2026-08-12
 
 ### Fixed

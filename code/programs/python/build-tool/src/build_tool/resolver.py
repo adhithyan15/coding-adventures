@@ -4,9 +4,9 @@ resolver.py -- Dependency Resolution from Package Metadata
 
 This module reads package metadata files (pyproject.toml for Python, .gemspec
 for Ruby, go.mod for Go, package.json for TypeScript, Cargo.toml for Rust,
-Package.swift for Swift, and root project files for C# and F#) and extracts
-internal dependencies. It builds a directed graph where edges represent
-"A depends on B".
+Package.swift for Swift, pubspec.yaml for Dart, and root project files for C#
+and F#) and extracts internal dependencies. It builds a directed graph where
+edges represent "A depends on B".
 
 Dependency mapping conventions
 ------------------------------
@@ -336,6 +336,76 @@ def _parse_elixir_deps(package: Package, known_names: dict[str, str]) -> list[st
                 internal_deps.append(known_names[app_name])
 
     return internal_deps
+
+
+# ---------------------------------------------------------------------------
+# Dart dependency parsing
+# ---------------------------------------------------------------------------
+
+
+_DART_PACKAGE_IDENTIFIER = re.compile(r"^[a-z][a-z0-9_]*$")
+
+
+def _read_dart_package_name(package_path: Path) -> str | None:
+    """Return one unquoted root ``name`` from a Dart pubspec."""
+    pubspec = package_path / "pubspec.yaml"
+    if not pubspec.exists():
+        return None
+    match = re.search(
+        r"(?m)^name\s*:\s*([a-z0-9_]+)\s*$",
+        pubspec.read_text(encoding="utf-8"),
+    )
+    return match.group(1).lower() if match else None
+
+
+def _parse_dart_deps(
+    package: Package, known_names: dict[str, str]
+) -> list[str]:
+    """Read direct dependency keys from the two root pubspec maps.
+
+    A dependency value may be a scalar constraint or a nested source map. The
+    nested map is deliberately opaque: following ``path`` or reading target
+    manifests would turn metadata resolution into filesystem authority and
+    would misclassify source-option keys as packages.
+    """
+    pubspec = package.path / "pubspec.yaml"
+    if not pubspec.exists():
+        return []
+
+    dependencies: set[str] = set()
+    in_dependency_map = False
+    direct_entry_indent: int | None = None
+
+    for raw_line in pubspec.read_text(encoding="utf-8").splitlines():
+        stripped = raw_line.strip()
+        if not stripped or stripped.startswith("#"):
+            continue
+
+        indent = len(raw_line) - len(raw_line.lstrip(" "))
+        if indent == 0:
+            in_dependency_map = stripped in {
+                "dependencies:",
+                "dev_dependencies:",
+            }
+            direct_entry_indent = None
+            continue
+
+        if not in_dependency_map:
+            continue
+        if direct_entry_indent is None:
+            direct_entry_indent = indent
+        if indent != direct_entry_indent:
+            continue
+
+        dependency_name, separator, _ = stripped.partition(":")
+        dependency_name = dependency_name.strip().lower()
+        if not separator or not _DART_PACKAGE_IDENTIFIER.fullmatch(dependency_name):
+            continue
+        dependency = known_names.get(dependency_name)
+        if dependency is not None and dependency != package.name:
+            dependencies.add(dependency)
+
+    return sorted(dependencies)
 
 
 # ---------------------------------------------------------------------------
@@ -1120,11 +1190,14 @@ def _build_known_names_for_language(
     known: dict[str, str] = {}
     known_paths: dict[str, Path] = {}
     known_languages: dict[str, str] = {}
+    ambiguous: set[str] = set()
     scope = _dependency_scope(language)
 
     def _set_known(key: str, value: str, pkg_path: Path) -> None:
-        """Insert key→value, letting library packages overwrite programs."""
+        """Prioritize libraries while rejecting same-priority Dart ambiguity."""
         package_language = value.split("/", 1)[0]
+        if key in ambiguous:
+            return
         if key not in known:
             known[key] = value
             known_paths[key] = pkg_path
@@ -1138,6 +1211,12 @@ def _build_known_names_for_language(
             known_languages[key] = package_language
             return
         if not existing_is_program and current_is_program:
+            return
+        if scope == "dart" and known[key] != value:
+            del known[key]
+            del known_paths[key]
+            del known_languages[key]
+            ambiguous.add(key)
             return
         if scope == "dotnet":
             if known_languages[key] == language:
@@ -1204,6 +1283,17 @@ def _build_known_names_for_language(
                 app_match = re.search(r"app:\s*:([a-z0-9_]+)", mix_exs.read_text(encoding="utf-8"))
                 if app_match:
                     _set_known(app_match.group(1).strip().lower(), pkg.name, pkg.path)
+
+        elif pkg.language == "dart":
+            # Pub package identifiers use lower-case snake_case. Keep the
+            # legacy coding_adventures_ prefix and the declared root name as
+            # aliases so directory and manifest migrations resolve equally.
+            dir_base = pkg.path.name.replace("-", "_").lower()
+            _set_known(dir_base, pkg.name, pkg.path)
+            _set_known(f"coding_adventures_{dir_base}", pkg.name, pkg.path)
+            declared_name = _read_dart_package_name(pkg.path)
+            if declared_name is not None:
+                _set_known(declared_name, pkg.name, pkg.path)
 
         elif pkg.language == "lua":
             # Lua rockspec names use hyphens: "logic_gates" dir → "coding-adventures-logic-gates"
@@ -1312,6 +1402,8 @@ def resolve_dependencies(packages: list[Package]) -> DirectedGraph:
             deps = _parse_rust_deps(pkg, known_names)
         elif pkg.language == "elixir":
             deps = _parse_elixir_deps(pkg, known_names)
+        elif pkg.language == "dart":
+            deps = _parse_dart_deps(pkg, known_names)
         elif pkg.language == "lua":
             deps = _parse_lua_deps(pkg, known_names)
         elif pkg.language == "perl":

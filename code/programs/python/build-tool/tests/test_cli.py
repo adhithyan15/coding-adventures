@@ -98,7 +98,7 @@ class TestMainCli:
         assert exit_code == 0
 
     @pytest.mark.parametrize(
-        "language", ["csharp", "fsharp", "haskell", "java", "kotlin"]
+        "language", ["csharp", "dart", "fsharp", "haskell", "java", "kotlin"]
     )
     def test_safely_resolved_language_filters(self, tmp_path, capsys, language):
         """Every safely resolved manifest lane has a real dry-run filter."""
