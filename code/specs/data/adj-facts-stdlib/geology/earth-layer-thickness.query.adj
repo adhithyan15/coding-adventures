@@ -1,0 +1,24 @@
+% ============================================================================
+% earth-layer-thickness.query.adj — a worked recall over the geology
+% earth-layer-thickness library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "how thick is the
+% mantle?": it states no earth-science fact of its own — it only `import`s
+% the grounded table and asks binding queries. The engine resolves each `?`
+% against the `earth_layer_thickness` rows and returns the thickness (in km)
+% + the table's source/locator/trust. The fourth query runs the relation
+% BACKWARD (bind the thickness 1250, recall which layer it names — the
+% inner_core). A layer the cited spans give no figure for (the crust)
+% abstains honestly — the engine never invents a number.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli earth-layer-thickness.query.adj
+% ============================================================================
+
+import "earth-layer-thickness.adj"
+
+? earth_layer_thickness(mantle, $ThicknessKm)      % expect 2900
+? earth_layer_thickness(outer_core, $ThicknessKm)  % expect 2200
+? earth_layer_thickness(inner_core, $ThicknessKm)  % expect 1250
+? earth_layer_thickness($Layer, 1250)              % reverse bind — expect inner_core
+? earth_layer_thickness(crust, $ThicknessKm)       % expect abstain — the cited span gives crust no thickness figure
