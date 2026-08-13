@@ -75,6 +75,18 @@ shutdown. A worker clock or actor failure stops both listeners instead of
 leaving a partially live daemon. Reapplying an identical interface is
 idempotent; changing it durably replaces the worker configuration.
 
+Setting `hue_pairing_kek_path` in the same table also makes Chief the supervised
+Hue physical-presence pairing owner. The path names an existing owner-only
+32-byte injected KEK; the daemon initializes or unseals the configured Vault
+without placing key bytes in TOML, messages, snapshots, reports, or logs. This
+opt-in is rejected while `[vault].container = true`. The worker watches pending
+Hue sessions on the shared controller, preserves the requesting principal and
+exact durable revision, and delegates registration, sealed credential storage,
+transaction recovery, and central completion to
+`smart-home-hue-pairing-service`. Link-button rejection remains retryable while
+the session is pending. Clock or actor failure stops both listeners, and normal
+shutdown joins the worker before the controller and unsealed Vault are dropped.
+
 The shared HTTP adapter receives the same fallible Unix-millisecond clock as the
 model-tool dispatcher. It samples that source once for every matched request
 and reuses the result for grant activation/expiry, authorization audit,

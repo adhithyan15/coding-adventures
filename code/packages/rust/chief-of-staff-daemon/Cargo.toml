@@ -23,6 +23,7 @@ chief-of-staff-daemon-credential = { path = "../chief-of-staff-daemon-credential
 chief-of-staff-daemon-keyring = { path = "../chief-of-staff-daemon-keyring" }
 chief-of-staff-daemon-policy = { path = "../chief-of-staff-daemon-policy" }
 chief-of-staff-daemon-runtime = { path = "../chief-of-staff-daemon-runtime" }
+chief-of-staff-daemon-secret-file = { path = "../chief-of-staff-daemon-secret-file" }
 chief-of-staff-host-data-plane = { path = "../chief-of-staff-host-data-plane" }
 chief-of-staff-host-control-protocol = { path = "../chief-of-staff-host-control-protocol" }
 chief-of-staff-smart-home-tools = { path = "../chief-of-staff-smart-home-tools" }
@@ -45,9 +46,11 @@ smart-home-controller-runtime = { path = "../smart-home-controller-runtime" }
 smart-home-core = { path = "../smart-home-core" }
 smart-home-discovery = { path = "../smart-home-discovery" }
 smart-home-discovery-service = { path = "../smart-home-discovery-service" }
+smart-home-hue-pairing-service = { path = "../smart-home-hue-pairing-service" }
 smart-home-platform-http = { path = "../smart-home-platform-http" }
 smart-home-runtime = { path = "../smart-home-runtime" }
 transport-platform = { path = "../transport-platform" }
+coding_adventures_vault_sealed_store = { path = "../vault-sealed-store" }
 web-core = { path = "../web-core" }
 websocket-runtime = { path = "../websocket-runtime" }
 

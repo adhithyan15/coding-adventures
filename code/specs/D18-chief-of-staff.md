@@ -2186,6 +2186,8 @@ bind = "127.0.0.1"            # optional Home Assistant-compatible API
 port = 8123                    # distinct from the Chief WebSocket endpoint
 instance_name = "Chief Smart Home"
 hue_mdns_interface = "en0"    # optional supervised Hue discovery interface
+# hue_pairing_kek_path = "~/.chief-of-staff/keys/smart-home-vault.kek"
+# The pairing worker requires vault.container = false.
 
 [keyring]
 trusted_keys = [
@@ -2260,6 +2262,18 @@ only after both listeners bind and owns its cooperative stop and join. Clock or
 actor failure stops both listeners, identical startup is idempotent, and an
 interface change durably replaces the schedule without creating another runtime
 owner.
+
+Its optional `hue_pairing_kek_path` enables supervised Hue physical-presence
+pairing against that same controller. The path names an exact owner-only
+32-byte injected KEK and is accepted only when `vault.container = false`, so
+in-process Vault custody is explicit. Startup initializes or unseals the
+configured Vault and resolves pending pairing journals before either listener
+serves. The actor processes one unexpired pending Hue session at a time with the
+session's requesting principal and exact durable revision. Registration keys
+remain process-local until sealed; messages, controller state, reports, and logs
+contain only the opaque `VaultRef`. Physical-presence rejection remains
+retryable, while clock or actor failure stops both listeners and normal shutdown
+joins the worker before controller and Vault teardown.
 
 That HTTP adapter MUST preserve wall-clock failure rather than converting it to
 a sentinel timestamp. Chief samples its injected Unix-millisecond clock exactly

@@ -183,6 +183,7 @@ pub struct SmartHomeListenerConfig {
     port: u16,
     instance_name: String,
     hue_mdns_interface: Option<String>,
+    hue_pairing_kek_path: Option<ConfigPath>,
 }
 
 impl SmartHomeListenerConfig {
@@ -204,6 +205,11 @@ impl SmartHomeListenerConfig {
     /// Return the network interface on which Chief supervises Hue mDNS discovery.
     pub fn hue_mdns_interface(&self) -> Option<&str> {
         self.hue_mdns_interface.as_deref()
+    }
+
+    /// Return the owner-only injected KEK file used by the Chief Hue pairing worker.
+    pub fn hue_pairing_kek_path(&self) -> Option<&ConfigPath> {
+        self.hue_pairing_kek_path.as_ref()
     }
 }
 
@@ -619,11 +625,18 @@ pub fn parse_config(source: &str) -> Result<ChiefConfig, ConfigError> {
             .transpose()?
             .map(|value| bounded_identity(value, MAX_NETWORK_INTERFACE_BYTES))
             .transpose()?;
+        let hue_pairing_kek_path = document
+            .take_optional(SMART_HOME, "hue_pairing_kek_path")
+            .map(expect_string)
+            .transpose()?
+            .map(ConfigPath::parse)
+            .transpose()?;
         Some(SmartHomeListenerConfig {
             bind,
             port,
             instance_name,
             hue_mdns_interface,
+            hue_pairing_kek_path,
         })
     } else {
         None
@@ -631,6 +644,13 @@ pub fn parse_config(source: &str) -> Result<ChiefConfig, ConfigError> {
     if smart_home.as_ref().is_some_and(|listener| {
         listener.bind == orchestrator_bind && listener.port == orchestrator_port
     }) {
+        return Err(ConfigError::InvalidValue);
+    }
+    if container
+        && smart_home
+            .as_ref()
+            .is_some_and(|listener| listener.hue_pairing_kek_path.is_some())
+    {
         return Err(ConfigError::InvalidValue);
     }
     let data_plane = if document.has_table(DATA_PLANE) {
@@ -1319,6 +1339,7 @@ hardware_key_timeout = 60
         assert_eq!(listener.port(), 8123);
         assert_eq!(listener.instance_name(), "Codex Home");
         assert_eq!(listener.hue_mdns_interface(), Some("en0"));
+        assert!(listener.hue_pairing_kek_path().is_none());
 
         assert_eq!(
             parse_config(&source.replace("port = 8123", "port = 7463")),
@@ -1351,6 +1372,26 @@ hardware_key_timeout = 60
                 "hue_mdns_interface = \" en0\""
             )),
             Err(ConfigError::InvalidValue)
+        );
+    }
+
+    #[test]
+    fn hue_pairing_requires_explicit_in_process_vault_custody() {
+        let source = format!(
+            "{VALID}\n[smart_home]\nbind = \"127.0.0.1\"\nport = 8123\ninstance_name = \"Codex Home\"\nhue_pairing_kek_path = \"~/.chief-of-staff/keys/smart-home-vault.kek\"\n"
+        );
+        assert_eq!(parse_config(&source), Err(ConfigError::InvalidValue));
+
+        let source = source.replace("container = true", "container = false");
+        let config = parse_config(&source).unwrap();
+        assert_eq!(
+            config
+                .smart_home()
+                .unwrap()
+                .hue_pairing_kek_path()
+                .unwrap()
+                .as_str(),
+            "~/.chief-of-staff/keys/smart-home-vault.kek"
         );
     }
 

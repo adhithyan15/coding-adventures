@@ -2022,7 +2022,8 @@ Assistant-compatible API from that exact live owner. Listener authority is
 provisioned through a central transaction; both loopback listeners bind before
 serving and share coordinated failure and shutdown semantics. The shared HTTP
 surface also samples one fallible request clock and fails closed before handler
-execution instead of fabricating timestamp zero.
+execution instead of fabricating timestamp zero. The first supervised pairing
+worker now shares that same owner as well.
 
 ## Current Chief Hue Discovery Worker Slice
 
@@ -2037,12 +2038,35 @@ mDNS worker instead of requiring the standalone local-controller process:
   and is joined before controller teardown. Clock or actor failure stops both
   listeners instead of leaving partial service alive.
 
+## Current Chief Hue Pairing Worker Slice
+
+The optional Chief smart-home composition now owns Hue physical-presence
+pairing without restoring a second D23 runtime:
+
+- `hue_pairing_kek_path` requires an owner-only 32-byte injected KEK and is
+  accepted only with explicit in-process Vault custody via
+  `[vault].container = false`.
+- Startup initializes or unseals the configured Vault, resolves pending
+  transaction journals, and installs the existing Hue pairing service actor
+  against the exact controller observed by HTTP and D18D model tools.
+- Each tick selects one unexpired pending Hue session, preserves its requesting
+  principal and exact durable revision, and retries the physical-presence
+  registration exchange without copying application or client keys into actor
+  messages, controller snapshots, reports, or logs.
+- Successful registration seals credentials, commits pairing completion through
+  the central transaction coordinator, and immediately publishes the opaque
+  `VaultRef` to every shared consumer. Clock or actor failure stops both
+  listeners; normal shutdown joins the worker before controller and Vault drop.
+- A real loopback Hue response test proves central visibility and secret-free
+  durable state, while worker tests prove cooperative stop and failure
+  propagation.
+
 The remaining central-composition backlog still takes priority over adding
 another isolated integration or Chief read model:
 
-1. Move supervised pairing workers that still require standalone composition
-   into the Chief-owned controller process without creating a second runtime
-   owner.
+1. Move the remaining ONVIF, Axis, ZoneMinder, Synology, and Reolink supervised
+   pairing workers into the Chief-owned controller process with explicit
+   owner-only credential-input and Vault-custody boundaries.
 2. Move automation schedule workers into the same process and prove restart-safe
    tick recovery and HTTP/model-tool visibility under coordinated shutdown.
 
