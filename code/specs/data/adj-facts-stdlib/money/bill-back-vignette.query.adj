@@ -1,0 +1,20 @@
+% ============================================================================
+% bill-back-vignette.query.adj — a worked recall over the money
+% bill-back-vignette library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what's on the back of
+% a $20 bill?": it states no money fact of its own — it only `import`s the
+% grounded table and asks binding queries. The engine resolves each `?`
+% against the `bill_back_vignette` rows and returns the vignette + the
+% table's source/locator/trust. The $5 note, whose own cited span names no
+% back vignette, abstains honestly — the engine never invents one.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli bill-back-vignette.query.adj
+% ============================================================================
+
+import "bill-back-vignette.adj"
+
+? bill_back_vignette(20, $Vignette)          % expect white_house
+? bill_back_vignette($Dollars, us_capitol)    % expect 50
+? bill_back_vignette(5, $Vignette)            % expect abstain — the $5 note's own cited span names no back vignette
