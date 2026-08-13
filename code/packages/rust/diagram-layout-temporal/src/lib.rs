@@ -18,7 +18,7 @@ use diagram_ir::{
 };
 use std::collections::{BTreeSet, HashMap};
 
-pub const VERSION: &str = "0.9.0";
+pub const VERSION: &str = "0.10.0";
 
 // ── Constants ─────────────────────────────────────────────────────────────
 
@@ -57,13 +57,10 @@ fn layout_journey(title: &Option<String>, diagram: &JourneyDiagram, cw: f64) -> 
     let margin_y = diagram.config.diagram_margin_y.unwrap_or(0.0);
     let task_margin = diagram.config.task_margin.unwrap_or(6.0);
     let task_x = diagram.config.left_margin.unwrap_or(margin_x).max(margin_x);
-    let task_width = diagram
-        .config
-        .task_width
-        .unwrap_or(cw - task_x - margin_x)
-        .max(1.0);
+    let task_width = diagram.config.task_width.unwrap_or(150.0).max(1.0);
+    let task_height = diagram.config.task_height.unwrap_or(50.0).max(1.0);
     let actor_label_width = diagram.config.max_label_width.unwrap_or(360.0).max(1.0);
-    let mut y = margin_y;
+    let mut content_y = margin_y;
     if let Some(title) = title {
         let title_font_size = diagram.config.title_font_size.unwrap_or(18.0);
         let title_height = (12.0
@@ -71,7 +68,7 @@ fn layout_journey(title: &Option<String>, diagram: &JourneyDiagram, cw: f64) -> 
             .max(32.0);
         items.push(LayoutedTemporalItem::JourneyTitle {
             x: 0.0,
-            y,
+            y: content_y,
             width: cw,
             height: title_height,
             label: title.clone(),
@@ -79,7 +76,7 @@ fn layout_journey(title: &Option<String>, diagram: &JourneyDiagram, cw: f64) -> 
             font_family: diagram.config.title_font_family.clone(),
             color: diagram.config.title_color.clone(),
         });
-        y += title_height + 4.0;
+        content_y += title_height + 4.0;
     }
     let actors = diagram
         .sections
@@ -90,6 +87,7 @@ fn layout_journey(title: &Option<String>, diagram: &JourneyDiagram, cw: f64) -> 
         .cloned()
         .collect::<BTreeSet<_>>();
     let configured_actor_colors = &diagram.config.actor_colors;
+    let mut actor_y = content_y + 12.0;
     let actor_colors = actors
         .iter()
         .enumerate()
@@ -103,19 +101,35 @@ fn layout_journey(title: &Option<String>, diagram: &JourneyDiagram, cw: f64) -> 
             let height = (label.lines().count().max(1) as f64 * 18.0).max(20.0);
             items.push(LayoutedTemporalItem::JourneyActor {
                 x: margin_x + 8.0,
-                y: y + height / 2.0,
+                y: actor_y + height / 2.0,
                 width: actor_label_width,
                 height,
                 color: color.clone(),
                 label,
             });
-            y += height + 4.0;
+            actor_y += height + 4.0;
             (actor.clone(), color)
         })
         .collect::<HashMap<_, _>>();
-    if !actor_colors.is_empty() {
-        y += 4.0;
+    let section_height = diagram
+        .sections
+        .iter()
+        .map(|section| 12.0 + section.label.lines().count().max(1) as f64 * 16.0)
+        .fold(28.0, f64::max);
+    let task_y = content_y + section_height + 4.0;
+    let activity_y = task_y + task_height + 14.0;
+    let total_tasks = diagram.sections.iter().map(|section| section.tasks.len()).sum::<usize>();
+    if total_tasks > 0 {
+        let first_center = task_x + task_width / 2.0;
+        let last_center = first_center + (total_tasks.saturating_sub(1) as f64) * (task_width + task_margin);
+        items.push(LayoutedTemporalItem::JourneyActivityLine {
+            x1: first_center,
+            y: activity_y,
+            x2: last_center,
+        });
     }
+    let mut task_index = 0usize;
+    let mut max_score_y = activity_y;
     for (section_index, section) in diagram.sections.iter().enumerate() {
         let fill = if diagram.config.section_fills.is_empty() {
             JOURNEY_SECTION_FILLS[section_index % JOURNEY_SECTION_FILLS.len()].to_string()
@@ -127,17 +141,24 @@ fn layout_journey(title: &Option<String>, diagram: &JourneyDiagram, cw: f64) -> 
         } else {
             diagram.config.section_colors[section_index % diagram.config.section_colors.len()].clone()
         };
-        let section_height = 12.0 + section.label.lines().count().max(1) as f64 * 16.0;
+        let section_x = task_x + task_index as f64 * (task_width + task_margin);
+        let section_width = section.tasks.len() as f64 * task_width
+            + section.tasks.len().saturating_sub(1) as f64 * task_margin;
         items.push(LayoutedTemporalItem::JourneySection {
-            x: 0.0, y, width: cw, height: section_height, label: section.label.clone(),
+            x: section_x, y: content_y, width: section_width, height: section_height, label: section.label.clone(),
             fill: fill.clone(), text_color: text_color.clone(),
         });
-        y += section_height + 4.0;
         for task in &section.tasks {
-            let task_height = (16.0 + task.label.lines().count().max(1) as f64 * 16.0)
-                .max(diagram.config.task_height.unwrap_or(36.0));
+            let x = task_x + task_index as f64 * (task_width + task_margin);
+            let score_y = activity_y + 18.0 + (5 - task.score) as f64 * 24.0;
+            max_score_y = max_score_y.max(score_y);
+            items.push(LayoutedTemporalItem::JourneyTaskLine {
+                x: x + task_width / 2.0,
+                y1: task_y + task_height,
+                y2: score_y,
+            });
             items.push(LayoutedTemporalItem::JourneyTask {
-                x: task_x, y, width: task_width, height: task_height,
+                x, y: task_y, width: task_width, height: task_height, score_y,
                 score: task.score, label: task.label.clone(), people: task.people.clone(),
                 person_colors: task.people.iter().filter_map(|person| actor_colors.get(person).cloned()).collect(),
                 font_size: diagram.config.task_font_size,
@@ -145,12 +166,20 @@ fn layout_journey(title: &Option<String>, diagram: &JourneyDiagram, cw: f64) -> 
                 fill: fill.clone(),
                 text_color: text_color.clone(),
             });
-            y += task_height + task_margin;
+            task_index += 1;
         }
     }
+    let resolved_width = if total_tasks == 0 {
+        cw
+    } else {
+        (task_x + total_tasks as f64 * task_width
+            + total_tasks.saturating_sub(1) as f64 * task_margin
+            + margin_x)
+            .max(cw)
+    };
     LayoutedTemporalDiagram {
-        width: cw,
-        height: y + margin_y + 16.0,
+        width: resolved_width,
+        height: (max_score_y + 20.0).max(actor_y + margin_y + 16.0),
         accessibility_title: diagram.accessibility_title.clone(),
         accessibility_description: diagram.accessibility_description.clone(),
         items,
@@ -469,7 +498,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.9.0");
+        assert_eq!(crate::VERSION, "0.10.0");
     }
 
     #[test]
@@ -555,9 +584,14 @@ mod tests {
                 },
                 sections: vec![JourneySection {
                     label: "Payment\nflow".into(),
-                    tasks: vec![JourneyTask {
-                        label: "Pay\nsecurely".into(), score: 2, people: vec!["Bob".into()],
-                    }],
+                    tasks: vec![
+                        JourneyTask {
+                            label: "Pay\nsecurely".into(), score: 2, people: vec!["Bob".into()],
+                        },
+                        JourneyTask {
+                            label: "Confirm".into(), score: 5, people: vec!["Bob".into()],
+                        },
+                    ],
                 }],
             })),
         };
@@ -574,6 +608,17 @@ mod tests {
             LayoutedTemporalItem::JourneyTask { x, width, height, .. }
                 if *x == 120.0 && *width == 280.0 && *height >= 52.0
         )));
+        assert!(layout.items.iter().any(|item| matches!(item,
+            LayoutedTemporalItem::JourneyTask { x, label, .. }
+                if *x == 418.0 && label == "Confirm"
+        )));
+        assert!(layout.items.iter().any(|item| matches!(item,
+            LayoutedTemporalItem::JourneyActivityLine { x1, x2, .. }
+                if *x1 == 260.0 && *x2 == 558.0
+        )));
+        assert_eq!(layout.items.iter().filter(|item| matches!(item,
+            LayoutedTemporalItem::JourneyTaskLine { .. }
+        )).count(), 2);
         assert!(layout.items.iter().any(|item| matches!(item,
             LayoutedTemporalItem::JourneyTask { font_size, font_family, .. }
                 if *font_size == Some(18.0) && font_family.as_deref() == Some("Avenir Next")

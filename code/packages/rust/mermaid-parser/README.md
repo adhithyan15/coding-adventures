@@ -57,6 +57,8 @@ Actor colors and cyclic section fill/text palettes also resolve before Paint,
 matching Mermaid's Journey-specific init configuration model.
 Configured `leftMargin` reserves the legend column before task rows, while
 `maxLabelWidth` deterministically wraps actor labels into resolved Paint bounds.
+Journey sections and tasks resolve as horizontal columns with score-ranked faces,
+an activity spine, and dashed descenders before backend-neutral Paint lowering.
 
 The sequence subset includes participants and actors, aliases, standard solid
 and dotted message arrows, bidirectional/cross/point arrowheads, notes,

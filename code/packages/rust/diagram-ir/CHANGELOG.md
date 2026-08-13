@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.52.0
+
+- Carry resolved Journey activity spines, task descenders, and score positions.
+
 ## 0.51.0
 
 - Preserve Journey legend offset and label-width controls plus resolved actor bounds.

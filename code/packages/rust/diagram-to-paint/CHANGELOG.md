@@ -1,5 +1,9 @@
 # Changelog — diagram-to-paint
 
+## 0.50.0
+
+- Paint horizontal Journey activity spines, dashed task descenders, and layout-resolved score faces.
+
 ## 0.49.0
 
 - Shape Journey actor labels inside layout-resolved bounds.

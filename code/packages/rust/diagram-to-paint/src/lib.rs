@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.49.0";
+pub const VERSION: &str = "0.50.0";
 
 use std::collections::HashMap;
 
@@ -2651,6 +2651,40 @@ where
                     stroke_dash_offset: None,
                 }));
             }
+            LayoutedTemporalItem::JourneyActivityLine { x1, y, x2 } => {
+                instructions.push(PaintInstruction::Path(PaintPath {
+                    base: PaintBase::default(),
+                    commands: vec![
+                        PathCommand::MoveTo { x: *x1, y: *y },
+                        PathCommand::LineTo { x: *x2, y: *y },
+                    ],
+                    fill: Some("none".into()),
+                    fill_rule: None,
+                    stroke: Some("#0f172a".into()),
+                    stroke_width: Some(4.0),
+                    stroke_cap: Some(StrokeCap::Round),
+                    stroke_join: Some(StrokeJoin::Round),
+                    stroke_dash: None,
+                    stroke_dash_offset: None,
+                }));
+            }
+            LayoutedTemporalItem::JourneyTaskLine { x, y1, y2 } => {
+                instructions.push(PaintInstruction::Path(PaintPath {
+                    base: PaintBase::default(),
+                    commands: vec![
+                        PathCommand::MoveTo { x: *x, y: *y1 },
+                        PathCommand::LineTo { x: *x, y: *y2 },
+                    ],
+                    fill: Some("none".into()),
+                    fill_rule: None,
+                    stroke: Some("#64748b".into()),
+                    stroke_width: Some(1.0),
+                    stroke_cap: Some(StrokeCap::Round),
+                    stroke_join: Some(StrokeJoin::Round),
+                    stroke_dash: Some(vec![4.0, 2.0]),
+                    stroke_dash_offset: None,
+                }));
+            }
             LayoutedTemporalItem::JourneyActor {
                 x,
                 y,
@@ -2691,9 +2725,10 @@ where
                 y,
                 width,
                 height,
+                score_y,
                 score,
                 label,
-                people,
+                people: _,
                 person_colors,
                 font_size,
                 font_family,
@@ -2717,7 +2752,7 @@ where
                     instructions.push(PaintInstruction::Ellipse(PaintEllipse {
                         base: PaintBase::default(),
                         cx: x + 12.0 + index as f64 * 12.0,
-                        cy: y + height - 7.0,
+                        cy: *y,
                         rx: 4.0,
                         ry: 4.0,
                         fill: Some(color.clone()),
@@ -2727,8 +2762,8 @@ where
                         stroke_dash_offset: None,
                     }));
                 }
-                let face_x = x + width - 22.0;
-                let face_y = y + height / 2.0;
+                let face_x = x + width / 2.0;
+                let face_y = *score_y;
                 instructions.push(PaintInstruction::Ellipse(PaintEllipse {
                     base: PaintBase::default(),
                     cx: face_x,
@@ -2785,11 +2820,6 @@ where
                     stroke_dash: None,
                     stroke_dash_offset: None,
                 }));
-                let actors = if people.is_empty() {
-                    String::new()
-                } else {
-                    format!(" · {}", people.join(", "))
-                };
                 let mut task_font = lf.clone();
                 if let Some(size) = font_size {
                     task_font.size = *size;
@@ -2798,10 +2828,10 @@ where
                     task_font.family.clone_from(family);
                 }
                 text_children.push(text_node(
-                    &format!("{label}  {score}/5{actors}"),
+                    label,
                     x + 10.0,
                     y + 6.0,
-                    width - 52.0,
+                    width - 20.0,
                     height - 12.0,
                     task_font,
                     css_to_color(text_color),
@@ -3341,7 +3371,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.49.0");
+        assert_eq!(crate::VERSION, "0.50.0");
     }
 
     #[test]
@@ -3569,6 +3599,16 @@ mod tests {
                     color: "#8fbc8f".into(),
                     label: "Alice\nWonderland".into(),
                 },
+                LayoutedTemporalItem::JourneyActivityLine {
+                    x1: 80.0,
+                    y: 92.0,
+                    x2: 240.0,
+                },
+                LayoutedTemporalItem::JourneyTaskLine {
+                    x: 160.0,
+                    y1: 80.0,
+                    y2: 112.0,
+                },
                 LayoutedTemporalItem::JourneySection {
                     x: 0.0,
                     y: 28.0,
@@ -3583,6 +3623,7 @@ mod tests {
                     y: 40.0,
                     width: 288.0,
                     height: 40.0,
+                    score_y: 112.0,
                     score: 5,
                     label: "Find product".into(),
                     people: vec!["Alice".into()],
@@ -3607,6 +3648,10 @@ mod tests {
         assert!(scene.instructions.iter().any(|instruction| matches!(
             instruction,
             PaintInstruction::Path(path) if path.commands.iter().any(|command| matches!(command, PathCommand::QuadTo { .. }))
+        )));
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::Path(path) if path.stroke_dash.as_deref() == Some(&[4.0, 2.0])
         )));
         assert!(scene.instructions.iter().any(|instruction| matches!(
             instruction,
