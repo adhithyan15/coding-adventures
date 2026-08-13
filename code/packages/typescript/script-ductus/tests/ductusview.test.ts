@@ -210,6 +210,8 @@ const CYRILLIC_DE = ductusFor("д", "cyrillic")!;
 const cyrillicDeOutline = cyrillicOutline("д");
 const CYRILLIC_IE = ductusFor("е", "cyrillic")!;
 const cyrillicIeOutline = cyrillicOutline("е");
+const CYRILLIC_IO = ductusFor("ё", "cyrillic")!;
+const cyrillicIoOutline = cyrillicOutline("ё");
 const HEBREW_ALEF = ductusFor("א", "hebrew")!;
 const hebrewAlefOutline = hebrewOutline("א");
 const HEBREW_BET = ductusFor("ב", "hebrew")!;
@@ -2551,6 +2553,36 @@ describe("Cyrillic е — one zero-lift upper loop and lower bowl", () => {
     );
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(CYRILLIC_IE.strokes[0], 1),
+    );
+  });
+});
+
+describe("Cyrillic ё — looped body followed by two lifted dots", () => {
+  const steps = ductusSteps(CYRILLIC_IO);
+  const strip = ductusFilmstrip(CYRILLIC_IO, cyrillicIoOutline);
+
+  it("shows the joined body before the left and right dots", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "curve around the upper bowl and sweep through the middle",
+      "reverse through the middle and circle the lower bowl",
+      "lift and place the left dot",
+      "lift again and place the right dot",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, true, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 1, 2]);
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(2);
+    expect(strip.summary).toBe("3 strokes · 2 pen lifts · 4 movements");
+  });
+
+  it("draws the exact dotted Noto Sans Cyrillic glyph behind all three runs", () => {
+    const paths = byTag(strip.frames[3], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      cyrillicIoOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(2);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(CYRILLIC_IO.strokes[2], 1),
     );
   });
 });

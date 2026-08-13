@@ -21,6 +21,12 @@ at the package. `scriptdata` stays out of that chunk on purpose — the shell ne
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Cyrillic ё ductus (HL-C09EF)
+
+- Render **ё** in four movements across three source-aligned strokes.
+- Complete the joined е body, lift for the left dot, then lift again for the right dot.
+- Preserve the native-teacher lesson's body-before-left-dot-before-right-dot order while fitting its tall school hand through Noto Sans Cyrillic's compact printed e and circular dots, and reduce measured HL-C09 debt to 96 entries.
+
 ### Added — cited Cyrillic е ductus (HL-C09EE)
 
 - Render **е** in two joined movements across one source-aligned stroke.
