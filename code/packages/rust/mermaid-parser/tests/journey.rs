@@ -1,7 +1,7 @@
 use diagram_ir::{TemporalBody, TemporalKind};
 use mermaid_parser::{parse_any_mermaid, parse_journey, MermaidDiagram};
 
-const SOURCE: &str = "%%{init: {\"journey\": {\"diagramMarginX\": 24, \"diagramMarginY\": 12, \"width\": 280, \"height\": 52, \"taskMargin\": 18}}}%%\nJoUrNeY\naccTitle: Checkout journey\naccDescr {\n  A native checkout\n  experience\n}\ntitle Checkout<br/>experience\nsection Discover<br>products\nFind<br\t/>product: 5: Alice, Bob\nsection Payment\nPay: 2: Bob";
+const SOURCE: &str = "%%{init: {\"journey\": {\"diagramMarginX\": 24, \"diagramMarginY\": 12, \"width\": 280, \"height\": 52, \"taskMargin\": 18, \"taskFontSize\": \"18px\", \"taskFontFamily\": \"Avenir Next\"}}}%%\nJoUrNeY\naccTitle: Checkout journey\naccDescr {\n  A native checkout\n  experience\n}\ntitle Checkout<br/>experience\nsection Discover<br>products\nFind<br\t/>product: 5: Alice, Bob\nsection Payment\nPay: 2: Bob";
 
 #[test]
 fn journey_core_grammar_lowers_to_typed_ir() {
@@ -22,6 +22,8 @@ fn journey_core_grammar_lowers_to_typed_ir() {
     assert_eq!(journey.config.task_width, Some(280.0));
     assert_eq!(journey.config.task_height, Some(52.0));
     assert_eq!(journey.config.task_margin, Some(18.0));
+    assert_eq!(journey.config.task_font_size, Some(18.0));
+    assert_eq!(journey.config.task_font_family.as_deref(), Some("Avenir Next"));
 }
 
 #[test]

@@ -605,7 +605,7 @@ mod apple {
     #[test]
     fn render_mermaid_journey_to_png() {
         let (title, journey) = parse_journey(
-            "%%{init: {\"journey\": {\"diagramMarginX\": 24, \"diagramMarginY\": 12, \"width\": 640, \"height\": 52, \"taskMargin\": 18}}}%%\njourney\naccTitle: Checkout journey\naccDescr: Native checkout experience\ntitle Checkout<br/>experience\nsection Discover<br>products\nFind<br />product: 5: Alice, Bob\nsection Payment\nPay: 2: Bob",
+            "%%{init: {\"journey\": {\"diagramMarginX\": 24, \"diagramMarginY\": 12, \"width\": 640, \"height\": 52, \"taskMargin\": 18, \"taskFontSize\": \"18px\", \"taskFontFamily\": \"Avenir Next\"}}}%%\njourney\naccTitle: Checkout journey\naccDescr: Native checkout experience\ntitle Checkout<br/>experience\nsection Discover<br>products\nFind<br />product: 5: Alice, Bob\nsection Payment\nPay: 2: Bob",
         )
         .expect("journey parse failed");
         let layout = layout_temporal_diagram(

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.6.0
+
+- Resolve Journey task typography onto backend-neutral temporal layout items.
+
 ## 0.5.0
 
 - Resolve Journey margins, task dimensions, and task spacing from Mermaid init configuration.

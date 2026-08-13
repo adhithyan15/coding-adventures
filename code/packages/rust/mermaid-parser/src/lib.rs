@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.92.0";
+pub const VERSION: &str = "0.93.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -719,12 +719,22 @@ pub fn parse_any_mermaid(source: &str) -> Result<MermaidDiagram, ParseError> {
 
 pub fn parse_journey(source: &str) -> Result<(Option<String>, JourneyDiagram), ParseError> {
     let number = |key| quadrant_directive_value(source, key).and_then(|value| value.parse().ok());
+    let font_size = |key| {
+        quadrant_directive_value(source, key).and_then(|value| {
+            value
+                .trim_end_matches(|character: char| character.is_ascii_alphabetic())
+                .parse()
+                .ok()
+        })
+    };
     let config = JourneyConfig {
         diagram_margin_x: number("diagramMarginX"),
         diagram_margin_y: number("diagramMarginY"),
         task_width: number("width"),
         task_height: number("height"),
         task_margin: number("taskMargin"),
+        task_font_size: font_size("taskFontSize"),
+        task_font_family: quadrant_directive_value(source, "taskFontFamily"),
     };
     let preprocessed = preprocess_mermaid_source(source)?;
     let tokens =
@@ -6607,7 +6617,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.92.0");
+        assert_eq!(crate::VERSION, "0.93.0");
     }
 
     #[test]

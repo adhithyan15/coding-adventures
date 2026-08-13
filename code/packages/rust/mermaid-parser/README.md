@@ -49,7 +49,8 @@ documented one-to-five domain, comma-separated actors, accessibility metadata,
 and multiline break-tag labels. Resolved layout assigns deterministic actor
 colors, and Paint renders actor legends, task markers, and score faces.
 Journey init directives also preserve diagram margins, task dimensions, and
-task spacing through semantic IR and resolved temporal layout.
+task spacing through semantic IR and resolved temporal layout. Configured task
+font size and family reach backend-neutral Paint glyph shaping.
 
 The sequence subset includes participants and actors, aliases, standard solid
 and dotted message arrows, bidirectional/cross/point arrowheads, notes,

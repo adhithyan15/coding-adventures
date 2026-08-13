@@ -15,7 +15,7 @@
     { "id": "task-actor-forms", "source": "journey\nsection Documentation\nA task: 5: Alice, Bob, Charlie\nB task: 3:Bob, Charlie\nC task: 5\nD task: 5: Charlie, Alice\nE task: 5:" },
     { "id": "case-insensitive-keywords", "source": "JoUrNeY\nTiTlE Working day\nSeCtIoN Work\nTask: 4: Me" },
     { "id": "comments", "source": "journey\n%% a comment\n# another comment\nsection Work\nTask: 4: Me" },
-    { "id": "init-geometry", "source": "%%{init: {\"journey\": {\"diagramMarginX\": 24, \"diagramMarginY\": 12, \"width\": 280, \"height\": 52, \"taskMargin\": 18}}}%%\njourney\nsection Work\nTask: 4: Me" }
+    { "id": "init-geometry-and-typography", "source": "%%{init: {\"journey\": {\"diagramMarginX\": 24, \"diagramMarginY\": 12, \"width\": 280, \"height\": 52, \"taskMargin\": 18, \"taskFontSize\": \"18px\", \"taskFontFamily\": \"Avenir Next\"}}}%%\njourney\nsection Work\nTask: 4: Me" }
   ],
   "invalid": [
     { "id": "score-zero", "source": "journey\nsection Work\nTask: 0: Me" },

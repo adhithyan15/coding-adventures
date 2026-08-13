@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.93.0
+
+- Parse Journey `taskFontSize` and `taskFontFamily` init options.
+
 ## 0.92.0
 
 - Parse Journey numeric geometry options from Mermaid init directives.
