@@ -1,0 +1,21 @@
+% ============================================================================
+% phase-change-alt-name.query.adj — a worked recall over the physics
+% phase-change-alt-name library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what's an older word
+% for melting?": it states no physics fact of its own — it only `import`s
+% the grounded table and asks binding queries. The engine resolves each `?`
+% against the `phase_change_alt_name` rows and returns the alternate name +
+% the table's source/locator/trust. A direction the cited spans give no
+% alternate name for abstains honestly — the engine never invents a
+% synonym.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli phase-change-alt-name.query.adj
+% ============================================================================
+
+import "phase-change-alt-name.adj"
+
+? phase_change_alt_name(solid_to_liquid, $AltName)   % expect fusion
+? phase_change_alt_name($Change, boiling)            % reverse bind — expect liquid_to_gas
+? phase_change_alt_name(gas_to_liquid, $AltName)     % expect abstain — the cited span names condensation only, no alternate word

@@ -1,0 +1,71 @@
+% ============================================================================
+% phase-change-alt-name — for the phase changes where the SAME source names
+% an alternate word, the alternate name (adj-facts-stdlib, PHYSICS).
+% ============================================================================
+% A sibling to the already-shipped `states-of-matter.adj`
+% (`phase_change_name(change, name)`, ONE primary name per phase-change
+% direction: melting, freezing, vaporization, condensation, sublimation,
+% deposition): a new `phase_change_alt_name(change, alt_name)` table names
+% the OLDER or ALTERNATE word the SAME already-cited LibreTexts pages state
+% for a direction, decoded from spans already sitting unused inside
+% `states-of-matter.adj`'s own header and provenance block — no new
+% WebFetch. That table's `name` column has room for only the PRIMARY name;
+% the SAME already-quoted sentences also carry a second word for three of
+% the six directions that never made it into a row:
+%
+%   solid_to_liquid → fusion
+%     "an older term that you may see sometimes is fusion"
+%   liquid_to_solid → solidification
+%     "some textbooks also use the word solidification for this process"
+%   liquid_to_gas → boiling
+%     "which is more often referred to as \"boiling\""
+%
+% Recall is a binding query:
+%
+%     ? phase_change_alt_name(solid_to_liquid, $AltName)      % fusion
+%
+% This is a native `table` (ADJ-TABLES RS-5, a TWO-column table like
+% `states-of-matter.adj`'s own `phase_change_name`): each `row` lowers to a
+% ground relation `phase_change_alt_name(change, alt_name)` carrying the
+% citation, so the lookup above is the ordinary SLD binding query — the
+% engine returns the alternate name WITH its source, on the CPU, with zero
+% model calls, and abstains on any direction the cited spans do not give an
+% alternate name for (`gas_to_liquid`/`solid_to_gas`/`gas_to_solid`, whose
+% own already-cited spans in `states-of-matter.adj` state only the single
+% primary name — condensation, sublimation, deposition — with no second
+% word).
+%
+% Only THREE of `states-of-matter.adj`'s six phase-change directions have
+% an alternate name in the ALREADY-cited spans; this table is deliberately
+% narrow rather than inventing a synonym the source does not state. The
+% query also runs BACKWARD — bind an alternate name and recall which
+% direction it names:
+%
+%     ? phase_change_alt_name($Change, boiling)   % liquid_to_gas
+%
+% Provenance: reproduces, byte-for-byte, the SAME solid_to_liquid span
+% already quoted inside `states-of-matter.adj`'s own provenance block, from
+% the SAME LibreTexts "Melting, Freezing, and Sublimation" page that table
+% already cites — no new WebFetch, only a different schema decoding a part
+% of each already-verified quote. An ADJ `table` carries ONE provenance
+% envelope (per `states-of-matter.adj`'s own convention), so
+% `source`/`locator`/`trust` below hold the solid_to_liquid span; the
+% liquid_to_solid/liquid_to_gas rows' own spans are listed above for
+% independent auditability. `trust consensus` — the same tier
+% `states-of-matter.adj` already carries (LibreTexts is a secondary
+% teaching reference, not a primary source).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table phase_change_alt_name {
+    columns change, alt_name
+
+    row (solid_to_liquid, fusion)
+    row (liquid_to_solid, solidification)
+    row (liquid_to_gas, boiling)
+
+    source "The process of a solid becoming a liquid is called melting (an older term that you may see sometimes is fusion)."
+    locator "https://chem.libretexts.org/Courses/Madera_Community_College/MacArthur_Chemistry_3A_v_1.2/09:_Attractive_Forces/9.03:_Phase_Transitions/9.3.01:_Melting_Freezing_and_Sublimation"
+    trust consensus
+}
