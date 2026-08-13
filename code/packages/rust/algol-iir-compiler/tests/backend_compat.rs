@@ -160,8 +160,8 @@ fn algol_runtime_string_local_lowers_to_wasm_jvm_clr_beam_and_llvm() {
         &iir_to_cil_bytecode::IIRClrConfig::new("AlgolRuntimeStringLocal"),
     )
     .expect("runtime string local should emit CLR IL");
-    assert!(clr.contains("string pick(int32 A_0)"));
-    assert!(clr.contains("call string AlgolRuntimeStringLocalProgram::pick(int32)"));
+    assert!(clr.contains("string 'pick'(int32 A_0)"));
+    assert!(clr.contains("call string AlgolRuntimeStringLocalProgram::'pick'(int32)"));
     assert!(clr.contains("System.String::Concat(string, string)"));
     assert!(clr.contains("System.String::Equals(string, string)"));
 
