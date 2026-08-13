@@ -1,0 +1,23 @@
+% ============================================================================
+% lung-lobe-names.query.adj — a worked recall over the anatomy lung-lobe-names
+% library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "which lung is the right
+% middle lobe part of?": it states no anatomy fact — it only `import`s the
+% grounded table and asks binding queries. The engine resolves each `?`
+% against the `lung_lobe_name` rows and returns the lung + the table's
+% source/locator/trust. The third query runs the relation BACKWARD (bind the
+% lung right_lung, recall EVERY lobe it has — a genuine one-to-many reverse
+% recall). The trachea is not a lobe, so a recall on it abstains honestly —
+% the engine never invents a lung assignment.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli lung-lobe-names.query.adj
+% ============================================================================
+
+import "lung-lobe-names.adj"
+
+? lung_lobe_name(right_middle_lobe, $Lung)   % expect right_lung
+? lung_lobe_name(left_upper_lobe, $Lung)     % expect left_lung
+? lung_lobe_name($Lobe, right_lung)          % expect right_upper_lobe ; right_middle_lobe ; right_lower_lobe — reverse recall
+? lung_lobe_name(trachea, $Lung)             % expect abstain — the trachea is not one of the five lobes
