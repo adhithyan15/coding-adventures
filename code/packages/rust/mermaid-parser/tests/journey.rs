@@ -28,3 +28,11 @@ fn journey_dispatches_through_temporal_ir() {
     assert_eq!(diagram.kind, TemporalKind::Journey);
     assert!(matches!(diagram.body, TemporalBody::Journey(_)));
 }
+
+#[test]
+fn journey_rejects_scores_outside_mermaids_one_to_five_domain() {
+    for score in ["0", "6", "15"] {
+        let source = format!("journey\nsection Work\nTask: {score}: Me");
+        assert!(parse_journey(&source).is_err(), "score {score}");
+    }
+}

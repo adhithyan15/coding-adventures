@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.52.0
+
+- Enforce Journey's documented one-to-five task-score domain in the portable token grammar.
+
 ## 0.51.0
 
 - Tokenize Journey accessibility statements and multiline descriptions.

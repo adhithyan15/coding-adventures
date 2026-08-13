@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.91.0
+
+- Gate the pinned Journey parser corpus and reject task scores outside Mermaid's documented one-to-five domain.
+
 ## 0.90.0
 
 - Parse Journey accessibility metadata and normalize upstream HTML break-tag label forms.

@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "sources": [
+    "packages/mermaid/src/diagrams/user-journey/parser/journey.spec.js",
+    "packages/mermaid/src/docs/syntax/userJourney.md"
+  ],
+  "valid": [
+    { "id": "header-only", "source": "journey" },
+    { "id": "title", "source": "journey\ntitle Adding journey diagram functionality to mermaid" },
+    { "id": "single-line-accessibility", "source": "journey\naccTitle: Family shopping\naccDescr: A user journey for family shopping\nsection Order from website" },
+    { "id": "multiline-accessibility", "source": "journey\naccDescr {\n  A user journey for\n  family shopping\n}title Shopping\nsection Order from website" },
+    { "id": "break-tag-sections", "source": "journey\ntitle Working day\nsection Line1<br>Line2<br/>Line3</br />Line4<br\t/>Line5" },
+    { "id": "documented-example", "source": "journey\ntitle My working day\nsection Go to work\nMake tea: 5: Me\nGo upstairs: 3: Me\nDo work: 1: Me, Cat\nsection Go home\nGo downstairs: 5: Me\nSit down: 5: Me" },
+    { "id": "task-actor-forms", "source": "journey\nsection Documentation\nA task: 5: Alice, Bob, Charlie\nB task: 3:Bob, Charlie\nC task: 5\nD task: 5: Charlie, Alice\nE task: 5:" },
+    { "id": "case-insensitive-keywords", "source": "JoUrNeY\nTiTlE Working day\nSeCtIoN Work\nTask: 4: Me" },
+    { "id": "comments", "source": "journey\n%% a comment\n# another comment\nsection Work\nTask: 4: Me" }
+  ],
+  "invalid": [
+    { "id": "score-zero", "source": "journey\nsection Work\nTask: 0: Me" },
+    { "id": "score-six", "source": "journey\nsection Work\nTask: 6: Me" },
+    { "id": "multi-digit-score", "source": "journey\nsection Work\nTask: 15: Me" }
+  ]
+}

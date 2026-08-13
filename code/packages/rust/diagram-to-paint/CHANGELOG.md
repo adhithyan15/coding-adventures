@@ -1,5 +1,9 @@
 # Changelog — diagram-to-paint
 
+## 0.45.0
+
+- Render Journey actor legends, task markers, and score sentiment faces with backend-neutral Paint instructions.
+
 ## 0.44.0
 
 - Emit Journey accessibility metadata and shape multiline labels within resolved rows.
