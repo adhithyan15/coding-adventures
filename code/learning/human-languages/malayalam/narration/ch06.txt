@@ -1,8 +1,8 @@
 Malayalam, chapter 6: Case Endings and Dative Subjects.
-2 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+3 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 2.
+Lesson 1 of 3.
 -ിക്ക് (-ikku) — "to, for".
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
@@ -45,7 +45,7 @@ Wrap-up Recall.
 What does -ിക്ക് mean? ("To" or "for.") Where does it go? (On the end of the noun.) What is "to me"? (എനിക്ക് enikku.) Why does the suffix have two shapes? (-ikku and -inu are chosen by the noun's ending — one case, two forms.) How is that unlike a Latin ending? (Latin fuses case+number+declension — and -īs doesn't even fix which case; Malayalam's carries one meaning, unambiguously, seam visible.) Next: the sentence where the person isn't the subject.
 
 
-Lesson 2 of 2.
+Lesson 2 of 3.
 എനിക്ക് മലയാളം അറിയാം (enikku malayāḷam aṟiyām) — "I know Malayalam".
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
@@ -92,3 +92,41 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 What does എനിക്ക് മലയാളം അറിയാം (enikku malayāḷam aṟiyām) literally say? ("To-me Malayalam is-knowable.") What has English got that Malayalam hasn't? (A nominative "I" — ñān is replaced by the dative enikku.) Why the dative? (Knowing happens to you.) Which Tamil word is enikku almost identical to, and why? (Enakku — Tamil and Malayalam split most recently of the four.) Which English word keeps the same idea? (Methinks.)
+
+
+Lesson 3 of 3.
+ക (ka) — one character, met inside words you already say.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ക and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 1 second]
+Highly rounded and loopy — full circles, hooks and curls, with almost no straight lines.
+[pause 2 seconds]
+One character this time. Just one — and you have been saying it for pages without knowing which mark on the page it was.
+
+Script you'll notice: ക.
+ക — ka.
+It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not k, it is ka.
+You already say these, and every one of them has ക (ka) somewhere inside it:
+നമസ്കാരം namaskāram — hello / greetings (namaskāram — "a making of a bow").
+പോകുക — to go (and വരിക, to come).
+നാളെ കാണാം nāḷe kāṇāṁ — see you tomorrow.
+വീണ്ടും കാണാം — we'll meet again.
+
+Writing: ക — copy what you see.
+Put your pen on ക (ka) and follow its line. Copy the shape you can see — slowly, and larger than it is printed.
+This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime.
+
+Guided Practice.
+[pause 1 second]
+[your turn — look: at these words, and find ക (ka) in the ones that have it]
+[pause 8 seconds for the answer]
+നമസ്കാരം, പോകുക, നന്ദി.
+[once you have stopped driving — trace: ക three times, saying ka as you finish each one]
+[your turn — look: back at any page of this chapter and find ക (ka) once more]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which character is this — ക? What sound does it carry? (ka.) Name one word you already say that contains it.

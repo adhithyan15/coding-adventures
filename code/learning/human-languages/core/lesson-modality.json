@@ -7,18 +7,18 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:8d84f1619ed713b4",
+  "sourceHash": "fnv1a64:7c96f62385ba08ed",
   "summary": {
-    "totalLessons": 1975,
+    "totalLessons": 2005,
     "voice": 1336,
     "sight": 561,
-    "pen": 78,
+    "pen": 108,
     "drivableLessons": 1336,
-    "drivablePercent": 68,
+    "drivablePercent": 67,
     "trackCount": 22,
     "chapterCount": 720,
     "drivablePrefixTotal": 1136,
-    "fullyDrivableChapters": 489,
+    "fullyDrivableChapters": 472,
     "unstartableChapters": 173,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
@@ -3343,15 +3343,16 @@
     },
     {
       "language": "kannada",
-      "lessonCount": 88,
+      "lessonCount": 96,
       "voice": 57,
       "sight": 31,
-      "pen": 0,
-      "drivablePercent": 65,
+      "pen": 8,
+      "drivablePercent": 59,
       "drivablePrefixTotal": 48,
       "modalities": [
         "voice",
-        "sight"
+        "sight",
+        "pen"
       ],
       "chapters": [
         {
@@ -3430,13 +3431,14 @@
         },
         {
           "chapter": 6,
-          "lessonCount": 3,
+          "lessonCount": 4,
           "voice": 1,
           "sight": 2,
-          "pen": 0,
+          "pen": 1,
           "modalities": [
             "voice",
-            "sight"
+            "sight",
+            "pen"
           ],
           "drivablePrefix": 0,
           "firstNonVoiceLesson": "KA-C06-dative-ge",
@@ -3445,12 +3447,13 @@
         },
         {
           "chapter": 7,
-          "lessonCount": 2,
+          "lessonCount": 3,
           "voice": 0,
           "sight": 2,
-          "pen": 0,
+          "pen": 1,
           "modalities": [
-            "sight"
+            "sight",
+            "pen"
           ],
           "drivablePrefix": 0,
           "firstNonVoiceLesson": "KA-C07-numbers-1-5",
@@ -3459,12 +3462,13 @@
         },
         {
           "chapter": 8,
-          "lessonCount": 1,
+          "lessonCount": 2,
           "voice": 0,
           "sight": 1,
-          "pen": 0,
+          "pen": 1,
           "modalities": [
-            "sight"
+            "sight",
+            "pen"
           ],
           "drivablePrefix": 0,
           "firstNonVoiceLesson": "KA-C08-dayavittu",
@@ -3473,80 +3477,90 @@
         },
         {
           "chapter": 9,
-          "lessonCount": 1,
+          "lessonCount": 2,
           "voice": 1,
           "sight": 0,
-          "pen": 0,
+          "pen": 1,
           "modalities": [
-            "voice"
+            "voice",
+            "sight",
+            "pen"
           ],
           "drivablePrefix": 1,
-          "firstNonVoiceLesson": null,
-          "drivable": true,
+          "firstNonVoiceLesson": "KA-S04-vowel-sign-i",
+          "drivable": false,
           "drivableLessonIds": [
             "KA-C09-kshamisi"
           ]
         },
         {
           "chapter": 10,
-          "lessonCount": 1,
+          "lessonCount": 2,
           "voice": 1,
           "sight": 0,
-          "pen": 0,
+          "pen": 1,
           "modalities": [
-            "voice"
+            "voice",
+            "sight",
+            "pen"
           ],
           "drivablePrefix": 1,
-          "firstNonVoiceLesson": null,
-          "drivable": true,
+          "firstNonVoiceLesson": "KA-S05-letter-ta",
+          "drivable": false,
           "drivableLessonIds": [
             "KA-C10-vaara"
           ]
         },
         {
           "chapter": 11,
-          "lessonCount": 1,
+          "lessonCount": 2,
           "voice": 1,
           "sight": 0,
-          "pen": 0,
+          "pen": 1,
           "modalities": [
-            "voice"
+            "voice",
+            "sight",
+            "pen"
           ],
           "drivablePrefix": 1,
-          "firstNonVoiceLesson": null,
-          "drivable": true,
+          "firstNonVoiceLesson": "KA-S06-letter-da",
+          "drivable": false,
           "drivableLessonIds": [
             "KA-C11-bannagalu"
           ]
         },
         {
           "chapter": 12,
-          "lessonCount": 1,
+          "lessonCount": 2,
           "voice": 1,
           "sight": 0,
-          "pen": 0,
+          "pen": 1,
           "modalities": [
-            "voice"
+            "voice",
+            "sight",
+            "pen"
           ],
           "drivablePrefix": 1,
-          "firstNonVoiceLesson": null,
-          "drivable": true,
+          "firstNonVoiceLesson": "KA-S07-letter-ra",
+          "drivable": false,
           "drivableLessonIds": [
             "KA-C12-kutumba"
           ]
         },
         {
           "chapter": 13,
-          "lessonCount": 1,
+          "lessonCount": 2,
           "voice": 1,
           "sight": 0,
-          "pen": 0,
+          "pen": 1,
           "modalities": [
-            "voice"
+            "voice",
+            "sight",
+            "pen"
           ],
           "drivablePrefix": 1,
-          "firstNonVoiceLesson": null,
-          "drivable": true,
+          "firstNonVoiceLesson": "KA-S08-vowel-sign-aa",
+          "drivable": false,
           "drivableLessonIds": [
             "KA-C13-dehada-bhagagalu"
           ]
@@ -4745,15 +4759,16 @@
     },
     {
       "language": "malayalam",
-      "lessonCount": 93,
+      "lessonCount": 101,
       "voice": 53,
       "sight": 40,
-      "pen": 0,
-      "drivablePercent": 57,
+      "pen": 8,
+      "drivablePercent": 52,
       "drivablePrefixTotal": 46,
       "modalities": [
         "voice",
-        "sight"
+        "sight",
+        "pen"
       ],
       "chapters": [
         {
@@ -4832,12 +4847,13 @@
         },
         {
           "chapter": 6,
-          "lessonCount": 2,
+          "lessonCount": 3,
           "voice": 0,
           "sight": 2,
-          "pen": 0,
+          "pen": 1,
           "modalities": [
-            "sight"
+            "sight",
+            "pen"
           ],
           "drivablePrefix": 0,
           "firstNonVoiceLesson": "ML-C06-dative-ikku",
@@ -4846,12 +4862,13 @@
         },
         {
           "chapter": 7,
-          "lessonCount": 2,
+          "lessonCount": 3,
           "voice": 0,
           "sight": 2,
-          "pen": 0,
+          "pen": 1,
           "modalities": [
-            "sight"
+            "sight",
+            "pen"
           ],
           "drivablePrefix": 0,
           "firstNonVoiceLesson": "ML-C07-numbers-1-5",
@@ -4860,44 +4877,49 @@
         },
         {
           "chapter": 8,
-          "lessonCount": 1,
+          "lessonCount": 2,
           "voice": 1,
           "sight": 0,
-          "pen": 0,
+          "pen": 1,
           "modalities": [
-            "voice"
+            "voice",
+            "sight",
+            "pen"
           ],
           "drivablePrefix": 1,
-          "firstNonVoiceLesson": null,
-          "drivable": true,
+          "firstNonVoiceLesson": "ML-S03-vowel-sign-i",
+          "drivable": false,
           "drivableLessonIds": [
             "ML-C08-dayavayi"
           ]
         },
         {
           "chapter": 9,
-          "lessonCount": 1,
+          "lessonCount": 2,
           "voice": 1,
           "sight": 0,
-          "pen": 0,
+          "pen": 1,
           "modalities": [
-            "voice"
+            "voice",
+            "sight",
+            "pen"
           ],
           "drivablePrefix": 1,
-          "firstNonVoiceLesson": null,
-          "drivable": true,
+          "firstNonVoiceLesson": "ML-S04-vowel-sign-aa",
+          "drivable": false,
           "drivableLessonIds": [
             "ML-C09-kshamikkanam"
           ]
         },
         {
           "chapter": 10,
-          "lessonCount": 1,
+          "lessonCount": 2,
           "voice": 0,
           "sight": 1,
-          "pen": 0,
+          "pen": 1,
           "modalities": [
-            "sight"
+            "sight",
+            "pen"
           ],
           "drivablePrefix": 0,
           "firstNonVoiceLesson": "ML-C10-azhcha",
@@ -4906,48 +4928,54 @@
         },
         {
           "chapter": 11,
-          "lessonCount": 1,
+          "lessonCount": 2,
           "voice": 1,
           "sight": 0,
-          "pen": 0,
+          "pen": 1,
           "modalities": [
-            "voice"
+            "voice",
+            "sight",
+            "pen"
           ],
           "drivablePrefix": 1,
-          "firstNonVoiceLesson": null,
-          "drivable": true,
+          "firstNonVoiceLesson": "ML-S06-letter-chillu-ll",
+          "drivable": false,
           "drivableLessonIds": [
             "ML-C11-nirangal"
           ]
         },
         {
           "chapter": 12,
-          "lessonCount": 1,
+          "lessonCount": 2,
           "voice": 1,
           "sight": 0,
-          "pen": 0,
+          "pen": 1,
           "modalities": [
-            "voice"
+            "voice",
+            "sight",
+            "pen"
           ],
           "drivablePrefix": 1,
-          "firstNonVoiceLesson": null,
-          "drivable": true,
+          "firstNonVoiceLesson": "ML-S07-vowel-sign-u",
+          "drivable": false,
           "drivableLessonIds": [
             "ML-C12-kudumbam"
           ]
         },
         {
           "chapter": 13,
-          "lessonCount": 1,
+          "lessonCount": 2,
           "voice": 1,
           "sight": 0,
-          "pen": 0,
+          "pen": 1,
           "modalities": [
-            "voice"
+            "voice",
+            "sight",
+            "pen"
           ],
           "drivablePrefix": 1,
-          "firstNonVoiceLesson": null,
-          "drivable": true,
+          "firstNonVoiceLesson": "ML-S08-letter-ta",
+          "drivable": false,
           "drivableLessonIds": [
             "ML-C13-shareera-bhaagangal"
           ]
@@ -6842,15 +6870,16 @@
     },
     {
       "language": "sanskrit",
-      "lessonCount": 59,
+      "lessonCount": 65,
       "voice": 23,
       "sight": 36,
-      "pen": 0,
-      "drivablePercent": 39,
+      "pen": 6,
+      "drivablePercent": 35,
       "drivablePrefixTotal": 14,
       "modalities": [
         "voice",
-        "sight"
+        "sight",
+        "pen"
       ],
       "chapters": [
         {
@@ -6966,16 +6995,18 @@
         },
         {
           "chapter": 8,
-          "lessonCount": 4,
+          "lessonCount": 5,
           "voice": 4,
           "sight": 0,
-          "pen": 0,
+          "pen": 1,
           "modalities": [
-            "voice"
+            "voice",
+            "sight",
+            "pen"
           ],
           "drivablePrefix": 4,
-          "firstNonVoiceLesson": null,
-          "drivable": true,
+          "firstNonVoiceLesson": "SA-S01-letter-ma",
+          "drivable": false,
           "drivableLessonIds": [
             "SA-C08-cintayati",
             "SA-C08-avagacchati",
@@ -6985,16 +7016,18 @@
         },
         {
           "chapter": 9,
-          "lessonCount": 4,
+          "lessonCount": 5,
           "voice": 4,
           "sight": 0,
-          "pen": 0,
+          "pen": 1,
           "modalities": [
-            "voice"
+            "voice",
+            "sight",
+            "pen"
           ],
           "drivablePrefix": 4,
-          "firstNonVoiceLesson": null,
-          "drivable": true,
+          "firstNonVoiceLesson": "SA-S02-letter-na",
+          "drivable": false,
           "drivableLessonIds": [
             "SA-C09-grhnati",
             "SA-C09-prcchati",
@@ -7004,12 +7037,13 @@
         },
         {
           "chapter": 10,
-          "lessonCount": 3,
+          "lessonCount": 4,
           "voice": 0,
           "sight": 3,
-          "pen": 0,
+          "pen": 1,
           "modalities": [
-            "sight"
+            "sight",
+            "pen"
           ],
           "drivablePrefix": 0,
           "firstNonVoiceLesson": "SA-C10-paniyam",
@@ -7018,12 +7052,13 @@
         },
         {
           "chapter": 11,
-          "lessonCount": 4,
+          "lessonCount": 5,
           "voice": 0,
           "sight": 4,
-          "pen": 0,
+          "pen": 1,
           "modalities": [
-            "sight"
+            "sight",
+            "pen"
           ],
           "drivablePrefix": 0,
           "firstNonVoiceLesson": "SA-C11-mitram",
@@ -7032,12 +7067,13 @@
         },
         {
           "chapter": 12,
-          "lessonCount": 3,
+          "lessonCount": 4,
           "voice": 0,
           "sight": 3,
-          "pen": 0,
+          "pen": 1,
           "modalities": [
-            "sight"
+            "sight",
+            "pen"
           ],
           "drivablePrefix": 0,
           "firstNonVoiceLesson": "SA-C12-akshi",
@@ -7046,12 +7082,13 @@
         },
         {
           "chapter": 13,
-          "lessonCount": 2,
+          "lessonCount": 3,
           "voice": 0,
           "sight": 2,
-          "pen": 0,
+          "pen": 1,
           "modalities": [
-            "sight"
+            "sight",
+            "pen"
           ],
           "drivablePrefix": 0,
           "firstNonVoiceLesson": "SA-C13-nasika",
@@ -11366,15 +11403,16 @@
     },
     {
       "language": "telugu",
-      "lessonCount": 87,
+      "lessonCount": 95,
       "voice": 51,
       "sight": 36,
-      "pen": 0,
-      "drivablePercent": 59,
+      "pen": 8,
+      "drivablePercent": 54,
       "drivablePrefixTotal": 43,
       "modalities": [
         "voice",
-        "sight"
+        "sight",
+        "pen"
       ],
       "chapters": [
         {
@@ -11453,13 +11491,14 @@
         },
         {
           "chapter": 6,
-          "lessonCount": 2,
+          "lessonCount": 3,
           "voice": 1,
           "sight": 1,
-          "pen": 0,
+          "pen": 1,
           "modalities": [
             "voice",
-            "sight"
+            "sight",
+            "pen"
           ],
           "drivablePrefix": 0,
           "firstNonVoiceLesson": "TE-C06-dative-ku",
@@ -11468,12 +11507,13 @@
         },
         {
           "chapter": 7,
-          "lessonCount": 2,
+          "lessonCount": 3,
           "voice": 0,
           "sight": 2,
-          "pen": 0,
+          "pen": 1,
           "modalities": [
-            "sight"
+            "sight",
+            "pen"
           ],
           "drivablePrefix": 0,
           "firstNonVoiceLesson": "TE-C07-numbers-1-5",
@@ -11482,12 +11522,13 @@
         },
         {
           "chapter": 8,
-          "lessonCount": 1,
+          "lessonCount": 2,
           "voice": 0,
           "sight": 1,
-          "pen": 0,
+          "pen": 1,
           "modalities": [
-            "sight"
+            "sight",
+            "pen"
           ],
           "drivablePrefix": 0,
           "firstNonVoiceLesson": "TE-C08-dayachesi",
@@ -11496,80 +11537,90 @@
         },
         {
           "chapter": 9,
-          "lessonCount": 1,
+          "lessonCount": 2,
           "voice": 1,
           "sight": 0,
-          "pen": 0,
+          "pen": 1,
           "modalities": [
-            "voice"
+            "voice",
+            "sight",
+            "pen"
           ],
           "drivablePrefix": 1,
-          "firstNonVoiceLesson": null,
-          "drivable": true,
+          "firstNonVoiceLesson": "TE-S04-sign-anusvara",
+          "drivable": false,
           "drivableLessonIds": [
             "TE-C09-kshaminchandi"
           ]
         },
         {
           "chapter": 10,
-          "lessonCount": 1,
+          "lessonCount": 2,
           "voice": 1,
           "sight": 0,
-          "pen": 0,
+          "pen": 1,
           "modalities": [
-            "voice"
+            "voice",
+            "sight",
+            "pen"
           ],
           "drivablePrefix": 1,
-          "firstNonVoiceLesson": null,
-          "drivable": true,
+          "firstNonVoiceLesson": "TE-S05-sign-virama",
+          "drivable": false,
           "drivableLessonIds": [
             "TE-C10-vaaram"
           ]
         },
         {
           "chapter": 11,
-          "lessonCount": 1,
+          "lessonCount": 2,
           "voice": 1,
           "sight": 0,
-          "pen": 0,
+          "pen": 1,
           "modalities": [
-            "voice"
+            "voice",
+            "sight",
+            "pen"
           ],
           "drivablePrefix": 1,
-          "firstNonVoiceLesson": null,
-          "drivable": true,
+          "firstNonVoiceLesson": "TE-S06-letter-ra",
+          "drivable": false,
           "drivableLessonIds": [
             "TE-C11-rangulu"
           ]
         },
         {
           "chapter": 12,
-          "lessonCount": 1,
+          "lessonCount": 2,
           "voice": 1,
           "sight": 0,
-          "pen": 0,
+          "pen": 1,
           "modalities": [
-            "voice"
+            "voice",
+            "sight",
+            "pen"
           ],
           "drivablePrefix": 1,
-          "firstNonVoiceLesson": null,
-          "drivable": true,
+          "firstNonVoiceLesson": "TE-S07-vowel-sign-aa",
+          "drivable": false,
           "drivableLessonIds": [
             "TE-C12-kutumbam"
           ]
         },
         {
           "chapter": 13,
-          "lessonCount": 1,
+          "lessonCount": 2,
           "voice": 1,
           "sight": 0,
-          "pen": 0,
+          "pen": 1,
           "modalities": [
-            "voice"
+            "voice",
+            "sight",
+            "pen"
           ],
           "drivablePrefix": 1,
-          "firstNonVoiceLesson": null,
-          "drivable": true,
+          "firstNonVoiceLesson": "TE-S08-vowel-sign-i",
+          "drivable": false,
           "drivableLessonIds": [
             "TE-C13-sharira-bhagalu"
           ]
@@ -25290,6 +25341,31 @@
       "sourceHash": "fnv1a64:b6cdaf03c942582b"
     },
     {
+      "id": "KA-S01-letter-na",
+      "language": "kannada",
+      "chapter": 6,
+      "sequence": 335,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:aaf07f13053f8628",
+      "detachableSegments": [
+        "Script you'll notice: ನ",
+        "Writing: ನ — copy what you see"
+      ],
+      "delivery": "script"
+    },
+    {
       "id": "KA-C07-numbers-1-5",
       "language": "kannada",
       "chapter": 7,
@@ -25326,6 +25402,31 @@
       "sourceHash": "fnv1a64:ac529c2e35700a68"
     },
     {
+      "id": "KA-S02-vowel-sign-u",
+      "language": "kannada",
+      "chapter": 7,
+      "sequence": 355,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:80e6a83febbba217",
+      "detachableSegments": [
+        "Script you'll notice: ◌ು",
+        "Writing: ◌ು — copy what you see"
+      ],
+      "delivery": "script"
+    },
+    {
       "id": "KA-C08-dayavittu",
       "language": "kannada",
       "chapter": 8,
@@ -25342,6 +25443,31 @@
       ],
       "coreDrivable": false,
       "sourceHash": "fnv1a64:914592b7c3ac64e7"
+    },
+    {
+      "id": "KA-S03-sign-virama",
+      "language": "kannada",
+      "chapter": 8,
+      "sequence": 365,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:4acdc2c21dbe9884",
+      "detachableSegments": [
+        "Script you'll notice: ◌್",
+        "Writing: ◌್ — copy what you see"
+      ],
+      "delivery": "script"
     },
     {
       "id": "KA-C09-kshamisi",
@@ -25362,6 +25488,31 @@
       "sourceHash": "fnv1a64:35ace1cd966ef652"
     },
     {
+      "id": "KA-S04-vowel-sign-i",
+      "language": "kannada",
+      "chapter": 9,
+      "sequence": 375,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:440673f7f5730079",
+      "detachableSegments": [
+        "Script you'll notice: ◌ಿ",
+        "Writing: ◌ಿ — copy what you see"
+      ],
+      "delivery": "script"
+    },
+    {
       "id": "KA-C10-vaara",
       "language": "kannada",
       "chapter": 10,
@@ -25378,6 +25529,31 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:bc906a495b55c8c5"
+    },
+    {
+      "id": "KA-S05-letter-ta",
+      "language": "kannada",
+      "chapter": 10,
+      "sequence": 385,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:6df006e071b41eea",
+      "detachableSegments": [
+        "Script you'll notice: ತ",
+        "Writing: ತ — copy what you see"
+      ],
+      "delivery": "script"
     },
     {
       "id": "KA-C11-bannagalu",
@@ -25398,6 +25574,31 @@
       "sourceHash": "fnv1a64:d1cb40574cf48b89"
     },
     {
+      "id": "KA-S06-letter-da",
+      "language": "kannada",
+      "chapter": 11,
+      "sequence": 395,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:b0a01da9a34fe17f",
+      "detachableSegments": [
+        "Script you'll notice: ದ",
+        "Writing: ದ — copy what you see"
+      ],
+      "delivery": "script"
+    },
+    {
       "id": "KA-C12-kutumba",
       "language": "kannada",
       "chapter": 12,
@@ -25416,6 +25617,31 @@
       "sourceHash": "fnv1a64:84a6e74134b1665c"
     },
     {
+      "id": "KA-S07-letter-ra",
+      "language": "kannada",
+      "chapter": 12,
+      "sequence": 405,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:fd01f1b2be482deb",
+      "detachableSegments": [
+        "Script you'll notice: ರ",
+        "Writing: ರ — copy what you see"
+      ],
+      "delivery": "script"
+    },
+    {
       "id": "KA-C13-dehada-bhagagalu",
       "language": "kannada",
       "chapter": 13,
@@ -25432,6 +25658,31 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:816ebd1863ce3cc9"
+    },
+    {
+      "id": "KA-S08-vowel-sign-aa",
+      "language": "kannada",
+      "chapter": 13,
+      "sequence": 415,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:5d1c8307fed7683e",
+      "detachableSegments": [
+        "Script you'll notice: ◌ಾ",
+        "Writing: ◌ಾ — copy what you see"
+      ],
+      "delivery": "script"
     },
     {
       "id": "KA-C14-kaalagalu",
@@ -28538,6 +28789,31 @@
       "sourceHash": "fnv1a64:776992a51835cb14"
     },
     {
+      "id": "ML-S01-letter-ka",
+      "language": "malayalam",
+      "chapter": 6,
+      "sequence": 335,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:623958a5a4b34003",
+      "detachableSegments": [
+        "Script you'll notice: ക",
+        "Writing: ക — copy what you see"
+      ],
+      "delivery": "script"
+    },
+    {
       "id": "ML-C07-numbers-1-5",
       "language": "malayalam",
       "chapter": 7,
@@ -28574,6 +28850,31 @@
       "sourceHash": "fnv1a64:fdd67cc65bed0e4b"
     },
     {
+      "id": "ML-S02-sign-virama",
+      "language": "malayalam",
+      "chapter": 7,
+      "sequence": 355,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:1ddf6755ba2d2964",
+      "detachableSegments": [
+        "Script you'll notice: ◌്",
+        "Writing: ◌് — copy what you see"
+      ],
+      "delivery": "script"
+    },
+    {
       "id": "ML-C08-dayavayi",
       "language": "malayalam",
       "chapter": 8,
@@ -28590,6 +28891,31 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:216fa0b67ea1f0c5"
+    },
+    {
+      "id": "ML-S03-vowel-sign-i",
+      "language": "malayalam",
+      "chapter": 8,
+      "sequence": 365,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:c6bfd1902b24b6d1",
+      "detachableSegments": [
+        "Script you'll notice: ◌ി",
+        "Writing: ◌ി — copy what you see"
+      ],
+      "delivery": "script"
     },
     {
       "id": "ML-C09-kshamikkanam",
@@ -28610,6 +28936,31 @@
       "sourceHash": "fnv1a64:ca5b8c14bd082b01"
     },
     {
+      "id": "ML-S04-vowel-sign-aa",
+      "language": "malayalam",
+      "chapter": 9,
+      "sequence": 375,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:6cc371fcfa4be349",
+      "detachableSegments": [
+        "Script you'll notice: ◌ാ",
+        "Writing: ◌ാ — copy what you see"
+      ],
+      "delivery": "script"
+    },
+    {
       "id": "ML-C10-azhcha",
       "language": "malayalam",
       "chapter": 10,
@@ -28626,6 +28977,31 @@
       ],
       "coreDrivable": false,
       "sourceHash": "fnv1a64:52b95d56c392c026"
+    },
+    {
+      "id": "ML-S05-letter-na",
+      "language": "malayalam",
+      "chapter": 10,
+      "sequence": 385,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:4e657e9ad6739def",
+      "detachableSegments": [
+        "Script you'll notice: ന",
+        "Writing: ന — copy what you see"
+      ],
+      "delivery": "script"
     },
     {
       "id": "ML-C11-nirangal",
@@ -28646,6 +29022,31 @@
       "sourceHash": "fnv1a64:62c26eca8d419caa"
     },
     {
+      "id": "ML-S06-letter-chillu-ll",
+      "language": "malayalam",
+      "chapter": 11,
+      "sequence": 395,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:c2ff431fe4b6d3a0",
+      "detachableSegments": [
+        "Script you'll notice: ൾ",
+        "Writing: ൾ — copy what you see"
+      ],
+      "delivery": "script"
+    },
+    {
       "id": "ML-C12-kudumbam",
       "language": "malayalam",
       "chapter": 12,
@@ -28664,6 +29065,31 @@
       "sourceHash": "fnv1a64:c8f4b6bd85c63fb9"
     },
     {
+      "id": "ML-S07-vowel-sign-u",
+      "language": "malayalam",
+      "chapter": 12,
+      "sequence": 405,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:0f5a27f5ff191965",
+      "detachableSegments": [
+        "Script you'll notice: ◌ു",
+        "Writing: ◌ു — copy what you see"
+      ],
+      "delivery": "script"
+    },
+    {
       "id": "ML-C13-shareera-bhaagangal",
       "language": "malayalam",
       "chapter": 13,
@@ -28680,6 +29106,31 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:188461a9e7b4408b"
+    },
+    {
+      "id": "ML-S08-letter-ta",
+      "language": "malayalam",
+      "chapter": 13,
+      "sequence": 415,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:b4103eff4b5069b1",
+      "detachableSegments": [
+        "Script you'll notice: ത",
+        "Writing: ത — copy what you see"
+      ],
+      "delivery": "script"
     },
     {
       "id": "ML-C14-kaalangal",
@@ -36941,6 +37392,31 @@
       "sourceHash": "fnv1a64:ce24506e6dea766d"
     },
     {
+      "id": "SA-S01-letter-ma",
+      "language": "sanskrit",
+      "chapter": 8,
+      "sequence": 435,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:63a52b8e7a9b66c0",
+      "detachableSegments": [
+        "Script you'll notice: म",
+        "Writing: म — copy what you see"
+      ],
+      "delivery": "script"
+    },
+    {
       "id": "SA-C09-grhnati",
       "language": "sanskrit",
       "chapter": 9,
@@ -37013,6 +37489,31 @@
       "sourceHash": "fnv1a64:f64ad93b34c76775"
     },
     {
+      "id": "SA-S02-letter-na",
+      "language": "sanskrit",
+      "chapter": 9,
+      "sequence": 475,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:c2332331db082e86",
+      "detachableSegments": [
+        "Script you'll notice: न",
+        "Writing: न — copy what you see"
+      ],
+      "delivery": "script"
+    },
+    {
       "id": "SA-C10-paniyam",
       "language": "sanskrit",
       "chapter": 10,
@@ -37074,6 +37575,31 @@
       "detachableSegments": [
         "The letters in this word"
       ]
+    },
+    {
+      "id": "SA-S03-letter-a",
+      "language": "sanskrit",
+      "chapter": 10,
+      "sequence": 505,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:28108f7365b86029",
+      "detachableSegments": [
+        "Script you'll notice: अ",
+        "Writing: अ — copy what you see"
+      ],
+      "delivery": "script"
     },
     {
       "id": "SA-C11-mitram",
@@ -37160,6 +37686,31 @@
       ]
     },
     {
+      "id": "SA-S04-letter-aa",
+      "language": "sanskrit",
+      "chapter": 11,
+      "sequence": 545,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:849000193bead802",
+      "detachableSegments": [
+        "Script you'll notice: आ",
+        "Writing: आ — copy what you see"
+      ],
+      "delivery": "script"
+    },
+    {
       "id": "SA-C12-akshi",
       "language": "sanskrit",
       "chapter": 12,
@@ -37223,6 +37774,31 @@
       ]
     },
     {
+      "id": "SA-S05-sign-virama",
+      "language": "sanskrit",
+      "chapter": 12,
+      "sequence": 575,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:156bdff7ccbcea43",
+      "detachableSegments": [
+        "Script you'll notice: ◌्",
+        "Writing: ◌् — copy what you see"
+      ],
+      "delivery": "script"
+    },
+    {
       "id": "SA-C13-nasika",
       "language": "sanskrit",
       "chapter": 13,
@@ -37263,6 +37839,31 @@
       "detachableSegments": [
         "The letters in this word"
       ]
+    },
+    {
+      "id": "SA-S06-vowel-sign-aa",
+      "language": "sanskrit",
+      "chapter": 13,
+      "sequence": 595,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:720215319350fae8",
+      "detachableSegments": [
+        "Script you'll notice: ◌ा",
+        "Writing: ◌ा — copy what you see"
+      ],
+      "delivery": "script"
     },
     {
       "id": "ES-C01-hola",
@@ -47358,6 +47959,31 @@
       "sourceHash": "fnv1a64:ea0900ad7d7e9e5a"
     },
     {
+      "id": "TE-S01-letter-ta",
+      "language": "telugu",
+      "chapter": 6,
+      "sequence": 325,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:113659e6c521e242",
+      "detachableSegments": [
+        "Script you'll notice: త",
+        "Writing: త — copy what you see"
+      ],
+      "delivery": "script"
+    },
+    {
       "id": "TE-C07-numbers-1-5",
       "language": "telugu",
       "chapter": 7,
@@ -47398,6 +48024,31 @@
       "sourceHash": "fnv1a64:ad0f0d5bb46a0ef3"
     },
     {
+      "id": "TE-S02-vowel-sign-u",
+      "language": "telugu",
+      "chapter": 7,
+      "sequence": 345,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:4dececed840cf54d",
+      "detachableSegments": [
+        "Script you'll notice: ◌ు",
+        "Writing: ◌ు — copy what you see"
+      ],
+      "delivery": "script"
+    },
+    {
       "id": "TE-C08-dayachesi",
       "language": "telugu",
       "chapter": 8,
@@ -47419,6 +48070,31 @@
       ]
     },
     {
+      "id": "TE-S03-letter-ka",
+      "language": "telugu",
+      "chapter": 8,
+      "sequence": 355,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:fa98d6d6d8541739",
+      "detachableSegments": [
+        "Script you'll notice: క",
+        "Writing: క — copy what you see"
+      ],
+      "delivery": "script"
+    },
+    {
       "id": "TE-C09-kshaminchandi",
       "language": "telugu",
       "chapter": 9,
@@ -47435,6 +48111,31 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:0bcd75b57925d88b"
+    },
+    {
+      "id": "TE-S04-sign-anusvara",
+      "language": "telugu",
+      "chapter": 9,
+      "sequence": 365,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:c1e0b10bd6aa56d1",
+      "detachableSegments": [
+        "Script you'll notice: ◌ం",
+        "Writing: ◌ం — copy what you see"
+      ],
+      "delivery": "script"
     },
     {
       "id": "TE-C10-vaaram",
@@ -47455,6 +48156,31 @@
       "sourceHash": "fnv1a64:fca7ffd433cc3894"
     },
     {
+      "id": "TE-S05-sign-virama",
+      "language": "telugu",
+      "chapter": 10,
+      "sequence": 375,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:0d3f701a193fa239",
+      "detachableSegments": [
+        "Script you'll notice: ◌్",
+        "Writing: ◌్ — copy what you see"
+      ],
+      "delivery": "script"
+    },
+    {
       "id": "TE-C11-rangulu",
       "language": "telugu",
       "chapter": 11,
@@ -47471,6 +48197,31 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:d9887faa67f4d0a2"
+    },
+    {
+      "id": "TE-S06-letter-ra",
+      "language": "telugu",
+      "chapter": 11,
+      "sequence": 385,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:60ac4f920c1cdbbf",
+      "detachableSegments": [
+        "Script you'll notice: ర",
+        "Writing: ర — copy what you see"
+      ],
+      "delivery": "script"
     },
     {
       "id": "TE-C12-kutumbam",
@@ -47491,6 +48242,31 @@
       "sourceHash": "fnv1a64:468849cfa4cd8161"
     },
     {
+      "id": "TE-S07-vowel-sign-aa",
+      "language": "telugu",
+      "chapter": 12,
+      "sequence": 395,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:d583d9ea4c2700e4",
+      "detachableSegments": [
+        "Script you'll notice: ◌ా",
+        "Writing: ◌ా — copy what you see"
+      ],
+      "delivery": "script"
+    },
+    {
       "id": "TE-C13-sharira-bhagalu",
       "language": "telugu",
       "chapter": 13,
@@ -47507,6 +48283,31 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:cede24ba7ccf678a"
+    },
+    {
+      "id": "TE-S08-vowel-sign-i",
+      "language": "telugu",
+      "chapter": 13,
+      "sequence": 405,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:f81f5050896cfd7d",
+      "detachableSegments": [
+        "Script you'll notice: ◌ి",
+        "Writing: ◌ి — copy what you see"
+      ],
+      "delivery": "script"
     },
     {
       "id": "TE-C14-rutuvulu",

@@ -214,15 +214,20 @@ describe("the real corpus", () => {
     }
   });
 
-  it("Tamil is in less debt than the tracks with no writing lessons", () => {
-    // Tamil has script lessons; Telugu, Kannada, Malayalam and Sanskrit have
-    // none. The measurement should reflect that difference rather than flatten
-    // it, or it is not measuring what it claims to.
+  it("every Indic track now teaches letters, and Tamil still teaches the most", () => {
+    // This test used to assert `scriptLessons === 0` for Telugu, Kannada and
+    // Malayalam, which was true and was the problem: four of the six Indic
+    // tracks taught no letter at all. HL12's recognition segments ended that, so
+    // the old assertion is not re-pinned -- it is replaced by the claim it was
+    // standing in for. Tamil leads because it leads on sourcing: its letters
+    // have a cited stroke order and can be taught to the hand, where these three
+    // scripts have none and are taught to the eye first.
     const tamil = report.tracks.find((t) => t.language === "tamil")!;
-    for (const language of ["telugu", "kannada", "malayalam"]) {
+    for (const language of ["telugu", "kannada", "malayalam", "sanskrit"]) {
       const other = report.tracks.find((t) => t.language === language);
       if (!other) continue;
-      expect(other.scriptLessons, language).toBe(0);
+      expect(other.scriptLessons, language).toBeGreaterThan(0);
+      expect(tamil.scriptLessons, language).toBeGreaterThan(other.scriptLessons);
       expect(tamil.neverTaughtGlyphs, language).toBeLessThan(other.neverTaughtGlyphs);
     }
   });
