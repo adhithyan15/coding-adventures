@@ -219,29 +219,114 @@ fn preserves_narrow_unsigned_wrap_semantics() {
 }
 
 #[test]
-fn reports_out_of_range_rv32_values() {
-    let cir = vec![ci(
-        "const_i64",
-        Some("large"),
-        vec![CIROperand::Int(i64::from(i32::MAX) + 1)],
-        "i64",
-    )];
-    let err =
-        compile(&ctx("large", &[], "i64"), &cir).expect_err("must reject i64 values outside RV32I");
-    assert!(matches!(err, BackendError::ImmediateOutOfRange(_)));
+fn executes_wide_integer_addition_and_subtraction_with_register_pairs() {
+    let add = vec![
+        ci(
+            "const_i64",
+            Some("base"),
+            vec![CIROperand::Int(4_294_967_296)],
+            "i64",
+        ),
+        ci(
+            "const_i64",
+            Some("offset"),
+            vec![CIROperand::Int(42)],
+            "i64",
+        ),
+        ci(
+            "add_i64",
+            Some("sum"),
+            vec![
+                CIROperand::Var("base".into()),
+                CIROperand::Var("offset".into()),
+            ],
+            "i64",
+        ),
+        ci("ret_i64", None, vec![CIROperand::Var("sum".into())], "i64"),
+    ];
+    let add_bytes = compile(&ctx("wide_add", &[], "i64"), &add).expect("wide add lowering");
+    let add_result = run_binary(&add_bytes, &[]).expect("wide add execution");
+    assert_eq!(add_result.return_value as u32, 42);
+    assert_eq!(add_result.return_value_high, 1);
+
+    let subtract = vec![
+        ci(
+            "const_i64",
+            Some("base"),
+            vec![CIROperand::Int(4_294_967_296)],
+            "i64",
+        ),
+        ci("const_i64", Some("one"), vec![CIROperand::Int(1)], "i64"),
+        ci(
+            "sub_i64",
+            Some("difference"),
+            vec![
+                CIROperand::Var("base".into()),
+                CIROperand::Var("one".into()),
+            ],
+            "i64",
+        ),
+        ci(
+            "ret_i64",
+            None,
+            vec![CIROperand::Var("difference".into())],
+            "i64",
+        ),
+    ];
+    let subtract_bytes =
+        compile(&ctx("wide_sub", &[], "i64"), &subtract).expect("wide sub lowering");
+    let subtract_result = run_binary(&subtract_bytes, &[]).expect("wide sub execution");
+    assert_eq!(subtract_result.return_value as u32, u32::MAX);
+    assert_eq!(subtract_result.return_value_high, 0);
+
+    let signed = vec![
+        ci(
+            "const_i64",
+            Some("minus_one"),
+            vec![CIROperand::Int(-1)],
+            "i64",
+        ),
+        ci("const_i64", Some("one"), vec![CIROperand::Int(1)], "i64"),
+        ci(
+            "add_i64",
+            Some("zero"),
+            vec![
+                CIROperand::Var("minus_one".into()),
+                CIROperand::Var("one".into()),
+            ],
+            "i64",
+        ),
+        ci("ret_i64", None, vec![CIROperand::Var("zero".into())], "i64"),
+    ];
+    let signed_bytes =
+        compile(&ctx("signed_wide_add", &[], "i64"), &signed).expect("signed wide add lowering");
+    let signed_result = run_binary(&signed_bytes, &[]).expect("signed wide add execution");
+    assert_eq!(signed_result.return_value, 0);
+    assert_eq!(signed_result.return_value_high, 0);
 }
 
 #[test]
-fn rejects_wide_arithmetic_instead_of_silently_truncating_it() {
-    let cir = vec![ci(
-        "add_i64",
-        Some("sum"),
-        vec![CIROperand::Var("a".into()), CIROperand::Var("b".into())],
-        "i64",
-    )];
-    let err = compile(&ctx("wide", &[], "i64"), &cir)
-        .expect_err("RV32I scalar lowering must reject i64 arithmetic");
-    assert_eq!(err, BackendError::UnsupportedType("i64".to_owned()));
+fn executes_unsigned_64_bit_wraparound() {
+    let cir = vec![
+        ci("const_u64", Some("max"), vec![CIROperand::Int(-1)], "u64"),
+        ci("const_u64", Some("one"), vec![CIROperand::Int(1)], "u64"),
+        ci(
+            "add_u64",
+            Some("wrapped"),
+            vec![CIROperand::Var("max".into()), CIROperand::Var("one".into())],
+            "u64",
+        ),
+        ci(
+            "ret_u64",
+            None,
+            vec![CIROperand::Var("wrapped".into())],
+            "u64",
+        ),
+    ];
+    let bytes = compile(&ctx("wide_wrap", &[], "u64"), &cir).expect("wide add lowering");
+    let result = run_binary(&bytes, &[]).expect("wide add execution");
+    assert_eq!(result.return_value, 0);
+    assert_eq!(result.return_value_high, 0);
 }
 
 #[test]

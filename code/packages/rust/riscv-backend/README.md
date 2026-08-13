@@ -21,17 +21,19 @@ tests passing byte-for-byte.
 
 | CIR family | Status |
 |------------|--------|
-| `const_*` | ✓ signed/unsigned values that fit RV32I |
+| `const_*` | ✓ RV32 scalars and full-width `i64`/`u64` register pairs |
 | Integer scalar ops | ✓ `add`, `sub`, `and`, `or`, `xor`, `shl`, `shr`, `neg`, `not` |
+| Wide integer ops | ✓ `add_i64`, `sub_i64`, `add_u64`, `sub_u64` |
 | Comparisons | ✓ signed/unsigned `eq ne lt le gt ge` |
 | Control flow | ✓ `label`, `jmp`, `jmp_if_true`, `jmp_if_false` |
-| `ret_*`, `ret_void` | ✓ result in `a0`, standard `ret` |
-| `i64` / `u64` arithmetic, floats, calls, memory, I/O | not yet supported |
+| `ret_*`, `ret_void` | ✓ scalar result in `a0`; wide result in `a0:a1` |
+| Wide multiply/divide/bitwise/shifts/comparisons, floats, calls, memory, I/O | not yet supported |
 
 `run_binary` executes a produced function binary in `riscv-simulator` and
-reports the `a0` return value, halt state, and instruction count. It installs a
-one-word `ecall` return trampoline, so normal function binaries remain usable
-both as callable code and as inputs to the simulator runner.
+reports the `a0` low return word, `a1` high return word, halt state, and
+instruction count. It installs a one-word `ecall` return trampoline, so normal
+function binaries remain usable both as callable code and as inputs to the
+simulator runner.
 
 ```rust
 use jit_core::backend::FunctionContext;
@@ -48,12 +50,10 @@ let result = run_binary(&binary, &[]).unwrap();
 assert_eq!(result.return_value, 42);
 ```
 
-For compatibility with existing scalar source smoke tests, `const_i64` /
-`ret_i64` are accepted when the literal fits in an RV32 register. Wide
-arithmetic remains a validation error rather than silently truncating. `i64` /
-`u64` comparisons are accepted only when both operands are constants proven to
-fit in one RV32 register; this unlocks simple Nib literal conditionals without
-claiming to implement arbitrary 64-bit comparisons.
+For compatibility with existing scalar source smoke tests, a word-sized
+`const_i64` / `ret_i64` retains the original canonical bytes. Wider constants
+and `add` / `sub` values use a low/high register pair. Wide comparisons remain
+limited to word-sized operands until pair-aware ordering sequences land.
 
 ## Why this is the FINAL lane
 
