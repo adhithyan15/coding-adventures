@@ -143,6 +143,12 @@ continuation, RCDATA end-tag-name, comment end-dash, character-reference
 recovery, or DOCTYPE public identifier continuation without loading definition
 files at runtime.
 
+`Tokenizer::drain_positioned_tokens` and `next_positioned_token` pair each
+token with the `SourcePosition` where it was emitted. This is intentionally an
+emission point rather than a source span: buffered text, character-reference
+replacement, and reconsumed input do not always retain a provable lexical
+start. Existing `drain_tokens` and `next_token` APIs remain token-only.
+
 Wrapper packages can opt into HTML-style input-stream newline preprocessing
 with `Tokenizer::with_normalized_carriage_returns`. That maps CRLF pairs and
 bare carriage returns to a single LF before transition matching while keeping

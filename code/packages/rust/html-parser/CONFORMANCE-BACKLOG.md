@@ -474,6 +474,14 @@ Prioritized work items:
 3. **Diagnostic positions and error taxonomy.** Carry source positions into
    tree construction and map diagnostics to current WHATWG concepts. Legacy
    WPT/html5lib error labels are evidence hints, not a normative public API.
+   Tokenizer output now has an opt-in positioned-token path that records the
+   proven emission point without guessing a lexical span, while existing token
+   drains and unpositioned streaming parser callers remain compatible. The
+   after-after-frameset ignored-token diagnostic is the first end-to-end tree
+   construction slice to carry that position through UTF-8, Unicode-scalar,
+   line, column, and CRLF-preprocessing accounting. Continue migrating one
+   evidence-backed diagnostic family at a time; synthetic or directly supplied
+   tokens must remain explicitly unpositioned.
 4. **Input boundary review.** Document the Unicode-code-point parser boundary
    and either add or explicitly separate byte decoding and encoding sniffing.
 5. **Algorithm and differential audit.** Map implemented states/modes to the
