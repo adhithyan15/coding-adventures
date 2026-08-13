@@ -111,6 +111,7 @@ per rotation, in parallel):
 | `mathematics/` | Roman numeral → value | (consensus) |
 | `calendar/` | day / month → number | ISO 8601 |
 | `money/` | US coin → cents | US Mint |
+| `money/` | US coin → the discontinuation status, year, and production span the SAME U.S. Mint span also states (`coin_status(coin, status, year, production_years)`, penny → (discontinued, 2025, 232)) — a sibling to `us-coins.adj`, decoding facts already sitting unused in that table's own header quote; deliberately a single row, since no other coin's own cited span states any circulation-status change | US Mint (authoritative; see `coin-penny-discontinued.adj`'s header — same source `us-coins.adj` already cites) |
 | `money/` | US paper bill → who is on the front (`bill_portrait(dollars, portrait)`, 1 → washington, 20 → jackson, 100 → franklin) | U.S. Currency Education Program |
 | `money/` | US paper bill → what's on the back, the SAME USCEP feature-sheet sentence also states (`bill_back_vignette(dollars, vignette)`, 1 → great_seal, 20 → white_house, 100 → independence_hall) — a sibling to `us-bills.adj`, decoding the back-vignette half of a quote already sitting unused in that table's own header; honest abstention on the $5 note, whose own cited span names no back vignette | U.S. Currency Education Program (authoritative; see `bill-back-vignette.adj`'s header — same source `us-bills.adj` already cites) |
 | `earth-science/` | water-cycle stage → step number | USGS Water Science School |
