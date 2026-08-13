@@ -2,6 +2,40 @@
 
 All notable changes to `@coding-adventures/sir-runtime-core` are documented here.
 
+## [0.5.0] - 2026-08-13
+
+### Added — APL display convention + NDArray display support
+
+Found via `apl-to-semantic-ir/tests/e2e_typescript.rs` (a new Rust test
+that runs this backend's array codegen through a real `tsc`/`tsx`
+toolchain against this package for real, for the first time): `+/1 2 3`
+printed `[object Object]`, not `6`. This package has (deliberately) no
+dependency on `@coding-adventures/sir-runtime-array` — a non-array-sourced
+program should pull in zero array code — so `toDisplay` had no way to
+recognise the `{shape, data}` `NDArray` shape that package constructs, and
+fell through to the generic `String(v)` fallback.
+
+- `setDisplayConvention` accepts a new `"apl"` value (alongside the
+  existing `"ruby"`/`"lisp"`), selected once at program startup by an
+  APL-sourced module's emitted `__Sir.setDisplayConvention("apl")` call
+  (see `semantic-ir-to-typescript` 0.13.0).
+- `toDisplay` now renders a negative number with APL's own high-minus
+  glyph (`¯`, not ASCII `-`) under the `"apl"` convention, and duck-types
+  (`{shape: number[], data: Float64Array}`, exported as `NDArrayLike`) an
+  NDArray value to render it the way a real APL session echoes a bare
+  auto-printed result — a 1:1 port of `apl_runtime::value::display`/
+  `fmt_num`, already ported once before into `semantic-ir-to-javascript`'s
+  self-contained `ArrayRt` (this is the third port of the same logic, now
+  into this package's own layout, mirroring `sir-runtime-array`'s own
+  `iota.ts` doc comment about the same "ported a third time" pattern).
+  Recognition is gated on the `"apl"` convention specifically, so an
+  object that merely happens to have `shape`/`data` fields under any other
+  convention is never mistaken for an NDArray.
+- `NDArrayLike` joined the public `Val` union (the same way SIR16's
+  `Val[]`/`Map<Val,Val>` already did) so a TypeScript-emitted
+  `__Sir.write(...)` call passing an array/matrix result type-checks under
+  `tsc --strict`.
+
 ## [0.4.0] - 2026-08-11
 
 ### Removed — SIR28 §7: dead `print`/`puts`/`putsOne`

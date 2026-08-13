@@ -1,6 +1,6 @@
 [package]
 name = "apl-to-semantic-ir"
-version = "0.2.0"
+version = "0.2.1"
 edition = "2021"
 description = "APL CST → narrow-waist Semantic IR (SIR22 + SIR22 addendum array/matrix domain). MA-4f, the last APL rollout item per HML01."
 
@@ -37,3 +37,4 @@ semantic-ir-to-javascript = { path = "../semantic-ir-to-javascript" }
 # lowering itself only needs the parse-tree shape, never the evaluator; only
 # this test file needs it, for comparison purposes only.
 coding-adventures-apl-runtime = { path = "../apl-runtime" }
+semantic-ir-to-typescript = { path = "../semantic-ir-to-typescript" }

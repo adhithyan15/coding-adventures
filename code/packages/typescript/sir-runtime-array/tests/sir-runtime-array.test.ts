@@ -813,6 +813,16 @@ describe("indexGenerator / indexOf", () => {
     expect(() => arr.indexGenerator(huge)).toThrow(/exceeds/);
   });
 
+  it("indexGenerator accepts a bare (unwrapped) number, not just a scalar NDArray", () => {
+    // A compiled `⍳6` lowers `count` to a plain SIR `Expr`, which the
+    // TypeScript backend emits as-is — the bare number `6`, not a
+    // pre-wrapped `arr.scalar(6)`. Rejecting that would break every real
+    // `⍳n` program the emitter produces (caught by
+    // `apl-to-semantic-ir/tests/e2e_typescript.rs`'s real-toolchain proof).
+    const r = arr.indexGenerator(6);
+    expect(Array.from(r.data)).toEqual([1, 2, 3, 4, 5, 6]);
+  });
+
   it("indexOf finds each needle's 1-based position, or haystack.length + 1 if not found", () => {
     const haystack = arr.fromVec([10, 20, 30]);
     const needles = arr.fromVec([20, 99, 10]);
