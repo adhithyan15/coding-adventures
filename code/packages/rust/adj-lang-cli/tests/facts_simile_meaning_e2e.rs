@@ -93,6 +93,38 @@ fn simile_meaning_abstains_honestly_on_an_untabled_simile() {
     assert!(ok, "cli should succeed: {out}");
     assert!(
         out.contains("\"abstained\":true"),
-        "as_busy_as_a_bee is a real simile but not one of the three tabled here -- honest abstention, never invented: {out}"
+        "as_busy_as_a_bee is a real simile but not one of the tabled ones -- honest abstention, never invented: {out}"
+    );
+}
+
+#[test]
+fn simile_meaning_extension_recalls_the_newly_added_rows() {
+    let dir = scratch("ext");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"simile-meaning.adj\"\n\
+         ? simile_meaning(like_a_fish_out_of_water, $M)\n\
+         ? simile_meaning($S, very_strong)\n\
+         ? simile_meaning(as_hungry_as_a_horse, $M)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // 12 similes were added this cycle from the SAME already-cited Grammarly
+    // "Common simile examples" table (originally only 3 of its 15 rows were
+    // shipped).
+    assert!(
+        out.contains("\"M\":\"uncomfortable_or_out_of_place\""),
+        "like a fish out of water → uncomfortable_or_out_of_place: {out}"
+    );
+    assert!(
+        out.contains("\"S\":\"as_strong_as_an_ox\""),
+        "very_strong → as_strong_as_an_ox (reverse recall): {out}"
+    );
+    assert!(
+        out.contains("\"M\":\"extremely_eager_to_eat\""),
+        "as hungry as a horse → extremely_eager_to_eat: {out}"
     );
 }
