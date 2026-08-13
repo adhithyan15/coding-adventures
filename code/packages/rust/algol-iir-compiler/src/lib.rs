@@ -4837,6 +4837,14 @@ impl Compiler {
             } else {
                 (None, None)
             };
+            let (static_while_exit_real, static_while_exit_integer) = if is_while_element
+                && !entry_tracking_disabled
+                && self.for_body_avoids_target(target, body)
+            {
+                self.for_while_exit_snapshot(target, var_ty, elem)
+            } else {
+                (None, None)
+            };
             let tracks_step_body =
                 static_step_exit_real.is_some() || static_step_exit_integer.is_some();
             let tracks_while_body = is_while_element
@@ -4883,7 +4891,11 @@ impl Compiler {
                     static_step_exit_integer,
                 )?;
             } else if tracks_while_body && !self.static_real_tracking_disabled {
-                self.update_for_target_snapshot(target, None, None)?;
+                self.update_for_target_snapshot(
+                    target,
+                    static_while_exit_real,
+                    static_while_exit_integer,
+                )?;
             }
         }
         Ok(())
@@ -5214,6 +5226,71 @@ impl Compiler {
         self.static_integer_slots = saved_integers;
         self.static_boolean_slots = saved_booleans;
         executes
+    }
+
+    fn for_while_exit_snapshot(
+        &mut self,
+        target: &GrammarASTNode,
+        target_ty: ScalarType,
+        elem: &GrammarASTNode,
+    ) -> (Option<String>, Option<i64>) {
+        let Ok(target_name) = self.simple_variable_name(target) else {
+            return (None, None);
+        };
+        let Some(value) = direct_nodes(elem)
+            .into_iter()
+            .find(|node| node.rule_name == "arith_expr")
+        else {
+            return (None, None);
+        };
+        let Some(condition) = first_direct_node(elem, "bool_expr") else {
+            return (None, None);
+        };
+        if recursive_tokens(value)
+            .into_iter()
+            .chain(recursive_tokens(condition))
+            .any(|token| {
+                token.effective_type_name() == "NAME" && token.value != target_name
+            })
+        {
+            return (None, None);
+        }
+
+        let saved_reals = self.static_real_slots.clone();
+        let saved_integers = self.static_integer_slots.clone();
+        let saved_booleans = self.static_boolean_slots.clone();
+        let mut exit = (None, None);
+        for _ in 0..MAX_STATIC_WHILE_ITERATIONS {
+            let static_real = (target_ty == ScalarType::Real)
+                .then(|| self.static_assigned_real_value(value))
+                .flatten()
+                .filter(|value| value.is_finite())
+                .map(|value| value.to_string());
+            let static_integer = (target_ty == ScalarType::Integer)
+                .then(|| self.static_assigned_integer_value(value))
+                .flatten();
+            if static_real.is_none() && static_integer.is_none() {
+                break;
+            }
+            if self
+                .update_for_target_snapshot(target, static_real.clone(), static_integer)
+                .is_err()
+            {
+                break;
+            }
+            match self.static_boolean_value(condition) {
+                Some(false) => {
+                    exit = (static_real, static_integer);
+                    break;
+                }
+                Some(true) => {}
+                None => break,
+            }
+        }
+        self.static_real_slots = saved_reals;
+        self.static_integer_slots = saved_integers;
+        self.static_boolean_slots = saved_booleans;
+        exit
     }
 
     fn static_boolean_value(&self, node: &GrammarASTNode) -> Option<bool> {
@@ -7004,6 +7081,9 @@ const MAX_POW_UNROLL_EXPONENT: u32 = 64;
 /// algebraically invertible, so mirror the emitted additions while keeping
 /// adversarial source programs from consuming unbounded compiler time.
 const MAX_STATIC_REAL_FOR_ITERATIONS: usize = 4_096;
+
+/// Bound abstract execution of self-contained `while` controls.
+const MAX_STATIC_WHILE_ITERATIONS: usize = 4_096;
 
 /// Hard cap for the number of switch-list arms emitted while lowering one IIR
 /// function. Nested switch designators form a graph; without this cap an
@@ -9084,6 +9164,35 @@ mod tests {
             "test",
         )
         .expect_err("a control-dependent while body requires iteration-specific analysis");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_static_while_preserves_integer_control_exit_snapshot() {
+        compile_source(
+            "begin integer i; i := 0; for i := i + 1 while i < 3 do print(''); print(i + 0.25) end",
+            "test",
+        )
+        .expect("bounded self-contained while progress has a static exit value");
+    }
+
+    #[test]
+    fn al4_static_while_dependency_remains_conservative() {
+        let err = compile_source(
+            "begin integer i, n; n := 3; i := 0; for i := i + 1 while i < n do print(''); print(i + 0.25) end",
+            "test",
+        )
+        .expect_err("an external while dependency remains conservative");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_nonprogressing_static_while_remains_conservative() {
+        let err = compile_source(
+            "begin real x; x := 1.0; for x := x while x < 2.0 do print(''); print(x + 0.25) end",
+            "test",
+        )
+        .expect_err("bounded analysis must reject a nonprogressing while control");
         assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 

@@ -896,7 +896,11 @@ backend immediately) come before the enabler-dependent items.
   numeric comparison, evaluated after abstractly assigning its initial
   controlled value, proves the first condition true. Such an element also
   retains path-independent integer, real, and boolean constants established by
-  a body that avoids the control; its final controlled value remains unknown.
+  a body that avoids the control. When the value and predicate reference only
+  the controlled scalar, capped abstract execution also retains the first
+  control value whose predicate is false. The proof is limited to 4,096
+  iterations; external dependencies, unknown expressions, and nonterminating
+  or longer loops leave the final controlled value unknown.
   Known comparison leaves
   compose through `not`, `and`, `or`, `impl`, and `eqv`; bare literals,
   including direct `true` and `false`, compose through those operators;
