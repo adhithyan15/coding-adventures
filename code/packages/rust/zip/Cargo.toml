@@ -1,6 +1,6 @@
 [package]
 name = "zip"
-version = "0.1.1"
+version = "0.2.0"
 edition = "2021"
 description = "ZIP archive format (CMP09) — read and write .zip files"
 license = "MIT"
@@ -8,3 +8,6 @@ license = "MIT"
 [dependencies]
 lzss = { path = "../lzss" }
 deflate = { path = "../deflate" }
+
+[dev-dependencies]
+serde_json = "1"

@@ -11,9 +11,9 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": 11218,
+  "active_pr": null,
   "last_inventory": {
-    "revision": "f0dc0943313fea7484c8e6f13069bd9aee2a7b9a",
+    "revision": "d9857363b1bfd5c99ffaecb01d1007e4eeb307af",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1305,
@@ -3147,7 +3147,7 @@
     {
       "id": "zip-raw-rfc1951-dart-lane-parity",
       "title": "Expose ZIP raw RFC 1951 conformance in Dart",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["zip-raw-rfc1951-language-neutral-conformance"],
       "branch": "codex/dart-zip-raw-rfc1951",
       "pr_number": 11218,
@@ -3156,6 +3156,9 @@
       "selection_revision": "0eabbd60beba51de34693b35980cd0f2366497b9",
       "selection_notes": "Selected after PR #11202 merged externally and the collision-clean post-merge inventory remained exactly 1,305 identities, 4,461 slots, 855 singletons, 11,970 singleton gaps, 658 Rust singletons, zero collisions, and zero unknown buckets. Dart is the smallest ready ZIP child because its existing pure in-memory codec already supports stored, fixed, dynamic, multi-block, capped decode, CRC-32, and foreign ZIP interoperability. This bounded tranche closes counted consumption, stable errors, strict malformed-stream behavior, neutral fixture consumption, and empty capability metadata without overlapping any live PR or the historical stale cross-lane ZIP branch.",
       "implementation_revision": "c3dd42495c39ca13c9201d36cb4a3efd0a9e22e0",
+      "final_review_revision": "a35a466ab45426195f6656cf157f3264dabde6fb",
+      "merged_at": "2026-08-13T18:11:16Z",
+      "merge_revision": "0338e4f2558f9df9eebdcbba43d67187de4aafe2",
       "validation_notes": "The real Dart ZIP BUILD front door passes format, fatal analyzer, and all 66 package tests, including all 34 neutral raw RFC 1951 cases, the Dart SDK raw-zlib foreign decoder, system ZIP interoperability, and compressed-payload cavity rejection. Dart VM coverage records 447 of 470 executable library lines (95.11%). The independent neutral fixture and parity reporter suites pass 19 tests; the capability taxonomy passes 7 tests and 678 subtests; the collision gate, strict state dependency graph, JSON, diff, added-line credential scan, and pure-production authority scan pass. The runtime dependency graph remains the existing in-repository lzss package only; production code imports no filesystem, process, network, environment, clock, entropy, console, or credential authority, and the explicit capability profile is empty.",
       "publication_notes": "Ready-for-review PR #11218 opened from c3dd42495c after a clean rebase and full recertification against origin/main f0dc094331. GitHub reports it open, non-draft, and mergeable; required CI, CodeQL, and auxiliary checks are expected to queue, so the loop is monitor-only while they are pending.",
       "notes": "Portable Dart child of the ZIP raw-codec completion umbrella. Consume CMP09 and every closed zip-raw-rfc1951-v1 case, expose the ZIP-owned raw primitives without duplicating DEFLATE, preserve pure in-memory operation, and add explicit empty capability metadata."
@@ -3235,10 +3238,13 @@
     {
       "id": "zip-raw-rfc1951-rust-lane-parity",
       "title": "Expose ZIP raw RFC 1951 conformance in Rust",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["zip-raw-rfc1951-language-neutral-conformance"],
-      "branch": null,
+      "branch": "codex/rust-zip-raw-rfc1951",
       "pr_number": null,
+      "selection_revision": "53fa0bf8108efbfd831bb1b1526b3d9aaf38b6e9",
+      "selection_notes": "Selected after PR #11218 merged externally and a collision-clean live-main refresh remained exactly 1,305 identities, 4,461 slots, 855 singletons, 11,970 singleton gaps, 658 Rust singletons, zero collisions, and zero unknown buckets. Rust is the only remaining ZIP child whose established decoder already supports stored, fixed, dynamic, multi-block, and full-window streams, so this tranche can harden counted consumption, caller bounds, typed payload-blind errors, strict Huffman validation, all 34 neutral fixtures, and empty capability metadata without constructing a second codec. No live PR overlaps ZIP, DEFLATE, PNG, the shared fixture, state, or roadmap.",
+      "validation_notes": "The real Rust deflate and ZIP BUILD front doors pass 30 deflate unit tests, 24 ZIP unit tests, both portable integration tests, five ZIP doctests, Clippy with warnings denied, and rustdoc; all 34 closed neutral raw RFC 1951 cases are consumed. Release tests and builds pass, as do downstream png (15 tests) and paint-codec-png (12 tests). LLVM coverage records 1,039 of 1,070 deflate lines (97.10%) and 488 of 535 ZIP lines (91.21%). The independent neutral fixture suite passes 9 tests; the capability taxonomy passes 7 tests; the Rust-only build-file validator covers all 1,004 Rust packages; the collision gate, strict state graph, JSON, diff, credential scan, and production-authority scan pass. Runtime dependencies remain only the in-repository lzss and deflate crates; the ZIP fixture parser is dev-only, and production imports no filesystem, network, process, environment, clock, entropy, console, or credential authority.",
       "notes": "Portable Rust child of the ZIP raw-codec completion umbrella. Consume CMP09 and every closed zip-raw-rfc1951-v1 case, expose the ZIP-owned raw primitives without duplicating DEFLATE, preserve pure in-memory operation, and add explicit empty capability metadata."
     },
     {

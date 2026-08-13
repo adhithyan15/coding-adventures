@@ -900,7 +900,7 @@ fn emit_dynamic_block(bw: &mut BitBuilder, tokens: &[Token], plan: &DynamicPlan)
 /// the minimum, so `compress` never produces a *larger* stream than fixed-only.
 ///
 /// The dynamic tree is built with the **package-merge** length-limiting
-/// algorithm (see [`length_limited_huffman`]), which guarantees every code is
+/// algorithm (see `length_limited_huffman`), which guarantees every code is
 /// ≤ 15 bits (≤ 7 for the code-length alphabet) as RFC 1951 requires — a plain
 /// Huffman tree can exceed that on skewed data and would produce an invalid
 /// stream.
@@ -942,7 +942,7 @@ pub fn compress(data: &[u8]) -> Result<Vec<u8>, String> {
 /// RFC 1951, the symmetric decode *is* the standard inflate — so `decompress`
 /// simply forwards, keeping the `compress`/`decompress` pair for callers that
 /// want the symmetric naming. `inflate` decodes all three block types (stored,
-/// fixed, and dynamic Huffman) and enforces the [`MAX_INFLATE_OUTPUT`] guard.
+/// fixed, and dynamic Huffman) and enforces the [`RAW_INFLATE_MAX_OUTPUT`] guard.
 pub fn decompress(data: &[u8]) -> Result<Vec<u8>, String> {
     inflate(data)
 }
@@ -1009,7 +1009,7 @@ fn deflate_compress_stored(data: &[u8]) -> Vec<u8> {
 
 /// Compress `data` using the zlib format (RFC 1950).
 ///
-/// Returns: [CMF=0x78][FLG=0x9C][stored DEFLATE blocks][Adler-32 BE 4 bytes].
+/// Returns: `CMF=0x78 | FLG=0x9C | stored DEFLATE blocks | Adler-32 BE`.
 ///
 /// This uses stored (non-compressed) DEFLATE blocks, which are always valid
 /// per RFC 1951. The output is decompressable by any zlib-compatible library.
@@ -1060,6 +1060,81 @@ pub fn zlib_compress(data: &[u8]) -> Vec<u8> {
 // For Huffman decode we call `read_bits(1)` one bit at a time and accumulate
 // MSB-first manually.
 
+/// Absolute ceiling for one in-memory raw inflate operation (256 MiB).
+///
+/// Callers may choose any lower non-negative limit. The limit is checked before
+/// the decoder allocates its output buffer.
+pub const RAW_INFLATE_MAX_OUTPUT: i64 = 256 * 1024 * 1024;
+
+/// Stable, payload-blind failures for strict raw RFC 1951 decoding.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum InflateErrorCode {
+    InvalidOutputLimit,
+    UnexpectedEof,
+    ReservedBlockType,
+    StoredLengthMismatch,
+    HuffmanOversubscribed,
+    IncompleteCodeLengthTree,
+    IncompleteLiteralLengthTree,
+    IncompleteDistanceTree,
+    RepeatWithoutPrevious,
+    RepeatOverrun,
+    InvalidLiteralLengthSymbol,
+    ReservedDistanceSymbol,
+    InvalidBackReference,
+    OutputLimitExceeded,
+}
+
+impl InflateErrorCode {
+    /// Language-neutral identifier from `zip-owned-raw-rfc1951-v1`.
+    pub const fn as_str(self) -> &'static str {
+        match self {
+            Self::InvalidOutputLimit => "invalid-output-limit",
+            Self::UnexpectedEof => "unexpected-eof",
+            Self::ReservedBlockType => "reserved-block-type",
+            Self::StoredLengthMismatch => "stored-length-mismatch",
+            Self::HuffmanOversubscribed => "huffman-oversubscribed",
+            Self::IncompleteCodeLengthTree => "incomplete-code-length-tree",
+            Self::IncompleteLiteralLengthTree => "incomplete-literal-length-tree",
+            Self::IncompleteDistanceTree => "incomplete-distance-tree",
+            Self::RepeatWithoutPrevious => "repeat-without-previous",
+            Self::RepeatOverrun => "repeat-overrun",
+            Self::InvalidLiteralLengthSymbol => "invalid-literal-length-symbol",
+            Self::ReservedDistanceSymbol => "reserved-distance-symbol",
+            Self::InvalidBackReference => "invalid-back-reference",
+            Self::OutputLimitExceeded => "output-limit-exceeded",
+        }
+    }
+}
+
+/// A strict raw-inflate error. It deliberately carries no input bytes, offsets,
+/// sizes, or other attacker-controlled values.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct InflateError {
+    pub code: InflateErrorCode,
+}
+
+impl InflateError {
+    const fn new(code: InflateErrorCode) -> Self {
+        Self { code }
+    }
+}
+
+impl std::fmt::Display for InflateError {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        formatter.write_str(self.code.as_str())
+    }
+}
+
+impl std::error::Error for InflateError {}
+
+/// Successful strict raw inflate with exact compressed-byte consumption.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct InflateResult {
+    pub output: Vec<u8>,
+    pub bytes_consumed: usize,
+}
+
 struct BitReader<'a> {
     data: &'a [u8],
     byte_pos: usize,
@@ -1073,10 +1148,10 @@ impl<'a> BitReader<'a> {
     }
 
     /// Refill `buf` from `data` so that at least `n` bits are available.
-    fn refill(&mut self, n: u32) -> Result<(), String> {
+    fn refill(&mut self, n: u32) -> Result<(), InflateError> {
         while self.bits_in_buf < n {
             if self.byte_pos >= self.data.len() {
-                return Err("inflate: unexpected end of input".to_string());
+                return Err(InflateError::new(InflateErrorCode::UnexpectedEof));
             }
             self.buf |= (self.data[self.byte_pos] as u64) << self.bits_in_buf;
             self.byte_pos += 1;
@@ -1086,7 +1161,7 @@ impl<'a> BitReader<'a> {
     }
 
     /// Read `n` bits LSB-first (bit 0 = earliest bit in stream).
-    fn read_bits(&mut self, n: u32) -> Result<u32, String> {
+    fn read_bits(&mut self, n: u32) -> Result<u32, InflateError> {
         if n == 0 {
             return Ok(0);
         }
@@ -1109,7 +1184,7 @@ impl<'a> BitReader<'a> {
     }
 
     /// Read one byte (must be byte-aligned; call `align_to_byte` first).
-    fn read_byte(&mut self) -> Result<u8, String> {
+    fn read_byte(&mut self) -> Result<u8, InflateError> {
         self.refill(8)?;
         let b = (self.buf & 0xFF) as u8;
         self.buf >>= 8;
@@ -1118,7 +1193,7 @@ impl<'a> BitReader<'a> {
     }
 
     /// Read a 16-bit little-endian value (two bytes).
-    fn read_u16_le(&mut self) -> Result<u16, String> {
+    fn read_u16_le(&mut self) -> Result<u16, InflateError> {
         let lo = self.read_byte()? as u16;
         let hi = self.read_byte()? as u16;
         Ok(lo | (hi << 8))
@@ -1138,26 +1213,44 @@ impl<'a> BitReader<'a> {
 // We store the result in a HashMap<(code_bits: u32, code_len: u32), symbol: u16>
 // so that during decode we can check after each bit whether we have a match.
 
-fn build_huffman_decoder(lengths: &[u8]) -> HashMap<(u32, u32), u16> {
-    // lengths[i] = code length for symbol i (0 = absent from alphabet)
-    let max_len = lengths.iter().copied().max().unwrap_or(0) as usize;
-    if max_len == 0 {
-        return HashMap::new();
-    }
+struct HuffmanDecoder {
+    table: HashMap<(u32, u32), u16>,
+    complete: bool,
+    symbol_count: usize,
+    one_bit_count: u32,
+}
 
-    // Step 1: count symbols at each length.
-    let mut bl_count = vec![0u32; max_len + 1];
+fn build_huffman_decoder(lengths: &[u8]) -> Result<HuffmanDecoder, InflateError> {
+    // lengths[i] = code length for symbol i (0 = absent from alphabet).
+    let mut bl_count = [0u32; 16];
     for &l in lengths {
         if l > 0 {
+            if l > 15 {
+                return Err(InflateError::new(
+                    InflateErrorCode::InvalidLiteralLengthSymbol,
+                ));
+            }
             bl_count[l as usize] += 1;
         }
     }
 
+    // Kraft's inequality. Over-subscribed trees are ambiguous; incomplete
+    // trees leave bit patterns that decode to nothing. Callers decide which
+    // of the narrowly permitted incomplete shapes are acceptable.
+    let mut left = 1i32;
+    for count in bl_count.iter().skip(1) {
+        left = (left << 1) - *count as i32;
+        if left < 0 {
+            return Err(InflateError::new(
+                InflateErrorCode::HuffmanOversubscribed,
+            ));
+        }
+    }
+
     // Step 2: find the smallest code for each length.
-    let mut next_code = vec![0u32; max_len + 2];
+    let mut next_code = [0u32; 16];
     let mut code = 0u32;
-    bl_count[0] = 0;
-    for bits in 1..=max_len {
+    for bits in 1..=15 {
         code = (code + bl_count[bits - 1]) << 1;
         next_code[bits] = code;
     }
@@ -1172,7 +1265,12 @@ fn build_huffman_decoder(lengths: &[u8]) -> HashMap<(u32, u32), u16> {
             next_code[len] += 1;
         }
     }
-    table
+    Ok(HuffmanDecoder {
+        table,
+        complete: left == 0,
+        symbol_count: lengths.iter().filter(|&&length| length > 0).count(),
+        one_bit_count: bl_count[1],
+    })
 }
 
 /// Decode one Huffman symbol using the given decode table.
@@ -1185,9 +1283,10 @@ fn build_huffman_decoder(lengths: &[u8]) -> HashMap<(u32, u32), u16> {
 /// After each additional bit we check whether (code, bit_count) is in the
 /// table.  When a match is found we return that symbol.
 fn decode_symbol(
-    table: &HashMap<(u32, u32), u16>,
+    decoder: &HuffmanDecoder,
     reader: &mut BitReader<'_>,
-) -> Result<u16, String> {
+    invalid_code: InflateErrorCode,
+) -> Result<u16, InflateError> {
     let mut code = 0u32;
     // RFC 1951 requires Huffman codes ≤ 15 bits.
     for len in 1u32..=15 {
@@ -1195,11 +1294,11 @@ fn decode_symbol(
         // Shift the new bit in at the LSB position; since we're building MSB-first,
         // accumulate as: code = (code << 1) | bit.
         code = (code << 1) | bit;
-        if let Some(&sym) = table.get(&(code, len)) {
+        if let Some(&sym) = decoder.table.get(&(code, len)) {
             return Ok(sym);
         }
     }
-    Err("inflate: invalid Huffman code".to_string())
+    Err(InflateError::new(invalid_code))
 }
 
 // ── Fixed Huffman code tables (RFC 1951 §3.2.6) ────────────────────────────
@@ -1241,24 +1340,22 @@ fn fixed_dist_lengths() -> Vec<u8> {
 //
 // This is intentional in DEFLATE — it compresses runs cheaply.
 
-/// Upper bound on decompressed output, guarding against "decompression bombs":
-/// tiny inputs that expand to enormous outputs (a highly compressible stream can
-/// reach ~1000:1, so a few KB of malicious `.xlsx`/`.gz` could otherwise exhaust
-/// memory). 256 MB comfortably exceeds any legitimate OOXML part while capping
-/// the blast radius of hostile input. Callers that legitimately need more should
-/// stream rather than inflate whole.
-const MAX_INFLATE_OUTPUT: usize = 256 * 1024 * 1024;
-
-fn copy_back_ref(output: &mut Vec<u8>, dist: usize, length: usize) -> Result<(), String> {
+fn copy_back_ref(
+    output: &mut Vec<u8>,
+    dist: usize,
+    length: usize,
+    max_output: usize,
+) -> Result<(), InflateError> {
     let out_len = output.len();
-    if dist > out_len {
-        return Err(format!(
-            "inflate: back-reference distance {} exceeds output length {}",
-            dist, out_len
+    if dist == 0 || dist > out_len {
+        return Err(InflateError::new(
+            InflateErrorCode::InvalidBackReference,
         ));
     }
-    if out_len + length > MAX_INFLATE_OUTPUT {
-        return Err("inflate: output size limit exceeded (decompression bomb?)".to_string());
+    if length > max_output.saturating_sub(out_len) {
+        return Err(InflateError::new(
+            InflateErrorCode::OutputLimitExceeded,
+        ));
     }
     let start = out_len - dist;
     for i in 0..length {
@@ -1287,52 +1384,53 @@ const CL_PERMUTATION: [usize; 19] = [
 ///   17    → output zeros × (3 + read_bits(3))
 ///   18    → output zeros × (11 + read_bits(7))
 fn decode_code_lengths(
-    cl_table: &HashMap<(u32, u32), u16>,
+    cl_table: &HuffmanDecoder,
     reader: &mut BitReader<'_>,
     total: usize,
-) -> Result<Vec<u8>, String> {
+) -> Result<Vec<u8>, InflateError> {
     let mut lengths = Vec::with_capacity(total);
-    let mut prev = 0u8;
     while lengths.len() < total {
-        let sym = decode_symbol(cl_table, reader)?;
+        let sym = decode_symbol(
+            cl_table,
+            reader,
+            InflateErrorCode::InvalidLiteralLengthSymbol,
+        )?;
         match sym {
             0..=15 => {
-                prev = sym as u8;
-                lengths.push(prev);
+                lengths.push(sym as u8);
             }
             16 => {
                 // Repeat the previous length 3–6 times.
-                let repeat = reader.read_bits(2)? + 3;
-                for _ in 0..repeat {
-                    if lengths.len() >= total {
-                        return Err("inflate: code length repeat overflow".to_string());
-                    }
-                    lengths.push(prev);
+                let previous = lengths.last().copied().ok_or_else(|| {
+                    InflateError::new(InflateErrorCode::RepeatWithoutPrevious)
+                })?;
+                let repeat = reader.read_bits(2)? as usize + 3;
+                if repeat > total - lengths.len() {
+                    return Err(InflateError::new(InflateErrorCode::RepeatOverrun));
                 }
+                lengths.extend(std::iter::repeat_n(previous, repeat));
             }
             17 => {
                 // Insert 3–10 zeros.
-                let repeat = reader.read_bits(3)? + 3;
-                for _ in 0..repeat {
-                    if lengths.len() >= total {
-                        return Err("inflate: code length zero-run-3 overflow".to_string());
-                    }
-                    lengths.push(0);
+                let repeat = reader.read_bits(3)? as usize + 3;
+                if repeat > total - lengths.len() {
+                    return Err(InflateError::new(InflateErrorCode::RepeatOverrun));
                 }
-                prev = 0;
+                lengths.extend(std::iter::repeat_n(0, repeat));
             }
             18 => {
                 // Insert 11–138 zeros.
-                let repeat = reader.read_bits(7)? + 11;
-                for _ in 0..repeat {
-                    if lengths.len() >= total {
-                        return Err("inflate: code length zero-run-7 overflow".to_string());
-                    }
-                    lengths.push(0);
+                let repeat = reader.read_bits(7)? as usize + 11;
+                if repeat > total - lengths.len() {
+                    return Err(InflateError::new(InflateErrorCode::RepeatOverrun));
                 }
-                prev = 0;
+                lengths.extend(std::iter::repeat_n(0, repeat));
             }
-            _ => return Err(format!("inflate: invalid CL symbol {}", sym)),
+            _ => {
+                return Err(InflateError::new(
+                    InflateErrorCode::InvalidLiteralLengthSymbol,
+                ));
+            }
         }
     }
     Ok(lengths)
@@ -1351,18 +1449,25 @@ fn decode_code_lengths(
 //     if sym >= 257 → decode (length, dist) back-reference and copy
 
 fn decode_block(
-    ll_table: &HashMap<(u32, u32), u16>,
-    dist_table: &HashMap<(u32, u32), u16>,
+    ll_table: &HuffmanDecoder,
+    dist_table: &HuffmanDecoder,
     reader: &mut BitReader<'_>,
     output: &mut Vec<u8>,
-) -> Result<(), String> {
+    max_output: usize,
+) -> Result<(), InflateError> {
     loop {
-        let sym = decode_symbol(ll_table, reader)?;
+        let sym = decode_symbol(
+            ll_table,
+            reader,
+            InflateErrorCode::InvalidLiteralLengthSymbol,
+        )?;
 
         if sym < 256 {
             // Plain literal byte.
-            if output.len() >= MAX_INFLATE_OUTPUT {
-                return Err("inflate: output size limit exceeded (decompression bomb?)".to_string());
+            if output.len() >= max_output {
+                return Err(InflateError::new(
+                    InflateErrorCode::OutputLimitExceeded,
+                ));
             }
             output.push(sym as u8);
         } else if sym == 256 {
@@ -1371,37 +1476,60 @@ fn decode_block(
         } else {
             // Length/distance back-reference.
             // `sym` is 257–285 (284 max in standard streams; 285 = length 258).
+            if sym > 285 {
+                return Err(InflateError::new(
+                    InflateErrorCode::InvalidLiteralLengthSymbol,
+                ));
+            }
             let length_idx = (sym - 257) as usize;
             if length_idx >= LENGTH_TABLE.len() {
-                return Err(format!("inflate: invalid length symbol {}", sym));
+                return Err(InflateError::new(
+                    InflateErrorCode::InvalidLiteralLengthSymbol,
+                ));
             }
             let entry = &LENGTH_TABLE[length_idx];
             let extra_len = reader.read_bits(entry.extra_bits)?;
             let length = (entry.base + extra_len) as usize;
 
             // Distance symbol.
-            let dist_sym = decode_symbol(dist_table, reader)? as usize;
+            let dist_sym = decode_symbol(
+                dist_table,
+                reader,
+                InflateErrorCode::ReservedDistanceSymbol,
+            )? as usize;
             if dist_sym >= DIST_TABLE.len() {
-                return Err(format!("inflate: invalid distance symbol {}", dist_sym));
+                return Err(InflateError::new(
+                    InflateErrorCode::ReservedDistanceSymbol,
+                ));
             }
             let dentry = &DIST_TABLE[dist_sym];
             let extra_dist = reader.read_bits(dentry.extra_bits)?;
             let dist = (dentry.base + extra_dist) as usize;
 
-            copy_back_ref(output, dist, length)?;
+            copy_back_ref(output, dist, length, max_output)?;
         }
     }
 }
 
-/// Decompress a raw DEFLATE bit stream (RFC 1951) and return the original bytes.
+/// Strictly decompress a raw DEFLATE bit stream (RFC 1951).
 ///
 /// Supports all three block types:
 ///   - BTYPE=00 stored (verbatim copy)
 ///   - BTYPE=01 fixed Huffman
 ///   - BTYPE=10 dynamic Huffman
 ///
-/// Returns `Err(String)` on any malformed input.
-pub fn inflate(data: &[u8]) -> Result<Vec<u8>, String> {
+/// The caller supplies a non-negative output limit no greater than
+/// [`RAW_INFLATE_MAX_OUTPUT`]. Success reports the exact number of compressed
+/// bytes consumed, including a partially consumed final byte. Failures use the
+/// stable language-neutral error taxonomy and never return partial output.
+pub fn inflate_counted(
+    data: &[u8],
+    max_output: i64,
+) -> Result<InflateResult, InflateError> {
+    if !(0..=RAW_INFLATE_MAX_OUTPUT).contains(&max_output) {
+        return Err(InflateError::new(InflateErrorCode::InvalidOutputLimit));
+    }
+    let max_output = max_output as usize;
     let mut reader = BitReader::new(data);
     let mut output: Vec<u8> = Vec::new();
 
@@ -1426,10 +1554,14 @@ pub fn inflate(data: &[u8]) -> Result<Vec<u8>, String> {
                 let len  = reader.read_u16_le()? as usize;
                 let nlen = reader.read_u16_le()? as usize;
                 if (len ^ 0xFFFF) != nlen {
-                    return Err("inflate: stored block LEN/NLEN mismatch".to_string());
+                    return Err(InflateError::new(
+                        InflateErrorCode::StoredLengthMismatch,
+                    ));
                 }
-                if output.len() + len > MAX_INFLATE_OUTPUT {
-                    return Err("inflate: output size limit exceeded (decompression bomb?)".to_string());
+                if len > max_output.saturating_sub(output.len()) {
+                    return Err(InflateError::new(
+                        InflateErrorCode::OutputLimitExceeded,
+                    ));
                 }
                 for _ in 0..len {
                     output.push(reader.read_byte()?);
@@ -1443,9 +1575,15 @@ pub fn inflate(data: &[u8]) -> Result<Vec<u8>, String> {
             0b01 => {
                 let ll_lengths   = fixed_ll_lengths();
                 let dist_lengths = fixed_dist_lengths();
-                let ll_table   = build_huffman_decoder(&ll_lengths);
-                let dist_table = build_huffman_decoder(&dist_lengths);
-                decode_block(&ll_table, &dist_table, &mut reader, &mut output)?;
+                let ll_table   = build_huffman_decoder(&ll_lengths)?;
+                let dist_table = build_huffman_decoder(&dist_lengths)?;
+                decode_block(
+                    &ll_table,
+                    &dist_table,
+                    &mut reader,
+                    &mut output,
+                    max_output,
+                )?;
             }
 
             // ── BTYPE=10: Dynamic Huffman ───────────────────────────────────
@@ -1465,6 +1603,11 @@ pub fn inflate(data: &[u8]) -> Result<Vec<u8>, String> {
                 let hlit  = reader.read_bits(5)? as usize + 257;
                 let hdist = reader.read_bits(5)? as usize + 1;
                 let hclen = reader.read_bits(4)? as usize + 4;
+                if hlit > 286 {
+                    return Err(InflateError::new(
+                        InflateErrorCode::InvalidLiteralLengthSymbol,
+                    ));
+                }
 
                 // Read the CL code lengths in permutation order (19 possible CL symbols).
                 let mut cl_lengths = vec![0u8; 19];
@@ -1473,21 +1616,45 @@ pub fn inflate(data: &[u8]) -> Result<Vec<u8>, String> {
                 }
 
                 // Build the CL (meta-tree) decoder.
-                let cl_table = build_huffman_decoder(&cl_lengths);
+                let cl_table = build_huffman_decoder(&cl_lengths)?;
+                if !cl_table.complete {
+                    return Err(InflateError::new(
+                        InflateErrorCode::IncompleteCodeLengthTree,
+                    ));
+                }
 
                 // Use the CL tree to decode hlit+hdist code lengths.
                 let all_lengths = decode_code_lengths(&cl_table, &mut reader, hlit + hdist)?;
                 let ll_lengths   = all_lengths[..hlit].to_vec();
                 let dist_lengths = all_lengths[hlit..].to_vec();
 
-                let ll_table   = build_huffman_decoder(&ll_lengths);
-                let dist_table = build_huffman_decoder(&dist_lengths);
+                let ll_table   = build_huffman_decoder(&ll_lengths)?;
+                if !ll_table.complete {
+                    return Err(InflateError::new(
+                        InflateErrorCode::IncompleteLiteralLengthTree,
+                    ));
+                }
+                let dist_table = build_huffman_decoder(&dist_lengths)?;
+                let permitted_distance_shape = dist_table.complete
+                    || (dist_table.symbol_count == 1 && dist_table.one_bit_count == 1)
+                    || dist_table.symbol_count == 0;
+                if !permitted_distance_shape {
+                    return Err(InflateError::new(
+                        InflateErrorCode::IncompleteDistanceTree,
+                    ));
+                }
 
-                decode_block(&ll_table, &dist_table, &mut reader, &mut output)?;
+                decode_block(
+                    &ll_table,
+                    &dist_table,
+                    &mut reader,
+                    &mut output,
+                    max_output,
+                )?;
             }
 
             _ => {
-                return Err(format!("inflate: reserved BTYPE={}", btype));
+                return Err(InflateError::new(InflateErrorCode::ReservedBlockType));
             }
         }
 
@@ -1496,7 +1663,21 @@ pub fn inflate(data: &[u8]) -> Result<Vec<u8>, String> {
         }
     }
 
-    Ok(output)
+    Ok(InflateResult {
+        output,
+        bytes_consumed: reader.byte_pos,
+    })
+}
+
+/// Decompress a raw DEFLATE bit stream using the 256 MiB compatibility limit.
+///
+/// This preserves the historical string-returning API. New callers that need
+/// exact consumption, a lower limit, or typed errors should use
+/// [`inflate_counted`].
+pub fn inflate(data: &[u8]) -> Result<Vec<u8>, String> {
+    inflate_counted(data, RAW_INFLATE_MAX_OUTPUT)
+        .map(|result| result.output)
+        .map_err(|error| error.to_string())
 }
 
 // ---------------------------------------------------------------------------
