@@ -48,6 +48,21 @@ harness's core "never silently skip / never silently pass" property:
 
 The executed matrix stays at 4 confirmed failures (ALGOL strings on
 NativeAot/Clr, COBOL COMPUTE on Clr/Jvm); the new column adds none.
+## 0.225.12 - 2026-08-13 (ALGOL stable conditional while effects)
+
+The seven-backend ALGOL matrix now proves that an unreachable dependency write
+behind a stable false boolean local does not invalidate a capped `while` exit.
+
+## 0.225.11 - 2026-08-13 (ALGOL static conditional while effects)
+
+The seven-backend ALGOL matrix now proves that an unreachable dependency write
+behind a variable-free false body condition does not invalidate a capped
+`while` exit.
+
+## 0.225.10 - 2026-08-13 (ALGOL idempotent while dependencies)
+
+The seven-backend ALGOL matrix now proves that an exact scalar self-assignment
+does not invalidate a stable local dependency of capped `while` analysis.
 
 ## 0.225.9 - 2026-08-13 (ALGOL real while-control snapshots)
 

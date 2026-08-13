@@ -21,6 +21,24 @@ at the package. `scriptdata` stays out of that chunk on purpose — the shell ne
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Cyrillic в ductus (HL-C09EB)
+
+- Render **в** in two joined movements across one source-aligned stroke.
+- Climb from the baseline through the upper loop, descend to the baseline, then continue counterclockwise around the lower bowl without lifting.
+- Preserve the native-teacher lesson's zero-lift school-hand order, fit its tall cursive ascender through Noto Sans Cyrillic's compact printed upper bowl and left stem, and reduce measured HL-C09 debt to 100 entries.
+
+### Added — cited Cyrillic б ductus (HL-C09EA)
+
+- Render **б** in two joined movements across one source-aligned stroke.
+- Circle the lower body counterclockwise, then continue through the rising shoulder and rightward top flag without lifting.
+- Preserve the native-teacher lesson's zero-lift body-to-flag order, fit its handwritten diagonal transition to Noto Sans Cyrillic's printed upper-left shoulder, and reduce measured HL-C09 debt to 101 entries.
+
+### Added — cited Cyrillic а ductus (HL-C09DZ)
+
+- Render **а** in two joined movements across one source-aligned stroke.
+- Sweep through the upper shoulder and counterclockwise lower body before continuing down the right-hand finishing stem without lifting.
+- Preserve the native-teacher lesson's zero-lift single-storey school hand, fit it to Noto Sans Cyrillic's double-storey printed outline, and reduce measured HL-C09 debt to 102 entries.
+
 ### Added — cited Devanagari ह ductus (HL-C09DY)
 
 - Render **ह** in three source-aligned movements across three strokes.

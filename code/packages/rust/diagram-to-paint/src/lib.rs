@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.47.0";
+pub const VERSION: &str = "0.50.0";
 
 use std::collections::HashMap;
 
@@ -2355,6 +2355,38 @@ where
                     }),
                 ));
             }
+            LayoutedTemporalItem::JourneySection {
+                x,
+                y,
+                width,
+                height,
+                label,
+                fill,
+                text_color,
+            } => {
+                instructions.push(PaintInstruction::Rect(PaintRect {
+                    base: PaintBase::default(),
+                    x: *x,
+                    y: *y,
+                    width: *width,
+                    height: *height,
+                    fill: Some(fill.clone()),
+                    stroke: None,
+                    stroke_width: None,
+                    corner_radius: Some(3.0),
+                    stroke_dash: None,
+                    stroke_dash_offset: None,
+                }));
+                text_children.push(text_node(
+                    label,
+                    *x + 8.0,
+                    *y + 6.0,
+                    *width - 16.0,
+                    *height - 12.0,
+                    options.title_font.clone(),
+                    css_to_color(text_color),
+                ));
+            }
             LayoutedTemporalItem::TimeAxisSpine { x1, y1, x2, y2 } => {
                 instructions.push(PaintInstruction::Path(line_path(
                     &[Point { x: *x1, y: *y1 }, Point { x: *x2, y: *y2 }],
@@ -2619,8 +2651,48 @@ where
                     stroke_dash_offset: None,
                 }));
             }
-            LayoutedTemporalItem::JourneyActor { x, y, color, label } => {
-                let label_width = (label.chars().count() as f64 * ls * 0.65).max(24.0);
+            LayoutedTemporalItem::JourneyActivityLine { x1, y, x2 } => {
+                instructions.push(PaintInstruction::Path(PaintPath {
+                    base: PaintBase::default(),
+                    commands: vec![
+                        PathCommand::MoveTo { x: *x1, y: *y },
+                        PathCommand::LineTo { x: *x2, y: *y },
+                    ],
+                    fill: Some("none".into()),
+                    fill_rule: None,
+                    stroke: Some("#0f172a".into()),
+                    stroke_width: Some(4.0),
+                    stroke_cap: Some(StrokeCap::Round),
+                    stroke_join: Some(StrokeJoin::Round),
+                    stroke_dash: None,
+                    stroke_dash_offset: None,
+                }));
+            }
+            LayoutedTemporalItem::JourneyTaskLine { x, y1, y2 } => {
+                instructions.push(PaintInstruction::Path(PaintPath {
+                    base: PaintBase::default(),
+                    commands: vec![
+                        PathCommand::MoveTo { x: *x, y: *y1 },
+                        PathCommand::LineTo { x: *x, y: *y2 },
+                    ],
+                    fill: Some("none".into()),
+                    fill_rule: None,
+                    stroke: Some("#64748b".into()),
+                    stroke_width: Some(1.0),
+                    stroke_cap: Some(StrokeCap::Round),
+                    stroke_join: Some(StrokeJoin::Round),
+                    stroke_dash: Some(vec![4.0, 2.0]),
+                    stroke_dash_offset: None,
+                }));
+            }
+            LayoutedTemporalItem::JourneyActor {
+                x,
+                y,
+                width,
+                height,
+                color,
+                label,
+            } => {
                 instructions.push(PaintInstruction::Ellipse(PaintEllipse {
                     base: PaintBase::default(),
                     cx: *x,
@@ -2636,9 +2708,9 @@ where
                 text_children.push(text_node(
                     label,
                     x + 12.0,
-                    y - ls / 2.0,
-                    label_width,
-                    ls * 1.2,
+                    y - height / 2.0,
+                    *width,
+                    *height,
                     lf.clone(),
                     Color {
                         r: 71,
@@ -2653,24 +2725,23 @@ where
                 y,
                 width,
                 height,
+                score_y,
                 score,
                 label,
-                people,
+                people: _,
                 person_colors,
                 font_size,
                 font_family,
+                fill,
+                text_color,
             } => {
-                let clamped = (*score).min(5);
-                let red = 239_u8.saturating_sub(clamped * 28);
-                let green = 68_u8.saturating_add(clamped * 31);
-                let fill = format!("rgb({red},{green},120)");
                 instructions.push(PaintInstruction::Rect(PaintRect {
                     base: PaintBase::default(),
                     x: *x,
                     y: *y,
                     width: *width,
                     height: *height,
-                    fill: Some(fill),
+                    fill: Some(fill.clone()),
                     stroke: Some("#475569".into()),
                     stroke_width: Some(1.0),
                     corner_radius: Some(6.0),
@@ -2681,7 +2752,7 @@ where
                     instructions.push(PaintInstruction::Ellipse(PaintEllipse {
                         base: PaintBase::default(),
                         cx: x + 12.0 + index as f64 * 12.0,
-                        cy: y + height - 7.0,
+                        cy: *y,
                         rx: 4.0,
                         ry: 4.0,
                         fill: Some(color.clone()),
@@ -2691,8 +2762,8 @@ where
                         stroke_dash_offset: None,
                     }));
                 }
-                let face_x = x + width - 22.0;
-                let face_y = y + height / 2.0;
+                let face_x = x + width / 2.0;
+                let face_y = *score_y;
                 instructions.push(PaintInstruction::Ellipse(PaintEllipse {
                     base: PaintBase::default(),
                     cx: face_x,
@@ -2749,11 +2820,6 @@ where
                     stroke_dash: None,
                     stroke_dash_offset: None,
                 }));
-                let actors = if people.is_empty() {
-                    String::new()
-                } else {
-                    format!(" · {}", people.join(", "))
-                };
                 let mut task_font = lf.clone();
                 if let Some(size) = font_size {
                     task_font.size = *size;
@@ -2762,18 +2828,13 @@ where
                     task_font.family.clone_from(family);
                 }
                 text_children.push(text_node(
-                    &format!("{label}  {score}/5{actors}"),
+                    label,
                     x + 10.0,
                     y + 6.0,
-                    width - 52.0,
+                    width - 20.0,
                     height - 12.0,
                     task_font,
-                    Color {
-                        r: 15,
-                        g: 23,
-                        b: 42,
-                        a: 255,
-                    },
+                    css_to_color(text_color),
                 ));
             }
         }
@@ -3310,7 +3371,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.47.0");
+        assert_eq!(crate::VERSION, "0.50.0");
     }
 
     #[test]
@@ -3533,20 +3594,44 @@ mod tests {
                 LayoutedTemporalItem::JourneyActor {
                     x: 24.0,
                     y: 18.0,
+                    width: 56.0,
+                    height: 36.0,
                     color: "#8fbc8f".into(),
-                    label: "Alice".into(),
+                    label: "Alice\nWonderland".into(),
+                },
+                LayoutedTemporalItem::JourneyActivityLine {
+                    x1: 80.0,
+                    y: 92.0,
+                    x2: 240.0,
+                },
+                LayoutedTemporalItem::JourneyTaskLine {
+                    x: 160.0,
+                    y1: 80.0,
+                    y2: 112.0,
+                },
+                LayoutedTemporalItem::JourneySection {
+                    x: 0.0,
+                    y: 28.0,
+                    width: 320.0,
+                    height: 32.0,
+                    label: "Discovery".into(),
+                    fill: "#112233".into(),
+                    text_color: "#fefefe".into(),
                 },
                 LayoutedTemporalItem::JourneyTask {
                     x: 16.0,
                     y: 40.0,
                     width: 288.0,
                     height: 40.0,
+                    score_y: 112.0,
                     score: 5,
                     label: "Find product".into(),
                     people: vec!["Alice".into()],
                     person_colors: vec!["#8fbc8f".into()],
                     font_size: Some(18.0),
                     font_family: Some("Avenir Next".into()),
+                    fill: "#112233".into(),
+                    text_color: "#fefefe".into(),
                 },
             ],
         };
@@ -3563,6 +3648,10 @@ mod tests {
         assert!(scene.instructions.iter().any(|instruction| matches!(
             instruction,
             PaintInstruction::Path(path) if path.commands.iter().any(|command| matches!(command, PathCommand::QuadTo { .. }))
+        )));
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::Path(path) if path.stroke_dash.as_deref() == Some(&[4.0, 2.0])
         )));
         assert!(scene.instructions.iter().any(|instruction| matches!(
             instruction,

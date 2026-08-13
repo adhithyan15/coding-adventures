@@ -9,6 +9,7 @@
 
 import arabic from "../../../../learning/human-languages/data/scripts/arabic.json";
 import chinese from "../../../../learning/human-languages/data/scripts/chinese.json";
+import cyrillic from "../../../../learning/human-languages/data/scripts/cyrillic.json";
 import devanagari from "../../../../learning/human-languages/data/scripts/devanagari.json";
 import hebrew from "../../../../learning/human-languages/data/scripts/hebrew.json";
 import persoArabic from "../../../../learning/human-languages/data/scripts/perso-arabic.json";
@@ -209,6 +210,14 @@ const chineseCharacterSource = (glyph: string): StrokeSource => {
   return letter.strokeOrderSource;
 };
 
+const cyrillicAlphabetSource = (glyph: string): StrokeSource => {
+  const letter = cyrillic.letters.find((candidate) => candidate.glyph === glyph);
+  if (!letter || !("strokeOrderSource" in letter) || !letter.strokeOrderSource) {
+    throw new Error(`Cyrillic ${glyph} has no verified source`);
+  }
+  return letter.strokeOrderSource;
+};
+
 const devanagariAlphabetSource = (glyph: string): StrokeSource => {
   const letter = devanagari.letters.find((candidate) => candidate.glyph === glyph);
   if (!letter || !("strokeOrderSource" in letter) || !letter.strokeOrderSource) {
@@ -252,6 +261,15 @@ export const ductusKey = (script: string, glyph: string): string => `${script}:$
 // glyph (shape) and against `source` (order), not trusted because they look
 // plausible here.
 //
+// RussianIrina's all-letter school-hand video forms lowercase Cyrillic а as
+// one continuous round loop and right-hand finishing stem. The source's
+// handwritten form is single-storey; this learner path preserves that one-run
+// motion while widening the entry to cover Noto Sans Cyrillic's extra printed
+// upper shoulder before circling the lower bowl and descending the right stem.
+// The same lesson writes lowercase Cyrillic б without lifting: a
+// counterclockwise lower body closes before the pen rises into its rightward
+// top flag. The handwritten diagonal transition is routed through Noto Sans
+// Cyrillic's upper-left printed shoulder so the fitted path stays on its ink.
 // Arabic ا opens the smallest remaining starter inventory from the University
 // of Oregon's instructional video: one top-to-bottom movement with no lift.
 // Its scoped key preserves Arabic provenance separately from the Persian and
@@ -2954,6 +2972,119 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       ] }] },
     ],
     source: devanagariAlphabetSource("ह"),
+  },
+  // The native-teacher demonstration keeps lowercase а in one pen-down run:
+  // its rounded body closes at the right and flows into the finishing stem.
+  // Noto Sans Cyrillic uses a double-storey printed outline, so the source's
+  // opening loop is fitted through the font's extra shoulder without adding a
+  // lift that the handwriting demonstration does not contain.
+  [ductusKey("cyrillic", "а")]: {
+    script: "cyrillic",
+    glyph: "а",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "sweep over the shoulder and around the round body",
+            path: [
+              { x: 110, y: 455 }, { x: 155, y: 495 }, { x: 215, y: 515 },
+              { x: 285, y: 515 }, { x: 345, y: 490 }, { x: 395, y: 445 },
+              { x: 420, y: 395 }, { x: 420, y: 345 }, { x: 390, y: 305 },
+              { x: 325, y: 300 }, { x: 250, y: 300 }, { x: 175, y: 300 },
+              { x: 145, y: 285 }, { x: 95, y: 245 }, { x: 75, y: 190 },
+              { x: 85, y: 125 }, { x: 120, y: 70 }, { x: 175, y: 35 },
+              { x: 240, y: 25 }, { x: 305, y: 45 }, { x: 355, y: 85 },
+              { x: 395, y: 140 }, { x: 420, y: 205 }, { x: 420, y: 265 },
+              { x: 420, y: 305 },
+            ],
+          },
+          {
+            label: "continue down the right-hand finishing stem",
+            path: [
+              { x: 420, y: 305 }, { x: 430, y: 250 }, { x: 435, y: 190 },
+              { x: 435, y: 125 }, { x: 435, y: 65 }, { x: 440, y: 20 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: cyrillicAlphabetSource("а"),
+  },
+  // RussianIrina closes the rounded lowercase б body and immediately climbs
+  // into its top flag. The source's direct diagonal crossing is a handwritten
+  // form; Noto Sans Cyrillic joins the ascender at the upper-left shoulder, so
+  // this one-run fit carries the pen left along the printed shoulder first.
+  [ductusKey("cyrillic", "б")]: {
+    script: "cyrillic",
+    glyph: "б",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "circle counterclockwise around the rounded lower body",
+            path: [
+              { x: 430, y: 480 }, { x: 350, y: 495 }, { x: 270, y: 495 },
+              { x: 190, y: 470 }, { x: 125, y: 420 }, { x: 90, y: 340 },
+              { x: 85, y: 250 }, { x: 105, y: 165 }, { x: 155, y: 95 },
+              { x: 225, y: 45 }, { x: 305, y: 25 }, { x: 380, y: 45 },
+              { x: 445, y: 90 }, { x: 490, y: 155 }, { x: 510, y: 235 },
+              { x: 505, y: 315 }, { x: 480, y: 400 }, { x: 430, y: 480 },
+            ],
+          },
+          {
+            label: "continue through the rising shoulder and sweep the top flag right",
+            path: [
+              { x: 430, y: 480 }, { x: 350, y: 490 }, { x: 270, y: 490 },
+              { x: 195, y: 485 }, { x: 195, y: 465 }, { x: 195, y: 450 },
+              { x: 170, y: 445 }, { x: 140, y: 445 }, { x: 140, y: 480 },
+              { x: 140, y: 520 }, { x: 150, y: 545 }, { x: 165, y: 585 },
+              { x: 185, y: 620 }, { x: 215, y: 660 }, { x: 260, y: 690 },
+              { x: 320, y: 710 }, { x: 390, y: 720 }, { x: 460, y: 730 },
+              { x: 500, y: 735 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: cyrillicAlphabetSource("б"),
+  },
+  // RussianIrina starts lowercase в at the baseline, climbs through its tall
+  // handwritten ascender loop, descends to the baseline, and continues around
+  // the lower bowl without lifting. Noto Sans Cyrillic prints two compact bowls
+  // on a straight stem, so the same one-run order is fitted through the upper
+  // bowl, down the stem, and counterclockwise around the lower bowl.
+  [ductusKey("cyrillic", "в")]: {
+    script: "cyrillic",
+    glyph: "в",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "climb through the upper loop and descend to the baseline",
+            path: [
+              { x: 130, y: 20 }, { x: 130, y: 100 }, { x: 130, y: 200 },
+              { x: 130, y: 300 }, { x: 130, y: 400 }, { x: 130, y: 500 },
+              { x: 220, y: 500 }, { x: 310, y: 500 }, { x: 380, y: 480 },
+              { x: 430, y: 445 }, { x: 455, y: 400 }, { x: 450, y: 355 },
+              { x: 420, y: 320 }, { x: 365, y: 300 }, { x: 295, y: 290 },
+              { x: 220, y: 290 }, { x: 150, y: 290 }, { x: 130, y: 260 },
+              { x: 130, y: 180 }, { x: 130, y: 100 }, { x: 130, y: 20 },
+            ],
+          },
+          {
+            label: "continue counterclockwise around the rounded lower bowl",
+            path: [
+              { x: 130, y: 20 }, { x: 220, y: 35 }, { x: 310, y: 35 },
+              { x: 385, y: 50 }, { x: 440, y: 80 }, { x: 470, y: 120 },
+              { x: 475, y: 165 }, { x: 455, y: 205 }, { x: 415, y: 235 },
+              { x: 360, y: 260 }, { x: 295, y: 270 }, { x: 220, y: 270 },
+              { x: 150, y: 270 }, { x: 130, y: 260 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: cyrillicAlphabetSource("в"),
   },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner

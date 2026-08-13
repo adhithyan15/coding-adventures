@@ -36,6 +36,24 @@ This evaluates the bindings left-to-right and returns the tuple's
 last element (the block's value).  Tested deterministically — no
 codegen variance across runs.
 
+## Type-directed operator selection (SIR21 T3c-3)
+
+`+ - * < > <= >= == !=` are `BuiltinCall`s that, by default, lower to a
+runtime-dispatch helper (`_sir_plus(x, y)` above) because SIR carries no
+static type for either operand in the fully-dynamic pipeline every
+frontend produces today. Before reaching that fallback, the emitter now
+builds a `TypeEnv` per function and consults `semantic-ir`'s
+`op_select::resolve_binary` with each operand's statically-known type
+(from `TypeEnv::expr_type`, a direct `VarRef` to a declared `Param`/
+`Capture`/`LetBinding` only — no inference). When both operands agree on
+a concrete int/float/comparable type, the emitter specialises to native
+Python infix (`(x + y)`) instead of the helper call; string concatenation
+and any `Dynamic`/mismatched pair keep routing through the helper,
+unchanged. No shipped frontend populates operand types in a way this
+backend can reach yet (see `code/specs/SIR21-type-system-and-integer-semantics.md`),
+so this is presently inert for every real program — the wiring exists so
+a future typed frontend/backend slice has one correct place to plug in.
+
 ## Default parameters
 
 SIR default parameters are **call-time** and a default may reference an

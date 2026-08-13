@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Require validated request context for channel create and destroy authorization.
+- Add authoritative channel/member tier resolution and Trust Checker composition.
+- Bind approvals to a SHA-256 fingerprint of the complete immutable topology mutation.
+- Fail tier resolution and approval before any durable channel storage mutation.
 - Require the production process composition to inject a host data-plane
   dispatcher while keeping the generic orchestration core payload-blind.
 - Require the production process composition to inject a manifest-blind host

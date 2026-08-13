@@ -8,7 +8,9 @@ operations require that session.
 
 Channel topology changes remain denied by default. The adapter deliberately does
 not turn a local bearer credential into privilege approval: a later Trust Checker
-must authorize the exact immutable topology mutation.
+must authorize the exact immutable topology mutation. The orchestrator core now
+provides that Trust Checker adapter, but production retains this denial until an
+explicit reviewed approval provider and authoritative tier resolver are composed.
 
 The package generates credential material but performs no filesystem, terminal,
 environment, or network access. Outer composition owns protected persistence and

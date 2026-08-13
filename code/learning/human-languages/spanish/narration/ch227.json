@@ -1,0 +1,248 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 227,
+  "title": "Bastante --- An Ending You Can Already Read",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:ccbeb2ce79e676e2",
+  "lessons": [
+    {
+      "id": "ES-C60-bastante",
+      "sequence": 2370,
+      "title": "bastante — an ending you can already read",
+      "headword": "bastante",
+      "romanization": "bastante",
+      "gloss": "enough, quite — an ending you already decode, on a verb meaning to suffice, giving a word that means exactly \"sufficing\"",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4b097097667c06bc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The ending -ante, from chapter fifty-two. Estudiante — the one who studies. It turns a verb into the one doing it."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Keep that in mind; it is about to hand you a word for free."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart: bastante",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "There is a verb bastar, to be enough. Put your ending on it:"
+            },
+            {
+              "kind": "speech",
+              "text": "bast- + -ante becomes bastante, \"sufficing\"."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "So bastante does not mean a lot. It means enough — and from there, quite, fairly. It is the amount that suffices, not the amount that impresses."
+            },
+            {
+              "kind": "speech",
+              "text": "Estoy bastante cansado. — I'm quite tired."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You now hold a scale, and it is worth saying out loud in order:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "poco, little.",
+                "bastante, enough, quite.",
+                "muy, very."
+              ]
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Notice where bastante sits. English speakers reach for it thinking quite a lot, and land higher than they meant. It is the middle of the scale, not the top — the top is muy."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And unlike muy, it is not fussy about what follows: bastante café, bastante grande. Only muy insists on leaning on an adjective or an adverb."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "poco, bastante, muy, in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *poco*, *bastante*, *muy*, in order]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Estoy bastante cansado",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Estoy bastante cansado*]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C60-bastante-say",
+              "prompt": "Say: I am quite tired.",
+              "assesses": [
+                "ES-LEX-BASTANTE"
+              ],
+              "responseSeconds": 13,
+              "acceptedResponses": [
+                "estoy bastante cansado",
+                "estoy bastante cansada"
+              ],
+              "feedback": {
+                "correct": "Enough tired, not very tired.",
+                "incorrect": "Estoy bastante cansado."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C60-bastante-scale",
+              "prompt": "Put them in order, least to most: muy, poco, bastante.",
+              "assesses": [
+                "ES-GRAMMAR-DEGREE-SCALE"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "poco bastante muy",
+                "poco, bastante, muy"
+              ],
+              "feedback": {
+                "correct": "Bastante is the middle, not the top.",
+                "incorrect": "Poco, bastante, muy."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C60-bastante-parts",
+              "prompt": "What does bastante literally mean, taken apart?",
+              "assesses": [
+                "ES-ETYMON-BASTANTE-BASTAR"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "sufficing",
+                "the one that suffices",
+                "bastar plus -ante"
+              ],
+              "feedback": {
+                "correct": "An ending you already knew how to read.",
+                "incorrect": "Sufficing -- bastar + -ante."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does bastante sit on the scale? (In the middle — enough, not very.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And which of the three refuses to sit in front of a noun? (Muy.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -273,6 +273,7 @@ mod tests {
             globals: Vec::new(),
             global_types: Vec::new(),
             func_types: Vec::new(),
+            types: Vec::new(),
             func_bodies: Vec::new(),
             host_functions: Vec::new(),
             typed_locals: Vec::new(),
@@ -285,6 +286,7 @@ mod tests {
             gc_heap: Vec::new(),
             struct_field_counts: Vec::new(),
             gc_state: GcState::default(),
+            call_depth: 0,
         }
     }
 

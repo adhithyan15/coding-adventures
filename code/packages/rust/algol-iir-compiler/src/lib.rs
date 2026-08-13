@@ -5257,7 +5257,7 @@ impl Compiler {
             if binding.is_global
                 || binding.array.is_some()
                 || self.active_by_name_binding(dependency).is_some()
-                || self.for_body_writes_name(body, dependency)
+                || self.for_body_writes_name(body, dependency, &target_name, body)
             {
                 return (None, None);
             }
@@ -5300,15 +5300,77 @@ impl Compiler {
         exit
     }
 
-    fn for_body_writes_name(&self, node: &GrammarASTNode, name: &str) -> bool {
-        if node.rule_name == "assign_stmt"
-            && direct_nodes(node)
+    fn for_body_writes_name(
+        &self,
+        node: &GrammarASTNode,
+        name: &str,
+        target_name: &str,
+        effect_root: &GrammarASTNode,
+    ) -> bool {
+        if node.rule_name == "cond_stmt" {
+            let children = direct_nodes(node);
+            let condition = children
+                .iter()
+                .find(|child| child.rule_name == "bool_expr")
+                .copied();
+            let condition_is_variable_free = condition.is_some_and(|condition| {
+                !recursive_tokens(condition)
+                    .iter()
+                    .any(|token| token.effective_type_name() == "NAME")
+            });
+            let stable_boolean_selector = condition
+                .and_then(expr_variable_name)
+                .filter(|selector| selector != target_name)
+                .filter(|selector| {
+                    self.require_var(selector).is_ok_and(|binding| {
+                        binding.ty == ScalarType::Boolean
+                            && !binding.is_global
+                            && binding.array.is_none()
+                            && self.active_by_name_binding(selector).is_none()
+                    })
+                })
+                .filter(|selector| !for_body_assigns_name(effect_root, selector));
+            if condition_is_variable_free || stable_boolean_selector.is_some() {
+                let branches: Vec<&GrammarASTNode> = children
+                    .into_iter()
+                    .filter(|child| {
+                        child.rule_name == "unlabeled_stmt" || child.rule_name == "statement"
+                    })
+                    .collect();
+                return match condition.and_then(|condition| self.static_boolean_value(condition)) {
+                    Some(true) => branches
+                        .first()
+                        .is_some_and(|branch| {
+                            self.for_body_writes_name(branch, name, target_name, effect_root)
+                        }),
+                    Some(false) => branches
+                        .get(1)
+                        .is_some_and(|branch| {
+                            self.for_body_writes_name(branch, name, target_name, effect_root)
+                        }),
+                    None => direct_nodes(node)
+                        .into_iter()
+                        .any(|child| {
+                            self.for_body_writes_name(child, name, target_name, effect_root)
+                        }),
+                };
+            }
+        }
+        if node.rule_name == "assign_stmt" {
+            let writes_name = direct_nodes(node)
                 .into_iter()
                 .filter(|child| child.rule_name == "left_part")
                 .filter_map(|left| first_direct_node(left, "variable"))
-                .any(|variable| self.simple_variable_name(variable).ok().as_deref() == Some(name))
-        {
-            return true;
+                .any(|variable| {
+                    array_subscripts(variable).is_none()
+                        && self.simple_variable_name(variable).ok().as_deref() == Some(name)
+                });
+            if writes_name {
+                let preserves_name = first_direct_node(node, "expression")
+                    .and_then(expr_variable_name)
+                    .is_some_and(|source_name| source_name == name);
+                return !preserves_name;
+            }
         }
         if node.rule_name == "for_stmt"
             && first_direct_node(node, "variable")
@@ -5320,7 +5382,7 @@ impl Compiler {
         }
         direct_nodes(node)
             .into_iter()
-            .any(|child| self.for_body_writes_name(child, name))
+            .any(|child| self.for_body_writes_name(child, name, target_name, effect_root))
     }
 
     fn static_boolean_value(&self, node: &GrammarASTNode) -> Option<bool> {
@@ -7060,6 +7122,36 @@ fn collect_expression_dependency_names(
     for child in direct_nodes(node) {
         collect_expression_dependency_names(child, target_name, dependencies);
     }
+}
+
+fn for_body_assigns_name(node: &GrammarASTNode, name: &str) -> bool {
+    if node.rule_name == "assign_stmt"
+        && direct_nodes(node)
+            .into_iter()
+            .filter(|child| child.rule_name == "left_part")
+            .filter_map(|left| first_direct_node(left, "variable"))
+            .any(|variable| {
+                array_subscripts(variable).is_none()
+                    && direct_tokens(variable).into_iter().any(|token| {
+                        token.effective_type_name() == "NAME" && token.value == name
+                    })
+            })
+    {
+        return true;
+    }
+    if node.rule_name == "for_stmt"
+        && first_direct_node(node, "variable").is_some_and(|variable| {
+            array_subscripts(variable).is_none()
+                && direct_tokens(variable).into_iter().any(|token| {
+                    token.effective_type_name() == "NAME" && token.value == name
+                })
+        })
+    {
+        return true;
+    }
+    direct_nodes(node)
+        .into_iter()
+        .any(|child| for_body_assigns_name(child, name))
 }
 
 fn collect_tokens<'a>(node: &'a GrammarASTNode, out: &mut Vec<&'a Token>) {
@@ -9254,6 +9346,33 @@ mod tests {
     }
 
     #[test]
+    fn al4_static_while_preserves_idempotently_assigned_dependency() {
+        compile_source(
+            "begin integer i, n; n := 3; i := 0; for i := i + 1 while i < n do n := n; print(i + 0.25) end",
+            "test",
+        )
+        .expect("an exact scalar self-assignment preserves the dependency");
+    }
+
+    #[test]
+    fn al4_static_while_ignores_unreachable_conditional_dependency_write() {
+        compile_source(
+            "begin integer i, n; n := 3; i := 0; for i := i + 1 while i < n do if false then n := n + 1; print(i + 0.25) end",
+            "test",
+        )
+        .expect("a variable-free false branch cannot mutate the dependency");
+    }
+
+    #[test]
+    fn al4_static_while_selects_stable_boolean_body_condition() {
+        compile_source(
+            "begin integer i, n; boolean flag; n := 3; flag := false; i := 0; for i := i + 1 while i < n do if flag then n := n + 1; print(i + 0.25) end",
+            "test",
+        )
+        .expect("an unwritten known boolean local selects one body branch");
+    }
+
+    #[test]
     fn al4_static_while_preserves_standard_function_dependency() {
         compile_source(
             "begin integer i, n; n := -3; i := 0; for i := i + 1 while i < abs(n) do print(''); print(i + 0.25) end",
@@ -9279,6 +9398,36 @@ mod tests {
             "test",
         )
         .expect_err("a dependency referenced by the body may change each iteration");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_computed_self_assignment_while_dependency_remains_conservative() {
+        let err = compile_source(
+            "begin integer i, n; n := 3; i := 0; for i := i + 1 while i < n do n := n + 0; print(i + 0.25) end",
+            "test",
+        )
+        .expect_err("only an exact bare self-assignment is treated as idempotent");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_variable_conditional_while_dependency_write_remains_conservative() {
+        let err = compile_source(
+            "begin integer i, n; boolean flag; n := 3; i := 0; for i := i + 1 while i < n do if flag then n := n + 1; print(i + 0.25) end",
+            "test",
+        )
+        .expect_err("a variable-dependent body condition must scan both paths");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_written_conditional_selector_while_effect_remains_conservative() {
+        let err = compile_source(
+            "begin integer i, n; boolean flag; n := 3; flag := false; i := 0; for i := i + 1 while i < n do begin if flag then n := n + 1; flag := true end; print(i + 0.25) end",
+            "test",
+        )
+        .expect_err("a selector written by the body may choose another branch later");
         assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 

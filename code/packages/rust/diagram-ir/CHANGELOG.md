@@ -1,5 +1,18 @@
 # Changelog — diagram-ir
 
+## 0.52.0
+
+- Carry resolved Journey activity spines, task descenders, and score positions.
+
+## 0.51.0
+
+- Preserve Journey legend offset and label-width controls plus resolved actor bounds.
+
+## 0.50.0
+
+- Preserve Journey actor and section palettes through semantic and resolved IR.
+- Box the expanded Journey temporal body to keep the shared enum compact.
+
 ## 0.49.0
 
 - Preserve Journey title font size, family, and color through semantic and resolved IR.

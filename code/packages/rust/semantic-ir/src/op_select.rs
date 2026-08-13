@@ -5,9 +5,11 @@
 //! operands, and **each backend resolves the concrete operation from the
 //! operands' static types**. When the types are known and agree, the backend
 //! specialises (a native `i32` add that wraps, a bignum add that grows, a float
-//! add that promotes). When an operand is `Dynamic` — as *every* operand is in
-//! the current fully-dynamic pipeline — it falls back to runtime dispatch
-//! (`_sir_plus`/`_sir_times`/…), which is **exactly today's behaviour**.
+//! add that promotes). When an operand is `Dynamic` — as every operand still is
+//! for any program a consulting backend can actually reach end-to-end today
+//! (see `type_env`'s module docs for the `Feature::Conversions` gap) — it
+//! falls back to runtime dispatch (`_sir_plus`/`_sir_times`/…), which is
+//! **exactly today's behaviour**.
 //!
 //! ```text
 //! (Int i32{wrap}, Int i32{wrap})  ⟶  Int(i32{wrap})   native 32-bit, wraps

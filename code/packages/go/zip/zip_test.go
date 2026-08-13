@@ -87,7 +87,10 @@ func TestZipMultipleFiles(t *testing.T) {
 	for i := range allBytes {
 		allBytes[i] = byte(i)
 	}
-	type pair struct{ name string; data []byte }
+	type pair struct {
+		name string
+		data []byte
+	}
 	pairs := []pair{
 		{"a.txt", []byte("file A content")},
 		{"b.txt", []byte("file B content")},
@@ -304,7 +307,10 @@ func TestZipUnicodeFilename(t *testing.T) {
 // =============================================================================
 
 func TestZipNestedPaths(t *testing.T) {
-	type pair struct{ name string; data []byte }
+	type pair struct {
+		name string
+		data []byte
+	}
 	pairs := []pair{
 		{"root.txt", []byte("root")},
 		{"dir/file.txt", []byte("nested")},

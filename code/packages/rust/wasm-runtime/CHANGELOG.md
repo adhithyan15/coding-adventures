@@ -2,6 +2,49 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.5.1] — 2026-08-13 (WASM07 — a trapped call must not lose an instance's state)
+
+`call_engine` (shared by `call()` and `call_typed()`) temporarily
+`take()`s `instance.memory`/`mem::take`s `instance.tables`/
+`instance.host_functions` into a fresh `WasmExecutionEngine` for the
+duration of one call, then writes the engine's post-call state back onto
+`instance`. That write-back used `let results =
+engine.call_function(func_index, wasm_args)?;` — the `?` early-returns on
+ANY trap, before the write-back lines ever run. Since the fields were
+already taken, `instance.memory` was left `None` (and `instance.tables`/
+`instance.host_functions` left empty) **forever after** — not just for
+that one trapped call, but for every subsequent call on the same
+instance, since nothing else ever puts them back.
+
+This is exactly the shape of `wasm-conformance`'s own module-registry
+model: a script's module registry holds one `WasmInstance` per `(module
+...)` directive and runs every `invoke`/`assert_*` against it in order.
+The moment ANY of those directives trapped for any reason — an
+intentionally-trapping `assert_trap`, or a genuine bug in an unrelated
+function — every LATER directive against that same module silently and
+permanently failed with a spurious "no memory available"/"undefined
+table", masking whatever those later directives were actually checking.
+This affected dozens of real testsuite cases across
+`load.wast`/`local_tee.wast`/`nop.wast`/`memory_trap.wast`/`call.wast`
+(their common `as-call_indirect-*`/`as-load-*`/`as-store-*` cases always
+follow an earlier intentionally-trapping case in the same module).
+
+Fixed by capturing the `Result` instead of `?`-ing it immediately, always
+restoring `instance`'s fields from `engine.into_state()` (safe regardless
+of whether the call trapped — `call_function` takes `&mut self`, so
+`engine`, and everything moved into it, is fully intact either way), and
+only then returning the captured result.
+
+Also wires the module's real type section into the engine
+(`engine.set_type_section(instance.module.types.clone())`) so
+`call_indirect` gets real type-checking — see `wasm-execution` 0.6.3's
+own changelog for why that was a separate, necessary fix and not
+something this crate could paper over on its own.
+
+2 new regression tests (`tests/wasm07_regression.rs`): memory and a
+table each independently confirmed to survive an earlier trapped call on
+the same instance and remain usable by a later one.
+
 ## [0.5.0] — 2026-08-13
 
 ### Added — `WasmRuntime::call_typed`, a bit-exact sibling of `call()` (W05 PR-4)

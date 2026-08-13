@@ -1390,7 +1390,11 @@ mod tests {
     impl ChannelWiringAuthorizer for NoopWiring {
         type Error = ();
 
-        fn authorize(&mut self, _request: ChannelWiringRequest<'_>) -> Result<(), Self::Error> {
+        fn authorize(
+            &mut self,
+            _context: &chief_of_staff_trust_checker::TrustRequestContext,
+            _request: ChannelWiringRequest<'_>,
+        ) -> Result<(), Self::Error> {
             Ok(())
         }
     }

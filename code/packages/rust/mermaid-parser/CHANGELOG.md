@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.97.0
+
+- Graduate Journey to full Mermaid 11.16.1 compatibility after pinned corpus and native render coverage.
+
+## 0.96.0
+
+- Parse Journey `leftMargin` and `maxLabelWidth` init options.
+
+## 0.95.0
+
+- Parse Journey `actorColours`, `sectionFills`, and `sectionColours` init arrays.
+
 ## 0.94.0
 
 - Parse Journey `titleFontSize`, `titleFontFamily`, and `titleColor` init options.

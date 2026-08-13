@@ -273,11 +273,18 @@ describe("what the corpus actually covers", () => {
     const { lessons } = loadEverything();
     const coverage = measureExamCoverage(loadExamInventory("spanish", "A1"), lessons);
 
-    // 220 chapters, a curriculum that had climbed to a B2 node, and 62% of the
-    // A1 grammar an examiner may ask for. The gaps are not exotic: the
-    // demonstratives are absent ENTIRELY (este/ese/aquel, all three points),
-    // `muy` is untaught, `al`/`del` are untaught, the gerund is untaught, and
-    // the personal `a` is untaught.
+    // First measured at 53/85 over 220 chapters — a curriculum that had climbed
+    // to a B2 node while missing 62% of... no: while holding only 62% of the A1
+    // grammar an examiner may ask for. Chapters 221-225 then taught the
+    // demonstratives, which had been absent ENTIRELY (este/ese/aquel and the
+    // neuters, 3 of 3 points), taking it to 56/85.
+    //
+    // Chapters 226-229 then taught the degree words -- `muy`, `bastante`, `mal`
+    // -- closing four more points across three categories, and taking
+    // `El sintagma adjetival` off the floor at last.
+    //
+    // Still untaught and still counted against us: the `al`/`del` contractions,
+    // the gerund, `quien`, `ni`/`o`, and the personal `a`.
     //
     // This number is allowed to move only two ways. Up, when a lesson teaches
     // something the inventory lists. Down, when one is retired. It must NOT
@@ -285,13 +292,13 @@ describe("what the corpus actually covers", () => {
     // fails alongside an edit to exam-inventory-es-a1.json, read that edit
     // before re-pinning.
     expect(coverage.enumerated).toBe(85);
-    expect(coverage.covered).toBe(53);
-    expect(coverage.percent).toBe(62);
+    expect(coverage.covered).toBe(60);
+    expect(coverage.percent).toBe(71);
 
     // Whole categories missing is a different failure from thin coverage, and
     // the report has to keep them distinguishable.
-    expect(coverage.byCategory["Los demostrativos"]).toEqual({ enumerated: 3, covered: 0 });
-    expect(coverage.byCategory["El sintagma adjetival"]).toEqual({ enumerated: 1, covered: 0 });
+    expect(coverage.byCategory["Los demostrativos"]).toEqual({ enumerated: 3, covered: 3 }); // closed by chapters 221-225
+    expect(coverage.byCategory["El sintagma adjetival"]).toEqual({ enumerated: 1, covered: 1 }); // closed by ch226-229: muy, poco and bastante are all taught now
     expect(coverage.byCategory["La oracion simple"]).toEqual({ enumerated: 6, covered: 6 });
   });
 
@@ -300,9 +307,12 @@ describe("what the corpus actually covers", () => {
     const report = formatExamCoverage(
       measureExamCoverage(loadExamInventory("spanish", "A1"), lessons),
     );
-    expect(report).toContain("spanish A1: 53/85 points covered (62%)");
+    expect(report).toContain("spanish A1: 60/85 points covered (71%)");
     // Worst category first: the line after the summary should be the emptiest
-    // category, not the alphabetically first one.
-    expect(report.split("\n")[2]).toContain("0/1  El sintagma adjetival");
+    // category, not the alphabetically first one. It USED to be
+    // `El sintagma adjetival` at 0/1; chapters 226-229 closed that, and the
+    // ordering moved on its own to the next-worst — which is the whole point of
+    // sorting by shortfall rather than by name.
+    expect(report.split("\n")[2]).toContain("1/4  Los cuantificadores");
   });
 });

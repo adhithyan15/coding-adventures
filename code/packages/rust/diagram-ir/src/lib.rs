@@ -1,6 +1,6 @@
 //! diagram-ir v0.42.0 - DG00/DG04 semantic IR
 
-pub const VERSION: &str = "0.49.0";
+pub const VERSION: &str = "0.52.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramDirection {
@@ -884,6 +884,11 @@ pub struct JourneyConfig {
     pub title_font_size: Option<f64>,
     pub title_font_family: Option<String>,
     pub title_color: Option<String>,
+    pub actor_colors: Vec<String>,
+    pub section_fills: Vec<String>,
+    pub section_colors: Vec<String>,
+    pub left_margin: Option<f64>,
+    pub max_label_width: Option<f64>,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -983,7 +988,7 @@ pub struct GitDiagram {
 pub enum TemporalBody {
     Gantt(GanttDiagram),
     Git(GitDiagram),
-    Journey(JourneyDiagram),
+    Journey(Box<JourneyDiagram>),
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -1004,6 +1009,15 @@ pub enum LayoutedTemporalItem {
         font_size: Option<f64>,
         font_family: Option<String>,
         color: Option<String>,
+    },
+    JourneySection {
+        x: f64,
+        y: f64,
+        width: f64,
+        height: f64,
+        label: String,
+        fill: String,
+        text_color: String,
     },
     TimeAxisSpine {
         x1: f64,
@@ -1064,18 +1078,33 @@ pub enum LayoutedTemporalItem {
         y: f64,
         width: f64,
         height: f64,
+        score_y: f64,
         score: u8,
         label: String,
         people: Vec<String>,
         person_colors: Vec<String>,
         font_size: Option<f64>,
         font_family: Option<String>,
+        fill: String,
+        text_color: String,
     },
     JourneyActor {
         x: f64,
         y: f64,
+        width: f64,
+        height: f64,
         color: String,
         label: String,
+    },
+    JourneyActivityLine {
+        x1: f64,
+        y: f64,
+        x2: f64,
+    },
+    JourneyTaskLine {
+        x: f64,
+        y1: f64,
+        y2: f64,
     },
 }
 
@@ -1168,7 +1197,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.49.0");
+        assert_eq!(VERSION, "0.52.0");
     }
     #[test]
     fn default_direction_is_tb() {

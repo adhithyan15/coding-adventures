@@ -5,6 +5,7 @@
 
 use chief_of_staff_daemon_api::{Operation, SessionAuthorizer};
 use chief_of_staff_orchestrator_core::{ChannelWiringAuthorizer, ChannelWiringRequest};
+use chief_of_staff_trust_checker::TrustRequestContext;
 use coding_adventures_csprng::random_array;
 use coding_adventures_ct_compare::ct_eq_fixed;
 use coding_adventures_zeroize::Zeroizing;
@@ -132,7 +133,11 @@ pub struct DenyChannelWiring;
 impl ChannelWiringAuthorizer for DenyChannelWiring {
     type Error = ChannelWiringDenied;
 
-    fn authorize(&mut self, _request: ChannelWiringRequest<'_>) -> Result<(), Self::Error> {
+    fn authorize(
+        &mut self,
+        _context: &TrustRequestContext,
+        _request: ChannelWiringRequest<'_>,
+    ) -> Result<(), Self::Error> {
         Err(ChannelWiringDenied)
     }
 }
@@ -222,13 +227,14 @@ mod tests {
     #[test]
     fn channel_topology_is_denied_until_a_trust_checker_approves_it() {
         let definition = channel_definition();
+        let context = TrustRequestContext::new("request", "operator:local").unwrap();
         let mut policy = DenyChannelWiring;
         assert_eq!(
-            policy.authorize(ChannelWiringRequest::Create(&definition)),
+            policy.authorize(&context, ChannelWiringRequest::Create(&definition)),
             Err(ChannelWiringDenied)
         );
         assert_eq!(
-            policy.authorize(ChannelWiringRequest::Destroy(&definition)),
+            policy.authorize(&context, ChannelWiringRequest::Destroy(&definition)),
             Err(ChannelWiringDenied)
         );
     }

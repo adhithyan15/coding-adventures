@@ -1627,6 +1627,22 @@ documents, a physical security key is required.
 
 A pipeline's effective tier is the **maximum** tier of any resource it touches.
 
+The transport-independent `chief-of-staff-trust-checker` package owns this
+calculation and the tier decision below. It accepts an exact bounded non-secret
+resource set and delegates notification, biometric, hardware-key, timeout, and
+platform interaction to an injected approval provider. Provider failure,
+insufficient authentication assurance, and Tier 2 or Tier 3 timeout fail
+closed. Tier 1 timeout is the sole auto-approval path.
+
+`chief-of-staff-orchestrator-core` adapts channel topology changes into that
+contract. It resolves the current channel and member tiers through an
+authoritative injected boundary and binds the approval to a domain-separated
+SHA-256 fingerprint covering the operation, channel UUID, complete membership,
+public keys, creation time, key epoch, and lifecycle. Any resolution or approval
+failure occurs before channel storage mutation. The production daemon remains
+fail closed until an explicit platform approval provider and tier resolver are
+configured.
+
 ```
 Pipeline: "Check bank balance and email it to accountant"
 ├── Email Responder: Tier 1 (sends email)

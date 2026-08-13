@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.94.0";
+pub const VERSION: &str = "0.97.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -702,7 +702,7 @@ pub fn parse_any_mermaid(source: &str) -> Result<MermaidDiagram, ParseError> {
             MermaidDiagram::Temporal(TemporalDiagram {
                 kind: TemporalKind::Journey,
                 title,
-                body: TemporalBody::Journey(journey),
+                body: TemporalBody::Journey(Box::new(journey)),
             })
         }),
         unsupported => Err(ParseError {
@@ -731,6 +731,11 @@ pub fn parse_journey(source: &str) -> Result<(Option<String>, JourneyDiagram), P
         title_font_size: font_size("titleFontSize"),
         title_font_family: quadrant_directive_value(source, "titleFontFamily"),
         title_color: quadrant_directive_value(source, "titleColor"),
+        actor_colors: mermaid_directive_string_array(source, "actorColours"),
+        section_fills: mermaid_directive_string_array(source, "sectionFills"),
+        section_colors: mermaid_directive_string_array(source, "sectionColours"),
+        left_margin: number("leftMargin"),
+        max_label_width: number("maxLabelWidth"),
     };
     let preprocessed = preprocess_mermaid_source(source)?;
     let tokens =
@@ -839,6 +844,32 @@ fn parse_mermaid_font_size(value: String) -> Option<f64> {
         }
     }
     value.parse().ok()
+}
+
+fn mermaid_directive_string_array(source: &str, key: &str) -> Vec<String> {
+    for quote in ['"', '\''] {
+        let needle = format!("{quote}{key}{quote}");
+        let Some(after_key) = source
+            .find(&needle)
+            .map(|index| &source[index + needle.len()..])
+        else {
+            continue;
+        };
+        let Some(after_open) = after_key.split_once('[').map(|(_, value)| value) else {
+            continue;
+        };
+        let Some((values, _)) = after_open.split_once(']') else {
+            continue;
+        };
+        return values
+            .split(',')
+            .map(str::trim)
+            .map(|value| value.trim_matches(['"', '\'']))
+            .filter(|value| !value.is_empty())
+            .map(str::to_string)
+            .collect();
+    }
+    Vec::new()
 }
 
 fn normalize_journey_label(source: &str) -> String {
@@ -6623,7 +6654,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.94.0");
+        assert_eq!(crate::VERSION, "0.97.0");
     }
 
     #[test]

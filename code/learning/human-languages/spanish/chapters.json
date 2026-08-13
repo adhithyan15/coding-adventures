@@ -4333,6 +4333,159 @@
           "ES-LEX-TAMPOCO"
         ]
       }
+    },
+    {
+      "chapter": 221,
+      "title": "Este --- Pointing at What Is in Your Hand",
+      "label": "ch:este",
+      "canDo": "I can point at something next to me.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C59-este",
+        "kind": "task",
+        "summary": "I can point at something next to me.",
+        "assesses": [
+          "ES-GRAMMAR-DEMONSTRATIVE-ESTE"
+        ]
+      }
+    },
+    {
+      "chapter": 222,
+      "title": "Ese --- Pointing at What Is by You",
+      "label": "ch:ese",
+      "canDo": "I can point at something on my listener's side.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C59-ese",
+        "kind": "task",
+        "summary": "I can point at something on my listener's side.",
+        "assesses": [
+          "ES-GRAMMAR-DEMONSTRATIVE-ESE"
+        ]
+      }
+    },
+    {
+      "chapter": 223,
+      "title": "Aquel --- The Far One, and an Old Friend",
+      "label": "ch:aquel",
+      "canDo": "I can point at something away from us both.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C59-aquel",
+        "kind": "task",
+        "summary": "I can point at something away from us both.",
+        "assesses": [
+          "ES-GRAMMAR-DEMONSTRATIVE-AQUEL"
+        ]
+      }
+    },
+    {
+      "chapter": 224,
+      "title": "Esto, Eso, Aquello --- Pointing at What Has No Name",
+      "label": "ch:esto-eso-aquello",
+      "canDo": "I can point at something I cannot name, or at a whole situation.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C59-esto-eso-aquello",
+        "kind": "task",
+        "summary": "I can point at something I cannot name, or at a whole situation.",
+        "assesses": [
+          "ES-GRAMMAR-DEMONSTRATIVE-NEUTER"
+        ]
+      }
+    },
+    {
+      "chapter": 225,
+      "title": "Review --- Three Places, One Question",
+      "label": "ch:repaso-demostrativos",
+      "canDo": "I can choose the right pointing word without stopping to think.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C59-repaso-demostrativos",
+        "kind": "task",
+        "summary": "I can choose the right pointing word without stopping to think.",
+        "assesses": [
+          "ES-GRAMMAR-DEMONSTRATIVE-THREE-DISTANCES"
+        ]
+      }
+    },
+    {
+      "chapter": 226,
+      "title": "Muy --- The Same Word, Bitten Short",
+      "label": "ch:muy",
+      "canDo": "I can say that something is very something.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C60-muy",
+        "kind": "task",
+        "summary": "I can say that something is very something.",
+        "assesses": [
+          "ES-LEX-MUY"
+        ]
+      }
+    },
+    {
+      "chapter": 227,
+      "title": "Bastante --- An Ending You Can Already Read",
+      "label": "ch:bastante",
+      "canDo": "I can say that something is enough, or quite so.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C60-bastante",
+        "kind": "task",
+        "summary": "I can say that something is enough, or quite so.",
+        "assesses": [
+          "ES-LEX-BASTANTE"
+        ]
+      }
+    },
+    {
+      "chapter": 228,
+      "title": "Mal --- Bien Finally Gets Its Opposite",
+      "label": "ch:mal",
+      "canDo": "I can say that something is bad, or going badly.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C60-mal",
+        "kind": "task",
+        "summary": "I can say that something is bad, or going badly.",
+        "assesses": [
+          "ES-LEX-MAL"
+        ]
+      }
+    },
+    {
+      "chapter": 229,
+      "title": "Review --- One Scale, One Habit",
+      "label": "ch:repaso-grado",
+      "canDo": "I can place a thing on a scale, and recognise a shortened word.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C60-repaso-grado",
+        "kind": "task",
+        "summary": "I can place a thing on a scale, and recognise a shortened word.",
+        "assesses": [
+          "ES-GRAMMAR-APOCOPE-PATTERN"
+        ]
+      }
     }
   ]
 }

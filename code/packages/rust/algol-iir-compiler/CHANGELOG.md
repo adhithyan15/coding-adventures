@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.155.0 — 2026-08-13 — stable conditional while effects
+
+Capped `while` dependency analysis now selects a body branch controlled by a
+statically known bare boolean local when an all-path scan proves the body never
+writes that selector. Dynamic, written, nonlocal, and compound selectors remain
+conservative.
+
+## 0.154.0 — 2026-08-13 — static conditional while effects
+
+Capped `while` dependency analysis now scans only the selected branch of a
+variable-free statically decidable body conditional. Dynamic and
+variable-dependent conditions continue to scan both branches conservatively.
+
+## 0.153.0 — 2026-08-13 — idempotent while dependencies
+
+Capped `while` control analysis now permits an exact scalar self-assignment to
+a stable local dependency in the loop body. Computed assignments, array targets,
+nested controls, globals, and by-name values remain conservative.
+
 ## 0.152.0 — 2026-08-13 — real while-control snapshots
 
 Capped `while` control analysis now has an explicit real-valued conformance

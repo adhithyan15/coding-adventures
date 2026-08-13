@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Accept validated Trust Checker request context while preserving unconditional production denial.
+
 ## 0.1.0
 
 - Add an OS-random 256-bit local daemon bearer credential encoded as lowercase hex.

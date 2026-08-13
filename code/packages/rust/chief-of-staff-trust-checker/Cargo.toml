@@ -1,0 +1,9 @@
+[package]
+name = "chief-of-staff-trust-checker"
+version = "0.1.0"
+edition = "2021"
+description = "Transport-independent privilege approval core for D18 Chief of Staff"
+license = "MIT"
+
+[dependencies]
+chief-of-staff-tool-api = { path = "../chief-of-staff-tool-api" }

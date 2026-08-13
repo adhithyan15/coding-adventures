@@ -67,6 +67,11 @@ const devanagariOutline = (character: string): GlyphOutline => {
   return { path: g.path, bounds: boundsOf(g.contours) };
 };
 
+const cyrillicOutline = (character: string): GlyphOutline => {
+  const g = parseFont(load("NotoSansCyrillic-Static.ttf")).glyphFor(character)!;
+  return { path: g.path, bounds: boundsOf(g.contours) };
+};
+
 const MA = DUCTUS["ம"];
 const outline = tamilOutline("ம");
 const A = DUCTUS["அ"];
@@ -193,6 +198,12 @@ const DEVANAGARI_SA = ductusFor("स", "devanagari")!;
 const devanagariSaOutline = devanagariOutline("स");
 const DEVANAGARI_HA = ductusFor("ह", "devanagari")!;
 const devanagariHaOutline = devanagariOutline("ह");
+const CYRILLIC_A = ductusFor("а", "cyrillic")!;
+const cyrillicAOutline = cyrillicOutline("а");
+const CYRILLIC_BE = ductusFor("б", "cyrillic")!;
+const cyrillicBeOutline = cyrillicOutline("б");
+const CYRILLIC_VE = ductusFor("в", "cyrillic")!;
+const cyrillicVeOutline = cyrillicOutline("в");
 const HEBREW_ALEF = ductusFor("א", "hebrew")!;
 const hebrewAlefOutline = hebrewOutline("א");
 const HEBREW_BET = ductusFor("ב", "hebrew")!;
@@ -2372,6 +2383,87 @@ describe("Devanagari ह — joined stem and hooked body before the outer tail",
     );
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(DEVANAGARI_HA.strokes[2], 1),
+    );
+  });
+});
+
+describe("Cyrillic а — one joined body and finishing stem", () => {
+  const steps = ductusSteps(CYRILLIC_A);
+  const strip = ductusFilmstrip(CYRILLIC_A, cyrillicAOutline);
+
+  it("shows two movements within one sourced pen-down run", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "sweep over the shoulder and around the round body",
+      "continue down the right-hand finishing stem",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0]);
+    expect(strip.frames).toHaveLength(2);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 2 movements");
+  });
+
+  it("draws the exact Noto Sans Cyrillic character behind the finishing stem", () => {
+    const paths = byTag(strip.frames[1], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      cyrillicAOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(CYRILLIC_A.strokes[0], 1),
+    );
+  });
+});
+
+describe("Cyrillic б — one joined lower body and top flag", () => {
+  const steps = ductusSteps(CYRILLIC_BE);
+  const strip = ductusFilmstrip(CYRILLIC_BE, cyrillicBeOutline);
+
+  it("shows the body and top flag within one sourced pen-down run", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "circle counterclockwise around the rounded lower body",
+      "continue through the rising shoulder and sweep the top flag right",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0]);
+    expect(strip.frames).toHaveLength(2);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 2 movements");
+  });
+
+  it("draws the exact Noto Sans Cyrillic character behind the top flag", () => {
+    const paths = byTag(strip.frames[1], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      cyrillicBeOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(CYRILLIC_BE.strokes[0], 1),
+    );
+  });
+});
+
+describe("Cyrillic в — one joined upper loop and lower bowl", () => {
+  const steps = ductusSteps(CYRILLIC_VE);
+  const strip = ductusFilmstrip(CYRILLIC_VE, cyrillicVeOutline);
+
+  it("shows the upper loop and lower bowl within one sourced pen-down run", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "climb through the upper loop and descend to the baseline",
+      "continue counterclockwise around the rounded lower bowl",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0]);
+    expect(strip.frames).toHaveLength(2);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 2 movements");
+  });
+
+  it("draws the exact Noto Sans Cyrillic character behind the lower bowl", () => {
+    const paths = byTag(strip.frames[1], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      cyrillicVeOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(CYRILLIC_VE.strokes[0], 1),
     );
   });
 });

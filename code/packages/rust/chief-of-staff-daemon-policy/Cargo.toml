@@ -8,6 +8,7 @@ license = "MIT"
 [dependencies]
 chief-of-staff-daemon-api = { path = "../chief-of-staff-daemon-api" }
 chief-of-staff-orchestrator-core = { path = "../chief-of-staff-orchestrator-core" }
+chief-of-staff-trust-checker = { path = "../chief-of-staff-trust-checker" }
 coding_adventures_csprng = { path = "../csprng" }
 coding_adventures_ct_compare = { path = "../ct-compare" }
 coding_adventures_zeroize = { path = "../zeroize" }

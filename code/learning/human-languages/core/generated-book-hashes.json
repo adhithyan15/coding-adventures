@@ -5613,6 +5613,87 @@
       "tex": "spanish/book/chapters/ch220-tampoco.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 221,
+      "sourceHash": "fnv1a64:911a83dee709a194",
+      "lessonIds": [
+        "ES-C59-este"
+      ],
+      "tex": "spanish/book/chapters/ch221-este.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 222,
+      "sourceHash": "fnv1a64:1e6dc5d561eb2fcc",
+      "lessonIds": [
+        "ES-C59-ese"
+      ],
+      "tex": "spanish/book/chapters/ch222-ese.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 223,
+      "sourceHash": "fnv1a64:1509577691415c0c",
+      "lessonIds": [
+        "ES-C59-aquel"
+      ],
+      "tex": "spanish/book/chapters/ch223-aquel.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 224,
+      "sourceHash": "fnv1a64:fb19bbdd6ef8c699",
+      "lessonIds": [
+        "ES-C59-esto-eso-aquello"
+      ],
+      "tex": "spanish/book/chapters/ch224-esto-eso-aquello.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 225,
+      "sourceHash": "fnv1a64:0ae835f36517e259",
+      "lessonIds": [
+        "ES-C59-repaso-demostrativos"
+      ],
+      "tex": "spanish/book/chapters/ch225-review-demostrativos.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 226,
+      "sourceHash": "fnv1a64:2862a5c1bcc49e54",
+      "lessonIds": [
+        "ES-C60-muy"
+      ],
+      "tex": "spanish/book/chapters/ch226-muy.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 227,
+      "sourceHash": "fnv1a64:cfd684c091e84d79",
+      "lessonIds": [
+        "ES-C60-bastante"
+      ],
+      "tex": "spanish/book/chapters/ch227-bastante.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 228,
+      "sourceHash": "fnv1a64:48959a428959bac0",
+      "lessonIds": [
+        "ES-C60-mal"
+      ],
+      "tex": "spanish/book/chapters/ch228-mal.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 229,
+      "sourceHash": "fnv1a64:828770b3ca60254e",
+      "lessonIds": [
+        "ES-C60-repaso-grado"
+      ],
+      "tex": "spanish/book/chapters/ch229-review-grado.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "sourceHash": "fnv1a64:5f56402811418e13",

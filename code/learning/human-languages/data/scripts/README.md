@@ -700,10 +700,25 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   22-frame animation with two lifts. The Directorate's deskbook confirms the
   same component order but stages the joined first body across more buildup
   steps, so the animation supplies the three-run lift evidence. Devanagari's
-  starter inventory is now source-verified. The remaining **103** prose part
+  starter inventory is now source-verified. Cyrillic then breaks its tie with
+  Gujarati: RussianIrina's native-teacher all-letter lesson demonstrates
+  lowercase **а** at 00:50–00:55 as a rounded body flowing directly into its
+  right-hand finishing stem, with no intervening lift. Its two-frame Noto Sans
+  Cyrillic path preserves that one-run school-hand motion while fitting the
+  source's single-storey form through the font's extra double-storey printed
+  shoulder. The same lesson demonstrates lowercase **б** at 01:13–01:18:
+  its counterclockwise lower body closes before the pen rises into the
+  rightward top flag, again without lifting. The two-frame font fit preserves
+  that one-run order while routing the handwritten diagonal transition through
+  Noto Sans Cyrillic's printed upper-left shoulder. Lowercase **в** follows at
+  01:33–01:38: the pen starts at the baseline, climbs through its tall upper
+  loop, descends to the baseline, and continues counterclockwise around the
+  lower bowl without lifting. Its two-frame font fit preserves that one-run
+  order while routing the cursive ascender through Noto Sans Cyrillic's compact
+  printed upper bowl and straight left stem. The remaining **100** prose part
   orders across four scripts
   (`arabic` 3,
-  `cyrillic` 33,
+  `cyrillic` 30,
   `gujarati` 33, `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a
   citation without a count), and Language Ladder's ductus test proves every

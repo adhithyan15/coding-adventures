@@ -466,6 +466,137 @@ reader's brain can connect, and write for someone who knows no grammar
 vocabulary at all. Both are specified in HL10 §6.7, §7.4 and §7.5 and carried by
 HL-C88 and HL-C89 below.
 
+## P0 — THE INDIC DRIVE ORDER: pre-A1 to C2, all six in lockstep
+
+**2026-08-13.** This is the standing work order for Tamil, Telugu, Kannada,
+Malayalam, Hindi and Sanskrit. It exists because the gap is not a difficulty
+problem, it is an allocation problem, and the allocation is visible in the log.
+
+### Where the six actually are, against Spanish
+
+| track | lessons | atoms | vs Spanish |
+|---|---:|---:|---:|
+| **spanish** | **366** | **562** | — |
+| tamil | 141 | 206 | 39% |
+| hindi | 117 | 160 | 32% |
+| malayalam | 101 | 135 | 28% |
+| kannada | 96 | 136 | 26% |
+| telugu | 95 | 132 | 26% |
+| sanskrit | 65 | 73 | 18% |
+
+### Why they are there, stated as an accounting fact
+
+**Spanish has a drive loop. The six have a queue slot.** In the last seven days:
+85 content commits to Spanish, 29 across all six Indic tracks combined. Over the
+whole history: 85 lesson-adding commits for Spanish, 8-23 each for the others.
+
+The six are fed by rotating vocabulary waves, and the rotation is the problem:
+
+| wave | tracks served |
+|---|---|
+| 2 | French, German, Portuguese, Italian |
+| 3 | Russian, Bengali, Gujarati, **Kannada** |
+| 4 | Marathi, Punjabi, **Sanskrit**, Urdu |
+| 5 | Persian, **Telugu**, **Malayalam** |
+| 6 | Russian, Persian, Urdu, Bengali |
+
+Four tracks per wave out of ~16, ~14 lessons each. **Kannada's last wave was #3.
+Tamil and Hindi have never had one.** At 14 lessons a wave, closing a 250-lesson
+gap takes ~18 waves for one track, and a track gets a wave about one time in
+four. That is not slow progress, it is an arithmetic that never arrives.
+
+The fix is this order: **the six get their own loop, and every tranche serves all
+six.** Not a slot in a rotation.
+
+### The shape of the climb
+
+Two ramps, per HL12 §2, and only one of them ends:
+
+```
+DECODING  letters -> vowel signs -> vowel-killer -> conjuncts -> running text
+          -> speed -> "you can read anything now"          <- IT CLOSES, at A1
+
+MEANING   pre-A1 -> A1 -> A2 -> B1 -> B2 -> C1 -> C2       <- the whole climb
+```
+
+Never steepen both in one lesson (HL12 §2.1). Script segments ride inside the
+meaning tranches rather than forming their own front, which is what "drizzled"
+means and what keeps the book useful from page 1.
+
+### Sizing, stated honestly and not used as a constraint
+
+HL09 §3 puts a complete track at ~8,000 lessons; six is ~48,000. The pre-A1 floor
+alone is ~300 words against today's 53-86, so roughly **230 words x 6 tracks =
+1,400 lessons** before a single track can honestly claim its first rung. At ~12
+words per track per tranche that is ~19 tranches. Those are the real numbers.
+Per the owner's standing rule, page count is never a reason to compress: the
+answer to 19 tranches is 19 tranches, not 8 fatter ones.
+
+### The order
+
+Priority is by what unblocks the most, then by what a reader feels soonest.
+LEXICON leads because it is what the six are actually short of, and because
+HL12 §4.2 names it as what carries the weight once the script retires.
+
+| ID | Status | Work item | Completion signal |
+|---|---|---|---|
+| HL-C136 | **NEXT** | **pre-A1 LEXICON drive, wave I of ~19.** ~12 headwords per track, all six, chosen by the HL10 §9 selection order (function first, frequency second, cognate leverage third). Every headword carries a `romanization`, so it is usable before its letters exist. | +72 lessons; `runLevelGate` pre-A1 vocabulary rises for all six in one tranche; every book still builds; no chapter crosses its atom budget. |
+| HL-C137 | Not started | **Repeat HL-C136 to the floor** — waves II..~XIX, same shape, until every track holds ~300 pre-A1 words. Each wave is one PR. | pre-A1 **attained** for all six on `runLevelGate` (this is HL-C135's completion signal, reached by this route). |
+| HL-C138 | Not started | **Finish the letter ledgers.** Each of the five scripts has 24 authored positions; 6-8 are taught. Author the remainder as one-character segments, drizzled into the meaning tranches at one per chapter. | 24 of 24 positions taught per script; `unspent letters` 0; closure violations fall per track. |
+| HL-C139 | Not started | **Conjuncts and ligatures** — the decoding rung after the vowel-killer, and the one where these scripts stop being decomposable letter by letter. | Each track teaches its script's conjunct formation; a reader can decode a conjunct they have not seen. |
+| HL-C140 | Not started | **Running text, speed, and the closing lesson.** Names the moment the decoding ladder ends (HL-C132) and prints the reframing: from here on the difficulty is meaning. | One named closing lesson per track; the book says so on the page; SCRIPT is silent after it. |
+| HL-C141 | Not started | **A1 rung, all six.** ~1,000 words cumulative per HL09 §3, plus the A1 can-do descriptors. | A1 attained for all six; the script strand has closed underneath it. |
+| HL-C142 | Not started | **A2 rung**, all six. Romanization now absent (HL-C133), closure strict and gating. | A2 attained; no A2+ lesson carries a headword romanization; closure violations 0. |
+| HL-C143 | Not started | **B1 rung**, all six. | B1 attained. |
+| HL-C144 | Not started | **B2 rung**, all six. | B2 attained. |
+| HL-C145 | Not started | **C1 rung**, all six. | C1 attained. |
+| HL-C146 | Not started | **C2 rung**, all six. The top of the ladder. | C2 attained for all six. |
+| HL-C147 | Not started | **Split each track into pre-A1 … C2 editions** — one curriculum, N derived books, filtered by level. Deferred on purpose: the split is a filter over the source and must not shape it. | Each track emits per-level books from the same lessons; the driving edition is unaffected. |
+
+Riding alongside, not blocking the rungs:
+
+| ID | Status | Work item | Completion signal |
+|---|---|---|---|
+| HL-C115 | Not started | `letter-ductus` filmstrip figures. **Both blockers merged**: `script-ductus` exposes the filmstrip to the book generator and `path-raster` renders it to PNG. | Declared in `core/figure-generation.json`, byte-gated, proved on Tamil's cited letters and Devanagari's अ and आ. |
+| HL-C118 | Not started | Cited ductus for Telugu, Kannada, Malayalam and the rest of Devanagari. **No citation → no pen path → no figure**; the gap is reported, never filled by invention. | Every authored pen path font-verified and carrying a `strokeOrderSource`. |
+| HL-C134 | Not started | Rewrite the handwritten chapters 1-5 into the generated pipeline for all six. Bites when a tranche needs to place a word or a letter in the opening chapters. | No protected handwritten chapter; Hindi's 11 writing lessons reach the page. |
+| HL-C148 | Not started | **Migrate the six tracks' schema-v1 lessons** (233) and give every lesson a `sequence`. Until then those lessons are invisible to every gate, so the measurements understate the debt. | `measurablePercent` rises; 0 lessons without `sequence` in the six. |
+| HL-C149 | **Done** | **Derive the corpus-count pins instead of hard-coding them.** Twenty snapshot assertions across six test files hard-coded counts that every content tranche moves — so every tranche conflicted with every other PR that moved any of them, and this repo lands a PR every few minutes. Converted to the shape each number actually has: **floors** for content volume, **ceilings** for inherited debt (stricter than the pin was — a ratchet that cannot slip back), **ratios** for debt that grows with honest content. The running annotations stay; only the digits churned. | Mutation-tested both ways: deleting one lesson still fails the floors, and adding 42 lessons passes without touching a test file. |
+| HL-C150 | **NEXT** | **Place the deixis words where they are needed, not at the end of the book.** Wave I put *this/that/here/there/who/where* in a new final chapter, and HL-C149's new forward-reference ceiling immediately showed why that is wrong: `ML-C01-athe` uses അത് in **chapter 1**, and the new chapter is the first thing that ever teaches it — 100 lessons late. Six function words the corpus already leans on from page 1 cannot be taught last. | The six land as early as the generated range allows; `forwardReferences` does not rise; every book still builds. Going earlier than chapter 6 depends on HL-C134. |
+
+
+### Discovered while running the loop (2026-08-13)
+
+**HL-C149 was found by wave I, not predicted.** The tranche was authored,
+verified and pushed green, then went `DIRTY` three times before it could merge:
+main kept landing chapters, and both sides had moved the same twenty
+corpus-snapshot pins. Neither side's numbers described the merged corpus, so the
+conflict could not be resolved by choosing — the wave had to be reset onto the
+new base and every measurement re-derived. Nineteen waves would have meant
+nineteen of those, so HL-C149 was pulled ahead of wave II.
+
+The rule it protects is worth stating, because the tempting fix is the wrong
+one: **never resolve a conflicted snapshot by taking either side.** A pin is a
+measurement, and a measurement of neither corpus is not a compromise, it is a
+wrong number with a confident annotation attached. Regenerate from the merged
+base.
+
+**HL-C150 was then found by HL-C149** — one gate catching what another had
+hidden. Converting `forwardReferences` from an exact pin into a ceiling turned it
+from a number nobody read into a ratchet, and the first thing it caught was wave
+I itself. Not a defect in the new lessons: the wave *revealed* forward references
+that were already there, because it is the first thing in the corpus that teaches
+words chapter 1 has been using untaught since it was written. The lesson
+generalises past this wave — a word the opening chapters already lean on belongs
+near the opening chapters, and "append a chapter at the end" is the wrong shape
+for function words however good the chapter is.
+
+### The loop this order is executed by
+
+One work item per PR. Push, watch CI and mergeability, auto-merge when green,
+then take the next item. New work discovered mid-item is logged here and the
+order re-prioritized before the next item is picked up — not deferred to memory.
+
 ## P0 — The Indic ladder, pre-A1 to C2 (HL12)
 
 **2026-08-13.** [HL12](../../specs/HL12-indic-pre-a1-to-c2.md) is HL10's
@@ -506,13 +637,19 @@ We can chop it up into pre-A1, A1...C2 in the future."* No rule may be relaxed
 and no lessons merged to keep a book short; `HI-W01-shirorekha-na-ma`, twelve
 Devanagari glyphs in one lesson, is exactly what economising looks like.
 
+*(Renumbered on 2026-08-13: this section first claimed HL-C123–127, which
+HL-C126 and HL-C127 were already carrying for Spanish — `SPINE-DESCRIBE-EXPERIENCE`
+and the `vosotros` rung, both cited in merged commits. Those keep the ids; these
+rows moved. A work-item id is a name two commits can agree on, so a duplicate is
+worse than a gap.)*
+
 | ID | Status | Work item | Completion signal |
 |---|---|---|---|
-| HL-C123 | Not started | Measure the both-ramps-steep set in `ramp.ts`, report-only beside the closure numbers: per track, the lessons whose new glyphs and new atoms arrive together, and which of the two frontiers each lesson sits at. | The 59 appear in the gap report, attributed per track and per lesson id; the list is a burn-down, and nothing throws. |
-| HL-C124 | Not started | Name the lesson in each track where the decoding ladder **closes** — after which the script is never a topic again — and say so on the page, reframing what comes next as meaning. | Each track declares one closing lesson; the book prints the reframing; a track with no closing lesson is reported, not silently accepted. |
-| HL-C125 | Not started | Schedule romanization's removal: present on every headword at pre-A1, first use only at A1, absent at A2 and above, with closure becoming a **gate** exactly as the exemption is withdrawn. | The schedule is measured per track and per level; no A2+ lesson carries a headword romanization; closure violations at A2+ are zero, and gating is on. |
-| HL-C126 | Not started | Rewrite the handwritten draft chapters into the generated pipeline for all six tracks, carrying the prose across intact. This is what unblocks placement, ordering and every gate at once. | No track has a protected handwritten chapter; every lesson has a `sequence`; Hindi's 11 writing lessons reach the page rather than only the answer key. |
-| HL-C127 | Not started | Author the pre-A1 rung honestly for all six — the ~300-word floor — in lockstep, splitting rather than compressing. | `runLevelGate` reports pre-A1 **attained** for all six; the A2 *touches* claim is withdrawn until it is earned. |
+| HL-C131 | Not started | Measure the both-ramps-steep set in `ramp.ts`, report-only beside the closure numbers: per track, the lessons whose new glyphs and new atoms arrive together, and which of the two frontiers each lesson sits at. | The 59 appear in the gap report, attributed per track and per lesson id; the list is a burn-down, and nothing throws. |
+| HL-C132 | Not started | Name the lesson in each track where the decoding ladder **closes** — after which the script is never a topic again — and say so on the page, reframing what comes next as meaning. | Each track declares one closing lesson; the book prints the reframing; a track with no closing lesson is reported, not silently accepted. |
+| HL-C133 | Not started | Schedule romanization's removal: present on every headword at pre-A1, first use only at A1, absent at A2 and above, with closure becoming a **gate** exactly as the exemption is withdrawn. | The schedule is measured per track and per level; no A2+ lesson carries a headword romanization; closure violations at A2+ are zero, and gating is on. |
+| HL-C134 | Not started | Rewrite the handwritten draft chapters into the generated pipeline for all six tracks, carrying the prose across intact. This is what unblocks placement, ordering and every gate at once. | No track has a protected handwritten chapter; every lesson has a `sequence`; Hindi's 11 writing lessons reach the page rather than only the answer key. |
+| HL-C135 | Not started | Author the pre-A1 rung honestly for all six — the ~300-word floor — in lockstep, splitting rather than compressing. | `runLevelGate` reports pre-A1 **attained** for all six; the A2 *touches* claim is withdrawn until it is earned. |
 
 ## P0 — The drizzled script ramp for the six Indic tracks (HL11)
 
@@ -842,7 +979,7 @@ direction, and no gate may penalise page, lesson, or chapter count.
 | HL-C06 | Complete (#10219) | Add the figure pipeline: SVG generation, `graphicx`, SVG→PDF in CI, and a `--check` hash gate. | A generated figure round-trips from canonical data into a compiled PDF and fails CI on drift, reusing `paint-vm-svg`'s `renderToSvgString`. |
 | HL-C07 | Complete (#9963) | Add the log-scanning warning gate with recorded per-track baselines. | Overfull/underfull boxes, missing glyphs, hyperref warnings, duplicate destinations, and font substitutions are machine-checked by `scan_latex_log_warnings.py` after the `latexmk` loop, against `core/latex-warning-baseline.json`. Baselines ship unseeded — `null` means unmeasured, never zero — so the gate reports today and fails the moment a seeded track regresses. The first CI run on main emits the real counts into the job summary for a human to paste back. |
 | HL-C08 | Complete (#9974) | Render the ductus in Language Ladder. | `penPathD`/`penTip` drive the tested SVG stroke build-up in the app; the currently authored ductus is shared with validation and script practice. |
-| HL-C09 | Queued — 125 of 228 verified | Expand `DUCTUS` to cover the ten scripts with prose stroke-order entries. | Add cited, font-checked ductus and verified pen-lift metadata for the remaining 103 entries measured by HL-C19; each passes the on-ink, join-tolerance, coverage, citation, and source-agreement invariants. Hebrew, Chinese, and the Devanagari starter inventory are complete. Arabic's three remaining entries are deferred for mismatched or unavailable sources; Cyrillic and Gujarati are now tied as the smallest actionable inventories with 33 entries each. |
+| HL-C09 | Queued — 128 of 228 verified | Expand `DUCTUS` to cover the ten scripts with prose stroke-order entries. | Add cited, font-checked ductus and verified pen-lift metadata for the remaining 100 entries measured by HL-C19; each passes the on-ink, join-tolerance, coverage, citation, and source-agreement invariants. Hebrew, Chinese, and the Devanagari starter inventory are complete. Arabic's three remaining entries are deferred for mismatched or unavailable sources; Cyrillic is now the smallest actionable inventory with 30 entries. |
 | HL-C09A | Complete (#10222) | Verify Tamil அ as the first post-HL-C19 expansion tranche, using the primer already cited for Tamil handwriting. | அ carries a source-aligned two-stroke path with exactly one lift; its five movements, learner prose, source metadata, font-outline geometry, and rendered filmstrip agree. |
 | HL-C09B | Complete (#10223) | Verify Tamil ஆ as the next source-backed expansion tranche from Frame 4 of the same primer. | ஆ carries a font-checked path for the அ body plus its long-vowel right-hand loop; its learner prose states every verified lift, and source, geometry, and filmstrip tests agree. |
 | HL-C09C | Complete (#10226) | Verify Tamil இ as Frame 4's third source-backed vowel tranche. | இ carries a seven-movement, font-checked path whose learner prose states each evidenced lift; the cited order, Noto outline geometry, source metadata, and real filmstrip agree. |
@@ -972,6 +1109,9 @@ direction, and no gate may penalise page, lesson, or chapter count.
 | HL-C09DW | Complete ([PR #11313](https://github.com/adhithyan15/coding-adventures/pull/11313)) | Verify Devanagari श by preserving its joined double-loop body and diagonal tail before the separate right stem and headline. | Opiaterein's 25-frame animation carries the upper loop, descending outer curve, lower loop, and down-right diagonal tail in one continuous run, then uses 250 ms holds to delimit the restarted right stem and headline. JackPotte's separate 26-frame animation and the Central Hindi Directorate's 2019 deskbook independently confirm the same three-part buildup. The three-frame learner path fits those runs to Noto Sans Devanagari and preserves two lifts. Devanagari स is next. |
 | HL-C09DX | Complete ([PR #11318](https://github.com/adhithyan15/coding-adventures/pull/11318)) | Verify Devanagari स while distinguishing its animation-backed hook-to-tail join from component-order corroboration. | JackPotte's 13-frame animation spatially restarts only after the descending left stem, central hook, and down-right diagonal tail have been drawn continuously, then separately draws the middle crossbar, descends the right stem, and finishes the shirorekhā. The Central Hindi Directorate's 2019 deskbook confirms the same component order but stages the left curve and diagonal tail separately, so the three-lift claim remains explicitly animation-backed. The four-frame learner path fits those runs to Noto Sans Devanagari. Devanagari ह is next. |
 | HL-C09DY | Complete ([PR #11325](https://github.com/adhithyan15/coding-adventures/pull/11325)) | Verify Devanagari ह while distinguishing its animation-backed joined first body from component-order corroboration. | Opiaterein's 22-frame animation descends the right stem, sweeps left through the shoulder, and curves clockwise around the hooked body continuously, then uses holds to delimit the restarted down-left outer curve and down-right tail before the final shirorekhā. The Central Hindi Directorate's 2019 deskbook confirms the same component order but stages the joined first body across more buildup steps, so the two-lift claim remains explicitly animation-backed. The three-frame learner path fits those runs to Noto Sans Devanagari and completes the source-verified Devanagari starter inventory. Cyrillic and Gujarati are tied as the next smallest actionable inventories. |
+| HL-C09DZ | Complete ([PR #11337](https://github.com/adhithyan15/coding-adventures/pull/11337)) | Break the tied Cyrillic/Gujarati queue by verifying lowercase Cyrillic а from a native teacher's all-letter school-hand demonstration. | RussianIrina's 00:50–00:55 lowercase а demonstration keeps its rounded body and right-hand finishing stem in one pen-down run. The two-frame learner path preserves zero lifts while fitting the handwritten single-storey motion through Noto Sans Cyrillic's double-storey printed shoulder. The same source covers all 33 Russian letters, so Cyrillic б is next. |
+| HL-C09EA | Complete ([PR #11356](https://github.com/adhithyan15/coding-adventures/pull/11356)) | Verify lowercase Cyrillic б from the same native teacher's all-letter school-hand demonstration. | RussianIrina's 01:13–01:18 lowercase б demonstration circles the lower body counterclockwise and continues into the rising shoulder and rightward top flag without lifting. The two-frame learner path preserves that zero-lift body-to-flag order while routing the handwritten diagonal transition through Noto Sans Cyrillic's printed upper-left shoulder. Cyrillic в is next. |
+| HL-C09EB | Complete ([PR #11370](https://github.com/adhithyan15/coding-adventures/pull/11370)) | Verify lowercase Cyrillic в from the source-adjacent school-hand demonstration. | RussianIrina's 01:33–01:38 lowercase в demonstration starts at the baseline, climbs through a tall upper loop, descends to the baseline, and continues counterclockwise around the lower bowl without lifting. The two-frame learner path preserves that zero-lift order while routing the cursive ascender through Noto Sans Cyrillic's compact printed upper bowl and straight left stem. Cyrillic г is next. |
 | HL-C10 | Complete (#10010, #10013, #10067) | Complete A1 and add the A2-through-C2 spine tranches with all registered realization ledgers. | All seven declared stages carry nodes; every one of the 22 registered tracks has a non-drifting ledger entry for every node. |
 | HL-C11 | Queued — capability and closure coverage complete | Finish representative chapter payoffs across all 22 tracks. | #10128 brought all 513 chapters to an authored `canDo`, spine mapping, known payoff lesson, and closed assessment. Remediate the remaining 27 payoffs below the 0.5 representativeness floor across ten tracks, then enforce the clean tracks instead of leaving their gates report-only. |
 | HL-C12 | Queued — licensing decided, pipeline outstanding | Add the Class C illustration pipeline with provenance sidecars and a size budget. Licensing is settled and recorded in [`_assets/LICENSE.md`](./_assets/LICENSE.md); the remaining work is the pipeline itself. | Every asset carries `license`, `rightsAsserted`, `generator`, `model`, `prompt`, `date`, and `sha256`; CI fails any asset without a provenance sidecar or a recorded licence, and enforces the per-track size budget. |
@@ -1014,7 +1154,7 @@ direction, and no gate may penalise page, lesson, or chapter count.
 | HL-C125 | Not started | **The rest of `SPINE-ARGUE-A-VIEW` is blocked on four words the corpus has never used.** Measured 2026-08-12 across all 217 chapters: `aunque` 0 occurrences, `sin embargo` 0, `por eso` 0, `mejor` 0. The node's own concepts are CONNECTIVE-HOWEVER and CONNECTIVE-ALTHOUGH, so it cannot be finished without them. HL-C113 step 8 opened the node with `pero`, `también` and `tampoco` (and minted `tan`, `poco`); still owed are `sin` (needed by `sin embargo`), `aunque` with the indicative (a fact conceded) and `aunque` with the subjunctive (a supposition conceded — which pays off the imperfect-subjunctive arc at 206-210), `sin embargo` as the formal register partner to `pero`, then the node's review and synthesis. `muy` is also untaught and is wanted for ARGUMENT-EVIDENCE. |
 | HL-C126 | Not started | **One unbuilt B1 node gates the entire remaining ladder.** Measured 2026-08-12: `SPINE-DESCRIBE-EXPERIENCE` has **0 segments**, and so does `SPINE-HANDLE-TRAVEL`. `SPINE-READ-EXTENDED-PROSE` (B2) lists DESCRIBE-EXPERIENCE as its prerequisite, and `SPINE-DISCUSS-ABSTRACT` (B2) requires READ-EXTENDED-PROSE — so three nodes across two levels are unreachable until one B1 node is authored. B1 therefore is **not** finished, despite HL-C113 closing `SPINE-EXPRESS-CONDITION`: 31 lessons across three of five nodes. DESCRIBE-EXPERIENCE's concepts are ADJECTIVE-FEELING, AMBITION-EXPRESS, COMPARISON-BASIC and TIME-DURATION; **check the lexical inventory for each before authoring** — COMPARISON-BASIC needs `más`/`menos`/`mejor`, and `mejor` is not taught anywhere (see HL-C125). HANDLE-TRAVEL (DIRECTION-ASK, TRANSPORT-TICKET, LODGING-ROOM, PROBLEM-REPORT) is a pure vocabulary node and should be scheduled with HL-C123. |
 | HL-C127 | Not started | **Two preterite debts, named out loud in chapter 204 and still owed.** The `vosotros` forms (`hablasteis`, `comisteis`, `tuvisteis`) and the strong `nosotros` forms (`tuvimos`, `hicimos`, `estuvimos`). Chapter 204 tells the reader both are coming, which makes this a promise in the text rather than a nice-to-have. Small — two lessons, possibly three with a review — and it closes the preterite properly before anything else builds on it. |
-| HL-C128 | **In progress — the gate exists and Spanish reads 53/85 (62%) at A1.** | **Replace `touches`/`attained` with a gate that asks whether a reader could PASS the exam.** Owner correction, 2026-08-12: *"The goal is not whether something touches some level. The goal is can someone pass that level of exam with just reading the book and slowly following its gentle ramp."* Both current numbers are corpus-internal — they measure whether lessons exist and whether atoms were revisited, neither of which is what an examiner tests. The replacement has a source: the **Plan Curricular del Instituto Cervantes** publishes a *finite, enumerable* grammar inventory per level (15 categories, two columns marked A1 and A2, **roughly 80-100 distinct grammar points at A1 alone**), plus inventories for nociones generales/específicas, ortografía and fonética. Needs: map every taught atom onto a Plan Curricular point, report per-level coverage as *points covered / points enumerated*, and let a track claim a level only when coverage is complete **and** HL-C130's task-shape criteria are met. That number, unlike `touches`, cannot be moved by adding a lesson on something the exam does not test. Source: <https://cvc.cervantes.es/ensenanza/biblioteca_ele/plan_curricular/indice.htm> **First result, 2026-08-12:** `core/exam-inventory-es-a1.json` enumerates 85 A1 points restated from the Plan Curricular structure, each carrying an *executable* probe rather than a hand-filled `coveredBy` annotation — coverage is recomputed from the corpus on every run, so it falls when an atom is retired and cannot go stale in the flattering direction. `src/exam-inventory.ts` resolves it; `tests/exam-inventory.test.ts` pins the number and was verified adversarially (an empty probe throws at load; deleting a point fails the pin). **Spanish covers 53 of 85 (62%)** after 220 chapters that had climbed to a B2 node. The gaps are not exotic: the demonstratives are absent ENTIRELY (este/ese/aquel, 3 of 3 points), `muy` is untaught, the `al`/`del` contractions are untaught, the gerund is untaught, `quien` is untaught, and the personal `a` is untaught. Still owed on this row: the same treatment for A2 and above, and the non-grammar inventories (nociones, ortografia, fonetica). |
+| HL-C128 | **In progress — gate built; Spanish 53/85 (62%) → 56/85 → 60/85 (71%) at A1 after the demonstratives landed.** | **Replace `touches`/`attained` with a gate that asks whether a reader could PASS the exam.** Owner correction, 2026-08-12: *"The goal is not whether something touches some level. The goal is can someone pass that level of exam with just reading the book and slowly following its gentle ramp."* Both current numbers are corpus-internal — they measure whether lessons exist and whether atoms were revisited, neither of which is what an examiner tests. The replacement has a source: the **Plan Curricular del Instituto Cervantes** publishes a *finite, enumerable* grammar inventory per level (15 categories, two columns marked A1 and A2, **roughly 80-100 distinct grammar points at A1 alone**), plus inventories for nociones generales/específicas, ortografía and fonética. Needs: map every taught atom onto a Plan Curricular point, report per-level coverage as *points covered / points enumerated*, and let a track claim a level only when coverage is complete **and** HL-C130's task-shape criteria are met. That number, unlike `touches`, cannot be moved by adding a lesson on something the exam does not test. Source: <https://cvc.cervantes.es/ensenanza/biblioteca_ele/plan_curricular/indice.htm> **First result, 2026-08-12:** `core/exam-inventory-es-a1.json` enumerates 85 A1 points restated from the Plan Curricular structure, each carrying an *executable* probe rather than a hand-filled `coveredBy` annotation — coverage is recomputed from the corpus on every run, so it falls when an atom is retired and cannot go stale in the flattering direction. `src/exam-inventory.ts` resolves it; `tests/exam-inventory.test.ts` pins the number and was verified adversarially (an empty probe throws at load; deleting a point fails the pin). **Spanish covers 53 of 85 (62%)** after 220 chapters that had climbed to a B2 node. The gaps are not exotic: the demonstratives are absent ENTIRELY (este/ese/aquel, 3 of 3 points), `muy` is untaught, the `al`/`del` contractions are untaught, the gerund is untaught, `quien` is untaught, and the personal `a` is untaught. Still owed on this row: the same treatment for A2 and above, and the non-grammar inventories (nociones, ortografia, fonetica). **Step 2, 2026-08-13:** closed `Los demostrativos`, the only category reading **0 of 3** — chapters 221-225 teach `este`/`ese`/`aquel`, the neuters `esto`/`eso`/`aquello`, and a review. The gate behaved exactly as designed on the way through: coverage would not move until the three probes were wired, and the pinned 53 had to be re-pinned to 56 **deliberately**, with the category assertion going 3/0 → 3/3 in the same edit. Remaining at A1: 29 points, of which the cheapest are `muy`, the `al`/`del` contractions, `quien`, `ni`/`o`, the personal `a`, and the gerund. **Step 3, 2026-08-13:** chapters 226-229 teach the degree words `muy`, `bastante` and `mal`, closing **four** points across three categories with three lessons — the best points-per-lesson available on the list, because `muy` and `bastante` each appear on more than one inventory line. `El sintagma adjetival` is off the floor (0/1 → 1/1), and the worst-category-first report reordered itself to `Los cuantificadores` at 1/4, which is the next thing to do. Remaining at A1: 25 points; the cheapest are the `al`/`del` contractions, `quien`, `ni`/`o`, ordinals, the personal `a`, and the gerund. |
 | HL-C129 | Not started | **The longest continuous Spanish in the whole book is 10 words.** Measured 2026-08-12 across all 220 chapters, counting only genuinely Spanish emphasised runs: 1 stretch of 10 words, 3 of 9, 7 of 8, and **zero of 20 or more** — and several of the longest are conjugation lists (`viví · viviste · vivió · vivimos · vivieron`) rather than prose. A reader can finish this book having never read a Spanish **paragraph**. The DELE A1 reading paper is 25 questions over four tasks in 45 minutes, on connected texts; B1 and above are longer still. This is a gap in **shape**, not size, and no amount of additional vocabulary closes it. Needs: graded reading passages as a first-class lesson type, built only from already-taught words so the ramp holds, starting short (30-40 words) and growing with the level; a measurement of the longest-passage ceiling per level; and a rule that the ceiling must rise before a level is claimed. Note this interacts with HL-C123: connected prose is also the cheapest way to *revisit* headwords, which is the gate's second blocker. |
 | HL-C130 | Not started | **Every one of the 704 activities in the corpus is the same task shape, and the exam has four.** Measured 2026-08-12: all 704 `hl-activity` blocks are `kind: "text"` — a one-line prompt with a short expected answer. The DELE structure is four papers in two groups, and **a candidate must score at least 30/50 in EACH group independently** (Group 1 = reading + written expression; Group 2 = listening + oral expression), so being strong at half the exam is a fail, not a partial pass. Against that: `writing` is claimed by **44 of 366 lessons (12%)**, and only 7 lessons have `type: writing`, while `speaking` and `listening` are claimed by 98% each. There is no reading-comprehension item over a passage, no listening item, no free written production of the length the exam asks for, and no oral prompt. Needs: new activity kinds (`reading-comprehension`, `listening`, `free-writing`, `oral-prompt`), a written-production strand that reaches the exam's word counts, and at least one full mock paper per level so the reader has rehearsed the shape before sitting it. Source for structure and the per-group pass rule: <https://londres.cervantes.es/en/courses_spanish/students_spanish/dele_diplomas_info/exam_format.htm> |
 | HL-C78 | Complete (#10202) | Reconcile the early foundational backlog rows against what later deliveries actually shipped. | Every pre-HL-C19 queued row is checked against direct code and test evidence; work that is already complete is closed with the PRs or concrete implementation that delivered it, partially complete rows state only their measured remainder, and genuinely absent work stays queued in priority order. |

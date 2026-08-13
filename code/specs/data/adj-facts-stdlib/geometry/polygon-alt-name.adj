@@ -1,0 +1,58 @@
+% ============================================================================
+% polygon-alt-name — for the polygon where the SAME source names an
+% alternate word, the alternate name (adj-facts-stdlib, GEOMETRY).
+% ============================================================================
+% A sibling to the already-shipped `shapes.adj` (`polygon_sides(shape,
+% sides)`, ONE side-count per polygon: triangle, quadrilateral, pentagon,
+% hexagon, heptagon, octagon, nonagon, decagon). That table's own `source`
+% field already quotes the MathWorld "Polygon" names table's triangle row
+% VERBATIM — "3 | triangle (trigon)" — but the table's `sides`-only schema
+% had no room for the parenthetical alternate name that row also states:
+%
+%   triangle → trigon
+%     "3 | triangle (trigon)"
+%
+% Recall is a binding query:
+%
+%     ? polygon_alt_name(triangle, $AltName)      % trigon
+%
+% This is a native `table` (ADJ-TABLES RS-5, a TWO-column table like
+% `shapes.adj`'s own `polygon_sides`): each `row` lowers to a ground
+% relation `polygon_alt_name(shape, alt_name)` carrying the citation, so
+% the lookup above is the ordinary SLD binding query — the engine returns
+% the alternate name WITH its source, on the CPU, with zero model calls,
+% and abstains on every other polygon `shapes.adj` tables, since none of
+% their MathWorld "Polygon" names-table rows carry a parenthetical
+% alternate name — a quadrilateral, pentagon, hexagon, and so on are each
+% named only once in that source table.
+%
+% Only ONE of `shapes.adj`'s eight polygons has a genuinely distinct
+% alternate name in the ALREADY-cited span; this table is deliberately
+% narrow rather than inventing a name the source does not state. The query
+% also runs BACKWARD — bind an alternate name and recall which polygon it
+% names:
+%
+%     ? polygon_alt_name($Shape, trigon)   % triangle
+%
+% Provenance: reproduces, byte-for-byte, the SAME "3 | triangle (trigon)"
+% span already quoted inside `shapes.adj`'s own `source` field, from the
+% SAME MathWorld "Polygon" names table that table already cites — no new
+% WebFetch, only a different schema decoding the parenthetical half of an
+% already-verified quote. An ADJ `table` carries ONE provenance envelope
+% (per `shapes.adj`'s own convention), so `source`/`locator`/`trust` below
+% hold that same span — the single span that fixes this table's only row.
+% `trust authoritative` — the same tier `shapes.adj` already carries
+% (Wolfram MathWorld, a primary mathematics reference).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table polygon_alt_name {
+    columns shape, alt_name
+
+    row (triangle, trigon)
+
+    source "3 | triangle (trigon)"
+    locator "https://mathworld.wolfram.com/Polygon.html"
+    trust authoritative
+}

@@ -5,6 +5,47 @@ landed and why, not a semver-tracked API.
 
 ## Unreleased
 
+- `geography/reference-line-hemisphere-split.adj` (new) — a sibling to the already-shipped
+  `reference-lines.adj` (`reference_line(line, marks)`, ONE degree-marking property per line:
+  equator, prime_meridian, tropic_of_cancer, tropic_of_capricorn, arctic_circle,
+  antarctic_circle). That table's own `source` and `cites` fields already quote a SECOND fact,
+  verbatim, for two of the six lines — which pair of hemispheres each line divides the Earth
+  into — that the marks-only schema had no room for: the equator's cited NOAA "What is
+  latitude?" source states "it equally divides the Earth into the Northern and Southern
+  hemispheres," and the prime meridian's cited NOAA "What is longitude?" corroboration states
+  "It divides the Earth into the eastern and western hemispheres." New
+  `reference_line_hemisphere_split(line, hemispheres)` table: equator → northern_southern,
+  prime_meridian → eastern_western. Honest abstention on the two tropics and two polar circles,
+  whose own cited spans state a latitude limit or polar ring, not a hemisphere split. New e2e
+  test file `facts_referencelinehemispheresplit_e2e.rs` (3 tests: forward recall with citation,
+  backward recall from a bound hemisphere pair, honest abstention on tropic_of_cancer). No
+  manifest objective, matching `reference-lines.adj`'s own precedent of not having one. First
+  slice from a fresh geography/ sweep (mathematics/ swept and closed empty first — see below).
+- `geometry/polygon-alt-name.adj` (new) — a sibling to the already-shipped `shapes.adj`
+  (`polygon_sides(shape, sides)`, ONE side-count per polygon: triangle, quadrilateral, pentagon,
+  hexagon, heptagon, octagon, nonagon, decagon). That table's own `source` field already quotes
+  the MathWorld "Polygon" names table's triangle row verbatim — "3 | triangle (trigon)" — but the
+  sides-only schema had no room for the parenthetical alternate name that row also states. New
+  `polygon_alt_name(shape, alt_name)` table: triangle → trigon. Honest abstention on the other
+  seven polygons, whose own MathWorld "Polygon" names-table rows carry no parenthetical alternate
+  name. New e2e test file `facts_polygonaltname_e2e.rs` (3 tests: forward recall with citation,
+  backward recall from a bound alternate name, honest abstention on quadrilateral). No manifest
+  objective, matching `shapes.adj`'s own precedent of not having one. Fifth and LAST slice from
+  the geometry/ sweep tranche — geometry/ (9 files) is now fully exhausted (5/5 candidates from
+  the original sweep shipped: radius-definition, quadrilateral-secondary-property,
+  quadrilateral-alt-name, triangle-alt-name, polygon-alt-name).
+- `geometry/triangle-alt-name.adj` (new) — a sibling to the already-shipped `triangle-types.adj`
+  (`triangle_sides(triangle, condition)`, ONE defining side-condition per triangle side-class:
+  equilateral, isosceles, scalene). That table's equilateral row's own already-quoted MathWorld
+  sentence — "An equilateral triangle is a triangle with all three sides of equal length a,
+  corresponding to what could also be known as a 'regular' triangle." — also names an ALTERNATE
+  word for equilateral that the condition-only schema had no room for. New
+  `triangle_alt_name(triangle, alt_name)` table: equilateral → regular. Honest abstention on
+  isosceles and scalene, whose own cited spans name no alternate word. New e2e test file
+  `facts_trianglealtname_e2e.rs` (3 tests: forward recall with citation, backward recall from a
+  bound alternate name, honest abstention on isosceles). No manifest objective, matching
+  `triangle-types.adj`'s own precedent of not having one. Fourth slice from the geometry/ sweep
+  tranche.
 - `geometry/quadrilateral-alt-name.adj` (new) — a sibling to the already-shipped
   `quadrilateral-types.adj` (`quadrilateral_property(shape, property)`, ONE defining property
   per quadrilateral: square, rectangle, rhombus, parallelogram, trapezoid). That table's rhombus

@@ -900,8 +900,12 @@ backend immediately) come before the enabler-dependent items.
   first integer or finite binary64 control value whose predicate is false when
   its value and predicate reference only the control and statically known
   ordinary local scalars that
-  the body does not write. Read-only body uses are permitted; assignment targets
-  and nested controlled variables count as writes. The proof is limited to
+  the body does not change. Read-only body uses and exact scalar
+  self-assignments are permitted; computed assignment targets and nested
+  controlled variables count as writes. A variable-free static body condition,
+  or a statically known bare boolean local that the body never writes, scans
+  only its selected branch; dynamic, written, nonlocal, and compound selectors
+  scan both paths. The proof is limited to
   4,096 iterations; globals, arrays, by-name values, written dependencies,
   unknown expressions, rounded-away real progress, and nonterminating or
   longer loops leave the final controlled value unknown. Exact supported

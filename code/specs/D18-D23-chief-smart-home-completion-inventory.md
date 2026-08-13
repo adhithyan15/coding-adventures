@@ -1988,6 +1988,57 @@ smart-home authority:
 - D23 remains the source of truth for authorization, state, commands, pairing,
   supervision, durable revisions, and audit evidence.
 
+## Current Chief Trust Checker Core Slice
+
+This slice begins the remaining central-orchestrator authority path after the
+smart-home ownership composition completed:
+
+- `chief-of-staff-trust-checker` validates an exact bounded non-secret resource
+  set and computes the pipeline effective tier as the maximum resource tier.
+- Tier 0 bypasses the approval provider. Tier 1 requests a five-second
+  notification and preserves D18's timeout auto-approval rule while explicit
+  denial fails closed.
+- Tier 2 requires biometric assurance within thirty seconds, and Tier 3
+  requires hardware-key assurance within sixty seconds. Both timeout paths and
+  any provider failure fail closed.
+- The checker rejects approval evidence weaker than the effective tier and
+  returns a typed non-secret authorization receipt for the exact request.
+- Notification, biometric, hardware-key, clock, and platform interaction stay
+  behind an injected provider; the primitive performs no filesystem, network,
+  terminal, environment, or device access.
+
+Production still composes `DenyChannelWiring` until a reviewed provider and
+exact channel/pipeline request adapter are connected. The next bounded slices
+are orchestrator-core composition followed by authenticated daemon API and CLI
+wire/unwire operations; this primitive does not weaken the current fail-closed
+production default.
+
+## Current Chief Trust-Checked Channel Mutation Slice
+
+This slice connects the reusable Trust Checker to the existing durable channel
+topology boundary without enabling an unreviewed production approval path:
+
+- Channel create and irreversible destroy calls now require validated request
+  identity and requester context before entering the authorization boundary.
+- `TrustCheckingChannelWiring` resolves the current tier of the exact channel,
+  originator, and every receiver through an injected authoritative resolver;
+  callers cannot supply their own effective tier.
+- A domain-separated SHA-256 resource fingerprint covers the operation,
+  channel UUID, originator and receiver identifiers and public keys, creation
+  time, key epoch, and lifecycle. Create, destroy, or any topology/key change
+  therefore produces a different approval-bound resource.
+- The Trust Checker resource bound now covers the channel contract's maximum
+  1,024 receivers plus originator and channel. That remains a finite 1,026-row
+  request instead of rejecting otherwise valid maximum membership.
+- Tier-resolution errors, invalid trust requests, denials, weak assurance, and
+  provider failures all occur before durable channel storage mutation and keep
+  nested diagnostics out of display output.
+
+Production continues to compose `DenyChannelWiring`. The next P0 is to expose
+bounded pipeline wire/unwire requests through the authenticated daemon API and
+CLI with an explicit reviewed provider/tier-policy composition; this adapter
+does not treat the loopback bearer token as approval.
+
 ## Current Chief HTTP Request Clock Slice
 
 This slice closes the remaining request-time ambiguity in the shared
@@ -2181,6 +2232,27 @@ local-controller process is also running:
 The central controller composition backlog is now complete. Future executable
 work must come from the protocol- and vendor-specific inventory below after its
 recorded ownership, authentication, and secret-handling prerequisites are met.
+
+## Current Modbus TCP Breadth Slice
+
+The first breadth slice after central composition adds a common local building
+and energy protocol without weakening any credential-gated vendor boundary:
+
+- `modbus-protocol` owns MBAP framing and strict correlation checks for read
+  holding-register (`0x03`) and read input-register (`0x04`) exchanges.
+- `smart-home-modbus-tcp-integration` polls an explicit endpoint, unit id, and
+  bounded register profile through the shared TCP client, then projects typed,
+  scaled register values into normalized D23 sensor entities.
+- Authorization runs before network I/O. Profiles are limited to 64 points,
+  every request honors the Modbus 125-register maximum, and malformed,
+  mismatched, oversized, or exception responses fail without runtime mutation.
+- The runtime exposes no register-write function. Classic Modbus TCP has no
+  peer authentication, so control remains out of scope until a separately
+  secured host and operation-specific postcondition policy exist.
+
+This broadens local HVAC, energy, and industrial telemetry coverage while the
+independent camera, cloud, radio, and credential prerequisites below remain
+honestly blocked.
 
 The protocol- and vendor-specific backlog below remains valid after those
 central ownership steps:
