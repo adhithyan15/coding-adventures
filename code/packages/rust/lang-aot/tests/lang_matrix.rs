@@ -2235,6 +2235,15 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("6.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — an exactly-one-iteration step loop may retain a static body
+    // assignment to the controlled scalar because no increment executes.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real x; for x := 1.0 step 1.0 until 1.0 do x := 6.25; print(x) end",
+        expect: Expect::Stdout("6.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a list containing only single-value elements is straight-line
     // repetition with no zero-trip path or backedge. Its final static real
     // assignment therefore remains available to the portable output path.
@@ -9501,6 +9510,37 @@ fn algol_static_step_body_snapshot_runs_on_every_available_standard_backend() {
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the static step-body snapshot did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_single_step_control_snapshot_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("for x := 1.0 step 1.0 until 1.0 do x := 6.25")
+        })
+        .expect("the ALGOL single-step control snapshot program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the single-step control snapshot did not run"
             );
             continue;
         };

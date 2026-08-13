@@ -4832,7 +4832,8 @@ impl Compiler {
             };
             let tracks_step_body = is_step_element
                 && self.for_step_executes_exactly_once(var_ty, elem)
-                && self.for_body_avoids_target(target, body)
+                && (self.for_body_avoids_target(target, body)
+                    || self.for_body_statically_assigns_target(target, var_ty, body))
                 && !entry_tracking_disabled;
             if tracks_step_body {
                 self.static_real_slots.clear();
@@ -4860,7 +4861,10 @@ impl Compiler {
                         static_initial_integer,
                     )?;
                 }
-            } else if tracks_step_body && !self.static_real_tracking_disabled {
+            } else if tracks_step_body
+                && !self.static_real_tracking_disabled
+                && !self.for_body_statically_assigns_target(target, var_ty, body)
+            {
                 self.update_for_target_snapshot(target, None, None)?;
             }
         }
@@ -4949,6 +4953,48 @@ impl Compiler {
         !recursive_tokens(body).iter().any(|token| {
             token.effective_type_name() == "NAME" && token.value == target_name
         })
+    }
+
+    fn for_body_statically_assigns_target(
+        &self,
+        target: &GrammarASTNode,
+        target_ty: ScalarType,
+        body: &GrammarASTNode,
+    ) -> bool {
+        let Ok(target_name) = self.simple_variable_name(target) else {
+            return false;
+        };
+        let Some(stmt) = first_direct_node(body, "unlabeled_stmt") else {
+            return false;
+        };
+        let Some(assign) = first_direct_node(stmt, "assign_stmt") else {
+            return false;
+        };
+        let left_parts: Vec<&GrammarASTNode> = direct_nodes(assign)
+            .into_iter()
+            .filter(|node| node.rule_name == "left_part")
+            .collect();
+        if left_parts.len() != 1 {
+            return false;
+        }
+        let Some(variable) = first_direct_node(left_parts[0], "variable") else {
+            return false;
+        };
+        if array_subscripts(variable).is_some()
+            || self.simple_variable_name(variable).ok().as_deref() != Some(target_name.as_str())
+        {
+            return false;
+        }
+        let Some(expr) = first_direct_node(assign, "expression") else {
+            return false;
+        };
+        match target_ty {
+            ScalarType::Integer => self.static_assigned_integer_value(expr).is_some(),
+            ScalarType::Real => self
+                .static_assigned_real_value(expr)
+                .is_some_and(f64::is_finite),
+            ScalarType::Boolean | ScalarType::String => false,
+        }
     }
 
     fn for_element_execution(
@@ -9096,6 +9142,25 @@ mod tests {
             "test",
         )
         .expect_err("the loop increment keeps the controlled variable dynamic");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_single_iteration_step_loop_preserves_static_control_assignment() {
+        compile_source(
+            "begin real x; for x := 1.0 step 1.0 until 1.0 do x := 6.25; print(x) end",
+            "test",
+        )
+        .expect("a single iteration may retain its body's static controlled assignment");
+    }
+
+    #[test]
+    fn al4_single_iteration_step_loop_rejects_dynamic_control_assignment() {
+        let err = compile_source(
+            "begin integer n; real x; for x := 1.0 step 1.0 until 1.0 do x := n; print(x) end",
+            "test",
+        )
+        .expect_err("a dynamic controlled assignment remains conservative");
         assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
