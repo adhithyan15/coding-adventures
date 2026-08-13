@@ -57,6 +57,15 @@ directives at all) rather than test it, for exactly this reason.
   executed and graded (previously always `NotYetSupported`, unconditionally,
   specifically because of this gap) — both vendored cases now pass for
   real. See that crate's own changelog.
+- **A second security-review round** found the 512 KiB minimum-stack
+  assumption behind `MAX_CALL_DEPTH` lived only in a doc comment on a
+  *private* `const` — invisible to any downstream consumer reading just
+  the public API. Surfaced it directly on the public
+  `WasmExecutionEngine::call_function`'s own doc comment instead. Making
+  `MAX_CALL_DEPTH` itself caller-configurable (for embedders who know
+  they're running on a smaller stack) was judged out of scope for this
+  PR — folded into the WASM10 follow-up alongside the dedicated-thread
+  work, rather than widening this PR's surface further.
 
 173 tests passing (up from 168), clippy clean. Downstream consumers
 (`lang-aot` and the WASM-compiler crates) re-checked: no new failures

@@ -3316,6 +3316,20 @@ impl WasmExecutionEngine {
     }
 
     /// Call a WASM function by index.
+    ///
+    /// **Caller stack requirement**: nested WASM `call`/`call_indirect`
+    /// recurse through the calling thread's real Rust stack, one level per
+    /// nested call, up to [`MAX_CALL_DEPTH`] (currently 80) before this
+    /// returns a "call stack exhausted" trap. That ceiling was measured
+    /// assuming the calling thread has **at least 512 KiB** of stack space
+    /// available at the point this is called — Rust's own default spawned-
+    /// thread stack (2 MiB) and the main thread's default on every major OS
+    /// both clear this comfortably. If you invoke this on a thread you've
+    /// deliberately given a smaller stack than that (a constrained worker-
+    /// thread pool, an embedded target, a reactor/executor with small
+    /// per-task stacks), this guard cannot promise a clean trap instead of
+    /// a host-process abort — give the calling thread at least 512 KiB, or
+    /// treat a smaller stack as unsupported for now.
     pub fn call_function(
         &mut self,
         func_index: usize,
