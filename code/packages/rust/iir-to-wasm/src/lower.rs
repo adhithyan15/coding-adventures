@@ -2783,12 +2783,22 @@ fn emit_instr(
                 // double-pop bug in `wasm-execution::execute_branch` that has
                 // since been fixed.)
                 //
-                // For the last block the LOOP is gone; use depth=1 to exit `if`
-                // plus outer_exit (should not occur in well-formed programs).
+                // For the last block, LOOP is STILL open at this point (see
+                // the WASM11 security-review note on the fall-through
+                // fallback further down in this file, which found and fixed
+                // a real hang from this exact "LOOP is gone" assumption
+                // being wrong) — the label stack here is [if_label, LOOP,
+                // outer_exit], so exiting `if` AND reaching outer_exit
+                // (skipping LOOP) needs depth=2. This arm is currently
+                // unreachable (the sentinel-block invariant elsewhere in
+                // this function guarantees a block containing
+                // `jmp_if_true`/`jmp_if_false` is never the literal last
+                // block), kept correct anyway as defense in depth against a
+                // future change to that invariant.
                 let depth = if block_idx + 1 < n_blocks {
                     (n_blocks - block_idx) as u32
                 } else {
-                    1 // last block — should not normally conditional-jmp
+                    2 // last block — should not normally conditional-jmp
                 };
                 code.extend(encode_local_get(cond_reg));
                 // `if` tests an i32 != 0. An i64 condition (the Brainfuck loop
@@ -2841,13 +2851,14 @@ fn emit_instr(
             if is_dispatch_loop {
                 let target_idx = get_label(label)? as usize;
                 // Emit: if cond == 0 { dispatch = target_idx; br <depth> }
-                // Same depth computation as jmp_if_true (see WASM11 note there):
-                // always re-enter the LOOP, one extra label level for the
-                // enclosing `if` block.
+                // Same depth computation as jmp_if_true (see WASM11 notes
+                // there, both on the general formula and on why the
+                // last-block fallback is 2, not 1): always re-enter the
+                // LOOP, one extra label level for the enclosing `if` block.
                 let depth = if block_idx + 1 < n_blocks {
                     (n_blocks - block_idx) as u32
                 } else {
-                    1 // last block — should not normally conditional-jmp
+                    2 // last block — should not normally conditional-jmp
                 };
                 code.extend(encode_local_get(cond_reg));
                 // "branch if cond == 0" → push the i32 boolean `cond == 0`.
@@ -4082,11 +4093,21 @@ fn lower_function(
             // WASM11 note on the `jmp` depth formula above — this is the same
             // "plain jmp, not inside an extra `if`" case).
             //
-            // Special case: the last block (block_idx = n_blocks - 1) has
-            // label_stack = [outer_exit], so `br 0` exits the outer block,
-            // which terminates the function.  This is correct: well-formed
-            // programs end the last block with `ret`, so fall-through there
-            // is unreachable, but we emit a valid instruction for safety.
+            // Special case: the last block (block_idx = n_blocks - 1) — this
+            // point is reached from INSIDE the per-block loop body, before
+            // this same function's own `code.push(END); // end loop` below
+            // ever runs, so LOOP is still open here. label_stack =
+            // [LOOP, outer_exit], not just `[outer_exit]` (a WASM11 security
+            // review found and reproduced a real hang from the stale
+            // `[outer_exit]`-only assumption a previous version of this
+            // comment made: `br 0` landed on LOOP, redispatching to the
+            // SAME block forever with the dispatch variable never updated —
+            // an unconditional infinite loop, not a trap, for any program
+            // whose final basic block falls through without an explicit
+            // `ret`/`ret_void`/`jmp` — exactly the shape the sentinel-block
+            // workaround above exists to produce, e.g. BASIC GOSUB/RETURN
+            // dispatch-loop lowering). `br 1` is what actually reaches
+            // outer_exit (skipping LOOP), terminating the function.
             let last_op = block.instrs.last().map(|i| i.op.as_str()).unwrap_or("");
             if !matches!(last_op, "ret" | "ret_void" | "jmp") {
                 if block_idx + 1 < n_blocks {
@@ -4097,8 +4118,9 @@ fn lower_function(
                     let loop_depth = (n_blocks - block_idx - 1) as u32;
                     code.extend(encode_br(loop_depth));
                 } else {
-                    // Last block: `br 0` exits outer_exit → function ends.
-                    code.extend(encode_br(0));
+                    // Last block: `br 1` skips LOOP (still open here) to
+                    // reach outer_exit, terminating the function.
+                    code.extend(encode_br(1));
                 }
             }
         }

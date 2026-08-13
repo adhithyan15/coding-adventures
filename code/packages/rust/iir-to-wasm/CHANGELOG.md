@@ -1,5 +1,46 @@
 # Changelog — iir-to-wasm
 
+## [0.48.1] — 2026-08-13 (security review: the "last block" fallback was still wrong)
+
+A security review of 0.48.0's fix found the general-formula `+1` correction
+exposed a THIRD, latent bug in the same dispatch-loop codegen strategy, in the
+one case 0.48.0 deliberately left untouched: the fallback emitted for the
+LAST basic block falling through without an explicit `ret`/`ret_void`/`jmp`
+(`lower_function`, the code right after the per-block loop). Its own comment
+claimed `label_stack = [outer_exit]` at that point and emitted `br 0` — but
+that point is reached from INSIDE the per-block loop's own body, before this
+same function's `code.push(END); // end loop` ever runs, so `LOOP` is still
+open. `br 0` therefore targeted `LOOP` (redispatch), not `outer_exit` (exit)
+— and since this fallback never updates the dispatch variable, the emitted
+code redispatched to the SAME block forever: a genuine, unconditional
+infinite loop (a hang, not a trap) for any program whose final basic block's
+terminator is a bare conditional jump — precisely the shape this crate's own
+sentinel-block workaround exists to produce (e.g. BASIC GOSUB/RETURN
+dispatch-loop lowering).
+
+Confirmed by reproduction: a minimal IIR function (`const cond; label L1;
+jmp_if_false cond, L1`) compiled and run through `wasm_runtime::load_and_run`
+never returned on 0.48.0 (100% CPU, no progress within a 10s bound); the same
+program returns promptly on the *pre-0.48.0* code with a clean
+`StackUnderflow` trap — meaning 0.48.0 converted a previously-safe failure
+mode (a clean trap) into an unconditional hang for this reachable shape.
+
+Fixed: `br 0` → `br 1` (skip `LOOP`, which is genuinely still open, to reach
+`outer_exit`). Also corrected two currently-*unreachable* fallback constants
+in `jmp_if_true`/`jmp_if_false`'s own `is_dispatch_loop` arms (`1` → `2`, same
+"LOOP still open" reasoning) for consistency and defense in depth — the
+sentinel-block invariant elsewhere in this function currently guarantees a
+block containing `jmp_if_true`/`jmp_if_false` is never the literal last
+block, so these two are dead code today, but they're the exact same stale
+assumption and would become live bugs if that invariant is ever relaxed.
+
+New regression test (`tests/wasm11_dispatch_loop_fallthrough.rs`): compiles
+and runs the exact reproduction above on a background thread with a 5s
+timeout, so a future regression of this kind fails the test cleanly instead
+of hanging the suite. Verified the test actually catches the bug (temporarily
+reverted the `br 1` fix back to `br 0` and confirmed the test fails on
+timeout, then restored the fix).
+
 ## [0.48.0] — 2026-08-13 (dispatch-loop branch depths were tuned to a `wasm-execution` bug)
 
 Fix a **backend disagreement**: the dispatch-loop control-flow strategy (used
