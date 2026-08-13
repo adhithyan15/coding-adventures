@@ -1535,6 +1535,42 @@ fn allocate_slots(
 /// the generic `"any"` string.
 /// A comparison op produces a 0/1 boolean `int`, whatever its operand width.
 /// Its dest slot must therefore be `int` on the JVM (see [`build_type_map`]).
+/// Store a 0/1 `int` result into `dest_slot` at the width that slot is typed for.
+///
+/// Every comparison and predicate leaves a one-slot `int` on the stack, and each
+/// of them used to `emit_istore` unconditionally, discarding the slot's type.
+/// That is correct whenever the slot is `Int` — which `build_type_map`'s
+/// comparison override arranges for a dest whose *producer* is a `cmp_*`. It is
+/// wrong whenever the slot's type was decided by something else, and for the
+/// predicate builtins it always is: `equal?`/`pair?`/`not` reach the backend as
+/// `call_builtin`, never as `cmp_*`, so that override never sees them and the
+/// dest keeps whatever hint it carries. A Twig `(equal? 'a 'a)` has its result
+/// retyped `any` → `i64` by `concretize_scalar_any_for_jvm` (the entry returns
+/// `J`), so the slot is `Long` and the store and the load disagreed:
+///
+/// ```text
+///   42: istore 4      ← int, one slot
+///   44: lload  4      ← long, slots 4/5
+///   46: lreturn
+///   VerifyError: Accessing value from uninitialized register pair 4/5
+/// ```
+///
+/// Widening at the store makes it agree with every later load by construction,
+/// whatever decided the slot's type. That is the invariant worth holding: a
+/// store and a load of one slot must never disagree about its width, and the
+/// store is the side that knows what it is actually pushing. BA-JVM-1 fixed the
+/// same disagreement from the other end, by forcing the *type* to `Int`; this
+/// covers the cases where the type is not ours to choose.
+fn emit_bool_result_store(code: &mut Vec<u8>, dest_slot: u16, dest_ty: JvmType) {
+    match dest_ty {
+        JvmType::Long => {
+            code.push(I2L);
+            emit_typed_store(code, dest_slot, JvmType::Long);
+        }
+        _ => emit_istore(code, dest_slot),
+    }
+}
+
 fn is_comparison_op(op: &str) -> bool {
     matches!(
         op,
@@ -2796,10 +2832,11 @@ fn lower_function(
                     };
                     emit_int_compare(&mut code, cmp_opcode);
                 }
-                // Result (0 or 1) is now on the stack; store it.
+                // Result (0 or 1) is now on the stack; store it at the width the
+                // destination slot is typed for (see `emit_bool_result_store`).
                 if let Some(dest) = &instr.dest {
-                    let (dest_slot, _) = lookup_var(dest)?;
-                    emit_istore(&mut code, dest_slot);
+                    let (dest_slot, dest_ty) = lookup_var(dest)?;
+                    emit_bool_result_store(&mut code, dest_slot, dest_ty);
                 }
             }
 
@@ -3526,24 +3563,24 @@ fn lower_function(
                         // `Object[]`; an atom is an `Integer`; nil is `null`.
                         let dest_name = builtin_dest(instr, fname, "pair?")?;
                         let arg = builtin_arg(instr, fname, "pair?", 1)?;
-                        let (dest_slot, _) = lookup_var(dest_name)?;
+                        let (dest_slot, dest_ty) = lookup_var(dest_name)?;
                         let (arg_slot, _) = lookup_var(&arg)?;
                         emit_aload(&mut code, arg_slot);
                         let cidx = cp.add_class("[Ljava/lang/Object;");
                         code.push(INSTANCEOF);
                         code.extend_from_slice(&cidx.to_be_bytes());
-                        emit_istore(&mut code, dest_slot);
+                        emit_bool_result_store(&mut code, dest_slot, dest_ty);
                     }
                     "not" => {
                         // Logical not of a 0/1 machine boolean: `arg ^ 1`.
                         let dest_name = builtin_dest(instr, fname, "not")?;
                         let arg = builtin_arg(instr, fname, "not", 1)?;
-                        let (dest_slot, _) = lookup_var(dest_name)?;
+                        let (dest_slot, dest_ty) = lookup_var(dest_name)?;
                         let (arg_slot, _) = lookup_var(&arg)?;
                         emit_iload(&mut code, arg_slot);
                         code.push(ICONST_1);
                         code.push(IXOR);
-                        emit_istore(&mut code, dest_slot);
+                        emit_bool_result_store(&mut code, dest_slot, dest_ty);
                     }
                     "equal?" => {
                         // `EQ` on atoms: unbox both `Integer`s and compare. The
@@ -3553,7 +3590,7 @@ fn lower_function(
                         let dest_name = builtin_dest(instr, fname, "equal?")?;
                         let a = builtin_arg(instr, fname, "equal?", 1)?;
                         let b = builtin_arg(instr, fname, "equal?", 2)?;
-                        let (dest_slot, _) = lookup_var(dest_name)?;
+                        let (dest_slot, dest_ty) = lookup_var(dest_name)?;
                         let (a_slot, _) = lookup_var(&a)?;
                         let (b_slot, _) = lookup_var(&b)?;
                         let int_cidx = cp.add_class("java/lang/Integer");
@@ -3572,7 +3609,7 @@ fn lower_function(
                         code.extend_from_slice(&intval.to_be_bytes());
                         // a == b ? 1 : 0  (IF_ICMPNE skips the true arm when a≠b)
                         emit_int_compare(&mut code, IF_ICMPNE);
-                        emit_istore(&mut code, dest_slot);
+                        emit_bool_result_store(&mut code, dest_slot, dest_ty);
                     }
                     _ => {
                         // Validator should have rejected this; defense in depth.

@@ -1,5 +1,36 @@
 # Changelog — iir-to-jvm-class-file
 
+## 0.34.0 - 2026-08-13 - a comparison result is stored at the slot's width
+
+A store and a load of one local slot must never disagree about its width, and
+the store is the side that knows what it is actually pushing. Four sites did not
+hold that: `cmp_*` and the `equal?` / `pair?` / `not` predicate builtins each
+left a one-slot `int` on the stack and then `emit_istore`d it unconditionally,
+discarding the destination slot's type.
+
+That is correct whenever the slot is `Int` — which `build_type_map`'s comparison
+override arranges for a dest whose *producer* is a `cmp_*` (the BA-JVM-1 fix,
+which closed the same disagreement from the other end). It is wrong whenever the
+slot's type was decided elsewhere, and for the predicates it always is: they
+reach the backend as `call_builtin`, never as `cmp_*`, so the override never
+sees them.
+
+A Twig `(equal? 'a 'a)` has its result retyped `any` → `i64` by
+`concretize_scalar_any_for_jvm` — the entry returns `J` — so the slot is `Long`:
+
+    42: istore 4      <- int, one slot
+    44: lload  4      <- long, slots 4/5
+    46: lreturn
+
+    VerifyError: Accessing value from uninitialized register pair 4/5
+
+surfacing to the user as the far less helpful `Error: Unable to initialize main
+class Main`.
+
+New `emit_bool_result_store` widens with `i2l` when the slot is `Long`, so the
+store agrees with every later load by construction, whatever decided the type.
+
+
 ## 0.33.0 - 2026-07-30 - ALGOL captured-array globals
 
 Module globals now preserve their concrete JVM field descriptor. Existing
