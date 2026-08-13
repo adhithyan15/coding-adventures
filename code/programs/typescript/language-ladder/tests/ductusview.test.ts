@@ -143,6 +143,8 @@ const DEVANAGARI_AA = ductusFor("आ", "devanagari")!;
 const devanagariAaOutline = devanagariOutline("आ");
 const DEVANAGARI_I = ductusFor("इ", "devanagari")!;
 const devanagariIOutline = devanagariOutline("इ");
+const DEVANAGARI_II = ductusFor("ई", "devanagari")!;
+const devanagariIiOutline = devanagariOutline("ई");
 const HEBREW_ALEF = ductusFor("א", "hebrew")!;
 const hebrewAlefOutline = hebrewOutline("א");
 const HEBREW_BET = ductusFor("ב", "hebrew")!;
@@ -1560,6 +1562,37 @@ describe("Devanagari इ — continuous double-bowl body before the headline", (
     );
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(DEVANAGARI_I.strokes[1], 1),
+    );
+  });
+});
+
+describe("Devanagari ई — shared double-bowl body before curl and headline", () => {
+  const steps = ductusSteps(DEVANAGARI_II);
+  const strip = ductusFilmstrip(DEVANAGARI_II, devanagariIiOutline);
+
+  it("shows six movements across three sourced strokes", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "descend the upright from the headline",
+      "turn left and curve around the upper bowl without lifting",
+      "sweep right through the waist and around the lower bowl",
+      "finish down-right through the tail without lifting",
+      "lift, then sweep the upper curl upward and around to the right",
+      "lift, then draw the shirorekha left-to-right",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false, false, true, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 0, 1, 2]);
+    expect(strip.frames).toHaveLength(6);
+    expect(strip.penLifts).toBe(2);
+    expect(strip.summary).toBe("3 strokes · 2 pen lifts · 6 movements");
+  });
+
+  it("draws the exact Noto Sans Devanagari character behind the headline", () => {
+    const paths = byTag(strip.frames[5], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      devanagariIiOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(DEVANAGARI_II.strokes[2], 1),
     );
   });
 });
