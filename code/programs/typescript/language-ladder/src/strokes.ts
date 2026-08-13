@@ -1816,6 +1816,35 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: chineseCharacterSource("见"),
   },
+  // 什 completes both strokes of 亻 before writing 十: four separate strokes,
+  // three lifts, and four movements.
+  [ductusKey("chinese", "什")]: {
+    script: "chinese",
+    glyph: "什",
+    strokes: [
+      { segments: [{ label: "draw 亻's left-falling stroke from the upper centre down-left", path: [
+        { x: 280, y: 810 }, { x: 265, y: 760 }, { x: 245, y: 700 },
+        { x: 220, y: 640 }, { x: 190, y: 580 }, { x: 155, y: 525 },
+        { x: 120, y: 480 }, { x: 85, y: 450 }, { x: 50, y: 430 },
+      ] }] },
+      { segments: [{ label: "lift, then descend 亻's vertical stroke to the baseline", path: [
+        { x: 225, y: 590 }, { x: 225, y: 480 }, { x: 225, y: 370 },
+        { x: 225, y: 260 }, { x: 225, y: 150 }, { x: 225, y: 40 },
+        { x: 225, y: -65 },
+      ] }] },
+      { segments: [{ label: "lift, then draw 十's horizontal stroke left-to-right", path: [
+        { x: 340, y: 457 }, { x: 440, y: 457 }, { x: 540, y: 457 },
+        { x: 640, y: 457 }, { x: 740, y: 457 }, { x: 840, y: 457 },
+        { x: 940, y: 457 },
+      ] }] },
+      { segments: [{ label: "lift, then descend 十's vertical stroke through the horizontal", path: [
+        { x: 646, y: 810 }, { x: 646, y: 680 }, { x: 646, y: 550 },
+        { x: 646, y: 420 }, { x: 646, y: 290 }, { x: 646, y: 160 },
+        { x: 646, y: 30 }, { x: 646, y: -65 },
+      ] }] },
+    ],
+    source: chineseCharacterSource("什"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the
