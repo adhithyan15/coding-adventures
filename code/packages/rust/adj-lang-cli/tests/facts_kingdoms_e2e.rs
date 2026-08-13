@@ -82,3 +82,49 @@ fn biology_kingdoms_recall_binds_example_with_citation() {
     // a fabricated example.
     assert!(out.contains("\"abstained\":true"), "virus abstains: {out}");
 }
+
+#[test]
+fn biology_kingdoms_extension_recalls_every_example_per_kingdom() {
+    let dir = scratch("kingdoms_ext");
+    let src = facts_stdlib().join("biology/kingdoms.adj");
+    std::fs::copy(&src, dir.join("kingdoms.adj")).expect("copy shipped kingdoms.adj");
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"kingdoms.adj\"\n\
+         ? kingdom_example(fungi, $Example)\n\
+         ? kingdom_example(bacteria, $Example)\n\
+         ? kingdom_example($Kingdom, diatoms)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // fungi now recalls THREE examples (mushrooms, yeast, molds), not just
+    // the one originally shipped -- the table went from single-valued to
+    // many-valued per kingdom this cycle.
+    assert!(
+        out.contains("\"Example\":\"yeast\""),
+        "fungi → yeast (added this cycle): {out}"
+    );
+    assert!(
+        out.contains("\"Example\":\"molds\""),
+        "fungi → molds (added this cycle): {out}"
+    );
+    assert!(
+        out.contains("\"Example\":\"gram_positive_bacteria\""),
+        "bacteria → gram_positive_bacteria (added this cycle): {out}"
+    );
+    assert!(
+        out.contains("\"Example\":\"gram_negative_bacteria\""),
+        "bacteria → gram_negative_bacteria (added this cycle): {out}"
+    );
+    assert!(
+        out.contains("\"Example\":\"actinobacteria\""),
+        "bacteria → actinobacteria (added this cycle): {out}"
+    );
+    // Reverse recall on a newly-added example still resolves to its kingdom.
+    assert!(
+        out.contains("\"Kingdom\":\"protista\""),
+        "diatoms → protista (reverse recall on a newly-added example): {out}"
+    );
+}

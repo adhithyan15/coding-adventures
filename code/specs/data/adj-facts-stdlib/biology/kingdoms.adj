@@ -1,6 +1,6 @@
 % ============================================================================
-% kingdoms — each biological kingdom of life mapped to a representative example
-% organism the source lists for it (adj-facts-stdlib, BIOLOGY).
+% kingdoms — each biological kingdom of life mapped to every example organism
+% the source lists for it (adj-facts-stdlib, BIOLOGY).
 % ============================================================================
 % One of the very first ideas a biology learner meets: every living thing on
 % Earth is sorted into a small number of top-level KINGDOMS, and each kingdom
@@ -9,24 +9,47 @@
 % cyanobacteria are Bacteria." Before you can reason about an organism at all,
 % it helps to know WHICH kingdom it belongs to. Recall is a binding query:
 %
-%     ? kingdom_example(fungi, $Example)      % mushrooms
+%     ? kingdom_example(fungi, $Example)      % mushrooms ; yeast ; molds
 %
 % This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
 % relation `kingdom_example(kingdom, example)` carrying the table's citation, so
-% the lookup above is the ordinary SLD binding query — the engine returns the
+% the lookup above is the ordinary SLD binding query — the engine returns EVERY
 % example WITH its source, on the CPU, with zero model calls, and abstains on a
-% word that is not one of these kingdoms (it never invents an example).
+% word that is not one of these kingdoms (it never invents an example). Each
+% kingdom is deliberately ONE-TO-MANY: the source names several example
+% organisms per kingdom, so `kingdom_example(animalia, $Example)` binds
+% `$Example` to EACH of them in turn, just like `flame_color.adj`'s many-to-one
+% `red` (strontium ; lithium) already established the reverse shape in this
+% same stdlib.
 %
-% Each kingdom below and the representative example the source lists first for
-% it, as a little truth table:
+% Each kingdom below and EVERY example the source lists for it, as a truth
+% table:
 %
-%     kingdom     representative example   a beginner's cue
-%     ---------   ----------------------   ----------------------------------
-%     animalia    humans                   the animal kingdom — humans, birds…
-%     plantae     flowers                  the plant kingdom — flowers, ferns…
-%     fungi       mushrooms                the fungus kingdom — mushrooms, molds
-%     protista    amoebas                  single-celled eukaryotes — amoebas…
-%     bacteria    cyanobacteria            the prokaryote kingdom — cyanobacteria
+%     kingdom     example                a beginner's cue
+%     ---------   --------------------   ----------------------------------
+%     animalia    humans                 the animal kingdom
+%     animalia    birds
+%     animalia    crustaceans
+%     animalia    sponges
+%     plantae     flowers                the plant kingdom
+%     plantae     grasses
+%     plantae     conifers
+%     plantae     multicellular_algae
+%     plantae     ferns
+%     plantae     mosses
+%     fungi       mushrooms              the fungus kingdom
+%     fungi       yeast
+%     fungi       molds
+%     protista    amoebas                single-celled eukaryotes
+%     protista    diatoms
+%     protista    dinoflagellates
+%     protista    ciliates
+%     protista    slime_molds
+%     protista    single_celled_algae
+%     bacteria    cyanobacteria          the prokaryote kingdom
+%     bacteria    gram_positive_bacteria
+%     bacteria    gram_negative_bacteria
+%     bacteria    actinobacteria
 %
 % The query also runs BACKWARD — bind an example and recall its kingdom:
 %
@@ -39,10 +62,11 @@
 % honest-abstention property is what makes the table safe to build a reasoner
 % on: it answers exactly the kingdom→example pairs it can ground, and only those.
 %
-% The `example` value of every row is a SINGLE lowercase atom, chosen to be the
-% first single-organism example the source EXPLICITLY lists for that kingdom —
-% never one the source does not support. (The source's word is kept, lowercased:
-% it writes "Humans"/"Flowers"/"Mushrooms"/"Amoebas", so every value stays
+% The `example` value of every row is a SINGLE lowercase snake_case atom, chosen
+% to be an organism the source EXPLICITLY lists for that kingdom — never one the
+% source does not support. (Where the source's own phrase is two or more words
+% — "multicellular algae", "slime molds", "single-celled algae", "Gram-positive
+% ... bacteria" — the atom joins them with underscores, so every value stays
 % literally checkable against the quoted "Examples:" span.)
 %
 % ---------------------------------------------------------------------------
@@ -52,22 +76,39 @@
 % have been dropped). Each pair, with the verbatim "Examples:" span that states
 % it (all from the one source below):
 %
-%   animalia → humans
+%   animalia → humans, birds, crustaceans, sponges
 %     "Examples: Humans, birds, crustaceans, sponges"
-%   plantae → flowers
+%   plantae → flowers, grasses, conifers, multicellular_algae, ferns, mosses
 %     "Examples: Flowers, grasses, conifers, multicellular algae, ferns, mosses"
-%   fungi → mushrooms
+%   fungi → mushrooms, yeast, molds
 %     "Examples: Mushrooms, yeast, molds"
-%   protista → amoebas
+%   protista → amoebas, diatoms, dinoflagellates, ciliates, slime_molds,
+%   single_celled_algae
 %     "Examples: Amoebas, diatoms, dinoflagellates, ciliates, slime molds,
 %      single-celled algae"
-%   bacteria → cyanobacteria
+%   bacteria → cyanobacteria, gram_positive_bacteria, gram_negative_bacteria,
+%   actinobacteria
 %     "Examples: Gram-positive and Gram-negative bacteria, cyanobacteria,
-%      actinobacteria"
+%      actinobacteria" (the "and"-joined pair names two distinct, literal
+%      examples in the same list -- not an "or"-joined alternative
+%      categorization -- so each is its own row)
 %
 % All five spans are from the same page,
 % https://sciencenotes.org/kingdoms-of-life-in-biology/ — a secondary science
 % teaching resource, so `trust consensus` (not a primary .gov/.edu source).
+%
+% EXTENDED this cycle from 5 to 23 rows: the SAME already-cited Science Notes
+% page's own "Examples:" lines name eighteen MORE organisms beyond the five
+% originally shipped (one per kingdom) — zero new source page needed,
+% WebFetch-verified (re-fetched the live page and confirmed every "Examples:"
+% line word-for-word against the header's original transcription) before
+% writing. This is the fifth successful extend-pattern win in this loop's
+% recent run (after animal-classes.adj, idiom-meaning.adj, plant-tropisms.adj,
+% simile-meaning.adj), and the first to extend a table from single-valued to
+% many-valued per key rather than adding new keys — the same reverse-lookup
+% shape `flame_color.adj` already established (many values recalled for one
+% bound argument), just applied in the OTHER direction (many `example` values
+% recalled for one bound `kingdom`).
 %
 % An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
 % `trust` below hold the single cleanest span: the "Examples:" line that fixes
@@ -81,10 +122,28 @@ table kingdom_example {
     columns kingdom, example
 
     row (animalia, humans)
+    row (animalia, birds)
+    row (animalia, crustaceans)
+    row (animalia, sponges)
     row (plantae, flowers)
+    row (plantae, grasses)
+    row (plantae, conifers)
+    row (plantae, multicellular_algae)
+    row (plantae, ferns)
+    row (plantae, mosses)
     row (fungi, mushrooms)
+    row (fungi, yeast)
+    row (fungi, molds)
     row (protista, amoebas)
+    row (protista, diatoms)
+    row (protista, dinoflagellates)
+    row (protista, ciliates)
+    row (protista, slime_molds)
+    row (protista, single_celled_algae)
     row (bacteria, cyanobacteria)
+    row (bacteria, gram_positive_bacteria)
+    row (bacteria, gram_negative_bacteria)
+    row (bacteria, actinobacteria)
 
     source "Examples: Humans, birds, crustaceans, sponges"
     locator "https://sciencenotes.org/kingdoms-of-life-in-biology/"
