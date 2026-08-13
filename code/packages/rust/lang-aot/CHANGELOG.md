@@ -1,5 +1,11 @@
 # Changelog — `lang-aot`
 
+## 0.224.3 - 2026-08-13 (ALGOL finite step-loop control exits)
+
+The seven-backend ALGOL matrix now proves that a finite integer step loop
+retains the controlled scalar's first post-limit value. The exactly-one
+controlled-assignment cell also expects its real post-increment exit value.
+
 ## 0.224.2 - 2026-08-13 (ALGOL single-step controlled snapshots)
 
 The ALGOL matrix now proves across all seven standard backends that an

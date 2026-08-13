@@ -880,10 +880,13 @@ backend immediately) come before the enabler-dependent items.
   conservative.
   Statically proven single-iteration `step`/`until` elements analyze a body
   that does not reference the controlled variable from empty scalar metadata
-  and retain constants established by that one pass. Multi-iteration loops,
-  tracking barriers, and dynamic controlled-scalar writes remain conservative;
-  a direct finite static assignment to the controlled scalar is retained because
-  the exactly-one proof also establishes that no loop increment executes.
+  and retain constants established by that one pass. A finite static integer
+  loop whose body avoids the controlled scalar also retains its checked first
+  post-limit value. A direct finite static assignment to the controlled scalar
+  is retained only when its post-increment value exits after exactly one pass.
+  Reals, overflow, zero steps, arrays, globals, by-name targets, tracking
+  barriers, dynamic writes, and target-referencing multi-iteration bodies remain
+  conservative.
   A `while` element also retains body initialization when a bounded static
   numeric comparison, evaluated after abstractly assigning its initial
   controlled value, proves the first condition true. Known comparison leaves
