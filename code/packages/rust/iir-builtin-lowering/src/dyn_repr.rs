@@ -400,7 +400,54 @@ fn lower_dyn_repr_function(
     // ── 5. Unbox at the program-exit boundary (entry function only). ──
     if is_entry {
         insert_unbox_before_lisp_rets(func, &boxed_regs, lisp_funcs);
+    } else if lisp_funcs.contains(&func.name) {
+        // ── 5b. Box a tagged function's RAW scalar result. ──
+        //
+        // A function on the tagged boundary promises its callers a tagged word.
+        // `((LAMBDA () 5))` returns the raw `5`, and the caller's exit coercion
+        // then reads it as a tagged value: `5` is `0b101`, the whole-word `#t`
+        // tag, so the program exited 1 instead of 5.
+        //
+        // The managed pass has had this since the start (`dyn_repr_structural`'s
+        // non-entry box branch); the tagged pass never grew the counterpart. It
+        // stayed hidden because the entry's coercion was `unbox_int` — `5 >> 3 =
+        // 0`, also wrong, just wrong differently — until the nullary lambda
+        // reached the correct runtime tag switch and exposed it.
+        box_raw_scalar_return(func, &boxed_regs);
     }
+}
+
+/// Box the returned register of a tagged-boundary function when it still holds a
+/// raw machine scalar, so the value crossing the boundary is a `LispyValue`.
+fn box_raw_scalar_return(func: &mut IIRFunction, boxed_regs: &HashSet<String>) {
+    let Some(ret_pos) = func.instructions.iter().position(|i| i.op == "ret") else {
+        return;
+    };
+    let Some(Operand::Var(ret_reg)) = func.instructions[ret_pos].srcs.first().cloned() else {
+        return;
+    };
+    if boxed_regs.contains(&ret_reg) {
+        return; // already tagged — nothing to do.
+    }
+    // A tagged PARAMETER is already a `LispyValue`; `boxed_regs` is built from
+    // instructions and so never contains one. `((LAMBDA (X) X) 5)` returns its
+    // parameter untouched, and boxing it a second time made the entry's single
+    // unbox leave `5 << 3 = 40`.
+    let param_is_tagged = func
+        .params
+        .iter()
+        .any(|(name, ty)| *name == ret_reg && (ty == REF_ANY || ty == SYMBOL_HINT));
+    if param_is_tagged {
+        return;
+    }
+    let boxed = format!("{ret_reg}.retbox");
+    func.instructions.insert(
+        ret_pos,
+        IIRInstr::new("box", Some(boxed.clone()), vec![Operand::Var(ret_reg)], REF_ANY),
+    );
+    let ret = &mut func.instructions[ret_pos + 1];
+    ret.srcs = vec![Operand::Var(boxed)];
+    ret.type_hint = REF_ANY.to_string();
 }
 
 /// Rewrite each `jmp_if_false %cond, label` whose `%cond` holds a tagged

@@ -444,7 +444,12 @@ fn is_narrowable_dynamic(t: &str) -> bool {
 /// Heap/reference functions (cons/symbols/lambda — the tagged-word value model
 /// routed through `dynval_runtime.c`, W12b+) are left alone.
 fn concretize_scalar_any_for_llvm(module: &mut IIRModule) {
-    const HEAP_OPS: &[&str] = &["alloc", "field_load", "field_store", "is_null"];
+    // `box`/`unbox` are heap-model evidence too. The old code caught them
+    // incidentally, because a `ref<any>` instruction hint counted as evidence;
+    // now that it does not, a module whose ONLY tagged-model signal is a
+    // box/unbox pair would be narrowed while those ops survive.
+    const HEAP_OPS: &[&str] =
+        &["alloc", "field_load", "field_store", "is_null", "box", "unbox"];
     // Both spellings: the frontend's names, and the `dyn_*` names the earlier
     // representation passes rename them to. Whichever form survives to this
     // point is unfakeable evidence that the function is on the tagged value
@@ -559,7 +564,12 @@ pub fn compile_source_to_llvm_with_target(
 /// **not** touch functions that use the heap (cons cells, symbols) — those
 /// need the boxed-`anyref` value model, a follow-up slice (L3b-3a-3).
 fn concretize_scalar_any_for_wasm(module: &mut IIRModule) {
-    const HEAP_OPS: &[&str] = &["alloc", "field_load", "field_store", "is_null"];
+    // `box`/`unbox` are heap-model evidence too. The old code caught them
+    // incidentally, because a `ref<any>` instruction hint counted as evidence;
+    // now that it does not, a module whose ONLY tagged-model signal is a
+    // box/unbox pair would be narrowed while those ops survive.
+    const HEAP_OPS: &[&str] =
+        &["alloc", "field_load", "field_store", "is_null", "box", "unbox"];
     // Both spellings: the frontend's names, and the `dyn_*` names the earlier
     // representation passes rename them to. Whichever form survives to this
     // point is unfakeable evidence that the function is on the tagged value
@@ -682,7 +692,12 @@ pub fn compile_source_to_wasm(
 /// heap/reference functions alone (cons/symbols/lambda are W3b+, where the
 /// uniform-`Object` value model lands).
 fn concretize_scalar_any_for_jvm(module: &mut IIRModule) {
-    const HEAP_OPS: &[&str] = &["alloc", "field_load", "field_store", "is_null"];
+    // `box`/`unbox` are heap-model evidence too. The old code caught them
+    // incidentally, because a `ref<any>` instruction hint counted as evidence;
+    // now that it does not, a module whose ONLY tagged-model signal is a
+    // box/unbox pair would be narrowed while those ops survive.
+    const HEAP_OPS: &[&str] =
+        &["alloc", "field_load", "field_store", "is_null", "box", "unbox"];
     // Both spellings: the frontend's names, and the `dyn_*` names the earlier
     // representation passes rename them to. Whichever form survives to this
     // point is unfakeable evidence that the function is on the tagged value
@@ -880,7 +895,12 @@ pub fn compile_source_to_jvm_class(
 /// `int32`, so a scalar program's result is an `int`. Heap/reference functions
 /// (cons/symbols/lambda — W6b+) are left for the uniform-`object` value model.
 fn concretize_scalar_any_for_cil(module: &mut IIRModule) {
-    const HEAP_OPS: &[&str] = &["alloc", "field_load", "field_store", "is_null"];
+    // `box`/`unbox` are heap-model evidence too. The old code caught them
+    // incidentally, because a `ref<any>` instruction hint counted as evidence;
+    // now that it does not, a module whose ONLY tagged-model signal is a
+    // box/unbox pair would be narrowed while those ops survive.
+    const HEAP_OPS: &[&str] =
+        &["alloc", "field_load", "field_store", "is_null", "box", "unbox"];
     // Both spellings: the frontend's names, and the `dyn_*` names the earlier
     // representation passes rename them to. Whichever form survives to this
     // point is unfakeable evidence that the function is on the tagged value

@@ -215,7 +215,24 @@ fn seeded_lisp_functions(module: &IIRModule, include_heap_bodies: bool) -> HashS
     let mut lisp: HashSet<String> = module
         .functions
         .iter()
-        .filter(|f| (include_heap_bodies && function_uses_heap(f)) || has_lisp_param(f))
+        // A boundary has two sides. Seeding only from parameters misses a
+        // **nullary** tagged function — `((LAMBDA () (ATOM 7)))` has no params
+        // to inspect, so its caller's `call` was not recognised as tagged and
+        // the entry coerced the result with the static `dyn_unbox_int` (`>> 3`)
+        // instead of the runtime tag switch `dyn_to_exit_code`. `#t` is the
+        // whole word `0b101`, so `5 >> 3 = 0`: the program reported FALSE for a
+        // true predicate, with no diagnostic. The declared return type is the
+        // other half of the signature and says so.
+        //
+        // This does not reinstate the Twig union-constructor bug: Twig's
+        // `Some`/`None` declare `-> any` (raw), McCarthy's lambdas declare
+        // `-> ref<any>`, so the two stay separated by type, which is the point.
+        .filter(|f| {
+            (include_heap_bodies && function_uses_heap(f))
+                || has_lisp_param(f)
+                || f.return_type == "symbol"
+                || f.return_type.starts_with("ref<")
+        })
         .map(|f| f.name.clone())
         .collect();
     // Fixpoint: a caller of a lisp function is lisp.

@@ -28,9 +28,28 @@ cons cell internally while taking its argument raw, so `call Some(42)` boxed the
 exited `(42 << 3) & 0xFF = 80` instead of 42.
 
 The language gate had hidden this by forcing the set empty for every non-lisp
-module. New `tagged_boundary_functions` seeds from declared parameter types only;
-`lisp_functions` keeps the heap-body clause for the structural work that wants
-it.
+module. New `tagged_boundary_functions` seeds from declared parameter types AND
+return types; `lisp_functions` keeps the heap-body clause for the structural work
+that wants it.
+
+### Three more found in security review, each exposed by fixing the last
+
+The reviewer built both revisions, emitted all 294 matrix-corpus programs from
+each, and ran them — finding a silent wrong answer the corpus does not contain.
+
+* **Nullary tagged functions were missed.** Seeding only from parameters leaves
+  `((LAMBDA () (ATOM 7)))` outside the set, so the entry coerced its result with
+  the static `dyn_unbox_int` (`>> 3`) instead of the runtime tag switch. `#t` is
+  the whole word `0b101`, and `5 >> 3 = 0`: the program reported FALSE for a
+  true predicate, on native-AOT and LLVM, with no diagnostic. A boundary has two
+  sides; the declared return type is the other one.
+* **A tagged function never boxed a raw scalar return** (pre-existing). The
+  managed pass has always done this; the tagged pass never grew the counterpart.
+  `((LAMBDA () 5))` exited 1 — `5` is `0b101`, read as the `#t` tag. It stayed
+  hidden because the old coercion was also wrong, just differently.
+* **…which then double-boxed a returned parameter.** A tagged *parameter* is
+  already a `LispyValue`, and `boxed_regs` is built from instructions so never
+  contains one. `((LAMBDA (X) X) 5)` exited `5 << 3 = 40`.
 
 ## 0.36.0 - 2026-08-13 - drop the name-carrying `const` once its consumer is lowered
 
