@@ -149,11 +149,11 @@ implemented.
 16. [x] **Complete wide spill coverage:** mixed scalar/pair allocation uses
    coherent pair slots, reclaims dead values of either width, and spills live
    scalar or wide values as needed under arbitrary temporary pressure.
-17. [ ] **Calls and modules:** module-local calls link as PC-relative `jal`
-   instructions, preserve `ra`, and marshal scalar or `i64`/`u64` pair arguments
-   through `a0` through `a7`. Nib argument calls execute from the selected entry
-   function in the simulator. Next: preserve caller values that remain live
-   across a call.
+17. [x] **Calls and modules:** module-local calls link as PC-relative `jal`,
+   preserve `ra`, marshal scalar or `i64`/`u64` pair arguments through `a0`
+   through `a7`, and save register-resident scalar or pair values live across a
+   call. Nib argument and live-value calls execute from the selected entry
+   function in the simulator.
 18. [ ] **Host runtime ABI:** define simulator `ecall` services for exit and integer
    output, then lower language print primitives through that ABI.
 19. [ ] **Memory and data:** globals, addresses, loads/stores, and a data-image
@@ -165,6 +165,9 @@ implemented.
 21. [x] **Call argument ABI:** marshal scalar and pair-value arguments into
    `a0` through `a7`, including word-sized wide values, and preserve the narrow
    CIR view of ABI-normalized wide parameters.
+22. [ ] **Typed CIR moves (next):** lower `mov_*` copies so source-language
+   locals can flow into direct calls. Nib `let` bindings currently introduce
+   `mov_i64`, preventing otherwise-supported call programs from reaching RV32I.
 
 Each item should land as a focused PR with an end-to-end fixture from the
 highest-level language it enables. New constraints discovered while carrying

@@ -336,6 +336,8 @@ struct Lowerer {
     next_internal_label: usize,
     frame_size: i32,
     return_address_offset: Option<i32>,
+    call_argument_words: usize,
+    call_save_words: usize,
     next_spill_slot: usize,
 }
 
@@ -351,6 +353,12 @@ enum ValueLocation {
     Pair { lo: u32, hi: u32 },
     Spill { offset: i32 },
     PairSpill { lo_offset: i32, hi_offset: i32 },
+}
+
+#[derive(Debug, Clone, Copy)]
+enum SavedValue {
+    Word { register: u32, offset: i32 },
+    Pair { lo: u32, hi: u32, offset: i32 },
 }
 
 impl ValueLocation {
@@ -433,9 +441,11 @@ impl Lowerer {
             (true, Some(signatures)) => max_call_argument_words(cir, signatures)?,
             _ => 0,
         };
+        let call_save_words = max_call_save_words(ctx, cir);
         let needs_return_address_slot = allow_direct_calls && cir.iter().any(|instr| instr.op == "call");
         let frame_words = value_word_count
             + call_argument_words
+            + call_save_words
             + usize::from(needs_return_address_slot);
         let frame_size = if frame_words > VALUE_REGISTERS.len() || needs_return_address_slot {
             ((frame_words as i32) * 4 + 15) & !15
@@ -467,7 +477,9 @@ impl Lowerer {
             next_internal_label: 0,
             frame_size,
             return_address_offset,
-            next_spill_slot: call_argument_words,
+            call_argument_words,
+            call_save_words,
+            next_spill_slot: call_argument_words + call_save_words,
         })
     }
 
@@ -760,15 +772,6 @@ impl Lowerer {
         if argument_words > ARG_REGISTERS.len() {
             return Err(BackendError::TooManyArguments(argument_words));
         }
-        if let Some((name, _)) = self.env.iter().find(|(name, _)| {
-            self.remaining_uses.get(name).copied().unwrap_or_default()
-                > value_source_occurrences(instr, name)
-        }) {
-            return Err(BackendError::UnsupportedOp(format!(
-                "call with value {name:?} live across it (caller-save spilling is pending)"
-            )));
-        }
-
         let mut argument_word = 0;
         for (index, ty) in signature.params.iter().enumerate() {
             self.stage_call_argument(instr, index + 1, ty, argument_word)?;
@@ -786,12 +789,14 @@ impl Lowerer {
                 (argument_word * 4) as i32,
             ));
         }
+        let saved_values = self.save_live_values_across_call(instr);
 
         self.calls.push(PendingCall {
             word_index: self.words.len(),
             function: function.clone(),
         });
         self.words.push(0);
+        self.restore_live_values_after_call(&saved_values);
 
         let return_type = if instr.ty == "any" {
             signature.return_type
@@ -820,6 +825,58 @@ impl Lowerer {
             (None, _) => Err(BackendError::InvalidOperand(
                 "non-void call requires a destination".to_owned(),
             )),
+        }
+    }
+
+    fn save_live_values_across_call(&mut self, instr: &CIRInstr) -> Vec<SavedValue> {
+        let mut offset = (self.call_argument_words * 4) as i32;
+        let mut saved = Vec::new();
+        for (name, location) in &self.env {
+            if self.remaining_uses.get(name).copied().unwrap_or_default()
+                <= value_source_occurrences(instr, name)
+            {
+                continue;
+            }
+            match location {
+                ValueLocation::Word(register) => {
+                    self.words.push(encode_sw(*register, STACK_POINTER, offset));
+                    saved.push(SavedValue::Word {
+                        register: *register,
+                        offset,
+                    });
+                    offset += 4;
+                }
+                ValueLocation::Pair { lo, hi } => {
+                    self.words.push(encode_sw(*lo, STACK_POINTER, offset));
+                    self.words.push(encode_sw(*hi, STACK_POINTER, offset + 4));
+                    saved.push(SavedValue::Pair {
+                        lo: *lo,
+                        hi: *hi,
+                        offset,
+                    });
+                    offset += 8;
+                }
+                ValueLocation::Spill { .. } | ValueLocation::PairSpill { .. } => {}
+            }
+        }
+        debug_assert!(
+            (offset - (self.call_argument_words * 4) as i32) / 4
+                <= self.call_save_words as i32
+        );
+        saved
+    }
+
+    fn restore_live_values_after_call(&mut self, saved: &[SavedValue]) {
+        for value in saved {
+            match value {
+                SavedValue::Word { register, offset } => {
+                    self.words.push(encode_lw(*register, STACK_POINTER, *offset));
+                }
+                SavedValue::Pair { lo, hi, offset } => {
+                    self.words.push(encode_lw(*lo, STACK_POINTER, *offset));
+                    self.words.push(encode_lw(*hi, STACK_POINTER, *offset + 4));
+                }
+            }
         }
     }
 
@@ -2068,6 +2125,55 @@ fn max_call_argument_words(
         maximum = maximum.max(words);
     }
     Ok(maximum)
+}
+
+fn max_call_save_words(ctx: &FunctionContext<'_>, cir: &[CIRInstr]) -> usize {
+    let mut value_types: HashMap<&str, &str> = ctx
+        .params
+        .iter()
+        .map(|(name, ty)| (name.as_str(), ty.as_str()))
+        .collect();
+    for instr in cir {
+        if let Some(destination) = instr.dest.as_deref() {
+            value_types.insert(destination, instr.ty.as_str());
+        }
+    }
+
+    let mut maximum = 0;
+    for (call_index, call) in cir.iter().enumerate() {
+        if call.op != "call" {
+            continue;
+        }
+        let mut live_values = HashSet::new();
+        for instr in &cir[call_index + 1..] {
+            for (index, operand) in instr.srcs.iter().enumerate() {
+                if !is_value_source(instr, index) {
+                    continue;
+                }
+                let CIROperand::Var(name) = operand else {
+                    continue;
+                };
+                if value_types.contains_key(name.as_str()) {
+                    live_values.insert(name.as_str());
+                }
+            }
+        }
+        maximum = maximum.max(
+            live_values
+                .into_iter()
+                .map(|name| storage_word_count(value_types[name]))
+                .sum(),
+        );
+    }
+    maximum
+}
+
+fn storage_word_count(ty: &str) -> usize {
+    if matches!(ty, "i64" | "u64" | "any") {
+        2
+    } else {
+        1
+    }
 }
 
 fn value_source_occurrences(instr: &CIRInstr, name: &str) -> usize {
