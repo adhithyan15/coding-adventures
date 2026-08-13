@@ -31,8 +31,9 @@ implements:
   memory, choosing DEFLATE (method 8) or Stored (method 0) per file.
 - **Read**: `ZipReader` / `unzip()` — parse the Central Directory, enumerate
   entries, and decompress individual files.
-- **DEFLATE**: RFC 1951 fixed-Huffman blocks (no zlib or gzip wrapper),
-  backed by `lzss` for match-finding.
+- **Raw DEFLATE**: ZIP-owned `raw_deflate`, `raw_inflate`, and
+  `raw_inflate_counted` APIs for stored, fixed, dynamic, multi-block, and
+  full-window RFC 1951 streams without a zlib or gzip wrapper.
 - **CRC-32**: CRC-32/ISO-HDLC polynomial (0xEDB88320), precomputed table.
 - **MS-DOS date/time**: packing and `DOS_EPOCH` constant (1980-01-01 00:00:00).
 
@@ -90,6 +91,22 @@ let c2 = crc32(b"world", c1);
 assert_eq!(c2, crc32(b"hello world", 0));
 ```
 
+### Raw RFC 1951
+
+```rust
+use zip::{raw_deflate, raw_inflate_counted, RAW_INFLATE_MAX_OUTPUT};
+
+let encoded = raw_deflate(b"hello hello hello");
+let decoded = raw_inflate_counted(&encoded, RAW_INFLATE_MAX_OUTPUT)?;
+assert_eq!(decoded.output, b"hello hello hello");
+assert_eq!(decoded.bytes_consumed, encoded.len());
+# Ok::<(), zip::RawInflateError>(())
+```
+
+`RawInflateErrorCode::as_str()` yields one of the 14 stable
+`zip-owned-raw-rfc1951-v1` identifiers. Errors carry no input bytes, offsets,
+sizes, or partial output.
+
 ---
 
 ## Architecture
@@ -98,12 +115,11 @@ assert_eq!(c2, crc32(b"hello world", 0));
 zip/src/lib.rs
 ├── crc32()                  — CRC-32/ISO-HDLC
 ├── dos_datetime()           — MS-DOS timestamp packing
-├── deflate_compress()       — RFC 1951 fixed-Huffman encoder
+├── raw_deflate()            — RFC 1951 fixed-Huffman encoder
 │   ├── BitWriter            — LSB-first bit stream
 │   ├── fixed_ll_encode()    — literal/length code → (bits, nbits)
 │   └── fixed_dist_encode()  — distance code → (bits, nbits)
-├── deflate_decompress()     — RFC 1951 decoder (stored + fixed blocks)
-│   └── BitReader            — LSB-first bit stream reader
+├── raw_inflate_counted()    — strict shared RFC 1951 decoder
 ├── ZipWriter                — builds Local File Headers + Central Directory
 └── ZipReader                — EOCD-first parsing; per-entry decompression
 ```
@@ -126,7 +142,8 @@ Archives produced by this crate are compatible with:
 
 | Threat | Mitigation |
 |--------|-----------|
-| Decompression bombs | Output capped at 256 MB per `unzip()` call |
+| Decompression bombs | Caller-lowerable cap with a 256 MiB hard ceiling; ZIP entries use their declared size |
+| Compressed suffix cavities | `ZipReader` requires counted consumption to equal the declared compressed payload |
 | Zip-slip path traversal | Callers should validate `entry.name` for `..` and absolute paths |
 | Corrupt EOCD | Validate signature and comment_len on every candidate |
 | CRC mismatch | `read()` verifies CRC-32 after decompression; returns `Err` on mismatch |

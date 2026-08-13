@@ -4,6 +4,25 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.2.0] - 2026-08-13
+
+### Added
+
+- ZIP-owned `raw_deflate`, `raw_inflate`, and `raw_inflate_counted` entry points
+  plus the typed raw-inflate result, error, error-code, and hard-limit exports.
+- A consumer for all 34 closed `zip-raw-rfc1951-v1` cases, covering stored,
+  fixed, dynamic, multi-block, full-window, counted suffix, exact-cap,
+  malformed-stream, encoder interoperability, and incremental CRC-32 behavior.
+- Explicit empty capability metadata for the pure in-memory implementation.
+
+### Security
+
+- `ZipReader` now sets the inflate limit from the Central Directory size,
+  rejects compressed-payload suffix bytes and exact-size mismatches, and never
+  trims excess decompressor output into a plausible entry.
+- Raw errors use stable payload-blind codes. CRC-32 remains an accidental-error
+  checksum, not an authentication mechanism.
+
 ## [0.1.1] — 2026-07-02
 
 ### Changed

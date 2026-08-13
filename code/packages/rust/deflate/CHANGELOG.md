@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.5.0 - 2026-08-13
+
+### Added
+
+- `inflate_counted(data, max_output)` returns both decoded bytes and exact
+  compressed-byte consumption, including a partially consumed final byte.
+- `InflateError`, `InflateErrorCode`, `InflateResult`, and
+  `RAW_INFLATE_MAX_OUTPUT` expose the closed 14-code, payload-blind raw RFC 1951
+  contract while historical `inflate` and `decompress` string APIs remain
+  compatible wrappers.
+
+### Security
+
+- Validate caller limits before output allocation and allow any lower
+  non-negative limit beneath the 256 MiB hard ceiling.
+- Reject over-subscribed and impermissibly incomplete Huffman trees, malformed
+  code-length repeats, literal/length symbols 286-287, decoded reserved distance
+  symbols 30-31, invalid back-references, and limit overruns without returning
+  partial output or attacker-controlled error details. Exact consumption makes
+  a compressed-payload suffix visible to container callers.
+
 ## 0.4.0 — 2026-07-02
 
 ### Added — dynamic-Huffman encoding (BTYPE=10)

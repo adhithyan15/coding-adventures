@@ -100,6 +100,14 @@
 
 use lzss::Token;
 
+pub use deflate::{
+    InflateError as RawInflateError, InflateErrorCode as RawInflateErrorCode,
+    InflateResult as RawInflateResult,
+};
+
+/// Absolute ceiling for one in-memory raw RFC 1951 inflate operation.
+pub const RAW_INFLATE_MAX_OUTPUT: i64 = deflate::RAW_INFLATE_MAX_OUTPUT;
+
 // =============================================================================
 // CRC-32
 // =============================================================================
@@ -306,7 +314,7 @@ fn encode_dist(offset: u16) -> (u8 /*code*/, u32 /*base*/, u32 /*extra*/) {
 
 /// Compress `data` to a raw RFC 1951 DEFLATE bit-stream (fixed Huffman, single block).
 /// The output starts directly with the 3-bit block header — no zlib wrapper.
-pub(crate) fn deflate_compress(data: &[u8]) -> Vec<u8> {
+pub fn raw_deflate(data: &[u8]) -> Vec<u8> {
     let mut bw = BitWriter::new();
 
     if data.is_empty() {
@@ -359,6 +367,19 @@ pub(crate) fn deflate_compress(data: &[u8]) -> Vec<u8> {
     bw.write_huffman(eob_code, eob_bits);
 
     bw.finish()
+}
+
+/// Inflate a raw RFC 1951 stream with a caller-selected output limit.
+pub fn raw_inflate(data: &[u8], max_output: i64) -> Result<Vec<u8>, RawInflateError> {
+    raw_inflate_counted(data, max_output).map(|result| result.output)
+}
+
+/// Inflate a raw RFC 1951 stream and report exact compressed-byte consumption.
+pub fn raw_inflate_counted(
+    data: &[u8],
+    max_output: i64,
+) -> Result<RawInflateResult, RawInflateError> {
+    deflate::inflate_counted(data, max_output)
 }
 
 // =============================================================================
@@ -454,7 +475,7 @@ impl ZipWriter {
 
         // Compress if requested; fall back to Stored if it doesn't help.
         let (method, file_data): (u16, Vec<u8>) = if compress && !data.is_empty() {
-            let compressed = deflate_compress(data);
+            let compressed = raw_deflate(data);
             if compressed.len() < data.len() {
                 (8, compressed)
             } else {
@@ -723,17 +744,21 @@ impl<'a> ZipReader<'a> {
         // fixed Huffman cannot open the files people actually have.
         let decompressed = match entry.method {
             0 => compressed.to_vec(), // Stored — verbatim copy
-            8 => deflate::inflate(compressed)
-                    .map_err(|e| format!("zip: entry '{}': {}", entry.name, e))?,
+            8 => {
+                let result = raw_inflate_counted(compressed, entry.size as i64)
+                    .map_err(|error| format!("zip: raw inflate: {error}"))?;
+                if result.bytes_consumed != compressed.len() {
+                    return Err("zip: compressed payload contains trailing bytes".into());
+                }
+                result.output
+            }
             m => return Err(format!("zip: unsupported compression method {} for '{}'", m, entry.name)),
         };
 
-        // Trim to declared uncompressed size (guards against decompressor over-read).
-        let decompressed = if decompressed.len() > entry.size as usize {
-            decompressed[..entry.size as usize].to_vec()
-        } else {
-            decompressed
-        };
+        // The Central Directory size is authoritative; never trim excess output.
+        if decompressed.len() != entry.size as usize {
+            return Err("zip: uncompressed size does not match the directory".into());
+        }
 
         // Verify CRC-32.
         let actual_crc = crc32(&decompressed, 0);
@@ -870,7 +895,7 @@ mod tests {
         // Compress with our writer, then decode with the canonical `deflate`
         // inflater — proving our fixed-Huffman output is standard RFC 1951 that
         // any conforming decoder reads (not just a private round-trip).
-        let compressed   = deflate_compress(data);
+        let compressed   = raw_deflate(data);
         let decompressed = deflate::inflate(&compressed).expect("inflate failed");
         assert_eq!(decompressed, data, "DEFLATE round-trip mismatch");
     }
@@ -886,7 +911,7 @@ mod tests {
     #[test]
     fn test_deflate_repetitive() {
         let data: Vec<u8> = b"ABCABCABC".repeat(100);
-        let compressed = deflate_compress(&data);
+        let compressed = raw_deflate(&data);
         let decompressed = deflate::inflate(&compressed).unwrap();
         assert_eq!(decompressed, data);
         assert!(compressed.len() < data.len(), "DEFLATE must compress repetitive data");

@@ -3258,6 +3258,35 @@ metadata. No live PR overlaps the Dart ZIP package, shared fixture, state, or
 roadmap, and the historical stale cross-lane ZIP branch does not touch Dart.
 The remaining eleven ZIP children stay pending and independently reviewable.
 
+## Post-#11218 Refresh and Rust ZIP Raw-Conformance Selection
+
+External review merged ready-for-review PR #11218 as
+`0338e4f2558f9df9eebdcbba43d67187de4aafe2` at
+2026-08-13T18:11:16Z after every required CI and CodeQL check reached terminal
+success or an expected skip. The final reviewed head is
+`a35a466ab45426195f6656cf157f3264dabde6fb`. A fresh collision-checked report
+at live main `d9857363b1bfd5c99ffaecb01d1007e4eeb307af` still covers 15 established
+lanes, 1,305 normalized implementation identities, and 4,461 established
+slots. It reports 173 high-consensus identities with 269 missing slots, 855
+singletons with 11,970 missing singleton slots, 658 Rust singletons, zero
+canonical collisions, and zero unknown buckets.
+
+The Dart merge changes only the established ZIP root, and the six later main
+commits change only existing ALGOL, RISC-V, human-language, ADJ, and Mermaid
+roots. None creates, removes, nor reclassifies a package root, so no new owner
+is required before selection.
+The Dart child is now merged, the ten other non-Rust ZIP children remain
+pending, and the portable ZIP umbrella stays blocked on all twelve children.
+
+The dependency/leverage pass selected `zip-raw-rfc1951-rust-lane-parity`.
+Rust is the only remaining child whose established DEFLATE decoder already
+handles stored, fixed, dynamic, multi-block, and full-window streams. The
+reviewable slice therefore adds strict counted and capped decoding, typed
+payload-blind errors, complete malformed-Huffman validation, ZIP-owned raw
+entry points, all 34 neutral fixtures, and explicit empty capability metadata
+without duplicating the codec. No live PR overlaps the Rust ZIP or DEFLATE
+packages, shared fixture, state, or roadmap.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
