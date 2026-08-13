@@ -48,10 +48,29 @@
 //! * **I/O languages** (Brainfuck, Dartmouth BASIC) produce their result on
 //!   **stdout** (`putchar` / `PRINT`), so the harness captures and compares stdout.
 
+//! ## The BEAM column (Lisp-shaped languages)
+//!
+//! BEAM joins as an eighth backend, scoped deliberately. It is the one target
+//! with **no raw memory** — no linear address space, and every term immutable —
+//! so it takes the cons/immutable half of the IIR natively (`cons`/`car`/`cdr`
+//! are Erlang lists, symbols are atoms) and REFUSES the rest at validation
+//! rather than approximating it: `box`/`unbox` and `str_len` are unsupported
+//! ops. That refusal is the useful property — a Twig program needing them is
+//! rejected before emission, never miscompiled.
+//!
+//! Of the 47 Twig programs here, **19 compile and run correctly on BEAM** and
+//! carry `Beam` in their `backends` list; the other 28 are refused (12 on
+//! `str_len`, 7 on other string ops, 9 on `box`) and do not. Each was verified
+//! by executing the emitted module under a real `erl`, not by compiling it.
+//!
+//! NOTE: several per-cell comments below say "all seven engines". That phrasing
+//! predates this column and means the seven non-BEAM engines. The `backends`
+//! list on each `Prog` is the authority, not the prose.
+
 use lang_aot::Language;
 use std::process::Command;
 
-/// A non-BEAM backend the matrix proves languages on. Each new column the campaign
+/// A backend the matrix proves languages on. Each new column the campaign
 /// lands adds a variant here and a `run` arm; each `Prog` lists the backends it is
 /// **proven** to run on (so a cell is only asserted once a slice has verified it).
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
@@ -70,6 +89,12 @@ enum Backend {
     /// (Phase C, the CLR-real path). The emitted entry `Console.WriteLine`s its `int`
     /// result, which the harness parses (mirrors the McCarthy CLR-real chapter).
     Clr,
+    /// Source → BEAM bytecode (`iir-to-beam`) → real `erl` (the Lisp-shaped
+    /// column). BEAM has no raw memory and every term is immutable, so it takes
+    /// the cons/immutable half of the IIR naturally and refuses the rest: `box`
+    /// and `str_len` are still unsupported, which is why only the cells proven
+    /// to run list this backend. Gated on `erl`.
+    Beam,
     /// Source → IIR (`compile_source_to_iir`) → the **generic register VM**
     /// (`vm_core::VMCore`) interpreting the shared IIR directly (Phase V). This is the
     /// execution-time analog of the code-gen backends: `VMCore` consumes the same
@@ -123,7 +148,7 @@ struct Prog {
     backends: &'static [Backend],
 }
 
-use Backend::{Clr, Jit, Jvm, Llvm, NativeAot, Vm, Wasm};
+use Backend::{Beam, Clr, Jit, Jvm, Llvm, NativeAot, Vm, Wasm};
 
 /// The real-CoreCLR helpers (`find_ilasm`, the NuGet-cache assembler search) are
 /// shared with the McCarthy CLR-real chapter; `#[path]`-include the module so we
@@ -152,7 +177,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(+ 10 20 12)",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — **E6d-1: TW3-core dynamic `cons`/`car`/`cdr` on the code-gen backends.**
     // `(car (cons 42 0))` allocates a heap cons pair `(42 . 0)` and reads its head.
@@ -172,7 +197,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(car (cons 42 0))",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — E6d-1: nested cons proves multi-cell pointer chasing.
     // `(car (cdr (cons 1 (cons 42 0))))` = car(cdr(`(1 . (42 . 0))`)) =
@@ -182,7 +207,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(car (cdr (cons 1 (cons 42 0))))",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — **E6d-2: dynamic integer arithmetic over `any`, all 5 code-gen
     // backends.** `(+ (car (cons 41 0)) 1)` forces `+` over a boxed operand —
@@ -220,7 +245,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(car (list 42 1 2))",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — E6d-3a: `list` + `cdr` traversal reaches the second element.
     // `(car (cdr (list 1 42 3)))` = car(cdr(`(1 42 3)`)) = car(`(42 3)`) = 42,
@@ -230,7 +255,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(car (cdr (list 1 42 3)))",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — **E6d-3b: the `length` list operation on the code-gen backends.**
     // Unlike the `list` *constructor* (E6d-3a, a straight-line cons desugar),
@@ -259,7 +284,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(null? (list))",
         expect: Expect::Exit(1),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — **E6d-3b: the `list-ref` list operation on the code-gen backends.**
     // Like `length`, `list-ref` *walks* the cons chain, so `lower_list_ops`
@@ -292,7 +317,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(car (cdr (append (list 1 42) (list 3))))",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — **E6d-3b: the `reverse` list operation on the code-gen backends.**
     // `reverse` is lowered by `lower_list_ops` to a nil-seeded call to a synthesized
@@ -309,7 +334,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(car (reverse (list 1 2 42)))",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — **E6d-3b: the `assoc` list operation on the code-gen backends** (the
     // last E6d-3b op). `assoc` searches an association list (a list of `(k . v)`
@@ -349,7 +374,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(equal? 'a 'a)",
         expect: Expect::Exit(1),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Beam],
     },
     // Twig — E6d-4: two DISTINCT symbols are not `equal?` (different interned ids),
     // so `(equal? 'a 'b)` = #f → exit 0 — the discriminating half of the proof.
@@ -358,7 +383,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(equal? 'a 'b)",
         expect: Expect::Exit(0),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Beam],
     },
     // Twig — **E6d-5: records (TW6 part 1) on the code-gen backends.** A `(record
     // Name (f : T) …)` erases to a constructor `Name(…)` that builds a cons chain
@@ -386,7 +411,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(record Point (x : int) (y : int)) (point-x (Point 42 7))",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — E6d-5: the SECOND field of a record (accessor walks one `cdr` then
     // `car`), proving the cons-chain offset is right. `(point-y (Point 7 42))` = 42.
@@ -395,7 +420,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(record Point (x : int) (y : int)) (point-y (Point 7 42))",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — **E6d-6: unions / `match` (TW6 part 2).** A `(union Name (Variant …) …)`
     // erases to integer-tagged constructors (a cons `(tag . fields…)`) and `match`
@@ -470,7 +495,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(define (f) g) (define g 42) (f)",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Beam],
     },
     // Twig — **E6d-7: closures (TW5) on all 5 code-gen backends** (the last E6
     // backend gap). `((lambda (x) (+ x 1)) 41)` allocates a closure and applies
@@ -561,7 +586,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(string=? \"HELLO\" \"HELLO\")",
         expect: Expect::Exit(1),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — E4 named string values. Non-escaping top-level string `define`s
     // now stay in `main` as typed `str_const` registers, so shared string ops can
@@ -585,7 +610,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(define s \"HELLO\") (if (string=? s \"HELLO\") 42 0)",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — E4 named string indexing. This reuses the landed in-bounds
     // `str_index` backend support but proves the source string can be a named
@@ -626,7 +651,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(let ((s \"OK\") (t \"OK\")) (if (string=? s t) 42 0))",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — E4 lexical string locals feeding concat. This takes the local
     // string path beyond indexing: two `let` string slots feed `str_concat`,
@@ -680,7 +705,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(if (string<? \"ALPHA\" \"BETA\") (if (string>? \"BETA\" \"ALPHA\") 42 0) 0)",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — E4 string ops inside a direct top-level function. The function body
     // lowers `(string-length "HELLO")` to typed `str_const` + `str_len`, and the
@@ -763,7 +788,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(define (same a b) (if (string=? a b) 42 0)) (same \"OK\" (string-append \"O\" \"K\"))",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — E4 string ops over an unannotated top-level function parameter
     // with direct-call evidence from a non-escaping top-level string value. The
@@ -826,7 +851,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(define x 40) (define y 2) (+ x y)",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Nib — typed functions: define `double`, call it, return the result. Greened on
     // WASM in LM-W Nib by completing the i64 materialization: `nib_ty_str` and the
@@ -6019,6 +6044,132 @@ fn dotnet_ok() -> bool {
 /// the run, so the executed assembly cannot be substituted in the assemble→run
 /// window (CWE-377/367); the class name is the constant `"Main"`, never from input;
 /// and each program terminates by construction.
+// ── Backend: BEAM on a real `erl`. Gated on `erl`. ─────────────────────────
+//
+// The Lisp-shaped column. BEAM is the one target with NO raw memory — no linear
+// address space, every term immutable — so it takes the cons/immutable half of
+// the IIR natively (`cons`/`car`/`cdr` are Erlang lists, symbols are atoms) and
+// refuses the rest outright rather than approximating it. `box`/`unbox` and
+// `str_len` remain unsupported ops, so a program needing them is REJECTED at
+// validation, never miscompiled. Only cells proven to run list `Beam`.
+fn erl_ok() -> bool {
+    Command::new("erl")
+        .arg("-noshell")
+        .arg("-eval")
+        .arg("halt(0).")
+        .output()
+        .map(|o| o.status.success())
+        .unwrap_or(false)
+}
+
+/// Is this backend's external toolchain present on THIS host?
+///
+/// One function, not an inline `match` per test. Every test block used to carry
+/// its own copy, so adding a `Backend` variant meant editing ~100 identical
+/// matches — and any block landing on main while a backend branch was open
+/// broke that branch's build on merge, three times in one afternoon. A new
+/// variant now needs exactly one edit here.
+fn toolchain_available(backend: Backend) -> bool {
+    match backend {
+        NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+        Llvm => clang_ok(),
+        Wasm | Vm | Jit => true,
+        Jvm => java_ok(),
+        Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        Beam => erl_ok(),
+    }
+}
+
+fn run_beam(p: &Prog) -> Option<RunResult> {
+    if !erl_ok() {
+        return None; // no BEAM runtime on this host — the ONLY legitimate skip
+    }
+    let module = "langmatrix";
+    let bytes = match lang_aot::compile_source_to_beam(p.lang, p.src, module) {
+        Ok(b) => b,
+        Err(e) => cell_failed("Beam", p, "source → BEAM bytes", format!("{e:?}")),
+    };
+    let dir = tempfile::Builder::new()
+        .prefix("lang_matrix_beam")
+        .tempdir()
+        .expect("beam: create temp dir");
+    std::fs::write(dir.path().join(format!("{module}.beam")), &bytes)
+        .expect("beam: write .beam");
+
+    let out = Command::new("erl")
+        .arg("-noshell")
+        .arg("-pa")
+        .arg(dir.path())
+        .arg("-eval")
+        // The result is bracketed by sentinels because `main()` runs BEFORE the
+        // `io:format` and shares the same stdout. Without them a program that
+        // prints anything has its output concatenated with its result: a module
+        // printing "5" and returning 42 yields "542", which parses cleanly and
+        // is then confidently wrong.
+        .arg(format!(
+            "io:format(\"<<R>>~w<</R>>~n\",[{module}:main()]),halt(0)."
+        ))
+        .output()
+        .expect("beam: spawn erl");
+
+    let raw = String::from_utf8_lossy(&out.stdout);
+    // A non-zero exit is a failure even when stdout happens to parse. OTP writes
+    // `=ERROR REPORT` to stdout, not stderr, so the status is the reliable signal.
+    if !out.status.success() {
+        cell_failed(
+            "Beam",
+            p,
+            "`erl` execution of the emitted module",
+            format!(
+                "exit {:?}, stdout {:?}\n{}",
+                out.status.code(),
+                raw.trim(),
+                String::from_utf8_lossy(&out.stderr)
+            ),
+        );
+    }
+    let between = raw
+        .split_once("<<R>>")
+        .and_then(|(_, rest)| rest.split_once("<</R>>"))
+        .map(|(v, _)| v.trim().to_string());
+    let Some(stdout) = between else {
+        cell_failed(
+            "Beam",
+            p,
+            "`erl` output carried no <<R>>…<</R>> result marker",
+            format!("stdout {:?}\n{}", raw.trim(), String::from_utf8_lossy(&out.stderr)),
+        )
+    };
+    match stdout.parse::<i32>() {
+        // NO `& 0xFF`. The other columns are physically truncated by `exit()`;
+        // BEAM observes the full-width value, which makes it the one column that
+        // can catch an un-narrowed result. Masking would throw that away and, far
+        // worse, turn wrong values into passes: `SYMBOL_ID_BASE` is `1 << 29`,
+        // exactly 0 mod 256, so a leaked symbol tag would mask straight onto an
+        // expected 0 or 42. Anything outside exit-code range fails loudly instead.
+        Ok(v) if (0..=255).contains(&v) => Some(RunResult::Completed {
+            code: Some(v),
+            stdout: String::new(),
+        }),
+        Ok(v) => cell_failed(
+            "Beam",
+            p,
+            "`erl` result outside exit-code range",
+            format!("main() returned {v}, which no exit-code backend could report"),
+        ),
+        Err(_) => cell_failed(
+            "Beam",
+            p,
+            "`erl` execution of the emitted module",
+            format!(
+                "exit {:?}, stdout {stdout:?}\n{}",
+                out.status.code(),
+                String::from_utf8_lossy(&out.stderr)
+            ),
+        ),
+    }
+}
+
 fn run_clr(p: &Prog) -> Option<RunResult> {
     if !dotnet_ok() {
         return None;
@@ -6397,6 +6548,7 @@ fn run(backend: Backend, p: &Prog) -> Option<RunResult> {
         Backend::Wasm => run_wasm(p),
         Backend::Jvm => run_jvm(p),
         Backend::Clr => run_clr(p),
+        Backend::Beam => run_beam(p),
         Backend::Vm => run_vm(p),
         Backend::Jit => run_jit(p),
     }
@@ -6468,6 +6620,7 @@ fn only_cell_request() -> Option<(usize, Backend)> {
             "Clr" => Clr,
             "Vm" => Vm,
             "Jit" => Jit,
+        "Beam" => Beam,
             _ => return None,
         };
         Some((idx, backend))
@@ -6475,7 +6628,7 @@ fn only_cell_request() -> Option<(usize, Backend)> {
     Some(parsed.unwrap_or_else(|| {
         panic!(
             "{ONLY_CELL}={raw:?} is not \"<program index>:<backend name>\" \
-             (backends: NativeAot|Llvm|Wasm|Jvm|Clr|Vm|Jit)"
+             (backends: NativeAot|Llvm|Wasm|Jvm|Clr|Beam|Vm|Jit)"
         )
     }))
 }
@@ -6597,7 +6750,7 @@ fn reverify_in_fresh_process(idx: usize, backend: Backend) -> Option<String> {
 /// other is exactly the kind that rots.
 #[test]
 fn every_backend_name_round_trips_through_the_single_cell_env_var() {
-    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Beam, Vm, Jit] {
         let encoded = format!("7:{backend:?}");
         // SAFETY-of-intent: this test is the only reader/writer of the var here,
         // and libtest runs each test body once.
@@ -6793,7 +6946,10 @@ fn matrix_every_proven_cell_agrees() {
         && clang_ok()
         && java_ok()
         && dotnet_ok()
-        && clr_support::find_ilasm().is_some();
+        && clr_support::find_ilasm().is_some()
+        // Without this, a host with everything EXCEPT Erlang reports its 19
+        // legitimate BEAM skips as "a runner is silently opting out".
+        && erl_ok();
     if fully_equipped {
         assert_eq!(
             skipped, 0,
@@ -6813,13 +6969,7 @@ fn algol_integer_output_runs_on_every_available_standard_backend() {
         .expect("the ALGOL integer-output program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -6842,13 +6992,7 @@ fn algol_boolean_output_runs_on_every_available_standard_backend() {
         .expect("the ALGOL boolean-output program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -6870,13 +7014,7 @@ fn algol_real_literal_output_runs_on_every_available_standard_backend() {
         .expect("the ALGOL real-literal-output program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -6901,13 +7039,7 @@ fn algol_static_integer_functions_widening_runs_on_every_available_standard_back
         .expect("the static integer-functions program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -6929,13 +7061,7 @@ fn algol_signed_real_literal_output_runs_on_every_available_standard_backend() {
         .expect("the ALGOL signed-real-literal program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -6960,13 +7086,7 @@ fn algol_conditional_real_literal_output_runs_on_every_available_standard_backen
         .expect("the conditional real-literal program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -6989,13 +7109,7 @@ fn algol_parenthesized_real_literal_output_runs_on_every_available_standard_back
         .expect("the parenthesized real-literal program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -7018,13 +7132,7 @@ fn algol_static_additive_real_output_runs_on_every_available_standard_backend() 
         .expect("the static additive real program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -7047,13 +7155,7 @@ fn algol_static_real_multiplication_output_runs_on_every_available_standard_back
         .expect("the static real multiplication program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -7076,13 +7178,7 @@ fn algol_static_real_division_output_runs_on_every_available_standard_backend() 
         .expect("the static real division program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -7105,13 +7201,7 @@ fn algol_static_real_integer_power_output_runs_on_every_available_standard_backe
         .expect("the static real integer-power program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -7134,13 +7224,7 @@ fn algol_static_real_signed_power_output_runs_on_every_available_standard_backen
         .expect("the static real signed-power program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -7163,13 +7247,7 @@ fn algol_static_integral_real_exponent_output_runs_on_every_available_standard_b
         .expect("the static integral-real exponent program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -7194,13 +7272,7 @@ fn algol_static_integral_exponent_chain_output_runs_on_every_available_standard_
         .expect("the static integral exponent-chain program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -7225,13 +7297,7 @@ fn algol_static_real_standard_function_output_runs_on_every_available_standard_b
         .expect("the static real standard-function program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -7256,13 +7322,7 @@ fn algol_composed_static_real_standard_function_output_runs_on_every_available_s
         .expect("the composed static real standard-function program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -7288,13 +7348,7 @@ fn algol_conditional_static_real_standard_function_output_runs_on_every_availabl
         .expect("the conditional static real standard-function program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -7319,13 +7373,7 @@ fn algol_canonical_static_real_function_output_runs_on_every_available_standard_
         .expect("the canonical static real function program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -7350,13 +7398,7 @@ fn algol_integer_function_static_real_composition_runs_on_every_available_standa
         .expect("the integer-function static real program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -7380,13 +7422,7 @@ fn algol_canonical_conditional_branches_run_on_every_available_standard_backend(
         .expect("the canonical conditional-branch ALGOL program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -7415,13 +7451,7 @@ fn algol_runtime_string_ordering_runs_on_every_available_standard_backend() {
         .expect("the ALGOL runtime string ordering program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(RunResult::Completed { code, stdout }) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -7456,13 +7486,7 @@ fn algol_string_array_runs_on_every_available_standard_backend() {
         .expect("the ALGOL string array program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -7487,13 +7511,7 @@ fn algol_runtime_string_procedure_results_survive_string_array_storage_on_every_
         .expect("the runtime string-to-array ALGOL program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -7518,13 +7536,7 @@ fn algol_nested_procedure_captures_multidimensional_string_array_on_every_availa
         .expect("the nested multidimensional ALGOL string-array program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -7554,13 +7566,7 @@ fn algol_nested_procedure_captures_three_dimensional_string_array_on_every_avail
         .expect("the nested 3-D ALGOL string-array program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -7590,13 +7596,7 @@ fn algol_nested_procedure_captures_three_dimensional_boolean_array_on_every_avai
         .expect("the nested 3-D ALGOL boolean-array program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -7626,13 +7626,7 @@ fn algol_nested_procedure_captures_three_dimensional_real_array_on_every_availab
         .expect("the nested 3-D ALGOL real-array program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -7664,13 +7658,7 @@ fn algol_nested_procedure_captures_four_dimensional_integer_array_on_every_avail
         .expect("the nested 4-D ALGOL integer-array program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -7702,13 +7690,7 @@ fn algol_nested_procedure_captures_four_dimensional_string_array_on_every_availa
         .expect("the nested 4-D ALGOL string-array program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -7738,13 +7720,7 @@ fn algol_nested_procedure_forwards_captured_four_dimensional_string_array_on_eve
         .expect("the nested 4-D ALGOL string-array forwarding program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -7774,13 +7750,7 @@ fn algol_nested_procedure_forwards_captured_four_dimensional_real_array_on_every
         .expect("the nested 4-D ALGOL real-array forwarding program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -7810,13 +7780,7 @@ fn algol_nested_procedure_forwards_captured_four_dimensional_boolean_array_on_ev
         .expect("the nested 4-D ALGOL boolean-array forwarding program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -7839,13 +7803,7 @@ fn algol_power_chain_associates_right_to_left_on_every_available_standard_backen
         .expect("the right-associative ALGOL power-chain program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -7870,13 +7828,7 @@ fn algol_runtime_integer_exponents_run_on_every_available_standard_backend() {
         .expect("the runtime-exponent ALGOL program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -7900,13 +7852,7 @@ fn algol_captured_array_runs_on_every_available_standard_backend() {
         .expect("the ALGOL captured array program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -7930,13 +7876,7 @@ fn algol_array_parameter_runs_on_every_available_standard_backend() {
         .expect("the ALGOL array parameter program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -7959,13 +7899,7 @@ fn algol_array_for_variable_runs_on_every_available_standard_backend() {
         .expect("the ALGOL array-controlled for program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -7988,13 +7922,7 @@ fn algol_real_for_variable_runs_on_every_available_standard_backend() {
         .expect("the ALGOL real for-variable program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -8018,13 +7946,7 @@ fn algol_zero_argument_procedures_run_on_every_available_standard_backend() {
         .expect("the ALGOL zero-argument procedure program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -8048,13 +7970,7 @@ fn algol_validated_procedure_heading_runs_on_every_available_standard_backend() 
         .expect("the validated ALGOL procedure-heading program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -8080,13 +7996,7 @@ fn algol_split_formal_specifications_run_on_every_available_standard_backend() {
         .expect("the split-specification ALGOL program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -8110,13 +8020,7 @@ fn algol_procedure_shadowing_runs_on_every_available_standard_backend() {
         .expect("the ALGOL procedure-shadowing program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -8140,13 +8044,7 @@ fn algol_standard_function_shadowing_runs_on_every_available_standard_backend() 
         .expect("the ALGOL standard-function shadowing program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -8170,13 +8068,7 @@ fn algol_boolean_procedure_results_drive_control_flow_on_every_available_standar
         .expect("the ALGOL boolean procedure program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -8200,13 +8092,7 @@ fn algol_boolean_procedure_values_compose_on_every_available_standard_backend() 
         .expect("the ALGOL boolean procedure composition program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -8230,13 +8116,7 @@ fn algol_string_procedure_values_compose_on_every_available_standard_backend() {
         .expect("the ALGOL string procedure composition program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -8260,13 +8140,7 @@ fn algol_real_procedure_values_compose_on_every_available_standard_backend() {
         .expect("the ALGOL real procedure composition program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -8290,13 +8164,7 @@ fn algol_integer_procedure_values_compose_on_every_available_standard_backend() 
         .expect("the ALGOL integer procedure composition program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -8321,13 +8189,7 @@ fn algol_dynamic_captured_strings_reassign_on_every_available_standard_backend()
         .expect("the ALGOL dynamic captured-string program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -8351,13 +8213,7 @@ fn algol_dynamic_own_strings_reassign_on_every_available_standard_backend() {
         .expect("the ALGOL dynamic own-string program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -8382,13 +8238,7 @@ fn algol_multidimensional_array_parameter_runs_on_every_available_standard_backe
         .expect("the ALGOL multidimensional array parameter program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -8412,13 +8262,7 @@ fn algol_multidimensional_cross_coordinate_oob_traps_on_every_available_standard
         .expect("the ALGOL multidimensional coordinate-trap program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -8442,13 +8286,7 @@ fn algol_reversed_dynamic_array_bounds_trap_on_every_available_standard_backend(
         .expect("the ALGOL reversed-bound trap program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -8473,13 +8311,7 @@ fn algol_nested_procedure_captures_array_formal_on_every_available_standard_back
         .expect("the ALGOL array-formal capture program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -8504,13 +8336,7 @@ fn algol_nested_procedure_captures_scalar_formal_on_every_available_standard_bac
         .expect("the ALGOL scalar-formal capture program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -8534,13 +8360,7 @@ fn algol_call_by_name_jensen_sum_runs_on_every_available_standard_backend() {
         .expect("the call-by-name ALGOL program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -8565,13 +8385,7 @@ fn algol_call_by_name_forwarding_runs_on_every_available_standard_backend() {
         .expect("the forwarded call-by-name ALGOL program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -8596,13 +8410,7 @@ fn algol_call_by_name_array_forwarding_runs_on_every_available_standard_backend(
         .expect("the name-array ALGOL program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -8627,13 +8435,7 @@ fn algol_recursive_name_array_formals_run_on_every_available_standard_backend() 
         .expect("the recursive name-array ALGOL program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -8658,13 +8460,7 @@ fn algol_recursive_scalar_name_forwarding_runs_on_every_available_standard_backe
         .expect("the recursive scalar name-forwarding program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -8689,13 +8485,7 @@ fn algol_recursive_scalar_name_remapping_runs_on_every_available_standard_backen
         .expect("the recursive scalar name-remapping program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -8720,13 +8510,7 @@ fn algol_direct_formal_procedure_runs_on_every_available_standard_backend() {
         .expect("the direct formal-procedure ALGOL program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -8751,13 +8535,7 @@ fn algol_typed_formal_procedure_runs_on_every_available_standard_backend() {
         .expect("the typed formal-procedure ALGOL program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -8781,13 +8559,7 @@ fn algol_standard_function_formal_procedure_runs_on_every_available_standard_bac
         .expect("the standard-function formal-procedure program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -8811,13 +8583,7 @@ fn algol_value_formal_procedure_runs_on_every_available_standard_backend() {
         .expect("the value-mode formal-procedure program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -8841,13 +8607,7 @@ fn algol_nested_capturing_formal_procedure_runs_on_every_available_standard_back
         .expect("the nested-capturing formal-procedure program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -8872,13 +8632,7 @@ fn algol_recursive_formal_procedure_runs_on_every_available_standard_backend() {
         .expect("the recursive formal-procedure program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -8903,13 +8657,7 @@ fn algol_mutual_recursive_formal_procedure_runs_on_every_available_standard_back
         .expect("the mutual-recursive formal-procedure program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -8933,13 +8681,7 @@ fn algol_standard_output_formal_procedure_runs_on_every_available_standard_backe
         .expect("the standard-output formal-procedure program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -8964,13 +8706,7 @@ fn algol_call_by_name_string_forwarding_runs_on_every_available_standard_backend
         .expect("the string call-by-name ALGOL program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -8994,13 +8730,7 @@ fn algol_boolean_array_runs_on_every_available_standard_backend() {
         .expect("the ALGOL boolean-array program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -9024,13 +8754,7 @@ fn algol_multidimensional_boolean_array_runs_on_every_available_standard_backend
         .expect("the multidimensional ALGOL boolean-array program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -9055,13 +8779,7 @@ fn algol_switch_designator_elements_run_on_every_available_standard_backend() {
         .expect("the ALGOL switch-designator program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -9084,13 +8802,7 @@ fn algol_report_style_go_to_runs_on_every_available_standard_backend() {
         .expect("the ALGOL report-style go-to program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -9115,13 +8827,7 @@ fn algol_switch_shadowing_runs_on_every_available_standard_backend() {
         .expect("the ALGOL switch-shadowing program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -9146,13 +8852,7 @@ fn algol_label_shadowing_runs_on_every_available_standard_backend() {
         .expect("the ALGOL label-shadowing program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -9177,13 +8877,7 @@ fn algol_lexical_nested_switch_runs_on_every_available_standard_backend() {
         .expect("the ALGOL lexical nested-switch program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -9208,13 +8902,7 @@ fn algol_multiple_labels_run_on_every_available_standard_backend() {
         .expect("the ALGOL multiple-label program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -9239,13 +8927,7 @@ fn algol_dummy_statements_run_on_every_available_standard_backend() {
         .expect("the ALGOL dummy-statement program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -9270,13 +8952,7 @@ fn algol_numeric_promotion_runs_on_every_available_standard_backend() {
         .expect("the ALGOL numeric-promotion program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -9300,13 +8976,7 @@ fn algol_own_array_runs_on_every_available_standard_backend() {
         .expect("the ALGOL own array program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -9330,13 +9000,7 @@ fn algol_captured_and_own_strings_run_on_every_available_standard_backend() {
         .expect("the ALGOL captured/own string program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -9360,13 +9024,7 @@ fn algol_static_step_loop_initialization_runs_on_every_available_standard_backen
         .expect("the ALGOL static step-loop initialization program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -9390,13 +9048,7 @@ fn algol_tracked_step_bounds_run_on_every_available_standard_backend() {
         .expect("the ALGOL tracked step-bound program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -9422,13 +9074,7 @@ fn algol_static_statement_condition_runs_on_every_available_standard_backend() {
         .expect("the ALGOL initial while-condition program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -9451,13 +9097,7 @@ fn algol_static_conditional_assignment_runs_on_every_available_standard_backend(
         .expect("the ALGOL static conditional-assignment program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -9482,13 +9122,7 @@ fn algol_static_conditional_real_output_runs_on_every_available_standard_backend
         .expect("the ALGOL static conditional-real-output program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -9514,13 +9148,7 @@ fn algol_static_zero_trip_snapshot_runs_on_every_available_standard_backend() {
         .expect("the ALGOL static zero-trip snapshot program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -9545,13 +9173,7 @@ fn algol_zero_trip_controlled_snapshot_runs_on_every_available_standard_backend(
         .expect("the ALGOL zero-trip controlled snapshot program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -9577,13 +9199,7 @@ fn algol_zero_trip_while_snapshot_runs_on_every_available_standard_backend() {
         .expect("the ALGOL zero-trip while snapshot program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -9608,13 +9224,7 @@ fn algol_static_step_body_snapshot_runs_on_every_available_standard_backend() {
         .expect("the ALGOL static step-body snapshot program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -9639,13 +9249,7 @@ fn algol_single_step_control_snapshot_runs_on_every_available_standard_backend()
         .expect("the ALGOL single-step control snapshot program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -9670,13 +9274,7 @@ fn algol_finite_step_control_exit_runs_on_every_available_standard_backend() {
         .expect("the ALGOL finite step control-exit program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -9701,13 +9299,7 @@ fn algol_finite_real_step_control_exit_runs_on_every_available_standard_backend(
         .expect("the ALGOL finite real step control-exit program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -9732,13 +9324,7 @@ fn algol_finite_loop_body_snapshot_runs_on_every_available_standard_backend() {
         .expect("the ALGOL finite loop-body snapshot program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -9763,13 +9349,7 @@ fn algol_static_while_body_snapshot_runs_on_every_available_standard_backend() {
         .expect("the ALGOL static while-body snapshot program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -9794,13 +9374,7 @@ fn algol_static_while_control_exit_runs_on_every_available_standard_backend() {
         .expect("the ALGOL static while control-exit program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -9825,13 +9399,7 @@ fn algol_static_real_while_control_exit_runs_on_every_available_standard_backend
         .expect("the ALGOL static real while control-exit program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -9856,13 +9424,7 @@ fn algol_idempotent_while_dependency_runs_on_every_available_standard_backend() 
         .expect("the ALGOL idempotent while-dependency program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -9887,13 +9449,7 @@ fn algol_static_conditional_while_effect_runs_on_every_available_standard_backen
         .expect("the ALGOL static conditional while-effect program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -9918,13 +9474,7 @@ fn algol_stable_conditional_while_effect_runs_on_every_available_standard_backen
         .expect("the ALGOL stable conditional while-effect program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -9949,13 +9499,7 @@ fn algol_composed_stable_conditional_while_effect_runs_on_every_available_standa
         .expect("the ALGOL composed stable while-effect program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -9980,13 +9524,7 @@ fn algol_stable_scalar_while_predicate_runs_on_every_available_standard_backend(
         .expect("the ALGOL stable scalar while-predicate program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -10011,13 +9549,7 @@ fn algol_stable_function_while_predicate_runs_on_every_available_standard_backen
         .expect("the ALGOL stable function while-predicate program must remain in the matrix");
 
     for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
-        let toolchain_available = match backend {
-            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
-            Llvm => clang_ok(),
-            Wasm | Vm | Jit => true,
-            Jvm => java_ok(),
-            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
-        };
+        let toolchain_available = toolchain_available(backend);
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
@@ -10091,6 +9623,21 @@ fn proven_columns_do_not_silently_skip() {
                 run_jvm(p).is_some(),
                 "java present but JVM failed to run {:?}",
                 p.lang
+            );
+        }
+    }
+    // BEAM: when `erl` is present every Beam-tagged program must run. Without
+    // this block BEAM is the only gated column with no independent floor — and
+    // `erl_ok()` ends in `.unwrap_or(false)`, so a transient spawn failure under
+    // the sweep's process fan-out would turn all 19 cells into skips with
+    // nothing to catch it.
+    if erl_ok() {
+        for p in PROGRAMS.iter().filter(|p| p.backends.contains(&Beam)) {
+            assert!(
+                run_beam(p).is_some(),
+                "erl present but BEAM failed to run {:?}: {}",
+                p.lang,
+                p.src
             );
         }
     }
