@@ -1,5 +1,10 @@
 # Changelog — `lang-aot`
 
+## 0.225.8 - 2026-08-13 (ALGOL standard-function while controls)
+
+The seven-backend ALGOL matrix now proves a bounded static `while` exit whose
+predicate applies exact built-in `abs` to a stable local dependency.
+
 ## 0.225.7 - 2026-08-13 (ALGOL read-only while dependencies)
 
 The seven-backend ALGOL matrix now proves that a static `while` exit remains

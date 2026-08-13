@@ -903,7 +903,9 @@ backend immediately) come before the enabler-dependent items.
   and nested controlled variables count as writes. The proof is limited to
   4,096 iterations; globals, arrays, by-name values, written dependencies,
   unknown expressions, and nonterminating or longer loops leave the final
-  controlled value unknown.
+  controlled value unknown. Exact supported standard-function calls may wrap
+  these dependencies in the value or predicate; user declarations still shadow
+  the built-ins and make that call dynamic.
   Known comparison leaves
   compose through `not`, `and`, `or`, `impl`, and `eqv`; bare literals,
   including direct `true` and `false`, compose through those operators;

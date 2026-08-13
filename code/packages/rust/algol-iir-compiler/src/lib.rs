@@ -5247,14 +5247,9 @@ impl Compiler {
         let Some(condition) = first_direct_node(elem, "bool_expr") else {
             return (None, None);
         };
-        let dependencies: HashSet<String> = recursive_tokens(value)
-            .into_iter()
-            .chain(recursive_tokens(condition))
-            .filter(|token| {
-                token.effective_type_name() == "NAME" && token.value != target_name
-            })
-            .map(|token| token.value.clone())
-            .collect();
+        let mut dependencies = HashSet::new();
+        collect_expression_dependency_names(value, &target_name, &mut dependencies);
+        collect_expression_dependency_names(condition, &target_name, &mut dependencies);
         for dependency in &dependencies {
             let Ok(binding) = self.require_var(dependency) else {
                 return (None, None);
@@ -7045,6 +7040,26 @@ fn recursive_tokens(node: &GrammarASTNode) -> Vec<&Token> {
     let mut out = Vec::new();
     collect_tokens(node, &mut out);
     out
+}
+
+fn collect_expression_dependency_names(
+    node: &GrammarASTNode,
+    target_name: &str,
+    dependencies: &mut HashSet<String>,
+) {
+    if node.rule_name != "proc_call" {
+        dependencies.extend(
+            direct_tokens(node)
+                .into_iter()
+                .filter(|token| {
+                    token.effective_type_name() == "NAME" && token.value != target_name
+                })
+                .map(|token| token.value.clone()),
+        );
+    }
+    for child in direct_nodes(node) {
+        collect_expression_dependency_names(child, target_name, dependencies);
+    }
 }
 
 fn collect_tokens<'a>(node: &'a GrammarASTNode, out: &mut Vec<&'a Token>) {
@@ -9227,6 +9242,25 @@ mod tests {
             "test",
         )
         .expect("reading a stable local dependency does not mutate it");
+    }
+
+    #[test]
+    fn al4_static_while_preserves_standard_function_dependency() {
+        compile_source(
+            "begin integer i, n; n := -3; i := 0; for i := i + 1 while i < abs(n) do print(''); print(i + 0.25) end",
+            "test",
+        )
+        .expect("a deterministic standard function may use a stable dependency");
+    }
+
+    #[test]
+    fn al4_user_overridden_while_function_remains_conservative() {
+        let err = compile_source(
+            "begin integer procedure abs(x); value x; integer x; abs := 1; integer i, n; n := -3; i := 0; for i := i + 1 while i < abs(n) do print(''); print(i + 0.25) end",
+            "test",
+        )
+        .expect_err("a user procedure is not a statically pure standard function");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
     #[test]
