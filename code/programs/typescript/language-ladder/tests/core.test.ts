@@ -9,7 +9,7 @@ import {
   handwritingHeading,
 } from "../src/core.ts";
 import type { Letter, ScriptData } from "../src/types.ts";
-import { SCRIPTS } from "../src/data.ts";
+import { SCRIPTS } from "@coding-adventures/script-ductus";
 
 function letter(overrides: Partial<Letter> = {}): Letter {
   return {

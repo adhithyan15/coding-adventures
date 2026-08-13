@@ -10,7 +10,7 @@ import {
 } from "../src/drill.ts";
 import type { LetterView } from "../src/core.ts";
 import { buildScriptView } from "../src/core.ts";
-import { SCRIPTS } from "../src/data.ts";
+import { SCRIPTS } from "@coding-adventures/script-ductus";
 
 function lv(glyph: string, over: Partial<LetterView> = {}): LetterView {
   return {

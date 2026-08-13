@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { parseFont, boundsOf, type Contour } from "../src/truetype";
-import { SCRIPTS, verifiedLetterFont } from "../src/data";
+import { SCRIPTS, verifiedLetterFont } from "../src/scriptdata";
 import {
   DUCTUS,
   ductusKey,

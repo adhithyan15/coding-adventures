@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { SCRIPTS } from "../src/data";
+import { SCRIPTS } from "@coding-adventures/script-ductus";
 import { crossScriptSiblings } from "../src/siblings";
 import { isSyllabary } from "../src/syllabary";
 import { buildSyllableMatrix } from "../src/matrix";

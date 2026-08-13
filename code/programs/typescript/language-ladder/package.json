@@ -14,7 +14,8 @@
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
-    "@coding-adventures/human-language-data": "file:../../../packages/typescript/human-language-data"
+    "@coding-adventures/human-language-data": "file:../../../packages/typescript/human-language-data",
+    "@coding-adventures/script-ductus": "file:../../../packages/typescript/script-ductus"
   },
   "devDependencies": {
     "@vitest/coverage-v8": "^4.1.0",
