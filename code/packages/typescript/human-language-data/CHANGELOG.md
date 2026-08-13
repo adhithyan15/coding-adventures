@@ -94,6 +94,12 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
   the one malformed shape that scores as covered -- throws at load, and deleting
   a point fails the pin.
 
+### Added - source-verified Chinese 早 (HL-C09CV)
+
+- Verify 早 as six ordered strokes with five lifts against the pinned PRC source.
+- Preserve its complete 日-before-十 order and joined top-right turn in a Noto Sans SC fit.
+- Reduce HL-C09 debt to 132 entries; Chinese has 1 outstanding.
+
 ### Added - source-verified Chinese 么 (HL-C09CU)
 
 - Verify 么 as three ordered strokes with two lifts against the pinned PRC source.

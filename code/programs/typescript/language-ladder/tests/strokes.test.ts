@@ -46,6 +46,7 @@ const CHINESE_AGAIN = DUCTUS[ductusKey("chinese", "再")];
 const CHINESE_SEE = DUCTUS[ductusKey("chinese", "见")];
 const CHINESE_WHAT = DUCTUS[ductusKey("chinese", "什")];
 const CHINESE_PARTICLE_ME = DUCTUS[ductusKey("chinese", "么")];
+const CHINESE_EARLY = DUCTUS[ductusKey("chinese", "早")];
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
@@ -608,6 +609,21 @@ describe("handwriting ductus", () => {
     expect(CHINESE_PARTICLE_ME.strokes.map((stroke) => stroke.segments.length)).toEqual([1, 2, 1]);
     expect(CHINESE_PARTICLE_ME.strokes[1].segments[0].path.at(-1)).toEqual(
       CHINESE_PARTICLE_ME.strokes[1].segments[1].path[0],
+    );
+  });
+
+  it("Chinese 早 completes 日 before the two strokes of 十", () => {
+    expect(CHINESE_EARLY.script).toBe("chinese");
+    expect(penLifts(CHINESE_EARLY)).toBe(5);
+    expect(CHINESE_EARLY.strokes).toHaveLength(6);
+    expect(CHINESE_EARLY.strokes.map((stroke) => stroke.segments.length)).toEqual([
+      1, 2, 1, 1, 1, 1,
+    ]);
+    expect(CHINESE_EARLY.strokes[1].segments[0].path.at(-1)).toEqual(
+      CHINESE_EARLY.strokes[1].segments[1].path[0],
+    );
+    expect(Math.max(...penPath(CHINESE_EARLY.strokes[4]).map((point) => point.y))).toBeLessThan(
+      Math.min(...penPath(CHINESE_EARLY.strokes[3]).map((point) => point.y)),
     );
   });
 
@@ -1570,6 +1586,9 @@ describe("handwriting ductus", () => {
     expect(verifiedLetterFont("么", CHINESE_PARTICLE_ME.source.url)).toBe(
       "_fonts/NotoSansSC-Subset.ttf",
     );
+    expect(verifiedLetterFont("早", CHINESE_EARLY.source.url)).toBe(
+      "_fonts/NotoSansSC-Subset.ttf",
+    );
     expect(verifiedLetterFont("א", HEBREW_ALEF.source.url)).toBe(
       "_fonts/NotoSansHebrew-Static.ttf",
     );
@@ -1936,6 +1955,17 @@ describe("handwriting ductus", () => {
     expect(src.citation).toMatch(/Hanzi Writer Data 么\.json.*medians 1–3.*snapshot 68d10a4/i);
     expect(src.variation).toMatch(
       /three ordered strokes.*Median 1.*upper left-falling stroke.*Median 2.*upper right.*falls down-left.*turns without lifting.*sweeps right along the base.*Median 3.*final down-right dot.*People's Republic of China stroke order.*Noto Sans SC.*second stroke's joined turn.*two intervening lifts/i,
+    );
+  });
+
+  it("Chinese 早 traces its complete 日-before-十 order to the pinned PRC dataset", () => {
+    const src = CHINESE_EARLY.source;
+    expect(src.url).toBe(
+      "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E6%97%A9.json",
+    );
+    expect(src.citation).toMatch(/Hanzi Writer Data 早\.json.*medians 1–6.*snapshot 68d10a4/i);
+    expect(src.variation).toMatch(
+      /six ordered strokes.*Medians 1–4.*complete 日 first.*left side.*top horizontal.*turns down the right side.*middle horizontal.*closing bottom horizontal.*Median 5.*十's horizontal left-to-right.*median 6.*descends its vertical.*People's Republic of China stroke order.*Noto Sans SC.*日-before-十.*joined top-right turn.*five intervening lifts/i,
     );
   });
 
