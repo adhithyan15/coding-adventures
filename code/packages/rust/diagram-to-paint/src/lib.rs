@@ -433,7 +433,12 @@ where
             group.y + 8.0,
             group.width - 24.0,
             label_size * 1.2,
-            label_font.clone(),
+            {
+                let mut f = label_font.clone();
+                f.size = group.style.font_size;
+                f.weight = group.style.font_weight;
+                f
+            },
             css_to_color(&group.style.text_color),
         ));
     }
@@ -468,6 +473,7 @@ where
                 {
                     let mut f = label_font.clone();
                     f.size = edge.style.font_size;
+                    f.weight = edge.style.font_weight;
                     f
                 },
                 css_to_color(&edge.style.text_color),
@@ -491,6 +497,7 @@ where
             {
                 let mut f = label_font.clone();
                 f.size = node.style.font_size;
+                f.weight = node.style.font_weight;
                 f
             },
             css_to_color(&node.style.text_color),
@@ -2904,6 +2911,7 @@ mod tests {
             stroke_width: 2.0,
             text_color: "#374151".to_string(),
             font_size: 12.0,
+            font_weight: 400,
             corner_radius: 0.0,
         }
     }
@@ -3350,6 +3358,7 @@ mod tests {
                 stroke_width: 3.0,
                 text_color: "#78350f".into(),
                 font_size: 14.0,
+                font_weight: 400,
                 corner_radius: 8.0,
             },
         });
