@@ -11,9 +11,9 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": 11202,
+  "active_pr": null,
   "last_inventory": {
-    "revision": "e57bec074440fd7b3b4198597b42d3c059f659c4",
+    "revision": "f0dc0943313fea7484c8e6f13069bd9aee2a7b9a",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1305,
@@ -3120,7 +3120,7 @@
     {
       "id": "zip-raw-rfc1951-language-neutral-conformance",
       "title": "Define language-neutral ZIP raw RFC 1951 conformance",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [],
       "branch": "codex/zip-raw-rfc1951-neutral",
       "pr_number": 11202,
@@ -3128,16 +3128,129 @@
       "opened_at": "2026-08-13T09:59:05Z",
       "selection_revision": "5574bc77277b1b047d09d6e696f9427e2a8c4ba7",
       "selection_notes": "Selected after PR #11162 merged externally and the collision-clean post-merge inventory remained exactly 1,305 identities, 4,461 slots, 855 singletons, 11,970 singleton gaps, 658 Rust singletons, zero collisions, and zero unknown buckets. This dependency-free neutral contract is the highest-leverage ready slice: it makes the reviewable ZIP raw-codec lane children eligible and ultimately unlocks the fourteen missing established PNG codec slots without overlapping external WebAssembly PR #11146 or widening into the still-unsplit remaining build-plan writers.",
-      "implementation_revision": "9b079f060d72ea94203edbaa0d24db5aa30e61fe",
+      "implementation_revision": "2909069e3fe7665bd08fe46ccaa2daec3094c5fc",
+      "merged_at": "2026-08-13T10:31:33Z",
+      "merge_revision": "0eabbd60beba51de34693b35980cd0f2366497b9",
       "validation_notes": "The closed 34-case RFC 1951 corpus and independent Python zlib/binascii validator pass 9 focused tests; the capability taxonomy passes 7 tests and 678 subtests. The real TypeScript ZIP BUILD front door passes 98 tests with 98.63% line, 94.11% statement, 84.41% branch, and 100% function coverage. The real image-codec-png downstream BUILD passes 58 tests with 100% line, 97.44% statement, 94.70% branch, and 100% function coverage. The suite covers stored, fixed, dynamic, multi-block, symbol 285, exact counted consumption, HDIST=32 with unused reserved slots, decoded dynamic distance symbols 30 and 31, stable payload-blind failures, hard and caller output caps, foreign decoding, incremental CRC-32, and ZIP compressed-payload cavity rejection. Ruff, Ruff format, MyPy, Bandit, TypeScript builds, Go build-tool tests, vet, module verification, trimpath build, strict JSON, dependency-graph, credential-pattern, diff, and runtime dependency audit gates pass. Both ZIP and PNG runtime audits report zero vulnerabilities. The collision-clean inventory at e57bec0744 remains 1,305 identities, 4,461 slots, 855 singletons, 11,970 singleton gaps, 658 Rust singletons, zero collisions, and zero unknown buckets. External WebAssembly PR #11146 merged during the rebase, so its temporary neutral/core overlap blocks were cleared after the unchanged inventory refresh; the broader WAST umbrella and host authority review remain blocked as designed.",
       "publication_notes": "Ready-for-review PR #11202 opened from edd552aff1 after rebasing and validating against e57bec0744. GitHub reports it open, non-draft, and mergeable; CI, CodeQL, and auxiliary checks are queued, so the loop is monitor-only until they reach terminal state.",
       "notes": "Split from the broad ZIP completion owner during the post-#11111 leverage pass. Tighten CMP09 around a closed fallible raw_deflate, capped raw_inflate, exact raw_inflate_counted, and incremental CRC-32 profile; add neutral stored, fixed, dynamic, foreign-stream, malformed-tree/header, truncation, trailing-byte, output-cap, exact-consumption, and stable payload-free error fixtures. TypeScript remains the reference consumer; lane ports are separate dependency-shaped children under the completion umbrella."
     },
     {
+      "id": "zip-raw-rfc1951-dotnet-lane-parity",
+      "title": "Expose ZIP raw RFC 1951 conformance in the .NET lanes",
+      "status": "pending",
+      "depends_on": ["zip-raw-rfc1951-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Portable C# and F# child of the ZIP raw-codec completion umbrella. Consume CMP09 and every closed zip-raw-rfc1951-v1 case, expose the ZIP-owned raw primitives without duplicating DEFLATE, preserve pure in-memory operation, and add explicit empty capability metadata."
+    },
+    {
+      "id": "zip-raw-rfc1951-dart-lane-parity",
+      "title": "Expose ZIP raw RFC 1951 conformance in Dart",
+      "status": "in-progress",
+      "depends_on": ["zip-raw-rfc1951-language-neutral-conformance"],
+      "branch": "codex/dart-zip-raw-rfc1951",
+      "pr_number": null,
+      "selection_revision": "0eabbd60beba51de34693b35980cd0f2366497b9",
+      "selection_notes": "Selected after PR #11202 merged externally and the collision-clean post-merge inventory remained exactly 1,305 identities, 4,461 slots, 855 singletons, 11,970 singleton gaps, 658 Rust singletons, zero collisions, and zero unknown buckets. Dart is the smallest ready ZIP child because its existing pure in-memory codec already supports stored, fixed, dynamic, multi-block, capped decode, CRC-32, and foreign ZIP interoperability. This bounded tranche closes counted consumption, stable errors, strict malformed-stream behavior, neutral fixture consumption, and empty capability metadata without overlapping any live PR or the historical stale cross-lane ZIP branch.",
+      "validation_notes": "The real Dart ZIP BUILD front door passes format, fatal analyzer, and all 66 package tests, including all 34 neutral raw RFC 1951 cases, the Dart SDK raw-zlib foreign decoder, system ZIP interoperability, and compressed-payload cavity rejection. Dart VM coverage records 447 of 470 executable library lines (95.11%). The independent neutral fixture and parity reporter suites pass 19 tests; the capability taxonomy passes 7 tests and 678 subtests; the collision gate, strict state dependency graph, JSON, diff, added-line credential scan, and pure-production authority scan pass. The runtime dependency graph remains the existing in-repository lzss package only; production code imports no filesystem, process, network, environment, clock, entropy, console, or credential authority, and the explicit capability profile is empty.",
+      "notes": "Portable Dart child of the ZIP raw-codec completion umbrella. Consume CMP09 and every closed zip-raw-rfc1951-v1 case, expose the ZIP-owned raw primitives without duplicating DEFLATE, preserve pure in-memory operation, and add explicit empty capability metadata."
+    },
+    {
+      "id": "zip-raw-rfc1951-elixir-lane-parity",
+      "title": "Expose ZIP raw RFC 1951 conformance in Elixir",
+      "status": "pending",
+      "depends_on": ["zip-raw-rfc1951-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Portable Elixir child of the ZIP raw-codec completion umbrella. Consume CMP09 and every closed zip-raw-rfc1951-v1 case, expose the ZIP-owned raw primitives without duplicating DEFLATE, preserve pure in-memory operation, and add explicit empty capability metadata."
+    },
+    {
+      "id": "zip-raw-rfc1951-go-lane-parity",
+      "title": "Expose ZIP raw RFC 1951 conformance in Go",
+      "status": "pending",
+      "depends_on": ["zip-raw-rfc1951-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Portable Go child of the ZIP raw-codec completion umbrella. Consume CMP09 and every closed zip-raw-rfc1951-v1 case, expose the ZIP-owned raw primitives without duplicating DEFLATE, preserve pure in-memory operation, and add explicit empty capability metadata."
+    },
+    {
+      "id": "zip-raw-rfc1951-haskell-lane-parity",
+      "title": "Expose ZIP raw RFC 1951 conformance in Haskell",
+      "status": "pending",
+      "depends_on": ["zip-raw-rfc1951-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Portable Haskell child of the ZIP raw-codec completion umbrella. Consume CMP09 and every closed zip-raw-rfc1951-v1 case, expose the ZIP-owned raw primitives without duplicating DEFLATE, preserve pure in-memory operation, and add explicit empty capability metadata."
+    },
+    {
+      "id": "zip-raw-rfc1951-jvm-lane-parity",
+      "title": "Expose ZIP raw RFC 1951 conformance in the JVM lanes",
+      "status": "pending",
+      "depends_on": ["zip-raw-rfc1951-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Portable Java and Kotlin child of the ZIP raw-codec completion umbrella. Consume CMP09 and every closed zip-raw-rfc1951-v1 case, expose the ZIP-owned raw primitives without duplicating DEFLATE, preserve pure in-memory operation, and add explicit empty capability metadata."
+    },
+    {
+      "id": "zip-raw-rfc1951-lua-lane-parity",
+      "title": "Expose ZIP raw RFC 1951 conformance in Lua",
+      "status": "pending",
+      "depends_on": ["zip-raw-rfc1951-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Portable Lua child of the ZIP raw-codec completion umbrella. Consume CMP09 and every closed zip-raw-rfc1951-v1 case, expose the ZIP-owned raw primitives without duplicating DEFLATE, preserve pure in-memory operation, and add explicit empty capability metadata."
+    },
+    {
+      "id": "zip-raw-rfc1951-perl-lane-parity",
+      "title": "Expose ZIP raw RFC 1951 conformance in Perl",
+      "status": "pending",
+      "depends_on": ["zip-raw-rfc1951-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Portable Perl child of the ZIP raw-codec completion umbrella. Consume CMP09 and every closed zip-raw-rfc1951-v1 case, expose the ZIP-owned raw primitives without duplicating DEFLATE, preserve pure in-memory operation, and add explicit empty capability metadata."
+    },
+    {
+      "id": "zip-raw-rfc1951-python-lane-parity",
+      "title": "Expose ZIP raw RFC 1951 conformance in Python",
+      "status": "pending",
+      "depends_on": ["zip-raw-rfc1951-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Portable Python child of the ZIP raw-codec completion umbrella. Consume CMP09 and every closed zip-raw-rfc1951-v1 case, expose the ZIP-owned raw primitives without duplicating DEFLATE, preserve pure in-memory operation, and add explicit empty capability metadata."
+    },
+    {
+      "id": "zip-raw-rfc1951-ruby-lane-parity",
+      "title": "Expose ZIP raw RFC 1951 conformance in Ruby",
+      "status": "pending",
+      "depends_on": ["zip-raw-rfc1951-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Portable Ruby child of the ZIP raw-codec completion umbrella. Consume CMP09 and every closed zip-raw-rfc1951-v1 case, expose the ZIP-owned raw primitives without duplicating DEFLATE, preserve pure in-memory operation, and add explicit empty capability metadata."
+    },
+    {
+      "id": "zip-raw-rfc1951-rust-lane-parity",
+      "title": "Expose ZIP raw RFC 1951 conformance in Rust",
+      "status": "pending",
+      "depends_on": ["zip-raw-rfc1951-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Portable Rust child of the ZIP raw-codec completion umbrella. Consume CMP09 and every closed zip-raw-rfc1951-v1 case, expose the ZIP-owned raw primitives without duplicating DEFLATE, preserve pure in-memory operation, and add explicit empty capability metadata."
+    },
+    {
+      "id": "zip-raw-rfc1951-swift-lane-parity",
+      "title": "Expose ZIP raw RFC 1951 conformance in Swift",
+      "status": "pending",
+      "depends_on": ["zip-raw-rfc1951-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Portable Swift child of the ZIP raw-codec completion umbrella. Consume CMP09 and every closed zip-raw-rfc1951-v1 case, expose the ZIP-owned raw primitives without duplicating DEFLATE, preserve pure in-memory operation, and add explicit empty capability metadata."
+    },
+    {
       "id": "zip-raw-rfc1951-portable-conformance",
       "title": "Fixture and expose ZIP-owned raw RFC 1951 primitives across established lanes",
       "status": "pending",
-      "depends_on": ["zip-raw-rfc1951-language-neutral-conformance"],
+      "depends_on": ["zip-raw-rfc1951-dotnet-lane-parity", "zip-raw-rfc1951-dart-lane-parity", "zip-raw-rfc1951-elixir-lane-parity", "zip-raw-rfc1951-go-lane-parity", "zip-raw-rfc1951-haskell-lane-parity", "zip-raw-rfc1951-jvm-lane-parity", "zip-raw-rfc1951-lua-lane-parity", "zip-raw-rfc1951-perl-lane-parity", "zip-raw-rfc1951-python-lane-parity", "zip-raw-rfc1951-ruby-lane-parity", "zip-raw-rfc1951-rust-lane-parity", "zip-raw-rfc1951-swift-lane-parity"],
       "branch": null,
       "pr_number": null,
       "selection_blocked": true,

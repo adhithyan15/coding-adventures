@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.2.0 - 2026-08-13
+
+- Added the CMP09 portable `rawDeflate`, `rawInflate`, and
+  `rawInflateCounted` API while retaining `deflateCompress` and `inflate` as
+  compatibility entry points.
+- Added stable payload-blind `RawInflateError.code` failures, exact compressed
+  byte consumption, strict dynamic-header, Huffman, repeat, reserved-symbol,
+  and output-limit validation, including RFC-conforming 32-slot distance
+  headers.
+- Added a consumer for all 34 language-neutral `zip-raw-rfc1951-v1` cases and
+  an independent Dart SDK raw-zlib interoperability oracle.
+- Hardened method-8 ZIP reads to reject unused bytes inside a declared
+  compressed payload and to cap inflate at the smaller of the entry's declared
+  size and the caller's limit.
+- Declared an explicit empty host-capability profile and added format and
+  analyzer gates to the package BUILD front door.
+
 ## 0.1.0
 
 - Added the initial Dart implementation of the CMP09 ZIP archive format.

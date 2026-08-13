@@ -299,6 +299,37 @@ void main() {
     expect(reader.readByName('sheet1.xml'), equals(expected));
   });
 
+  test('rejects a suffix inside a declared DEFLATE payload', () {
+    final archive = zipBytes([
+      ('payload.txt', utf8Bytes('hidden cavity regression ' * 40)),
+    ]);
+    final reader = ZipReader(archive);
+    final entry = reader.entries().single;
+    expect(entry.method, 8);
+
+    final originalView = ByteData.sublistView(archive);
+    final originalEocd = archive.length - 22;
+    final originalCd = originalView.getUint32(
+      originalEocd + 16,
+      Endian.little,
+    );
+    final tampered = Uint8List(archive.length + 1)
+      ..setRange(0, originalCd, archive)
+      ..[originalCd] = 0xDE
+      ..setRange(originalCd + 1, archive.length + 1, archive, originalCd);
+    final view = ByteData.sublistView(tampered);
+    final newCd = originalCd + 1;
+    final newEocd = originalEocd + 1;
+    view.setUint32(18, entry.compressedSize + 1, Endian.little);
+    view.setUint32(newCd + 20, entry.compressedSize + 1, Endian.little);
+    view.setUint32(newEocd + 16, newCd, Endian.little);
+
+    final tamperedReader = ZipReader(tampered);
+    expect(
+      () => tamperedReader.read(tamperedReader.entries().single),
+      throwsA(isA<FormatException>()),
+    );
+  });
   // ── Additional coverage: read_by_name ──────────────────────────────────────
 
   test('read_by_name finds an entry and throws for missing names', () {

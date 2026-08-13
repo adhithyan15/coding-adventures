@@ -3226,6 +3226,38 @@ their umbrella closes, unlocks the fourteen missing established PNG codec
 slots. It does not widen into those lane ports, the remaining build-plan
 writers, OCaml promotion, or the externally owned WebAssembly work.
 
+## Post-#11202 Refresh and Dart ZIP Raw-Conformance Selection
+
+External review merged ready-for-review PR #11202 as
+`0eabbd60beba51de34693b35980cd0f2366497b9` at
+2026-08-13T10:31:33Z after every required CI and CodeQL check reached terminal
+success or an expected skip. The final reviewed head is
+`2909069e3fe7665bd08fe46ccaa2daec3094c5fc`. A fresh collision-checked report
+at the merge revision covers 15 established lanes, 1,305 normalized
+implementation identities, and 4,461 established slots. It reports 173
+high-consensus identities with 269 missing slots, 855 singletons with 11,970
+missing singleton slots, 658 Rust singletons, zero canonical collisions, and
+zero unknown buckets.
+
+The merge is topology-neutral: it tightens the established TypeScript ZIP
+package and adds the closed neutral fixture without creating, removing, or
+reclassifying an established package identity. No newly unowned gap was
+discovered. The completion umbrella is now decomposed into twelve reviewable
+toolchain-shaped children: .NET, Dart, Elixir, Go, Haskell, JVM, Lua, Perl,
+Python, Ruby, Rust, and Swift. Every child depends only on the merged neutral
+contract, and the umbrella remains blocked until all twelve have merged.
+Direct PNG parity continues to depend on that completed umbrella.
+
+The dependency/leverage pass selected `zip-raw-rfc1951-dart-lane-parity`.
+Dart's existing pure in-memory ZIP codec already handles stored, fixed,
+dynamic, and multi-block streams, bounded output, CRC-32, and foreign ZIP
+interoperability. This bounded tranche therefore focuses on the closed raw
+API, exact counted consumption, stable payload-blind errors, hardened malformed
+stream rejection, all 34 neutral cases, and explicit empty capability
+metadata. No live PR overlaps the Dart ZIP package, shared fixture, state, or
+roadmap, and the historical stale cross-lane ZIP branch does not touch Dart.
+The remaining eleven ZIP children stay pending and independently reviewable.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
