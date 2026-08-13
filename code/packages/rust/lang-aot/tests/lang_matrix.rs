@@ -6265,22 +6265,47 @@ fn assert_cell(backend: Backend, p: &Prog, result: RunResult) {
 /// in a *fresh process* — see `reverify_in_fresh_process`.
 const ONLY_CELL: &str = "LANG_MATRIX_ONLY_CELL";
 
+/// Printed by the single-cell path immediately before it returns, as positive
+/// proof that the cell actually ran.
+///
+/// A child that exits 0 is not evidence on its own: libtest exits 0 when its
+/// filter matches *nothing* ("0 passed; N filtered out"), so a renamed or moved
+/// test would make every re-verification "pass" and the sweep would discard
+/// every real failure while reporting green. The tool must be able to tell
+/// "checked and fine" from "never checked".
+const RAN_SENTINEL: &str = "lang-matrix: single-cell ran";
+
 /// Parse `LANG_MATRIX_ONLY_CELL` as `"<program index>:<backend name>"`.
+///
+/// `None` means the variable is **absent**. A variable that is set but malformed
+/// panics rather than falling back to `None` — because `None` here means "run the
+/// whole matrix", so a typo would silently burn a full six-minute run, and a
+/// `Backend` variant renamed without updating these arms would make every
+/// re-verification child run the entire matrix (and any child whose full run
+/// happened to pass would discard a genuine failure).
 fn only_cell_request() -> Option<(usize, Backend)> {
     let raw = std::env::var(ONLY_CELL).ok()?;
-    let (idx, backend) = raw.split_once(':')?;
-    let idx: usize = idx.parse().ok()?;
-    let backend = match backend {
-        "NativeAot" => NativeAot,
-        "Llvm" => Llvm,
-        "Wasm" => Wasm,
-        "Jvm" => Jvm,
-        "Clr" => Clr,
-        "Vm" => Vm,
-        "Jit" => Jit,
-        _ => return None,
-    };
-    Some((idx, backend))
+    let parsed = (|| {
+        let (idx, backend) = raw.split_once(':')?;
+        let idx: usize = idx.parse().ok()?;
+        let backend = match backend {
+            "NativeAot" => NativeAot,
+            "Llvm" => Llvm,
+            "Wasm" => Wasm,
+            "Jvm" => Jvm,
+            "Clr" => Clr,
+            "Vm" => Vm,
+            "Jit" => Jit,
+            _ => return None,
+        };
+        Some((idx, backend))
+    })();
+    Some(parsed.unwrap_or_else(|| {
+        panic!(
+            "{ONLY_CELL}={raw:?} is not \"<program index>:<backend name>\" \
+             (backends: NativeAot|Llvm|Wasm|Jvm|Clr|Vm|Jit)"
+        )
+    }))
 }
 
 /// Re-run one failing cell in a **fresh process** and report whether it still
@@ -6320,16 +6345,18 @@ fn reverify_in_fresh_process(idx: usize, backend: Backend) -> Option<String> {
             ))
         }
     };
-    let out = Command::new(exe)
+    let spawned = Command::new(exe)
         .arg("matrix_every_proven_cell_agrees")
         .arg("--exact")
         .arg("--nocapture")
         .env(ONLY_CELL, format!("{idx}:{backend:?}"))
         // The child must not recurse into sweep mode.
         .env_remove("LANG_MATRIX_REPORT_ALL")
-        .output();
-    let out = match out {
-        Ok(o) => o,
+        .stdout(std::process::Stdio::piped())
+        .stderr(std::process::Stdio::piped())
+        .spawn();
+    let child = match spawned {
+        Ok(c) => c,
         Err(e) => {
             return Some(format!(
                 "could not spawn the re-verification child ({e}); reporting the sweep's \
@@ -6337,15 +6364,80 @@ fn reverify_in_fresh_process(idx: usize, backend: Backend) -> Option<String> {
             ))
         }
     };
-    if out.status.success() {
-        return None; // Passed on its own — the sweep's report was contamination.
-    }
+    // A cell that panics under contamination but *hangs* in isolation would wedge
+    // the sweep forever with all its output captured. Bound the wait; a timeout
+    // reports the hit rather than discarding it, like every other failure path.
+    const REVERIFY_TIMEOUT: std::time::Duration = std::time::Duration::from_secs(300);
+    let pid = child.id();
+    let (tx, rx) = std::sync::mpsc::channel();
+    std::thread::spawn(move || {
+        let _ = tx.send(child.wait_with_output());
+    });
+    let out = match rx.recv_timeout(REVERIFY_TIMEOUT) {
+        Ok(Ok(o)) => o,
+        Ok(Err(e)) => {
+            return Some(format!(
+                "could not collect the re-verification child's output ({e}); reporting \
+                 the sweep's hit unconfirmed rather than discarding it"
+            ))
+        }
+        Err(_) => {
+            // Best-effort kill so the wedged child does not outlive the run.
+            let _ = Command::new("kill").arg("-9").arg(pid.to_string()).status();
+            return Some(format!(
+                "the re-verification child for this cell did not finish within {}s — it \
+                 hangs in isolation even though it panicked in the sweep; reporting it \
+                 unconfirmed rather than discarding it",
+                REVERIFY_TIMEOUT.as_secs()
+            ));
+        }
+    };
     let text = format!(
         "{}{}",
         String::from_utf8_lossy(&out.stdout),
         String::from_utf8_lossy(&out.stderr)
     );
+    if out.status.success() {
+        // Exit 0 is not enough. Require the sentinel the single-cell path prints,
+        // so "libtest filtered everything out and exited 0" cannot masquerade as
+        // "the cell ran and passed".
+        return if text.contains(RAN_SENTINEL) {
+            None // Genuinely passed on its own — the sweep's report was contamination.
+        } else {
+            Some(format!(
+                "the re-verification child exited 0 but never ran the cell (did the test \
+                 filter match nothing?); reporting the sweep's hit unconfirmed rather \
+                 than discarding it:\n{text}"
+            ))
+        };
+    }
     Some(text)
+}
+
+/// The re-verification round-trip must be exact for **every** backend.
+///
+/// `reverify_in_fresh_process` writes the backend with `{:?}` and the child
+/// parses it back by name, and nothing but this test connects the two. Rename a
+/// `Backend` variant without touching `only_cell_request` and the parse now
+/// panics on a name the parent itself produced — every re-verification child
+/// dies, and (before the fail-closed changes) every real failure would have been
+/// discarded. An unenforced invariant between two functions that never call each
+/// other is exactly the kind that rots.
+#[test]
+fn every_backend_name_round_trips_through_the_single_cell_env_var() {
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let encoded = format!("7:{backend:?}");
+        // SAFETY-of-intent: this test is the only reader/writer of the var here,
+        // and libtest runs each test body once.
+        std::env::set_var(ONLY_CELL, &encoded);
+        let parsed = only_cell_request();
+        std::env::remove_var(ONLY_CELL);
+        assert_eq!(
+            parsed,
+            Some((7, backend)),
+            "`{encoded}` must parse back to {backend:?} — the parent encodes with `{{:?}}`"
+        );
+    }
 }
 
 /// The capstone: every `(program, backend)` cell the campaign has **proven** runs
@@ -6369,6 +6461,47 @@ fn matrix_every_proven_cell_agrees() {
     // list as a triage map to be confirmed cell-by-cell in fail-fast mode, which
     // is exactly how it is used: find the clusters, then fix and verify one at a
     // time.
+    // Single-cell mode: a child spawned by `reverify_in_fresh_process`. Run only
+    // the requested cell, in a process with no other cell's state in it, and let
+    // any failure panic normally.
+    //
+    // This is handled BEFORE the sweep's panic hook is installed. If both env
+    // vars are set by hand, returning from below the hook installation would
+    // leave the process-global empty hook in place and silently strip the panic
+    // messages off every other test in this binary.
+    if let Some((want_idx, want_backend)) = only_cell_request() {
+        let p = PROGRAMS.get(want_idx).unwrap_or_else(|| {
+            panic!("{ONLY_CELL} names program #{want_idx}, but there are {}", PROGRAMS.len())
+        });
+        assert!(
+            p.backends.contains(&want_backend),
+            "{ONLY_CELL} names {want_backend:?} for program #{want_idx}, which is not a proven \
+             backend for it ({:?})",
+            p.backends
+        );
+        // A skip here must FAIL, not pass quietly. The parent only re-verifies
+        // cells that already ran and panicked in-process, so a toolchain gate
+        // answering "absent" in the child is an anomaly — a transient spawn
+        // failure inside `clang_ok`/`java_ok`/`dotnet_ok` (all of which end in
+        // `.unwrap_or(false)`), most plausibly while the sweep is fanning out
+        // child processes. Exiting 0 there would convert a confirmed failure
+        // into a green discard, which is the one outcome this whole mechanism
+        // exists to prevent.
+        let Some(result) = run(want_backend, p) else {
+            panic!(
+                "{ONLY_CELL} cell #{want_idx} {want_backend:?} was SKIPPED in the \
+                 re-verification child — its toolchain gate reported absent, yet the \
+                 sweep ran this cell in-process. Reporting unconfirmed rather than \
+                 discarding the failure."
+            );
+        };
+        assert_cell(want_backend, p, result);
+        // Positive proof, for the parent, that the cell actually ran: a libtest
+        // filter that matches nothing also exits 0.
+        eprintln!("{RAN_SENTINEL} {want_idx}:{want_backend:?}");
+        return;
+    }
+
     let report_all = std::env::var_os("LANG_MATRIX_REPORT_ALL").is_some();
     // Silence the default panic printer once for the whole sweep rather than per
     // cell. The hook is process-global, and taking/restoring it once per cell —
@@ -6381,24 +6514,6 @@ fn matrix_every_proven_cell_agrees() {
         std::panic::set_hook(Box::new(|_| {}));
         hook
     });
-    // Single-cell mode: a child spawned by `reverify_in_fresh_process`. Run only
-    // the requested cell, in a process with no other cell's state in it, and let
-    // any failure panic normally.
-    if let Some((want_idx, want_backend)) = only_cell_request() {
-        let p = PROGRAMS.get(want_idx).unwrap_or_else(|| {
-            panic!("{ONLY_CELL} names program #{want_idx}, but there are {}", PROGRAMS.len())
-        });
-        assert!(
-            p.backends.contains(&want_backend),
-            "{ONLY_CELL} names {want_backend:?} for program #{want_idx}, which is not a proven \
-             backend for it ({:?})",
-            p.backends
-        );
-        if let Some(result) = run(want_backend, p) {
-            assert_cell(want_backend, p, result);
-        }
-        return;
-    }
 
     let mut ran = 0usize;
     let mut skipped = 0usize;
