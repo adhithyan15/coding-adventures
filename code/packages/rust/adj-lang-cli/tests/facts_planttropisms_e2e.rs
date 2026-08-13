@@ -79,3 +79,38 @@ fn biology_plant_tropisms_recall_binds_stimulus_with_citation() {
     // fabricated stimulus.
     assert!(out.contains("\"abstained\":true"), "sound abstains: {out}");
 }
+
+#[test]
+fn biology_plant_tropisms_extension_recalls_the_newly_added_rows() {
+    let dir = scratch("planttropismsext");
+    let src = facts_stdlib().join("biology/plant-tropisms.adj");
+    std::fs::copy(&src, dir.join("plant-tropisms.adj")).expect("copy shipped plant-tropisms.adj");
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"plant-tropisms.adj\"\n\
+         ? tropism_stimulus(aerotropism, $Stimulus)\n\
+         ? tropism_stimulus($Tropism, temperature)\n\
+         ? tropism_stimulus(inotropism, $Stimulus)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // 7 tropisms were added this cycle from the SAME already-cited Wikipedia
+    // "Tropism" article's own "Types of tropism" list.
+    assert!(
+        out.contains("\"Stimulus\":\"wind\""),
+        "aerotropism → wind: {out}"
+    );
+    assert!(
+        out.contains("\"Tropism\":\"thermotropism\""),
+        "temperature → thermotropism (reverse recall): {out}"
+    );
+    // inotropism is a real term on the SAME Wikipedia page, but names a
+    // MUSCLE's contraction response to drugs, not a plant tropism -- honest
+    // abstention, never a fabricated stimulus.
+    assert!(
+        out.contains("\"abstained\":true"),
+        "inotropism abstains (wrong domain): {out}"
+    );
+}

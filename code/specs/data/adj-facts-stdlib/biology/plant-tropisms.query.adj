@@ -20,4 +20,7 @@ import "plant-tropisms.adj"
 ? tropism_stimulus(thigmotropism, $Stimulus)  % expect touch
 ? tropism_stimulus(hydrotropism, $Stimulus)   % expect water
 ? tropism_stimulus($Tropism, gravity)         % reverse bind — expect gravitropism
+? tropism_stimulus(aerotropism, $Stimulus)    % expect wind (added this cycle)
+? tropism_stimulus($Tropism, temperature)     % reverse bind — expect thermotropism (added this cycle)
+? tropism_stimulus(inotropism, $Stimulus)     % expect abstain — a real term on the same page, but names a MUSCLE's drug response, not a plant tropism
 ? tropism_stimulus(sound, $Stimulus)          % expect abstain — there is no "soundtropism" row; sound is not one of these tropisms
