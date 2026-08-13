@@ -1,5 +1,37 @@
 # Changelog — iir-builtin-lowering
 
+## 0.37.0 - 2026-08-13 - the passes no longer ask which language wrote the module
+
+`dyn_repr::is_lisp_language` — literally `language == "mccarthy-lisp"` — is
+deleted, along with all three of its decision sites. No pass in this crate reads
+`module.language` any more.
+
+It existed to disambiguate bare `any`, which McCarthy used for "a tagged
+LispyValue" and Twig/Nib used for "statically unresolved, passed raw". The gate's
+own comment stated the problem: *"Twig also types untyped params `any` and
+shares this pass, so the `any`-param heuristic alone would mis-flag a Twig
+`(define (fib n) …)` as lisp and corrupt it."*
+
+The frontends now say which they mean. McCarthy stamps `ref<any>` — already the
+unambiguous "boxed dynamic value" in every language — and bare `any` means raw
+everywhere. `is_boxed(hint)` is `hint == "ref<any>"`, and `closure_heap` reads
+each lambda body's own declared parameter types instead of a module-wide flag.
+
+### The gate was load-bearing for a wrong rule
+
+Removing it exposed that `lisp_functions` seeded the "callers must box for this
+callee" set partly from **heap ops in the body**. A body that allocates tells you
+the function uses the heap; it tells you nothing about the ABI its callers must
+satisfy. A Twig union constructor `(union Opt (Some (v : int)) …)` allocates a
+cons cell internally while taking its argument raw, so `call Some(42)` boxed the
+42 and the `match` that extracted it returned the tagged word — the program
+exited `(42 << 3) & 0xFF = 80` instead of 42.
+
+The language gate had hidden this by forcing the set empty for every non-lisp
+module. New `tagged_boundary_functions` seeds from declared parameter types only;
+`lisp_functions` keeps the heap-body clause for the structural work that wants
+it.
+
 ## 0.36.0 - 2026-08-13 - drop the name-carrying `const` once its consumer is lowered
 
 `const %n1 = Operand::Var("g")` is not a real instruction: it is how the

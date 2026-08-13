@@ -75,7 +75,6 @@ const REF_PAIR: &str = "ref<LispyPair>";
 /// either hint holds a `DynValue` *by what it is*, independent of which
 /// primitive produced it — the producer-agnostic classification of DVAL01 §3.3.
 const REF_ANY: &str = "ref<any>";
-const ANY_HINT: &str = "any";
 
 /// The type hint for a symbol literal. After `intern_symbols` runs, such a
 /// const already holds the finished tagged immediate `(id<<32)|TAG_SYMBOL` —
@@ -131,17 +130,11 @@ const TRUTHY_BUILTIN: &str = "dyn_truthy";
 /// every case.
 const EXIT_CODE_BUILTIN: &str = "dyn_to_exit_code";
 
-/// True when a module's source language uses the tagged-word lisp value model
-/// (today: McCarthy 1960 Lisp). Gates the lambda-aware `call` handling so a Twig
-/// module — which shares this pass and also types untyped params `any` — is left
-/// completely untouched.
-///
-/// `pub(crate)`: `dynamic_arith.rs` reuses this to gate its own bare-`any`
-/// boxed-ness check the same way (see its `is_boxed`) — the two passes must
-/// agree on what "any" means, so there is exactly one definition.
-pub(crate) fn is_lisp_language(language: &str) -> bool {
-    language == "mccarthy-lisp"
-}
+// `is_lisp_language` is gone. It existed only to disambiguate bare `any`, which
+// McCarthy used for "a tagged LispyValue" and Twig/Nib used for "statically
+// unresolved, passed raw". The frontends now say which they mean — `ref<any>` is
+// the tagged dynamic value — so the passes read the IIR instead of asking who
+// wrote it. An IR that needs to know its source language is not language-agnostic.
 
 /// True when `instr` is a `call` to a **lisp function** (a `LAMBDA`/`LABEL`,
 /// identified by `lisp_funcs`). Its parameters and result use the tagged-word
@@ -217,15 +210,27 @@ pub fn lower_dyn_repr(module: &mut IIRModule) {
     // `any`-param heuristic alone would mis-flag a Twig `(define (fib n) …)` as
     // lisp and corrupt it. The empty set for a non-lisp module makes every new
     // `call`-handling branch inert — the pass stays a faithful no-op for Twig.
-    let is_lisp = is_lisp_language(&module.language);
-    let lisp_funcs = if is_lisp {
-        crate::dyn_repr_structural::lisp_functions(module)
-    } else {
-        HashSet::new()
-    };
+    // No language gate. `lisp_functions` seeds from `ref<any>`/`symbol` params
+    // and heap ops — evidence carried by the IIR itself — and closes under
+    // calling. A module whose frontend emits none of those yields an empty set,
+    // so this pass is a faithful no-op for it without having to be told which
+    // frontend wrote it.
+    // Which callees take a **tagged** argument list? That is decided by their
+    // declared parameter types, not by what their bodies allocate.
+    //
+    // `lisp_functions` seeds from `function_uses_heap(f) || has_lisp_param(f)`,
+    // and the heap clause is wrong for this purpose: a Twig union constructor
+    // `(union Opt (Some (v : int)) …)` allocates a cons cell internally — so it
+    // "uses the heap" — while its parameter is a bare `any` it receives raw.
+    // Treating it as tagged made `call Some(42)` box the 42, and the `match`
+    // that extracted it returned the tagged word: the program exited
+    // `(42 << 3) & 0xFF = 80` instead of 42. (The old language gate hid this by
+    // forcing the set empty for every non-lisp module, which is exactly the
+    // coupling being removed — so the underlying rule has to be right now.)
+    let lisp_funcs = crate::dyn_repr_structural::tagged_boundary_functions(module);
     for func in &mut module.functions {
         let is_entry = entry.as_deref() == Some(func.name.as_str());
-        lower_dyn_repr_function(func, is_entry, &lisp_funcs, is_lisp);
+        lower_dyn_repr_function(func, is_entry, &lisp_funcs);
     }
 }
 
@@ -233,7 +238,6 @@ fn lower_dyn_repr_function(
     func: &mut IIRFunction,
     is_entry: bool,
     lisp_funcs: &HashSet<String>,
-    is_lisp: bool,
 ) {
     // ── 0. Type-directed `not` → `dyn_not`. ──
     //
@@ -314,7 +318,7 @@ fn lower_dyn_repr_function(
             //     Twig/Nib (see the language gate in `lower_dyn_repr`), so its
             //     seed stays gated on `is_lisp`.
             let hint = instr.type_hint.as_str();
-            if hint == REF_ANY || (is_lisp && hint == ANY_HINT) {
+            if hint == REF_ANY {
                 boxed_regs.insert(dest.clone());
                 continue;
             }
@@ -996,8 +1000,17 @@ mod tests {
     }
 
     /// `main { a = 5; r = <callee>(a); ret r }` plus an identity `<callee>(X){ ret X }`.
-    fn apply_identity_module(callee: &str, language: &str) -> IIRModule {
-        let id = IIRFunction::new(callee, vec![("X".into(), "any".into())], "any", vec![ret("X")]);
+    /// An `identity(X)` called with the integer 5, where the callee's boundary
+    /// type is the caller's choice. That type IS the contract now: `ref<any>`
+    /// declares a tagged value, a raw type declares a machine word, and the pass
+    /// reads it from the signature rather than from the module's language.
+    fn apply_identity_module_typed(callee: &str, language: &str, boundary: &str) -> IIRModule {
+        let id = IIRFunction::new(
+            callee,
+            vec![("X".into(), boundary.into())],
+            boundary,
+            vec![ret("X")],
+        );
         let main = vec![
             konst("a", 5, "i64"),
             IIRInstr::new(
@@ -1009,6 +1022,11 @@ mod tests {
             ret("r"),
         ];
         multi_fn_module(main, vec![id], language)
+    }
+
+    /// The tagged-boundary case (a McCarthy `LAMBDA`).
+    fn apply_identity_module(callee: &str, language: &str) -> IIRModule {
+        apply_identity_module_typed(callee, language, "ref<any>")
     }
 
     /// McCarthy W13b (F7): a `call` to a lisp function boxes its integer atom
@@ -1029,7 +1047,9 @@ mod tests {
     /// regression where `(define (fib n) …)` was mis-boxed.)
     #[test]
     fn non_lisp_call_is_left_untouched() {
-        let mut m = apply_identity_module("fib", "twig");
+        // A Twig `(define (fib n) …)`: the parameter is statically unresolved,
+        // stamped bare `any`, and passed as a raw machine word.
+        let mut m = apply_identity_module_typed("fib", "twig", "any");
         lower_dyn_repr(&mut m);
         assert_eq!(find_const(&m, "a"), 5, "a Twig int arg stays a raw machine word");
         assert_eq!(count_builtin(&m, "dyn_to_exit_code"), 0, "a Twig call is never coerced");

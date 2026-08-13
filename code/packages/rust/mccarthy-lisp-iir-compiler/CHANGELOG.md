@@ -1,5 +1,20 @@
 # Changelog — mccarthy-lisp-iir-compiler
 
+## 0.8.0 - 2026-08-13 - emit `ref<any>` for tagged values
+
+The frontend stamped bare `any` on every tagged `LispyValue` — parameters, lambda
+results, call results, returns — and left the shared lowering passes to work out
+that `any` meant "tagged" by checking `module.language == "mccarthy-lisp"`.
+
+Twig and Nib stamp the same bare `any` to mean the opposite: a statically
+unresolved value passed as a raw machine word. One spelling, two contradictory
+meanings, disambiguated by asking who wrote the module.
+
+All 15 sites now emit `ref<any>`, which already meant "boxed dynamic value"
+unambiguously in every language and already mapped correctly in every backend
+(`iir_type_to_jvm("ref<any>")` is `Ref`, and so on). The language gate in
+`iir-builtin-lowering` is deleted as a result.
+
 ## v0.7.1 — 2026-07-11 — DVAL01-1c: dependency renamed `lispy-runtime` → `dynval-runtime`
 
 The shared value-model crate `lispy-runtime` is renamed to `dynval-runtime`

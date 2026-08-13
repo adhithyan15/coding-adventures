@@ -62,7 +62,6 @@
 //! corrupts every Twig comparison/arithmetic op with a parameter operand (the
 //! unbox right-shifts the raw value by 3 before the typed op runs).
 
-use crate::dyn_repr::is_lisp_language;
 use interpreter_ir::function::IIRFunction;
 use interpreter_ir::instr::{IIRInstr, Operand};
 use interpreter_ir::IIRModule;
@@ -118,8 +117,8 @@ fn typed_op(name: &str) -> Option<&'static str> {
 /// back as `1` and silently miscompared. `dyn_repr.rs` and this pass must
 /// agree on what `any` means, so this reuses its `is_lisp_language` rather
 /// than re-deriving it.
-fn is_boxed(hint: &str, is_lisp: bool) -> bool {
-    hint == REF_ANY || (is_lisp && hint == "any")
+fn is_boxed(hint: &str) -> bool {
+    hint == REF_ANY
 }
 
 /// Whether a typed op produces a boolean rather than an integer.
@@ -136,10 +135,9 @@ fn unbox_operand(
     v: &str,
     out: &mut Vec<IIRInstr>,
     types: &HashMap<String, String>,
-    is_lisp: bool,
     counter: &mut usize,
 ) -> String {
-    let boxed = types.get(v).map(|t| is_boxed(t, is_lisp)).unwrap_or(false);
+    let boxed = types.get(v).map(|t| is_boxed(t)).unwrap_or(false);
     if !boxed {
         return v.to_string();
     }
@@ -172,7 +170,7 @@ fn producer_types(fn_: &IIRFunction) -> HashMap<String, String> {
 /// `is_lisp` gates whether a bare `any`-typed operand counts as boxed — see
 /// `is_boxed`'s doc comment. Callers with a whole `IIRModule` should go
 /// through `lower_dynamic_arith`, which derives this from `module.language`.
-pub fn lower_dynamic_arith_function(fn_: &mut IIRFunction, is_lisp: bool) {
+pub fn lower_dynamic_arith_function(fn_: &mut IIRFunction) {
     // `types` is seeded from the *incoming* instructions, but this pass changes
     // what some of those destinations hold: every dynamic op it rewrites ends in
     // `box dest : ref<any>`, so `dest` is boxed afterwards even if the frontend
@@ -225,8 +223,8 @@ pub fn lower_dynamic_arith_function(fn_: &mut IIRFunction, is_lisp: bool) {
 
         // Unbox each boxed operand to a machine integer; pass a raw operand
         // (an unboxed literal / already-typed value) straight through.
-        let ia = unbox_operand(&a, &mut out, &types, is_lisp, &mut counter);
-        let ib = unbox_operand(&b, &mut out, &types, is_lisp, &mut counter);
+        let ia = unbox_operand(&a, &mut out, &types, &mut counter);
+        let ib = unbox_operand(&b, &mut out, &types, &mut counter);
 
         // The typed op writes a fresh machine-typed temporary; the original
         // dest name is kept for the `box` so downstream readers are unchanged.
@@ -255,9 +253,8 @@ pub fn lower_dynamic_arith_function(fn_: &mut IIRFunction, is_lisp: bool) {
 
 /// Module-level entry point: lower dynamic arithmetic in every function.
 pub fn lower_dynamic_arith(module: &mut IIRModule) {
-    let is_lisp = is_lisp_language(&module.language);
     for fn_ in &mut module.functions {
-        lower_dynamic_arith_function(fn_, is_lisp);
+        lower_dynamic_arith_function(fn_);
     }
 }
 
@@ -385,7 +382,7 @@ mod tests {
         );
         // `is_lisp = false` — the Twig/Nib raw-parameter model, where bare `any`
         // params arrive unboxed and only this pass's own `box` results are tagged.
-        lower_dynamic_arith_function(&mut f, false);
+        lower_dynamic_arith_function(&mut f);
 
         // The raw params are used directly: exactly ONE unbox, and it is of the
         // inner result.
@@ -419,7 +416,7 @@ mod tests {
     fn boxed_operand_is_unboxed_then_op_then_boxed() {
         // (+ boxed raw) → unbox boxed ; add ; box
         let mut f = arith_fn("+", ("x", "ref<any>"), ("y", "i64"));
-        lower_dynamic_arith_function(&mut f, true);
+        lower_dynamic_arith_function(&mut f);
         assert_eq!(ops(&f), vec!["field_load", "const", "unbox", "add", "box", "ret"]);
         // The `add` consumes the unboxed operand and the raw one directly.
         let add = f.instructions.iter().find(|i| i.op == "add").unwrap();
@@ -434,14 +431,14 @@ mod tests {
     #[test]
     fn both_boxed_operands_are_unboxed() {
         let mut f = arith_fn("*", ("x", "ref<any>"), ("y", "ref<any>"));
-        lower_dynamic_arith_function(&mut f, true);
+        lower_dynamic_arith_function(&mut f);
         assert_eq!(ops(&f), vec!["field_load", "field_load", "unbox", "unbox", "mul", "box", "ret"]);
     }
 
     #[test]
     fn comparison_lowers_to_cmp_and_boxes_a_bool() {
         let mut f = arith_fn("<", ("x", "ref<any>"), ("y", "i64"));
-        lower_dynamic_arith_function(&mut f, true);
+        lower_dynamic_arith_function(&mut f);
         assert_eq!(ops(&f), vec!["field_load", "const", "unbox", "cmp_lt", "box", "ret"]);
         let cmp = f.instructions.iter().find(|i| i.op == "cmp_lt").unwrap();
         assert_eq!(cmp.type_hint, "bool");
@@ -451,14 +448,14 @@ mod tests {
     fn raw_operands_are_not_unboxed() {
         // Both operands already machine ints — no unbox, still a typed op + box.
         let mut f = arith_fn("-", ("x", "i64"), ("y", "i64"));
-        lower_dynamic_arith_function(&mut f, true);
+        lower_dynamic_arith_function(&mut f);
         assert_eq!(ops(&f), vec!["const", "const", "sub", "box", "ret"]);
     }
 
     #[test]
     fn non_arith_builtin_is_left_untouched() {
         let mut f = arith_fn("cons", ("x", "i64"), ("y", "i64"));
-        lower_dynamic_arith_function(&mut f, true);
+        lower_dynamic_arith_function(&mut f);
         assert!(f.instructions.iter().any(|i| i.op == "call_builtin"));
         assert!(!f.instructions.iter().any(|i| i.op == "box"));
     }
@@ -467,11 +464,14 @@ mod tests {
     /// `field_load`/`ref<any>` value — exactly how every untyped Twig
     /// function parameter is declared) compared against an `i64` literal.
     /// Mirrors Twig `(define (classify n) (if (< n 2) 111 222))`.
-    fn any_param_cmp_fn(op: &str) -> IIRFunction {
+    /// A `classify(n) = n < 2` whose parameter type the caller chooses — which
+    /// is the whole point: `ref<any>` means a tagged value, bare `any` means a
+    /// raw machine word, and the pass reads that from the type alone.
+    fn param_cmp_fn(op: &str, param_ty: &str) -> IIRFunction {
         IIRFunction::new(
             "classify",
-            vec![("n".into(), "any".into())],
-            "any",
+            vec![("n".into(), param_ty.into())],
+            param_ty,
             vec![
                 IIRInstr::new("const", Some("two".into()), vec![Operand::Int(2)], "i64"),
                 IIRInstr::new(
@@ -492,9 +492,11 @@ mod tests {
     /// corrupting every comparison against a function parameter (the bug this
     /// whole investigation traced: `(< n 2)` with `n = 10` misread as `1<2`).
     #[test]
-    fn twig_any_param_operand_is_not_unboxed() {
+    fn a_bare_any_param_operand_is_not_unboxed() {
+        // Bare `any` means "statically unresolved, passed raw" — again decided
+        // by the type, not by the module's language.
         let mut module = IIRModule::new("m", "twig");
-        module.functions.push(any_param_cmp_fn("<"));
+        module.functions.push(param_cmp_fn("<", "any"));
         lower_dynamic_arith(&mut module);
         let f = &module.functions[0];
         assert_eq!(
@@ -515,15 +517,18 @@ mod tests {
     /// no machine arithmetic at all) and must still be unboxed before a typed
     /// comparison/arithmetic op can consume it.
     #[test]
-    fn mccarthy_any_param_operand_is_still_unboxed() {
-        let mut module = IIRModule::new("m", "mccarthy-lisp");
-        module.functions.push(any_param_cmp_fn("<"));
+    fn a_ref_any_param_operand_is_unboxed() {
+        // The module's `language` is deliberately something other than a lisp:
+        // boxed-ness is read off the parameter's TYPE, not off who wrote the
+        // module. `ref<any>` means "a tagged dynamic value" in every language.
+        let mut module = IIRModule::new("m", "not-a-lisp");
+        module.functions.push(param_cmp_fn("<", "ref<any>"));
         lower_dynamic_arith(&mut module);
         let f = &module.functions[0];
         assert_eq!(
             ops(f),
             vec!["const", "unbox", "cmp_lt", "box", "ret"],
-            "a McCarthy bare-any parameter is a tagged value and must still be unboxed"
+            "a `ref<any>` parameter is a tagged value and must be unboxed"
         );
     }
 
@@ -535,7 +540,7 @@ mod tests {
     fn box_unbox_ops_become_runtime_calls() {
         // (+ boxed raw): field_load ; const ; unbox ; add ; box ; ret
         let mut f = arith_fn("+", ("x", "ref<any>"), ("y", "i64"));
-        lower_dynamic_arith_function(&mut f, true);
+        lower_dynamic_arith_function(&mut f);
         let mut module = IIRModule::new("m", "mccarthy-lisp");
         module.functions.push(f);
         lower_box_unbox_to_runtime_calls(&mut module);
