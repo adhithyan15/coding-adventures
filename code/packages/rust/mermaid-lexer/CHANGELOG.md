@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.42.0
+
+- Tokenize Mermaid state HTML line-break variants, including whitespace before the optional slash, as semantic `LINE_BREAK` tokens.
+
 ## 0.41.0
 
 - Skip pinned state-diagram `#` comments without consuming entities or hexadecimal style colors.

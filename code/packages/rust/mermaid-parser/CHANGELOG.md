@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.77.0
+
+- Parse bare state declarations and normalize all pinned HTML line-break variants in labels and notes before layout.
+
 ## 0.76.0
 
 - Attach state notes to composite-group endpoints without creating duplicate ordinary nodes.

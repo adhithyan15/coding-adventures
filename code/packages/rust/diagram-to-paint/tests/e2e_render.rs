@@ -265,6 +265,61 @@ mod apple {
     }
 
     #[test]
+    fn render_mermaid_state_line_break_variants_to_png() {
+        let graph = parse_state_diagram(
+            "stateDiagram-v2\nReady: First<br>Second<br/>Third<br />Fourth<br\t/>Fifth\nReady --> Done\n",
+        )
+        .expect("Mermaid state line-break variants should parse");
+        assert_eq!(graph.nodes[0].label.text, "First\nSecond\nThird\nFourth\nFifth");
+
+        let layout = layout_graph_diagram(&graph, None, None);
+        let ready = layout
+            .nodes
+            .iter()
+            .find(|node| node.id == "Ready")
+            .expect("multiline Ready node");
+        assert!(ready.height > 100.0);
+
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint(
+            &layout,
+            &DiagramToPaintOptions {
+                background: layout_ir::Color {
+                    r: 255,
+                    g: 255,
+                    b: 255,
+                    a: 255,
+                },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 14.0),
+                title_font: font_spec("Helvetica", 18.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            },
+        );
+        let glyph_runs = scene
+            .instructions
+            .iter()
+            .filter(|instruction| {
+                matches!(
+                    instruction,
+                    paint_instructions::PaintInstruction::GlyphRun(_)
+                )
+            })
+            .count();
+        assert!(glyph_runs >= 6, "five label lines plus the Done label");
+
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_state_line_breaks_e2e.png")
+            .expect("PNG write failed");
+        assert!(pixels.width > 0);
+        assert!(pixels.height > 0);
+    }
+
+    #[test]
     fn render_mermaid_pie_to_png() {
         let diagram = parse_pie(
             r#"pie showData
