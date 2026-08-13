@@ -4503,25 +4503,32 @@ fn native_linker_ok() -> bool {
     }
 }
 
-/// Compile `p` to a native executable for the host OS. `None` when the host can't
-/// produce a native exe (skip), so the suite degrades gracefully off Linux/macOS.
-fn compile_native(src_path: &std::path::Path, exe: &std::path::Path, lang: Language) -> Option<()> {
+/// Compile `p` to a native executable for the host OS. `Err` carries the real
+/// compiler/linker error so `run_native` can fail loudly (see `cell_failed`) — the
+/// host-can't-produce-a-native-exe case is decided earlier by `native_linker_ok`,
+/// which is the *gate*, not this function.
+fn compile_native(
+    src_path: &std::path::Path,
+    exe: &std::path::Path,
+    lang: Language,
+) -> Result<(), String> {
     #[cfg(target_os = "linux")]
     {
-        lang_aot::compile_file_to_linux_executable(src_path, exe, lang).ok()
+        lang_aot::compile_file_to_linux_executable(src_path, exe, lang).map_err(|e| format!("{e:?}"))
     }
     #[cfg(target_os = "macos")]
     {
-        lang_aot::compile_file_to_macos_executable(src_path, exe, lang).ok()
+        lang_aot::compile_file_to_macos_executable(src_path, exe, lang).map_err(|e| format!("{e:?}"))
     }
     #[cfg(target_os = "windows")]
     {
-        lang_aot::compile_file_to_windows_executable(src_path, exe, lang).ok()
+        lang_aot::compile_file_to_windows_executable(src_path, exe, lang)
+            .map_err(|e| format!("{e:?}"))
     }
     #[cfg(not(any(target_os = "linux", target_os = "macos", target_os = "windows")))]
     {
         let _ = (src_path, exe, lang);
-        None
+        Err("no native-executable path for this host OS".to_string())
     }
 }
 
@@ -4593,8 +4600,42 @@ fn output_with_stdin(mut cmd: Command, input: &[u8]) -> Option<std::process::Out
     child.wait_with_output().ok()
 }
 
+/// The matrix's **skip policy**, in one place.
+///
+/// A cell may be skipped for exactly one reason: the host genuinely lacks that
+/// backend's toolchain (no `clang`, no `java`, no `dotnet`/`ilasm`, no native
+/// linker). That is a statement about the *machine*, and the `*_ok()` gate
+/// functions are the only places allowed to decide it.
+///
+/// Everything else — a frontend that refuses the program, a backend that emits
+/// nothing, an assembler that rejects the output, a linker that can't resolve a
+/// symbol, a runtime that crashes — is a **real failure of the code under test**
+/// and must fail the suite loudly, carrying the underlying error.
+///
+/// This distinction is not academic. Before it existed, every runner returned a
+/// bare `None` for both cases, so "this machine has no Java" and "the JVM backend
+/// emitted a class that fails verification" were indistinguishable: the suite
+/// printed `ok` while 47 cells quietly did nothing. The McCarthy W16 capstone hid
+/// a broken LLVM column the same way for as long as its link line was stale — a
+/// missing `gc-core-capi` archive made `clang` fail, `clang` failing returned
+/// `None`, and `None` read as "no clang installed" even on a machine with clang.
+///
+/// A test that cannot fail is not a test. `cell_failed` is how a runner says
+/// "the toolchain was here and the code under test is wrong".
+fn cell_failed(backend: &str, p: &Prog, stage: &str, detail: impl std::fmt::Display) -> ! {
+    panic!(
+        "{backend} {:?}: {stage} failed — this is a REAL failure, not a skip.\n\
+         source: {:?}\n\
+         expected: {:?}\n\
+         error:\n{detail}",
+        p.lang, p.src, p.expect
+    )
+}
+
 /// Native-AOT runner: write the source, compile to a host executable, run it, and
-/// return `(exit_code, trimmed_stdout)`. `None` when native AOT is unavailable here.
+/// return `(exit_code, trimmed_stdout)`. `None` **only** when the host has no
+/// native linker at all; a compile or link that fails on a capable host panics via
+/// `cell_failed`.
 ///
 /// The programs are fixed literals (no untrusted input), and each terminates by
 /// construction — there is no unbounded loop or recursion in the harness itself.
@@ -4607,14 +4648,18 @@ fn run_native(p: &Prog) -> Option<RunResult> {
     if !native_linker_ok() {
         return None;
     }
-    let dir = tempfile::tempdir().ok()?;
+    let dir = tempfile::tempdir().expect("native: create temp dir");
     let src_path = dir.path().join(format!("prog.{}", p.ext));
-    std::fs::write(&src_path, p.src).ok()?;
+    std::fs::write(&src_path, p.src).expect("native: write source");
     let exe = dir.path().join("prog");
-    compile_native(&src_path, &exe, p.lang)?;
+    if let Err(e) = compile_native(&src_path, &exe, p.lang) {
+        cell_failed("NativeAot", p, "source → native executable", e);
+    }
     // Feed the program's stdin (a Brainfuck `,` reads it via libc `getchar`); empty for
     // every other program, so the prior no-stdin behaviour is unchanged.
-    let out = output_with_stdin(Command::new(&exe), program_stdin(p))?;
+    let Some(out) = output_with_stdin(Command::new(&exe), program_stdin(p)) else {
+        cell_failed("NativeAot", p, "running the linked executable", "could not spawn/collect");
+    };
     let stdout = String::from_utf8_lossy(&out.stdout).trim().to_string();
     if matches!(&p.expect, Expect::Trap) && !out.status.success() {
         return Some(RunResult::Trapped);
@@ -4696,15 +4741,18 @@ fn run_llvm(p: &Prog) -> Option<RunResult> {
         return None;
     }
     let triple = String::from_utf8(
-        Command::new("clang").arg("-dumpmachine").output().ok()?.stdout,
+        Command::new("clang").arg("-dumpmachine").output().expect("clang -dumpmachine").stdout,
     )
-    .ok()?
+    .expect("clang -dumpmachine emitted valid UTF-8")
     .trim()
     .to_string();
-    let ll = lang_aot::compile_source_to_llvm_with_target(p.lang, p.src, "lm", &triple).ok()?;
-    let dir = tempfile::tempdir().ok()?;
+    let ll = match lang_aot::compile_source_to_llvm_with_target(p.lang, p.src, "lm", &triple) {
+        Ok(ll) => ll,
+        Err(e) => cell_failed("Llvm", p, "source → LLVM IR", format!("{e:?}")),
+    };
+    let dir = tempfile::tempdir().expect("llvm: create temp dir");
     let ll_path = dir.path().join("prog.ll");
-    std::fs::write(&ll_path, &ll).ok()?;
+    std::fs::write(&ll_path, &ll).expect("llvm: write .ll");
     let exe = dir.path().join("prog");
     let mut cmd = Command::new("clang");
     cmd.arg("-x").arg("ir").arg(&ll_path);
@@ -4751,7 +4799,7 @@ fn run_llvm(p: &Prog) -> Option<RunResult> {
     // `__print_i64`/`__print_str` have no equivalent there.
     if ll.contains("@__print_i64") || ll.contains("@__print_str") {
         let rt_path = dir.path().join("print_rt.c");
-        std::fs::write(&rt_path, PRINT_RUNTIME_C).ok()?;
+        std::fs::write(&rt_path, PRINT_RUNTIME_C).expect("llvm: write print runtime");
         cmd.arg("-x").arg("c").arg(&rt_path);
     }
     // Link the *standalone* input/string-op runtime iff the program needs one
@@ -4766,16 +4814,26 @@ fn run_llvm(p: &Prog) -> Option<RunResult> {
             || ll.contains("@__twig_str_cmp"))
     {
         let rt_path = dir.path().join("misc_io_rt.c");
-        std::fs::write(&rt_path, MISC_IO_RUNTIME_C).ok()?;
+        std::fs::write(&rt_path, MISC_IO_RUNTIME_C).expect("llvm: write misc-io runtime");
         cmd.arg("-x").arg("c").arg(&rt_path);
     }
-    let built = cmd.arg("-x").arg("none").arg("-o").arg(&exe).output().ok()?;
+    let built = cmd.arg("-x").arg("none").arg("-o").arg(&exe).output().expect("llvm: spawn clang");
     if !built.status.success() {
-        return None;
+        // Reaching here means clang was present and rejected our own output — the
+        // exact shape of the stale-link-line bug that silently disabled the McCarthy
+        // LLVM column. Surface clang's diagnostics rather than skipping.
+        cell_failed(
+            "Llvm",
+            p,
+            "clang link of the emitted .ll",
+            String::from_utf8_lossy(&built.stderr),
+        );
     }
     // Same stdin wiring as `run_native`: a Brainfuck `,` reads libc `getchar` from the
     // process stdin; empty for every other program.
-    let out = output_with_stdin(Command::new(&exe), program_stdin(p))?;
+    let Some(out) = output_with_stdin(Command::new(&exe), program_stdin(p)) else {
+        cell_failed("Llvm", p, "running the clang-linked executable", "could not spawn/collect");
+    };
     let stdout = String::from_utf8_lossy(&out.stdout).trim().to_string();
     if matches!(&p.expect, Expect::Trap) && !out.status.success() {
         return Some(RunResult::Trapped);
@@ -5317,7 +5375,13 @@ impl wasm_execution::HostInterface for PrintHost {
 /// (the `code`); an I/O language (Dartmouth BASIC) prints through `env.__print_i64`,
 /// whose arguments the host captured into the buffer, joined as the program's stdout.
 fn run_wasm(p: &Prog) -> Option<RunResult> {
-    let wasm = lang_aot::compile_source_to_wasm(p.lang, p.src, "main").ok()?;
+    // Wasm is compiled and executed entirely in-process: there is no host toolchain
+    // to be absent, so this runner has NO legitimate skip. Every exit below is a
+    // real failure.
+    let wasm = match lang_aot::compile_source_to_wasm(p.lang, p.src, "main") {
+        Ok(w) => w,
+        Err(e) => cell_failed("Wasm", p, "source → wasm bytes", format!("{e:?}")),
+    };
     let captured = std::sync::Arc::new(std::sync::Mutex::new(Vec::new()));
     let byte_buf = std::sync::Arc::new(std::sync::Mutex::new(Vec::new()));
     // The program's stdin, drained by `env.getchar` (Brainfuck `,`); empty otherwise.
@@ -5333,7 +5397,7 @@ fn run_wasm(p: &Prog) -> Option<RunResult> {
     let result = match rt.load_and_run(&wasm, "main", &[]) {
         Ok(result) => result,
         Err(_) if matches!(&p.expect, Expect::Trap) => return Some(RunResult::Trapped),
-        Err(_) => return None,
+        Err(e) => cell_failed("Wasm", p, "wasm-runtime execution", format!("{e:?}")),
     };
     // `main`'s single i64 result is the program's value (`& 0xFF` matches the exit
     // convention the native/LLVM columns use for the same programs).
@@ -5468,11 +5532,19 @@ fn run_jvm(p: &Prog) -> Option<RunResult> {
         (cp.len() - 1) as u16
     }
     let prints = matches!(&p.expect, Expect::Stdout(_));
-    let mut class = lang_aot::compile_source_to_jvm_class(p.lang, p.src, "Main").ok()?;
+    let mut class = match lang_aot::compile_source_to_jvm_class(p.lang, p.src, "Main") {
+        Ok(c) => c,
+        Err(e) => cell_failed("Jvm", p, "source → JVM class file", format!("{e:?}")),
+    };
     // The entry method's real return type — `I` (int) for the expression languages,
     // `J` (long) for a printing program. The launcher must match it exactly.
-    let entry_desc = class.methods.iter().find(|m| m.name == "main")?.descriptor.clone();
-    let ret = entry_desc.rsplit(')').next()?.to_string();
+    let Some(entry) = class.methods.iter().find(|m| m.name == "main") else {
+        cell_failed("Jvm", p, "locating the entry method", "emitted class has no `main`");
+    };
+    let entry_desc = entry.descriptor.clone();
+    let Some(ret) = entry_desc.rsplit(')').next().map(str::to_string) else {
+        cell_failed("Jvm", p, "parsing the entry descriptor", format!("descriptor {entry_desc:?}"));
+    };
 
     // Build the constant-pool entries the launcher references. Always a self-ref to
     // `Main.main<entry_desc>`; for the value path also `System.err` and the matching
@@ -5562,8 +5634,8 @@ fn run_jvm(p: &Prog) -> Option<RunResult> {
         })],
     });
     let bytes = serialize_jvm_class_file(&class);
-    let dir = tempfile::tempdir().ok()?;
-    std::fs::write(dir.path().join("Main.class"), &bytes).ok()?;
+    let dir = tempfile::tempdir().expect("jvm: create temp dir");
+    std::fs::write(dir.path().join("Main.class"), &bytes).expect("jvm: write Main.class");
     // For an I/O program, compile the `env.BasicRuntime` host class onto the
     // classpath so its `println(J)V` resolves. `javac` ships with the JDK; if it is
     // somehow absent the cell skips gracefully (`None`).
@@ -5582,20 +5654,30 @@ fn run_jvm(p: &Prog) -> Option<RunResult> {
             ("BasicRuntime.java", BASIC_RUNTIME_JAVA)
         };
         let src = dir.path().join(file);
-        std::fs::write(&src, source).ok()?;
-        let built = Command::new("javac").arg("-d").arg(dir.path()).arg(&src).output().ok()?;
+        std::fs::write(&src, source).expect("jvm: write host runtime source");
+        let built = Command::new("javac")
+            .arg("-d")
+            .arg(dir.path())
+            .arg(&src)
+            .output()
+            .expect("jvm: spawn javac");
         if !built.status.success() {
-            return None;
+            cell_failed("Jvm", p, "javac of the host runtime class", String::from_utf8_lossy(&built.stderr));
         }
         // Dartmouth BASIC programs that use INPUT need BasicRuntime.readLong()J.
         // Compile BasicRuntime.java alongside BFRuntime.java only when the program
         // actually has an INPUT statement; other programs use only BFRuntime (putchar).
         if p.lang == Language::DartmouthBasic && p.src.contains("INPUT") {
             let basic_src = dir.path().join("BasicRuntime.java");
-            std::fs::write(&basic_src, BASIC_RUNTIME_JAVA).ok()?;
-            let built = Command::new("javac").arg("-d").arg(dir.path()).arg(&basic_src).output().ok()?;
+            std::fs::write(&basic_src, BASIC_RUNTIME_JAVA).expect("jvm: write BasicRuntime.java");
+            let built = Command::new("javac")
+                .arg("-d")
+                .arg(dir.path())
+                .arg(&basic_src)
+                .output()
+                .expect("jvm: spawn javac for BasicRuntime");
             if !built.status.success() {
-                return None;
+                cell_failed("Jvm", p, "javac of BasicRuntime.java", String::from_utf8_lossy(&built.stderr));
             }
         }
     }
@@ -5603,19 +5685,40 @@ fn run_jvm(p: &Prog) -> Option<RunResult> {
     // program's stdin to the `java` process; empty for every other program.
     let mut java = Command::new("java");
     java.arg("-cp").arg(dir.path()).arg("Main");
-    let out = output_with_stdin(java, program_stdin(p))?;
+    let Some(out) = output_with_stdin(java, program_stdin(p)) else {
+        cell_failed("Jvm", p, "running `java`", "could not spawn/collect");
+    };
     let stdout = String::from_utf8_lossy(&out.stdout).trim().to_string();
     let stderr = String::from_utf8_lossy(&out.stderr).trim().to_string();
     if matches!(&p.expect, Expect::Trap) && !out.status.success() {
         return Some(RunResult::Trapped);
+    }
+    // A non-zero `java` exit for a program that is *not* expected to trap means the
+    // JVM refused or crashed on our class — a VerifyError, a ClassFormatError, an
+    // uncaught exception. That diagnostic lives on stderr, and the value path below
+    // would otherwise silently swallow it: `stderr.parse::<i32>()` fails on a stack
+    // trace and yields `code: None`, which reads as "no result" instead of "the JVM
+    // backend emitted a broken class".
+    if !out.status.success() {
+        cell_failed("Jvm", p, "`java` execution of the emitted class", &stderr);
     }
     if prints {
         // The program wrote its result to stdout via `env.BasicRuntime.println`.
         Some(RunResult::Completed { code: out.status.code(), stdout })
     } else {
         // The launcher printed the entry method's result to stderr; parse it as the
-        // program value while retaining the program's own stdout.
-        Some(RunResult::Completed { code: stderr.parse::<i32>().ok(), stdout })
+        // program value while retaining the program's own stdout. A `java` that
+        // exited 0 must have printed a parseable integer there — anything else is
+        // the launcher or the backend misbehaving, not a skip.
+        let Ok(code) = stderr.parse::<i32>() else {
+            cell_failed(
+                "Jvm",
+                p,
+                "parsing the entry result the launcher printed to stderr",
+                format!("stderr was {stderr:?}, stdout was {stdout:?}"),
+            );
+        };
+        Some(RunResult::Completed { code: Some(code), stdout })
     }
 }
 
@@ -5648,10 +5751,13 @@ fn run_clr(p: &Prog) -> Option<RunResult> {
         return None;
     }
     let ilasm = clr_support::find_ilasm()?;
-    let il = lang_aot::compile_source_to_cil_text(p.lang, p.src, "Main").ok()?;
-    let dir = tempfile::tempdir().ok()?;
+    let il = match lang_aot::compile_source_to_cil_text(p.lang, p.src, "Main") {
+        Ok(il) => il,
+        Err(e) => cell_failed("Clr", p, "source → textual CIL", format!("{e:?}")),
+    };
+    let dir = tempfile::tempdir().expect("clr: create temp dir");
     let il_path = dir.path().join("Main.il");
-    std::fs::write(&il_path, &il).ok()?;
+    std::fs::write(&il_path, &il).expect("clr: write Main.il");
     let dll = dir.path().join("Main.dll");
     let asm = Command::new(&ilasm)
         .arg("-dll=false")
@@ -5659,9 +5765,19 @@ fn run_clr(p: &Prog) -> Option<RunResult> {
         .arg(format!("-output={}", dll.display()))
         .arg(&il_path)
         .output()
-        .ok()?;
+        .expect("clr: spawn ilasm");
     if !asm.status.success() || !dll.exists() {
-        return None;
+        // `ilasm` was found and rejected our `.il` — a backend bug, not a missing tool.
+        cell_failed(
+            "Clr",
+            p,
+            "ilasm assembly of the emitted .il",
+            format!(
+                "{}\n{}",
+                String::from_utf8_lossy(&asm.stdout),
+                String::from_utf8_lossy(&asm.stderr)
+            ),
+        );
     }
     // A `.runtimeconfig.json` is required to launch a framework-dependent assembly
     // on `dotnet`; pin it to the same net9.0 runtime the McCarthy CLR-real tests use.
@@ -5669,17 +5785,29 @@ fn run_clr(p: &Prog) -> Option<RunResult> {
         dir.path().join("Main.runtimeconfig.json"),
         r#"{ "runtimeOptions": { "tfm": "net9.0", "framework": { "name": "Microsoft.NETCore.App", "version": "9.0.0" } } }"#,
     )
-    .ok()?;
+    .expect("clr: write runtimeconfig.json");
     // A Brainfuck `,` reads `Console.Read()` from the process stdin, so pipe the
     // program's stdin to the `dotnet` process; empty for every other program.
     let mut dn = Command::new("dotnet");
     dn.arg(&dll);
-    let out = output_with_stdin(dn, program_stdin(p))?;
+    let Some(out) = output_with_stdin(dn, program_stdin(p)) else {
+        cell_failed("Clr", p, "running `dotnet`", "could not spawn/collect");
+    };
     if !out.status.success() {
         if matches!(&p.expect, Expect::Trap) {
             return Some(RunResult::Trapped);
         }
-        return None;
+        cell_failed(
+            "Clr",
+            p,
+            "`dotnet` execution of the assembled PE",
+            format!(
+                "exit {:?}\n{}\n{}",
+                out.status.code(),
+                String::from_utf8_lossy(&out.stdout),
+                String::from_utf8_lossy(&out.stderr)
+            ),
+        );
     }
     // Whatever the program wrote to `Console`: for an expression language that's the
     // launcher's `Console.WriteLine` of the entry's `int` result (parsed as the value,
@@ -5733,7 +5861,12 @@ fn run_vm(p: &Prog) -> Option<RunResult> {
     use vm_core::core::VMCore;
     use vm_core::value::Value;
 
-    let mut module = lang_aot::compile_source_to_iir(p.lang, p.src, "main").ok()?;
+    // The VM is in-process — there is no toolchain to be absent, so a compile
+    // failure here is a real failure, never a skip.
+    let mut module = match lang_aot::compile_source_to_iir(p.lang, p.src, "main") {
+        Ok(m) => m,
+        Err(e) => cell_failed("Vm", p, "source → IIR", format!("{e:?}")),
+    };
     lower_dynamic_for_generic_engine(&mut module);
     let entry = module.entry_point.clone().unwrap_or_else(|| "main".to_string());
 
@@ -5805,7 +5938,7 @@ fn run_vm(p: &Prog) -> Option<RunResult> {
     let result = match vm.execute(&mut module, &entry, &[]) {
         Ok(result) => result,
         Err(_) if matches!(&p.expect, Expect::Trap) => return Some(RunResult::Trapped),
-        Err(_) => return None,
+        Err(e) => cell_failed("Vm", p, "VMCore execution", format!("{e:?}")),
     };
 
     // The exit code: an expression language's `main` returns an `Int`.
@@ -5852,7 +5985,11 @@ fn run_jit(p: &Prog) -> Option<RunResult> {
     use vm_core::core::VMCore;
     use vm_core::value::Value;
 
-    let mut module = lang_aot::compile_source_to_iir(p.lang, p.src, "main").ok()?;
+    // In-process, like `run_vm`: no toolchain gate, so no legitimate skip.
+    let mut module = match lang_aot::compile_source_to_iir(p.lang, p.src, "main") {
+        Ok(m) => m,
+        Err(e) => cell_failed("Jit", p, "source → IIR", format!("{e:?}")),
+    };
     lower_dynamic_for_generic_engine(&mut module);
     let entry = module.entry_point.clone().unwrap_or_else(|| "main".to_string());
 
@@ -5955,7 +6092,7 @@ fn run_jit(p: &Prog) -> Option<RunResult> {
     let result = match jit.execute_with_jit(&mut vm, &mut module, &entry, &[]) {
         Ok(result) => result,
         Err(_) if matches!(&p.expect, Expect::Trap) => return Some(RunResult::Trapped),
-        Err(_) => return None,
+        Err(e) => cell_failed("Jit", p, "JITCore execution", format!("{e:?}")),
     };
 
     // Exit code / stdout extraction is identical to `run_vm` — the JIT is observably
@@ -6020,16 +6157,37 @@ fn assert_cell(backend: Backend, p: &Prog, result: RunResult) {
 #[test]
 fn matrix_every_proven_cell_agrees() {
     let mut ran = 0usize;
+    let mut skipped = 0usize;
     for p in PROGRAMS {
         for &backend in p.backends {
             let Some(result) = run(backend, p) else {
+                skipped += 1;
                 continue;
             };
             assert_cell(backend, p, result);
             ran += 1;
         }
     }
-    eprintln!("lang-matrix: {ran} proven cells exercised");
+    eprintln!("lang-matrix: {ran} proven cells exercised, {skipped} skipped");
+
+    // The skip invariant. After `cell_failed`, a runner returns `None` for exactly
+    // one reason: its `*_ok()` gate said the host has no such toolchain. So on a host
+    // that HAS every toolchain, the skip count must be zero — if it isn't, some cell
+    // found a third way to opt out, and a cell that opts out is a cell that cannot
+    // fail. Asserting the invariant here means the harness polices itself instead of
+    // relying on a human to read a skip tally that only prints on `--nocapture`.
+    let fully_equipped = native_linker_ok()
+        && clang_ok()
+        && java_ok()
+        && dotnet_ok()
+        && clr_support::find_ilasm().is_some();
+    if fully_equipped {
+        assert_eq!(
+            skipped, 0,
+            "every backend toolchain is present on this host, so no cell may skip — \
+             {skipped} did, which means a runner is silently opting out"
+        );
+    }
 }
 
 #[test]
