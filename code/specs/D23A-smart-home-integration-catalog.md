@@ -601,6 +601,7 @@ These should be implemented before most vendor-specific adapters:
 | `smart-home-usb-serial` | Zigbee, Z-Wave, Thread, Modbus RTU |
 | `modbus-protocol` and `smart-home-modbus-tcp-integration` | bounded read-only Modbus TCP register telemetry and D23 sensor projection |
 | `bacnet-protocol` and `smart-home-bacnet-ip-integration` | bounded BACnet/IP Who-Is/I-Am discovery and D23 bridge-candidate projection |
+| `knxnet-ip-protocol` and `smart-home-knxnet-ip-integration` | bounded KNXnet/IP Search Request/Search Response discovery and D23 interface projection |
 | `smart-home-camera-media` | ONVIF, RTSP, snapshots, privacy-sensitive state |
 | `smart-home-cloud-account` | OAuth/API-key cloud integrations and webhook registration |
 | `smart-home-data-governance` | purpose-bound consent, coarse-location configuration, and exact-destination telemetry egress |
@@ -617,7 +618,7 @@ These should be implemented before most vendor-specific adapters:
 | Tasmota | MQTT-native device ecosystem |
 | Modbus | HVAC, energy, industrial |
 | BACnet/IP | vendor-neutral building automation discovery |
-| KNX | building automation |
+| KNXnet/IP | vendor-neutral building automation interface discovery |
 
 ### Wave 3 - High-Leverage Local Hubs And Devices
 

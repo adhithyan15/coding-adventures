@@ -2275,6 +2275,31 @@ keeping unauthenticated BACnet control outside the runtime boundary:
 This expands local HVAC, lighting, access, and energy discovery without
 weakening the independent credential, camera-resource, or radio-host blocks.
 
+## Current KNXnet/IP Breadth Slice
+
+The next breadth slice adds vendor-neutral KNX interface discovery without
+pretending that discovery provides an authorized building-control session:
+
+- `knxnet-ip-protocol` owns strict KNXnet/IP Search Request and Search Response
+  framing, including UDP/IPv4 HPAI correlation, Device Information Blocks, and
+  Supported Service Family parsing.
+- `smart-home-knxnet-ip-integration` binds one explicit local IPv4 interface,
+  sends one request to an explicit destination, collects at most 64 replies
+  within a bounded timeout, and projects verified serial-number identities into
+  the shared D23 discovery catalog.
+- Discovery authorization runs before UDP socket creation. Responses must
+  advertise the exact source control endpoint, malformed packets remain partial
+  failures, and conflicting endpoints claiming one serial number do not replace
+  the deterministic first observation.
+- The runtime exposes no ETS project import, group-address interpretation,
+  tunneling, routing telegrams, configuration writes, or KNX IP Secure session
+  ownership. Those require separate project/key custody and operation-specific
+  policy.
+
+This broadens local lighting, HVAC, shading, access, and energy interface
+discovery while keeping actual KNX bus access outside the unauthenticated
+discovery boundary.
+
 The protocol- and vendor-specific backlog below remains valid after those
 central ownership steps:
 

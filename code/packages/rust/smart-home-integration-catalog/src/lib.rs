@@ -44919,6 +44919,7 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
             "mqtt",
         ),
         bacnet_ip_entry(),
+        knxnet_ip_entry(),
         modbus_tcp_entry(),
         protocol_entry(
             "matter",
@@ -49095,6 +49096,35 @@ fn bacnet_ip_entry() -> IntegrationCatalogEntry {
     .with_notes(&[
         "The first-party runtime supports only bounded Who-Is/I-Am device discovery.",
         "Property reads, writes, controls, BBMD management, foreign-device registration, and BACnet/SC remain out of scope.",
+    ])
+}
+
+fn knxnet_ip_entry() -> IntegrationCatalogEntry {
+    base_entry(
+        "knxnet_ip",
+        "KNXnet/IP",
+        "Bounded local discovery for KNXnet/IP interfaces and routers.",
+        IntegrationCategory::ProtocolStandard,
+        ConnectivityClass::LocalPolling,
+        ImplementationStatus::FirstPartyRuntime,
+        1,
+        "knx",
+    )
+    .with_protocols(vec![ProtocolFamily::Vendor("knxnet_ip".to_string())])
+    .with_capabilities(&["smart_home.read"])
+    .with_discovery(&[DiscoveryMechanism::UdpMulticast, DiscoveryMechanism::Manual])
+    .with_auth(&[AuthMode::None])
+    .with_primitives(&[
+        PrimitiveFamily::DiscoveryIndex,
+        PrimitiveFamily::Udp,
+        PrimitiveFamily::NormalizedModel,
+        PrimitiveFamily::CapabilityPolicy,
+        PrimitiveFamily::Supervision,
+        PrimitiveFamily::TestSimulator,
+    ])
+    .with_notes(&[
+        "The first-party runtime supports only bounded KNXnet/IP Search Request/Search Response discovery.",
+        "ETS project import, group-address semantics, tunneling, routing telegrams, configuration, and KNX IP Secure sessions remain out of scope.",
     ])
 }
 
@@ -81773,6 +81803,38 @@ mod tests {
             assert!(bacnet.required_primitives.contains(&primitive));
         }
         assert!(!bacnet.required_primitives.contains(&PrimitiveFamily::Tcp));
+    }
+
+    #[test]
+    fn knxnet_ip_entry_exposes_bounded_discovery_only_runtime() {
+        let catalog = first_party_catalog();
+        let knx = find_entry(&catalog, &IntegrationId::trusted("knxnet_ip")).unwrap();
+        assert_eq!(
+            knx.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(knx.connectivity, ConnectivityClass::LocalPolling);
+        assert_eq!(knx.auth_modes, vec![AuthMode::None]);
+        assert_eq!(
+            knx.supported_protocols,
+            vec![ProtocolFamily::Vendor("knxnet_ip".to_string())]
+        );
+        assert_eq!(
+            knx.required_capabilities,
+            vec![CapabilityId::trusted("smart_home.read")]
+        );
+        assert!(knx.target_entity_kinds.is_empty());
+        for primitive in [
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::Udp,
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::Supervision,
+            PrimitiveFamily::TestSimulator,
+        ] {
+            assert!(knx.required_primitives.contains(&primitive));
+        }
+        assert!(!knx.required_primitives.contains(&PrimitiveFamily::Tcp));
     }
 
     #[test]
