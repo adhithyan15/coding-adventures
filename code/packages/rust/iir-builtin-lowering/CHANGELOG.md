@@ -43,6 +43,22 @@ tagged word directly. `(+ (+ a b) c)` with `a,b,c = 10,20,12` computed
 The map is now updated as the rewrite proceeds, so a later operand in the same
 function sees the boxed type its producer actually has.
 
+### The invariant the uniform shift relies on
+
+`box`/`unbox` are `<< 3`/`>> 3`, so a *value* round-trips for anything under 61
+bits — a heap address included. But a cons cell is **traced by the collector**,
+and a heap handle is `addr | 0b111`; shifted left by 3 it resolves to no live
+block under either interpretation the precise-kind scan applies. The collector
+would stop tracing through the chain while the chain is the only thing holding
+the referent.
+
+So this representation is sound only while every raw-model capture and argument
+is a non-pointer — true of every closure program today, and the interim contract
+until closure lowering grows tag-directed extraction. `store` now asserts it
+rather than describing it: capturing a string, a cons, or another closure from a
+raw-model closure fires in any debug build instead of silently producing a
+dangling reference. (Found in security review.)
+
 ### Tests
 
 Three new unit tests pin the invariants: chained dynamic arithmetic emits

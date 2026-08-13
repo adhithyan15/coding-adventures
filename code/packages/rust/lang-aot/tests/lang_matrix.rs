@@ -6197,7 +6197,26 @@ fn matrix_every_proven_cell_agrees() {
     // at one backend bug or twenty. `LANG_MATRIX_REPORT_ALL=1` runs every cell,
     // collects the failures, and reports them together at the end. The test still
     // fails; it just tells you everything at once.
+    //
+    // **This mode is diagnostic only, and deliberately not what CI runs.** It
+    // continues past a panic that unwound out of an in-process backend (`run_vm`,
+    // `run_jit`, `run_wasm`) or a lowering pass, and those mutate state that
+    // outlives a single cell — so failures reported *after* the first in-process
+    // failure may be consequences of it rather than independent bugs. Treat the
+    // list as a triage map to be confirmed cell-by-cell in fail-fast mode, which
+    // is exactly how it is used: find the clusters, then fix and verify one at a
+    // time.
     let report_all = std::env::var_os("LANG_MATRIX_REPORT_ALL").is_some();
+    // Silence the default panic printer once for the whole sweep rather than per
+    // cell. The hook is process-global and libtest runs tests concurrently in one
+    // binary, so a per-cell take/set window swallows the diagnostics of every
+    // *other* test that happens to panic during it — the opposite of this file's
+    // whole purpose.
+    let restore_hook = report_all.then(|| {
+        let hook = std::panic::take_hook();
+        std::panic::set_hook(Box::new(|_| {}));
+        hook
+    });
     let mut ran = 0usize;
     let mut skipped = 0usize;
     let mut failures: Vec<String> = Vec::new();
@@ -6205,17 +6224,12 @@ fn matrix_every_proven_cell_agrees() {
         for &backend in p.backends {
             let cell = if report_all {
                 // A failing runner panics by design (`cell_failed`), so collecting
-                // rather than aborting means catching the unwind. The hook is
-                // silenced only for the duration of the sweep so the collected
-                // report is the single source of output.
-                let hook = std::panic::take_hook();
-                std::panic::set_hook(Box::new(|_| {}));
+                // rather than aborting means catching the unwind.
                 let caught = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
                     run(backend, p).map(|r| {
                         assert_cell(backend, p, r);
                     })
                 }));
-                std::panic::set_hook(hook);
                 match caught {
                     Ok(outcome) => outcome,
                     Err(e) => {
@@ -6238,6 +6252,9 @@ fn matrix_every_proven_cell_agrees() {
             }
             ran += 1;
         }
+    }
+    if let Some(hook) = restore_hook {
+        std::panic::set_hook(hook);
     }
     eprintln!("lang-matrix: {ran} proven cells exercised, {skipped} skipped");
     if !failures.is_empty() {

@@ -134,10 +134,28 @@ fn tool_ok(cmd: &str, arg: &str) -> bool {
         .unwrap_or(false)
 }
 
-fn tmp_dir(tag: &str) -> std::path::PathBuf {
-    let d = std::env::temp_dir().join(format!("mccarthy_w16_{}_{tag}", std::process::id()));
-    std::fs::create_dir_all(&d).expect("temp dir");
-    d
+/// A fresh, private scratch directory for one backend's artifacts.
+///
+/// This used to be `temp_dir()/mccarthy_w16_<pid>_<tag>` — a fully predictable
+/// path that `create_dir_all` would happily adopt if it already existed. The
+/// harness then writes a `.ll`/`.class`/`.beam` there, links an executable into
+/// it, and runs it. A local attacker who pre-creates the directory (the PID
+/// space is small enough to enumerate) owns it, and can redirect `clang -o`
+/// through a symlink to clobber any file the developer can write, or swap the
+/// binary between the link and the exec — CWE-377/367. `/tmp`'s sticky bit does
+/// not help when the attacker owns the containing directory.
+///
+/// `tempfile::tempdir()` is `mkdtemp`: random name, mode `0700`, and it fails
+/// rather than adopting an existing directory. The sibling `lang_matrix.rs`
+/// already did it this way; this suite is where the habit had not reached.
+///
+/// The returned guard must outlive the run — dropping it deletes the directory,
+/// so callers bind it, not just `.path()`.
+fn tmp_dir(tag: &str) -> tempfile::TempDir {
+    tempfile::Builder::new()
+        .prefix(&format!("mccarthy_w16_{tag}_"))
+        .tempdir()
+        .expect("create a private temp dir")
 }
 
 // ── Backend 1: VM (the reference interpreter, tagged-word). Always runs. ──
@@ -277,9 +295,9 @@ fn run_jvm(src: &str) -> Option<i64> {
     });
     let bytes = serialize_jvm_class_file(&class);
     let dir = tmp_dir("jvm");
-    std::fs::write(dir.join("Main.class"), &bytes).expect("jvm: write Main.class");
+    std::fs::write(dir.path().join("Main.class"), &bytes).expect("jvm: write Main.class");
     let out = std::process::Command::new("java")
-        .arg("-Xverify:none").arg("-cp").arg(&dir).arg("Main")
+        .arg("-Xverify:none").arg("-cp").arg(dir.path()).arg("Main")
         .output()
         .expect("jvm: spawn java");
     let stdout = String::from_utf8_lossy(&out.stdout).trim().to_string();
@@ -309,9 +327,9 @@ fn run_beam(src: &str) -> Option<i64> {
         Err(e) => backend_failed("BEAM", src, "source → BEAM bytes", format!("{e:?}")),
     };
     let dir = tmp_dir("beam");
-    std::fs::write(dir.join(format!("{module}.beam")), &bytes).expect("beam: write .beam");
+    std::fs::write(dir.path().join(format!("{module}.beam")), &bytes).expect("beam: write .beam");
     let out = std::process::Command::new("erl")
-        .arg("-noshell").arg("-pa").arg(&dir)
+        .arg("-noshell").arg("-pa").arg(dir.path())
         .arg("-eval").arg(format!("io:format(\"~w~n\",[{module}:main()]),halt(0)."))
         .output()
         .expect("beam: spawn erl");
@@ -353,9 +371,9 @@ fn run_llvm(src: &str) -> Option<i64> {
         Err(e) => backend_failed("LLVM", src, "source → LLVM IR", format!("{e:?}")),
     };
     let dir = tmp_dir("llvm");
-    let ll_path = dir.join("conf.ll");
+    let ll_path = dir.path().join("conf.ll");
     std::fs::write(&ll_path, &ll).expect("llvm: write conf.ll");
-    let exe = dir.join("conf");
+    let exe = dir.path().join("conf");
     // `dynval_runtime.c`'s `__dyn_cons` calls `__gc_alloc_kind`/`__gc_register_kind`,
     // which moved into the `gc-core-capi` staticlib when `twig_gc.c` was retired
     // (#118b-2b). Without `gc_link_args()` the link fails with undefined symbols —
@@ -392,9 +410,9 @@ fn run_native(src: &str) -> Option<i64> {
         return None;
     }
     let dir = tmp_dir("native");
-    let s = dir.join("conf.mcl");
+    let s = dir.path().join("conf.mcl");
     std::fs::write(&s, src).expect("native: write source");
-    let exe = dir.join("conf");
+    let exe = dir.path().join("conf");
     if let Err(e) = compile_file_to_macos_executable(&s, &exe, Language::McCarthyLisp) {
         backend_failed("native-AOT", src, "source → macOS executable", format!("{e:?}"));
     }

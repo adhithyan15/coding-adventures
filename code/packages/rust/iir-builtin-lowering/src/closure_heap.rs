@@ -174,6 +174,7 @@ fn rewrite_closure_ops(
     index_of: &BTreeMap<String, i64>,
     params_are_boxed: bool,
 ) {
+    let types = producer_types(f);
     let old = std::mem::take(&mut f.instructions);
     let mut out: Vec<IIRInstr> = Vec::with_capacity(old.len() * 2);
     // Monotonic suffix so the temporaries this pass introduces never collide.
@@ -194,7 +195,7 @@ fn rewrite_closure_ops(
                 None => { out.push(instr); continue; }
             };
             let captures: Vec<Operand> = instr.srcs[1..].to_vec();
-            emit_closure_alloc(&mut out, &dest, idx, &captures, &mut counter, params_are_boxed);
+            emit_closure_alloc(&mut out, &dest, idx, &captures, &mut counter, params_are_boxed, &types);
             continue;
         }
         if is_call_closure(&instr) {
@@ -207,7 +208,7 @@ fn rewrite_closure_ops(
                 None => { out.push(instr); continue; }
             };
             let args: Vec<Operand> = instr.srcs[1..].to_vec();
-            emit_closure_call(&mut out, &dest, handle, &args, &mut counter, params_are_boxed);
+            emit_closure_call(&mut out, &dest, handle, &args, &mut counter, params_are_boxed, &types);
             continue;
         }
         out.push(instr);
@@ -228,16 +229,65 @@ fn rewrite_closure_ops(
 /// recovered `40 >> 3 = 5` from the untagged capture and computed 7.
 ///
 /// Owning both ends in this pass makes the representation a property of the
-/// closure substrate rather than an emergent one. Boxing an already-tagged heap
-/// handle is safe: `box`/`unbox` are `<< 3`/`>> 3`, which round-trips any value
-/// that fits in 61 bits, and a heap address does.
-fn store(out: &mut Vec<IIRInstr>, v: Operand, counter: &mut usize, box_it: bool) -> Operand {
+/// closure substrate rather than an emergent one.
+///
+/// ## The invariant this relies on, and why it is asserted
+///
+/// `box`/`unbox` are `<< 3`/`>> 3`, so the *value* round-trips for anything that
+/// fits in 61 bits — including a heap address. But value round-tripping is not
+/// the only property that matters: a cons cell is **traced by the collector**.
+/// `__dyn_cons` registers its cell with a precise kind whose slots the collector
+/// interprets as either a raw word or a tag-stripped pointer. A heap handle is
+/// `addr | 0b111`; shifted left by 3 it becomes `addr*8 | 0b111000`, which
+/// resolves to no live block under either interpretation. The collector would
+/// stop tracing through the chain while the chain is the only thing holding the
+/// referent — a use-after-free waiting for the first collection in the window.
+///
+/// So this uniform-shift representation is sound only while every raw-model
+/// capture and argument is a **non-pointer**. That is true of every closure
+/// program in the matrix today (they capture and pass integers), and it is the
+/// interim contract until closure lowering grows a tag-directed extraction.
+/// An invariant that holds by accident is one nobody notices breaking, so it is
+/// asserted rather than described: the moment a raw-model closure captures a
+/// string, a cons, or another closure, this fires in any debug build instead of
+/// silently producing a dangling reference at runtime.
+fn store(
+    out: &mut Vec<IIRInstr>,
+    v: Operand,
+    counter: &mut usize,
+    box_it: bool,
+    types: &BTreeMap<String, String>,
+) -> Operand {
     if !box_it {
         return v;
     }
+    debug_assert!(
+        !matches!(&v, Operand::Var(name)
+            if types.get(name).is_some_and(|t| t.starts_with("ref<"))),
+        "closure_heap: a raw-model closure captured/passed the reference-typed value {v:?}. \
+         Boxing it into the cons chain would shift its heap tag out of recognition and make \
+         the referent invisible to the collector. Closure lowering needs tag-directed \
+         extraction before a raw-model closure can carry a pointer."
+    );
     let boxed = fresh(counter, "clobox");
     out.push(IIRInstr::new("box", Some(boxed.clone()), vec![v], REF_ANY));
     Operand::Var(boxed)
+}
+
+/// Map each destination (and parameter) in `f` to the type hint it was produced
+/// with, so `store` can tell a raw machine value from a reference. Same shape as
+/// `dynamic_arith::producer_types`.
+fn producer_types(f: &IIRFunction) -> BTreeMap<String, String> {
+    let mut m: BTreeMap<String, String> = BTreeMap::new();
+    for (name, ty) in &f.params {
+        m.insert(name.clone(), ty.clone());
+    }
+    for instr in &f.instructions {
+        if let Some(dest) = &instr.dest {
+            m.insert(dest.clone(), instr.type_hint.clone());
+        }
+    }
+    m
 }
 
 /// Emit `dest = ( box(idx) . ( cap0 . ( … . nil ) ) )`.
@@ -248,13 +298,14 @@ fn emit_closure_alloc(
     captures: &[Operand],
     counter: &mut usize,
     params_are_boxed: bool,
+    types: &BTreeMap<String, String>,
 ) {
     // Build the captures list bottom-up, seeded with nil.
     let mut chain = fresh(counter, "clonil");
     out.push(IIRInstr::new("const", Some(chain.clone()), vec![Operand::Int(0)], REF_PAIR));
     for cap in captures.iter().rev() {
         let next = fresh(counter, "clocons");
-        let stored = store(out, cap.clone(), counter, !params_are_boxed);
+        let stored = store(out, cap.clone(), counter, !params_are_boxed, types);
         out.push(cons(&next, stored, Operand::Var(chain)));
         chain = next;
     }
@@ -274,12 +325,13 @@ fn emit_closure_call(
     args: &[Operand],
     counter: &mut usize,
     params_are_boxed: bool,
+    types: &BTreeMap<String, String>,
 ) {
     let mut chain = fresh(counter, "argnil");
     out.push(IIRInstr::new("const", Some(chain.clone()), vec![Operand::Int(0)], REF_PAIR));
     for arg in args.iter().rev() {
         let next = fresh(counter, "argcons");
-        let stored = store(out, arg.clone(), counter, !params_are_boxed);
+        let stored = store(out, arg.clone(), counter, !params_are_boxed, types);
         out.push(cons(&next, stored, Operand::Var(chain)));
         chain = next;
     }
