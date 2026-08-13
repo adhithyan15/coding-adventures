@@ -1,0 +1,23 @@
+{
+  "name": "@coding-adventures/image-codec-png",
+  "version": "0.1.0",
+  "description": "IC18: PNG image encoder and decoder using PixelContainer",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/pixel-container": "file:../pixel-container",
+    "@coding-adventures/zip": "file:../zip"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.0",
+    "@vitest/coverage-v8": "^4.1.0"
+  }
+}
