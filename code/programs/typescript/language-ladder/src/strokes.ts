@@ -2730,6 +2730,38 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: devanagariAlphabetSource("म"),
   },
+  // Opiaterein's animation and the Central Hindi Directorate deskbook agree
+  // on four runs: the clockwise inner curl, the restarted lower bowl, the
+  // descending right stem, and the headline. JackPotte documents a joined
+  // two-lift body as a real variation; this path follows the corroborated
+  // four-stroke form.
+  [ductusKey("devanagari", "य")]: {
+    script: "devanagari",
+    glyph: "य",
+    strokes: [
+      { segments: [{ label: "curve clockwise around the inner curl", path: [
+        { x: 165, y: 551 }, { x: 195, y: 540 }, { x: 215, y: 510 },
+        { x: 220, y: 475 }, { x: 207, y: 440 }, { x: 185, y: 410 },
+        { x: 150, y: 382 }, { x: 105, y: 360 }, { x: 55, y: 355 },
+      ] }] },
+      { segments: [{ label: "lift, then curve around the lower bowl to the right", path: [
+        { x: 55, y: 350 }, { x: 80, y: 310 }, { x: 110, y: 270 },
+        { x: 150, y: 235 }, { x: 205, y: 190 }, { x: 270, y: 165 },
+        { x: 335, y: 173 }, { x: 385, y: 202 }, { x: 425, y: 245 },
+      ] }] },
+      { segments: [{ label: "lift, then descend the right stem", path: [
+        { x: 450, y: 551 }, { x: 450, y: 475 }, { x: 450, y: 395 },
+        { x: 450, y: 315 }, { x: 450, y: 235 }, { x: 450, y: 155 },
+        { x: 450, y: 75 }, { x: 450, y: 5 },
+      ] }] },
+      { segments: [{ label: "lift, then draw the shirorekha left-to-right", path: [
+        { x: 5, y: 585 }, { x: 85, y: 585 }, { x: 165, y: 585 },
+        { x: 245, y: 585 }, { x: 325, y: 585 }, { x: 405, y: 585 },
+        { x: 485, y: 585 }, { x: 590, y: 585 },
+      ] }] },
+    ],
+    source: devanagariAlphabetSource("य"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the

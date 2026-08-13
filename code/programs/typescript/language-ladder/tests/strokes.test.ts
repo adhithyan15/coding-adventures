@@ -69,6 +69,7 @@ const DEVANAGARI_PA = DUCTUS[ductusKey("devanagari", "प")];
 const DEVANAGARI_BA = DUCTUS[ductusKey("devanagari", "ब")];
 const DEVANAGARI_BHA = DUCTUS[ductusKey("devanagari", "भ")];
 const DEVANAGARI_MA = DUCTUS[ductusKey("devanagari", "म")];
+const DEVANAGARI_YA = DUCTUS[ductusKey("devanagari", "य")];
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
@@ -1028,6 +1029,26 @@ describe("handwriting ductus", () => {
     const stem = penPath(DEVANAGARI_MA.strokes[1]);
     expect(stem[0].y).toBeGreaterThan(stem.at(-1)!.y);
     const headline = penPath(DEVANAGARI_MA.strokes[2]);
+    expect(headline[0].x).toBeLessThan(headline.at(-1)!.x);
+  });
+
+  it("Devanagari य separates its clockwise inner curl from the lower bowl", () => {
+    expect(DEVANAGARI_YA.script).toBe("devanagari");
+    expect(penLifts(DEVANAGARI_YA)).toBe(3);
+    expect(DEVANAGARI_YA.strokes).toHaveLength(4);
+    expect(DEVANAGARI_YA.strokes.map((stroke) => stroke.segments.length)).toEqual([
+      1, 1, 1, 1,
+    ]);
+    const curl = penPath(DEVANAGARI_YA.strokes[0]);
+    expect(Math.max(...curl.map((point) => point.x))).toBeGreaterThan(curl[0].x);
+    expect(curl.at(-1)!.x).toBeLessThan(curl[0].x);
+    expect(curl.at(-1)!.y).toBeLessThan(curl[0].y);
+    const bowl = penPath(DEVANAGARI_YA.strokes[1]);
+    expect(bowl.at(-1)!.x).toBeGreaterThan(bowl[0].x);
+    expect(Math.min(...bowl.map((point) => point.y))).toBeLessThan(bowl[0].y);
+    const stem = penPath(DEVANAGARI_YA.strokes[2]);
+    expect(stem[0].y).toBeGreaterThan(stem.at(-1)!.y);
+    const headline = penPath(DEVANAGARI_YA.strokes[3]);
     expect(headline[0].x).toBeLessThan(headline.at(-1)!.x);
   });
 
@@ -2059,6 +2080,9 @@ describe("handwriting ductus", () => {
     expect(verifiedLetterFont("म", DEVANAGARI_MA.source.url)).toBe(
       "_fonts/NotoSansDevanagari-Static.ttf",
     );
+    expect(verifiedLetterFont("य", DEVANAGARI_YA.source.url)).toBe(
+      "_fonts/NotoSansDevanagari-Static.ttf",
+    );
     expect(verifiedLetterFont("א", HEBREW_ALEF.source.url)).toBe(
       "_fonts/NotoSansHebrew-Static.ttf",
     );
@@ -2720,6 +2744,19 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /12-frame animation.*three ordered pen-down runs.*frames 0–5.*descend the left stem.*curl left and clockwise around the lower loop.*continue right through the crossbar.*without lifting.*frames 6–8.*right stem's headline junction.*top-to-bottom.*frames 9–11.*headline's left edge.*shirorekhā left-to-right.*two intervening lifts.*spatial restarts.*frames 6 and 9.*all frames last 100 ms.*no long inter-stroke holds.*Central Hindi Directorate.*2019 Deskbook on Orthography of Devanagari Script.*Lesson 2.*Unit VII.*p\. 39.*left stem.*lower loop and crossbar.*right stem.*headline order.*staging the left stem and loop-crossbar separately.*rather than proving their join.*three-run lift count from the animation.*Noto Sans Devanagari.*everyday handwriting.*divide or simplify/i,
+    );
+  });
+
+  it("Devanagari य traces the corroborated four-run form and records the joined-body variation", () => {
+    const src = DEVANAGARI_YA.source;
+    expect(src.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Deva-%E0%A4%AF-order.gif",
+    );
+    expect(src.citation).toMatch(
+      /Opiaterein.*Deva-य-order\.gif.*strokes 1–4.*Wikimedia Commons.*10 May 2009/i,
+    );
+    expect(src.variation).toMatch(
+      /22-frame animation.*four ordered pen-down runs.*gray guide.*frames 2–5.*beneath the headline.*clockwise around the inner curl.*left waist.*frames 6–13.*restart at that waist.*down and right around the lower bowl.*right-stem junction.*frames 14–16.*right stem's headline junction.*top-to-bottom.*frames 17–20.*headline's left edge.*shirorekhā left-to-right.*three intervening lifts.*190 ms hold.*frame 5.*250 ms holds.*frames 13 and 16.*one-second completed frame 21.*Central Hindi Directorate.*2019 Deskbook on Orthography of Devanagari Script.*Lesson 2.*Unit VIII.*p\. 41.*inner curl.*lower bowl.*right stem.*headline buildup.*JackPotte.*11-frame.*Devanagari j य\.gif.*29 March 2009.*joins the inner curl and lower bowl.*separately descended right stem.*left-to-right headline.*four-run form.*Noto Sans Devanagari.*three-run join.*simplify the bowls/i,
     );
   });
 
