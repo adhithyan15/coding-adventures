@@ -4775,8 +4775,20 @@ impl HtmlParser {
                     mode.name()
                 ),
             ));
-            self.document_tail_mode = DocumentTailMode::InBody;
-            self.document_tail_reentered_in_body = true;
+            match token {
+                Token::EndTag { name } if name == "body" => {
+                    self.document_tail_mode = DocumentTailMode::AfterBody;
+                    self.document_tail_reentered_in_body = false;
+                }
+                Token::EndTag { name } if name == "html" => {
+                    self.document_tail_mode = DocumentTailMode::AfterHtml;
+                    self.document_tail_reentered_in_body = false;
+                }
+                _ => {
+                    self.document_tail_mode = DocumentTailMode::InBody;
+                    self.document_tail_reentered_in_body = true;
+                }
+            }
         }
     }
 
@@ -6182,6 +6194,21 @@ impl HtmlParser {
             && self.explicit_html_end_seen
             && !self.current_element_is("noframes")
         {
+            self.document.children.push(node);
+            return;
+        }
+        if matches!(self.document_tail_mode, DocumentTailMode::AfterBody) {
+            if let Some(Node::Element(html)) = self
+                .document
+                .children
+                .iter_mut()
+                .find(|node| matches!(node, Node::Element(element) if element.name == "html"))
+            {
+                html.children.push(node);
+                return;
+            }
+        }
+        if matches!(self.document_tail_mode, DocumentTailMode::AfterHtml) {
             self.document.children.push(node);
             return;
         }
@@ -39785,6 +39812,56 @@ mod tests {
         assert!(matches!(
             body(&reentered_after_html.document).children[2],
             Node::ProcessingInstruction(_)
+        ));
+    }
+
+    #[test]
+    fn restores_tail_mode_after_repeated_shell_end_tags() {
+        let repeated_body = parse_html_with_diagnostics(
+            "<!doctype html><body>A</body></html></body><!--tail-->",
+        )
+        .unwrap();
+        assert_eq!(
+            repeated_body
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-token-after-html")
+                .count(),
+            1
+        );
+        assert!(matches!(
+            html(&repeated_body.document).children[2],
+            Node::Comment(_)
+        ));
+
+        let repeated_html = parse_html_with_diagnostics(
+            "<!doctype html><body>A</body></html></html><!--tail-->",
+        )
+        .unwrap();
+        assert_eq!(
+            repeated_html
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-token-after-html")
+                .count(),
+            1
+        );
+        assert!(matches!(repeated_html.document.children[2], Node::Comment(_)));
+
+        let repeated_after_body =
+            parse_html_with_diagnostics("<!doctype html><body>A</body></body><!--tail-->")
+                .unwrap();
+        assert_eq!(
+            repeated_after_body
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-token-after-body")
+                .count(),
+            1
+        );
+        assert!(matches!(
+            html(&repeated_after_body.document).children[2],
+            Node::Comment(_)
         ));
     }
 
