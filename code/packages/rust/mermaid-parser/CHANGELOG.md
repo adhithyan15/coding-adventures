@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.72.0
+
+- Preserve normal, bold, and numeric state `font-weight` styles in graph IR.
+
 ## 0.71.0
 
 - Preserve state `font-size` styles in graph semantic IR.

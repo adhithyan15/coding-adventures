@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.34.0
+
+- Preserve optional and resolved graph text font weights.
+
 ## 0.33.0
 
 - Preserve state empty-description visibility through graph semantic and layout IR.
