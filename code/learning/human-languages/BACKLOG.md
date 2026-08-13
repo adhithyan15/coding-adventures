@@ -562,7 +562,7 @@ Riding alongside, not blocking the rungs:
 | HL-C134 | Not started | Rewrite the handwritten chapters 1-5 into the generated pipeline for all six. Bites when a tranche needs to place a word or a letter in the opening chapters. | No protected handwritten chapter; Hindi's 11 writing lessons reach the page. |
 | HL-C148 | Not started | **Migrate the six tracks' schema-v1 lessons** (233) and give every lesson a `sequence`. Until then those lessons are invisible to every gate, so the measurements understate the debt. | `measurablePercent` rises; 0 lessons without `sequence` in the six. |
 | HL-C149 | **Done** | **Derive the corpus-count pins instead of hard-coding them.** Twenty snapshot assertions across six test files hard-coded counts that every content tranche moves — so every tranche conflicted with every other PR that moved any of them, and this repo lands a PR every few minutes. Converted to the shape each number actually has: **floors** for content volume, **ceilings** for inherited debt (stricter than the pin was — a ratchet that cannot slip back), **ratios** for debt that grows with honest content. The running annotations stay; only the digits churned. | Mutation-tested both ways: deleting one lesson still fails the floors, and adding 42 lessons passes without touching a test file. |
-| HL-C150 | **NEXT** | **Place the deixis words where they are needed, not at the end of the book.** Wave I put *this/that/here/there/who/where* in a new final chapter, and HL-C149's new forward-reference ceiling immediately showed why that is wrong: `ML-C01-athe` uses അത് in **chapter 1**, and the new chapter is the first thing that ever teaches it — 100 lessons late. Six function words the corpus already leans on from page 1 cannot be taught last. | The six land as early as the generated range allows; `forwardReferences` does not rise; every book still builds. Going earlier than chapter 6 depends on HL-C134. |
+| HL-C150 | **NEXT** | **The six tracks teach core words about thirty chapters after they first use them.** Measured on merged main, before any new content: **46 forward references** across the six. Tamil's chapter 1 practice uses வா, taught in chapter 32. Chapter 3 uses இரு, taught in chapter 32. Malayalam's chapter 1 uses ഉണ്ട്, taught in chapter 32. Kannada's chapter 4 uses ಬಾ, taught in chapter 32. This is the corpus's shape, not one wave's mistake — and wave I was about to add six more of it by appending its chapter at the end. Move the words that the opening chapters already lean on to where they are used. | `forwardReferences` in the six falls toward zero; no core word is taught more than a few chapters after its first use; every book still builds. |
 
 
 ### Discovered while running the loop (2026-08-13)
@@ -590,6 +590,24 @@ words chapter 1 has been using untaught since it was written. The lesson
 generalises past this wave — a word the opening chapters already lean on belongs
 near the opening chapters, and "append a chapter at the end" is the wrong shape
 for function words however good the chapter is.
+
+**Correction to the HL-C150 finding as first written.** It originally said that
+`ML-C01-athe` uses അത് untaught in chapter 1. That specific claim was wrong, and
+checking it is what found the real one. Two of the examples were homographs
+rather than uses: Malayalam അതെ ("yes") merely contains the letters of അത്
+("that"), and Tamil `TA-C33-puri` uses **-அது** as a THIRD-PERSON VERB ENDING
+(புரி + கிற் + அது) and not as the demonstrative pronoun. Same letters, different
+morpheme, and the detector cannot tell them apart.
+
+Thirteen of the forty-six referenced words are three characters or fewer, so some
+share of the rest is the same artifact. The finding survives the correction and
+gets bigger: the genuine cases -- வா, இரு, ഉണ്ട്, ಬಾ, all used in chapters 1-5 and
+taught in chapter 32 -- are core verbs, not edge cases, and they are pre-existing.
+Wave I did not create this. It was about to join it.
+
+Worth carrying forward as its own small item: the forward-reference detector
+matches substrings, so its raw count overstates. Sharpening it to word boundaries
+would make the ceiling in `continuity.test.ts` mean what it says.
 
 ### The loop this order is executed by
 
