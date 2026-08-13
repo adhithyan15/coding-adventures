@@ -14,7 +14,18 @@
 - `summarizeLetterLedger()` publishes `firstWritableWord` and the writable-word
   curve. A word, not a letter count: twenty taught letters is not something a
   reader can feel, and writing *thank you* is.
-- `loadScripts()` now skips `*-ledger.json`. Both files sit in `data/scripts` and
+- Each ledger row carries its **code point** beside its Unicode name. A rendered
+  glyph is not an audit surface — it can be a lookalike, and it can carry code
+  points that render as nothing — so the validator rejects a multi-code-point
+  glyph, a code point disagreeing with the glyph, and a name from the wrong
+  script. Without the first of those the two Unicode checks are satisfiable by
+  different parts of one string: the script test is unanchored and the combining
+  test is anchored.
+- A ledger whose `tracks` match no loaded lesson now reports
+  `ledger-unlocks-unverified` rather than passing silently. One mistyped track
+  name would otherwise make the only check for fictional unlock claims vanish
+  while the report still read zero.
+- `loadScripts()` now skips `*-ledger.json`, case-insensitively. Both files sit in `data/scripts` and
   carry the same `script` key, so reading both into one map would have had one
   silently overwrite the other — decided by filename sort order.
 

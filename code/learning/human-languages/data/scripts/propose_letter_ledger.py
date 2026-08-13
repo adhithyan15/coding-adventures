@@ -328,6 +328,13 @@ def propose(script, tracks):
             order.append({
                 "position": len(order) + 1,
                 "glyph": ch,
+                # The code point in hex, beside the name. Together they pin the
+                # row numerically: a reviewer who cannot read the script can
+                # check "U+0BB1" against "TAMIL LETTER RRA" without trusting the
+                # rendered glyph, which may be a lookalike from another script or
+                # may be carrying invisible passengers. The TypeScript validator
+                # has no Unicode name database, so this is what it checks against.
+                "codePoint": f"U+{ord(ch):04X}",
                 "unicodeName": unicodedata.name(ch),
                 "kind": "vowel-sign" if is_mark(ch) else "letter",
                 "family": "".join(fam_of[ch]) if ch in fam_of else None,

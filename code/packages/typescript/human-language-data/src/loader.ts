@@ -301,6 +301,18 @@ export function modalityManifestById(
 /** Suffix marking a letter ledger, which lives beside the script inventories. */
 const LEDGER_SUFFIX = "-ledger.json";
 
+/**
+ * Is this a letter ledger rather than a script inventory?
+ *
+ * Case-insensitive on purpose. A file committed as `Tamil-Ledger.json` would
+ * otherwise fail this test, be read as a script inventory, and collide with the
+ * real `tamil.json` under the same key -- which is precisely the collision the
+ * skip exists to prevent.
+ */
+function isLedgerFile(file: string): boolean {
+  return file.toLowerCase().endsWith(LEDGER_SUFFIX);
+}
+
 /** Read data/scripts/*.json (may be empty while scripts are still being authored). */
 export function loadScripts(root = defaultCurriculumRoot()): Record<string, ScriptData> {
   const dir = join(root, "data", "scripts");
@@ -312,7 +324,7 @@ export function loadScripts(root = defaultCurriculumRoot()): Record<string, Scri
     // as the inventory it orders, so reading both into one map would have one
     // silently overwrite the other. Which one won would depend on filename
     // sort order, which is not a thing to depend on.
-    if (file.endsWith(LEDGER_SUFFIX)) continue;
+    if (isLedgerFile(file)) continue;
     const sd = JSON.parse(readFileSync(join(dir, file), "utf8")) as ScriptData;
     out[sd.script] = sd;
   }
@@ -334,8 +346,18 @@ export function loadLetterLedgers(root = defaultCurriculumRoot()): LetterLedger[
   if (!existsSync(dir)) return [];
   const out: LetterLedger[] = [];
   for (const file of readdirSync(dir).sort()) {
-    if (!file.endsWith(LEDGER_SUFFIX)) continue;
-    out.push(JSON.parse(readFileSync(join(dir, file), "utf8")) as LetterLedger);
+    if (!isLedgerFile(file)) continue;
+    const raw = JSON.parse(readFileSync(join(dir, file), "utf8")) as Partial<LetterLedger>;
+    // Shape-checked at the boundary. `validateLetterLedger` cannot report a
+    // malformed ledger, because it walks these two arrays before it checks
+    // anything -- so a missing key would surface as an unhandled TypeError out
+    // of `loadEverything`, not as an issue anyone could read.
+    if (!Array.isArray(raw.letters) || !Array.isArray(raw.tracks)) {
+      throw new Error(
+        `${file}: a letter ledger needs 'letters' and 'tracks' arrays`,
+      );
+    }
+    out.push(raw as LetterLedger);
   }
   return out;
 }

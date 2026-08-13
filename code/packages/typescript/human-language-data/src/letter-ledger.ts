@@ -37,6 +37,15 @@ import type { ParsedLesson } from "./parse.js";
 export interface LedgerLetter {
   position: number;
   glyph: string;
+  /**
+   * The glyph's code point as `U+XXXX`.
+   *
+   * Beside the name, this pins the row NUMERICALLY. A rendered glyph is not an
+   * audit surface: it can be a lookalike from another script, and it can carry
+   * invisible passengers that render as nothing at all. `U+0BB1` next to
+   * `TAMIL LETTER RRA` is checkable by a reviewer who cannot read Tamil.
+   */
+  codePoint: string;
   /** The glyph's official Unicode name, so a non-reader can audit the row. */
   unicodeName: string;
   kind: "letter" | "vowel-sign";
@@ -134,11 +143,49 @@ export function validateLetterLedger(
   }
 
   // 2. Every glyph belongs to the script the ledger names.
-  const pattern = SCRIPT_PATTERN[script];
+  //
+  // `Object.hasOwn` rather than a bare lookup: `SCRIPT_PATTERN` is an object
+  // literal, so `SCRIPT_PATTERN["constructor"]` returns a function, sails past
+  // the guard below, and turns an intended REPORT into a TypeError that takes
+  // the whole validation run down with it.
+  const pattern = Object.hasOwn(SCRIPT_PATTERN, script) ? SCRIPT_PATTERN[script] : undefined;
   if (!pattern) {
     add("error", "ledger-unknown-script", `no Unicode script pattern for '${script}'`);
   } else {
     for (const letter of ledger.letters) {
+      // ONE code point, checked before anything else looks at the string.
+      //
+      // Without this, the two tests below are each satisfied by a different
+      // part of a longer string: `pattern.test` is unanchored, so it passes if
+      // ANY code point is in-script, and `COMBINING` is anchored, so it only
+      // ever sees the first. A row could therefore declare itself
+      // `TAMIL LETTER KA` while carrying trailing Latin text, a bidi override,
+      // or a homoglyph -- invisible in review, and the ledger is exactly the
+      // artifact review is supposed to be able to trust.
+      const points = [...letter.glyph];
+      if (points.length !== 1) {
+        add("error", "ledger-glyph-not-one-code-point",
+          `${letter.unicodeName} is ${points.length} code points, not one`,
+          letter.position);
+        continue;
+      }
+
+      // The name is a claim ABOUT the glyph; the code point IS the glyph. There
+      // is no Unicode name database in the browser or in Node's standard
+      // library, so the row carries its own code point and that is what gets
+      // checked. The name's script prefix is checked too, which is the part of
+      // the name a wrong row is most likely to get wrong.
+      const actual = `U+${(letter.glyph.codePointAt(0) ?? 0).toString(16).toUpperCase().padStart(4, "0")}`;
+      if (letter.codePoint !== actual) {
+        add("error", "ledger-code-point-mismatch",
+          `row says ${letter.codePoint} but the glyph is ${actual}`, letter.position);
+      }
+      if (!letter.unicodeName.startsWith(script.toUpperCase() + " ")) {
+        add("error", "ledger-name-wrong-script",
+          `'${letter.unicodeName}' does not name a ${script} character`,
+          letter.position);
+      }
+
       if (!pattern.test(letter.glyph)) {
         add("error", "ledger-foreign-glyph",
           `${letter.unicodeName} is not a ${script} character`, letter.position);
@@ -193,7 +240,18 @@ export function validateLetterLedger(
   const known = new Set(
     lessons.filter((l) => tracks.has(l.language)).map((l) => l.frontmatter.id),
   );
-  if (known.size > 0) {
+  if (known.size === 0) {
+    // "Not checked" and "checked, clean" must not look the same. A ledger
+    // supplies its own `tracks`, so one renamed or mistyped track name would
+    // otherwise make the ONLY check for fictional unlock claims vanish while
+    // the report still read zero -- the same silent-zero failure
+    // `loadChapterPolicy` carries a warning about.
+    if (ledger.letters.some((l) => l.unlocks.length > 0)) {
+      add("warning", "ledger-unlocks-unverified",
+        `no lesson of ${ledger.tracks.join("/")} was loaded, so the unlock ` +
+        `claims in this ledger were not checked against anything`);
+    }
+  } else {
     for (const letter of ledger.letters) {
       for (const unlock of letter.unlocks) {
         if (!known.has(unlock.lesson)) {

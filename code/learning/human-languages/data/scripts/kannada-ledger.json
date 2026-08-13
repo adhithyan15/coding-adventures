@@ -11,6 +11,7 @@
     {
       "position": 1,
       "glyph": "ನ",
+      "codePoint": "U+0CA8",
       "unicodeName": "KANNADA LETTER NA",
       "kind": "letter",
       "family": null,
@@ -20,6 +21,7 @@
     {
       "position": 2,
       "glyph": "ು",
+      "codePoint": "U+0CC1",
       "unicodeName": "KANNADA VOWEL SIGN U",
       "kind": "vowel-sign",
       "family": null,
@@ -29,6 +31,7 @@
     {
       "position": 3,
       "glyph": "್",
+      "codePoint": "U+0CCD",
       "unicodeName": "KANNADA SIGN VIRAMA",
       "kind": "vowel-sign",
       "family": null,
@@ -38,6 +41,7 @@
     {
       "position": 4,
       "glyph": "ಿ",
+      "codePoint": "U+0CBF",
       "unicodeName": "KANNADA VOWEL SIGN I",
       "kind": "vowel-sign",
       "family": null,
@@ -47,6 +51,7 @@
     {
       "position": 5,
       "glyph": "ತ",
+      "codePoint": "U+0CA4",
       "unicodeName": "KANNADA LETTER TA",
       "kind": "letter",
       "family": null,
@@ -62,6 +67,7 @@
     {
       "position": 6,
       "glyph": "ದ",
+      "codePoint": "U+0CA6",
       "unicodeName": "KANNADA LETTER DA",
       "kind": "letter",
       "family": null,
@@ -77,6 +83,7 @@
     {
       "position": 7,
       "glyph": "ಓ",
+      "codePoint": "U+0C93",
       "unicodeName": "KANNADA LETTER OO",
       "kind": "letter",
       "family": null,
@@ -92,6 +99,7 @@
     {
       "position": 8,
       "glyph": "ರ",
+      "codePoint": "U+0CB0",
       "unicodeName": "KANNADA LETTER RA",
       "kind": "letter",
       "family": null,
@@ -101,6 +109,7 @@
     {
       "position": 9,
       "glyph": "ಾ",
+      "codePoint": "U+0CBE",
       "unicodeName": "KANNADA VOWEL SIGN AA",
       "kind": "vowel-sign",
       "family": null,
@@ -116,6 +125,7 @@
     {
       "position": 10,
       "glyph": "ಬ",
+      "codePoint": "U+0CAC",
       "unicodeName": "KANNADA LETTER BA",
       "kind": "letter",
       "family": null,
@@ -131,6 +141,7 @@
     {
       "position": 11,
       "glyph": "ೆ",
+      "codePoint": "U+0CC6",
       "unicodeName": "KANNADA VOWEL SIGN E",
       "kind": "vowel-sign",
       "family": null,
@@ -146,6 +157,7 @@
     {
       "position": 12,
       "glyph": "ಗ",
+      "codePoint": "U+0C97",
       "unicodeName": "KANNADA LETTER GA",
       "kind": "letter",
       "family": null,
@@ -161,6 +173,7 @@
     {
       "position": 13,
       "glyph": "ಳ",
+      "codePoint": "U+0CB3",
       "unicodeName": "KANNADA LETTER LLA",
       "kind": "letter",
       "family": null,
@@ -176,6 +189,7 @@
     {
       "position": 14,
       "glyph": "ೊ",
+      "codePoint": "U+0CCA",
       "unicodeName": "KANNADA VOWEL SIGN O",
       "kind": "vowel-sign",
       "family": null,
@@ -191,6 +205,7 @@
     {
       "position": 15,
       "glyph": "ಇ",
+      "codePoint": "U+0C87",
       "unicodeName": "KANNADA LETTER I",
       "kind": "letter",
       "family": null,
@@ -206,6 +221,7 @@
     {
       "position": 16,
       "glyph": "ಕ",
+      "codePoint": "U+0C95",
       "unicodeName": "KANNADA LETTER KA",
       "kind": "letter",
       "family": null,
@@ -215,6 +231,7 @@
     {
       "position": 17,
       "glyph": "ಯ",
+      "codePoint": "U+0CAF",
       "unicodeName": "KANNADA LETTER YA",
       "kind": "letter",
       "family": null,
@@ -230,6 +247,7 @@
     {
       "position": 18,
       "glyph": "ಡ",
+      "codePoint": "U+0CA1",
       "unicodeName": "KANNADA LETTER DDA",
       "kind": "letter",
       "family": null,
@@ -245,6 +263,7 @@
     {
       "position": 19,
       "glyph": "ೋ",
+      "codePoint": "U+0CCB",
       "unicodeName": "KANNADA VOWEL SIGN OO",
       "kind": "vowel-sign",
       "family": null,
@@ -260,6 +279,7 @@
     {
       "position": 20,
       "glyph": "ಹ",
+      "codePoint": "U+0CB9",
       "unicodeName": "KANNADA LETTER HA",
       "kind": "letter",
       "family": null,
@@ -275,6 +295,7 @@
     {
       "position": 21,
       "glyph": "ಸ",
+      "codePoint": "U+0CB8",
       "unicodeName": "KANNADA LETTER SA",
       "kind": "letter",
       "family": null,
@@ -290,6 +311,7 @@
     {
       "position": 22,
       "glyph": "ಚ",
+      "codePoint": "U+0C9A",
       "unicodeName": "KANNADA LETTER CA",
       "kind": "letter",
       "family": null,
@@ -305,6 +327,7 @@
     {
       "position": 23,
       "glyph": "ಂ",
+      "codePoint": "U+0C82",
       "unicodeName": "KANNADA SIGN ANUSVARA",
       "kind": "vowel-sign",
       "family": null,
@@ -314,6 +337,7 @@
     {
       "position": 24,
       "glyph": "ಪ",
+      "codePoint": "U+0CAA",
       "unicodeName": "KANNADA LETTER PA",
       "kind": "letter",
       "family": null,

@@ -12,6 +12,7 @@
     {
       "position": 1,
       "glyph": "म",
+      "codePoint": "U+092E",
       "unicodeName": "DEVANAGARI LETTER MA",
       "kind": "letter",
       "family": null,
@@ -27,6 +28,7 @@
     {
       "position": 2,
       "glyph": "न",
+      "codePoint": "U+0928",
       "unicodeName": "DEVANAGARI LETTER NA",
       "kind": "letter",
       "family": null,
@@ -42,6 +44,7 @@
     {
       "position": 3,
       "glyph": "अ",
+      "codePoint": "U+0905",
       "unicodeName": "DEVANAGARI LETTER A",
       "kind": "letter",
       "family": "अआ",
@@ -57,6 +60,7 @@
     {
       "position": 4,
       "glyph": "आ",
+      "codePoint": "U+0906",
       "unicodeName": "DEVANAGARI LETTER AA",
       "kind": "letter",
       "family": "आऔ",
@@ -66,6 +70,7 @@
     {
       "position": 5,
       "glyph": "्",
+      "codePoint": "U+094D",
       "unicodeName": "DEVANAGARI SIGN VIRAMA",
       "kind": "vowel-sign",
       "family": null,
@@ -81,6 +86,7 @@
     {
       "position": 6,
       "glyph": "ा",
+      "codePoint": "U+093E",
       "unicodeName": "DEVANAGARI VOWEL SIGN AA",
       "kind": "vowel-sign",
       "family": null,
@@ -90,6 +96,7 @@
     {
       "position": 7,
       "glyph": "त",
+      "codePoint": "U+0924",
       "unicodeName": "DEVANAGARI LETTER TA",
       "kind": "letter",
       "family": null,
@@ -99,6 +106,7 @@
     {
       "position": 8,
       "glyph": "स",
+      "codePoint": "U+0938",
       "unicodeName": "DEVANAGARI LETTER SA",
       "kind": "letter",
       "family": null,
@@ -114,6 +122,7 @@
     {
       "position": 9,
       "glyph": "ि",
+      "codePoint": "U+093F",
       "unicodeName": "DEVANAGARI VOWEL SIGN I",
       "kind": "vowel-sign",
       "family": null,
@@ -129,6 +138,7 @@
     {
       "position": 10,
       "glyph": "र",
+      "codePoint": "U+0930",
       "unicodeName": "DEVANAGARI LETTER RA",
       "kind": "letter",
       "family": null,
@@ -154,6 +164,7 @@
     {
       "position": 11,
       "glyph": "क",
+      "codePoint": "U+0915",
       "unicodeName": "DEVANAGARI LETTER KA",
       "kind": "letter",
       "family": null,
@@ -179,6 +190,7 @@
     {
       "position": 12,
       "glyph": "े",
+      "codePoint": "U+0947",
       "unicodeName": "DEVANAGARI VOWEL SIGN E",
       "kind": "vowel-sign",
       "family": null,
@@ -199,6 +211,7 @@
     {
       "position": 13,
       "glyph": "प",
+      "codePoint": "U+092A",
       "unicodeName": "DEVANAGARI LETTER PA",
       "kind": "letter",
       "family": null,
@@ -214,6 +227,7 @@
     {
       "position": 14,
       "glyph": "ह",
+      "codePoint": "U+0939",
       "unicodeName": "DEVANAGARI LETTER HA",
       "kind": "letter",
       "family": null,
@@ -229,6 +243,7 @@
     {
       "position": 15,
       "glyph": "य",
+      "codePoint": "U+092F",
       "unicodeName": "DEVANAGARI LETTER YA",
       "kind": "letter",
       "family": null,
@@ -244,6 +259,7 @@
     {
       "position": 16,
       "glyph": "ी",
+      "codePoint": "U+0940",
       "unicodeName": "DEVANAGARI VOWEL SIGN II",
       "kind": "vowel-sign",
       "family": null,
@@ -259,6 +275,7 @@
     {
       "position": 17,
       "glyph": "च",
+      "codePoint": "U+091A",
       "unicodeName": "DEVANAGARI LETTER CA",
       "kind": "letter",
       "family": null,
@@ -279,6 +296,7 @@
     {
       "position": 18,
       "glyph": "ँ",
+      "codePoint": "U+0901",
       "unicodeName": "DEVANAGARI SIGN CANDRABINDU",
       "kind": "vowel-sign",
       "family": null,
@@ -299,6 +317,7 @@
     {
       "position": 19,
       "glyph": "ष",
+      "codePoint": "U+0937",
       "unicodeName": "DEVANAGARI LETTER SSA",
       "kind": "letter",
       "family": null,
@@ -319,6 +338,7 @@
     {
       "position": 20,
       "glyph": "ु",
+      "codePoint": "U+0941",
       "unicodeName": "DEVANAGARI VOWEL SIGN U",
       "kind": "vowel-sign",
       "family": null,
@@ -334,6 +354,7 @@
     {
       "position": 21,
       "glyph": "ल",
+      "codePoint": "U+0932",
       "unicodeName": "DEVANAGARI LETTER LA",
       "kind": "letter",
       "family": null,
@@ -349,6 +370,7 @@
     {
       "position": 22,
       "glyph": "ख",
+      "codePoint": "U+0916",
       "unicodeName": "DEVANAGARI LETTER KHA",
       "kind": "letter",
       "family": null,
@@ -369,6 +391,7 @@
     {
       "position": 23,
       "glyph": "द",
+      "codePoint": "U+0926",
       "unicodeName": "DEVANAGARI LETTER DA",
       "kind": "letter",
       "family": "दध",
@@ -384,6 +407,7 @@
     {
       "position": 24,
       "glyph": "ध",
+      "codePoint": "U+0927",
       "unicodeName": "DEVANAGARI LETTER DHA",
       "kind": "letter",
       "family": "दध",

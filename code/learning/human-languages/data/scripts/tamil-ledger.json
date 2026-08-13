@@ -11,6 +11,7 @@
     {
       "position": 1,
       "glyph": "ப",
+      "codePoint": "U+0BAA",
       "unicodeName": "TAMIL LETTER PA",
       "kind": "letter",
       "family": null,
@@ -20,6 +21,7 @@
     {
       "position": 2,
       "glyph": "ோ",
+      "codePoint": "U+0BCB",
       "unicodeName": "TAMIL VOWEL SIGN OO",
       "kind": "vowel-sign",
       "family": null,
@@ -35,6 +37,7 @@
     {
       "position": 3,
       "glyph": "்",
+      "codePoint": "U+0BCD",
       "unicodeName": "TAMIL SIGN VIRAMA",
       "kind": "vowel-sign",
       "family": null,
@@ -44,6 +47,7 @@
     {
       "position": 4,
       "glyph": "க",
+      "codePoint": "U+0B95",
       "unicodeName": "TAMIL LETTER KA",
       "kind": "letter",
       "family": null,
@@ -53,6 +57,7 @@
     {
       "position": 5,
       "glyph": "வ",
+      "codePoint": "U+0BB5",
       "unicodeName": "TAMIL LETTER VA",
       "kind": "letter",
       "family": null,
@@ -68,6 +73,7 @@
     {
       "position": 6,
       "glyph": "ி",
+      "codePoint": "U+0BBF",
       "unicodeName": "TAMIL VOWEL SIGN I",
       "kind": "vowel-sign",
       "family": null,
@@ -77,6 +83,7 @@
     {
       "position": 7,
       "glyph": "ண",
+      "codePoint": "U+0BA3",
       "unicodeName": "TAMIL LETTER NNA",
       "kind": "letter",
       "family": "ணனநற",
@@ -86,6 +93,7 @@
     {
       "position": 8,
       "glyph": "ன",
+      "codePoint": "U+0BA9",
       "unicodeName": "TAMIL LETTER NNNA",
       "kind": "letter",
       "family": "ணனநற",
@@ -95,6 +103,7 @@
     {
       "position": 9,
       "glyph": "ந",
+      "codePoint": "U+0BA8",
       "unicodeName": "TAMIL LETTER NA",
       "kind": "letter",
       "family": "ணனநற",
@@ -104,6 +113,7 @@
     {
       "position": 10,
       "glyph": "ற",
+      "codePoint": "U+0BB1",
       "unicodeName": "TAMIL LETTER RRA",
       "kind": "letter",
       "family": "ணனநற",
@@ -119,6 +129,7 @@
     {
       "position": 11,
       "glyph": "ம",
+      "codePoint": "U+0BAE",
       "unicodeName": "TAMIL LETTER MA",
       "kind": "letter",
       "family": null,
@@ -139,6 +150,7 @@
     {
       "position": 12,
       "glyph": "எ",
+      "codePoint": "U+0B8E",
       "unicodeName": "TAMIL LETTER E",
       "kind": "letter",
       "family": null,
@@ -159,6 +171,7 @@
     {
       "position": 13,
       "glyph": "ல",
+      "codePoint": "U+0BB2",
       "unicodeName": "TAMIL LETTER LA",
       "kind": "letter",
       "family": null,
@@ -174,6 +187,7 @@
     {
       "position": 14,
       "glyph": "ா",
+      "codePoint": "U+0BBE",
       "unicodeName": "TAMIL VOWEL SIGN AA",
       "kind": "vowel-sign",
       "family": null,
@@ -189,6 +203,7 @@
     {
       "position": 15,
       "glyph": "ழ",
+      "codePoint": "U+0BB4",
       "unicodeName": "TAMIL LETTER LLLA",
       "kind": "letter",
       "family": null,
@@ -204,6 +219,7 @@
     {
       "position": 16,
       "glyph": "ச",
+      "codePoint": "U+0B9A",
       "unicodeName": "TAMIL LETTER CA",
       "kind": "letter",
       "family": null,
@@ -219,6 +235,7 @@
     {
       "position": 17,
       "glyph": "ர",
+      "codePoint": "U+0BB0",
       "unicodeName": "TAMIL LETTER RA",
       "kind": "letter",
       "family": null,
@@ -234,6 +251,7 @@
     {
       "position": 18,
       "glyph": "ட",
+      "codePoint": "U+0B9F",
       "unicodeName": "TAMIL LETTER TTA",
       "kind": "letter",
       "family": null,
@@ -249,6 +267,7 @@
     {
       "position": 19,
       "glyph": "அ",
+      "codePoint": "U+0B85",
       "unicodeName": "TAMIL LETTER A",
       "kind": "letter",
       "family": "அஆ",
@@ -258,6 +277,7 @@
     {
       "position": 20,
       "glyph": "ஆ",
+      "codePoint": "U+0B86",
       "unicodeName": "TAMIL LETTER AA",
       "kind": "letter",
       "family": "அஆ",
@@ -273,6 +293,7 @@
     {
       "position": 21,
       "glyph": "ு",
+      "codePoint": "U+0BC1",
       "unicodeName": "TAMIL VOWEL SIGN U",
       "kind": "vowel-sign",
       "family": null,
@@ -282,6 +303,7 @@
     {
       "position": 22,
       "glyph": "த",
+      "codePoint": "U+0BA4",
       "unicodeName": "TAMIL LETTER TA",
       "kind": "letter",
       "family": null,
@@ -297,6 +319,7 @@
     {
       "position": 23,
       "glyph": "ே",
+      "codePoint": "U+0BC7",
       "unicodeName": "TAMIL VOWEL SIGN EE",
       "kind": "vowel-sign",
       "family": null,
@@ -317,6 +340,7 @@
     {
       "position": 24,
       "glyph": "ய",
+      "codePoint": "U+0BAF",
       "unicodeName": "TAMIL LETTER YA",
       "kind": "letter",
       "family": null,

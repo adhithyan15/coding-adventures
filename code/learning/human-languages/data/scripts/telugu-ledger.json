@@ -11,6 +11,7 @@
     {
       "position": 1,
       "glyph": "త",
+      "codePoint": "U+0C24",
       "unicodeName": "TELUGU LETTER TA",
       "kind": "letter",
       "family": null,
@@ -20,6 +21,7 @@
     {
       "position": 2,
       "glyph": "ు",
+      "codePoint": "U+0C41",
       "unicodeName": "TELUGU VOWEL SIGN U",
       "kind": "vowel-sign",
       "family": null,
@@ -29,6 +31,7 @@
     {
       "position": 3,
       "glyph": "క",
+      "codePoint": "U+0C15",
       "unicodeName": "TELUGU LETTER KA",
       "kind": "letter",
       "family": null,
@@ -44,6 +47,7 @@
     {
       "position": 4,
       "glyph": "ం",
+      "codePoint": "U+0C02",
       "unicodeName": "TELUGU SIGN ANUSVARA",
       "kind": "vowel-sign",
       "family": null,
@@ -53,6 +57,7 @@
     {
       "position": 5,
       "glyph": "్",
+      "codePoint": "U+0C4D",
       "unicodeName": "TELUGU SIGN VIRAMA",
       "kind": "vowel-sign",
       "family": null,
@@ -62,6 +67,7 @@
     {
       "position": 6,
       "glyph": "ర",
+      "codePoint": "U+0C30",
       "unicodeName": "TELUGU LETTER RA",
       "kind": "letter",
       "family": null,
@@ -71,6 +77,7 @@
     {
       "position": 7,
       "glyph": "ా",
+      "codePoint": "U+0C3E",
       "unicodeName": "TELUGU VOWEL SIGN AA",
       "kind": "vowel-sign",
       "family": null,
@@ -86,6 +93,7 @@
     {
       "position": 8,
       "glyph": "ి",
+      "codePoint": "U+0C3F",
       "unicodeName": "TELUGU VOWEL SIGN I",
       "kind": "vowel-sign",
       "family": null,
@@ -101,6 +109,7 @@
     {
       "position": 9,
       "glyph": "న",
+      "codePoint": "U+0C28",
       "unicodeName": "TELUGU LETTER NA",
       "kind": "letter",
       "family": null,
@@ -116,6 +125,7 @@
     {
       "position": 10,
       "glyph": "య",
+      "codePoint": "U+0C2F",
       "unicodeName": "TELUGU LETTER YA",
       "kind": "letter",
       "family": null,
@@ -131,6 +141,7 @@
     {
       "position": 11,
       "glyph": "స",
+      "codePoint": "U+0C38",
       "unicodeName": "TELUGU LETTER SA",
       "kind": "letter",
       "family": null,
@@ -146,6 +157,7 @@
     {
       "position": 12,
       "glyph": "చ",
+      "codePoint": "U+0C1A",
       "unicodeName": "TELUGU LETTER CA",
       "kind": "letter",
       "family": null,
@@ -155,6 +167,7 @@
     {
       "position": 13,
       "glyph": "ప",
+      "codePoint": "U+0C2A",
       "unicodeName": "TELUGU LETTER PA",
       "kind": "letter",
       "family": null,
@@ -170,6 +183,7 @@
     {
       "position": 14,
       "glyph": "ల",
+      "codePoint": "U+0C32",
       "unicodeName": "TELUGU LETTER LA",
       "kind": "letter",
       "family": null,
@@ -185,6 +199,7 @@
     {
       "position": 15,
       "glyph": "ె",
+      "codePoint": "U+0C46",
       "unicodeName": "TELUGU VOWEL SIGN E",
       "kind": "vowel-sign",
       "family": null,
@@ -205,6 +220,7 @@
     {
       "position": 16,
       "glyph": "ద",
+      "codePoint": "U+0C26",
       "unicodeName": "TELUGU LETTER DA",
       "kind": "letter",
       "family": null,
@@ -214,6 +230,7 @@
     {
       "position": 17,
       "glyph": "వ",
+      "codePoint": "U+0C35",
       "unicodeName": "TELUGU LETTER VA",
       "kind": "letter",
       "family": null,
@@ -229,6 +246,7 @@
     {
       "position": 18,
       "glyph": "గ",
+      "codePoint": "U+0C17",
       "unicodeName": "TELUGU LETTER GA",
       "kind": "letter",
       "family": null,
@@ -244,6 +262,7 @@
     {
       "position": 19,
       "glyph": "ీ",
+      "codePoint": "U+0C40",
       "unicodeName": "TELUGU VOWEL SIGN II",
       "kind": "vowel-sign",
       "family": null,
@@ -259,6 +278,7 @@
     {
       "position": 20,
       "glyph": "ే",
+      "codePoint": "U+0C47",
       "unicodeName": "TELUGU VOWEL SIGN EE",
       "kind": "vowel-sign",
       "family": null,
@@ -274,6 +294,7 @@
     {
       "position": 21,
       "glyph": "ళ",
+      "codePoint": "U+0C33",
       "unicodeName": "TELUGU LETTER LLA",
       "kind": "letter",
       "family": null,
@@ -289,6 +310,7 @@
     {
       "position": 22,
       "glyph": "ఉ",
+      "codePoint": "U+0C09",
       "unicodeName": "TELUGU LETTER U",
       "kind": "letter",
       "family": null,
@@ -304,6 +326,7 @@
     {
       "position": 23,
       "glyph": "డ",
+      "codePoint": "U+0C21",
       "unicodeName": "TELUGU LETTER DDA",
       "kind": "letter",
       "family": null,
@@ -319,6 +342,7 @@
     {
       "position": 24,
       "glyph": "ఎ",
+      "codePoint": "U+0C0E",
       "unicodeName": "TELUGU LETTER E",
       "kind": "letter",
       "family": null,

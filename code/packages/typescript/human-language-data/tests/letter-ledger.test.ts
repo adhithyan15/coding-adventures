@@ -32,12 +32,17 @@ const SIGN_AA = "ா";
 // DEVANAGARI LETTER KA, for the wrong-script test.
 const DEV_KA = "क";
 
+function codePointOf(glyph: string): string {
+  return `U+${(glyph.codePointAt(0) ?? 0).toString(16).toUpperCase().padStart(4, "0")}`;
+}
+
 function letter(position: number, glyph: string, over: Partial<LedgerLetter> = {}): LedgerLetter {
   const isMark = glyph === VIRAMA || glyph === SIGN_AA;
   return {
     position,
     glyph,
-    unicodeName: `TEST ${position}`,
+    codePoint: codePointOf(glyph),
+    unicodeName: `TAMIL TEST ${position}`,
     kind: isMark ? "vowel-sign" : "letter",
     family: null,
     familySource: null,
@@ -194,10 +199,19 @@ describe("claimed unlocks must come from real lessons", () => {
     expect(codes(issues)).toContain("ledger-unlock-missing-lesson");
   });
 
-  it("skips the check entirely when no lesson of the track is loaded", () => {
+  it("says so, loudly, when the check could not run at all", () => {
     // A partial corpus must not manufacture failures: "I cannot see the
-    // lessons" and "the lessons are not there" are different statements.
+    // lessons" and "the lessons are not there" are different statements. But it
+    // must not be SILENT either -- the ledger supplies its own `tracks`, so one
+    // renamed track name would make the only check for fictional unlock claims
+    // vanish while the report still read zero.
     const issues = validateLetterLedger(withUnlock("TA-C01-anything"), corpus([]));
+    expect(codes(issues)).toEqual(["ledger-unlocks-unverified"]);
+    expect(issues[0]?.severity).toBe("warning");
+  });
+
+  it("stays quiet when there is nothing to verify in the first place", () => {
+    const issues = validateLetterLedger(ledgerOf([letter(1, KA)]), corpus([]));
     expect(codes(issues)).toEqual([]);
   });
 });
@@ -307,6 +321,55 @@ describe("the committed ledgers against the real corpus", () => {
       const s = summarizeLetterLedger(ledger);
       const at24 = s.writableAfter.find((w) => w.position === 24)?.words ?? 0;
       expect(at24 / s.openingWords, `${ledger.script}`).toBeGreaterThan(0.25);
+    }
+  });
+});
+
+// --- Rows must be auditable by someone who cannot read the script -----------
+//
+// The ledger's whole claim to reviewability is that a maintainer can check a
+// row without trusting the rendered glyph. A rendered glyph is not an audit
+// surface: it can be a lookalike from another script, and it can carry code
+// points that render as nothing at all.
+
+describe("a row is pinned numerically, not by how it looks", () => {
+  it("rejects a glyph carrying extra code points", () => {
+    // The two Unicode checks are satisfied by different parts of a longer
+    // string: the script test is unanchored so any in-script code point passes
+    // it, and the combining test is anchored so it only ever sees the first.
+    // A row could declare itself TAMIL LETTER KA while carrying Latin text.
+    const smuggled = { ...letter(1, KA), glyph: KA + "evil@example.com" };
+    expect(codes(validateLetterLedger(ledgerOf([smuggled]), corpus([]))))
+      .toContain("ledger-glyph-not-one-code-point");
+  });
+
+  it("rejects a glyph carrying an invisible bidi override", () => {
+    const smuggled = { ...letter(1, KA), glyph: KA + "‮" };
+    expect(codes(validateLetterLedger(ledgerOf([smuggled]), corpus([]))))
+      .toContain("ledger-glyph-not-one-code-point");
+  });
+
+  it("rejects a code point that does not match the glyph", () => {
+    const wrong = { ...letter(1, KA), codePoint: "U+0BAE" };
+    expect(codes(validateLetterLedger(ledgerOf([wrong]), corpus([]))))
+      .toContain("ledger-code-point-mismatch");
+  });
+
+  it("rejects a name from the wrong script", () => {
+    const wrong = { ...letter(1, KA), unicodeName: "DEVANAGARI LETTER KA" };
+    expect(codes(validateLetterLedger(ledgerOf([wrong]), corpus([]))))
+      .toContain("ledger-name-wrong-script");
+  });
+
+  it("does not turn an inherited property name into a crash", () => {
+    // `SCRIPT_PATTERN` is an object literal, so a bare lookup on "constructor"
+    // returns a function, sails past the guard, and throws on `.test` -- turning
+    // an intended report into a dead validation run.
+    for (const script of ["constructor", "toString", "__proto__", "hasOwnProperty"]) {
+      const l = { ...ledgerOf([letter(1, KA)]), script };
+      expect(() => validateLetterLedger(l, corpus([])), script).not.toThrow();
+      expect(codes(validateLetterLedger(l, corpus([]))), script)
+        .toContain("ledger-unknown-script");
     }
   });
 });

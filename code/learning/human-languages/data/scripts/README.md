@@ -80,7 +80,7 @@ they make writable**, and the ledger records that decision:
   "openingWords": 30,           // distinct words in the first 40 lessons
   "letters": [
     { "position": 10,
-      "glyph": "…", "unicodeName": "TAMIL LETTER RRA",
+      "glyph": "…", "codePoint": "U+0BB1", "unicodeName": "TAMIL LETTER RRA",
       "kind": "letter",
       "family": "…",            // letters that share a shape, taught together
       "familySource": "tamil.json notes: \"several letters share a straight top bar…\"",
@@ -124,6 +124,13 @@ Not one target-script character is typed into the generator. Glyphs are looked
 up by their official Unicode **name**, the same grounding rule
 `generate_syllabary.py` follows, so a maintainer who cannot read the script can
 still audit every line.
+
+Each row also carries its **code point**, because a rendered glyph is not an
+audit surface: it can be a lookalike from another script, and it can carry code
+points that render as nothing at all. `U+0BB1` beside `TAMIL LETTER RRA` is
+checkable without trusting what the character looks like, and the validator
+rejects a glyph that is more than one code point, a code point that disagrees
+with the glyph, or a name from the wrong script.
 
 `components` is the point: each glyph is broken into named parts you can practise
 one at a time on paper. `strokeOrder` puts those visible parts in their usual
