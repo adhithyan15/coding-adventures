@@ -6991,6 +6991,44 @@ impl HtmlParser {
         }
         if self.current_namespace().is_some()
             && !self.current_element_is(name)
+            && name == "form"
+            && self.has_open_foreign_integration_point()
+        {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-end-tag-in-foreign-content",
+                "end tag `</form>` did not match the current foreign element",
+            ));
+            if self.close_open_foreign_element_before_html_boundary(name) {
+                return;
+            }
+            if self.current_element_is_marked_foreign_fragment_context() {
+                return;
+            }
+
+            let has_open_template = self.has_open_html_template_element();
+            let pointer_was_set = self.form_element_pointer_set;
+            if !has_open_template {
+                self.form_element_pointer_set = false;
+            }
+            let (code, message) = if (has_open_template
+                && self.has_authored_open_html_element("form"))
+                || (!has_open_template && pointer_was_set)
+            {
+                (
+                    "unexpected-form-end-tag-outside-scope",
+                    "end tag `</form>` targeted a form outside ordinary scope",
+                )
+            } else {
+                (
+                    "unexpected-end-tag",
+                    "end tag `</form>` did not match an open element",
+                )
+            };
+            self.diagnostics.push(ParserDiagnostic::new(code, message));
+            return;
+        }
+        if self.current_namespace().is_some()
+            && !self.current_element_is(name)
             && name == "button"
             && self.has_open_foreign_integration_point()
         {
@@ -31972,6 +32010,171 @@ mod tests {
             vec![ParserDiagnostic::new(
                 "unexpected-end-tag-in-foreign-content",
                 "end tag `</button>` did not match the current foreign element"
+            )]
+        );
+    }
+
+    #[test]
+    fn form_end_tags_respect_foreign_integration_scope_and_pointer() {
+        for (root_name, boundary_start, boundary_name) in [
+            ("svg", "foreignObject", "foreignObject"),
+            ("svg", "desc", "desc"),
+            ("svg", "title", "title"),
+            ("math", "mi", "mi"),
+            ("math", "mtext", "mtext"),
+            (
+                "math",
+                "annotation-xml encoding=text/html",
+                "annotation-xml",
+            ),
+        ] {
+            let source = format!(
+                "<!doctype html><form id=outer><{root_name}><{boundary_start} id=boundary></form>X</{boundary_name}></{root_name}>Y<form id=next></form>"
+            );
+            let output = parse_html_with_diagnostics(&source).unwrap();
+            assert_eq!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .filter(|diagnostic| {
+                        matches!(
+                            diagnostic.code.as_str(),
+                            "unexpected-end-tag-in-foreign-content"
+                                | "unexpected-form-end-tag-outside-scope"
+                        )
+                    })
+                    .cloned()
+                    .collect::<Vec<_>>(),
+                vec![
+                    ParserDiagnostic::new(
+                        "unexpected-end-tag-in-foreign-content",
+                        "end tag `</form>` did not match the current foreign element"
+                    ),
+                    ParserDiagnostic::new(
+                        "unexpected-form-end-tag-outside-scope",
+                        "end tag `</form>` targeted a form outside ordinary scope"
+                    ),
+                ],
+                "source {source:?}: {:?}",
+                output.parser_diagnostics
+            );
+            let outer = find_element_by_id(&output.document.children, "outer").unwrap();
+            let boundary = find_element_by_id(&outer.children, "boundary").unwrap();
+            assert_eq!(boundary.children, vec![Node::text("X")], "source {source:?}");
+            assert_eq!(outer.children.get(1), Some(&Node::text("Y")));
+            assert!(find_element_by_id(&outer.children, "next").is_some());
+        }
+
+        let template_owned = parse_html_with_diagnostics(
+            "<!doctype html><form id=outer><template><form id=inner><svg><foreignObject id=boundary></form>X</foreignObject></svg>Y</template><form id=ignored><input id=after>",
+        )
+        .unwrap();
+        let outer = find_element_by_id(&template_owned.document.children, "outer").unwrap();
+        let inner = find_element_by_id(&outer.children, "inner").unwrap();
+        let boundary = find_element_by_id(&inner.children, "boundary").unwrap();
+        assert_eq!(boundary.children, vec![Node::text("X")]);
+        assert!(find_element_by_id(&outer.children, "ignored").is_none());
+        assert!(find_element_by_id(&outer.children, "after").is_some());
+        assert_eq!(
+            template_owned
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| {
+                    diagnostic.code == "unexpected-form-end-tag-outside-scope"
+                })
+                .count(),
+            1
+        );
+
+        let matching_foreign = parse_html_with_diagnostics(
+            "<!doctype html><form id=outer><svg><foreignObject><svg id=inner-svg><form id=foreign><g></form>X</svg></foreignObject></svg>Y<form id=ignored>",
+        )
+        .unwrap();
+        assert_eq!(
+            matching_foreign
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| {
+                    matches!(
+                        diagnostic.code.as_str(),
+                        "unexpected-end-tag-in-foreign-content"
+                            | "unexpected-form-end-tag-outside-scope"
+                    )
+                })
+                .cloned()
+                .collect::<Vec<_>>(),
+            vec![ParserDiagnostic::new(
+                "unexpected-end-tag-in-foreign-content",
+                "end tag `</form>` did not match the current foreign element"
+            )]
+        );
+        let inner_svg =
+            find_element_by_id(&matching_foreign.document.children, "inner-svg").unwrap();
+        assert_eq!(inner_svg.children.last(), Some(&Node::text("X")));
+        assert!(find_element_by_id(&matching_foreign.document.children, "ignored").is_none());
+
+        let unmatched = parse_html_with_diagnostics(
+            "<!doctype html><svg><foreignObject id=boundary></form>X</foreignObject></svg>",
+        )
+        .unwrap();
+        assert_eq!(
+            unmatched.parser_diagnostics,
+            vec![
+                ParserDiagnostic::new(
+                    "unexpected-end-tag-in-foreign-content",
+                    "end tag `</form>` did not match the current foreign element"
+                ),
+                ParserDiagnostic::new(
+                    "unexpected-end-tag",
+                    "end tag `</form>` did not match an open element"
+                ),
+            ]
+        );
+        let boundary = find_element_by_id(&unmatched.document.children, "boundary").unwrap();
+        assert_eq!(boundary.children, vec![Node::text("X")]);
+
+        let foreign_select = parse_html_with_diagnostics(
+            "<!doctype html><form id=outer><svg><foreignObject><svg><select id=foreign><g></form>X</select></svg></foreignObject></svg>Y<form id=next></form>",
+        )
+        .unwrap();
+        assert_eq!(
+            foreign_select
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| {
+                    diagnostic.code == "unexpected-form-end-tag-outside-scope"
+                })
+                .count(),
+            1
+        );
+        assert!(find_element_by_id(&foreign_select.document.children, "next").is_some());
+
+        for source in [
+            "<!doctype html><form><object></form>X</object>",
+            "<!doctype html><form><select></form>X</select>",
+            "<!doctype html><form><template></form>X</template>",
+            "<!doctype html><form><table><tr><td></form>X</td></tr></table>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output.parser_diagnostics.iter().all(|diagnostic| {
+                diagnostic.code != "unexpected-end-tag-in-foreign-content"
+            }));
+        }
+
+        let ordinary = parse_html_with_diagnostics("<!doctype html><form>X</form>Y").unwrap();
+        assert!(ordinary.parser_diagnostics.is_empty());
+
+        let fragment = parse_html_fragment_for_context_with_diagnostics(
+            "</form>X",
+            "svg foreignObject",
+        )
+        .unwrap();
+        assert_eq!(fragment.nodes, vec![Node::text("X")]);
+        assert_eq!(
+            fragment.parser_diagnostics,
+            vec![ParserDiagnostic::new(
+                "unexpected-end-tag-in-foreign-content",
+                "end tag `</form>` did not match the current foreign element"
             )]
         );
     }
