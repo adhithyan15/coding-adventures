@@ -101,9 +101,12 @@ pub fn parse_i64(text: &str, pos: usize) -> Result<i64, WastParseError> {
 fn parse_float_magnitude(text: &str, pos: usize) -> Result<f64, WastParseError> {
     let cleaned = strip_underscores(text);
     if let Some(hex) = cleaned.strip_prefix("0x").or_else(|| cleaned.strip_prefix("0X")) {
-        let (mantissa_str, exp_str) = hex
-            .split_once(['p', 'P'])
-            .ok_or(WastParseError::InvalidNumericLiteral { pos, text: text.to_string() })?;
+        // WAT's `p`/`P` exponent is OPTIONAL, not just on a bare hex
+        // integer (`f32.const 0xf32` = 3890.0) but also on a hex literal
+        // with a fractional part (`0xa0_ff.f141_a59a` with no exponent at
+        // all) -- both default to exponent 0, only the mantissa parsing
+        // differs based on whether a `.` is present.
+        let (mantissa_str, exp_str) = hex.split_once(['p', 'P']).unwrap_or((hex, "0"));
         let (int_part, frac_part) = match mantissa_str.split_once('.') {
             Some((i, f)) => (i, f),
             None => (mantissa_str, ""),
@@ -249,6 +252,27 @@ mod tests {
         // 0x1p-1 = 1.0 * 2^-1 = 0.5
         let bits = parse_f64_bits("0x1p-1", 0).unwrap();
         assert_eq!(f64::from_bits(bits), 0.5);
+    }
+
+    /// Found running the real WebAssembly/testsuite corpus (`call.wast`):
+    /// a bare hex INTEGER (no `p`/`P` exponent) is valid wherever a float
+    /// literal is expected -- `f32.const 0xf32` means 3890.0, not a hex
+    /// *float* (which would require an exponent) and not a bit
+    /// reinterpretation.
+    #[test]
+    fn bare_hex_integer_is_a_valid_float_magnitude() {
+        let bits = parse_f64_bits("0xf32", 0).unwrap();
+        assert_eq!(f64::from_bits(bits), 0xf32 as f64);
+    }
+
+    /// Found running the real corpus (`float_literals.wast`): a hex
+    /// literal with a fractional part but no `p`/`P` exponent at all --
+    /// the exponent is optional there too, defaulting to 0, not just on a
+    /// bare hex integer.
+    #[test]
+    fn hex_float_with_fraction_and_no_exponent_defaults_to_zero() {
+        let bits = parse_f64_bits("0x1.8", 0).unwrap();
+        assert_eq!(f64::from_bits(bits), 1.5);
     }
 
     #[test]

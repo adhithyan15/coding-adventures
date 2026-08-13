@@ -1,6 +1,6 @@
 [package]
 name = "wasm-runtime"
-version = "0.4.0"
+version = "0.5.0"
 edition = "2021"
 description = "WebAssembly 1.0 wasm-runtime"
 
@@ -12,3 +12,6 @@ wasm-module-parser = { path = "../wasm-module-parser" }
 wasm-validator = { path = "../wasm-validator" }
 wasm-execution = { path = "../wasm-execution" }
 virtual-machine = { path = "../virtual-machine" }
+
+[dev-dependencies]
+wasm-wast-parser = { path = "../wasm-wast-parser" }

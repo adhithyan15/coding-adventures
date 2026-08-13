@@ -2,6 +2,39 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.5.0] — 2026-08-13
+
+### Added — `WasmRuntime::call_typed`, a bit-exact sibling of `call()` (W05 PR-4)
+
+`call()` is the crate's only public execution entry point, and it round-trips
+every argument and result through `i64` — lossy for floats. Its result
+conversion does `WasmValue::F32(v) => *v as i64` / `F64(v) => *v as i64`, a
+numeric *truncation* (Rust's `as` cast), not a bit reinterpretation: a
+`3.5f64` result comes back as `3i64`, and a NaN's payload/sign bits are not
+preserved at all. This is fine for `call()`'s existing callers (integer-only
+WASI/Lisp-value-model workloads), but it means `call()` cannot support
+anything that needs the *exact* result the interpreter produced — most
+directly, a conformance harness grading the official testsuite's
+`assert_return` directives, some of which assert an exact
+`nan:0x<payload>` bit pattern.
+
+`call_typed(&self, instance: &mut WasmInstance, name: &str, args: &[WasmValue]) -> Result<Vec<WasmValue>, TrapError>`
+is a purely additive sibling: same export-lookup and engine-execution
+plumbing as `call()` (now factored into a shared private `call_engine`
+helper so neither duplicates the memory/tables/host-functions ownership
+transfer and WasmGC struct-field-count wiring), but it takes and returns
+typed `WasmValue`s directly, with no `i64` round trip at all. `call()`
+itself, its behavior, and its existing callers/tests are unchanged — this
+refactor was verified against the existing WASI Tier 3 test suite (17
+tests, all still passing) before and after.
+
+New tests in `tests/call_typed.rs` empirically confirm the bug `call_typed`
+fixes: one asserts `call()` really does truncate `3.5` to `3`, and a
+sibling assertion on the same call confirms `call_typed` returns the exact
+`f64` bits instead; another constructs a NaN with a specific,
+non-canonical payload via `f64.reinterpret_i64` and asserts `call_typed`'s
+result preserves that exact bit pattern, not just "is NaN".
+
 ## [0.4.0] — 2026-07-13
 
 ### Fixed — struct field counts indexed by deduplicated function-type count (LANG-FULL E6d-5)

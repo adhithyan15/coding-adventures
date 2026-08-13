@@ -474,7 +474,7 @@ fn build(fields: &[&SExpr], ctx: &mut ModuleCtx) -> Result<(), WastParseError> {
                 let rest = &items[name_skip..];
                 let idx = num_import_tables + table_i;
                 let (limits_start, _) = handle_inline_export(rest, "table", idx, ctx)?;
-                ctx.module.tables[idx].limits = parse_limits(&rest[limits_start..])?;
+                build_table_limits_and_elements(&rest[limits_start..], idx as u32, ctx)?;
                 table_i += 1;
             }
             "global" => {
@@ -596,6 +596,44 @@ fn build_func(fields: &[SExpr], ctx: &mut ModuleCtx, func_idx: usize) -> Result<
     encode_instr_list(&fields[instr_start..], &mut icx, &mut code)?;
     code.push(0x0B);
     ctx.module.code[func_idx] = FunctionBody { locals: locals_decl, code };
+    Ok(())
+}
+
+/// A `table` declaration's payload (after any name/inline-export fields
+/// are already stripped) is one of two forms:
+/// - `limits reftype` — explicit `min [max]` numbers, e.g. `(table 1
+///   funcref)` or `(table 1 10 funcref)`.
+/// - `reftype (elem elem*)` — no explicit numbers at all; the table's
+///   size is implied by the inline element list, which is sugar for
+///   `min = max = element count` plus an elem segment initializing the
+///   table with those elements starting at offset 0. Found missing while
+///   running the real WebAssembly/testsuite corpus (e.g. `br.wast`,
+///   `call_indirect.wast`) -- every one of them uses this shorthand for
+///   their auxiliary function-pointer table.
+fn build_table_limits_and_elements(rest: &[SExpr], table_idx: u32, ctx: &mut ModuleCtx) -> Result<(), WastParseError> {
+    let starts_with_limit_number = rest.first().and_then(|e| e.as_atom()).is_some_and(|s| s.chars().all(|c| c.is_ascii_digit()));
+    if starts_with_limit_number {
+        ctx.module.tables[table_idx as usize].limits = parse_limits(rest)?;
+        return Ok(());
+    }
+
+    // `[reftype, (elem e*)]` -- skip the reftype keyword (this crate only
+    // tracks FUNCREF tables, matching every MVP-era table declaration),
+    // then resolve the elem list's own function references.
+    let elem_form = expect_get(rest, 1)?
+        .as_list()
+        .ok_or(WastParseError::UnexpectedEof)?;
+    let function_indices: Vec<u32> = elem_form[1..]
+        .iter()
+        .map(|f| resolve_idx(&ctx.func_names, f, "func"))
+        .collect::<Result<_, _>>()?;
+    let count = function_indices.len() as u32;
+    ctx.module.tables[table_idx as usize].limits = Limits { min: count, max: Some(count) };
+    ctx.module.elements.push(Element {
+        table_index: table_idx,
+        offset_expr: vec![0x41, 0x00, 0x0B], // i32.const 0; end
+        function_indices,
+    });
     Ok(())
 }
 
@@ -1121,17 +1159,20 @@ fn encode_flat_instr(
             Ok(())
         }
         "br_table" => {
-            // All trailing atoms are labels (>=1); everything before that,
-            // if any, is the folded index operand.
-            let label_start = args.iter().rposition(|a| !is_label_atom(a)).map(|i| i + 1).unwrap_or(0);
-            let labels = &args[label_start..];
+            // Opposite of every other instruction's own "immediates trail
+            // operands" split: `br_table`'s folded grammar lists all label
+            // targets FIRST (bare atoms), then an OPTIONAL folded index
+            // operand LAST -- `(br_table $a $b (i32.const 0))`, not
+            // `(br_table (i32.const 0) $a $b)`.
+            let label_end = args.iter().position(|a| !is_label_atom(a)).unwrap_or(args.len());
+            let labels = &args[..label_end];
             // br_table takes >=1 label per spec -- `(br_table)` or
-            // `(br_table (i32.const 0))` (zero trailing label atoms) must
+            // `(br_table (i32.const 0))` (zero leading label atoms) must
             // error cleanly, not underflow `labels.len() - 1` below.
             if labels.is_empty() {
                 return Err(WastParseError::UnexpectedEof);
             }
-            encode_instr_list(&args[..label_start], icx, out)?;
+            encode_instr_list(&args[label_end..], icx, out)?;
             out.push(info.opcode);
             out.extend(wasm_leb128::encode_unsigned((labels.len() - 1) as u64));
             for l in labels {
@@ -1506,6 +1547,60 @@ mod tests {
         // Used to underflow `labels.len() - 1` (0 - 1 on usize).
         let err = parse_module("(module (func (br_table)))").unwrap_err();
         assert!(matches!(err, WastParseError::UnexpectedEof));
+    }
+
+    /// Found running the real WebAssembly/testsuite corpus (align.wast):
+    /// folded `br_table`'s label targets come FIRST, with an OPTIONAL
+    /// folded index operand LAST -- `(br_table $a $b (i32.const 0))` --
+    /// the opposite order from every other instruction's own
+    /// "immediates trail operands" convention. The original
+    /// implementation searched from the END of `args` for the first
+    /// non-atom element (assuming trailing atoms were the labels), which
+    /// finds the folded operand's own position and treats everything
+    /// after it (nothing) as the labels, mis-encoding a zero-label
+    /// `br_table` and silently dropping `$a`/`$b` instead of resolving
+    /// them.
+    #[test]
+    fn folded_br_table_with_multiple_labels_and_trailing_folded_operand() {
+        let m = parse_module(
+            "(module
+               (func $f
+                 (block $a
+                   (block $b
+                     (br_table $a $b (i32.const 0))
+                   )
+                 )
+               )
+             )",
+        )
+        .unwrap();
+        let code = &m.code[0].code;
+        // br_table opcode 0x0E, count=1 (2 labels - 1), then each label's
+        // depth in WRITTEN order: $a (outer, depth 1), $b (inner, depth 0).
+        assert!(code.windows(4).any(|w| w == [0x0E, 0x01, 0x01, 0x00]), "code: {code:02x?}");
+    }
+
+    /// Found running the real WebAssembly/testsuite corpus (`br.wast`,
+    /// `call_indirect.wast`): `(table reftype (elem e*))` -- no explicit
+    /// numeric limits at all, table size implied by the element list --
+    /// was completely unhandled, always erroring "expected 1 or 2 limit
+    /// numbers" because `funcref` (the reftype keyword) isn't a digit atom.
+    #[test]
+    fn table_with_size_implied_by_inline_elem_list() {
+        let m = parse_module(
+            "(module
+               (func $a (result i32) i32.const 1)
+               (func $b (result i32) i32.const 2)
+               (table funcref (elem $a $b))
+             )",
+        )
+        .unwrap();
+        assert_eq!(m.tables.len(), 1);
+        assert_eq!(m.tables[0].limits, Limits { min: 2, max: Some(2) });
+        assert_eq!(m.elements.len(), 1);
+        assert_eq!(m.elements[0].table_index, 0);
+        assert_eq!(m.elements[0].function_indices, vec![0, 1]);
+        assert_eq!(m.elements[0].offset_expr, vec![0x41, 0x00, 0x0B]);
     }
 
     #[test]
