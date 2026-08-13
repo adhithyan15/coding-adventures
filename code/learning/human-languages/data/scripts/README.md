@@ -553,9 +553,11 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   and a final dot; its four-frame Noto Sans SC path preserves the joined turn
   and two lifts. **早** completes 日's four strokes before writing 十's
   horizontal and vertical below; its seven-frame Noto Sans SC path preserves
-  the joined top-right turn and five lifts.
-  The remaining **132** prose part orders across six scripts
-  (`arabic` 3, `chinese` 1,
+  the joined top-right turn and five lifts. **上** then descends its vertical,
+  places the short middle horizontal, and finishes with the long base; its
+  three-frame Noto Sans SC path preserves both lifts and completes Chinese.
+  The remaining **131** prose part orders across five scripts
+  (`arabic` 3,
   `cyrillic` 33, `devanagari` 28,
   `gujarati` 33, `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a

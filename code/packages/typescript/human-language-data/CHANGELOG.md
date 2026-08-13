@@ -71,6 +71,12 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
 
 ## [Unreleased]
 
+### Added - source-verified Chinese 上 (HL-C09CW)
+
+- Verify 上 as three ordered strokes with two lifts against the pinned PRC source.
+- Preserve its vertical-first, short-before-long horizontal order in a Noto Sans SC fit.
+- Reduce HL-C09 debt to 131 entries and complete the Chinese starter inventory.
+
 ### Added - coverage against what the exam tests (HL-C128)
 - Add `core/exam-inventory-es-a1.json`, `src/exam-inventory.ts` and
   `tests/exam-inventory.test.ts`: the first measurement in this package that
