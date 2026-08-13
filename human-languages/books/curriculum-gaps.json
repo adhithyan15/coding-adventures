@@ -27,19 +27,19 @@
     "scriptRampOverBudgetLessons": 61,
     "lessonsOpeningMultipleScripts": 5,
     "scriptClosureViolations": 871,
-    "scriptExposureExemptedGlyphs": 2919,
+    "scriptExposureExemptedGlyphs": 2926,
     "tracksTeachingNoScript": 12,
     "headwordsWithoutRomanization": 305,
-    "lessonsWithoutSequence": 477,
-    "forwardReviews": 267,
+    "lessonsWithoutSequence": 322,
+    "forwardReviews": 168,
     "atomsNeverRevisited": 484,
-    "forwardReferences": 467,
+    "forwardReferences": 454,
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 34,
     "chapterGateCleanTracks": 12,
     "drivableLessons": 1772,
     "drivablePercent": 90,
-    "chaptersWithoutDrivablePrefix": 70,
+    "chaptersWithoutDrivablePrefix": 67,
     "unexplainedModalityOverrides": 0
   },
   "duration": {
@@ -3809,17 +3809,6 @@
       },
       "lessons": [
         {
-          "lessonId": "HI-W01-shirorekha-na-ma",
-          "language": "hindi",
-          "chapter": 1,
-          "glyphs": 12,
-          "sample": "खतनमरशसािेो्",
-          "systems": [
-            "Devanagari"
-          ],
-          "budget": 3
-        },
-        {
           "lessonId": "MR-C01-dhanyavad",
           "language": "marathi",
           "chapter": 1,
@@ -3900,6 +3889,17 @@
           "budget": 3
         },
         {
+          "lessonId": "ML-C01-namaskaram",
+          "language": "malayalam",
+          "chapter": 1,
+          "glyphs": 8,
+          "sample": "ംകനമരസാ്",
+          "systems": [
+            "Malayalam"
+          ],
+          "budget": 3
+        },
+        {
           "lessonId": "TA-C07-numbers-1-5",
           "language": "tamil",
           "chapter": 7,
@@ -3907,6 +3907,17 @@
           "sample": "ஐஒூ௧௨௩௪௫",
           "systems": [
             "Tamil"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "TE-C01-namaskaram",
+          "language": "telugu",
+          "chapter": 1,
+          "glyphs": 8,
+          "sample": "ంకనమరసా్",
+          "systems": [
+            "Telugu"
           ],
           "budget": 3
         },
@@ -3933,6 +3944,28 @@
           "budget": 3
         },
         {
+          "lessonId": "HI-C01-dhanyavad",
+          "language": "hindi",
+          "chapter": 1,
+          "glyphs": 7,
+          "sample": "दधयवशिु",
+          "systems": [
+            "Devanagari"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "HI-C01-namaste",
+          "language": "hindi",
+          "chapter": 1,
+          "glyphs": 7,
+          "sample": "ःतनमसे्",
+          "systems": [
+            "Devanagari"
+          ],
+          "budget": 3
+        },
+        {
           "lessonId": "JA-C01-konnichiwa",
           "language": "japanese",
           "chapter": 1,
@@ -3945,24 +3978,13 @@
           "budget": 3
         },
         {
-          "lessonId": "KA-C01-dhanyavada",
+          "lessonId": "KA-C01-namaskara",
           "language": "kannada",
           "chapter": 1,
           "glyphs": 7,
-          "sample": "ದಧನಯವಾ್",
+          "sample": "ಕನಮರಸಾ್",
           "systems": [
             "Kannada"
-          ],
-          "budget": 3
-        },
-        {
-          "lessonId": "ML-C01-namaskaram",
-          "language": "malayalam",
-          "chapter": 1,
-          "glyphs": 7,
-          "sample": "ംകനമരസാ",
-          "systems": [
-            "Malayalam"
           ],
           "budget": 3
         },
@@ -3974,17 +3996,6 @@
           "sample": "ഏഴ൬൭൮൯൰",
           "systems": [
             "Malayalam"
-          ],
-          "budget": 3
-        },
-        {
-          "lessonId": "TE-C01-dhanyavadamulu",
-          "language": "telugu",
-          "chapter": 1,
-          "glyphs": 7,
-          "sample": "దధమయలా్",
-          "systems": [
-            "Telugu"
           ],
           "budget": 3
         },
@@ -4018,17 +4029,6 @@
           "sample": "গপভলেো",
           "systems": [
             "Bengali"
-          ],
-          "budget": 3
-        },
-        {
-          "lessonId": "KA-C01-practice",
-          "language": "kannada",
-          "chapter": 1,
-          "glyphs": 6,
-          "sample": "ಗತಬಿೇೋ",
-          "systems": [
-            "Kannada"
           ],
           "budget": 3
         },
@@ -4088,13 +4088,24 @@
           "budget": 3
         },
         {
-          "lessonId": "SA-C01-dhanyavada",
+          "lessonId": "SA-C01-namaste",
           "language": "sanskrit",
           "chapter": 1,
           "glyphs": 6,
-          "sample": "ःदधयवा",
+          "sample": "तनमसे्",
           "systems": [
             "Devanagari"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "TE-C01-dhanyavadamulu",
+          "language": "telugu",
+          "chapter": 1,
+          "glyphs": 6,
+          "sample": "దధయలవు",
+          "systems": [
+            "Telugu"
           ],
           "budget": 3
         },
@@ -4176,13 +4187,13 @@
           "budget": 3
         },
         {
-          "lessonId": "HI-C01-alvida",
-          "language": "hindi",
+          "lessonId": "KA-C01-practice",
+          "language": "kannada",
           "chapter": 1,
           "glyphs": 5,
-          "sample": "अयलवु",
+          "sample": "ಗತಬೇೋ",
           "systems": [
-            "Devanagari"
+            "Kannada"
           ],
           "budget": 3
         },
@@ -4192,17 +4203,6 @@
           "chapter": 1,
           "glyphs": 5,
           "sample": "ഇഉടണല",
-          "systems": [
-            "Malayalam"
-          ],
-          "budget": 3
-        },
-        {
-          "lessonId": "ML-C01-practice",
-          "language": "malayalam",
-          "chapter": 1,
-          "glyphs": 5,
-          "sample": "പയവശോ",
           "systems": [
             "Malayalam"
           ],
@@ -4227,17 +4227,6 @@
           "sample": "бжкло",
           "systems": [
             "Cyrillic"
-          ],
-          "budget": 3
-        },
-        {
-          "lessonId": "SA-C02-anandah",
-          "language": "sanskrit",
-          "chapter": 2,
-          "glyphs": 5,
-          "sample": "ंटभषृ",
-          "systems": [
-            "Devanagari"
           ],
           "budget": 3
         },
@@ -4275,17 +4264,6 @@
           "budget": 3
         },
         {
-          "lessonId": "TE-C01-practice",
-          "language": "telugu",
-          "chapter": 1,
-          "glyphs": 5,
-          "sample": "డతళిె",
-          "systems": [
-            "Telugu"
-          ],
-          "budget": 3
-        },
-        {
           "lessonId": "AR-W06-harakat-and-hamza",
           "language": "arabic",
           "chapter": 2,
@@ -4297,44 +4275,44 @@
           "budget": 3
         },
         {
-          "lessonId": "HI-W05-virama-namaste",
+          "lessonId": "HI-C01-namaskar",
           "language": "hindi",
-          "chapter": 2,
+          "chapter": 1,
           "glyphs": 4,
-          "sample": "ंणहू",
+          "sample": "कराृ",
           "systems": [
             "Devanagari"
           ],
           "budget": 3
         },
         {
-          "lessonId": "KA-C01-namaskara",
+          "lessonId": "KA-C01-dhanyavada",
           "language": "kannada",
           "chapter": 1,
           "glyphs": 4,
-          "sample": "ಕಮರಸ",
+          "sample": "ದಧಯವ",
           "systems": [
             "Kannada"
           ],
           "budget": 3
         },
         {
-          "lessonId": "KA-C02-practice",
+          "lessonId": "KA-C02-santosha",
           "language": "kannada",
           "chapter": 2,
           "glyphs": 4,
-          "sample": "ಂಅಣಷ",
+          "sample": "ಂಟಭಷ",
           "systems": [
             "Kannada"
           ],
           "budget": 3
         },
         {
-          "lessonId": "ML-C01-athe",
+          "lessonId": "ML-C01-practice",
           "language": "malayalam",
           "chapter": 1,
           "glyphs": 4,
-          "sample": "അതെ്",
+          "sample": "പയവോ",
           "systems": [
             "Malayalam"
           ],
@@ -4407,11 +4385,33 @@
           "budget": 3
         },
         {
-          "lessonId": "SA-C01-am-na",
+          "lessonId": "SA-C01-dhanyavada",
           "language": "sanskrit",
           "chapter": 1,
           "glyphs": 4,
-          "sample": "आनम्",
+          "sample": "दधयव",
+          "systems": [
+            "Devanagari"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "SA-C01-namaskara",
+          "language": "sanskrit",
+          "chapter": 1,
+          "glyphs": 4,
+          "sample": "ःकरा",
+          "systems": [
+            "Devanagari"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "SA-C02-anandah",
+          "language": "sanskrit",
+          "chapter": 2,
+          "glyphs": 4,
+          "sample": "ंटषृ",
           "systems": [
             "Devanagari"
           ],
@@ -4451,11 +4451,11 @@
           "budget": 3
         },
         {
-          "lessonId": "TE-C01-avunu",
+          "lessonId": "TE-C01-practice",
           "language": "telugu",
           "chapter": 1,
           "glyphs": 4,
-          "sample": "అనవు",
+          "sample": "డతళె",
           "systems": [
             "Telugu"
           ],
@@ -4653,7 +4653,7 @@
           "latinScript": false,
           "lessonCount": 93,
           "totalGlyphs": 66,
-          "lessonViolations": 7,
+          "lessonViolations": 6,
           "systemViolations": 0,
           "lessonsWithForeignScript": 42
         },
@@ -4713,7 +4713,7 @@
           "latinScript": false,
           "lessonCount": 59,
           "totalGlyphs": 48,
-          "lessonViolations": 5,
+          "lessonViolations": 6,
           "systemViolations": 0,
           "lessonsWithForeignScript": 1
         },
@@ -4762,13 +4762,13 @@
         "lessonViolations": 61,
         "systemViolations": 5,
         "lessonsWithForeignScript": 184,
-        "maxForeignGlyphsInALesson": 26,
+        "maxForeignGlyphsInALesson": 27,
         "steepestLesson": {
-          "lessonId": "HI-W01-shirorekha-na-ma",
-          "language": "hindi",
+          "lessonId": "MR-C01-dhanyavad",
+          "language": "marathi",
           "chapter": 1,
           "glyphs": 12,
-          "sample": "खतनमरशसािेो्",
+          "sample": "आदधनभयवहाीे्",
           "systems": [
             "Devanagari"
           ],
@@ -7946,626 +7946,20 @@
         "detail": "no declared reading order; position is a fallback, not a fact"
       },
       {
-        "lessonId": "HI-C01-alvida",
-        "language": "hindi",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "HI-C01-alvida",
-        "language": "hindi",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "HI-C01-shukriya",
-        "detail": "reviews HI-C01-shukriya, which the learner does not reach for another 5 lesson(s)"
-      },
-      {
-        "lessonId": "HI-C01-alvida",
-        "language": "hindi",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "HI-C01-namaste",
-        "detail": "reviews HI-C01-namaste, which the learner does not reach for another 3 lesson(s)"
-      },
-      {
-        "lessonId": "HI-C01-alvida",
-        "language": "hindi",
-        "chapter": 1,
-        "kind": "forward-prerequisite",
-        "other": "HI-C01-shukriya",
-        "detail": "requires HI-C01-shukriya, which comes 5 lesson(s) later"
-      },
-      {
-        "lessonId": "HI-C01-dhanyavad",
-        "language": "hindi",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "HI-C01-dhanyavad",
-        "language": "hindi",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "HI-C01-namaste",
-        "detail": "reviews HI-C01-namaste, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "HI-C01-dhanyavad",
-        "language": "hindi",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "HI-C01-namaskar",
-        "detail": "reviews HI-C01-namaskar, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "HI-C01-dhanyavad",
-        "language": "hindi",
-        "chapter": 1,
-        "kind": "forward-prerequisite",
-        "other": "HI-C01-namaskar",
-        "detail": "requires HI-C01-namaskar, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "HI-C01-namaskar",
-        "language": "hindi",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "HI-C01-namaskar",
-        "language": "hindi",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "HI-C01-namaste",
-        "detail": "reviews HI-C01-namaste, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "HI-C01-namaskar",
-        "language": "hindi",
-        "chapter": 1,
-        "kind": "forward-prerequisite",
-        "other": "HI-C01-namaste",
-        "detail": "requires HI-C01-namaste, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "HI-C01-namaste",
-        "language": "hindi",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "HI-C01-practice",
-        "language": "hindi",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "HI-C01-practice",
-        "language": "hindi",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "HI-C01-shukriya",
-        "detail": "reviews HI-C01-shukriya, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "HI-C01-practice",
-        "language": "hindi",
-        "chapter": 1,
-        "kind": "forward-prerequisite",
-        "other": "HI-C01-shukriya",
-        "detail": "requires HI-C01-shukriya, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "HI-C01-shukriya",
-        "language": "hindi",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "HI-C02-aap-tum",
-        "language": "hindi",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "HI-C02-aap-tum",
-        "language": "hindi",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "HI-C02-mera-naam-hai",
-        "detail": "reviews HI-C02-mera-naam-hai, which the learner does not reach for another 5 lesson(s)"
-      },
-      {
-        "lessonId": "HI-C02-aap-tum",
-        "language": "hindi",
-        "chapter": 2,
-        "kind": "forward-prerequisite",
-        "other": "HI-C02-naam",
-        "detail": "requires HI-C02-naam, which comes 7 lesson(s) later"
-      },
-      {
-        "lessonId": "HI-C02-aapka-naam-kya-hai",
-        "language": "hindi",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "HI-C02-aapka-naam-kya-hai",
-        "language": "hindi",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "HI-C02-kya",
-        "detail": "reviews HI-C02-kya, which the learner does not reach for another 3 lesson(s)"
-      },
-      {
-        "lessonId": "HI-C02-aapka-naam-kya-hai",
-        "language": "hindi",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "HI-C02-mera-naam-hai",
-        "detail": "reviews HI-C02-mera-naam-hai, which the learner does not reach for another 4 lesson(s)"
-      },
-      {
-        "lessonId": "HI-C02-aapka-naam-kya-hai",
-        "language": "hindi",
-        "chapter": 2,
-        "kind": "forward-prerequisite",
-        "other": "HI-C02-kya",
-        "detail": "requires HI-C02-kya, which comes 3 lesson(s) later"
-      },
-      {
-        "lessonId": "HI-C02-aapka-naam-kya-hai",
-        "language": "hindi",
-        "chapter": 2,
-        "kind": "forward-prerequisite",
-        "other": "HI-C02-hai",
-        "detail": "requires HI-C02-hai, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "HI-C02-hai",
-        "language": "hindi",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "HI-C02-hai",
-        "language": "hindi",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "HI-C02-naam",
-        "detail": "reviews HI-C02-naam, which the learner does not reach for another 5 lesson(s)"
-      },
-      {
-        "lessonId": "HI-C02-hai",
-        "language": "hindi",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "HI-C02-meraa",
-        "detail": "reviews HI-C02-meraa, which the learner does not reach for another 4 lesson(s)"
-      },
-      {
-        "lessonId": "HI-C02-hai",
-        "language": "hindi",
-        "chapter": 2,
-        "kind": "forward-prerequisite",
-        "other": "HI-C02-naam",
-        "detail": "requires HI-C02-naam, which comes 5 lesson(s) later"
-      },
-      {
-        "lessonId": "HI-C02-khushi",
-        "language": "hindi",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "HI-C02-khushi",
-        "language": "hindi",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "HI-C02-mera-naam-hai",
-        "detail": "reviews HI-C02-mera-naam-hai, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "HI-C02-khushi",
-        "language": "hindi",
-        "chapter": 2,
-        "kind": "forward-prerequisite",
-        "other": "HI-C02-mera-naam-hai",
-        "detail": "requires HI-C02-mera-naam-hai, which comes 2 lesson(s) later"
-      },
-      {
-        "lessonId": "HI-C02-kya",
-        "language": "hindi",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "HI-C02-mera-naam-hai",
-        "language": "hindi",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "HI-C02-mera-naam-hai",
-        "language": "hindi",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "HI-C02-meraa",
-        "detail": "reviews HI-C02-meraa, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "HI-C02-mera-naam-hai",
-        "language": "hindi",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "HI-C02-naam",
-        "detail": "reviews HI-C02-naam, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "HI-C02-mera-naam-hai",
-        "language": "hindi",
-        "chapter": 2,
-        "kind": "forward-prerequisite",
-        "other": "HI-C02-meraa",
-        "detail": "requires HI-C02-meraa, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "HI-C02-mera-naam-hai",
-        "language": "hindi",
-        "chapter": 2,
-        "kind": "forward-prerequisite",
-        "other": "HI-C02-naam",
-        "detail": "requires HI-C02-naam, which comes 2 lesson(s) later"
-      },
-      {
-        "lessonId": "HI-C02-meraa",
-        "language": "hindi",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "HI-C02-meraa",
-        "language": "hindi",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "HI-C02-naam",
-        "detail": "reviews HI-C02-naam, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "HI-C02-meraa",
-        "language": "hindi",
-        "chapter": 2,
-        "kind": "forward-prerequisite",
-        "other": "HI-C02-naam",
-        "detail": "requires HI-C02-naam, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "HI-C02-naam",
-        "language": "hindi",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "HI-C02-practice",
-        "language": "hindi",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "HI-C03-aap-kaise-hain",
-        "language": "hindi",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "HI-C03-aap-kaise-hain",
-        "language": "hindi",
-        "chapter": 3,
-        "kind": "forward-review",
-        "other": "HI-C03-kaise",
-        "detail": "reviews HI-C03-kaise, which the learner does not reach for another 3 lesson(s)"
-      },
-      {
-        "lessonId": "HI-C03-aap-kaise-hain",
-        "language": "hindi",
-        "chapter": 3,
-        "kind": "forward-prerequisite",
-        "other": "HI-C03-kaise",
-        "detail": "requires HI-C03-kaise, which comes 3 lesson(s) later"
-      },
-      {
-        "lessonId": "HI-C03-aapka-swagat-hai",
-        "language": "hindi",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "HI-C03-hun",
-        "language": "hindi",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "HI-C03-hun",
-        "language": "hindi",
-        "chapter": 3,
-        "kind": "forward-prerequisite",
-        "other": "HI-C03-main",
-        "detail": "requires HI-C03-main, which comes 2 lesson(s) later"
-      },
-      {
-        "lessonId": "HI-C03-kaise",
-        "language": "hindi",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "HI-C03-main",
-        "language": "hindi",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "HI-C03-practice",
-        "language": "hindi",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "HI-C03-practice",
-        "language": "hindi",
-        "chapter": 3,
-        "kind": "forward-review",
-        "other": "HI-C03-thik",
-        "detail": "reviews HI-C03-thik, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "HI-C03-practice",
-        "language": "hindi",
-        "chapter": 3,
-        "kind": "forward-prerequisite",
-        "other": "HI-C03-thik",
-        "detail": "requires HI-C03-thik, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "HI-C03-thik",
-        "language": "hindi",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "HI-C04-chalta-hun",
-        "language": "hindi",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "HI-C04-kal-milte-hain",
-        "language": "hindi",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "HI-C04-kal-milte-hain",
-        "language": "hindi",
-        "chapter": 4,
-        "kind": "forward-review",
-        "other": "HI-C04-milenge",
-        "detail": "reviews HI-C04-milenge, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "HI-C04-kal-milte-hain",
-        "language": "hindi",
-        "chapter": 4,
-        "kind": "forward-prerequisite",
-        "other": "HI-C04-milenge",
-        "detail": "requires HI-C04-milenge, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "HI-C04-milenge",
-        "language": "hindi",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "HI-C04-phir",
-        "language": "hindi",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "HI-C04-phir-milenge",
-        "language": "hindi",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "HI-C04-practice",
-        "language": "hindi",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "HI-C05-bolna",
+        "lessonId": "HI-C05-main-hindi-bolta-hun",
         "language": "hindi",
         "chapter": 5,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "HI-C05-bolta-hun",
-        "language": "hindi",
-        "chapter": 5,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "HI-C05-karna",
-        "language": "hindi",
-        "chapter": 5,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "HI-C05-karna",
-        "language": "hindi",
-        "chapter": 5,
         "kind": "forward-review",
-        "other": "HI-C05-rahna",
-        "detail": "reviews HI-C05-rahna, which the learner does not reach for another 3 lesson(s)"
+        "other": "HI-C05-bolta-hun",
+        "detail": "reviews HI-C05-bolta-hun, which the learner does not reach for another 3 lesson(s)"
       },
       {
         "lessonId": "HI-C05-main-hindi-bolta-hun",
         "language": "hindi",
         "chapter": 5,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "HI-C05-practice",
-        "language": "hindi",
-        "chapter": 5,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "HI-C05-practice",
-        "language": "hindi",
-        "chapter": 5,
-        "kind": "forward-review",
-        "other": "HI-C05-rahna",
-        "detail": "reviews HI-C05-rahna, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "HI-C05-practice",
-        "language": "hindi",
-        "chapter": 5,
         "kind": "forward-prerequisite",
-        "other": "HI-C05-rahna",
-        "detail": "requires HI-C05-rahna, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "HI-C05-rahna",
-        "language": "hindi",
-        "chapter": 5,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "HI-W01-na-ma",
-        "language": "hindi",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "HI-C01-namaste",
-        "detail": "reviews HI-C01-namaste, which the learner does not reach for another 6 lesson(s)"
-      },
-      {
-        "lessonId": "HI-W01-na-ma",
-        "language": "hindi",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "HI-C01-namaskar",
-        "detail": "reviews HI-C01-namaskar, which the learner does not reach for another 5 lesson(s)"
-      },
-      {
-        "lessonId": "HI-W01-shirorekha-na-ma",
-        "language": "hindi",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "HI-C01-namaste",
-        "detail": "reviews HI-C01-namaste, which the learner does not reach for another 7 lesson(s)"
-      },
-      {
-        "lessonId": "HI-W01-shirorekha-na-ma",
-        "language": "hindi",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "HI-C01-namaskar",
-        "detail": "reviews HI-C01-namaskar, which the learner does not reach for another 6 lesson(s)"
-      },
-      {
-        "lessonId": "HI-W01-shirorekha-na-ma",
-        "language": "hindi",
-        "chapter": 1,
-        "kind": "forward-prerequisite",
-        "other": "HI-C01-namaste",
-        "detail": "requires HI-C01-namaste, which comes 7 lesson(s) later"
-      },
-      {
-        "lessonId": "HI-W02-abugida-ka-ta",
-        "language": "hindi",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "HI-C01-namaste",
-        "detail": "reviews HI-C01-namaste, which the learner does not reach for another 5 lesson(s)"
-      },
-      {
-        "lessonId": "HI-W03-matras-naam",
-        "language": "hindi",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "HI-C02-naam",
-        "detail": "reviews HI-C02-naam, which the learner does not reach for another 14 lesson(s)"
-      },
-      {
-        "lessonId": "HI-W04-ra-sa-mera-naam",
-        "language": "hindi",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "HI-C02-meraa",
-        "detail": "reviews HI-C02-meraa, which the learner does not reach for another 11 lesson(s)"
-      },
-      {
-        "lessonId": "HI-W04-ra-sa-mera-naam",
-        "language": "hindi",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "HI-C02-mera-naam-hai",
-        "detail": "reviews HI-C02-mera-naam-hai, which the learner does not reach for another 10 lesson(s)"
-      },
-      {
-        "lessonId": "HI-W04-write-mera-naam",
-        "language": "hindi",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "HI-C02-meraa",
-        "detail": "reviews HI-C02-meraa, which the learner does not reach for another 10 lesson(s)"
-      },
-      {
-        "lessonId": "HI-W04-write-mera-naam",
-        "language": "hindi",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "HI-C02-mera-naam-hai",
-        "detail": "reviews HI-C02-mera-naam-hai, which the learner does not reach for another 9 lesson(s)"
+        "other": "HI-C05-bolta-hun",
+        "detail": "requires HI-C05-bolta-hun, which comes 3 lesson(s) later"
       },
       {
         "lessonId": "IT-C01-buongiorno",
@@ -8733,921 +8127,6 @@
         "kind": "forward-review",
         "other": "IT-C04-arrivederci",
         "detail": "reviews IT-C04-arrivederci, which the learner does not reach for another 5 lesson(s)"
-      },
-      {
-        "lessonId": "KA-C01-dhanyavada",
-        "language": "kannada",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "KA-C01-dhanyavada",
-        "language": "kannada",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "KA-C01-namaskara",
-        "detail": "reviews KA-C01-namaskara, which the learner does not reach for another 3 lesson(s)"
-      },
-      {
-        "lessonId": "KA-C01-dhanyavada",
-        "language": "kannada",
-        "chapter": 1,
-        "kind": "forward-prerequisite",
-        "other": "KA-C01-namaskara",
-        "detail": "requires KA-C01-namaskara, which comes 3 lesson(s) later"
-      },
-      {
-        "lessonId": "KA-C01-haudu",
-        "language": "kannada",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "KA-C01-haudu",
-        "language": "kannada",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "KA-C01-namaskara",
-        "detail": "reviews KA-C01-namaskara, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "KA-C01-haudu",
-        "language": "kannada",
-        "chapter": 1,
-        "kind": "forward-prerequisite",
-        "other": "KA-C01-namaskara",
-        "detail": "requires KA-C01-namaskara, which comes 2 lesson(s) later"
-      },
-      {
-        "lessonId": "KA-C01-illa",
-        "language": "kannada",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "KA-C01-illa",
-        "language": "kannada",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "KA-C01-namaskara",
-        "detail": "reviews KA-C01-namaskara, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "KA-C01-namaskara",
-        "language": "kannada",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "KA-C01-practice",
-        "language": "kannada",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "KA-C01-practice",
-        "language": "kannada",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "KA-C01-sari",
-        "detail": "reviews KA-C01-sari, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "KA-C01-practice",
-        "language": "kannada",
-        "chapter": 1,
-        "kind": "forward-prerequisite",
-        "other": "KA-C01-sari",
-        "detail": "requires KA-C01-sari, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "KA-C01-sari",
-        "language": "kannada",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "KA-C02-enu",
-        "language": "kannada",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "KA-C02-enu",
-        "language": "kannada",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "KA-C02-niinu-niivu",
-        "detail": "reviews KA-C02-niinu-niivu, which the learner does not reach for another 4 lesson(s)"
-      },
-      {
-        "lessonId": "KA-C02-enu",
-        "language": "kannada",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "KA-C02-nanna-hesaru",
-        "detail": "reviews KA-C02-nanna-hesaru, which the learner does not reach for another 3 lesson(s)"
-      },
-      {
-        "lessonId": "KA-C02-enu",
-        "language": "kannada",
-        "chapter": 2,
-        "kind": "forward-prerequisite",
-        "other": "KA-C02-niinu-niivu",
-        "detail": "requires KA-C02-niinu-niivu, which comes 4 lesson(s) later"
-      },
-      {
-        "lessonId": "KA-C02-hesaru",
-        "language": "kannada",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "KA-C02-nanna",
-        "language": "kannada",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "KA-C02-nanna-hesaru",
-        "language": "kannada",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "KA-C02-niinu-niivu",
-        "language": "kannada",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "KA-C02-nimma-hesaru-enu",
-        "language": "kannada",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "KA-C02-practice",
-        "language": "kannada",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "KA-C02-practice",
-        "language": "kannada",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "KA-C02-santosha",
-        "detail": "reviews KA-C02-santosha, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "KA-C02-practice",
-        "language": "kannada",
-        "chapter": 2,
-        "kind": "forward-prerequisite",
-        "other": "KA-C02-santosha",
-        "detail": "requires KA-C02-santosha, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "KA-C02-santosha",
-        "language": "kannada",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "KA-C03-cennaagi",
-        "language": "kannada",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "KA-C03-cennaagi",
-        "language": "kannada",
-        "chapter": 3,
-        "kind": "forward-review",
-        "other": "KA-C03-naanu",
-        "detail": "reviews KA-C03-naanu, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "KA-C03-cennaagi",
-        "language": "kannada",
-        "chapter": 3,
-        "kind": "forward-prerequisite",
-        "other": "KA-C03-naanu",
-        "detail": "requires KA-C03-naanu, which comes 2 lesson(s) later"
-      },
-      {
-        "lessonId": "KA-C03-cennaagi",
-        "language": "kannada",
-        "chapter": 3,
-        "kind": "forward-prerequisite",
-        "other": "KA-C03-niivu-hegiddiira",
-        "detail": "requires KA-C03-niivu-hegiddiira, which comes 3 lesson(s) later"
-      },
-      {
-        "lessonId": "KA-C03-hege",
-        "language": "kannada",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "KA-C03-naanu",
-        "language": "kannada",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "KA-C03-niivu-hegiddiira",
-        "language": "kannada",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "KA-C03-paravaagilla",
-        "language": "kannada",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "KA-C03-practice",
-        "language": "kannada",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "KA-C04-hoogi-baruttene",
-        "language": "kannada",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "KA-C04-hoogi-baruttene",
-        "language": "kannada",
-        "chapter": 4,
-        "kind": "forward-review",
-        "other": "KA-C04-hoogu",
-        "detail": "reviews KA-C04-hoogu, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "KA-C04-hoogi-baruttene",
-        "language": "kannada",
-        "chapter": 4,
-        "kind": "forward-prerequisite",
-        "other": "KA-C04-hoogu",
-        "detail": "requires KA-C04-hoogu, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "KA-C04-hoogu",
-        "language": "kannada",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "KA-C04-matte-sigona",
-        "language": "kannada",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "KA-C04-matte-sigona",
-        "language": "kannada",
-        "chapter": 4,
-        "kind": "forward-review",
-        "other": "KA-C04-naale-sigona",
-        "detail": "reviews KA-C04-naale-sigona, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "KA-C04-matte-sigona",
-        "language": "kannada",
-        "chapter": 4,
-        "kind": "forward-prerequisite",
-        "other": "KA-C04-naale-sigona",
-        "detail": "requires KA-C04-naale-sigona, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "KA-C04-naale-sigona",
-        "language": "kannada",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "KA-C04-practice",
-        "language": "kannada",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "KA-C05-iru",
-        "language": "kannada",
-        "chapter": 5,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "KA-C05-iru",
-        "language": "kannada",
-        "chapter": 5,
-        "kind": "forward-prerequisite",
-        "other": "KA-C05-maatanaadu",
-        "detail": "requires KA-C05-maatanaadu, which comes 2 lesson(s) later"
-      },
-      {
-        "lessonId": "KA-C05-kelasa-maadu",
-        "language": "kannada",
-        "chapter": 5,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "KA-C05-kelasa-maadu",
-        "language": "kannada",
-        "chapter": 5,
-        "kind": "forward-review",
-        "other": "KA-C05-maatanaadu",
-        "detail": "reviews KA-C05-maatanaadu, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "KA-C05-kelasa-maadu",
-        "language": "kannada",
-        "chapter": 5,
-        "kind": "forward-prerequisite",
-        "other": "KA-C05-maatanaadu",
-        "detail": "requires KA-C05-maatanaadu, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "KA-C05-maatanaadu",
-        "language": "kannada",
-        "chapter": 5,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "KA-C05-naanu-kannada-maatanaaduttene",
-        "language": "kannada",
-        "chapter": 5,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "KA-C05-practice",
-        "language": "kannada",
-        "chapter": 5,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ML-C01-athe",
-        "language": "malayalam",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ML-C01-athe",
-        "language": "malayalam",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "ML-C01-namaskaram",
-        "detail": "reviews ML-C01-namaskaram, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "ML-C01-athe",
-        "language": "malayalam",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "ML-C01-nandi",
-        "detail": "reviews ML-C01-nandi, which the learner does not reach for another 3 lesson(s)"
-      },
-      {
-        "lessonId": "ML-C01-athe",
-        "language": "malayalam",
-        "chapter": 1,
-        "kind": "forward-prerequisite",
-        "other": "ML-C01-namaskaram",
-        "detail": "requires ML-C01-namaskaram, which comes 2 lesson(s) later"
-      },
-      {
-        "lessonId": "ML-C01-illa",
-        "language": "malayalam",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ML-C01-illa",
-        "language": "malayalam",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "ML-C01-namaskaram",
-        "detail": "reviews ML-C01-namaskaram, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "ML-C01-namaskaram",
-        "language": "malayalam",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ML-C01-nandi",
-        "language": "malayalam",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ML-C01-practice",
-        "language": "malayalam",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ML-C01-practice",
-        "language": "malayalam",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "ML-C01-sari",
-        "detail": "reviews ML-C01-sari, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "ML-C01-practice",
-        "language": "malayalam",
-        "chapter": 1,
-        "kind": "forward-prerequisite",
-        "other": "ML-C01-sari",
-        "detail": "requires ML-C01-sari, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "ML-C01-sari",
-        "language": "malayalam",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ML-C02-aanu",
-        "language": "malayalam",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ML-C02-aanu",
-        "language": "malayalam",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "ML-C02-peru",
-        "detail": "reviews ML-C02-peru, which the learner does not reach for another 6 lesson(s)"
-      },
-      {
-        "lessonId": "ML-C02-aanu",
-        "language": "malayalam",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "ML-C02-enre",
-        "detail": "reviews ML-C02-enre, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "ML-C02-aanu",
-        "language": "malayalam",
-        "chapter": 2,
-        "kind": "forward-prerequisite",
-        "other": "ML-C02-peru",
-        "detail": "requires ML-C02-peru, which comes 6 lesson(s) later"
-      },
-      {
-        "lessonId": "ML-C02-enre",
-        "language": "malayalam",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ML-C02-enre",
-        "language": "malayalam",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "ML-C02-peru",
-        "detail": "reviews ML-C02-peru, which the learner does not reach for another 5 lesson(s)"
-      },
-      {
-        "lessonId": "ML-C02-enre",
-        "language": "malayalam",
-        "chapter": 2,
-        "kind": "forward-prerequisite",
-        "other": "ML-C02-peru",
-        "detail": "requires ML-C02-peru, which comes 5 lesson(s) later"
-      },
-      {
-        "lessonId": "ML-C02-enre-peru-aanu",
-        "language": "malayalam",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ML-C02-enre-peru-aanu",
-        "language": "malayalam",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "ML-C02-peru",
-        "detail": "reviews ML-C02-peru, which the learner does not reach for another 4 lesson(s)"
-      },
-      {
-        "lessonId": "ML-C02-enre-peru-aanu",
-        "language": "malayalam",
-        "chapter": 2,
-        "kind": "forward-prerequisite",
-        "other": "ML-C02-peru",
-        "detail": "requires ML-C02-peru, which comes 4 lesson(s) later"
-      },
-      {
-        "lessonId": "ML-C02-entu",
-        "language": "malayalam",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ML-C02-entu",
-        "language": "malayalam",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "ML-C02-nii-ningal",
-        "detail": "reviews ML-C02-nii-ningal, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "ML-C02-entu",
-        "language": "malayalam",
-        "chapter": 2,
-        "kind": "forward-prerequisite",
-        "other": "ML-C02-nii-ningal",
-        "detail": "requires ML-C02-nii-ningal, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "ML-C02-nii-ningal",
-        "language": "malayalam",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ML-C02-nii-ningal",
-        "language": "malayalam",
-        "chapter": 2,
-        "kind": "forward-prerequisite",
-        "other": "ML-C02-peru",
-        "detail": "requires ML-C02-peru, which comes 2 lesson(s) later"
-      },
-      {
-        "lessonId": "ML-C02-ninre-peru-entaanu",
-        "language": "malayalam",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ML-C02-ninre-peru-entaanu",
-        "language": "malayalam",
-        "chapter": 2,
-        "kind": "forward-prerequisite",
-        "other": "ML-C02-peru",
-        "detail": "requires ML-C02-peru, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "ML-C02-peru",
-        "language": "malayalam",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ML-C02-practice",
-        "language": "malayalam",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ML-C02-practice",
-        "language": "malayalam",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "ML-C02-santosham",
-        "detail": "reviews ML-C02-santosham, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "ML-C02-practice",
-        "language": "malayalam",
-        "chapter": 2,
-        "kind": "forward-prerequisite",
-        "other": "ML-C02-santosham",
-        "detail": "requires ML-C02-santosham, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "ML-C02-santosham",
-        "language": "malayalam",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ML-C03-engane",
-        "language": "malayalam",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ML-C03-njaan",
-        "language": "malayalam",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ML-C03-practice",
-        "language": "malayalam",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ML-C03-practice",
-        "language": "malayalam",
-        "chapter": 3,
-        "kind": "forward-review",
-        "other": "ML-C03-sukhamaano",
-        "detail": "reviews ML-C03-sukhamaano, which the learner does not reach for another 3 lesson(s)"
-      },
-      {
-        "lessonId": "ML-C03-practice",
-        "language": "malayalam",
-        "chapter": 3,
-        "kind": "forward-review",
-        "other": "ML-C03-sukham",
-        "detail": "reviews ML-C03-sukham, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "ML-C03-practice",
-        "language": "malayalam",
-        "chapter": 3,
-        "kind": "forward-review",
-        "other": "ML-C03-saaramilla",
-        "detail": "reviews ML-C03-saaramilla, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "ML-C03-practice",
-        "language": "malayalam",
-        "chapter": 3,
-        "kind": "forward-prerequisite",
-        "other": "ML-C03-sukhamaano",
-        "detail": "requires ML-C03-sukhamaano, which comes 3 lesson(s) later"
-      },
-      {
-        "lessonId": "ML-C03-practice",
-        "language": "malayalam",
-        "chapter": 3,
-        "kind": "forward-prerequisite",
-        "other": "ML-C03-sukham",
-        "detail": "requires ML-C03-sukham, which comes 2 lesson(s) later"
-      },
-      {
-        "lessonId": "ML-C03-practice",
-        "language": "malayalam",
-        "chapter": 3,
-        "kind": "forward-prerequisite",
-        "other": "ML-C03-saaramilla",
-        "detail": "requires ML-C03-saaramilla, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "ML-C03-saaramilla",
-        "language": "malayalam",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ML-C03-sukham",
-        "language": "malayalam",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ML-C03-sukham",
-        "language": "malayalam",
-        "chapter": 3,
-        "kind": "forward-prerequisite",
-        "other": "ML-C03-sukhamaano",
-        "detail": "requires ML-C03-sukhamaano, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "ML-C03-sukhamaano",
-        "language": "malayalam",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ML-C04-naale-kaanaam",
-        "language": "malayalam",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ML-C04-naale-kaanaam",
-        "language": "malayalam",
-        "chapter": 4,
-        "kind": "forward-review",
-        "other": "ML-C04-poyi-varaam",
-        "detail": "reviews ML-C04-poyi-varaam, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "ML-C04-naale-kaanaam",
-        "language": "malayalam",
-        "chapter": 4,
-        "kind": "forward-prerequisite",
-        "other": "ML-C04-poyi-varaam",
-        "detail": "requires ML-C04-poyi-varaam, which comes 2 lesson(s) later"
-      },
-      {
-        "lessonId": "ML-C04-pokuka",
-        "language": "malayalam",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ML-C04-poyi-varaam",
-        "language": "malayalam",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ML-C04-practice",
-        "language": "malayalam",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ML-C04-practice",
-        "language": "malayalam",
-        "chapter": 4,
-        "kind": "forward-review",
-        "other": "ML-C04-veendum-kaanaam",
-        "detail": "reviews ML-C04-veendum-kaanaam, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "ML-C04-practice",
-        "language": "malayalam",
-        "chapter": 4,
-        "kind": "forward-prerequisite",
-        "other": "ML-C04-veendum-kaanaam",
-        "detail": "requires ML-C04-veendum-kaanaam, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "ML-C04-veendum-kaanaam",
-        "language": "malayalam",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ML-C05-joli-ceyyuka",
-        "language": "malayalam",
-        "chapter": 5,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ML-C05-joli-ceyyuka",
-        "language": "malayalam",
-        "chapter": 5,
-        "kind": "forward-review",
-        "other": "ML-C05-samsaarikkuka",
-        "detail": "reviews ML-C05-samsaarikkuka, which the learner does not reach for another 3 lesson(s)"
-      },
-      {
-        "lessonId": "ML-C05-joli-ceyyuka",
-        "language": "malayalam",
-        "chapter": 5,
-        "kind": "forward-review",
-        "other": "ML-C05-taamasikkuka",
-        "detail": "reviews ML-C05-taamasikkuka, which the learner does not reach for another 4 lesson(s)"
-      },
-      {
-        "lessonId": "ML-C05-joli-ceyyuka",
-        "language": "malayalam",
-        "chapter": 5,
-        "kind": "forward-prerequisite",
-        "other": "ML-C05-samsaarikkuka",
-        "detail": "requires ML-C05-samsaarikkuka, which comes 3 lesson(s) later"
-      },
-      {
-        "lessonId": "ML-C05-njaan-malayalam-samsaarikkunnu",
-        "language": "malayalam",
-        "chapter": 5,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ML-C05-njaan-malayalam-samsaarikkunnu",
-        "language": "malayalam",
-        "chapter": 5,
-        "kind": "forward-review",
-        "other": "ML-C05-samsaarikkuka",
-        "detail": "reviews ML-C05-samsaarikkuka, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "ML-C05-njaan-malayalam-samsaarikkunnu",
-        "language": "malayalam",
-        "chapter": 5,
-        "kind": "forward-prerequisite",
-        "other": "ML-C05-samsaarikkuka",
-        "detail": "requires ML-C05-samsaarikkuka, which comes 2 lesson(s) later"
-      },
-      {
-        "lessonId": "ML-C05-practice",
-        "language": "malayalam",
-        "chapter": 5,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ML-C05-practice",
-        "language": "malayalam",
-        "chapter": 5,
-        "kind": "forward-review",
-        "other": "ML-C05-samsaarikkuka",
-        "detail": "reviews ML-C05-samsaarikkuka, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "ML-C05-practice",
-        "language": "malayalam",
-        "chapter": 5,
-        "kind": "forward-review",
-        "other": "ML-C05-taamasikkuka",
-        "detail": "reviews ML-C05-taamasikkuka, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "ML-C05-practice",
-        "language": "malayalam",
-        "chapter": 5,
-        "kind": "forward-prerequisite",
-        "other": "ML-C05-samsaarikkuka",
-        "detail": "requires ML-C05-samsaarikkuka, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "ML-C05-practice",
-        "language": "malayalam",
-        "chapter": 5,
-        "kind": "forward-prerequisite",
-        "other": "ML-C05-taamasikkuka",
-        "detail": "requires ML-C05-taamasikkuka, which comes 2 lesson(s) later"
-      },
-      {
-        "lessonId": "ML-C05-samsaarikkuka",
-        "language": "malayalam",
-        "chapter": 5,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "ML-C05-taamasikkuka",
-        "language": "malayalam",
-        "chapter": 5,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
       },
       {
         "lessonId": "MR-C01-baram",
@@ -11046,1018 +9525,6 @@
         "detail": "no declared reading order; position is a fallback, not a fact"
       },
       {
-        "lessonId": "SA-C01-am-na",
-        "language": "sanskrit",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "SA-C01-am-na",
-        "language": "sanskrit",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "SA-C01-namaste",
-        "detail": "reviews SA-C01-namaste, which the learner does not reach for another 3 lesson(s)"
-      },
-      {
-        "lessonId": "SA-C01-am-na",
-        "language": "sanskrit",
-        "chapter": 1,
-        "kind": "forward-prerequisite",
-        "other": "SA-C01-svagatam",
-        "detail": "requires SA-C01-svagatam, which comes 5 lesson(s) later"
-      },
-      {
-        "lessonId": "SA-C01-dhanyavada",
-        "language": "sanskrit",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "SA-C01-dhanyavada",
-        "language": "sanskrit",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "SA-C01-namaste",
-        "detail": "reviews SA-C01-namaste, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "SA-C01-dhanyavada",
-        "language": "sanskrit",
-        "chapter": 1,
-        "kind": "forward-prerequisite",
-        "other": "SA-C01-namaskara",
-        "detail": "requires SA-C01-namaskara, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "SA-C01-namaskara",
-        "language": "sanskrit",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "SA-C01-namaskara",
-        "language": "sanskrit",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "SA-C01-namaste",
-        "detail": "reviews SA-C01-namaste, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "SA-C01-namaskara",
-        "language": "sanskrit",
-        "chapter": 1,
-        "kind": "forward-prerequisite",
-        "other": "SA-C01-namaste",
-        "detail": "requires SA-C01-namaste, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "SA-C01-namaste",
-        "language": "sanskrit",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "SA-C01-practice",
-        "language": "sanskrit",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "SA-C01-practice",
-        "language": "sanskrit",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "SA-C01-svagatam",
-        "detail": "reviews SA-C01-svagatam, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "SA-C01-practice",
-        "language": "sanskrit",
-        "chapter": 1,
-        "kind": "forward-prerequisite",
-        "other": "SA-C01-svagatam",
-        "detail": "requires SA-C01-svagatam, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "SA-C01-svagatam",
-        "language": "sanskrit",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "SA-C02-anandah",
-        "language": "sanskrit",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "SA-C02-anandah",
-        "language": "sanskrit",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "SA-C02-tava-nama-kim",
-        "detail": "reviews SA-C02-tava-nama-kim, which the learner does not reach for another 7 lesson(s)"
-      },
-      {
-        "lessonId": "SA-C02-anandah",
-        "language": "sanskrit",
-        "chapter": 2,
-        "kind": "forward-prerequisite",
-        "other": "SA-C02-mama-nama-asti",
-        "detail": "requires SA-C02-mama-nama-asti, which comes 5 lesson(s) later"
-      },
-      {
-        "lessonId": "SA-C02-asti",
-        "language": "sanskrit",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "SA-C02-asti",
-        "language": "sanskrit",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "SA-C02-nama",
-        "detail": "reviews SA-C02-nama, which the learner does not reach for another 5 lesson(s)"
-      },
-      {
-        "lessonId": "SA-C02-asti",
-        "language": "sanskrit",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "SA-C02-mama",
-        "detail": "reviews SA-C02-mama, which the learner does not reach for another 3 lesson(s)"
-      },
-      {
-        "lessonId": "SA-C02-asti",
-        "language": "sanskrit",
-        "chapter": 2,
-        "kind": "forward-prerequisite",
-        "other": "SA-C02-nama",
-        "detail": "requires SA-C02-nama, which comes 5 lesson(s) later"
-      },
-      {
-        "lessonId": "SA-C02-bhavan-tvam",
-        "language": "sanskrit",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "SA-C02-bhavan-tvam",
-        "language": "sanskrit",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "SA-C02-mama-nama-asti",
-        "detail": "reviews SA-C02-mama-nama-asti, which the learner does not reach for another 3 lesson(s)"
-      },
-      {
-        "lessonId": "SA-C02-bhavan-tvam",
-        "language": "sanskrit",
-        "chapter": 2,
-        "kind": "forward-prerequisite",
-        "other": "SA-C02-nama",
-        "detail": "requires SA-C02-nama, which comes 4 lesson(s) later"
-      },
-      {
-        "lessonId": "SA-C02-kim",
-        "language": "sanskrit",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "SA-C02-kim",
-        "language": "sanskrit",
-        "chapter": 2,
-        "kind": "forward-prerequisite",
-        "other": "SA-C02-nama",
-        "detail": "requires SA-C02-nama, which comes 3 lesson(s) later"
-      },
-      {
-        "lessonId": "SA-C02-mama",
-        "language": "sanskrit",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "SA-C02-mama",
-        "language": "sanskrit",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "SA-C02-nama",
-        "detail": "reviews SA-C02-nama, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "SA-C02-mama",
-        "language": "sanskrit",
-        "chapter": 2,
-        "kind": "forward-prerequisite",
-        "other": "SA-C02-nama",
-        "detail": "requires SA-C02-nama, which comes 2 lesson(s) later"
-      },
-      {
-        "lessonId": "SA-C02-mama-nama-asti",
-        "language": "sanskrit",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "SA-C02-mama-nama-asti",
-        "language": "sanskrit",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "SA-C02-nama",
-        "detail": "reviews SA-C02-nama, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "SA-C02-mama-nama-asti",
-        "language": "sanskrit",
-        "chapter": 2,
-        "kind": "forward-prerequisite",
-        "other": "SA-C02-nama",
-        "detail": "requires SA-C02-nama, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "SA-C02-nama",
-        "language": "sanskrit",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "SA-C02-tava-nama-kim",
-        "language": "sanskrit",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "SA-C03-aham",
-        "language": "sanskrit",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "SA-C03-bhavan-katham-asti",
-        "language": "sanskrit",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "SA-C03-bhavan-katham-asti",
-        "language": "sanskrit",
-        "chapter": 3,
-        "kind": "forward-prerequisite",
-        "other": "SA-C03-katham",
-        "detail": "requires SA-C03-katham, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "SA-C03-katham",
-        "language": "sanskrit",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "SA-C03-kushalam",
-        "language": "sanskrit",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "SA-C03-na-cinta",
-        "language": "sanskrit",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "SA-C03-practice",
-        "language": "sanskrit",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "SA-C04-gacchami",
-        "language": "sanskrit",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "SA-C04-practice",
-        "language": "sanskrit",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "SA-C04-practice",
-        "language": "sanskrit",
-        "chapter": 4,
-        "kind": "forward-review",
-        "other": "SA-C04-punah",
-        "detail": "reviews SA-C04-punah, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "SA-C04-practice",
-        "language": "sanskrit",
-        "chapter": 4,
-        "kind": "forward-review",
-        "other": "SA-C04-punar-darshanaya",
-        "detail": "reviews SA-C04-punar-darshanaya, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "SA-C04-practice",
-        "language": "sanskrit",
-        "chapter": 4,
-        "kind": "forward-review",
-        "other": "SA-C04-shvah",
-        "detail": "reviews SA-C04-shvah, which the learner does not reach for another 3 lesson(s)"
-      },
-      {
-        "lessonId": "SA-C04-practice",
-        "language": "sanskrit",
-        "chapter": 4,
-        "kind": "forward-prerequisite",
-        "other": "SA-C04-punar-darshanaya",
-        "detail": "requires SA-C04-punar-darshanaya, which comes 2 lesson(s) later"
-      },
-      {
-        "lessonId": "SA-C04-practice",
-        "language": "sanskrit",
-        "chapter": 4,
-        "kind": "forward-prerequisite",
-        "other": "SA-C04-shvah",
-        "detail": "requires SA-C04-shvah, which comes 3 lesson(s) later"
-      },
-      {
-        "lessonId": "SA-C04-punah",
-        "language": "sanskrit",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "SA-C04-punar-darshanaya",
-        "language": "sanskrit",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "SA-C04-shvah",
-        "language": "sanskrit",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "SA-C05-aham-samskritam-vadami",
-        "language": "sanskrit",
-        "chapter": 5,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "SA-C05-aham-samskritam-vadami",
-        "language": "sanskrit",
-        "chapter": 5,
-        "kind": "forward-review",
-        "other": "SA-C05-vadami",
-        "detail": "reviews SA-C05-vadami, which the learner does not reach for another 3 lesson(s)"
-      },
-      {
-        "lessonId": "SA-C05-aham-samskritam-vadami",
-        "language": "sanskrit",
-        "chapter": 5,
-        "kind": "forward-prerequisite",
-        "other": "SA-C05-vadami",
-        "detail": "requires SA-C05-vadami, which comes 3 lesson(s) later"
-      },
-      {
-        "lessonId": "SA-C05-karomi",
-        "language": "sanskrit",
-        "chapter": 5,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "SA-C05-karomi",
-        "language": "sanskrit",
-        "chapter": 5,
-        "kind": "forward-review",
-        "other": "SA-C05-vadami",
-        "detail": "reviews SA-C05-vadami, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "SA-C05-karomi",
-        "language": "sanskrit",
-        "chapter": 5,
-        "kind": "forward-review",
-        "other": "SA-C05-vasami",
-        "detail": "reviews SA-C05-vasami, which the learner does not reach for another 3 lesson(s)"
-      },
-      {
-        "lessonId": "SA-C05-karomi",
-        "language": "sanskrit",
-        "chapter": 5,
-        "kind": "forward-prerequisite",
-        "other": "SA-C05-vadami",
-        "detail": "requires SA-C05-vadami, which comes 2 lesson(s) later"
-      },
-      {
-        "lessonId": "SA-C05-practice",
-        "language": "sanskrit",
-        "chapter": 5,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "SA-C05-practice",
-        "language": "sanskrit",
-        "chapter": 5,
-        "kind": "forward-review",
-        "other": "SA-C05-vadami",
-        "detail": "reviews SA-C05-vadami, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "SA-C05-practice",
-        "language": "sanskrit",
-        "chapter": 5,
-        "kind": "forward-review",
-        "other": "SA-C05-vasami",
-        "detail": "reviews SA-C05-vasami, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "SA-C05-practice",
-        "language": "sanskrit",
-        "chapter": 5,
-        "kind": "forward-prerequisite",
-        "other": "SA-C05-vadami",
-        "detail": "requires SA-C05-vadami, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "SA-C05-practice",
-        "language": "sanskrit",
-        "chapter": 5,
-        "kind": "forward-prerequisite",
-        "other": "SA-C05-vasami",
-        "detail": "requires SA-C05-vasami, which comes 2 lesson(s) later"
-      },
-      {
-        "lessonId": "SA-C05-vadami",
-        "language": "sanskrit",
-        "chapter": 5,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "SA-C05-vasami",
-        "language": "sanskrit",
-        "chapter": 5,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "TE-C01-avunu",
-        "language": "telugu",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "TE-C01-avunu",
-        "language": "telugu",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "TE-C01-namaskaram",
-        "detail": "reviews TE-C01-namaskaram, which the learner does not reach for another 3 lesson(s)"
-      },
-      {
-        "lessonId": "TE-C01-avunu",
-        "language": "telugu",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "TE-C01-dhanyavadamulu",
-        "detail": "reviews TE-C01-dhanyavadamulu, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "TE-C01-avunu",
-        "language": "telugu",
-        "chapter": 1,
-        "kind": "forward-prerequisite",
-        "other": "TE-C01-namaskaram",
-        "detail": "requires TE-C01-namaskaram, which comes 3 lesson(s) later"
-      },
-      {
-        "lessonId": "TE-C01-dhanyavadamulu",
-        "language": "telugu",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "TE-C01-dhanyavadamulu",
-        "language": "telugu",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "TE-C01-namaskaram",
-        "detail": "reviews TE-C01-namaskaram, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "TE-C01-dhanyavadamulu",
-        "language": "telugu",
-        "chapter": 1,
-        "kind": "forward-prerequisite",
-        "other": "TE-C01-namaskaram",
-        "detail": "requires TE-C01-namaskaram, which comes 2 lesson(s) later"
-      },
-      {
-        "lessonId": "TE-C01-ledu",
-        "language": "telugu",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "TE-C01-ledu",
-        "language": "telugu",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "TE-C01-namaskaram",
-        "detail": "reviews TE-C01-namaskaram, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "TE-C01-namaskaram",
-        "language": "telugu",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "TE-C01-practice",
-        "language": "telugu",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "TE-C01-practice",
-        "language": "telugu",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "TE-C01-sare",
-        "detail": "reviews TE-C01-sare, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "TE-C01-practice",
-        "language": "telugu",
-        "chapter": 1,
-        "kind": "forward-prerequisite",
-        "other": "TE-C01-sare",
-        "detail": "requires TE-C01-sare, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "TE-C01-sare",
-        "language": "telugu",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "TE-C02-emiti",
-        "language": "telugu",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "TE-C02-emiti",
-        "language": "telugu",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "TE-C02-nuvvu-miiru",
-        "detail": "reviews TE-C02-nuvvu-miiru, which the learner does not reach for another 4 lesson(s)"
-      },
-      {
-        "lessonId": "TE-C02-emiti",
-        "language": "telugu",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "TE-C02-naa-peru",
-        "detail": "reviews TE-C02-naa-peru, which the learner does not reach for another 3 lesson(s)"
-      },
-      {
-        "lessonId": "TE-C02-emiti",
-        "language": "telugu",
-        "chapter": 2,
-        "kind": "forward-prerequisite",
-        "other": "TE-C02-nuvvu-miiru",
-        "detail": "requires TE-C02-nuvvu-miiru, which comes 4 lesson(s) later"
-      },
-      {
-        "lessonId": "TE-C02-mii-peru-emiti",
-        "language": "telugu",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "TE-C02-mii-peru-emiti",
-        "language": "telugu",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "TE-C02-nuvvu-miiru",
-        "detail": "reviews TE-C02-nuvvu-miiru, which the learner does not reach for another 3 lesson(s)"
-      },
-      {
-        "lessonId": "TE-C02-mii-peru-emiti",
-        "language": "telugu",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "TE-C02-naa-peru",
-        "detail": "reviews TE-C02-naa-peru, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "TE-C02-mii-peru-emiti",
-        "language": "telugu",
-        "chapter": 2,
-        "kind": "forward-prerequisite",
-        "other": "TE-C02-nuvvu-miiru",
-        "detail": "requires TE-C02-nuvvu-miiru, which comes 3 lesson(s) later"
-      },
-      {
-        "lessonId": "TE-C02-mii-peru-emiti",
-        "language": "telugu",
-        "chapter": 2,
-        "kind": "forward-prerequisite",
-        "other": "TE-C02-peru",
-        "detail": "requires TE-C02-peru, which comes 4 lesson(s) later"
-      },
-      {
-        "lessonId": "TE-C02-naa",
-        "language": "telugu",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "TE-C02-naa",
-        "language": "telugu",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "TE-C02-peru",
-        "detail": "reviews TE-C02-peru, which the learner does not reach for another 3 lesson(s)"
-      },
-      {
-        "lessonId": "TE-C02-naa",
-        "language": "telugu",
-        "chapter": 2,
-        "kind": "forward-prerequisite",
-        "other": "TE-C02-peru",
-        "detail": "requires TE-C02-peru, which comes 3 lesson(s) later"
-      },
-      {
-        "lessonId": "TE-C02-naa-peru",
-        "language": "telugu",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "TE-C02-naa-peru",
-        "language": "telugu",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "TE-C02-peru",
-        "detail": "reviews TE-C02-peru, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "TE-C02-naa-peru",
-        "language": "telugu",
-        "chapter": 2,
-        "kind": "forward-prerequisite",
-        "other": "TE-C02-peru",
-        "detail": "requires TE-C02-peru, which comes 2 lesson(s) later"
-      },
-      {
-        "lessonId": "TE-C02-nuvvu-miiru",
-        "language": "telugu",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "TE-C02-nuvvu-miiru",
-        "language": "telugu",
-        "chapter": 2,
-        "kind": "forward-prerequisite",
-        "other": "TE-C02-peru",
-        "detail": "requires TE-C02-peru, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "TE-C02-peru",
-        "language": "telugu",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "TE-C02-practice",
-        "language": "telugu",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "TE-C02-practice",
-        "language": "telugu",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "TE-C02-santosham",
-        "detail": "reviews TE-C02-santosham, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "TE-C02-practice",
-        "language": "telugu",
-        "chapter": 2,
-        "kind": "forward-prerequisite",
-        "other": "TE-C02-santosham",
-        "detail": "requires TE-C02-santosham, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "TE-C02-santosham",
-        "language": "telugu",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "TE-C03-baagaa",
-        "language": "telugu",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "TE-C03-baagaa",
-        "language": "telugu",
-        "chapter": 3,
-        "kind": "forward-review",
-        "other": "TE-C03-nenu",
-        "detail": "reviews TE-C03-nenu, which the learner does not reach for another 3 lesson(s)"
-      },
-      {
-        "lessonId": "TE-C03-baagaa",
-        "language": "telugu",
-        "chapter": 3,
-        "kind": "forward-prerequisite",
-        "other": "TE-C03-nenu",
-        "detail": "requires TE-C03-nenu, which comes 3 lesson(s) later"
-      },
-      {
-        "lessonId": "TE-C03-baagaa",
-        "language": "telugu",
-        "chapter": 3,
-        "kind": "forward-prerequisite",
-        "other": "TE-C03-miiru-elaa-unnaaru",
-        "detail": "requires TE-C03-miiru-elaa-unnaaru, which comes 2 lesson(s) later"
-      },
-      {
-        "lessonId": "TE-C03-elaa",
-        "language": "telugu",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "TE-C03-miiru-elaa-unnaaru",
-        "language": "telugu",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "TE-C03-nenu",
-        "language": "telugu",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "TE-C03-paravaaledu",
-        "language": "telugu",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "TE-C03-practice",
-        "language": "telugu",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "TE-C04-malli-kaluddaam",
-        "language": "telugu",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "TE-C04-malli-kaluddaam",
-        "language": "telugu",
-        "chapter": 4,
-        "kind": "forward-review",
-        "other": "TE-C04-reepu-kaluddaam",
-        "detail": "reviews TE-C04-reepu-kaluddaam, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "TE-C04-malli-kaluddaam",
-        "language": "telugu",
-        "chapter": 4,
-        "kind": "forward-prerequisite",
-        "other": "TE-C04-reepu-kaluddaam",
-        "detail": "requires TE-C04-reepu-kaluddaam, which comes 2 lesson(s) later"
-      },
-      {
-        "lessonId": "TE-C04-practice",
-        "language": "telugu",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "TE-C04-practice",
-        "language": "telugu",
-        "chapter": 4,
-        "kind": "forward-review",
-        "other": "TE-C04-vellu",
-        "detail": "reviews TE-C04-vellu, which the learner does not reach for another 3 lesson(s)"
-      },
-      {
-        "lessonId": "TE-C04-practice",
-        "language": "telugu",
-        "chapter": 4,
-        "kind": "forward-review",
-        "other": "TE-C04-velli-vastaanu",
-        "detail": "reviews TE-C04-velli-vastaanu, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "TE-C04-practice",
-        "language": "telugu",
-        "chapter": 4,
-        "kind": "forward-review",
-        "other": "TE-C04-reepu-kaluddaam",
-        "detail": "reviews TE-C04-reepu-kaluddaam, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "TE-C04-practice",
-        "language": "telugu",
-        "chapter": 4,
-        "kind": "forward-prerequisite",
-        "other": "TE-C04-velli-vastaanu",
-        "detail": "requires TE-C04-velli-vastaanu, which comes 2 lesson(s) later"
-      },
-      {
-        "lessonId": "TE-C04-practice",
-        "language": "telugu",
-        "chapter": 4,
-        "kind": "forward-prerequisite",
-        "other": "TE-C04-reepu-kaluddaam",
-        "detail": "requires TE-C04-reepu-kaluddaam, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "TE-C04-reepu-kaluddaam",
-        "language": "telugu",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "TE-C04-reepu-kaluddaam",
-        "language": "telugu",
-        "chapter": 4,
-        "kind": "forward-review",
-        "other": "TE-C04-velli-vastaanu",
-        "detail": "reviews TE-C04-velli-vastaanu, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "TE-C04-reepu-kaluddaam",
-        "language": "telugu",
-        "chapter": 4,
-        "kind": "forward-prerequisite",
-        "other": "TE-C04-velli-vastaanu",
-        "detail": "requires TE-C04-velli-vastaanu, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "TE-C04-velli-vastaanu",
-        "language": "telugu",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "TE-C04-velli-vastaanu",
-        "language": "telugu",
-        "chapter": 4,
-        "kind": "forward-review",
-        "other": "TE-C04-vellu",
-        "detail": "reviews TE-C04-vellu, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "TE-C04-velli-vastaanu",
-        "language": "telugu",
-        "chapter": 4,
-        "kind": "forward-prerequisite",
-        "other": "TE-C04-vellu",
-        "detail": "requires TE-C04-vellu, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "TE-C04-vellu",
-        "language": "telugu",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "TE-C05-maatlaadu",
-        "language": "telugu",
-        "chapter": 5,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "TE-C05-nenu-telugu-maatlaadataanu",
-        "language": "telugu",
-        "chapter": 5,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "TE-C05-pani-ceyu",
-        "language": "telugu",
-        "chapter": 5,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "TE-C05-pani-ceyu",
-        "language": "telugu",
-        "chapter": 5,
-        "kind": "forward-review",
-        "other": "TE-C05-undu",
-        "detail": "reviews TE-C05-undu, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "TE-C05-practice",
-        "language": "telugu",
-        "chapter": 5,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "TE-C05-practice",
-        "language": "telugu",
-        "chapter": 5,
-        "kind": "forward-review",
-        "other": "TE-C05-undu",
-        "detail": "reviews TE-C05-undu, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "TE-C05-practice",
-        "language": "telugu",
-        "chapter": 5,
-        "kind": "forward-prerequisite",
-        "other": "TE-C05-undu",
-        "detail": "requires TE-C05-undu, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "TE-C05-undu",
-        "language": "telugu",
-        "chapter": 5,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
         "lessonId": "UR-C01-ji-han",
         "language": "urdu",
         "chapter": 1,
@@ -13036,6 +10503,32 @@
         "language": "spanish",
         "introducedBy": "ES-C02-noche",
         "introducedAt": 9,
+        "missed": [
+          "R1",
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "HI-CONCEPT-W04-RA-SA-MERA-NAAM-01",
+        "language": "hindi",
+        "introducedBy": "HI-W04-ra-sa-mera-naam",
+        "introducedAt": 20,
+        "missed": [
+          "R1",
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "HI-CONCEPT-W04-RA-SA-MERA-NAAM-02",
+        "language": "hindi",
+        "introducedBy": "HI-W04-ra-sa-mera-naam",
+        "introducedAt": 20,
         "missed": [
           "R1",
           "R2",
@@ -17873,7 +15366,7 @@
         "atom": "HI-CONCEPT-W01-NA-MA-01",
         "language": "hindi",
         "introducedBy": "HI-W01-na-ma",
-        "introducedAt": 1,
+        "introducedAt": 6,
         "missed": [
           "R1",
           "R2",
@@ -17885,7 +15378,7 @@
         "atom": "HI-CONCEPT-W01-NA-MA-02",
         "language": "hindi",
         "introducedBy": "HI-W01-na-ma",
-        "introducedAt": 1,
+        "introducedAt": 6,
         "missed": [
           "R1",
           "R2",
@@ -17897,7 +15390,7 @@
         "atom": "HI-CONCEPT-W01-NA-MA-03",
         "language": "hindi",
         "introducedBy": "HI-W01-na-ma",
-        "introducedAt": 1,
+        "introducedAt": 6,
         "missed": [
           "R1",
           "R2",
@@ -17909,7 +15402,7 @@
         "atom": "HI-CONCEPT-W01-SHIROREKHA-NA-MA-01",
         "language": "hindi",
         "introducedBy": "HI-W01-shirorekha-na-ma",
-        "introducedAt": 0,
+        "introducedAt": 5,
         "missed": [
           "R1",
           "R2",
@@ -17921,7 +15414,7 @@
         "atom": "HI-CONCEPT-W02-ABUGIDA-KA-TA-01",
         "language": "hindi",
         "introducedBy": "HI-W02-abugida-ka-ta",
-        "introducedAt": 2,
+        "introducedAt": 7,
         "missed": [
           "R1",
           "R2",
@@ -17933,7 +15426,7 @@
         "atom": "HI-CONCEPT-W02-ABUGIDA-KA-TA-02",
         "language": "hindi",
         "introducedBy": "HI-W02-abugida-ka-ta",
-        "introducedAt": 2,
+        "introducedAt": 7,
         "missed": [
           "R1",
           "R2",
@@ -17945,7 +15438,7 @@
         "atom": "HI-CONCEPT-W02-KA-TA-MOUTH-ORDER-01",
         "language": "hindi",
         "introducedBy": "HI-W02-ka-ta-mouth-order",
-        "introducedAt": 3,
+        "introducedAt": 8,
         "missed": [
           "R1",
           "R2",
@@ -17957,7 +15450,7 @@
         "atom": "HI-CONCEPT-W02-KA-TA-MOUTH-ORDER-02",
         "language": "hindi",
         "introducedBy": "HI-W02-ka-ta-mouth-order",
-        "introducedAt": 3,
+        "introducedAt": 8,
         "missed": [
           "R1",
           "R2",
@@ -17969,7 +15462,7 @@
         "atom": "HI-CONCEPT-W02-KA-TA-MOUTH-ORDER-03",
         "language": "hindi",
         "introducedBy": "HI-W02-ka-ta-mouth-order",
-        "introducedAt": 3,
+        "introducedAt": 8,
         "missed": [
           "R1",
           "R2",
@@ -17981,7 +15474,7 @@
         "atom": "HI-CONCEPT-W03-MATRAS-NAAM-01",
         "language": "hindi",
         "introducedBy": "HI-W03-matras-naam",
-        "introducedAt": 10,
+        "introducedAt": 18,
         "missed": [
           "R1",
           "R2",
@@ -17993,7 +15486,7 @@
         "atom": "HI-CONCEPT-W03-MATRAS-NAAM-02",
         "language": "hindi",
         "introducedBy": "HI-W03-matras-naam",
-        "introducedAt": 10,
+        "introducedAt": 18,
         "missed": [
           "R1",
           "R2",
@@ -18005,7 +15498,7 @@
         "atom": "HI-CONCEPT-W03-MATRAS-NAAM-03",
         "language": "hindi",
         "introducedBy": "HI-W03-matras-naam",
-        "introducedAt": 10,
+        "introducedAt": 18,
         "missed": [
           "R1",
           "R2",
@@ -18017,7 +15510,7 @@
         "atom": "HI-CONCEPT-W03-PREPOSED-I-01",
         "language": "hindi",
         "introducedBy": "HI-W03-preposed-i",
-        "introducedAt": 11,
+        "introducedAt": 19,
         "missed": [
           "R1",
           "R2",
@@ -18026,34 +15519,10 @@
         "revisits": 3
       },
       {
-        "atom": "HI-CONCEPT-W04-RA-SA-MERA-NAAM-01",
-        "language": "hindi",
-        "introducedBy": "HI-W04-ra-sa-mera-naam",
-        "introducedAt": 12,
-        "missed": [
-          "R1",
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "HI-CONCEPT-W04-RA-SA-MERA-NAAM-02",
-        "language": "hindi",
-        "introducedBy": "HI-W04-ra-sa-mera-naam",
-        "introducedAt": 12,
-        "missed": [
-          "R1",
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
         "atom": "HI-CONCEPT-W04-WRITE-MERA-NAAM-01",
         "language": "hindi",
         "introducedBy": "HI-W04-write-mera-naam",
-        "introducedAt": 13,
+        "introducedAt": 21,
         "missed": [
           "R1",
           "R2",
@@ -18065,7 +15534,7 @@
         "atom": "HI-CONCEPT-W05-CONJUNCTS-01",
         "language": "hindi",
         "introducedBy": "HI-W05-conjuncts",
-        "introducedAt": 15,
+        "introducedAt": 23,
         "missed": [
           "R1",
           "R2",
@@ -18077,7 +15546,7 @@
         "atom": "HI-CONCEPT-W05-CONJUNCTS-02",
         "language": "hindi",
         "introducedBy": "HI-W05-conjuncts",
-        "introducedAt": 15,
+        "introducedAt": 23,
         "missed": [
           "R1",
           "R2",
@@ -18089,7 +15558,7 @@
         "atom": "HI-CONCEPT-W05-VIRAMA-NAMASTE-01",
         "language": "hindi",
         "introducedBy": "HI-W05-virama-namaste",
-        "introducedAt": 14,
+        "introducedAt": 22,
         "missed": [
           "R1",
           "R2",
@@ -18101,7 +15570,7 @@
         "atom": "HI-CONCEPT-W05-WRITE-NAMASTE-01",
         "language": "hindi",
         "introducedBy": "HI-W05-write-namaste",
-        "introducedAt": 16,
+        "introducedAt": 24,
         "missed": [
           "R1",
           "R2",
@@ -18113,7 +15582,7 @@
         "atom": "HI-CONCEPT-W05-WRITE-NAMASTE-02",
         "language": "hindi",
         "introducedBy": "HI-W05-write-namaste",
-        "introducedAt": 16,
+        "introducedAt": 24,
         "missed": [
           "R1",
           "R2",
@@ -41391,10 +38860,10 @@
       {
         "lessonId": "ML-C01-illa",
         "language": "malayalam",
-        "position": 1,
+        "position": 3,
         "word": "ഉണ്ട്",
         "taughtBy": "ML-C32-undu",
-        "lessonsEarly": 63
+        "lessonsEarly": 61
       },
       {
         "lessonId": "AR-C01-shukran",
@@ -41493,14 +38962,6 @@
         "lessonsEarly": 50
       },
       {
-        "lessonId": "ML-C05-joli-ceyyuka",
-        "language": "malayalam",
-        "position": 26,
-        "word": "സഹായിക്കുക",
-        "taughtBy": "ML-C34-sahaayikkuka",
-        "lessonsEarly": 50
-      },
-      {
         "lessonId": "PT-C06-numeros-6-10",
         "language": "portuguese",
         "position": 33,
@@ -41541,20 +39002,12 @@
         "lessonsEarly": 48
       },
       {
-        "lessonId": "ML-C04-naale-kaanaam",
+        "lessonId": "ML-C05-joli-ceyyuka",
         "language": "malayalam",
-        "position": 21,
-        "word": "കാണുക",
-        "taughtBy": "ML-C32-kaanuka",
+        "position": 29,
+        "word": "സഹായിക്കുക",
+        "taughtBy": "ML-C34-sahaayikkuka",
         "lessonsEarly": 47
-      },
-      {
-        "lessonId": "KA-C05-kelasa-maadu",
-        "language": "kannada",
-        "position": 26,
-        "word": "ಸಹಾಯ ಮಾಡು",
-        "taughtBy": "KA-C34-sahaya-maadu",
-        "lessonsEarly": 46
       },
       {
         "lessonId": "PT-C02-como-vai-esta",
@@ -41565,11 +39018,11 @@
         "lessonsEarly": 46
       },
       {
-        "lessonId": "TE-C05-pani-ceyu",
-        "language": "telugu",
-        "position": 27,
-        "word": "సహాయం చేయు",
-        "taughtBy": "TE-C34-sahayam-ceyu",
+        "lessonId": "ML-C04-naale-kaanaam",
+        "language": "malayalam",
+        "position": 23,
+        "word": "കാണുക",
+        "taughtBy": "ML-C32-kaanuka",
         "lessonsEarly": 45
       },
       {
@@ -41579,6 +39032,30 @@
         "word": "estudiante",
         "taughtBy": "ES-C09-estudiante",
         "lessonsEarly": 44
+      },
+      {
+        "lessonId": "KA-C05-kelasa-maadu",
+        "language": "kannada",
+        "position": 28,
+        "word": "ಸಹಾಯ ಮಾಡು",
+        "taughtBy": "KA-C34-sahaya-maadu",
+        "lessonsEarly": 44
+      },
+      {
+        "lessonId": "TE-C05-pani-ceyu",
+        "language": "telugu",
+        "position": 28,
+        "word": "సహాయం చేయు",
+        "taughtBy": "TE-C34-sahayam-ceyu",
+        "lessonsEarly": 44
+      },
+      {
+        "lessonId": "KA-C04-hoogu",
+        "language": "kannada",
+        "position": 20,
+        "word": "ಬಾ",
+        "taughtBy": "KA-C32-baa",
+        "lessonsEarly": 42
       },
       {
         "lessonId": "IT-C02-stare",
@@ -41594,14 +39071,6 @@
         "position": 32,
         "word": "caffè",
         "taughtBy": "IT-C22-caffe",
-        "lessonsEarly": 41
-      },
-      {
-        "lessonId": "KA-C04-hoogu",
-        "language": "kannada",
-        "position": 21,
-        "word": "ಬಾ",
-        "taughtBy": "KA-C32-baa",
         "lessonsEarly": 41
       },
       {
@@ -41933,22 +39402,6 @@
         "lessonsEarly": 19
       },
       {
-        "lessonId": "ML-C01-practice",
-        "language": "malayalam",
-        "position": 4,
-        "word": "പോയി വരാം",
-        "taughtBy": "ML-C04-poyi-varaam",
-        "lessonsEarly": 19
-      },
-      {
-        "lessonId": "TE-C01-practice",
-        "language": "telugu",
-        "position": 4,
-        "word": "వెళ్ళి వస్తాను",
-        "taughtBy": "TE-C04-velli-vastaanu",
-        "lessonsEarly": 19
-      },
-      {
         "lessonId": "FA-C06-budan",
         "language": "persian",
         "position": 20,
@@ -42005,6 +39458,14 @@
         "lessonsEarly": 17
       },
       {
+        "lessonId": "ML-C01-practice",
+        "language": "malayalam",
+        "position": 5,
+        "word": "പോയി വരാം",
+        "taughtBy": "ML-C04-poyi-varaam",
+        "lessonsEarly": 17
+      },
+      {
         "lessonId": "ML-C19-vayassu",
         "language": "malayalam",
         "position": 47,
@@ -42023,9 +39484,17 @@
       {
         "lessonId": "KA-C01-practice",
         "language": "kannada",
-        "position": 4,
+        "position": 5,
         "word": "ಹೋಗಿ ಬರುತ್ತೇನೆ",
         "taughtBy": "KA-C04-hoogi-baruttene",
+        "lessonsEarly": 16
+      },
+      {
+        "lessonId": "KA-C03-hege",
+        "language": "kannada",
+        "position": 14,
+        "word": "ಗೆ",
+        "taughtBy": "KA-C06-dative-ge",
         "lessonsEarly": 16
       },
       {
@@ -42034,6 +39503,14 @@
         "position": 8,
         "word": "போய் வருகிறேன்",
         "taughtBy": "TA-C04-poy-varugiren",
+        "lessonsEarly": 16
+      },
+      {
+        "lessonId": "TE-C01-practice",
+        "language": "telugu",
+        "position": 5,
+        "word": "వెళ్ళి వస్తాను",
+        "taughtBy": "TE-C04-velli-vastaanu",
         "lessonsEarly": 16
       },
       {
@@ -42067,22 +39544,6 @@
         "word": "mutter",
         "taughtBy": "GE-C10-eltern",
         "lessonsEarly": 15
-      },
-      {
-        "lessonId": "KA-C03-hege",
-        "language": "kannada",
-        "position": 15,
-        "word": "ಗೆ",
-        "taughtBy": "KA-C06-dative-ge",
-        "lessonsEarly": 15
-      },
-      {
-        "lessonId": "HI-W03-matras-naam",
-        "language": "hindi",
-        "position": 10,
-        "word": "नाम",
-        "taughtBy": "HI-C02-naam",
-        "lessonsEarly": 14
       },
       {
         "lessonId": "LA-C02-numbers-6-10",
@@ -42141,14 +39602,6 @@
         "lessonsEarly": 13
       },
       {
-        "lessonId": "TE-C03-miiru-elaa-unnaaru",
-        "language": "telugu",
-        "position": 16,
-        "word": "ఉండు",
-        "taughtBy": "TE-C05-undu",
-        "lessonsEarly": 13
-      },
-      {
         "lessonId": "BN-C07-khaowa",
         "language": "bengali",
         "position": 34,
@@ -42189,6 +39642,14 @@
         "lessonsEarly": 12
       },
       {
+        "lessonId": "KA-C03-niivu-hegiddiira",
+        "language": "kannada",
+        "position": 15,
+        "word": "ಇರು",
+        "taughtBy": "KA-C05-iru",
+        "lessonsEarly": 12
+      },
+      {
         "lessonId": "LA-C19-quid-agis",
         "language": "latin",
         "position": 30,
@@ -42202,6 +39663,14 @@
         "position": 48,
         "word": "haver",
         "taughtBy": "PT-C18-ter-haver",
+        "lessonsEarly": 12
+      },
+      {
+        "lessonId": "TE-C03-miiru-elaa-unnaaru",
+        "language": "telugu",
+        "position": 15,
+        "word": "ఉండు",
+        "taughtBy": "TE-C05-undu",
         "lessonsEarly": 12
       },
       {
@@ -42269,6 +39738,14 @@
         "lessonsEarly": 10
       },
       {
+        "lessonId": "ML-C02-enre",
+        "language": "malayalam",
+        "position": 7,
+        "word": "ഞാൻ",
+        "taughtBy": "ML-C03-njaan",
+        "lessonsEarly": 10
+      },
+      {
         "lessonId": "PT-C15-tenho-falado",
         "language": "portuguese",
         "position": 51,
@@ -42317,11 +39794,19 @@
         "lessonsEarly": 9
       },
       {
-        "lessonId": "ML-C02-enre",
-        "language": "malayalam",
+        "lessonId": "KA-C02-nanna",
+        "language": "kannada",
         "position": 7,
-        "word": "ഞാൻ",
-        "taughtBy": "ML-C03-njaan",
+        "word": "ನಾನು",
+        "taughtBy": "KA-C03-naanu",
+        "lessonsEarly": 9
+      },
+      {
+        "lessonId": "SA-C02-mama",
+        "language": "sanskrit",
+        "position": 7,
+        "word": "अहम्",
+        "taughtBy": "SA-C03-aham",
         "lessonsEarly": 9
       },
       {
@@ -42335,7 +39820,7 @@
       {
         "lessonId": "TE-C02-naa",
         "language": "telugu",
-        "position": 8,
+        "position": 7,
         "word": "నేను",
         "taughtBy": "TE-C03-nenu",
         "lessonsEarly": 9
@@ -42394,22 +39879,6 @@
         "position": 9,
         "word": "io",
         "taughtBy": "IT-C03-io",
-        "lessonsEarly": 8
-      },
-      {
-        "lessonId": "KA-C02-nanna",
-        "language": "kannada",
-        "position": 8,
-        "word": "ನಾನು",
-        "taughtBy": "KA-C03-naanu",
-        "lessonsEarly": 8
-      },
-      {
-        "lessonId": "KA-C03-niivu-hegiddiira",
-        "language": "kannada",
-        "position": 17,
-        "word": "ಇರು",
-        "taughtBy": "KA-C05-iru",
         "lessonsEarly": 8
       },
       {
@@ -42562,14 +40031,6 @@
         "position": 7,
         "word": "તમે",
         "taughtBy": "GU-C02-tu-tame",
-        "lessonsEarly": 7
-      },
-      {
-        "lessonId": "HI-W01-shirorekha-na-ma",
-        "language": "hindi",
-        "position": 0,
-        "word": "नमस्ते",
-        "taughtBy": "HI-C01-namaste",
         "lessonsEarly": 7
       },
       {
@@ -42749,14 +40210,6 @@
         "lessonsEarly": 5
       },
       {
-        "lessonId": "HI-C01-alvida",
-        "language": "hindi",
-        "position": 4,
-        "word": "शुक्रिया",
-        "taughtBy": "HI-C01-shukriya",
-        "lessonsEarly": 5
-      },
-      {
         "lessonId": "HI-C25-din",
         "language": "hindi",
         "position": 75,
@@ -42901,14 +40354,6 @@
         "lessonsEarly": 4
       },
       {
-        "lessonId": "HI-C01-dhanyavad",
-        "language": "hindi",
-        "position": 5,
-        "word": "शुक्रिया",
-        "taughtBy": "HI-C01-shukriya",
-        "lessonsEarly": 4
-      },
-      {
         "lessonId": "HI-C19-age-grammar",
         "language": "hindi",
         "position": 66,
@@ -42930,14 +40375,6 @@
         "position": 55,
         "word": "estar",
         "taughtBy": "PT-C18-ser-estar",
-        "lessonsEarly": 4
-      },
-      {
-        "lessonId": "SA-C02-mama",
-        "language": "sanskrit",
-        "position": 10,
-        "word": "अहम्",
-        "taughtBy": "SA-C03-aham",
         "lessonsEarly": 4
       },
       {
@@ -43069,6 +40506,14 @@
         "lessonsEarly": 3
       },
       {
+        "lessonId": "HI-C05-main-hindi-bolta-hun",
+        "language": "hindi",
+        "position": 40,
+        "word": "बोलता हूँ",
+        "taughtBy": "HI-C05-bolta-hun",
+        "lessonsEarly": 3
+      },
+      {
         "lessonId": "IT-C01-buongiorno",
         "language": "italian",
         "position": 0,
@@ -43154,14 +40599,6 @@
         "position": 75,
         "word": "இருபது",
         "taughtBy": "TA-C20-pathinondru-irupathu",
-        "lessonsEarly": 3
-      },
-      {
-        "lessonId": "TE-C03-baagaa",
-        "language": "telugu",
-        "position": 14,
-        "word": "నేను",
-        "taughtBy": "TE-C03-nenu",
         "lessonsEarly": 3
       },
       {
@@ -43461,11 +40898,11 @@
         "lessonsEarly": 2
       },
       {
-        "lessonId": "KA-C03-cennaagi",
-        "language": "kannada",
-        "position": 14,
-        "word": "ನಾನು",
-        "taughtBy": "KA-C03-naanu",
+        "lessonId": "ML-C03-sukhamaano",
+        "language": "malayalam",
+        "position": 16,
+        "word": "സുഖം",
+        "taughtBy": "ML-C03-sukham",
         "lessonsEarly": 2
       },
       {
@@ -44159,33 +41596,9 @@
       {
         "lessonId": "HI-C01-dhanyavad",
         "language": "hindi",
-        "position": 5,
-        "word": "नमस्कार",
-        "taughtBy": "HI-C01-namaskar",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "HI-C01-namaskar",
-        "language": "hindi",
-        "position": 6,
-        "word": "नमस्ते",
-        "taughtBy": "HI-C01-namaste",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "HI-C01-practice",
-        "language": "hindi",
-        "position": 8,
+        "position": 2,
         "word": "शुक्रिया",
         "taughtBy": "HI-C01-shukriya",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "HI-C02-aapka-naam-kya-hai",
-        "language": "hindi",
-        "position": 18,
-        "word": "है",
-        "taughtBy": "HI-C02-hai",
         "lessonsEarly": 1
       },
       {
@@ -44413,22 +41826,6 @@
         "lessonsEarly": 1
       },
       {
-        "lessonId": "KA-C01-practice",
-        "language": "kannada",
-        "position": 4,
-        "word": "ಸರಿ",
-        "taughtBy": "KA-C01-sari",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "KA-C02-practice",
-        "language": "kannada",
-        "position": 12,
-        "word": "ಸಂತೋಷ",
-        "taughtBy": "KA-C02-santosha",
-        "lessonsEarly": 1
-      },
-      {
         "lessonId": "KA-C19-vayassu",
         "language": "kannada",
         "position": 46,
@@ -44450,22 +41847,6 @@
         "position": 22,
         "word": "hōra",
         "taughtBy": "LA-C13-hora",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "ML-C01-practice",
-        "language": "malayalam",
-        "position": 4,
-        "word": "ശരി",
-        "taughtBy": "ML-C01-sari",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "ML-C02-practice",
-        "language": "malayalam",
-        "position": 13,
-        "word": "സന്തോഷം",
-        "taughtBy": "ML-C02-santosham",
         "lessonsEarly": 1
       },
       {
@@ -44789,22 +42170,6 @@
         "lessonsEarly": 1
       },
       {
-        "lessonId": "TE-C01-practice",
-        "language": "telugu",
-        "position": 4,
-        "word": "సరే",
-        "taughtBy": "TE-C01-sare",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "TE-C02-practice",
-        "language": "telugu",
-        "position": 12,
-        "word": "సంతోషం",
-        "taughtBy": "TE-C02-santosham",
-        "lessonsEarly": 1
-      },
-      {
         "lessonId": "TE-C19-vayasu",
         "language": "telugu",
         "position": 45,
@@ -44877,12 +42242,12 @@
       {
         "language": "hindi",
         "lessonCount": 109,
-        "lessonsWithoutSequence": 34,
-        "forwardPrerequisites": 18,
-        "forwardReviews": 30,
+        "lessonsWithoutSequence": 0,
+        "forwardPrerequisites": 1,
+        "forwardReviews": 1,
         "atomsTaught": 152,
         "atomsNeverRevisited": 64,
-        "forwardReferences": 11
+        "forwardReferences": 5
       },
       {
         "language": "italian",
@@ -44907,12 +42272,12 @@
       {
         "language": "kannada",
         "lessonCount": 88,
-        "lessonsWithoutSequence": 30,
-        "forwardPrerequisites": 11,
-        "forwardReviews": 11,
+        "lessonsWithoutSequence": 0,
+        "forwardPrerequisites": 0,
+        "forwardReviews": 0,
         "atomsTaught": 128,
         "atomsNeverRevisited": 2,
-        "forwardReferences": 12
+        "forwardReferences": 9
       },
       {
         "language": "latin",
@@ -44927,12 +42292,12 @@
       {
         "language": "malayalam",
         "lessonCount": 93,
-        "lessonsWithoutSequence": 31,
-        "forwardPrerequisites": 19,
-        "forwardReviews": 20,
+        "lessonsWithoutSequence": 0,
+        "forwardPrerequisites": 0,
+        "forwardReviews": 0,
         "atomsTaught": 127,
         "atomsNeverRevisited": 45,
-        "forwardReferences": 12
+        "forwardReferences": 11
       },
       {
         "language": "marathi",
@@ -44987,9 +42352,9 @@
       {
         "language": "sanskrit",
         "lessonCount": 59,
-        "lessonsWithoutSequence": 30,
-        "forwardPrerequisites": 17,
-        "forwardReviews": 18,
+        "lessonsWithoutSequence": 0,
+        "forwardPrerequisites": 0,
+        "forwardReviews": 0,
         "atomsTaught": 67,
         "atomsNeverRevisited": 2,
         "forwardReferences": 1
@@ -45017,12 +42382,12 @@
       {
         "language": "telugu",
         "lessonCount": 87,
-        "lessonsWithoutSequence": 30,
-        "forwardPrerequisites": 18,
-        "forwardReviews": 21,
+        "lessonsWithoutSequence": 0,
+        "forwardPrerequisites": 0,
+        "forwardReviews": 0,
         "atomsTaught": 124,
         "atomsNeverRevisited": 8,
-        "forwardReferences": 12
+        "forwardReferences": 9
       },
       {
         "language": "urdu",
@@ -45036,10 +42401,10 @@
       }
     ],
     "summary": {
-      "lessonsWithoutSequence": 477,
-      "tracksWithUnorderedLessons": 17,
-      "forwardPrerequisites": 225,
-      "forwardReviews": 267,
+      "lessonsWithoutSequence": 322,
+      "tracksWithUnorderedLessons": 12,
+      "forwardPrerequisites": 143,
+      "forwardReviews": 168,
       "atomsTaught": 3033,
       "atomsNeverRevisited": 484,
       "neverRevisitedPercent": 16,
@@ -45047,9 +42412,9 @@
         "R1": 937,
         "R2": 2110,
         "R3": 1642,
-        "R4": 386
+        "R4": 388
       },
-      "forwardReferences": 467
+      "forwardReferences": 454
     }
   },
   "scriptClosure": {
@@ -45116,7 +42481,7 @@
         "neverTaughtGlyphs": 28,
         "violations": 83,
         "exposureOnly": 6,
-        "exposureExemptedGlyphs": 22,
+        "exposureExemptedGlyphs": 29,
         "headwordsWithoutRomanization": 70
       },
       {
@@ -45874,6 +43239,13 @@
         "count": 15
       },
       {
+        "lessonId": "HI-C01-dhanyavad",
+        "language": "hindi",
+        "chapter": 1,
+        "glyphs": "कतदधनमयरवशसािु्",
+        "count": 15
+      },
+      {
         "lessonId": "HI-C16-mahine",
         "language": "hindi",
         "chapter": 16,
@@ -46413,6 +43785,20 @@
         "count": 12
       },
       {
+        "lessonId": "HI-C01-alvida",
+        "language": "hindi",
+        "chapter": 1,
+        "glyphs": "अकदयरलवशािु्",
+        "count": 12
+      },
+      {
+        "lessonId": "HI-C01-shukriya",
+        "language": "hindi",
+        "chapter": 1,
+        "glyphs": "कदधनयरवशािु्",
+        "count": 12
+      },
+      {
         "lessonId": "KA-C11-bannagalu",
         "language": "kannada",
         "chapter": 11,
@@ -46725,6 +44111,13 @@
         "language": "gujarati",
         "chapter": 12,
         "glyphs": "આકખટણધનપવાી",
+        "count": 11
+      },
+      {
+        "lessonId": "HI-C01-namaskar",
+        "language": "hindi",
+        "chapter": 1,
+        "glyphs": "ःकतनमरसाृे्",
         "count": 11
       },
       {
@@ -48184,6 +45577,13 @@
         "count": 7
       },
       {
+        "lessonId": "HI-C02-khushi",
+        "language": "hindi",
+        "chapter": 2,
+        "glyphs": "आईलह़ीु",
+        "count": 7
+      },
+      {
         "lessonId": "HI-C02-practice",
         "language": "hindi",
         "chapter": 2,
@@ -48982,13 +46382,6 @@
         "count": 5
       },
       {
-        "lessonId": "HI-C02-khushi",
-        "language": "hindi",
-        "chapter": 2,
-        "glyphs": "आई़ीु",
-        "count": 5
-      },
-      {
         "lessonId": "HI-C03-thik",
         "language": "hindi",
         "chapter": 3,
@@ -49507,24 +46900,10 @@
         "count": 4
       },
       {
-        "lessonId": "HI-C01-alvida",
+        "lessonId": "HI-C02-aapka-naam-kya-hai",
         "language": "hindi",
-        "chapter": 1,
-        "glyphs": "यलवु",
-        "count": 4
-      },
-      {
-        "lessonId": "HI-C01-dhanyavad",
-        "language": "hindi",
-        "chapter": 1,
-        "glyphs": "धयवु",
-        "count": 4
-      },
-      {
-        "lessonId": "HI-C01-shukriya",
-        "language": "hindi",
-        "chapter": 1,
-        "glyphs": "धयवु",
+        "chapter": 2,
+        "glyphs": "आयहै",
         "count": 4
       },
       {
@@ -49910,13 +47289,6 @@
         "language": "gujarati",
         "chapter": 9,
         "glyphs": "ઉછહ",
-        "count": 3
-      },
-      {
-        "lessonId": "HI-C02-aapka-naam-kya-hai",
-        "language": "hindi",
-        "chapter": 2,
-        "glyphs": "आयै",
         "count": 3
       },
       {
@@ -50508,17 +47880,17 @@
         "count": 2
       },
       {
-        "lessonId": "HI-C01-namaskar",
-        "language": "hindi",
-        "chapter": 1,
-        "glyphs": "ःृ",
-        "count": 2
-      },
-      {
         "lessonId": "HI-C02-aap-tum",
         "language": "hindi",
         "chapter": 2,
         "glyphs": "आु",
+        "count": 2
+      },
+      {
+        "lessonId": "HI-C02-mera-naam-hai",
+        "language": "hindi",
+        "chapter": 2,
+        "glyphs": "है",
         "count": 2
       },
       {
@@ -51040,13 +48412,6 @@
         "count": 1
       },
       {
-        "lessonId": "HI-C02-mera-naam-hai",
-        "language": "hindi",
-        "chapter": 2,
-        "glyphs": "ै",
-        "count": 1
-      },
-      {
         "lessonId": "HI-C03-hun",
         "language": "hindi",
         "chapter": 3,
@@ -51367,7 +48732,7 @@
       "tracksTeachingNothing": 12,
       "violations": 871,
       "exposureOnly": 106,
-      "exposureExemptedGlyphs": 2919,
+      "exposureExemptedGlyphs": 2926,
       "headwordsWithoutRomanization": 305,
       "tracksWithUnknownScript": 0
     },
@@ -53726,7 +51091,7 @@
         "pen": 11,
         "coreVoice": 96,
         "drivablePercent": 88,
-        "drivablePrefixTotal": 80,
+        "drivablePrefixTotal": 90,
         "chapters": [
           {
             "language": "hindi",
@@ -53741,7 +51106,7 @@
               "sight",
               "pen"
             ],
-            "drivablePrefix": 0,
+            "drivablePrefix": 5,
             "firstNonVoiceLesson": "HI-W01-shirorekha-na-ma"
           },
           {
@@ -53757,7 +51122,7 @@
               "sight",
               "pen"
             ],
-            "drivablePrefix": 0,
+            "drivablePrefix": 8,
             "firstNonVoiceLesson": "HI-W03-matras-naam"
           },
           {
@@ -53802,7 +51167,7 @@
               "voice",
               "sight"
             ],
-            "drivablePrefix": 5,
+            "drivablePrefix": 2,
             "firstNonVoiceLesson": "HI-C05-rahna"
           },
           {
@@ -54694,7 +52059,7 @@
         "pen": 0,
         "coreVoice": 81,
         "drivablePercent": 92,
-        "drivablePrefixTotal": 76,
+        "drivablePrefixTotal": 77,
         "chapters": [
           {
             "language": "kannada",
@@ -54707,7 +52072,7 @@
             "modalities": [
               "sight"
             ],
-            "drivablePrefix": 0,
+            "drivablePrefix": 1,
             "firstNonVoiceLesson": "KA-C01-dhanyavada"
           },
           {
@@ -55887,7 +53252,7 @@
         "pen": 0,
         "coreVoice": 86,
         "drivablePercent": 92,
-        "drivablePrefixTotal": 85,
+        "drivablePrefixTotal": 86,
         "chapters": [
           {
             "language": "malayalam",
@@ -55900,7 +53265,7 @@
             "modalities": [
               "sight"
             ],
-            "drivablePrefix": 4,
+            "drivablePrefix": 5,
             "firstNonVoiceLesson": "ML-C01-practice"
           },
           {
@@ -57654,7 +55019,7 @@
         "pen": 0,
         "coreVoice": 57,
         "drivablePercent": 97,
-        "drivablePrefixTotal": 52,
+        "drivablePrefixTotal": 51,
         "chapters": [
           {
             "language": "sanskrit",
@@ -57668,7 +55033,7 @@
               "voice",
               "sight"
             ],
-            "drivablePrefix": 2,
+            "drivablePrefix": 1,
             "firstNonVoiceLesson": "SA-C01-namaskara"
           },
           {
