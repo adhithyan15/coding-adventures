@@ -23,6 +23,12 @@ use chief_of_staff_service_reconciler::{
 use chief_of_staff_service_registry::{
     DesiredState, HostEntry, HostName, HostRegistration, LoadedHost, RegistryError, ServiceRegistry,
 };
+use chief_of_staff_tool_api::PrivilegeTier;
+use chief_of_staff_trust_checker::{
+    ApprovalProvider, TrustChecker, TrustCheckerError, TrustRequestContext, TrustRequestError,
+    TrustResource,
+};
+use coding_adventures_sha256::sha256_hex;
 use coding_adventures_x3dh::IdentityKeyPair;
 use core::fmt::{self, Display, Formatter};
 use std::sync::Arc;
@@ -35,6 +41,15 @@ pub enum ChannelWiringRequest<'a> {
     Create(&'a ChannelDefinition),
     /// Authorize irreversible destruction of this current definition.
     Destroy(&'a ChannelDefinition),
+}
+
+/// Stable operation represented by a channel wiring request.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum ChannelWiringOperation {
+    /// Create an immutable active channel definition.
+    Create,
+    /// Irreversibly destroy the current active definition.
+    Destroy,
 }
 
 impl<'a> ChannelWiringRequest<'a> {
@@ -51,6 +66,14 @@ impl<'a> ChannelWiringRequest<'a> {
             Self::Create(definition) | Self::Destroy(definition) => definition,
         }
     }
+
+    /// Return the exact topology operation.
+    pub fn operation(self) -> ChannelWiringOperation {
+        match self {
+            Self::Create(_) => ChannelWiringOperation::Create,
+            Self::Destroy(_) => ChannelWiringOperation::Destroy,
+        }
+    }
 }
 
 /// Injected privilege and human-approval boundary for channel topology changes.
@@ -59,7 +82,185 @@ pub trait ChannelWiringAuthorizer {
     type Error;
 
     /// Approve this exact mutation or fail before any storage change.
-    fn authorize(&mut self, request: ChannelWiringRequest<'_>) -> Result<(), Self::Error>;
+    fn authorize(
+        &mut self,
+        context: &TrustRequestContext,
+        request: ChannelWiringRequest<'_>,
+    ) -> Result<(), Self::Error>;
+}
+
+/// Authoritative privilege lookup for one exact channel mutation.
+pub trait ChannelPrivilegeResolver {
+    /// Concrete lookup failure retained for programmatic recovery.
+    type Error;
+
+    /// Resolve the tier assigned to this exact channel and operation.
+    fn channel_tier(
+        &mut self,
+        request: ChannelWiringRequest<'_>,
+    ) -> Result<PrivilegeTier, Self::Error>;
+
+    /// Resolve the current tier assigned to one channel member.
+    fn agent_tier(
+        &mut self,
+        agent_id: &chief_of_staff_channel_endpoints::AgentId,
+    ) -> Result<PrivilegeTier, Self::Error>;
+}
+
+/// Fail-closed error from Trust Checker channel authorization.
+#[derive(Debug)]
+pub enum TrustChannelWiringError<ResolverError, ProviderError> {
+    /// Authoritative resource-tier resolution failed.
+    Resolver(ResolverError),
+    /// The resolved exact request violated a Trust Checker bound.
+    Request(TrustRequestError),
+    /// Approval was denied, timed out, too weak, or unavailable.
+    Approval(TrustCheckerError<ProviderError>),
+}
+
+impl<R, P> Display for TrustChannelWiringError<R, P> {
+    fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
+        formatter.write_str(match self {
+            Self::Resolver(_) => "orchestrator-core: channel privilege resolution failed",
+            Self::Request(_) => "orchestrator-core: channel trust request invalid",
+            Self::Approval(_) => "orchestrator-core: channel approval failed",
+        })
+    }
+}
+
+impl<R, P> std::error::Error for TrustChannelWiringError<R, P>
+where
+    R: std::error::Error + 'static,
+    P: std::error::Error + 'static,
+{
+}
+
+/// Exact channel authorizer backed by authoritative tiers and the Trust Checker.
+pub struct TrustCheckingChannelWiring<P, R> {
+    checker: TrustChecker<P>,
+    resolver: R,
+}
+
+impl<P, R> TrustCheckingChannelWiring<P, R> {
+    /// Compose one trusted approval provider with one authoritative tier resolver.
+    pub fn new(provider: P, resolver: R) -> Self {
+        Self {
+            checker: TrustChecker::new(provider),
+            resolver,
+        }
+    }
+
+    /// Consume the adapter and recover its provider and resolver.
+    pub fn into_parts(self) -> (P, R) {
+        (self.checker.into_provider(), self.resolver)
+    }
+}
+
+impl<P, R> ChannelWiringAuthorizer for TrustCheckingChannelWiring<P, R>
+where
+    P: ApprovalProvider,
+    R: ChannelPrivilegeResolver,
+{
+    type Error = TrustChannelWiringError<R::Error, P::Error>;
+
+    fn authorize(
+        &mut self,
+        context: &TrustRequestContext,
+        request: ChannelWiringRequest<'_>,
+    ) -> Result<(), Self::Error> {
+        let definition = request.definition();
+        let mut resources = Vec::with_capacity(definition.receivers().len() + 2);
+        resources.push(
+            TrustResource::new(
+                mutation_resource_id(request),
+                self.resolver
+                    .channel_tier(request)
+                    .map_err(TrustChannelWiringError::Resolver)?,
+            )
+            .map_err(TrustChannelWiringError::Request)?,
+        );
+        resources.push(
+            TrustResource::new(
+                agent_resource_id(definition.originator().agent_id.as_bytes()),
+                self.resolver
+                    .agent_tier(&definition.originator().agent_id)
+                    .map_err(TrustChannelWiringError::Resolver)?,
+            )
+            .map_err(TrustChannelWiringError::Request)?,
+        );
+        for receiver in definition.receivers() {
+            resources.push(
+                TrustResource::new(
+                    agent_resource_id(receiver.agent_id.as_bytes()),
+                    self.resolver
+                        .agent_tier(&receiver.agent_id)
+                        .map_err(TrustChannelWiringError::Resolver)?,
+                )
+                .map_err(TrustChannelWiringError::Request)?,
+            );
+        }
+        let trust_request = context
+            .with_resources(resources)
+            .map_err(TrustChannelWiringError::Request)?;
+        self.checker
+            .authorize(&trust_request)
+            .map(|_| ())
+            .map_err(TrustChannelWiringError::Approval)
+    }
+}
+
+fn mutation_resource_id(request: ChannelWiringRequest<'_>) -> String {
+    let operation = match request.operation() {
+        ChannelWiringOperation::Create => "create",
+        ChannelWiringOperation::Destroy => "destroy",
+    };
+    format!(
+        "channel:{operation}:sha256:{}",
+        sha256_hex(&canonical_mutation_bytes(request))
+    )
+}
+
+fn agent_resource_id(agent_id: &[u8]) -> String {
+    format!("agent:{}", encode_hex(agent_id))
+}
+
+fn canonical_mutation_bytes(request: ChannelWiringRequest<'_>) -> Vec<u8> {
+    let definition = request.definition();
+    let mut bytes = b"chief-channel-wiring-v1\0".to_vec();
+    bytes.push(match request.operation() {
+        ChannelWiringOperation::Create => 0,
+        ChannelWiringOperation::Destroy => 1,
+    });
+    bytes.extend_from_slice(&definition.channel_id().0);
+    put_bounded_bytes(&mut bytes, definition.originator().agent_id.as_bytes());
+    bytes.extend_from_slice(&definition.originator().public_key);
+    bytes.extend_from_slice(&(definition.receivers().len() as u32).to_be_bytes());
+    for receiver in definition.receivers() {
+        put_bounded_bytes(&mut bytes, receiver.agent_id.as_bytes());
+        bytes.extend_from_slice(&receiver.public_key);
+    }
+    bytes.extend_from_slice(&definition.created_at_ns().to_be_bytes());
+    bytes.extend_from_slice(&definition.key_epoch().0.to_be_bytes());
+    bytes.push(match definition.lifecycle() {
+        chief_of_staff_channel_endpoints::ChannelLifecycle::Active => 0,
+        chief_of_staff_channel_endpoints::ChannelLifecycle::Destroyed => 1,
+    });
+    bytes
+}
+
+fn put_bounded_bytes(output: &mut Vec<u8>, value: &[u8]) {
+    output.extend_from_slice(&(value.len() as u32).to_be_bytes());
+    output.extend_from_slice(value);
+}
+
+fn encode_hex(bytes: &[u8]) -> String {
+    const HEX: &[u8; 16] = b"0123456789abcdef";
+    let mut encoded = String::with_capacity(bytes.len() * 2);
+    for byte in bytes {
+        encoded.push(char::from(HEX[usize::from(byte >> 4)]));
+        encoded.push(char::from(HEX[usize::from(byte & 0x0f)]));
+    }
+    encoded
 }
 
 /// Durable intent together with a fresh authoritative supervisor observation.
@@ -369,10 +570,11 @@ where
     /// Authorize then idempotently create one durable active channel definition.
     pub fn create_channel(
         &mut self,
+        context: &TrustRequestContext,
         definition: &ChannelDefinition,
     ) -> Result<ChannelDefinition, OrchestratorCoreError<S::Error, A::Error>> {
         self.authorizer
-            .authorize(ChannelWiringRequest::Create(definition))
+            .authorize(context, ChannelWiringRequest::Create(definition))
             .map_err(OrchestratorCoreError::Authorization)?;
         ChannelDefinitionStore::new(self.backend.as_ref())
             .create(definition)
@@ -392,6 +594,7 @@ where
     /// Authorize then irreversibly destroy the current durable definition.
     pub fn destroy_channel(
         &mut self,
+        context: &TrustRequestContext,
         channel_id: ChannelId,
     ) -> Result<ChannelDefinition, OrchestratorCoreError<S::Error, A::Error>> {
         let store = ChannelDefinitionStore::new(self.backend.as_ref());
@@ -402,7 +605,7 @@ where
                 ChannelEndpointError::DefinitionNotFound,
             ))?;
         self.authorizer
-            .authorize(ChannelWiringRequest::Destroy(&definition))
+            .authorize(context, ChannelWiringRequest::Destroy(&definition))
             .map_err(OrchestratorCoreError::Authorization)?;
         store
             .destroy(channel_id)
@@ -454,6 +657,8 @@ mod tests {
     };
     use chief_of_staff_service_reconciler::{ReconcileAction, SupervisorOperation};
     use chief_of_staff_service_registry::{PackagePath, RestartPolicy};
+    use chief_of_staff_tool_api::ApprovalAssurance;
+    use chief_of_staff_trust_checker::{ApprovalOutcome, ApprovalPrompt, TrustRequest};
     use coding_adventures_x3dh::generate_identity_keypair;
     use std::collections::{BTreeMap, VecDeque};
     use std::sync::atomic::{AtomicUsize, Ordering};
@@ -559,6 +764,78 @@ mod tests {
         allow: bool,
     }
 
+    struct RecordingApprovalProvider {
+        outcome: Result<ApprovalOutcome, FakeError>,
+        requests: Vec<(
+            TrustRequest,
+            chief_of_staff_trust_checker::ApprovalRequirement,
+        )>,
+    }
+
+    impl RecordingApprovalProvider {
+        fn approving(assurance: ApprovalAssurance) -> Self {
+            Self {
+                outcome: Ok(ApprovalOutcome::Approved(assurance)),
+                requests: Vec::new(),
+            }
+        }
+    }
+
+    impl ApprovalProvider for RecordingApprovalProvider {
+        type Error = FakeError;
+
+        fn request_approval(
+            &mut self,
+            prompt: ApprovalPrompt<'_>,
+        ) -> Result<ApprovalOutcome, Self::Error> {
+            self.requests
+                .push((prompt.request().clone(), prompt.requirement()));
+            self.outcome.clone()
+        }
+    }
+
+    struct FixedTierResolver {
+        channel: PrivilegeTier,
+        agents: BTreeMap<Vec<u8>, PrivilegeTier>,
+        fail: bool,
+    }
+
+    impl FixedTierResolver {
+        fn tier0() -> Self {
+            Self {
+                channel: PrivilegeTier::Tier0,
+                agents: BTreeMap::new(),
+                fail: false,
+            }
+        }
+    }
+
+    impl ChannelPrivilegeResolver for FixedTierResolver {
+        type Error = FakeError;
+
+        fn channel_tier(
+            &mut self,
+            _request: ChannelWiringRequest<'_>,
+        ) -> Result<PrivilegeTier, Self::Error> {
+            if self.fail {
+                Err(FakeError("private tier resolution detail"))
+            } else {
+                Ok(self.channel)
+            }
+        }
+
+        fn agent_tier(&mut self, agent_id: &AgentId) -> Result<PrivilegeTier, Self::Error> {
+            if self.fail {
+                return Err(FakeError("private tier resolution detail"));
+            }
+            Ok(self
+                .agents
+                .get(agent_id.as_bytes())
+                .copied()
+                .unwrap_or(PrivilegeTier::Tier0))
+        }
+    }
+
     impl FakeAuthorizer {
         fn allowing(events: Arc<Mutex<Vec<WiringEvent>>>) -> Self {
             Self {
@@ -578,7 +855,12 @@ mod tests {
     impl ChannelWiringAuthorizer for FakeAuthorizer {
         type Error = FakeError;
 
-        fn authorize(&mut self, request: ChannelWiringRequest<'_>) -> Result<(), Self::Error> {
+        fn authorize(
+            &mut self,
+            context: &TrustRequestContext,
+            request: ChannelWiringRequest<'_>,
+        ) -> Result<(), Self::Error> {
+            assert_eq!(context.request_id(), "wire-request");
             assert_eq!(request.definition().channel_id(), request.channel_id());
             let event = match request {
                 ChannelWiringRequest::Create(_) => WiringEvent::Create(request.channel_id()),
@@ -617,6 +899,10 @@ mod tests {
         ChannelId(bytes)
     }
 
+    fn wiring_context() -> TrustRequestContext {
+        TrustRequestContext::new("wire-request", "operator:local").unwrap()
+    }
+
     fn definition(byte: u8) -> ChannelDefinition {
         ChannelDefinition::new(
             channel_id(byte),
@@ -634,12 +920,12 @@ mod tests {
         .expect("valid channel definition")
     }
 
-    fn core(
+    fn core<A>(
         backend: Arc<InMemoryStorageBackend>,
         supervisor: FakeSupervisor,
-        authorizer: FakeAuthorizer,
+        authorizer: A,
         clock: Arc<TestClock>,
-    ) -> OrchestratorCore<FakeSupervisor, FakeAuthorizer> {
+    ) -> OrchestratorCore<FakeSupervisor, A> {
         OrchestratorCore::new(
             backend,
             supervisor,
@@ -1084,11 +1370,12 @@ mod tests {
         let definition = definition(4);
 
         assert_eq!(
-            core.create_channel(&definition).expect("create channel"),
+            core.create_channel(&wiring_context(), &definition)
+                .expect("create channel"),
             definition
         );
         assert_eq!(
-            core.create_channel(&definition)
+            core.create_channel(&wiring_context(), &definition)
                 .expect("idempotent channel creation"),
             definition
         );
@@ -1098,7 +1385,7 @@ mod tests {
             Some(definition.clone())
         );
         let destroyed = core
-            .destroy_channel(definition.channel_id())
+            .destroy_channel(&wiring_context(), definition.channel_id())
             .expect("destroy channel");
         assert_eq!(destroyed.lifecycle(), ChannelLifecycle::Destroyed);
         assert_eq!(
@@ -1113,7 +1400,7 @@ mod tests {
             ]
         );
         assert_eq!(
-            core.destroy_channel(definition.channel_id())
+            core.destroy_channel(&wiring_context(), definition.channel_id())
                 .expect("destroying an already destroyed channel is idempotent"),
             destroyed
         );
@@ -1135,7 +1422,7 @@ mod tests {
         );
         let definition = definition(5);
         assert!(matches!(
-            core.create_channel(&definition),
+            core.create_channel(&wiring_context(), &definition),
             Err(OrchestratorCoreError::Authorization(FakeError("denied")))
         ));
         assert_eq!(
@@ -1148,7 +1435,7 @@ mod tests {
             .create(&definition)
             .expect("seed definition");
         assert!(matches!(
-            core.destroy_channel(definition.channel_id()),
+            core.destroy_channel(&wiring_context(), definition.channel_id()),
             Err(OrchestratorCoreError::Authorization(FakeError("denied")))
         ));
         assert_eq!(
@@ -1166,6 +1453,134 @@ mod tests {
                 WiringEvent::Destroy(definition.channel_id())
             ]
         );
+    }
+
+    #[test]
+    fn trust_checker_adapter_binds_the_complete_mutation_and_authoritative_tiers() {
+        let definition = definition(7);
+        let mut agents = BTreeMap::new();
+        agents.insert(
+            definition.originator().agent_id.as_bytes().to_vec(),
+            PrivilegeTier::Tier1,
+        );
+        agents.insert(
+            definition.receivers()[0].agent_id.as_bytes().to_vec(),
+            PrivilegeTier::Tier2,
+        );
+        let resolver = FixedTierResolver {
+            channel: PrivilegeTier::Tier0,
+            agents,
+            fail: false,
+        };
+        let mut authorizer = TrustCheckingChannelWiring::new(
+            RecordingApprovalProvider::approving(ApprovalAssurance::Biometric),
+            resolver,
+        );
+        authorizer
+            .authorize(&wiring_context(), ChannelWiringRequest::Create(&definition))
+            .unwrap();
+        let (provider, _) = authorizer.into_parts();
+        let (request, requirement) = &provider.requests[0];
+        assert_eq!(request.request_id(), "wire-request");
+        assert_eq!(request.requested_by(), "operator:local");
+        assert_eq!(request.effective_tier(), PrivilegeTier::Tier2);
+        assert_eq!(request.resources().len(), 3);
+        assert_eq!(
+            *requirement,
+            chief_of_staff_trust_checker::ApprovalRequirement::Biometric {
+                timeout: std::time::Duration::from_secs(30)
+            }
+        );
+        assert_eq!(
+            request.resources()[0].resource_id(),
+            mutation_resource_id(ChannelWiringRequest::Create(&definition))
+        );
+        assert_eq!(
+            request.resources()[1].resource_id(),
+            agent_resource_id(definition.originator().agent_id.as_bytes())
+        );
+
+        let replacement = ChannelDefinition::new(
+            definition.channel_id(),
+            OriginatorIdentity {
+                agent_id: definition.originator().agent_id.clone(),
+                public_key: [99; 32],
+            },
+            definition.receivers().to_vec(),
+            definition.created_at_ns(),
+            definition.key_epoch(),
+        )
+        .unwrap();
+        assert_ne!(
+            mutation_resource_id(ChannelWiringRequest::Create(&definition)),
+            mutation_resource_id(ChannelWiringRequest::Create(&replacement))
+        );
+        assert_ne!(
+            mutation_resource_id(ChannelWiringRequest::Create(&definition)),
+            mutation_resource_id(ChannelWiringRequest::Destroy(&definition))
+        );
+    }
+
+    #[test]
+    fn tier_resolution_and_approval_fail_before_channel_storage_mutates() {
+        let backend = Arc::new(InMemoryStorageBackend::new());
+        let resolver = FixedTierResolver {
+            channel: PrivilegeTier::Tier0,
+            agents: BTreeMap::new(),
+            fail: true,
+        };
+        let authorizer = TrustCheckingChannelWiring::new(
+            RecordingApprovalProvider::approving(ApprovalAssurance::HardwareKey),
+            resolver,
+        );
+        let mut core = core(
+            Arc::clone(&backend),
+            FakeSupervisor::default(),
+            authorizer,
+            Arc::new(TestClock::new([])),
+        );
+        let definition = definition(8);
+        let error = core
+            .create_channel(&wiring_context(), &definition)
+            .unwrap_err();
+        assert!(matches!(
+            error,
+            OrchestratorCoreError::Authorization(TrustChannelWiringError::Resolver(FakeError(_)))
+        ));
+        assert_eq!(
+            error.to_string(),
+            "orchestrator-core: channel authorization failed"
+        );
+        assert_eq!(core.load_channel(definition.channel_id()).unwrap(), None);
+    }
+
+    #[test]
+    fn maximum_channel_membership_fits_the_bounded_trust_request() {
+        let receivers = (0..1024u16)
+            .map(|index| ReceiverIdentity {
+                agent_id: AgentId::new(index.to_be_bytes().to_vec()).unwrap(),
+                public_key: [u8::try_from(index % 251).unwrap(); 32],
+            })
+            .collect();
+        let definition = ChannelDefinition::new(
+            channel_id(9),
+            OriginatorIdentity {
+                agent_id: AgentId::new(b"originator".to_vec()).unwrap(),
+                public_key: [1; 32],
+            },
+            receivers,
+            1,
+            KeyEpoch(1),
+        )
+        .unwrap();
+        let mut authorizer = TrustCheckingChannelWiring::new(
+            RecordingApprovalProvider::approving(ApprovalAssurance::ExplicitConsent),
+            FixedTierResolver::tier0(),
+        );
+        authorizer
+            .authorize(&wiring_context(), ChannelWiringRequest::Create(&definition))
+            .unwrap();
+        assert!(authorizer.into_parts().0.requests.is_empty());
     }
 
     #[test]

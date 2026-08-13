@@ -5,6 +5,11 @@ D18 pipeline and Vault authority changes. It validates a bounded exact resource
 set, computes the maximum privilege tier, and delegates every non-Tier-0
 decision to an injected trusted approval provider.
 
+The 1,026-resource bound covers one D18 channel, its originator, and the maximum
+1,024-receiver membership without making approval requests unbounded. A
+validated request context lets authoritative adapters resolve those resources
+before constructing the exact request.
+
 The core preserves the D18 tier policy:
 
 - Tier 0 proceeds without contacting the provider.
