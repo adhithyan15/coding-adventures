@@ -1,0 +1,13 @@
+[package]
+name = "smart-home-modbus-tcp-integration"
+version = "0.1.0"
+edition = "2021"
+description = "Read-only Modbus TCP telemetry integration for the smart-home runtime"
+license = "MIT"
+
+[dependencies]
+modbus-protocol = { path = "../modbus-protocol" }
+serde_json = "1"
+smart-home-core = { path = "../smart-home-core" }
+smart-home-runtime = { path = "../smart-home-runtime" }
+tcp-client = { path = "../tcp-client" }

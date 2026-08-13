@@ -2207,6 +2207,27 @@ The central controller composition backlog is now complete. Future executable
 work must come from the protocol- and vendor-specific inventory below after its
 recorded ownership, authentication, and secret-handling prerequisites are met.
 
+## Current Modbus TCP Breadth Slice
+
+The first breadth slice after central composition adds a common local building
+and energy protocol without weakening any credential-gated vendor boundary:
+
+- `modbus-protocol` owns MBAP framing and strict correlation checks for read
+  holding-register (`0x03`) and read input-register (`0x04`) exchanges.
+- `smart-home-modbus-tcp-integration` polls an explicit endpoint, unit id, and
+  bounded register profile through the shared TCP client, then projects typed,
+  scaled register values into normalized D23 sensor entities.
+- Authorization runs before network I/O. Profiles are limited to 64 points,
+  every request honors the Modbus 125-register maximum, and malformed,
+  mismatched, oversized, or exception responses fail without runtime mutation.
+- The runtime exposes no register-write function. Classic Modbus TCP has no
+  peer authentication, so control remains out of scope until a separately
+  secured host and operation-specific postcondition policy exist.
+
+This broadens local HVAC, energy, and industrial telemetry coverage while the
+independent camera, cloud, radio, and credential prerequisites below remain
+honestly blocked.
+
 The protocol- and vendor-specific backlog below remains valid after those
 central ownership steps:
 
