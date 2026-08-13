@@ -710,10 +710,15 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   its counterclockwise lower body closes before the pen rises into the
   rightward top flag, again without lifting. The two-frame font fit preserves
   that one-run order while routing the handwritten diagonal transition through
-  Noto Sans Cyrillic's printed upper-left shoulder. The remaining **101** prose part
+  Noto Sans Cyrillic's printed upper-left shoulder. Lowercase **в** follows at
+  01:33–01:38: the pen starts at the baseline, climbs through its tall upper
+  loop, descends to the baseline, and continues counterclockwise around the
+  lower bowl without lifting. Its two-frame font fit preserves that one-run
+  order while routing the cursive ascender through Noto Sans Cyrillic's compact
+  printed upper bowl and straight left stem. The remaining **100** prose part
   orders across four scripts
   (`arabic` 3,
-  `cyrillic` 31,
+  `cyrillic` 30,
   `gujarati` 33, `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a
   citation without a count), and Language Ladder's ductus test proves every

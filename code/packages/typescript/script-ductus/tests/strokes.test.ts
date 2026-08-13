@@ -78,6 +78,7 @@ const DEVANAGARI_SA = DUCTUS[ductusKey("devanagari", "स")];
 const DEVANAGARI_HA = DUCTUS[ductusKey("devanagari", "ह")];
 const CYRILLIC_A = DUCTUS[ductusKey("cyrillic", "а")];
 const CYRILLIC_BE = DUCTUS[ductusKey("cyrillic", "б")];
+const CYRILLIC_VE = DUCTUS[ductusKey("cyrillic", "в")];
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
@@ -1199,6 +1200,20 @@ describe("handwriting ductus", () => {
     expect(flag.at(-1)!.x).toBeGreaterThan(flag[0].x);
   });
 
+  it("Cyrillic в returns from its upper loop before circling the lower bowl", () => {
+    expect(CYRILLIC_VE.script).toBe("cyrillic");
+    expect(penLifts(CYRILLIC_VE)).toBe(0);
+    expect(CYRILLIC_VE.strokes).toHaveLength(1);
+    expect(CYRILLIC_VE.strokes[0].segments).toHaveLength(2);
+    const upper = CYRILLIC_VE.strokes[0].segments[0].path;
+    const lower = CYRILLIC_VE.strokes[0].segments[1].path;
+    expect(upper.at(-1)).toEqual(lower[0]);
+    expect(upper.at(-1)).toEqual(upper[0]);
+    expect(Math.max(...upper.map((point) => point.y))).toBeGreaterThan(upper[0].y);
+    expect(Math.max(...lower.map((point) => point.x))).toBeGreaterThan(lower[0].x);
+    expect(lower.at(-1)!.y).toBeGreaterThan(lower[0].y);
+  });
+
   it("Hebrew א uses two crossed pen-down runs with one lift", () => {
     expect(HEBREW_ALEF.script).toBe("hebrew");
     expect(penLifts(HEBREW_ALEF)).toBe(1);
@@ -2236,6 +2251,9 @@ describe("handwriting ductus", () => {
     expect(verifiedLetterFont("б", CYRILLIC_BE.source.url)).toBe(
       "_fonts/NotoSansCyrillic-Static.ttf",
     );
+    expect(verifiedLetterFont("в", CYRILLIC_VE.source.url)).toBe(
+      "_fonts/NotoSansCyrillic-Static.ttf",
+    );
     expect(verifiedLetterFont("א", HEBREW_ALEF.source.url)).toBe(
       "_fonts/NotoSansHebrew-Static.ttf",
     );
@@ -3010,6 +3028,17 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /all 33 Russian letters.*classic handwritten form taught at school.*01:13–01:18.*lower body counterclockwise.*upper-right junction.*rising shoulder.*rightward top flag.*one continuous pen-down run.*zero intervening lifts.*crosses diagonally.*bundled Noto Sans Cyrillic.*upper-left shoulder.*uninterrupted body-to-flag order.*printed upper shoulder.*font's ink.*connected cursive.*top flag.*exit join/i,
+    );
+  });
+
+  it("Cyrillic в traces its upper loop and lower bowl to the all-letter native lesson", () => {
+    const src = CYRILLIC_VE.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=tqDLDfYoO2o");
+    expect(src.citation).toMatch(
+      /RussianIrina.*Learning Russian - Alphabet letters, handwriting.*lowercase в.*01:33–01:38.*5 February 2013/i,
+    );
+    expect(src.variation).toMatch(
+      /all 33 Russian letters.*classic handwritten form taught at school.*01:33–01:38.*starts at the baseline.*tall upper loop.*descends to the baseline.*counterclockwise.*lower bowl.*one continuous pen-down run.*zero intervening lifts.*looped Latin cursive b.*bundled Noto Sans Cyrillic.*two stacked bowls.*straight left stem.*baseline-to-upper-loop-to-baseline-to-lower-bowl order.*printed upper bowl.*font's ink.*connected cursive.*entry and exit joins/i,
     );
   });
 

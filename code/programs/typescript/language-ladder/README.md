@@ -125,8 +125,8 @@ of that promise: they **break each letter apart** into its pieces and show a
 Pick a script, pick a letter, and the detail panel shows:
 
 - the **glyph**, big, with its sound and role;
-- **Break it apart** — the letter's component pieces (the "a vertical + two
-  stacked bowls" of Cyrillic *в*);
+- **Break it apart** — the letter's component pieces (the "tall joined upper
+  loop + rounded lower bowl" of handwritten Cyrillic *в*);
 - **Write it** — a conventional stroke order, numbered; and for letters with an
   authored pen path, the **stroke-order filmstrip** below;
 - a **⚠ false friend** badge for letters that look like a Latin letter but
@@ -723,6 +723,12 @@ lifting. The same native-teacher lesson demonstrates that one-run school hand
 at 01:13–01:18; the Noto Sans Cyrillic fit preserves its body-to-flag order
 while routing the handwritten diagonal transition through the printed glyph's
 upper-left shoulder.
+The two-frame Cyrillic **в** filmstrip starts at the baseline, climbs through
+the tall upper loop, returns down the left stem, and continues counterclockwise
+around the lower bowl without lifting. RussianIrina demonstrates that one-run
+school hand at 01:33–01:38; the Noto Sans Cyrillic fit preserves its
+baseline-to-upper-loop-to-lower-bowl order while routing the cursive ascender
+through the printed glyph's compact upper bowl and straight left stem.
 The runtime resolves each cited path back to the owning script and lazily loads that
 script's font, while Tamil continues to use Noto Sans Tamil. Unverified letters
 still fall back to the numbered prose list, unchanged. Extending the coverage is HL-C09,

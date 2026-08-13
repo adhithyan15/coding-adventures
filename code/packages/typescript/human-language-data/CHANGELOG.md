@@ -90,6 +90,12 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
 
 ## [Unreleased]
 
+### Added - source-verified Cyrillic в (HL-C09EB)
+
+- Verify lowercase в as one continuous baseline-to-upper-loop-to-lower-bowl run with zero lifts against RussianIrina's native-teacher all-letter handwriting lesson.
+- Preserve the source's tall looped school hand while routing the Noto Sans Cyrillic fit through the printed glyph's upper bowl and straight left stem.
+- Reduce measured HL-C09 debt to 100 entries and queue Cyrillic г next.
+
 ### Added - the degree words, and four inventory points for three lessons (HL-C128)
 - Add Spanish chapters 226-229: `muy`, `bastante`, `mal`, and a review.
   **A1 coverage 56/85 (66%) -> 60/85 (71%)**, and `El sintagma adjetival`
@@ -112,7 +118,6 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
 - The coverage report reordered itself: `El sintagma adjetival` was the
   worst-off category and is now closed, so the "worst first" line moved on to
   `Los cuantificadores` at 1/4 without anyone editing the sort.
-
 ### Added - source-verified Cyrillic б (HL-C09EA)
 - Verify lowercase б as one continuous counterclockwise-body-to-top-flag run with zero lifts against RussianIrina's native-teacher all-letter handwriting lesson.
 - Preserve the source's handwritten diagonal transition while routing the Noto Sans Cyrillic fit through the printed glyph's upper-left shoulder.
