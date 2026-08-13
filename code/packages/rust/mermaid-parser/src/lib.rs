@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.70.0";
+pub const VERSION: &str = "0.71.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -1678,6 +1678,18 @@ fn apply_state_style(
                 .map_err(|_| token_error(value, "invalid state stroke width"))?;
             style.stroke_width = Some(width);
         }
+        "font-size" => {
+            let size = value
+                .value
+                .strip_suffix("px")
+                .unwrap_or(&value.value)
+                .parse::<f64>()
+                .map_err(|_| token_error(value, "invalid state font size"))?;
+            if size <= 0.0 {
+                return Err(token_error(value, "state font size must be positive"));
+            }
+            style.font_size = Some(size);
+        }
         _ => {
             return Err(token_error(
                 value,
@@ -1727,6 +1739,9 @@ fn merge_state_style(target: &mut DiagramStyle, source: &DiagramStyle) {
     }
     if source.text_color.is_some() {
         target.text_color.clone_from(&source.text_color);
+    }
+    if source.font_size.is_some() {
+        target.font_size = source.font_size;
     }
 }
 
@@ -4489,7 +4504,7 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     #[test]
     fn state_parses_inline_styles() {
         let diagram = parse_state_diagram(
-            "stateDiagram-v2\nReady --> Running\nstyle Ready fill:#fee2e2,stroke:#991b1b,color:#111827,stroke-width:3px\n",
+            "stateDiagram-v2\nReady --> Running\nstyle Ready fill:#fee2e2,stroke:#991b1b,color:#111827,stroke-width:3px,font-size:24px\n",
         )
         .expect("state inline styles should parse");
         let style = diagram
@@ -4505,6 +4520,7 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         assert_eq!(style.stroke.as_deref(), Some("#991b1b"));
         assert_eq!(style.text_color.as_deref(), Some("#111827"));
         assert_eq!(style.stroke_width, Some(3.0));
+        assert_eq!(style.font_size, Some(24.0));
     }
 
     #[test]
@@ -5646,7 +5662,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.70.0");
+        assert_eq!(crate::VERSION, "0.71.0");
     }
 
     #[test]

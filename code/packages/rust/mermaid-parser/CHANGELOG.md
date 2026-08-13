@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.71.0
+
+- Preserve state `font-size` styles in graph semantic IR.
+
 ## 0.70.0
 
 - Preserve authored colons inside state descriptions and transition labels.

@@ -133,6 +133,8 @@ assignments that precede their declaration. The `:::` shorthand applies named
 classes to standalone states and either endpoint of a transition, including
 start/end pseudostates. Inline and named styles can target composite groups and
 survive resolved layout style into backend-neutral Paint rectangles and labels.
+State `font-size` styles survive semantic IR; graph layout measures matching
+node geometry before Paint shapes and centers text at the resolved size.
 One `class` statement may compose multiple named classes on every target;
 later classes override properties from earlier classes in authored order.
 Single-line and `end note` multiline `note left of`/`note right of` statements
