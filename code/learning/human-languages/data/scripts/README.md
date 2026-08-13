@@ -603,10 +603,16 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   and finish the shirorekhā left-to-right. Its three-frame Noto Sans
   Devanagari path follows the cited three-run animation with two lifts,
   corroborated by the Central Hindi Directorate's three-part learner buildup.
-  The remaining **119** prose part
+  **च** then draws its short upper bar left-to-right and turns directly through
+  the shoulder into the rounded open body before two lifted runs descend the
+  right stem and finish the shirorekhā. Its three-frame Noto Sans Devanagari
+  path follows the cited three-run animation with two lifts. The Directorate's
+  deskbook confirms component order but stages the upper bar and body
+  separately, so it corroborates order rather than the animation's first join.
+  The remaining **118** prose part
   orders across five scripts
   (`arabic` 3,
-  `cyrillic` 33, `devanagari` 16,
+  `cyrillic` 33, `devanagari` 15,
   `gujarati` 33, `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a
   citation without a count), and Language Ladder's ductus test proves every
