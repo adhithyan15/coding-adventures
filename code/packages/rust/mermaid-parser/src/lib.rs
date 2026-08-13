@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.98.0";
+pub const VERSION: &str = "0.99.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -830,13 +830,23 @@ fn parse_requirement_relationship(token: &Token) -> Result<StructuralRelationshi
     } else {
         return Err(token_error(token, "invalid requirement relationship"));
     };
+    let label = kind.trim().to_ascii_lowercase();
+    let relationship_kind = match label.as_str() {
+        "contains" => RelKind::Composition,
+        "copies" => RelKind::Association,
+        "derives" | "verifies" => RelKind::Dependency,
+        "satisfies" => RelKind::Realization,
+        "refines" => RelKind::Inheritance,
+        "traces" => RelKind::Link,
+        _ => return Err(token_error(token, "unknown requirement relationship")),
+    };
     Ok(StructuralRelationship {
         from: unquote_requirement_value(from),
         to: unquote_requirement_value(to),
-        kind: RelKind::Dependency,
+        kind: relationship_kind,
         from_mult: None,
         to_mult: None,
-        label: Some(kind.trim().to_ascii_lowercase()),
+        label: Some(label),
     })
 }
 
@@ -6777,7 +6787,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.98.0");
+        assert_eq!(crate::VERSION, "0.99.0");
     }
 
     #[test]

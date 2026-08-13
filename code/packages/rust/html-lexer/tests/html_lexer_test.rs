@@ -1,11 +1,12 @@
 use coding_adventures_html_lexer::{
     apply_html_lex_context, create_html_lexer, create_html_lexer_with_context, html1_definition,
     html1_machine, html_skeleton_definition, html_skeleton_machine, lex_html, lex_html_fragment,
-    Attribute, DoctypeSeed, HtmlLexContext, HtmlScriptingMode, HtmlTokenizerState, StartTagSeed,
-    Token, HTML_CHARACTER_REFERENCE_RETURN_STATES, HTML_CHARACTER_REFERENCE_TOKENIZER_STATES,
-    HTML_COMMENT_TOKENIZER_STATES, HTML_DOCTYPE_TOKENIZER_STATES, HTML_END_TAG_TOKENIZER_STATES,
-    HTML_FRAGMENT_TOKENIZER_STATES, HTML_SCRIPT_TOKENIZER_STATES, HTML_START_TAG_TOKENIZER_STATES,
-    HTML_TEXT_MODE_TOKENIZER_STATES, HTML_TOKENIZER_STATES,
+    Attribute, DoctypeSeed, HtmlLexContext, HtmlScriptingMode, HtmlTokenizerState, SourcePosition,
+    StartTagSeed, Token, HTML_CHARACTER_REFERENCE_RETURN_STATES,
+    HTML_CHARACTER_REFERENCE_TOKENIZER_STATES, HTML_COMMENT_TOKENIZER_STATES,
+    HTML_DOCTYPE_TOKENIZER_STATES, HTML_END_TAG_TOKENIZER_STATES, HTML_FRAGMENT_TOKENIZER_STATES,
+    HTML_SCRIPT_TOKENIZER_STATES, HTML_START_TAG_TOKENIZER_STATES, HTML_TEXT_MODE_TOKENIZER_STATES,
+    HTML_TOKENIZER_STATES,
 };
 use state_machine::END_INPUT;
 
@@ -26,6 +27,62 @@ fn default_html_lexer_still_lexes_basic_text_tags_and_eof() {
                 name: "p".to_string()
             },
             Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn positioned_tokens_report_proven_emission_points() {
+    let mut lexer = create_html_lexer().unwrap();
+    lexer.push("<p>x</p>").unwrap();
+    lexer.finish().unwrap();
+
+    let tokens = lexer.drain_positioned_tokens();
+    assert_eq!(
+        tokens.iter().map(|token| &token.token).collect::<Vec<_>>(),
+        vec![
+            &Token::StartTag {
+                name: "p".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            &Token::Text("x".to_string()),
+            &Token::EndTag {
+                name: "p".to_string()
+            },
+            &Token::Eof,
+        ]
+    );
+    assert_eq!(
+        tokens
+            .iter()
+            .map(|token| token.position)
+            .collect::<Vec<_>>(),
+        vec![
+            SourcePosition {
+                byte_offset: 2,
+                char_offset: 2,
+                line: 1,
+                column: 3
+            },
+            SourcePosition {
+                byte_offset: 4,
+                char_offset: 4,
+                line: 1,
+                column: 5
+            },
+            SourcePosition {
+                byte_offset: 7,
+                char_offset: 7,
+                line: 1,
+                column: 8
+            },
+            SourcePosition {
+                byte_offset: 8,
+                char_offset: 8,
+                line: 1,
+                column: 9
+            },
         ]
     );
 }

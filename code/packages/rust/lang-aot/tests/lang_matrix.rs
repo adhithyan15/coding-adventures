@@ -2360,6 +2360,15 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — supported standard functions are deterministic wrappers over
+    // stable scalar dependencies in a body predicate.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, n, guard; n := 3; guard := -1; i := 0; for i := i + 1 while i < n do if abs(guard) = 0 then n := n + 1; print(i + 0.25) end",
+        expect: Expect::Stdout("3.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — an exactly-one-iteration step loop with a static controlled
     // assignment may retain the post-body increment when that value exits.
     Prog {
@@ -9520,6 +9529,31 @@ fn algol_stable_scalar_while_predicate_runs_on_every_available_standard_backend(
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the stable scalar while predicate did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_stable_function_while_predicate_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("while i < n do if abs(guard) = 0 then n := n + 1")
+        })
+        .expect("the ALGOL stable function while-predicate program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the stable function while predicate did not run"
             );
             continue;
         };
