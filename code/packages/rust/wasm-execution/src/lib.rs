@@ -1953,22 +1953,46 @@ fn register_numeric_f32(vm: &mut GenericVM) {
 
     f32_unop!(vm, 0x8B, |a: f32| a.abs()); // abs
     f32_unop!(vm, 0x8C, |a: f32| -a); // neg
-    f32_unop!(vm, 0x8D, |a: f32| a.ceil()); // ceil
-    f32_unop!(vm, 0x8E, |a: f32| a.floor()); // floor
-    f32_unop!(vm, 0x8F, |a: f32| a.trunc()); // trunc
+    // WASM requires any NaN propagated through ceil/floor/trunc to have its
+    // quiet bit set (the spec's `nans()` function always quiets). The
+    // platform libm `a.ceil()`/`.floor()`/`.trunc()` call on a NaN input
+    // sometimes returns it with the ORIGINAL bit pattern unchanged --
+    // whether that preserves a signaling NaN's clear quiet bit is platform-
+    // and-libm-dependent, found as a genuine cross-platform (macOS vs
+    // Linux) discrepancy running the real WebAssembly/testsuite corpus
+    // (`f64.wast`'s `nan:arithmetic` cases) via `wasm-conformance`. Forcing
+    // the canonical NaN on any NaN input sidesteps the platform dependency
+    // entirely rather than trying to track it down further.
+    f32_unop!(vm, 0x8D, |a: f32| if a.is_nan() { f32::NAN } else { a.ceil() }); // ceil
+    f32_unop!(vm, 0x8E, |a: f32| if a.is_nan() { f32::NAN } else { a.floor() }); // floor
+    f32_unop!(vm, 0x8F, |a: f32| if a.is_nan() { f32::NAN } else { a.trunc() }); // trunc
     f32_unop!(
         vm,
         0x90,
-        |a: f32| if a.fract() == 0.5 || a.fract() == -0.5 {
-            // nearest even
-            let rounded = a.round();
-            if rounded as i32 % 2 != 0 {
-                rounded - a.signum()
+        |a: f32| {
+            // WASM's `nearest` (round-ties-to-even) must preserve the sign
+            // of a result that rounds to zero -- `nearest(-0.25)` is
+            // `-0.0`, not `0.0` -- per IEEE 754's roundTiesToEven. Rust's
+            // `f32::round()` doesn't guarantee that for magnitudes that
+            // round down to zero; found running the real
+            // WebAssembly/testsuite corpus (`f32.wast`) via
+            // `wasm-conformance`.
+            let rounded = if a.fract() == 0.5 || a.fract() == -0.5 {
+                // nearest even
+                let r = a.round();
+                if r as i32 % 2 != 0 {
+                    r - a.signum()
+                } else {
+                    r
+                }
+            } else {
+                a.round()
+            };
+            if rounded == 0.0 {
+                rounded.copysign(a)
             } else {
                 rounded
             }
-        } else {
-            a.round()
         }
     ); // nearest
     f32_unop!(vm, 0x91, |a: f32| a.sqrt()); // sqrt
@@ -1989,8 +2013,32 @@ fn register_numeric_f32(vm: &mut GenericVM) {
     f32_binop!(vm, 0x93, |a: f32, b: f32| a - b); // sub
     f32_binop!(vm, 0x94, |a: f32, b: f32| a * b); // mul
     f32_binop!(vm, 0x95, |a: f32, b: f32| a / b); // div
-    f32_binop!(vm, 0x96, |a: f32, b: f32| a.min(b)); // min
-    f32_binop!(vm, 0x97, |a: f32, b: f32| a.max(b)); // max
+    // WASM's `min`/`max` MUST propagate NaN unconditionally (if either
+    // operand is NaN, the result is NaN) and treat -0.0 < +0.0 for the
+    // purposes of picking a result -- neither matches Rust's native
+    // `f32::min`/`max`, which follow IEEE 754-2008 minNum/maxNum semantics
+    // instead: "if one of the arguments is NaN, then the OTHER argument is
+    // returned." Using `.min()`/`.max()` directly silently turned every
+    // `min(NaN, x)`/`max(NaN, x)` into a normal float, found running the
+    // real WebAssembly/testsuite corpus (`f32.wast`) via `wasm-conformance`.
+    f32_binop!(vm, 0x96, |a: f32, b: f32| {
+        if a.is_nan() || b.is_nan() {
+            f32::NAN
+        } else if a == 0.0 && b == 0.0 {
+            if a.is_sign_negative() || b.is_sign_negative() { -0.0 } else { 0.0 }
+        } else {
+            a.min(b)
+        }
+    }); // min
+    f32_binop!(vm, 0x97, |a: f32, b: f32| {
+        if a.is_nan() || b.is_nan() {
+            f32::NAN
+        } else if a == 0.0 && b == 0.0 {
+            if a.is_sign_positive() || b.is_sign_positive() { 0.0 } else { -0.0 }
+        } else {
+            a.max(b)
+        }
+    }); // max
     f32_binop!(vm, 0x98, |a: f32, b: f32| f32::from_bits(
         (a.to_bits() & 0x7FFF_FFFF) | (b.to_bits() & 0x8000_0000)
     )); // copysign
@@ -2042,21 +2090,32 @@ fn register_numeric_f64(vm: &mut GenericVM) {
 
     f64_unop!(vm, 0x99, |a: f64| a.abs()); // abs
     f64_unop!(vm, 0x9A, |a: f64| -a); // neg
-    f64_unop!(vm, 0x9B, |a: f64| a.ceil()); // ceil
-    f64_unop!(vm, 0x9C, |a: f64| a.floor()); // floor
-    f64_unop!(vm, 0x9D, |a: f64| a.trunc()); // trunc
+    // See the f32 ceil/floor/trunc registrations above for why NaN needs
+    // explicit quieting here.
+    f64_unop!(vm, 0x9B, |a: f64| if a.is_nan() { f64::NAN } else { a.ceil() }); // ceil
+    f64_unop!(vm, 0x9C, |a: f64| if a.is_nan() { f64::NAN } else { a.floor() }); // floor
+    f64_unop!(vm, 0x9D, |a: f64| if a.is_nan() { f64::NAN } else { a.trunc() }); // trunc
     f64_unop!(
         vm,
         0x9E,
-        |a: f64| if a.fract() == 0.5 || a.fract() == -0.5 {
-            let rounded = a.round();
-            if rounded as i64 % 2 != 0 {
-                rounded - a.signum()
+        // See the f32 `nearest` registration above for why the zero-result
+        // sign fixup is needed.
+        |a: f64| {
+            let rounded = if a.fract() == 0.5 || a.fract() == -0.5 {
+                let r = a.round();
+                if r as i64 % 2 != 0 {
+                    r - a.signum()
+                } else {
+                    r
+                }
+            } else {
+                a.round()
+            };
+            if rounded == 0.0 {
+                rounded.copysign(a)
             } else {
                 rounded
             }
-        } else {
-            a.round()
         }
     ); // nearest
     f64_unop!(vm, 0x9F, |a: f64| a.sqrt()); // sqrt
@@ -2077,8 +2136,26 @@ fn register_numeric_f64(vm: &mut GenericVM) {
     f64_binop!(vm, 0xA1, |a: f64, b: f64| a - b); // sub
     f64_binop!(vm, 0xA2, |a: f64, b: f64| a * b); // mul
     f64_binop!(vm, 0xA3, |a: f64, b: f64| a / b); // div
-    f64_binop!(vm, 0xA4, |a: f64, b: f64| a.min(b)); // min
-    f64_binop!(vm, 0xA5, |a: f64, b: f64| a.max(b)); // max
+    // See the f32 `min`/`max` registration above for why this can't be
+    // Rust's native `.min()`/`.max()` -- same NaN-propagation mismatch.
+    f64_binop!(vm, 0xA4, |a: f64, b: f64| {
+        if a.is_nan() || b.is_nan() {
+            f64::NAN
+        } else if a == 0.0 && b == 0.0 {
+            if a.is_sign_negative() || b.is_sign_negative() { -0.0 } else { 0.0 }
+        } else {
+            a.min(b)
+        }
+    }); // min
+    f64_binop!(vm, 0xA5, |a: f64, b: f64| {
+        if a.is_nan() || b.is_nan() {
+            f64::NAN
+        } else if a == 0.0 && b == 0.0 {
+            if a.is_sign_positive() || b.is_sign_positive() { 0.0 } else { -0.0 }
+        } else {
+            a.max(b)
+        }
+    }); // max
     f64_binop!(vm, 0xA6, |a: f64, b: f64| f64::from_bits(
         (a.to_bits() & 0x7FFF_FFFF_FFFF_FFFF) | (b.to_bits() & 0x8000_0000_0000_0000)
     )); // copysign
@@ -5032,6 +5109,38 @@ mod tests {
         assert_eq!(r, vec![WasmValue::F32(5.0)]);
     }
 
+    /// Found running the real WebAssembly/testsuite corpus (`f32.wast`) via
+    /// `wasm-conformance`: WASM's `min`/`max` MUST propagate NaN
+    /// unconditionally, unlike Rust's native `f32::min`/`max`, which return
+    /// the OTHER (non-NaN) operand when one input is NaN -- `min(NaN, -0.0)`
+    /// was silently returning `-0.0` instead of NaN.
+    #[test]
+    fn test_f32_min_max_propagates_nan() {
+        let mut eng = make_f32_binop_engine(0x96);
+        let r = eng.call_function(0, &[WasmValue::F32(f32::NAN), WasmValue::F32(1.0)]).unwrap();
+        assert!(matches!(r[0], WasmValue::F32(v) if v.is_nan()), "min(NaN, 1.0) should be NaN, got {r:?}");
+        let r = eng.call_function(0, &[WasmValue::F32(1.0), WasmValue::F32(f32::NAN)]).unwrap();
+        assert!(matches!(r[0], WasmValue::F32(v) if v.is_nan()), "min(1.0, NaN) should be NaN, got {r:?}");
+
+        let mut eng = make_f32_binop_engine(0x97);
+        let r = eng.call_function(0, &[WasmValue::F32(f32::NAN), WasmValue::F32(1.0)]).unwrap();
+        assert!(matches!(r[0], WasmValue::F32(v) if v.is_nan()), "max(NaN, 1.0) should be NaN, got {r:?}");
+    }
+
+    /// `min`/`max` must also treat `-0.0` as strictly less than `+0.0` --
+    /// `min(+0.0, -0.0) == -0.0`, `max(+0.0, -0.0) == +0.0` -- per the WASM
+    /// spec's own signed-zero tie-breaking rule.
+    #[test]
+    fn test_f32_min_max_signed_zero() {
+        let mut eng = make_f32_binop_engine(0x96);
+        let r = eng.call_function(0, &[WasmValue::F32(0.0), WasmValue::F32(-0.0)]).unwrap();
+        assert!(matches!(r[0], WasmValue::F32(v) if v.is_sign_negative()), "min(+0,-0) should be -0.0, got {r:?}");
+
+        let mut eng = make_f32_binop_engine(0x97);
+        let r = eng.call_function(0, &[WasmValue::F32(0.0), WasmValue::F32(-0.0)]).unwrap();
+        assert!(matches!(r[0], WasmValue::F32(v) if v.is_sign_positive()), "max(+0,-0) should be +0.0, got {r:?}");
+    }
+
     #[test]
     fn test_f32_abs_neg_sqrt() {
         let mut eng = make_f32_unop_engine(0x8B);
@@ -5072,6 +5181,48 @@ mod tests {
             eng.call_function(0, &[WasmValue::F32(-1.7)]).unwrap(),
             vec![WasmValue::F32(-1.0)]
         );
+    }
+
+    /// Found running the real corpus (`f64.wast`'s `nan:arithmetic`
+    /// cases) via `wasm-conformance`: a SIGNALING NaN input (quiet bit
+    /// clear) passed through `ceil`/`floor`/`trunc` must come out with the
+    /// quiet bit SET -- the platform libm's own behavior for this was
+    /// found to differ between macOS and Linux, so this can't rely on
+    /// `f32::ceil`/`floor`/`trunc`'s native NaN handling.
+    #[test]
+    fn test_f32_ceil_floor_trunc_quiets_signaling_nan() {
+        let signaling_nan = f32::from_bits(0x7FA0_0000); // exponent all-1, quiet bit clear, payload nonzero
+        assert!(signaling_nan.is_nan());
+        assert_eq!(signaling_nan.to_bits() & 0x0040_0000, 0, "test input must actually be signaling");
+
+        for opcode in [0x8D, 0x8E, 0x8F] {
+            let mut eng = make_f32_unop_engine(opcode);
+            let r = eng.call_function(0, &[WasmValue::F32(signaling_nan)]).unwrap();
+            let WasmValue::F32(v) = r[0] else { panic!("expected F32 result") };
+            assert!(v.is_nan(), "opcode {opcode:#x}: expected a NaN result");
+            assert_ne!(v.to_bits() & 0x0040_0000, 0, "opcode {opcode:#x}: result NaN must have the quiet bit set, got {:#010x}", v.to_bits());
+        }
+    }
+
+    /// Found running the real WebAssembly/testsuite corpus (`f32.wast`)
+    /// via `wasm-conformance`: `nearest` (round-ties-to-even, opcode
+    /// `0x90`) must preserve the sign of a result that rounds to zero --
+    /// `nearest(-0.25)` is `-0.0`, not `0.0` -- per IEEE 754's own
+    /// roundTiesToEven rule. Rust's `f32::round()` doesn't guarantee that
+    /// for magnitudes that round down to zero.
+    #[test]
+    fn test_f32_nearest() {
+        let mut eng = make_f32_unop_engine(0x90);
+        // Ordinary cases, unaffected by the sign-of-zero fix.
+        assert_eq!(eng.call_function(0, &[WasmValue::F32(2.3)]).unwrap(), vec![WasmValue::F32(2.0)]);
+        assert_eq!(eng.call_function(0, &[WasmValue::F32(2.5)]).unwrap(), vec![WasmValue::F32(2.0)], "ties to even");
+        assert_eq!(eng.call_function(0, &[WasmValue::F32(3.5)]).unwrap(), vec![WasmValue::F32(4.0)], "ties to even");
+
+        // The sign-of-zero case itself.
+        let r = eng.call_function(0, &[WasmValue::F32(-0.25)]).unwrap();
+        assert!(matches!(r[0], WasmValue::F32(v) if v == 0.0 && v.is_sign_negative()), "nearest(-0.25) should be -0.0, got {r:?}");
+        let r = eng.call_function(0, &[WasmValue::F32(0.25)]).unwrap();
+        assert!(matches!(r[0], WasmValue::F32(v) if v == 0.0 && v.is_sign_positive()), "nearest(0.25) should be +0.0, got {r:?}");
     }
 
     #[test]
@@ -5200,6 +5351,41 @@ mod tests {
     }
 
     #[test]
+    fn test_f64_min_max() {
+        let mut eng = make_f64_binop_engine(0xA4);
+        let r = eng.call_function(0, &[WasmValue::F64(3.0), WasmValue::F64(5.0)]).unwrap();
+        assert_eq!(r, vec![WasmValue::F64(3.0)]);
+
+        let mut eng = make_f64_binop_engine(0xA5);
+        let r = eng.call_function(0, &[WasmValue::F64(3.0), WasmValue::F64(5.0)]).unwrap();
+        assert_eq!(r, vec![WasmValue::F64(5.0)]);
+    }
+
+    /// As `test_f32_min_max_propagates_nan` -- same bug, same fix, f64.
+    #[test]
+    fn test_f64_min_max_propagates_nan() {
+        let mut eng = make_f64_binop_engine(0xA4);
+        let r = eng.call_function(0, &[WasmValue::F64(f64::NAN), WasmValue::F64(1.0)]).unwrap();
+        assert!(matches!(r[0], WasmValue::F64(v) if v.is_nan()), "min(NaN, 1.0) should be NaN, got {r:?}");
+
+        let mut eng = make_f64_binop_engine(0xA5);
+        let r = eng.call_function(0, &[WasmValue::F64(1.0), WasmValue::F64(f64::NAN)]).unwrap();
+        assert!(matches!(r[0], WasmValue::F64(v) if v.is_nan()), "max(1.0, NaN) should be NaN, got {r:?}");
+    }
+
+    /// As `test_f32_min_max_signed_zero` -- same rule, f64.
+    #[test]
+    fn test_f64_min_max_signed_zero() {
+        let mut eng = make_f64_binop_engine(0xA4);
+        let r = eng.call_function(0, &[WasmValue::F64(0.0), WasmValue::F64(-0.0)]).unwrap();
+        assert!(matches!(r[0], WasmValue::F64(v) if v.is_sign_negative()), "min(+0,-0) should be -0.0, got {r:?}");
+
+        let mut eng = make_f64_binop_engine(0xA5);
+        let r = eng.call_function(0, &[WasmValue::F64(0.0), WasmValue::F64(-0.0)]).unwrap();
+        assert!(matches!(r[0], WasmValue::F64(v) if v.is_sign_positive()), "max(+0,-0) should be +0.0, got {r:?}");
+    }
+
+    #[test]
     fn test_f64_abs_neg_sqrt_ceil_floor() {
         let mut eng = make_f64_unop_engine(0x99);
         assert_eq!(
@@ -5230,6 +5416,38 @@ mod tests {
             eng.call_function(0, &[WasmValue::F64(1.7)]).unwrap(),
             vec![WasmValue::F64(1.0)]
         );
+    }
+
+    /// As `test_f32_ceil_floor_trunc_quiets_signaling_nan` -- same
+    /// cross-platform bug, same fix, f64.
+    #[test]
+    fn test_f64_ceil_floor_trunc_quiets_signaling_nan() {
+        let signaling_nan = f64::from_bits(0x7FF4_0000_0000_0000); // exponent all-1, quiet bit clear, payload nonzero
+        assert!(signaling_nan.is_nan());
+        assert_eq!(signaling_nan.to_bits() & 0x0008_0000_0000_0000, 0, "test input must actually be signaling");
+
+        for opcode in [0x9B, 0x9C, 0x9D] {
+            let mut eng = make_f64_unop_engine(opcode);
+            let r = eng.call_function(0, &[WasmValue::F64(signaling_nan)]).unwrap();
+            let WasmValue::F64(v) = r[0] else { panic!("expected F64 result") };
+            assert!(v.is_nan(), "opcode {opcode:#x}: expected a NaN result");
+            assert_ne!(v.to_bits() & 0x0008_0000_0000_0000, 0, "opcode {opcode:#x}: result NaN must have the quiet bit set, got {:#018x}", v.to_bits());
+        }
+    }
+
+    /// As `test_f32_nearest` -- same sign-of-zero bug, same fix, f64
+    /// (opcode `0x9E`).
+    #[test]
+    fn test_f64_nearest() {
+        let mut eng = make_f64_unop_engine(0x9E);
+        assert_eq!(eng.call_function(0, &[WasmValue::F64(2.3)]).unwrap(), vec![WasmValue::F64(2.0)]);
+        assert_eq!(eng.call_function(0, &[WasmValue::F64(2.5)]).unwrap(), vec![WasmValue::F64(2.0)], "ties to even");
+        assert_eq!(eng.call_function(0, &[WasmValue::F64(3.5)]).unwrap(), vec![WasmValue::F64(4.0)], "ties to even");
+
+        let r = eng.call_function(0, &[WasmValue::F64(-0.25)]).unwrap();
+        assert!(matches!(r[0], WasmValue::F64(v) if v == 0.0 && v.is_sign_negative()), "nearest(-0.25) should be -0.0, got {r:?}");
+        let r = eng.call_function(0, &[WasmValue::F64(0.25)]).unwrap();
+        assert!(matches!(r[0], WasmValue::F64(v) if v == 0.0 && v.is_sign_positive()), "nearest(0.25) should be +0.0, got {r:?}");
     }
 
     #[test]

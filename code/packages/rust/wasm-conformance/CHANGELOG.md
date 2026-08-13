@@ -69,7 +69,7 @@ block signatures, reference-types' `externref` and generalized `elem`
 syntax, post-MVP saturating-truncation/sign-extension opcodes, and the
 `func`/`global` inline-import shorthand (linking-adjacent, sharing this
 phase's already-documented `spectest` deferral). Among the 32 that do
-parse: `assert_return` 11518/12238 (94.1%), `assert_trap` 325/325
+parse: `assert_return` 12032/12238 (98.3%), `assert_trap` 325/325
 (100%), `assert_invalid` 11/11 graded (100%) with 412 `NotYetSupported`,
 `assert_malformed` 145/147 (98.6%) with 46 `NotYetSupported`,
 `assert_exhaustion` 0/2 graded (both `NotYetSupported` by design). See
@@ -87,8 +87,29 @@ found by security review of the fix for one of them (an empty-list
 reachable panic on an empty inline list, and two hex-float-literal
 gaps) — see `code/packages/rust/wasm-wast-parser/CHANGELOG.md`'s `0.1.1`
 entry for the full detail. File-level parse failures dropped from 33/48
-to 16/48
-as a direct result.
+to 16/48 as a direct result.
+
+### It also found 3 real `wasm-execution` float correctness bugs
+
+`wasm-execution` 0.6.1 fixes three float-NaN/sign-handling bugs this
+harness's very first real run against the interpreter surfaced —
+`min`/`max` not propagating NaN (the single largest source of
+`assert_return` failures in the whole corpus: fixing it alone moved the
+aggregate `assert_return` pass rate from 94.1% to 98.3%), `nearest` not
+preserving the sign of a zero result, and `ceil`/`floor`/`trunc` not
+reliably quieting a signaling NaN input. See that crate's own `0.6.1`
+changelog entry for the full detail.
+
+The third of those was caught pushing this exact PR: CI's `ubuntu-latest`
+build failed the `corpus_matches_the_committed_baseline` gate — a
+genuine, reproducible platform difference between macOS (where this
+baseline was first generated) and Linux, not a flake. Diagnosed by
+reproducing Ubuntu's exact behavior locally via a `linux/amd64` Docker
+container and bisecting which specific `f64.wast` cases differed. This
+is exactly the failure mode the baseline gate exists to catch — a
+silent, un-reviewed drift in what "conformant" means would have shipped
+unnoticed without it. The final baseline was verified identical on both
+macOS and a Linux container before push.
 
 ### `wasm-runtime::call_typed`
 
