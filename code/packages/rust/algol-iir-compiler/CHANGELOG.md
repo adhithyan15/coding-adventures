@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.158.0 — 2026-08-13 — stable standard-function while predicates
+
+Capped `while` body-effect analysis now permits supported deterministic
+standard functions to wrap stable scalar predicate dependencies. User-shadowed
+and unsupported calls remain conservative.
+
 ## 0.157.0 — 2026-08-13 — stable scalar while predicates
 
 Capped `while` dependency analysis now selects a body branch controlled by a
