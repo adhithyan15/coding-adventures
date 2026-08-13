@@ -869,6 +869,9 @@ backend immediately) come before the enabler-dependent items.
   iteration. Those values may come from straight-line tracked numeric locals;
   the proof runs before loop lowering invalidates snapshots. Zero-trip,
   dynamic, and `while` elements preserve their entry set.
+  A statically proven zero-trip `step`/`until` element also preserves entry
+  integer, real, and boolean snapshots; unknown, `while`, and potentially
+  repeating elements still invalidate them.
   A `while` element also retains body initialization when a bounded static
   numeric comparison, evaluated after abstractly assigning its initial
   controlled value, proves the first condition true. Known comparison leaves
