@@ -7037,6 +7037,23 @@ impl HtmlParser {
             ));
             return;
         }
+        if self.current_namespace().is_some()
+            && !self.current_element_is(name)
+            && matches!(name, "dd" | "dt")
+            && (self.has_authored_open_html_element("dd")
+                || self.has_authored_open_html_element("dt"))
+            && self.open_html_element_in_scope_index(name).is_none()
+        {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-end-tag-in-foreign-content",
+                format!("end tag `</{name}>` did not match the current foreign element"),
+            ));
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-description-item-end-tag",
+                format!("end tag `</{name}>` did not match a description item in scope"),
+            ));
+            return;
+        }
         if self.has_open_svg_html_integration_point()
             && name != "template"
             && name != "p"
@@ -32514,8 +32531,11 @@ mod tests {
             .parser_diagnostics
             .iter()
             .all(|diagnostic| diagnostic.code != "unexpected-li-end-tag"));
-        let list = element(&body(&foreign_select.document).children[0]);
-        assert_eq!(list.children.last(), Some(&Node::text("X")));
+        let description_list = element(&body(&foreign_select.document).children[0]);
+        assert_eq!(
+            description_list.children.last(),
+            Some(&Node::text("X"))
+        );
 
         let no_html_list_item = parse_html_with_diagnostics(
             "<!doctype html><svg><foreignObject id=boundary></li>X</foreignObject></svg>",
@@ -32585,7 +32605,6 @@ mod tests {
             "<!doctype html><dl><dd><p></dd>Y</dl>",
             "<!doctype html><table><tr><td><dl><dd></dd><dt></dt></dl></td></tr></table>",
             "<!doctype html><dl><dd><svg><object></dd>Y</object></svg></dl>",
-            "<!doctype html><dl><dt><math><mi></dt>X</mi></math>Y</dl>",
         ] {
             let output = parse_html_with_diagnostics(source).unwrap();
             assert!(
@@ -32596,6 +32615,101 @@ mod tests {
                 output.parser_diagnostics
             );
         }
+
+        for item_name in ["dd", "dt"] {
+            for (root_name, boundary_start, boundary_name) in [
+                ("svg", "foreignObject", "foreignObject"),
+                ("svg", "desc", "desc"),
+                ("svg", "title", "title"),
+                ("math", "mi", "mi"),
+                ("math", "mtext", "mtext"),
+                (
+                    "math",
+                    "annotation-xml encoding=text/html",
+                    "annotation-xml",
+                ),
+            ] {
+                let source = format!(
+                    "<!doctype html><dl><{item_name} id=item><{root_name}><{boundary_start} id=boundary></{item_name}>X</{boundary_name}></{root_name}></{item_name}></dl>"
+                );
+                let output = parse_html_with_diagnostics(&source).unwrap();
+                assert_eq!(
+                    output.parser_diagnostics,
+                    vec![
+                        ParserDiagnostic::new(
+                            "unexpected-end-tag-in-foreign-content",
+                            format!(
+                                "end tag `</{item_name}>` did not match the current foreign element"
+                            )
+                        ),
+                        ParserDiagnostic::new(
+                            "unexpected-description-item-end-tag",
+                            format!(
+                                "end tag `</{item_name}>` did not match a description item in scope"
+                            )
+                        ),
+                    ],
+                    "source {source:?}"
+                );
+                let item = find_element_by_id(&output.document.children, "item").unwrap();
+                let boundary = find_element_by_id(&item.children, "boundary").unwrap();
+                assert_eq!(
+                    boundary.children,
+                    vec![Node::text("X")],
+                    "source {source:?}"
+                );
+            }
+        }
+
+        for (item_name, end_name) in [("dd", "dt"), ("dt", "dd")] {
+            let source = format!(
+                "<!doctype html><dl><{item_name} id=item><svg><foreignObject id=boundary></{end_name}>X</foreignObject></svg></{item_name}></dl>"
+            );
+            let output = parse_html_with_diagnostics(&source).unwrap();
+            assert_eq!(
+                output.parser_diagnostics,
+                vec![
+                    ParserDiagnostic::new(
+                        "unexpected-end-tag-in-foreign-content",
+                        format!(
+                            "end tag `</{end_name}>` did not match the current foreign element"
+                        )
+                    ),
+                    ParserDiagnostic::new(
+                        "unexpected-description-item-end-tag",
+                        format!(
+                            "end tag `</{end_name}>` did not match a description item in scope"
+                        )
+                    ),
+                ],
+                "source {source:?}"
+            );
+            let boundary = find_element_by_id(&output.document.children, "boundary").unwrap();
+            assert_eq!(boundary.children, vec![Node::text("X")]);
+        }
+
+        let foreign_select = parse_html_with_diagnostics(
+            "<!doctype html><dl><dd id=item><svg><select id=foreign></dd>X",
+        )
+        .unwrap();
+        assert!(foreign_select
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "unexpected-description-item-end-tag"));
+        let list = element(&body(&foreign_select.document).children[0]);
+        assert_eq!(list.children.last(), Some(&Node::text("X")));
+
+        let no_html_description_item = parse_html_with_diagnostics(
+            "<!doctype html><svg><foreignObject id=boundary></dd>X</foreignObject></svg>",
+        )
+        .unwrap();
+        assert!(no_html_description_item
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "unexpected-description-item-end-tag"));
+        let boundary =
+            find_element_by_id(&no_html_description_item.document.children, "boundary").unwrap();
+        assert_eq!(boundary.children, vec![Node::text("X")]);
 
         let blocked_table = parse_html_with_diagnostics(
             "<!doctype html><dl><dd id=item><table id=boundary></dd><tr><td>X</table>Y</dl>",
@@ -32635,6 +32749,14 @@ mod tests {
                 .count(),
             1
         );
+
+        let foreign_fragment =
+            parse_html_fragment_for_context_with_diagnostics("</dd>X", "svg dd").unwrap();
+        assert_eq!(foreign_fragment.nodes, vec![Node::text("X")]);
+        assert!(foreign_fragment
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "unexpected-description-item-end-tag"));
     }
 
     #[test]
