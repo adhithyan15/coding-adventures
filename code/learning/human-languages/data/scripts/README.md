@@ -673,10 +673,16 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   corroborated by the Directorate's matching four-part buildup and directions.
   JackPotte's separate 12-frame animation instead orders the right stem,
   diagonal arm, left loop, and headline, so that documented stem-first
-  alternative remains explicit. The remaining **107** prose part
+  alternative remains explicit. **व** then starts at the upper-right of its
+  body, travels left around the top, and continues counterclockwise around the
+  loop before two lifted runs descend the right stem and finish the
+  shirorekhā. Its three-frame Noto Sans Devanagari path follows JackPotte's
+  11-frame animation with two lifts. The Directorate's deskbook independently
+  confirms the same loop, right-stem, and headline buildup, while the animation
+  supplies the within-run directions and lift evidence. The remaining **106** prose part
   orders across five scripts
   (`arabic` 3,
-  `cyrillic` 33, `devanagari` 4,
+  `cyrillic` 33, `devanagari` 3,
   `gujarati` 33, `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a
   citation without a count), and Language Ladder's ductus test proves every
