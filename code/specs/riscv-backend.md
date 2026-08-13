@@ -142,13 +142,19 @@ implemented.
    emit a frame, removing the six-temporary limit for scalar CIR.
 15. [ ] **Wide register allocation:** spill live 64-bit register pairs and add
    pair-aware reloads, extending the scalar frame allocator to wide CIR values.
-16. [ ] **Calls and modules:** lower direct calls, add relocations/linking for flat
+   Pair arithmetic (`add`, `sub`, `mul`, bitwise operations, and `not`) reloads
+   live spills today; division, shifts, comparisons, and mixed-width pressure
+   need operand-specific scratch allocation before they can join this path.
+16. [ ] **Complete wide spill coverage:** make division, shifts, and comparisons
+   materialize spilled pairs without conflicting with their dedicated scratch
+   registers, then handle mixed scalar/pair register pressure.
+17. [ ] **Calls and modules:** lower direct calls, add relocations/linking for flat
    binaries, and preserve the RISC-V calling convention across calls.
-17. [ ] **Host runtime ABI:** define simulator `ecall` services for exit and integer
+18. [ ] **Host runtime ABI:** define simulator `ecall` services for exit and integer
    output, then lower language print primitives through that ABI.
-18. [ ] **Memory and data:** globals, addresses, loads/stores, and a data-image
+19. [ ] **Memory and data:** globals, addresses, loads/stores, and a data-image
    loader for programs needing strings or arrays.
-19. [ ] **BASIC real values:** Dartmouth BASIC currently lowers numeric values
+20. [ ] **BASIC real values:** Dartmouth BASIC currently lowers numeric values
    such as `PRINT 42` through `f64`; direct RISC-V execution needs either a
    floating-point ABI or an integer-only lowering path before those programs
    can run on the simulator.
