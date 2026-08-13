@@ -227,6 +227,113 @@ type ModuleRuntimeStrVars = HashMap<String, FunctionRuntimeStrVars>;
 type FunctionRuntimeStrBlocks = HashMap<String, u32>;
 type ModuleRuntimeStrBlocks = HashMap<String, FunctionRuntimeStrBlocks>;
 
+/// Compute the set of string variables that, at some point in this function,
+/// hold a **genuinely runtime** string — a value the compile-time literal table
+/// can never fold.
+///
+/// ## Why this exists (the stale-literal bug)
+///
+/// `string_literals` is keyed by *destination variable*, with last-writer-wins
+/// semantics.  That is exact only while every write to a variable folds to a
+/// compile-time literal.  ALGOL 60's `string procedure` breaks it:
+///
+/// ```text
+/// begin string s; …  s := pick(1);  if s = 'HI' then … ; print(s) end
+/// ```
+///
+/// lowers to
+///
+/// ```text
+///   str_const  s   ""            ← the declaration's empty initialiser
+///   call       _t3 = pick(_t2)   ← a RUNTIME handle; nothing to fold
+///   str_const  _t4 ""
+///   str_concat s   = _t3, _t4    ← s now holds a runtime handle
+///   str_eq     _t7 = s, 'HI'
+///   print_str  s
+/// ```
+///
+/// The `str_concat` cannot fold, so the old code `continue`d — leaving the
+/// **stale** `s → ""` entry from the declaration in `string_literals`.  Every
+/// later reader then took the compile-time fast path and silently read the dead
+/// initialiser: `str_eq s, 'HI'` constant-folded to `0` (so `result` was `0`, not
+/// `42`) and `print_str s` printed zero bytes instead of `HI`.  Worse, the
+/// `str_concat` itself took the literal fast path and never ran at all.  This is
+/// the same bug class `iir-to-llvm` fixed for its `str_lens`/`str_values` tables;
+/// the wasm backend has its own table and needed its own fix.
+///
+/// The invariant this restores: **a variable that ever holds a runtime string
+/// never carries a compile-time literal entry**, so every reader takes the
+/// runtime path (read the `[i32 len][bytes]` header back at run time) uniformly.
+///
+/// ## What counts as runtime
+///
+/// Seeds are the `str`-typed values no fold can reach: a `str` **parameter**, and
+/// the destination of any `str`-typed op that is not one of the three folding
+/// producers (`str_const`, `str_concat`, `str_slice`) — a `call` result, an
+/// `input_str` read, a `global_load`, an `array_get` element.  Runtime-ness then
+/// propagates through the folding producers: a `str_concat` whose operand is
+/// runtime is runtime, and so are `str_slice`/`mov` of a runtime source.
+///
+/// Propagation is a reachability walk over the operand→destination edges, not a
+/// re-scan-until-stable loop: IIR is not SSA, so a back edge can route a later
+/// definition into an earlier use, and re-scanning the whole instruction list per
+/// round would be quadratic in the module size.  Building the edge map once and
+/// draining a worklist visits every variable at most once, so the pass stays
+/// linear in the number of instructions even for a large or adversarial module.
+fn collect_runtime_valued_str_vars(fn_: &IIRFunction) -> HashSet<String> {
+    // operand variable → destinations that inherit its runtime-ness.
+    let mut edges: HashMap<&str, Vec<&str>> = HashMap::new();
+    // Seeds: `str` parameters, plus every `str` destination no fold can reach.
+    let mut worklist: Vec<&str> = fn_
+        .params
+        .iter()
+        .filter(|(_, ty)| ty == "str")
+        .map(|(name, _)| name.as_str())
+        .collect();
+    for instr in &fn_.instructions {
+        let Some(dest) = instr.dest.as_deref() else {
+            continue;
+        };
+        if instr.type_hint != "str" {
+            continue;
+        }
+        // How many leading `srcs` carry the string(s) this op derives its result
+        // from — `str_concat` joins two, `str_slice`/`mov` read one (a `str_slice`'s
+        // remaining operands are its integer indices).
+        let string_operands = match instr.op.as_str() {
+            // A literal is a literal — never runtime on its own.  (If this same
+            // variable is written a runtime string elsewhere, that instruction
+            // seeds it and the variable is runtime *as a variable*, which is
+            // exactly the granularity the by-dest literal table works at.)
+            "str_const" => continue,
+            "str_concat" => 2,
+            "str_slice" | "mov" => 1,
+            // Every other `str`-typed producer yields a live handle: a `call`
+            // result, `call_builtin "input_str"`, a `global_load`, an `array_get`.
+            // None of them has a compile-time value.
+            _ => {
+                worklist.push(dest);
+                continue;
+            }
+        };
+        for src in instr.srcs.iter().take(string_operands) {
+            if let Operand::Var(v) = src {
+                edges.entry(v.as_str()).or_default().push(dest);
+            }
+        }
+    }
+    let mut runtime: HashSet<String> = HashSet::new();
+    while let Some(var) = worklist.pop() {
+        if !runtime.insert(var.to_string()) {
+            continue; // already known runtime — its edges were already followed.
+        }
+        if let Some(dests) = edges.get(var) {
+            worklist.extend(dests.iter().copied());
+        }
+    }
+    runtime
+}
+
 /// Compute the set of string variables that must be promoted to a runtime
 /// handle: those that are the destination of a `str`-typed instruction in **more
 /// than one basic block**.  This mirrors `iir-to-llvm`'s `collect_slot_vars`
@@ -238,7 +345,10 @@ type ModuleRuntimeStrBlocks = HashMap<String, FunctionRuntimeStrBlocks>;
 /// ends one.  A str variable reassigned twice *straight-line* stays in one block
 /// and keeps the literal fast path — the linear last-writer-wins tracking is
 /// exactly right there.
-fn collect_runtime_str_vars(fn_: &IIRFunction) -> FunctionRuntimeStrVars {
+fn collect_runtime_str_vars(
+    fn_: &IIRFunction,
+    runtime_valued: &HashSet<String>,
+) -> FunctionRuntimeStrVars {
     let mut str_blocks: HashMap<&str, HashSet<usize>> = HashMap::new();
     // Folded-literal string destinations, and str vars handed to a callee as a call
     // argument.  A `str_const`/`str_concat`/`str_slice` whose result folds to a
@@ -290,7 +400,14 @@ fn collect_runtime_str_vars(fn_: &IIRFunction) -> FunctionRuntimeStrVars {
         // fold from.
         if matches!(op, "str_const" | "str_concat" | "str_slice") {
             if let Some(dest) = &instr.dest {
-                folding_str_dests.insert(dest.as_str());
+                // …unless this variable ever holds a runtime string (see
+                // `collect_runtime_valued_str_vars`).  A `str_concat` over a call
+                // result is written by a folding *opcode* but produces a live
+                // handle, and calling it "folding" here made the string-operation
+                // grouping below skip promoting its literal partner.
+                if !runtime_valued.contains(dest.as_str()) {
+                    folding_str_dests.insert(dest.as_str());
+                }
             }
         }
         if op == "call" {
@@ -357,6 +474,15 @@ fn collect_runtime_str_vars(fn_: &IIRFunction) -> FunctionRuntimeStrVars {
                 }
             }
         }
+    }
+    // A variable that ever holds a runtime string carries a *handle*, never a raw
+    // data offset — so any `str_const` writing it must store the offset of a
+    // length-prefixed `[i32 len][bytes]` block, exactly like a control-flow-selected
+    // string.  Without this, the empty initialiser of ALGOL's `string s;` would
+    // leave the raw (header-less) data offset in the local, and a reader that took
+    // the runtime path would read the first data bytes as a bogus length.
+    for v in runtime_valued {
+        promoted.insert(v.clone());
     }
     promoted
 }
@@ -4518,7 +4644,12 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
         // E4-dyn (E4d-3): which of this function's string variables are chosen by
         // control flow (assigned in >1 basic block) and so must carry a runtime
         // handle rather than a folded literal.
-        let fn_runtime_vars = collect_runtime_str_vars(fn_);
+        // Which of this function's string variables ever hold a runtime handle —
+        // and so must NEVER acquire a compile-time literal entry, no matter how
+        // many folding `str_const`s also write them (see
+        // `collect_runtime_valued_str_vars` for the bug this closes).
+        let fn_runtime_valued = collect_runtime_valued_str_vars(fn_);
+        let fn_runtime_vars = collect_runtime_str_vars(fn_, &fn_runtime_valued);
         for instr in &fn_.instructions {
             match instr.op.as_str() {
                 "global_load" | "global_store" => {
@@ -4555,17 +4686,29 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
                     if let (Some(dest), Some(Operand::Str(s))) =
                         (instr.dest.as_ref(), instr.srcs.first())
                     {
-                        let offset = string_data.len() as u32;
                         let len = s.len() as u32;
-                        string_data.extend_from_slice(s.as_bytes());
-                        string_literals
-                            .entry(fn_.name.clone())
-                            .or_default()
-                            .insert(dest.clone(), WasmStringLiteral {
-                                offset,
-                                len,
-                                bytes: s.as_bytes().to_vec(),
-                            });
+                        // A variable that ever holds a runtime string gets NO literal
+                        // entry — not even for a `str_const` that writes it earlier.
+                        // The table is keyed by variable, so an entry left here is
+                        // read back by every later `print_str`/`str_eq`/`str_cmp` on
+                        // that variable, silently answering with the dead initialiser
+                        // instead of the live runtime value.  The `lay_runtime_str_block`
+                        // below (this variable is in `fn_runtime_vars`, because
+                        // `collect_runtime_str_vars` promotes every runtime-valued var)
+                        // gives the `str_const` a real length-prefixed block instead, so
+                        // the uniform runtime path stays correct for it too.
+                        if !fn_runtime_valued.contains(dest) {
+                            let offset = string_data.len() as u32;
+                            string_data.extend_from_slice(s.as_bytes());
+                            string_literals
+                                .entry(fn_.name.clone())
+                                .or_default()
+                                .insert(dest.clone(), WasmStringLiteral {
+                                    offset,
+                                    len,
+                                    bytes: s.as_bytes().to_vec(),
+                                });
+                        }
 
                         // E4-dyn (E4d-3): if this string variable is chosen by
                         // control flow — OR handed to a callee as a folded literal
@@ -4592,8 +4735,14 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
                     if let (Some(dest), [Operand::Var(left), Operand::Var(right)]) =
                         (instr.dest.as_ref(), instr.srcs.as_slice())
                     {
+                        // A destination that ever holds a runtime string must take the
+                        // runtime path even when *this* concatenation's operands both
+                        // happen to fold, so the variable has exactly one
+                        // representation (a `[i32 len][bytes]` handle) everywhere.
+                        let foldable = !fn_runtime_valued.contains(dest);
                         let Some((left_lit, right_lit)) = string_literals
                             .get(&fn_.name)
+                            .filter(|_| foldable)
                             .and_then(|fn_strings| {
                                 Some((
                                     fn_strings.get(left)?.clone(),
@@ -4724,6 +4873,12 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
                         // compile-time, in-bounds indices yields the sliced bytes at
                         // compile time.  `folded` is `Some(bytes)` on success.
                         let folded: Option<Vec<u8>> = (|| {
+                            // Same one-representation rule as `str_concat`: if this
+                            // destination ever holds a runtime handle, it never holds a
+                            // folded literal.
+                            if fn_runtime_valued.contains(dest) {
+                                return None;
+                            }
                             let src_lit = string_literals
                                 .get(&fn_.name)
                                 .and_then(|fn_strings| fn_strings.get(src))?;
