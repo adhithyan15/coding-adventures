@@ -57,3 +57,30 @@ fn biology_animal_classes_recall_binds_class_with_citation() {
     // A rock is not an animal — honest abstention, never a fabricated class.
     assert!(out.contains("\"abstained\":true"), "rock abstains: {out}");
 }
+
+#[test]
+fn biology_animal_classes_extension_recalls_the_newly_added_rows() {
+    let dir = scratch("animalclassesext");
+    let src = facts_stdlib().join("biology/animal-classes.adj");
+    std::fs::copy(&src, dir.join("animal-classes.adj")).expect("copy shipped animal-classes.adj");
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"animal-classes.adj\"\n\
+         ? animal_class(fox, $Class)\n\
+         ? animal_class(ray, $Class)\n\
+         ? animal_class(cassowary, $Class)\n\
+         ? animal_class(bat, $Class)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // fox/ray/cassowary were added this cycle -- already named in the table's own
+    // header quotes (no new WebFetch needed to extend).
+    assert!(out.contains("\"Class\":\"mammal\""), "fox → mammal: {out}");
+    assert!(out.contains("\"Class\":\"fish\""), "ray → fish: {out}");
+    assert!(out.contains("\"Class\":\"bird\""), "cassowary → bird: {out}");
+    // A bat is a real mammal, but deliberately excluded (surprises beginners) --
+    // honest abstention, never a fabricated class.
+    assert!(out.contains("\"abstained\":true"), "bat abstains: {out}");
+}
