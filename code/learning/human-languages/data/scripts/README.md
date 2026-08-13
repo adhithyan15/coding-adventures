@@ -609,10 +609,15 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   path follows the cited three-run animation with two lifts. The Directorate's
   deskbook confirms component order but stages the upper bar and body
   separately, so it corroborates order rather than the animation's first join.
-  The remaining **118** prose part
+  **त** starts at the body's upper-right junction, sweeps left across the
+  shoulder, and curves down to its open lower tip before two lifted runs
+  descend the right stem and finish the shirorekhā. Its three-frame Noto Sans
+  Devanagari path follows the cited three-run animation with two lifts,
+  independently corroborated by the Directorate's three-part learner buildup.
+  The remaining **117** prose part
   orders across five scripts
   (`arabic` 3,
-  `cyrillic` 33, `devanagari` 15,
+  `cyrillic` 33, `devanagari` 14,
   `gujarati` 33, `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a
   citation without a count), and Language Ladder's ductus test proves every

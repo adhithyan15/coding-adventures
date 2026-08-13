@@ -619,6 +619,12 @@ Its Noto Sans Devanagari fit preserves the animated source's three strokes and
 two lifts. The Central Hindi Directorate deskbook confirms component order but
 stages the upper bar and body separately, so it corroborates order without
 being treated as independent evidence for the animation's first join.
+The three-frame Devanagari **त** filmstrip starts at the body's upper-right
+junction, sweeps left across the shoulder, and curves down to the open lower
+tip before separately descending the right stem and adding the shirorekhā.
+Its Noto Sans Devanagari fit preserves the animated source's three strokes and
+two lifts, with the same buildup independently corroborated by the Central
+Hindi Directorate's learner deskbook.
 The runtime resolves each cited path back to the owning script and lazily loads that
 script's font, while Tamil continues to use Noto Sans Tamil. Unverified letters
 still fall back to the numbered prose list, unchanged. Extending the coverage is HL-C09,
