@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.73.0
+
+- Preserve normal and italic state `font-style` declarations in graph IR.
+
 ## 0.72.0
 
 - Preserve normal, bold, and numeric state `font-weight` styles in graph IR.
