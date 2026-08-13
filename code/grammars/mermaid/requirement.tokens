@@ -1,0 +1,15 @@
+# @version 1
+# Mermaid 11.16.1 requirement diagram token grammar.
+
+skip:
+  WHITESPACE       = /[ \t]+/
+  COMMENT          = /(?:%%|#)[^\r\n]*/
+
+NEWLINE            = /\r?\n/
+HEADER             = /requirementDiagram/
+TITLE              = /title[ \t]+[^\r\n;#]+/
+DIRECTION          = /direction[ \t]+(?:TB|BT|LR|RL)/
+DEFINITION_START   = /(?:functionalRequirement|interfaceRequirement|performanceRequirement|physicalRequirement|designConstraint|requirement|element)[ \t]+(?:"[^"]+"|[^\s{]+)[ \t]*\{/
+FIELD              = /(?:id|text|risk|verifyMethod|verifymethod|type|docref|docRef)[ \t]*:[ \t]*(?:"[^"]*"|[^\r\n}]+)/
+RELATIONSHIP       = /(?:"[^"]+"|[^\s<>{}-]+)[ \t]*(?:-[ \t]*(?:contains|copies|derives|satisfies|verifies|refines|traces)[ \t]*->|<-[ \t]*(?:contains|copies|derives|satisfies|verifies|refines|traces)[ \t]*-)[ \t]*(?:"[^"]+"|[^\s<>{}-]+)/
+RBRACE             = "}"

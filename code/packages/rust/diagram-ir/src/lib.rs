@@ -1,6 +1,6 @@
 //! diagram-ir v0.42.0 - DG00/DG04 semantic IR
 
-pub const VERSION: &str = "0.52.0";
+pub const VERSION: &str = "0.53.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramDirection {
@@ -726,6 +726,7 @@ pub enum StructuralKind {
     Class,
     Er,
     C4,
+    Requirement,
 }
 
 #[derive(Clone, Debug, PartialEq, Default)]
@@ -736,6 +737,8 @@ pub enum StructuralNodeKind {
     Abstract,
     Enum,
     Entity,
+    Requirement,
+    Element,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -1197,7 +1200,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.52.0");
+        assert_eq!(VERSION, "0.53.0");
     }
     #[test]
     fn default_direction_is_tb() {
