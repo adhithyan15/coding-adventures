@@ -3693,6 +3693,36 @@
       "output": "spanish/book/chapters/ch250-review-tonicos.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 251,
+      "output": "spanish/book/chapters/ch251-ahi-alli.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 252,
+      "output": "spanish/book/chapters/ch252-ahora-hoy.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 253,
+      "output": "spanish/book/chapters/ch253-unos-unas.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 254,
+      "output": "spanish/book/chapters/ch254-vuestro.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 255,
+      "output": "spanish/book/chapters/ch255-vi-di.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 256,
+      "output": "spanish/book/chapters/ch256-review-parejas.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "output": "tamil/book/chapters/ch06-dative-case.tex",

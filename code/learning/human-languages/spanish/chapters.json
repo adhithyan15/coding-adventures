@@ -4843,6 +4843,108 @@
           "ES-GRAMMAR-VOCATIVE-COMMA"
         ]
       }
+    },
+    {
+      "chapter": 251,
+      "title": "Ahí, Allí --- The Other Two Places",
+      "label": "ch:ahi-alli",
+      "canDo": "I can say where something is, on any of the three sides.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C65-ahi-alli",
+        "kind": "task",
+        "summary": "I can say where something is, on any of the three sides.",
+        "assesses": [
+          "ES-GRAMMAR-PLACE-THREE-DISTANCES"
+        ]
+      }
+    },
+    {
+      "chapter": 252,
+      "title": "Ahora, Hoy --- Now and Today",
+      "label": "ch:ahora-hoy",
+      "canDo": "I can place what I am saying in time.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C65-ahora-hoy",
+        "kind": "task",
+        "summary": "I can place what I am saying in time.",
+        "assesses": [
+          "ES-LEX-AHORA"
+        ]
+      }
+    },
+    {
+      "chapter": 253,
+      "title": "Unos, Unas --- The Plural of One",
+      "label": "ch:unos-unas",
+      "canDo": "I can say some of a thing, as against the thing in general.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C65-unos-unas",
+        "kind": "task",
+        "summary": "I can say some of a thing, as against the thing in general.",
+        "assesses": [
+          "ES-GRAMMAR-INDEFINITE-PLURAL"
+        ]
+      }
+    },
+    {
+      "chapter": 254,
+      "title": "Vuestro --- The Last Possessive",
+      "label": "ch:vuestro",
+      "canDo": "I can use every possessive in the set.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C65-vuestro",
+        "kind": "task",
+        "summary": "I can use every possessive in the set.",
+        "assesses": [
+          "ES-GRAMMAR-POSSESSIVE-COMPLETE"
+        ]
+      }
+    },
+    {
+      "chapter": 255,
+      "title": "Vi, Di --- The Shortest Pasts",
+      "label": "ch:vi-di",
+      "canDo": "I can use the preterite of ver and dar.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C65-vi-di",
+        "kind": "task",
+        "summary": "I can use the preterite of ver and dar.",
+        "assesses": [
+          "ES-GRAMMAR-VER-PRETERITE"
+        ]
+      }
+    },
+    {
+      "chapter": 256,
+      "title": "Review --- Five Sets, Finished",
+      "label": "ch:repaso-parejas",
+      "canDo": "I can use every one of the sets the book had left half-taught.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C65-repaso-parejas",
+        "kind": "task",
+        "summary": "I can use every one of the sets the book had left half-taught.",
+        "assesses": [
+          "ES-GRAMMAR-POSSESSIVE-COMPLETE"
+        ]
+      }
     }
   ]
 }

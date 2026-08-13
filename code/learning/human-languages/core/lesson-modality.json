@@ -7,19 +7,19 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:7e53e267eb1d1bd6",
+  "sourceHash": "fnv1a64:4322ed65d0103bbd",
   "summary": {
-    "totalLessons": 2043,
-    "voice": 1361,
-    "sight": 566,
+    "totalLessons": 2049,
+    "voice": 1365,
+    "sight": 568,
     "pen": 116,
-    "drivableLessons": 1361,
+    "drivableLessons": 1365,
     "drivablePercent": 67,
     "trackCount": 22,
-    "chapterCount": 750,
-    "drivablePrefixTotal": 1161,
-    "fullyDrivableChapters": 490,
-    "unstartableChapters": 178,
+    "chapterCount": 756,
+    "drivablePrefixTotal": 1165,
+    "fullyDrivableChapters": 494,
+    "unstartableChapters": 180,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
   },
@@ -7114,12 +7114,12 @@
     },
     {
       "language": "spanish",
-      "lessonCount": 396,
-      "voice": 349,
-      "sight": 40,
+      "lessonCount": 402,
+      "voice": 353,
+      "sight": 42,
       "pen": 7,
       "drivablePercent": 88,
-      "drivablePrefixTotal": 336,
+      "drivablePrefixTotal": 340,
       "modalities": [
         "voice",
         "sight",
@@ -11188,6 +11188,98 @@
           "drivable": true,
           "drivableLessonIds": [
             "ES-C64-repaso-tonicos"
+          ]
+        },
+        {
+          "chapter": 251,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C65-ahi-alli"
+          ]
+        },
+        {
+          "chapter": 252,
+          "lessonCount": 1,
+          "voice": 0,
+          "sight": 1,
+          "pen": 0,
+          "modalities": [
+            "sight"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "ES-C65-ahora-hoy",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 253,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C65-unos-unas"
+          ]
+        },
+        {
+          "chapter": 254,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C65-vuestro"
+          ]
+        },
+        {
+          "chapter": 255,
+          "lessonCount": 1,
+          "voice": 0,
+          "sight": 1,
+          "pen": 0,
+          "modalities": [
+            "sight"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "ES-C65-vi-di",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 256,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C65-repaso-parejas"
           ]
         }
       ]
@@ -45714,6 +45806,114 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:08d1637be328b071"
+    },
+    {
+      "id": "ES-C65-ahi-alli",
+      "language": "spanish",
+      "chapter": 251,
+      "sequence": 2490,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:9c6cac056e548a9a"
+    },
+    {
+      "id": "ES-C65-ahora-hoy",
+      "language": "spanish",
+      "chapter": 252,
+      "sequence": 2495,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "sight-cue"
+      ],
+      "coreModality": "sight",
+      "coreReasons": [
+        "sight-cue"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:18732db569f9bd8f"
+    },
+    {
+      "id": "ES-C65-unos-unas",
+      "language": "spanish",
+      "chapter": 253,
+      "sequence": 2500,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:4d976843e8353006"
+    },
+    {
+      "id": "ES-C65-vuestro",
+      "language": "spanish",
+      "chapter": 254,
+      "sequence": 2505,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:8b3f82b0830743c5"
+    },
+    {
+      "id": "ES-C65-vi-di",
+      "language": "spanish",
+      "chapter": 255,
+      "sequence": 2510,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "sight-cue"
+      ],
+      "coreModality": "sight",
+      "coreReasons": [
+        "sight-cue"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:b97d685aa2072ea9"
+    },
+    {
+      "id": "ES-C65-repaso-parejas",
+      "language": "spanish",
+      "chapter": 256,
+      "sequence": 2515,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:1ea9c3ba5e7fdd0b"
     },
     {
       "id": "TA-C01-vanakkam",
