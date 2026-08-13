@@ -11,7 +11,7 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": 11202,
   "last_inventory": {
     "revision": "e57bec074440fd7b3b4198597b42d3c059f659c4",
     "schema_version": 3,
@@ -3120,14 +3120,17 @@
     {
       "id": "zip-raw-rfc1951-language-neutral-conformance",
       "title": "Define language-neutral ZIP raw RFC 1951 conformance",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": [],
       "branch": "codex/zip-raw-rfc1951-neutral",
-      "pr_number": null,
+      "pr_number": 11202,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/11202",
+      "opened_at": "2026-08-13T09:59:05Z",
       "selection_revision": "5574bc77277b1b047d09d6e696f9427e2a8c4ba7",
       "selection_notes": "Selected after PR #11162 merged externally and the collision-clean post-merge inventory remained exactly 1,305 identities, 4,461 slots, 855 singletons, 11,970 singleton gaps, 658 Rust singletons, zero collisions, and zero unknown buckets. This dependency-free neutral contract is the highest-leverage ready slice: it makes the reviewable ZIP raw-codec lane children eligible and ultimately unlocks the fourteen missing established PNG codec slots without overlapping external WebAssembly PR #11146 or widening into the still-unsplit remaining build-plan writers.",
       "implementation_revision": "9b079f060d72ea94203edbaa0d24db5aa30e61fe",
       "validation_notes": "The closed 34-case RFC 1951 corpus and independent Python zlib/binascii validator pass 9 focused tests; the capability taxonomy passes 7 tests and 678 subtests. The real TypeScript ZIP BUILD front door passes 98 tests with 98.63% line, 94.11% statement, 84.41% branch, and 100% function coverage. The real image-codec-png downstream BUILD passes 58 tests with 100% line, 97.44% statement, 94.70% branch, and 100% function coverage. The suite covers stored, fixed, dynamic, multi-block, symbol 285, exact counted consumption, HDIST=32 with unused reserved slots, decoded dynamic distance symbols 30 and 31, stable payload-blind failures, hard and caller output caps, foreign decoding, incremental CRC-32, and ZIP compressed-payload cavity rejection. Ruff, Ruff format, MyPy, Bandit, TypeScript builds, Go build-tool tests, vet, module verification, trimpath build, strict JSON, dependency-graph, credential-pattern, diff, and runtime dependency audit gates pass. Both ZIP and PNG runtime audits report zero vulnerabilities. The collision-clean inventory at e57bec0744 remains 1,305 identities, 4,461 slots, 855 singletons, 11,970 singleton gaps, 658 Rust singletons, zero collisions, and zero unknown buckets. External WebAssembly PR #11146 merged during the rebase, so its temporary neutral/core overlap blocks were cleared after the unchanged inventory refresh; the broader WAST umbrella and host authority review remain blocked as designed.",
+      "publication_notes": "Ready-for-review PR #11202 opened from edd552aff1 after rebasing and validating against e57bec0744. GitHub reports it open, non-draft, and mergeable; CI, CodeQL, and auxiliary checks are queued, so the loop is monitor-only until they reach terminal state.",
       "notes": "Split from the broad ZIP completion owner during the post-#11111 leverage pass. Tighten CMP09 around a closed fallible raw_deflate, capped raw_inflate, exact raw_inflate_counted, and incremental CRC-32 profile; add neutral stored, fixed, dynamic, foreign-stream, malformed-tree/header, truncation, trailing-byte, output-cap, exact-consumption, and stable payload-free error fixtures. TypeScript remains the reference consumer; lane ports are separate dependency-shaped children under the completion umbrella."
     },
     {
