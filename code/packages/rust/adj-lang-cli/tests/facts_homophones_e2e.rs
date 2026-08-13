@@ -95,3 +95,32 @@ fn homophone_abstains_honestly_on_an_untabled_word() {
         "here is a real word with a real homophone (hear) but has no shipped homophone in this table -- honest abstention, never invented: {out}"
     );
 }
+
+#[test]
+fn homophone_extension_recalls_the_newly_added_second_sound_alikes() {
+    let dir = scratch("ext");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"homophones.adj\"\n\
+         ? homophone(there, $Word)\n\
+         ? homophone(to, $Word)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // there's header already quoted BOTH "their" and "they're" but only
+    // "their" was ever shipped as a row until this cycle -- theyre is the
+    // apostrophe-free atom label for "they're".
+    assert!(
+        out.contains("homophone(there, theyre)"),
+        "there's second homophone theyre (added this cycle): {out}"
+    );
+    // to's header already quoted BOTH "too" and "two" but only "too" was
+    // ever shipped as a row until this cycle.
+    assert!(
+        out.contains("homophone(to, two)"),
+        "to's second homophone two (added this cycle): {out}"
+    );
+}

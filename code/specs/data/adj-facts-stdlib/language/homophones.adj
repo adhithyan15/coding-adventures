@@ -18,15 +18,31 @@
 % the lookup above is the ordinary SLD binding query — the engine returns the
 % sound-alike word WITH its source, on the CPU, with zero model calls, and
 % ABSTAINS on any word not in the table (it never invents a homophone it
-% cannot cite).
+% cannot cite). A `word` can have MORE THAN ONE `sound_alike` row when its
+% source lists more than one (e.g. `there` sounds like both `their` and
+% `theyre`) — the same many-valued-per-key shape `kingdoms.adj`/`opposites.adj`
+% already use.
 %
 % The pairs, as a truth table:
 %
 %     word     sound_alike   read as…
 %     -------  ------------  ---------------------------------------
 %     there    their         "there and their sound the same"
+%     there    theyre         "there and they're sound the same"
 %     flower   flour         "flower and flour sound the same"
 %     to       too           "to and too sound the same"
+%     to       two           "to and two sound the same"
+%
+% EXTENDED this cycle from 3 to 5 rows: the header above already quoted
+% BOTH of `there`'s Wiktionary homophones ("their, they're") and BOTH of
+% `to`'s ("too, two") when this table originally shipped, but only the
+% FIRST homophone per word had ever been turned into a row — the same
+% header-only zero-new-WebFetch discovery already proven on
+% `synonyms.adj`/`opposites.adj`/`wave-types.adj`. `flower` was already
+% fully captured (its source lists only one homophone). `theyre` is the
+% apostrophe-free atom label for "they're" — ADJ atom labels cannot carry
+% an apostrophe, so this table uses the same short atom-label discipline
+% `contraction.adj` already established (`dont` for "don't").
 %
 % Only ONE direction is shipped per pair (word → its sound-alike). A query
 % like `? homophone(their, $W)` therefore ABSTAINS: the honest-abstention
@@ -38,8 +54,8 @@
 %
 % Provenance — nothing here is from memory. Each pair is copied from the
 % English Wiktionary entry for the FIRST word, whose "Homophones" line lists
-% the sound-alike word verbatim. The per-pair citable spans (quoted exactly
-% as printed) are:
+% the sound-alike word(s) verbatim. The per-pair citable spans (quoted
+% exactly as printed, re-verified live this cycle) are:
 %
 %     there  → en.wiktionary.org/wiki/there   "Homophones: their, they're"
 %     flower → en.wiktionary.org/wiki/flower  "Homophone: flour (for people who pronounce flower as
@@ -59,8 +75,10 @@ table homophone {
     columns word, sound_alike
 
     row (there, their)
+    row (there, theyre)
     row (flower, flour)
     row (to, too)
+    row (to, two)
 
     source "Homophones: their, they're"
     locator "https://en.wiktionary.org/wiki/there"
