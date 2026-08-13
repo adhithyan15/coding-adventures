@@ -11,4 +11,5 @@ import "pronoun-type.adj"
 
 ? pronoun_type(interrogative_pronoun, $D)                              % expect used_in_questions (direct)
 ? pronoun_type($T, changes_form_based_on_grammatical_person)          % expect personal_pronoun (reverse)
-? pronoun_type(relative_pronoun, $D)                                   % expect abstain -- a real pronoun type the source covers, but not one of the three tabled here
+? pronoun_type(distributive_pronoun, $D)                               % expect refers_to_nouns_as_individual_elements_of_larger_groups (added this cycle)
+? pronoun_type(relative_pronoun, $D)                                   % expect abstain -- a real pronoun type the source covers, but not one of the four tabled here

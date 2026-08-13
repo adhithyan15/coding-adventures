@@ -1,6 +1,6 @@
 //! End-to-end test for the language FACTS library
 //! (`adj-facts-stdlib/language/pronoun-type.adj`) driven through the
-//! built CLI: a native `table` naming three pronoun types and what each
+//! built CLI: a native `table` naming four pronoun types and what each
 //! actually is, quoted verbatim from Grammarly's "Pronouns: Definition
 //! and Examples" article. 0 answer-time model calls.
 
@@ -92,6 +92,25 @@ fn pronoun_type_abstains_honestly_on_an_untabled_type() {
     assert!(ok, "cli should succeed: {out}");
     assert!(
         out.contains("\"abstained\":true"),
-        "relative_pronoun is a real pronoun type the source covers but not one of the three tabled here -- honest abstention, never invented: {out}"
+        "relative_pronoun is a real pronoun type the source covers but not one of the four tabled here -- honest abstention, never invented: {out}"
+    );
+}
+
+#[test]
+fn pronoun_type_extension_recalls_the_newly_added_distributive_pronoun() {
+    let dir = scratch("ext");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"pronoun-type.adj\"\n\
+         ? pronoun_type(distributive_pronoun, $D)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    assert!(
+        out.contains("pronoun_type(distributive_pronoun, refers_to_nouns_as_individual_elements_of_larger_groups)"),
+        "distributive_pronoun refers to nouns as individual elements of larger groups (added this cycle): {out}"
     );
 }
