@@ -1,0 +1,92 @@
+% ============================================================================
+% chemical-bond-family — each named type of chemical bond and which of the
+% source's two families it falls into: PRIMARY (strong) or SECONDARY (weak)
+% (adj-facts-stdlib, CHEMISTRY).
+% ============================================================================
+% A sibling to the already-shipped `chemical-bonds.adj` (which recalls only
+% each bond's single DEFINING TOKEN — ionic → transfer, covalent → sharing,
+% metallic → gas, van_der_waals → weak). This table recalls a DIFFERENT axis
+% the same source states about the same four bond types: which of the two
+% named FAMILIES each one belongs to. "Primary bonding (ionic, covalent and
+% metallic) is strong ...; secondary bonding is weak ..." Recall is a binding
+% query:
+%
+%     ? bond_family(ionic, $Family)   % primary
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `bond_family(bond, family)` carrying the table's citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the
+% family WITH its source, on the CPU, with zero model calls, and abstains on
+% a bond type this source does not name.
+%
+% Discovered via a header-revisit: `chemical-bonds.adj`'s own header already
+% quotes the LibreTexts sentence classifying all four bonds into these two
+% families ("Primary bonding (ionic, covalent and metallic) is strong and the
+% energies involved range from about 100 to 1000 kJ/mole. In contrast,
+% secondary bonding is weak, involving energies ranging from about 0.1 to 10
+% kJ/mole."), but that table's header explicitly says "the family split is
+% not part of this table" — a deliberate single-axis scope decision, not a
+% missing citation. Since the family fact IS cleanly grounded in the SAME
+% already-cited sentence, it earns its own sibling table with a DIFFERENT
+% schema (bond → family, not bond → token), the same "sibling table,
+% different schema" shape already used for `comet-part.adj`/
+% `comet-tail-type.adj` and `lung-lobes.adj`/`lung-lobe-names.adj`.
+% WebFetch re-verified the sentence live, TWO separate passes, both
+% byte-identical to what `chemical-bonds.adj`'s header already quoted.
+%
+% The four bonds and their family, as a little truth table:
+%
+%     bond            family      the cited classification
+%     -------------   ---------   -------------------------------------------
+%     ionic           primary     "Primary bonding (ionic, covalent and
+%                                   metallic) is strong"
+%     covalent        primary     (same sentence, second of the three)
+%     metallic        primary     (same sentence, third of the three)
+%     van_der_waals   secondary   "secondary bonding is weak"
+%
+% The query also runs BACKWARD — bind a family and recall EVERY bond in it (a
+% genuine one-to-many reverse recall for `primary`, which names three bonds):
+%
+%     ? bond_family($Bond, primary)   % ionic ; covalent ; metallic
+%
+% A bond type this source does NOT classify into either family — hydrogen
+% bonding, which `chemical-bonds.adj`'s header already notes the same page
+% treats separately (its energy "can as yet not be formulated") — has no
+% row, so a recall on it ABSTAINS rather than inventing a family. That
+% honest-abstention property is what makes the table safe to reason from.
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — the classification was
+% read out of the SAME fetched LibreTexts page `chemical-bonds.adj` already
+% cites, and any bond that could not be grounded there would have been
+% dropped). All four rows come from ONE sentence, the LibreTexts
+% "Introduction to Solid State Chemistry" §1.2 "Chemical Bonding"
+% (chem.libretexts.org), quoted here character-for-character:
+%
+%   ionic, covalent, metallic → primary; van_der_waals → secondary
+%     "Primary bonding (ionic, covalent and metallic) is strong and the
+%      energies involved range from about 100 to 1000 kJ/mole. In contrast,
+%      secondary bonding is weak, involving energies ranging from about 0.1
+%      to 10 kJ/mole."
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold that single sentence — the one span that fixes every
+% row at once. LibreTexts is a SECONDARY teaching reference (a college
+% course text, not a primary standards body), the same tier
+% `chemical-bonds.adj` already uses, so `trust consensus`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
+% ============================================================================
+
+table bond_family {
+    columns bond, family
+
+    row (ionic, primary)
+    row (covalent, primary)
+    row (metallic, primary)
+    row (van_der_waals, secondary)
+
+    source "Primary bonding (ionic, covalent and metallic) is strong and the energies involved range from about 100 to 1000 kJ/mole. In contrast, secondary bonding is weak, involving energies ranging from about 0.1 to 10 kJ/mole."
+    locator "https://chem.libretexts.org/Bookshelves/Inorganic_Chemistry/Introduction_to_Solid_State_Chemistry/01:_Lectures/1.02:_Chemical_Bonding"
+    trust consensus
+}
