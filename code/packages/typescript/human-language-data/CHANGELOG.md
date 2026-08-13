@@ -90,6 +90,12 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
 
 ## [Unreleased]
 
+### Added - source-verified Cyrillic г (HL-C09EC)
+
+- Verify lowercase г as one continuous two-hump cursive run with zero lifts against RussianIrina's native-teacher all-letter handwriting lesson.
+- Preserve the sourced lift count while fitting the bundled block glyph through its straight upright and top bar, explicitly documenting the omitted cursive exit arch.
+- Reduce measured HL-C09 debt to 99 entries and queue Cyrillic д next.
+
 ### Added - the joining words, and Coordinacion closes (HL-C128)
 - Add Spanish chapters 230-235: `al`, `del`, `quien`, `o`, `ni`, review.
   **A1 coverage 60/85 (71%) -> 64/85 (75%)**, and `Coordinacion` finishes
@@ -110,7 +116,6 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
   Spanish sentence can hold two negatives: they AGREE rather than cancel.
 - 235 review names the instinct the first three share and separates the fourth,
   which is about agreement rather than sound.
-
 ### Added - source-verified Cyrillic в (HL-C09EB)
 - Verify lowercase в as one continuous baseline-to-upper-loop-to-lower-bowl run with zero lifts against RussianIrina's native-teacher all-letter handwriting lesson.
 - Preserve the source's tall looped school hand while routing the Noto Sans Cyrillic fit through the printed glyph's upper bowl and straight left stem.

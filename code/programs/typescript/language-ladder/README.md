@@ -729,6 +729,11 @@ around the lower bowl without lifting. RussianIrina demonstrates that one-run
 school hand at 01:33–01:38; the Noto Sans Cyrillic fit preserves its
 baseline-to-upper-loop-to-lower-bowl order while routing the cursive ascender
 through the printed glyph's compact upper bowl and straight left stem.
+The two-frame Cyrillic **г** filmstrip climbs from the baseline through the
+upright and top bar, then retraces the top and descends without lifting. The
+same native-teacher lesson demonstrates a rounded two-hump cursive г at
+01:54–01:57; the Noto Sans Cyrillic fit preserves its zero-lift evidence while
+documenting that the isolated block glyph has no smaller exit arch.
 The runtime resolves each cited path back to the owning script and lazily loads that
 script's font, while Tamil continues to use Noto Sans Tamil. Unverified letters
 still fall back to the numbered prose list, unchanged. Extending the coverage is HL-C09,

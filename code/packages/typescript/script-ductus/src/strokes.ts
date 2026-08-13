@@ -3086,6 +3086,37 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: cyrillicAlphabetSource("в"),
   },
+  // RussianIrina writes lowercase г as one rounded two-hump cursive run. The
+  // bundled Noto glyph is the block-like isolated form, so its zero-lift order
+  // is preserved by climbing the upright, sweeping and retracing the top bar,
+  // then descending the upright. Connected cursive restores the exit hump.
+  [ductusKey("cyrillic", "г")]: {
+    script: "cyrillic",
+    glyph: "г",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "climb the upright and sweep the top bar right",
+            path: [
+              { x: 130, y: 20 }, { x: 130, y: 120 }, { x: 130, y: 240 },
+              { x: 130, y: 360 }, { x: 130, y: 500 }, { x: 220, y: 500 },
+              { x: 310, y: 500 }, { x: 390, y: 500 },
+            ],
+          },
+          {
+            label: "reverse along the top and descend to the baseline",
+            path: [
+              { x: 390, y: 500 }, { x: 310, y: 500 }, { x: 220, y: 500 },
+              { x: 130, y: 500 }, { x: 130, y: 360 }, { x: 130, y: 240 },
+              { x: 130, y: 120 }, { x: 130, y: 20 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: cyrillicAlphabetSource("г"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the
