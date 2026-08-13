@@ -1,5 +1,10 @@
 # Changelog — `lang-aot`
 
+## 0.225.6 - 2026-08-13 (ALGOL stable local while dependencies)
+
+The seven-backend ALGOL matrix now proves that a bounded static `while` control
+retains its exit value when its predicate uses an untouched known local limit.
+
 ## 0.225.5 - 2026-08-13 (ALGOL static while-control exits)
 
 The seven-backend ALGOL matrix now proves that capped abstract execution of a
