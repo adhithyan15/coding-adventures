@@ -404,7 +404,8 @@ console.log(prose, nested);
         # modules extracted out of language-ladder so the book pipeline can
         # reach them. A new TypeScript project is a new row here by
         # construction; the count is the contract that says so out loud.
-        self.assertEqual(summary.total_projects, 460)
+        # +1: path-raster, the scanline rasterizer P2D08 specifies.
+        self.assertEqual(summary.total_projects, 461)
         self.assertEqual(summary.shared_projects, 287)
         self.assertEqual(summary.inherited_root_dir, 129)
         self.assertEqual(summary.inherited_out_dir, 132)
@@ -427,7 +428,8 @@ console.log(prose, nested);
         self.assertEqual(summary.node_lock_exemptions, 1)
         # +1: script-ductus owns `@types/node` directly, because its tests
         # read the shipped fonts off disk to verify the pen paths.
-        self.assertEqual(summary.locked_compilers, 451)
+        # +1: path-raster, the scanline rasterizer P2D08 specifies.
+        self.assertEqual(summary.locked_compilers, 452)
 
 
 if __name__ == "__main__":

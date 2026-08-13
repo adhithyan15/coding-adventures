@@ -1,0 +1,22 @@
+{
+  "name": "@coding-adventures/path-raster",
+  "version": "0.1.0",
+  "description": "P2D08: filling and stroking paths into pixels, with no dependencies",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/pixel-container": "file:../pixel-container"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.0",
+    "@vitest/coverage-v8": "^4.1.0"
+  }
+}
