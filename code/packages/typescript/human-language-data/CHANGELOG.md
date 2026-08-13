@@ -265,6 +265,11 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
 - Review `-CT- -> -ch-` rather than introduce it: `ES-C02-noche` already teaches it.
 - Shift 241 lessons at sequence >=548 by +20 sequence and +3 chapter, and rebuild the
   capability ledger, book targets, curriculum path segments and extension nodes with them.
+### Added - source-verified Chinese 再 (HL-C09CR)
+
+- Verify 再 as six ordered strokes with five lifts against the pinned PRC source.
+- Preserve its joined frame, close-last order, and both turns in a Noto Sans SC fit.
+- Reduce HL-C09 debt to 136 entries; Chinese has 5 outstanding.
 
 ### Added - source-verified Chinese 请 (HL-C09CQ)
 
