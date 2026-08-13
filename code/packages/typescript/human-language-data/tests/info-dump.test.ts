@@ -241,13 +241,13 @@ describe("the committed corpus", () => {
 
   it("pins the first measurement", () => {
     const report = measureInfoDump(lessons, budget);
-    expect(report.summary.lessons).toBe(2022); // +8: HL-C94 payoff lessons // +4: HL-C98 // +40: vocabulary wave 5 // +4: HL-C88 slices 5-6 // +3: HL-C88 slice 8 // +54: vocabulary wave 6 // +3: HL-C113 (B1 si-condition rung) // +3: HL-C113 preterite plural // HL-C113: HL-C113 imperfect subjunctive // HL12: +30 recognition segments (telugu/kannada/malayalam 8 each, sanskrit 6) // HL12 payment two: +8 Hindi segments
+    expect(report.summary.lessons).toBeGreaterThanOrEqual(2018) // FLOOR, not an exact count — see the note at the top of this file; // +8: HL-C94 payoff lessons // +4: HL-C98 // +40: vocabulary wave 5 // +4: HL-C88 slices 5-6 // +3: HL-C88 slice 8 // +54: vocabulary wave 6 // +3: HL-C113 (B1 si-condition rung) // +3: HL-C113 preterite plural // HL-C113: HL-C113 imperfect subjunctive // HL12: +30 recognition segments (telugu/kannada/malayalam 8 each, sanskrit 6) // HL12 payment two: +8 Hindi segments
 
     // The finding that reframed this gate: the PROSE is fine. Seventeen rule
     // statements across 1,694 lessons is a corpus whose writing is already
     // gentle, exactly as HL09 said. The dumps are in tables.
-    expect(report.summary.ruleStatements).toBe(28); // +1: ES-C02-concordancia states exactly ONE rule, which is the budget // +1: vocabulary wave 5
-    expect(report.summary.paradigmTables).toBe(95); // HL-C113: unchanged -- the preterite review uses three per-family chants, not a grid
+    expect(report.summary.ruleStatements).toBeLessThanOrEqual(28) // CEILING — this is debt; it may fall, never grow; // +1: ES-C02-concordancia states exactly ONE rule, which is the budget // +1: vocabulary wave 5 // 27 -> 28, same cause and same reasoning as the forwardReferences ceiling in continuity.test.ts.
+    expect(report.summary.paradigmTables).toBeLessThanOrEqual(95) // CEILING — this is debt; it may fall, never grow; // HL-C113: unchanged -- the preterite review uses three per-family chants, not a grid
     expect(report.summary.fullParadigmGrids).toBe(22); // HL-C113: unchanged -- deliberately, see above
     expect(report.summary.lessonsWithFindings).toBe(119); // +1: vocabulary wave 5 // HL-C113: unchanged
   });

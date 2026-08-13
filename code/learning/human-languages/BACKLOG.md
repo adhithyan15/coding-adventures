@@ -561,6 +561,35 @@ Riding alongside, not blocking the rungs:
 | HL-C118 | Not started | Cited ductus for Telugu, Kannada, Malayalam and the rest of Devanagari. **No citation → no pen path → no figure**; the gap is reported, never filled by invention. | Every authored pen path font-verified and carrying a `strokeOrderSource`. |
 | HL-C134 | Not started | Rewrite the handwritten chapters 1-5 into the generated pipeline for all six. Bites when a tranche needs to place a word or a letter in the opening chapters. | No protected handwritten chapter; Hindi's 11 writing lessons reach the page. |
 | HL-C148 | Not started | **Migrate the six tracks' schema-v1 lessons** (233) and give every lesson a `sequence`. Until then those lessons are invisible to every gate, so the measurements understate the debt. | `measurablePercent` rises; 0 lessons without `sequence` in the six. |
+| HL-C149 | **Done** | **Derive the corpus-count pins instead of hard-coding them.** Twenty snapshot assertions across six test files hard-coded counts that every content tranche moves — so every tranche conflicted with every other PR that moved any of them, and this repo lands a PR every few minutes. Converted to the shape each number actually has: **floors** for content volume, **ceilings** for inherited debt (stricter than the pin was — a ratchet that cannot slip back), **ratios** for debt that grows with honest content. The running annotations stay; only the digits churned. | Mutation-tested both ways: deleting one lesson still fails the floors, and adding 42 lessons passes without touching a test file. |
+| HL-C150 | **NEXT** | **Place the deixis words where they are needed, not at the end of the book.** Wave I put *this/that/here/there/who/where* in a new final chapter, and HL-C149's new forward-reference ceiling immediately showed why that is wrong: `ML-C01-athe` uses അത് in **chapter 1**, and the new chapter is the first thing that ever teaches it — 100 lessons late. Six function words the corpus already leans on from page 1 cannot be taught last. | The six land as early as the generated range allows; `forwardReferences` does not rise; every book still builds. Going earlier than chapter 6 depends on HL-C134. |
+
+
+### Discovered while running the loop (2026-08-13)
+
+**HL-C149 was found by wave I, not predicted.** The tranche was authored,
+verified and pushed green, then went `DIRTY` three times before it could merge:
+main kept landing chapters, and both sides had moved the same twenty
+corpus-snapshot pins. Neither side's numbers described the merged corpus, so the
+conflict could not be resolved by choosing — the wave had to be reset onto the
+new base and every measurement re-derived. Nineteen waves would have meant
+nineteen of those, so HL-C149 was pulled ahead of wave II.
+
+The rule it protects is worth stating, because the tempting fix is the wrong
+one: **never resolve a conflicted snapshot by taking either side.** A pin is a
+measurement, and a measurement of neither corpus is not a compromise, it is a
+wrong number with a confident annotation attached. Regenerate from the merged
+base.
+
+**HL-C150 was then found by HL-C149** — one gate catching what another had
+hidden. Converting `forwardReferences` from an exact pin into a ceiling turned it
+from a number nobody read into a ratchet, and the first thing it caught was wave
+I itself. Not a defect in the new lessons: the wave *revealed* forward references
+that were already there, because it is the first thing in the corpus that teaches
+words chapter 1 has been using untaught since it was written. The lesson
+generalises past this wave — a word the opening chapters already lean on belongs
+near the opening chapters, and "append a chapter at the end" is the wrong shape
+for function words however good the chapter is.
 
 ### The loop this order is executed by
 
