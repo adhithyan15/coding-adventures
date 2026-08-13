@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.80.0";
+pub const VERSION: &str = "0.81.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -19,8 +19,8 @@ use grammar_tools::parser_grammar::parse_parser_grammar;
 use lexer::token::{Token, TokenType};
 use mermaid_lexer::{
     tokenize_mermaid, tokenize_mermaid_c4, tokenize_mermaid_er, tokenize_mermaid_gitgraph,
-    tokenize_mermaid_pie, tokenize_mermaid_quadrant, tokenize_mermaid_sankey, tokenize_mermaid_sequence,
-    tokenize_mermaid_state,
+    tokenize_mermaid_pie, tokenize_mermaid_quadrant, tokenize_mermaid_sankey,
+    tokenize_mermaid_sequence, tokenize_mermaid_state,
 };
 use parser::grammar_parser::{GrammarASTNode, GrammarParser, DEFAULT_MAX_RULE_DEPTH};
 
@@ -485,12 +485,13 @@ fn token_name(token: &Token) -> &str {
 use diagram_ir::{
     Axis, AxisKind, ChartDiagram, ChartKind, ChartOrientation, ChartSeries, Compartment,
     CompartmentKind, GanttDiagram, GanttSection, GanttTask, GitBranch, GitCommitType, GitDiagram,
-    GitEvent, PieSlice, QuadrantPoint, RelKind, SankeyFlow, SankeyNode, SequenceArrowhead, SequenceBlockKind,
-    SequenceCentralConnection, SequenceDiagram, SequenceEvent, SequenceLineStyle, SequenceLink,
-    SequenceNotePlacement, SequenceParticipant, SequenceParticipantGroup, SequenceParticipantKind,
-    SequenceProperty, SequenceTextWrap, SeriesKind, StructuralDiagram, StructuralGroup,
-    StructuralKind, StructuralNode, StructuralNodeKind, StructuralRelationship, TaskStart,
-    TaskStatus, TemporalBody, TemporalDiagram, TemporalKind,
+    GitEvent, PieSlice, QuadrantPoint, RelKind, SankeyFlow, SankeyNode, SequenceArrowhead,
+    SequenceBlockKind, SequenceCentralConnection, SequenceDiagram, SequenceEvent,
+    SequenceLineStyle, SequenceLink, SequenceNotePlacement, SequenceParticipant,
+    SequenceParticipantGroup, SequenceParticipantKind, SequenceProperty, SequenceTextWrap,
+    SeriesKind, StructuralDiagram, StructuralGroup, StructuralKind, StructuralNode,
+    StructuralNodeKind, StructuralRelationship, TaskStart, TaskStatus, TemporalBody,
+    TemporalDiagram, TemporalKind,
 };
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -587,6 +588,7 @@ impl MermaidDiagramType {
 }
 
 /// Union of all Mermaid diagram variants that `parse_any_mermaid` can return.
+#[allow(clippy::large_enum_variant)]
 pub enum MermaidDiagram {
     Graph(GraphDiagram),
     Chart(ChartDiagram),
@@ -1021,6 +1023,8 @@ pub fn parse_xychart(source: &str) -> Result<ChartDiagram, ParseError> {
 
     Ok(ChartDiagram {
         title,
+        accessibility_title: None,
+        accessibility_description: None,
         kind: ChartKind::Xy,
         x_axis,
         y_axis,
@@ -1045,28 +1049,58 @@ struct QuadrantPointStyle {
 
 impl QuadrantPointStyle {
     fn overlay(&mut self, other: &Self) {
-        if other.radius.is_some() { self.radius = other.radius; }
-        if other.color.is_some() { self.color.clone_from(&other.color); }
-        if other.stroke_color.is_some() { self.stroke_color.clone_from(&other.stroke_color); }
-        if other.stroke_width.is_some() { self.stroke_width = other.stroke_width; }
+        if other.radius.is_some() {
+            self.radius = other.radius;
+        }
+        if other.color.is_some() {
+            self.color.clone_from(&other.color);
+        }
+        if other.stroke_color.is_some() {
+            self.stroke_color.clone_from(&other.stroke_color);
+        }
+        if other.stroke_width.is_some() {
+            self.stroke_width = other.stroke_width;
+        }
     }
 }
 
 fn parse_quadrant_point_style(raw: &str, token: &Token) -> Result<QuadrantPointStyle, ParseError> {
     let mut style = QuadrantPointStyle::default();
-    for declaration in raw.split(',').map(str::trim).filter(|value| !value.is_empty()) {
-        let (property, value) = declaration
-            .split_once(':')
-            .ok_or_else(|| token_error(token, format!("invalid quadrant point style {declaration:?}")))?;
+    for declaration in raw
+        .split(',')
+        .map(str::trim)
+        .filter(|value| !value.is_empty())
+    {
+        let (property, value) = declaration.split_once(':').ok_or_else(|| {
+            token_error(
+                token,
+                format!("invalid quadrant point style {declaration:?}"),
+            )
+        })?;
         let property = property.trim();
         let value = value.trim();
         let number = |raw: &str| raw.trim_end_matches("px").trim().parse::<f64>();
         match property {
-            "radius" => style.radius = Some(number(value).map_err(|_| token_error(token, "invalid quadrant point radius"))?),
+            "radius" => {
+                style.radius = Some(
+                    number(value)
+                        .map_err(|_| token_error(token, "invalid quadrant point radius"))?,
+                )
+            }
             "color" => style.color = Some(value.to_string()),
             "stroke-color" => style.stroke_color = Some(value.to_string()),
-            "stroke-width" => style.stroke_width = Some(number(value).map_err(|_| token_error(token, "invalid quadrant point stroke width"))?),
-            _ => return Err(token_error(token, format!("unsupported quadrant point style {property:?}"))),
+            "stroke-width" => {
+                style.stroke_width = Some(
+                    number(value)
+                        .map_err(|_| token_error(token, "invalid quadrant point stroke width"))?,
+                )
+            }
+            _ => {
+                return Err(token_error(
+                    token,
+                    format!("unsupported quadrant point style {property:?}"),
+                ))
+            }
         }
     }
     Ok(style)
@@ -1083,6 +1117,8 @@ pub fn parse_quadrant_chart(source: &str) -> Result<ChartDiagram, ParseError> {
     cursor.skip_terminators();
 
     let mut title = None;
+    let mut accessibility_title = None;
+    let mut accessibility_description = None;
     let mut x_labels = Vec::new();
     let mut y_labels = Vec::new();
     let mut quadrant_labels: [Option<String>; 4] = [None, None, None, None];
@@ -1092,6 +1128,33 @@ pub fn parse_quadrant_chart(source: &str) -> Result<ChartDiagram, ParseError> {
     while !cursor.at_eof() {
         let token = cursor.advance().clone();
         match token_name(&token) {
+            "ACC_TITLE_STATEMENT" => {
+                accessibility_title = Some(
+                    token
+                        .value
+                        .split_once(':')
+                        .expect("token grammar requires ':'")
+                        .1
+                        .trim()
+                        .to_string(),
+                );
+            }
+            "ACC_DESCR_STATEMENT" => {
+                accessibility_description = Some(
+                    token
+                        .value
+                        .split_once(':')
+                        .expect("token grammar requires ':'")
+                        .1
+                        .trim()
+                        .to_string(),
+                );
+            }
+            "ACC_DESCR_BLOCK" => {
+                let open = token.value.find('{').expect("token grammar requires '{'");
+                let close = token.value.rfind('}').expect("token grammar requires '}'");
+                accessibility_description = Some(token.value[open + 1..close].trim().to_string());
+            }
             "TITLE_STATEMENT" => {
                 title = Some(token.value["title".len()..].trim().to_string());
             }
@@ -1116,10 +1179,14 @@ pub fn parse_quadrant_chart(source: &str) -> Result<ChartDiagram, ParseError> {
             }
             "CLASSDEF_STATEMENT" => {
                 let rest = token.value["classDef".len()..].trim();
-                let (name, declarations) = rest.split_once(char::is_whitespace).ok_or_else(|| {
-                    token_error(&token, "expected class name and quadrant point styles")
-                })?;
-                point_classes.insert(name.to_string(), parse_quadrant_point_style(declarations, &token)?);
+                let (name, declarations) =
+                    rest.split_once(char::is_whitespace).ok_or_else(|| {
+                        token_error(&token, "expected class name and quadrant point styles")
+                    })?;
+                point_classes.insert(
+                    name.to_string(),
+                    parse_quadrant_point_style(declarations, &token)?,
+                );
             }
             "POINT_STATEMENT" => {
                 let open = token.value.find('[').ok_or_else(|| {
@@ -1142,14 +1209,19 @@ pub fn parse_quadrant_chart(source: &str) -> Result<ChartDiagram, ParseError> {
                     .map(str::trim)
                     .collect::<Vec<_>>();
                 let [x, y] = coordinates.as_slice() else {
-                    return Err(token_error(&token, "expected two quadrant point coordinates"));
+                    return Err(token_error(
+                        &token,
+                        "expected two quadrant point coordinates",
+                    ));
                 };
                 let inline_style = parse_quadrant_point_style(&token.value[close + 1..], &token)?;
                 pending_points.push((
                     unquote_mermaid_string(label),
                     class_name,
-                    x.parse().map_err(|_| token_error(&token, "invalid quadrant x value"))?,
-                    y.parse().map_err(|_| token_error(&token, "invalid quadrant y value"))?,
+                    x.parse()
+                        .map_err(|_| token_error(&token, "invalid quadrant x value"))?,
+                    y.parse()
+                        .map_err(|_| token_error(&token, "invalid quadrant y value"))?,
                     inline_style,
                 ));
             }
@@ -1190,6 +1262,8 @@ pub fn parse_quadrant_chart(source: &str) -> Result<ChartDiagram, ParseError> {
 
     Ok(ChartDiagram {
         title,
+        accessibility_title,
+        accessibility_description,
         kind: ChartKind::Quadrant,
         x_axis: axis(x_labels),
         y_axis: axis(y_labels),
@@ -3477,6 +3551,8 @@ pub fn parse_pie(source: &str) -> Result<ChartDiagram, ParseError> {
 
     Ok(ChartDiagram {
         title: None,
+        accessibility_title: None,
+        accessibility_description: None,
         kind: ChartKind::Pie,
         x_axis: None,
         y_axis: None,
@@ -3571,6 +3647,8 @@ pub fn parse_sankey(source: &str) -> Result<ChartDiagram, ParseError> {
 
     Ok(ChartDiagram {
         title: None,
+        accessibility_title: None,
+        accessibility_description: None,
         kind: ChartKind::Sankey,
         x_axis: None,
         y_axis: None,
@@ -4508,11 +4586,31 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         assert_eq!(diagram.kind, ChartKind::Quadrant);
         assert_eq!(diagram.title.as_deref(), Some("Native portfolio"));
         assert_eq!(diagram.quadrant_labels[0].as_deref(), Some("Invest"));
-        assert_eq!(diagram.x_axis.unwrap().categories, ["Low reach", "High reach"]);
+        assert_eq!(
+            diagram.x_axis.unwrap().categories,
+            ["Low reach", "High reach"]
+        );
         assert_eq!(diagram.quadrant_points.len(), 2);
         assert_eq!(diagram.quadrant_points[0].label, "Metal");
         assert_eq!(diagram.quadrant_points[0].x, 0.75);
         assert_eq!(diagram.quadrant_points[0].y, 0.8);
+    }
+
+    #[test]
+    fn quadrant_parses_accessibility_metadata() {
+        let diagram = parse_quadrant_chart(
+            "quadrantChart\naccTitle: Portfolio matrix\naccDescr {\nNative renderer priorities\nacross backends\n}\nMetal: [0.75, 0.8]\n",
+        )
+        .unwrap();
+
+        assert_eq!(
+            diagram.accessibility_title.as_deref(),
+            Some("Portfolio matrix")
+        );
+        assert_eq!(
+            diagram.accessibility_description.as_deref(),
+            Some("Native renderer priorities\nacross backends")
+        );
     }
 
     #[test]
@@ -6117,7 +6215,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.80.0");
+        assert_eq!(crate::VERSION, "0.81.0");
     }
 
     #[test]

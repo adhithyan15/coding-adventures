@@ -1,6 +1,6 @@
-//! diagram-ir v0.38.0 - DG00/DG04 semantic IR
+//! diagram-ir v0.39.0 - DG00/DG04 semantic IR
 
-pub const VERSION: &str = "0.38.0";
+pub const VERSION: &str = "0.39.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramDirection {
@@ -549,6 +549,8 @@ pub struct QuadrantPoint {
 #[derive(Clone, Debug, PartialEq)]
 pub struct ChartDiagram {
     pub title: Option<String>,
+    pub accessibility_title: Option<String>,
+    pub accessibility_description: Option<String>,
     pub kind: ChartKind,
     pub x_axis: Option<Axis>,
     pub y_axis: Option<Axis>,
@@ -662,6 +664,8 @@ pub enum LayoutedChartItem {
 pub struct LayoutedChartDiagram {
     pub width: f64,
     pub height: f64,
+    pub accessibility_title: Option<String>,
+    pub accessibility_description: Option<String>,
     pub title_box: Option<LayoutedLabel>,
     pub items: Vec<LayoutedChartItem>,
 }
@@ -1047,7 +1051,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.38.0");
+        assert_eq!(VERSION, "0.39.0");
     }
     #[test]
     fn default_direction_is_tb() {
@@ -1128,6 +1132,8 @@ mod tests {
     fn chart_diagram_xy_builds() {
         let d = ChartDiagram {
             title: None,
+            accessibility_title: None,
+            accessibility_description: None,
             kind: ChartKind::Xy,
             x_axis: None,
             y_axis: None,

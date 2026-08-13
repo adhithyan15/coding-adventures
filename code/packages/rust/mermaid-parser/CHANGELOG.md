@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.81.0
+
+- Parse quadrant accessibility titles and single-line or multiline descriptions into chart IR.
+
 ## 0.80.0
 
 - Resolve quadrant point classes and inline radius/fill/stroke styles into chart IR.

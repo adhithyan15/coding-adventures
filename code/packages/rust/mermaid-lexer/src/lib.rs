@@ -1,6 +1,6 @@
 //! Grammar-driven lexers for Mermaid diagram families.
 
-pub const VERSION: &str = "0.45.0";
+pub const VERSION: &str = "0.46.0";
 
 use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
@@ -257,7 +257,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.45.0");
+        assert_eq!(VERSION, "0.46.0");
     }
 
     #[test]
@@ -281,6 +281,16 @@ mod tests {
         let names: Vec<_> = tokens.iter().filter_map(custom_name).collect();
         assert!(names.contains(&"CLASSDEF_STATEMENT"));
         assert!(names.contains(&"POINT_STATEMENT"));
+    }
+
+    #[test]
+    fn quadrant_tokenizes_accessibility_metadata() {
+        let tokens = tokenize_mermaid_quadrant(
+            "quadrantChart\naccTitle: Portfolio matrix\naccDescr {\nNative renderer priorities\nacross backends\n}\n",
+        );
+        let names: Vec<_> = tokens.iter().filter_map(custom_name).collect();
+        assert!(names.contains(&"ACC_TITLE_STATEMENT"));
+        assert!(names.contains(&"ACC_DESCR_BLOCK"));
     }
 
     #[test]

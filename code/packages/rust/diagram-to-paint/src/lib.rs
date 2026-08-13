@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.38.0";
+pub const VERSION: &str = "0.39.0";
 
 use std::collections::HashMap;
 
@@ -767,12 +767,23 @@ where
                         120.0,
                         ls * 1.2,
                         lf.clone(),
-                        Color { r: 51, g: 65, b: 85, a: 255 },
+                        Color {
+                            r: 51,
+                            g: 65,
+                            b: 85,
+                            a: 255,
+                        },
                     ));
                 }
             }
             LayoutedChartItem::ScatterPoint {
-                x, y, radius, color, stroke_color, stroke_width, label,
+                x,
+                y,
+                radius,
+                color,
+                stroke_color,
+                stroke_width,
+                label,
             } => {
                 instructions.push(PaintInstruction::Ellipse(PaintEllipse {
                     base: PaintBase::default(),
@@ -793,7 +804,12 @@ where
                     100.0,
                     ls * 1.2,
                     lf.clone(),
-                    Color { r: 30, g: 41, b: 59, a: 255 },
+                    Color {
+                        r: 30,
+                        g: 41,
+                        b: 59,
+                        a: 255,
+                    },
                 ));
             }
             LayoutedChartItem::DataLabel { x, y, text } => {
@@ -903,13 +919,20 @@ where
     instructions.extend(text_scene.instructions);
 
     let bg = options.background;
+    let mut metadata = HashMap::new();
+    if let Some(title) = &diagram.accessibility_title {
+        metadata.insert("accessibility.title".into(), title.clone());
+    }
+    if let Some(description) = &diagram.accessibility_description {
+        metadata.insert("accessibility.description".into(), description.clone());
+    }
     PaintScene {
         width: diagram.width,
         height: diagram.height,
         background: format!("rgb({},{},{})", bg.r, bg.g, bg.b),
         instructions,
         id: None,
-        metadata: None,
+        metadata: (!metadata.is_empty()).then_some(metadata),
     }
 }
 
@@ -3033,7 +3056,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.38.0");
+        assert_eq!(crate::VERSION, "0.39.0");
     }
 
     #[test]
@@ -3584,6 +3607,30 @@ mod tests {
                 b: 0,
                 a: 255
             }
+        );
+    }
+
+    #[test]
+    fn chart_accessibility_metadata_reaches_paint_scene() {
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let opts = make_opts(&shaper, &metrics, &resolver);
+        let layout = LayoutedChartDiagram {
+            width: 400.0,
+            height: 300.0,
+            accessibility_title: Some("Portfolio matrix".into()),
+            accessibility_description: Some("Native renderer priorities".into()),
+            title_box: None,
+            items: vec![],
+        };
+
+        let scene = diagram_to_paint_chart(&layout, &opts);
+        let metadata = scene.metadata.expect("chart accessibility metadata");
+        assert_eq!(metadata["accessibility.title"], "Portfolio matrix");
+        assert_eq!(
+            metadata["accessibility.description"],
+            "Native renderer priorities"
         );
     }
 

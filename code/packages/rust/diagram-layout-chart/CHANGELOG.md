@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.4.0 — 2026-08-13
+
+### Added
+- Preserve chart accessibility metadata through layout
+
 ## 0.3.0 — 2026-08-13
 
 ### Added
