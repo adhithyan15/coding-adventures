@@ -1,5 +1,34 @@
 # Changelog — iir-builtin-lowering
 
+## 0.36.0 - 2026-08-13 - drop the name-carrying `const` once its consumer is lowered
+
+`const %n1 = Operand::Var("g")` is not a real instruction: it is how the
+twig-ir-compiler smuggles a *string literal* to the `call_builtin` that follows.
+`lower_global_io` reads it, folds the name into `global_load Str("g")` — and
+then pushed the now-consumerless `const` through untouched, because pass 2
+filters on `op != "call_builtin"`.
+
+Native, LLVM, the VM and the JIT tolerated the leftover. The JVM, CLR and WASM
+backends read it literally, saw a `const` whose source names a variable, and
+refused the whole module:
+
+    JVM   "const instruction has a Var source — use load_reg instead"
+    CLR   "const expects an integer literal, got Some(Var(\"g\"))"
+
+So **every Twig program that reads a module-level global** failed on those three
+backends. The matrix names its case a "forward-referenced global", which is a
+red herring — declaration order is irrelevant; `(define g 42) (define (f) g) (f)`
+and `(define (f) g) (define g 42) (f)` produce identical IIR and both failed.
+
+Only *unreferenced* name carriers are dropped. One that some instruction still
+mentions is still doing work — a dynamic global this pass could not resolve, or
+a symbol a later pass will consume — and removing it would turn a compile error
+into a dangling reference.
+
+Verified by running: matrix cell #20 now passes on LLVM, JVM and CLR, and the
+three-program probe agrees with the VM oracle (42, 42, 8) on every backend.
+
+
 ## 0.35.0 - 2026-08-13 - materialize immediate value operands for the stack backends
 
 New pass `immediates::materialize_immediate_operands`, wired into the JVM, CLR

@@ -233,6 +233,49 @@ pub fn lower_global_io_function(fn_: &mut IIRFunction) {
         }
     }
 
+    // ------------------------------------------------------------------
+    // Pass 3 — drop the name-carrying `const`s whose consumer we just
+    // rewrote away.
+    //
+    // `const %n1 = Operand::Var("g")` is not a real instruction: it is how the
+    // twig-ir-compiler smuggles a *string literal* to the `call_builtin` that
+    // follows. Once that `call_builtin` becomes a `global_load Str("g")`, the
+    // name lives inside the new instruction and the `const` has no consumer —
+    // but pass 2 pushes it through untouched, because it filters on
+    // `op != "call_builtin"`.
+    //
+    // Native, LLVM, the VM and the JIT tolerate the leftover; the JVM, CLR and
+    // WASM backends read it literally, see a `const` whose source names a
+    // variable, and refuse the module:
+    //
+    //     JVM   "const instruction has a Var source — use load_reg instead"
+    //     CLR   "const expects an integer literal, got Some(Var(\"g\"))"
+    //
+    // So *every* Twig program that reads a module-level global failed on those
+    // three backends. (The matrix names its case a "forward-referenced global",
+    // which is a red herring — declaration order is irrelevant, both orderings
+    // produce identical IIR and both failed.)
+    //
+    // Only unreferenced ones are dropped. A name register that some instruction
+    // still mentions is still doing work — a dynamic global this pass could not
+    // resolve, or a symbol literal a later pass will consume — and removing it
+    // would turn a compile error into a dangling reference.
+    let referenced: std::collections::HashSet<String> = new_instrs
+        .iter()
+        .flat_map(|i| i.srcs.iter())
+        .filter_map(|s| match s {
+            Operand::Var(name) => Some(name.clone()),
+            _ => None,
+        })
+        .collect();
+    new_instrs.retain(|instr| {
+        let is_name_carrier = instr.op == "const"
+            && matches!(instr.srcs.first(), Some(Operand::Var(_)))
+            && instr.dest.as_deref().is_some_and(|d| const_str_map.contains_key(d));
+        let dest = instr.dest.clone().unwrap_or_default();
+        !(is_name_carrier && !referenced.contains(&dest))
+    });
+
     fn_.instructions = new_instrs;
 }
 
@@ -382,6 +425,55 @@ mod tests {
         lower_global_io(&mut m);
         let load = m.functions[0].instructions.iter().find(|i| i.op == "global_load").unwrap();
         assert_eq!(load.dest.as_deref(), Some("%result"));
+    }
+
+    /// Once the name lives inside `global_load Str("…")`, the `const` that
+    /// carried it has no consumer and must not survive.
+    ///
+    /// It is not a real instruction — `const %n1 = Var("g")` is how the
+    /// twig-ir-compiler smuggles a string literal to the `call_builtin` that
+    /// follows. Native, LLVM, the VM and the JIT tolerated the leftover; the
+    /// JVM, CLR and WASM backends read it literally and refused the module
+    /// (`"const instruction has a Var source"` / `"const expects an integer
+    /// literal"`), so every Twig program that read a module-level global failed
+    /// on those three.
+    #[test]
+    fn the_name_carrying_const_is_removed_once_its_consumer_is_lowered() {
+        let mut m = make_module(global_get_sequence("%n1", "g", "%r"));
+        lower_global_io(&mut m);
+        let instrs = &m.functions[0].instructions;
+        assert!(
+            !instrs
+                .iter()
+                .any(|i| i.op == "const" && matches!(i.srcs.first(), Some(Operand::Var(_)))),
+            "the name-carrying const must be gone: {:?}",
+            instrs.iter().map(|i| (&i.op, &i.srcs)).collect::<Vec<_>>()
+        );
+        assert!(instrs.iter().any(|i| i.op == "global_load"));
+    }
+
+    /// …but only when nothing still references it. A name register that some
+    /// instruction still mentions is doing work — a dynamic global this pass
+    /// could not resolve, or a symbol a later pass will consume — and removing
+    /// it would turn a compile error into a dangling reference.
+    #[test]
+    fn a_still_referenced_name_const_is_kept() {
+        // `%n1` names a global that IS lowered, and is ALSO passed to an
+        // unrelated builtin that this pass leaves alone.
+        let mut instrs = global_get_sequence("%n1", "g", "%r");
+        instrs.push(IIRInstr::new(
+            "call_builtin",
+            Some("%other".into()),
+            vec![Operand::Var("some_other_builtin".into()), Operand::Var("%n1".into())],
+            "any",
+        ));
+        let mut m = make_module(instrs);
+        lower_global_io(&mut m);
+        let kept = m.functions[0]
+            .instructions
+            .iter()
+            .any(|i| i.op == "const" && i.dest.as_deref() == Some("%n1"));
+        assert!(kept, "a const still referenced elsewhere must survive");
     }
 
     #[test]
