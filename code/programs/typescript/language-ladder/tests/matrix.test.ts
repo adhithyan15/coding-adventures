@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { buildSyllableMatrix } from "../src/matrix";
-import { SCRIPTS } from "../src/data";
+import { SCRIPTS } from "@coding-adventures/script-ductus";
 
 // A tiny rectangular fixture: 2 consonants × 3 vowels. A base syllable has ONE
 // component (the bare consonant, inherent "a"); a signed one has two.

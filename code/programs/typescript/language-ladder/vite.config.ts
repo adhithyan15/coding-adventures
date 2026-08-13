@@ -51,8 +51,13 @@ export default defineConfig({
               // renderer, and font parser out of the interactive shell so
               // later source-backed letters do not consume shell headroom.
               name: "handwriting-tools",
+              // The three modules moved into @coding-adventures/script-ductus,
+              // so the path they are matched by changed with them. `scriptdata`
+              // is NOT in this chunk: the app's shell needs SCRIPTS on first
+              // paint, while the pen paths and the font parser are only needed
+              // once a learner opens a letter's handwriting view.
               test:
-                /language-ladder[\\/]src[\\/](?:strokes|ductusview|truetype)\.ts$/,
+                /script-ductus[\\/]src[\\/](?:strokes|ductusview|truetype)\.ts$/,
             },
           ],
         },

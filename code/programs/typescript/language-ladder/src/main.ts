@@ -7,7 +7,7 @@
 // core.ts / drill.ts (and is unit-tested there); the ONLY randomness lives here,
 // in the UI, so the pure modules stay deterministic and testable.
 
-import { SCRIPTS, verifiedLetterFont } from "./data.ts";
+import { SCRIPTS, verifiedLetterFont } from "@coding-adventures/script-ductus";
 import {
   buildScriptView,
   scriptSummary,
@@ -110,13 +110,13 @@ import { buildVoiceScript, type NarrationLesson } from "./voicescript.ts";
 import { type VoiceHandle, browserSpeech, playVoiceScript } from "./voiceplayer.ts";
 import { loadNarration } from "./narration-sources.ts";
 import { browserStorage as masteryStorage, loadMastery, saveMastery } from "./masterystore.ts";
-import { parseFont, boundsOf, type Font } from "./truetype.ts";
+import { parseFont, boundsOf, type Font } from "@coding-adventures/script-ductus";
 import {
   ductusFilmstrip,
   ductusFor,
   isSafeName,
   type SvgNode,
-} from "./ductusview.ts";
+} from "@coding-adventures/script-ductus";
 import tamilFontUrl from "../../../../learning/human-languages/_fonts/NotoSansTamil-Static.ttf?url";
 import naskhFontUrl from "../../../../learning/human-languages/_fonts/NotoNaskhArabic-Static.ttf?url";
 import taxonomyJson from "../../../../learning/human-languages/concepts/taxonomy.json";

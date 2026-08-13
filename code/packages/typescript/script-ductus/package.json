@@ -1,0 +1,21 @@
+{
+  "name": "@coding-adventures/script-ductus",
+  "version": "0.1.0",
+  "description": "How a letter is written: authored pen paths, the shipped font's own outline, and the filmstrip that joins them",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.0",
+    "@vitest/coverage-v8": "^4.1.0",
+    "jsdom": "^25.0.0",
+    "@types/node": "^22.20.1"
+  }
+}

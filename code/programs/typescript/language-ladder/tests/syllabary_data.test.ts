@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { SCRIPTS } from "../src/data";
+import { SCRIPTS } from "@coding-adventures/script-ductus";
 import type { ScriptData } from "../src/types";
 
 // The three Dravidian syllabaries generated from Unicode by

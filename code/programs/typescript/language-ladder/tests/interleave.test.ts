@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { buildPool, poolSize } from "../src/interleave.ts";
 import { initStates, pickNext, reviewIn } from "../src/scheduler.ts";
-import { SCRIPTS } from "../src/data.ts";
+import { SCRIPTS } from "@coding-adventures/script-ductus";
 
 describe("buildPool", () => {
   it("interleaves scripts round-robin and includes every (script, letter) once", () => {

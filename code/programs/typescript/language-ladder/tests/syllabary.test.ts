@@ -6,7 +6,7 @@ import {
   unlockedLetterIndices,
   ROW_MASTERY_BOX,
 } from "../src/syllabary";
-import { SCRIPTS } from "../src/data";
+import { SCRIPTS } from "@coding-adventures/script-ductus";
 
 // A tiny fixture: 3 consonants × 3 vowels. A base syllable has ONE component (the
 // bare consonant); a signed one has two — the boundary consonantGroups() reads.
