@@ -11,4 +11,6 @@ import "onset-rime.adj"
 
 ? onset_rime(sleep, $Onset, $Rime)   % expect sl, eep (direct: segment "sleep" into onset/rime)
 ? onset_rime($Word, bl, ast)         % expect blast (reverse: blend bl + ast into a word)
-? onset_rime(cat, $Onset, $Rime)     % expect abstain -- "cat" is not one of the two words tabled
+? onset_rime($Word, m, ap)           % expect map (reverse: blend m + ap into a word -- added this cycle)
+? onset_rime(tape, $Onset, $Rime)    % expect t, ape (direct: segment "tape" into onset/rime -- added this cycle)
+? onset_rime(cat, $Onset, $Rime)     % expect abstain -- "cat" is not one of the four words tabled

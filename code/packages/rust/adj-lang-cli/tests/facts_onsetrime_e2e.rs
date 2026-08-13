@@ -100,3 +100,31 @@ fn onset_rime_abstains_honestly_on_an_unshipped_word() {
         "\"cat\" has no shipped row -- honest abstention, never invented: {out}"
     );
 }
+
+#[test]
+fn onset_rime_extension_recalls_the_newly_added_map_and_tape_splits() {
+    let dir = scratch("ext");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"onset-rime.adj\"\n\
+         ? onset_rime($Word, m, ap)\n\
+         ? onset_rime(tape, $Onset, $Rime)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // Discovered via a fresh WebFetch of Reading Rockets' "In Practice"
+    // module's "Blending Onset and Rime" and "Onset-rime Completion"
+    // sections -- both new rows share the table's existing schema, a pure
+    // addition alongside the original sleep/blast rows.
+    assert!(
+        out.contains("\"Word\":\"map\""),
+        "m + ap blends into map (added this cycle): {out}"
+    );
+    assert!(
+        out.contains("\"Onset\":\"t\"") && out.contains("\"Rime\":\"ape\""),
+        "tape splits into t + ape (added this cycle): {out}"
+    );
+}
