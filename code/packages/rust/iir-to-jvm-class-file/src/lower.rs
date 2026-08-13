@@ -2858,7 +2858,7 @@ fn lower_function(
                 // destination slot is typed for (see `emit_bool_result_store`).
                 if let Some(dest) = &instr.dest {
                     let (dest_slot, dest_ty) = lookup_var(dest)?;
-                    emit_bool_result_store(&mut code, dest_slot, dest_ty, &fname)?;
+                    emit_bool_result_store(&mut code, dest_slot, dest_ty, fname)?;
                 }
             }
 
@@ -3591,7 +3591,7 @@ fn lower_function(
                         let cidx = cp.add_class("[Ljava/lang/Object;");
                         code.push(INSTANCEOF);
                         code.extend_from_slice(&cidx.to_be_bytes());
-                        emit_bool_result_store(&mut code, dest_slot, dest_ty, &fname)?;
+                        emit_bool_result_store(&mut code, dest_slot, dest_ty, fname)?;
                     }
                     "not" => {
                         // Logical not of a 0/1 machine boolean: `arg ^ 1`.
@@ -3616,7 +3616,7 @@ fn lower_function(
                         }
                         code.push(ICONST_1);
                         code.push(IXOR);
-                        emit_bool_result_store(&mut code, dest_slot, dest_ty, &fname)?;
+                        emit_bool_result_store(&mut code, dest_slot, dest_ty, fname)?;
                     }
                     "equal?" => {
                         // `EQ` on atoms: unbox both `Integer`s and compare. The
@@ -3645,7 +3645,7 @@ fn lower_function(
                         code.extend_from_slice(&intval.to_be_bytes());
                         // a == b ? 1 : 0  (IF_ICMPNE skips the true arm when a≠b)
                         emit_int_compare(&mut code, IF_ICMPNE);
-                        emit_bool_result_store(&mut code, dest_slot, dest_ty, &fname)?;
+                        emit_bool_result_store(&mut code, dest_slot, dest_ty, fname)?;
                     }
                     _ => {
                         // Validator should have rejected this; defense in depth.
