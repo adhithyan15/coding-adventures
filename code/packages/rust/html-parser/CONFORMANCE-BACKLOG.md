@@ -455,9 +455,14 @@ Prioritized work items:
    after-after-body nodes remain under `Document`. Repeated `body` and `html`
    endings after an authored `html` end now restore after-body and
    after-after-body placement, respectively, instead of letting the earlier
-   explicit `html` ending override the current insertion mode. Continue with
-   the remaining after-body and after-after-body token classes and
-   trailing-token recovery.
+   explicit `html` ending override the current insertion mode. Unexpected
+   tokens after a valid body end now also restore the authored body on the open
+   stack before in-body reprocessing, so content after a closed void, block, or
+   template element remains in the body instead of sending later comments or
+   processing instructions to `html`. Direct after-body placement,
+   after-after-body reentry, and seeded HTML fragments remain distinct.
+   Continue with the remaining after-body and after-after-body token classes,
+   frameset tail modes, and trailing-token recovery.
 3. **Diagnostic positions and error taxonomy.** Carry source positions into
    tree construction and map diagnostics to current WHATWG concepts. Legacy
    WPT/html5lib error labels are evidence hints, not a normative public API.

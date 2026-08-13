@@ -4787,6 +4787,11 @@ impl HtmlParser {
                 _ => {
                     self.document_tail_mode = DocumentTailMode::InBody;
                     self.document_tail_reentered_in_body = true;
+                    if matches!(mode, DocumentTailMode::AfterBody)
+                        && self.current_element_is("html")
+                    {
+                        self.reopen_body_under_current_html();
+                    }
                 }
             }
         }
@@ -39862,6 +39867,87 @@ mod tests {
         assert!(matches!(
             html(&repeated_after_body.document).children[2],
             Node::Comment(_)
+        ));
+    }
+
+    #[test]
+    fn restores_body_stack_when_after_body_tokens_reenter_in_body() {
+        for source in [
+            "<!doctype html><body>A</body><br><!--tail--><?tail?>",
+            "<!doctype html><body>A</body><div>B</div><!--tail--><?tail?>",
+            "<!doctype html><body>A</body><template>T</template><!--tail--><?tail?>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .filter(|diagnostic| diagnostic.code == "unexpected-token-after-body")
+                    .count(),
+                1,
+                "source {source:?}"
+            );
+            let body_children = &body(&output.document).children;
+            assert!(matches!(
+                body_children.get(body_children.len() - 2),
+                Some(Node::Comment(_))
+            ));
+            assert!(matches!(
+                body_children.last(),
+                Some(Node::ProcessingInstruction(_))
+            ));
+            assert!(html(&output.document)
+                .children
+                .iter()
+                .all(|node| !matches!(node, Node::Comment(_) | Node::ProcessingInstruction(_))));
+        }
+
+        let direct_tail =
+            parse_html_with_diagnostics("<!doctype html><body>A</body><!--tail-->").unwrap();
+        assert!(matches!(
+            html(&direct_tail.document).children.last(),
+            Some(Node::Comment(_))
+        ));
+
+        let after_html = parse_html_with_diagnostics(
+            "<!doctype html><body>A</body></html><template>T</template><!--tail-->",
+        )
+        .unwrap();
+        assert_eq!(
+            after_html
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-token-after-html")
+                .count(),
+            1
+        );
+        assert!(matches!(
+            body(&after_html.document).children.last(),
+            Some(Node::Comment(_))
+        ));
+
+        let fragment = parse_html_fragment_for_context_with_diagnostics(
+            "<body>A</body><template>T</template><!--tail-->",
+            "html",
+        )
+        .unwrap();
+        assert_eq!(
+            fragment
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-token-after-body")
+                .count(),
+            1
+        );
+        let fragment_body = fragment
+            .nodes
+            .iter()
+            .find(|node| matches!(node, Node::Element(element) if element.name == "body"))
+            .map(element)
+            .unwrap();
+        assert!(matches!(
+            fragment_body.children.last(),
+            Some(Node::Comment(_))
         ));
     }
 
