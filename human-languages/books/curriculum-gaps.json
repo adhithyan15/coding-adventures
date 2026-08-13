@@ -12,11 +12,11 @@
   },
   "summary": {
     "registeredTracks": 22,
-    "totalLessons": 2005,
+    "totalLessons": 2013,
     "authoredBooks": 22,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
-    "laterChapterLessonsWithoutPrerequisites": 39,
+    "laterChapterLessonsWithoutPrerequisites": 40,
     "tracksWithoutBooks": 0,
     "lessonChaptersWithoutBooks": 0,
     "legacySchemaTracks": 0,
@@ -26,16 +26,16 @@
     "rampOverBudgetLessons": 42,
     "scriptRampOverBudgetLessons": 61,
     "lessonsOpeningMultipleScripts": 5,
-    "scriptClosureViolations": 817,
-    "scriptExposureExemptedGlyphs": 2214,
+    "scriptClosureViolations": 816,
+    "scriptExposureExemptedGlyphs": 2209,
     "tracksTeachingNoScript": 8,
     "headwordsWithoutRomanization": 305,
     "lessonsWithoutSequence": 322,
     "forwardReviews": 168,
-    "atomsNeverRevisited": 488,
+    "atomsNeverRevisited": 489,
     "forwardReferences": 454,
     "chaptersWithoutCapability": 0,
-    "chapterPayoffsNotRepresentative": 35,
+    "chapterPayoffsNotRepresentative": 38,
     "chapterGateCleanTracks": 12,
     "drivableLessons": 1772,
     "drivablePercent": 88,
@@ -167,6 +167,11 @@
         "lessonId": "HI-C04-phir",
         "language": "hindi",
         "chapter": 4
+      },
+      {
+        "lessonId": "HI-S01-letter-ma",
+        "language": "hindi",
+        "chapter": 6
       },
       {
         "lessonId": "IT-C01-ciao",
@@ -439,6 +444,11 @@
         "lessonId": "HI-C04-phir",
         "language": "hindi",
         "chapter": 4
+      },
+      {
+        "lessonId": "HI-S01-letter-ma",
+        "language": "hindi",
+        "chapter": 6
       },
       {
         "lessonId": "IT-C02-stare",
@@ -2286,10 +2296,10 @@
       {
         "language": "hindi",
         "status": "mixed",
-        "lessonCount": 109,
+        "lessonCount": 117,
         "versions": {
           "1": 34,
-          "2": 75
+          "2": 83
         }
       },
       {
@@ -2478,7 +2488,28 @@
         "language": "hindi",
         "chapter": 6,
         "lessonId": "HI-C06-paanch-nasal",
-        "message": "hindi chapter 6 payoff assesses 1/4 of the chapter's atoms (0.25), below the 0.5 floor."
+        "message": "hindi chapter 6 payoff assesses 1/5 of the chapter's atoms (0.20), below the 0.5 floor."
+      },
+      {
+        "code": "chapter-payoff-not-representative",
+        "language": "hindi",
+        "chapter": 10,
+        "lessonId": "HI-C10-shanivaar-ravivaar",
+        "message": "hindi chapter 10 payoff assesses 2/5 of the chapter's atoms (0.40), below the 0.5 floor."
+      },
+      {
+        "code": "chapter-payoff-not-representative",
+        "language": "hindi",
+        "chapter": 11,
+        "lessonId": "HI-C11-laal-niila",
+        "message": "hindi chapter 11 payoff assesses 2/5 of the chapter's atoms (0.40), below the 0.5 floor."
+      },
+      {
+        "code": "chapter-payoff-not-representative",
+        "language": "hindi",
+        "chapter": 12,
+        "lessonId": "HI-C12-bhaai-bahin",
+        "message": "hindi chapter 12 payoff assesses 2/5 of the chapter's atoms (0.40), below the 0.5 floor."
       },
       {
         "code": "chapter-payoff-not-representative",
@@ -2738,7 +2769,7 @@
         "bookChapters": 39,
         "declaredChapters": 39,
         "missingCapability": 0,
-        "findings": 4,
+        "findings": 7,
         "clean": false
       },
       {
@@ -2867,7 +2898,7 @@
       "declaredChapters": 720,
       "chaptersWithoutCapability": 0,
       "payoffsNotClosed": 0,
-      "payoffsNotRepresentative": 35,
+      "payoffsNotRepresentative": 38,
       "unknownPayoffLessons": 0,
       "titleDrift": 0,
       "duplicateChapters": 0,
@@ -2876,9 +2907,9 @@
     }
   },
   "levels": {
-    "totalLessons": 2005,
+    "totalLessons": 2013,
     "byLevel": {
-      "pre-A1": 1030,
+      "pre-A1": 1038,
       "A1": 361,
       "A2": 487,
       "B1": 31,
@@ -2981,9 +3012,9 @@
       },
       {
         "language": "hindi",
-        "lessonCount": 109,
+        "lessonCount": 117,
         "byLevel": {
-          "pre-A1": 62,
+          "pre-A1": 70,
           "A1": 28,
           "A2": 13,
           "B1": 0,
@@ -3722,8 +3753,8 @@
       },
       {
         "language": "hindi",
-        "lessonCount": 109,
-        "measurable": 75,
+        "lessonCount": 117,
+        "measurable": 83,
         "unmeasurable": 34,
         "lessonViolations": 1,
         "chapterViolations": 0
@@ -4648,7 +4679,7 @@
           "language": "hindi",
           "script": "devanagari",
           "latinScript": false,
-          "lessonCount": 109,
+          "lessonCount": 117,
           "totalGlyphs": 56,
           "lessonViolations": 3,
           "systemViolations": 0,
@@ -10559,32 +10590,6 @@
         "revisits": 2
       },
       {
-        "atom": "HI-CONCEPT-W04-RA-SA-MERA-NAAM-01",
-        "language": "hindi",
-        "introducedBy": "HI-W04-ra-sa-mera-naam",
-        "introducedAt": 20,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "HI-CONCEPT-W04-RA-SA-MERA-NAAM-02",
-        "language": "hindi",
-        "introducedBy": "HI-W04-ra-sa-mera-naam",
-        "introducedAt": 20,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 2
-      },
-      {
         "atom": "LA-ETYMON-PRACTICE-01",
         "language": "latin",
         "introducedBy": "LA-C01-practice",
@@ -14762,10 +14767,34 @@
         "revisits": 0
       },
       {
+        "atom": "HI-CONCEPT-C07-NAHIN-02",
+        "language": "hindi",
+        "introducedBy": "HI-C07-nahin",
+        "introducedAt": 50,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "HI-CONCEPT-C07-NAHIN-03",
+        "language": "hindi",
+        "introducedBy": "HI-C07-nahin",
+        "introducedAt": 50,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "HI-CONCEPT-C10-SHANIVAAR-RAVIVAAR-01",
         "language": "hindi",
         "introducedBy": "HI-C10-shanivaar-ravivaar",
-        "introducedAt": 53,
+        "introducedAt": 57,
         "missed": [
           "R1",
           "R2",
@@ -14777,7 +14806,7 @@
         "atom": "HI-CONCEPT-C10-SHANIVAAR-RAVIVAAR-02",
         "language": "hindi",
         "introducedBy": "HI-C10-shanivaar-ravivaar",
-        "introducedAt": 53,
+        "introducedAt": 57,
         "missed": [
           "R1",
           "R2",
@@ -14789,7 +14818,7 @@
         "atom": "HI-CONCEPT-C10-SOMAVAAR-SHUKRAVAAR-01",
         "language": "hindi",
         "introducedBy": "HI-C10-somavaar-shukravaar",
-        "introducedAt": 52,
+        "introducedAt": 56,
         "missed": [
           "R1",
           "R2",
@@ -14801,7 +14830,7 @@
         "atom": "HI-CONCEPT-C10-SOMAVAAR-SHUKRAVAAR-02",
         "language": "hindi",
         "introducedBy": "HI-C10-somavaar-shukravaar",
-        "introducedAt": 52,
+        "introducedAt": 56,
         "missed": [
           "R1",
           "R2",
@@ -14813,7 +14842,7 @@
         "atom": "HI-CONCEPT-C11-KAALAA-SAFED-01",
         "language": "hindi",
         "introducedBy": "HI-C11-kaalaa-safed",
-        "introducedAt": 54,
+        "introducedAt": 59,
         "missed": [
           "R1",
           "R2",
@@ -14825,7 +14854,7 @@
         "atom": "HI-CONCEPT-C11-KAALAA-SAFED-02",
         "language": "hindi",
         "introducedBy": "HI-C11-kaalaa-safed",
-        "introducedAt": 54,
+        "introducedAt": 59,
         "missed": [
           "R1",
           "R2",
@@ -14837,7 +14866,7 @@
         "atom": "HI-CONCEPT-C11-LAAL-NIILA-01",
         "language": "hindi",
         "introducedBy": "HI-C11-laal-niila",
-        "introducedAt": 55,
+        "introducedAt": 60,
         "missed": [
           "R1",
           "R2",
@@ -14849,7 +14878,7 @@
         "atom": "HI-CONCEPT-C11-LAAL-NIILA-02",
         "language": "hindi",
         "introducedBy": "HI-C11-laal-niila",
-        "introducedAt": 55,
+        "introducedAt": 60,
         "missed": [
           "R1",
           "R2",
@@ -14861,7 +14890,7 @@
         "atom": "HI-CONCEPT-C14-RITU-01",
         "language": "hindi",
         "introducedBy": "HI-C14-ritu",
-        "introducedAt": 60,
+        "introducedAt": 68,
         "missed": [
           "R1",
           "R2",
@@ -14873,7 +14902,7 @@
         "atom": "HI-CONCEPT-C14-RITU-02",
         "language": "hindi",
         "introducedBy": "HI-C14-ritu",
-        "introducedAt": 60,
+        "introducedAt": 68,
         "missed": [
           "R1",
           "R2",
@@ -14885,7 +14914,7 @@
         "atom": "HI-CONCEPT-C16-MAHINE-01",
         "language": "hindi",
         "introducedBy": "HI-C16-mahine",
-        "introducedAt": 62,
+        "introducedAt": 70,
         "missed": [
           "R1",
           "R2",
@@ -14897,7 +14926,7 @@
         "atom": "HI-CONCEPT-C16-MAHINE-02",
         "language": "hindi",
         "introducedBy": "HI-C16-mahine",
-        "introducedAt": 62,
+        "introducedAt": 70,
         "missed": [
           "R1",
           "R2",
@@ -14909,7 +14938,7 @@
         "atom": "HI-CONCEPT-C17-DOPAHAR-AADHI-RAAT-01",
         "language": "hindi",
         "introducedBy": "HI-C17-dopahar-aadhi-raat",
-        "introducedAt": 63,
+        "introducedAt": 71,
         "missed": [
           "R1",
           "R2",
@@ -14921,7 +14950,7 @@
         "atom": "HI-CONCEPT-C17-DOPAHAR-AADHI-RAAT-02",
         "language": "hindi",
         "introducedBy": "HI-C17-dopahar-aadhi-raat",
-        "introducedAt": 63,
+        "introducedAt": 71,
         "missed": [
           "R1",
           "R2",
@@ -14933,7 +14962,7 @@
         "atom": "HI-CONCEPT-C18-GHANTA-01",
         "language": "hindi",
         "introducedBy": "HI-C18-ghanta",
-        "introducedAt": 64,
+        "introducedAt": 72,
         "missed": [
           "R1",
           "R2",
@@ -14945,7 +14974,7 @@
         "atom": "HI-CONCEPT-C18-GHANTA-02",
         "language": "hindi",
         "introducedBy": "HI-C18-ghanta",
-        "introducedAt": 64,
+        "introducedAt": 72,
         "missed": [
           "R1",
           "R2",
@@ -14957,7 +14986,7 @@
         "atom": "HI-CONCEPT-C20-MAUSAM-01",
         "language": "hindi",
         "introducedBy": "HI-C20-mausam",
-        "introducedAt": 67,
+        "introducedAt": 75,
         "missed": [
           "R1",
           "R2",
@@ -14969,7 +14998,7 @@
         "atom": "HI-CONCEPT-C20-MAUSAM-02",
         "language": "hindi",
         "introducedBy": "HI-C20-mausam",
-        "introducedAt": 67,
+        "introducedAt": 75,
         "missed": [
           "R1",
           "R2",
@@ -14981,7 +15010,7 @@
         "atom": "HI-CONCEPT-C20-MAUSAM-03",
         "language": "hindi",
         "introducedBy": "HI-C20-mausam",
-        "introducedAt": 67,
+        "introducedAt": 75,
         "missed": [
           "R1",
           "R2",
@@ -14993,7 +15022,7 @@
         "atom": "HI-CONCEPT-C21-NUMBERS-6-10-01",
         "language": "hindi",
         "introducedBy": "HI-C21-numbers-6-10",
-        "introducedAt": 68,
+        "introducedAt": 76,
         "missed": [
           "R1",
           "R2",
@@ -15005,7 +15034,7 @@
         "atom": "HI-CONCEPT-C21-NUMBERS-6-10-02",
         "language": "hindi",
         "introducedBy": "HI-C21-numbers-6-10",
-        "introducedAt": 68,
+        "introducedAt": 76,
         "missed": [
           "R1",
           "R2",
@@ -15017,7 +15046,7 @@
         "atom": "HI-CONCEPT-C21-SIX-NINE-TEN-HISTORY-01",
         "language": "hindi",
         "introducedBy": "HI-C21-six-nine-ten-history",
-        "introducedAt": 69,
+        "introducedAt": 77,
         "missed": [
           "R1",
           "R2",
@@ -15029,7 +15058,7 @@
         "atom": "HI-CONCEPT-C21-SIX-NINE-TEN-HISTORY-02",
         "language": "hindi",
         "introducedBy": "HI-C21-six-nine-ten-history",
-        "introducedAt": 69,
+        "introducedAt": 77,
         "missed": [
           "R1",
           "R2",
@@ -15041,7 +15070,7 @@
         "atom": "HI-CONCEPT-C21-SIX-NINE-TEN-HISTORY-03",
         "language": "hindi",
         "introducedBy": "HI-C21-six-nine-ten-history",
-        "introducedAt": 69,
+        "introducedAt": 77,
         "missed": [
           "R1",
           "R2",
@@ -15053,7 +15082,7 @@
         "atom": "HI-CONCEPT-C22-GYARAH-BEES-01",
         "language": "hindi",
         "introducedBy": "HI-C22-gyarah-bees",
-        "introducedAt": 70,
+        "introducedAt": 78,
         "missed": [
           "R1",
           "R2",
@@ -15065,7 +15094,7 @@
         "atom": "HI-CONCEPT-C22-GYARAH-BEES-02",
         "language": "hindi",
         "introducedBy": "HI-C22-gyarah-bees",
-        "introducedAt": 70,
+        "introducedAt": 78,
         "missed": [
           "R1",
           "R2",
@@ -15077,7 +15106,7 @@
         "atom": "HI-CONCEPT-C22-GYARAH-BEES-03",
         "language": "hindi",
         "introducedBy": "HI-C22-gyarah-bees",
-        "introducedAt": 70,
+        "introducedAt": 78,
         "missed": [
           "R1",
           "R2",
@@ -15089,7 +15118,7 @@
         "atom": "HI-CONCEPT-C22-GYARAH-BEES-04",
         "language": "hindi",
         "introducedBy": "HI-C22-gyarah-bees",
-        "introducedAt": 70,
+        "introducedAt": 78,
         "missed": [
           "R1",
           "R2",
@@ -15101,7 +15130,7 @@
         "atom": "HI-CONCEPT-C23-BILLI-HISTORY-01",
         "language": "hindi",
         "introducedBy": "HI-C23-billi-history",
-        "introducedAt": 72,
+        "introducedAt": 80,
         "missed": [
           "R1",
           "R2",
@@ -15113,7 +15142,7 @@
         "atom": "HI-CONCEPT-C24-HARA-PILA-01",
         "language": "hindi",
         "introducedBy": "HI-C24-hara-pila",
-        "introducedAt": 73,
+        "introducedAt": 81,
         "missed": [
           "R1",
           "R2",
@@ -15125,7 +15154,7 @@
         "atom": "HI-CONCEPT-C24-PILA-HISTORY-01",
         "language": "hindi",
         "introducedBy": "HI-C24-pila-history",
-        "introducedAt": 74,
+        "introducedAt": 82,
         "missed": [
           "R1",
           "R2",
@@ -15137,7 +15166,7 @@
         "atom": "HI-CONCEPT-C25-DIN-01",
         "language": "hindi",
         "introducedBy": "HI-C25-din",
-        "introducedAt": 75,
+        "introducedAt": 83,
         "missed": [
           "R1",
           "R2",
@@ -15149,7 +15178,7 @@
         "atom": "HI-CONCEPT-C25-DIN-02",
         "language": "hindi",
         "introducedBy": "HI-C25-din",
-        "introducedAt": 75,
+        "introducedAt": 83,
         "missed": [
           "R1",
           "R2",
@@ -15161,7 +15190,7 @@
         "atom": "HI-CONCEPT-C26-RAAT-01",
         "language": "hindi",
         "introducedBy": "HI-C26-raat",
-        "introducedAt": 76,
+        "introducedAt": 84,
         "missed": [
           "R1",
           "R2",
@@ -15173,7 +15202,7 @@
         "atom": "HI-CONCEPT-C26-RAAT-02",
         "language": "hindi",
         "introducedBy": "HI-C26-raat",
-        "introducedAt": 76,
+        "introducedAt": 84,
         "missed": [
           "R1",
           "R2",
@@ -15185,7 +15214,7 @@
         "atom": "HI-CONCEPT-C27-SHUBH-RAATRI-01",
         "language": "hindi",
         "introducedBy": "HI-C27-shubh-raatri",
-        "introducedAt": 77,
+        "introducedAt": 85,
         "missed": [
           "R1",
           "R2",
@@ -15197,7 +15226,7 @@
         "atom": "HI-CONCEPT-C27-SHUBH-RAATRI-02",
         "language": "hindi",
         "introducedBy": "HI-C27-shubh-raatri",
-        "introducedAt": 77,
+        "introducedAt": 85,
         "missed": [
           "R1",
           "R2",
@@ -15209,7 +15238,7 @@
         "atom": "HI-CONCEPT-C28-SUBAH-01",
         "language": "hindi",
         "introducedBy": "HI-C28-subah",
-        "introducedAt": 78,
+        "introducedAt": 86,
         "missed": [
           "R1",
           "R2",
@@ -15221,7 +15250,7 @@
         "atom": "HI-CONCEPT-C28-SUBAH-02",
         "language": "hindi",
         "introducedBy": "HI-C28-subah",
-        "introducedAt": 78,
+        "introducedAt": 86,
         "missed": [
           "R1",
           "R2",
@@ -15233,7 +15262,7 @@
         "atom": "HI-CONCEPT-C28-SUBAH-03",
         "language": "hindi",
         "introducedBy": "HI-C28-subah",
-        "introducedAt": 78,
+        "introducedAt": 86,
         "missed": [
           "R1",
           "R2",
@@ -15245,7 +15274,7 @@
         "atom": "HI-CONCEPT-C29-SHAAM-02",
         "language": "hindi",
         "introducedBy": "HI-C29-shaam",
-        "introducedAt": 79,
+        "introducedAt": 87,
         "missed": [
           "R1",
           "R2",
@@ -15257,7 +15286,7 @@
         "atom": "HI-CONCEPT-C30-DOPAHAR-WIDENED-01",
         "language": "hindi",
         "introducedBy": "HI-C30-dopahar-widened",
-        "introducedAt": 80,
+        "introducedAt": 88,
         "missed": [
           "R1",
           "R2",
@@ -15269,7 +15298,7 @@
         "atom": "HI-CONCEPT-C30-DOPAHAR-WIDENED-02",
         "language": "hindi",
         "introducedBy": "HI-C30-dopahar-widened",
-        "introducedAt": 80,
+        "introducedAt": 88,
         "missed": [
           "R1",
           "R2",
@@ -15281,7 +15310,7 @@
         "atom": "HI-CONCEPT-C31-SUPRABHAT-01",
         "language": "hindi",
         "introducedBy": "HI-C31-suprabhat",
-        "introducedAt": 81,
+        "introducedAt": 89,
         "missed": [
           "R1",
           "R2",
@@ -15293,7 +15322,7 @@
         "atom": "HI-CONCEPT-C31-SUPRABHAT-02",
         "language": "hindi",
         "introducedBy": "HI-C31-suprabhat",
-        "introducedAt": 81,
+        "introducedAt": 89,
         "missed": [
           "R1",
           "R2",
@@ -15305,7 +15334,7 @@
         "atom": "HI-CONCEPT-C32-EVENING-REGISTER-01",
         "language": "hindi",
         "introducedBy": "HI-C32-evening-register",
-        "introducedAt": 83,
+        "introducedAt": 91,
         "missed": [
           "R1",
           "R2",
@@ -15317,7 +15346,7 @@
         "atom": "HI-CONCEPT-C32-SHUBH-SANDHYA-01",
         "language": "hindi",
         "introducedBy": "HI-C32-shubh-sandhya",
-        "introducedAt": 82,
+        "introducedAt": 90,
         "missed": [
           "R1",
           "R2",
@@ -15329,7 +15358,7 @@
         "atom": "HI-CONCEPT-C32-SHUBH-SANDHYA-02",
         "language": "hindi",
         "introducedBy": "HI-C32-shubh-sandhya",
-        "introducedAt": 82,
+        "introducedAt": 90,
         "missed": [
           "R1",
           "R2",
@@ -15341,7 +15370,7 @@
         "atom": "HI-CONCEPT-C33-SHUBH-DOPAHAR-01",
         "language": "hindi",
         "introducedBy": "HI-C33-shubh-dopahar",
-        "introducedAt": 84,
+        "introducedAt": 92,
         "missed": [
           "R1",
           "R2",
@@ -15353,7 +15382,7 @@
         "atom": "HI-CONCEPT-C33-SHUBH-DOPAHAR-02",
         "language": "hindi",
         "introducedBy": "HI-C33-shubh-dopahar",
-        "introducedAt": 84,
+        "introducedAt": 92,
         "missed": [
           "R1",
           "R2",
@@ -15365,7 +15394,7 @@
         "atom": "HI-CONCEPT-C34-LIKHNA-02",
         "language": "hindi",
         "introducedBy": "HI-C34-likhna",
-        "introducedAt": 88,
+        "introducedAt": 96,
         "missed": [
           "R1",
           "R2",
@@ -15377,7 +15406,7 @@
         "atom": "HI-CONCEPT-C34-PADHNA-02",
         "language": "hindi",
         "introducedBy": "HI-C34-padhna",
-        "introducedAt": 87,
+        "introducedAt": 95,
         "missed": [
           "R1",
           "R2",
@@ -15389,7 +15418,7 @@
         "atom": "HI-CONCEPT-C34-SAMAJHNA-02",
         "language": "hindi",
         "introducedBy": "HI-C34-samajhna",
-        "introducedAt": 86,
+        "introducedAt": 94,
         "missed": [
           "R1",
           "R2",
@@ -15401,7 +15430,7 @@
         "atom": "HI-CONCEPT-C34-SOCHNA-02",
         "language": "hindi",
         "introducedBy": "HI-C34-sochna",
-        "introducedAt": 85,
+        "introducedAt": 93,
         "missed": [
           "R1",
           "R2",
@@ -15566,6 +15595,30 @@
         "revisits": 3
       },
       {
+        "atom": "HI-CONCEPT-W04-RA-SA-MERA-NAAM-01",
+        "language": "hindi",
+        "introducedBy": "HI-W04-ra-sa-mera-naam",
+        "introducedAt": 20,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "HI-CONCEPT-W04-RA-SA-MERA-NAAM-02",
+        "language": "hindi",
+        "introducedBy": "HI-W04-ra-sa-mera-naam",
+        "introducedAt": 20,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "HI-CONCEPT-W04-WRITE-MERA-NAAM-01",
         "language": "hindi",
         "introducedBy": "HI-W04-write-mera-naam",
@@ -15636,6 +15689,18 @@
           "R3"
         ],
         "revisits": 2
+      },
+      {
+        "atom": "HI-SCRIPT-RECOG-08",
+        "language": "hindi",
+        "introducedBy": "HI-S08-letter-sa",
+        "introducedAt": 67,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 0
       },
       {
         "atom": "IT-ETYMON-GIORNI-2-02",
@@ -21518,7 +21583,7 @@
         "atom": "HI-CONCEPT-C07-HAAN-01",
         "language": "hindi",
         "introducedBy": "HI-C07-haan",
-        "introducedAt": 48,
+        "introducedAt": 49,
         "missed": [
           "R1",
           "R2"
@@ -21529,7 +21594,7 @@
         "atom": "HI-CONCEPT-C07-HAAN-02",
         "language": "hindi",
         "introducedBy": "HI-C07-haan",
-        "introducedAt": 48,
+        "introducedAt": 49,
         "missed": [
           "R1",
           "R2"
@@ -21540,29 +21605,7 @@
         "atom": "HI-CONCEPT-C07-NAHIN-01",
         "language": "hindi",
         "introducedBy": "HI-C07-nahin",
-        "introducedAt": 49,
-        "missed": [
-          "R1",
-          "R2"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "HI-CONCEPT-C07-NAHIN-02",
-        "language": "hindi",
-        "introducedBy": "HI-C07-nahin",
-        "introducedAt": 49,
-        "missed": [
-          "R1",
-          "R2"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "HI-CONCEPT-C07-NAHIN-03",
-        "language": "hindi",
-        "introducedBy": "HI-C07-nahin",
-        "introducedAt": 49,
+        "introducedAt": 50,
         "missed": [
           "R1",
           "R2"
@@ -21573,7 +21616,7 @@
         "atom": "HI-CONCEPT-C08-KRIPAYA-01",
         "language": "hindi",
         "introducedBy": "HI-C08-kripaya",
-        "introducedAt": 50,
+        "introducedAt": 52,
         "missed": [
           "R1",
           "R2"
@@ -21584,7 +21627,7 @@
         "atom": "HI-CONCEPT-C08-KRIPAYA-02",
         "language": "hindi",
         "introducedBy": "HI-C08-kripaya",
-        "introducedAt": 50,
+        "introducedAt": 52,
         "missed": [
           "R1",
           "R2"
@@ -21595,7 +21638,7 @@
         "atom": "HI-CONCEPT-C09-MAAF-KIJIYE-01",
         "language": "hindi",
         "introducedBy": "HI-C09-maaf-kijiye",
-        "introducedAt": 51,
+        "introducedAt": 54,
         "missed": [
           "R1",
           "R2"
@@ -21606,7 +21649,7 @@
         "atom": "HI-CONCEPT-C09-MAAF-KIJIYE-02",
         "language": "hindi",
         "introducedBy": "HI-C09-maaf-kijiye",
-        "introducedAt": 51,
+        "introducedAt": 54,
         "missed": [
           "R1",
           "R2"
@@ -21617,7 +21660,7 @@
         "atom": "HI-CONCEPT-C12-BHAAI-BAHIN-01",
         "language": "hindi",
         "introducedBy": "HI-C12-bhaai-bahin",
-        "introducedAt": 57,
+        "introducedAt": 63,
         "missed": [
           "R1",
           "R2"
@@ -21628,7 +21671,7 @@
         "atom": "HI-CONCEPT-C12-BHAAI-BAHIN-02",
         "language": "hindi",
         "introducedBy": "HI-C12-bhaai-bahin",
-        "introducedAt": 57,
+        "introducedAt": 63,
         "missed": [
           "R1",
           "R2"
@@ -21639,7 +21682,7 @@
         "atom": "HI-CONCEPT-C12-PITAA-MAATAA-01",
         "language": "hindi",
         "introducedBy": "HI-C12-pitaa-maataa",
-        "introducedAt": 56,
+        "introducedAt": 62,
         "missed": [
           "R1",
           "R2"
@@ -21650,7 +21693,7 @@
         "atom": "HI-CONCEPT-C12-PITAA-MAATAA-02",
         "language": "hindi",
         "introducedBy": "HI-C12-pitaa-maataa",
-        "introducedAt": 56,
+        "introducedAt": 62,
         "missed": [
           "R1",
           "R2"
@@ -21661,7 +21704,7 @@
         "atom": "HI-CONCEPT-C13-HAATH-01",
         "language": "hindi",
         "introducedBy": "HI-C13-haath",
-        "introducedAt": 59,
+        "introducedAt": 66,
         "missed": [
           "R1",
           "R2"
@@ -21672,7 +21715,7 @@
         "atom": "HI-CONCEPT-C13-HAATH-02",
         "language": "hindi",
         "introducedBy": "HI-C13-haath",
-        "introducedAt": 59,
+        "introducedAt": 66,
         "missed": [
           "R1",
           "R2"
@@ -21683,7 +21726,7 @@
         "atom": "HI-CONCEPT-C13-SIR-01",
         "language": "hindi",
         "introducedBy": "HI-C13-sir",
-        "introducedAt": 58,
+        "introducedAt": 65,
         "missed": [
           "R1",
           "R2"
@@ -21694,7 +21737,7 @@
         "atom": "HI-CONCEPT-C15-PAANI-ROTI-01",
         "language": "hindi",
         "introducedBy": "HI-C15-paani-roti",
-        "introducedAt": 61,
+        "introducedAt": 69,
         "missed": [
           "R1",
           "R2"
@@ -21705,7 +21748,7 @@
         "atom": "HI-CONCEPT-C15-PAANI-ROTI-02",
         "language": "hindi",
         "introducedBy": "HI-C15-paani-roti",
-        "introducedAt": 61,
+        "introducedAt": 69,
         "missed": [
           "R1",
           "R2"
@@ -21716,7 +21759,7 @@
         "atom": "HI-CONCEPT-C19-AGE-GRAMMAR-01",
         "language": "hindi",
         "introducedBy": "HI-C19-age-grammar",
-        "introducedAt": 66,
+        "introducedAt": 74,
         "missed": [
           "R1",
           "R2"
@@ -21727,7 +21770,7 @@
         "atom": "HI-CONCEPT-C19-UMR-01",
         "language": "hindi",
         "introducedBy": "HI-C19-umr",
-        "introducedAt": 65,
+        "introducedAt": 73,
         "missed": [
           "R1",
           "R2"
@@ -21738,7 +21781,7 @@
         "atom": "HI-CONCEPT-C23-KUTTA-BILLI-01",
         "language": "hindi",
         "introducedBy": "HI-C23-kutta-billi",
-        "introducedAt": 71,
+        "introducedAt": 79,
         "missed": [
           "R1",
           "R2"
@@ -21749,7 +21792,7 @@
         "atom": "HI-CONCEPT-C29-SHAAM-01",
         "language": "hindi",
         "introducedBy": "HI-C29-shaam",
-        "introducedAt": 79,
+        "introducedAt": 87,
         "missed": [
           "R1",
           "R3"
@@ -21760,7 +21803,7 @@
         "atom": "HI-CONCEPT-C34-LIKHNA-01",
         "language": "hindi",
         "introducedBy": "HI-C34-likhna",
-        "introducedAt": 88,
+        "introducedAt": 96,
         "missed": [
           "R2",
           "R3"
@@ -21771,7 +21814,7 @@
         "atom": "HI-CONCEPT-C34-PADHNA-01",
         "language": "hindi",
         "introducedBy": "HI-C34-padhna",
-        "introducedAt": 87,
+        "introducedAt": 95,
         "missed": [
           "R2",
           "R3"
@@ -21782,7 +21825,7 @@
         "atom": "HI-CONCEPT-C34-SAMAJHNA-01",
         "language": "hindi",
         "introducedBy": "HI-C34-samajhna",
-        "introducedAt": 86,
+        "introducedAt": 94,
         "missed": [
           "R2",
           "R3"
@@ -21793,7 +21836,7 @@
         "atom": "HI-CONCEPT-C34-SOCHNA-01",
         "language": "hindi",
         "introducedBy": "HI-C34-sochna",
-        "introducedAt": 85,
+        "introducedAt": 93,
         "missed": [
           "R2",
           "R3"
@@ -21804,7 +21847,7 @@
         "atom": "HI-CONCEPT-C35-LENA-02",
         "language": "hindi",
         "introducedBy": "HI-C35-lena",
-        "introducedAt": 89,
+        "introducedAt": 97,
         "missed": [
           "R1",
           "R2"
@@ -21815,7 +21858,7 @@
         "atom": "HI-CONCEPT-C35-MADAD-02",
         "language": "hindi",
         "introducedBy": "HI-C35-madad",
-        "introducedAt": 91,
+        "introducedAt": 99,
         "missed": [
           "R1",
           "R2"
@@ -21826,7 +21869,7 @@
         "atom": "HI-CONCEPT-C35-PASAND-01",
         "language": "hindi",
         "introducedBy": "HI-C35-pasand",
-        "introducedAt": 92,
+        "introducedAt": 100,
         "missed": [
           "R1",
           "R2"
@@ -21837,7 +21880,7 @@
         "atom": "HI-CONCEPT-C35-PASAND-02",
         "language": "hindi",
         "introducedBy": "HI-C35-pasand",
-        "introducedAt": 92,
+        "introducedAt": 100,
         "missed": [
           "R1",
           "R2"
@@ -21848,7 +21891,7 @@
         "atom": "HI-CONCEPT-C35-PASAND-03",
         "language": "hindi",
         "introducedBy": "HI-C35-pasand",
-        "introducedAt": 92,
+        "introducedAt": 100,
         "missed": [
           "R1",
           "R2"
@@ -21859,12 +21902,89 @@
         "atom": "HI-CONCEPT-C35-PUCHNA-02",
         "language": "hindi",
         "introducedBy": "HI-C35-puchna",
-        "introducedAt": 90,
+        "introducedAt": 98,
         "missed": [
           "R1",
           "R2"
         ],
         "revisits": 0
+      },
+      {
+        "atom": "HI-SCRIPT-RECOG-01",
+        "language": "hindi",
+        "introducedBy": "HI-S01-letter-ma",
+        "introducedAt": 48,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "HI-SCRIPT-RECOG-02",
+        "language": "hindi",
+        "introducedBy": "HI-S02-letter-na",
+        "introducedAt": 51,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "HI-SCRIPT-RECOG-03",
+        "language": "hindi",
+        "introducedBy": "HI-S03-letter-a",
+        "introducedAt": 53,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "HI-SCRIPT-RECOG-04",
+        "language": "hindi",
+        "introducedBy": "HI-S04-letter-aa",
+        "introducedAt": 55,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "HI-SCRIPT-RECOG-05",
+        "language": "hindi",
+        "introducedBy": "HI-S05-sign-virama",
+        "introducedAt": 58,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "HI-SCRIPT-RECOG-06",
+        "language": "hindi",
+        "introducedBy": "HI-S06-vowel-sign-aa",
+        "introducedAt": 61,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "HI-SCRIPT-RECOG-07",
+        "language": "hindi",
+        "introducedBy": "HI-S07-letter-ta",
+        "introducedAt": 64,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
       },
       {
         "atom": "IT-ETYMON-A-DOMANI-03",
@@ -32443,7 +32563,7 @@
         "atom": "HI-CONCEPT-C35-LENA-01",
         "language": "hindi",
         "introducedBy": "HI-C35-lena",
-        "introducedAt": 89,
+        "introducedAt": 97,
         "missed": [
           "R2"
         ],
@@ -32453,7 +32573,7 @@
         "atom": "HI-CONCEPT-C35-MADAD-01",
         "language": "hindi",
         "introducedBy": "HI-C35-madad",
-        "introducedAt": 91,
+        "introducedAt": 99,
         "missed": [
           "R2"
         ],
@@ -32463,7 +32583,7 @@
         "atom": "HI-CONCEPT-C35-PUCHNA-01",
         "language": "hindi",
         "introducedBy": "HI-C35-puchna",
-        "introducedAt": 90,
+        "introducedAt": 98,
         "missed": [
           "R2"
         ],
@@ -32473,7 +32593,7 @@
         "atom": "HI-CONCEPT-C36-DARVAAZA-02",
         "language": "hindi",
         "introducedBy": "HI-C36-darvaaza",
-        "introducedAt": 94,
+        "introducedAt": 102,
         "missed": [
           "R2"
         ],
@@ -32483,7 +32603,7 @@
         "atom": "HI-CONCEPT-C36-GHAR-01",
         "language": "hindi",
         "introducedBy": "HI-C36-ghar",
-        "introducedAt": 93,
+        "introducedAt": 101,
         "missed": [
           "R2"
         ],
@@ -32493,7 +32613,7 @@
         "atom": "HI-CONCEPT-C36-GHAR-02",
         "language": "hindi",
         "introducedBy": "HI-C36-ghar",
-        "introducedAt": 93,
+        "introducedAt": 101,
         "missed": [
           "R2"
         ],
@@ -32503,7 +32623,7 @@
         "atom": "HI-CONCEPT-C36-KAMRA-01",
         "language": "hindi",
         "introducedBy": "HI-C36-kamra",
-        "introducedAt": 95,
+        "introducedAt": 103,
         "missed": [
           "R2"
         ],
@@ -32513,7 +32633,7 @@
         "atom": "HI-CONCEPT-C36-KAMRA-02",
         "language": "hindi",
         "introducedBy": "HI-C36-kamra",
-        "introducedAt": 95,
+        "introducedAt": 103,
         "missed": [
           "R2"
         ],
@@ -32523,7 +32643,7 @@
         "atom": "HI-CONCEPT-C36-KURSI-02",
         "language": "hindi",
         "introducedBy": "HI-C36-kursi",
-        "introducedAt": 96,
+        "introducedAt": 104,
         "missed": [
           "R1"
         ],
@@ -32533,7 +32653,7 @@
         "atom": "HI-CONCEPT-C37-CHAI-02",
         "language": "hindi",
         "introducedBy": "HI-C37-chai",
-        "introducedAt": 97,
+        "introducedAt": 105,
         "missed": [
           "R2"
         ],
@@ -32543,7 +32663,7 @@
         "atom": "HI-CONCEPT-C37-CHAI-03",
         "language": "hindi",
         "introducedBy": "HI-C37-chai",
-        "introducedAt": 97,
+        "introducedAt": 105,
         "missed": [
           "R2"
         ],
@@ -32553,7 +32673,7 @@
         "atom": "HI-CONCEPT-C37-DUDH-01",
         "language": "hindi",
         "introducedBy": "HI-C37-dudh",
-        "introducedAt": 98,
+        "introducedAt": 106,
         "missed": [
           "R2"
         ],
@@ -32563,7 +32683,7 @@
         "atom": "HI-CONCEPT-C37-DUDH-02",
         "language": "hindi",
         "introducedBy": "HI-C37-dudh",
-        "introducedAt": 98,
+        "introducedAt": 106,
         "missed": [
           "R2"
         ],
@@ -32573,7 +32693,7 @@
         "atom": "HI-CONCEPT-C37-KHAANA-01",
         "language": "hindi",
         "introducedBy": "HI-C37-khaana",
-        "introducedAt": 99,
+        "introducedAt": 107,
         "missed": [
           "R2"
         ],
@@ -32583,7 +32703,7 @@
         "atom": "HI-CONCEPT-C37-KHAANA-02",
         "language": "hindi",
         "introducedBy": "HI-C37-khaana",
-        "introducedAt": 99,
+        "introducedAt": 107,
         "missed": [
           "R2"
         ],
@@ -32593,7 +32713,7 @@
         "atom": "HI-CONCEPT-C37-KITAAB-02",
         "language": "hindi",
         "introducedBy": "HI-C37-kitaab",
-        "introducedAt": 100,
+        "introducedAt": 108,
         "missed": [
           "R1"
         ],
@@ -32603,7 +32723,7 @@
         "atom": "HI-CONCEPT-C37-KITAAB-03",
         "language": "hindi",
         "introducedBy": "HI-C37-kitaab",
-        "introducedAt": 100,
+        "introducedAt": 108,
         "missed": [
           "R1"
         ],
@@ -32613,7 +32733,7 @@
         "atom": "HI-CONCEPT-C38-AANKH-02",
         "language": "hindi",
         "introducedBy": "HI-C38-aankh",
-        "introducedAt": 101,
+        "introducedAt": 109,
         "missed": [
           "R2"
         ],
@@ -32623,7 +32743,7 @@
         "atom": "HI-CONCEPT-C38-DAANT-01",
         "language": "hindi",
         "introducedBy": "HI-C38-daant",
-        "introducedAt": 102,
+        "introducedAt": 110,
         "missed": [
           "R2"
         ],
@@ -32633,7 +32753,7 @@
         "atom": "HI-CONCEPT-C38-DAANT-02",
         "language": "hindi",
         "introducedBy": "HI-C38-daant",
-        "introducedAt": 102,
+        "introducedAt": 110,
         "missed": [
           "R2"
         ],
@@ -32643,7 +32763,7 @@
         "atom": "HI-CONCEPT-C38-PAIR-01",
         "language": "hindi",
         "introducedBy": "HI-C38-pair",
-        "introducedAt": 103,
+        "introducedAt": 111,
         "missed": [
           "R2"
         ],
@@ -32653,7 +32773,7 @@
         "atom": "HI-CONCEPT-C38-PAIR-02",
         "language": "hindi",
         "introducedBy": "HI-C38-pair",
-        "introducedAt": 103,
+        "introducedAt": 111,
         "missed": [
           "R2"
         ],
@@ -32663,7 +32783,7 @@
         "atom": "HI-CONCEPT-C38-PET-02",
         "language": "hindi",
         "introducedBy": "HI-C38-pet",
-        "introducedAt": 104,
+        "introducedAt": 112,
         "missed": [
           "R1"
         ],
@@ -40638,7 +40758,7 @@
       {
         "lessonId": "HI-C25-din",
         "language": "hindi",
-        "position": 75,
+        "position": 83,
         "word": "दोपहर",
         "taughtBy": "HI-C30-dopahar-widened",
         "lessonsEarly": 5
@@ -40782,7 +40902,7 @@
       {
         "lessonId": "HI-C19-age-grammar",
         "language": "hindi",
-        "position": 66,
+        "position": 74,
         "word": "बीस",
         "taughtBy": "HI-C22-gyarah-bees",
         "lessonsEarly": 4
@@ -42030,7 +42150,7 @@
       {
         "lessonId": "HI-C07-haan",
         "language": "hindi",
-        "position": 48,
+        "position": 49,
         "word": "नहीं",
         "taughtBy": "HI-C07-nahin",
         "lessonsEarly": 1
@@ -42667,12 +42787,12 @@
       },
       {
         "language": "hindi",
-        "lessonCount": 109,
+        "lessonCount": 117,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 1,
         "forwardReviews": 1,
-        "atomsTaught": 152,
-        "atomsNeverRevisited": 64,
+        "atomsTaught": 160,
+        "atomsNeverRevisited": 65,
         "forwardReferences": 5
       },
       {
@@ -42831,14 +42951,14 @@
       "tracksWithUnorderedLessons": 12,
       "forwardPrerequisites": 143,
       "forwardReviews": 168,
-      "atomsTaught": 3063,
-      "atomsNeverRevisited": 488,
+      "atomsTaught": 3071,
+      "atomsNeverRevisited": 489,
       "neverRevisitedPercent": 16,
       "missedByWindow": {
-        "R1": 946,
-        "R2": 2140,
-        "R3": 1676,
-        "R4": 388
+        "R1": 947,
+        "R2": 2148,
+        "R3": 1686,
+        "R4": 386
       },
       "forwardReferences": 454
     }
@@ -42900,14 +43020,14 @@
       {
         "language": "hindi",
         "script": "devanagari",
-        "lessonCount": 109,
-        "scriptLessons": 11,
-        "taughtGlyphs": 28,
+        "lessonCount": 117,
+        "scriptLessons": 19,
+        "taughtGlyphs": 33,
         "shownGlyphs": 56,
-        "neverTaughtGlyphs": 28,
-        "violations": 83,
+        "neverTaughtGlyphs": 23,
+        "violations": 81,
         "exposureOnly": 6,
-        "exposureExemptedGlyphs": 29,
+        "exposureExemptedGlyphs": 25,
         "headwordsWithoutRomanization": 70
       },
       {
@@ -42928,12 +43048,12 @@
         "script": "kannada",
         "lessonCount": 96,
         "scriptLessons": 8,
-        "taughtGlyphs": 34,
+        "taughtGlyphs": 35,
         "shownGlyphs": 66,
-        "neverTaughtGlyphs": 32,
-        "violations": 61,
+        "neverTaughtGlyphs": 31,
+        "violations": 60,
         "exposureOnly": 15,
-        "exposureExemptedGlyphs": 180,
+        "exposureExemptedGlyphs": 179,
         "headwordsWithoutRomanization": 14
       },
       {
@@ -42941,12 +43061,12 @@
         "script": "malayalam",
         "lessonCount": 101,
         "scriptLessons": 8,
-        "taughtGlyphs": 41,
+        "taughtGlyphs": 40,
         "shownGlyphs": 66,
-        "neverTaughtGlyphs": 25,
-        "violations": 67,
-        "exposureOnly": 10,
-        "exposureExemptedGlyphs": 118,
+        "neverTaughtGlyphs": 26,
+        "violations": 73,
+        "exposureOnly": 8,
+        "exposureExemptedGlyphs": 123,
         "headwordsWithoutRomanization": 33
       },
       {
@@ -43006,12 +43126,12 @@
         "script": "devanagari",
         "lessonCount": 65,
         "scriptLessons": 6,
-        "taughtGlyphs": 23,
+        "taughtGlyphs": 22,
         "shownGlyphs": 48,
-        "neverTaughtGlyphs": 25,
-        "violations": 43,
-        "exposureOnly": 12,
-        "exposureExemptedGlyphs": 243,
+        "neverTaughtGlyphs": 26,
+        "violations": 41,
+        "exposureOnly": 13,
+        "exposureExemptedGlyphs": 241,
         "headwordsWithoutRomanization": 4
       },
       {
@@ -43032,12 +43152,12 @@
         "script": "telugu",
         "lessonCount": 95,
         "scriptLessons": 8,
-        "taughtGlyphs": 31,
+        "taughtGlyphs": 34,
         "shownGlyphs": 62,
-        "neverTaughtGlyphs": 31,
-        "violations": 48,
-        "exposureOnly": 19,
-        "exposureExemptedGlyphs": 157,
+        "neverTaughtGlyphs": 28,
+        "violations": 46,
+        "exposureOnly": 18,
+        "exposureExemptedGlyphs": 154,
         "headwordsWithoutRomanization": 17
       },
       {
@@ -43441,13 +43561,6 @@
         "count": 15
       },
       {
-        "lessonId": "HI-C16-mahine",
-        "language": "hindi",
-        "chapter": 16,
-        "glyphs": "आईगघठढफबभय़ीुैौ",
-        "count": 15
-      },
-      {
         "lessonId": "KA-C07-numbers-6-10",
         "language": "kannada",
         "chapter": 7,
@@ -43707,10 +43820,10 @@
         "count": 13
       },
       {
-        "lessonId": "HI-C34-padhna",
-        "language": "hindi",
-        "chapter": 34,
-        "glyphs": "ँआईएछठढफ़ीुैौ",
+        "lessonId": "ML-C07-numbers-6-10",
+        "language": "malayalam",
+        "chapter": 7,
+        "glyphs": "ആഎഏഒടപറഴ൬൭൮൯൰",
         "count": 13
       },
       {
@@ -43893,13 +44006,6 @@
         "language": "malayalam",
         "chapter": 2,
         "glyphs": "എണതനപരറാിെേ്",
-        "count": 12
-      },
-      {
-        "lessonId": "ML-C07-numbers-6-10",
-        "language": "malayalam",
-        "chapter": 7,
-        "glyphs": "ആഎഏഒതറഴ൬൭൮൯൰",
         "count": 12
       },
       {
@@ -44120,13 +44226,6 @@
         "count": 11
       },
       {
-        "lessonId": "HI-C39-aurat",
-        "language": "hindi",
-        "chapter": 39,
-        "glyphs": "ँआईएऔथबभयीु",
-        "count": 11
-      },
-      {
         "lessonId": "JA-C01-gozaimasu",
         "language": "japanese",
         "chapter": 1,
@@ -44141,13 +44240,6 @@
         "count": 11
       },
       {
-        "lessonId": "KA-C16-tingalugalu",
-        "language": "kannada",
-        "chapter": 16,
-        "glyphs": "ಆಖಘಜಠಢಪಫಭಶೈ",
-        "count": 11
-      },
-      {
         "lessonId": "ML-C03-sukhamaano",
         "language": "malayalam",
         "chapter": 3,
@@ -44159,13 +44251,6 @@
         "language": "malayalam",
         "chapter": 6,
         "glyphs": "എജഞനപരലാേോൻ",
-        "count": 11
-      },
-      {
-        "lessonId": "ML-C07-numbers-1-5",
-        "language": "malayalam",
-        "chapter": 7,
-        "glyphs": "അഒചഞലൂ൧൨൩൪൫",
         "count": 11
       },
       {
@@ -44358,10 +44443,17 @@
         "count": 10
       },
       {
-        "lessonId": "HI-C34-samajhna",
+        "lessonId": "HI-C16-mahine",
+        "language": "hindi",
+        "chapter": 16,
+        "glyphs": "ईघठढफबभ़ीौ",
+        "count": 10
+      },
+      {
+        "lessonId": "HI-C34-padhna",
         "language": "hindi",
         "chapter": 34,
-        "glyphs": "ँआएझफब़ीुै",
+        "glyphs": "ँईएछठढफ़ीौ",
         "count": 10
       },
       {
@@ -44393,6 +44485,13 @@
         "count": 10
       },
       {
+        "lessonId": "KA-C16-tingalugalu",
+        "language": "kannada",
+        "chapter": 16,
+        "glyphs": "ಆಖಘಜಠಢಫಭಶೈ",
+        "count": 10
+      },
+      {
         "lessonId": "ML-C02-enre-peru-aanu",
         "language": "malayalam",
         "chapter": 2,
@@ -44404,6 +44503,20 @@
         "language": "malayalam",
         "chapter": 5,
         "glyphs": "ംഉകനരസാിു്",
+        "count": 10
+      },
+      {
+        "lessonId": "ML-C07-numbers-1-5",
+        "language": "malayalam",
+        "chapter": 7,
+        "glyphs": "അഒഞടൂ൧൨൩൪൫",
+        "count": 10
+      },
+      {
+        "lessonId": "ML-C10-azhcha",
+        "language": "malayalam",
+        "chapter": 10,
+        "glyphs": "ങഞധബറഴൊൻർൾ",
         "count": 10
       },
       {
@@ -44890,31 +45003,10 @@
         "count": 8
       },
       {
-        "lessonId": "HI-C22-gyarah-bees",
+        "lessonId": "HI-C39-aurat",
         "language": "hindi",
-        "chapter": 22,
-        "glyphs": "उऊगठबयीौ",
-        "count": 8
-      },
-      {
-        "lessonId": "HI-C35-madad",
-        "language": "hindi",
-        "chapter": 35,
-        "glyphs": "ँआउएफ़ीै",
-        "count": 8
-      },
-      {
-        "lessonId": "HI-C37-chai",
-        "language": "hindi",
-        "chapter": 37,
-        "glyphs": "आएफय़ीुृ",
-        "count": 8
-      },
-      {
-        "lessonId": "HI-C38-aankh",
-        "language": "hindi",
-        "chapter": 38,
-        "glyphs": "ँआठथबयीै",
+        "chapter": 39,
+        "glyphs": "ँईएऔथबभी",
         "count": 8
       },
       {
@@ -45233,31 +45325,10 @@
         "count": 7
       },
       {
-        "lessonId": "HI-C20-mausam",
+        "lessonId": "HI-C34-samajhna",
         "language": "hindi",
-        "chapter": 20,
-        "glyphs": "गठडबीैौ",
-        "count": 7
-      },
-      {
-        "lessonId": "HI-C35-puchna",
-        "language": "hindi",
-        "chapter": 35,
-        "glyphs": "ँआउछीृै",
-        "count": 7
-      },
-      {
-        "lessonId": "HI-C37-kitaab",
-        "language": "hindi",
-        "chapter": 37,
-        "glyphs": "एथबयीुृ",
-        "count": 7
-      },
-      {
-        "lessonId": "HI-C38-pet",
-        "language": "hindi",
-        "chapter": 38,
-        "glyphs": "ँआठबीुै",
+        "chapter": 34,
+        "glyphs": "ँएझफब़ी",
         "count": 7
       },
       {
@@ -45265,13 +45336,6 @@
         "language": "kannada",
         "chapter": 2,
         "glyphs": "ನರಸಹುೆ್",
-        "count": 7
-      },
-      {
-        "lessonId": "ML-C10-azhcha",
-        "language": "malayalam",
-        "chapter": 10,
-        "glyphs": "ചധബയഴൊർ",
         "count": 7
       },
       {
@@ -45401,13 +45465,6 @@
         "count": 7
       },
       {
-        "lessonId": "SA-C10-paniyam",
-        "language": "sanskrit",
-        "chapter": 10,
-        "glyphs": "अउजबभलि",
-        "count": 7
-      },
-      {
         "lessonId": "TE-C03-elaa",
         "language": "telugu",
         "chapter": 3,
@@ -45527,24 +45584,17 @@
         "count": 6
       },
       {
-        "lessonId": "HI-C12-bhaai-bahin",
+        "lessonId": "HI-C22-gyarah-bees",
         "language": "hindi",
-        "chapter": 12,
-        "glyphs": "ईगबभीृ",
+        "chapter": 22,
+        "glyphs": "उऊठबीौ",
         "count": 6
       },
       {
-        "lessonId": "HI-C36-darvaaza",
+        "lessonId": "HI-C35-madad",
         "language": "hindi",
-        "chapter": 36,
-        "glyphs": "घफभ़ीु",
-        "count": 6
-      },
-      {
-        "lessonId": "HI-C39-aadmi",
-        "language": "hindi",
-        "chapter": 39,
-        "glyphs": "आएबयीु",
+        "chapter": 35,
+        "glyphs": "ँउएफ़ी",
         "count": 6
       },
       {
@@ -45699,6 +45749,13 @@
         "language": "sanskrit",
         "chapter": 8,
         "glyphs": "अगजञणा",
+        "count": 6
+      },
+      {
+        "lessonId": "SA-C10-paniyam",
+        "language": "sanskrit",
+        "chapter": 10,
+        "glyphs": "उजदबभल",
         "count": 6
       },
       {
@@ -45891,59 +45948,52 @@
         "count": 5
       },
       {
-        "lessonId": "HI-C19-age-grammar",
+        "lessonId": "HI-C12-bhaai-bahin",
         "language": "hindi",
-        "chapter": 19,
-        "glyphs": "ँबीुै",
+        "chapter": 12,
+        "glyphs": "ईबभीृ",
         "count": 5
       },
       {
-        "lessonId": "HI-C32-shubh-sandhya",
+        "lessonId": "HI-C20-mausam",
         "language": "hindi",
-        "chapter": 32,
-        "glyphs": "ँझभयु",
+        "chapter": 20,
+        "glyphs": "ठडबीौ",
         "count": 5
       },
       {
-        "lessonId": "HI-C34-sochna",
-        "language": "hindi",
-        "chapter": 34,
-        "glyphs": "ँआीुै",
-        "count": 5
-      },
-      {
-        "lessonId": "HI-C35-lena",
+        "lessonId": "HI-C35-puchna",
         "language": "hindi",
         "chapter": 35,
-        "glyphs": "ँआभीै",
+        "glyphs": "ँउछीृ",
         "count": 5
       },
       {
-        "lessonId": "HI-C36-ghar",
+        "lessonId": "HI-C36-darvaaza",
         "language": "hindi",
         "chapter": 36,
-        "glyphs": "गघयृै",
+        "glyphs": "घफभ़ी",
         "count": 5
       },
       {
-        "lessonId": "HI-C37-dudh",
+        "lessonId": "HI-C37-chai",
         "language": "hindi",
         "chapter": 37,
-        "glyphs": "एगयीु",
+        "glyphs": "एफ़ीृ",
         "count": 5
       },
       {
-        "lessonId": "HI-C38-pair",
+        "lessonId": "HI-C37-kitaab",
+        "language": "hindi",
+        "chapter": 37,
+        "glyphs": "एथबीृ",
+        "count": 5
+      },
+      {
+        "lessonId": "HI-C38-aankh",
         "language": "hindi",
         "chapter": 38,
-        "glyphs": "ँठथीै",
-        "count": 5
-      },
-      {
-        "lessonId": "HI-C39-baccha",
-        "language": "hindi",
-        "chapter": 39,
-        "glyphs": "छड़ीु",
+        "glyphs": "ँठथबी",
         "count": 5
       },
       {
@@ -46133,6 +46183,13 @@
         "language": "sanskrit",
         "chapter": 9,
         "glyphs": "ऋणशुू",
+        "count": 5
+      },
+      {
+        "lessonId": "SA-C10-kshiram",
+        "language": "sanskrit",
+        "chapter": 10,
+        "glyphs": "खदपभय",
         "count": 5
       },
       {
@@ -46339,59 +46396,24 @@
         "count": 4
       },
       {
-        "lessonId": "HI-C14-ritu",
+        "lessonId": "HI-C38-pair",
         "language": "hindi",
-        "chapter": 14,
-        "glyphs": "ऋगीु",
+        "chapter": 38,
+        "glyphs": "ँठथी",
         "count": 4
       },
       {
-        "lessonId": "HI-C19-umr",
+        "lessonId": "HI-C38-pet",
         "language": "hindi",
-        "chapter": 19,
-        "glyphs": "आउयु",
+        "chapter": 38,
+        "glyphs": "ँठबी",
         "count": 4
       },
       {
-        "lessonId": "HI-C21-numbers-6-10",
-        "language": "hindi",
-        "chapter": 21,
-        "glyphs": "आछठौ",
-        "count": 4
-      },
-      {
-        "lessonId": "HI-C33-shubh-dopahar",
-        "language": "hindi",
-        "chapter": 33,
-        "glyphs": "आभयु",
-        "count": 4
-      },
-      {
-        "lessonId": "HI-C34-likhna",
-        "language": "hindi",
-        "chapter": 34,
-        "glyphs": "ँआीै",
-        "count": 4
-      },
-      {
-        "lessonId": "HI-C35-pasand",
-        "language": "hindi",
-        "chapter": 35,
-        "glyphs": "झीुै",
-        "count": 4
-      },
-      {
-        "lessonId": "HI-C36-kamra",
-        "language": "hindi",
-        "chapter": 36,
-        "glyphs": "ब़ीै",
-        "count": 4
-      },
-      {
-        "lessonId": "HI-C39-dost",
+        "lessonId": "HI-C39-baccha",
         "language": "hindi",
         "chapter": 39,
-        "glyphs": "ँआीु",
+        "glyphs": "छड़ी",
         "count": 4
       },
       {
@@ -46420,13 +46442,6 @@
         "language": "kannada",
         "chapter": 39,
         "glyphs": "ಅಟಳಶ",
-        "count": 4
-      },
-      {
-        "lessonId": "KA-C39-kaapi",
-        "language": "kannada",
-        "chapter": 39,
-        "glyphs": "ಖಟಥಪ",
         "count": 4
       },
       {
@@ -46462,6 +46477,20 @@
         "language": "malayalam",
         "chapter": 3,
         "glyphs": "ണമാ്",
+        "count": 4
+      },
+      {
+        "lessonId": "ML-C16-kollavarsham-maasangal",
+        "language": "malayalam",
+        "chapter": 16,
+        "glyphs": "ടഥഭൃ",
+        "count": 4
+      },
+      {
+        "lessonId": "ML-C38-nenchu",
+        "language": "malayalam",
+        "chapter": 38,
+        "glyphs": "ടഹൃൈ",
         "count": 4
       },
       {
@@ -46539,13 +46568,6 @@
         "language": "sanskrit",
         "chapter": 9,
         "glyphs": "ंचञृ",
-        "count": 4
-      },
-      {
-        "lessonId": "SA-C12-karnah",
-        "language": "sanskrit",
-        "chapter": 12,
-        "glyphs": "ंषृौ",
         "count": 4
       },
       {
@@ -46738,20 +46760,6 @@
         "count": 3
       },
       {
-        "lessonId": "HI-C10-somavaar-shukravaar",
-        "language": "hindi",
-        "chapter": 10,
-        "glyphs": "गबु",
-        "count": 3
-      },
-      {
-        "lessonId": "HI-C11-kaalaa-safed",
-        "language": "hindi",
-        "chapter": 11,
-        "glyphs": "फ़ु",
-        "count": 3
-      },
-      {
         "lessonId": "HI-C12-pitaa-maataa",
         "language": "hindi",
         "chapter": 12,
@@ -46759,24 +46767,38 @@
         "count": 3
       },
       {
-        "lessonId": "HI-C18-ghanta",
+        "lessonId": "HI-C19-age-grammar",
         "language": "hindi",
-        "chapter": 18,
-        "glyphs": "एबै",
+        "chapter": 19,
+        "glyphs": "ँबी",
         "count": 3
       },
       {
-        "lessonId": "HI-C29-shaam",
+        "lessonId": "HI-C21-numbers-6-10",
         "language": "hindi",
-        "chapter": 29,
-        "glyphs": "बयु",
+        "chapter": 21,
+        "glyphs": "छठौ",
         "count": 3
       },
       {
-        "lessonId": "HI-C31-suprabhat",
+        "lessonId": "HI-C32-shubh-sandhya",
         "language": "hindi",
-        "chapter": 31,
-        "glyphs": "बभु",
+        "chapter": 32,
+        "glyphs": "ँझभ",
+        "count": 3
+      },
+      {
+        "lessonId": "HI-C35-lena",
+        "language": "hindi",
+        "chapter": 35,
+        "glyphs": "ँभी",
+        "count": 3
+      },
+      {
+        "lessonId": "HI-C36-kamra",
+        "language": "hindi",
+        "chapter": 36,
+        "glyphs": "ब़ी",
         "count": 3
       },
       {
@@ -46784,6 +46806,13 @@
         "language": "hindi",
         "chapter": 37,
         "glyphs": "ए़ी",
+        "count": 3
+      },
+      {
+        "lessonId": "HI-C39-aadmi",
+        "language": "hindi",
+        "chapter": 39,
+        "glyphs": "एबी",
         "count": 3
       },
       {
@@ -46815,13 +46844,6 @@
         "count": 3
       },
       {
-        "lessonId": "KA-C22-hasiru-haladi",
-        "language": "kannada",
-        "chapter": 22,
-        "glyphs": "ಅಪಶ",
-        "count": 3
-      },
-      {
         "lessonId": "KA-C29-shubhodaya",
         "language": "kannada",
         "chapter": 29,
@@ -46833,6 +46855,13 @@
         "language": "kannada",
         "chapter": 32,
         "glyphs": "ಊಟಳ",
+        "count": 3
+      },
+      {
+        "lessonId": "KA-C39-kaapi",
+        "language": "kannada",
+        "chapter": 39,
+        "glyphs": "ಖಟಥ",
         "count": 3
       },
       {
@@ -46864,10 +46893,10 @@
         "count": 3
       },
       {
-        "lessonId": "ML-C16-kollavarsham-maasangal",
+        "lessonId": "ML-C12-kudumbam",
         "language": "malayalam",
-        "chapter": 16,
-        "glyphs": "ഥഭൃ",
+        "chapter": 12,
+        "glyphs": "അഛട",
         "count": 3
       },
       {
@@ -46878,17 +46907,17 @@
         "count": 3
       },
       {
-        "lessonId": "ML-C38-nenchu",
-        "language": "malayalam",
-        "chapter": 38,
-        "glyphs": "ഹൃൈ",
-        "count": 3
-      },
-      {
         "lessonId": "ML-C39-chaaya",
         "language": "malayalam",
         "chapter": 39,
         "glyphs": "ഒഹൃ",
+        "count": 3
+      },
+      {
+        "lessonId": "ML-C40-oon",
+        "language": "malayalam",
+        "chapter": 40,
+        "glyphs": "ഉടൂ",
         "count": 3
       },
       {
@@ -46983,17 +47012,17 @@
         "count": 3
       },
       {
-        "lessonId": "SA-C10-kshiram",
+        "lessonId": "SA-C10-annam",
         "language": "sanskrit",
         "chapter": 10,
-        "glyphs": "खपभ",
+        "glyphs": "खदय",
         "count": 3
       },
       {
-        "lessonId": "SA-C11-bhagini",
+        "lessonId": "SA-C11-mitram",
         "language": "sanskrit",
         "chapter": 11,
-        "glyphs": "इईृ",
+        "glyphs": "पयी",
         "count": 3
       },
       {
@@ -47382,17 +47411,24 @@
         "count": 2
       },
       {
-        "lessonId": "HI-C15-paani-roti",
+        "lessonId": "HI-C11-kaalaa-safed",
         "language": "hindi",
-        "chapter": 15,
-        "glyphs": "आय",
+        "chapter": 11,
+        "glyphs": "फ़",
         "count": 2
       },
       {
-        "lessonId": "HI-C17-dopahar-aadhi-raat",
+        "lessonId": "HI-C14-ritu",
         "language": "hindi",
-        "chapter": 17,
-        "glyphs": "आी",
+        "chapter": 14,
+        "glyphs": "ऋी",
+        "count": 2
+      },
+      {
+        "lessonId": "HI-C18-ghanta",
+        "language": "hindi",
+        "chapter": 18,
+        "glyphs": "एब",
         "count": 2
       },
       {
@@ -47403,31 +47439,38 @@
         "count": 2
       },
       {
-        "lessonId": "HI-C25-din",
+        "lessonId": "HI-C31-suprabhat",
         "language": "hindi",
-        "chapter": 25,
-        "glyphs": "यु",
+        "chapter": 31,
+        "glyphs": "बभ",
         "count": 2
       },
       {
-        "lessonId": "HI-C26-raat",
+        "lessonId": "HI-C34-likhna",
         "language": "hindi",
-        "chapter": 26,
-        "glyphs": "आी",
+        "chapter": 34,
+        "glyphs": "ँी",
         "count": 2
       },
       {
-        "lessonId": "HI-C27-shubh-raatri",
+        "lessonId": "HI-C34-sochna",
         "language": "hindi",
-        "chapter": 27,
-        "glyphs": "भु",
+        "chapter": 34,
+        "glyphs": "ँी",
         "count": 2
       },
       {
-        "lessonId": "HI-C28-subah",
+        "lessonId": "HI-C35-pasand",
         "language": "hindi",
-        "chapter": 28,
-        "glyphs": "बु",
+        "chapter": 35,
+        "glyphs": "झी",
+        "count": 2
+      },
+      {
+        "lessonId": "HI-C36-ghar",
+        "language": "hindi",
+        "chapter": 36,
+        "glyphs": "घृ",
         "count": 2
       },
       {
@@ -47438,10 +47481,17 @@
         "count": 2
       },
       {
-        "lessonId": "HI-C38-daant",
+        "lessonId": "HI-C37-dudh",
         "language": "hindi",
-        "chapter": 38,
-        "glyphs": "आी",
+        "chapter": 37,
+        "glyphs": "एी",
+        "count": 2
+      },
+      {
+        "lessonId": "HI-C39-dost",
+        "language": "hindi",
+        "chapter": 39,
+        "glyphs": "ँी",
         "count": 2
       },
       {
@@ -47473,20 +47523,6 @@
         "count": 2
       },
       {
-        "lessonId": "KA-C11-bannagalu",
-        "language": "kannada",
-        "chapter": 11,
-        "glyphs": "ಪಳ",
-        "count": 2
-      },
-      {
-        "lessonId": "KA-C12-kutumba",
-        "language": "kannada",
-        "chapter": 12,
-        "glyphs": "ಅಪ",
-        "count": 2
-      },
-      {
         "lessonId": "KA-C14-kaalagalu",
         "language": "kannada",
         "chapter": 14,
@@ -47494,24 +47530,10 @@
         "count": 2
       },
       {
-        "lessonId": "KA-C19-vayassu",
+        "lessonId": "KA-C22-hasiru-haladi",
         "language": "kannada",
-        "chapter": 19,
-        "glyphs": "ಟಪ",
-        "count": 2
-      },
-      {
-        "lessonId": "KA-C20-hannondu-ippattu",
-        "language": "kannada",
-        "chapter": 20,
-        "glyphs": "ಪೊ",
-        "count": 2
-      },
-      {
-        "lessonId": "KA-C31-shubha-madhyahna",
-        "language": "kannada",
-        "chapter": 31,
-        "glyphs": "ಅಪ",
+        "chapter": 22,
+        "glyphs": "ಅಶ",
         "count": 2
       },
       {
@@ -47529,20 +47551,6 @@
         "count": 2
       },
       {
-        "lessonId": "KA-C34-keelu",
-        "language": "kannada",
-        "chapter": 34,
-        "glyphs": "ಪಶ",
-        "count": 2
-      },
-      {
-        "lessonId": "KA-C35-kutumba",
-        "language": "kannada",
-        "chapter": 35,
-        "glyphs": "ಅಪ",
-        "count": 2
-      },
-      {
         "lessonId": "ML-C03-saaramilla",
         "language": "malayalam",
         "chapter": 3,
@@ -47557,13 +47565,6 @@
         "count": 2
       },
       {
-        "lessonId": "ML-C09-kshamikkanam",
-        "language": "malayalam",
-        "chapter": 9,
-        "glyphs": "യൂ",
-        "count": 2
-      },
-      {
         "lessonId": "ML-C14-kaalangal",
         "language": "malayalam",
         "chapter": 14,
@@ -47571,17 +47572,24 @@
         "count": 2
       },
       {
-        "lessonId": "ML-C23-divasam",
+        "lessonId": "ML-C18-mani",
         "language": "malayalam",
-        "chapter": 23,
-        "glyphs": "ജൂ",
+        "chapter": 18,
+        "glyphs": "ഒട",
         "count": 2
       },
       {
-        "lessonId": "ML-C23-naal",
+        "lessonId": "ML-C19-vayassu",
         "language": "malayalam",
-        "chapter": 23,
-        "glyphs": "ഒജ",
+        "chapter": 19,
+        "glyphs": "ഉട",
+        "count": 2
+      },
+      {
+        "lessonId": "ML-C32-ariyuka",
+        "language": "malayalam",
+        "chapter": 32,
+        "glyphs": "ഉട",
         "count": 2
       },
       {
@@ -47606,10 +47614,24 @@
         "count": 2
       },
       {
-        "lessonId": "ML-C40-oon",
+        "lessonId": "ML-C33-manassilaakkuka",
         "language": "malayalam",
-        "chapter": 40,
-        "glyphs": "ഉൂ",
+        "chapter": 33,
+        "glyphs": "ആൽ",
+        "count": 2
+      },
+      {
+        "lessonId": "ML-C35-kudumbam",
+        "language": "malayalam",
+        "chapter": 35,
+        "glyphs": "ആഛ",
+        "count": 2
+      },
+      {
+        "lessonId": "ML-C35-suhruthu",
+        "language": "malayalam",
+        "chapter": 35,
+        "glyphs": "ടൂ",
         "count": 2
       },
       {
@@ -47662,24 +47684,17 @@
         "count": 2
       },
       {
-        "lessonId": "SA-C10-annam",
+        "lessonId": "SA-C11-bhagini",
         "language": "sanskrit",
-        "chapter": 10,
-        "glyphs": "खि",
+        "chapter": 11,
+        "glyphs": "इई",
         "count": 2
       },
       {
-        "lessonId": "SA-C11-kutumbam",
+        "lessonId": "SA-C12-karnah",
         "language": "sanskrit",
-        "chapter": 11,
-        "glyphs": "ंृ",
-        "count": 2
-      },
-      {
-        "lessonId": "SA-C11-mitram",
-        "language": "sanskrit",
-        "chapter": 11,
-        "glyphs": "पी",
+        "chapter": 12,
+        "glyphs": "षौ",
         "count": 2
       },
       {
@@ -47820,13 +47835,6 @@
         "language": "telugu",
         "chapter": 33,
         "glyphs": "ణై",
-        "count": 2
-      },
-      {
-        "lessonId": "TE-C34-tiisuko",
-        "language": "telugu",
-        "chapter": 34,
-        "glyphs": "బొ",
         "count": 2
       },
       {
@@ -48110,6 +48118,13 @@
         "count": 1
       },
       {
+        "lessonId": "HI-C10-somavaar-shukravaar",
+        "language": "hindi",
+        "chapter": 10,
+        "glyphs": "ब",
+        "count": 1
+      },
+      {
         "lessonId": "HI-C11-laal-niila",
         "language": "hindi",
         "chapter": 11,
@@ -48124,10 +48139,66 @@
         "count": 1
       },
       {
+        "lessonId": "HI-C17-dopahar-aadhi-raat",
+        "language": "hindi",
+        "chapter": 17,
+        "glyphs": "ी",
+        "count": 1
+      },
+      {
+        "lessonId": "HI-C19-umr",
+        "language": "hindi",
+        "chapter": 19,
+        "glyphs": "उ",
+        "count": 1
+      },
+      {
         "lessonId": "HI-C23-billi-history",
         "language": "hindi",
         "chapter": 23,
         "glyphs": "ड",
+        "count": 1
+      },
+      {
+        "lessonId": "HI-C26-raat",
+        "language": "hindi",
+        "chapter": 26,
+        "glyphs": "ी",
+        "count": 1
+      },
+      {
+        "lessonId": "HI-C27-shubh-raatri",
+        "language": "hindi",
+        "chapter": 27,
+        "glyphs": "भ",
+        "count": 1
+      },
+      {
+        "lessonId": "HI-C28-subah",
+        "language": "hindi",
+        "chapter": 28,
+        "glyphs": "ब",
+        "count": 1
+      },
+      {
+        "lessonId": "HI-C29-shaam",
+        "language": "hindi",
+        "chapter": 29,
+        "glyphs": "ब",
+        "count": 1
+      },
+      {
+        "lessonId": "HI-C33-shubh-dopahar",
+        "language": "hindi",
+        "chapter": 33,
+        "glyphs": "भ",
+        "count": 1
+      },
+      {
+        "lessonId": "HI-C38-daant",
+        "language": "hindi",
+        "chapter": 38,
+        "glyphs": "ी",
         "count": 1
       },
       {
@@ -48166,6 +48237,20 @@
         "count": 1
       },
       {
+        "lessonId": "KA-C11-bannagalu",
+        "language": "kannada",
+        "chapter": 11,
+        "glyphs": "ಳ",
+        "count": 1
+      },
+      {
+        "lessonId": "KA-C12-kutumba",
+        "language": "kannada",
+        "chapter": 12,
+        "glyphs": "ಅ",
+        "count": 1
+      },
+      {
         "lessonId": "KA-C13-dehada-bhagagalu",
         "language": "kannada",
         "chapter": 13,
@@ -48177,6 +48262,20 @@
         "language": "kannada",
         "chapter": 17,
         "glyphs": "ಅ",
+        "count": 1
+      },
+      {
+        "lessonId": "KA-C19-vayassu",
+        "language": "kannada",
+        "chapter": 19,
+        "glyphs": "ಟ",
+        "count": 1
+      },
+      {
+        "lessonId": "KA-C20-hannondu-ippattu",
+        "language": "kannada",
+        "chapter": 20,
+        "glyphs": "ೊ",
         "count": 1
       },
       {
@@ -48208,10 +48307,10 @@
         "count": 1
       },
       {
-        "lessonId": "KA-C32-hoogu",
+        "lessonId": "KA-C31-shubha-madhyahna",
         "language": "kannada",
-        "chapter": 32,
-        "glyphs": "ಪ",
+        "chapter": 31,
+        "glyphs": "ಅ",
         "count": 1
       },
       {
@@ -48243,6 +48342,13 @@
         "count": 1
       },
       {
+        "lessonId": "KA-C34-keelu",
+        "language": "kannada",
+        "chapter": 34,
+        "glyphs": "ಶ",
+        "count": 1
+      },
+      {
         "lessonId": "KA-C34-sahaya-maadu",
         "language": "kannada",
         "chapter": 34,
@@ -48254,6 +48360,13 @@
         "language": "kannada",
         "chapter": 34,
         "glyphs": "ಳ",
+        "count": 1
+      },
+      {
+        "lessonId": "KA-C35-kutumba",
+        "language": "kannada",
+        "chapter": 35,
+        "glyphs": "ಅ",
         "count": 1
       },
       {
@@ -48299,17 +48412,17 @@
         "count": 1
       },
       {
-        "lessonId": "ML-C11-nirangal",
+        "lessonId": "ML-C09-kshamikkanam",
         "language": "malayalam",
-        "chapter": 11,
-        "glyphs": "ച",
+        "chapter": 9,
+        "glyphs": "ൂ",
         "count": 1
       },
       {
-        "lessonId": "ML-C12-kudumbam",
+        "lessonId": "ML-C11-nirangal",
         "language": "malayalam",
-        "chapter": 12,
-        "glyphs": "ഛ",
+        "chapter": 11,
+        "glyphs": "ീ",
         "count": 1
       },
       {
@@ -48327,17 +48440,10 @@
         "count": 1
       },
       {
-        "lessonId": "ML-C18-mani",
+        "lessonId": "ML-C20-pathinonnu-irupathu",
         "language": "malayalam",
-        "chapter": 18,
-        "glyphs": "ഒ",
-        "count": 1
-      },
-      {
-        "lessonId": "ML-C19-vayassu",
-        "language": "malayalam",
-        "chapter": 19,
-        "glyphs": "ഉ",
+        "chapter": 20,
+        "glyphs": "ട",
         "count": 1
       },
       {
@@ -48345,6 +48451,20 @@
         "language": "malayalam",
         "chapter": 21,
         "glyphs": "ൂ",
+        "count": 1
+      },
+      {
+        "lessonId": "ML-C23-divasam",
+        "language": "malayalam",
+        "chapter": 23,
+        "glyphs": "ൂ",
+        "count": 1
+      },
+      {
+        "lessonId": "ML-C23-naal",
+        "language": "malayalam",
+        "chapter": 23,
+        "glyphs": "ഒ",
         "count": 1
       },
       {
@@ -48390,10 +48510,10 @@
         "count": 1
       },
       {
-        "lessonId": "ML-C32-ariyuka",
+        "lessonId": "ML-C32-kaanuka",
         "language": "malayalam",
         "chapter": 32,
-        "glyphs": "ഉ",
+        "glyphs": "ട",
         "count": 1
       },
       {
@@ -48404,10 +48524,10 @@
         "count": 1
       },
       {
-        "lessonId": "ML-C33-manassilaakkuka",
+        "lessonId": "ML-C32-undu",
         "language": "malayalam",
-        "chapter": 33,
-        "glyphs": "ൽ",
+        "chapter": 32,
+        "glyphs": "ആ",
         "count": 1
       },
       {
@@ -48425,24 +48545,17 @@
         "count": 1
       },
       {
+        "lessonId": "ML-C34-ishtam",
+        "language": "malayalam",
+        "chapter": 34,
+        "glyphs": "ആ",
+        "count": 1
+      },
+      {
         "lessonId": "ML-C34-sahaayikkuka",
         "language": "malayalam",
         "chapter": 34,
         "glyphs": "ഉ",
-        "count": 1
-      },
-      {
-        "lessonId": "ML-C35-kudumbam",
-        "language": "malayalam",
-        "chapter": 35,
-        "glyphs": "ഛ",
-        "count": 1
-      },
-      {
-        "lessonId": "ML-C35-suhruthu",
-        "language": "malayalam",
-        "chapter": 35,
-        "glyphs": "ൂ",
         "count": 1
       },
       {
@@ -48453,10 +48566,24 @@
         "count": 1
       },
       {
+        "lessonId": "ML-C36-makal",
+        "language": "malayalam",
+        "chapter": 36,
+        "glyphs": "ട",
+        "count": 1
+      },
+      {
         "lessonId": "ML-C37-kannu",
         "language": "malayalam",
         "chapter": 37,
         "glyphs": "ൈ",
+        "count": 1
+      },
+      {
+        "lessonId": "ML-C38-hrudayam",
+        "language": "malayalam",
+        "chapter": 38,
+        "glyphs": "ട",
         "count": 1
       },
       {
@@ -48534,13 +48661,6 @@
         "language": "sanskrit",
         "chapter": 5,
         "glyphs": "ऋ",
-        "count": 1
-      },
-      {
-        "lessonId": "SA-C11-bhrata",
-        "language": "sanskrit",
-        "chapter": 11,
-        "glyphs": "ृ",
         "count": 1
       },
       {
@@ -48663,10 +48783,10 @@
         "count": 1
       },
       {
-        "lessonId": "TE-C15-neellu-biyyam",
+        "lessonId": "TE-C11-rangulu",
         "language": "telugu",
-        "chapter": 15,
-        "glyphs": "బ",
+        "chapter": 11,
+        "glyphs": "ఎ",
         "count": 1
       },
       {
@@ -48674,13 +48794,6 @@
         "language": "telugu",
         "chapter": 17,
         "glyphs": "హ",
-        "count": 1
-      },
-      {
-        "lessonId": "TE-C18-ganta",
-        "language": "telugu",
-        "chapter": 18,
-        "glyphs": "ఒ",
         "count": 1
       },
       {
@@ -48719,6 +48832,13 @@
         "count": 1
       },
       {
+        "lessonId": "TE-C34-tiisuko",
+        "language": "telugu",
+        "chapter": 34,
+        "glyphs": "ొ",
+        "count": 1
+      },
+      {
         "lessonId": "TE-C35-kutumbam",
         "language": "telugu",
         "chapter": 35,
@@ -48730,13 +48850,6 @@
         "language": "telugu",
         "chapter": 35,
         "glyphs": "ఇ",
-        "count": 1
-      },
-      {
-        "lessonId": "TE-C37-kannu",
-        "language": "telugu",
-        "chapter": 37,
-        "glyphs": "ూ",
         "count": 1
       },
       {
@@ -48778,9 +48891,9 @@
     "summary": {
       "tracksWithScript": 16,
       "tracksTeachingNothing": 8,
-      "violations": 817,
-      "exposureOnly": 121,
-      "exposureExemptedGlyphs": 2214,
+      "violations": 816,
+      "exposureOnly": 119,
+      "exposureExemptedGlyphs": 2209,
       "headwordsWithoutRomanization": 305,
       "tracksWithUnknownScript": 0
     },
@@ -48929,8 +49042,8 @@
           },
           {
             "criterion": "reinforcement",
-            "detail": "4 atom(s) at or below pre-A1 are revisited fewer than twice",
-            "shortfall": 4
+            "detail": "12 atom(s) at or below pre-A1 are revisited fewer than twice",
+            "shortfall": 12
           }
         ],
         "vocabulary": 86
@@ -49267,12 +49380,12 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 2005,
+    "totalLessons": 2013,
     "voice": 1336,
     "sight": 561,
-    "pen": 108,
+    "pen": 116,
     "coreVoice": 1772,
-    "lessonsWithWritingSegments": 39,
+    "lessonsWithWritingSegments": 47,
     "drivablePercent": 88,
     "tracks": [
       {
@@ -51148,12 +51261,12 @@
       },
       {
         "language": "hindi",
-        "lessonCount": 109,
+        "lessonCount": 117,
         "voice": 59,
         "sight": 39,
-        "pen": 11,
+        "pen": 19,
         "coreVoice": 96,
-        "drivablePercent": 88,
+        "drivablePercent": 82,
         "drivablePrefixTotal": 90,
         "chapters": [
           {
@@ -51236,70 +51349,79 @@
           {
             "language": "hindi",
             "chapter": 6,
-            "lessonCount": 3,
+            "lessonCount": 4,
             "voice": 3,
             "sight": 0,
-            "pen": 0,
+            "pen": 1,
             "coreVoice": 3,
             "modalities": [
-              "voice"
+              "voice",
+              "sight",
+              "pen"
             ],
             "drivablePrefix": 3,
-            "firstNonVoiceLesson": null
+            "firstNonVoiceLesson": "HI-S01-letter-ma"
           },
           {
             "language": "hindi",
             "chapter": 7,
-            "lessonCount": 2,
+            "lessonCount": 3,
             "voice": 2,
             "sight": 0,
-            "pen": 0,
+            "pen": 1,
             "coreVoice": 2,
             "modalities": [
-              "voice"
+              "voice",
+              "sight",
+              "pen"
             ],
             "drivablePrefix": 2,
-            "firstNonVoiceLesson": null
+            "firstNonVoiceLesson": "HI-S02-letter-na"
           },
           {
             "language": "hindi",
             "chapter": 8,
-            "lessonCount": 1,
+            "lessonCount": 2,
             "voice": 1,
             "sight": 0,
-            "pen": 0,
+            "pen": 1,
             "coreVoice": 1,
             "modalities": [
-              "voice"
+              "voice",
+              "sight",
+              "pen"
             ],
             "drivablePrefix": 1,
-            "firstNonVoiceLesson": null
+            "firstNonVoiceLesson": "HI-S03-letter-a"
           },
           {
             "language": "hindi",
             "chapter": 9,
-            "lessonCount": 1,
+            "lessonCount": 2,
             "voice": 1,
             "sight": 0,
-            "pen": 0,
+            "pen": 1,
             "coreVoice": 1,
             "modalities": [
-              "voice"
+              "voice",
+              "sight",
+              "pen"
             ],
             "drivablePrefix": 1,
-            "firstNonVoiceLesson": null
+            "firstNonVoiceLesson": "HI-S04-letter-aa"
           },
           {
             "language": "hindi",
             "chapter": 10,
-            "lessonCount": 2,
+            "lessonCount": 3,
             "voice": 1,
             "sight": 1,
-            "pen": 0,
+            "pen": 1,
             "coreVoice": 1,
             "modalities": [
               "voice",
-              "sight"
+              "sight",
+              "pen"
             ],
             "drivablePrefix": 0,
             "firstNonVoiceLesson": "HI-C10-somavaar-shukravaar"
@@ -51307,44 +51429,50 @@
           {
             "language": "hindi",
             "chapter": 11,
-            "lessonCount": 2,
+            "lessonCount": 3,
             "voice": 2,
             "sight": 0,
-            "pen": 0,
+            "pen": 1,
             "coreVoice": 2,
             "modalities": [
-              "voice"
+              "voice",
+              "sight",
+              "pen"
             ],
             "drivablePrefix": 2,
-            "firstNonVoiceLesson": null
+            "firstNonVoiceLesson": "HI-S06-vowel-sign-aa"
           },
           {
             "language": "hindi",
             "chapter": 12,
-            "lessonCount": 2,
+            "lessonCount": 3,
             "voice": 2,
             "sight": 0,
-            "pen": 0,
+            "pen": 1,
             "coreVoice": 2,
             "modalities": [
-              "voice"
+              "voice",
+              "sight",
+              "pen"
             ],
             "drivablePrefix": 2,
-            "firstNonVoiceLesson": null
+            "firstNonVoiceLesson": "HI-S07-letter-ta"
           },
           {
             "language": "hindi",
             "chapter": 13,
-            "lessonCount": 2,
+            "lessonCount": 3,
             "voice": 2,
             "sight": 0,
-            "pen": 0,
+            "pen": 1,
             "coreVoice": 2,
             "modalities": [
-              "voice"
+              "voice",
+              "sight",
+              "pen"
             ],
             "drivablePrefix": 2,
-            "firstNonVoiceLesson": null
+            "firstNonVoiceLesson": "HI-S08-letter-sa"
           },
           {
             "language": "hindi",
@@ -60333,7 +60461,7 @@
     "underspentPercent": 96
   },
   "infoDump": {
-    "lessons": 2005,
+    "lessons": 2013,
     "lessonsWithFindings": 118,
     "ruleStatements": 27,
     "paradigmTables": 95,
@@ -60343,8 +60471,8 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 49,
-    "lessonsUsingTerms": 1989,
-    "usesBeforeIntroduction": 9078,
+    "lessonsUsingTerms": 1997,
+    "usesBeforeIntroduction": 9100,
     "technicalUsesBeforeIntroduction": 2728,
     "technicalLessons": 1354,
     "worstTerms": [
