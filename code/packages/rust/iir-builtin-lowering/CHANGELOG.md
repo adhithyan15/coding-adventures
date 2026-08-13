@@ -1,5 +1,57 @@
 # Changelog — iir-builtin-lowering
 
+## 0.35.0 - 2026-08-13 - materialize immediate value operands for the stack backends
+
+New pass `immediates::materialize_immediate_operands`, wired into the JVM, CLR
+and WASM pipelines in `lang-aot`.
+
+An IIR source operand is *either* a variable name or an immediate literal — the
+`Operand` type says so, and COBOL's `ADD 7 TO R` takes it at its word, lowering
+to `add _acc0, 7` with the literal inline. The native, LLVM, VM and JIT backends
+honour that. The three stack backends do not: their lowering assumes every value
+operand names a slot to `iload`/`ldloc`/`local.get`, so a literal makes them
+refuse the whole module.
+
+    JVM   InvalidOperand { detail: "add expects Var operands, got immediate" }
+    CLR   InvalidOperand { detail: "cmp_eq src[1] must be a variable, got Some(Int(1))" }
+    WASM  InvalidOperand { detail: "expected Var at src[1], got Int(1)" }
+
+That cost 24 matrix cells, and would have cost more as frontends multiply —
+each one learning by breaking which half of the contract is real.
+
+Teaching the three backends to fold literals is the other way to close it, and
+is arguably what the contract asks for; it is also the same work three times, in
+three instruction encoders, for every opcode family, and it leaves the next
+backend to make the same choice again. Normalizing is one pass, deterministic
+and language-agnostic: `add _acc0, 7` becomes `const 7 → __imm1` + `add _acc0,
+__imm1`, a shape the stack backends already lower. The backends that implement
+the full contract keep folding literals inline and emit the tighter code.
+
+Two things the pass is careful about:
+
+* **Only value operands.** An immediate that is part of an instruction's
+  addressing — `field_load`'s field index, `jmp`'s target label,
+  `call_builtin`'s builtin name, `const`'s own source — is not a value, and
+  rewriting it changes what the instruction means. The pass is opt-in per opcode
+  family (`is_arithmetic`, `is_bitwise`, `is_cmp`, `mov`) rather than a blanket
+  rewrite of every `Operand::Int` it can reach.
+* **Operand type, not result type.** A comparison's `type_hint` is `bool`, which
+  describes its result while the operands are what is being compared; emitting
+  `const 1 : bool` for `cmp_eq x, 1` would hand the backend a boolean where it
+  wants an integer — the same operand-width-versus-result-width confusion that
+  once made BASIC's comparisons lower to `icmp i1`. The literal's own kind is
+  used instead, preferring a sibling variable's concrete producer type when
+  there is one so the width matches what the surrounding code agreed on.
+
+Runs last in each pipeline, after every other pass has finished rewriting
+instructions — an earlier position would miss the operands its successors
+introduce. A no-op for a module whose frontend already materialized everything,
+which is every language that was already green.
+
+Ten unit tests cover both operand positions, two-literal instructions, the
+comparison typing rule, sibling-width inference, float/bool literals, the
+addressing-immediate exclusions, and the no-op case.
+
 ## 0.34.0 - 2026-08-12 - closure calling convention + chained dynamic arithmetic
 
 Two confirmed miscompiles, both instances of the same bug class as 0.32.0 and
