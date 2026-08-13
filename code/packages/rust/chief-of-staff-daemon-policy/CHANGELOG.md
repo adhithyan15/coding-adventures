@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Bind authenticated local sessions to the stable non-secret `operator:local`
+  requester identity and authorize the new pipeline wire/unwire API operations.
 - Accept validated Trust Checker request context while preserving unconditional production denial.
 
 ## 0.1.0
