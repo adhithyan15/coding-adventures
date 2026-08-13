@@ -13,4 +13,4 @@ pub mod core_adapter;
 
 pub use csr::CSRFile;
 pub use core_adapter::RiscVISADecoder;
-pub use simulator::RiscVSimulator;
+pub use simulator::{ExecutionResult, RiscVSimulator};
