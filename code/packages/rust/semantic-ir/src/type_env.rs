@@ -35,12 +35,19 @@
 //! *reachable*, never *more permissive* than what a frontend explicitly
 //! declared.
 //!
-//! **Not yet consulted by any backend.** No frontend populates `sir_type` on
-//! any node today (every operand is `Dynamic`), so wiring a backend's
-//! emitter to build and consult a [`TypeEnv`] is currently inert — it would
-//! resolve to `RuntimeDispatch` on every real program, identically to not
-//! consulting it at all. This module exists so that wiring, when it lands
-//! per backend, has one correct, tested primitive to call rather than six
+//! **`semantic-ir-to-python` is the first backend to consult this module**
+//! (SIR21 T3c-3). `c-to-semantic-ir` is the first — and currently only —
+//! frontend that populates `sir_type` (on `Param`/`Stmt::LetStarBinding`;
+//! grep `sir_type: Some(` in that crate's `lower.rs`). Its typed output
+//! cannot reach `semantic-ir-to-python` today, though: that backend does not
+//! declare `Feature::Conversions` in its `ACCEPTED_FEATURES`, so the
+//! validator rejects any `c-to-semantic-ir`-sourced module before it ever
+//! reaches emission (only `semantic-ir-to-c` and `semantic-ir-to-ruby`
+//! currently accept `Feature::Conversions`). So the wiring landing in
+//! `semantic-ir-to-python` is real and unit-tested, but not yet exercisable
+//! end-to-end through that backend via any real frontend — a gap tracked
+//! separately, not fixed here. This module exists so that wiring, per
+//! backend, has one correct, tested primitive to call rather than six
 //! independent reimplementations.
 
 use std::collections::HashMap;
