@@ -130,17 +130,51 @@ pub fn lower_closures_to_heap(module: &mut IIRModule) {
     let index_of: BTreeMap<String, i64> =
         dispatch.iter().map(|d| (d.fn_name.clone(), d.idx)).collect();
 
+    // Does this language's lambda bodies take **boxed** parameters?
+    //
+    // The closure representation is a cons chain, and a cons cell can only hold
+    // tagged `DynValue`s — so `dyn_repr` boxes every capture and argument on the
+    // way in (a Twig literal `41` is consed as `box_int(41)`, the tagged word
+    // `41 << 3 = 328`). What the *body* expects on the other side depends on the
+    // source language's value model, and the two models disagree:
+    //
+    //   * A lisp language (McCarthy) types its parameters `any` and genuinely
+    //     passes tagged words. Boxed in, boxed out — the chain round-trips.
+    //   * Twig/Nib also stamp `any` on a statically-unresolved parameter, but
+    //     pass it as a **raw** machine `i64`. `dynamic_arith` documents exactly
+    //     this ambiguity and resolves it the same way (`is_lisp_language`): for
+    //     a non-lisp module a bare-`any` operand is raw, so `(+ x 1)` in a lambda
+    //     body lowers to a plain `add x, 1`.
+    //
+    // Handing a raw-model body the boxed word is silent corruption, not a crash:
+    // `((lambda (x) (+ x 1)) 41)` computed `328 + 1 = 329`, re-boxed it, and the
+    // program exited `329 & 0xFF = 73` instead of 42. It reproduced on every
+    // tagged-word backend (native-AOT and LLVM) and on none of the structural
+    // ones, because a backend whose `box` is the identity cannot tell the two
+    // conventions apart — which is why the generic VM computed 42 and agreed
+    // with nobody.
+    //
+    // So the dispatcher unboxes what it pulls out of the chain exactly when the
+    // body expects raw. Boxing on the way in and unboxing on the way out are one
+    // decision, and they belong to the same language gate.
+    let params_are_boxed = crate::dyn_repr::is_lisp_language(&module.language);
+
     for f in &mut module.functions {
-        rewrite_closure_ops(f, &index_of);
+        rewrite_closure_ops(f, &index_of, params_are_boxed);
     }
     if !module.functions.iter().any(|f| f.name == DISPATCHER) {
-        module.functions.push(build_dispatcher(&dispatch));
+        module.functions.push(build_dispatcher(&dispatch, params_are_boxed));
     }
 }
 
 /// Rewrite `alloc_closure`/`call_closure` in one function to cons-chain builds +
 /// a `call __dyn_call_closure`.
-fn rewrite_closure_ops(f: &mut IIRFunction, index_of: &BTreeMap<String, i64>) {
+fn rewrite_closure_ops(
+    f: &mut IIRFunction,
+    index_of: &BTreeMap<String, i64>,
+    params_are_boxed: bool,
+) {
+    let types = producer_types(f);
     let old = std::mem::take(&mut f.instructions);
     let mut out: Vec<IIRInstr> = Vec::with_capacity(old.len() * 2);
     // Monotonic suffix so the temporaries this pass introduces never collide.
@@ -161,7 +195,7 @@ fn rewrite_closure_ops(f: &mut IIRFunction, index_of: &BTreeMap<String, i64>) {
                 None => { out.push(instr); continue; }
             };
             let captures: Vec<Operand> = instr.srcs[1..].to_vec();
-            emit_closure_alloc(&mut out, &dest, idx, &captures, &mut counter);
+            emit_closure_alloc(&mut out, &dest, idx, &captures, &mut counter, params_are_boxed, &types);
             continue;
         }
         if is_call_closure(&instr) {
@@ -174,12 +208,114 @@ fn rewrite_closure_ops(f: &mut IIRFunction, index_of: &BTreeMap<String, i64>) {
                 None => { out.push(instr); continue; }
             };
             let args: Vec<Operand> = instr.srcs[1..].to_vec();
-            emit_closure_call(&mut out, &dest, handle, &args, &mut counter);
+            emit_closure_call(&mut out, &dest, handle, &args, &mut counter, params_are_boxed, &types);
             continue;
         }
         out.push(instr);
     }
     f.instructions = out;
+}
+
+/// Store one raw value into the closure/argument chain in tagged form.
+///
+/// A cons cell holds tagged `DynValue`s, so a raw-model value has to be boxed on
+/// the way in — and it must be boxed *here*, explicitly, rather than left to
+/// `dyn_repr` to notice. `dyn_repr` boxes what it can prove is raw, which for a
+/// `const` literal it can (`41` is consed as the tagged word `328`) and for a
+/// bare-`any` parameter it cannot — so a captured parameter went into the chain
+/// **untagged** while a captured literal went in tagged. The chain then held two
+/// different representations and no single extraction rule could be right for
+/// both: unboxing the curried `(((lambda (x) (lambda (y) (+ x y))) 40) 2)`
+/// recovered `40 >> 3 = 5` from the untagged capture and computed 7.
+///
+/// Owning both ends in this pass makes the representation a property of the
+/// closure substrate rather than an emergent one.
+///
+/// ## The invariant this relies on, and why it is asserted
+///
+/// `box`/`unbox` are `<< 3`/`>> 3`, so the *value* round-trips for anything that
+/// fits in 61 bits — including a heap address. But value round-tripping is not
+/// the only property that matters: a cons cell is **traced by the collector**.
+/// `__dyn_cons` registers its cell with a precise kind whose slots the collector
+/// interprets as either a raw word or a tag-stripped pointer. A heap handle is
+/// `addr | 0b111`; shifted left by 3 it becomes `addr*8 | 0b111000`, which
+/// resolves to no live block under either interpretation. The collector would
+/// stop tracing through the chain while the chain is the only thing holding the
+/// referent — a use-after-free waiting for the first collection in the window.
+///
+/// So this uniform-shift representation is sound only while every raw-model
+/// capture and argument is a **non-pointer**. That is true of every closure
+/// program in the matrix today (they capture and pass integers), and it is the
+/// interim contract until closure lowering grows a tag-directed extraction.
+/// An invariant that holds by accident is one nobody notices breaking, so it is
+/// asserted rather than described: the moment a raw-model closure captures a
+/// string, a cons, or another closure, this fires — in every build, not just
+/// debug — instead of silently producing a dangling reference at runtime. The
+/// guard is only as good as its predicate, and `may_hold_a_pointer` documents
+/// the one case it cannot see (a bare-`any` destination that happens to hold a
+/// handle); read the two together.
+fn store(
+    out: &mut Vec<IIRInstr>,
+    v: Operand,
+    counter: &mut usize,
+    box_it: bool,
+    types: &BTreeMap<String, String>,
+) -> Operand {
+    if !box_it {
+        return v;
+    }
+    // `assert!`, not `debug_assert!`: what this guards is a memory-safety property
+    // of the code we *generate* (a dangling reference collected out from under a
+    // live chain), and a release build of the compiler would emit it silently. One
+    // map lookup per capture at compile time is not a price worth trading for that.
+    assert!(
+        !matches!(&v, Operand::Var(name) if types.get(name).is_some_and(|t| may_hold_a_pointer(t))),
+        "closure_heap: a raw-model closure captured/passed the pointer-valued operand {v:?}. \
+         Boxing it into the cons chain shifts its heap tag out of recognition, so the \
+         collector can no longer find the referent through the chain that holds it. \
+         Closure lowering needs tag-directed extraction before a raw-model closure can \
+         carry a pointer."
+    );
+    let boxed = fresh(counter, "clobox");
+    out.push(IIRInstr::new("box", Some(boxed.clone()), vec![v], REF_ANY));
+    Operand::Var(boxed)
+}
+
+/// Could a value with this type hint be a heap pointer under the tagged-word
+/// model? These are the hints a raw-model (Twig/Nib) frontend stamps on a
+/// destination whose runtime value is a handle:
+///
+/// * `ref<…>` — an explicit reference (`ref<any>`, `ref<LispyPair>`).
+/// * `closure` — what `alloc_closure` itself produces, so a closure capturing
+///   another closure lands here.
+/// * `str` — a Twig string is a heap handle on the native/LLVM backends.
+///
+/// **`any` is the residual hole, and it cannot be closed here.** A bare-`any`
+/// destination in a raw-model module is usually a machine integer — that is the
+/// whole premise of the `is_lisp_language` gate — but a higher-order Twig
+/// function receiving a closure, list, or string also gets `any`. The two are
+/// indistinguishable in the type hints, so asserting on `any` would reject every
+/// closure program that works today. This assert therefore catches the cases the
+/// frontend types precisely and leaves the ambiguous one to the tag-directed
+/// extraction that supersedes this whole scheme.
+fn may_hold_a_pointer(hint: &str) -> bool {
+    hint.starts_with("ref<") || hint == "closure" || hint == "str"
+}
+
+/// Map each destination (and parameter) in `f` to the type hint it was produced
+/// with, so `store` can tell a raw machine value from a reference. Same shape as
+/// `dynamic_arith::producer_types`.
+fn producer_types(f: &IIRFunction) -> BTreeMap<String, String> {
+    let mut m: BTreeMap<String, String> = BTreeMap::new();
+    for (name, ty) in &f.params {
+        m.insert(name.clone(), ty.clone());
+    }
+    for instr in &f.instructions {
+        if let Some(dest) = &instr.dest {
+            m.insert(dest.clone(), instr.type_hint.clone());
+        }
+    }
+    m
 }
 
 /// Emit `dest = ( box(idx) . ( cap0 . ( … . nil ) ) )`.
@@ -189,13 +325,16 @@ fn emit_closure_alloc(
     idx: i64,
     captures: &[Operand],
     counter: &mut usize,
+    params_are_boxed: bool,
+    types: &BTreeMap<String, String>,
 ) {
     // Build the captures list bottom-up, seeded with nil.
     let mut chain = fresh(counter, "clonil");
     out.push(IIRInstr::new("const", Some(chain.clone()), vec![Operand::Int(0)], REF_PAIR));
     for cap in captures.iter().rev() {
         let next = fresh(counter, "clocons");
-        out.push(cons(&next, cap.clone(), Operand::Var(chain)));
+        let stored = store(out, cap.clone(), counter, !params_are_boxed, types);
+        out.push(cons(&next, stored, Operand::Var(chain)));
         chain = next;
     }
     // Prepend the boxed dispatch index → the finished closure object.
@@ -213,12 +352,15 @@ fn emit_closure_call(
     handle: Operand,
     args: &[Operand],
     counter: &mut usize,
+    params_are_boxed: bool,
+    types: &BTreeMap<String, String>,
 ) {
     let mut chain = fresh(counter, "argnil");
     out.push(IIRInstr::new("const", Some(chain.clone()), vec![Operand::Int(0)], REF_PAIR));
     for arg in args.iter().rev() {
         let next = fresh(counter, "argcons");
-        out.push(cons(&next, arg.clone(), Operand::Var(chain)));
+        let stored = store(out, arg.clone(), counter, !params_are_boxed, types);
+        out.push(cons(&next, stored, Operand::Var(chain)));
         chain = next;
     }
     out.push(IIRInstr::new(
@@ -230,8 +372,26 @@ fn emit_closure_call(
 }
 
 /// Build the synthesized `__dyn_call_closure(clo, args) -> ref<any>` dispatcher.
-fn build_dispatcher(dispatch: &[Dispatch]) -> IIRFunction {
+fn build_dispatcher(dispatch: &[Dispatch], params_are_boxed: bool) -> IIRFunction {
     let mut instrs: Vec<IIRInstr> = Vec::new();
+    // Pull one value out of a cons chain and hand it to the body in the form the
+    // body's calling convention expects: tagged for a lisp language, raw for
+    // Twig/Nib (see the `params_are_boxed` note in `lower_closures_to_heap`).
+    // Returns the variable holding the value to pass.
+    let extract = |instrs: &mut Vec<IIRInstr>, dest: &str, from: &str| -> String {
+        instrs.push(car(dest, from));
+        if params_are_boxed {
+            return dest.to_string();
+        }
+        let raw = format!("{dest}_raw");
+        instrs.push(IIRInstr::new(
+            "unbox",
+            Some(raw.clone()),
+            vec![Operand::Var(dest.to_string())],
+            "i64",
+        ));
+        raw
+    };
     // idx_box = car(clo)  (a BOXED integer) ; caps = cdr(clo)
     instrs.push(car("cd_idxbox", "clo"));
     instrs.push(cdr("cd_caps", "clo"));
@@ -266,8 +426,8 @@ fn build_dispatcher(dispatch: &[Dispatch]) -> IIRFunction {
         let mut cur = "cd_caps".to_string();
         for i in 0..d.n_captures {
             let capv = format!("cd_cap_{k}_{i}");
-            instrs.push(car(&capv, &cur));
-            call_srcs.push(Operand::Var(capv));
+            let passed = extract(&mut instrs, &capv, &cur);
+            call_srcs.push(Operand::Var(passed));
             if i + 1 < d.n_captures {
                 let rest = format!("cd_caprest_{k}_{i}");
                 instrs.push(cdr(&rest, &cur));
@@ -278,8 +438,8 @@ fn build_dispatcher(dispatch: &[Dispatch]) -> IIRFunction {
         let mut acur = "args".to_string();
         for j in 0..n_args {
             let argv = format!("cd_arg_{k}_{j}");
-            instrs.push(car(&argv, &acur));
-            call_srcs.push(Operand::Var(argv));
+            let passed = extract(&mut instrs, &argv, &acur);
+            call_srcs.push(Operand::Var(passed));
             if j + 1 < n_args {
                 let rest = format!("cd_argrest_{k}_{j}");
                 instrs.push(cdr(&rest, &acur));
@@ -365,6 +525,159 @@ mod tests {
             && matches!(i.srcs.first(), Some(Operand::Var(n)) if n == DISPATCHER)));
         assert!(main.instructions.iter().any(|i| i.op == "call_builtin"
             && matches!(i.srcs.first(), Some(Operand::Var(n)) if n == "cons")));
+    }
+
+    /// A raw-model (Twig) module must box on the way into the cons chain and
+    /// unbox on the way out, so the body still receives raw machine words.
+    ///
+    /// Regression: the chain held two representations at once — `dyn_repr` boxed
+    /// a captured *literal* but could not prove a captured bare-`any` *parameter*
+    /// was raw, so it went in untagged. Whatever single rule the dispatcher used
+    /// was then wrong for one of them: `((lambda (x) (+ x 1)) 41)` exited 73
+    /// (`(41 << 3) + 1`) and the curried form exited 80.
+    #[test]
+    fn raw_model_boxes_into_the_chain_and_unboxes_out_of_it() {
+        let l0 = IIRFunction::new(
+            "__lambda_0",
+            vec![("x".into(), "any".into())],
+            "any",
+            vec![
+                IIRInstr::new(
+                    "alloc_closure",
+                    Some("c".into()),
+                    vec![Operand::Str("__lambda_1".into()), Operand::Var("x".into())],
+                    "closure",
+                ),
+                IIRInstr::new("ret", None, vec![Operand::Var("c".into())], "any"),
+            ],
+        );
+        let l1 = IIRFunction::new(
+            "__lambda_1",
+            vec![("x".into(), "any".into()), ("y".into(), "any".into())],
+            "any",
+            vec![IIRInstr::new("ret", None, vec![Operand::Var("y".into())], "any")],
+        );
+        let mut m = module_with(vec![l0, l1]);
+        lower_closures_to_heap(&mut m);
+
+        // Producer side: the captured parameter is boxed before it is consed.
+        let l0 = m.functions.iter().find(|f| f.name == "__lambda_0").unwrap();
+        assert!(
+            l0.instructions.iter().any(|i| i.op == "box"
+                && matches!(i.srcs.first(), Some(Operand::Var(v)) if v == "x")),
+            "the captured raw parameter must be boxed into the chain: {:?}",
+            l0.instructions.iter().map(|i| i.op.clone()).collect::<Vec<_>>()
+        );
+
+        // Consumer side: every value the dispatcher pulls out is unboxed again.
+        let disp = m.functions.iter().find(|f| f.name == DISPATCHER).unwrap();
+        let cars = disp.instructions.iter().filter(|i| i.op == "call_builtin"
+            && matches!(i.srcs.first(), Some(Operand::Var(n)) if n == "car"))
+            .count();
+        let unboxes = disp.instructions.iter().filter(|i| i.op == "unbox").count();
+        // One `car` reads the dispatch index (which the `=` test unboxes itself);
+        // the rest read captures/args and must each be unboxed.
+        assert_eq!(unboxes, cars - 1, "every extracted capture/arg is unboxed");
+    }
+
+    /// A raw-model closure that captures another **closure** must be rejected, not
+    /// silently boxed: the capture is a heap handle (`addr | 0b111`), and shifting
+    /// it left by 3 hides it from the collector while the chain is its only root.
+    ///
+    /// The first version of this guard tested `starts_with("ref<")`, which misses
+    /// the two hints a Twig frontend actually stamps on pointer destinations —
+    /// `closure` (from `alloc_closure` itself) and `str` — so the exact case its
+    /// own doc comment promised to catch sailed through. Found in security review.
+    #[test]
+    #[should_panic(expected = "pointer-valued operand")]
+    fn raw_model_closure_capturing_a_closure_is_rejected() {
+        // `outer` allocates one closure, then captures THAT handle in a second —
+        // the shape `let f = fn…; let g = fn(y) => f(y)` lowers to.
+        let inner = IIRFunction::new(
+            "__lambda_0",
+            vec![("x".into(), "any".into())],
+            "any",
+            vec![IIRInstr::new("ret", None, vec![Operand::Var("x".into())], "any")],
+        );
+        let outer = IIRFunction::new(
+            "__lambda_1",
+            vec![("f".into(), "any".into()), ("y".into(), "any".into())],
+            "any",
+            vec![IIRInstr::new("ret", None, vec![Operand::Var("y".into())], "any")],
+        );
+        let main = IIRFunction::new(
+            "main",
+            vec![],
+            "any",
+            vec![
+                // `f` is produced by `alloc_closure`, so its hint is `closure`.
+                IIRInstr::new(
+                    "alloc_closure",
+                    Some("f".into()),
+                    vec![Operand::Str("__lambda_0".into())],
+                    "closure",
+                ),
+                // …and is then captured by a second closure.
+                IIRInstr::new(
+                    "alloc_closure",
+                    Some("g".into()),
+                    vec![Operand::Str("__lambda_1".into()), Operand::Var("f".into())],
+                    "closure",
+                ),
+                IIRInstr::new("ret", None, vec![Operand::Var("g".into())], "any"),
+            ],
+        );
+        let mut m = module_with(vec![inner, outer, main]);
+        lower_closures_to_heap(&mut m);
+    }
+
+    /// The mirror image: a genuinely tagged (lisp) module passes values through
+    /// untouched, because its bodies already take and return tagged words.
+    #[test]
+    fn lisp_model_passes_tagged_values_through_untouched() {
+        let l0 = IIRFunction::new(
+            "__lambda_0",
+            vec![("x".into(), "any".into())],
+            "any",
+            vec![IIRInstr::new("ret", None, vec![Operand::Var("x".into())], "any")],
+        );
+        let main = IIRFunction::new(
+            "main",
+            vec![],
+            "any",
+            vec![
+                IIRInstr::new(
+                    "alloc_closure",
+                    Some("clo".into()),
+                    vec![Operand::Str("__lambda_0".into())],
+                    "closure",
+                ),
+                IIRInstr::new("const", Some("a".into()), vec![Operand::Int(41)], "i64"),
+                IIRInstr::new(
+                    "call_closure",
+                    Some("r".into()),
+                    vec![Operand::Var("clo".into()), Operand::Var("a".into())],
+                    "any",
+                ),
+                IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "any"),
+            ],
+        );
+        let mut m = IIRModule::new("m", "mccarthy-lisp");
+        m.functions = vec![l0, main];
+        lower_closures_to_heap(&mut m);
+
+        let disp = m.functions.iter().find(|f| f.name == DISPATCHER).unwrap();
+        assert_eq!(
+            disp.instructions.iter().filter(|i| i.op == "unbox").count(),
+            0,
+            "a lisp body takes tagged values — the dispatcher must not unbox"
+        );
+        let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+        assert_eq!(
+            main.instructions.iter().filter(|i| i.op == "box").count(),
+            1,
+            "only the dispatch index is boxed; the argument is already tagged"
+        );
     }
 
     /// Two bodies (a capturing closure) get distinct alphabetical indices and both

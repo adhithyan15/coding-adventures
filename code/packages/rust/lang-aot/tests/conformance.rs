@@ -56,6 +56,31 @@ use dynval_runtime::LispyValue;
 #[path = "clr_support/mod.rs"]
 mod clr_support;
 
+// `common::gc_link_args()` — the `gc-core-capi` staticlib that replaced the retired
+// `twig_gc.c`. `dynval_runtime.c` references `__gc_alloc_kind`/`__gc_register_kind`
+// from it, so the LLVM column cannot link without it (see `run_llvm`).
+#[path = "common/mod.rs"]
+mod common;
+
+/// A backend was present and the pipeline under test failed. See the identical
+/// policy note on `lang_matrix::cell_failed`: the ONLY legitimate reason for a
+/// backend to produce no result is an absent host toolchain. Anything else is a
+/// real failure and must be loud.
+///
+/// This suite is where the cost of getting that wrong was demonstrated. Every
+/// runner below returned a bare `None` on failure, indistinguishable from "tool not
+/// installed" — so when `dynval_runtime.c` grew a dependency on the `gc-core-capi`
+/// archive and `run_llvm`'s link line was never updated, `clang` failed, `clang`
+/// failing returned `None`, and the LLVM column vanished from the capstone while it
+/// still reported `ok`. It stayed gone until someone read the exercised-backend set
+/// and noticed LLVM missing from it.
+fn backend_failed(backend: &str, src: &str, stage: &str, detail: impl std::fmt::Display) -> ! {
+    panic!(
+        "{backend}: {stage} failed for program {src:?} — this is a REAL failure, not a skip.\n\
+         error:\n{detail}"
+    )
+}
+
 // ── The conformance table: McCarthy F1–F7, every result an integer. ──
 const PROGRAMS: &[(&str, i64)] = &[
     // F1 — scalar.
@@ -109,35 +134,75 @@ fn tool_ok(cmd: &str, arg: &str) -> bool {
         .unwrap_or(false)
 }
 
-fn tmp_dir(tag: &str) -> std::path::PathBuf {
-    let d = std::env::temp_dir().join(format!("mccarthy_w16_{}_{tag}", std::process::id()));
-    std::fs::create_dir_all(&d).expect("temp dir");
-    d
+/// A fresh, private scratch directory for one backend's artifacts.
+///
+/// This used to be `temp_dir()/mccarthy_w16_<pid>_<tag>` — a fully predictable
+/// path that `create_dir_all` would happily adopt if it already existed. The
+/// harness then writes a `.ll`/`.class`/`.beam` there, links an executable into
+/// it, and runs it. A local attacker who pre-creates the directory (the PID
+/// space is small enough to enumerate) owns it, and can redirect `clang -o`
+/// through a symlink to clobber any file the developer can write, or swap the
+/// binary between the link and the exec — CWE-377/367. `/tmp`'s sticky bit does
+/// not help when the attacker owns the containing directory.
+///
+/// `tempfile::tempdir()` is `mkdtemp`: random name, mode `0700`, and it fails
+/// rather than adopting an existing directory. The sibling `lang_matrix.rs`
+/// already did it this way; this suite is where the habit had not reached.
+///
+/// The returned guard must outlive the run — dropping it deletes the directory,
+/// so callers bind it, not just `.path()`.
+fn tmp_dir(tag: &str) -> tempfile::TempDir {
+    tempfile::Builder::new()
+        .prefix(&format!("mccarthy_w16_{tag}_"))
+        .tempdir()
+        .expect("create a private temp dir")
 }
 
 // ── Backend 1: VM (the reference interpreter, tagged-word). Always runs. ──
 fn run_vm(src: &str) -> Option<i64> {
-    let module = compile_source_to_iir(Language::McCarthyLisp, src, "vm").ok()?;
-    mccarthy_lisp_vm::run(&module).ok().map(exit_code)
+    let module = match compile_source_to_iir(Language::McCarthyLisp, src, "vm") {
+        Ok(m) => m,
+        Err(e) => backend_failed("VM", src, "source → IIR", format!("{e:?}")),
+    };
+    match mccarthy_lisp_vm::run(&module) {
+        Ok(v) => Some(exit_code(v)),
+        Err(e) => backend_failed("VM", src, "mccarthy-lisp-vm execution", format!("{e:?}")),
+    }
 }
 
 // ── Backend 2: the universal JIT. Always runs. ──
 fn run_jit(src: &str) -> Option<i64> {
-    run_mccarthy_on_jit(src).ok().flatten()
+    match run_mccarthy_on_jit(src) {
+        Ok(v) => Some(v.unwrap_or_else(|| {
+            backend_failed("JIT", src, "reading the JIT result", "produced no value")
+        })),
+        Err(e) => backend_failed("JIT", src, "JIT execution", format!("{e:?}")),
+    }
 }
 
 // ── Backend 3: WASM via the in-repo runtime. Always runs. ──
 fn run_wasm(src: &str) -> Option<i64> {
-    let bytes = compile_source_to_wasm(Language::McCarthyLisp, src, "main").ok()?;
+    let bytes = match compile_source_to_wasm(Language::McCarthyLisp, src, "main") {
+        Ok(b) => b,
+        Err(e) => backend_failed("WASM", src, "source → wasm bytes", format!("{e:?}")),
+    };
     let rt = wasm_runtime::WasmRuntime::new();
-    rt.load_and_run(&bytes, "main", &[]).ok()?.first().copied()
+    match rt.load_and_run(&bytes, "main", &[]) {
+        Ok(vals) => Some(vals.first().copied().unwrap_or_else(|| {
+            backend_failed("WASM", src, "reading `main`'s result", "returned no value")
+        })),
+        Err(e) => backend_failed("WASM", src, "wasm-runtime execution", format!("{e:?}")),
+    }
 }
 
 // ── Backend 4: CLR via the in-repo simulator. Always runs. The whole-program
 //    method table is loaded so a lambda's `call <MethodDef>` resolves by ordinal. ──
 fn run_clr(src: &str) -> Option<i64> {
     use clr_simulator::{CLRSimulator, MethodCode, Value};
-    let artifact = compile_source_to_cil_artifact(Language::McCarthyLisp, src, "Main").ok()?;
+    let artifact = match compile_source_to_cil_artifact(Language::McCarthyLisp, src, "Main") {
+        Ok(a) => a,
+        Err(e) => backend_failed("CLR", src, "source → CIL artifact", format!("{e:?}")),
+    };
     let methods: Vec<MethodCode> = artifact
         .methods
         .iter()
@@ -147,13 +212,20 @@ fn run_clr(src: &str) -> Option<i64> {
             num_args: m.parameter_types.len(),
         })
         .collect();
-    let entry = artifact.methods.iter().position(|m| m.name == "main")?;
+    let Some(entry) = artifact.methods.iter().position(|m| m.name == "main") else {
+        backend_failed("CLR", src, "locating the entry method", "artifact has no `main`");
+    };
     let mut sim = CLRSimulator::new();
     sim.load_program(methods, entry);
     sim.run(1_000_000);
     match sim.stack.last() {
         Some(Some(Value::Int(n))) => Some(*n as i64),
-        _ => None,
+        other => backend_failed(
+            "CLR",
+            src,
+            "reading the simulator's result",
+            format!("top of stack was {other:?}, expected an Int"),
+        ),
     }
 }
 
@@ -173,7 +245,10 @@ fn run_jvm(src: &str) -> Option<i64> {
         cp.push(Some(e));
         (cp.len() - 1) as u16
     }
-    let mut class = compile_source_to_jvm_class(Language::McCarthyLisp, src, "Main").ok()?;
+    let mut class = match compile_source_to_jvm_class(Language::McCarthyLisp, src, "Main") {
+        Ok(c) => c,
+        Err(e) => backend_failed("JVM", src, "source → JVM class file", format!("{e:?}")),
+    };
     let (out_fieldref, println_ref, entry_ref) = {
         let cp = &mut class.constant_pool;
         let sys_utf8 = cp_append(cp, JvmConstantPoolEntry::Utf8("java/lang/System".into()));
@@ -220,12 +295,25 @@ fn run_jvm(src: &str) -> Option<i64> {
     });
     let bytes = serialize_jvm_class_file(&class);
     let dir = tmp_dir("jvm");
-    std::fs::write(dir.join("Main.class"), &bytes).ok()?;
+    std::fs::write(dir.path().join("Main.class"), &bytes).expect("jvm: write Main.class");
     let out = std::process::Command::new("java")
-        .arg("-Xverify:none").arg("-cp").arg(&dir).arg("Main")
+        .arg("-Xverify:none").arg("-cp").arg(dir.path()).arg("Main")
         .output()
-        .ok()?;
-    String::from_utf8_lossy(&out.stdout).trim().parse::<i64>().ok()
+        .expect("jvm: spawn java");
+    let stdout = String::from_utf8_lossy(&out.stdout).trim().to_string();
+    match stdout.parse::<i64>() {
+        Ok(v) => Some(v),
+        Err(_) => backend_failed(
+            "JVM",
+            src,
+            "`java` execution of the emitted class",
+            format!(
+                "exit {:?}, stdout {stdout:?}\n{}",
+                out.status.code(),
+                String::from_utf8_lossy(&out.stderr)
+            ),
+        ),
+    }
 }
 
 // ── Backend 6: BEAM on a real `erl`. Gated on `erl`. ──
@@ -234,15 +322,31 @@ fn run_beam(src: &str) -> Option<i64> {
         return None;
     }
     let module = "conf";
-    let bytes = compile_source_to_beam(Language::McCarthyLisp, src, module).ok()?;
+    let bytes = match compile_source_to_beam(Language::McCarthyLisp, src, module) {
+        Ok(b) => b,
+        Err(e) => backend_failed("BEAM", src, "source → BEAM bytes", format!("{e:?}")),
+    };
     let dir = tmp_dir("beam");
-    std::fs::write(dir.join(format!("{module}.beam")), &bytes).ok()?;
+    std::fs::write(dir.path().join(format!("{module}.beam")), &bytes).expect("beam: write .beam");
     let out = std::process::Command::new("erl")
-        .arg("-noshell").arg("-pa").arg(&dir)
+        .arg("-noshell").arg("-pa").arg(dir.path())
         .arg("-eval").arg(format!("io:format(\"~w~n\",[{module}:main()]),halt(0)."))
         .output()
-        .ok()?;
-    String::from_utf8_lossy(&out.stdout).trim().parse::<i64>().ok()
+        .expect("beam: spawn erl");
+    let stdout = String::from_utf8_lossy(&out.stdout).trim().to_string();
+    match stdout.parse::<i64>() {
+        Ok(v) => Some(v),
+        Err(_) => backend_failed(
+            "BEAM",
+            src,
+            "`erl` execution of the emitted module",
+            format!(
+                "exit {:?}, stdout {stdout:?}\n{}",
+                out.status.code(),
+                String::from_utf8_lossy(&out.stderr)
+            ),
+        ),
+    }
 }
 
 // ── Backend 7: LLVM via `clang` + the shared C runtime. Gated on `clang`. ──
@@ -251,28 +355,51 @@ fn run_llvm(src: &str) -> Option<i64> {
         return None;
     }
     let triple = String::from_utf8(
-        std::process::Command::new("clang").arg("-dumpmachine").output().ok()?.stdout,
+        std::process::Command::new("clang")
+            .arg("-dumpmachine")
+            .output()
+            .expect("llvm: spawn clang -dumpmachine")
+            .stdout,
     )
-    .ok()?
+    .expect("llvm: clang -dumpmachine emitted valid UTF-8")
     .trim()
     .to_string();
     let runtime_c = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
         .join("../twig-aot/runtime/dynval_runtime.c");
-    let ll = compile_source_to_llvm_with_target(Language::McCarthyLisp, src, "conf", &triple).ok()?;
+    let ll = match compile_source_to_llvm_with_target(Language::McCarthyLisp, src, "conf", &triple) {
+        Ok(ll) => ll,
+        Err(e) => backend_failed("LLVM", src, "source → LLVM IR", format!("{e:?}")),
+    };
     let dir = tmp_dir("llvm");
-    let ll_path = dir.join("conf.ll");
-    std::fs::write(&ll_path, &ll).ok()?;
-    let exe = dir.join("conf");
+    let ll_path = dir.path().join("conf.ll");
+    std::fs::write(&ll_path, &ll).expect("llvm: write conf.ll");
+    let exe = dir.path().join("conf");
+    // `dynval_runtime.c`'s `__dyn_cons` calls `__gc_alloc_kind`/`__gc_register_kind`,
+    // which moved into the `gc-core-capi` staticlib when `twig_gc.c` was retired
+    // (#118b-2b). Without `gc_link_args()` the link fails with undefined symbols —
+    // which, before `backend_failed`, silently removed the whole LLVM column from
+    // this capstone. The per-feature `llvm_*.rs` suites have always linked it; this
+    // runner is the one that was never updated.
     let build = std::process::Command::new("clang")
         .arg("-x").arg("ir").arg(&ll_path)
         .arg("-x").arg("none").arg(&runtime_c)
+        .args(common::gc_link_args())
         .arg("-o").arg(&exe)
         .output()
-        .ok()?;
+        .expect("llvm: spawn clang");
     if !build.status.success() {
-        return None;
+        backend_failed(
+            "LLVM",
+            src,
+            "clang link of the emitted .ll",
+            String::from_utf8_lossy(&build.stderr),
+        );
     }
-    std::process::Command::new(&exe).output().ok()?.status.code().map(i64::from)
+    let out = std::process::Command::new(&exe).output().expect("llvm: run linked executable");
+    match out.status.code() {
+        Some(c) => Some(i64::from(c)),
+        None => backend_failed("LLVM", src, "reading the exit code", "process was signalled"),
+    }
 }
 
 // ── Backend 8: native AOT — emit a host object, link with the system linker,
@@ -283,11 +410,19 @@ fn run_native(src: &str) -> Option<i64> {
         return None;
     }
     let dir = tmp_dir("native");
-    let s = dir.join("conf.mcl");
-    std::fs::write(&s, src).ok()?;
-    let exe = dir.join("conf");
-    compile_file_to_macos_executable(&s, &exe, Language::McCarthyLisp).ok()?;
-    std::process::Command::new(&exe).output().ok()?.status.code().map(i64::from)
+    let s = dir.path().join("conf.mcl");
+    std::fs::write(&s, src).expect("native: write source");
+    let exe = dir.path().join("conf");
+    if let Err(e) = compile_file_to_macos_executable(&s, &exe, Language::McCarthyLisp) {
+        backend_failed("native-AOT", src, "source → macOS executable", format!("{e:?}"));
+    }
+    let out = std::process::Command::new(&exe).output().expect("native: run linked executable");
+    match out.status.code() {
+        Some(c) => Some(i64::from(c)),
+        None => {
+            backend_failed("native-AOT", src, "reading the exit code", "process was signalled")
+        }
+    }
 }
 #[cfg(not(target_os = "macos"))]
 fn run_native(_src: &str) -> Option<i64> {
@@ -339,6 +474,27 @@ fn mccarthy_is_uniform_across_every_backend() {
     // every program — they are the conformance floor.
     for must in ["VM", "JIT", "WASM", "CLR"] {
         assert!(exercised.contains(must), "in-process backend {must} failed to run");
+    }
+
+    // Every *gated* backend must also appear once its tool is installed. A backend
+    // is allowed to be missing from `exercised` only when the host genuinely lacks
+    // its toolchain — so pair each with its probe and assert the implication. This
+    // is the check that was absent when the LLVM column silently disappeared: the
+    // suite printed a set of exercised backends, LLVM was simply not in it, and
+    // nothing compared that set against what the machine could actually run.
+    let gated: &[(&str, bool)] = &[
+        ("JVM", tool_ok("java", "-version")),
+        ("BEAM", tool_ok("erl", "-version")),
+        ("LLVM", tool_ok("clang", "--version")),
+        ("native-AOT", cfg!(target_os = "macos")),
+        ("CLR-real", tool_ok("dotnet", "--version") && clr_support::find_ilasm().is_some()),
+    ];
+    for (name, tool_present) in gated {
+        assert!(
+            !tool_present || exercised.contains(name),
+            "{name}'s toolchain is installed on this host, so the {name} column must \
+             have run — it did not, which means the column is silently disabled"
+        );
     }
     eprintln!(
         "W16 conformance: {} programs × {} backends exercised → {:?}",

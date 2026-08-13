@@ -127,6 +127,28 @@ fn is_comparison(op: &str) -> bool {
     op.starts_with("cmp_")
 }
 
+/// Unbox one operand to a machine integer, or pass it through when it is
+/// already raw (an unboxed literal / a machine-typed value).
+///
+/// A free function rather than a closure so the caller can keep mutating the
+/// `types` map between calls — the pass has to see its own `box` results.
+fn unbox_operand(
+    v: &str,
+    out: &mut Vec<IIRInstr>,
+    types: &HashMap<String, String>,
+    is_lisp: bool,
+    counter: &mut usize,
+) -> String {
+    let boxed = types.get(v).map(|t| is_boxed(t, is_lisp)).unwrap_or(false);
+    if !boxed {
+        return v.to_string();
+    }
+    *counter += 1;
+    let u = format!("{v}.unbox{counter}");
+    out.push(IIRInstr::new("unbox", Some(u.clone()), vec![Operand::Var(v.to_string())], INT));
+    u
+}
+
 /// Map each SSA destination (and parameter) to the type hint it was produced
 /// with, so an operand's boxed-ness can be decided structurally.
 fn producer_types(fn_: &IIRFunction) -> HashMap<String, String> {
@@ -151,7 +173,18 @@ fn producer_types(fn_: &IIRFunction) -> HashMap<String, String> {
 /// `is_boxed`'s doc comment. Callers with a whole `IIRModule` should go
 /// through `lower_dynamic_arith`, which derives this from `module.language`.
 pub fn lower_dynamic_arith_function(fn_: &mut IIRFunction, is_lisp: bool) {
-    let types = producer_types(fn_);
+    // `types` is seeded from the *incoming* instructions, but this pass changes
+    // what some of those destinations hold: every dynamic op it rewrites ends in
+    // `box dest : ref<any>`, so `dest` is boxed afterwards even if the frontend
+    // stamped it `any`. Consulting only the seed map makes the pass misread its
+    // own output — and a nested expression is exactly where that happens.
+    //
+    // `(+ (+ a b) c)` in a Twig lambda lowered to `add a, b` → `box` → then
+    // `add <the boxed word>, c`, because the inner `+`'s dest still carried the
+    // frontend's bare `any` (raw, for a non-lisp language) while the value at
+    // runtime was tagged. `(10 + 20) + 12` computed `(30 << 3) + 12 = 252`.
+    // The map has to be updated as the rewrite proceeds, so it is `mut`.
+    let mut types = producer_types(fn_);
     let old = std::mem::take(&mut fn_.instructions);
     let mut out: Vec<IIRInstr> = Vec::with_capacity(old.len() * 2);
     // A monotonic suffix so the temporaries this pass introduces never collide.
@@ -192,23 +225,8 @@ pub fn lower_dynamic_arith_function(fn_: &mut IIRFunction, is_lisp: bool) {
 
         // Unbox each boxed operand to a machine integer; pass a raw operand
         // (an unboxed literal / already-typed value) straight through.
-        let mut unbox_operand = |v: &str, out: &mut Vec<IIRInstr>| -> String {
-            let boxed = types.get(v).map(|t| is_boxed(t, is_lisp)).unwrap_or(false);
-            if !boxed {
-                return v.to_string();
-            }
-            counter += 1;
-            let u = format!("{v}.unbox{counter}");
-            out.push(IIRInstr::new(
-                "unbox",
-                Some(u.clone()),
-                vec![Operand::Var(v.to_string())],
-                INT,
-            ));
-            u
-        };
-        let ia = unbox_operand(&a, &mut out);
-        let ib = unbox_operand(&b, &mut out);
+        let ia = unbox_operand(&a, &mut out, &types, is_lisp, &mut counter);
+        let ib = unbox_operand(&b, &mut out, &types, is_lisp, &mut counter);
 
         // The typed op writes a fresh machine-typed temporary; the original
         // dest name is kept for the `box` so downstream readers are unchanged.
@@ -225,7 +243,11 @@ pub fn lower_dynamic_arith_function(fn_: &mut IIRFunction, is_lisp: bool) {
         // Re-box the machine result as a lisp value (`ref<any>`), preserving the
         // original destination name. The `dyn_repr` pass then treats it like
         // any other lisp value (unboxing it at the return boundary).
-        out.push(IIRInstr::new("box", Some(dest), vec![Operand::Var(s)], REF_ANY));
+        out.push(IIRInstr::new("box", Some(dest.clone()), vec![Operand::Var(s)], REF_ANY));
+        // …and record that `dest` is now boxed, so a later op in this same
+        // function that consumes it unboxes rather than reading the tagged word
+        // as a machine integer.
+        types.insert(dest, REF_ANY.to_string());
     }
 
     fn_.instructions = out;
@@ -316,6 +338,77 @@ mod tests {
                 IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "any"),
             ],
         )
+    }
+
+    /// A *chained* dynamic expression: `(+ (+ a b) c)` over three raw params, the
+    /// shape a Twig lambda body has. The inner `+`'s destination is stamped with
+    /// the frontend's bare `any`, but this pass rewrites it to end in
+    /// `box … : ref<any>` — so by the time the outer `+` reads it, it is boxed.
+    ///
+    /// Regression: the operand-type map was seeded once from the incoming
+    /// instructions and never updated, so the outer `+` classified the inner
+    /// result by its *pre-pass* hint and added the tagged word directly.
+    /// `(10 + 20) + 12` produced `(30 << 3) + 12 = 252` on every tagged-word
+    /// backend. Third instance of this bug class — see 0.32.0 (parameters) and
+    /// 0.33.0 (`dyn_car` results); the invariant is that a producer's recorded
+    /// type must describe what the value IS after lowering, not what the
+    /// frontend called it.
+    #[test]
+    fn chained_dynamic_arith_unboxes_the_inner_result() {
+        let mut f = IIRFunction::new(
+            "body",
+            vec![
+                ("a".into(), "any".into()),
+                ("b".into(), "any".into()),
+                ("c".into(), "any".into()),
+            ],
+            "any",
+            vec![
+                IIRInstr::new(
+                    "call_builtin",
+                    Some("inner".into()),
+                    vec![Operand::Var("+".into()), Operand::Var("a".into()), Operand::Var("b".into())],
+                    "any",
+                ),
+                IIRInstr::new(
+                    "call_builtin",
+                    Some("outer".into()),
+                    vec![
+                        Operand::Var("+".into()),
+                        Operand::Var("inner".into()),
+                        Operand::Var("c".into()),
+                    ],
+                    "any",
+                ),
+                IIRInstr::new("ret", None, vec![Operand::Var("outer".into())], "any"),
+            ],
+        );
+        // `is_lisp = false` — the Twig/Nib raw-parameter model, where bare `any`
+        // params arrive unboxed and only this pass's own `box` results are tagged.
+        lower_dynamic_arith_function(&mut f, false);
+
+        // The raw params are used directly: exactly ONE unbox, and it is of the
+        // inner result.
+        let unboxes: Vec<&IIRInstr> = f.instructions.iter().filter(|i| i.op == "unbox").collect();
+        assert_eq!(unboxes.len(), 1, "only the boxed inner result needs unboxing: {:?}", ops(&f));
+        assert!(
+            matches!(unboxes[0].srcs.first(), Some(Operand::Var(v)) if v == "inner"),
+            "the unbox must consume the inner `+` result, got {:?}",
+            unboxes[0].srcs
+        );
+
+        // And the outer `add` consumes that unboxed temporary, never `inner` itself.
+        let outer_add = f
+            .instructions
+            .iter()
+            .filter(|i| i.op == "add")
+            .nth(1)
+            .expect("two adds emitted");
+        assert!(
+            !matches!(outer_add.srcs.first(), Some(Operand::Var(v)) if v == "inner"),
+            "outer add must not read the tagged word directly: {:?}",
+            outer_add.srcs
+        );
     }
 
     fn ops(f: &IIRFunction) -> Vec<String> {
