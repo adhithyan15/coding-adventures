@@ -2826,6 +2826,34 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: devanagariAlphabetSource("ल"),
   },
+  // JackPotte's animation and the Central Hindi Directorate deskbook agree on
+  // three parts: the counterclockwise loop, descending right stem, and final
+  // headline. The animation supplies the within-run directions and two lifts.
+  [ductusKey("devanagari", "व")]: {
+    script: "devanagari",
+    glyph: "व",
+    strokes: [
+      { segments: [{ label: "circle counterclockwise around the left loop", path: [
+        { x: 350, y: 415 }, { x: 305, y: 428 }, { x: 255, y: 430 },
+        { x: 205, y: 422 }, { x: 160, y: 402 }, { x: 125, y: 375 },
+        { x: 100, y: 340 }, { x: 87, y: 300 }, { x: 88, y: 260 },
+        { x: 105, y: 220 }, { x: 140, y: 185 }, { x: 190, y: 160 },
+        { x: 240, y: 150 }, { x: 290, y: 158 }, { x: 335, y: 180 },
+        { x: 370, y: 215 }, { x: 392, y: 260 },
+      ] }] },
+      { segments: [{ label: "lift, then descend the right stem", path: [
+        { x: 427, y: 551 }, { x: 427, y: 475 }, { x: 427, y: 395 },
+        { x: 427, y: 315 }, { x: 427, y: 235 }, { x: 427, y: 155 },
+        { x: 427, y: 75 }, { x: 427, y: 5 },
+      ] }] },
+      { segments: [{ label: "lift, then draw the shirorekha left-to-right", path: [
+        { x: 5, y: 585 }, { x: 75, y: 585 }, { x: 145, y: 585 },
+        { x: 215, y: 585 }, { x: 285, y: 585 }, { x: 355, y: 585 },
+        { x: 425, y: 585 }, { x: 495, y: 585 }, { x: 565, y: 585 },
+      ] }] },
+    ],
+    source: devanagariAlphabetSource("व"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the
