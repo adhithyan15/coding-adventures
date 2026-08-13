@@ -5505,6 +5505,51 @@ public static byte[] __tape = new byte[30000]; \
 public static void putchar(int c){ System.out.write(c & 0xFF); System.out.flush(); } \
 public static int getchar(){ try { int b = System.in.read(); return b < 0 ? 0 : b; } catch (java.io.IOException e) { return 0; } } }";
 
+/// Every `env/…` class the emitted class file references, read out of its own
+/// constant pool.
+///
+/// The backend already decided which host runtime a program needs when it chose
+/// which `invokestatic env/…` to emit; this reads that decision back rather than
+/// re-deriving it from the program's language. Returns internal JVM names
+/// (`env/BFRuntime`), deduplicated, in a stable order.
+fn referenced_env_classes(class: &jvm_class_file::JvmClassFile) -> Vec<String> {
+    use jvm_class_file::JvmConstantPoolEntry;
+    // A `Class` entry points at a `Utf8` holding the internal name. Resolve that
+    // indirection rather than scanning every `Utf8`, so a string constant that
+    // merely looks like a class name can't create phantom work.
+    let utf8_at = |i: u16| -> Option<&str> {
+        match class.constant_pool.get(i as usize) {
+            Some(Some(JvmConstantPoolEntry::Utf8(s))) => Some(s.as_str()),
+            _ => None,
+        }
+    };
+    let mut out: Vec<String> = Vec::new();
+    for entry in class.constant_pool.iter().flatten() {
+        if let JvmConstantPoolEntry::Class { name_index } = entry {
+            if let Some(name) = utf8_at(*name_index) {
+                if name.starts_with("env/") && !out.iter().any(|s| s == name) {
+                    out.push(name.to_string());
+                }
+            }
+        }
+    }
+    out.sort();
+    out
+}
+
+/// The Java source for one `env/…` host class, as `(filename, source)`.
+///
+/// `None` for a name this harness has no source for — which `run_jvm` turns into a
+/// loud failure naming the missing class, rather than letting `java` fail later
+/// with a bare `NoClassDefFoundError`.
+fn env_runtime_source(internal_name: &str) -> Option<(&'static str, &'static str)> {
+    match internal_name {
+        "env/BFRuntime" => Some(("BFRuntime.java", BF_RUNTIME_JAVA)),
+        "env/BasicRuntime" => Some(("BasicRuntime.java", BASIC_RUNTIME_JAVA)),
+        _ => None,
+    }
+}
+
 /// JVM runner: source → `JvmClassFile` (`iir-to-jvm-class-file`) → real `java`, the
 /// W16 wrapper-launcher strategy generalized from McCarthy to **any** language.
 ///
@@ -5664,22 +5709,33 @@ fn run_jvm(p: &Prog) -> Option<RunResult> {
     let bytes = serialize_jvm_class_file(&class);
     let dir = tempfile::tempdir().expect("jvm: create temp dir");
     std::fs::write(dir.path().join("Main.class"), &bytes).expect("jvm: write Main.class");
-    // For an I/O program, compile the `env.BasicRuntime` host class onto the
-    // classpath so its `println(J)V` resolves. `javac` ships with the JDK; if it is
-    // somehow absent the cell skips gracefully (`None`).
-    if prints {
-        // Pick the host class(es) the program's I/O lowers to. Brainfuck's `.`/`,`
-        // and — since BA2 — Dartmouth BASIC's `PRINT` lower to `putchar`
-        // (`invokestatic env/BFRuntime.putchar(I)V`), so both use `env.BFRuntime`.
-        // Dartmouth BASIC's `INPUT X` (BA-INPUT) lowers to `invokestatic
-        // env/BasicRuntime.readLong()J`, so DartmouthBasic additionally needs
-        // `BasicRuntime.java` on the classpath alongside `BFRuntime.java`.
-        let (file, source) = if p.lang == Language::Brainfuck
-            || p.lang == Language::DartmouthBasic
-        {
-            ("BFRuntime.java", BF_RUNTIME_JAVA)
-        } else {
-            ("BasicRuntime.java", BASIC_RUNTIME_JAVA)
+    // Compile onto the classpath exactly the `env.*` host classes the emitted class
+    // actually references — read out of its own constant pool, not guessed from the
+    // program's language.
+    //
+    // This used to be a hardcoded language allowlist: Brainfuck and Dartmouth BASIC
+    // got `BFRuntime`, everything else got `BasicRuntime`, plus a `src.contains("INPUT")`
+    // special case. Every entry in that list is a restatement of something the
+    // backend already decided when it chose which `invokestatic env/…` to emit, and
+    // a restatement drifts. It drifted twice: once when BA2 moved BASIC's `PRINT`
+    // from `println` to `putchar` and the harness kept compiling the wrong class,
+    // and again when COBOL 60 joined the matrix — its output lowers to
+    // `env/BFRuntime.putchar`, the allowlist handed it `BasicRuntime`, and ten cells
+    // died with `NoClassDefFoundError: env/BFRuntime`.
+    //
+    // Asking the class file removes the duplicate decision. A new frontend that
+    // lowers its I/O to `putchar` now gets the right host class with no edit here.
+    for needed in referenced_env_classes(&class) {
+        let Some((file, source)) = env_runtime_source(&needed) else {
+            cell_failed(
+                "Jvm",
+                p,
+                "resolving a host runtime class",
+                format!(
+                    "the emitted class references `{needed}`, which this harness has no \
+                     source for. Add it next to BF_RUNTIME_JAVA / BASIC_RUNTIME_JAVA."
+                ),
+            );
         };
         let src = dir.path().join(file);
         std::fs::write(&src, source).expect("jvm: write host runtime source");
@@ -5690,23 +5746,12 @@ fn run_jvm(p: &Prog) -> Option<RunResult> {
             .output()
             .expect("jvm: spawn javac");
         if !built.status.success() {
-            cell_failed("Jvm", p, "javac of the host runtime class", String::from_utf8_lossy(&built.stderr));
-        }
-        // Dartmouth BASIC programs that use INPUT need BasicRuntime.readLong()J.
-        // Compile BasicRuntime.java alongside BFRuntime.java only when the program
-        // actually has an INPUT statement; other programs use only BFRuntime (putchar).
-        if p.lang == Language::DartmouthBasic && p.src.contains("INPUT") {
-            let basic_src = dir.path().join("BasicRuntime.java");
-            std::fs::write(&basic_src, BASIC_RUNTIME_JAVA).expect("jvm: write BasicRuntime.java");
-            let built = Command::new("javac")
-                .arg("-d")
-                .arg(dir.path())
-                .arg(&basic_src)
-                .output()
-                .expect("jvm: spawn javac for BasicRuntime");
-            if !built.status.success() {
-                cell_failed("Jvm", p, "javac of BasicRuntime.java", String::from_utf8_lossy(&built.stderr));
-            }
+            cell_failed(
+                "Jvm",
+                p,
+                &format!("javac of the host runtime class {file}"),
+                String::from_utf8_lossy(&built.stderr),
+            );
         }
     }
     // A Brainfuck `,` reads `env.BFRuntime.getchar()` → `System.in`, so pipe the

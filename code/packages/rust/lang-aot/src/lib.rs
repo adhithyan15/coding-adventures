@@ -597,6 +597,13 @@ pub fn compile_source_to_wasm(
     // Together they leave every value concretely typed (LANG77 / L3b-3a-3c).
     iir_builtin_lowering::lower_dyn_repr_structural(&mut module);
     concretize_scalar_any_for_wasm(&mut module);
+    // Stack backends address every value operand through a slot, so an inline
+    // literal (COBOL's `ADD 7 TO R` → `add _acc0, 7`) is a shape they cannot
+    // lower even though the IIR contract allows it. Materialize those literals
+    // into `const` temporaries LAST, after every other pass has finished
+    // rewriting instructions — a pass that runs earlier would miss the operands
+    // its successors introduce.
+    iir_builtin_lowering::materialize_immediate_operands(&mut module);
 
     let config = iir_to_wasm::IIRWasmConfig::default();
     let wasm = iir_to_wasm::lower_iir_to_wasm(&module, &config)
@@ -774,6 +781,13 @@ pub fn compile_source_to_jvm_class(
     iir_builtin_lowering::intern_symbols_structural(&mut module);
     iir_builtin_lowering::lower_dyn_repr_structural(&mut module);
     concretize_scalar_any_for_jvm(&mut module);
+    // Stack backends address every value operand through a slot, so an inline
+    // literal (COBOL's `ADD 7 TO R` → `add _acc0, 7`) is a shape they cannot
+    // lower even though the IIR contract allows it. Materialize those literals
+    // into `const` temporaries LAST, after every other pass has finished
+    // rewriting instructions — a pass that runs earlier would miss the operands
+    // its successors introduce.
+    iir_builtin_lowering::materialize_immediate_operands(&mut module);
 
     let config = iir_to_jvm_class_file::IIRJvmConfig::new(class_name);
     iir_to_jvm_class_file::lower_iir_to_jvm(&module, &config)
@@ -862,6 +876,13 @@ pub fn compile_source_to_cil_artifact(
     iir_builtin_lowering::intern_symbols_structural(&mut module);
     iir_builtin_lowering::lower_dyn_repr_structural(&mut module);
     concretize_scalar_any_for_cil(&mut module);
+    // Stack backends address every value operand through a slot, so an inline
+    // literal (COBOL's `ADD 7 TO R` → `add _acc0, 7`) is a shape they cannot
+    // lower even though the IIR contract allows it. Materialize those literals
+    // into `const` temporaries LAST, after every other pass has finished
+    // rewriting instructions — a pass that runs earlier would miss the operands
+    // its successors introduce.
+    iir_builtin_lowering::materialize_immediate_operands(&mut module);
 
     let config = iir_to_cil_bytecode::IIRClrConfig::new(name);
     iir_to_cil_bytecode::lower_iir_to_cil(&module, &config)
@@ -891,6 +912,13 @@ pub fn compile_source_to_cil_text(
     iir_builtin_lowering::intern_symbols_structural(&mut module);
     iir_builtin_lowering::lower_dyn_repr_structural(&mut module);
     concretize_scalar_any_for_cil(&mut module);
+    // Stack backends address every value operand through a slot, so an inline
+    // literal (COBOL's `ADD 7 TO R` → `add _acc0, 7`) is a shape they cannot
+    // lower even though the IIR contract allows it. Materialize those literals
+    // into `const` temporaries LAST, after every other pass has finished
+    // rewriting instructions — a pass that runs earlier would miss the operands
+    // its successors introduce.
+    iir_builtin_lowering::materialize_immediate_operands(&mut module);
 
     let config = iir_to_cil_bytecode::IIRClrConfig::new(name);
     iir_to_cil_bytecode::emit_il(&module, &config)
