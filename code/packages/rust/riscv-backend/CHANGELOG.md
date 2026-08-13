@@ -11,6 +11,9 @@
   with simulator coverage for stack-resident dividends and divisors.
 - Added pair-spill reloads for wide comparisons and reserved a scalar register
   for mixed-width pressure when all pair temporaries are live.
+- Added mixed-width pair allocation: a wide destination can spill live scalar
+  words that occupy one of the three pair slots, then those scalars reload from
+  the frame when consumed.
 - Added scalar register spilling: live values evict to aligned `sp`-relative
   stack slots, reload through dedicated operand registers, and restore the
   frame on every return. The simulator fixture now executes seven live scalar

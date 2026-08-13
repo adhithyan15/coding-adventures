@@ -778,6 +778,10 @@ impl Lowerer {
             };
         }
 
+        if let Some(location) = self.allocate_pair_from_scalar_registers() {
+            return Ok(location);
+        }
+
         let index = self
             .env
             .iter()
@@ -796,6 +800,39 @@ impl Lowerer {
             hi_offset,
         };
         Ok(ValueLocation::Pair { lo, hi })
+    }
+
+    fn allocate_pair_from_scalar_registers(&mut self) -> Option<ValueLocation> {
+        for pair_index in (0..VALUE_REGISTERS.len()).step_by(2) {
+            let lo = VALUE_REGISTERS[pair_index];
+            let hi = VALUE_REGISTERS[pair_index + 1];
+            if self.env.iter().any(|(_, location)| {
+                matches!(location, ValueLocation::Pair { lo: pair_lo, hi: pair_hi }
+                    if *pair_lo == lo || *pair_lo == hi || *pair_hi == lo || *pair_hi == hi)
+            }) {
+                continue;
+            }
+
+            self.env.retain(|(name, location)| {
+                !matches!(location, ValueLocation::Word(register)
+                    if (*register == lo || *register == hi)
+                        && self.remaining_uses.get(name).copied().unwrap_or_default() == 0)
+            });
+
+            for register in [lo, hi] {
+                let Some(index) = self.env.iter().position(|(_, location)| {
+                    matches!(location, ValueLocation::Word(current) if *current == register)
+                }) else {
+                    continue;
+                };
+                let offset = (self.next_spill_slot * 4) as i32;
+                self.next_spill_slot += 1;
+                self.words.push(encode_sw(register, STACK_POINTER, offset));
+                self.env[index].1 = ValueLocation::Spill { offset };
+            }
+            return Some(ValueLocation::Pair { lo, hi });
+        }
+        None
     }
 
     fn wide_var_location(

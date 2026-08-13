@@ -1093,6 +1093,34 @@ fn spills_live_scalar_values_to_a_stack_frame() {
 }
 
 #[test]
+fn allocates_a_wide_pair_by_spilling_live_scalar_values() {
+    let mut cir: Vec<CIRInstr> = (1..=6)
+        .map(|value| ci("const_i32", Some(&format!("v{value}")), vec![CIROperand::Int(value)], "i32"))
+        .collect();
+    cir.extend([
+        ci(
+            "const_u64",
+            Some("wide"),
+            vec![CIROperand::Int(4_294_967_297)],
+            "u64",
+        ),
+        ci(
+            "add_i32",
+            Some("answer"),
+            vec![CIROperand::Var("v1".into()), CIROperand::Var("v2".into())],
+            "i32",
+        ),
+        ci(
+            "ret_i32",
+            None,
+            vec![CIROperand::Var("answer".into())],
+            "i32",
+        ),
+    ]);
+    assert_eq!(compile_and_run(&cir), 3);
+}
+
+#[test]
 fn spills_live_wide_pairs_to_a_stack_frame() {
     let mut cir: Vec<CIRInstr> = (1..=4)
         .map(|value| {
