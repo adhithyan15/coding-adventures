@@ -1,0 +1,253 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 215,
+  "title": "Preguntó Dónde --- What the Accent Was Always For",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:acb2cb2965d406c9",
+  "lessons": [
+    {
+      "id": "ES-C57-pregunto-donde",
+      "sequence": 2310,
+      "title": "preguntó dónde",
+      "headword": "preguntó dónde",
+      "romanization": "preguntó dónde",
+      "gloss": "he asked where — and the accent stays, which finally explains what that accent was always marking",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:9b1818a953f20d93",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Report a yes-or-no question. (Preguntó si trabajaba.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now one that cannot be answered with yes or no: ¿Dónde trabaja?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the asking word is the joint",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "¿Dónde trabaja? Preguntó dónde trabajaba."
+            },
+            {
+              "kind": "speech",
+              "text": "No que. No si. The asking word is the joint — it was already at the front of the question, and it stays there."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The rest is what you already do: question marks gone, verb stepped back into the imperfect."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Now look at dónde in that reported sentence. The accent is still there — in a sentence with no question marks at all."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "This is the answer to a question you may have been carrying since the sixth chapter. The accent was never a partner to the question marks. It marks the word as an asking word, and the asking is still inside the report: he wanted to know something, and dónde is the something."
+            },
+            {
+              "kind": "speech",
+              "text": "Compare the two jobs the same letters can do:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "donde, plain — it just points at a place.",
+                "dónde, asking — it wants the place named."
+              ]
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The marks around a sentence tell you the sentence is a question. The accent on a word tells you the word is doing the asking. Those are different facts, and only now do you have a sentence where one is true and the other is not."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Preguntó dónde trabajaba",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Preguntó dónde trabajaba*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Preguntó si trabajaba, then Preguntó dónde trabajaba",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Preguntó si trabajaba*, then *Preguntó dónde trabajaba*]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C57-pregunto-donde-report",
+              "prompt": "Report it: Donde trabaja? (he asked)",
+              "assesses": [
+                "ES-GRAMMAR-REPORTED-WH-ACCENT"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "pregunto donde trabajaba",
+                "el pregunto donde trabajaba"
+              ],
+              "feedback": {
+                "correct": "The asking word is the joint.",
+                "incorrect": "Pregunto donde trabajaba."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C57-pregunto-donde-accent",
+              "prompt": "Does donde keep its accent in the reported version?",
+              "assesses": [
+                "ES-GRAMMAR-QUESTION-ACCENT"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "yes",
+                "yes, it is still an asking word"
+              ],
+              "feedback": {
+                "correct": "The accent marks the word, not the sentence.",
+                "incorrect": "Yes. The asking is still in there."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C57-pregunto-donde-join",
+              "prompt": "Do you need que or si in front of donde here?",
+              "assesses": [
+                "ES-GRAMMAR-REPORTED-WH-ACCENT"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "no",
+                "no, donde is the joint"
+              ],
+              "feedback": {
+                "correct": "One joint per clause, and donde is already it.",
+                "incorrect": "No. Donde does that job itself."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What joins the report when the question starts with an asking word? (The asking word itself — no que, no si.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And what does the accent on dónde mark? (That the word is asking — not that the sentence is a question.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

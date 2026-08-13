@@ -9732,6 +9732,62 @@
       "jsonHash": "fnv1a64:67285529d2b85bdb"
     },
     {
+      "language": "spanish",
+      "chapter": 214,
+      "sourceHash": "fnv1a64:31555c0e2d959fc1",
+      "lessonIds": [
+        "ES-C57-pregunto-si"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "spanish/narration/ch214.txt",
+      "json": "spanish/narration/ch214.json",
+      "textHash": "fnv1a64:8fc589c52322bc17",
+      "jsonHash": "fnv1a64:3489bdde1dee6b58"
+    },
+    {
+      "language": "spanish",
+      "chapter": 215,
+      "sourceHash": "fnv1a64:acb2cb2965d406c9",
+      "lessonIds": [
+        "ES-C57-pregunto-donde"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "spanish/narration/ch215.txt",
+      "json": "spanish/narration/ch215.json",
+      "textHash": "fnv1a64:15623f6245bc2d91",
+      "jsonHash": "fnv1a64:9c4a063163119f58"
+    },
+    {
+      "language": "spanish",
+      "chapter": 216,
+      "sourceHash": "fnv1a64:d2dc584058e0f30d",
+      "lessonIds": [
+        "ES-C57-repaso-reportar"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch216.txt",
+      "json": "spanish/narration/ch216.json",
+      "textHash": "fnv1a64:f96ddafc33b33511",
+      "jsonHash": "fnv1a64:0d447fa20d24ad40"
+    },
+    {
+      "language": "spanish",
+      "chapter": 217,
+      "sourceHash": "fnv1a64:4c23e828b45f5065",
+      "lessonIds": [
+        "ES-C57-sintesis-reportar"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch217.txt",
+      "json": "spanish/narration/ch217.json",
+      "textHash": "fnv1a64:27dcd1c3f9c95451",
+      "jsonHash": "fnv1a64:5584f1495e0bcf61"
+    },
+    {
       "language": "tamil",
       "chapter": 1,
       "sourceHash": "fnv1a64:4ba983e1f562762e",

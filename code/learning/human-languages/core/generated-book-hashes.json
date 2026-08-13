@@ -5520,6 +5520,42 @@
       "tex": "spanish/book/chapters/ch213-dijo-que.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 214,
+      "sourceHash": "fnv1a64:ee40ea38c52fd09c",
+      "lessonIds": [
+        "ES-C57-pregunto-si"
+      ],
+      "tex": "spanish/book/chapters/ch214-pregunto-si.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 215,
+      "sourceHash": "fnv1a64:9744a99e692359e0",
+      "lessonIds": [
+        "ES-C57-pregunto-donde"
+      ],
+      "tex": "spanish/book/chapters/ch215-pregunto-donde.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 216,
+      "sourceHash": "fnv1a64:8ca2d7b8bf971911",
+      "lessonIds": [
+        "ES-C57-repaso-reportar"
+      ],
+      "tex": "spanish/book/chapters/ch216-review-reportar.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 217,
+      "sourceHash": "fnv1a64:015caefe9e0d4301",
+      "lessonIds": [
+        "ES-C57-sintesis-reportar"
+      ],
+      "tex": "spanish/book/chapters/ch217-synthesis-reportar.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "sourceHash": "fnv1a64:c0940889d5248bc5",

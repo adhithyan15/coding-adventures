@@ -104,7 +104,7 @@ describe("real curriculum", () => {
     // 40 (esperar, contestar, comprar). Two sessions authored a chapter 38 in parallel;
     // the collision surfaced as a merge conflict on chapters.json rather than silently,
     // because both sides must edit it.
-    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(213); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis // +3: HL-C88 slice 8 // +1: HL-C88 slice 9 (falsos amigos) // +3: HL-C113 (B1 si-condition rung) // +3: HL-C113 preterite plural // HL-C113: HL-C113 imperfect subjunctive
+    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(217); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis // +3: HL-C88 slice 8 // +1: HL-C88 slice 9 (falsos amigos) // +3: HL-C113 (B1 si-condition rung) // +3: HL-C113 preterite plural // HL-C113: HL-C113 imperfect subjunctive
     expect(
       books.books
         .find((book) => book.language === "persian")
@@ -861,10 +861,22 @@ describe("real curriculum", () => {
       "ES-C57-ll-decode",
       "ES-C57-ll-shape",
       "ES-C57-ll-three",
+      "ES-C57-pregunto-donde-accent",
+      "ES-C57-pregunto-donde-join",
+      "ES-C57-pregunto-donde-report",
+      "ES-C57-pregunto-si-marks",
+      "ES-C57-pregunto-si-report",
+      "ES-C57-pregunto-si-same",
+      "ES-C57-repaso-reportar-que",
+      "ES-C57-repaso-reportar-si",
+      "ES-C57-repaso-reportar-wh",
       "ES-C57-sintesis-descifrar-h",
       "ES-C57-sintesis-descifrar-limits",
       "ES-C57-sintesis-descifrar-ll",
       "ES-C57-sintesis-descifrar-mix",
+      "ES-C57-sintesis-reportar-one",
+      "ES-C57-sintesis-reportar-three",
+      "ES-C57-sintesis-reportar-two",
       "ES-W03-question-span-roberto-outside",
       "FA-C02-esm-e-man-sara",
       "FA-C03-chist-fusion",
