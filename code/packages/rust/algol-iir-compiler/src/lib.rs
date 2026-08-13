@@ -2289,6 +2289,21 @@ impl Compiler {
             return Ok(true);
         }
 
+        if let Some((condition, then_node, else_node)) = self.conditional_expression_parts(node) {
+            if let Some(selector) = self.static_boolean_value(condition) {
+                let selected = if selector { then_node } else { else_node };
+                if self.is_static_real_output_expr(selected) {
+                    let condition = self.emit_expr(condition)?;
+                    if condition.ty != ScalarType::Boolean {
+                        return Err(CompileError::Type(
+                            "conditional expression condition must be boolean".into(),
+                        ));
+                    }
+                    return self.try_emit_real_literal_output_expr(selected);
+                }
+            }
+        }
+
         let Some((condition, then_node, else_node)) =
             self.static_real_output_conditional_parts(node)
         else {
@@ -8159,7 +8174,7 @@ mod tests {
     #[test]
     fn al4_print_conditional_real_literals_branches_before_output() {
         let module = compile_source(
-            "begin boolean flag; flag := false; print(if flag then +4.25 else -2.5) end",
+            "begin integer i; print(if i = 0 then +4.25 else -2.5) end",
             "test",
         )
         .expect("conditional real-literal output compiles");
@@ -8184,7 +8199,7 @@ mod tests {
     #[test]
     fn al4_print_conditional_with_static_real_product() {
         let module = compile_source(
-            "begin boolean flag; flag := true; print(if flag then 2.0 * 2.25 else 4.25) end",
+            "begin integer i; print(if i = 0 then 2.0 * 2.25 else 4.25) end",
             "test",
         )
         .expect("conditional static real product compiles");
@@ -8436,7 +8451,7 @@ mod tests {
     #[test]
     fn al4_print_conditional_static_real_standard_functions() {
         let module = compile_source(
-            "begin boolean flag; flag := false; print(if flag then abs(-4.25) else sqrt(2.25) + 0.5) end",
+            "begin integer i; print(if i = 0 then abs(-4.25) else sqrt(2.25) + 0.5) end",
             "test",
         )
         .expect("conditional static standard-function output compiles");
@@ -8468,6 +8483,21 @@ mod tests {
         )
         .expect_err("a conditional user-defined abs result still requires runtime formatting");
         assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_print_static_conditional_selects_formatter_free_branch() {
+        let module = compile_source(
+            "begin real procedure choose; choose := 1.5; boolean flag; flag := false; print(if flag then choose() else 42.0) end",
+            "test",
+        )
+        .expect("a static selector ignores the unreachable runtime real branch");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "42.0")
+        }));
+        assert!(main.instructions.iter().all(|instr| instr.op != "call"));
     }
 
     #[test]
