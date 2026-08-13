@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.67.0
+
+- Ignore pinned state-diagram `#` comments while preserving entities and hexadecimal style colors.
+
 ## 0.66.0
 
 - Apply one inline state style statement to comma-delimited nodes and groups.

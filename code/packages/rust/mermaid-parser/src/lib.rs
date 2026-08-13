@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.66.0";
+pub const VERSION: &str = "0.67.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -4794,6 +4794,32 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     }
 
     #[test]
+    fn state_skips_hash_comments() {
+        let diagram = parse_state_diagram(
+            "stateDiagram-v2\n# lifecycle comment\n#abc color-looking comment\nReady --> Running # transition comment\nRunning: Metal #9829; native\nstyle Ready fill:#dbeafe\n",
+        )
+        .expect("hash comments should parse");
+
+        assert_eq!(diagram.edges.len(), 1);
+        assert_eq!(diagram.nodes.len(), 2);
+        let ready = diagram
+            .nodes
+            .iter()
+            .find(|node| node.id == "Ready")
+            .unwrap();
+        assert_eq!(
+            ready.style.as_ref().unwrap().fill.as_deref(),
+            Some("#dbeafe")
+        );
+        let running = diagram
+            .nodes
+            .iter()
+            .find(|node| node.id == "Running")
+            .unwrap();
+        assert_eq!(running.label.text, "Metal ♥ native");
+    }
+
+    #[test]
     fn sequence_parses_case_insensitive_keywords() {
         let diagram = parse_any_mermaid(
             "SeQuEnCeDiAgRaM\nPaRtIcIpAnT A As Alice\nA->>B: Hello\nAcTiVaTe B\nNoTe RiGhT Of B: WRAP: Ready\nDeAcTiVaTe B\n",
@@ -5564,7 +5590,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.66.0");
+        assert_eq!(crate::VERSION, "0.67.0");
     }
 
     #[test]

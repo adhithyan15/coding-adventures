@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.41.0
+
+- Skip pinned state-diagram `#` comments without consuming entities or hexadecimal style colors.
+
 ## 0.40.0
 
 - Tokenize Mermaid state entities distinctly from hash colors.
