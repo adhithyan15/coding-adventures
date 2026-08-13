@@ -916,11 +916,21 @@ export interface ZipEntry {
 /** Reader options. */
 export interface ZipReaderOptions {
   /**
-   * Byte ceiling on any single entry's decompressed size. Defaults to 256 MB.
+   * Byte ceiling on any single DEFLATED entry's decompressed size. Defaults to
+   * 256 MB. Must be finite and non-negative.
    *
    * The reader always takes the SMALLER of this and the size the archive
    * declares, so lowering it is always safe and raising it is the only way to
    * read an entry bigger than the default.
+   *
+   * `Infinity` is rejected rather than read as "no limit". It would pass the
+   * `Math.min` against the archive's declared size and leave the CEILING equal
+   * to four bytes the archive chose -- which is precisely the attacker-chosen
+   * limit this option exists to prevent. To read something enormous, name a
+   * number.
+   *
+   * Stored entries (method 0) are not affected: their bytes are already resident
+   * in the archive, so there is no amplification to bound.
    */
   maxOutput?: number;
 }
@@ -930,7 +940,15 @@ export class ZipReader {
   private readonly maxOutput: number;
 
   constructor(private readonly data: Uint8Array, options: ZipReaderOptions = {}) {
-    this.maxOutput = options.maxOutput ?? MAX_OUTPUT;
+    const cap = options.maxOutput ?? MAX_OUTPUT;
+    // Validated HERE rather than left to the inflater, so both entry points
+    // treat the same value the same way. NaN and negatives would propagate
+    // through `Math.min` and be caught downstream; Infinity would NOT -- it
+    // would leave the archive's own declared size as the effective ceiling.
+    if (!Number.isFinite(cap) || cap < 0) {
+      throw new Error("zip: maxOutput must be a non-negative finite number");
+    }
+    this.maxOutput = cap;
     const eocdOffset = this.findEOCD();
     if (eocdOffset === null) throw new Error("zip: no End of Central Directory record found");
 

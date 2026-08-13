@@ -776,3 +776,33 @@ describe("the distance-table exception is keyed on code LENGTH, not symbol count
     expect(() => rawInflate(bytes)).toThrow(/incomplete distance Huffman table/);
   });
 });
+
+describe("ZipReaderOptions.maxOutput is validated where it enters", () => {
+  // Long and repetitive, so it really is stored with method 8 -- a five-byte
+  // string falls back to Stored and would never reach the inflater at all.
+  const archive = zipBytes([["a.txt", enc.encode("x".repeat(1000))]], true);
+
+  it("rejects Infinity, which would otherwise mean 'whatever the archive claims'", () => {
+    // Infinity is the natural way to write "no limit", and it is the one value
+    // that survives Math.min against the declared size -- handing the ceiling
+    // back to the input. It must not be a quiet way to undo the clamp.
+    expect(() => new ZipReader(archive, { maxOutput: Infinity }))
+      .toThrow(/non-negative finite/);
+  });
+
+  it("rejects NaN and negative ceilings", () => {
+    expect(() => new ZipReader(archive, { maxOutput: Number.NaN })).toThrow(/non-negative finite/);
+    expect(() => new ZipReader(archive, { maxOutput: -1 })).toThrow(/non-negative finite/);
+  });
+
+  it("accepts zero, which caps everything", () => {
+    const reader = new ZipReader(archive, { maxOutput: 0 });
+    expect(() => reader.read(reader.entries()[0]!)).toThrow(/output size limit exceeded/);
+  });
+
+  it("leaves stored entries alone, since they cannot amplify", () => {
+    const stored = zipBytes([["a.txt", enc.encode("hello")]], false);
+    const reader = new ZipReader(stored, { maxOutput: 0 });
+    expect(dec.decode(reader.readByName("a.txt"))).toBe("hello");
+  });
+});

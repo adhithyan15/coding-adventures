@@ -44,7 +44,11 @@
   limit it replaced: it is four bytes the archive chose, can say 4 GiB, and the
   CRC-32 that catches the lie only runs once the memory is already committed.
 - **`new ZipReader(bytes, { maxOutput })`** makes that ceiling configurable, for
-  the same reason `rawInflate`'s is.
+  the same reason `rawInflate`'s is. It is validated in the constructor rather
+  than left to the inflater, because `Infinity` — the natural way to write "no
+  limit" — is the one value that survives the `Math.min` and would quietly hand
+  the ceiling back to the archive. NaN and negatives are rejected there too, so
+  both entry points treat the same value the same way.
 - **Huffman tables are checked against Kraft's inequality.** Over-subscribed
   tables (more codes claimed than exist at a length) are rejected outright, and
   incomplete tables are rejected everywhere RFC 1951 forbids them. Without this
@@ -73,7 +77,7 @@
 - Cap behaviour: a caller-supplied ceiling, a stored block hitting it, a
   nonsensical ceiling rejected rather than ignored, and a 500:1 zlib-built bomb
   stopped at the stated byte count.
-- 54 tests; 98% line coverage. The clamp regression is verified adversarially:
+- 58 tests; 98% line coverage. The clamp regression is verified adversarially:
   with the `Math.min` removed it fails, which is the only way to know a guard
   test is testing the guard.
 
