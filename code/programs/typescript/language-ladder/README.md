@@ -175,7 +175,7 @@ thirteen Urdu starter entries — ا, ج, ر, س, ش, ک, ل, م, ن, ں, ہ, ی
 all eighteen Arabic starter letters — ا, ب, ت, ج, ح, خ, د, ر, س, ش, ص, ض, ع, ك, ل, ه, و, and ي —,
 all twenty-two Hebrew starter letters א, ב, ג, ד, ה, ו, ז, ח, ט, י, כ, ל,
 מ, נ, ס, ע, פ, צ, ק, ר, ש, and ת, all twenty-four Chinese starter entries 人, 亻, 口, 女, 子, 日, 讠, 氵, 宀, 你, 好, 我, 是, 不, 名, 字, 谢, 请, 再, 见, 什, 么, 早, and 上,
-and Devanagari अ and आ
+and Devanagari अ, आ, and इ
 have authored pen paths today.**
 `DUCTUS` admits no letter without a citation
 for its stroke order, and hand-drawing a letter is forbidden
@@ -562,6 +562,11 @@ separately adds the middle shoulder, inner and trailing top-to-bottom stems, and
 final left-to-right shirorekhā. Its Noto Sans Devanagari fit preserves five
 sourced strokes and four lifts while carrying the published base-letter
 variation forward.
+The five-frame Devanagari **इ** filmstrip descends its upright, turns left around
+the upper bowl, sweeps through the lower bowl, and finishes down-right through
+the tail in one run before adding the shirorekhā. Its Noto Sans Devanagari fit
+preserves the source's two strokes and single lift while identifying that
+printed sequence as one teaching form rather than a universal standard.
 The runtime resolves each cited path back to the owning script and lazily loads that
 script's font, while Tamil continues to use Noto Sans Tamil. Unverified letters
 still fall back to the numbered prose list, unchanged. Extending the coverage is HL-C09,

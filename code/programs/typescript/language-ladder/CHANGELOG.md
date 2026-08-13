@@ -2,6 +2,12 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Devanagari इ ductus (HL-C09CZ)
+
+- Render **इ** in five source-aligned movements across two strokes.
+- Keep its upright, both bowls, and down-right tail in one continuous run before the final left-to-right shirorekhā.
+- Preserve the source's single lift in Noto Sans Devanagari while identifying the modern printed sequence as one teaching form.
+
 ### Added — cited Devanagari आ ductus (HL-C09CY)
 
 - Render **आ** in six source-aligned movements across five strokes.
