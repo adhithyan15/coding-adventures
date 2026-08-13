@@ -1201,39 +1201,31 @@ pub fn compile_file_to_riscv32_bin(
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
     let module = compile_source_to_iir(language, &source, stem)?;
 
-    // Phase 7 (FINAL lane) of the historical-arch backend migration:
-    // route through aot_core::infer + aot_core::specialise +
-    // riscv_backend::compile per function, same pattern as Phases 3-6
-    // for GE-225 / Intel 4004 / ARMv7 / Intel 8008.  riscv-backend
-    // emits little-endian-flattened bytes directly, so concatenation
-    // here is just `extend_from_slice`.
+    // Route through aot_core::infer + aot_core::specialise, then let the
+    // RISC-V backend lay out the whole module. This keeps the selected entry
+    // at address zero and lets it patch direct module-local `jal` calls.
     let _ = stem;
-    let mut bytes = Vec::new();
-    let empty_params: Vec<(String, String)> = Vec::new();
+    let mut cir_functions = Vec::with_capacity(module.functions.len());
     for f in &module.functions {
         let inferred = aot_core::infer::infer_types(f);
-        let cir = aot_core::specialise::aot_specialise(f, Some(&inferred));
-        let ctx = jit_core::backend::FunctionContext {
-            name: f.name.as_str(),
-            params: &empty_params,
-            return_type: f.return_type.as_str(),
-        };
-        // Name the function in the message.  A module is many functions
-        // (BASIC alone injects its whole `__basic_print_*` runtime), so
-        // "unsupported type f64" with no function name leaves the reader
-        // guessing which one refused — and the doc comment above has always
-        // promised the message names the function.
-        let fn_bytes = riscv_backend::compile(&ctx, &cir).map_err(|e| {
-            LangAotError::RiscvBackendError(format!("function {:?}: {e}", f.name))
-        })?;
-        bytes.extend_from_slice(&fn_bytes);
+        cir_functions.push(aot_core::specialise::aot_specialise(f, Some(&inferred)));
     }
-    if bytes.is_empty() {
-        // Fallback: an empty module still needs at least the
-        // canonical `ret` so consumers (qemu-riscv32, simulator)
-        // see a well-formed `.bin`.
-        bytes.extend_from_slice(&riscv_encoder::RET_WORD.to_le_bytes());
-    }
+    let functions: Vec<_> = module
+        .functions
+        .iter()
+        .zip(&cir_functions)
+        .map(|(function, cir)| riscv_backend::ModuleFunction {
+            context: jit_core::backend::FunctionContext {
+                name: function.name.as_str(),
+                params: &function.params,
+                return_type: function.return_type.as_str(),
+            },
+            cir,
+        })
+        .collect();
+    let bytes = riscv_backend::compile_module(&functions, module.entry_point.as_deref()).map_err(
+        |e| LangAotError::RiscvBackendError(format!("module {:?}: {e}", module.name)),
+    )?;
 
     std::fs::write(out, &bytes)?;
     Ok(())

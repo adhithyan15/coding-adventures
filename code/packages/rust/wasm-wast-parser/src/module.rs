@@ -545,6 +545,32 @@ fn resolve_func_signature_ref(desc_rest: &[SExpr], ctx: &mut ModuleCtx) -> Resul
     Ok(dedup_type(&mut ctx.module, ty))
 }
 
+/// Whether `f` belongs to a WASM function's leading `param`/`result`/
+/// `type`/`local` region -- shared verbatim by `build_func`'s mismatch
+/// pre-scan and its main index-assignment loop so the two can never
+/// silently disagree on where that region ends (a round-3 security
+/// review found they'd drifted apart once already).
+fn is_leading_field(f: &SExpr) -> bool {
+    f.is_keyword_list("param") || f.is_keyword_list("result") || f.is_keyword_list("type") || f.is_keyword_list("local")
+}
+
+/// Count how many params one `(param ...)` s-expression's `items` (the
+/// full list, including the leading `"param"` atom) declares, and the
+/// name of the ONE it declares if it's the named form -- `(param $x i32)`
+/// is a single named param (a name + its type), not two; `(param i32
+/// i32)` is two unnamed ones. Shared by `build_func`'s mismatch pre-scan
+/// and its main index-assignment loop for the same reason `is_leading_field`
+/// is: a round-4 security review flagged two independently-maintained
+/// copies of this same arithmetic as exactly the kind of drift that
+/// produced this bug's first two rounds.
+fn count_literal_param(items: &[SExpr]) -> (u32, Option<String>) {
+    if items.len() == 3 && items[1].as_atom().is_some_and(|s| s.starts_with('$')) {
+        (1, Some(items[1].as_atom().unwrap().to_string()))
+    } else {
+        ((items.len() - 1) as u32, None)
+    }
+}
+
 fn build_func(fields: &[SExpr], ctx: &mut ModuleCtx, func_idx: usize) -> Result<(), WastParseError> {
     // Inline export shorthand: `(func $f (export "e") ...)`.
     let (after_export, _) = handle_inline_export(fields, "func", func_idx, ctx)?;
@@ -553,40 +579,155 @@ fn build_func(fields: &[SExpr], ctx: &mut ModuleCtx, func_idx: usize) -> Result<
     let type_idx = resolve_func_signature_ref(fields, ctx)?;
     ctx.module.functions[func_idx] = type_idx;
 
-    // Local scope: params first (from the signature just resolved,
-    // re-walking the param forms here only for their OPTIONAL names --
-    // `parse_func_signature` already captured the types), then declared
-    // `(local ...)` forms.
+    // Local scope: params first, then declared `(local ...)` forms right
+    // after them. The FIRST declared local's index must be the function's
+    // REAL param count -- `ctx.module.types[type_idx].params.len()` --
+    // not a count built by re-walking this function's own literal
+    // `(param ...)` forms below. Those two can differ: a function that
+    // references an out-of-line signature via `(type $sig)` (`func.wast`'s
+    // own "type-use-1".."type-use-5" cases, none of which repeat `(param
+    // ...)` inline) has ZERO literal `(param ...)` forms in `fields` at
+    // all, even though its real type has params occupying local indices
+    // 0..N. Seeding the local-index counter from 0 in that case makes the
+    // first declared `(local ...)` silently alias parameter index 0
+    // instead of starting after the params -- a real, previously-wrong
+    // computed VALUE (not a trap), since `local.get $var` then reads the
+    // param's value instead of the local's own zero-initialized default.
+    // The loop below still walks literal `(param ...)` forms (when
+    // present) to capture their OPTIONAL `$name`s at the correct
+    // POSITIONAL index, which is unaffected by this fix either way.
+    //
+    // `resolved_type` is `None` for an out-of-range numeric `(type N)`
+    // reference (no `(type ...)` section entry at all) -- a real, already
+    // regression-tested case (`func_with_out_of_range_numeric_type_reference_does_not_panic`)
+    // this text-level parser deliberately does NOT reject: bounds-checking
+    // a type index is `wasm-validator`'s job, not this parser's, and this
+    // already-structurally-invalid module will fail validation regardless,
+    // for the missing type, not for anything computed here. `param_count`
+    // falls back to 0 for local-index purposes in that case (unaffected
+    // either way, since there's no real type to disagree with).
+    //
+    // A round-4 security review found the mismatch check just below this
+    // had DRIFTED from that same documented contract: it compared against
+    // `param_count`'s 0-fallback too, so `(func (type 0) (param i32))`
+    // with NO `(type ...)` section at all got hard-rejected at parse time
+    // instead of the "still parses, fails validation instead" behavior
+    // the crate promises for an out-of-range type index. Gating the check
+    // on `resolved_type.is_some()` restores that contract: an unresolvable
+    // type reference is `wasm-validator`'s problem either way, never this
+    // check's.
+    let resolved_type = ctx.module.types.get(type_idx as usize);
+    let param_count = resolved_type.map(|t| t.params.len()).unwrap_or(0) as u32;
+
+    // Reject a func that gives BOTH an explicit `(type $sig)` reference
+    // AND its own literal `(param ...)` forms whose arity disagrees with
+    // `$sig`'s real params -- see `WastParseError::TypeUseParamCountMismatch`'s
+    // own doc comment for why local-index computation below depends on
+    // this invariant holding, not just on it being the common case. When
+    // a func has NO `(type ...)` reference at all, `resolve_func_signature_ref`
+    // synthesizes its type directly FROM these same literal params, so
+    // `param_count` and `literal_param_count` are equal by construction
+    // and this is always a no-op in that case.
+    //
+    // A round-2 security review found this pre-scan's original "stop"
+    // condition (break on the first field that isn't `param`/`result`/
+    // `type`) DIVERGED from the main assignment loop below, which also
+    // treats `local` as part of the same leading region (this text-level
+    // parser doesn't enforce that `(param ...)` forms all precede `(local
+    // ...)` forms -- that's `wasm-validator`'s job, same division of
+    // responsibility documented throughout this file). A `func` with a
+    // `(local ...)` BEFORE some of its trailing `(param ...)` forms made
+    // this scan stop early, undercounting `literal_param_count` (or never
+    // even setting `saw_literal_param`) and silently skipping the check
+    // below -- while the main loop still processed those later params,
+    // seeding `next_local` from a stale, too-small count. `is_leading_field`
+    // below is shared verbatim by both this pre-scan and the main loop's
+    // own `else if`/`else { break }` structure, so the two can no longer
+    // silently disagree on where the leading region ends. `count_literal_param`
+    // is likewise the SAME function both this pre-scan and the main loop
+    // call for the named-vs-unnamed counting logic, for the same reason:
+    // two independently-maintained copies of "the same" arithmetic is
+    // exactly the pattern that produced this bug's first two rounds.
+    let mut literal_param_count = 0u32;
+    let mut saw_literal_param = false;
+    for f in fields.iter().take_while(|f| is_leading_field(f)) {
+        if f.is_keyword_list("param") {
+            saw_literal_param = true;
+            literal_param_count += count_literal_param(f.as_list().unwrap()).0;
+        }
+    }
+    if resolved_type.is_some() && saw_literal_param && literal_param_count != param_count {
+        return Err(WastParseError::TypeUseParamCountMismatch {
+            pos: fields.first().map(|f| f.pos()).unwrap_or(0),
+            declared: literal_param_count as usize,
+            referenced: param_count as usize,
+        });
+    }
+
     let mut local_names: HashMap<String, u32> = HashMap::new();
-    let mut next_local = 0u32;
+    let mut param_position = 0u32;
+    // `next_local` isn't seeded until the FIRST `(local ...)` form is
+    // actually reached -- see below for why.
+    let mut next_local: Option<u32> = None;
     let mut locals_decl: Vec<ValueType> = Vec::new();
     let mut instr_start = 0usize;
     for (i, f) in fields.iter().enumerate() {
         if f.is_keyword_list("param") {
-            let items = f.as_list().unwrap();
-            if items.len() == 3 && items[1].as_atom().is_some_and(|s| s.starts_with('$')) {
-                local_names.insert(items[1].as_atom().unwrap().to_string(), next_local);
-                next_local += 1;
-            } else {
-                next_local += (items.len() - 1) as u32;
+            let (count, name) = count_literal_param(f.as_list().unwrap());
+            if let Some(name) = name {
+                local_names.insert(name, param_position);
             }
+            param_position += count;
             instr_start = i + 1;
         } else if f.is_keyword_list("result") || f.is_keyword_list("type") {
             instr_start = i + 1;
         } else if f.is_keyword_list("local") {
+            // A security review found a residual edge case in the fix
+            // above: `param_position` (literal `(param ...)` forms
+            // counted as written) and `param_count` (the type's real,
+            // resolved param count) are only guaranteed to agree when a
+            // function's literal params match its `(type $sig)`
+            // reference exactly -- `resolve_func_signature_ref` doesn't
+            // enforce that itself (that's `wasm-validator`'s job, same
+            // division of responsibility as the out-of-range `(type N)`
+            // case above). A syntactically-valid but semantically
+            // inconsistent module (literal params disagreeing in count
+            // with a same-function `(type $sig)` reference) could
+            // otherwise make a declared local alias whichever of the two
+            // counts was smaller. Seeding from `max` the first time a
+            // `(local ...)` is actually reached (not the loop iteration
+            // that resolves `type_idx`) guarantees a declared local can
+            // never collide with a position either count considers a
+            // parameter, in every case -- including the ordinary one
+            // this fix exists for, where `param_position` stays 0.
+            let next_local = next_local.get_or_insert_with(|| param_position.max(param_count));
             let items = f.as_list().unwrap();
             if items.len() == 3 && items[1].as_atom().is_some_and(|s| s.starts_with('$')) {
-                local_names.insert(items[1].as_atom().unwrap().to_string(), next_local);
+                local_names.insert(items[1].as_atom().unwrap().to_string(), *next_local);
                 locals_decl.push(parse_value_type(&items[2])?);
-                next_local += 1;
+                *next_local += 1;
             } else {
                 for t in &items[1..] {
                     locals_decl.push(parse_value_type(t)?);
-                    next_local += 1;
+                    *next_local += 1;
                 }
             }
             instr_start = i + 1;
         } else {
+            // A round-5 security review found `is_leading_field`'s own
+            // doc comment overclaimed this dispatch actually CALLS it --
+            // it re-implements the identical 4-way test inline instead,
+            // which happened to still agree today but is exactly the kind
+            // of silent-drift risk rounds 2-4 spent closing for the
+            // arity-counting logic. This assertion makes that claim
+            // actually true (not just documented): any future edit that
+            // adds a leading-field kind to one without the other trips
+            // this in every `cargo test` run, immediately, rather than
+            // waiting for a security review to notice again.
+            debug_assert!(
+                !is_leading_field(f),
+                "is_leading_field and this dispatch's own param/result/type/local arms must stay in sync"
+            );
             break;
         }
     }
@@ -1434,6 +1575,142 @@ mod tests {
         .unwrap();
         // param is local 0, $x is local 1.
         assert_eq!(code_of(&m, 0), &[0x20, 0x00, 0x20, 0x01, 0x1A, 0x0B]);
+    }
+
+    /// WASM14: a function that references its signature via `(type $sig)`
+    /// and has ZERO literal `(param ...)` forms of its own must still seed
+    /// the local-index counter from the referenced type's REAL param count,
+    /// not from 0 -- otherwise a declared `(local ...)` silently aliases
+    /// parameter index 0 instead of starting right after the params. This
+    /// is exactly `func.wast`'s own "type-use-1" shape from the official
+    /// spec testsuite (`(func (export "f") (type $sig) (local $var i32)
+    /// (local.get $var))` returning the local's own zero-initialized
+    /// default, 0, not the param's value, 42), found because that real
+    /// case was returning the wrong VALUE (not trapping) -- the kind of
+    /// bug an inline-`(param ...)` test like the one above can't catch.
+    #[test]
+    fn local_declared_after_a_type_only_referenced_param_gets_the_next_free_index() {
+        let m = parse_module(
+            "(module
+               (type $sig (func (param i32) (result i32)))
+               (func (export \"f\") (type $sig) (local $var i32) (local.get $var)))",
+        )
+        .unwrap();
+        // The param occupies local 0 (from $sig, never spelled out here);
+        // $var must be local 1, NOT local 0 again.
+        assert_eq!(code_of(&m, 0), &[0x20, 0x01, 0x0B]);
+    }
+
+    /// Two rounds of security review on the WASM14 fix above chased the
+    /// same underlying issue through two increasingly narrow patches: a
+    /// func that gives BOTH an explicit `(type $sig)` reference AND its
+    /// own literal `(param ...)` forms with a DIFFERENT arity is something
+    /// `resolve_func_signature_ref` never rejects, so `param_count` (from
+    /// the real type) and this function's own literal param count can
+    /// disagree. Round 1's fix (seed local indices from `param_count`)
+    /// could make a declared local collide with (alias the storage of) an
+    /// "extra" literal param. Round 2's fix (seed from `max` of the two
+    /// counts) closed that collision but, since the compiled
+    /// `FunctionBody` and real function type only ever account for
+    /// `param_count` real params, an "extra" literal param's `local.get`/
+    /// `.set`/`.tee` still encoded an index past the function's real local
+    /// array -- confirmed via `wasm-execution`'s raw, unchecked
+    /// `ctx.typed_locals[index]` panicking once such a module actually ran
+    /// (not memory-unsafe, but a real crash/DoS surface). The real fix is
+    /// upstream of both patches: REJECT the mismatch at parse time
+    /// (`WastParseError::TypeUseParamCountMismatch`) rather than silently
+    /// accepting it and hoping every later index computation stays safe.
+    /// This is also the spec-correct behavior — a real `.wat` file's
+    /// literal params, when given alongside a type reference, must always
+    /// already match it exactly. The round-1/round-2 `max()`-based local
+    /// index seeding stays in place as defense in depth (harmless — once
+    /// this check passes, `param_position` and `param_count` are always
+    /// equal whenever literal params were given), but this parse-time
+    /// rejection is what actually makes the invariant hold.
+    #[test]
+    fn func_rejects_type_reference_disagreeing_with_its_own_literal_params() {
+        let result = parse_module(
+            "(module
+               (type $sig (func (param i32) (result i32)))
+               (func (export \"f\") (type $sig) (param i32) (param i32) (local $x i32)
+                 (local.get $x)))",
+        );
+        assert!(matches!(
+            result,
+            Err(WastParseError::TypeUseParamCountMismatch { declared: 2, referenced: 1, .. })
+        ));
+    }
+
+    /// The legitimate counterpart to the rejection test above: a func that
+    /// repeats its `(param ...)` forms AGREEING with a `(type $sig)`
+    /// reference (purely for naming — `func.wast`'s own `"type-use-6"`
+    /// does exactly this: `(func (export "type-use-6") (type $sig-3)
+    /// (param i32))`) must still parse and index locals correctly.
+    #[test]
+    fn func_accepts_type_reference_agreeing_with_its_own_literal_params() {
+        let m = parse_module(
+            "(module
+               (type $sig (func (param i32) (result i32)))
+               (func (export \"f\") (type $sig) (param $x i32) (local $y i32)
+                 local.get $x local.get $y drop))",
+        )
+        .unwrap();
+        // $x (from the matching literal param) is local 0, $y is local 1.
+        assert_eq!(code_of(&m, 0), &[0x20, 0x00, 0x20, 0x01, 0x1A, 0x0B]);
+    }
+
+    /// A THIRD round of security review found round 3's own mismatch
+    /// check could itself be bypassed: its pre-scan originally stopped at
+    /// the first field that wasn't `param`/`result`/`type`, but this
+    /// text-level parser doesn't otherwise enforce that a func's `(local
+    /// ...)` forms all come after its `(param ...)` forms (that ordering
+    /// check is `wasm-validator`'s job too). A func with a `(local ...)`
+    /// BEFORE some of its trailing `(param ...)` forms made the pre-scan
+    /// stop before ever counting those later params -- silently skipping
+    /// the mismatch check entirely (`saw_literal_param` could even end up
+    /// `false`) while the main assignment loop still processed them,
+    /// reproducing the exact out-of-bounds local index round 2's finding
+    /// was about, just via reordering instead of an outright arity
+    /// mismatch. Fixed by giving the pre-scan the SAME leading-region
+    /// membership test (`is_leading_field`) the main loop already uses --
+    /// `param`/`result`/`type`/`local` are ALL "still in the prefix,"
+    /// only a true instruction ends it -- so the two can no longer
+    /// disagree on how far to scan.
+    #[test]
+    fn func_rejects_type_reference_disagreeing_even_with_a_local_field_reordered_before_the_extra_params() {
+        let result = parse_module(
+            "(module
+               (type $sig (func (param i32)))
+               (func (export \"f\") (type $sig)
+                 (local $a i32)
+                 (param $b i32) (param $c i32) (param $d i32)
+                 (local.get $d)))",
+        );
+        assert!(matches!(
+            result,
+            Err(WastParseError::TypeUseParamCountMismatch { declared: 3, referenced: 1, .. })
+        ));
+    }
+
+    /// A FOURTH round of security review found the `TypeUseParamCountMismatch`
+    /// check itself had drifted from this file's own documented contract:
+    /// an out-of-range numeric `(type N)` reference (no `(type ...)`
+    /// section entry at all) must NOT be rejected here -- see
+    /// `func_with_out_of_range_numeric_type_reference_does_not_panic`
+    /// above, which is this exact promise, already regression-tested for
+    /// the no-literal-params case. But `(func (type 0) (param i32))`
+    /// (ordinary, spec-legal literal params, alongside an unresolvable
+    /// type reference) compared against `param_count`'s `0` FALLBACK for
+    /// the missing type and got hard-rejected -- a real functional
+    /// regression, not a security bug (it only makes the parser MORE
+    /// conservative), but still a false positive against input this
+    /// crate's own design says it should still accept and pass through to
+    /// `wasm-validator`. Fixed by gating the check on the type reference
+    /// actually having resolved to a real type in the first place.
+    #[test]
+    fn out_of_range_type_reference_with_ordinary_literal_params_still_does_not_panic_or_reject() {
+        let result = parse_module("(module (func (type 0) (param i32)))");
+        assert!(result.is_ok());
     }
 
     #[test]

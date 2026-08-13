@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.98.0
+
+- Parse core Requirement definitions, elements, and typed relationships into structural IR.
+
 ## 0.97.0
 
 - Graduate Journey to full Mermaid 11.16.1 compatibility after pinned corpus and native render coverage.

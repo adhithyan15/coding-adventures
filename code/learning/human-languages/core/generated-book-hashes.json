@@ -5748,6 +5748,51 @@
       "tex": "spanish/book/chapters/ch235-review-juntores.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 236,
+      "sourceHash": "fnv1a64:0d1042db01f07d04",
+      "lessonIds": [
+        "ES-C62-hablando"
+      ],
+      "tex": "spanish/book/chapters/ch236-hablando.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 237,
+      "sourceHash": "fnv1a64:72ad6ed8bf42fc55",
+      "lessonIds": [
+        "ES-C62-comiendo"
+      ],
+      "tex": "spanish/book/chapters/ch237-comiendo.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 238,
+      "sourceHash": "fnv1a64:71ed50669e3d0bf5",
+      "lessonIds": [
+        "ES-C62-estoy-hablando"
+      ],
+      "tex": "spanish/book/chapters/ch238-estoy-hablando.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 239,
+      "sourceHash": "fnv1a64:736efcae54f9b311",
+      "lessonIds": [
+        "ES-C62-veo-a-maria"
+      ],
+      "tex": "spanish/book/chapters/ch239-veo-a-maria.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 240,
+      "sourceHash": "fnv1a64:a9d724b13b553eed",
+      "lessonIds": [
+        "ES-C62-repaso-gerundio"
+      ],
+      "tex": "spanish/book/chapters/ch240-review-gerundio.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "sourceHash": "fnv1a64:5f56402811418e13",

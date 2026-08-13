@@ -104,7 +104,7 @@ describe("real curriculum", () => {
     // 40 (esperar, contestar, comprar). Two sessions authored a chapter 38 in parallel;
     // the collision surfaced as a merge conflict on chapters.json rather than silently,
     // because both sides must edit it.
-    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(235); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis // +3: HL-C88 slice 8 // +1: HL-C88 slice 9 (falsos amigos) // +3: HL-C113 (B1 si-condition rung) // +3: HL-C113 preterite plural // HL-C113: HL-C113 imperfect subjunctive
+    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(240); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis // +3: HL-C88 slice 8 // +1: HL-C88 slice 9 (falsos amigos) // +3: HL-C113 (B1 si-condition rung) // +3: HL-C113 preterite plural // HL-C113: HL-C113 imperfect subjunctive
     expect(
       books.books
         .find((book) => book.language === "persian")
@@ -930,6 +930,21 @@ describe("real curriculum", () => {
       "ES-C61-repaso-juntores-count",
       "ES-C61-repaso-juntores-u",
       "ES-C61-repaso-juntores-who",
+      "ES-C62-comiendo-count",
+      "ES-C62-comiendo-er",
+      "ES-C62-comiendo-ir",
+      "ES-C62-estoy-hablando-future",
+      "ES-C62-estoy-hablando-say",
+      "ES-C62-estoy-hablando-which",
+      "ES-C62-hablando-agree",
+      "ES-C62-hablando-make",
+      "ES-C62-hablando-mean",
+      "ES-C62-repaso-gerundio-a",
+      "ES-C62-repaso-gerundio-now",
+      "ES-C62-repaso-gerundio-tomorrow",
+      "ES-C62-veo-a-maria-person",
+      "ES-C62-veo-a-maria-thing",
+      "ES-C62-veo-a-maria-why",
       "ES-W03-question-span-roberto-outside",
       "FA-C02-esm-e-man-sara",
       "FA-C03-chist-fusion",

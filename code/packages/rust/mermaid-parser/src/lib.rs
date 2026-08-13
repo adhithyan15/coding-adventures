@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.97.0";
+pub const VERSION: &str = "0.98.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -21,6 +21,7 @@ use mermaid_lexer::{
     tokenize_mermaid, tokenize_mermaid_c4, tokenize_mermaid_er, tokenize_mermaid_gitgraph,
     tokenize_mermaid_pie, tokenize_mermaid_sankey, tokenize_mermaid_sequence,
     tokenize_mermaid_state, try_tokenize_mermaid_journey, try_tokenize_mermaid_quadrant,
+    try_tokenize_mermaid_requirement,
 };
 use parser::grammar_parser::{GrammarASTNode, GrammarParser, DEFAULT_MAX_RULE_DEPTH};
 
@@ -40,6 +41,8 @@ const QUADRANT_PARSER_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/quadrant.grammar");
 const JOURNEY_PARSER_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/journey.grammar");
+const REQUIREMENT_PARSER_GRAMMAR_SOURCE: &str =
+    include_str!("../../../../grammars/mermaid/requirement.grammar");
 
 /// Recursion-depth cap for the Mermaid [`GrammarParser`] — see
 /// [`GrammarParser::with_max_depth`] for why this guard exists at all (deep
@@ -584,6 +587,7 @@ impl MermaidDiagramType {
                 | Self::Gantt
                 | Self::GitGraph
                 | Self::Journey
+                | Self::Requirement
                 | Self::Pie
                 | Self::Quadrant
                 | Self::Sequence
@@ -676,6 +680,9 @@ pub fn parse_any_mermaid(source: &str) -> Result<MermaidDiagram, ParseError> {
         MermaidDiagramType::Class => parse_class_diagram(source).map(MermaidDiagram::Structural),
         MermaidDiagramType::C4 => parse_c4_diagram(source).map(MermaidDiagram::Structural),
         MermaidDiagramType::Er => parse_er_diagram(source).map(MermaidDiagram::Structural),
+        MermaidDiagramType::Requirement => {
+            parse_requirement_diagram(source).map(MermaidDiagram::Structural)
+        }
         MermaidDiagramType::XyChart => parse_xychart(source).map(MermaidDiagram::Chart),
         MermaidDiagramType::Pie => parse_pie(source).map(MermaidDiagram::Chart),
         MermaidDiagramType::Quadrant => parse_quadrant_chart(source).map(MermaidDiagram::Chart),
@@ -715,6 +722,122 @@ pub fn parse_any_mermaid(source: &str) -> Result<MermaidDiagram, ParseError> {
             col: 1,
         }),
     }
+}
+
+/// Parse Mermaid requirements and elements into the shared structural IR.
+pub fn parse_requirement_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
+    let tokens = try_tokenize_mermaid_requirement(source).map_err(|message| ParseError {
+        message,
+        line: 1,
+        col: 1,
+    })?;
+    let grammar = parse_parser_grammar(REQUIREMENT_PARSER_GRAMMAR_SOURCE)
+        .unwrap_or_else(|error| panic!("Failed to parse requirement.grammar: {error}"));
+    let mut parser = GrammarParser::new(tokens.clone(), grammar).with_max_depth(MAX_RULE_DEPTH);
+    parser.parse().map_err(|error| ParseError {
+        message: error.message,
+        line: error.token.line,
+        col: error.token.column,
+    })?;
+
+    let mut title = None;
+    let mut nodes = Vec::new();
+    let mut relationships = Vec::new();
+    let mut cursor = TokenCursor::new(tokens);
+    cursor.skip_terminators();
+    cursor.consume_if("HEADER");
+    cursor.skip_terminators();
+    while !cursor.at_eof() {
+        match token_name(cursor.current()) {
+            "TITLE" => {
+                let value = cursor.advance().value.clone();
+                title = Some(value.trim_start_matches("title").trim().to_string());
+            }
+            "DIRECTION" => {
+                cursor.advance();
+            }
+            "DEFINITION_START" => {
+                let declaration = cursor.advance().value.trim_end_matches('{').trim().to_string();
+                let (kind, name) = declaration.split_once(char::is_whitespace).ok_or_else(|| {
+                    token_error(cursor.current(), "invalid requirement definition")
+                })?;
+                let name = unquote_requirement_value(name);
+                let mut fields = Vec::new();
+                cursor.skip_terminators();
+                while token_name(cursor.current()) != "RBRACE" {
+                    if cursor.at_eof() {
+                        return Err(token_error(cursor.current(), "unterminated requirement definition"));
+                    }
+                    if token_name(cursor.current()) == "FIELD" {
+                        let value = cursor.advance().value.clone();
+                        if let Some((key, value)) = value.split_once(':') {
+                            fields.push(format!("{}: {}", key.trim(), unquote_requirement_value(value)));
+                        }
+                    } else {
+                        cursor.advance();
+                    }
+                    cursor.skip_terminators();
+                }
+                cursor.advance();
+                let is_element = kind.eq_ignore_ascii_case("element");
+                nodes.push(StructuralNode {
+                    id: name.clone(),
+                    label: name,
+                    stereotype: Some(kind.to_string()),
+                    node_kind: if is_element {
+                        StructuralNodeKind::Element
+                    } else {
+                        StructuralNodeKind::Requirement
+                    },
+                    compartments: vec![Compartment {
+                        kind: CompartmentKind::Values,
+                        entries: fields,
+                    }],
+                    parent_group: None,
+                });
+            }
+            "RELATIONSHIP" => {
+                let token = cursor.advance().clone();
+                relationships.push(parse_requirement_relationship(&token)?);
+            }
+            _ => {
+                cursor.advance();
+            }
+        }
+        cursor.skip_terminators();
+    }
+    Ok(StructuralDiagram {
+        kind: StructuralKind::Requirement,
+        title,
+        nodes,
+        groups: Vec::new(),
+        relationships,
+    })
+}
+
+fn unquote_requirement_value(value: &str) -> String {
+    value.trim().trim_matches('"').to_string()
+}
+
+fn parse_requirement_relationship(token: &Token) -> Result<StructuralRelationship, ParseError> {
+    let value = token.value.trim();
+    let (from, kind, to) = if let Some((left, to)) = value.split_once("->") {
+        let (from, kind) = left.rsplit_once('-').ok_or_else(|| token_error(token, "invalid relationship"))?;
+        (from, kind, to)
+    } else if let Some((to, right)) = value.split_once("<-") {
+        let (kind, from) = right.split_once('-').ok_or_else(|| token_error(token, "invalid relationship"))?;
+        (from, kind, to)
+    } else {
+        return Err(token_error(token, "invalid requirement relationship"));
+    };
+    Ok(StructuralRelationship {
+        from: unquote_requirement_value(from),
+        to: unquote_requirement_value(to),
+        kind: RelKind::Dependency,
+        from_mult: None,
+        to_mult: None,
+        label: Some(kind.trim().to_ascii_lowercase()),
+    })
 }
 
 pub fn parse_journey(source: &str) -> Result<(Option<String>, JourneyDiagram), ParseError> {
@@ -6654,7 +6777,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.97.0");
+        assert_eq!(crate::VERSION, "0.98.0");
     }
 
     #[test]

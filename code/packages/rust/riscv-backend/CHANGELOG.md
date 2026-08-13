@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Added module-local direct-call linking for zero-argument CIR calls.
+  `compile_module` puts the entry function at address zero, patches `jal`
+  targets after layout, and saves `ra` in every caller frame. `lang-aot` now
+  emits one linked RV32I image rather than concatenating independent functions.
 - Reworked mixed-width temporary allocation around three non-overlapping RV32
   register-pair slots. Scalars and full-width values can now interleave without
   constructing overlapping pairs; dead occupants are reclaimed and live scalar

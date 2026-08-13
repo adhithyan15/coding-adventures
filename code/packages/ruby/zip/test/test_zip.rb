@@ -2,8 +2,7 @@
 
 # test_zip.rb — CMP09 ZIP package tests (TC-1 through TC-12).
 
-require "minitest/autorun"
-require "coding_adventures_zip"
+require "test_helper"
 
 class TestCRC32 < Minitest::Test
   def test_empty_input
@@ -40,15 +39,15 @@ end
 # TC-1: Single file, Stored (no compression)
 class TestTC1SingleFileStored < Minitest::Test
   def test_round_trip_without_compression
-    data    = "Hello, ZIP!".b
+    data = "Hello, ZIP!".b
     archive = CodingAdventures::Zip.zip([["hello.txt", data]], compress: false)
-    files   = CodingAdventures::Zip.unzip(archive)
+    files = CodingAdventures::Zip.unzip(archive)
     assert_equal "Hello, ZIP!", files["hello.txt"]
   end
 
   def test_stored_entry_has_method_0
     archive = CodingAdventures::Zip.zip([["a.txt", "abc".b]], compress: false)
-    reader  = CodingAdventures::Zip::ZipReader.new(archive)
+    reader = CodingAdventures::Zip::ZipReader.new(archive)
     assert_equal 0, reader.entries.first.method
   end
 end
@@ -56,17 +55,17 @@ end
 # TC-2: Single file, DEFLATE
 class TestTC2SingleFileDeflate < Minitest::Test
   def test_round_trip_repetitive_text_via_deflate
-    data    = ("ABCABCABC" * 100).b
+    data = ("ABCABCABC" * 100).b
     archive = CodingAdventures::Zip.zip([["rep.txt", data]], compress: true)
-    files   = CodingAdventures::Zip.unzip(archive)
+    files = CodingAdventures::Zip.unzip(archive)
     assert_equal data, files["rep.txt"]
   end
 
   def test_deflate_shrinks_repetitive_data
-    data    = ("x" * 1000).b
+    data = ("x" * 1000).b
     archive = CodingAdventures::Zip.zip([["x.txt", data]], compress: true)
-    reader  = CodingAdventures::Zip::ZipReader.new(archive)
-    entry   = reader.entries.first
+    reader = CodingAdventures::Zip::ZipReader.new(archive)
+    entry = reader.entries.first
     assert_operator entry.compressed_size, :<, entry.size
     assert_equal 8, entry.method
   end
@@ -77,9 +76,9 @@ class TestTC3MultipleFiles < Minitest::Test
   def test_packs_and_unpacks_three_files
     entries = [["a.txt", "alpha".b], ["b.txt", "beta".b], ["c.txt", "gamma".b]]
     archive = CodingAdventures::Zip.zip(entries)
-    files   = CodingAdventures::Zip.unzip(archive)
+    files = CodingAdventures::Zip.unzip(archive)
     assert_equal "alpha", files["a.txt"]
-    assert_equal "beta",  files["b.txt"]
+    assert_equal "beta", files["b.txt"]
     assert_equal "gamma", files["c.txt"]
   end
 
@@ -95,8 +94,8 @@ class TestTC4DirectoryEntry < Minitest::Test
     w = CodingAdventures::Zip::ZipWriter.new
     w.add_directory("mydir/")
     archive = w.finish
-    reader  = CodingAdventures::Zip::ZipReader.new(archive)
-    dir     = reader.entries.find { |e| e.name == "mydir/" }
+    reader = CodingAdventures::Zip::ZipReader.new(archive)
+    dir = reader.entries.find { |e| e.name == "mydir/" }
     assert dir&.directory?
   end
 
@@ -104,8 +103,8 @@ class TestTC4DirectoryEntry < Minitest::Test
     w = CodingAdventures::Zip::ZipWriter.new
     w.add_directory("dir/")
     archive = w.finish
-    reader  = CodingAdventures::Zip::ZipReader.new(archive)
-    dir     = reader.entries.find { |e| e.name == "dir/" }
+    reader = CodingAdventures::Zip::ZipReader.new(archive)
+    dir = reader.entries.find { |e| e.name == "dir/" }
     assert_equal "".b, reader.read(dir)
   end
 end
@@ -113,16 +112,16 @@ end
 # TC-5: CRC-32 mismatch
 class TestTC5CRC32Mismatch < Minitest::Test
   def test_raises_on_corrupted_data
-    data    = "important data".b
+    data = "important data".b
     archive = CodingAdventures::Zip.zip([["file.txt", data]], compress: false).b
 
     # Corrupt a byte in the file data section (after 30-byte local header + name)
     lh_name_len = archive.byteslice(26, 2).unpack1("v")
-    data_start  = 30 + lh_name_len
+    data_start = 30 + lh_name_len
     archive.setbyte(data_start, archive.getbyte(data_start) ^ 0xFF)
 
     reader = CodingAdventures::Zip::ZipReader.new(archive)
-    entry  = reader.entries.first
+    entry = reader.entries.first
     assert_raises(RuntimeError) { reader.read(entry) }
   end
 end
@@ -141,11 +140,11 @@ end
 class TestTC7IncompressibleData < Minitest::Test
   def test_incompressible_data_stored_as_method_0
     # 256 distinct bytes — DEFLATE will expand, so ZIP falls back to Stored
-    data    = (0..255).map(&:chr).join.b
+    data = (0..255).map(&:chr).join.b
     archive = CodingAdventures::Zip.zip([["rand.bin", data]], compress: true)
-    reader  = CodingAdventures::Zip::ZipReader.new(archive)
-    entry   = reader.entries.first
-    assert_equal 0,    entry.method
+    reader = CodingAdventures::Zip::ZipReader.new(archive)
+    entry = reader.entries.first
+    assert_equal 0, entry.method
     assert_equal data, reader.read(entry)
   end
 end
@@ -154,13 +153,13 @@ end
 class TestTC8EmptyFile < Minitest::Test
   def test_empty_file_round_trips_correctly
     archive = CodingAdventures::Zip.zip([["empty.txt", "".b]])
-    files   = CodingAdventures::Zip.unzip(archive)
+    files = CodingAdventures::Zip.unzip(archive)
     assert_equal "".b, files["empty.txt"]
   end
 
   def test_empty_file_has_size_0_in_entries
     archive = CodingAdventures::Zip.zip([["e.txt", "".b]])
-    entry   = CodingAdventures::Zip::ZipReader.new(archive).entries.first
+    entry = CodingAdventures::Zip::ZipReader.new(archive).entries.first
     assert_equal 0, entry.size
     assert_equal 0, entry.compressed_size
   end
@@ -169,16 +168,16 @@ end
 # TC-9: Large file
 class TestTC9LargeFile < Minitest::Test
   def test_compresses_and_decompresses_100kb
-    data    = (("A".."Z").to_a * 4000).join[0, 100_000].b
+    data = (("A".."Z").to_a * 4000).join[0, 100_000].b
     archive = CodingAdventures::Zip.zip([["big.bin", data]], compress: true)
-    files   = CodingAdventures::Zip.unzip(archive)
+    files = CodingAdventures::Zip.unzip(archive)
     assert_equal data, files["big.bin"]
   end
 
   def test_10kb_all_same_byte_compresses_significantly
-    data    = ("A" * 10_000).b
+    data = ("A" * 10_000).b
     archive = CodingAdventures::Zip.zip([["aaaa.bin", data]], compress: true)
-    entry   = CodingAdventures::Zip::ZipReader.new(archive).entries.first
+    entry = CodingAdventures::Zip::ZipReader.new(archive).entries.first
     assert_operator entry.compressed_size, :<, 200
   end
 end
@@ -186,9 +185,9 @@ end
 # TC-10: Unicode filename
 class TestTC10UnicodeFilename < Minitest::Test
   def test_preserves_unicode_filename
-    name    = "日本語/résumé.txt"
+    name = "日本語/résumé.txt"
     archive = CodingAdventures::Zip.zip([[name, "hello".b]])
-    files   = CodingAdventures::Zip.unzip(archive)
+    files = CodingAdventures::Zip.unzip(archive)
     assert files.key?(name), "Expected key #{name.inspect} in #{files.keys.inspect}"
     assert_equal "hello", files[name]
   end
@@ -197,22 +196,22 @@ end
 # TC-11: Nested paths
 class TestTC11NestedPaths < Minitest::Test
   def test_preserves_deep_nested_filename
-    name    = "a/b/c/deep.txt"
+    name = "a/b/c/deep.txt"
     archive = CodingAdventures::Zip.zip([[name, "deep".b]])
-    files   = CodingAdventures::Zip.unzip(archive)
+    files = CodingAdventures::Zip.unzip(archive)
     assert_equal "deep", files[name]
   end
 
   def test_mixed_nested_and_flat_files
     entries = [
-      ["root.txt",          "root".b],
-      ["sub/file.txt",      "sub".b],
+      ["root.txt", "root".b],
+      ["sub/file.txt", "sub".b],
       ["sub/deep/file.txt", "deep".b]
     ]
     archive = CodingAdventures::Zip.zip(entries)
-    files   = CodingAdventures::Zip.unzip(archive)
+    files = CodingAdventures::Zip.unzip(archive)
     assert_equal "root", files["root.txt"]
-    assert_equal "sub",  files["sub/file.txt"]
+    assert_equal "sub", files["sub/file.txt"]
     assert_equal "deep", files["sub/deep/file.txt"]
   end
 end
@@ -221,7 +220,7 @@ end
 class TestTC12EmptyArchive < Minitest::Test
   def test_empty_writer_produces_valid_archive
     archive = CodingAdventures::Zip::ZipWriter.new.finish
-    reader  = CodingAdventures::Zip::ZipReader.new(archive)
+    reader = CodingAdventures::Zip::ZipReader.new(archive)
     assert_equal [], reader.entries
   end
 
@@ -269,9 +268,9 @@ class TestZipWriterAPI < Minitest::Test
     w.add_directory("docs/")
     w.add_file("docs/readme.txt", "Read me".b, compress: false)
     archive = w.finish
-    reader  = CodingAdventures::Zip::ZipReader.new(archive)
+    reader = CodingAdventures::Zip::ZipReader.new(archive)
     entries = reader.entries
-    assert_equal 2,     entries.length
+    assert_equal 2, entries.length
     assert entries[0].directory?
     assert_equal "Read me", reader.read_by_name("docs/readme.txt")
   end

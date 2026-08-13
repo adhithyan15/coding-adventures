@@ -1,5 +1,120 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.2 — 2026-08-13 — a local-index bug found investigating real assert_return failures (WASM14)
+
+`build_func` assigned local indices by re-walking a function's own literal
+`(param ...)` forms, incrementing a counter as it went. That undercounts
+the moment a function references its signature purely via `(type $sig)`
+(no `(param ...)` forms of its own at all — the official testsuite's
+`func.wast` has several such cases: `"type-use-1"` through `"type-use-5"`)
+and *also* declares a `(local ...)`: the counter never advances past 0
+for the (invisible-to-this-function) params from the referenced type, so
+the first declared local silently gets assigned parameter index 0 again
+instead of the index right after the real params. `local.get` on that
+local then read the PARAM's value instead of the local's own
+zero-initialized default — a real, wrong computed VALUE, not a trap
+(`func.wast`'s `"f"`/`"g"` cases expected 0, got 42, the argument passed
+in).
+
+Fixed by seeding the local-index counter from `ctx.module.types[type_idx]
+.params.len()` — the function's REAL resolved param count — rather than
+from a count built by re-walking this function's own literal `(param
+...)` forms, which can legitimately be empty. Uses `.get()`, not direct
+indexing: an already-regression-tested case
+(`func_with_out_of_range_numeric_type_reference_does_not_panic`) exercises
+a numeric `(type N)` reference with no matching `(type ...)` section entry
+at all, which this text-level parser deliberately does not reject (that's
+`wasm-validator`'s job) — falls back to a param count of 0 rather than
+panicking on the out-of-range index.
+
+1 new regression test
+(`local_declared_after_a_type_only_referenced_param_gets_the_next_free_index`)
+reproducing `func.wast`'s exact shape in isolation. Baseline: `assert_return`
+12169/12238 (99.4%) → 12171/12238 (99.5%).
+
+**A security review of this fix found a residual edge case**: it split
+one shared counter into two independent ones (literal `(param ...)`
+forms counted as written, vs. the referenced type's real param count),
+which only agree when a function's literal params match its `(type
+$sig)` reference exactly — not something `resolve_func_signature_ref`
+itself enforces. A syntactically-valid but semantically-inconsistent
+module (literal params disagreeing in count with a same-function `(type
+$sig)` reference — deliberately adversarial input, not something a real
+`.wat` file produces) could make a declared local alias whichever count
+was smaller. Fixed by seeding the local-index counter from
+`max(literal param count, the type's real param count)` the first time a
+`(local ...)` form is actually reached, so a declared local can never
+collide with a position either count considers a parameter. 1 more
+regression test
+(`local_index_never_collides_with_a_param_even_if_literal_params_and_the_type_disagree`).
+No conformance-baseline change (the real testsuite never disagrees with
+its own type references).
+
+**A second round of security review found that round 1's fix wasn't
+actually closed by round 2's `max()` patch — it moved the failure mode.**
+Since the compiled `FunctionBody` and the function's real type only ever
+account for the type's real param count, an "extra" literal param (in
+the same mismatched-arity scenario round 2 was defending against) still
+encoded a `local.get`/`.set`/`.tee` index past the function's real local
+array. Confirmed empirically: `wasm-execution`'s raw, unchecked
+`ctx.typed_locals[index]` panics once such a module actually runs — not
+memory-unsafe (checked Rust indexing), but a real crash/DoS surface
+reachable through this repo's own pipeline
+(`wasm-conformance`/`wasm-runtime`/`wasm-execution`), since the only
+validation currently wired up (`WasmRuntime::validate`) is structural
+only and doesn't check instruction operand bounds. The real fix is
+upstream of both prior patches: a new `WastParseError::TypeUseParamCountMismatch`
+now REJECTS at parse time when a func's literal `(param ...)` forms
+disagree in arity with an explicit `(type $sig)` reference, instead of
+silently accepting the inconsistency and hoping every later index
+computation stays safe. This is also the spec-correct behavior — a real
+`.wat` file's literal params, when given alongside a type reference,
+always already match it exactly. The `max()`-based local-index seeding
+from round 2 stays as defense in depth (harmless: once this new check
+passes, the two counts are always equal whenever literal params were
+given), but this rejection is what actually makes the invariant hold. 2
+more regression tests: the mismatched case now asserts a clean `Err`
+instead of successfully (and unsoundly) parsing, plus a new positive
+case confirming the legitimate "type reference + matching literal
+params" pattern (`func.wast`'s own `"type-use-6"` shape) still parses
+and indexes correctly.
+
+**A third round of security review found round 3's own rejection check
+could itself be bypassed.** Its pre-scan stopped at the first field that
+wasn't `param`/`result`/`type` — but a `(local ...)` form placed BEFORE
+some of a func's trailing `(param ...)` forms (this parser doesn't
+enforce that params all precede locals; that's `wasm-validator`'s job
+too) made the pre-scan stop before ever counting those later params,
+silently skipping the mismatch check while the main assignment loop
+still processed them — reproducing round 2's exact out-of-bounds local
+index, just via reordering instead of an outright count mismatch. Fixed
+by giving the pre-scan the identical leading-region membership test
+(`is_leading_field`: `param`/`result`/`type`/`local` are ALL "still in
+the prefix," only a real instruction ends it) the main loop already
+uses, so the two passes can no longer silently disagree on where the
+leading region ends. 1 more regression test reproducing the reordered
+bypass directly.
+
+**A fourth (final) round of security review, after re-verifying the
+round-3 fix genuinely closed the OOB class, found a functional
+regression the mismatch check itself had introduced**: it compared
+against `param_count`'s `0` fallback for an out-of-range numeric `(type
+N)` reference, silently violating this file's own documented contract
+(`func_with_out_of_range_numeric_type_reference_does_not_panic`) that an
+unresolvable type reference must NOT be rejected here — that's
+`wasm-validator`'s job. `(func (type 0) (param i32))` — ordinary,
+spec-legal literal params alongside an unresolvable type index — got
+hard-rejected instead of passed through. Fixed by gating the check on
+the type reference actually resolving to a real type first. Also
+extracted `count_literal_param` (the named-vs-unnamed param-counting
+arithmetic) as a single function shared by the pre-scan and the main
+loop, the same way `is_leading_field` already is — the review flagged
+two independently-maintained copies of that arithmetic as exactly the
+drift pattern that produced rounds 2 and 3's findings, even though the
+two copies were still identical today. 2 more regression tests: the
+false-positive case now confirmed fixed, plus the legitimate
+"out-of-range type, no literal params" case re-confirmed unaffected.
+
 ## 0.1.1 — 2026-08-13 — 4 grammar bugs found running the real testsuite (W05 PR-4)
 
 `wasm-conformance` (W05 PR-4) is this crate's first real workout: running

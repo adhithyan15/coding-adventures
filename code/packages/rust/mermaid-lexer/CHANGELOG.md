@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.53.0
+
+- Add portable Mermaid 11.16.1 requirement-diagram tokens.
+
 ## 0.52.0
 
 - Enforce Journey's documented one-to-five task-score domain in the portable token grammar.

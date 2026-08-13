@@ -85,6 +85,7 @@ the RISC-V spec. Per-function byte streams can be concatenated directly;
 | `ImmediateOutOfRange(i64)` | A compatibility `i64` literal cannot fit in RV32 |
 | `OutOfRegisters` | A wide register-pair allocation cannot fit the starter pool |
 | `TooManyArguments(usize)` | More than eight starter-ABI parameters or arguments |
+| `CallOutOfRange` | A linked direct-call target is beyond the `jal` range |
 | `ExecutionDidNotHalt` | Simulator step limit was exceeded |
 
 ## Tests
@@ -148,8 +149,10 @@ implemented.
 16. [x] **Complete wide spill coverage:** mixed scalar/pair allocation uses
    coherent pair slots, reclaims dead values of either width, and spills live
    scalar or wide values as needed under arbitrary temporary pressure.
-17. [ ] **Calls and modules:** lower direct calls, add relocations/linking for flat
-   binaries, and preserve the RISC-V calling convention across calls.
+17. [ ] **Calls and modules:** module-local zero-argument scalar calls now link as
+   PC-relative `jal` instructions, preserve `ra`, and execute from the selected
+   entry function in the simulator. Next: marshal call arguments and preserve
+   caller values that remain live across a call.
 18. [ ] **Host runtime ABI:** define simulator `ecall` services for exit and integer
    output, then lower language print primitives through that ABI.
 19. [ ] **Memory and data:** globals, addresses, loads/stores, and a data-image
@@ -158,6 +161,9 @@ implemented.
    such as `PRINT 42` through `f64`; direct RISC-V execution needs either a
    floating-point ABI or an integer-only lowering path before those programs
    can run on the simulator.
+21. [ ] **Call ABI completion:** marshal scalar arguments into `a0` through `a7`,
+   spill caller-owned temporaries across calls, and add pair-value arguments and
+   returns before supporting recursive and mutually recursive source functions.
 
 Each item should land as a focused PR with an end-to-end fixture from the
 highest-level language it enables. New constraints discovered while carrying
