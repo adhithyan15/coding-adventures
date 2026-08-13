@@ -11,4 +11,6 @@ import "idiom-meaning.adj"
 
 ? idiom_meaning(piece_of_cake, $M)              % expect very_easy_to_do (direct)
 ? idiom_meaning($I, feeling_slightly_ill)       % expect under_the_weather (reverse)
-? idiom_meaning(raining_cats_and_dogs, $M)      % expect abstain -- a real idiom, but not one of the three tabled examples
+? idiom_meaning(let_the_cat_out_of_the_bag, $M) % expect reveal_a_secret_by_mistake (added this cycle)
+? idiom_meaning($I, give_up)                    % expect throw_in_the_towel (added this cycle, reverse)
+? idiom_meaning(raining_cats_and_dogs, $M)      % expect abstain -- a real idiom, but not one of the tabled examples

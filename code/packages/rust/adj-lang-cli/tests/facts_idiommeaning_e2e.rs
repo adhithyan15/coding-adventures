@@ -94,6 +94,38 @@ fn idiom_meaning_abstains_honestly_on_an_untabled_idiom() {
     assert!(ok, "cli should succeed: {out}");
     assert!(
         out.contains("\"abstained\":true"),
-        "raining cats and dogs is a real idiom but not one of the three tabled examples -- honest abstention, never invented: {out}"
+        "raining cats and dogs is a real idiom but not one of the tabled examples -- honest abstention, never invented: {out}"
+    );
+}
+
+#[test]
+fn idiom_meaning_extension_recalls_the_newly_added_rows() {
+    let dir = scratch("ext");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"idiom-meaning.adj\"\n\
+         ? idiom_meaning(let_the_cat_out_of_the_bag, $M)\n\
+         ? idiom_meaning($I, give_up)\n\
+         ? idiom_meaning(once_in_a_blue_moon, $M)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // 20 idioms were added this cycle from the SAME already-cited Oxford
+    // International English page (its own title names 30, the live page
+    // lists 50 -- the original 3-row slice was a narrow first cut).
+    assert!(
+        out.contains("\"M\":\"reveal_a_secret_by_mistake\""),
+        "let the cat out of the bag → reveal a secret by mistake: {out}"
+    );
+    assert!(
+        out.contains("\"I\":\"throw_in_the_towel\""),
+        "throw in the towel means give up: {out}"
+    );
+    assert!(
+        out.contains("\"M\":\"very_rarely\""),
+        "once in a blue moon → very rarely: {out}"
     );
 }

@@ -15,32 +15,66 @@
 % relation `idiom_meaning(idiom, meaning)` carrying the source citation, so
 % the lookup above is the ordinary SLD binding query — the engine returns
 % the meaning WITH its source, on the CPU, with zero model calls, and
-% abstains on any idiom not one of these three source-cited examples. The
+% abstains on any idiom not one of these source-cited examples. The
 % query also runs BACKWARD — bind a meaning and recall which idiom carries
 % it:
 %
 %     ? idiom_meaning($I, feeling_slightly_ill)
 %       % under_the_weather
 %
+% EXTENDED this cycle from 3 to 23 rows: the source page's OWN title states
+% it covers "30 Useful English Idiomatic Expressions" (the live page in
+% fact lists 50), so the original 3-row slice was a narrow first cut, not
+% the page's own limit. Every one of the 20 newly added rows is grounded in
+% the SAME already-cited Oxford International English page, each with its
+% own clean one-sentence "Meaning: ..." definition, WebFetch-verified
+% (including a targeted second pass re-fetching five of the new rows'
+% raw "Meaning:" text directly, confirming the extraction is accurate and
+% not paraphrased) before writing — zero new source page needed. Idioms
+% whose page entry uses a slash or bracketed variant (e.g. "Hit the
+% sack/hay", "Cut [somebody] some slack", "By the skin of your/my teeth")
+% were deliberately left out of this batch, since a single unquoted atom
+% cannot honestly represent an "either/or" variant phrase — a future slice
+% could add those with an explicit variant-choice convention if needed.
+%
 % Provenance: quoted verbatim from Oxford International English's "30
 % Useful English Idiomatic Expressions & Their Meanings" article, which
 % states a one-sentence definition for each idiom:
 %
-%     idiom               meaning                    rule (verbatim)
-%     -----------------   ------------------------   -------------------------------------------------------------
-%     piece_of_cake       very_easy_to_do             "Something very easy to do."
-%     break_the_ice       start_a_conversation        "To start a conversation or make people feel more comfortable."
-%     under_the_weather   feeling_slightly_ill        "Feeling slightly ill."
+%     idiom                              meaning                                                rule (verbatim, abbreviated where long)
+%     ---------------------------------  -----------------------------------------------------  -------------------------------------------------------------
+%     piece_of_cake                      very_easy_to_do                                         "Something very easy to do."
+%     break_the_ice                      start_a_conversation                                     "To start a conversation or make people feel more comfortable."
+%     under_the_weather                  feeling_slightly_ill                                     "Feeling slightly ill."
+%     cut_corners                        done_the_easiest_or_cheapest_way_often_badly             "To do something in the easiest or cheapest way, often badly."
+%     hit_the_nail_on_the_head           describes_something_exactly_right                        "To describe something exactly right."
+%     cost_an_arm_and_a_leg              very_expensive                                           "To be very expensive"
+%     bite_off_more_than_you_can_chew    try_to_do_more_than_you_can_manage                       "To try to do more than you can manage."
+%     beat_around_the_bush               avoid_talking_about_what_is_important                    "To avoid talking about what's important."
+%     cry_over_spilled_milk              upset_about_something_already_happened_and_unchangeable  "To be upset about something that has already happened and can't be changed."
+%     get_your_act_together              organise_yourself_and_improve_your_behaviour             "To organise yourself and improve your behaviour."
+%     kill_two_birds_with_one_stone      solve_two_problems_with_one_action                       "To solve two problems with one action."
+%     let_the_cat_out_of_the_bag         reveal_a_secret_by_mistake                               "To reveal a secret by mistake."
+%     pull_someones_leg                  joke_with_someone_by_telling_them_something_untrue       "To joke with someone by telling them something that isn't true."
+%     burn_the_midnight_oil              work_late_into_the_night                                 "To work late into the night."
+%     bite_the_bullet                    do_something_difficult_or_unpleasant_being_avoided       "To do something difficult or unpleasant that you have been avoiding."
+%     break_a_leg                        wish_someone_good_luck_especially_before_a_performance   "A way of wishing someone good luck, especially before a performance."
+%     call_it_a_day                      stop_working_on_something                                "To stop working on something."
+%     steal_someones_thunder             take_attention_away_from_someone_elses_achievement       "To take attention away from someone else's achievement."
+%     the_ball_is_in_your_court          your_turn_to_take_action_or_make_a_decision              "It's your turn to take action or make a decision."
+%     throw_in_the_towel                 give_up                                                  "To give up."
+%     speak_of_the_devil                 said_when_someone_appears_as_you_are_talking_about_them  "Said when someone appears just as you're talking about them."
+%     once_in_a_blue_moon                very_rarely                                              "Very rarely."
+%     catch_someone_red_handed           catch_someone_while_they_are_doing_something_wrong       "To catch someone while they are doing something wrong."
 %
-% WebFetch-verified before writing. `trust consensus` — a language-education
-% organization site, not a primary government or research-institution
-% source, the same tier this stdlib already reserves for its other
-% non-.gov language sources (e.g. 7ESL's past-tense -ed article,
-% Speakspeak's plural-ending article). An idiom not one of these three —
-% e.g. `raining_cats_and_dogs`, a real, well-known idiom, but not one of
-% this source's own cited examples — is deliberately NOT a row, so a
-% recall ABSTAINS on it rather than inventing a meaning. (See
-% ../README.md; feedback_nothing_human_authored,
+% `trust consensus` — a language-education organization site, not a
+% primary government or research-institution source, the same tier this
+% stdlib already reserves for its other non-.gov language sources (e.g.
+% 7ESL's past-tense -ed article, Speakspeak's plural-ending article). An
+% idiom not one of these 23 — e.g. `raining_cats_and_dogs`, a real,
+% well-known idiom, but not one of this source's own cited examples — is
+% deliberately NOT a row, so a recall ABSTAINS on it rather than inventing
+% a meaning. (See ../README.md; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts.)
 % ============================================================================
 
@@ -50,6 +84,26 @@ table idiom_meaning {
     row (piece_of_cake, very_easy_to_do)
     row (break_the_ice, start_a_conversation)
     row (under_the_weather, feeling_slightly_ill)
+    row (cut_corners, done_the_easiest_or_cheapest_way_often_badly)
+    row (hit_the_nail_on_the_head, describes_something_exactly_right)
+    row (cost_an_arm_and_a_leg, very_expensive)
+    row (bite_off_more_than_you_can_chew, try_to_do_more_than_you_can_manage)
+    row (beat_around_the_bush, avoid_talking_about_what_is_important)
+    row (cry_over_spilled_milk, upset_about_something_already_happened_and_unchangeable)
+    row (get_your_act_together, organise_yourself_and_improve_your_behaviour)
+    row (kill_two_birds_with_one_stone, solve_two_problems_with_one_action)
+    row (let_the_cat_out_of_the_bag, reveal_a_secret_by_mistake)
+    row (pull_someones_leg, joke_with_someone_by_telling_them_something_untrue)
+    row (burn_the_midnight_oil, work_late_into_the_night)
+    row (bite_the_bullet, do_something_difficult_or_unpleasant_being_avoided)
+    row (break_a_leg, wish_someone_good_luck_especially_before_a_performance)
+    row (call_it_a_day, stop_working_on_something)
+    row (steal_someones_thunder, take_attention_away_from_someone_elses_achievement)
+    row (the_ball_is_in_your_court, your_turn_to_take_action_or_make_a_decision)
+    row (throw_in_the_towel, give_up)
+    row (speak_of_the_devil, said_when_someone_appears_as_you_are_talking_about_them)
+    row (once_in_a_blue_moon, very_rarely)
+    row (catch_someone_red_handed, catch_someone_while_they_are_doing_something_wrong)
 
     source "Something very easy to do."
     locator "https://www.oxfordinternationalenglish.com/30-useful-english-idiomatic-expressions-their-meanings/"
