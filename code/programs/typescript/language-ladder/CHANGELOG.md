@@ -48,6 +48,10 @@
   A local LaTeX run rewrites `.log`, `.aux` and `.pdf` under the corpus tree, which
   left the guard permanently tripped — teaching the exact habit it exists to prevent.
 - Re-pin the Spanish chapter table from the generated manifest: 181 chapters.
+### Added — cited Chinese 再 ductus (HL-C09CR)
+
+- Render **再** in eight source-aligned movements across six strokes.
+- Preserve the joined frame, close-last order, and five lifts in Noto Sans SC.
 
 ### Added — cited Chinese 请 ductus (HL-C09CQ)
 

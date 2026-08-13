@@ -42,6 +42,7 @@ const CHINESE_NAME = DUCTUS[ductusKey("chinese", "名")];
 const CHINESE_CHARACTER = DUCTUS[ductusKey("chinese", "字")];
 const CHINESE_THANK = DUCTUS[ductusKey("chinese", "谢")];
 const CHINESE_PLEASE = DUCTUS[ductusKey("chinese", "请")];
+const CHINESE_AGAIN = DUCTUS[ductusKey("chinese", "再")];
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
@@ -555,6 +556,18 @@ describe("handwriting ductus", () => {
           CHINESE_PLEASE.strokes[strokeIndex].segments[segmentIndex + 1].path[0],
         );
       }
+    }
+  });
+
+  it("Chinese 再 closes last and preserves both turns inside the enclosing stroke", () => {
+    expect(CHINESE_AGAIN.script).toBe("chinese");
+    expect(penLifts(CHINESE_AGAIN)).toBe(5);
+    expect(CHINESE_AGAIN.strokes).toHaveLength(6);
+    expect(CHINESE_AGAIN.strokes.map((stroke) => stroke.segments.length)).toEqual([1, 1, 3, 1, 1, 1]);
+    for (let segmentIndex = 0; segmentIndex < 2; segmentIndex++) {
+      expect(CHINESE_AGAIN.strokes[2].segments[segmentIndex].path.at(-1)).toEqual(
+        CHINESE_AGAIN.strokes[2].segments[segmentIndex + 1].path[0],
+      );
     }
   });
 
@@ -1511,6 +1524,7 @@ describe("handwriting ductus", () => {
     expect(verifiedLetterFont("字", CHINESE_CHARACTER.source.url)).toBe("_fonts/NotoSansSC-Subset.ttf");
     expect(verifiedLetterFont("谢", CHINESE_THANK.source.url)).toBe("_fonts/NotoSansSC-Subset.ttf");
     expect(verifiedLetterFont("请", CHINESE_PLEASE.source.url)).toBe("_fonts/NotoSansSC-Subset.ttf");
+    expect(verifiedLetterFont("再", CHINESE_AGAIN.source.url)).toBe("_fonts/NotoSansSC-Subset.ttf");
     expect(verifiedLetterFont("א", HEBREW_ALEF.source.url)).toBe(
       "_fonts/NotoSansHebrew-Static.ttf",
     );
@@ -1833,6 +1847,17 @@ describe("handwriting ductus", () => {
     expect(src.citation).toMatch(/Hanzi Writer Data 请\.json.*medians 1–10.*snapshot 68d10a4/i);
     expect(src.variation).toMatch(
       /ten ordered strokes.*Medians 1–2.*讠.*down-right dot.*short horizontal.*turns down.*finishes up-right without lifting.*Medians 3–10.*青.*two upper horizontals.*central vertical.*wide middle horizontal.*lower left side.*lower top horizontal.*right side.*hooks left.*two inner horizontals.*People's Republic of China stroke order.*Noto Sans SC.*all four internal turns.*nine intervening lifts/i,
+    );
+  });
+
+  it("Chinese 再 traces its frame-before-close order to the pinned PRC-order dataset", () => {
+    const src = CHINESE_AGAIN.source;
+    expect(src.url).toBe(
+      "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E5%86%8D.json",
+    );
+    expect(src.citation).toMatch(/Hanzi Writer Data 再\.json.*medians 1–6.*snapshot 68d10a4/i);
+    expect(src.variation).toMatch(
+      /six ordered strokes.*top horizontal left-to-right.*left side.*Median 3.*frame's top.*right side.*hooks left.*central vertical.*inner horizontal.*closes with the long bottom horizontal left-to-right.*People's Republic of China stroke order.*Noto Sans SC.*both turns.*close-last rule.*five intervening lifts/i,
     );
   });
 
