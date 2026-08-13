@@ -74,6 +74,7 @@ const DEVANAGARI_RA = DUCTUS[ductusKey("devanagari", "र")];
 const DEVANAGARI_LA = DUCTUS[ductusKey("devanagari", "ल")];
 const DEVANAGARI_VA = DUCTUS[ductusKey("devanagari", "व")];
 const DEVANAGARI_SHA = DUCTUS[ductusKey("devanagari", "श")];
+const DEVANAGARI_SA = DUCTUS[ductusKey("devanagari", "स")];
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
@@ -1126,6 +1127,25 @@ describe("handwriting ductus", () => {
     const stem = penPath(DEVANAGARI_SHA.strokes[1]);
     expect(stem[0].y).toBeGreaterThan(stem.at(-1)!.y);
     const headline = penPath(DEVANAGARI_SHA.strokes[2]);
+    expect(headline[0].x).toBeLessThan(headline.at(-1)!.x);
+  });
+
+  it("Devanagari स joins its hook and tail before the middle crossbar", () => {
+    expect(DEVANAGARI_SA.script).toBe("devanagari");
+    expect(penLifts(DEVANAGARI_SA)).toBe(3);
+    expect(DEVANAGARI_SA.strokes).toHaveLength(4);
+    expect(DEVANAGARI_SA.strokes.map((stroke) => stroke.segments.length)).toEqual([
+      1, 1, 1, 1,
+    ]);
+    const body = penPath(DEVANAGARI_SA.strokes[0]);
+    expect(body[0].y).toBeGreaterThan(body.at(-1)!.y);
+    expect(Math.min(...body.map((point) => point.x))).toBeLessThan(body[0].x);
+    expect(body.at(-1)!.x).toBeGreaterThan(Math.min(...body.map((point) => point.x)));
+    const crossbar = penPath(DEVANAGARI_SA.strokes[1]);
+    expect(crossbar[0].x).toBeLessThan(crossbar.at(-1)!.x);
+    const stem = penPath(DEVANAGARI_SA.strokes[2]);
+    expect(stem[0].y).toBeGreaterThan(stem.at(-1)!.y);
+    const headline = penPath(DEVANAGARI_SA.strokes[3]);
     expect(headline[0].x).toBeLessThan(headline.at(-1)!.x);
   });
 
@@ -2886,6 +2906,19 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /25-frame animation.*three ordered pen-down runs.*gray guide.*frames 2–16.*upper loop's lower inner tip.*sweep left and clockwise around the upper loop.*descend the joined outer curve.*curl around the lower loop.*continue down-right through the diagonal tail.*without lifting.*frames 17–21.*right stem's headline junction.*descend top-to-bottom.*frames 22–24.*headline's left edge.*shirorekhā left-to-right.*two intervening lifts.*250 ms holds.*frames 16 and 21.*one-second completed frame 24.*JackPotte.*26-frame.*Devanagari ç श\.gif.*same joined body.*restarted right stem.*restarted headline.*spatial restarts.*frames 14 and 21.*all its frames last 100 ms.*Central Hindi Directorate.*2019 Deskbook on Orthography of Devanagari Script.*Lesson 2.*Unit IX.*p\. 45.*body.*right-stem.*headline buildup.*animations supply.*directions and lift evidence.*corroborated three-run form.*Noto Sans Devanagari.*simplify or narrow the loops/i,
+    );
+  });
+
+  it("Devanagari स traces its joined-body animation and staged corroboration", () => {
+    const src = DEVANAGARI_SA.source;
+    expect(src.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Devanagari_s_%E0%A4%B8.gif",
+    );
+    expect(src.citation).toMatch(
+      /JackPotte.*Devanagari s स\.gif.*strokes 1–4.*Wikimedia Commons.*29 March 2009/i,
+    );
+    expect(src.variation).toMatch(
+      /13-frame animation.*four ordered pen-down runs.*frames 0–4.*just below the headline.*descend the left stem.*curve left around the central hook.*continue diagonally down-right through the tail.*without lifting.*frames 5–6.*central junction.*middle crossbar left-to-right.*frames 7–9.*right stem's headline junction.*descend top-to-bottom.*frames 10–12.*headline's left edge.*shirorekhā left-to-right.*three intervening lifts.*spatial restarts.*frames 5, 7, and 10.*all frames last 100 ms.*no long inter-stroke holds.*Central Hindi Directorate.*2019 Deskbook on Orthography of Devanagari Script.*Lesson 2.*Unit IX.*p\. 47.*left curve.*diagonal tail.*middle crossbar.*right stem.*headline order.*stages the left curve and tail separately.*rather than proving their join.*four-run lift count.*animation.*Noto Sans Devanagari.*divide or simplify the joined body/i,
     );
   });
 

@@ -2,6 +2,12 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Devanagari स ductus (HL-C09DX)
+
+- Render **स** in four source-aligned movements across four strokes.
+- Join the descending left stem, central hook, and down-right diagonal tail before the restarted middle crossbar, top-to-bottom right stem, and final left-to-right shirorekhā.
+- Preserve the animation's three lifts, fit the path to Noto Sans Devanagari, and reduce measured HL-C09 debt to 104 entries.
+
 ### Added — cited Devanagari श ductus (HL-C09DW)
 
 - Render **श** in three source-aligned movements across three strokes.
