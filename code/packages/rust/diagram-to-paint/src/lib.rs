@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.46.0";
+pub const VERSION: &str = "0.47.0";
 
 use std::collections::HashMap;
 
@@ -2323,6 +2323,38 @@ where
 
     for item in &diagram.items {
         match item {
+            LayoutedTemporalItem::JourneyTitle {
+                x,
+                y,
+                width,
+                height,
+                label,
+                font_size,
+                font_family,
+                color,
+            } => {
+                let mut title_font = options.title_font.clone();
+                if let Some(size) = font_size {
+                    title_font.size = *size;
+                }
+                if let Some(family) = font_family {
+                    title_font.family.clone_from(family);
+                }
+                text_children.push(text_node(
+                    label,
+                    *x + 8.0,
+                    *y + 6.0,
+                    *width - 16.0,
+                    *height - 12.0,
+                    title_font,
+                    color.as_deref().map(css_to_color).unwrap_or(Color {
+                        r: 17,
+                        g: 24,
+                        b: 39,
+                        a: 255,
+                    }),
+                ));
+            }
             LayoutedTemporalItem::TimeAxisSpine { x1, y1, x2, y2 } => {
                 instructions.push(PaintInstruction::Path(line_path(
                     &[Point { x: *x1, y: *y1 }, Point { x: *x2, y: *y2 }],
@@ -3278,7 +3310,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.46.0");
+        assert_eq!(crate::VERSION, "0.47.0");
     }
 
     #[test]
@@ -3488,6 +3520,16 @@ mod tests {
             accessibility_title: None,
             accessibility_description: None,
             items: vec![
+                LayoutedTemporalItem::JourneyTitle {
+                    x: 0.0,
+                    y: 0.0,
+                    width: 320.0,
+                    height: 36.0,
+                    label: "Checkout".into(),
+                    font_size: Some(22.0),
+                    font_family: Some("Georgia".into()),
+                    color: Some("#123456".into()),
+                },
                 LayoutedTemporalItem::JourneyActor {
                     x: 24.0,
                     y: 18.0,
@@ -3521,6 +3563,10 @@ mod tests {
         assert!(scene.instructions.iter().any(|instruction| matches!(
             instruction,
             PaintInstruction::Path(path) if path.commands.iter().any(|command| matches!(command, PathCommand::QuadTo { .. }))
+        )));
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::GlyphRun(run) if run.font_size == 22.0
         )));
     }
 

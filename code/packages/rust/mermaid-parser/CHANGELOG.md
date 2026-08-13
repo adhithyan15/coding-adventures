@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.94.0
+
+- Parse Journey `titleFontSize`, `titleFontFamily`, and `titleColor` init options.
+
 ## 0.93.0
 
 - Parse Journey `taskFontSize` and `taskFontFamily` init options.

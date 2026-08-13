@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.7.0
+
+- Resolve styled Journey titles into dedicated backend-neutral layout items.
+
 ## 0.6.0
 
 - Resolve Journey task typography onto backend-neutral temporal layout items.

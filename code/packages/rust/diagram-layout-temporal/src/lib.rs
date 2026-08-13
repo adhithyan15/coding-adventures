@@ -18,7 +18,7 @@ use diagram_ir::{
 };
 use std::collections::{BTreeSet, HashMap};
 
-pub const VERSION: &str = "0.6.0";
+pub const VERSION: &str = "0.7.0";
 
 // ── Constants ─────────────────────────────────────────────────────────────
 
@@ -55,10 +55,21 @@ fn layout_journey(title: &Option<String>, diagram: &JourneyDiagram, cw: f64) -> 
     let task_width = diagram.config.task_width.unwrap_or(cw - margin_x * 2.0).max(1.0);
     let mut y = margin_y;
     if let Some(title) = title {
-        items.push(LayoutedTemporalItem::SectionHeader {
-            x: 0.0, y, width: cw, height: 32.0, label: title.clone(),
+        let title_font_size = diagram.config.title_font_size.unwrap_or(18.0);
+        let title_height = (12.0
+            + title.lines().count().max(1) as f64 * title_font_size * 1.2)
+            .max(32.0);
+        items.push(LayoutedTemporalItem::JourneyTitle {
+            x: 0.0,
+            y,
+            width: cw,
+            height: title_height,
+            label: title.clone(),
+            font_size: diagram.config.title_font_size,
+            font_family: diagram.config.title_font_family.clone(),
+            color: diagram.config.title_color.clone(),
         });
-        y += 36.0;
+        y += title_height + 4.0;
     }
     let actors = diagram
         .sections
@@ -392,7 +403,7 @@ mod tests {
         }
     }
 
-    #[test] fn version_exists() { assert_eq!(crate::VERSION, "0.6.0"); }
+    #[test] fn version_exists() { assert_eq!(crate::VERSION, "0.7.0"); }
 
     #[test]
     fn gantt_has_task_bars() {
@@ -458,6 +469,9 @@ mod tests {
                     task_margin: Some(18.0),
                     task_font_size: Some(18.0),
                     task_font_family: Some("Avenir Next".into()),
+                    title_font_size: Some(22.0),
+                    title_font_family: Some("Georgia".into()),
+                    title_color: Some("#123456".into()),
                 },
                 sections: vec![JourneySection {
                     label: "Payment\nflow".into(),
@@ -483,6 +497,12 @@ mod tests {
         assert!(layout.items.iter().any(|item| matches!(item,
             LayoutedTemporalItem::JourneyTask { font_size, font_family, .. }
                 if *font_size == Some(18.0) && font_family.as_deref() == Some("Avenir Next")
+        )));
+        assert!(layout.items.iter().any(|item| matches!(item,
+            LayoutedTemporalItem::JourneyTitle { font_size, font_family, color, .. }
+                if *font_size == Some(22.0)
+                    && font_family.as_deref() == Some("Georgia")
+                    && color.as_deref() == Some("#123456")
         )));
     }
 }

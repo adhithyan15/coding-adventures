@@ -1,6 +1,6 @@
 //! diagram-ir v0.42.0 - DG00/DG04 semantic IR
 
-pub const VERSION: &str = "0.48.0";
+pub const VERSION: &str = "0.49.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramDirection {
@@ -881,6 +881,9 @@ pub struct JourneyConfig {
     pub task_margin: Option<f64>,
     pub task_font_size: Option<f64>,
     pub task_font_family: Option<String>,
+    pub title_font_size: Option<f64>,
+    pub title_font_family: Option<String>,
+    pub title_color: Option<String>,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -992,6 +995,16 @@ pub struct TemporalDiagram {
 
 #[derive(Clone, Debug, PartialEq)]
 pub enum LayoutedTemporalItem {
+    JourneyTitle {
+        x: f64,
+        y: f64,
+        width: f64,
+        height: f64,
+        label: String,
+        font_size: Option<f64>,
+        font_family: Option<String>,
+        color: Option<String>,
+    },
     TimeAxisSpine {
         x1: f64,
         y1: f64,
@@ -1155,7 +1168,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.48.0");
+        assert_eq!(VERSION, "0.49.0");
     }
     #[test]
     fn default_direction_is_tb() {
