@@ -165,9 +165,9 @@ implemented.
 21. [x] **Call argument ABI:** marshal scalar and pair-value arguments into
    `a0` through `a7`, including word-sized wide values, and preserve the narrow
    CIR view of ABI-normalized wide parameters.
-22. [ ] **Typed CIR moves (next):** lower `mov_*` copies so source-language
-   locals can flow into direct calls. Nib `let` bindings currently introduce
-   `mov_i64`, preventing otherwise-supported call programs from reaching RV32I.
+22. [x] **Typed CIR moves:** lower scalar and wide `mov_*` copies, including
+   copies with a live wide source. Nib `let` bindings can now flow into direct
+   calls and execute in the simulator.
 
 Each item should land as a focused PR with an end-to-end fixture from the
 highest-level language it enables. New constraints discovered while carrying
