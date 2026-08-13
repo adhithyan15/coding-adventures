@@ -624,10 +624,15 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   runs draw the lower bowl, descend the right stem, and finish the shirorekhā.
   Its four-frame Noto Sans Devanagari path follows the animated four-run form
   with three lifts, independently corroborated by the Directorate's matching
-  four-part learner buildup. The remaining **115** prose part
+  four-part learner buildup. **न** then circles clockwise around its left loop
+  and continues right along the shoulder before two lifted runs descend the
+  right stem and finish the shirorekhā. Its three-frame Noto Sans Devanagari
+  path follows the animated three-run form with two lifts, independently
+  corroborated by the Directorate's matching three-part learner buildup and
+  directions. The remaining **114** prose part
   orders across five scripts
   (`arabic` 3,
-  `cyrillic` 33, `devanagari` 12,
+  `cyrillic` 33, `devanagari` 11,
   `gujarati` 33, `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a
   citation without a count), and Language Ladder's ductus test proves every
