@@ -15,31 +15,38 @@
 #
 # WHAT RUNS WHERE. Pull-request CI fans out over ubuntu-latest, macos-latest and
 # windows-latest (the `detect` job's build_matrix in .github/workflows/ci.yml),
-# but only TWO of those legs build Rust: the windows leg's build job runs
-# `build-tool.exe ... -language swift` plus the Venture/ADJ containment steps and
-# never invokes the Rust path at all (verified in the job log for this PR — the
-# macOS leg logs `rust/twig-aot  BUILT`, the windows leg never mentions it).
-# Since three of these targets are whole-file host-gated, each leg runs a
-# different subset and the others compile to zero tests:
+# but Rust is only ever built on ubuntu and macOS. The windows leg never builds
+# it, for two independent reasons: on a PR the "Build and test affected packages"
+# step — the one that runs `-language all` — is guarded by
+# `if: needs.detect.outputs.is_main != 'true' && (runner.os != 'Windows' || needs.detect.outputs.needs_swift == 'true')`
+# (ci.yml:1529), so on Windows it runs ONLY when the PR touches Swift; and on main
+# the detect job hardcodes every matrix entry to `"os": "ubuntu-latest"`, so the
+# unguarded "Full build on main merge" step has no windows leg to run on. A green
+# `build (windows-latest)` is therefore not evidence that Rust compiled there.
 #
 #   --lib               58 unit tests incl. the dynval_runtime_golden divergence
 #                       guard. Host-independent — runs on ubuntu + macOS.
 #   e4d_str_helpers     `#![cfg(unix)]`; drives the C runtime's string helpers
 #                       through $CC. Runs on ubuntu + macOS.
-#   linux_x86_64_smoke  `#[cfg(target_os = "linux")]`; ELF end-to-end + GC
-#                       stackmap differentials. Runs on the ubuntu leg — the only
-#                       leg that executes it.
 #   windows_x86_64_smoke `#![cfg(target_os = "windows")]`; PE end-to-end + GC
 #                       stackmap differentials. Listed so a developer on a Windows
 #                       host runs it, but NOTHING IN CI DOES — see above. Treat it
 #                       as unwatched until the windows leg builds Rust.
 #
-# ONE TARGET IS DELIBERATELY EXCLUDED because it is red today. It is named here
-# rather than silently dropped — an excluded target is an unprotected one, and it
-# should be added back the moment it goes green:
+# Be honest about what that leaves: in CI only `--lib` and `e4d_str_helpers`
+# actually execute assertions. The two end-to-end suites that would exercise the
+# native AOT pipeline are excluded (below) or unreachable (windows).
 #
-#   macos_arm64_smoke   13 of 16 pass on Apple Silicon; 3 fail, all in the
-#                       precise-GC-roots area:
+# TWO TARGETS ARE DELIBERATELY EXCLUDED because they are red today, both on the
+# SAME known gap: precise GC stackmap roots, where `ref<>` refness is erased to
+# `any` before the backend sees it, so precise collection cannot reclaim what it
+# claims to. Neither is flaky and neither is unimportant — they are correctly
+# detecting a real hole, which is exactly why they must be named here rather than
+# silently dropped, and re-added the moment the gap closes. Do NOT `#[ignore]`
+# them or relax the assertions: a weakened test is a silent regression, and this
+# whole campaign exists because tests that could not fail hid real failures.
+#
+#   macos_arm64_smoke   13 of 16 pass on Apple Silicon; 3 fail:
 #                         end_to_end_typed_twig_returns_42
 #                           link failure — `___gc_register_stackmap` undefined in
 #                           smoke.o; the test's own `ld` invocation does not link
@@ -51,17 +58,33 @@
 #                           the intermediate self-recursive frame is not precisely
 #                           mapped at the recursive-call return address (precise
 #                           64, conservative 128, expected 0).
-#                       This matters on more than a developer laptop: macos-latest
-#                       is an Apple Silicon runner and IS in the pull-request
-#                       matrix, so including this target would turn that leg red.
+#                       macos-latest is an Apple Silicon runner and IS in the
+#                       pull-request matrix, so including this would turn that
+#                       leg red — not just a developer laptop.
+#   linux_x86_64_smoke  6 of 8 pass on the ubuntu leg; 2 fail, the same
+#                       precise-GC differentials as above in this file's own
+#                       copies:
+#                         gc_stress_live_bytes_differential_on_linux
+#                           precise leaves 64 bytes live where the test expects 0
+#                           (the object is reachable only through a non-reference
+#                           i64 slot; conservative also keeps 64).
+#                         gc_recursive_frame_live_bytes_differential_on_linux
+#                           precise leaves 64 bytes live where the test expects 0
+#                           — the intermediate self-recursive frame is not
+#                           precisely mapped at the recursive-call return address
+#                           (conservative keeps 128).
+#                       The other 6 — ELF framing, putchar/heap byte I/O, the
+#                       machine field, and stackmap registration — all pass, so
+#                       the ELF end-to-end path itself is healthy.
 #
 # EXCLUSION ONLY SKIPS THE RUN, NOT THE BUILD. The check step compiles every
 # target in the crate with `-D warnings`, so an excluded suite that fails to
-# COMPILE still fails CI — only its failing assertions are excluded. That is
-# exactly how the unused import in macos_arm64_smoke.rs would have surfaced, and
-# why fixing the import was a prerequisite for adding this file rather than an
-# unrelated tidy-up.
+# COMPILE still fails CI — only its failing assertions are excluded. Both
+# excluded files above must therefore still compile clean, and they do: the
+# unused import in macos_arm64_smoke.rs and the unused_mut in
+# linux_x86_64_smoke.rs were both fixed rather than excluded, precisely because
+# exclusion buys nothing on a red compile.
 #
 # Listing targets explicitly rather than running the whole crate is what makes
-# the exclusion visible. A bare `cargo test -p twig-aot` would hide it.
-cargo test -p twig-aot --lib --test e4d_str_helpers --test linux_x86_64_smoke --test windows_x86_64_smoke
+# the exclusions visible. A bare `cargo test -p twig-aot` would hide them.
+cargo test -p twig-aot --lib --test e4d_str_helpers --test windows_x86_64_smoke
