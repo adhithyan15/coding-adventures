@@ -80,6 +80,8 @@ fn decode_r_type(raw: u32) -> DecodeResult {
     let mnemonic = match (funct3 as u32, funct7 as u32) {
         (FUNCT3_ADD, FUNCT7_NORMAL) => "add",
         (FUNCT3_ADD, FUNCT7_ALT) => "sub",
+        (FUNCT3_MUL, FUNCT7_M) => "mul",
+        (FUNCT3_MULHU, FUNCT7_M) => "mulhu",
         (FUNCT3_SLL, _) => "sll",
         (FUNCT3_SLT, _) => "slt",
         (FUNCT3_SLTU, _) => "sltu",

@@ -84,7 +84,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: '1.23'
+          go-version: '1.26.1'
 
       - name: Set up Rust for capability taxonomy conformance
         uses: dtolnay/rust-toolchain@stable
@@ -424,7 +424,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: '1.23'
+          go-version: '1.26.1'
 
       - name: Set up Python
         if: needs.detect.outputs.needs_python == 'true' || runner.os == 'Windows' || runner.os == 'macOS'

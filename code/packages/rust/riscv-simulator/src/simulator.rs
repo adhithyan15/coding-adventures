@@ -147,6 +147,7 @@ mod tests {
 
     // R-type arithmetic
     #[test] fn test_add_sub() { let sim = run_program(&[encode_addi(1,0,10), encode_addi(2,0,20), encode_add(3,1,2), encode_sub(4,1,2), encode_ecall()]); assert_eq!(sim.regs.read(3), 30); assert_eq!(sim.regs.read(4) as i32, -10); }
+    #[test] fn test_mul_and_mulhu() { let sim = run_program(&[encode_addi(1, 0, -1), encode_addi(2, 0, 2), encode_mul(3, 1, 2), encode_mulhu(4, 1, 2), encode_ecall()]); assert_eq!(sim.regs.read(3), 0xffff_fffe); assert_eq!(sim.regs.read(4), 1); }
     #[test] fn test_sll() { let sim = run_program(&[encode_addi(1,0,1), encode_addi(2,0,8), encode_sll(3,1,2), encode_ecall()]); assert_eq!(sim.regs.read(3), 256); }
     #[test] fn test_slt() { let sim = run_program(&[encode_addi(1,0,-5), encode_addi(2,0,3), encode_slt(3,1,2), encode_slt(4,2,1), encode_ecall()]); assert_eq!(sim.regs.read(3), 1); assert_eq!(sim.regs.read(4), 0); }
     #[test] fn test_sltu() { let sim = run_program(&[encode_addi(1,0,-1), encode_addi(2,0,1), encode_sltu(3,2,1), encode_sltu(4,1,2), encode_ecall()]); assert_eq!(sim.regs.read(3), 1); assert_eq!(sim.regs.read(4), 0); }

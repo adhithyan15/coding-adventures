@@ -1,4 +1,4 @@
-//! Instruction executor for all RV32I + M-mode instructions.
+//! Instruction executor for RV32I, the multiply subset of RV32M, and M-mode instructions.
 
 use cpu_simulator::{RegisterFile, Memory};
 use crate::csr::*;
@@ -41,6 +41,8 @@ pub fn execute(
         // R-type arithmetic
         "add"   => exec_reg_arith(decoded, regs, pc, |a, b| (a as i32).wrapping_add(b as i32) as u32),
         "sub"   => exec_reg_arith(decoded, regs, pc, |a, b| (a as i32).wrapping_sub(b as i32) as u32),
+        "mul"   => exec_reg_arith(decoded, regs, pc, |a, b| a.wrapping_mul(b)),
+        "mulhu" => exec_reg_arith(decoded, regs, pc, |a, b| ((a as u64 * b as u64) >> 32) as u32),
         "sll"   => exec_reg_arith(decoded, regs, pc, |a, b| a << (b & 0x1F)),
         "slt"   => exec_reg_arith(decoded, regs, pc, |a, b| if (a as i32) < (b as i32) { 1 } else { 0 }),
         "sltu"  => exec_reg_arith(decoded, regs, pc, |a, b| if a < b { 1 } else { 0 }),

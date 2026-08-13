@@ -61,6 +61,8 @@ make bytes appear.  A loud refusal beats a silent wrong answer.
   including a Nib bitwise source-to-simulator fixture.
 - Added pair-aware left, logical-right, and arithmetic-right shifts with
   correct zero, cross-word, and `>= 64` count handling.
+- Added pair-aware signed and unsigned multiplication using the RV32M `mul`
+  and `mulhu` instructions, including a source-level Nib simulator fixture.
 
 ## v0.1.0 — 2026-06-03 — Phase 7 (FINAL lane) of historical-arch backend migration
 
