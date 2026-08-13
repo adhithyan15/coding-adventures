@@ -714,6 +714,20 @@ fn build_func(fields: &[SExpr], ctx: &mut ModuleCtx, func_idx: usize) -> Result<
             }
             instr_start = i + 1;
         } else {
+            // A round-5 security review found `is_leading_field`'s own
+            // doc comment overclaimed this dispatch actually CALLS it --
+            // it re-implements the identical 4-way test inline instead,
+            // which happened to still agree today but is exactly the kind
+            // of silent-drift risk rounds 2-4 spent closing for the
+            // arity-counting logic. This assertion makes that claim
+            // actually true (not just documented): any future edit that
+            // adds a leading-field kind to one without the other trips
+            // this in every `cargo test` run, immediately, rather than
+            // waiting for a security review to notice again.
+            debug_assert!(
+                !is_leading_field(f),
+                "is_leading_field and this dispatch's own param/result/type/local arms must stay in sync"
+            );
             break;
         }
     }
