@@ -142,10 +142,10 @@ implemented.
    emit a frame, removing the six-temporary limit for scalar CIR.
 15. [ ] **Wide register allocation:** spill live 64-bit register pairs and add
    pair-aware reloads, extending the scalar frame allocator to wide CIR values.
-   Pair arithmetic (`add`, `sub`, `mul`, bitwise operations, and `not`) reloads
-   live spills today; division, shifts, comparisons, and mixed-width pressure
-   need operand-specific scratch allocation before they can join this path.
-16. [ ] **Complete wide spill coverage:** make division, shifts, and comparisons
+   Pair arithmetic, bitwise operations, and shifts reload live spills today;
+   division, comparisons, and mixed-width pressure need operand-specific scratch
+   allocation before they can join this path.
+16. [ ] **Complete wide spill coverage:** make division and comparisons
    materialize spilled pairs without conflicting with their dedicated scratch
    registers, then handle mixed scalar/pair register pressure.
 17. [ ] **Calls and modules:** lower direct calls, add relocations/linking for flat

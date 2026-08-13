@@ -5,6 +5,8 @@
 - Added aligned stack spilling and pair-aware reloads for live 64-bit values in
   wide arithmetic and bitwise lowering, with a simulator fixture that exceeds
   the three-pair register pool.
+- Added pair-spill reloads for wide shifts, including a parameterized simulator
+  fixture that shifts a stack-resident full-width value.
 - Added scalar register spilling: live values evict to aligned `sp`-relative
   stack slots, reload through dedicated operand registers, and restore the
   frame on every return. The simulator fixture now executes seven live scalar
