@@ -14,18 +14,25 @@
 # on one line.
 #
 # WHAT RUNS WHERE. Pull-request CI fans out over ubuntu-latest, macos-latest and
-# windows-latest (see the `detect` job's build_matrix in .github/workflows/ci.yml),
-# and three of these targets are whole-file host-gated, so each leg runs a
+# windows-latest (the `detect` job's build_matrix in .github/workflows/ci.yml),
+# but only TWO of those legs build Rust: the windows leg's build job runs
+# `build-tool.exe ... -language swift` plus the Venture/ADJ containment steps and
+# never invokes the Rust path at all (verified in the job log for this PR — the
+# macOS leg logs `rust/twig-aot  BUILT`, the windows leg never mentions it).
+# Since three of these targets are whole-file host-gated, each leg runs a
 # different subset and the others compile to zero tests:
 #
 #   --lib               58 unit tests incl. the dynval_runtime_golden divergence
-#                       guard. Host-independent — runs on all three legs.
+#                       guard. Host-independent — runs on ubuntu + macOS.
 #   e4d_str_helpers     `#![cfg(unix)]`; drives the C runtime's string helpers
-#                       through $CC. Runs on ubuntu + macOS, no-op on Windows.
+#                       through $CC. Runs on ubuntu + macOS.
 #   linux_x86_64_smoke  `#[cfg(target_os = "linux")]`; ELF end-to-end + GC
-#                       stackmap differentials. Runs on the ubuntu leg only.
-#   windows_x86_64_smoke `#[cfg(target_os = "windows")]`; PE end-to-end + GC
-#                       stackmap differentials. Runs on the windows leg only.
+#                       stackmap differentials. Runs on the ubuntu leg — the only
+#                       leg that executes it.
+#   windows_x86_64_smoke `#![cfg(target_os = "windows")]`; PE end-to-end + GC
+#                       stackmap differentials. Listed so a developer on a Windows
+#                       host runs it, but NOTHING IN CI DOES — see above. Treat it
+#                       as unwatched until the windows leg builds Rust.
 #
 # ONE TARGET IS DELIBERATELY EXCLUDED because it is red today. It is named here
 # rather than silently dropped — an excluded target is an unprotected one, and it

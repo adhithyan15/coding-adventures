@@ -34,10 +34,36 @@ BUILD file runs, on one line (the build tool executes each BUILD line as its own
 cargo test -p twig-aot --lib --test e4d_str_helpers --test linux_x86_64_smoke --test windows_x86_64_smoke
 ```
 
-Three of those targets are whole-file host-gated, so each pull-request CI leg
-(ubuntu / macOS / windows) runs a different subset and the rest compile to zero
-tests. `--lib` (58 tests, including the `dynval_runtime_golden` divergence
-guard) runs everywhere.
+Three of those targets are whole-file host-gated, so each CI leg runs a different
+subset and the rest compile to zero tests. Note that only the ubuntu and macOS
+legs build Rust at all — the windows leg's build job runs `-language swift` plus
+the Venture/ADJ containment steps and never enters the Rust path, so
+`windows_x86_64_smoke` is listed for developers on a Windows host but is not
+actually watched by CI.
+
+**All three file-level `std` imports in `tests/macos_arm64_smoke.rs` are now
+gated to `#[cfg(all(target_os = "macos", target_arch = "aarch64"))]`.** Making
+the crate discoverable meant CI compiled its test targets on Linux for the first
+time, which immediately surfaced the rest of the same bug — on a non-macOS host
+every one of the file's fourteen gated tests vanishes while the imports remain:
+
+```
+error: unused import: `std::os::unix::fs::PermissionsExt`
+error: unused import: `std::path::PathBuf`
+error: unused import: `std::process::Command`
+```
+
+Unlike its `linux_x86_64_smoke.rs` / `windows_x86_64_smoke.rs` siblings, this
+file has no file-level `#![cfg(...)]` — by design, since two of its tests check
+byte production on every runner — so each import has to carry its own gate. The
+gates were chosen by reading the cfg on every use site: `PermissionsExt` has two
+`set_mode` sites, `PathBuf` two bare-name bindings (all other mentions are
+already fully qualified), and `Command` seventeen `Command::new` sites, every one
+of them inside a macOS+aarch64 test. `PermissionsExt`'s previous `#[cfg(unix)]`
+was the specific mistake: it answers "does this module exist here?" but not "is
+it used here?", and Linux is unix. The `target_arch` half matters too — on an
+Intel Mac every use site is still cfg'd out, so gating on `target_os` alone would
+just relocate the error.
 
 `macos_arm64_smoke` is **deliberately excluded and named in the BUILD file**
 rather than silently dropped — 13 of its 16 tests pass on Apple Silicon, and the

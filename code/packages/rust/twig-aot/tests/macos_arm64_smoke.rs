@@ -36,20 +36,48 @@
 //! only runs locally on Apple Silicon Macs.  Other CI runners just
 //! verify the byte production.
 
-// `PermissionsExt` is Unix-only; only import it on platforms where it exists.
-// All callers are already gated with `#[cfg(all(target_os = "macos", ...))]`
-// which is a strict subset of unix, so the cfg is safe.
-#[cfg(unix)]
-use std::os::unix::fs::PermissionsExt;
-// NOTE: there is deliberately no top-level `use std::io::Write;` here.  The one
+// ## Why every std import below carries the same cfg
+//
+// Unlike its `linux_x86_64_smoke.rs` / `windows_x86_64_smoke.rs` siblings, this
+// file has NO file-level `#![cfg(...)]` — it deliberately compiles everywhere so
+// that `macho_arm64_byte_production` and `backend_pipeline_produces_bytes_for_simple_function`
+// can check byte production on every runner (see "Skipping" above).  The other
+// fourteen tests are each `#[cfg(all(target_os = "macos", target_arch = "aarch64"))]`,
+// and they are the ONLY users of the three imports below.  So on a Linux or
+// Windows runner the imports survive while all of their use sites vanish — and
+// CI compiles test targets with `-D warnings`, which makes an unused import a
+// hard build error, not a nag.
+//
+// Each import is therefore gated to exactly the platform set that uses it,
+// verified by reading the cfg on every use site rather than assuming:
+//
+//   PermissionsExt  `perms.set_mode(0o755)` — 2 sites, both in macOS+aarch64
+//                   tests.  The old gate was the weaker `#[cfg(unix)]`, which
+//                   answers "does this module exist here?" but not "is it used
+//                   here?"; Linux is unix, so that is precisely where it broke.
+//   PathBuf         bare-name uses are the two `let ... : PathBuf` bindings in
+//                   `end_to_end_object_through_ld_returns_42`.  Every other
+//                   mention in the file is already fully qualified as
+//                   `std::path::PathBuf` and needs no import.
+//   Command         17 bare `Command::new` sites, all inside macOS+aarch64
+//                   tests; the two `std::process::Command::new("xcrun")` calls
+//                   are fully qualified.
+//
+// The `target_arch = "aarch64"` half matters as much as the `target_os` half: on
+// an Intel Mac every use site is still cfg'd out, so gating on `target_os` alone
+// would just move the same error to a different host.
+//
+// Note also that there is deliberately no `use std::io::Write;` here.  The one
 // `writeln!` in this file lives inside `end_to_end_typed_twig_arithmetic_and_branches`,
-// which imports the trait itself in its own body, so a file-level import is
+// which imports the trait in its own body, so a file-level import would be
 // unused on EVERY host — including Apple Silicon, where the inner `use` shadows
-// it.  CI compiles test targets with `-D warnings`, so an unused import is a
-// hard build error, not a nag.  If a future test outside that function needs
-// `writeln!`, import `Write` in that test's body too rather than re-adding a
-// file-level import that only some cfg combinations can justify.
+// it.  If a future test outside that function needs `writeln!`, import `Write`
+// in that test's body too.
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+use std::os::unix::fs::PermissionsExt;
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
 use std::path::PathBuf;
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
 use std::process::Command;
 
 use aarch64_backend::AArch64Backend;
