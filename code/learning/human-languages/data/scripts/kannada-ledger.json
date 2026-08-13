@@ -1,0 +1,354 @@
+{
+  "script": "kannada",
+  "version": 1,
+  "note": "Letter ledger (HL11 section 4). AUTHORED INTENT: proposed by propose_letter_ledger.py, then reviewed and committed by hand. A validator may check this file and may never rewrite it. Letters are ordered by the words they make writable, not by recitation order, because this curriculum's reader cannot yet speak the language and a letter is worth exactly what it unlocks.",
+  "tracks": [
+    "kannada"
+  ],
+  "openingLessons": 40,
+  "openingWords": 39,
+  "letters": [
+    {
+      "position": 1,
+      "glyph": "ನ",
+      "codePoint": "U+0CA8",
+      "unicodeName": "KANNADA LETTER NA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": []
+    },
+    {
+      "position": 2,
+      "glyph": "ು",
+      "codePoint": "U+0CC1",
+      "unicodeName": "KANNADA VOWEL SIGN U",
+      "kind": "vowel-sign",
+      "family": null,
+      "familySource": null,
+      "unlocks": []
+    },
+    {
+      "position": 3,
+      "glyph": "್",
+      "codePoint": "U+0CCD",
+      "unicodeName": "KANNADA SIGN VIRAMA",
+      "kind": "vowel-sign",
+      "family": null,
+      "familySource": null,
+      "unlocks": []
+    },
+    {
+      "position": 4,
+      "glyph": "ಿ",
+      "codePoint": "U+0CBF",
+      "unicodeName": "KANNADA VOWEL SIGN I",
+      "kind": "vowel-sign",
+      "family": null,
+      "familySource": null,
+      "unlocks": []
+    },
+    {
+      "position": 5,
+      "glyph": "ತ",
+      "codePoint": "U+0CA4",
+      "unicodeName": "KANNADA LETTER TA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "ತಿನ್ನು",
+          "romanization": "tinnu",
+          "lesson": "KA-C32-tinnu"
+        }
+      ]
+    },
+    {
+      "position": 6,
+      "glyph": "ದ",
+      "codePoint": "U+0CA6",
+      "unicodeName": "KANNADA LETTER DA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "ದಿನ",
+          "romanization": "day\" — a Sanskrit tatsama word,...",
+          "lesson": "KA-C23-dina"
+        }
+      ]
+    },
+    {
+      "position": 7,
+      "glyph": "ಓ",
+      "codePoint": "U+0C93",
+      "unicodeName": "KANNADA LETTER OO",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "ಓದು",
+          "romanization": "ōdu",
+          "lesson": "KA-C33-oodu"
+        }
+      ]
+    },
+    {
+      "position": 8,
+      "glyph": "ರ",
+      "codePoint": "U+0CB0",
+      "unicodeName": "KANNADA LETTER RA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": []
+    },
+    {
+      "position": 9,
+      "glyph": "ಾ",
+      "codePoint": "U+0CBE",
+      "unicodeName": "KANNADA VOWEL SIGN AA",
+      "kind": "vowel-sign",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "ರಾತ್ರಿ",
+          "romanization": "night\" — the same Sanskrit tatsama...",
+          "lesson": "KA-C24-ratri"
+        }
+      ]
+    },
+    {
+      "position": 10,
+      "glyph": "ಬ",
+      "codePoint": "U+0CAC",
+      "unicodeName": "KANNADA LETTER BA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "ಬಾ",
+          "romanization": "bā / baru",
+          "lesson": "KA-C32-baa"
+        }
+      ]
+    },
+    {
+      "position": 11,
+      "glyph": "ೆ",
+      "codePoint": "U+0CC6",
+      "unicodeName": "KANNADA VOWEL SIGN E",
+      "kind": "vowel-sign",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "ಬರೆ",
+          "romanization": "bare",
+          "lesson": "KA-C33-bare"
+        }
+      ]
+    },
+    {
+      "position": 12,
+      "glyph": "ಗ",
+      "codePoint": "U+0C97",
+      "unicodeName": "KANNADA LETTER GA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "-ಗೆ",
+          "romanization": "-ge",
+          "lesson": "KA-C06-dative-ge"
+        }
+      ]
+    },
+    {
+      "position": 13,
+      "glyph": "ಳ",
+      "codePoint": "U+0CB3",
+      "unicodeName": "KANNADA LETTER LLA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "ಬೆಳಗ್ಗೆ",
+          "romanization": "morning\"",
+          "lesson": "KA-C26-belagge"
+        }
+      ]
+    },
+    {
+      "position": 14,
+      "glyph": "ೊ",
+      "codePoint": "U+0CCA",
+      "unicodeName": "KANNADA VOWEL SIGN O",
+      "kind": "vowel-sign",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "ಗೊತ್ತು",
+          "romanization": "gottu",
+          "lesson": "KA-C32-gottu"
+        }
+      ]
+    },
+    {
+      "position": 15,
+      "glyph": "ಇ",
+      "codePoint": "U+0C87",
+      "unicodeName": "KANNADA LETTER I",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "ಇರು",
+          "romanization": "iru",
+          "lesson": "KA-C32-iru"
+        }
+      ]
+    },
+    {
+      "position": 16,
+      "glyph": "ಕ",
+      "codePoint": "U+0C95",
+      "unicodeName": "KANNADA LETTER KA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": []
+    },
+    {
+      "position": 17,
+      "glyph": "ಯ",
+      "codePoint": "U+0CAF",
+      "unicodeName": "KANNADA LETTER YA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "ನಾಯಿ, ಬೆಕ್ಕು",
+          "romanization": "dog and cat — naayi is a solid,...",
+          "lesson": "KA-C21-naayi-bekku"
+        }
+      ]
+    },
+    {
+      "position": 18,
+      "glyph": "ಡ",
+      "codePoint": "U+0CA1",
+      "unicodeName": "KANNADA LETTER DDA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "ನನಗೆ ಕನ್ನಡ ಗೊತ್ತು",
+          "romanization": "nanage kannaḍa gottu",
+          "lesson": "KA-C06-dative-subject"
+        }
+      ]
+    },
+    {
+      "position": 19,
+      "glyph": "ೋ",
+      "codePoint": "U+0CCB",
+      "unicodeName": "KANNADA VOWEL SIGN OO",
+      "kind": "vowel-sign",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "ನೋಡು",
+          "romanization": "nōḍu",
+          "lesson": "KA-C32-noodu"
+        }
+      ]
+    },
+    {
+      "position": 20,
+      "glyph": "ಹ",
+      "codePoint": "U+0CB9",
+      "unicodeName": "KANNADA LETTER HA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "ಹೋಗು",
+          "romanization": "hōgu",
+          "lesson": "KA-C32-hoogu"
+        }
+      ]
+    },
+    {
+      "position": 21,
+      "glyph": "ಸ",
+      "codePoint": "U+0CB8",
+      "unicodeName": "KANNADA LETTER SA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "ಹಸಿರು, ಹಳದಿ",
+          "romanization": "green and yellow — hasiru is...",
+          "lesson": "KA-C22-hasiru-haladi"
+        }
+      ]
+    },
+    {
+      "position": 22,
+      "glyph": "ಚ",
+      "codePoint": "U+0C9A",
+      "unicodeName": "KANNADA LETTER CA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "ಯೋಚಿಸು",
+          "romanization": "yōcisu",
+          "lesson": "KA-C33-yocisu"
+        }
+      ]
+    },
+    {
+      "position": 23,
+      "glyph": "ಂ",
+      "codePoint": "U+0C82",
+      "unicodeName": "KANNADA SIGN ANUSVARA",
+      "kind": "vowel-sign",
+      "family": null,
+      "familySource": null,
+      "unlocks": []
+    },
+    {
+      "position": 24,
+      "glyph": "ಪ",
+      "codePoint": "U+0CAA",
+      "unicodeName": "KANNADA LETTER PA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "ಹನ್ನೊಂದು — ಇಪ್ಪತ್ತು",
+          "romanization": "11-20 — additive \"ten-echo\"...",
+          "lesson": "KA-C20-hannondu-ippattu"
+        }
+      ]
+    }
+  ]
+}

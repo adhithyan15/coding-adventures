@@ -1,0 +1,354 @@
+{
+  "script": "malayalam",
+  "version": 1,
+  "note": "Letter ledger (HL11 section 4). AUTHORED INTENT: proposed by propose_letter_ledger.py, then reviewed and committed by hand. A validator may check this file and may never rewrite it. Letters are ordered by the words they make writable, not by recitation order, because this curriculum's reader cannot yet speak the language and a letter is worth exactly what it unlocks.",
+  "tracks": [
+    "malayalam"
+  ],
+  "openingLessons": 40,
+  "openingWords": 38,
+  "letters": [
+    {
+      "position": 1,
+      "glyph": "ക",
+      "codePoint": "U+0D15",
+      "unicodeName": "MALAYALAM LETTER KA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": []
+    },
+    {
+      "position": 2,
+      "glyph": "്",
+      "codePoint": "U+0D4D",
+      "unicodeName": "MALAYALAM SIGN VIRAMA",
+      "kind": "vowel-sign",
+      "family": null,
+      "familySource": null,
+      "unlocks": []
+    },
+    {
+      "position": 3,
+      "glyph": "ി",
+      "codePoint": "U+0D3F",
+      "unicodeName": "MALAYALAM VOWEL SIGN I",
+      "kind": "vowel-sign",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "-ിക്ക്",
+          "romanization": "-ikku",
+          "lesson": "ML-C06-dative-ikku"
+        }
+      ]
+    },
+    {
+      "position": 4,
+      "glyph": "ാ",
+      "codePoint": "U+0D3E",
+      "unicodeName": "MALAYALAM VOWEL SIGN AA",
+      "kind": "vowel-sign",
+      "family": null,
+      "familySource": null,
+      "unlocks": []
+    },
+    {
+      "position": 5,
+      "glyph": "ന",
+      "codePoint": "U+0D28",
+      "unicodeName": "MALAYALAM LETTER NA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": []
+    },
+    {
+      "position": 6,
+      "glyph": "ൾ",
+      "codePoint": "U+0D7E",
+      "unicodeName": "MALAYALAM LETTER CHILLU LL",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "നാൾ",
+          "romanization": "the native day-word, narrowed into...",
+          "lesson": "ML-C23-naal"
+        }
+      ]
+    },
+    {
+      "position": 7,
+      "glyph": "ു",
+      "codePoint": "U+0D41",
+      "unicodeName": "MALAYALAM VOWEL SIGN U",
+      "kind": "vowel-sign",
+      "family": null,
+      "familySource": null,
+      "unlocks": []
+    },
+    {
+      "position": 8,
+      "glyph": "ത",
+      "codePoint": "U+0D24",
+      "unicodeName": "MALAYALAM LETTER TA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "തിന്നുക",
+          "romanization": "tinnuka",
+          "lesson": "ML-C32-tinnuka"
+        }
+      ]
+    },
+    {
+      "position": 9,
+      "glyph": "ര",
+      "codePoint": "U+0D30",
+      "unicodeName": "MALAYALAM LETTER RA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "രാത്രി",
+          "romanization": "night\" — the Sanskrit tatsama...",
+          "lesson": "ML-C24-rathri"
+        }
+      ]
+    },
+    {
+      "position": 10,
+      "glyph": "വ",
+      "codePoint": "U+0D35",
+      "unicodeName": "MALAYALAM LETTER VA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "വരുക",
+          "romanization": "varuka",
+          "lesson": "ML-C32-varuka"
+        }
+      ]
+    },
+    {
+      "position": 11,
+      "glyph": "ച",
+      "codePoint": "U+0D1A",
+      "unicodeName": "MALAYALAM LETTER CA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "ചിന്തിക്കുക",
+          "romanization": "cintikkuka",
+          "lesson": "ML-C33-cintikkuka"
+        }
+      ]
+    },
+    {
+      "position": 12,
+      "glyph": "പ",
+      "codePoint": "U+0D2A",
+      "unicodeName": "MALAYALAM LETTER PA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "പാതിരാ",
+          "romanization": "midnight, built on Malayalam paathi...",
+          "lesson": "ML-C17-paathira"
+        }
+      ]
+    },
+    {
+      "position": 13,
+      "glyph": "ണ",
+      "codePoint": "U+0D23",
+      "unicodeName": "MALAYALAM LETTER NNA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "കാണുക",
+          "romanization": "kāṇuka",
+          "lesson": "ML-C32-kaanuka"
+        }
+      ]
+    },
+    {
+      "position": 14,
+      "glyph": "മ",
+      "codePoint": "U+0D2E",
+      "unicodeName": "MALAYALAM LETTER MA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "മണി",
+          "romanization": "hour — Malayalam's OWN dictionary...",
+          "lesson": "ML-C18-mani"
+        }
+      ]
+    },
+    {
+      "position": 15,
+      "glyph": "ഞ",
+      "codePoint": "U+0D1E",
+      "unicodeName": "MALAYALAM LETTER NYA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "പച്ച, മഞ്ഞ",
+          "romanization": "green and yellow — paccha matches...",
+          "lesson": "ML-C22-paccha-manja"
+        }
+      ]
+    },
+    {
+      "position": 16,
+      "glyph": "ഉ",
+      "codePoint": "U+0D09",
+      "unicodeName": "MALAYALAM LETTER U",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "ഉച്ച",
+          "romanization": "noon, most likely from a different...",
+          "lesson": "ML-C17-ucha-paathira"
+        }
+      ]
+    },
+    {
+      "position": 17,
+      "glyph": "ട",
+      "codePoint": "U+0D1F",
+      "unicodeName": "MALAYALAM LETTER TTA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "ഉണ്ട്",
+          "romanization": "uṇṭŭ",
+          "lesson": "ML-C32-undu"
+        }
+      ]
+    },
+    {
+      "position": 18,
+      "glyph": "ഴ",
+      "codePoint": "U+0D34",
+      "unicodeName": "MALAYALAM LETTER LLLA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "ഉച്ചകഴിഞ്ഞ്",
+          "romanization": "afternoon\"",
+          "lesson": "ML-C28-uchakazhinju"
+        }
+      ]
+    },
+    {
+      "position": 19,
+      "glyph": "ോ",
+      "codePoint": "U+0D4B",
+      "unicodeName": "MALAYALAM VOWEL SIGN OO",
+      "kind": "vowel-sign",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "പോകുക",
+          "romanization": "pōkuka",
+          "lesson": "ML-C32-pokuka"
+        }
+      ]
+    },
+    {
+      "position": 20,
+      "glyph": "ം",
+      "codePoint": "U+0D02",
+      "unicodeName": "MALAYALAM SIGN ANUSVARA",
+      "kind": "vowel-sign",
+      "family": null,
+      "familySource": null,
+      "unlocks": []
+    },
+    {
+      "position": 21,
+      "glyph": "ഷ",
+      "codePoint": "U+0D37",
+      "unicodeName": "MALAYALAM LETTER SSA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "ക്ഷമിക്കണം",
+          "romanization": "(you) should forgive / sorry",
+          "lesson": "ML-C09-kshamikkanam"
+        }
+      ]
+    },
+    {
+      "position": 22,
+      "glyph": "യ",
+      "codePoint": "U+0D2F",
+      "unicodeName": "MALAYALAM LETTER YA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": []
+    },
+    {
+      "position": 23,
+      "glyph": "ദ",
+      "codePoint": "U+0D26",
+      "unicodeName": "MALAYALAM LETTER DA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "ദയവായി",
+          "romanization": "please",
+          "lesson": "ML-C08-dayavayi"
+        }
+      ]
+    },
+    {
+      "position": 24,
+      "glyph": "സ",
+      "codePoint": "U+0D38",
+      "unicodeName": "MALAYALAM LETTER SA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "ദിവസം",
+          "romanization": "day\" — everyday Sanskrit divasam...",
+          "lesson": "ML-C23-divasam"
+        }
+      ]
+    }
+  ]
+}

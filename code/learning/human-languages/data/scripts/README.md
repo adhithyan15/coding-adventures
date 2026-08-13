@@ -56,6 +56,82 @@ holds the structured tone (`"1"`–`"4"` | `"neutral"`). No `forms`, no `marks`.
 }
 ```
 
+## The letter ledger — what order to teach them in
+
+A `<script>.json` says what the letters ARE. A `<script>-ledger.json` says what
+order a reader meets them in, which is a different question with a much less
+obvious answer.
+
+Every one of these scripts has a traditional order — அ ஆ இ ஈ உ ஊ, अ आ इ ई उ ऊ —
+organised by phonology, for a learner who already **speaks** the language and is
+learning to write it. It front-loads independent vowels, which in an abugida
+appear in relatively few words, because the vowel that does the work in running
+text is the *sign* on a consonant. Measured against this corpus, **twelve glyphs
+in recitation order complete zero words.**
+
+This curriculum's reader is the opposite person: they cannot yet speak, and a
+letter is worth exactly what it unlocks. So HL11 orders letters by **the words
+they make writable**, and the ledger records that decision:
+
+```jsonc
+{
+  "script": "tamil",
+  "tracks": ["tamil"],          // Hindi and Sanskrit share the Devanagari ledger
+  "openingWords": 30,           // distinct words in the first 40 lessons
+  "letters": [
+    { "position": 10,
+      "glyph": "…", "codePoint": "U+0BB1", "unicodeName": "TAMIL LETTER RRA",
+      "kind": "letter",
+      "family": "…",            // letters that share a shape, taught together
+      "familySource": "tamil.json notes: \"several letters share a straight top bar…\"",
+      "unlocks": [ { "word": "…", "romanization": "thank you",
+                     "lesson": "TA-C01-nandri" } ] }
+  ]
+}
+```
+
+Measured over the six tracks' opening lessons, ordering this way reaches
+**நன்றி at the tenth Tamil glyph and வணக்கம் at the eleventh**; Devanagari
+reaches नमस्ते at the twelfth. Roughly a third of each track's opening
+vocabulary is writable within 24 positions.
+
+`propose_letter_ledger.py` computes a candidate order and shows its work:
+
+```bash
+python3 propose_letter_ledger.py           # print the proposal for every script
+python3 propose_letter_ledger.py --write   # write <script>-ledger.json
+```
+
+**The committed ledger is authored intent**, in the same sense `chapters.json`
+is: a human reads the proposal, adjusts it, and commits the result. No validator
+rewrites it. "Not yet decided" and "decided and recorded" are different states,
+and a generator that overwrites the second erases the difference.
+
+Two rules the payoff ordering does not get to override:
+
+1. **A vowel sign may not precede the first base letter.** These are abugidas: a
+   mark modifies a letter, and the vowel-killer removes a vowel a letter is
+   carrying. A ledger opening on one describes a lesson that cannot be written
+   down. This costs a position or two and is not negotiable.
+2. **Letters that share a shape are taught together.** Splitting a family across
+   the ledger to chase payoff trades a reading ramp for a writing confusion.
+   Families are extracted *mechanically* wherever a letter's `components` name
+   another letter of the same script (Devanagari records "ध: like द with an extra
+   inner loop"); where a script file states one in prose instead, the ledger
+   carries the sentence that justifies it.
+
+Not one target-script character is typed into the generator. Glyphs are looked
+up by their official Unicode **name**, the same grounding rule
+`generate_syllabary.py` follows, so a maintainer who cannot read the script can
+still audit every line.
+
+Each row also carries its **code point**, because a rendered glyph is not an
+audit surface: it can be a lookalike from another script, and it can carry code
+points that render as nothing at all. `U+0BB1` beside `TAMIL LETTER RRA` is
+checkable without trusting what the character looks like, and the validator
+rejects a glyph that is more than one code point, a code point that disagrees
+with the glyph, or a name from the wrong script.
+
 `components` is the point: each glyph is broken into named parts you can practise
 one at a time on paper. `strokeOrder` puts those visible parts in their usual
 writing order; it is not a count of pen-down strokes. Language Ladder labels every

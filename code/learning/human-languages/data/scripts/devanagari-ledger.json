@@ -1,0 +1,418 @@
+{
+  "script": "devanagari",
+  "version": 1,
+  "note": "Letter ledger (HL11 section 4). AUTHORED INTENT: proposed by propose_letter_ledger.py, then reviewed and committed by hand. A validator may check this file and may never rewrite it. Letters are ordered by the words they make writable, not by recitation order, because this curriculum's reader cannot yet speak the language and a letter is worth exactly what it unlocks.",
+  "tracks": [
+    "hindi",
+    "sanskrit"
+  ],
+  "openingLessons": 40,
+  "openingWords": 73,
+  "letters": [
+    {
+      "position": 1,
+      "glyph": "म",
+      "codePoint": "U+092E",
+      "unicodeName": "DEVANAGARI LETTER MA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "मम",
+          "romanization": "my",
+          "lesson": "SA-C02-mama"
+        }
+      ]
+    },
+    {
+      "position": 2,
+      "glyph": "न",
+      "codePoint": "U+0928",
+      "unicodeName": "DEVANAGARI LETTER NA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "न, म",
+          "romanization": "na, ma",
+          "lesson": "HI-W01-na-ma"
+        }
+      ]
+    },
+    {
+      "position": 3,
+      "glyph": "अ",
+      "codePoint": "U+0905",
+      "unicodeName": "DEVANAGARI LETTER A",
+      "kind": "letter",
+      "family": "अआ",
+      "familySource": "devanagari.json: components of DEVANAGARI LETTER AA name DEVANAGARI LETTER A",
+      "unlocks": [
+        {
+          "word": "अ",
+          "romanization": "a",
+          "lesson": "HI-W02-abugida-ka-ta"
+        }
+      ]
+    },
+    {
+      "position": 4,
+      "glyph": "आ",
+      "codePoint": "U+0906",
+      "unicodeName": "DEVANAGARI LETTER AA",
+      "kind": "letter",
+      "family": "आऔ",
+      "familySource": "devanagari.json: components of DEVANAGARI LETTER AU name DEVANAGARI LETTER AA",
+      "unlocks": []
+    },
+    {
+      "position": 5,
+      "glyph": "्",
+      "codePoint": "U+094D",
+      "unicodeName": "DEVANAGARI SIGN VIRAMA",
+      "kind": "vowel-sign",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "अन्नम्",
+          "romanization": "annam",
+          "lesson": "SA-C10-annam"
+        }
+      ]
+    },
+    {
+      "position": 6,
+      "glyph": "ा",
+      "codePoint": "U+093E",
+      "unicodeName": "DEVANAGARI VOWEL SIGN AA",
+      "kind": "vowel-sign",
+      "family": null,
+      "familySource": null,
+      "unlocks": []
+    },
+    {
+      "position": 7,
+      "glyph": "त",
+      "codePoint": "U+0924",
+      "unicodeName": "DEVANAGARI LETTER TA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": []
+    },
+    {
+      "position": 8,
+      "glyph": "स",
+      "codePoint": "U+0938",
+      "unicodeName": "DEVANAGARI LETTER SA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "स्त",
+          "romanization": "sta",
+          "lesson": "HI-W05-conjuncts"
+        }
+      ]
+    },
+    {
+      "position": 9,
+      "glyph": "ि",
+      "codePoint": "U+093F",
+      "unicodeName": "DEVANAGARI VOWEL SIGN I",
+      "kind": "vowel-sign",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "अस्ति",
+          "romanization": "is",
+          "lesson": "SA-C02-asti"
+        }
+      ]
+    },
+    {
+      "position": 10,
+      "glyph": "र",
+      "codePoint": "U+0930",
+      "unicodeName": "DEVANAGARI LETTER RA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "र, स",
+          "romanization": "ra, sa",
+          "lesson": "HI-W04-ra-sa-mera-naam"
+        },
+        {
+          "word": "सिर",
+          "romanization": "the head — from Sanskrit śiras,...",
+          "lesson": "HI-C13-sir"
+        },
+        {
+          "word": "मित्रम्",
+          "romanization": "mitram",
+          "lesson": "SA-C11-mitram"
+        }
+      ]
+    },
+    {
+      "position": 11,
+      "glyph": "क",
+      "codePoint": "U+0915",
+      "unicodeName": "DEVANAGARI LETTER KA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "क, त",
+          "romanization": "ka, ta",
+          "lesson": "HI-W02-ka-ta-mouth-order"
+        },
+        {
+          "word": "नासिका",
+          "romanization": "nāsikā",
+          "lesson": "SA-C13-nasika"
+        },
+        {
+          "word": "किम्",
+          "romanization": "what",
+          "lesson": "SA-C02-kim"
+        }
+      ]
+    },
+    {
+      "position": 12,
+      "glyph": "े",
+      "codePoint": "U+0947",
+      "unicodeName": "DEVANAGARI VOWEL SIGN E",
+      "kind": "vowel-sign",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "मेरा नाम",
+          "romanization": "merā nām",
+          "lesson": "HI-W04-write-mera-naam"
+        },
+        {
+          "word": "नमस्ते",
+          "romanization": "namaste",
+          "lesson": "HI-W05-write-namaste"
+        }
+      ]
+    },
+    {
+      "position": 13,
+      "glyph": "प",
+      "codePoint": "U+092A",
+      "unicodeName": "DEVANAGARI LETTER PA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "पिता माता",
+          "romanization": "father and mother — Sanskrit...",
+          "lesson": "HI-C12-pitaa-maataa"
+        }
+      ]
+    },
+    {
+      "position": 14,
+      "glyph": "ह",
+      "codePoint": "U+0939",
+      "unicodeName": "DEVANAGARI LETTER HA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "हरा",
+          "romanization": "green — a deep cousin of German...",
+          "lesson": "HI-C24-hara-pila"
+        }
+      ]
+    },
+    {
+      "position": 15,
+      "glyph": "य",
+      "codePoint": "U+092F",
+      "unicodeName": "DEVANAGARI LETTER YA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "स्निह्यति · प्रियम्",
+          "romanization": "snihyati · priyam",
+          "lesson": "SA-C09-snihyati"
+        }
+      ]
+    },
+    {
+      "position": 16,
+      "glyph": "ी",
+      "codePoint": "U+0940",
+      "unicodeName": "DEVANAGARI VOWEL SIGN II",
+      "kind": "vowel-sign",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "पानीयम्",
+          "romanization": "pānīyam",
+          "lesson": "SA-C10-paniyam"
+        }
+      ]
+    },
+    {
+      "position": 17,
+      "glyph": "च",
+      "codePoint": "U+091A",
+      "unicodeName": "DEVANAGARI LETTER CA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "तीन, चार",
+          "romanization": "three and four descend from...",
+          "lesson": "HI-C06-tin-char-history"
+        },
+        {
+          "word": "चिन्तयति",
+          "romanization": "cintayati",
+          "lesson": "SA-C08-cintayati"
+        }
+      ]
+    },
+    {
+      "position": 18,
+      "glyph": "ँ",
+      "codePoint": "U+0901",
+      "unicodeName": "DEVANAGARI SIGN CANDRABINDU",
+      "kind": "vowel-sign",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "पाँच",
+          "romanization": "pāṁch",
+          "lesson": "HI-C06-paanch-nasal"
+        },
+        {
+          "word": "हाँ",
+          "romanization": "yes",
+          "lesson": "HI-C07-haan"
+        }
+      ]
+    },
+    {
+      "position": 19,
+      "glyph": "ष",
+      "codePoint": "U+0937",
+      "unicodeName": "DEVANAGARI LETTER SSA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "क्षीरम्",
+          "romanization": "kṣīram",
+          "lesson": "SA-C10-kshiram"
+        },
+        {
+          "word": "अक्षि",
+          "romanization": "akṣi",
+          "lesson": "SA-C12-akshi"
+        }
+      ]
+    },
+    {
+      "position": 20,
+      "glyph": "ु",
+      "codePoint": "U+0941",
+      "unicodeName": "DEVANAGARI VOWEL SIGN U",
+      "kind": "vowel-sign",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "कुत्ता",
+          "romanization": "dog — a third uncertain-origin...",
+          "lesson": "HI-C23-kutta-billi"
+        }
+      ]
+    },
+    {
+      "position": 21,
+      "glyph": "ल",
+      "codePoint": "U+0932",
+      "unicodeName": "DEVANAGARI LETTER LA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "लाल नीला",
+          "romanization": "red and blue — a Persian...",
+          "lesson": "HI-C11-laal-niila"
+        }
+      ]
+    },
+    {
+      "position": 22,
+      "glyph": "ख",
+      "codePoint": "U+0916",
+      "unicodeName": "DEVANAGARI LETTER KHA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "लिखति",
+          "romanization": "likhati",
+          "lesson": "SA-C08-likhati"
+        },
+        {
+          "word": "मुखम्",
+          "romanization": "mukham",
+          "lesson": "SA-C12-mukham"
+        }
+      ]
+    },
+    {
+      "position": 23,
+      "glyph": "द",
+      "codePoint": "U+0926",
+      "unicodeName": "DEVANAGARI LETTER DA",
+      "kind": "letter",
+      "family": "दध",
+      "familySource": "devanagari.json: components of DEVANAGARI LETTER DHA name DEVANAGARI LETTER DA",
+      "unlocks": [
+        {
+          "word": "खादति",
+          "romanization": "khādati",
+          "lesson": "SA-C07-khadati"
+        }
+      ]
+    },
+    {
+      "position": 24,
+      "glyph": "ध",
+      "codePoint": "U+0927",
+      "unicodeName": "DEVANAGARI LETTER DHA",
+      "kind": "letter",
+      "family": "दध",
+      "familySource": "devanagari.json: components of DEVANAGARI LETTER DHA name DEVANAGARI LETTER DA",
+      "unlocks": []
+    }
+  ]
+}

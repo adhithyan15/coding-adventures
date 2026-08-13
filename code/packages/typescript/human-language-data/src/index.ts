@@ -134,6 +134,7 @@ export {
   loadModalityManifest,
   modalityManifestById,
   loadScripts,
+  loadLetterLedgers,
   loadEverything,
 } from "./loader.js";
 export {
@@ -309,3 +310,13 @@ export {
   runFigureGeneration,
 } from "./figure-cli.js";
 export { generatedModalityOutputs, runModalityManifest } from "./modality-cli.js";
+
+export {
+  validateLetterLedger,
+  summarizeLetterLedger,
+  type LetterLedger,
+  type LedgerLetter,
+  type LedgerUnlock,
+  type LedgerIssue,
+  type LedgerSummary,
+} from "./letter-ledger.js";

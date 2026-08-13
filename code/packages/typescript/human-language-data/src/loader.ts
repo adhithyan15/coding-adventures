@@ -11,6 +11,7 @@ import {
   type ModalityManifestLesson,
 } from "./modality-manifest.js";
 import { buildDataset, parseLesson, type ParsedLesson } from "./parse.js";
+import type { LedgerLetter, LetterLedger } from "./letter-ledger.js";
 import type {
   BookChapter,
   BookCorpus,
@@ -297,6 +298,21 @@ export function modalityManifestById(
   return index;
 }
 
+/** Suffix marking a letter ledger, which lives beside the script inventories. */
+const LEDGER_SUFFIX = "-ledger.json";
+
+/**
+ * Is this a letter ledger rather than a script inventory?
+ *
+ * Case-insensitive on purpose. A file committed as `Tamil-Ledger.json` would
+ * otherwise fail this test, be read as a script inventory, and collide with the
+ * real `tamil.json` under the same key -- which is precisely the collision the
+ * skip exists to prevent.
+ */
+function isLedgerFile(file: string): boolean {
+  return file.toLowerCase().endsWith(LEDGER_SUFFIX);
+}
+
 /** Read data/scripts/*.json (may be empty while scripts are still being authored). */
 export function loadScripts(root = defaultCurriculumRoot()): Record<string, ScriptData> {
   const dir = join(root, "data", "scripts");
@@ -304,8 +320,65 @@ export function loadScripts(root = defaultCurriculumRoot()): Record<string, Scri
   if (!existsSync(dir)) return out;
   for (const file of readdirSync(dir).sort()) {
     if (!file.endsWith(".json")) continue;
+    // A letter ledger sits in this directory and carries the SAME `script` key
+    // as the inventory it orders, so reading both into one map would have one
+    // silently overwrite the other. Which one won would depend on filename
+    // sort order, which is not a thing to depend on.
+    if (isLedgerFile(file)) continue;
     const sd = JSON.parse(readFileSync(join(dir, file), "utf8")) as ScriptData;
     out[sd.script] = sd;
+  }
+  return out;
+}
+
+/**
+ * Read data/scripts/*-ledger.json — the order a reader meets each script's
+ * letters (HL11 section 4).
+ *
+ * Scripts without a ledger are SKIPPED, not defaulted to an empty one, for the
+ * same reason `loadTrackChapters` skips tracks without a capability ledger:
+ * "not yet authored" and "authored and empty" are different kinds of debt, and
+ * collapsing the first into the second erases what the gap report exists to
+ * measure.
+ */
+export function loadLetterLedgers(root = defaultCurriculumRoot()): LetterLedger[] {
+  const dir = join(root, "data", "scripts");
+  if (!existsSync(dir)) return [];
+  const out: LetterLedger[] = [];
+  for (const file of readdirSync(dir).sort()) {
+    if (!isLedgerFile(file)) continue;
+    const raw = JSON.parse(readFileSync(join(dir, file), "utf8")) as Partial<LetterLedger>;
+    // Shape-checked at the boundary. `validateLetterLedger` cannot report a
+    // malformed ledger, because it walks these two arrays before it checks
+    // anything -- so a missing key would surface as an unhandled TypeError out
+    // of `loadEverything`, not as an issue anyone could read.
+    if (!Array.isArray(raw.letters) || !Array.isArray(raw.tracks)) {
+      throw new Error(
+        `${file}: a letter ledger needs 'letters' and 'tracks' arrays`,
+      );
+    }
+    // And the rows, not just the two arrays. The validator reads `glyph`,
+    // `unicodeName` and `unlocks` off every row before it checks anything, so a
+    // row missing one of them fails as an unhandled TypeError out of
+    // `loadEverything` rather than as an error anyone can read. Checking the top
+    // level alone moved that failure down a level; it did not remove it.
+    raw.letters.forEach((row, index) => {
+      const letter = row as Partial<LedgerLetter> | null;
+      if (
+        !letter ||
+        typeof letter !== "object" ||
+        typeof letter.glyph !== "string" ||
+        typeof letter.unicodeName !== "string" ||
+        typeof letter.codePoint !== "string" ||
+        !Array.isArray(letter.unlocks)
+      ) {
+        throw new Error(
+          `${file}: letters[${index}] needs string 'glyph', 'codePoint' and ` +
+          `'unicodeName', and an 'unlocks' array`,
+        );
+      }
+    });
+    out.push(raw as LetterLedger);
   }
   return out;
 }
@@ -319,6 +392,7 @@ export function loadEverything(root = defaultCurriculumRoot()): {
   books: BookCorpus;
   lessons: ParsedLesson[];
   scripts: Record<string, ScriptData>;
+  letterLedgers: LetterLedger[];
   dataset: Dataset;
 } {
   const taxonomy = loadTaxonomy(root);
@@ -328,6 +402,7 @@ export function loadEverything(root = defaultCurriculumRoot()): {
   const books = loadBookCorpus(root);
   const lessons = loadLessons(root);
   const scripts = loadScripts(root);
+  const letterLedgers = loadLetterLedgers(root);
   return {
     taxonomy,
     registry,
@@ -336,6 +411,7 @@ export function loadEverything(root = defaultCurriculumRoot()): {
     books,
     lessons,
     scripts,
+    letterLedgers,
     dataset: buildDataset(taxonomy, lessons),
   };
 }
