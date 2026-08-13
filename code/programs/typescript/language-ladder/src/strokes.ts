@@ -2447,6 +2447,38 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: devanagariAlphabetSource("ग"),
   },
+  // Opiaterein's animation joins the short upper bar directly to the rounded
+  // body, then separately descends the right stem and finishes the headline.
+  // The Central Hindi Directorate deskbook corroborates component order while
+  // staging the bar and body separately: three animated strokes, two lifts.
+  [ductusKey("devanagari", "च")]: {
+    script: "devanagari",
+    glyph: "च",
+    strokes: [
+      { segments: [{ label: "draw the upper bar right and curve around the open body", path: [
+        { x: 45, y: 412 }, { x: 100, y: 412 }, { x: 160, y: 412 },
+        { x: 220, y: 412 }, { x: 280, y: 412 }, { x: 340, y: 412 },
+        { x: 320, y: 395 }, { x: 300, y: 380 }, { x: 270, y: 372 },
+        { x: 235, y: 365 }, { x: 215, y: 350 }, { x: 200, y: 330 },
+        { x: 187, y: 305 }, { x: 178, y: 275 }, { x: 177, y: 250 },
+        { x: 180, y: 218 },
+        { x: 200, y: 185 }, { x: 235, y: 160 }, { x: 280, y: 145 },
+        { x: 325, y: 145 }, { x: 370, y: 160 }, { x: 410, y: 182 },
+        { x: 447, y: 210 }, { x: 470, y: 238 },
+      ] }] },
+      { segments: [{ label: "lift, then descend the right stem", path: [
+        { x: 505, y: 551 }, { x: 505, y: 475 }, { x: 505, y: 395 },
+        { x: 505, y: 315 }, { x: 505, y: 235 }, { x: 505, y: 155 },
+        { x: 505, y: 75 }, { x: 505, y: 5 },
+      ] }] },
+      { segments: [{ label: "lift, then draw the shirorekha left-to-right", path: [
+        { x: 5, y: 585 }, { x: 95, y: 585 }, { x: 185, y: 585 },
+        { x: 275, y: 585 }, { x: 365, y: 585 }, { x: 455, y: 585 },
+        { x: 545, y: 585 }, { x: 644, y: 585 },
+      ] }] },
+    ],
+    source: devanagariAlphabetSource("च"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the
