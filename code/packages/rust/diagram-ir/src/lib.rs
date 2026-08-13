@@ -1,6 +1,6 @@
 //! diagram-ir v0.42.0 - DG00/DG04 semantic IR
 
-pub const VERSION: &str = "0.42.0";
+pub const VERSION: &str = "0.44.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramDirection {
@@ -856,6 +856,25 @@ pub struct LayoutedStructuralDiagram {
 pub enum TemporalKind {
     Gantt,
     Git,
+    Journey,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct JourneyTask {
+    pub label: String,
+    pub score: u8,
+    pub people: Vec<String>,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct JourneySection {
+    pub label: String,
+    pub tasks: Vec<JourneyTask>,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct JourneyDiagram {
+    pub sections: Vec<JourneySection>,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -947,6 +966,7 @@ pub struct GitDiagram {
 pub enum TemporalBody {
     Gantt(GanttDiagram),
     Git(GitDiagram),
+    Journey(JourneyDiagram),
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -1011,6 +1031,15 @@ pub enum LayoutedTemporalItem {
         from_y: f64,
         to_x: f64,
         to_y: f64,
+    },
+    JourneyTask {
+        x: f64,
+        y: f64,
+        width: f64,
+        height: f64,
+        score: u8,
+        label: String,
+        people: Vec<String>,
     },
 }
 
@@ -1101,7 +1130,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.42.0");
+        assert_eq!(VERSION, "0.44.0");
     }
     #[test]
     fn default_direction_is_tb() {

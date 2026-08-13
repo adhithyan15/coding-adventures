@@ -1,0 +1,16 @@
+# @version 5
+# Mermaid 11.16.1 user-journey token grammar.
+# Upstream: packages/mermaid/src/diagrams/user-journey/parser/journey.jison
+
+case_sensitive: false
+
+skip:
+  WHITESPACE        = /[ \t]+/
+  COMMENT           = /(?:%%|#)[^\r\n]*/
+
+NEWLINE             = /\r?\n/
+SEMICOLON           = ";"
+HEADER              = /journey/
+TITLE_STATEMENT     = /title[ \t]+[^#\r\n;]+/
+SECTION_STATEMENT   = /section[ \t]+[^#:\r\n;]+/
+TASK_STATEMENT      = /[^#:\r\n;]+:[ \t]*[0-9]+(?:[ \t]*:[^#\r\n;]*)?/

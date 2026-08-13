@@ -20,6 +20,7 @@ The current native pipeline supports documented subsets of:
 - `sankey`
 - `xychart`
 - `quadrantChart`
+- `journey`
 
 Each supported family lowers into the shared Diagram IR and can continue
 through its family layout package:
@@ -42,6 +43,9 @@ dimensions, axis positions, point radius, padding, independent border widths,
 and title, axis, region, and point-label typography, plus all 15 quadrant theme
 variables. The pinned upstream parser/style corpus and native Metal render
 fixture pass, so `quadrantChart` is tracked at `full` compatibility.
+
+The initial `journey` subset covers titles, sections, integer task scores, and
+comma-separated actors through typed Journey IR, temporal layout, and Paint.
 
 The sequence subset includes participants and actors, aliases, standard solid
 and dotted message arrows, bidirectional/cross/point arrowheads, notes,

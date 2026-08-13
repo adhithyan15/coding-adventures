@@ -12,13 +12,13 @@
 //! place commit nodes and merge arcs.
 
 use diagram_ir::{
-    GitDiagram, GitEvent,
+    GitDiagram, GitEvent, JourneyDiagram,
     LayoutedTemporalDiagram, LayoutedTemporalItem, TaskStart, TaskStatus,
     TemporalBody, TemporalDiagram,
 };
 use std::collections::HashMap;
 
-pub const VERSION: &str = "0.1.0";
+pub const VERSION: &str = "0.2.0";
 
 // ── Constants ─────────────────────────────────────────────────────────────
 
@@ -40,7 +40,33 @@ pub fn layout_temporal_diagram(d: &TemporalDiagram, cw: f64) -> LayoutedTemporal
     match &d.body {
         TemporalBody::Gantt(g) => layout_gantt(&d.title, g, cw),
         TemporalBody::Git(g)   => layout_git(g, cw),
+        TemporalBody::Journey(j) => layout_journey(&d.title, j, cw),
     }
+}
+
+fn layout_journey(title: &Option<String>, diagram: &JourneyDiagram, cw: f64) -> LayoutedTemporalDiagram {
+    let mut items = Vec::new();
+    let mut y = 0.0;
+    if let Some(title) = title {
+        items.push(LayoutedTemporalItem::SectionHeader {
+            x: 0.0, y, width: cw, height: 32.0, label: title.clone(),
+        });
+        y += 36.0;
+    }
+    for section in &diagram.sections {
+        items.push(LayoutedTemporalItem::SectionHeader {
+            x: 0.0, y, width: cw, height: 24.0, label: section.label.clone(),
+        });
+        y += 28.0;
+        for task in &section.tasks {
+            items.push(LayoutedTemporalItem::JourneyTask {
+                x: 16.0, y, width: (cw - 32.0).max(120.0), height: 36.0,
+                score: task.score, label: task.label.clone(), people: task.people.clone(),
+            });
+            y += 42.0;
+        }
+    }
+    LayoutedTemporalDiagram { width: cw, height: y + 16.0, items }
 }
 
 // ── Date helpers ──────────────────────────────────────────────────────────
@@ -318,7 +344,7 @@ mod tests {
         }
     }
 
-    #[test] fn version_exists() { assert_eq!(crate::VERSION, "0.1.0"); }
+    #[test] fn version_exists() { assert_eq!(crate::VERSION, "0.2.0"); }
 
     #[test]
     fn gantt_has_task_bars() {
@@ -366,5 +392,26 @@ mod tests {
     fn git_canvas_width_covers_commits() {
         let d = layout_temporal_diagram(&simple_git(), 800.0);
         assert!(d.width >= 2.0 * COMMIT_SPACING);
+    }
+
+    #[test]
+    fn journey_layout_preserves_score_and_people() {
+        let diagram = TemporalDiagram {
+            kind: TemporalKind::Journey,
+            title: Some("Checkout".into()),
+            body: TemporalBody::Journey(JourneyDiagram {
+                sections: vec![JourneySection {
+                    label: "Payment".into(),
+                    tasks: vec![JourneyTask {
+                        label: "Pay".into(), score: 2, people: vec!["Bob".into()],
+                    }],
+                }],
+            }),
+        };
+        let layout = layout_temporal_diagram(&diagram, 640.0);
+        assert!(layout.items.iter().any(|item| matches!(item,
+            LayoutedTemporalItem::JourneyTask { score: 2, label, people, .. }
+                if label == "Pay" && people == &["Bob"]
+        )));
     }
 }

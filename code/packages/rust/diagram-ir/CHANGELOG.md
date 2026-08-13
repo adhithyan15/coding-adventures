@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.44.0
+
+- Add typed Journey sections, scored tasks, actors, and resolved layout items.
+
 ## 0.43.0
 
 - Preserve all pinned quadrant theme-variable colors through semantic and layout IR.

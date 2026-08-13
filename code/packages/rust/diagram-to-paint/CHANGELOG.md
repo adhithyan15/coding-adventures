@@ -1,5 +1,9 @@
 # Changelog — diagram-to-paint
 
+## 0.43.0
+
+- Lower Journey score rows and actor labels into backend-neutral Paint instructions and shaped glyphs.
+
 ## 0.42.0
 
 - Lower resolved quadrant theme colors into backend-neutral Paint instructions and shaped glyphs.

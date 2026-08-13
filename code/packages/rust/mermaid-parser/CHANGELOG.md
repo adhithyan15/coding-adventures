@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.89.0
+
+- Parse the core Journey grammar into typed semantic IR and native dispatch.
+
 ## 0.88.0
 
 - Gate quadrant compatibility on the pinned upstream parser and style-validation corpus.

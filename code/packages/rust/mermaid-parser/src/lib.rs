@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.88.0";
+pub const VERSION: &str = "0.89.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -20,7 +20,7 @@ use lexer::token::{Token, TokenType};
 use mermaid_lexer::{
     tokenize_mermaid, tokenize_mermaid_c4, tokenize_mermaid_er, tokenize_mermaid_gitgraph,
     tokenize_mermaid_pie, tokenize_mermaid_sankey, tokenize_mermaid_sequence,
-    tokenize_mermaid_state, try_tokenize_mermaid_quadrant,
+    tokenize_mermaid_state, try_tokenize_mermaid_journey, try_tokenize_mermaid_quadrant,
 };
 use parser::grammar_parser::{GrammarASTNode, GrammarParser, DEFAULT_MAX_RULE_DEPTH};
 
@@ -38,6 +38,8 @@ const STATE_PARSER_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/state.grammar");
 const QUADRANT_PARSER_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/quadrant.grammar");
+const JOURNEY_PARSER_GRAMMAR_SOURCE: &str =
+    include_str!("../../../../grammars/mermaid/journey.grammar");
 
 /// Recursion-depth cap for the Mermaid [`GrammarParser`] — see
 /// [`GrammarParser::with_max_depth`] for why this guard exists at all (deep
@@ -489,13 +491,13 @@ fn token_name(token: &Token) -> &str {
 use diagram_ir::{
     Axis, AxisKind, ChartDiagram, ChartKind, ChartOrientation, ChartSeries, Compartment,
     CompartmentKind, GanttDiagram, GanttSection, GanttTask, GitBranch, GitCommitType, GitDiagram,
-    GitEvent, PieSlice, QuadrantConfig, QuadrantPoint, RelKind, SankeyFlow, SankeyNode,
-    SequenceArrowhead, SequenceBlockKind, SequenceCentralConnection, SequenceDiagram,
-    SequenceEvent, SequenceLineStyle, SequenceLink, SequenceNotePlacement, SequenceParticipant,
-    SequenceParticipantGroup, SequenceParticipantKind, SequenceProperty, SequenceTextWrap,
-    SeriesKind, StructuralDiagram, StructuralGroup, StructuralKind, StructuralNode,
-    StructuralNodeKind, StructuralRelationship, TaskStart, TaskStatus, TemporalBody,
-    TemporalDiagram, TemporalKind,
+    GitEvent, JourneyDiagram, JourneySection, JourneyTask, PieSlice, QuadrantConfig, QuadrantPoint,
+    RelKind, SankeyFlow, SankeyNode, SequenceArrowhead, SequenceBlockKind,
+    SequenceCentralConnection, SequenceDiagram, SequenceEvent, SequenceLineStyle, SequenceLink,
+    SequenceNotePlacement, SequenceParticipant, SequenceParticipantGroup, SequenceParticipantKind,
+    SequenceProperty, SequenceTextWrap, SeriesKind, StructuralDiagram, StructuralGroup,
+    StructuralKind, StructuralNode, StructuralNodeKind, StructuralRelationship, TaskStart,
+    TaskStatus, TemporalBody, TemporalDiagram, TemporalKind,
 };
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -581,6 +583,7 @@ impl MermaidDiagramType {
                 | Self::Er
                 | Self::Gantt
                 | Self::GitGraph
+                | Self::Journey
                 | Self::Pie
                 | Self::Quadrant
                 | Self::Sequence
@@ -613,6 +616,9 @@ pub fn detect_mermaid_type(source: &str) -> Result<MermaidDiagramType, ParseErro
     }
     if first.eq_ignore_ascii_case("quadrantChart") {
         return Ok(MermaidDiagramType::Quadrant);
+    }
+    if first.eq_ignore_ascii_case("journey") {
+        return Ok(MermaidDiagramType::Journey);
     }
     let diagram_type = match first.as_str() {
         "flowchart" | "graph" | "flowchart-elk" => MermaidDiagramType::Flowchart,
@@ -692,6 +698,13 @@ pub fn parse_any_mermaid(source: &str) -> Result<MermaidDiagram, ParseError> {
                 body: TemporalBody::Gantt(g),
             })
         }),
+        MermaidDiagramType::Journey => parse_journey(source).map(|(title, journey)| {
+            MermaidDiagram::Temporal(TemporalDiagram {
+                kind: TemporalKind::Journey,
+                title,
+                body: TemporalBody::Journey(journey),
+            })
+        }),
         unsupported => Err(ParseError {
             message: format!(
                 "Mermaid {} diagram family {:?} is recognized but not implemented",
@@ -702,6 +715,70 @@ pub fn parse_any_mermaid(source: &str) -> Result<MermaidDiagram, ParseError> {
             col: 1,
         }),
     }
+}
+
+pub fn parse_journey(source: &str) -> Result<(Option<String>, JourneyDiagram), ParseError> {
+    let preprocessed = preprocess_mermaid_source(source)?;
+    let tokens =
+        try_tokenize_mermaid_journey(&preprocessed.source).map_err(|message| ParseError {
+            message,
+            line: 1,
+            col: 1,
+        })?;
+    let grammar = parse_parser_grammar(JOURNEY_PARSER_GRAMMAR_SOURCE)
+        .unwrap_or_else(|error| panic!("Failed to parse journey.grammar: {error}"));
+    let mut grammar_parser =
+        GrammarParser::new(tokens.clone(), grammar).with_max_depth(MAX_RULE_DEPTH);
+    grammar_parser.parse().map_err(|error| ParseError {
+        message: error.message,
+        line: error.token.line,
+        col: error.token.column,
+    })?;
+
+    let mut title = None;
+    let mut sections = Vec::<JourneySection>::new();
+    for token in tokens {
+        match token.type_name.as_deref() {
+            Some("TITLE_STATEMENT") => {
+                title = Some(token.value["title".len()..].trim().to_string());
+            }
+            Some("SECTION_STATEMENT") => sections.push(JourneySection {
+                label: token.value["section".len()..].trim().to_string(),
+                tasks: Vec::new(),
+            }),
+            Some("TASK_STATEMENT") => {
+                let mut parts = token.value.split(':');
+                let label = parts.next().unwrap_or_default().trim().to_string();
+                let score = parts
+                    .next()
+                    .unwrap_or_default()
+                    .trim()
+                    .parse::<u8>()
+                    .map_err(|_| token_error(&token, "invalid journey task score"))?;
+                let people = parts
+                    .next()
+                    .map(|value| {
+                        value
+                            .split(',')
+                            .map(str::trim)
+                            .filter(|person| !person.is_empty())
+                            .map(str::to_string)
+                            .collect()
+                    })
+                    .unwrap_or_default();
+                let section = sections
+                    .last_mut()
+                    .ok_or_else(|| token_error(&token, "journey task must follow a section"))?;
+                section.tasks.push(JourneyTask {
+                    label,
+                    score,
+                    people,
+                });
+            }
+            _ => {}
+        }
+    }
+    Ok((title, JourneyDiagram { sections }))
 }
 
 fn first_keyword(source: &str) -> String {
@@ -6460,7 +6537,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.88.0");
+        assert_eq!(crate::VERSION, "0.89.0");
     }
 
     #[test]

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.0
+
+- Lay out Mermaid user-journey sections and scored task rows.
+
 ## 0.1.0 — 2026-04-24
 
 ### Added

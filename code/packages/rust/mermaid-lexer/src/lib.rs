@@ -1,6 +1,6 @@
 //! Grammar-driven lexers for Mermaid diagram families.
 
-pub const VERSION: &str = "0.49.0";
+pub const VERSION: &str = "0.50.0";
 
 use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
@@ -19,6 +19,8 @@ const SEQUENCE_TOKEN_GRAMMAR_SOURCE: &str =
 const STATE_TOKEN_GRAMMAR_SOURCE: &str = include_str!("../../../../grammars/mermaid/state.tokens");
 const QUADRANT_TOKEN_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/quadrant.tokens");
+const JOURNEY_TOKEN_GRAMMAR_SOURCE: &str =
+    include_str!("../../../../grammars/mermaid/journey.tokens");
 
 fn create_lexer<'a>(source: &'a str, grammar_source: &str, grammar_name: &str) -> GrammarLexer<'a> {
     let grammar = parse_token_grammar(grammar_source)
@@ -60,6 +62,10 @@ pub fn create_mermaid_state_lexer(source: &str) -> GrammarLexer<'_> {
 
 pub fn create_mermaid_quadrant_lexer(source: &str) -> GrammarLexer<'_> {
     create_lexer(source, QUADRANT_TOKEN_GRAMMAR_SOURCE, "quadrant.tokens")
+}
+
+pub fn create_mermaid_journey_lexer(source: &str) -> GrammarLexer<'_> {
+    create_lexer(source, JOURNEY_TOKEN_GRAMMAR_SOURCE, "journey.tokens")
 }
 
 pub fn tokenize_mermaid(source: &str) -> Vec<Token> {
@@ -249,6 +255,11 @@ pub fn try_tokenize_mermaid_quadrant(source: &str) -> Result<Vec<Token>, String>
     lexer.tokenize().map_err(|error| error.to_string())
 }
 
+pub fn try_tokenize_mermaid_journey(source: &str) -> Result<Vec<Token>, String> {
+    let mut lexer = create_mermaid_journey_lexer(source);
+    lexer.tokenize().map_err(|error| error.to_string())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -260,7 +271,24 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.49.0");
+        assert_eq!(VERSION, "0.50.0");
+    }
+
+    #[test]
+    fn journey_tokenizes_sections_and_scored_tasks() {
+        let tokens = try_tokenize_mermaid_journey(
+            "JoUrNeY\ntitle Checkout\nsection Payment\nPay: 2: Alice, Bob",
+        )
+        .expect("journey tokenization");
+        assert!(tokens
+            .iter()
+            .any(|token| token.type_name.as_deref() == Some("HEADER")));
+        assert!(tokens
+            .iter()
+            .any(|token| token.type_name.as_deref() == Some("SECTION_STATEMENT")));
+        assert!(tokens
+            .iter()
+            .any(|token| token.type_name.as_deref() == Some("TASK_STATEMENT")));
     }
 
     #[test]
