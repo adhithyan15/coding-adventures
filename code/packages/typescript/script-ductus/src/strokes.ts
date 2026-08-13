@@ -3241,6 +3241,43 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: cyrillicAlphabetSource("ё"),
   },
+  // RussianIrina writes lowercase ж as one continuous rounded left-to-centre-
+  // to-right run. Noto Sans Cyrillic prints a straight upright with four arms,
+  // so the sourced zero-lift order is fitted by retracing each side junction
+  // and the central upright before continuing into the opposite wing.
+  [ductusKey("cyrillic", "ж")]: {
+    script: "cyrillic",
+    glyph: "ж",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "trace the left wings and rise through the centre",
+            path: [
+              { x: 60, y: 30 }, { x: 110, y: 100 }, { x: 190, y: 220 },
+              { x: 265, y: 275 }, { x: 210, y: 350 }, { x: 140, y: 455 },
+              { x: 75, y: 510 }, { x: 140, y: 455 }, { x: 210, y: 350 },
+              { x: 265, y: 275 }, { x: 340, y: 275 }, { x: 380, y: 275 },
+              { x: 380, y: 380 }, { x: 380, y: 510 }, { x: 380, y: 380 },
+              { x: 380, y: 275 }, { x: 380, y: 150 }, { x: 380, y: 30 },
+              { x: 380, y: 150 }, { x: 380, y: 275 },
+            ],
+          },
+          {
+            label: "retrace the centre and trace the right wings",
+            path: [
+              { x: 380, y: 275 }, { x: 495, y: 275 }, { x: 560, y: 370 },
+              { x: 630, y: 470 },
+              { x: 690, y: 510 }, { x: 630, y: 470 }, { x: 560, y: 370 },
+              { x: 495, y: 275 }, { x: 560, y: 180 }, { x: 630, y: 80 },
+              { x: 700, y: 30 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: cyrillicAlphabetSource("ж"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the
