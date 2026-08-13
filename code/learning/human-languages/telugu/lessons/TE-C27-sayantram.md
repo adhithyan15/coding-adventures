@@ -7,6 +7,7 @@ chapter: 27
 type: word
 headword: సాయంత్రం
 gloss: "evening" (sāyantram) — Sanskrit tatsama from సాయం (sāyam, "in the evening") + a "-tana" time-adjective suffix; సాయం itself traces to PIE *seh₁- ("long, lasting"), the SAME root as Latin's sērus — attested as the root of French soir and Italian sera — a genuine distant cognate across two completely different Indo-European branches
+romanization: "sāyantram"
 concept_tag: TIME-EVENING
 prerequisites: [TE-C26-udayam]
 sounds: [telugu-anusvara, telugu-conjunct-tra]

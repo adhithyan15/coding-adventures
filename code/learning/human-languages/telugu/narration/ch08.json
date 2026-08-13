@@ -4,14 +4,14 @@
   "chapter": 8,
   "title": "Please",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:88acff6378f254ad",
+  "sourceHash": "fnv1a64:3ef132e7b925743a",
   "lessons": [
     {
       "id": "TE-C08-dayachesi",
       "sequence": 350,
       "title": "దయచేసి (dayacēsi) — please (having done compassion)",
       "headword": "దయచేసి",
-      "romanization": "",
+      "romanization": "dayacēsi",
       "gloss": "please (dayacēsi — \"having done compassion,\" from దయ daya \"compassion\")",
       "script": "telugu",
       "modality": "sight",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b2afdcd482b62280",
+      "sourceHash": "fnv1a64:5da90112221b1c54",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -55,7 +55,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "దయచేసి = please, literally \"having done kindness / compassion.\" Two pieces:"
+              "text": "దయచేసి (dayacēsi) = please, literally \"having done kindness / compassion.\" Two pieces:"
             },
             {
               "kind": "speech",
@@ -109,7 +109,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Honestly: the standalone word is somewhat formal / emphatic. Day-to-day, Telugu politeness rides on the respectful command ending ‑ండి (-aṇḍi): కూర్చోండి (kūrcōṇḍi) \"please sit,\" చెప్పండి (ceppaṇḍi) \"please tell me.\" That -aṇḍi is already \"please.\" Put దయచేసి in front to warm it further."
+              "text": "Honestly: the standalone word is somewhat formal / emphatic. Day-to-day, Telugu politeness rides on the respectful command ending ‑ండి (-aṇḍi): కూర్చోండి (kūrcōṇḍi) \"please sit,\" చెప్పండి (ceppaṇḍi) \"please tell me.\" That -aṇḍi is already \"please.\" Put దయచేసి (dayacēsi) in front to warm it further."
             }
           ]
         },

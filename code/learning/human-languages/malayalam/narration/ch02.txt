@@ -57,7 +57,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What word is എന്റെ the possessive of? (ñāṉ, "I".)
+What word is എന്റെ (enṟe) the possessive of? (ñāṉ, "I".)
 
 
 Lesson 3 of 9.
@@ -69,7 +69,7 @@ Assemble the three atoms — including the copula āṇŭ that Tamil lacks.
 
 The phrase, assembled.
 enṟe (my) + pēru (name) + your name + āṇŭ (is).
-എന്റെ പേര് … ആണ് = "my name … is" = "my name is…"
+എന്റെ (enṟe) പേര് (pēr) … ആണ് = "my name … is" = "my name is…"
 Enṟe pēru Arun āṇŭ. becomes "My name is Arun."
 
 Grammar Lens: verb last.
@@ -152,7 +152,7 @@ Assemble the question — your + name + what-is. And notice the copula hiding in
 The phrase, assembled.
 നിന്റെ (ninṟe, "your") = the possessive of nī ("you").
 എന്താണ് (entāṇŭ) = entŭ (what) + āṇŭ (is), fused into one.
-നിന്റെ പേര് എന്താണ്? = literally "your name what is?"
+നിന്റെ പേര് (pēr) എന്താണ്? = literally "your name what is?"
 Unlike the Tamil question (which had no verb), Malayalam carries its copula āṇŭ right inside the question-word entāṇŭ.
 
 Grammar Lens: answer, and the respectful version.
@@ -251,4 +251,4 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Is സന്തോഷം native or Sanskrit, and what does that show about how Malayalam borrows? (Sanskrit; it borrows selectively — native for some words, Sanskrit for others.)
+Is സന്തോഷം (santōṣam) native or Sanskrit, and what does that show about how Malayalam borrows? (Sanskrit; it borrows selectively — native for some words, Sanskrit for others.)

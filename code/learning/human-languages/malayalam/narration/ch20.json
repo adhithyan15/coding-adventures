@@ -4,7 +4,7 @@
   "chapter": 20,
   "title": "Numbers 11–20 and Weather",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:f974ebaac51f7c0e",
+  "sourceHash": "fnv1a64:8bbb05afdc796123",
   "lessons": [
     {
       "id": "ML-C20-pathinonnu-irupathu",
@@ -123,9 +123,9 @@
     {
       "id": "ML-C20-kalavastha",
       "sequence": 500,
-      "title": "കാലാവസ്ഥ — \"the state of time,\" an echo of Spanish's tiempo",
+      "title": "കാലാവസ്ഥ (kālāvastha) — \"the state of time,\" an echo of Spanish's tiempo",
       "headword": "കാലാവസ്ഥ",
-      "romanization": "",
+      "romanization": "kālāvastha",
       "gloss": "weather — a Sanskrit compound literally meaning \"state of TIME\": kaala (\"time\") + avastha (\"state, condition\") — a real echo of Spanish's tiempo meaning both \"time\" AND \"weather\"",
       "script": "malayalam",
       "modality": "voice",
@@ -133,7 +133,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0ad30d747675aade",
+      "sourceHash": "fnv1a64:173012b20e03f833",
       "notice": null,
       "blocks": [
         {
@@ -240,7 +240,7 @@
             },
             {
               "kind": "speech",
-              "text": "What are the two Sanskrit pieces of കാലാവസ്ഥ, and what does the whole word literally mean? (കാലം, \"time,\" + അവസ്ഥ, \"state\" — \"the state of time.\") What earlier lesson does this echo, and how is the construction different? (Spanish's tiempo — Spanish reuses ONE word for both senses; Malayalam compounds two separate words instead.) What word does Malayalam use for \"rain\"? (മഴ, mazha.)"
+              "text": "What are the two Sanskrit pieces of കാലാവസ്ഥ (kālāvastha), and what does the whole word literally mean? (കാലം, \"time,\" + അവസ്ഥ, \"state\" — \"the state of time.\") What earlier lesson does this echo, and how is the construction different? (Spanish's tiempo — Spanish reuses ONE word for both senses; Malayalam compounds two separate words instead.) What word does Malayalam use for \"rain\"? (മഴ, mazha.)"
             }
           ]
         }

@@ -7,6 +7,7 @@ chapter: 20
 type: phrase
 headword: వాతావరణం
 gloss: weather/atmosphere — a PURE Sanskrit compound, unlike Kannada's Persian+Sanskrit hybrid: vata ("air/wind") + avarana ("covering")
+romanization: "vātāvaraṇam"
 concept_tag: TE-WEATHER
 prerequisites: [TE-C18-ganta]
 sounds: [telugu-anusvara, telugu-compound-word]

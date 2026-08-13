@@ -4,6 +4,7 @@ chapter: 5
 type: word
 headword: താമസിക്കുക
 gloss: to live, to stay
+romanization: "tāmasikkuka"
 concept_tag: ML-VERB-TAAMASIKKUKA
 prerequisites: [ML-C05-samsaarikkuka]
 sounds: [long-aa, double-kk]

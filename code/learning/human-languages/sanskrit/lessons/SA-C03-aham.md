@@ -4,6 +4,7 @@ chapter: 3
 type: word
 headword: अहम्
 gloss: I
+romanization: "aham"
 concept_tag: PRONOUN-I
 prerequisites: [SA-C02-mama]
 sounds: [inherent-a, halant]

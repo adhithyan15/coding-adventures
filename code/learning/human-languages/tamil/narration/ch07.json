@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Numbers One to Ten",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:3a0207b0f2cb9ddd",
+  "sourceHash": "fnv1a64:1844516eb788dc98",
   "lessons": [
     {
       "id": "TA-C07-numbers-1-5",
@@ -131,7 +131,7 @@
       "sequence": 430,
       "title": "Two to five — one family in four regional coats",
       "headword": "இரண்டு மூன்று நான்கு ஐந்து",
-      "romanization": "",
+      "romanization": "iraṇṭu mūṉṟu nāṉku aintu",
       "gloss": "two through five remain visible cousins across the Dravidian family while one is less tidy",
       "script": "tamil",
       "modality": "sight",
@@ -139,7 +139,7 @@
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:1348a3cd6d2254dc",
+      "sourceHash": "fnv1a64:1a1d31d055362221",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -599,7 +599,7 @@
       "sequence": 460,
       "title": "Six to ten — family resemblances and one Kannada shift",
       "headword": "ஆறு ஏழு பத்து",
-      "romanization": "",
+      "romanization": "āṟu ēḻu pattu",
       "gloss": "six, seven, and ten stay family cousins while Kannada regularly softens p to h",
       "script": "tamil",
       "modality": "voice",
@@ -607,7 +607,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cee9f967507bdf77",
+      "sourceHash": "fnv1a64:7cd6282c54e9b939",
       "notice": null,
       "blocks": [
         {

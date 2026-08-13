@@ -30,7 +30,7 @@ How are Malayalam's teens built? (പത്ത് (ten) + a digit, compounded.) 
 
 
 Lesson 2 of 2.
-കാലാവസ്ഥ — "the state of time," an echo of Spanish's tiempo.
+കാലാവസ്ഥ (kālāvastha) — "the state of time," an echo of Spanish's tiempo.
 
 Warm-up.
 [pause 2 seconds]
@@ -56,4 +56,4 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What are the two Sanskrit pieces of കാലാവസ്ഥ, and what does the whole word literally mean? (കാലം, "time," + അവസ്ഥ, "state" — "the state of time.") What earlier lesson does this echo, and how is the construction different? (Spanish's tiempo — Spanish reuses ONE word for both senses; Malayalam compounds two separate words instead.) What word does Malayalam use for "rain"? (മഴ, mazha.)
+What are the two Sanskrit pieces of കാലാവസ്ഥ (kālāvastha), and what does the whole word literally mean? (കാലം, "time," + അവസ്ഥ, "state" — "the state of time.") What earlier lesson does this echo, and how is the construction different? (Spanish's tiempo — Spanish reuses ONE word for both senses; Malayalam compounds two separate words instead.) What word does Malayalam use for "rain"? (മഴ, mazha.)

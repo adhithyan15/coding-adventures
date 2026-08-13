@@ -4,14 +4,14 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:dcf6cb6bc6f91b5c",
+  "sourceHash": "fnv1a64:d17260b497a1a61b",
   "lessons": [
     {
       "id": "SA-C03-aham",
       "sequence": null,
       "title": "अहम् (aham) — \"I,\" the ancestor of ego and I",
       "headword": "अहम्",
-      "romanization": "",
+      "romanization": "aham",
       "gloss": "I",
       "script": "devanagari",
       "modality": "sight",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:45944c82838832c8",
+      "sourceHash": "fnv1a64:e4d464718ba5ab00",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -259,7 +259,7 @@
       "sequence": null,
       "title": "कथम् (katham) — \"how,\" another of the ka- questions",
       "headword": "कथम्",
-      "romanization": "",
+      "romanization": "katham",
       "gloss": "how",
       "script": "devanagari",
       "modality": "sight",
@@ -267,7 +267,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:656fec3705a363e8",
+      "sourceHash": "fnv1a64:ea990077d737ff9d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -373,7 +373,7 @@
       "sequence": null,
       "title": "कुशलम् (kuśalam) — \"well-being,\" and how to answer",
       "headword": "कुशलम्",
-      "romanization": "",
+      "romanization": "kuśalam",
       "gloss": "well-being — and the reply \"अहं कुशली अस्मि\"",
       "script": "devanagari",
       "modality": "sight",
@@ -381,7 +381,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3fe117d8b3a2e1c0",
+      "sourceHash": "fnv1a64:eb5b5c3c0329f734",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -511,7 +511,7 @@
       "sequence": null,
       "title": "न चिन्ता (na cintā) — \"no worry\"",
       "headword": "न चिन्ता",
-      "romanization": "",
+      "romanization": "na cintā",
       "gloss": "no worry / it's nothing / you're welcome",
       "script": "devanagari",
       "modality": "sight",
@@ -519,7 +519,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3b49148c41bacfa4",
+      "sourceHash": "fnv1a64:dad6ae7aacfbb389",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -566,7 +566,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "न चिन्ता literally means \"[there is] no worry / no anxiety\" — used for \"never mind / no trouble / you're welcome.\" Two atoms: न (na, \"not\"), the ancient negative from Chapter 1 — PIE ne, behind English no, not, Latin nōn, and every Indo-Aryan \"no.\" And चिन्ता (cintā, \"anxious thought\"), from the root चिन्त् (cint, \"to think, ponder\") — the same cintā borrowed into Hindi and Urdu (cintā mat karo, \"don't worry\"). So the reply pairs the family's oldest negative with a verb of thinking: \"think nothing of it.\""
+              "text": "न चिन्ता (na cintā) literally means \"[there is] no worry / no anxiety\" — used for \"never mind / no trouble / you're welcome.\" Two atoms: न (na, \"not\"), the ancient negative from Chapter 1 — PIE ne, behind English no, not, Latin nōn, and every Indo-Aryan \"no.\" And चिन्ता (cintā, \"anxious thought\"), from the root चिन्त् (cint, \"to think, ponder\") — the same cintā borrowed into Hindi and Urdu (cintā mat karo, \"don't worry\"). So the reply pairs the family's oldest negative with a verb of thinking: \"think nothing of it.\""
             }
           ]
         },

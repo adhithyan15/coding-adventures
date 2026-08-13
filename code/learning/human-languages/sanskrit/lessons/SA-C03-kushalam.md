@@ -4,6 +4,7 @@ chapter: 3
 type: word
 headword: कुशलम्
 gloss: well-being — and the reply "अहं कुशली अस्मि"
+romanization: "kuśalam"
 concept_tag: WORD-WELL
 prerequisites: [SA-C03-aham, SA-C03-bhavan-katham-asti]
 sounds: [inherent-a, sha, halant]

@@ -7,6 +7,7 @@ chapter: 26
 type: word
 headword: രാവിലെ
 gloss: "morning" (rāvile) — a compound of രാവ് (rāvŭ, "night," a cognate doublet of ഇരവ്/iravŭ already met in ML-C24 — same root, not literally the same word) + locative-ish suffixes -il/-e; literally built from NIGHT, not light or rising — a genuinely different strategy than Kannada's "the shining" or Telugu's Sanskrit "rise"; പ്രഭാതം (Sanskrit tatsama, the same prabhāta root Telugu draws on) and പുലർച്ച (native, thinner etymology) also exist as alternatives
+romanization: "rāvile"
 concept_tag: TIME-MORNING
 prerequisites: [ML-C24-native-night-words]
 sounds: [malayalam-vowel-sign-e, malayalam-virama-va]

@@ -5,6 +5,7 @@ sequence: 300
 type: word
 headword: பேசு
 gloss: to speak
+romanization: "pēsu"
 concept_tag: TA-VERB-PESU
 prerequisites: [TA-C03-naan]
 sounds: [long-e]

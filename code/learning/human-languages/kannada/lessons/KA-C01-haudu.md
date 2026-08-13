@@ -4,6 +4,7 @@ chapter: 1
 type: word
 headword: ಹೌದು
 gloss: yes (haudu)
+romanization: "haudu"
 concept_tag: RESPONSE-YES
 prerequisites: [KA-C01-namaskara]
 sounds: [au-vowel-sign, u-vowel-sign]

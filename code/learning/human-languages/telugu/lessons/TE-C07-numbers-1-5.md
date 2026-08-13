@@ -7,6 +7,7 @@ chapter: 7
 type: word
 headword: ఒకటి రెండు మూడు నాలుగు ఐదు
 gloss: one to five — the Dravidian family numbers, with Telugu's maverick "one"
+romanization: "okaṭi reṇḍu mūḍu nālugu aidu"
 concept_tag: TE-NUMBERS-1-5
 prerequisites: [TE-C01-namaskaram]
 sounds: [telugu-inherent-a, retroflex-series, telugu-u-ending]

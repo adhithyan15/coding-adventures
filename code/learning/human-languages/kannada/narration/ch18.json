@@ -4,14 +4,14 @@
   "chapter": 18,
   "title": "Telling Time",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:3ece51b0bab8b3df",
+  "sourceHash": "fnv1a64:34a73d7f5a4728c8",
   "lessons": [
     {
       "id": "KA-C18-gante",
       "sequence": 460,
-      "title": "ಗಂಟೆ — the same \"bell\" word as Hindi, borrowed through Prakrit",
+      "title": "ಗಂಟೆ (gaṇṭe) — the same \"bell\" word as Hindi, borrowed through Prakrit",
       "headword": "ಗಂಟೆ",
-      "romanization": "",
+      "romanization": "gaṇṭe",
       "gloss": "hour — the SAME Sanskrit \"bell\" word behind Hindi's ghantā, borrowed via Prakrit",
       "script": "kannada",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f73a4d5c3f34c2df",
+      "sourceHash": "fnv1a64:5c0078edb9547165",
       "notice": null,
       "blocks": [
         {
@@ -133,7 +133,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does ಗಂಟೆ mean besides \"hour,\" and what Sanskrit word is it related to? (\"Bell, gong\" — related to Sanskrit ghaṇṭā.) Is this the same root Hindi uses for \"hour\"? (Yes — Hindi's ghanṭā is the same Sanskrit word.) Does Tamil use this same Sanskrit root for \"hour\"? (Most likely not — it uses a native Dravidian word instead, arrived at independently.)"
+              "text": "What does ಗಂಟೆ (gaṇṭe) mean besides \"hour,\" and what Sanskrit word is it related to? (\"Bell, gong\" — related to Sanskrit ghaṇṭā.) Is this the same root Hindi uses for \"hour\"? (Yes — Hindi's ghanṭā is the same Sanskrit word.) Does Tamil use this same Sanskrit root for \"hour\"? (Most likely not — it uses a native Dravidian word instead, arrived at independently.)"
             }
           ]
         }

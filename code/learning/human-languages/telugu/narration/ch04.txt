@@ -15,7 +15,7 @@ The letters in this word.
 మళ్ళీ (maḷḷī): note the doubled retroflex ళ్ళ (ḷḷ), the same sound as in veḷḷu. కలుద్దాం (kaluddām, "let's meet") you just learned.
 
 The word, taken apart.
-మళ్ళీ కలుద్దాం = మళ్ళీ (maḷḷī, "again") + కలుద్దాం (kaluddām, "let's meet") — "we'll meet again." Both words are native Dravidian: maḷḷī ("again," from maral, "to return") and kalu ("to meet"). Where Tamil's "we'll meet again" (mīṇḍum sandippōm) reaches for the Sanskrit loan sandi to say "meet," Telugu keeps the native kalu — a small reminder that these sisters make the same phrase from different stock.
+మళ్ళీ కలుద్దాం (maḷḷī kaluddām) = మళ్ళీ (maḷḷī, "again") + కలుద్దాం (kaluddām, "let's meet") — "we'll meet again." Both words are native Dravidian: maḷḷī ("again," from maral, "to return") and kalu ("to meet"). Where Tamil's "we'll meet again" (mīṇḍum sandippōm) reaches for the Sanskrit loan sandi to say "meet," Telugu keeps the native kalu — a small reminder that these sisters make the same phrase from different stock.
 
 Guided Practice.
 [pause 1 second]
@@ -109,7 +109,7 @@ The letters in this word.
 వెళ్ళి (veḷḷi, "having gone") is veḷḷu + the "-i" that means "having …d." వస్తాను (vastānu, "I come/will come") is from vaccu ("come") + "I."
 
 The word, taken apart.
-వెళ్ళి వస్తాను = వెళ్ళి (veḷḷi, "having gone") + వస్తాను (vastānu, "I come") — literally "having gone, I come [back]," i.e. "I'll go and come back." A Telugu speaker never signs off with a bare "I'm leaving" — that sounds final. Instead they promise return. It is the same "go-and-come-back" farewell you meet across the Dravidian south (Tamil pōy varugiṟēṉ, Kannada hōgi baruttēne, Malayalam pōyi varāṁ) and echoing into the Indo-Aryan tracks (Bengali āshi). The warm reply is వెళ్ళి రండి (veḷḷi raṇḍi, "go and come [back]").
+వెళ్ళి వస్తాను (veḷḷi vastānu) = వెళ్ళి (veḷḷi, "having gone") + వస్తాను (vastānu, "I come") — literally "having gone, I come [back]," i.e. "I'll go and come back." A Telugu speaker never signs off with a bare "I'm leaving" — that sounds final. Instead they promise return. It is the same "go-and-come-back" farewell you meet across the Dravidian south (Tamil pōy varugiṟēṉ, Kannada hōgi baruttēne, Malayalam pōyi varāṁ) and echoing into the Indo-Aryan tracks (Bengali āshi). The warm reply is వెళ్ళి రండి (veḷḷi raṇḍi, "go and come [back]").
 
 Grammar Lens: the "having …d" participle.
 Veḷḷi is Telugu's way of chaining actions: "having gone, (then) I come." Like its sisters, Telugu strings verbs with one in the participle form and the last one fully conjugated.

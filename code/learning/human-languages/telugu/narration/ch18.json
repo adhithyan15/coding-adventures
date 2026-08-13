@@ -4,14 +4,14 @@
   "chapter": 18,
   "title": "Telling Time",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:c703d071cc0d8e4b",
+  "sourceHash": "fnv1a64:ac4a6a0a1c0dcb2c",
   "lessons": [
     {
       "id": "TE-C18-ganta",
       "sequence": 450,
-      "title": "గంట — matching Kannada and Hindi's \"bell\" word exactly",
+      "title": "గంట (ganṭa) — matching Kannada and Hindi's \"bell\" word exactly",
       "headword": "గంట",
-      "romanization": "",
+      "romanization": "ganṭa",
       "gloss": "hour — matching Kannada and Hindi exactly, the same Sanskrit \"bell\" word",
       "script": "telugu",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:46fbe5e7dd9ad73b",
+      "sourceHash": "fnv1a64:76a79508d5a71fce",
       "notice": null,
       "blocks": [
         {

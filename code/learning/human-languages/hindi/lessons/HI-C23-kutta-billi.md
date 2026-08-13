@@ -7,6 +7,7 @@ chapter: 23
 type: word
 headword: कुत्ता
 gloss: dog — a third uncertain-origin everyday word displacing an inherited PIE dog-word
+romanization: "kuttā"
 concept_tag: HI-ANIMALS
 prerequisites: [HI-C22-gyarah-bees]
 sounds: [conjunct-tta, conjunct-lli]

@@ -4,14 +4,14 @@
   "chapter": 27,
   "title": "Evening",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:5b610fd79895225e",
+  "sourceHash": "fnv1a64:c09f7860a5c9b52d",
   "lessons": [
     {
       "id": "KA-C27-sanje",
       "sequence": 560,
       "title": "ಸಂಜೆ (sañje) — a Sanskrit word that arrived already worn down",
       "headword": "ಸಂಜೆ",
-      "romanization": "",
+      "romanization": "sañje",
       "gloss": "\"evening\" (sañje) — borrowed from Maharashtri Prakrit sañjhā, itself from Sanskrit संध्या (saṃdhyā); a striking cross-family convergence with Hindi's साँझ/sāñjh, same Sanskrit root, arriving via a DIFFERENT sister Prakrit dialect",
       "script": "kannada",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1466642b866e29ed",
+      "sourceHash": "fnv1a64:72a485ed0029a2cf",
       "notice": null,
       "blocks": [
         {
@@ -114,7 +114,7 @@
             },
             {
               "kind": "speech",
-              "text": "Does ಸಂಜೆ arrive in Kannada as a fresh, whole Sanskrit tatsama, like dina and ratri did? (No — it arrived already worn down, via Maharashtri Prakrit ಸಂಝಾ.) What Hindi word shares ಸಂಜೆ's exact Sanskrit root, and by what different path did it get there? (साँझ (sāñjh) — inherited via a different sister Prakrit, Śauraseni, rather than borrowed via Maharashtri.)"
+              "text": "Does ಸಂಜೆ (sañje) arrive in Kannada as a fresh, whole Sanskrit tatsama, like dina and ratri did? (No — it arrived already worn down, via Maharashtri Prakrit ಸಂಝಾ.) What Hindi word shares ಸಂಜೆ (sañje)'s exact Sanskrit root, and by what different path did it get there? (साँझ (sāñjh) — inherited via a different sister Prakrit, Śauraseni, rather than borrowed via Maharashtri.)"
             }
           ]
         }

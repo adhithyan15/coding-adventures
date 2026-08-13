@@ -4,6 +4,7 @@ chapter: 3
 type: word
 headword: मैं
 gloss: I
+romanization: "maiṁ"
 concept_tag: PRONOUN-I
 prerequisites: [HI-C02-meraa]
 sounds: [anusvara, matra-ai]

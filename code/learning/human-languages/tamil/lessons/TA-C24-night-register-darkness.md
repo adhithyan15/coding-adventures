@@ -7,6 +7,7 @@ chapter: 24
 type: grammar
 headword: இரவு / ராத்திரி / இருள்
 gloss: one source prefers rāttiri colloquially, a claim to test against native usage; iruḷ means darkness
+romanization: "iravu / rāttiri / iruḷ"
 prerequisites: [TA-C24-iravu]
 sounds: [tamil-retroflex-lla]
 roots: [proto-dravidian-cira-darkness, proto-dravidian-cirvl, sanskrit-ratri]

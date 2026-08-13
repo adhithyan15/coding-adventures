@@ -4,6 +4,7 @@ chapter: 4
 type: phrase
 headword: ನಾಳೆ ಸಿಗೋಣ
 gloss: see you tomorrow
+romanization: "nāḷe sigōṇa"
 concept_tag: FAREWELL-TOMORROW
 prerequisites: [KA-C04-hoogi-baruttene]
 sounds: [long-aa, retroflex-l]

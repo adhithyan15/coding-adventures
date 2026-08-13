@@ -4,6 +4,7 @@ chapter: 2
 type: word
 headword: क्या
 gloss: what
+romanization: "kyā"
 concept_tag: QUESTION-WHAT
 prerequisites: [HI-C02-aap-tum]
 sounds: [conjunct-kya, matra-aa]

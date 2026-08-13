@@ -4,6 +4,7 @@ chapter: 5
 type: word
 headword: ಮಾತನಾಡು
 gloss: to speak
+romanization: "mātanāḍu"
 concept_tag: KA-VERB-MATANADU
 prerequisites: [KA-C03-naanu]
 sounds: [long-aa]

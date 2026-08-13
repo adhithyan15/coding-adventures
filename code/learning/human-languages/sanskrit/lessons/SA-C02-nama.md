@@ -4,6 +4,7 @@ chapter: 2
 type: word
 headword: नाम
 gloss: name
+romanization: "nāma"
 concept_tag: WORD-NAME
 prerequisites: []
 sounds: [inherent-a, long-aa]

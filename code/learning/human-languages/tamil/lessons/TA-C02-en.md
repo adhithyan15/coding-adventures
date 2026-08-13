@@ -5,6 +5,7 @@ sequence: 110
 type: word
 headword: என்
 gloss: my
+romanization: "eṉ"
 concept_tag: PRONOUN-MY
 prerequisites: [TA-C02-peyar]
 sounds: []

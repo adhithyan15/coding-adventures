@@ -4,14 +4,14 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:d9491d4801d7b49f",
+  "sourceHash": "fnv1a64:6bfd8b90401aa63a",
   "lessons": [
     {
       "id": "KA-C01-dhanyavada",
       "sequence": null,
       "title": "ಧನ್ಯವಾದ (dhanyavāda) — \"thank you,\" an utterance of \"worthy\"",
       "headword": "ಧನ್ಯವಾದ",
-      "romanization": "",
+      "romanization": "dhanyavāda",
       "gloss": "thank you (dhanyavāda — \"an utterance of 'worthy'\")",
       "script": "kannada",
       "modality": "sight",
@@ -20,7 +20,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:035084b4558bdd72",
+      "sourceHash": "fnv1a64:e076f11a393cf450",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -188,7 +188,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read ಧನ್ಯವಾದ. What are its two Sanskrit pieces? (dhanya \"worthy\" + vāda \"a saying.\") Which two Dravidian languages use a native word for thanks instead? (Tamil naṉṟi, Malayalam nandi.)"
+              "text": "Read ಧನ್ಯವಾದ (dhanyavāda). What are its two Sanskrit pieces? (dhanya \"worthy\" + vāda \"a saying.\") Which two Dravidian languages use a native word for thanks instead? (Tamil naṉṟi, Malayalam nandi.)"
             }
           ]
         }
@@ -199,7 +199,7 @@
       "sequence": null,
       "title": "ಹೌದು (haudu) — \"yes\"",
       "headword": "ಹೌದು",
-      "romanization": "",
+      "romanization": "haudu",
       "gloss": "yes (haudu)",
       "script": "kannada",
       "modality": "sight",
@@ -207,7 +207,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:762cd4edbe26fc8e",
+      "sourceHash": "fnv1a64:24a0fb20fb0d6d6c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -349,7 +349,7 @@
       "sequence": null,
       "title": "ಇಲ್ಲ (illa) — \"no,\" and a word Tamil shares almost exactly",
       "headword": "ಇಲ್ಲ",
-      "romanization": "",
+      "romanization": "illa",
       "gloss": "no / there isn't (illa — the negative)",
       "script": "kannada",
       "modality": "sight",
@@ -357,7 +357,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5d8cbb19876741f0",
+      "sourceHash": "fnv1a64:137f2e107f2fa603",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -539,7 +539,7 @@
       "sequence": null,
       "title": "ನಮಸ್ಕಾರ (namaskāra) — \"greetings,\" a making of a bow",
       "headword": "ನಮಸ್ಕಾರ",
-      "romanization": "",
+      "romanization": "namaskāra",
       "gloss": "hello / greetings (namaskāra — \"a making of a bow\")",
       "script": "kannada",
       "modality": "sight",
@@ -547,7 +547,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3466dc173743e691",
+      "sourceHash": "fnv1a64:1d1d261ef3641d39",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -719,7 +719,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read ನಮಸ್ಕಾರ. Is it a native Kannada word or a borrowing, and what does it literally mean? (Sanskrit namas + kāra, \"the making of a bow.\") Which Dravidian language kept a native word for \"hello\" instead? (Tamil, vaṇakkam.)"
+              "text": "Read ನಮಸ್ಕಾರ (namaskāra). Is it a native Kannada word or a borrowing, and what does it literally mean? (Sanskrit namas + kāra, \"the making of a bow.\") Which Dravidian language kept a native word for \"hello\" instead? (Tamil, vaṇakkam.)"
             }
           ]
         }
@@ -886,7 +886,7 @@
       "sequence": null,
       "title": "ಸರಿ (sari) — \"okay,\" the word that oils every conversation",
       "headword": "ಸರಿ",
-      "romanization": "",
+      "romanization": "sari",
       "gloss": "okay / alright / correct (sari)",
       "script": "kannada",
       "modality": "sight",
@@ -894,7 +894,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:805a095b1041dc57",
+      "sourceHash": "fnv1a64:d7868413537d644d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1029,7 +1029,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read ಸರಿ. What does it literally mean, and what does it do in conversation? (\"Correct/even\" becomes \"okay, agreed.\") Is it native or borrowed, and which sister language spells the same word சரி? (Native Dravidian; Tamil.)"
+              "text": "Read ಸರಿ (sari). What does it literally mean, and what does it do in conversation? (\"Correct/even\" becomes \"okay, agreed.\") Is it native or borrowed, and which sister language spells the same word சரி? (Native Dravidian; Tamil.)"
             }
           ]
         }

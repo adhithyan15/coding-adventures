@@ -4,6 +4,7 @@ chapter: 1
 type: word
 headword: అవును
 gloss: yes (avunu)
+romanization: "avunu"
 concept_tag: RESPONSE-YES
 prerequisites: [TE-C01-namaskaram]
 sounds: [independent-vowel-a, u-vowel-sign]

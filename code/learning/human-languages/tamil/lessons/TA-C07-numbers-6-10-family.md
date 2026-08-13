@@ -7,6 +7,7 @@ chapter: 7
 type: etymology
 headword: ஆறு ஏழு பத்து
 gloss: six, seven, and ten stay family cousins while Kannada regularly softens p to h
+romanization: "āṟu ēḻu pattu"
 prerequisites: [TA-C07-numbers-6-10]
 sounds: [kannada-p-to-h, tamil-retroflex-liquid]
 roots: [proto-dravidian-numbers]

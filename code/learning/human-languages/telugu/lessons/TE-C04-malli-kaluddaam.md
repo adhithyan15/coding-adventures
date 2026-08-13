@@ -4,6 +4,7 @@ chapter: 4
 type: phrase
 headword: మళ్ళీ కలుద్దాం
 gloss: we'll meet again
+romanization: "maḷḷī kaluddām"
 concept_tag: FAREWELL-LATER
 prerequisites: [TE-C04-reepu-kaluddaam]
 sounds: [retroflex-ll]

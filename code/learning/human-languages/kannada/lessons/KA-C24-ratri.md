@@ -7,6 +7,7 @@ chapter: 24
 type: word
 headword: ರಾತ್ರಿ
 gloss: "night" — the same Sanskrit tatsama word already hiding inside madhyarātri; Kannada's real native Dravidian word, irulu, has been pushed into archaism, unlike hagalu's living daytime sense
+romanization: "rātri"
 concept_tag: TIME-NIGHT
 prerequisites: [KA-C17-madhyaahna-madhyaraatri, KA-C23-dina]
 sounds: [kannada-conjunct-tra, kannada-vowel-sign-i]

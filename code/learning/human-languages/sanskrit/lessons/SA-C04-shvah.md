@@ -4,6 +4,7 @@ chapter: 4
 type: word
 headword: श्वः
 gloss: tomorrow — and "see you tomorrow"
+romanization: "śvaḥ"
 concept_tag: FAREWELL-TOMORROW
 prerequisites: [SA-C04-punar-darshanaya]
 sounds: [shva-conjunct, visarga]

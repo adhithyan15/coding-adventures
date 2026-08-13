@@ -4,6 +4,7 @@ chapter: 5
 type: word
 headword: ജോലി ചെയ്യുക
 gloss: to work (lit. "work-do")
+romanization: "jōli ceyyuka"
 concept_tag: ML-VERB-CEYYUKA
 prerequisites: [ML-C05-samsaarikkuka]
 sounds: [double-yy]

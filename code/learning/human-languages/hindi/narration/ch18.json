@@ -4,14 +4,14 @@
   "chapter": 18,
   "title": "Telling Time",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:a720d6b0f6833ce7",
+  "sourceHash": "fnv1a64:fdb0dddee83d2690",
   "lessons": [
     {
       "id": "HI-C18-ghanta",
       "sequence": 400,
-      "title": "घंटा — \"hour,\" literally \"bell\"",
+      "title": "घंटा (ghaṇṭā) — \"hour,\" literally \"bell\"",
       "headword": "घंटा",
-      "romanization": "",
+      "romanization": "ghaṇṭā",
       "gloss": "hour — literally \"bell,\" from the historical practice of striking a bell to mark the hour",
       "script": "devanagari",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:feb6c6d4810251db",
+      "sourceHash": "fnv1a64:c839d2ce20177497",
       "notice": null,
       "blocks": [
         {

@@ -4,14 +4,14 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:299477aef2c2aa1c",
+  "sourceHash": "fnv1a64:73b0cad140c0f1f0",
   "lessons": [
     {
       "id": "SA-C05-aham-samskritam-vadami",
       "sequence": null,
       "title": "अहं संस्कृतं वदामि (ahaṁ saṁskṛtaṁ vadāmi) — \"I speak Sanskrit\"",
       "headword": "अहं संस्कृतं वदामि",
-      "romanization": "",
+      "romanization": "ahaṁ saṁskṛtaṁ vadāmi",
       "gloss": "I speak Sanskrit",
       "script": "devanagari",
       "modality": "sight",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6ce6fe49bf237194",
+      "sourceHash": "fnv1a64:3dc6c4a6d0b8391e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -66,7 +66,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "अहं संस्कृतं वदामि = अहम् (aham, \"I\") + संस्कृतम् (saṁskṛtam, the object) + वदामि (vadāmi, \"speak\") — \"I Sanskrit speak,\" the verb last (as in every daughter language). The name संस्कृत (saṁskṛta) means \"put together, refined, perfected\" — from सम् (sam-, \"together,\" cousin of English same, Greek syn-) + कृत (kṛta, \"made, done,\" from the root कृ kṛ you met in namaskāra). So \"Sanskrit\" literally means \"the perfected [language],\" named in contrast to prākṛta (\"natural, raw\" — Prakrit, the everyday speech from which Hindi, Bengali, and the rest descend)."
+              "text": "अहं संस्कृतं वदामि (ahaṁ saṁskṛtaṁ vadāmi) = अहम् (aham, \"I\") + संस्कृतम् (saṁskṛtam, the object) + वदामि (vadāmi, \"speak\") — \"I Sanskrit speak,\" the verb last (as in every daughter language). The name संस्कृत (saṁskṛta) means \"put together, refined, perfected\" — from सम् (sam-, \"together,\" cousin of English same, Greek syn-) + कृत (kṛta, \"made, done,\" from the root कृ kṛ you met in namaskāra). So \"Sanskrit\" literally means \"the perfected [language],\" named in contrast to prākṛta (\"natural, raw\" — Prakrit, the everyday speech from which Hindi, Bengali, and the rest descend)."
             }
           ]
         },
@@ -145,7 +145,7 @@
       "sequence": null,
       "title": "करोमि (karomi) — \"I do,\" from the root behind karma and namaskāra",
       "headword": "करोमि",
-      "romanization": "",
+      "romanization": "karomi",
       "gloss": "I do, I make (कार्यं करोमि, \"I work\")",
       "script": "devanagari",
       "modality": "sight",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0c5fd96530e11254",
+      "sourceHash": "fnv1a64:b3d5e2c87218460e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -454,7 +454,7 @@
       "sequence": null,
       "title": "वदामि (vadāmi) — \"I speak,\" and the Sanskrit verb",
       "headword": "वदामि",
-      "romanization": "",
+      "romanization": "vadāmi",
       "gloss": "I speak (from वद्, to speak)",
       "script": "devanagari",
       "modality": "sight",
@@ -462,7 +462,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:dab4cb61ca2e0775",
+      "sourceHash": "fnv1a64:d61ce6ff0acbe8dc",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -607,7 +607,7 @@
       "sequence": null,
       "title": "वसामि (vasāmi) — \"I live, I dwell\"",
       "headword": "वसामि",
-      "romanization": "",
+      "romanization": "vasāmi",
       "gloss": "I live, I dwell (from वस्, to dwell)",
       "script": "devanagari",
       "modality": "sight",
@@ -615,7 +615,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d03f17265b4a3ef7",
+      "sourceHash": "fnv1a64:bd21c613d45f700b",
       "notice": {
         "modality": "sight",
         "needs": [

@@ -4,6 +4,7 @@ chapter: 3
 type: word
 headword: എങ്ങനെ
 gloss: how
+romanization: "eṅṅane"
 concept_tag: QUESTION-HOW
 prerequisites: [ML-C02-entu]
 sounds: [double-ng]

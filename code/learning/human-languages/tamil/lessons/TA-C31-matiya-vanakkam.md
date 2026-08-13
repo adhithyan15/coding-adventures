@@ -7,6 +7,7 @@ chapter: 31
 type: phrase
 headword: மதிய வணக்கம்
 gloss: good afternoon (matiya vaṇakkam), confirmed by two sources for roughly noon to 4 PM, while a third source does not teach a separate afternoon greeting
+romanization: "matiya vaṇakkam"
 concept_tag: GREETING-AFTERNOON
 prerequisites: [TA-C28-afternoon-boundary, TA-C29-kaalai-vanakkam]
 sounds: [tamil-vowel-sign-i, tamil-geminate-kka]

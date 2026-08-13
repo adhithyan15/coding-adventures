@@ -4,14 +4,14 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:919bcef05a0e1250",
+  "sourceHash": "fnv1a64:82e0ad2da16cf73f",
   "lessons": [
     {
       "id": "TA-C03-eppadi",
       "sequence": 180,
       "title": "எப்படி (eppaḍi) — \"how,\" another of the e- questions",
       "headword": "எப்படி",
-      "romanization": "",
+      "romanization": "eppaḍi",
       "gloss": "how",
       "script": "tamil",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:64342f32f2e5e919",
+      "sourceHash": "fnv1a64:721cce0594f7e7f7",
       "notice": null,
       "blocks": [
         {
@@ -236,7 +236,7 @@
       "sequence": 200,
       "title": "நான் (nāṉ) — \"I,\" the Dravidian first person",
       "headword": "நான்",
-      "romanization": "",
+      "romanization": "nāṉ",
       "gloss": "I",
       "script": "tamil",
       "modality": "voice",
@@ -244,7 +244,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:048724de9db451e5",
+      "sourceHash": "fnv1a64:26dddc33f0b1f1f0",
       "notice": null,
       "blocks": [
         {
@@ -350,7 +350,7 @@
       "sequence": 210,
       "title": "நலம் (nalam) — \"well,\" and how to answer",
       "headword": "நலம்",
-      "romanization": "",
+      "romanization": "nalam",
       "gloss": "well, wellness, good — and the reply \"நான் நலமாக இருக்கிறேன்\"",
       "script": "tamil",
       "modality": "voice",
@@ -358,7 +358,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:45b455e9ad00a5f6",
+      "sourceHash": "fnv1a64:e307ac13eeeb378e",
       "notice": null,
       "blocks": [
         {
@@ -472,7 +472,7 @@
       "sequence": 220,
       "title": "பரவாயில்லை (paravāyillai) — \"no problem\"",
       "headword": "பரவாயில்லை",
-      "romanization": "",
+      "romanization": "paravāyillai",
       "gloss": "it's okay / no problem / you're welcome",
       "script": "tamil",
       "modality": "voice",
@@ -480,7 +480,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8a3e39237641211e",
+      "sourceHash": "fnv1a64:254f875eb66ed2a8",
       "notice": null,
       "blocks": [
         {
@@ -507,7 +507,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "பரவாயில்லை literally means \"there is no harm\" — paravāy (\"harm, trouble\")."
+              "text": "பரவாயில்லை (paravāyillai) literally means \"there is no harm\" — paravāy (\"harm, trouble\")."
             },
             {
               "kind": "speech",

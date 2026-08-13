@@ -5,6 +5,7 @@ sequence: 100
 type: word
 headword: பெயர்
 gloss: name
+romanization: "peyar"
 concept_tag: WORD-NAME
 prerequisites: []
 sounds: []

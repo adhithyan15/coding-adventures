@@ -4,6 +4,7 @@ chapter: 3
 type: word
 headword: कथम्
 gloss: how
+romanization: "katham"
 concept_tag: QUESTION-HOW
 prerequisites: [SA-C02-kim]
 sounds: [inherent-a, halant]

@@ -3,7 +3,7 @@ Tamil, chapter 30: Good Evening.
 
 
 Lesson 1 of 1.
-மாலை வணக்கம் — "evening greetings".
+மாலை வணக்கம் (mālai vaṇakkam) — "evening greetings".
 
 Warm-up.
 [pause 2 seconds]
@@ -26,4 +26,4 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What two already-known words does மாலை வணக்கம் build from? (மாலை, "evening" + வணக்கம், "greetings.") Was it assumed that the evening greeting would follow the same pattern as the morning one, or was it independently checked? (Independently checked — via direct fetch, not assumed, since this arc has learned that greeting patterns don't reliably generalize.) Does மாலை வணக்கம் use a śubha-equivalent word, like Hindi/Kannada/Telugu/Malayalam's evening greetings do? (No — same as Tamil's morning greeting, no śubha-equivalent word appears here either.)
+What two already-known words does மாலை வணக்கம் (mālai vaṇakkam) build from? (மாலை, "evening" + வணக்கம், "greetings.") Was it assumed that the evening greeting would follow the same pattern as the morning one, or was it independently checked? (Independently checked — via direct fetch, not assumed, since this arc has learned that greeting patterns don't reliably generalize.) Does மாலை வணக்கம் (mālai vaṇakkam) use a śubha-equivalent word, like Hindi/Kannada/Telugu/Malayalam's evening greetings do? (No — same as Tamil's morning greeting, no śubha-equivalent word appears here either.)

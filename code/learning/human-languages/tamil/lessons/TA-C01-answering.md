@@ -5,6 +5,7 @@ chapter: 1
 type: phrase
 headword: ஆம் / இல்லை / சரி
 gloss: answering in Tamil — the five words in use, and the two habits behind them
+romanization: "ām / illai / sari"
 concept_tag: RESPONSE-YESNO
 prerequisites: [TA-C01-sari, TA-C01-nandri, TA-C01-illai, TA-C01-aam, TA-C01-vanakkam]
 sounds: []

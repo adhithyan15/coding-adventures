@@ -5,6 +5,7 @@ sequence: 140
 type: word
 headword: நீ / நீங்கள்
 gloss: you (familiar / respectful)
+romanization: "nī / nīṅgaḷ"
 concept_tag: PRONOUN-YOU
 prerequisites: [TA-C02-peyar]
 sounds: [long-ii, ngal]

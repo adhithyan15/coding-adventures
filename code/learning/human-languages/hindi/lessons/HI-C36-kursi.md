@@ -7,6 +7,7 @@ chapter: 36
 type: word
 headword: कुर्सी
 gloss: chair — your first feminine noun, and a word that has been passing between Middle Eastern languages for four thousand years
+romanization: "kursī"
 concept_tag: HI-HOME-CHAIR
 prerequisites: [HI-C36-kamra, HI-W05-conjuncts, HI-C02-meraa]
 sounds: [repha-r, devanagari-long-ii]

@@ -4,14 +4,14 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:4ce874054fee9743",
+  "sourceHash": "fnv1a64:0155f019dc7ee2b8",
   "lessons": [
     {
       "id": "TE-C03-baagaa",
       "sequence": null,
       "title": "బాగా (bāgā) — \"well,\" and how to answer",
       "headword": "బాగా",
-      "romanization": "",
+      "romanization": "bāgā",
       "gloss": "well, fine — and the reply \"నేను బాగున్నాను\"",
       "script": "telugu",
       "modality": "sight",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:921926f70cd68931",
+      "sourceHash": "fnv1a64:5bc22d14bf3bbe9b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -394,7 +394,7 @@
       "sequence": null,
       "title": "నేను (nēnu) — \"I,\" the Dravidian first person",
       "headword": "నేను",
-      "romanization": "",
+      "romanization": "nēnu",
       "gloss": "I",
       "script": "telugu",
       "modality": "sight",
@@ -402,7 +402,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c9f149c5d962518f",
+      "sourceHash": "fnv1a64:6e164f64a524796e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -528,7 +528,7 @@
       "sequence": null,
       "title": "పరవాలేదు (paravālēdu) — \"no problem\"",
       "headword": "పరవాలేదు",
-      "romanization": "",
+      "romanization": "paravālēdu",
       "gloss": "it's okay / no problem / you're welcome",
       "script": "telugu",
       "modality": "sight",
@@ -536,7 +536,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:4f0cfb3134d69cfb",
+      "sourceHash": "fnv1a64:1bcdd5b99080e43f",
       "notice": {
         "modality": "sight",
         "needs": [

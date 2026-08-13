@@ -7,6 +7,7 @@ chapter: 13
 type: word
 headword: తల చెయ్యి
 gloss: head (matching its cousins) and hand (the SAME Dravidian root as the others, transformed almost past recognition)
+romanization: "tala ceyyi"
 concept_tag: TE-BODY-BASIC
 prerequisites: [TE-C12-kutumbam]
 sounds: [telugu-geminate-yya]

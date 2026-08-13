@@ -4,14 +4,14 @@
   "chapter": 23,
   "title": "Day",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:60f8859a49057808",
+  "sourceHash": "fnv1a64:ece18b024e8a6897",
   "lessons": [
     {
       "id": "TE-C23-roju",
       "sequence": 510,
       "title": "రోజు (rōju) — \"day,\" a genuine Persian surprise",
       "headword": "రోజు",
-      "romanization": "",
+      "romanization": "rōju",
       "gloss": "\"day\" — a genuine surprise: Telugu's everyday word isn't Sanskrit or native Dravidian at all, it's a Persian loanword; దినము, the Sanskrit tatsama form, is the more formal alternate here — the mirror image of Kannada's pattern",
       "script": "telugu",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2a2be619494004e7",
+      "sourceHash": "fnv1a64:0e5f30243daa1733",
       "notice": null,
       "blocks": [
         {

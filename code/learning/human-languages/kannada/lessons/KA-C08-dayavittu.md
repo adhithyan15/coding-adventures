@@ -7,6 +7,7 @@ chapter: 8
 type: word
 headword: ದಯವಿಟ್ಟು
 gloss: please (dayaviṭṭu — "having placed compassion," from ದಯ daya "compassion")
+romanization: "dayaviṭṭu"
 concept_tag: COURTESY-PLEASE
 prerequisites: [KA-C01-dhanyavada]
 sounds: [kannada-vowel-sign-i, kannada-virama-ottu, kannada-geminate-tta]

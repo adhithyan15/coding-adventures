@@ -7,6 +7,7 @@ chapter: 37
 type: word
 headword: खाना
 gloss: food — masculine, from a Sanskrit verb of eating, and not to be confused with its Persian look-alike meaning "house"
+romanization: "khānā"
 concept_tag: HI-FOOD-MEAL
 prerequisites: [HI-C37-dudh, HI-W01-na-ma]
 sounds: [aspirated-kha, devanagari-long-aa]

@@ -4,14 +4,14 @@
   "chapter": 24,
   "title": "Green and Yellow",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:0934b8a539c16d43",
+  "sourceHash": "fnv1a64:3d1b0937d7ec6c72",
   "lessons": [
     {
       "id": "HI-C24-hara-pila",
       "sequence": 490,
-      "title": "हरा — a color cousin hiding in plain sight",
+      "title": "हरा (harā) — a color cousin hiding in plain sight",
       "headword": "हरा",
-      "romanization": "",
+      "romanization": "harā",
       "gloss": "green — a deep cousin of German gelb and English yellow from an ancient shining-color root",
       "script": "devanagari",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:01d9eb13c4005aeb",
+      "sourceHash": "fnv1a64:265e57f6824884ee",
       "notice": null,
       "blocks": [
         {
@@ -64,7 +64,7 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"हरा\" — green, a hidden PIE cousin of German's gelb",
+              "instruction": "\"हरा (harā)\" — green, a hidden PIE cousin of German's gelb",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,

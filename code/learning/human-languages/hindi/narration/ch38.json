@@ -4,7 +4,7 @@
   "chapter": 38,
   "title": "Six Words for Where It Hurts",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:c24fc0097c1f0772",
+  "sourceHash": "fnv1a64:39ef798f1c58f74c",
   "lessons": [
     {
       "id": "HI-C38-aankh",
@@ -192,9 +192,9 @@
     {
       "id": "HI-C38-daant",
       "sequence": 780,
-      "title": "दाँत (dāṁt) — the tooth, and the gender trap of this chapter",
+      "title": "दाँत (danta) (dāṁt) — the tooth, and the gender trap of this chapter",
       "headword": "दाँत",
-      "romanization": "",
+      "romanization": "danta",
       "gloss": "tooth — masculine, though it is built exactly like the feminine आँख, and a cousin of Latin dēns and English tooth",
       "script": "devanagari",
       "modality": "sight",
@@ -202,7 +202,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:cb862bd64f6b136b",
+      "sourceHash": "fnv1a64:34a83d9992bfd9cc",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -257,15 +257,15 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "दाँत (dāṁt) = \"tooth,\" and it is masculine — मेरा दाँत."
+              "text": "दाँत (danta) (dāṁt) = \"tooth,\" and it is masculine — मेरा दाँत (danta)."
             },
             {
               "kind": "speech",
-              "text": "Now put the two side by side. आँख and दाँत: same long ā, same chandrabindu, same single final consonant, both parts of the body, both everyday. आँख is feminine. दाँत is masculine."
+              "text": "Now put the two side by side. आँख and दाँत (danta): same long ā, same chandrabindu, same single final consonant, both parts of the body, both everyday. आँख is feminine. दाँत (danta) is masculine."
             },
             {
               "kind": "speech",
-              "text": "There is no rule underneath that. There is no reasoning that gets you from one to the other. This is the pair to hold up whenever you are tempted to guess: मेरी आँख, मेरा दाँत."
+              "text": "There is no rule underneath that. There is no reasoning that gets you from one to the other. This is the pair to hold up whenever you are tempted to guess: मेरी आँख, मेरा दाँत (danta)."
             }
           ]
         },
@@ -371,7 +371,7 @@
             },
             {
               "kind": "speech",
-              "text": "आँख and दाँत look alike — do they share a gender? (No — merī āṁkh, merā dāṁt.) Which English words carry the Latin form? (Dentist, dental, trident.) What does the older reading make a tooth? (The biting one — from a root meaning \"to bite.\")"
+              "text": "आँख and दाँत (danta) look alike — do they share a gender? (No — merī āṁkh, merā dāṁt.) Which English words carry the Latin form? (Dentist, dental, trident.) What does the older reading make a tooth? (The biting one — from a root meaning \"to bite.\")"
             }
           ]
         }
@@ -593,7 +593,7 @@
             },
             {
               "kind": "speech",
-              "text": "Then ट: a retroflex ṭ, tongue-tip curled back, not the त of दाँत made flat against the teeth. Say dāṁt, then peṭ."
+              "text": "Then ट: a retroflex ṭ, tongue-tip curled back, not the त of दाँत (danta) made flat against the teeth. Say dāṁt, then peṭ."
             }
           ]
         },

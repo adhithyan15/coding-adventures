@@ -4,6 +4,7 @@ chapter: 2
 type: word
 headword: किम्
 gloss: what
+romanization: "kim"
 concept_tag: QUESTION-WHAT
 prerequisites: [SA-C02-nama]
 sounds: [sihari-i, halant]

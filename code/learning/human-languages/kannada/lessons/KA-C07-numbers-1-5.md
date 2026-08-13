@@ -7,6 +7,7 @@ chapter: 7
 type: word
 headword: ಒಂದು ಎರಡು ಮೂರು ನಾಲ್ಕು ಐದು
 gloss: one to five — the same Dravidian numbers as Tamil, with a Kannada accent
+romanization: "ondu eraḍu mūru nālku aidu"
 concept_tag: KA-NUMBERS-1-5
 prerequisites: [KA-C01-namaskara]
 sounds: [kannada-inherent-a, anusvara, retroflex-series]

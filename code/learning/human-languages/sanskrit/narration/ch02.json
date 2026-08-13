@@ -4,14 +4,14 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:bb5a242c96a6f6d0",
+  "sourceHash": "fnv1a64:d5a51e692d33e8ad",
   "lessons": [
     {
       "id": "SA-C02-anandah",
       "sequence": null,
       "title": "आनन्दः (ānandaḥ) — \"joy,\" and \"a joy to meet you\"",
       "headword": "आनन्दः",
-      "romanization": "",
+      "romanization": "ānandaḥ",
       "gloss": "joy — and \"meeting you is a joy\"",
       "script": "devanagari",
       "modality": "sight",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e8e0fd6673d824d6",
+      "sourceHash": "fnv1a64:85908ea8069f703c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -134,7 +134,7 @@
       "sequence": null,
       "title": "अस्ति (asti) — \"is,\" the ancestor of is and est",
       "headword": "अस्ति",
-      "romanization": "",
+      "romanization": "asti",
       "gloss": "is",
       "script": "devanagari",
       "modality": "sight",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:9088728915fcc1e6",
+      "sourceHash": "fnv1a64:3ad56dd0b8cb9d2e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -248,7 +248,7 @@
       "sequence": null,
       "title": "भवान् / त्वम् (bhavān / tvam) — \"you,\" respectful and familiar",
       "headword": "भवान् / त्वम्",
-      "romanization": "",
+      "romanization": "bhavān / tvam",
       "gloss": "you (respectful / familiar)",
       "script": "devanagari",
       "modality": "sight",
@@ -256,7 +256,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5f68b66f9b279a71",
+      "sourceHash": "fnv1a64:fd7e8ec37d4acc05",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -382,7 +382,7 @@
       "sequence": null,
       "title": "किम् (kim) — \"what,\" the source of the question-words",
       "headword": "किम्",
-      "romanization": "",
+      "romanization": "kim",
       "gloss": "what",
       "script": "devanagari",
       "modality": "sight",
@@ -390,7 +390,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:4e40385ad96c7c3b",
+      "sourceHash": "fnv1a64:aa506d9fe99a3f71",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -505,7 +505,7 @@
       "sequence": null,
       "title": "मम (mama) — \"my,\" the ancestor of me and my",
       "headword": "मम",
-      "romanization": "",
+      "romanization": "mama",
       "gloss": "my",
       "script": "devanagari",
       "modality": "sight",
@@ -513,7 +513,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:19cf8b63960c764f",
+      "sourceHash": "fnv1a64:e33bd01ad0a6f408",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -665,7 +665,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Where Tamil says only eṉ peyar Arun and Bengali āmār nām Arun — both dropping the verb (the zero copula) — Sanskrit says मम नाम … अस्ति, with an explicit asti (\"is\"). This is the Indo-European way, the one Latin and English kept too (my name is …). The verb comes last, as in the modern Indian languages that descend from it. (In casual use asti can be dropped, but the \"full-dress\" Sanskrit sentence keeps it.)"
+              "text": "Where Tamil says only eṉ peyar Arun and Bengali āmār nām Arun — both dropping the verb (the zero copula) — Sanskrit says मम (mama) नाम (nāma) … अस्ति, with an explicit asti (\"is\"). This is the Indo-European way, the one Latin and English kept too (my name is …). The verb comes last, as in the modern Indian languages that descend from it. (In casual use asti can be dropped, but the \"full-dress\" Sanskrit sentence keeps it.)"
             }
           ]
         },
@@ -724,7 +724,7 @@
       "sequence": null,
       "title": "नाम (nāma) — \"name,\" the source of a word half the world shares",
       "headword": "नाम",
-      "romanization": "",
+      "romanization": "nāma",
       "gloss": "name",
       "script": "devanagari",
       "modality": "sight",
@@ -732,7 +732,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:dd8f39ca044c965c",
+      "sourceHash": "fnv1a64:fc1bbc2cea5e6668",
       "notice": {
         "modality": "sight",
         "needs": [

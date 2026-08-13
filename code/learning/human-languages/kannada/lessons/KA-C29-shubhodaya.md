@@ -7,6 +7,7 @@ chapter: 29
 type: phrase
 headword: ಶುಭೋದಯ
 gloss: "good morning" (śubhōdaya) — śubha ("good") + udaya ("rising, sunrise," ← ud- "up" + i "to go"), a DIFFERENT root from ಬೆಳಗ್ಗೆ; sources conflict on its everyday spoken commonality, but the more careful ones describe it skewing formal/written, similar to Hindi's सुप्रभात, with ನಮಸ್ಕಾರ likely covering casual mornings
+romanization: "śubhōdaya"
 concept_tag: GREETING-MORNING
 prerequisites: [KA-C26-belagge]
 sounds: [kannada-vowel-sign-oo, kannada-bha]

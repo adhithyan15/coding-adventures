@@ -7,6 +7,7 @@ chapter: 15
 type: word
 headword: पानी रोटी
 gloss: water (literally "the drinkable one," not the ancient Sanskrit word for water) and bread/flatbread
+romanization: "pānī roṭī"
 concept_tag: HI-FOOD-BASIC
 prerequisites: [HI-C14-ritu]
 sounds: [devanagari-long-ii, retroflex-tta]

@@ -7,6 +7,7 @@ chapter: 30
 type: phrase
 headword: శుభ సాయంత్రం
 gloss: "good evening" (śubha sāyantram) — pairs with సాయంత్రం (TE-C27, the word with the striking Latin sērus/French soir cognate); unlike GREETING-MORNING's single, dramatic "displaced by English" source, TWO independently-fetched sources agree this one is genuinely, commonly used in both formal and casual speech, with నమస్కారం as a time-independent alternative rather than a replacement
+romanization: "śubha sāyantram"
 concept_tag: GREETING-EVENING
 prerequisites: [TE-C27-sayantram]
 sounds: [telugu-sha, telugu-anusvara]

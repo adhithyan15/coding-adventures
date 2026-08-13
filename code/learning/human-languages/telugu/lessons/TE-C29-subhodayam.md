@@ -7,6 +7,7 @@ chapter: 29
 type: phrase
 headword: శుభోదయం
 gloss: "good morning" (subhodayam) — శుభ + ఉదయం, the traditional phrase; one directly-fetched source (a Telugu-learning blog, the same low-authority genre already found overstated for Hindi/Kannada) claims it's archaic, displaced by English "good morning" — treat with real skepticism, not as confirmed; నమస్కారం remains a safer everyday-greeting bet regardless
+romanization: "śubhōdayam"
 concept_tag: GREETING-MORNING
 prerequisites: [TE-C26-udayam]
 sounds: [telugu-sha, telugu-conjunct-bha]

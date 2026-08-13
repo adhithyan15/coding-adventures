@@ -4,6 +4,7 @@ chapter: 2
 type: word
 headword: अस्ति
 gloss: is
+romanization: "asti"
 concept_tag: WORD-IS
 prerequisites: [SA-C02-nama]
 sounds: [independent-a, st-conjunct]

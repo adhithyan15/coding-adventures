@@ -4,14 +4,14 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:1e014704b06c6363",
+  "sourceHash": "fnv1a64:1f90c5a082a1b028",
   "lessons": [
     {
       "id": "TE-C01-avunu",
       "sequence": null,
       "title": "అవును (avunu) — \"yes\"",
       "headword": "అవును",
-      "romanization": "",
+      "romanization": "avunu",
       "gloss": "yes (avunu)",
       "script": "telugu",
       "modality": "sight",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:02c7e53b73ee6c0f",
+      "sourceHash": "fnv1a64:a1171fcd96f01b85",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -154,7 +154,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read అవును. Native Telugu or Sanskrit loan? (Native.) At root, what kind of statement is a Telugu \"yes\"? (An assertion of being — \"it is [so],\" mirrored by kādu, \"it is not.\")"
+              "text": "Read అవును (avunu). Native Telugu or Sanskrit loan? (Native.) At root, what kind of statement is a Telugu \"yes\"? (An assertion of being — \"it is [so],\" mirrored by kādu, \"it is not.\")"
             }
           ]
         }
@@ -165,7 +165,7 @@
       "sequence": null,
       "title": "ధన్యవాదములు (dhanyavādamulu) — \"thank you,\" utterances of \"worthy\"",
       "headword": "ధన్యవాదములు",
-      "romanization": "",
+      "romanization": "dhanyavādamulu",
       "gloss": "thank you (dhanyavādamulu — \"utterances of 'worthy'\")",
       "script": "telugu",
       "modality": "sight",
@@ -174,7 +174,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:00aabcd9866ae9f2",
+      "sourceHash": "fnv1a64:01180c3b06f07cd3",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -338,7 +338,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read ధన్యవాదములు. What is Sanskrit in it, and what is Telugu? (dhanya-vāda is Sanskrit; the plural -mulu is Telugu.) What does \"agglutinative\" mean for how Telugu builds words? (It glues endings onto a stem.)"
+              "text": "Read ధన్యవాదములు (dhanyavādamulu). What is Sanskrit in it, and what is Telugu? (dhanya-vāda is Sanskrit; the plural -mulu is Telugu.) What does \"agglutinative\" mean for how Telugu builds words? (It glues endings onto a stem.)"
             }
           ]
         }
@@ -349,7 +349,7 @@
       "sequence": null,
       "title": "లేదు (lēdu) — \"no,\" where Telugu parts ways with its sisters",
       "headword": "లేదు",
-      "romanization": "",
+      "romanization": "lēdu",
       "gloss": "no / there isn't (lēdu)",
       "script": "telugu",
       "modality": "sight",
@@ -357,7 +357,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:fa3ba3d6439ce271",
+      "sourceHash": "fnv1a64:24a4d36df8acba14",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -524,7 +524,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read లేదు. What does it deny — existence or identity? (Existence — \"there isn't\"; kādu denies identity.) How does Telugu's \"no\" differ from Tamil's and Kannada's? (Different root: lē- / kā-, not the shared il-.)"
+              "text": "Read లేదు (lēdu). What does it deny — existence or identity? (Existence — \"there isn't\"; kādu denies identity.) How does Telugu's \"no\" differ from Tamil's and Kannada's? (Different root: lē- / kā-, not the shared il-.)"
             }
           ]
         }
@@ -535,7 +535,7 @@
       "sequence": null,
       "title": "నమస్కారం (namaskāram) — \"greetings,\" a making of a bow",
       "headword": "నమస్కారం",
-      "romanization": "",
+      "romanization": "namaskāram",
       "gloss": "hello / greetings (namaskāram — \"a making of a bow\")",
       "script": "telugu",
       "modality": "sight",
@@ -543,7 +543,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:86c4ca28846a9629",
+      "sourceHash": "fnv1a64:ff3c7a1094f3e782",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -715,7 +715,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read నమస్కారం. Native Telugu or a borrowing, and what does it literally mean? (Sanskrit namas + kāra, \"the making of a bow.\") What does the dot ం (anusvāra) do? (Adds a final nasal.) Which Dravidian language kept a native \"hello\"? (Tamil, vaṇakkam.)"
+              "text": "Read నమస్కారం (namaskāram). Native Telugu or a borrowing, and what does it literally mean? (Sanskrit namas + kāra, \"the making of a bow.\") What does the dot ం (anusvāra) do? (Adds a final nasal.) Which Dravidian language kept a native \"hello\"? (Tamil, vaṇakkam.)"
             }
           ]
         }
@@ -882,7 +882,7 @@
       "sequence": null,
       "title": "సరే (sarē) — \"okay,\" the family word in Telugu dress",
       "headword": "సరే",
-      "romanization": "",
+      "romanization": "sarē",
       "gloss": "okay / alright (sarē)",
       "script": "telugu",
       "modality": "sight",
@@ -890,7 +890,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:563edf856ad232b4",
+      "sourceHash": "fnv1a64:607cdc58a80a738a",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1021,7 +1021,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read సరే. What does it mean, and what is its Tamil/Kannada twin? (\"Okay, agreed\"; sari.) Which vowel sign does rē share with lēdu? (The long-\"ē\" sign.)"
+              "text": "Read సరే (sarē). What does it mean, and what is its Tamil/Kannada twin? (\"Okay, agreed\"; sari.) Which vowel sign does rē share with lēdu? (The long-\"ē\" sign.)"
             }
           ]
         }

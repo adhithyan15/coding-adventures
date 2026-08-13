@@ -4,14 +4,14 @@
   "chapter": 22,
   "title": "Green and Yellow",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:e6b54c7e41773a27",
+  "sourceHash": "fnv1a64:f276e8f0a008ab8b",
   "lessons": [
     {
       "id": "KA-C22-hasiru-haladi",
       "sequence": 510,
-      "title": "ಹಸಿರು, ಹಳದಿ — a real Dravidian family, and a borrowed cousin of gelb",
+      "title": "ಹಸಿರು, ಹಳದಿ (hasiru haḷadi) — a real Dravidian family, and a borrowed cousin of gelb",
       "headword": "ಹಸಿರು, ಹಳದಿ",
-      "romanization": "",
+      "romanization": "hasiru haḷadi",
       "gloss": "green and yellow — hasiru is genuine pan-Dravidian, sharing its Proto-Dravidian root with Tamil's paccai and Telugu's pacca; haladi is a Sanskrit/Hindi loan built on the word for turmeric, and traces back to the SAME ancient PIE root already behind Hindi's harā (green) and German's gelb (yellow)",
       "script": "kannada",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6b4ce584accf6c2a",
+      "sourceHash": "fnv1a64:65ba36cced6b0222",
       "notice": null,
       "blocks": [
         {

@@ -4,14 +4,14 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:e585e84796aea7f4",
+  "sourceHash": "fnv1a64:df1ebc3e66240c77",
   "lessons": [
     {
       "id": "TE-C05-maatlaadu",
       "sequence": null,
       "title": "మాట్లాడు (māṭlāḍu) — \"to speak,\" your first full verb",
       "headword": "మాట్లాడు",
-      "romanization": "",
+      "romanization": "māṭlāḍu",
       "gloss": "to speak",
       "script": "telugu",
       "modality": "sight",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:8d053f228fb6653b",
+      "sourceHash": "fnv1a64:61f3175a47fb4987",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -287,7 +287,7 @@
       "sequence": null,
       "title": "పని చేయు (pani cēyu) — \"to work\"",
       "headword": "పని చేయు",
-      "romanization": "",
+      "romanization": "pani cēyu",
       "gloss": "to work (lit. \"work-do\")",
       "script": "telugu",
       "modality": "sight",
@@ -295,7 +295,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:eaa29c2ebacac405",
+      "sourceHash": "fnv1a64:c0fd459441846498",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -607,7 +607,7 @@
       "sequence": null,
       "title": "ఉండు (uṇḍu) — \"to be, to stay, to live\"",
       "headword": "ఉండు",
-      "romanization": "",
+      "romanization": "uṇḍu",
       "gloss": "to be, to stay, to live",
       "script": "telugu",
       "modality": "sight",
@@ -615,7 +615,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:26e4f178d9a9f193",
+      "sourceHash": "fnv1a64:8951a55fa2ad6f41",
       "notice": {
         "modality": "sight",
         "needs": [

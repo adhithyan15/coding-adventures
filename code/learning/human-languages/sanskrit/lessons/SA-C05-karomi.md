@@ -4,6 +4,7 @@ chapter: 5
 type: word
 headword: करोमि
 gloss: I do, I make (कार्यं करोमि, "I work")
+romanization: "karomi"
 concept_tag: SA-VERB-KR
 prerequisites: [SA-C05-vadami]
 sounds: [inherent-a, long-o]

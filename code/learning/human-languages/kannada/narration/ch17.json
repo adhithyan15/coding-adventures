@@ -4,14 +4,14 @@
   "chapter": 17,
   "title": "Noon and Midnight",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:223e56c5ec67ed1a",
+  "sourceHash": "fnv1a64:6eb01d6f15546fe9",
   "lessons": [
     {
       "id": "KA-C17-madhyaahna-madhyaraatri",
       "sequence": 450,
       "title": "ಮಧ್ಯಾಹ್ನ, ಮಧ್ಯರಾತ್ರಿ — one Sanskrit root, two everyday Kannada words",
       "headword": "ಮಧ್ಯಾಹ್ನ ಮಧ್ಯರಾತ್ರಿ",
-      "romanization": "",
+      "romanization": "madhyāhna madhyarātri",
       "gloss": "noon and midnight — both direct Sanskrit tatsama compounds built on the SAME \"middle\" root, madhya",
       "script": "kannada",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3671dc98e0d34e40",
+      "sourceHash": "fnv1a64:d3cd6c08f92c685e",
       "notice": null,
       "blocks": [
         {

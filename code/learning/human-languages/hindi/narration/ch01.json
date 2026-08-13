@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:2a794f935169484b",
+  "sourceHash": "fnv1a64:68855e2a810996e8",
   "lessons": [
     {
       "id": "HI-W01-shirorekha-na-ma",
@@ -50,7 +50,7 @@
             },
             {
               "kind": "speech",
-              "text": "नमस्ते."
+              "text": "नमस्ते (namaste)."
             },
             {
               "kind": "speech",
@@ -107,7 +107,7 @@
             {
               "kind": "prompt",
               "action": "TRACE",
-              "instruction": "the bar across नमस्ते, from left edge to right edge",
+              "instruction": "the bar across नमस्ते (namaste), from left edge to right edge",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -1045,7 +1045,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "नमस्ते — you already know न म स, the halant, and how consonants carry \"a.\""
+              "text": "नमस्ते (namaste) — you already know न म स, the halant, and how consonants carry \"a.\""
             }
           ]
         },
@@ -1166,7 +1166,7 @@
       "sequence": null,
       "title": "नमस्ते (namaste) — \"I bow to you\"",
       "headword": "नमस्ते",
-      "romanization": "",
+      "romanization": "namaste",
       "gloss": "hello / goodbye (namaste — \"I bow to you\")",
       "script": "devanagari",
       "modality": "sight",
@@ -1174,7 +1174,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d41848618c702321",
+      "sourceHash": "fnv1a64:003f029fbcf7f5e1",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1313,7 +1313,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read नमस्ते. What does it literally mean? (\"I bow to you\" — namaḥ + te.) What does a halant do to a consonant? (Removes its built-in a.)"
+              "text": "Read नमस्ते (namaste). What does it literally mean? (\"I bow to you\" — namaḥ + te.) What does a halant do to a consonant? (Removes its built-in a.)"
             }
           ]
         }

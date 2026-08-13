@@ -4,14 +4,14 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:e673ee026212e7ec",
+  "sourceHash": "fnv1a64:3a943d7be495e9ac",
   "lessons": [
     {
       "id": "TA-C05-pesu",
       "sequence": 300,
       "title": "பேசு (pēsu) — \"to speak,\" your first full verb",
       "headword": "பேசு",
-      "romanization": "",
+      "romanization": "pēsu",
       "gloss": "to speak",
       "script": "tamil",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fb566b65a21c956b",
+      "sourceHash": "fnv1a64:8cffed7ec5dda841",
       "notice": null,
       "blocks": [
         {
@@ -133,7 +133,7 @@
       "sequence": 310,
       "title": "நான் தமிழ் பேசுகிறேன் (nāṉ tamiḻ pēsugiṟēṉ) — \"I speak Tamil\"",
       "headword": "நான் தமிழ் பேசுகிறேன்",
-      "romanization": "",
+      "romanization": "nāṉ tamiḻ pēsugiṟēṉ",
       "gloss": "I speak Tamil",
       "script": "tamil",
       "modality": "voice",
@@ -141,7 +141,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c8fbce5b84c6ca12",
+      "sourceHash": "fnv1a64:0cce51304bfb7ef8",
       "notice": null,
       "blocks": [
         {
@@ -168,7 +168,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "நான் தமிழ் பேசுகிறேன் = நான் (nāṉ, \"I\") + தமிழ் (tamiḻ, \"Tamil,\" the object) + பேசுகிறேன் (pēsugiṟēṉ, \"speak\") — \"I Tamil speak,\" the verb last as always. The name தமிழ் (tamiḻ) is native, of debated but clearly Dravidian origin (often linked to a sense of \"sweetness / one's own speech\"); it names one of the oldest living literary languages in the world, with poetry two thousand years old still read today."
+              "text": "நான் தமிழ் பேசுகிறேன் (nāṉ tamiḻ pēsugiṟēṉ) = நான் (nāṉ, \"I\") + தமிழ் (tamiḻ, \"Tamil,\" the object) + பேசுகிறேன் (pēsugiṟēṉ, \"speak\") — \"I Tamil speak,\" the verb last as always. The name தமிழ் (tamiḻ) is native, of debated but clearly Dravidian origin (often linked to a sense of \"sweetness / one's own speech\"); it names one of the oldest living literary languages in the world, with poetry two thousand years old still read today."
             },
             {
               "kind": "speech",
@@ -434,7 +434,7 @@
       "sequence": 330,
       "title": "வாழ் (vāḻ) — \"to live, to flourish\"",
       "headword": "வாழ்",
-      "romanization": "",
+      "romanization": "vāḻ",
       "gloss": "to live, to flourish",
       "script": "tamil",
       "modality": "voice",
@@ -442,7 +442,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:897c0df3eca3c5a6",
+      "sourceHash": "fnv1a64:9b65e09a8722fe40",
       "notice": null,
       "blocks": [
         {
@@ -552,7 +552,7 @@
       "sequence": 340,
       "title": "வேலை செய் (vēlai sey) — \"to work\"",
       "headword": "வேலை செய்",
-      "romanization": "",
+      "romanization": "vēlai sey",
       "gloss": "to work (lit. \"work-do\")",
       "script": "tamil",
       "modality": "voice",
@@ -560,7 +560,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:41f470fad02f3716",
+      "sourceHash": "fnv1a64:f253c9fea41fd91d",
       "notice": null,
       "blocks": [
         {

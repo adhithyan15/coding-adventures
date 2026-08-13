@@ -4,14 +4,14 @@
   "chapter": 17,
   "title": "Noon and Midnight",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:0a0fa920ce37765e",
+  "sourceHash": "fnv1a64:95c1c904ba62264c",
   "lessons": [
     {
       "id": "ML-C17-ucha-paathira",
       "sequence": 450,
-      "title": "ഉച്ച — a different Sanskrit metaphor, not a Sanskrit-free one",
+      "title": "ഉച്ച (ucca) — a different Sanskrit metaphor, not a Sanskrit-free one",
       "headword": "ഉച്ച",
-      "romanization": "",
+      "romanization": "ucca",
       "gloss": "noon, most likely from a different Sanskrit metaphor than Kannada and Telugu — height rather than middle",
       "script": "malayalam",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7d243c4083456d88",
+      "sourceHash": "fnv1a64:128d3273c3920f51",
       "notice": null,
       "blocks": [
         {
@@ -140,7 +140,7 @@
             },
             {
               "kind": "speech",
-              "text": "ഉച്ച named noon by the sun’s height. Malayalam builds midnight with a different spatial idea: cut the night in half."
+              "text": "ഉച്ച (ucca) named noon by the sun’s height. Malayalam builds midnight with a different spatial idea: cut the night in half."
             }
           ]
         },

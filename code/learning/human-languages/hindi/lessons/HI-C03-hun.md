@@ -4,6 +4,7 @@ chapter: 3
 type: word
 headword: हूँ
 gloss: am (1st-person of होना, "to be")
+romanization: "hūṁ"
 concept_tag: VERB-BE
 prerequisites: [HI-C02-hai, HI-C03-main]
 sounds: [matra-u, chandrabindu]

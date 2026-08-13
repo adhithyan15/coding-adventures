@@ -32,7 +32,7 @@ Warm-up.
 The everyday Tamil goodbye — and it is, quite literally, a promise to return.
 
 The phrase, taken apart.
-போய் வருகிறேன் = போய் (pōy, "having gone") + வருகிறேன் (varugiṟēṉ, "I come") — literally "having gone, I come," i.e. "I'll go and come back." A Tamil speaker never signs off with a bare "I'm leaving" — that sounds final, even ill-omened. Instead they promise return. It is the exact "promise of return" farewell you meet, in its own words, across the Dravidian south (Kannada hōgi baruttēne, Telugu veḷḷi vastānu, Malayalam pōyi varāṁ) — and it echoes the Indo-Aryan tracks too (Bengali āshi, Marathi yeto, Hindi phir milenge). The reply is warm: போய் வா (pōy vā, "go and come [back]").
+போய் வருகிறேன் (pōy varugiṟēṉ) = போய் (pōy, "having gone") + வருகிறேன் (varugiṟēṉ, "I come") — literally "having gone, I come," i.e. "I'll go and come back." A Tamil speaker never signs off with a bare "I'm leaving" — that sounds final, even ill-omened. Instead they promise return. It is the exact "promise of return" farewell you meet, in its own words, across the Dravidian south (Kannada hōgi baruttēne, Telugu veḷḷi vastānu, Malayalam pōyi varāṁ) — and it echoes the Indo-Aryan tracks too (Bengali āshi, Marathi yeto, Hindi phir milenge). The reply is warm: போய் வா (pōy vā, "go and come [back]").
 Varugiṟēṉ itself is built in three parts: varu ("come") + a present-tense marker + -ēṉ ("I"). Chapter 5 makes that stem-tense-person pattern explicit; here it is enough to hear the three pieces.
 
 Grammar Lens: the "having …d" participle.
@@ -84,7 +84,7 @@ Warm-up.
 A warmer, open-ended goodbye — and a chance to see Tamil's two vocabularies side by side.
 
 The word, taken apart.
-மீண்டும் சந்திப்போம் = மீண்டும் (mīṇḍum, "again") + சந்திப்போம் (sandippōm, "we will meet") — "we'll meet again." Two vocabularies meet in these two words:
+மீண்டும் சந்திப்போம் (mīṇḍum sandippōm) = மீண்டும் (mīṇḍum, "again") + சந்திப்போம் (sandippōm, "we will meet") — "we'll meet again." Two vocabularies meet in these two words:
 மீண்டும் (mīṇḍum, "again") is native Dravidian, from mīḷ ("to return"). Say it mīṇ-ḍum: the ṇḍ in the middle is a retroflex pair, both halves made with the tongue curled back, and it is one gesture rather than two.
 சந்தி (sandi, "to meet, a junction") is a Sanskrit loan — from sandhi ("a joining, union"), the very word Sanskrit grammar uses for how sounds join at a word-boundary. The ending on it is -ppōm, "we will," so sandippōm is "we will meet."
 So even a goodbye shows Tamil's balance: an ancient Dravidian core (mīṇḍum) beside a Sanskrit borrowing (sandi) — the recurring thread of this whole track.

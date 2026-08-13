@@ -4,6 +4,7 @@ chapter: 1
 type: word
 headword: आम् / न
 gloss: yes / no (ām / na)
+romanization: "ām / na"
 concept_tag: RESPONSE-YESNO
 prerequisites: [SA-C01-svagatam]
 sounds: [independent-vowel, halant, inherent-a]

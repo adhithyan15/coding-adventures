@@ -7,6 +7,7 @@ chapter: 20
 type: word
 headword: పదకొండు — ఇరవై
 gloss: 11-20 — additive "ten-echo" compounds for the teens; ఇరవై (20) most likely continues the SAME pan-Dravidian "two-tens" pattern as Kannada's ippattu, though worn down further and less transparent on the surface today
+romanization: "padakoṇḍu — iravai"
 concept_tag: TE-NUM-11-20
 prerequisites: [TE-C19-vayasu]
 sounds: [telugu-vowel-sign-ai, telugu-geminate-none]

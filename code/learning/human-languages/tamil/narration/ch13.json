@@ -4,14 +4,14 @@
   "chapter": 13,
   "title": "Body Parts",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:93438d9d63e80927",
+  "sourceHash": "fnv1a64:2cf26cf0f32190a2",
   "lessons": [
     {
       "id": "TA-C13-udal-uruppugal",
       "sequence": 560,
       "title": "தலை, கை — head and hand, both Tamil's own",
       "headword": "தலை கை",
-      "romanization": "",
+      "romanization": "talai kai",
       "gloss": "head and hand — both native Dravidian words, unlike Hindi's Sanskrit-descended pair",
       "script": "tamil",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a126d778478d4902",
+      "sourceHash": "fnv1a64:667b2e88be342205",
       "notice": null,
       "blocks": [
         {

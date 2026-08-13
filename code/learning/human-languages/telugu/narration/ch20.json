@@ -4,14 +4,14 @@
   "chapter": 20,
   "title": "Numbers 11–20 and Weather",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:7158e143058013f8",
+  "sourceHash": "fnv1a64:4b47c5d40ebd1691",
   "lessons": [
     {
       "id": "TE-C20-padakondu-iravai",
       "sequence": 470,
       "title": "పదకొండు, ఇరవై — the same pattern, worn down one step further",
       "headword": "పదకొండు — ఇరవై",
-      "romanization": "",
+      "romanization": "padakoṇḍu — iravai",
       "gloss": "11-20 — additive \"ten-echo\" compounds for the teens; ఇరవై (20) most likely continues the SAME pan-Dravidian \"two-tens\" pattern as Kannada's ippattu, though worn down further and less transparent on the surface today",
       "script": "telugu",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e884cbd15de39796",
+      "sourceHash": "fnv1a64:5bbfbf4e8b38b873",
       "notice": null,
       "blocks": [
         {
@@ -123,9 +123,9 @@
     {
       "id": "TE-C20-vatavaranam",
       "sequence": 480,
-      "title": "వాతావరణం — \"the covering of air,\" pure Sanskrit this time",
+      "title": "వాతావరణం (vātāvaraṇam) — \"the covering of air,\" pure Sanskrit this time",
       "headword": "వాతావరణం",
-      "romanization": "",
+      "romanization": "vātāvaraṇam",
       "gloss": "weather/atmosphere — a PURE Sanskrit compound, unlike Kannada's Persian+Sanskrit hybrid: vata (\"air/wind\") + avarana (\"covering\")",
       "script": "telugu",
       "modality": "voice",
@@ -133,7 +133,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:37d9dac6f11c147a",
+      "sourceHash": "fnv1a64:2db943fdb4d27658",
       "notice": null,
       "blocks": [
         {
@@ -240,7 +240,7 @@
             },
             {
               "kind": "speech",
-              "text": "What are the two Sanskrit pieces of వాతావరణం, and what does the whole word literally mean? (వాత, \"air,\" + ఆవరణ, \"covering\" — \"the covering of air.\") Is either piece a Persian/Arabic loan, like part of Kannada's word? (No — both pieces are Sanskrit.) What word does Telugu use for \"rain\"? (వర్షం, varṣaṁ.)"
+              "text": "What are the two Sanskrit pieces of వాతావరణం (vātāvaraṇam), and what does the whole word literally mean? (వాత, \"air,\" + ఆవరణ, \"covering\" — \"the covering of air.\") Is either piece a Persian/Arabic loan, like part of Kannada's word? (No — both pieces are Sanskrit.) What word does Telugu use for \"rain\"? (వర్షం, varṣaṁ.)"
             }
           ]
         }

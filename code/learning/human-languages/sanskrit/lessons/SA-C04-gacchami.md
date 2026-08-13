@@ -4,6 +4,7 @@ chapter: 4
 type: word
 headword: गच्छामि
 gloss: I go (a way to take leave)
+romanization: "gacchāmi"
 concept_tag: FAREWELL
 prerequisites: [SA-C03-aham]
 sounds: [cch-conjunct, long-aa]

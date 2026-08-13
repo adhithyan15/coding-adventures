@@ -4,14 +4,14 @@
   "chapter": 22,
   "title": "Green and Yellow",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:093d888489413d50",
+  "sourceHash": "fnv1a64:e23d3f69b39d024a",
   "lessons": [
     {
       "id": "TA-C22-paccai-manjal",
       "sequence": 730,
-      "title": "பச்சை, மஞ்சள் — closing the Dravidian arc, holding both patterns at once",
+      "title": "பச்சை, மஞ்சள் (paccai mañcaḷ) — closing the Dravidian arc, holding both patterns at once",
       "headword": "பச்சை, மஞ்சள்",
-      "romanization": "",
+      "romanization": "paccai mañcaḷ",
       "gloss": "green and yellow — paccai is the pan-Dravidian pac- word already met in Kannada, Telugu, and Malayalam; manjal (\"yellow, turmeric\") is a separate native Dravidian root, matching Malayalam's mañña/maññaḷ closely — and Tamil dictionaries also record a rarer, less-commonly-used pacuppu (\"greenish yellow\"), a genuine doublet of paccai itself, echoing Telugu's pattern in miniature",
       "script": "tamil",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3114da16b86a47ea",
+      "sourceHash": "fnv1a64:315090b4ab998a0e",
       "notice": null,
       "blocks": [
         {

@@ -4,14 +4,14 @@
   "chapter": 24,
   "title": "Night",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:bcea2d1a3a4809af",
+  "sourceHash": "fnv1a64:333d9bb84bca2bca",
   "lessons": [
     {
       "id": "TA-C24-iravu",
       "sequence": 760,
       "title": "இரவு (iravu) — \"night,\" and a register question worth a native speaker's ear",
       "headword": "இரவு",
-      "romanization": "",
+      "romanization": "iravu",
       "gloss": "\"night\" — native Dravidian, already used standalone inside \"midnight\" (naḷḷiravu); a Sanskrit loan alternative, rāttiri, also exists — and per at least one dictionary source, rāttiri may actually be the MORE common word in everyday spoken Tamil, the opposite direction from நாள்'s story last lesson",
       "script": "tamil",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7838990e6a1e86ab",
+      "sourceHash": "fnv1a64:796ac5d8129c3245",
       "notice": null,
       "blocks": [
         {
@@ -116,7 +116,7 @@
       "sequence": 770,
       "title": "Night words — a register hypothesis and a semantic boundary",
       "headword": "இரவு / ராத்திரி / இருள்",
-      "romanization": "",
+      "romanization": "iravu / rāttiri / iruḷ",
       "gloss": "one source prefers rāttiri colloquially, a claim to test against native usage; iruḷ means darkness",
       "script": "tamil",
       "modality": "voice",
@@ -124,7 +124,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b3a2d9a756bc31c9",
+      "sourceHash": "fnv1a64:39c3cb1f85922cf4",
       "notice": null,
       "blocks": [
         {
@@ -151,7 +151,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "At least one dictionary says ராத்திரி is more common colloquially, implying native இரவு may lean literary/written. If accurate, this reverses the day story, where native nāḷ is uncontested everyday speech."
+              "text": "At least one dictionary says ராத்திரி is more common colloquially, implying native இரவு (iravu) may lean literary/written. If accurate, this reverses the day story, where native nāḷ is uncontested everyday speech."
             },
             {
               "kind": "speech",
@@ -223,7 +223,7 @@
             },
             {
               "kind": "speech",
-              "text": "Is the rāttiri register claim settled? (No — limited sourcing, worth checking against native usage.) Is இருள் interchangeable with இரவு? (No — darkness versus a time period, from different roots.)"
+              "text": "Is the rāttiri register claim settled? (No — limited sourcing, worth checking against native usage.) Is இருள் interchangeable with இரவு (iravu)? (No — darkness versus a time period, from different roots.)"
             }
           ]
         }

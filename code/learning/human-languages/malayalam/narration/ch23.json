@@ -4,14 +4,14 @@
   "chapter": 23,
   "title": "Day",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:e9c420c4e46128da",
+  "sourceHash": "fnv1a64:a314701877510adb",
   "lessons": [
     {
       "id": "ML-C23-divasam",
       "sequence": 530,
       "title": "ദിവസം (divasam) — the everyday Sanskrit day-word",
       "headword": "ദിവസം",
-      "romanization": "",
+      "romanization": "divasam",
       "gloss": "\"day\" — everyday Sanskrit divasam beside the more literary Sanskrit dinam",
       "script": "malayalam",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c8a896f44b16eafa",
+      "sourceHash": "fnv1a64:4123f286c50e264a",
       "notice": null,
       "blocks": [
         {
@@ -140,7 +140,7 @@
             },
             {
               "kind": "speech",
-              "text": "ദിവസം counts ordinary days and ദിനം writes formally. But Malayalam’s native day-word never disappeared—you met it long ago inside “tomorrow.”"
+              "text": "ദിവസം (divasam) counts ordinary days and ദിനം writes formally. But Malayalam’s native day-word never disappeared—you met it long ago inside “tomorrow.”"
             }
           ]
         },
@@ -155,7 +155,7 @@
             },
             {
               "kind": "speech",
-              "text": "The Sanskrit loan ദിവസം took over ordinary counting, but നാൾ narrowed rather than vanished. ഒരു നാൾ (oru nāḷ, “one day”) remains natural in storytelling, and the word stays productive in പിറന്നാൾ (piṟannāḷ), “birthday,” literally “day of birth.” That traditional compound stands beside the newer Sanskrit-style ജന്മദിനം (janmadinam)."
+              "text": "The Sanskrit loan ദിവസം (divasam) took over ordinary counting, but നാൾ narrowed rather than vanished. ഒരു നാൾ (oru nāḷ, “one day”) remains natural in storytelling, and the word stays productive in പിറന്നാൾ (piṟannāḷ), “birthday,” literally “day of birth.” That traditional compound stands beside the newer Sanskrit-style ജന്മദിനം (janmadinam)."
             },
             {
               "kind": "speech",

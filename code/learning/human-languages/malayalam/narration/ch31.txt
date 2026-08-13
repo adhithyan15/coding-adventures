@@ -21,7 +21,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Is ശുഭ മധ്യാഹ്നം built on ML-C28's ഉച്ചകഴിഞ്ഞ്? (No — it's built on മധ്യാഹ്നം, a genuine Wiktionary-confirmed synonym of ML-C17's ഉച്ച, not the TIME-AFTERNOON compound.) Is the "fewer than 1% use this" statistic something this lesson confirms? (No — it couldn't be traced to any directly-fetched source and is deliberately excluded; only the hedged "formal, not common in daily conversation" finding is asserted.)
+Is ശുഭ മധ്യാഹ്നം (śubha madhyāhnaṁ) built on ML-C28's ഉച്ചകഴിഞ്ഞ്? (No — it's built on മധ്യാഹ്നം, a genuine Wiktionary-confirmed synonym of ML-C17's ഉച്ച, not the TIME-AFTERNOON compound.) Is the "fewer than 1% use this" statistic something this lesson confirms? (No — it couldn't be traced to any directly-fetched source and is deliberately excluded; only the hedged "formal, not common in daily conversation" finding is asserted.)
 
 
 Lesson 2 of 2.
@@ -33,7 +33,7 @@ Malayalam’s formal greeting uses ശുഭ + മധ്യാഹ്നം. Kann
 
 You'll want to know.
 [a table of 3 rows, read aloud]
-language: Malayalam. formal afternoon greeting: ശുഭ മധ്യാഹ്നം.
+language: Malayalam. formal afternoon greeting: ശുഭ മധ്യാഹ്നം (śubha madhyāhnaṁ).
 language: Kannada. formal afternoon greeting: ಶುಭ ಮಧ್ಯಾಹ್ನ.
 language: Telugu. formal afternoon greeting: శుభ మధ్యాహ్నం.
 All three share the Sanskrit śubha + madhyāhna structure. That shared greeting is striking because the languages’ everyday time words diverge:

@@ -4,6 +4,7 @@ chapter: 2
 type: word
 headword: ಏನು
 gloss: what
+romanization: "ēnu"
 concept_tag: QUESTION-WHAT
 prerequisites: [KA-C02-niinu-niivu]
 sounds: [independent-ee]

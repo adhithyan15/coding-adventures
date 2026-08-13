@@ -4,6 +4,7 @@ chapter: 3
 type: word
 headword: నేను
 gloss: I
+romanization: "nēnu"
 concept_tag: PRONOUN-I
 prerequisites: [TE-C02-naa]
 sounds: [long-e, double-nn]

@@ -7,6 +7,7 @@ chapter: 29
 type: phrase
 headword: സുപ്രഭാതം
 gloss: "good morning" (suprabhātaṁ) — Malayalam's actual, most common morning greeting, confirmed used in BOTH formal and informal contexts, and independently corroborated as the "most general" morning greeting by a SECOND directly-fetched source (not just one); built from su- ("good") + പ്രഭാതം (already met, ML-C26, "morning/dawn"), NOT from ശുഭ (ML-C25's "auspicious," used for Malayalam's own GREETING-GOODNIGHT) — a genuinely different Sanskrit "good" morpheme; the SAME word as Telugu's సుప్రభాతం, but with an inverted role: PRIMARY greeting in Malayalam, only a SECONDARY alternative in Telugu (where శుభోదయం, a different root, is primary)
+romanization: "suprabhātaṁ"
 concept_tag: GREETING-MORNING
 prerequisites: [ML-C26-raavile]
 sounds: [malayalam-conjunct-pra, malayalam-anusvara]

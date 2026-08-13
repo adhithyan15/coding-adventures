@@ -7,6 +7,7 @@ chapter: 19
 type: phrase
 headword: నీ వయసెంత?
 gloss: how old are you? — literally "your age how-much?", matching Kannada's simple verbless possessive exactly
+romanization: "nī vayasenta"
 concept_tag: TE-AGE
 prerequisites: [TE-C18-ganta]
 sounds: [telugu-anusvara, telugu-vowel-sandhi]

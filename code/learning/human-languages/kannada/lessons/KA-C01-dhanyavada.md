@@ -4,6 +4,7 @@ chapter: 1
 type: word
 headword: ಧನ್ಯವಾದ
 gloss: thank you (dhanyavāda — "an utterance of 'worthy'")
+romanization: "dhanyavāda"
 concept_tag: COURTESY-THANKS
 prerequisites: [KA-C01-namaskara]
 sounds: [nya-conjunct, vowel-sign-aa]

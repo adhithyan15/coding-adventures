@@ -4,6 +4,7 @@ chapter: 3
 type: word
 headword: ಹೇಗೆ
 gloss: how
+romanization: "hēge"
 concept_tag: QUESTION-HOW
 prerequisites: [KA-C02-enu]
 sounds: [long-e]

@@ -7,6 +7,7 @@ chapter: 25
 type: phrase
 headword: శుభ రాత్రి
 gloss: "good night" — the standard Sanskrit-tatsama translation (rātri already met, śubha new); some sources describe everyday speakers often code-switching to English "good night" instead
+romanization: "śubha rātri"
 concept_tag: GREETING-GOODNIGHT
 prerequisites: [TE-C24-ratri]
 sounds: [telugu-sha, telugu-bha]

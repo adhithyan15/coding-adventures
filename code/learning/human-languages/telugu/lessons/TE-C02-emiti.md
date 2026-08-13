@@ -4,6 +4,7 @@ chapter: 2
 type: word
 headword: ఏమిటి
 gloss: what
+romanization: "ēmiṭi"
 concept_tag: QUESTION-WHAT
 prerequisites: [TE-C02-nuvvu-miiru]
 sounds: [independent-ee, retroflex-ti]

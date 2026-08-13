@@ -4,6 +4,7 @@ chapter: 4
 type: word
 headword: వెళ్ళు
 gloss: to go (and వచ్చు, to come)
+romanization: "veḷḷu"
 concept_tag: TE-VERB-VELLU
 prerequisites: [TE-C03-nenu]
 sounds: [retroflex-ll, cc]

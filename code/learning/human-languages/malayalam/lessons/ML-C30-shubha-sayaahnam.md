@@ -7,6 +7,7 @@ chapter: 30
 type: phrase
 headword: ശുഭ സായാഹ്നം
 gloss: "good evening" (śubha sāyāhnaṁ) — confirmed real, used "from late afternoon until sunset" per a directly-fetched source; built on ശുഭ (ML-C25) + സായാഹ്നം (sāyāhnaṁ), a SEPARATE Sanskrit tatsama for "evening," Wiktionary-labeled "poetic" — NOT built on ML-C27's native വൈകുന്നേരം; സായാഹ്നം's own root, साय ("end"), is CONFIRMED via Wiktionary's separate साय entry to trace to the same PIE *seh₁- as Telugu's సాయంత్రం (sāyam) and Latin sērus — a properly-verified cognate, not just a plausible guess
+romanization: "śubha sāyāhnaṁ"
 concept_tag: GREETING-EVENING
 prerequisites: [ML-C25-shubha-rathri, ML-C27-vaikunneram]
 sounds: [malayalam-vowel-sign-aa, malayalam-conjunct-hna]

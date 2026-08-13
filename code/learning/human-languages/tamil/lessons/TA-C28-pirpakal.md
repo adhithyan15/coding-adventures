@@ -7,6 +7,7 @@ chapter: 28
 type: word
 headword: பிற்பகல்
 gloss: afternoon (piṟpakal) — a transparent compound, பின் (piṉ, "after") + நண்பகல்'s own பகல் ("daytime"), with பின் surfacing as பிற்- before ப, a SIMILAR kind of consonant sandhi to the one already taught in TA-C17 (நள்→நண்) — though Wiktionary itself does not discuss the sandhi mechanism, and the two changes move in different phonetic directions (nasal→stop vs. lateral→nasal), so this is the lesson's own analysis, not a sourced claim; Wiktionary-listed formal register; a real, citable overlap worth flagging honestly: Wiktionary's OWN afternoon-word page ALSO lists நடுப்பகல் as a synonym, even though TA-C17 established நடுப்பகல் as a synonym of NOON specifically; also related but distinct: மதியம், a Sanskrit tatsama (from madhya, "middle") meaning "noon," a synonym of நண்பகல் — NOT specifically "afternoon," despite an unverified WebSearch claim that matiyam "originally meant moon," which does not appear anywhere on its actual Wiktionary page and is therefore not asserted here
+romanization: "piṟpakal"
 concept_tag: TIME-AFTERNOON
 prerequisites: [TA-C17-transparent-middle-synonyms]
 sounds: [tamil-retroflex-rra, tamil-pulli-virama]

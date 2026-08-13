@@ -4,6 +4,7 @@ chapter: 2
 type: word
 headword: ಹೆಸರು
 gloss: name
+romanization: "hesaru"
 concept_tag: WORD-NAME
 prerequisites: []
 sounds: [e-sign]

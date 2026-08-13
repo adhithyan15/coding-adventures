@@ -4,6 +4,7 @@ chapter: 3
 type: word
 headword: బాగా
 gloss: well, fine — and the reply "నేను బాగున్నాను"
+romanization: "bāgā"
 concept_tag: WORD-WELL
 prerequisites: [TE-C03-nenu, TE-C03-miiru-elaa-unnaaru]
 sounds: [long-aa]

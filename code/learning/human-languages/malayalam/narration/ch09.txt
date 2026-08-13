@@ -13,7 +13,7 @@ You'll want to know.
 ക്ഷമ (kṣama) = "forgiveness, patience" — the Sanskrit noun.
 ‑ഇക്കുക (‑ikkuka) = a verb-making suffix: kṣama + ‑ikkuka becomes ക്ഷമിക്കുക (kṣamikkuka), "to forgive."
 ‑ണം (‑aṇaṁ) = the necessitative ending, "must / should" — literally kṣamikkaṇaṁ says "[you] must forgive," used as a softened, polite request exactly the way English can soften a request into "you should really forgive me" without meaning it as an order.
-So ക്ഷമിക്കണം leans on obligation to be polite — a very different move from a plain imperative.
+So ക്ഷമിക്കണം (kṣamikkaṇaṁ) leans on obligation to be polite — a very different move from a plain imperative.
 
 Why it's said this way.
 Malayalam ക്ഷമിക്കണം kṣamikkaṇaṁ — Sanskrit kṣama + ‑ikkuka (verb) + ‑aṇaṁ (necessitative: "must/should").
@@ -22,7 +22,7 @@ Telugu క్షమించండి kṣamin̄caṇḍi — Sanskrit kṣamā 
 Tamil மன்னிக்கவும் maṉṉikkavum — its own native root maṉṉi, not Sanskrit at all.
 
 Why it's said this way.
-ക്ഷമിക്കണം is a genuine, common way to ask forgiveness — but Malayalam speakers reach just as often for the plain imperative ക്ഷമിക്കൂ (kṣamikkū, using the ‑ൂ ending from the please lesson) or simply the borrowed English "sorry."
+ക്ഷമിക്കണം (kṣamikkaṇaṁ) is a genuine, common way to ask forgiveness — but Malayalam speakers reach just as often for the plain imperative ക്ഷമിക്കൂ (kṣamikkū, using the ‑ൂ ending from the please lesson) or simply the borrowed English "sorry."
 
 Guided Practice.
 [pause 1 second]
@@ -35,4 +35,4 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does ക്ഷമിക്കണം literally say, and why is that polite? ("[You] must forgive" — the necessitative ‑aṇaṁ softens an obligation into a request, same as ദയവായി's note on ‑aṇaṁ.) Which cousins also verb-ify kṣama? (Kannada and Telugu; Tamil uses its own root maṉṉi.) What's a plainer alternative? (Kṣamikkū, using the ‑ū ending, or borrowed English "sorry.")
+What does ക്ഷമിക്കണം (kṣamikkaṇaṁ) literally say, and why is that polite? ("[You] must forgive" — the necessitative ‑aṇaṁ softens an obligation into a request, same as ദയവായി's note on ‑aṇaṁ.) Which cousins also verb-ify kṣama? (Kannada and Telugu; Tamil uses its own root maṉṉi.) What's a plainer alternative? (Kṣamikkū, using the ‑ū ending, or borrowed English "sorry.")

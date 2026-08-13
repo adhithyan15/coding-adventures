@@ -5,6 +5,7 @@ chapter: 1
 type: word
 headword: சரி
 gloss: okay / alright / correct (sari)
+romanization: "sari"
 concept_tag: RESPONSE-OKAY
 prerequisites: [TA-C01-nandri]
 sounds: [c-sa-one-letter, matra-i]

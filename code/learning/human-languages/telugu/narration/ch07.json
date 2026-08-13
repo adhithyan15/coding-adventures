@@ -4,14 +4,14 @@
   "chapter": 7,
   "title": "Numbers One to Ten",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:b740fb498ae7b163",
+  "sourceHash": "fnv1a64:78c87c62530b0ff7",
   "lessons": [
     {
       "id": "TE-C07-numbers-1-5",
       "sequence": 330,
       "title": "ఒకటి, రెండు, మూడు, నాలుగు, ఐదు — one to five",
       "headword": "ఒకటి రెండు మూడు నాలుగు ఐదు",
-      "romanization": "",
+      "romanization": "okaṭi reṇḍu mūḍu nālugu aidu",
       "gloss": "one to five — the Dravidian family numbers, with Telugu's maverick \"one\"",
       "script": "telugu",
       "modality": "sight",
@@ -20,7 +20,7 @@
         "script-block",
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:d4f724de2a90e484",
+      "sourceHash": "fnv1a64:03c37e86ea6bfc16",
       "notice": {
         "modality": "sight",
         "needs": [

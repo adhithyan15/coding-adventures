@@ -4,14 +4,14 @@
   "chapter": 25,
   "title": "Good Night",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:d84a11ad7e7cac19",
+  "sourceHash": "fnv1a64:81113a2a23489289",
   "lessons": [
     {
       "id": "KA-C25-shubha-ratri",
       "sequence": 540,
       "title": "ಶುಭ ರಾತ್ರಿ (śubha rātri) — \"good night,\" auspicious to the end",
       "headword": "ಶುಭ ರಾತ್ರಿ",
-      "romanization": "",
+      "romanization": "śubha rātri",
       "gloss": "good night\" — literally \"auspicious night,\" pairing rātri (already met) with shubha, a word that started life meaning \"to be beautiful",
       "script": "kannada",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a3df191ed7cba0c0",
+      "sourceHash": "fnv1a64:6c8aec35b231b411",
       "notice": null,
       "blocks": [
         {
@@ -68,7 +68,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Here's the honest cross-language note: ಶುಭ ರಾತ್ರಿ and Hindi's own शुभ रात्रि are, word for word, the exact same phrase — a Dravidian language and an Indo-Aryan language landing on an identical \"good night.\" The most likely explanation is shared Sanskrit vocabulary, not one language directly copying the phrase from the other — but be honest about the limits of that claim: \"good night\" as a farewell greeting is itself a modern convention across Indian languages, not an ancient one, so some degree of cross-language reinforcement (Hindi's wide reach as a pan-Indian media language, for instance) can't be ruled out either. Unlike Hindi, where rātri is the formal member of a live doublet against everyday raat, Kannada's rātri is simply the ordinary word (Chapter 24) — so this phrase draws on shared Sanskrit vocabulary, not a shared \"formal-versus-everyday\" register split the way it does in Hindi."
+              "text": "Here's the honest cross-language note: ಶುಭ ರಾತ್ರಿ (śubha rātri) and Hindi's own शुभ रात्रि are, word for word, the exact same phrase — a Dravidian language and an Indo-Aryan language landing on an identical \"good night.\" The most likely explanation is shared Sanskrit vocabulary, not one language directly copying the phrase from the other — but be honest about the limits of that claim: \"good night\" as a farewell greeting is itself a modern convention across Indian languages, not an ancient one, so some degree of cross-language reinforcement (Hindi's wide reach as a pan-Indian media language, for instance) can't be ruled out either. Unlike Hindi, where rātri is the formal member of a live doublet against everyday raat, Kannada's rātri is simply the ordinary word (Chapter 24) — so this phrase draws on shared Sanskrit vocabulary, not a shared \"formal-versus-everyday\" register split the way it does in Hindi."
             }
           ]
         },
