@@ -4,14 +4,14 @@
   "chapter": 23,
   "title": "Day",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:89b27d26d650da3d",
+  "sourceHash": "fnv1a64:f2e5a8bd92a1b7ab",
   "lessons": [
     {
       "id": "TA-C23-naal",
       "sequence": 740,
       "title": "நாள் (nāḷ) — \"day,\" the one this arc's Dravidian languages didn't lose",
       "headword": "நாள்",
-      "romanization": "",
+      "romanization": "nāḷ",
       "gloss": "\"day\" — Tamil's everyday, native Dravidian word, already met inside \"tomorrow\"; unlike Kannada's dina, Telugu's rōju, and Malayalam's divasam, Tamil's plain day-word is NOT a loanword at all — நாள் just is the everyday word, no Sanskrit or Persian substitute doing that job",
       "script": "tamil",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:01ed309a4046ac0d",
+      "sourceHash": "fnv1a64:5555c918817436eb",
       "notice": null,
       "blocks": [
         {
@@ -103,9 +103,9 @@
     {
       "id": "TA-C23-day-family-register",
       "sequence": 750,
-      "title": "நாள் and தினம் — everyday native, formal borrowed",
+      "title": "நாள் (nāḷ) and தினம் — everyday native, formal borrowed",
       "headword": "நாள் / தினம்",
-      "romanization": "",
+      "romanization": "nāḷ / tiṉam",
       "gloss": "Tamil alone keeps a native everyday day-word while Sanskrit tiṉam occupies formal compounds",
       "script": "tamil",
       "modality": "voice",
@@ -113,7 +113,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:43a47e46c1189b5e",
+      "sourceHash": "fnv1a64:66f11d4091607d07",
       "notice": null,
       "blocks": [
         {

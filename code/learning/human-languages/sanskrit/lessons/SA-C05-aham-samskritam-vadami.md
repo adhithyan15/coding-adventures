@@ -4,6 +4,7 @@ chapter: 5
 type: phrase
 headword: अहं संस्कृतं वदामि
 gloss: I speak Sanskrit
+romanization: "ahaṁ saṁskṛtaṁ vadāmi"
 concept_tag: SA-WORD-SAMSKRITA
 prerequisites: [SA-C05-vadami, SA-C03-aham]
 sounds: [anusvara, kr-vocalic]

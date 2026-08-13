@@ -4,14 +4,14 @@
   "chapter": 31,
   "title": "Good Afternoon",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:20379a3b55c97b76",
+  "sourceHash": "fnv1a64:3bfaef7b1191ba4c",
   "lessons": [
     {
       "id": "TE-C31-subha-madhyahnam",
       "sequence": 590,
       "title": "శుభ మధ్యాహ్నం (śubha madhyāhnam) — good afternoon",
       "headword": "శుభ మధ్యాహ్నం",
-      "romanization": "",
+      "romanization": "śubha madhyāhnam",
       "gloss": "\"good afternoon\" (śubha madhyāhnam), built on the widened \"noon\" word rather than the classical later-afternoon term",
       "script": "telugu",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5f0f648bad51261c",
+      "sourceHash": "fnv1a64:be4e3b25d30485e7",
       "notice": null,
       "blocks": [
         {
@@ -107,7 +107,7 @@
             },
             {
               "kind": "speech",
-              "text": "Is శుభ మధ్యాహ్నం built on మధ్యాహ్నం or అపరాహ్నం? (మధ్యాహ్నం — the “noon, widened” word.) Which sister language made the same choice? (Kannada, in ಶುಭ ಮಧ್ಯಾಹ್ನ.)"
+              "text": "Is శుభ మధ్యాహ్నం (śubha madhyāhnam) built on మధ్యాహ్నం or అపరాహ్నం? (మధ్యాహ్నం — the “noon, widened” word.) Which sister language made the same choice? (Kannada, in ಶುಭ ಮಧ್ಯಾಹ್ನ.)"
             }
           ]
         }
@@ -116,7 +116,7 @@
     {
       "id": "TE-C31-subha-madhyahnam-register",
       "sequence": 600,
-      "title": "శుభ మధ్యాహ్నం — register and evidence",
+      "title": "శుభ మధ్యాహ్నం (śubha madhyāhnam) — register and evidence",
       "headword": "శుభ మధ్యాహ్నం — register",
       "romanization": "",
       "gloss": "a real formal or workplace greeting, less secure as an everyday default",
@@ -142,7 +142,7 @@
             },
             {
               "kind": "speech",
-              "text": "You can now build శుభ మధ్యాహ్నం. The next question is when it sounds natural—and how strongly the available evidence answers that question."
+              "text": "You can now build శుభ మధ్యాహ్నం (śubha madhyāhnam). The next question is when it sounds natural—and how strongly the available evidence answers that question."
             }
           ]
         },
@@ -153,7 +153,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Two independently fetched language-learning sources confirm that శుభ మధ్యాహ్నం is a real, correctly formed greeting for formal or workplace use around noon and early afternoon."
+              "text": "Two independently fetched language-learning sources confirm that శుభ మధ్యాహ్నం (śubha madhyāhnam) is a real, correctly formed greeting for formal or workplace use around noon and early afternoon."
             },
             {
               "kind": "speech",
@@ -176,7 +176,7 @@
             },
             {
               "kind": "speech",
-              "text": "శుభ మధ్యాహ్నం — real and workplace-timed, with narrower support for its lower everyday frequency."
+              "text": "శుభ మధ్యాహ్నం (śubha madhyāhnam) — real and workplace-timed, with narrower support for its lower everyday frequency."
             },
             {
               "kind": "speech",
@@ -237,7 +237,7 @@
             },
             {
               "kind": "speech",
-              "text": "Do both sources rank శుభ మధ్యాహ్నం as less common? (No. Both support its formal use; only Talkpal makes the frequency comparison.) What is the safer all-day greeting? (నమస్కారం.)"
+              "text": "Do both sources rank శుభ మధ్యాహ్నం (śubha madhyāhnam) as less common? (No. Both support its formal use; only Talkpal makes the frequency comparison.) What is the safer all-day greeting? (నమస్కారం.)"
             },
             {
               "kind": "activity",

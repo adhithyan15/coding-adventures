@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:ac6aa6db065a34b3",
+  "sourceHash": "fnv1a64:ca4779dcca428e1c",
   "lessons": [
     {
       "id": "ML-C02-aanu",
@@ -140,7 +140,7 @@
       "sequence": null,
       "title": "എന്റെ (enṟe) — \"my\"",
       "headword": "എന്റെ",
-      "romanization": "",
+      "romanization": "enṟe",
       "gloss": "my",
       "script": "malayalam",
       "modality": "sight",
@@ -148,7 +148,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:fdf49546f6b2b6ee",
+      "sourceHash": "fnv1a64:50983e3865948970",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -243,7 +243,7 @@
             },
             {
               "kind": "speech",
-              "text": "What word is എന്റെ the possessive of? (ñāṉ, \"I\".)"
+              "text": "What word is എന്റെ (enṟe) the possessive of? (ñāṉ, \"I\".)"
             }
           ]
         }
@@ -293,7 +293,7 @@
             },
             {
               "kind": "speech",
-              "text": "എന്റെ പേര് … ആണ് = \"my name … is\" = \"my name is…\""
+              "text": "എന്റെ (enṟe) പേര് (pēr) … ആണ് = \"my name … is\" = \"my name is…\""
             },
             {
               "kind": "speech",
@@ -640,7 +640,7 @@
             },
             {
               "kind": "speech",
-              "text": "നിന്റെ പേര് എന്താണ്? = literally \"your name what is?\""
+              "text": "നിന്റെ പേര് (pēr) എന്താണ്? = literally \"your name what is?\""
             },
             {
               "kind": "speech",
@@ -714,7 +714,7 @@
       "sequence": null,
       "title": "പേര് (pēru) — \"name,\" the native Dravidian word",
       "headword": "പേര്",
-      "romanization": "",
+      "romanization": "pēr",
       "gloss": "name",
       "script": "malayalam",
       "modality": "sight",
@@ -722,7 +722,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:fce78214aef0ef35",
+      "sourceHash": "fnv1a64:eeefd4f9a16486f7",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -957,7 +957,7 @@
       "sequence": null,
       "title": "സന്തോഷം (santōṣam) — \"joy,\" and \"pleased to meet you\"",
       "headword": "സന്തോഷം",
-      "romanization": "",
+      "romanization": "santōṣam",
       "gloss": "joy / pleased to meet you",
       "script": "malayalam",
       "modality": "voice",
@@ -965,7 +965,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:39689e1d6aa3ebb2",
+      "sourceHash": "fnv1a64:e75714ed42a88378",
       "notice": null,
       "blocks": [
         {
@@ -1051,7 +1051,7 @@
             },
             {
               "kind": "speech",
-              "text": "Is സന്തോഷം native or Sanskrit, and what does that show about how Malayalam borrows? (Sanskrit; it borrows selectively — native for some words, Sanskrit for others.)"
+              "text": "Is സന്തോഷം (santōṣam) native or Sanskrit, and what does that show about how Malayalam borrows? (Sanskrit; it borrows selectively — native for some words, Sanskrit for others.)"
             }
           ]
         }

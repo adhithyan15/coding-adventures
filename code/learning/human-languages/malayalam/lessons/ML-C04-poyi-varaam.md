@@ -4,6 +4,7 @@ chapter: 4
 type: phrase
 headword: പോയി വരാം
 gloss: goodbye (lit. "I'll go and come back")
+romanization: "pōyi varāṁ"
 concept_tag: FAREWELL
 prerequisites: [ML-C04-pokuka, ML-C03-njaan]
 sounds: [poyi-participle, aam-ending]

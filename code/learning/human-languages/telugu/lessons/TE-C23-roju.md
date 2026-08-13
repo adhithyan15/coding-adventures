@@ -7,6 +7,7 @@ chapter: 23
 type: word
 headword: రోజు
 gloss: "day" — a genuine surprise: Telugu's everyday word isn't Sanskrit or native Dravidian at all, it's a Persian loanword; దినము, the Sanskrit tatsama form, is the more formal alternate here — the mirror image of Kannada's pattern
+romanization: "rōju"
 concept_tag: TIME-DAY
 prerequisites: [TE-C17-madhyaahnam-ardharaatri]
 sounds: [telugu-vowel-sign-oo, telugu-ja]

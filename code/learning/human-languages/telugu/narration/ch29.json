@@ -4,14 +4,14 @@
   "chapter": 29,
   "title": "Good Morning",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:2a0449c46a95b7f2",
+  "sourceHash": "fnv1a64:0030d5c9ef8324c9",
   "lessons": [
     {
       "id": "TE-C29-subhodayam",
       "sequence": 570,
       "title": "శుభోదయం (śubhōdayam) — a claim worth real skepticism, not a settled fact",
       "headword": "శుభోదయం",
-      "romanization": "",
+      "romanization": "śubhōdayam",
       "gloss": "\"good morning\" (subhodayam) — శుభ + ఉదయం, the traditional phrase; one directly-fetched source (a Telugu-learning blog, the same low-authority genre already found overstated for Hindi/Kannada) claims it's archaic, displaced by English \"good morning\" — treat with real skepticism, not as confirmed; నమస్కారం remains a safer everyday-greeting bet regardless",
       "script": "telugu",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:586b3a016969c36f",
+      "sourceHash": "fnv1a64:2dd423abc55ec4e1",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Here's the twist, and the honesty this time cuts against the source itself: one directly-fetched page describes శుభోదయం as out of trend, displaced by English \"good morning,\" with children taught the English phrase from preschool. That's a vivid, quotable claim — but \"fetched directly\" doesn't make a source authoritative. This is the same genre of Telugu/Kannada/Hindi-learning content blog already found overstated for Hindi's सुप्रभात and Kannada's own ಶುಭೋದಯ (a single uncredentialed listicle, no sociolinguistic methodology, no citations) — treat this claim the same skeptical way, not as settled."
+              "text": "Here's the twist, and the honesty this time cuts against the source itself: one directly-fetched page describes శుభోదయం (śubhōdayam) as out of trend, displaced by English \"good morning,\" with children taught the English phrase from preschool. That's a vivid, quotable claim — but \"fetched directly\" doesn't make a source authoritative. This is the same genre of Telugu/Kannada/Hindi-learning content blog already found overstated for Hindi's सुप्रभात and Kannada's own ಶುಭೋದಯ (a single uncredentialed listicle, no sociolinguistic methodology, no citations) — treat this claim the same skeptical way, not as settled."
             },
             {
               "kind": "speech",
@@ -118,7 +118,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is శుభోదయం built from? (శుభ + ఉదయం.) Is the claim that శుభోదయం has been displaced by English a confirmed, well-sourced fact? (No — it comes from one low-authority content-blog source, the same genre already found overstated for Hindi/Kannada; treat it skeptically, not as settled.) Does సుప్రభాతం share ఉదయం's root, or Kannada's ಶುಭೋದಯ's root? (Neither — its own root, ప్రభాత/prabhāta, is a genuinely different Sanskrit word.)"
+              "text": "What is శుభోదయం (śubhōdayam) built from? (శుభ + ఉదయం.) Is the claim that శుభోదయం (śubhōdayam) has been displaced by English a confirmed, well-sourced fact? (No — it comes from one low-authority content-blog source, the same genre already found overstated for Hindi/Kannada; treat it skeptically, not as settled.) Does సుప్రభాతం share ఉదయం's root, or Kannada's ಶುಭೋದಯ's root? (Neither — its own root, ప్రభాత/prabhāta, is a genuinely different Sanskrit word.)"
             }
           ]
         }

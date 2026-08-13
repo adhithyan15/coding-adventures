@@ -4,14 +4,14 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:0bd13d76a6d2d33f",
+  "sourceHash": "fnv1a64:9c82797fe819f97f",
   "lessons": [
     {
       "id": "ML-C05-joli-ceyyuka",
       "sequence": null,
       "title": "ജോലി ചെയ്യുക (jōli ceyyuka) — \"to work\"",
       "headword": "ജോലി ചെയ്യുക",
-      "romanization": "",
+      "romanization": "jōli ceyyuka",
       "gloss": "to work (lit. \"work-do\")",
       "script": "malayalam",
       "modality": "sight",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:31d528a76c0bd599",
+      "sourceHash": "fnv1a64:eb22149686f6cdec",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -619,7 +619,7 @@
       "sequence": null,
       "title": "താമസിക്കുക (tāmasikkuka) — \"to live, to stay\"",
       "headword": "താമസിക്കുക",
-      "romanization": "",
+      "romanization": "tāmasikkuka",
       "gloss": "to live, to stay",
       "script": "malayalam",
       "modality": "sight",
@@ -627,7 +627,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:8af0e0a180efa543",
+      "sourceHash": "fnv1a64:9b4d197fa6baffc8",
       "notice": {
         "modality": "sight",
         "needs": [

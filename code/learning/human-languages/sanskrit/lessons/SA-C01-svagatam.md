@@ -4,6 +4,7 @@ chapter: 1
 type: word
 headword: स्वागतम्
 gloss: welcome (lit. "well come") (svāgatam)
+romanization: "svāgatam"
 concept_tag: GREETING-WELCOME
 prerequisites: [SA-C01-dhanyavada]
 sounds: [sva-conjunct, halant]

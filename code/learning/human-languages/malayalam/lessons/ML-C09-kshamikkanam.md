@@ -7,6 +7,7 @@ chapter: 9
 type: word
 headword: ക്ഷമിക്കണം
 gloss: (you) should forgive / sorry (kṣamikkaṇaṁ — from kṣamikkuka "to forgive," Sanskrit kṣama + necessitative -aṇaṁ)
+romanization: "kṣamikkaṇaṁ"
 concept_tag: COURTESY-SORRY
 prerequisites: [ML-C08-dayavayi]
 sounds: [malayalam-conjunct-kssa, malayalam-geminate-kka]

@@ -4,14 +4,14 @@
   "chapter": 29,
   "title": "Good Morning",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f50670956f8c9ff2",
+  "sourceHash": "fnv1a64:04412c3d0b13f291",
   "lessons": [
     {
       "id": "TA-C29-kaalai-vanakkam",
       "sequence": 840,
-      "title": "காலை வணக்கம் — \"morning greetings\"",
+      "title": "காலை வணக்கம் (kālai vaṇakkam) — \"morning greetings\"",
       "headword": "காலை வணக்கம்",
-      "romanization": "",
+      "romanization": "kālai vaṇakkam",
       "gloss": "good morning (kālai vaṇakkam), literally \"morning greetings\" — a transparent compound of காலை (already met, TA-C26) + வணக்கம் (already met, TA-C01, \"reverence, homage\"); confirmed via TWO independently-fetched sources as the standard, formal greeting, used from sunrise until around 11 AM; NOT a śubha-equivalent construction, breaking the pattern its neighbours share; a WebSearch summary's claim that a Sanskrit-borrowed \"suprabhatham\" is a casual alternative could NOT be traced to either directly-fetched source and is therefore not asserted here",
       "script": "tamil",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:824054e5b5c328eb",
+      "sourceHash": "fnv1a64:ec2aada931263b05",
       "notice": null,
       "blocks": [
         {
@@ -114,7 +114,7 @@
             },
             {
               "kind": "speech",
-              "text": "What two known words build காலை வணக்கம்? (காலை, \"morning\" + வணக்கம், \"reverence/hello.\")"
+              "text": "What two known words build காலை வணக்கம் (kālai vaṇakkam)? (காலை, \"morning\" + வணக்கம், \"reverence/hello.\")"
             },
             {
               "kind": "speech",

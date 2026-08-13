@@ -7,6 +7,7 @@ chapter: 22
 type: word
 headword: పచ్చ, పసుపు
 gloss: green and yellow — a genuine Telugu doublet pair, both from the same Proto-Dravidian *pac- root, unlike Kannada, where the yellow word broke away as a Sanskrit loan
+romanization: "pacca pasupu"
 concept_tag: TE-COLOUR-GREEN-YELLOW
 prerequisites: [TE-C11-rangulu, TE-C21-kukka-pilli]
 sounds: [telugu-short-vowels, telugu-virama-geminate]

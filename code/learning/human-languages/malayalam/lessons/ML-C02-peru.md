@@ -4,6 +4,7 @@ chapter: 2
 type: word
 headword: പേര്
 gloss: name
+romanization: "pēr"
 concept_tag: WORD-NAME
 prerequisites: []
 sounds: [ee-sign, chandrakkala]

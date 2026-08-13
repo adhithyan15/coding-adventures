@@ -7,6 +7,7 @@ chapter: 30
 type: phrase
 headword: மாலை வணக்கம்
 gloss: good evening (mālai vaṇakkam), literally "evening greetings" — the SAME compositional pattern as TA-C29's kālai vaṇakkam: மாலை (already met, TA-C27, "evening") + வணக்கம் (already met, TA-C01); confirmed via TWO independently-fetched sources (talkpal.ai, preply.com — same practical-content tier as TA-C29's sources) as real and used from afternoon/late-afternoon through nightfall, one labeling it formal; no śubha-equivalent word here either, consistent with TA-C29's finding, not just assumed to carry over automatically
+romanization: "mālai vaṇakkam"
 concept_tag: GREETING-EVENING
 prerequisites: [TA-C27-maalai, TA-C29-kaalai-vanakkam]
 sounds: [tamil-vowel-sign-aa, tamil-geminate-kka]

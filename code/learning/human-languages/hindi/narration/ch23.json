@@ -4,14 +4,14 @@
   "chapter": 23,
   "title": "Dog and Cat",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:dead36175f19a05e",
+  "sourceHash": "fnv1a64:969a9d3c654bd977",
   "lessons": [
     {
       "id": "HI-C23-kutta-billi",
       "sequence": 470,
-      "title": "कुत्ता — a third mystery dog-word",
+      "title": "कुत्ता (kuttā) — a third mystery dog-word",
       "headword": "कुत्ता",
-      "romanization": "",
+      "romanization": "kuttā",
       "gloss": "dog — a third uncertain-origin everyday word displacing an inherited PIE dog-word",
       "script": "devanagari",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1e4f97628c48b9b1",
+      "sourceHash": "fnv1a64:3a0be63459204cd5",
       "notice": null,
       "blocks": [
         {

@@ -4,14 +4,14 @@
   "chapter": 13,
   "title": "Head and Hand",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:1debf26c0657eade",
+  "sourceHash": "fnv1a64:7f8366d88a25d938",
   "lessons": [
     {
       "id": "TE-C13-sharira-bhagalu",
       "sequence": 400,
       "title": "తల, చెయ్యి — head and hand",
       "headword": "తల చెయ్యి",
-      "romanization": "",
+      "romanization": "tala ceyyi",
       "gloss": "head (matching its cousins) and hand (the SAME Dravidian root as the others, transformed almost past recognition)",
       "script": "telugu",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fcf0942176d96b7c",
+      "sourceHash": "fnv1a64:cede24ba7ccf678a",
       "notice": null,
       "blocks": [
         {

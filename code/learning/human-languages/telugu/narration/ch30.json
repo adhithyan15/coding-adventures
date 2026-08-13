@@ -4,14 +4,14 @@
   "chapter": 30,
   "title": "Good Evening",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:7325bf88a3f86691",
+  "sourceHash": "fnv1a64:48a5cef20b80b3a0",
   "lessons": [
     {
       "id": "TE-C30-subha-sayantram",
       "sequence": 580,
       "title": "శుభ సాయంత్రం (śubha sāyantram) — a claim that actually holds up on checking",
       "headword": "శుభ సాయంత్రం",
-      "romanization": "",
+      "romanization": "śubha sāyantram",
       "gloss": "\"good evening\" (śubha sāyantram) — pairs with సాయంత్రం (TE-C27, the word with the striking Latin sērus/French soir cognate); unlike GREETING-MORNING's single, dramatic \"displaced by English\" source, TWO independently-fetched sources agree this one is genuinely, commonly used in both formal and casual speech, with నమస్కారం as a time-independent alternative rather than a replacement",
       "script": "telugu",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bef920e3f643611d",
+      "sourceHash": "fnv1a64:e888b3152fcdca78",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Here's the honest contrast worth drawing explicitly: last lesson's శుభోదయం rested on one dramatic, low-authority source claiming it had been displaced by English entirely. This time, two independently fetched sources — not just search-engine summaries — agree: శుభ సాయంత్రం is genuinely, commonly used, in both formal and informal contexts, appropriate for greeting people after work or arriving at an evening gathering. Neither source flags it as archaic or displaced. This doesn't mean these sources are beyond question — they're still the same general genre of language-learning content that has needed hedging before — but being independently cross-corroborated is a real, meaningful difference in evidence quality from a single dramatic claim, and it's worth being just as honest about a claim holding up as about one that doesn't. నమస్కారం, as before, remains a genuine time-independent alternative — but nothing here suggests it has displaced this greeting the way English reportedly displaced శుభోదయం."
+              "text": "Here's the honest contrast worth drawing explicitly: last lesson's శుభోదయం rested on one dramatic, low-authority source claiming it had been displaced by English entirely. This time, two independently fetched sources — not just search-engine summaries — agree: శుభ సాయంత్రం (śubha sāyantram) is genuinely, commonly used, in both formal and informal contexts, appropriate for greeting people after work or arriving at an evening gathering. Neither source flags it as archaic or displaced. This doesn't mean these sources are beyond question — they're still the same general genre of language-learning content that has needed hedging before — but being independently cross-corroborated is a real, meaningful difference in evidence quality from a single dramatic claim, and it's worth being just as honest about a claim holding up as about one that doesn't. నమస్కారం, as before, remains a genuine time-independent alternative — but nothing here suggests it has displaced this greeting the way English reportedly displaced శుభోదయం."
             }
           ]
         },
@@ -114,7 +114,7 @@
             },
             {
               "kind": "speech",
-              "text": "What word does శుభ సాయంత్రం pair with, and what's that word's own striking cross-language story? (సాయంత్రం — a genuine distant PIE cognate of Latin sērus/French soir/Italian sera.) Is the \"genuinely commonly used\" claim for శుభ సాయంత్రం as thinly sourced as శుభోదయం's \"displaced by English\" claim was? (No — two independent sources agree here, versus one dramatic claim last lesson — a real difference in evidence quality.)"
+              "text": "What word does శుభ సాయంత్రం (śubha sāyantram) pair with, and what's that word's own striking cross-language story? (సాయంత్రం — a genuine distant PIE cognate of Latin sērus/French soir/Italian sera.) Is the \"genuinely commonly used\" claim for శుభ సాయంత్రం (śubha sāyantram) as thinly sourced as శుభోదయం's \"displaced by English\" claim was? (No — two independent sources agree here, versus one dramatic claim last lesson — a real difference in evidence quality.)"
             }
           ]
         }

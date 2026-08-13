@@ -7,6 +7,7 @@ chapter: 22
 type: word
 headword: ಹಸಿರು, ಹಳದಿ
 gloss: green and yellow — hasiru is genuine pan-Dravidian, sharing its Proto-Dravidian root with Tamil's paccai and Telugu's pacca; haladi is a Sanskrit/Hindi loan built on the word for turmeric, and traces back to the SAME ancient PIE root already behind Hindi's harā (green) and German's gelb (yellow)
+romanization: "hasiru haḷadi"
 concept_tag: KA-COLOUR-GREEN-YELLOW
 prerequisites: [KA-C11-bannagalu, KA-C21-naayi-bekku]
 sounds: [kannada-retroflex-lla, kannada-virama-geminate]

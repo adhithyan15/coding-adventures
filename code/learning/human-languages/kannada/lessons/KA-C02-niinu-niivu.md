@@ -4,6 +4,7 @@ chapter: 2
 type: word
 headword: ನೀನು / ನೀವು
 gloss: you (familiar / respectful)
+romanization: "nīnu / nīvu"
 concept_tag: PRONOUN-YOU
 prerequisites: [KA-C02-hesaru]
 sounds: [long-ii]

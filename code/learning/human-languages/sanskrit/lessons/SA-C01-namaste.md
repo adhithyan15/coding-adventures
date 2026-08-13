@@ -4,6 +4,7 @@ chapter: 1
 type: word
 headword: नमस्ते
 gloss: hello (lit. "a bow to you") (namaste)
+romanization: "namaste"
 concept_tag: GREETING-HELLO
 prerequisites: []
 sounds: [inherent-a, halant-conjunct]

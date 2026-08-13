@@ -4,14 +4,14 @@
   "chapter": 27,
   "title": "Evening",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:7cddce6c619c2508",
+  "sourceHash": "fnv1a64:f8e82c6bf8d1ee32",
   "lessons": [
     {
       "id": "TA-C27-maalai",
       "sequence": 810,
       "title": "மாலை (mālai) — \"evening,\" and a garland that only looks like the same word",
       "headword": "மாலை",
-      "romanization": "",
+      "romanization": "mālai",
       "gloss": "evening (mālai) — a genuine HOMONYM: Wiktionary lists TWO separate etymologies for this exact spelling — \"garland/necklace\" (possibly a Dravidian word BORROWED INTO Sanskrit as माला/mālā, a reverse-direction loan) and, unrelated, \"evening\" (compared to மால், Proto-Dravidian mā/māl, whose senses include \"கருமை,\" darkness); confidently native for the evening sense, unlike TA-C26's uncertain காலை, though the exact semantic mechanism (\"evening\" from \"darkness\" specifically) isn't spelled out with full certainty by the source",
       "script": "tamil",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9b58ae9e7d826a6f",
+      "sourceHash": "fnv1a64:41db8c56f6ad2596",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The evening sense of மாலை is a separate Old Tamil word entirely, compared instead to மால் (māl) — which Wiktionary traces to Proto-Dravidian mā/māl, with senses including \"கருமை\" (\"blackness, darkness\"), plus archaic senses of \"illusion, confusion\" and, as a proper noun, the Hindu deity Vishnu. Be honest about the exact mechanism here: Wiktionary's own etymology for \"evening\" only says \"compare māl\" — it does not explicitly state that \"evening\" derives specifically from the darkness sense rather than some other sense of this multi-meaning root. The connection (evening = the time it grows dark) is natural and plausible, but not nailed down with full certainty by the source itself. What IS certain: this is confidently native Dravidian vocabulary, a genuine contrast with TA-C26's uncertain காலை."
+              "text": "The evening sense of மாலை (mālai) is a separate Old Tamil word entirely, compared instead to மால் (māl) — which Wiktionary traces to Proto-Dravidian mā/māl, with senses including \"கருமை\" (\"blackness, darkness\"), plus archaic senses of \"illusion, confusion\" and, as a proper noun, the Hindu deity Vishnu. Be honest about the exact mechanism here: Wiktionary's own etymology for \"evening\" only says \"compare māl\" — it does not explicitly state that \"evening\" derives specifically from the darkness sense rather than some other sense of this multi-meaning root. The connection (evening = the time it grows dark) is natural and plausible, but not nailed down with full certainty by the source itself. What IS certain: this is confidently native Dravidian vocabulary, a genuine contrast with TA-C26's uncertain காலை."
             }
           ]
         },

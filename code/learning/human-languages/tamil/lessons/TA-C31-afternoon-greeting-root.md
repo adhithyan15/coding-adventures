@@ -7,6 +7,7 @@ chapter: 31
 type: etymology
 headword: மதிய
 gloss: the adjective inside the afternoon greeting comes from மதியம் (noon), not from பிற்பகல் (afternoon)
+romanization: "matiya"
 concept_tag: GREETING-AFTERNOON
 prerequisites: [TA-C31-matiya-vanakkam]
 sounds: [tamil-vowel-sign-i]

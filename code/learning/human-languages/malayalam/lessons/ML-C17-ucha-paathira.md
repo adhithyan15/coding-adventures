@@ -7,6 +7,7 @@ chapter: 17
 type: word
 headword: ഉച്ച
 gloss: noon, most likely from a different Sanskrit metaphor than Kannada and Telugu — height rather than middle
+romanization: "ucca"
 concept_tag: ML-TIME-NOON
 prerequisites: [ML-C16-kollavarsham-maasangal]
 sounds: [malayalam-virama-cha, malayalam-vowel-sign-aa]

@@ -4,6 +4,7 @@ chapter: 2
 type: word
 headword: నా
 gloss: my
+romanization: "nā"
 concept_tag: PRONOUN-MY
 prerequisites: [TE-C02-peru]
 sounds: [long-aa]

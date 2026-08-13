@@ -4,14 +4,14 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:e08a7fd2e7d9d6f8",
+  "sourceHash": "fnv1a64:c5c4a66622c17ba9",
   "lessons": [
     {
       "id": "KA-C04-hoogi-baruttene",
       "sequence": null,
       "title": "ಹೋಗಿ ಬರುತ್ತೇನೆ (hōgi baruttēne) — \"I'll go and come back\"",
       "headword": "ಹೋಗಿ ಬರುತ್ತೇನೆ",
-      "romanization": "",
+      "romanization": "hōgi baruttēne",
       "gloss": "goodbye (lit. \"I'll go and come back\")",
       "script": "kannada",
       "modality": "sight",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5424de3b9e5d6cef",
+      "sourceHash": "fnv1a64:163fe9b04e84446c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -66,7 +66,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಹೋಗಿ ಬರುತ್ತೇನೆ = ಹೋಗಿ (hōgi, \"having gone\") + ಬರುತ್ತೇನೆ (baruttēne, \"I come\") — literally \"having gone, I come [back],\" i.e. \"I'll go and come back.\" A Kannada speaker never signs off with a bare \"I'm leaving\" — it sounds final. It is the same \"go-and-come-back\" farewell across the Dravidian south (Tamil pōy varugiṟēṉ, Telugu veḷḷi vastānu, Malayalam pōyi varāṁ). The warm reply is ಹೋಗಿ ಬನ್ನಿ (hōgi banni, \"go and come [back]\")."
+              "text": "ಹೋಗಿ ಬರುತ್ತೇನೆ (hōgi baruttēne) = ಹೋಗಿ (hōgi, \"having gone\") + ಬರುತ್ತೇನೆ (baruttēne, \"I come\") — literally \"having gone, I come [back],\" i.e. \"I'll go and come back.\" A Kannada speaker never signs off with a bare \"I'm leaving\" — it sounds final. It is the same \"go-and-come-back\" farewell across the Dravidian south (Tamil pōy varugiṟēṉ, Telugu veḷḷi vastānu, Malayalam pōyi varāṁ). The warm reply is ಹೋಗಿ ಬನ್ನಿ (hōgi banni, \"go and come [back]\")."
             }
           ]
         },
@@ -145,7 +145,7 @@
       "sequence": null,
       "title": "ಹೋಗು (hōgu) — \"go,\" and ಬಾ (come)",
       "headword": "ಹೋಗು",
-      "romanization": "",
+      "romanization": "hōgu",
       "gloss": "to go (and ಬಾ, come)",
       "script": "kannada",
       "modality": "sight",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:30e99c8aa7d1463b",
+      "sourceHash": "fnv1a64:18d2e096c02b8b7c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -259,7 +259,7 @@
       "sequence": null,
       "title": "ಮತ್ತೆ ಸಿಗೋಣ (matte sigōṇa) — \"we'll meet again\"",
       "headword": "ಮತ್ತೆ ಸಿಗೋಣ",
-      "romanization": "",
+      "romanization": "matte sigōṇa",
       "gloss": "we'll meet again",
       "script": "kannada",
       "modality": "sight",
@@ -267,7 +267,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:4340dca3b939a451",
+      "sourceHash": "fnv1a64:702193f26b67e288",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -314,7 +314,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಮತ್ತೆ ಸಿಗೋಣ = ಮತ್ತೆ (matte, \"again\") + ಸಿಗೋಣ (sigōṇa, \"let's meet\") — \"we'll meet again.\" Both words are native Dravidian: matte (\"again\") and sigu (\"to meet\"). Where Tamil's \"we'll meet again\" (mīṇḍum sandippōm) reaches for the Sanskrit loan sandi to say \"meet,\" Kannada keeps the native sigu — the same phrase, from home-grown stock."
+              "text": "ಮತ್ತೆ ಸಿಗೋಣ (matte sigōṇa) = ಮತ್ತೆ (matte, \"again\") + ಸಿಗೋಣ (sigōṇa, \"let's meet\") — \"we'll meet again.\" Both words are native Dravidian: matte (\"again\") and sigu (\"to meet\"). Where Tamil's \"we'll meet again\" (mīṇḍum sandippōm) reaches for the Sanskrit loan sandi to say \"meet,\" Kannada keeps the native sigu — the same phrase, from home-grown stock."
             }
           ]
         },
@@ -373,7 +373,7 @@
       "sequence": null,
       "title": "ನಾಳೆ ಸಿಗೋಣ (nāḷe sigōṇa) — \"see you tomorrow\"",
       "headword": "ನಾಳೆ ಸಿಗೋಣ",
-      "romanization": "",
+      "romanization": "nāḷe sigōṇa",
       "gloss": "see you tomorrow",
       "script": "kannada",
       "modality": "sight",
@@ -381,7 +381,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:9c7fce2e8376967d",
+      "sourceHash": "fnv1a64:7585162fb5f98807",
       "notice": {
         "modality": "sight",
         "needs": [

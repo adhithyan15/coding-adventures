@@ -4,14 +4,14 @@
   "chapter": 8,
   "title": "Please",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:17e6eaaffab36d7e",
+  "sourceHash": "fnv1a64:9b3fdb994aa335d3",
   "lessons": [
     {
       "id": "TA-C08-tayavuseytu",
       "sequence": 470,
       "title": "தயவுசெய்து (tayavu seytu) — please (do the kindness)",
       "headword": "தயவுசெய்து",
-      "romanization": "",
+      "romanization": "tayavu seytu",
       "gloss": "please (tayavu seytu — \"do the kindness,\" from தயவு tayavu \"compassion/grace\")",
       "script": "tamil",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b971e0b2bb303f4a",
+      "sourceHash": "fnv1a64:f617ae89e5cbc693",
       "notice": null,
       "blocks": [
         {
@@ -46,7 +46,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "தயவுசெய்து = please, literally \"do the kindness / grace.\" It is two pieces snapped together:"
+              "text": "தயவுசெய்து (tayavu seytu) = please, literally \"do the kindness / grace.\" It is two pieces snapped together:"
             },
             {
               "kind": "speech",
@@ -150,9 +150,9 @@
     {
       "id": "TA-C08-please-register",
       "sequence": 480,
-      "title": "தயவுசெய்து or -உங்கள்? — politeness in phrase or verb",
+      "title": "தயவுசெய்து (tayavu seytu) or -உங்கள்? — politeness in phrase or verb",
       "headword": "தயவுசெய்து / -உங்கள்",
-      "romanization": "",
+      "romanization": "tayavu seytu / uṅgaḷ",
       "gloss": "standalone please is emphatic while everyday courtesy often lives in the respectful verb ending",
       "script": "tamil",
       "modality": "sight",
@@ -160,7 +160,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:623569769d69e6a3",
+      "sourceHash": "fnv1a64:7f8aae22027949eb",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -196,7 +196,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "A standalone தயவுசெய்து is more emphatic and formal than English \"please.\" Ordinary polite commands use respectful -உங்கள் (-uṅgaḷ):"
+              "text": "A standalone தயவுசெய்து (tayavu seytu) is more emphatic and formal than English \"please.\" Ordinary polite commands use respectful -உங்கள் (-uṅgaḷ):"
             },
             {
               "kind": "speech",
@@ -237,7 +237,7 @@
             {
               "kind": "prompt",
               "action": "CHOOSE",
-              "instruction": "emphatic request becomes தயவுசெய்து",
+              "instruction": "emphatic request becomes தயவுசெய்து (tayavu seytu)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,

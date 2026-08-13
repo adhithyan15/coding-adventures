@@ -107,7 +107,7 @@ The letters in this word.
 The new word is ಹೇಗಿದ್ದೀರಾ (hēgiddīrā): hēge ("how") fused with ಇದ್ದೀರಾ (iddīrā, "are you"), from the verb ಇರು (iru, "to be, exist, stay") + the respectful-you ending. Note the doubled ದ್ದ (dd).
 
 The phrase, taken apart.
-ನೀವು ಹೇಗಿದ್ದೀರಾ? = ನೀವು (nīvu, "you," respectful) + ಹೇಗಿದ್ದೀರಾ (hēgiddīrā, "how are you") — the verb last, as always. The verb is ಇರು (iru, "to be / exist / stay") — the same native Dravidian iru that Tamil uses for "how are you," and (in Chapter 5) the verb for "I live."
+ನೀವು ಹೇಗಿದ್ದೀರಾ? (nīvu hēgiddīrā) = ನೀವು (nīvu, "you," respectful) + ಹೇಗಿದ್ದೀರಾ (hēgiddīrā, "how are you") — the verb last, as always. The verb is ಇರು (iru, "to be / exist / stay") — the same native Dravidian iru that Tamil uses for "how are you," and (in Chapter 5) the verb for "I live."
 
 Grammar Lens: the verb carries "you".
 The ending already means "you (respectful)," so nīvu can be dropped: hēgiddīrā? alone is a complete "how are you?" To a friend (nīnu), it shifts: ನೀನು ಹೇಗಿದ್ದೀಯಾ? (nīnu hēgiddīyā?). Match the "you" to the verb-ending, as Kannada always does.

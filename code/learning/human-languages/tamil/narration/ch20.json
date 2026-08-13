@@ -4,7 +4,7 @@
   "chapter": 20,
   "title": "Numbers Eleven to Twenty and Weather",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:2cf7f0e2e424d5a4",
+  "sourceHash": "fnv1a64:748f22c43b1f90eb",
   "lessons": [
     {
       "id": "TA-C20-pathinondru-irupathu",
@@ -134,9 +134,9 @@
     {
       "id": "TA-C20-vaanilai",
       "sequence": 710,
-      "title": "வானிலை — \"the standing of the sky,\" most likely all native",
+      "title": "வானிலை (vāṉilai) — \"the standing of the sky,\" most likely all native",
       "headword": "வானிலை",
-      "romanization": "",
+      "romanization": "vāṉilai",
       "gloss": "weather — most likely a NATIVE Dravidian compound, unlike Kannada/Telugu/Malayalam's Sanskrit compounds: vaanam (\"sky\") + nilai (\"state, standing\")",
       "script": "tamil",
       "modality": "voice",
@@ -144,7 +144,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:661e8c72b79c3d22",
+      "sourceHash": "fnv1a64:c3eab369514507a8",
       "notice": null,
       "blocks": [
         {
@@ -251,7 +251,7 @@
             },
             {
               "kind": "speech",
-              "text": "What are the two pieces of வானிலை, and what does the whole word literally mean? (வானம், \"sky,\" + நிலை, \"state/standing\" — \"the standing of the sky.\") Is either piece a Sanskrit or Persian/Arabic loan, unlike Kannada, Telugu, or Malayalam's weather words? (Most likely not — both pieces are native Dravidian.) What Tamil word does Malayalam's mazha match for \"rain\"? (மழை, mazhai.)"
+              "text": "What are the two pieces of வானிலை (vāṉilai), and what does the whole word literally mean? (வானம், \"sky,\" + நிலை, \"state/standing\" — \"the standing of the sky.\") Is either piece a Sanskrit or Persian/Arabic loan, unlike Kannada, Telugu, or Malayalam's weather words? (Most likely not — both pieces are native Dravidian.) What Tamil word does Malayalam's mazha match for \"rain\"? (மழை, mazhai.)"
             }
           ]
         }

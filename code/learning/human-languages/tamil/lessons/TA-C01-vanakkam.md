@@ -5,6 +5,7 @@ chapter: 1
 type: word
 headword: வணக்கம்
 gloss: hello / greetings (vaṇakkam — "reverence, homage")
+romanization: "vaṇakkam"
 concept_tag: GREETING-HELLO
 prerequisites: []
 sounds: [tamil-inherent-a, pulli-virama, retroflex-n]

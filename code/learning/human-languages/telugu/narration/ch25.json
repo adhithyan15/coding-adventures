@@ -4,14 +4,14 @@
   "chapter": 25,
   "title": "Good Night",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:889282df4447ea86",
+  "sourceHash": "fnv1a64:07e2cba5e31df43a",
   "lessons": [
     {
       "id": "TE-C25-shubha-ratri",
       "sequence": 530,
       "title": "శుభ రాత్రి (śubha rātri) — the standard translation, honestly checked against real speech",
       "headword": "శుభ రాత్రి",
-      "romanization": "",
+      "romanization": "śubha rātri",
       "gloss": "\"good night\" — the standard Sanskrit-tatsama translation (rātri already met, śubha new); some sources describe everyday speakers often code-switching to English \"good night\" instead",
       "script": "telugu",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b4f4970ab0dab434",
+      "sourceHash": "fnv1a64:83f579a6fb5c54f1",
       "notice": null,
       "blocks": [
         {

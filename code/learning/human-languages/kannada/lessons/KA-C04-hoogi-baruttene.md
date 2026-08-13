@@ -4,6 +4,7 @@ chapter: 4
 type: phrase
 headword: ಹೋಗಿ ಬರುತ್ತೇನೆ
 gloss: goodbye (lit. "I'll go and come back")
+romanization: "hōgi baruttēne"
 concept_tag: FAREWELL
 prerequisites: [KA-C04-hoogu, KA-C03-naanu]
 sounds: [hoogi-participle]

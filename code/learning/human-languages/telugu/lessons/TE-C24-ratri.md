@@ -7,6 +7,7 @@ chapter: 24
 type: word
 headword: రాత్రి
 gloss: "night" — the same Sanskrit tatsama word already hiding inside ardharātri; unlike day's Persian surprise, night genuinely follows the Sanskrit-tatsama-as-everyday pattern, matching Kannada
+romanization: "rātri"
 concept_tag: TIME-NIGHT
 prerequisites: [TE-C17-madhyaahnam-ardharaatri, TE-C23-roju]
 sounds: [telugu-conjunct-tra, telugu-vowel-sign-i]

@@ -5,6 +5,7 @@ sequence: 340
 type: word
 headword: வேலை செய்
 gloss: to work (lit. "work-do")
+romanization: "vēlai sey"
 concept_tag: TA-VERB-SEY
 prerequisites: [TA-C05-pesu]
 sounds: [long-e]

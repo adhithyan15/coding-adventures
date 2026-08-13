@@ -4,6 +4,7 @@ chapter: 5
 type: word
 headword: పని చేయు
 gloss: to work (lit. "work-do")
+romanization: "pani cēyu"
 concept_tag: TE-VERB-CEYU
 prerequisites: [TE-C05-maatlaadu]
 sounds: [long-e]

@@ -7,6 +7,7 @@ chapter: 18
 type: word
 headword: घंटा
 gloss: hour — literally "bell," from the historical practice of striking a bell to mark the hour
+romanization: "ghaṇṭā"
 concept_tag: HI-TIME-HOUR
 prerequisites: [HI-C17-dopahar-aadhi-raat]
 sounds: [devanagari-anusvara, devanagari-conjunct-none]

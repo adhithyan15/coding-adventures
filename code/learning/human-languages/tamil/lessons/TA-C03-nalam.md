@@ -5,6 +5,7 @@ sequence: 210
 type: word
 headword: நலம்
 gloss: well, wellness, good — and the reply "நான் நலமாக இருக்கிறேன்"
+romanization: "nalam"
 concept_tag: WORD-WELL
 prerequisites: [TA-C03-naan, TA-C03-eppadi-irukkirirgal]
 sounds: [final-m]

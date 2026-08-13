@@ -4,14 +4,14 @@
   "chapter": 15,
   "title": "Water and Rice",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:d190fb570c076825",
+  "sourceHash": "fnv1a64:f676fc9d9ac69d21",
   "lessons": [
     {
       "id": "KA-C15-niiru-akki",
       "sequence": 430,
       "title": "ನೀರು, ಅಕ್ಕಿ, ಅನ್ನ — water matching Tamil, and rice, raw and cooked",
       "headword": "ನೀರು ಅಕ್ಕಿ ಅನ್ನ",
-      "romanization": "",
+      "romanization": "nīru akki anna",
       "gloss": "water (matching Tamil's neer, unlike Malayalam), and rice raw/cooked",
       "script": "kannada",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4e297f50c05aa28a",
+      "sourceHash": "fnv1a64:e75f2043dbe5a5b9",
       "notice": null,
       "blocks": [
         {

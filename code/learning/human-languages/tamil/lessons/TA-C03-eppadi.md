@@ -5,6 +5,7 @@ sequence: 180
 type: word
 headword: எப்படி
 gloss: how
+romanization: "eppaḍi"
 concept_tag: QUESTION-HOW
 prerequisites: [TA-C02-enna]
 sounds: [e-interrogative]

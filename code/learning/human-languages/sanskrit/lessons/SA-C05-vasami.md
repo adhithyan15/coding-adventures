@@ -4,6 +4,7 @@ chapter: 5
 type: word
 headword: वसामि
 gloss: I live, I dwell (from वस्, to dwell)
+romanization: "vasāmi"
 concept_tag: SA-VERB-VAS
 prerequisites: [SA-C05-vadami]
 sounds: [inherent-a, long-aa]

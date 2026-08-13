@@ -4,6 +4,7 @@ chapter: 4
 type: phrase
 headword: రేపు కలుద్దాం
 gloss: see you tomorrow
+romanization: "rēpu kaluddām"
 concept_tag: FAREWELL-TOMORROW
 prerequisites: [TE-C04-velli-vastaanu]
 sounds: [long-e]

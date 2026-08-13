@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:b228867e095b9ba0",
+  "sourceHash": "fnv1a64:b925cb988099ec1e",
   "lessons": [
     {
       "id": "ML-C01-athe",
@@ -161,7 +161,7 @@
       "sequence": null,
       "title": "ഇല്ല (illa) — \"no,\" the word Malayalam and Tamil share almost exactly",
       "headword": "ഇല്ല",
-      "romanization": "",
+      "romanization": "illa",
       "gloss": "no / there isn't (illa — the negative)",
       "script": "malayalam",
       "modality": "sight",
@@ -169,7 +169,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a386c9616c67b3e7",
+      "sourceHash": "fnv1a64:c377ce81161a892c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -336,7 +336,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read ഇല്ല. Literally, is it closer to \"no\" or \"is not\"? (\"Is not / there is not.\") Which languages share this exact il- root, and which Dravidian sister does not? (Tamil and Kannada share it; Telugu is the outlier, with lēdu.)"
+              "text": "Read ഇല്ല (illa). Literally, is it closer to \"no\" or \"is not\"? (\"Is not / there is not.\") Which languages share this exact il- root, and which Dravidian sister does not? (Tamil and Kannada share it; Telugu is the outlier, with lēdu.)"
             }
           ]
         }
@@ -347,7 +347,7 @@
       "sequence": null,
       "title": "നമസ്കാരം (namaskāram) — \"greetings,\" a making of a bow",
       "headword": "നമസ്കാരം",
-      "romanization": "",
+      "romanization": "namaskāram",
       "gloss": "hello / greetings (namaskāram — \"a making of a bow\")",
       "script": "malayalam",
       "modality": "sight",
@@ -355,7 +355,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:bd41bd8573b9cfb8",
+      "sourceHash": "fnv1a64:ccd411311e0764f1",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -527,7 +527,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read നമസ്കാരം. Native Malayalam or a borrowing, and what does it literally mean? (Sanskrit namas + kāra, \"the making of a bow.\") Which language is Malayalam's closest sister? (Tamil.)"
+              "text": "Read നമസ്കാരം (namaskāram). Native Malayalam or a borrowing, and what does it literally mean? (Sanskrit namas + kāra, \"the making of a bow.\") Which language is Malayalam's closest sister? (Tamil.)"
             }
           ]
         }
@@ -538,7 +538,7 @@
       "sequence": null,
       "title": "നന്ദി (nandi) — \"thank you,\" and the Tamil kinship made visible",
       "headword": "നന്ദി",
-      "romanization": "",
+      "romanization": "nandi",
       "gloss": "thank you (nandi — the native Dravidian word, Tamil's cousin)",
       "script": "malayalam",
       "modality": "sight",
@@ -546,7 +546,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:77fae88f5176850b",
+      "sourceHash": "fnv1a64:4690f7c84094b174",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -705,7 +705,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read നന്ദി. Is it native or a Sanskrit loan, and which language has the twin word? (Native — root nal, \"good\"; Tamil's naṉṟi.) Which two Dravidian languages use the Sanskrit word for thanks instead? (Kannada, Telugu.)"
+              "text": "Read നന്ദി (nandi). Is it native or a Sanskrit loan, and which language has the twin word? (Native — root nal, \"good\"; Tamil's naṉṟi.) Which two Dravidian languages use the Sanskrit word for thanks instead? (Kannada, Telugu.)"
             }
           ]
         }
@@ -870,9 +870,9 @@
     {
       "id": "ML-C01-sari",
       "sequence": null,
-      "title": "ശരി (śari) — \"okay,\" the whole-family word once more",
+      "title": "ശരി (sari) (śari) — \"okay,\" the whole-family word once more",
       "headword": "ശരി",
-      "romanization": "",
+      "romanization": "sari",
       "gloss": "okay / alright / correct (śari)",
       "script": "malayalam",
       "modality": "sight",
@@ -880,7 +880,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:65e56bc8c04f01a1",
+      "sourceHash": "fnv1a64:203bb2f266e73be7",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -932,7 +932,7 @@
             },
             {
               "kind": "speech",
-              "text": "ശരി = śari = \"okay / correct.\""
+              "text": "ശരി (sari) = śari = \"okay / correct.\""
             }
           ]
         },

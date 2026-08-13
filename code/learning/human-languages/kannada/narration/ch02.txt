@@ -26,7 +26,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What Dravidian stem heads ಏನು and Kannada's other question-words? (yā-/e-, the same as Tamil eṉṉa.)
+What Dravidian stem heads ಏನು (ēnu) and Kannada's other question-words? (yā-/e-, the same as Tamil eṉṉa.)
 
 
 Lesson 2 of 8.
@@ -83,7 +83,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What word is ನನ್ನ the possessive of? (nānu, "I".) Which Tamil pronoun shares its root? (nāṉ.)
+What word is ನನ್ನ (nanna) the possessive of? (nānu, "I".) Which Tamil pronoun shares its root? (nāṉ.)
 
 
 Lesson 4 of 8.
@@ -95,7 +95,7 @@ Assemble the two atoms — and notice, as in Tamil, no word for "is."
 
 The phrase, assembled.
 nanna (my) + hesaru (name) + your name.
-ನನ್ನ ಹೆಸರು … = "my name …" becomes "my name is…"
+ನನ್ನ (nanna) ಹೆಸರು (hesaru) … = "my name …" becomes "my name is…"
 Nanna hesaru Arun. becomes "My name is Arun."
 
 Grammar Lens: the zero copula.
@@ -150,7 +150,7 @@ Assemble the question — your + name + what — still no "is."
 
 The phrase, assembled.
 ನಿಮ್ಮ (nimma, "your") = the possessive of nīvu ("you," respectful).
-ನಿಮ್ಮ ಹೆಸರು ಏನು? = literally "your name what?" = "what's your name?"
+ನಿಮ್ಮ ಹೆಸರು (hesaru) ಏನು (ēnu)? = literally "your name what?" = "what's your name?"
 Three words, no verb — the zero copula holds for questions too.
 
 Grammar Lens: answer, and the familiar version.
@@ -165,7 +165,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does ನಿಮ್ಮ ಹೆಸರು ಏನು? literally say, and what's missing vs. English? ("Your name what?"; no "is" — zero copula.)
+What does ನಿಮ್ಮ ಹೆಸರು (hesaru) ಏನು (ēnu)? literally say, and what's missing vs. English? ("Your name what?"; no "is" — zero copula.)
 
 
 Lesson 7 of 8.
@@ -225,4 +225,4 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Is ಸಂತೋಷ native or borrowed, and what does the contrast with Tamil show? (Sanskrit; Kannada borrows Sanskrit — here for "pleased" — where Tamil keeps native magiḻcci.)
+Is ಸಂತೋಷ (santōṣa) native or borrowed, and what does the contrast with Tamil show? (Sanskrit; Kannada borrows Sanskrit — here for "pleased" — where Tamil keeps native magiḻcci.)

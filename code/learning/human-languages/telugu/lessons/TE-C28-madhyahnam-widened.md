@@ -7,6 +7,7 @@ chapter: 28
 type: word
 headword: మధ్యాహ్నం
 gloss: "afternoon" — the same word already met meaning precisely "noon" (TE-C17), confirmed via a directly-fetched source to also cover "the time between noon and evening" in modern usage — the same kind of semantic widening already found for Hindi's दोपहर and, more thinly, Kannada's మధ్యాహ్న
+romanization: "madhyāhnam"
 concept_tag: TIME-AFTERNOON
 prerequisites: [TE-C17-madhyaahnam-ardharaatri, TE-C27-sayantram]
 sounds: [telugu-conjunct-dhya, telugu-vowel-sign-aa]

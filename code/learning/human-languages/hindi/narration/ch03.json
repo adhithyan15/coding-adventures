@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:3214a53668c2fb82",
+  "sourceHash": "fnv1a64:228fde6365aa8692",
   "lessons": [
     {
       "id": "HI-C03-aap-kaise-hain",
@@ -280,7 +280,7 @@
       "sequence": null,
       "title": "हूँ (hūṁ) — \"am,\" cousin of English am",
       "headword": "हूँ",
-      "romanization": "",
+      "romanization": "hūṁ",
       "gloss": "am (1st-person of होना, \"to be\")",
       "script": "devanagari",
       "modality": "sight",
@@ -288,7 +288,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:75b0ccce17d974e7",
+      "sourceHash": "fnv1a64:bdb92f3f790827b5",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -429,7 +429,7 @@
       "sequence": null,
       "title": "कैसे (kaise) — \"how,\" another of the k- questions",
       "headword": "कैसे",
-      "romanization": "",
+      "romanization": "kaise",
       "gloss": "how (also कैसा/कैसी, agreeing)",
       "script": "devanagari",
       "modality": "sight",
@@ -437,7 +437,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5a680be90e0f885f",
+      "sourceHash": "fnv1a64:b515c75fe5c2519f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -563,7 +563,7 @@
       "sequence": null,
       "title": "मैं (maiṁ) — \"I,\" the m- of the first person",
       "headword": "मैं",
-      "romanization": "",
+      "romanization": "maiṁ",
       "gloss": "I",
       "script": "devanagari",
       "modality": "sight",
@@ -571,7 +571,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:aea62ee6b7a4034b",
+      "sourceHash": "fnv1a64:f9a6b0ed381dc76a",
       "notice": {
         "modality": "sight",
         "needs": [

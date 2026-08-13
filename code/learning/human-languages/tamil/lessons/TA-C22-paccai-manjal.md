@@ -7,6 +7,7 @@ chapter: 22
 type: word
 headword: பச்சை, மஞ்சள்
 gloss: green and yellow — paccai is the pan-Dravidian *pac- word already met in Kannada, Telugu, and Malayalam; manjal ("yellow, turmeric") is a separate native Dravidian root, matching Malayalam's mañña/maññaḷ closely — and Tamil dictionaries also record a rarer, less-commonly-used pacuppu ("greenish yellow"), a genuine doublet of paccai itself, echoing Telugu's pattern in miniature
+romanization: "paccai mañcaḷ"
 concept_tag: TA-COLOUR-GREEN-YELLOW
 prerequisites: [TA-C11-nirangal, TA-C21-naay-poonai]
 sounds: [tamil-double-lla, pulli-virama]

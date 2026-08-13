@@ -4,6 +4,7 @@ chapter: 2
 type: phrase
 headword: आनन्दः
 gloss: joy — and "meeting you is a joy"
+romanization: "ānandaḥ"
 concept_tag: INTRO-NICE-TO-MEET-YOU
 prerequisites: [SA-C02-mama-nama-asti]
 sounds: [independent-aa, visarga]

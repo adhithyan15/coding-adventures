@@ -5,6 +5,7 @@ chapter: 1
 type: word
 headword: நன்றி
 gloss: thank you (naṉṟi — "goodness, gratitude")
+romanization: "naṉṟi"
 concept_tag: COURTESY-THANKS
 prerequisites: [TA-C01-illai]
 sounds: [dental-vs-alveolar-vs-retroflex-n, matra-i]

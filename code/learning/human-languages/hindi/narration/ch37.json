@@ -4,7 +4,7 @@
   "chapter": 37,
   "title": "One Tea, Please",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:2db6148216359b7d",
+  "sourceHash": "fnv1a64:0083d8a9043a53f4",
   "lessons": [
     {
       "id": "HI-C37-chai",
@@ -316,7 +316,7 @@
       "sequence": 750,
       "title": "खाना (khānā) — \"food,\" and the dot that separates it from a house",
       "headword": "खाना",
-      "romanization": "",
+      "romanization": "khānā",
       "gloss": "food — masculine, from a Sanskrit verb of eating, and not to be confused with its Persian look-alike meaning \"house\"",
       "script": "devanagari",
       "modality": "sight",
@@ -324,7 +324,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c20131f51974a639",
+      "sourceHash": "fnv1a64:68e68e1f325a2271",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -387,7 +387,7 @@
             },
             {
               "kind": "speech",
-              "text": "So खाना दीजिए is \"give me food,\" and खाना alone can be the act. Which one you mean, the sentence decides."
+              "text": "So खाना (khānā) दीजिए is \"give me food,\" and खाना (khānā) alone can be the act. Which one you mean, the sentence decides."
             }
           ]
         },
@@ -406,7 +406,7 @@
             },
             {
               "kind": "speech",
-              "text": "Two unrelated words, one from Sanskrit and one from Persian, separated on the page by a single dot. And here is the honest part: that dot is very often left off. In ordinary printing and handwriting both are simply written खाना, and the reader is expected to sort it out from context. The nuqta tells you where a sound came from — when somebody bothers to write it."
+              "text": "Two unrelated words, one from Sanskrit and one from Persian, separated on the page by a single dot. And here is the honest part: that dot is very often left off. In ordinary printing and handwriting both are simply written खाना (khānā), and the reader is expected to sort it out from context. The nuqta tells you where a sound came from — when somebody bothers to write it."
             }
           ]
         },
@@ -472,7 +472,7 @@
             },
             {
               "kind": "speech",
-              "text": "What two jobs does खाना do? (Food, and the verb to eat.) What is ख़ाना, and where does it come from? (House, compartment — Persian خانه, as in davākhāna.) Can you always tell them apart on the page? (No — the nuqta is often dropped, and context decides.)"
+              "text": "What two jobs does खाना (khānā) do? (Food, and the verb to eat.) What is ख़ाना, and where does it come from? (House, compartment — Persian خانه, as in davākhāna.) Can you always tell them apart on the page? (No — the nuqta is often dropped, and context decides.)"
             }
           ]
         }
@@ -616,7 +616,7 @@
             },
             {
               "kind": "speech",
-              "text": "And that is the chapter — चाय from a Chinese port, दूध named for what was done to it, खाना shadowed by a Persian house, किताब cut from an Arabic root."
+              "text": "And that is the chapter — चाय from a Chinese port, दूध named for what was done to it, खाना (khānā) shadowed by a Persian house, किताब cut from an Arabic root."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 39,
   "title": "The People Around You",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:8caddac03ed8c336",
+  "sourceHash": "fnv1a64:e070c2ca9359862e",
   "lessons": [
     {
       "id": "HI-C39-dost",
@@ -191,9 +191,9 @@
     {
       "id": "HI-C39-baccha",
       "sequence": 820,
-      "title": "बच्चा (bacchā) — the child, who is a \"yearling\"",
+      "title": "बच्चा (bacca) (bacchā) — the child, who is a \"yearling\"",
       "headword": "बच्चा",
-      "romanization": "",
+      "romanization": "bacca",
       "gloss": "child — masculine, with a feminine बच्ची, and a Persian word that landed on top of an inherited Sanskrit cousin",
       "script": "devanagari",
       "modality": "voice",
@@ -201,7 +201,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:585b746e54384286",
+      "sourceHash": "fnv1a64:79b100130230a337",
       "notice": null,
       "blocks": [
         {
@@ -228,7 +228,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "बच्चा (bacchā) = \"child,\" masculine — मेरा बच्चा."
+              "text": "बच्चा (bacca) (bacchā) = \"child,\" masculine — मेरा बच्चा (bacca)."
             },
             {
               "kind": "speech",
@@ -267,7 +267,7 @@
             },
             {
               "kind": "speech",
-              "text": "A child, at the root, is a yearling. पिता and माता are named by relationship; बच्चा is named by age."
+              "text": "A child, at the root, is a yearling. पिता and माता are named by relationship; बच्चा (bacca) is named by age."
             }
           ]
         },
@@ -387,7 +387,7 @@
             },
             {
               "kind": "speech",
-              "text": "The gender still shows the instant anything agrees with the noun. Put it beside कुर्सी: both end in long -ी, one is feminine, one masculine, and no reasoning takes you from the ending to the answer. Beside बच्चा / बच्ची, where the ending does carry the gender, the contrast is sharper."
+              "text": "The gender still shows the instant anything agrees with the noun. Put it beside कुर्सी: both end in long -ी, one is feminine, one masculine, and no reasoning takes you from the ending to the answer. Beside बच्चा (bacca) / बच्ची, where the ending does carry the gender, the contrast is sharper."
             },
             {
               "kind": "speech",
@@ -534,11 +534,11 @@
             },
             {
               "kind": "speech",
-              "text": "Consonant ending, feminine — as चाय, किताब and आँख were. Beside it आदमी: -ी ending, masculine. Neither adult's gender is reachable from spelling. Where you can hear the agreement is on the child: मेरा बच्चा, मेरी बच्ची, the yearling who takes the ending seriously."
+              "text": "Consonant ending, feminine — as चाय, किताब and आँख were. Beside it आदमी: -ी ending, masculine. Neither adult's gender is reachable from spelling. Where you can hear the agreement is on the child: मेरा बच्चा (bacca), मेरी बच्ची, the yearling who takes the ending seriously."
             },
             {
               "kind": "speech",
-              "text": "The family: पिता, माता, भाई, बहन, बच्चा, आदमी, औरत — and the chosen one, दोस्त."
+              "text": "The family: पिता, माता, भाई, बहन, बच्चा (bacca), आदमी, औरत — and the chosen one, दोस्त."
             }
           ]
         },

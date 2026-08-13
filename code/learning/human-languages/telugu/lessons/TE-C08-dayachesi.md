@@ -7,6 +7,7 @@ chapter: 8
 type: word
 headword: దయచేసి
 gloss: please (dayacēsi — "having done compassion," from దయ daya "compassion")
+romanization: "dayacēsi"
 concept_tag: COURTESY-PLEASE
 prerequisites: [TE-C01-avunu]
 sounds: [telugu-vowel-sign-ee, telugu-vowel-sign-i, telugu-ca]

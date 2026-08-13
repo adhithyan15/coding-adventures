@@ -5,6 +5,7 @@ sequence: 220
 type: phrase
 headword: பரவாயில்லை
 gloss: it's okay / no problem / you're welcome
+romanization: "paravāyillai"
 concept_tag: COURTESY-YOUREWELCOME
 prerequisites: [TA-C01-illai, TA-C01-nandri-family-register]
 sounds: [illai-negative]

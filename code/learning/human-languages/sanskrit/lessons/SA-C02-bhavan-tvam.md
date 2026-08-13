@@ -4,6 +4,7 @@ chapter: 2
 type: word
 headword: भवान् / त्वम्
 gloss: you (respectful / familiar)
+romanization: "bhavān / tvam"
 concept_tag: PRONOUN-YOU
 prerequisites: [SA-C02-nama]
 sounds: [independent-vowel, halant]

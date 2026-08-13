@@ -157,7 +157,7 @@ The phrase, assembled.
 मम (my) + नाम (name) + your name + अस्ति (is) = mama nāma … asti, "my name is…" Mama nāma Aruṇaḥ asti. becomes "My name is Arun."
 
 Grammar Lens: Sanskrit keeps the "is".
-Where Tamil says only eṉ peyar Arun and Bengali āmār nām Arun — both dropping the verb (the zero copula) — Sanskrit says मम नाम … अस्ति, with an explicit asti ("is"). This is the Indo-European way, the one Latin and English kept too (my name is …). The verb comes last, as in the modern Indian languages that descend from it. (In casual use asti can be dropped, but the "full-dress" Sanskrit sentence keeps it.)
+Where Tamil says only eṉ peyar Arun and Bengali āmār nām Arun — both dropping the verb (the zero copula) — Sanskrit says मम (mama) नाम (nāma) … अस्ति, with an explicit asti ("is"). This is the Indo-European way, the one Latin and English kept too (my name is …). The verb comes last, as in the modern Indian languages that descend from it. (In casual use asti can be dropped, but the "full-dress" Sanskrit sentence keeps it.)
 
 Guided Practice.
 [pause 1 second]

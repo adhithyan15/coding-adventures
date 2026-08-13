@@ -7,6 +7,7 @@ chapter: 35
 type: word
 headword: लेना
 gloss: to take — worn down from Sanskrit labh-, which also sits, undisguised, in the noun लाभ
+romanization: "lenā"
 concept_tag: VERB-TAKE
 prerequisites: [HI-C34-likhna, HI-C15-paani-roti]
 sounds: [matra-e, dental-na]

@@ -3,7 +3,7 @@ Telugu, chapter 19: Asking Someone's Age.
 
 
 Lesson 1 of 1.
-నీ వయసెంత? — matching Kannada's simple possessive exactly.
+నీ వయసెంత? (nī vayasenta) — matching Kannada's simple possessive exactly.
 
 Warm-up.
 [pause 2 seconds]
@@ -13,7 +13,7 @@ The word, taken apart - వయస్సు — the same Sanskrit "vigor/age" wor
 వయస్సు (vayasu) = "age" — the exact same Sanskrit वयस् (vayas, "age, vigor, strength," PIE cousin of Latin vīs) that Kannada also carries.
 
 Grammar Lens: fused by sandhi, still verbless.
-నీ వయసెంత? — "How old are you?" — literally "your age how-much?" (nī vayas-enta? — from nī vayasu + enta, "how much," fused by regular vowel sandhi into vayasenta.)
+నీ వయసెంత? (nī vayasenta) — "How old are you?" — literally "your age how-much?" (nī vayas-enta? — from nī vayasu + enta, "how much," fused by regular vowel sandhi into vayasenta.)
 నా వయస్సు ఇరవై. — "I am twenty years old." — literally "my age [is] twenty." (nā vayasu iravai.)
 Same shape as Kannada: a plain possessive ("your/my age") sitting next to the number, no verb at all. The only wrinkle is surface-level: everyday spoken Telugu often fuses vayasu + enta into one word, vayasenta, the same kind of vowel sandhi you'd see fusing any two Telugu words in fast speech — the underlying grammar is identical to Kannada's, just written closer together.
 

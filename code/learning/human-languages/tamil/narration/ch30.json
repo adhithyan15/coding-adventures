@@ -4,14 +4,14 @@
   "chapter": 30,
   "title": "Good Evening",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:543b13b5f49981c2",
+  "sourceHash": "fnv1a64:d8182770b2c6ca85",
   "lessons": [
     {
       "id": "TA-C30-maalai-vanakkam",
       "sequence": 850,
-      "title": "மாலை வணக்கம் — \"evening greetings\"",
+      "title": "மாலை வணக்கம் (mālai vaṇakkam) — \"evening greetings\"",
       "headword": "மாலை வணக்கம்",
-      "romanization": "",
+      "romanization": "mālai vaṇakkam",
       "gloss": "good evening (mālai vaṇakkam), literally \"evening greetings\" — the SAME compositional pattern as TA-C29's kālai vaṇakkam: மாலை (already met, TA-C27, \"evening\") + வணக்கம் (already met, TA-C01); confirmed via TWO independently-fetched sources (talkpal.ai, preply.com — same practical-content tier as TA-C29's sources) as real and used from afternoon/late-afternoon through nightfall, one labeling it formal; no śubha-equivalent word here either, consistent with TA-C29's finding, not just assumed to carry over automatically",
       "script": "tamil",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a569e6a16620cd0e",
+      "sourceHash": "fnv1a64:9ec726b7fe435a3e",
       "notice": null,
       "blocks": [
         {
@@ -114,7 +114,7 @@
             },
             {
               "kind": "speech",
-              "text": "What two already-known words does மாலை வணக்கம் build from? (மாலை, \"evening\" + வணக்கம், \"greetings.\") Was it assumed that the evening greeting would follow the same pattern as the morning one, or was it independently checked? (Independently checked — via direct fetch, not assumed, since this arc has learned that greeting patterns don't reliably generalize.) Does மாலை வணக்கம் use a śubha-equivalent word, like Hindi/Kannada/Telugu/Malayalam's evening greetings do? (No — same as Tamil's morning greeting, no śubha-equivalent word appears here either.)"
+              "text": "What two already-known words does மாலை வணக்கம் (mālai vaṇakkam) build from? (மாலை, \"evening\" + வணக்கம், \"greetings.\") Was it assumed that the evening greeting would follow the same pattern as the morning one, or was it independently checked? (Independently checked — via direct fetch, not assumed, since this arc has learned that greeting patterns don't reliably generalize.) Does மாலை வணக்கம் (mālai vaṇakkam) use a śubha-equivalent word, like Hindi/Kannada/Telugu/Malayalam's evening greetings do? (No — same as Tamil's morning greeting, no śubha-equivalent word appears here either.)"
             }
           ]
         }

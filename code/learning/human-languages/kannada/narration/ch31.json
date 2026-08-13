@@ -4,14 +4,14 @@
   "chapter": 31,
   "title": "Good Afternoon",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f2a6ae56d39f4220",
+  "sourceHash": "fnv1a64:55413f7e93660d6a",
   "lessons": [
     {
       "id": "KA-C31-shubha-madhyahna",
       "sequence": 600,
-      "title": "ಶುಭ ಮಧ್ಯಾಹ್ನ — good afternoon",
+      "title": "ಶುಭ ಮಧ್ಯಾಹ್ನ (śubha madhyāhna) — good afternoon",
       "headword": "ಶುಭ ಮಧ್ಯಾಹ್ನ",
-      "romanization": "",
+      "romanization": "śubha madhyāhna",
       "gloss": "\"good afternoon\" (śubha madhyāhna) — reuses ಮಧ್ಯಾಹ್ನ, KA-C17's \"noon\" word, not the more precise ಅಪರಾಹ್ನ from KA-C28; one directly-fetched source describes it leaning formal/workplace, though this wasn't cross-corroborated the way ನಮಸ್ಕಾರ's universal, any-time-of-day status was",
       "script": "kannada",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:235151969cc736e2",
+      "sourceHash": "fnv1a64:7d10ac70762d2a6e",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Here's the useful discipline this lesson followed: checking a claim against an actual, directly fetched source page, not just trusting a search-engine's own summary of one. That check turned up two claims of very different strength. ನಮಸ್ಕಾರ's status as a genuinely universal greeting — suited to any time of day, any occasion — is independently confirmed across multiple fetched sources; that one's solid. The claim that ಶುಭ ಮಧ್ಯಾಹ್ನ leans formal or semi-formal — workplaces, official meetings — traces back to just one source. It's a real, directly-verified data point, worth taking seriously — but it isn't cross-corroborated the way the ನಮಸ್ಕಾರ claim is, so treat it as a single well-checked impression, not a settled fact."
+              "text": "Here's the useful discipline this lesson followed: checking a claim against an actual, directly fetched source page, not just trusting a search-engine's own summary of one. That check turned up two claims of very different strength. ನಮಸ್ಕಾರ's status as a genuinely universal greeting — suited to any time of day, any occasion — is independently confirmed across multiple fetched sources; that one's solid. The claim that ಶುಭ ಮಧ್ಯಾಹ್ನ (śubha madhyāhna) leans formal or semi-formal — workplaces, official meetings — traces back to just one source. It's a real, directly-verified data point, worth taking seriously — but it isn't cross-corroborated the way the ನಮಸ್ಕಾರ claim is, so treat it as a single well-checked impression, not a settled fact."
             }
           ]
         },
@@ -114,7 +114,7 @@
             },
             {
               "kind": "speech",
-              "text": "Does ಶುಭ ಮಧ್ಯಾಹ್ನ use ಮಧ್ಯಾಹ್ನ (\"noon\") or ಅಪರಾಹ್ನ (the more precise \"afternoon\" word)? (ಮಧ್ಯಾಹ್ನ — real evidence for its meaning stretching to cover \"afternoon\" too.) Is the \"formal/workplace\" register claim for ಶುಭ ಮಧ್ಯಾಹ್ನ as solidly confirmed as ನಮಸ್ಕಾರ's universal status? (No — the workplace claim rests on a single directly-verified source, not cross-corroborated the way ನಮಸ್ಕಾರ's is.) What's the confirmed universal, any-time-of-day alternative? (ನಮಸ್ಕಾರ.)"
+              "text": "Does ಶುಭ ಮಧ್ಯಾಹ್ನ (śubha madhyāhna) use ಮಧ್ಯಾಹ್ನ (\"noon\") or ಅಪರಾಹ್ನ (the more precise \"afternoon\" word)? (ಮಧ್ಯಾಹ್ನ — real evidence for its meaning stretching to cover \"afternoon\" too.) Is the \"formal/workplace\" register claim for ಶುಭ ಮಧ್ಯಾಹ್ನ (śubha madhyāhna) as solidly confirmed as ನಮಸ್ಕಾರ's universal status? (No — the workplace claim rests on a single directly-verified source, not cross-corroborated the way ನಮಸ್ಕಾರ's is.) What's the confirmed universal, any-time-of-day alternative? (ನಮಸ್ಕಾರ.)"
             }
           ]
         }

@@ -7,6 +7,7 @@ chapter: 9
 type: grammar
 headword: மன்னிக்கவும் / sorry
 gloss: the native forgiveness request leans formal while colloquial apologies vary by region
+romanization: "maṉṉikkavum / sorry"
 prerequisites: [TA-C09-mannikkavum]
 sounds: [tamil-double-alveolar-n, pulli-virama]
 roots: [manni-tamil]

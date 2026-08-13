@@ -4,14 +4,14 @@
   "chapter": 8,
   "title": "Please",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:beb32b8b66098647",
+  "sourceHash": "fnv1a64:79bb07040518549b",
   "lessons": [
     {
       "id": "ML-C08-dayavayi",
       "sequence": 360,
       "title": "ദയവായി (dayavāyi) — please (as a compassion)",
       "headword": "ദയവായി",
-      "romanization": "",
+      "romanization": "dayavāyi",
       "gloss": "please (dayavāyi — \"as a compassion,\" from ദയ daya \"compassion\")",
       "script": "malayalam",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4520f33cdb069b52",
+      "sourceHash": "fnv1a64:216fa0b67ea1f0c5",
       "notice": null,
       "blocks": [
         {
@@ -46,7 +46,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ദയവായി = please, literally \"kindly / as a compassion.\" Two pieces:"
+              "text": "ദയവായി (dayavāyi) = please, literally \"kindly / as a compassion.\" Two pieces:"
             },
             {
               "kind": "speech",
@@ -100,7 +100,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Honestly: as elsewhere in the family, the standalone word is a touch formal / emphatic. Everyday Malayalam politeness leans on the respectful request form of the verb — endings like ‑ൂ (-ū) or ‑ണം (-aṇaṁ): ഇരിക്കൂ (irikkū) \"please sit,\" പറയൂ (paṟayū) \"please tell me.\" Add ദയവായി in front when you want the courtesy spoken aloud."
+              "text": "Honestly: as elsewhere in the family, the standalone word is a touch formal / emphatic. Everyday Malayalam politeness leans on the respectful request form of the verb — endings like ‑ൂ (-ū) or ‑ണം (-aṇaṁ): ഇരിക്കൂ (irikkū) \"please sit,\" പറയൂ (paṟayū) \"please tell me.\" Add ദയവായി (dayavāyi) in front when you want the courtesy spoken aloud."
             }
           ]
         },

@@ -4,14 +4,14 @@
   "chapter": 19,
   "title": "Asking Someone's Age",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:466c98e8fb1a6905",
+  "sourceHash": "fnv1a64:478a6db9e61a6c71",
   "lessons": [
     {
       "id": "TE-C19-vayasu",
       "sequence": 460,
-      "title": "నీ వయసెంత? — matching Kannada's simple possessive exactly",
+      "title": "నీ వయసెంత? (nī vayasenta) — matching Kannada's simple possessive exactly",
       "headword": "నీ వయసెంత?",
-      "romanization": "",
+      "romanization": "nī vayasenta",
       "gloss": "how old are you? — literally \"your age how-much?\", matching Kannada's simple verbless possessive exactly",
       "script": "telugu",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:93863a8dc7d95c43",
+      "sourceHash": "fnv1a64:be9fdb231de44dad",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "నీ వయసెంత? — \"How old are you?\" — literally \"your age how-much?\" (nī vayas-enta? — from nī vayasu + enta, \"how much,\" fused by regular vowel sandhi into vayasenta.)"
+              "text": "నీ వయసెంత? (nī vayasenta) — \"How old are you?\" — literally \"your age how-much?\" (nī vayas-enta? — from nī vayasu + enta, \"how much,\" fused by regular vowel sandhi into vayasenta.)"
             },
             {
               "kind": "speech",

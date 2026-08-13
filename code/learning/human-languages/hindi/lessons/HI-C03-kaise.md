@@ -4,6 +4,7 @@ chapter: 3
 type: word
 headword: कैसे
 gloss: how (also कैसा/कैसी, agreeing)
+romanization: "kaise"
 concept_tag: QUESTION-HOW
 prerequisites: [HI-C02-kya]
 sounds: [matra-ai, matra-e]

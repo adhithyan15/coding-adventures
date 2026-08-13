@@ -4,14 +4,14 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:e4153a7d2fa6af5d",
+  "sourceHash": "fnv1a64:a6a504ec6af93023",
   "lessons": [
     {
       "id": "TE-C04-malli-kaluddaam",
       "sequence": null,
       "title": "మళ్ళీ కలుద్దాం (maḷḷī kaluddām) — \"we'll meet again\"",
       "headword": "మళ్ళీ కలుద్దాం",
-      "romanization": "",
+      "romanization": "maḷḷī kaluddām",
       "gloss": "we'll meet again",
       "script": "telugu",
       "modality": "sight",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:515fec85b9e97e7c",
+      "sourceHash": "fnv1a64:cdab9fcf5a7a31c7",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -66,7 +66,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "మళ్ళీ కలుద్దాం = మళ్ళీ (maḷḷī, \"again\") + కలుద్దాం (kaluddām, \"let's meet\") — \"we'll meet again.\" Both words are native Dravidian: maḷḷī (\"again,\" from maral, \"to return\") and kalu (\"to meet\"). Where Tamil's \"we'll meet again\" (mīṇḍum sandippōm) reaches for the Sanskrit loan sandi to say \"meet,\" Telugu keeps the native kalu — a small reminder that these sisters make the same phrase from different stock."
+              "text": "మళ్ళీ కలుద్దాం (maḷḷī kaluddām) = మళ్ళీ (maḷḷī, \"again\") + కలుద్దాం (kaluddām, \"let's meet\") — \"we'll meet again.\" Both words are native Dravidian: maḷḷī (\"again,\" from maral, \"to return\") and kalu (\"to meet\"). Where Tamil's \"we'll meet again\" (mīṇḍum sandippōm) reaches for the Sanskrit loan sandi to say \"meet,\" Telugu keeps the native kalu — a small reminder that these sisters make the same phrase from different stock."
             }
           ]
         },
@@ -291,7 +291,7 @@
       "sequence": null,
       "title": "రేపు కలుద్దాం (rēpu kaluddām) — \"see you tomorrow\"",
       "headword": "రేపు కలుద్దాం",
-      "romanization": "",
+      "romanization": "rēpu kaluddām",
       "gloss": "see you tomorrow",
       "script": "telugu",
       "modality": "sight",
@@ -299,7 +299,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f241961853fa1fdd",
+      "sourceHash": "fnv1a64:6b5d247b6d933685",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -414,7 +414,7 @@
       "sequence": null,
       "title": "వెళ్ళి వస్తాను (veḷḷi vastānu) — \"I'll go and come back\"",
       "headword": "వెళ్ళి వస్తాను",
-      "romanization": "",
+      "romanization": "veḷḷi vastānu",
       "gloss": "goodbye (lit. \"I'll go and come back\")",
       "script": "telugu",
       "modality": "sight",
@@ -422,7 +422,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7a4b023ba6421195",
+      "sourceHash": "fnv1a64:cca05ae609b9418c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -469,7 +469,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "వెళ్ళి వస్తాను = వెళ్ళి (veḷḷi, \"having gone\") + వస్తాను (vastānu, \"I come\") — literally \"having gone, I come [back],\" i.e. \"I'll go and come back.\" A Telugu speaker never signs off with a bare \"I'm leaving\" — that sounds final. Instead they promise return. It is the same \"go-and-come-back\" farewell you meet across the Dravidian south (Tamil pōy varugiṟēṉ, Kannada hōgi baruttēne, Malayalam pōyi varāṁ) and echoing into the Indo-Aryan tracks (Bengali āshi). The warm reply is వెళ్ళి రండి (veḷḷi raṇḍi, \"go and come [back]\")."
+              "text": "వెళ్ళి వస్తాను (veḷḷi vastānu) = వెళ్ళి (veḷḷi, \"having gone\") + వస్తాను (vastānu, \"I come\") — literally \"having gone, I come [back],\" i.e. \"I'll go and come back.\" A Telugu speaker never signs off with a bare \"I'm leaving\" — that sounds final. Instead they promise return. It is the same \"go-and-come-back\" farewell you meet across the Dravidian south (Tamil pōy varugiṟēṉ, Kannada hōgi baruttēne, Malayalam pōyi varāṁ) and echoing into the Indo-Aryan tracks (Bengali āshi). The warm reply is వెళ్ళి రండి (veḷḷi raṇḍi, \"go and come [back]\")."
             }
           ]
         },
@@ -548,7 +548,7 @@
       "sequence": null,
       "title": "వెళ్ళు (veḷḷu) — \"go,\" and వచ్చు (come)",
       "headword": "వెళ్ళు",
-      "romanization": "",
+      "romanization": "veḷḷu",
       "gloss": "to go (and వచ్చు, to come)",
       "script": "telugu",
       "modality": "sight",
@@ -556,7 +556,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:662e875342cd06a1",
+      "sourceHash": "fnv1a64:aeeed251b66ac28a",
       "notice": {
         "modality": "sight",
         "needs": [

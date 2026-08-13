@@ -529,6 +529,49 @@ Harmless today: all 15 non-Latin tracks are registered, `unknownScriptTracks` is
 empty, and the module is report-only. It is written down because "no track can
 vanish from this report" is currently true by luck rather than by construction.
 
+## HL-C121 — paying down closure, payment one: 184 words a reader can say
+
+**Done.** 184 of the 489 headwords that had no romanization now have one, across
+all six Indic tracks. Corpus closure violations 932 -> 873; headwords without
+romanization 489 -> 305.
+
+| track | violations | headwords with no romanization |
+|---|---|---|
+| tamil | 68 -> **50** | 68 -> **22** |
+| telugu | 83 -> **71** | 53 -> **17** |
+| kannada | 85 -> **74** | 52 -> **14** |
+| malayalam | 90 -> **85** | 57 -> **33** |
+| hindi | 86 -> **83** | 88 -> **70** |
+| sanskrit | 53 -> **43** | 26 -> **4** |
+
+**The finding that shaped the work: mechanical transliteration is unsafe here.**
+The obvious implementation was to derive romanizations from the script -- every
+one of these maps to ISO-15919 by rule and `generate_syllabary.py` already has
+the tables. Measured against the 195 romanizations these tracks' authors had
+already written by hand, that derivation agreed with **71%**:
+
+| track | agreement | why it differs |
+|---|---:|---|
+| tamil | 61% | one letter each for k/g/h, c/s, t/d, p/b — *cāppiṭu* vs *sāppiḍu* |
+| hindi | 62% | schwa deletion — *kitane* vs *kitne* |
+| malayalam | 51% | the half-u at a word's end — *uṇṭ* vs *uṇṭŭ* |
+| telugu | 86% | anusvara assimilation — *uṁḍu* vs *uṇḍu* |
+| kannada | 87% | same |
+| sanskrit | 89% | same, plus vocalic-r notation |
+
+Every disagreement was the machine being faithful to the SPELLING and wrong
+about the SOUND. A romanization exists so the reader can say the word, and this
+field is read aloud by the narration export — so 344 derivations would have been
+344 confident mispronunciations. Two of the three worst tracks are the two with
+the largest gaps.
+
+So the tool recovers rather than derives: it takes the pronunciation each lesson
+already gives its reader in prose and moves it into the field, checking the grab
+against the headword's script through a per-script skeleton fold. Where nothing
+matches it recovers nothing. **160 headwords still need a human** — 70 of them
+Hindi, whose lessons state pronunciation in prose least often — and that is the
+correct output rather than a gap to paper over.
+
 ## Findings from HL-C116
 
 - **932 lessons across 16 non-Latin tracks ask the reader to decode a glyph

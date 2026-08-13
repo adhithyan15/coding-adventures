@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:659bad26dc3f61e2",
+  "sourceHash": "fnv1a64:636265b7173f066e",
   "lessons": [
     {
       "id": "HI-W03-matras-naam",
@@ -580,7 +580,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "मेरा — four pieces, one bar",
+              "instruction": "मेरा (merā) — four pieces, one bar",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -1240,7 +1240,7 @@
             },
             {
               "kind": "speech",
-              "text": "आपका नाम क्या है? = literally \"your name what is?\" = \"what's your name?\""
+              "text": "आपका नाम क्या (kyā) है (hai)? = literally \"your name what is?\" = \"what's your name?\""
             },
             {
               "kind": "speech",
@@ -1312,7 +1312,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does आपका नाम क्या है? literally say, and where's the verb? (\"Your name what is?\"; the verb hai is last.) What's āpkā made of? (āp + kā, \"you\" + possessive.)"
+              "text": "What does आपका नाम क्या (kyā) है? literally say, and where's the verb? (\"Your name what is?\"; the verb hai is last.) What's āpkā made of? (āp + kā, \"you\" + possessive.)"
             }
           ]
         }
@@ -1323,7 +1323,7 @@
       "sequence": null,
       "title": "है (hai) — \"is,\" cousin of English is",
       "headword": "है",
-      "romanization": "",
+      "romanization": "hai",
       "gloss": "is",
       "script": "devanagari",
       "modality": "sight",
@@ -1331,7 +1331,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:373276fb279897f5",
+      "sourceHash": "fnv1a64:6f81f677f00ecce8",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1454,7 +1454,7 @@
             },
             {
               "kind": "speech",
-              "text": "What Sanskrit/PIE root is है from, and its cousins? (asti / h₁es- — is, ist, est, es.) Where does the verb sit in a Hindi sentence? (At the end.)"
+              "text": "What Sanskrit/PIE root is है (hai) from, and its cousins? (asti / h₁es- — is, ist, est, es.) Where does the verb sit in a Hindi sentence? (At the end.)"
             }
           ]
         }
@@ -1579,7 +1579,7 @@
       "sequence": null,
       "title": "क्या (kyā) — \"what\"",
       "headword": "क्या",
-      "romanization": "",
+      "romanization": "kyā",
       "gloss": "what",
       "script": "devanagari",
       "modality": "sight",
@@ -1587,7 +1587,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:98b5bd2e8efd62f6",
+      "sourceHash": "fnv1a64:a75c0ec3e0dbbf96",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1691,7 +1691,7 @@
             },
             {
               "kind": "speech",
-              "text": "What root is क्या from, and its English cousins? (ka- / kʷo- — what, who, which.) What sound do most Hindi question-words start with? (k-.)"
+              "text": "What root is क्या (kyā) from, and its English cousins? (ka- / kʷo- — what, who, which.) What sound do most Hindi question-words start with? (k-.)"
             }
           ]
         }
@@ -1741,7 +1741,7 @@
             },
             {
               "kind": "speech",
-              "text": "मेरा नाम (merā nām) … है = \"my name … is\" = \"my name is…\""
+              "text": "मेरा नाम (merā nām) … है (hai) = \"my name … is\" = \"my name is…\""
             },
             {
               "kind": "speech",
@@ -1815,7 +1815,7 @@
       "sequence": null,
       "title": "मेरा (merā) — \"my\"",
       "headword": "मेरा",
-      "romanization": "",
+      "romanization": "merā",
       "gloss": "my",
       "script": "devanagari",
       "modality": "sight",
@@ -1823,7 +1823,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:eeaa065b35da7455",
+      "sourceHash": "fnv1a64:9307d749d245ebcd",
       "notice": {
         "modality": "sight",
         "needs": [

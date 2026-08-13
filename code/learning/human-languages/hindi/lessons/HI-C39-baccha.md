@@ -7,6 +7,7 @@ chapter: 39
 type: word
 headword: बच्चा
 gloss: child — masculine, with a feminine बच्ची, and a Persian word that landed on top of an inherited Sanskrit cousin
+romanization: "bacca"
 concept_tag: HI-PERSON-CHILD
 prerequisites: [HI-C39-dost, HI-C12-pitaa-maataa, HI-C19-age-grammar]
 sounds: [geminate-cca, devanagari-long-aa]

@@ -7,6 +7,7 @@ chapter: 38
 type: word
 headword: दाँत
 gloss: tooth — masculine, though it is built exactly like the feminine आँख, and a cousin of Latin dēns and English tooth
+romanization: "danta"
 concept_tag: HI-BODY-TOOTH
 prerequisites: [HI-C38-aankh, HI-C37-khaana, HI-W01-shirorekha-na-ma]
 sounds: [chandrabindu-nasal, dental-ta]

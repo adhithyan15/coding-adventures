@@ -4,14 +4,14 @@
   "chapter": 23,
   "title": "Day",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:422a48e530cebe57",
+  "sourceHash": "fnv1a64:8430eacd3df5139f",
   "lessons": [
     {
       "id": "KA-C23-dina",
       "sequence": 520,
       "title": "ದಿನ (dina) — \"day,\" Sanskrit kept whole",
       "headword": "ದಿನ",
-      "romanization": "",
+      "romanization": "dina",
       "gloss": "day\" — a Sanskrit tatsama word, kept whole and unworn, unlike Hindi's own eroded din; Kannada also has a real native Dravidian word, hagalu, but it means specifically \"daytime,\" not \"a day",
       "script": "kannada",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b23a67688711dae0",
+      "sourceHash": "fnv1a64:5bde450231503c37",
       "notice": null,
       "blocks": [
         {

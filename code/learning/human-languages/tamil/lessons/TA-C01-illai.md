@@ -5,6 +5,7 @@ chapter: 1
 type: word
 headword: இல்லை
 gloss: no / there isn't (illai — the negative)
+romanization: "illai"
 concept_tag: RESPONSE-NO
 prerequisites: [TA-C01-aam]
 sounds: [independent-vowel-i, matra-ai, pulli-virama]

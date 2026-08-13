@@ -10,7 +10,7 @@ Warm-up.
 Malayalam's "please" turns compassion into an adverb: do this thing as a kindness.
 
 You'll want to know.
-ദയവായി = please, literally "kindly / as a compassion." Two pieces:
+ദയവായി (dayavāyi) = please, literally "kindly / as a compassion." Two pieces:
 ദയ (daya) = compassion, kindness, grace — from Sanskrit daya.
 ‑വായി (-vāyi) = "having become / as," turning the noun into "in the manner of compassion" — i.e. kindly. (The true historical seam is dayavu "kindness" + ‑ആയി -āyi, the adverb of ആകുക ākuka "to become"; we split it -vāyi here just to keep the daya root visible.)
 So dayavāyi asks you to act kindly, as a kindness. Where Tamil and Telugu say "do the kindness" and Kannada "having placed it," Malayalam makes kindness the manner of the whole request.
@@ -24,7 +24,7 @@ Kannada ದಯವಿಟ್ಟು dayaviṭṭu — compassion + having placed.
 Telugu దయచేసి dayacēsi — compassion + having done.
 
 Why it's said this way.
-Honestly: as elsewhere in the family, the standalone word is a touch formal / emphatic. Everyday Malayalam politeness leans on the respectful request form of the verb — endings like ‑ൂ (-ū) or ‑ണം (-aṇaṁ): ഇരിക്കൂ (irikkū) "please sit," പറയൂ (paṟayū) "please tell me." Add ദയവായി in front when you want the courtesy spoken aloud.
+Honestly: as elsewhere in the family, the standalone word is a touch formal / emphatic. Everyday Malayalam politeness leans on the respectful request form of the verb — endings like ‑ൂ (-ū) or ‑ണം (-aṇaṁ): ഇരിക്കൂ (irikkū) "please sit," പറയൂ (paṟayū) "please tell me." Add ദയവായി (dayavāyi) in front when you want the courtesy spoken aloud.
 
 The word, taken apart.
 The heart of the word is വാ — va stretched by the long‑ā sign ാ (-ā) — then യി, ya + the i sign (ി). Malayalam's rounded letters hang their vowel-signs to the right; the long ാ is simply a tall stroke after the consonant, the same ā you would meet across the Dravidian scripts.

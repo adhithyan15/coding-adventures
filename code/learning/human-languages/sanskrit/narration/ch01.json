@@ -4,14 +4,14 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:281f1ccd090a19c1",
+  "sourceHash": "fnv1a64:99f04a882485d4a4",
   "lessons": [
     {
       "id": "SA-C01-am-na",
       "sequence": null,
       "title": "आम् / न (ām / na) — \"yes\" and \"no\"",
       "headword": "आम् / न",
-      "romanization": "",
+      "romanization": "ām / na",
       "gloss": "yes / no (ām / na)",
       "script": "devanagari",
       "modality": "sight",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:487c7a73e21f5983",
+      "sourceHash": "fnv1a64:6620bb2dac91dd52",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -283,7 +283,7 @@
       "sequence": null,
       "title": "नमस्कारः (namaskāraḥ) — the fuller form",
       "headword": "नमस्कारः",
-      "romanization": "",
+      "romanization": "namaskāraḥ",
       "gloss": "hello (lit. \"the making of a bow\") (namaskāraḥ)",
       "script": "devanagari",
       "modality": "sight",
@@ -292,7 +292,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:a0eb563a777d2f13",
+      "sourceHash": "fnv1a64:be3ba3dfbee27e2d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -329,7 +329,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "New: का kā (क + the ā-sign ा), र ra, and the visarga ः — a soft breathed \"ḥ\" at a word's end, written as two dots. नमस्कारः = namas-kā-raḥ."
+              "text": "New: का kā (क + the ā-sign ा), र ra, and the visarga ः — a soft breathed \"ḥ\" at a word's end, written as two dots. नमस्कारः (namaskāraḥ) = namas-kā-raḥ."
             }
           ]
         },
@@ -340,7 +340,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "नमस्कारः = namas (\"a bow\") + kāra (\"the making, the doing,\" from the root √kṛ \"to do/make\"). So namaskāra is \"the making of a bow\" — an act, where namaste is an address. That root √kṛ \"to do\" is among Sanskrit's most productive (it gives karma, \"a thing done\"); it is PIE kʷer-. The final visarga -aḥ marks the masculine singular — your first case-ending."
+              "text": "नमस्कारः (namaskāraḥ) = namas (\"a bow\") + kāra (\"the making, the doing,\" from the root √kṛ \"to do/make\"). So namaskāra is \"the making of a bow\" — an act, where namaste is an address. That root √kṛ \"to do\" is among Sanskrit's most productive (it gives karma, \"a thing done\"); it is PIE kʷer-. The final visarga -aḥ marks the masculine singular — your first case-ending."
             }
           ]
         },
@@ -419,7 +419,7 @@
       "sequence": null,
       "title": "नमस्ते (namaste) — \"I bow to you\"",
       "headword": "नमस्ते",
-      "romanization": "",
+      "romanization": "namaste",
       "gloss": "hello (lit. \"a bow to you\") (namaste)",
       "script": "devanagari",
       "modality": "sight",
@@ -427,7 +427,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:386744037c9fab92",
+      "sourceHash": "fnv1a64:e083b9e09a50f57a",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -749,7 +749,7 @@
       "sequence": null,
       "title": "स्वागतम् (svāgatam) — \"welcome\"",
       "headword": "स्वागतम्",
-      "romanization": "",
+      "romanization": "svāgatam",
       "gloss": "welcome (lit. \"well come\") (svāgatam)",
       "script": "devanagari",
       "modality": "sight",
@@ -757,7 +757,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:cbf7ca601bf00a4f",
+      "sourceHash": "fnv1a64:9301b9a1c3a2bdae",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -804,7 +804,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "स्वागतम् = su (\"well, good\") + āgata (\"come,\" from ā \"toward\" + the root √gam \"to go/come\") — \"well come,\" which is exactly what English welcome means too. Two deep Indo-European threads surface:"
+              "text": "स्वागतम् (svāgatam) = su (\"well, good\") + āgata (\"come,\" from ā \"toward\" + the root √gam \"to go/come\") — \"well come,\" which is exactly what English welcome means too. Two deep Indo-European threads surface:"
             },
             {
               "kind": "speech",

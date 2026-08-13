@@ -7,6 +7,7 @@ chapter: 23
 type: etymology
 headword: நாள் / தினம்
 gloss: Tamil alone keeps a native everyday day-word while Sanskrit tiṉam occupies formal compounds
+romanization: "nāḷ / tiṉam"
 prerequisites: [TA-C23-naal]
 sounds: [tamil-retroflex-lla]
 roots: [proto-dravidian-naal-day, sanskrit-dina]

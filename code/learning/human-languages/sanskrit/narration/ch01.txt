@@ -77,10 +77,10 @@ Warm-up.
 Same bow, different grammar — and your first case-ending.
 
 The letters in this word.
-New: का kā (क + the ā-sign ा), र ra, and the visarga ः — a soft breathed "ḥ" at a word's end, written as two dots. नमस्कारः = namas-kā-raḥ.
+New: का kā (क + the ā-sign ा), र ra, and the visarga ः — a soft breathed "ḥ" at a word's end, written as two dots. नमस्कारः (namaskāraḥ) = namas-kā-raḥ.
 
 The word, taken apart.
-नमस्कारः = namas ("a bow") + kāra ("the making, the doing," from the root √kṛ "to do/make"). So namaskāra is "the making of a bow" — an act, where namaste is an address. That root √kṛ "to do" is among Sanskrit's most productive (it gives karma, "a thing done"); it is PIE kʷer-. The final visarga -aḥ marks the masculine singular — your first case-ending.
+नमस्कारः (namaskāraḥ) = namas ("a bow") + kāra ("the making, the doing," from the root √kṛ "to do/make"). So namaskāra is "the making of a bow" — an act, where namaste is an address. That root √kṛ "to do" is among Sanskrit's most productive (it gives karma, "a thing done"); it is PIE kʷer-. The final visarga -aḥ marks the masculine singular — your first case-ending.
 
 Grammar Lens.
 Namaste and namaskāra share the same first half, namas, but end differently because they do different grammatical jobs — one takes a pronoun (te "to you"), the other builds a noun (-kāra "the making of"). Sanskrit words are transparently assembled from roots and endings; once you see the seams, long words stop being frightening.
@@ -189,7 +189,7 @@ The letters in this word.
 New: the conjunct स्व (स् + व va) = sva, ग ga, and the halant म् m closing the word with no vowel. Read स्वा, ग, तम्, svā-ga-tam.
 
 The word, taken apart.
-स्वागतम् = su ("well, good") + āgata ("come," from ā "toward" + the root √gam "to go/come") — "well come," which is exactly what English welcome means too. Two deep Indo-European threads surface:
+स्वागतम् (svāgatam) = su ("well, good") + āgata ("come," from ā "toward" + the root √gam "to go/come") — "well come," which is exactly what English welcome means too. Two deep Indo-European threads surface:
 su- "good" is the twin of Greek eu- — the eu of euphoria, eulogy, euphemism. Sanskrit su- and Greek eu- are the same prefix.
 the root √gam "to go/come" is PIE gʷem- — the very root of English come (and of Latin venīre, hence venue, convene).
 So svāgatam and welcome are not just parallel ideas but partly cognate ones.

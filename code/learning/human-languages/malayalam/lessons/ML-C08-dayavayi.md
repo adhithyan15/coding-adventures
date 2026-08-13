@@ -7,6 +7,7 @@ chapter: 8
 type: word
 headword: ദയവായി
 gloss: please (dayavāyi — "as a compassion," from ദയ daya "compassion")
+romanization: "dayavāyi"
 concept_tag: COURTESY-PLEASE
 prerequisites: [ML-C01-athe]
 sounds: [malayalam-vowel-sign-aa, malayalam-vowel-sign-i, malayalam-va]

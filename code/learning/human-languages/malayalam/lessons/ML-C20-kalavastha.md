@@ -7,6 +7,7 @@ chapter: 20
 type: phrase
 headword: കാലാവസ്ഥ
 gloss: weather — a Sanskrit compound literally meaning "state of TIME": kaala ("time") + avastha ("state, condition") — a real echo of Spanish's tiempo meaning both "time" AND "weather"
+romanization: "kālāvastha"
 concept_tag: ML-WEATHER
 prerequisites: [ML-C18-mani]
 sounds: [malayalam-vowel-sign-aa, malayalam-conjunct-stha]

@@ -3,7 +3,7 @@ Tamil, chapter 18: Telling Time.
 
 
 Lesson 1 of 3.
-மணி — Tamil's native "bell," and a real homophone trap.
+மணி (maṇi) — Tamil's native "bell," and a real homophone trap.
 
 Warm-up.
 [pause 2 seconds]
@@ -19,7 +19,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Is Tamil's மணி ("hour") from the same Sanskrit root as Kannada/Telugu/Hindi's hour-words? (Most likely no — it's treated as a native Dravidian "bell" word that independently reached "hour" the same way, though even DEDR flags this as not fully settled.) What semantic path links the meanings? (A bell announces the hour.) Next: writing இல்லை (illai) — a second independent vowel, ல, and the ai sign.
+Is Tamil's மணி (maṇi) ("hour") from the same Sanskrit root as Kannada/Telugu/Hindi's hour-words? (Most likely no — it's treated as a native Dravidian "bell" word that independently reached "hour" the same way, though even DEDR flags this as not fully settled.) What semantic path links the meanings? (A bell announces the hour.) Next: writing இல்லை (illai) — a second independent vowel, ல, and the ai sign.
 
 
 Lesson 2 of 3.
@@ -67,7 +67,7 @@ Write இல்லை (illai). Why does it open with இ rather than a sign? (Th
 
 
 Lesson 3 of 3.
-மணி — hour or jewel? Context decides.
+மணி (maṇi) — hour or jewel? Context decides.
 
 Warm-up.
 [pause 2 seconds]
@@ -78,7 +78,7 @@ Tamil dictionaries list a second மணி from Sanskrit मणि (maṇi), "ge
 Malayalam dictionaries analyze their cognate differently, treating bell/hour and gem as one Sanskrit-derived word. Closely related languages do not always settle the same etymological question in the same way.
 
 Grammar Lens: Tell the time.
-ஒரு மணி. — one o'clock, literally "one hour/bell" இரண்டு மணி. — two o'clock.
+ஒரு மணி (maṇi). — one o'clock, literally "one hour/bell" இரண்டு மணி (maṇi). — two o'clock.
 The number comes first; maṇi supplies the clock unit.
 
 Guided Practice.

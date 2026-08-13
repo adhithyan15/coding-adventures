@@ -4,6 +4,7 @@ chapter: 4
 type: phrase
 headword: వెళ్ళి వస్తాను
 gloss: goodbye (lit. "I'll go and come back")
+romanization: "veḷḷi vastānu"
 concept_tag: FAREWELL
 prerequisites: [TE-C04-vellu, TE-C03-nenu]
 sounds: [velli-participle]

@@ -4,6 +4,7 @@ chapter: 5
 type: word
 headword: ಇರು
 gloss: to be, to stay, to live
+romanization: "iru"
 concept_tag: KA-VERB-IRU
 prerequisites: [KA-C05-maatanaadu, KA-C03-niivu-hegiddiira]
 sounds: [independent-i]

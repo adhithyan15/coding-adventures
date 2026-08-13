@@ -4,14 +4,14 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:a5a6cf8447b604ca",
+  "sourceHash": "fnv1a64:7b2539288a4238cb",
   "lessons": [
     {
       "id": "TA-C04-po",
       "sequence": 240,
       "title": "போ (pō) — \"go,\" and வா (come)",
       "headword": "போ",
-      "romanization": "",
+      "romanization": "pō",
       "gloss": "to go (and வா, to come)",
       "script": "tamil",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4032f776949c58bb",
+      "sourceHash": "fnv1a64:e25cd027a196bbec",
       "notice": null,
       "blocks": [
         {
@@ -105,7 +105,7 @@
       "sequence": 250,
       "title": "போய் வருகிறேன் (pōy varugiṟēṉ) — \"I'll go and come back\"",
       "headword": "போய் வருகிறேன்",
-      "romanization": "",
+      "romanization": "pōy varugiṟēṉ",
       "gloss": "goodbye (lit. \"I'll go and come back\")",
       "script": "tamil",
       "modality": "voice",
@@ -113,7 +113,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4db27cf81bd3a648",
+      "sourceHash": "fnv1a64:fa80fb4061e562bd",
       "notice": null,
       "blocks": [
         {
@@ -140,7 +140,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "போய் வருகிறேன் = போய் (pōy, \"having gone\") + வருகிறேன் (varugiṟēṉ, \"I come\") — literally \"having gone, I come,\" i.e. \"I'll go and come back.\" A Tamil speaker never signs off with a bare \"I'm leaving\" — that sounds final, even ill-omened. Instead they promise return. It is the exact \"promise of return\" farewell you meet, in its own words, across the Dravidian south (Kannada hōgi baruttēne, Telugu veḷḷi vastānu, Malayalam pōyi varāṁ) — and it echoes the Indo-Aryan tracks too (Bengali āshi, Marathi yeto, Hindi phir milenge). The reply is warm: போய் வா (pōy vā, \"go and come [back]\")."
+              "text": "போய் வருகிறேன் (pōy varugiṟēṉ) = போய் (pōy, \"having gone\") + வருகிறேன் (varugiṟēṉ, \"I come\") — literally \"having gone, I come,\" i.e. \"I'll go and come back.\" A Tamil speaker never signs off with a bare \"I'm leaving\" — that sounds final, even ill-omened. Instead they promise return. It is the exact \"promise of return\" farewell you meet, in its own words, across the Dravidian south (Kannada hōgi baruttēne, Telugu veḷḷi vastānu, Malayalam pōyi varāṁ) — and it echoes the Indo-Aryan tracks too (Bengali āshi, Marathi yeto, Hindi phir milenge). The reply is warm: போய் வா (pōy vā, \"go and come [back]\")."
             },
             {
               "kind": "speech",
@@ -223,7 +223,7 @@
       "sequence": 255,
       "title": "நாளை பார்க்கலாம் (nāḷai pārkkalām) — \"see you tomorrow\"",
       "headword": "நாளை பார்க்கலாம்",
-      "romanization": "",
+      "romanization": "nāḷai pārkkalām",
       "gloss": "see you tomorrow",
       "script": "tamil",
       "modality": "voice",
@@ -231,7 +231,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:34d2538c5a595200",
+      "sourceHash": "fnv1a64:c0ddfaffb73c6c16",
       "notice": null,
       "blocks": [
         {
@@ -326,7 +326,7 @@
       "sequence": 260,
       "title": "மீண்டும் சந்திப்போம் (mīṇḍum sandippōm) — \"we'll meet again\"",
       "headword": "மீண்டும் சந்திப்போம்",
-      "romanization": "",
+      "romanization": "mīṇḍum sandippōm",
       "gloss": "we'll meet again",
       "script": "tamil",
       "modality": "voice",
@@ -334,7 +334,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5d3e6bac3fb15ffa",
+      "sourceHash": "fnv1a64:7f127eeb921f458c",
       "notice": null,
       "blocks": [
         {
@@ -361,7 +361,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "மீண்டும் சந்திப்போம் = மீண்டும் (mīṇḍum, \"again\") + சந்திப்போம் (sandippōm, \"we will meet\") — \"we'll meet again.\" Two vocabularies meet in these two words:"
+              "text": "மீண்டும் சந்திப்போம் (mīṇḍum sandippōm) = மீண்டும் (mīṇḍum, \"again\") + சந்திப்போம் (sandippōm, \"we will meet\") — \"we'll meet again.\" Two vocabularies meet in these two words:"
             },
             {
               "kind": "speech",

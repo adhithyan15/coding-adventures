@@ -4,6 +4,7 @@ chapter: 4
 type: word
 headword: ಹೋಗು
 gloss: to go (and ಬಾ, come)
+romanization: "hōgu"
 concept_tag: KA-VERB-HOOGU
 prerequisites: [KA-C03-naanu]
 sounds: [long-o]

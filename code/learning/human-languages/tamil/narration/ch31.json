@@ -4,14 +4,14 @@
   "chapter": 31,
   "title": "Good Afternoon",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:930027490aca12db",
+  "sourceHash": "fnv1a64:20a75ec52e7beed9",
   "lessons": [
     {
       "id": "TA-C31-matiya-vanakkam",
       "sequence": 860,
       "title": "மதிய வணக்கம் (matiya vaṇakkam) — a sourced afternoon greeting",
       "headword": "மதிய வணக்கம்",
-      "romanization": "",
+      "romanization": "matiya vaṇakkam",
       "gloss": "good afternoon (matiya vaṇakkam), confirmed by two sources for roughly noon to 4 PM, while a third source does not teach a separate afternoon greeting",
       "script": "tamil",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ed3341669544458b",
+      "sourceHash": "fnv1a64:e0fc68ea0a96a97e",
       "notice": null,
       "blocks": [
         {
@@ -50,7 +50,7 @@
             },
             {
               "kind": "speech",
-              "text": "Use மதிய வணக்கம் when that afternoon slot fits the people and setting around you. Treat \"noon to 4\" as a useful learning window, not as a universal clock rule."
+              "text": "Use மதிய வணக்கம் (matiya vaṇakkam) when that afternoon slot fits the people and setting around you. Treat \"noon to 4\" as a useful learning window, not as a universal clock rule."
             }
           ]
         },
@@ -107,9 +107,9 @@
     {
       "id": "TA-C31-afternoon-greeting-root",
       "sequence": 870,
-      "title": "மதிய — the greeting takes a different root",
+      "title": "மதிய (matiya) — the greeting takes a different root",
       "headword": "மதிய",
-      "romanization": "",
+      "romanization": "matiya",
       "gloss": "the adjective inside the afternoon greeting comes from மதியம் (noon), not from பிற்பகல் (afternoon)",
       "script": "tamil",
       "modality": "voice",
@@ -117,7 +117,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aebc39e8e3bbc929",
+      "sourceHash": "fnv1a64:bd3bfbc73f95cbb9",
       "notice": null,
       "blocks": [
         {
@@ -133,7 +133,7 @@
             },
             {
               "kind": "speech",
-              "text": "You can now say மதிய வணக்கம். This final step explains why its first word is not the ordinary afternoon word பிற்பகல்."
+              "text": "You can now say மதிய வணக்கம் (matiya vaṇakkam). This final step explains why its first word is not the ordinary afternoon word பிற்பகல்."
             }
           ]
         },
@@ -148,7 +148,7 @@
             },
             {
               "kind": "speech",
-              "text": "The adjective மதிய can be glossed \"of or pertaining to afternoon.\" That lets Tamil build மதிய வணக்கம் even though the dedicated word you learned for \"afternoon\" was பிற்பகல், the native compound from piṉ (after) + pakal (daytime)."
+              "text": "The adjective மதிய can be glossed \"of or pertaining to afternoon.\" That lets Tamil build மதிய வணக்கம் (matiya vaṇakkam) even though the dedicated word you learned for \"afternoon\" was பிற்பகல், the native compound from piṉ (after) + pakal (daytime)."
             },
             {
               "kind": "speech",
@@ -160,7 +160,7 @@
             },
             {
               "kind": "speech",
-              "text": "மதிய வணக்கம்: middle/noon adjective + greeting becomes good afternoon."
+              "text": "மதிய வணக்கம் (matiya vaṇakkam): middle/noon adjective + greeting becomes good afternoon."
             },
             {
               "kind": "speech",
@@ -221,7 +221,7 @@
             },
             {
               "kind": "speech",
-              "text": "Does மதிய வணக்கம் begin with பிற்பகல்? (No.) What noun is மதிய related to? (மதியம், \"noon.\") What older root lies behind it? (Sanskrit madhya, \"middle.\") Why should you learn the whole greeting rather than construct it from the time word? (Tamil uses a different root in the greeting.)"
+              "text": "Does மதிய வணக்கம் (matiya vaṇakkam) begin with பிற்பகல்? (No.) What noun is மதிய related to? (மதியம், \"noon.\") What older root lies behind it? (Sanskrit madhya, \"middle.\") Why should you learn the whole greeting rather than construct it from the time word? (Tamil uses a different root in the greeting.)"
             }
           ]
         }

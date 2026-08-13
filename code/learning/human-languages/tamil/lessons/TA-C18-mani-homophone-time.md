@@ -7,6 +7,7 @@ chapter: 18
 type: etymology
 headword: மணி / மணி
 gloss: the hour-word and Sanskrit gem-word are likely homophones, then maṇi tells clock time
+romanization: "maṇi / maṇi"
 prerequisites: [TA-C18-mani]
 sounds: [tamil-retroflex-nna, tamil-vowel-sign-i]
 roots: [tamil-mani-bell, sanskrit-mani-gem]

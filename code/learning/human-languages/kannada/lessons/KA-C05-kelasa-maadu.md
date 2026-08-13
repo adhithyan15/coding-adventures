@@ -4,6 +4,7 @@ chapter: 5
 type: word
 headword: ಕೆಲಸ ಮಾಡು
 gloss: to work (lit. "work-do")
+romanization: "kelasa māḍu"
 concept_tag: KA-VERB-MAADU
 prerequisites: [KA-C05-maatanaadu]
 sounds: [long-aa]

@@ -5,6 +5,7 @@ sequence: 310
 type: phrase
 headword: நான் தமிழ் பேசுகிறேன்
 gloss: I speak Tamil
+romanization: "nāṉ tamiḻ pēsugiṟēṉ"
 concept_tag: TA-WORD-TAMIZH
 prerequisites: [TA-C05-pesu, TA-C03-naan]
 sounds: [zh-retroflex]

@@ -4,6 +4,7 @@ chapter: 3
 type: phrase
 headword: ನೀವು ಹೇಗಿದ್ದೀರಾ?
 gloss: how are you? (respectful)
+romanization: "nīvu hēgiddīrā"
 concept_tag: STATE-HOW-ARE-YOU
 prerequisites: [KA-C03-hege, KA-C02-niinu-niivu]
 sounds: [double-dd, long-ii]

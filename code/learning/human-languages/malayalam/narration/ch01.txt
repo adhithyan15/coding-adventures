@@ -82,7 +82,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Read ഇല്ല. Literally, is it closer to "no" or "is not"? ("Is not / there is not.") Which languages share this exact il- root, and which Dravidian sister does not? (Tamil and Kannada share it; Telugu is the outlier, with lēdu.)
+Read ഇല്ല (illa). Literally, is it closer to "no" or "is not"? ("Is not / there is not.") Which languages share this exact il- root, and which Dravidian sister does not? (Tamil and Kannada share it; Telugu is the outlier, with lēdu.)
 
 
 Lesson 3 of 6.
@@ -131,7 +131,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Read നമസ്കാരം. Native Malayalam or a borrowing, and what does it literally mean? (Sanskrit namas + kāra, "the making of a bow.") Which language is Malayalam's closest sister? (Tamil.)
+Read നമസ്കാരം (namaskāram). Native Malayalam or a borrowing, and what does it literally mean? (Sanskrit namas + kāra, "the making of a bow.") Which language is Malayalam's closest sister? (Tamil.)
 
 
 Lesson 4 of 6.
@@ -176,7 +176,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Read നന്ദി. Is it native or a Sanskrit loan, and which language has the twin word? (Native — root nal, "good"; Tamil's naṉṟi.) Which two Dravidian languages use the Sanskrit word for thanks instead? (Kannada, Telugu.)
+Read നന്ദി (nandi). Is it native or a Sanskrit loan, and which language has the twin word? (Native — root nal, "good"; Tamil's naṉṟi.) Which two Dravidian languages use the Sanskrit word for thanks instead? (Kannada, Telugu.)
 
 
 Lesson 5 of 6.
@@ -215,7 +215,7 @@ That completes the four Dravidian first chapters — Tamil, Kannada, Telugu, Mal
 
 
 Lesson 6 of 6.
-ശരി (śari) — "okay," the whole-family word once more.
+ശരി (sari) (śari) — "okay," the whole-family word once more.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
@@ -228,7 +228,7 @@ The letters in this word.
 ശ = "śa" — a sh-sound (the palatal ś). Malayalam, having borrowed so much Sanskrit, keeps the full set of Sanskrit sibilants (ś, ṣ, s) as separate letters — more than Tamil, which makes do with one.
 രി = "ri" — ര (ra) with the "i" vowel sign.
 Left to right: ശ, രി = śa-ri, which gives:
-ശരി = śari = "okay / correct."
+ശരി (sari) = śari = "okay / correct."
 
 The word, taken apart.
 ശരി (śari) is the pan-Dravidian "correct, right becomes okay, agreed," the verbal nod of Malayalam. It is the same family word carried by Tamil and Kannada as sari and Telugu as sarē; Malayalam simply spells its opening sound with ശ (ś). Doubled, śari śari, it means "yes yes, fine."

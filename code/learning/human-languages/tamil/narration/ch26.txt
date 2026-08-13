@@ -13,7 +13,7 @@ The word, taken apart - காலை — genuinely uncertain, and worth saying s
 காலை (kālai) — "morning" — has an etymology that Wiktionary itself only hedges at: "possibly from Sanskrit काल्य (kālya)." That's a real hedge from the source itself, not one this lesson is adding for caution's sake. Complicating things further: the related word கால் (kāl) carries six entirely distinct etymologies in Tamil — "leg/foot," "irrigation channel," "forest," "wind," a Sanskrit-derived "time" sense, and a conjunction meaning "if, when" — and காலை may be an accusative-type form built on the "time" sense specifically, or may not be. Be honest: this is genuinely less settled than Kannada's confidently-native morning word or Telugu's confidently-Sanskrit one. Don't manufacture certainty the primary source itself doesn't have.
 
 The word, taken apart - What IS confirmed: a coordinate term and a transparent compound.
-Wiktionary does confirm one solid fact: பகல் (already met, Chapter 17, "daytime") is listed as காலை's coordinate term — the two words sit side by side in the same semantic field, whatever காலை's deeper root turns out to be. And அதிகாலை ("early dawn") is confirmed, per the Tamil Lexicon, as a fully transparent compound: ati- ("excessive, very") + காலை, glossed simply as "early dawn" by the Tamil Lexicon.
+Wiktionary does confirm one solid fact: பகல் (already met, Chapter 17, "daytime") is listed as காலை (kālai)'s coordinate term — the two words sit side by side in the same semantic field, whatever காலை (kālai)'s deeper root turns out to be. And அதிகாலை ("early dawn") is confirmed, per the Tamil Lexicon, as a fully transparent compound: ati- ("excessive, very") + காலை (kālai), glossed simply as "early dawn" by the Tamil Lexicon.
 
 Guided Practice.
 [pause 1 second]
@@ -26,4 +26,4 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Is காலை's etymology as confidently sourced as Kannada's or Telugu's morning words? (No — Wiktionary itself only says "possibly" Sanskrit kālya; genuinely uncertain, not settled.) What coordinate term does Wiktionary list alongside காலை? (பகல், "daytime," already met in Chapter 17.) What does அதிகாலை literally build on? (ati- ("very") + காலை — a transparent compound for "early dawn.")
+Is காலை (kālai)'s etymology as confidently sourced as Kannada's or Telugu's morning words? (No — Wiktionary itself only says "possibly" Sanskrit kālya; genuinely uncertain, not settled.) What coordinate term does Wiktionary list alongside காலை (kālai)? (பகல், "daytime," already met in Chapter 17.) What does அதிகாலை literally build on? (ati- ("very") + காலை (kālai) — a transparent compound for "early dawn.")

@@ -4,14 +4,14 @@
   "chapter": 24,
   "title": "Night",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:1d1695f2caa824c8",
+  "sourceHash": "fnv1a64:1dfd2146b938c6e0",
   "lessons": [
     {
       "id": "TE-C24-ratri",
       "sequence": 520,
       "title": "రాత్రి (rātri) — \"night,\" this time matching the expected pattern",
       "headword": "రాత్రి",
-      "romanization": "",
+      "romanization": "rātri",
       "gloss": "\"night\" — the same Sanskrit tatsama word already hiding inside ardharātri; unlike day's Persian surprise, night genuinely follows the Sanskrit-tatsama-as-everyday pattern, matching Kannada",
       "script": "telugu",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:767a5519fcd55de6",
+      "sourceHash": "fnv1a64:4d1a6d3aa41020d3",
       "notice": null,
       "blocks": [
         {

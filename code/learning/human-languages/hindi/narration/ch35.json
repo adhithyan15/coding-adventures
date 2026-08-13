@@ -4,14 +4,14 @@
   "chapter": 35,
   "title": "Taking, Asking, Helping — and Liking",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:19427f33e5a3b21b",
+  "sourceHash": "fnv1a64:23178830e6f6dc4d",
   "lessons": [
     {
       "id": "HI-C35-lena",
       "sequence": 650,
       "title": "लेना (lenā) — \"to take,\" a verb that lost a consonant",
       "headword": "लेना",
-      "romanization": "",
+      "romanization": "lenā",
       "gloss": "to take — worn down from Sanskrit labh-, which also sits, undisguised, in the noun लाभ",
       "script": "devanagari",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e9e64bdec332f5c3",
+      "sourceHash": "fnv1a64:9d066242cb4bddce",
       "notice": null,
       "blocks": [
         {
@@ -61,7 +61,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "लेना looks too short to have a history. It has a long one. Sanskrit's verb was लभते (labhate) — \"takes, obtains, receives.\" Through Prakrit lahaï the -bh- thinned to a breath and then vanished, and the two vowels left behind fused into the single ले- you now say. Almost the whole word eroded."
+              "text": "लेना (lenā) looks too short to have a history. It has a long one. Sanskrit's verb was लभते (labhate) — \"takes, obtains, receives.\" Through Prakrit lahaï the -bh- thinned to a breath and then vanished, and the two vowels left behind fused into the single ले- you now say. Almost the whole word eroded."
             },
             {
               "kind": "speech",

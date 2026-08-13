@@ -4,14 +4,14 @@
   "chapter": 30,
   "title": "Good Evening",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:b0be1109c8dd7827",
+  "sourceHash": "fnv1a64:7713f803a7a00dfd",
   "lessons": [
     {
       "id": "ML-C30-shubha-sayaahnam",
       "sequence": 620,
       "title": "ശുഭ സായാഹ്നം (śubha sāyāhnaṁ) — \"good evening,\" a different evening-word than expected",
       "headword": "ശുഭ സായാഹ്നം",
-      "romanization": "",
+      "romanization": "śubha sāyāhnaṁ",
       "gloss": "\"good evening\" (śubha sāyāhnaṁ) — confirmed real, used \"from late afternoon until sunset\" per a directly-fetched source; built on ശുഭ (ML-C25) + സായാഹ്നം (sāyāhnaṁ), a SEPARATE Sanskrit tatsama for \"evening,\" Wiktionary-labeled \"poetic\" — NOT built on ML-C27's native വൈകുന്നേരം; സായാഹ്നം's own root, साय (\"end\"), is CONFIRMED via Wiktionary's separate साय entry to trace to the same PIE seh₁- as Telugu's సాయంత్రం (sāyam) and Latin sērus — a properly-verified cognate, not just a plausible guess",
       "script": "malayalam",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:319b9cf0184e41fe",
+      "sourceHash": "fnv1a64:88a6fe956dca744b",
       "notice": null,
       "blocks": [
         {
@@ -114,7 +114,7 @@
             },
             {
               "kind": "speech",
-              "text": "Is ശുഭ സായാഹ്നം built on വൈകുന്നേരം, ML-C27's native evening word? (No — സായാഹ്നം is a completely separate Sanskrit tatsama.) What does Wiktionary's own part-of-speech label for സായാഹ്നം suggest about its register? (\"Poetic\" — a real, checkable signal it likely skews formal or literary.) Is it confirmed that സായാഹ്നം shares that spectacular PIE root with Telugu's సాయంత్రం? (Yes — Wiktionary's separate साय entry directly confirms the same PIE seh₁- ancestry, naming sāyam and Latin sērus as cognates — a genuinely verified shared root, reached by following the etymology one hop further.)"
+              "text": "Is ശുഭ സായാഹ്നം (śubha sāyāhnaṁ) built on വൈകുന്നേരം, ML-C27's native evening word? (No — സായാഹ്നം is a completely separate Sanskrit tatsama.) What does Wiktionary's own part-of-speech label for സായാഹ്നം suggest about its register? (\"Poetic\" — a real, checkable signal it likely skews formal or literary.) Is it confirmed that സായാഹ്നം shares that spectacular PIE root with Telugu's సాయంత్రం? (Yes — Wiktionary's separate साय entry directly confirms the same PIE seh₁- ancestry, naming sāyam and Latin sērus as cognates — a genuinely verified shared root, reached by following the etymology one hop further.)"
             }
           ]
         }

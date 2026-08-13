@@ -4,14 +4,14 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:f1c85116657207db",
+  "sourceHash": "fnv1a64:5a32225adae0e94d",
   "lessons": [
     {
       "id": "ML-C04-naale-kaanaam",
       "sequence": null,
       "title": "നാളെ കാണാം (nāḷe kāṇāṁ) — \"see you tomorrow\"",
       "headword": "നാളെ കാണാം",
-      "romanization": "",
+      "romanization": "nāḷe kāṇāṁ",
       "gloss": "see you tomorrow",
       "script": "malayalam",
       "modality": "sight",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7f5e2b7fe9218475",
+      "sourceHash": "fnv1a64:4e2b06c59e372a3b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -248,7 +248,7 @@
       "sequence": null,
       "title": "പോയി വരാം (pōyi varāṁ) — \"I'll go and come back\"",
       "headword": "പോയി വരാം",
-      "romanization": "",
+      "romanization": "pōyi varāṁ",
       "gloss": "goodbye (lit. \"I'll go and come back\")",
       "script": "malayalam",
       "modality": "sight",
@@ -256,7 +256,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:887651ed8d638d32",
+      "sourceHash": "fnv1a64:701e4581b1215ff6",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "പോയി വരാം = പോയി (pōyi, \"having gone\") + വരാം (varāṁ, \"I'll come\") — literally \"having gone, I'll come [back],\" i.e. \"I'll go and come back.\" A Malayali never signs off with a bare \"I'm leaving.\" It is the same \"go-and-come-back\" farewell across the Dravidian south (Tamil pōy varugiṟēṉ, Kannada hōgi baruttēne, Telugu veḷḷi vastānu). The warm reply is പോയി വരൂ (pōyi varū, \"go and come [back]\")."
+              "text": "പോയി വരാം (pōyi varāṁ) = പോയി (pōyi, \"having gone\") + വരാം (varāṁ, \"I'll come\") — literally \"having gone, I'll come [back],\" i.e. \"I'll go and come back.\" A Malayali never signs off with a bare \"I'm leaving.\" It is the same \"go-and-come-back\" farewell across the Dravidian south (Tamil pōy varugiṟēṉ, Kannada hōgi baruttēne, Telugu veḷḷi vastānu). The warm reply is പോയി വരൂ (pōyi varū, \"go and come [back]\")."
             }
           ]
         },

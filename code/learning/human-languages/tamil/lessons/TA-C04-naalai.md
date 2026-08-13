@@ -5,6 +5,7 @@ sequence: 255
 type: phrase
 headword: நாளை பார்க்கலாம்
 gloss: see you tomorrow
+romanization: "nāḷai pārkkalām"
 concept_tag: FAREWELL-TOMORROW
 prerequisites: [TA-C04-poy-varugiren]
 sounds: [long-aa, retroflex-l]

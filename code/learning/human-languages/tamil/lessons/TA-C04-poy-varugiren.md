@@ -5,6 +5,7 @@ sequence: 250
 type: phrase
 headword: போய் வருகிறேன்
 gloss: goodbye (lit. "I'll go and come back")
+romanization: "pōy varugiṟēṉ"
 concept_tag: FAREWELL
 prerequisites: [TA-C04-po, TA-C03-naan]
 sounds: [poy-participle]

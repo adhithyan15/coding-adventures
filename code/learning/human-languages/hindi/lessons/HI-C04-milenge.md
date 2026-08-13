@@ -4,6 +4,7 @@ chapter: 4
 type: word
 headword: मिलेंगे
 gloss: (we) will meet
+romanization: "milenge"
 concept_tag: HI-VERB-MILNA
 prerequisites: [HI-C03-hun]
 sounds: [matra-e, anusvara]

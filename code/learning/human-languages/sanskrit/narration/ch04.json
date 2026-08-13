@@ -4,14 +4,14 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:f28a789d74943117",
+  "sourceHash": "fnv1a64:457f5ac90eb66e0f",
   "lessons": [
     {
       "id": "SA-C04-gacchami",
       "sequence": null,
       "title": "गच्छामि (gacchāmi) — \"I go\" (taking leave)",
       "headword": "गच्छामि",
-      "romanization": "",
+      "romanization": "gacchāmi",
       "gloss": "I go (a way to take leave)",
       "script": "devanagari",
       "modality": "sight",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b682dedfea2ec53e",
+      "sourceHash": "fnv1a64:6cc098a2013b77ba",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -295,7 +295,7 @@
       "sequence": null,
       "title": "पुनः (punaḥ) — \"again,\" the seed of \"till we meet again\"",
       "headword": "पुनः",
-      "romanization": "",
+      "romanization": "punaḥ",
       "gloss": "again",
       "script": "devanagari",
       "modality": "sight",
@@ -303,7 +303,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ca5312471924cfcf",
+      "sourceHash": "fnv1a64:9a5fbfa7c32f6516",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -407,9 +407,9 @@
     {
       "id": "SA-C04-punar-darshanaya",
       "sequence": null,
-      "title": "पुनर्दर्शनाय (punar-darśanāya) — \"until we meet again\"",
+      "title": "पुनर्दर्शनाय (punardarśanāya) (punar-darśanāya) — \"until we meet again\"",
       "headword": "पुनर्दर्शनाय",
-      "romanization": "",
+      "romanization": "punardarśanāya",
       "gloss": "until we meet again (lit. \"for seeing again\")",
       "script": "devanagari",
       "modality": "sight",
@@ -417,7 +417,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c01517255bb7ee88",
+      "sourceHash": "fnv1a64:63e2173f0dd4ce5a",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -453,7 +453,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "पुनर् (punar, \"again,\" the r-form of punaḥ) + दर्शनाय (darśanāya, \"for seeing\") becomes पुनर्दर्शनाय (punar-darśanāya)."
+              "text": "पुनर् (punar, \"again,\" the r-form of punaḥ) + दर्शनाय (darśanāya, \"for seeing\") becomes पुनर्दर्शनाय (punardarśanāya) (punar-darśanāya)."
             }
           ]
         },
@@ -464,7 +464,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "पुनर्दर्शनाय = punar (\"again\") + दर्शन (darśana, \"seeing, sight, vision\") in the dative case (-āya, \"for the sake of\") — literally \"for seeing [you] again,\" i.e. \"until we meet again.\" The word दर्शन (darśana) is deep: it is \"seeing\" in the sense of beholding — the darśan one takes of a deity or a revered person, and the name of the six darśanas, the schools of Indian philosophy (\"ways of seeing\"). So this farewell promises not just a meeting but a beholding to come."
+              "text": "पुनर्दर्शनाय (punardarśanāya) = punar (\"again\") + दर्शन (darśana, \"seeing, sight, vision\") in the dative case (-āya, \"for the sake of\") — literally \"for seeing [you] again,\" i.e. \"until we meet again.\" The word दर्शन (darśana) is deep: it is \"seeing\" in the sense of beholding — the darśan one takes of a deity or a revered person, and the name of the six darśanas, the schools of Indian philosophy (\"ways of seeing\"). So this farewell promises not just a meeting but a beholding to come."
             }
           ]
         },
@@ -543,7 +543,7 @@
       "sequence": null,
       "title": "श्वः (śvaḥ) — \"tomorrow\"",
       "headword": "श्वः",
-      "romanization": "",
+      "romanization": "śvaḥ",
       "gloss": "tomorrow — and \"see you tomorrow\"",
       "script": "devanagari",
       "modality": "sight",
@@ -551,7 +551,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:4ded4e8244e80298",
+      "sourceHash": "fnv1a64:c668d84e7f45e3da",
       "notice": {
         "modality": "sight",
         "needs": [

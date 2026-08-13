@@ -7,6 +7,7 @@ chapter: 8
 type: word
 headword: कृपया
 gloss: please (kṛpayā — "kindly," from kṛpā "grace/compassion")
+romanization: "kṛpayā"
 concept_tag: COURTESY-PLEASE
 prerequisites: [HI-C01-dhanyavad]
 sounds: [vocalic-r-matra, retroflex-flap]

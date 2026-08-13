@@ -7,6 +7,7 @@ chapter: 26
 type: word
 headword: ಬೆಳಗ್ಗೆ
 gloss: "morning" (beḷagge) — genuine native Dravidian, from beḷagu ("to shine, to dawn") + beḷaku ("light"); unlike Kannada's Sanskrit tatsama day/night/noon words (dina, ratri, madhyāhna), this one is Kannada's own
+romanization: "beḷagge"
 concept_tag: TIME-MORNING
 prerequisites: [KA-C17-madhyaahna-madhyaraatri, KA-C23-dina, KA-C24-ratri]
 sounds: [kannada-conjunct-gge, kannada-vowel-sign-e]

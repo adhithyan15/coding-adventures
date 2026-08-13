@@ -7,6 +7,7 @@ chapter: 8
 type: phrase
 headword: தயவுசெய்து
 gloss: please (tayavu seytu — "do the kindness," from தயவு tayavu "compassion/grace")
+romanization: "tayavu seytu"
 concept_tag: COURTESY-PLEASE
 prerequisites: [TA-C01-aam]
 sounds: [tamil-vowel-sign-u, pulli-virama, tamil-vowel-sign-e]

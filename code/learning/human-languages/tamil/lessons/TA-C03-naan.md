@@ -5,6 +5,7 @@ sequence: 200
 type: word
 headword: நான்
 gloss: I
+romanization: "nāṉ"
 concept_tag: PRONOUN-I
 prerequisites: [TA-C02-en]
 sounds: [long-aa, final-n]

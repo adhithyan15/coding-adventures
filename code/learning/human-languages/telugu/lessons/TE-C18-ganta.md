@@ -7,6 +7,7 @@ chapter: 18
 type: word
 headword: గంట
 gloss: hour — matching Kannada and Hindi exactly, the same Sanskrit "bell" word
+romanization: "ganṭa"
 concept_tag: TE-TIME-HOUR
 prerequisites: [TE-C17-madhyaahnam-ardharaatri]
 sounds: [telugu-anusvara, telugu-retroflex-tta]

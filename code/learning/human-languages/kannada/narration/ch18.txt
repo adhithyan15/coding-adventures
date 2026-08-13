@@ -3,7 +3,7 @@ Kannada, chapter 18: Telling Time.
 
 
 Lesson 1 of 1.
-ಗಂಟೆ — the same "bell" word as Hindi, borrowed through Prakrit.
+ಗಂಟೆ (gaṇṭe) — the same "bell" word as Hindi, borrowed through Prakrit.
 
 Warm-up.
 [pause 2 seconds]
@@ -31,4 +31,4 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does ಗಂಟೆ mean besides "hour," and what Sanskrit word is it related to? ("Bell, gong" — related to Sanskrit ghaṇṭā.) Is this the same root Hindi uses for "hour"? (Yes — Hindi's ghanṭā is the same Sanskrit word.) Does Tamil use this same Sanskrit root for "hour"? (Most likely not — it uses a native Dravidian word instead, arrived at independently.)
+What does ಗಂಟೆ (gaṇṭe) mean besides "hour," and what Sanskrit word is it related to? ("Bell, gong" — related to Sanskrit ghaṇṭā.) Is this the same root Hindi uses for "hour"? (Yes — Hindi's ghanṭā is the same Sanskrit word.) Does Tamil use this same Sanskrit root for "hour"? (Most likely not — it uses a native Dravidian word instead, arrived at independently.)
