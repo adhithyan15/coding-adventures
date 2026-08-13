@@ -1,5 +1,31 @@
 # Changelog
 
+## [0.2.0] - 2026-08-13
+
+### Added
+
+- Public `raw_deflate/1`, `raw_inflate/2`, and `raw_inflate_counted/2` APIs for
+  ZIP-owned raw RFC 1951 streams.
+- Strict dynamic-Huffman decoding, exact BFINAL byte consumption, caller output
+  caps, full 32 KiB overlapping back-references, and 14 stable payload-blind
+  error identifiers.
+- All 34 `zip-raw-rfc1951-v1` neutral conformance cases plus independent Erlang
+  `:zlib` encoder interoperability and full-window coverage.
+- Explicit empty production capability metadata.
+
+### Changed
+
+- ZIP method 8 extraction now rejects compressed-payload suffix cavities and
+  declared uncompressed-size mismatches before CRC validation.
+- Test inputs are deterministic and the BUILD front door enforces formatting,
+  warning-free test compilation, coverage, and the complete suite.
+
+### Security
+
+- Output limits are validated before decoding and enforced before every stored
+  byte, literal, and back-reference write; failures expose no partial output or
+  attacker-controlled details. CRC-32 remains non-authentication.
+
 ## [0.1.0] - 2026-04-23
 
 ### Added

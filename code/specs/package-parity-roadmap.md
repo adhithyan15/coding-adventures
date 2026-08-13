@@ -3393,6 +3393,40 @@ loop returns to monitor-only behavior until those checks reach a terminal
 state. Eight ZIP raw-profile children remain pending under the blocked
 completion umbrella: .NET, Elixir, Haskell, JVM, Lua, Perl, Python, and Swift.
 
+## Post-#11386 Refresh and Elixir ZIP Raw-Conformance Selection
+
+External review merged ready-for-review PR #11386 as
+`2df1499600b500cc4e34b3631fc840bd9abaf261` at
+2026-08-13T21:55:35Z from final reviewed head
+`42004110d93a2dc61738853f5102598c465457fb`. All 20 reported checks reached a
+terminal success, expected skip, or neutral conclusion; the remote branch was
+deleted, and this loop did not exercise merge authority.
+
+A fresh collision-checked report, refreshed after selection at live main
+`d73dadad9531aa88bdc830a53912a208fe4ce76a`, still covers 15 established lanes,
+1,310 normalized identities, and 4,466 slots. It reports 173 high-consensus
+identities with 269 gaps, 860 singletons with 12,040 singleton gaps, 661 Rust
+singletons, zero collisions, and zero unknown buckets. The Ruby merge and the
+intervening ALGOL, wasm-wast-parser, Spanish-curriculum, Mermaid, RISC-V,
+ADJ-facts, and HTML-parser changes modify only existing package roots, so the
+normalized root set and every inventory metric are unchanged. No newly unowned
+identity or authority boundary was discovered, and no additional state owner
+was required before reprioritization.
+
+The Ruby ZIP child is now merged, leaving eight dependency-ready children:
+.NET, Elixir, Haskell, JVM, Lua, Perl, Python, and Swift. No live PR or remote
+parity branch owns ZIP, the neutral fixture, state, or this roadmap. The stale
+historical catch-up branch still touches only .NET, Haskell, and JVM ZIP paths
+and remains unowned residue that must not be reused or cherry-picked.
+
+The dependency/leverage pass selected
+`zip-raw-rfc1951-elixir-lane-parity`. Elixir is the smallest clean standalone
+remaining package/toolchain without live or historical overlap. Its ZIP-owned
+decoder explicitly rejects dynamic Huffman streams, making this a genuine
+codec-contract port: strict dynamic trees, counted consumption, caller output
+caps, stable payload-blind errors, all 34 neutral fixtures, ZIP suffix-cavity
+and declared-size rejection, and explicit empty capability metadata.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
