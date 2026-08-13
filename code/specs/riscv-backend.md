@@ -62,7 +62,7 @@ the RISC-V spec. Per-function byte streams can be concatenated directly;
 | Twig `42` | `const_i64 v=42; ret_i64 v` | `[0x93, 0x02, 0xA0, 0x02, 0x13, 0x85, 0x02, 0x00, 0x67, 0x80, 0x00, 0x00]` |
 | `ret_void` only | `ret_void` | `[0x67, 0x80, 0x00, 0x00]` |
 | Empty CIR | (none) | `[0x67, 0x80, 0x00, 0x00]` |
-| BASIC `PRINT 42` | `call_builtin_print_i64; ret_void` | (unsupported until the host runtime ABI increment) |
+| BASIC `PRINT 42` | `const_f64 42.0; call __basic_print_real; ...` | (refused — Dartmouth BASIC's only numeric type is REAL, and RV32I has no floating-point registers) |
 
 ## Backend trait surface
 
@@ -79,6 +79,7 @@ the RISC-V spec. Per-function byte streams can be concatenated directly;
 |------------------------|---------|
 | `UnsupportedOp(String)` | CIR operation outside the scalar core |
 | `UnsupportedType(String)` | Type needing a representation beyond one RV32 register |
+| `UnsupportedFloat { site, ty }` | A floating-point type (`f32`/`f64`) reached the backend. RV32I is the base *integer* ISA and has no floating-point registers; floats need the `F`/`D` extensions (RV32F/RV32D). `site` names the CIR op or parameter that carried it. Distinct from `UnsupportedType` because the fix is retarget-or-soft-float, not "write the missing lowering" |
 | `InvalidOperand(String)` | Malformed CIR operands or destinations |
 | `UndefinedVariable(String)` | A variable has no allocated source register |
 | `ImmediateOutOfRange(i64)` | A compatibility `i64` literal cannot fit in RV32 |

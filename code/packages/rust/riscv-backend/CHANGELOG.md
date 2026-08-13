@@ -1,6 +1,45 @@
 # Changelog — riscv-backend
 
-## Unreleased
+## v0.2.0 — 2026-08-13 — executable scalar core, plus a float refusal that says why
+
+### Floating point now refuses with a reason instead of a shrug
+
+`riscv-backend` reported `UnsupportedType("f64")` — "unsupported RV32I scalar
+type" — for a double.  That reads like a lowering nobody has written yet, and
+it is not: RV32I is the RISC-V **base integer** ISA.  Its entire architectural
+state is 32 *integer* registers; there is no `f0`..`f31` bank and no `fadd.d`.
+Single and double precision are separate optional standard extensions (`F` →
+RV32F, `D` → RV32D).  An `f64` on RV32I is a value the target cannot hold, and
+that has a completely different fix from a missing op: retarget the module, or
+decompose the double into integer soft-float sequences before this backend
+sees it.
+
+So floats get their own error, `BackendError::UnsupportedFloat { site, ty }`.
+It names *where* the float appeared (`op "const_f64"`, `parameter "mag"`) and
+spells out that RV32I has no floating-point registers, naming RV32F/RV32D as
+the extensions that would carry it.  Non-float types keep the generic
+`UnsupportedType`, so the two cases stay distinguishable.
+
+This surfaced through Dartmouth BASIC.  BASIC has exactly one numeric type and
+it is REAL, so after the BA7 floating-point conversion even `10 PRINT 42` is
+`const_f64 42.0` feeding `__basic_print_real(x : f64)`.  The `lang-aot`
+BASIC → RV32I smoke test had been written to tolerate "lowering gap" messages
+by substring, and its list did not include this one — so a genuine, correct
+refusal read as a test failure.  The refusal is right; the expectation was
+wrong.  Note what was *not* done: no truncation of `42.0` to an integer to
+make bytes appear.  A loud refusal beats a silent wrong answer.
+
+- Added `BackendError::UnsupportedFloat { site, ty }` and routed every type
+  gate (parameters, `const_*`, `ret_*`, arithmetic, bitwise, unary, and
+  comparisons) through a shared `unsupported_type_error` helper that picks the
+  float refusal for `f16`/`f32`/`f64`/`f128` and the generic one otherwise.
+- Type gates now receive the CIR op name so the message points at the exact
+  instruction rather than "somewhere in this function".
+- Added tests for a float constant, float arithmetic, a float comparison, a
+  float return, an `f64` parameter, and a non-float type keeping the generic
+  error.
+
+### Executable scalar core (previously unreleased)
 
 - Added executable RV32I scalar lowering for typed CIR constants, arithmetic,
   bitwise operations, shifts, unary operations, and signed/unsigned comparisons.

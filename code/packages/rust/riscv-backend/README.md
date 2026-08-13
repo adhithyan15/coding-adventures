@@ -28,7 +28,26 @@ tests passing byte-for-byte.
 | Comparisons | ✓ signed/unsigned `eq ne lt le gt ge`, including `i64`/`u64` pairs |
 | Control flow | ✓ `label`, `jmp`, `jmp_if_true`, `jmp_if_false` |
 | `ret_*`, `ret_void` | ✓ scalar result in `a0`; wide result in `a0:a1` |
-| Wide multiply/divide/shifts, floats, calls, memory, I/O | not yet supported |
+| Wide multiply/divide/shifts, calls, memory, I/O | not yet supported |
+| Floating point (`f32`/`f64`) | ✗ **refused by design** — see below |
+
+### Floating point is refused, not "unimplemented"
+
+RV32I is the RISC-V *base integer* ISA: 32 integer registers, no `f0`..`f31`
+bank, no `fadd.d`.  Single and double precision live in the optional `F` and
+`D` standard extensions (RV32F / RV32D).  An `f64` here is therefore not an op
+nobody has written yet — it is a value the target cannot hold, and the two
+cases have opposite fixes.  So a float gets its own error,
+`BackendError::UnsupportedFloat { site, ty }`, which names the CIR op (or the
+parameter) that carried it and says plainly that RV32I has no floating-point
+registers.  Never approximate: truncating a double to an integer to produce
+*some* bytes would be a silent wrong answer.
+
+The real-world case is Dartmouth BASIC, whose one numeric type is REAL — after
+the BA7 floating-point conversion even `PRINT 42` is `const_f64 42.0`, so no
+BASIC program reaches RV32I bytes today.  The routes forward are retargeting
+(LLVM/JVM/CLR/wasm all carry doubles) or a future soft-float pass that
+decomposes a double into integer sequences before this backend sees it.
 
 `run_binary` executes a produced function binary in `riscv-simulator` and
 reports the `a0` low return word, `a1` high return word, halt state, and

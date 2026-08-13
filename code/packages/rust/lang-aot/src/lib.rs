@@ -1203,8 +1203,14 @@ pub fn compile_file_to_riscv32_bin(
             params: &empty_params,
             return_type: f.return_type.as_str(),
         };
-        let fn_bytes = riscv_backend::compile(&ctx, &cir)
-            .map_err(|e| LangAotError::RiscvBackendError(format!("{e}")))?;
+        // Name the function in the message.  A module is many functions
+        // (BASIC alone injects its whole `__basic_print_*` runtime), so
+        // "unsupported type f64" with no function name leaves the reader
+        // guessing which one refused — and the doc comment above has always
+        // promised the message names the function.
+        let fn_bytes = riscv_backend::compile(&ctx, &cir).map_err(|e| {
+            LangAotError::RiscvBackendError(format!("function {:?}: {e}", f.name))
+        })?;
         bytes.extend_from_slice(&fn_bytes);
     }
     if bytes.is_empty() {

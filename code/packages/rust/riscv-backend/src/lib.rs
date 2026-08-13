@@ -50,6 +50,14 @@ pub struct RunResult {
 pub enum BackendError {
     UnsupportedOp(String),
     UnsupportedType(String),
+    /// A value the module needs to hold in a register is a floating-point
+    /// number, and RV32I — the *base integer* ISA — has no floating-point
+    /// registers at all.  See [`is_floating_point_type`] for the reasoning.
+    ///
+    /// `site` names where the float showed up (`op "const_f64"`, or
+    /// `parameter "mag"`) so a caller's message points at real CIR, not just
+    /// "somewhere in this function".
+    UnsupportedFloat { site: String, ty: String },
     InvalidOperand(String),
     UndefinedVariable(String),
     UndefinedLabel(String),
@@ -67,6 +75,14 @@ impl fmt::Display for BackendError {
             Self::UnsupportedType(ty) => {
                 write!(f, "riscv-backend: unsupported RV32I scalar type {ty:?}")
             }
+            Self::UnsupportedFloat { site, ty } => write!(
+                f,
+                "riscv-backend: {site} carries floating-point type {ty:?}, and RV32I is the \
+                 base *integer* ISA — it has no floating-point registers (f32 needs the F \
+                 extension, f64 needs D, i.e. RV32F/RV32D).  Retarget this module to a \
+                 float-capable backend (LLVM, JVM, CLR, wasm), or lower the float to \
+                 soft-float integer sequences before the RV32I backend sees it."
+            ),
             Self::InvalidOperand(detail) => write!(f, "riscv-backend: invalid operand: {detail}"),
             Self::UndefinedVariable(name) => {
                 write!(f, "riscv-backend: undefined variable {name:?}")
@@ -201,7 +217,7 @@ impl Lowerer {
         let mut next_argument = 0;
         for (name, ty) in ctx.params {
             if !is_rv32_value_type(ty) {
-                return Err(BackendError::UnsupportedType(ty.clone()));
+                return Err(unsupported_type_error(ty, &format!("parameter {name:?}")));
             }
             let location = if matches!(ty.as_str(), "i64" | "u64") {
                 if next_argument + 1 >= ARG_REGISTERS.len() {
@@ -241,7 +257,7 @@ impl Lowerer {
             return Ok(());
         }
         if let Some(ty) = op.strip_prefix("ret_") {
-            self.require_scalar_type(ty)?;
+            self.require_scalar_type(ty, op)?;
             match self.var_location(instr, 0, op)? {
                 ValueLocation::Word(src) => self.words.push(encode_addi(A0, src, 0)),
                 ValueLocation::Pair { lo, hi } => {
@@ -253,7 +269,7 @@ impl Lowerer {
             return Ok(());
         }
         if let Some(ty) = op.strip_prefix("const_") {
-            self.require_scalar_type(ty)?;
+            self.require_scalar_type(ty, op)?;
             if matches!(ty, "i64" | "u64") && !wide_literal_fits_word(instr.srcs.first(), ty)? {
                 let ValueLocation::Pair { lo, hi } = self.dest_pair(instr, op)? else {
                     unreachable!("dest_pair always returns a pair")
@@ -313,7 +329,7 @@ impl Lowerer {
                         _ => Err(BackendError::UnsupportedType(ty.to_owned())),
                     };
                 }
-                self.require_operation_type(ty)?;
+                self.require_operation_type(ty, op)?;
                 let rd = self.dest(instr, op)?;
                 let lhs = self.var_src(instr, 0, op)?;
                 let rhs = self.var_src(instr, 1, op)?;
@@ -342,7 +358,7 @@ impl Lowerer {
                         _ => Err(BackendError::UnsupportedType(ty.to_owned())),
                     };
                 }
-                self.require_operation_type(ty)?;
+                self.require_operation_type(ty, op)?;
                 let rd = self.dest(instr, op)?;
                 let src = self.var_src(instr, 0, op)?;
                 self.words.push(match family {
@@ -817,19 +833,19 @@ impl Lowerer {
         }
     }
 
-    fn require_scalar_type(&self, ty: &str) -> Result<(), BackendError> {
+    fn require_scalar_type(&self, ty: &str, op: &str) -> Result<(), BackendError> {
         if is_rv32_value_type(ty) {
             Ok(())
         } else {
-            Err(BackendError::UnsupportedType(ty.to_owned()))
+            Err(unsupported_type_error(ty, &format!("op {op:?}")))
         }
     }
 
-    fn require_operation_type(&self, ty: &str) -> Result<(), BackendError> {
+    fn require_operation_type(&self, ty: &str, op: &str) -> Result<(), BackendError> {
         if is_rv32_operation_type(ty) {
             Ok(())
         } else {
-            Err(BackendError::UnsupportedType(ty.to_owned()))
+            Err(unsupported_type_error(ty, &format!("op {op:?}")))
         }
     }
 
@@ -843,7 +859,7 @@ impl Lowerer {
             return Ok(());
         }
         if !matches!(ty, "i64" | "u64") {
-            return Err(BackendError::UnsupportedType(ty.to_owned()));
+            return Err(unsupported_type_error(ty, &format!("op {op:?}")));
         }
 
         for index in 0..2 {
@@ -875,6 +891,44 @@ fn comparison_parts(op: &str) -> Option<(&str, &str)> {
 
 fn is_signed(ty: &str) -> bool {
     ty.starts_with('i')
+}
+
+/// Is `ty` a floating-point CIR scalar type?
+///
+/// `aot-core`'s inference spells every literal `Float` as `"f64"` and its
+/// type lattice also knows `"f32"`, so those are the two names that can reach
+/// a backend today; the wider IEEE-754 names are listed for the day the
+/// lattice grows them.
+///
+/// # Why this deserves its own error
+///
+/// RV32I is the RISC-V **base integer** ISA.  Its entire architectural state
+/// is 32 general-purpose *integer* registers — there is no `f0`..`f31` bank,
+/// no `fadd.d`, no way to even name a double.  Floating point is a separate,
+/// optional standard extension: `F` (single precision, adds RV32F) and `D`
+/// (double precision, adds RV32D).  So an `f64` on RV32I is not "an op we
+/// have not written yet" — it is a value the target cannot represent at all
+/// until either the module is retargeted or the float is decomposed into
+/// integer soft-float sequences.  Saying that plainly beats a generic
+/// "unsupported type", because the two have completely different fixes.
+fn is_floating_point_type(ty: &str) -> bool {
+    matches!(ty, "f16" | "f32" | "f64" | "f128")
+}
+
+/// Build the right "this type does not fit RV32I" error for `ty`.
+///
+/// Floats get the specific [`BackendError::UnsupportedFloat`] refusal (the
+/// fix is retarget-or-soft-float); everything else stays the generic
+/// [`BackendError::UnsupportedType`] (the fix is "implement the lowering").
+fn unsupported_type_error(ty: &str, site: &str) -> BackendError {
+    if is_floating_point_type(ty) {
+        BackendError::UnsupportedFloat {
+            site: site.to_owned(),
+            ty: ty.to_owned(),
+        }
+    } else {
+        BackendError::UnsupportedType(ty.to_owned())
+    }
 }
 
 fn is_rv32_value_type(ty: &str) -> bool {
