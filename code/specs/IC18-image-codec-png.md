@@ -77,16 +77,16 @@ Three chunk types are required:
 
 | Type | Position | Meaning |
 |---|---|---|
-| `IHDR` | first, exactly one | 13 bytes: dimensions and pixel format |
+| `IHDR` | **first**, exactly one | 13 bytes: dimensions and pixel format |
 | `IDAT` | one or more, **consecutive** | the zlib stream, possibly split |
 | `IEND` | **last**, **empty** | terminator |
 
-Those emphases are normative and a decoder MUST enforce all three. Each
-describes a file that decodes to exactly the right image while carrying bytes
-the image does not need -- an intervening chunk between two `IDAT`s, a payload
-inside `IEND`, or anything after `IEND`. The picture is identical either way,
-which is why tolerating them turns a valid-looking PNG into free carriage: a
-scanner that renders the image sees nothing wrong.
+Those emphases are normative and a decoder MUST enforce all four. Each describes
+a file that decodes to exactly the right image while carrying bytes the image
+does not need -- a chunk ahead of `IHDR`, an intervening chunk between two
+`IDAT`s, a payload inside `IEND`, or anything after `IEND`. The picture is
+identical either way, which is why tolerating them turns a valid-looking PNG
+into free carriage: a scanner that renders the image sees nothing wrong.
 
 **Chunk type case is a bitfield.** Bit 5 of each of the four letters is a flag,
 and the first letter's is the one that matters here: uppercase means **critical**,
@@ -299,8 +299,16 @@ PNG is a format a program reads from strangers, so these are normative.
    edge cap and is 268 million pixels, about 3 GiB once the container, the
    filtered buffer and the transient copy made while sizing it are counted.
    A port MUST cap the edges (16384, matching IC01) AND the total pixel count
-   (64 mebipixels, a 256 MiB RGBA buffer), and SHOULD let the caller lower the
-   latter.
+   (32 mebipixels by default, a 128 MiB RGBA buffer), and SHOULD let the caller
+   lower the latter and validate it where it is supplied.
+
+   The pixel ceiling is a judgement, not a law, and a port should state its
+   arithmetic: decoding costs roughly THREE times the pixel buffer -- the
+   container, the filtered scanlines, and a transient copy while the latter is
+   sized -- so 32 mebipixels admits about 400 MB of peak allocation. That is
+   chosen to still read an ordinary camera photograph while sitting an order of
+   magnitude below what a per-edge cap alone permits. An inflate that can return
+   its buffer without a final trimming copy removes one of the three.
 
    This is where PNG parts company with BMP. BMP survives on an edge cap because
    its pixels have to BE in the file, so demanding a gigabyte of memory costs a
@@ -345,6 +353,7 @@ PngCodec implements ImageCodec # mime type "image/png"
 | inflated length != the header's promise | error |
 | Adler-32 mismatch | error |
 | filter byte above 4 | error naming the value |
+| any chunk before `IHDR` | error naming the type |
 | bytes after `IEND` | error naming the count |
 | non-empty `IEND` | error |
 | non-consecutive `IDAT` chunks | error |

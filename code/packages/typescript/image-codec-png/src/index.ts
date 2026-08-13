@@ -149,8 +149,8 @@ export { type PixelContainer, type ImageCodec };
 const MAX_DIMENSION = 16384;
 
 /**
- * Largest total pixel count this codec will decode. 64 mebipixels, which is a
- * 256 MiB RGBA buffer.
+ * Largest total pixel count this codec will decode by default: 32 mebipixels,
+ * about 8000 x 4000, which is a 128 MiB RGBA buffer.
  *
  * A per-edge cap alone is not enough, and PNG is where that stops being a
  * theoretical distinction. 16384 x 16384 is within the edge cap and is 268
@@ -162,8 +162,16 @@ const MAX_DIMENSION = 16384;
  * and DEFLATE's ratio reaches 1032:1, so the same demand costs about **one
  * megabyte**. The amplification is the whole difference, and it is why this
  * second ceiling exists here and not there.
+ *
+ * The number is a judgement, not a law. Decoding costs roughly THREE times the
+ * pixel buffer -- the container, the filtered scanlines, and a transient copy
+ * while the latter is sized -- so this default admits about 400 MB of peak
+ * allocation. That is chosen to still read an ordinary camera photograph while
+ * being an order of magnitude below what a per-edge cap alone would allow. An
+ * embedder that knows its images are small should say so: this package's own
+ * caller draws single letters and passes a ceiling in the thousands.
  */
-const MAX_PIXELS = 64 * 1024 * 1024;
+const MAX_PIXELS = 32 * 1024 * 1024;
 
 /** Options for {@link decodePng}. */
 export interface DecodePngOptions {
@@ -353,6 +361,14 @@ function chooseFilter(
   return bestType;
 }
 
+/** Reject a ceiling that is not a usable number, wherever it is supplied. */
+function validateMaxPixels(value: number | undefined): void {
+  if (value === undefined) return;
+  if (!Number.isFinite(value) || value <= 0) {
+    throw new Error("PNG: maxPixels must be a positive finite number");
+  }
+}
+
 // ============================================================================
 // Chunk writing
 // ============================================================================
@@ -362,14 +378,49 @@ function u32be(value: number): number[] {
   return [(v >>> 24) & 0xff, (v >>> 16) & 0xff, (v >>> 8) & 0xff, v & 0xff];
 }
 
+/**
+ * The growing PNG file, held as real bytes.
+ *
+ * A plain `number[]` would cost four to eight bytes per output byte in V8 and
+ * then a full copy on the way out -- the same accounting mistake `zip`'s
+ * inflater made on the other side of this package. The input here is the
+ * caller's own image rather than a stranger's, so this is a cost rather than a
+ * vulnerability, but it is the same fix.
+ */
+class ByteBuffer {
+  private buf = new Uint8Array(1024);
+  private len = 0;
+
+  private reserve(extra: number): void {
+    if (this.len + extra <= this.buf.length) return;
+    let next = this.buf.length;
+    while (next < this.len + extra) next *= 2;
+    const grown = new Uint8Array(next);
+    grown.set(this.buf.subarray(0, this.len));
+    this.buf = grown;
+  }
+
+  write(bytes: ArrayLike<number>): void {
+    this.reserve(bytes.length);
+    this.buf.set(bytes as Uint8Array, this.len);
+    this.len += bytes.length;
+  }
+
+  finish(): Uint8Array {
+    return this.buf.slice(0, this.len);
+  }
+}
+
 /** Append one complete chunk: length, type, data, CRC over type+data. */
-function pushChunk(out: number[], type: string, data: Uint8Array): void {
-  out.push(...u32be(data.length));
+function pushChunk(out: ByteBuffer, type: string, data: Uint8Array): void {
+  out.write(u32be(data.length));
+  // The CRC covers the TYPE and the DATA together, so they are laid out
+  // contiguously once and then both written and hashed from the same bytes.
   const typed = new Uint8Array(4 + data.length);
   for (let i = 0; i < 4; i++) typed[i] = type.charCodeAt(i);
   typed.set(data, 4);
-  for (const byte of typed) out.push(byte);
-  out.push(...u32be(crc32(typed)));
+  out.write(typed);
+  out.write(u32be(crc32(typed)));
 }
 
 // ============================================================================
@@ -386,7 +437,13 @@ function pushChunk(out: number[], type: string, data: Uint8Array): void {
 export class PngCodec implements ImageCodec {
   readonly mimeType = "image/png";
 
-  constructor(private readonly options: DecodePngOptions = {}) {}
+  constructor(private readonly options: DecodePngOptions = {}) {
+    // Validated here as well as in `decodePng`, so a bad ceiling fails when it
+    // is supplied rather than at the first decode. `ZipReader` does the same,
+    // and two sibling packages disagreeing about when an option is checked is
+    // how one of them ends up with a hole.
+    validateMaxPixels(options.maxPixels);
+  }
 
   encode(pixels: PixelContainer): Uint8Array {
     return encodePng(pixels);
@@ -432,8 +489,8 @@ export function encodePng(pixels: PixelContainer): Uint8Array {
     );
   }
 
-  const out: number[] = [];
-  for (const byte of SIGNATURE) out.push(byte);
+  const out = new ByteBuffer();
+  out.write(SIGNATURE);
 
   // IHDR: 13 bytes, and the order is fixed by the spec.
   const ihdr = new Uint8Array([
@@ -478,7 +535,7 @@ export function encodePng(pixels: PixelContainer): Uint8Array {
 
   pushChunk(out, "IEND", new Uint8Array(0));
 
-  return new Uint8Array(out);
+  return out.finish();
 }
 
 /**
@@ -493,10 +550,8 @@ export function encodePng(pixels: PixelContainer): Uint8Array {
  * pixels.width; pixels.height; pixels.data;
  */
 export function decodePng(bytes: Uint8Array, options: DecodePngOptions = {}): PixelContainer {
+  validateMaxPixels(options.maxPixels);
   const maxPixels = options.maxPixels ?? MAX_PIXELS;
-  if (!Number.isFinite(maxPixels) || maxPixels <= 0) {
-    throw new Error("PNG: maxPixels must be a positive finite number");
-  }
   if (bytes.length < SIGNATURE.length) throw new Error("PNG: file too short");
   for (let i = 0; i < SIGNATURE.length; i++) {
     if (bytes[i] !== SIGNATURE[i]) throw new Error("PNG: invalid signature");
@@ -540,6 +595,14 @@ export function decodePng(bytes: Uint8Array, options: DecodePngOptions = {}): Pi
 
     const data = bytes.subarray(dataStart, dataEnd);
 
+    // RFC 2083: IHDR is the first chunk. This is the last member of the family
+    // the rules above close -- a `tEXt` ahead of the header is a chunk out of
+    // place, libpng refuses it, and accepting what the reference implementation
+    // rejects is the differential this decoder exists not to have.
+    if (!sawIHDR && type !== "IHDR") {
+      throw new Error(`PNG: '${type}' chunk before IHDR`);
+    }
+
     if (type === "IHDR") {
       if (sawIHDR) throw new Error("PNG: more than one IHDR chunk");
       if (length !== 13) throw new Error(`PNG: IHDR must be 13 bytes, got ${length}`);
@@ -575,7 +638,6 @@ export function decodePng(bytes: Uint8Array, options: DecodePngOptions = {}): Pi
       }
       sawIHDR = true;
     } else if (type === "IDAT") {
-      if (!sawIHDR) throw new Error("PNG: IDAT before IHDR");
       // RFC 2083: multiple IDATs "shall appear consecutively with no other
       // intervening chunks". They are one stream cut into pieces, so a chunk
       // between them is either corruption or someone using the gap.

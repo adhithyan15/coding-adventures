@@ -133,16 +133,20 @@ mis-reads a palette image is worse than one that says it cannot read it.
 - Every chunk CRC and the trailing Adler-32 are verified.
 - A chunk's declared length is checked against the file size **before** any
   arithmetic uses it.
-- Each edge is capped at 16,384 pixels **and the total at 64 mebipixels**,
+- Each edge is capped at 16,384 pixels **and the total at 32 mebipixels**,
   because `IHDR` is eight attacker-chosen bytes and `width × height × 4` is
   allocated on their word. An edge cap alone is not enough: 16384 × 16384 sits
   inside it and is 268 million pixels, roughly 3 GiB of peak allocation — which
   at DEFLATE's 1032:1 costs the attacker about a megabyte. BMP survives on an
   edge cap because its pixels have to *be* in the file; PNG compresses, and that
   amplification is the whole difference. Lower it with
-  `decodePng(bytes, { maxPixels })` or `new PngCodec({ maxPixels })`.
-- **`IEND` must be empty and last, `IDAT` chunks must be consecutive, and the
-  compressed data must end exactly where the Adler-32 begins.** Each of those
+  `decodePng(bytes, { maxPixels })` or `new PngCodec({ maxPixels })` — decoding
+  costs about three times the pixel buffer, so the default admits roughly
+  400 MB of peak allocation, and a caller who knows its images are small should
+  say so.
+- **`IHDR` must be first, `IEND` must be empty and last, `IDAT` chunks must be
+  consecutive, and the compressed data must end exactly where the Adler-32
+  begins.** Each of those
   describes a file that decodes to precisely the right image while carrying
   bytes the image does not need. The picture is identical either way, which is
   why tolerating them turns a valid-looking PNG into free carriage: a scanner

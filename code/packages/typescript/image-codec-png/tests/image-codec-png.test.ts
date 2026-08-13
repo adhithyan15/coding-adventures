@@ -439,13 +439,13 @@ describe("decodePng rejections", () => {
     expect(() => decodePng(png)).toThrow(/no IDAT/);
   });
 
-  it("rejects IDAT before IHDR", () => {
+  it("rejects any chunk before IHDR, which the spec requires to be first", () => {
     const png = new Uint8Array([
       ...SIGNATURE,
       ...chunk("IDAT", [1, 2, 3]),
       ...chunk("IEND", []),
     ]);
-    expect(() => decodePng(png)).toThrow(/IDAT before IHDR/);
+    expect(() => decodePng(png)).toThrow(/chunk before IHDR/);
   });
 
   it("rejects two IHDR chunks", () => {
@@ -657,5 +657,42 @@ describe("framing rules", () => {
       ...SIGNATURE, ...ihdr, ...many, ...chunk("IDAT", okIdat), ...chunk("IEND", []),
     ]);
     expect(decodePng(png).width).toBe(1);
+  });
+});
+
+describe("IHDR must be the first chunk", () => {
+  it("rejects an ancillary chunk ahead of IHDR", () => {
+    // The last member of the carriage family. A tEXt before the header is a
+    // chunk out of place; libpng refuses it, and accepting what the reference
+    // implementation rejects is the differential this decoder exists not to
+    // have. Nothing is corrupted by it -- that is exactly why it needs saying.
+    const png = new Uint8Array([
+      ...SIGNATURE,
+      ...chunk("tEXt", [65, 66]),
+      ...chunk("IHDR", [...u32be(1), ...u32be(1), 8, 6, 0, 0, 0]),
+      ...chunk("IDAT", Array.from(deflateSync(Buffer.from([0, 1, 2, 3, 4])))),
+      ...chunk("IEND", []),
+    ]);
+    expect(() => decodePng(png)).toThrow(/'tEXt' chunk before IHDR/);
+  });
+
+  it("still accepts the same file with the chunk moved after IHDR", () => {
+    // Same bytes, legal order: proves the rejection is about position.
+    const png = new Uint8Array([
+      ...SIGNATURE,
+      ...chunk("IHDR", [...u32be(1), ...u32be(1), 8, 6, 0, 0, 0]),
+      ...chunk("tEXt", [65, 66]),
+      ...chunk("IDAT", Array.from(deflateSync(Buffer.from([0, 1, 2, 3, 4])))),
+      ...chunk("IEND", []),
+    ]);
+    expect(pixelAt(decodePng(png), 0, 0)).toEqual([1, 2, 3, 4]);
+  });
+});
+
+describe("PngCodec validates its ceiling when it is supplied", () => {
+  it("rejects a bad maxPixels at construction, not at first decode", () => {
+    expect(() => new PngCodec({ maxPixels: Infinity })).toThrow(/positive finite/);
+    expect(() => new PngCodec({ maxPixels: 0 })).toThrow(/positive finite/);
+    expect(() => new PngCodec({ maxPixels: Number.NaN })).toThrow(/positive finite/);
   });
 });

@@ -695,6 +695,12 @@ class ByteSink {
   }
 
   finish(): Uint8Array {
+    // When the buffer came out exactly full there is nothing to trim, and
+    // handing it back directly saves a full second copy of the output. That
+    // matters more than it looks: a caller that passes the exact expected size
+    // as its ceiling -- which PNG does, from IHDR -- hits this path every time,
+    // so the peak drops from three copies of the image to two.
+    if (this.len === this.buf.length) return this.buf;
     return this.buf.slice(0, this.len);
   }
 }
