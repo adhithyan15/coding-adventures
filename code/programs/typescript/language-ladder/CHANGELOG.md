@@ -2,6 +2,12 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Devanagari उ ductus (HL-C09DB)
+
+- Render **उ** in three source-aligned movements across two strokes.
+- Keep the upper bowl and lower loop in one continuous run before the separate left-to-right shirorekhā.
+- Preserve the source's single lift, fit the path to Noto Sans Devanagari, and reduce measured HL-C09 debt to 126 entries.
+
 ### Added — cited Devanagari ई ductus (HL-C09DA)
 
 - Render **ई** in six source-aligned movements across three strokes.
