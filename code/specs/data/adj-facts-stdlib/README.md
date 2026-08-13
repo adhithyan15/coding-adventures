@@ -87,7 +87,7 @@ per rotation, in parallel):
 | `chemistry/` | element → atomic number | PubChem / NIH |
 | `chemistry/` | common substance → approximate pH | LibreTexts (consensus) |
 | `chemistry/` | element → periodic-table group family (`element_group_family(element, family)`, 28 elements across alkali_metal/alkaline_earth_metal/halogen/noble_gas/transition_metal, extended from the original 14 by pulling the remaining members each family's own already-cited Wikipedia sentence had always named) | Wikipedia (consensus) |
-| `chemistry/` | common chemical → acid or base | LibreTexts (consensus) |
+| `chemistry/` | common chemical → acid or base (`acid_or_base(substance, classification)`, 16 substances, extended from the original 12 by pulling the remaining 4 — chloric_acid, rubidium_hydroxide, caesium_hydroxide, strontium_hydroxide — that the table's own header had always named as grounded in the same already-cited source table but omitted only to keep the original set balanced) | LibreTexts (consensus) |
 | `chemistry/` | subatomic particle → electric charge (proton → positive) | DOE "Explains…Nuclei" (authoritative) |
 | `chemistry/` | chemical bond type → defining token (ionic → transfer) | LibreTexts (consensus) |
 | `chemistry/` | chemical bond type → which family it belongs to (`bond_family(bond, family)`, ionic/covalent/metallic → primary, van_der_waals → secondary) — a sibling to the bond→token table above, discovered via a header-revisit of that table's own already-cited LibreTexts sentence | LibreTexts (consensus; see `chemical-bond-family.adj`'s header) |

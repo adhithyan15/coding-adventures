@@ -2199,6 +2199,15 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("42.0"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — a statically empty step loop cannot change the entry real
+    // snapshot, so formatter-free output remains available afterward.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i; real r; r := 42.0; for i := 2 step 1 until 1 do r := 1.5; print(r) end",
+        expect: Expect::Stdout("42"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a list containing only single-value elements is straight-line
     // repetition with no zero-trip path or backedge. Its final static real
     // assignment therefore remains available to the portable output path.
@@ -9339,6 +9348,38 @@ fn algol_static_conditional_real_output_runs_on_every_available_standard_backend
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but static conditional real output did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_static_zero_trip_snapshot_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("for i := 2 step 1 until 1 do r := 1.5")
+                && program.src.contains("r := 42.0")
+        })
+        .expect("the ALGOL static zero-trip snapshot program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the static zero-trip snapshot did not run"
             );
             continue;
         };

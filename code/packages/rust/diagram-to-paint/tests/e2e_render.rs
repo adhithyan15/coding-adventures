@@ -328,6 +328,19 @@ mod apple {
         assert_eq!(graph.nodes.len(), 8);
 
         let layout = layout_graph_diagram(&graph, None, None);
+        for (index, node) in layout.nodes.iter().enumerate() {
+            for other in layout.nodes.iter().skip(index + 1) {
+                let separated = node.x + node.width <= other.x
+                    || other.x + other.width <= node.x
+                    || node.y + node.height <= other.y
+                    || other.y + other.height <= node.y;
+                assert!(
+                    separated,
+                    "layout nodes {} and {} must not overlap",
+                    node.id, other.id
+                );
+            }
+        }
         let shaper = CoreTextShaper;
         let metrics = CoreTextMetrics;
         let resolver = CoreTextResolver::new();

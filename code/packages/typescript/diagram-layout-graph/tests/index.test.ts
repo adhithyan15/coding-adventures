@@ -43,4 +43,22 @@ describe("layoutGraphDiagram", () => {
     const layout = layoutGraphDiagram(diagram);
     expect(layout.nodes[0].y).not.toBe(layout.nodes[1].y);
   });
+
+  it("keeps mixed-width disconnected nodes separated", () => {
+    const diagram = graphDiagram(
+      [
+        graphNode("Wide", "A very wide disconnected state"),
+        graphNode("Narrow"),
+      ],
+      [],
+      { direction: "tb" },
+    );
+    const layout = layoutGraphDiagram(diagram, {
+      nodeGap: 30,
+    });
+    const wide = layout.nodes.find((node) => node.id === "Wide")!;
+    const narrow = layout.nodes.find((node) => node.id === "Narrow")!;
+
+    expect(narrow.x - (wide.x + wide.width)).toBe(30);
+  });
 });

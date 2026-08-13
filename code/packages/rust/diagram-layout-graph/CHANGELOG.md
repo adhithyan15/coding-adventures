@@ -1,5 +1,9 @@
 # Changelog — diagram-layout-graph
 
+## 0.18.0
+
+- Prevent mixed-size nodes in the same rank and mixed-size ranks from overlapping.
+
 ## 0.17.0
 
 - Place state notes beside composite-group bounds and route their associations to group endpoints.

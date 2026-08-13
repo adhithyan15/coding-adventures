@@ -38,7 +38,7 @@
 //! | `h_padding`     | 24      | Horizontal text padding inside a node    |
 //! | `char_width`    | 8       | Approximate width per character (px)     |
 
-pub const VERSION: &str = "0.17.0";
+pub const VERSION: &str = "0.18.0";
 
 use diagram_ir::{
     DiagramDirection, DiagramShape, GraphDiagram, LayoutedGraphDiagram, LayoutedGraphEdge,
@@ -293,50 +293,55 @@ fn place_nodes(
     let ranks = assign_ranks(diagram);
     let top_inset = if diagram.title.is_some() { opts.title_gap } else { 0.0 };
 
-    // Compute the maximum node width within each rank (used to set column widths
-    // in LR/RL mode so all nodes in a column line up).
-    let rank_sizes: Vec<f64> = ranks
+    // Reserve each rank's largest extent on the major axis. Using the current
+    // node's dimensions here can make differently sized ranks overlap.
+    let rank_major_sizes: Vec<f64> = ranks
         .iter()
         .map(|rank| {
             rank.iter()
                 .map(|id| {
                     let node = diagram.nodes.iter().find(|n| n.id == *id).unwrap();
-                    node_dimensions(node, opts, measurer).0
+                    let (width, height) = node_dimensions(node, opts, measurer);
+                    match direction {
+                        DiagramDirection::Lr | DiagramDirection::Rl => width,
+                        _ => height,
+                    }
                 })
                 .fold(0.0_f64, f64::max)
         })
         .collect();
 
-    let max_rank_size = rank_sizes.iter().cloned().fold(0.0_f64, f64::max);
+    let mut rank_major_offsets = vec![0.0; ranks.len()];
+    let rank_order: Box<dyn Iterator<Item = usize>> = match direction {
+        DiagramDirection::Rl | DiagramDirection::Bt => Box::new((0..ranks.len()).rev()),
+        _ => Box::new(0..ranks.len()),
+    };
+    let mut major_offset = 0.0;
+    for rank_index in rank_order {
+        rank_major_offsets[rank_index] = major_offset;
+        major_offset += rank_major_sizes[rank_index] + opts.rank_gap;
+    }
 
     let mut nodes: Vec<LayoutedGraphNode> = Vec::new();
 
     for (rank_index, rank) in ranks.iter().enumerate() {
-        for (item_index, node_id) in rank.iter().enumerate() {
+        let mut minor_offset = 0.0;
+        for node_id in rank {
             let node = diagram.nodes.iter().find(|n| n.id == *node_id).unwrap();
             let (width, height) = node_dimensions(node, opts, measurer);
 
-            // For BT/RL, reverse the rank axis so rank 0 appears at the
-            // "start" of the reversed direction.
-            let major_index = match direction {
-                DiagramDirection::Rl | DiagramDirection::Bt => {
-                    ranks.len() - rank_index - 1
-                }
-                _ => rank_index,
-            };
-
             let (x, y) = match direction {
                 DiagramDirection::Lr | DiagramDirection::Rl => {
-                    let x = opts.margin + major_index as f64 * (max_rank_size + opts.rank_gap);
-                    let y = opts.margin + top_inset
-                        + item_index as f64 * (height + opts.node_gap);
+                    let x = opts.margin + rank_major_offsets[rank_index];
+                    let y = opts.margin + top_inset + minor_offset;
+                    minor_offset += height + opts.node_gap;
                     (x, y)
                 }
                 _ => {
                     // TB or BT
-                    let x = opts.margin + item_index as f64 * (width + opts.node_gap);
-                    let y = opts.margin + top_inset
-                        + major_index as f64 * (height + opts.rank_gap);
+                    let x = opts.margin + minor_offset;
+                    let y = opts.margin + top_inset + rank_major_offsets[rank_index];
+                    minor_offset += width + opts.node_gap;
                     (x, y)
                 }
             };
@@ -913,7 +918,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.17.0");
+        assert_eq!(VERSION, "0.18.0");
     }
 
     #[test]
@@ -1045,6 +1050,70 @@ mod tests {
         let w_short = l.nodes.iter().find(|n| n.id == "A").unwrap().width;
         let w_long  = l.nodes.iter().find(|n| n.id == "LongLabel").unwrap().width;
         assert!(w_long > w_short, "longer label should produce wider node");
+    }
+
+    #[test]
+    fn mixed_width_nodes_in_one_tb_rank_do_not_overlap() {
+        let d = GraphDiagram {
+            direction: DiagramDirection::Tb,
+            requested_width: None,
+            hide_empty_descriptions: false,
+            title: None,
+            accessibility_title: None,
+            accessibility_description: None,
+            links: Vec::new(),
+            groups: Vec::new(),
+            nodes: vec![
+                GraphNode {
+                    id: "Wide".into(),
+                    label: DiagramLabel::new("A very wide disconnected state"),
+                    shape: None,
+                    style: None,
+                },
+                simple_node("Narrow"),
+            ],
+            edges: vec![],
+        };
+        let l = layout_graph_diagram(&d, None, None);
+        let wide = l.nodes.iter().find(|node| node.id == "Wide").unwrap();
+        let narrow = l.nodes.iter().find(|node| node.id == "Narrow").unwrap();
+
+        let gap = if wide.x < narrow.x {
+            narrow.x - (wide.x + wide.width)
+        } else {
+            wide.x - (narrow.x + narrow.width)
+        };
+        assert!(gap >= Opts::from(None).node_gap);
+    }
+
+    #[test]
+    fn mixed_height_nodes_in_one_lr_rank_do_not_overlap() {
+        let mut d = GraphDiagram {
+            direction: DiagramDirection::Lr,
+            requested_width: None,
+            hide_empty_descriptions: false,
+            title: None,
+            accessibility_title: None,
+            accessibility_description: None,
+            links: Vec::new(),
+            groups: Vec::new(),
+            nodes: vec![simple_node("Tall"), simple_node("Short")],
+            edges: vec![],
+        };
+        d.nodes[0].style = Some(diagram_ir::DiagramStyle {
+            font_size: Some(42.0),
+            ..Default::default()
+        });
+        let l = layout_graph_diagram(&d, None, None);
+        let tall = l.nodes.iter().find(|node| node.id == "Tall").unwrap();
+        let short = l.nodes.iter().find(|node| node.id == "Short").unwrap();
+
+        let gap = if tall.y < short.y {
+            short.y - (tall.y + tall.height)
+        } else {
+            tall.y - (short.y + short.height)
+        };
+        assert!(gap >= Opts::from(None).node_gap);
     }
 
     #[test]
