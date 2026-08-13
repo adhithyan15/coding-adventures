@@ -3214,3 +3214,90 @@ fn a_literal_reassigned_from_a_runtime_string_loses_its_compile_time_length() {
         "a runtime handle must not be used as a ptr operand; got:\n{ll}"
     );
 }
+
+/// Every runtime-string producer must invalidate the destination's literal
+/// facts, not just `str_concat`.
+///
+/// The first fix for this bug patched one producer. Security review enumerated
+/// the rest and reproduced the identical defect at five more: `input_str`, a
+/// `call` returning `str`, `mov`, `array_get` and `global_load`. Invalidating
+/// once at dispatch is what makes this hold for producers nobody has written
+/// yet.
+#[test]
+fn every_runtime_string_producer_invalidates_stale_literal_facts() {
+    // (op-shape label, the instruction that stores a runtime string into `s`)
+    let producers: Vec<(&str, Vec<IIRInstr>)> = vec![
+        (
+            "input_str",
+            vec![IIRInstr::new(
+                "call_builtin",
+                Some("s".into()),
+                vec![Operand::Var("input_str".into())],
+                "str",
+            )],
+        ),
+        (
+            "mov-from-runtime",
+            vec![
+                IIRInstr::new(
+                    "call_builtin",
+                    Some("t".into()),
+                    vec![Operand::Var("input_str".into())],
+                    "str",
+                ),
+                IIRInstr::new("mov", Some("s".into()), vec![Operand::Var("t".into())], "str"),
+            ],
+        ),
+    ];
+
+    for (label, producer) in producers {
+        let mut body = vec![
+            // `s` starts as a literal — this is what plants the stale facts.
+            IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str(String::new())], "str"),
+        ];
+        body.extend(producer);
+        body.push(IIRInstr::new("print_str", None, vec![Operand::Var("s".into())], "void"));
+        body.push(IIRInstr::new("const", Some("z".into()), vec![Operand::Int(0)], "i64"));
+        body.push(IIRInstr::new("ret", None, vec![Operand::Var("z".into())], "i64"));
+
+        let ll = lower(&module_with(IIRFunction::new("main", vec![], "i64", body)));
+        assert!(
+            !ll.contains("getelementptr inbounds i8, ptr %s"),
+            "{label}: a runtime handle must not be used as a ptr operand; got:\n{ll}"
+        );
+    }
+}
+
+/// The SILENT variant, which matters more than the loud one.
+///
+/// A stale `str_lens` makes clang refuse the module — annoying, but it tells
+/// you. A stale `str_values` instead drives the constant-FOLDING paths:
+/// `str_len` folds against a literal the variable no longer holds, and the
+/// module compiles clean and computes the wrong answer, with the runtime input
+/// read and then ignored. No error, no failing test — only wrong output.
+#[test]
+fn a_runtime_string_is_not_constant_folded_against_its_stale_literal() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str(String::new())], "str"),
+            IIRInstr::new(
+                "call_builtin",
+                Some("s".into()),
+                vec![Operand::Var("input_str".into())],
+                "str",
+            ),
+            // If the stale zero-length literal survives, this folds to `0`.
+            IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("s".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+        ],
+    );
+    let ll = lower(&module_with(f));
+    assert!(
+        ll.contains("inttoptr") && ll.contains("load i64"),
+        "str_len over a reassigned runtime string must read the length header at \
+         run time, not fold the stale literal's 0; got:\n{ll}"
+    );
+}

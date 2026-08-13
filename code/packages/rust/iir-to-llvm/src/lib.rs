@@ -1836,6 +1836,35 @@ fn lower_instr(
     out: &mut String,
 ) -> Result<(), IIRLlvmError> {
     let fn_name = state.fn_name;
+
+    // Redefining a variable invalidates every compile-time literal fact about
+    // it. Doing this once at dispatch — rather than remembering to do it in each
+    // producer — is what makes the invariant hold by construction: a new
+    // string-producing op cannot forget a step it never has to take.
+    //
+    // The listed ops are excluded because they *own* those facts and would be
+    // sabotaged by clearing them first:
+    //
+    //   * `str_const` / `str_slice` re-insert the facts they compute.
+    //   * `str_concat` READS the destination's own facts when the destination is
+    //     also an operand (`s := s & "x"` folds only if `str_values[s]` survives
+    //     until the fold runs); its runtime path forgets explicitly instead.
+    //   * `mov` PROPAGATES the source's facts, so it decides per-source whether
+    //     the destination ends up literal or runtime.
+    //
+    // Getting this wrong is not loud. A stale `str_lens` makes a consumer emit a
+    // payload GEP on an `i64` and clang refuses the module — annoying, but it
+    // tells you. A stale `str_values` instead feeds the constant-FOLDING paths:
+    // `str_eq`/`str_len` fold against a literal the variable no longer holds and
+    // the module compiles clean and computes the wrong answer, with the runtime
+    // input read and then ignored.
+    const MANAGES_OWN_STRING_FACTS: &[&str] = &["str_const", "str_concat", "str_slice", "mov"];
+    if !MANAGES_OWN_STRING_FACTS.contains(&instr.op.as_str()) {
+        if let Some(dest) = &instr.dest {
+            state.forget_literal_string(dest);
+        }
+    }
+
     match instr.op.as_str() {
         // ── const: tracked, not emitted ──────────────────────────────────
         "const" => {
@@ -1859,6 +1888,23 @@ fn lower_instr(
                     if let Some(value) = state.env_i1.get(src).cloned() {
                         state.env_i1.insert(dest.to_string(), value);
                     }
+                }
+            }
+            // A `mov` copies the source's REPRESENTATION, so it must copy the
+            // facts that identify which representation that is — in both
+            // directions. Copying a literal without its facts left `env[dest]`
+            // holding a `ptr` global while consumers took the runtime path and
+            // emitted `inttoptr i64 @__twig_str_0`, the exact mirror of the
+            // stale-literal bug (clang: "global variable reference must have
+            // pointer type"). Copying a runtime handle must clear any facts the
+            // destination carried from an earlier literal assignment.
+            if let Some(Operand::Var(src)) = instr.srcs.first() {
+                match (state.str_lens.get(src).copied(), state.str_values.get(src).cloned()) {
+                    (Some(len), Some(value)) => {
+                        state.str_lens.insert(dest.to_string(), len);
+                        state.str_values.insert(dest.to_string(), value);
+                    }
+                    _ => state.forget_literal_string(dest),
                 }
             }
             Ok(())

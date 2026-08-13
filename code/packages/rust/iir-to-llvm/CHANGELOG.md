@@ -22,6 +22,35 @@ and emitted a payload GEP on an `i64`:
 
     error: '%__scc3' defined with type 'i64' but expected 'ptr'
 
+### Security review: the first fix patched 1 of 6 producers
+
+Review enumerated every site that stores a string into a destination and
+reproduced the identical defect at five more — `input_str`, a `call` returning
+`str`, `mov`, `array_get` and `global_load`. None was reachable on the current
+corpus (ALGOL routes every string assignment through the `str_const` +
+`str_concat` idiom, and BASIC's one-statement-per-line labels promote any
+twice-assigned string to a slot, where facts are keyed by the renamed temp), but
+each is one frontend change away.
+
+**The silent variant matters more than the loud one.** A stale `str_lens` makes
+a consumer emit a payload GEP on an `i64` and clang refuses the module —
+annoying, but it tells you. A stale `str_values` instead drives the constant-
+FOLDING paths: `str_eq`/`str_len` fold against a literal the variable no longer
+holds, and the module compiles clean and computes the wrong answer, with the
+runtime input read and then ignored.
+
+So invalidation now happens once at dispatch rather than in each producer, which
+is what makes it hold for producers nobody has written yet. Four ops are
+excluded because they own those facts: `str_const` and `str_slice` re-insert
+what they compute; `str_concat` reads the destination's own facts when the
+destination is also an operand (`s := s & "x"`), so its runtime path forgets
+explicitly; and `mov` propagates the source's facts.
+
+`mov` also gained the missing direction: copying a *literal* previously dropped
+the facts, leaving `env[dest]` holding a `ptr` global while consumers took the
+runtime path and emitted `inttoptr i64 @__twig_str_0` — the exact mirror image,
+which clang also rejects ("global variable reference must have pointer type").
+
 New `FnState::forget_literal_string` clears both maps when a runtime string is
 stored, making the runtime paths' stated invariant actually hold.
 
