@@ -10210,6 +10210,76 @@
       "jsonHash": "fnv1a64:01038f476a6d84bd"
     },
     {
+      "language": "spanish",
+      "chapter": 246,
+      "sourceHash": "fnv1a64:630b6b98c981594c",
+      "lessonIds": [
+        "ES-C64-para-mi"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch246.txt",
+      "json": "spanish/narration/ch246.json",
+      "textHash": "fnv1a64:01643f7ee9c63def",
+      "jsonHash": "fnv1a64:f87a438ac970a5b3"
+    },
+    {
+      "language": "spanish",
+      "chapter": 247,
+      "sourceHash": "fnv1a64:1bc40300d7405f1d",
+      "lessonIds": [
+        "ES-C64-conmigo"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch247.txt",
+      "json": "spanish/narration/ch247.json",
+      "textHash": "fnv1a64:f7cf72f8c3bc32b2",
+      "jsonHash": "fnv1a64:af10487e43460d81"
+    },
+    {
+      "language": "spanish",
+      "chapter": 248,
+      "sourceHash": "fnv1a64:131244a54a8cd9d3",
+      "lessonIds": [
+        "ES-C64-que-grande"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch248.txt",
+      "json": "spanish/narration/ch248.json",
+      "textHash": "fnv1a64:82d222e9b7f694fc",
+      "jsonHash": "fnv1a64:b3392f314e0919af"
+    },
+    {
+      "language": "spanish",
+      "chapter": 249,
+      "sourceHash": "fnv1a64:cac453291b9c3c79",
+      "lessonIds": [
+        "ES-C64-maria-ven"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch249.txt",
+      "json": "spanish/narration/ch249.json",
+      "textHash": "fnv1a64:6b1463fe486e0bf7",
+      "jsonHash": "fnv1a64:566ad5b2125bf705"
+    },
+    {
+      "language": "spanish",
+      "chapter": 250,
+      "sourceHash": "fnv1a64:b042a039aa1c399b",
+      "lessonIds": [
+        "ES-C64-repaso-tonicos"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch250.txt",
+      "json": "spanish/narration/ch250.json",
+      "textHash": "fnv1a64:6b6ecdc55ffc8f7c",
+      "jsonHash": "fnv1a64:acd6e43652756add"
+    },
+    {
       "language": "tamil",
       "chapter": 1,
       "sourceHash": "fnv1a64:3c0d5e6c060b7723",

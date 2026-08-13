@@ -3668,6 +3668,31 @@
       "output": "spanish/book/chapters/ch245-review-paradigmas.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 246,
+      "output": "spanish/book/chapters/ch246-para-mi.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 247,
+      "output": "spanish/book/chapters/ch247-conmigo.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 248,
+      "output": "spanish/book/chapters/ch248-que-grande.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 249,
+      "output": "spanish/book/chapters/ch249-maria-ven.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 250,
+      "output": "spanish/book/chapters/ch250-review-tonicos.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "output": "tamil/book/chapters/ch06-dative-case.tex",

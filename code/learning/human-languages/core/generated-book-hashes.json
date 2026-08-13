@@ -5838,6 +5838,51 @@
       "tex": "spanish/book/chapters/ch245-review-paradigmas.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 246,
+      "sourceHash": "fnv1a64:eae3fc1859435cf9",
+      "lessonIds": [
+        "ES-C64-para-mi"
+      ],
+      "tex": "spanish/book/chapters/ch246-para-mi.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 247,
+      "sourceHash": "fnv1a64:cd39f44829ad4189",
+      "lessonIds": [
+        "ES-C64-conmigo"
+      ],
+      "tex": "spanish/book/chapters/ch247-conmigo.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 248,
+      "sourceHash": "fnv1a64:8d5ee228e82a8f7f",
+      "lessonIds": [
+        "ES-C64-que-grande"
+      ],
+      "tex": "spanish/book/chapters/ch248-que-grande.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 249,
+      "sourceHash": "fnv1a64:87bdd7fbc8616db1",
+      "lessonIds": [
+        "ES-C64-maria-ven"
+      ],
+      "tex": "spanish/book/chapters/ch249-maria-ven.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 250,
+      "sourceHash": "fnv1a64:c987a50c7f1e63d0",
+      "lessonIds": [
+        "ES-C64-repaso-tonicos"
+      ],
+      "tex": "spanish/book/chapters/ch250-review-tonicos.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "sourceHash": "fnv1a64:5f56402811418e13",

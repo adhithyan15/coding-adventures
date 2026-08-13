@@ -4758,6 +4758,91 @@
           "ES-GRAMMAR-PRETERITE-COMPLETE"
         ]
       }
+    },
+    {
+      "chapter": 246,
+      "title": "Para Mí --- The Pronouns That Stand on Their Own",
+      "label": "ch:para-mi",
+      "canDo": "I can use a pronoun after a preposition.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C64-para-mi",
+        "kind": "task",
+        "summary": "I can use a pronoun after a preposition.",
+        "assesses": [
+          "ES-GRAMMAR-TONIC-PRONOUN-AFTER-PREPOSITION"
+        ]
+      }
+    },
+    {
+      "chapter": 247,
+      "title": "Conmigo, Contigo --- The Word That Says With Twice",
+      "label": "ch:conmigo",
+      "canDo": "I can say with me and with you.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C64-conmigo",
+        "kind": "task",
+        "summary": "I can say with me and with you.",
+        "assesses": [
+          "ES-LEX-CONMIGO"
+        ]
+      }
+    },
+    {
+      "chapter": 248,
+      "title": "¡Qué Grande! --- The Same Word, Exclaiming",
+      "label": "ch:que-grande",
+      "canDo": "I can react to something with force, in two words.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C64-que-grande",
+        "kind": "task",
+        "summary": "I can react to something with force, in two words.",
+        "assesses": [
+          "ES-GRAMMAR-EXCLAMATIVE-QUE"
+        ]
+      }
+    },
+    {
+      "chapter": 249,
+      "title": "María, Ven --- Naming Who You Are Talking To",
+      "label": "ch:maria-ven",
+      "canDo": "I can address somebody by name.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C64-maria-ven",
+        "kind": "task",
+        "summary": "I can address somebody by name.",
+        "assesses": [
+          "ES-GRAMMAR-VOCATIVE-COMMA"
+        ]
+      }
+    },
+    {
+      "chapter": 250,
+      "title": "Review --- Four Small Things",
+      "label": "ch:repaso-tonicos",
+      "canDo": "I can use the stressed pronouns, exclaim, and address somebody.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C64-repaso-tonicos",
+        "kind": "task",
+        "summary": "I can use the stressed pronouns, exclaim, and address somebody.",
+        "assesses": [
+          "ES-GRAMMAR-VOCATIVE-COMMA"
+        ]
+      }
     }
   ]
 }
