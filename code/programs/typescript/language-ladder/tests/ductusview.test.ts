@@ -167,6 +167,8 @@ const DEVANAGARI_TA = ductusFor("त", "devanagari")!;
 const devanagariTaOutline = devanagariOutline("त");
 const DEVANAGARI_DA = ductusFor("द", "devanagari")!;
 const devanagariDaOutline = devanagariOutline("द");
+const DEVANAGARI_DHA = ductusFor("ध", "devanagari")!;
+const devanagariDhaOutline = devanagariOutline("ध");
 const HEBREW_ALEF = ductusFor("א", "hebrew")!;
 const hebrewAlefOutline = hebrewOutline("א");
 const HEBREW_BET = ductusFor("ב", "hebrew")!;
@@ -1951,6 +1953,37 @@ describe("Devanagari द — short stem before the joined outer body, curl, and 
     );
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(DEVANAGARI_DA.strokes[2], 1),
+    );
+  });
+});
+
+describe("Devanagari ध — upper spiral before the lower bowl and lifted right stem", () => {
+  const steps = ductusSteps(DEVANAGARI_DHA);
+  const strip = ductusFilmstrip(DEVANAGARI_DHA, devanagariDhaOutline);
+
+  it("shows four movements across four sourced strokes", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "curl around the upper spiral and sweep right through the shoulder",
+      "lift, then sweep down and around the lower bowl",
+      "lift, then descend the right stem",
+      "lift, then draw the shirorekha left-to-right",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([
+      false, true, true, true,
+    ]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 1, 2, 3]);
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(3);
+    expect(strip.summary).toBe("4 strokes · 3 pen lifts · 4 movements");
+  });
+
+  it("draws the exact Noto Sans Devanagari character behind the headline", () => {
+    const paths = byTag(strip.frames[3], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      devanagariDhaOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(DEVANAGARI_DHA.strokes[3], 1),
     );
   });
 });
