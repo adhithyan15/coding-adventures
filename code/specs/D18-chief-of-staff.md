@@ -1639,9 +1639,11 @@ contract. It resolves the current channel and member tiers through an
 authoritative injected boundary and binds the approval to a domain-separated
 SHA-256 fingerprint covering the operation, channel UUID, complete membership,
 public keys, creation time, key epoch, and lifecycle. Any resolution or approval
-failure occurs before channel storage mutation. The production daemon remains
-fail closed until an explicit platform approval provider and tier resolver are
-configured.
+failure occurs before channel storage mutation. The production daemon resolves
+explicit agent, channel, package-hash, and model assignments from its closed
+configuration. A fully assigned Tier 0 mutation can proceed without interaction;
+an omitted assignment and every Tier 1 through Tier 3 request fail closed until
+the corresponding reviewed platform approval provider is composed.
 
 ```
 Pipeline: "Check bank balance and email it to accountant"
@@ -2227,6 +2229,18 @@ container = true               # run vault in OS container
 tier_1_auto_approve_timeout = 5  # seconds
 biometric_timeout = 30           # seconds
 hardware_key_timeout = 60        # seconds
+agent_tiers = [
+  { agent_id = "77656174686572", tier = 0 }, # lowercase-hex "weather"
+]
+channel_tiers = [
+  { channel_id = "018f0c10-7b4a-7cc0-8000-000000000002", tier = 0 },
+]
+package_tiers = [
+  { package_hash = "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef", tier = 0 },
+]
+model_tiers = [
+  { model = "qwen2.5:0.5b", tier = 0 },
+]
 
 [data_plane]
 channel_keys = [

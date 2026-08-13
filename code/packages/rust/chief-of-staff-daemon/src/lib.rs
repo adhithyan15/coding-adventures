@@ -18,7 +18,9 @@ use chief_of_staff_daemon_config::{
 };
 use chief_of_staff_daemon_credential::{load_or_create_credential, CredentialFileError};
 use chief_of_staff_daemon_keyring::{load_package_keyring, KeyringLoadError};
-use chief_of_staff_daemon_policy::{DenyChannelWiring, LocalAuthError, LocalBearerAuthorizer};
+use chief_of_staff_daemon_policy::{
+    production_wiring_authorizer, LocalAuthError, LocalBearerAuthorizer,
+};
 use chief_of_staff_daemon_runtime::{ChiefDaemonRuntime, DaemonRuntimeError, ReconcileSchedule};
 use chief_of_staff_daemon_secret_file::{read_owner_only_secret, SecretFileError};
 use chief_of_staff_host_control_protocol::{
@@ -731,7 +733,7 @@ pub fn run(config: ChiefConfig, home: &Path) -> Result<(), ChiefDaemonError> {
         clock,
         Box::new(UuidV7SessionIdSource),
         reconcile_config,
-        DenyChannelWiring,
+        production_wiring_authorizer(config.privilege()),
     );
     let api = Arc::new(DaemonApi::new(core, bearer));
     let address = BindAddress::Ip(SocketAddr::new(

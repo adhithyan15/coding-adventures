@@ -21,6 +21,7 @@ const SMART_HOME: &[&str] = &["smart_home"];
 const MAX_CONFIG_BYTES: usize = 256 * 1024;
 const MAX_PATH_BYTES: usize = 4096;
 const MAX_TRUSTED_KEYS: usize = 256;
+const MAX_PRIVILEGE_ASSIGNMENTS: usize = 4096;
 const MAX_CHANNEL_KEYS: usize = 1024;
 const MAX_OLLAMA_MODELS: usize = 256;
 const MAX_SMART_HOME_TOOL_GRANTS: usize = 4096;
@@ -583,11 +584,104 @@ impl VaultConfig {
 }
 
 /// Validated privilege-interaction deadlines.
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct PrivilegeConfig {
     tier_1_auto_approve_timeout: Duration,
     biometric_timeout: Duration,
     hardware_key_timeout: Duration,
+    agent_tiers: Vec<AgentPrivilegeTierConfig>,
+    channel_tiers: Vec<ChannelPrivilegeTierConfig>,
+    package_tiers: Vec<PackagePrivilegeTierConfig>,
+    model_tiers: Vec<ModelPrivilegeTierConfig>,
+}
+
+/// One configured D18 privilege tier.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
+pub enum ConfiguredPrivilegeTier {
+    /// No interactive approval is required.
+    Tier0,
+    /// Notification approval with the canonical timeout policy is required.
+    Tier1,
+    /// Biometric assurance is required.
+    Tier2,
+    /// Hardware-key assurance is required.
+    Tier3,
+}
+
+/// Exact privilege assignment for one agent identity.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct AgentPrivilegeTierConfig {
+    agent_id: Vec<u8>,
+    tier: ConfiguredPrivilegeTier,
+}
+
+impl AgentPrivilegeTierConfig {
+    /// Return the exact decoded agent identity bytes.
+    pub fn agent_id(&self) -> &[u8] {
+        &self.agent_id
+    }
+
+    /// Return the assigned privilege tier.
+    pub fn tier(&self) -> ConfiguredPrivilegeTier {
+        self.tier
+    }
+}
+
+/// Exact privilege assignment for one channel UUID.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct ChannelPrivilegeTierConfig {
+    channel_id: [u8; 16],
+    tier: ConfiguredPrivilegeTier,
+}
+
+impl ChannelPrivilegeTierConfig {
+    /// Return the canonical UUID-v7 channel identity.
+    pub fn channel_id(&self) -> [u8; 16] {
+        self.channel_id
+    }
+
+    /// Return the assigned privilege tier.
+    pub fn tier(&self) -> ConfiguredPrivilegeTier {
+        self.tier
+    }
+}
+
+/// Exact privilege assignment for one immutable package hash.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct PackagePrivilegeTierConfig {
+    package_hash: [u8; 32],
+    tier: ConfiguredPrivilegeTier,
+}
+
+impl PackagePrivilegeTierConfig {
+    /// Return the exact SHA-256 package identity.
+    pub fn package_hash(&self) -> [u8; 32] {
+        self.package_hash
+    }
+
+    /// Return the assigned privilege tier.
+    pub fn tier(&self) -> ConfiguredPrivilegeTier {
+        self.tier
+    }
+}
+
+/// Exact privilege assignment for one model selector.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct ModelPrivilegeTierConfig {
+    model: String,
+    tier: ConfiguredPrivilegeTier,
+}
+
+impl ModelPrivilegeTierConfig {
+    /// Return the exact model selector.
+    pub fn model(&self) -> &str {
+        &self.model
+    }
+
+    /// Return the assigned privilege tier.
+    pub fn tier(&self) -> ConfiguredPrivilegeTier {
+        self.tier
+    }
 }
 
 /// Direction of one exact channel-key file declaration.
@@ -760,18 +854,38 @@ impl DataPlaneConfig {
 
 impl PrivilegeConfig {
     /// Return the non-zero Tier 1 auto-approval timeout.
-    pub fn tier_1_auto_approve_timeout(self) -> Duration {
+    pub fn tier_1_auto_approve_timeout(&self) -> Duration {
         self.tier_1_auto_approve_timeout
     }
 
     /// Return the non-zero biometric interaction timeout.
-    pub fn biometric_timeout(self) -> Duration {
+    pub fn biometric_timeout(&self) -> Duration {
         self.biometric_timeout
     }
 
     /// Return the non-zero hardware-key interaction timeout.
-    pub fn hardware_key_timeout(self) -> Duration {
+    pub fn hardware_key_timeout(&self) -> Duration {
         self.hardware_key_timeout
+    }
+
+    /// Return exact configured agent-tier assignments.
+    pub fn agent_tiers(&self) -> &[AgentPrivilegeTierConfig] {
+        &self.agent_tiers
+    }
+
+    /// Return exact configured channel-tier assignments.
+    pub fn channel_tiers(&self) -> &[ChannelPrivilegeTierConfig] {
+        &self.channel_tiers
+    }
+
+    /// Return exact configured package-tier assignments.
+    pub fn package_tiers(&self) -> &[PackagePrivilegeTierConfig] {
+        &self.package_tiers
+    }
+
+    /// Return exact configured model-tier assignments.
+    pub fn model_tiers(&self) -> &[ModelPrivilegeTierConfig] {
+        &self.model_tiers
     }
 }
 
@@ -814,8 +928,8 @@ impl ChiefConfig {
     }
 
     /// Return privilege-interaction deadlines.
-    pub fn privilege(&self) -> PrivilegeConfig {
-        self.privilege
+    pub fn privilege(&self) -> &PrivilegeConfig {
+        &self.privilege
     }
 
     /// Return explicit host data-plane authority declarations.
@@ -863,6 +977,26 @@ pub fn parse_config(source: &str) -> Result<ChiefConfig, ConfigError> {
         positive_secs(document.take(PRIVILEGE, "tier_1_auto_approve_timeout")?)?;
     let biometric_timeout = positive_secs(document.take(PRIVILEGE, "biometric_timeout")?)?;
     let hardware_key_timeout = positive_secs(document.take(PRIVILEGE, "hardware_key_timeout")?)?;
+    let agent_tiers = document
+        .take_optional(PRIVILEGE, "agent_tiers")
+        .map(parse_agent_privilege_tiers)
+        .transpose()?
+        .unwrap_or_default();
+    let channel_tiers = document
+        .take_optional(PRIVILEGE, "channel_tiers")
+        .map(parse_channel_privilege_tiers)
+        .transpose()?
+        .unwrap_or_default();
+    let package_tiers = document
+        .take_optional(PRIVILEGE, "package_tiers")
+        .map(parse_package_privilege_tiers)
+        .transpose()?
+        .unwrap_or_default();
+    let model_tiers = document
+        .take_optional(PRIVILEGE, "model_tiers")
+        .map(parse_model_privilege_tiers)
+        .transpose()?
+        .unwrap_or_default();
     let smart_home = if document.has_table(SMART_HOME) {
         let bind = expect_string(document.take(SMART_HOME, "bind")?)?
             .parse::<IpAddr>()
@@ -1288,9 +1422,149 @@ pub fn parse_config(source: &str) -> Result<ChiefConfig, ConfigError> {
             tier_1_auto_approve_timeout,
             biometric_timeout,
             hardware_key_timeout,
+            agent_tiers,
+            channel_tiers,
+            package_tiers,
+            model_tiers,
         },
         data_plane,
     })
+}
+
+fn parse_agent_privilege_tiers(
+    value: RawValue,
+) -> Result<Vec<AgentPrivilegeTierConfig>, ConfigError> {
+    parse_privilege_assignments(value, |mut fields| {
+        let agent_id = decode_lower_hex(
+            expect_string(take_inline(&mut fields, "agent_id")?)?,
+            MAX_AGENT_ID_BYTES,
+        )?;
+        let tier = parse_configured_privilege_tier(take_inline(&mut fields, "tier")?)?;
+        require_closed_inline(fields)?;
+        Ok((
+            agent_id.clone(),
+            AgentPrivilegeTierConfig { agent_id, tier },
+        ))
+    })
+}
+
+fn parse_channel_privilege_tiers(
+    value: RawValue,
+) -> Result<Vec<ChannelPrivilegeTierConfig>, ConfigError> {
+    parse_privilege_assignments(value, |mut fields| {
+        let channel_id = parse_uuid_v7(expect_string(take_inline(&mut fields, "channel_id")?)?)?;
+        let tier = parse_configured_privilege_tier(take_inline(&mut fields, "tier")?)?;
+        require_closed_inline(fields)?;
+        Ok((channel_id, ChannelPrivilegeTierConfig { channel_id, tier }))
+    })
+}
+
+fn parse_package_privilege_tiers(
+    value: RawValue,
+) -> Result<Vec<PackagePrivilegeTierConfig>, ConfigError> {
+    parse_privilege_assignments(value, |mut fields| {
+        let bytes = decode_lower_hex(
+            expect_string(take_inline(&mut fields, "package_hash")?)?,
+            32,
+        )?;
+        let package_hash: [u8; 32] = bytes.try_into().map_err(|_| ConfigError::InvalidValue)?;
+        let tier = parse_configured_privilege_tier(take_inline(&mut fields, "tier")?)?;
+        require_closed_inline(fields)?;
+        Ok((
+            package_hash,
+            PackagePrivilegeTierConfig { package_hash, tier },
+        ))
+    })
+}
+
+fn parse_model_privilege_tiers(
+    value: RawValue,
+) -> Result<Vec<ModelPrivilegeTierConfig>, ConfigError> {
+    parse_privilege_assignments(value, |mut fields| {
+        let model = bounded_identity(
+            expect_string(take_inline(&mut fields, "model")?)?,
+            MAX_MODEL_BYTES,
+        )?;
+        let tier = parse_configured_privilege_tier(take_inline(&mut fields, "tier")?)?;
+        require_closed_inline(fields)?;
+        Ok((model.clone(), ModelPrivilegeTierConfig { model, tier }))
+    })
+}
+
+fn parse_privilege_assignments<K, T>(
+    value: RawValue,
+    mut parse: impl FnMut(BTreeMap<Vec<String>, RawValue>) -> Result<(K, T), ConfigError>,
+) -> Result<Vec<T>, ConfigError>
+where
+    K: Ord,
+{
+    let RawValue::Array(values) = value else {
+        return Err(ConfigError::InvalidType);
+    };
+    if values.len() > MAX_PRIVILEGE_ASSIGNMENTS {
+        return Err(ConfigError::InvalidValue);
+    }
+    let mut identities = BTreeSet::new();
+    let mut assignments = Vec::with_capacity(values.len());
+    for value in values {
+        let RawValue::InlineTable(fields) = value else {
+            return Err(ConfigError::InvalidType);
+        };
+        let (identity, assignment) = parse(fields)?;
+        if !identities.insert(identity) {
+            return Err(ConfigError::Duplicate);
+        }
+        assignments.push(assignment);
+    }
+    Ok(assignments)
+}
+
+fn parse_configured_privilege_tier(
+    value: RawValue,
+) -> Result<ConfiguredPrivilegeTier, ConfigError> {
+    let RawValue::Integer(value) = value else {
+        return Err(ConfigError::InvalidType);
+    };
+    match value {
+        0 => Ok(ConfiguredPrivilegeTier::Tier0),
+        1 => Ok(ConfiguredPrivilegeTier::Tier1),
+        2 => Ok(ConfiguredPrivilegeTier::Tier2),
+        3 => Ok(ConfiguredPrivilegeTier::Tier3),
+        _ => Err(ConfigError::InvalidValue),
+    }
+}
+
+fn require_closed_inline(fields: BTreeMap<Vec<String>, RawValue>) -> Result<(), ConfigError> {
+    if fields.is_empty() {
+        Ok(())
+    } else {
+        Err(ConfigError::Unknown)
+    }
+}
+
+fn decode_lower_hex(value: String, maximum_bytes: usize) -> Result<Vec<u8>, ConfigError> {
+    if value.is_empty()
+        || value.len() > maximum_bytes.saturating_mul(2)
+        || !value.len().is_multiple_of(2)
+        || !value
+            .bytes()
+            .all(|byte| byte.is_ascii_digit() || (b'a'..=b'f').contains(&byte))
+    {
+        return Err(ConfigError::InvalidValue);
+    }
+    Ok(value
+        .as_bytes()
+        .chunks_exact(2)
+        .map(|pair| (hex_nibble(pair[0]) << 4) | hex_nibble(pair[1]))
+        .collect())
+}
+
+fn hex_nibble(byte: u8) -> u8 {
+    match byte {
+        b'0'..=b'9' => byte - b'0',
+        b'a'..=b'f' => byte - b'a' + 10,
+        _ => unreachable!("hex input was validated before decoding"),
+    }
 }
 
 fn parse_channel_keys(value: RawValue) -> Result<Vec<ChannelKeyConfig>, ConfigError> {
@@ -1926,6 +2200,71 @@ hardware_key_timeout = 60
         assert!(config.data_plane().ollama_models().is_empty());
         assert!(config.data_plane().smart_home_tool_grants().is_empty());
         assert!(config.smart_home().is_none());
+    }
+
+    #[test]
+    fn privilege_resource_assignments_are_exact_bounded_and_closed() {
+        let source = format!(
+            r#"{VALID}
+agent_tiers = [
+  {{ agent_id = "77656174686572", tier = 0 }},
+]
+channel_tiers = [
+  {{ channel_id = "018f0c10-7b4a-7cc0-8000-000000000002", tier = 1 }},
+]
+package_tiers = [
+  {{ package_hash = "{}", tier = 2 }},
+]
+model_tiers = [
+  {{ model = "qwen2.5:0.5b", tier = 3 }},
+]
+"#,
+            "ab".repeat(32)
+        );
+        let config = parse_config(&source).unwrap();
+        let privilege = config.privilege();
+        assert_eq!(privilege.agent_tiers()[0].agent_id(), b"weather");
+        assert_eq!(
+            privilege.agent_tiers()[0].tier(),
+            ConfiguredPrivilegeTier::Tier0
+        );
+        assert_eq!(
+            privilege.channel_tiers()[0].tier(),
+            ConfiguredPrivilegeTier::Tier1
+        );
+        assert_eq!(privilege.package_tiers()[0].package_hash(), [0xab; 32]);
+        assert_eq!(
+            privilege.package_tiers()[0].tier(),
+            ConfiguredPrivilegeTier::Tier2
+        );
+        assert_eq!(privilege.model_tiers()[0].model(), "qwen2.5:0.5b");
+        assert_eq!(
+            privilege.model_tiers()[0].tier(),
+            ConfiguredPrivilegeTier::Tier3
+        );
+
+        assert_eq!(
+            parse_config(&source.replace("77656174686572", "7765617468657A")),
+            Err(ConfigError::InvalidValue)
+        );
+        assert_eq!(
+            parse_config(&source.replace("tier = 3", "tier = 4")),
+            Err(ConfigError::InvalidValue)
+        );
+        assert_eq!(
+            parse_config(&source.replace(
+                "{ agent_id = \"77656174686572\", tier = 0 },",
+                "{ agent_id = \"77656174686572\", tier = 0 },\n  { agent_id = \"77656174686572\", tier = 1 },"
+            )),
+            Err(ConfigError::Duplicate)
+        );
+        assert_eq!(
+            parse_config(&source.replace(
+                "model = \"qwen2.5:0.5b\", tier = 3",
+                "model = \"qwen2.5:0.5b\", tier = 3, extra = true"
+            )),
+            Err(ConfigError::Unknown)
+        );
     }
 
     #[test]
