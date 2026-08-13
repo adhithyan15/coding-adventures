@@ -59,3 +59,31 @@ fn biology_animal_babies_recall_binds_baby_name_with_citation() {
     // A rock is not an animal — honest abstention, never a fabricated name.
     assert!(out.contains("\"abstained\":true"), "rock abstains: {out}");
 }
+
+#[test]
+fn biology_animal_babies_extension_recalls_new_rows_and_shared_baby_word() {
+    let dir = scratch("animalbabies_ext");
+    let src = facts_stdlib().join("biology/animal-babies.adj");
+    std::fs::copy(&src, dir.join("animal-babies.adj")).expect("copy shipped animal-babies.adj");
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"animal-babies.adj\"\n\
+         ? animal_baby(deer, $Baby)\n\
+         ? animal_baby(whale, $Baby)\n\
+         ? animal_baby($Animal, cub)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // A baby deer is a fawn -- one of the seventeen animals added this cycle
+    // from the same already-cited Wikipedia "List of animal names" table.
+    assert!(out.contains("\"Baby\":\"fawn\""), "deer → fawn: {out}");
+    // A baby whale is a calf -- the same word cattle already uses.
+    assert!(out.contains("\"Baby\":\"calf\""), "whale → calf: {out}");
+    // Reverse recall on the shared word "cub" returns every animal that
+    // shares it (bear, cheetah, lion, tiger, wolf) -- honest many-to-one.
+    assert!(out.contains("\"Animal\":\"bear\""), "cub → bear: {out}");
+    assert!(out.contains("\"Animal\":\"tiger\""), "cub → tiger: {out}");
+    assert!(out.contains("\"Animal\":\"wolf\""), "cub → wolf: {out}");
+}
