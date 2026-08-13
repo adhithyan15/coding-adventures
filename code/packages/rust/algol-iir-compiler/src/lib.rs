@@ -4841,7 +4841,7 @@ impl Compiler {
                 && !entry_tracking_disabled
                 && self.for_body_avoids_target(target, body)
             {
-                self.for_while_exit_snapshot(target, var_ty, elem)
+                self.for_while_exit_snapshot(target, var_ty, elem, body)
             } else {
                 (None, None)
             };
@@ -5233,6 +5233,7 @@ impl Compiler {
         target: &GrammarASTNode,
         target_ty: ScalarType,
         elem: &GrammarASTNode,
+        body: &GrammarASTNode,
     ) -> (Option<String>, Option<i64>) {
         let Ok(target_name) = self.simple_variable_name(target) else {
             return (None, None);
@@ -5246,14 +5247,28 @@ impl Compiler {
         let Some(condition) = first_direct_node(elem, "bool_expr") else {
             return (None, None);
         };
-        if recursive_tokens(value)
+        let dependencies: HashSet<String> = recursive_tokens(value)
             .into_iter()
             .chain(recursive_tokens(condition))
-            .any(|token| {
+            .filter(|token| {
                 token.effective_type_name() == "NAME" && token.value != target_name
             })
-        {
-            return (None, None);
+            .map(|token| token.value.clone())
+            .collect();
+        let body_tokens = recursive_tokens(body);
+        for dependency in &dependencies {
+            let Ok(binding) = self.require_var(dependency) else {
+                return (None, None);
+            };
+            if binding.is_global
+                || binding.array.is_some()
+                || self.active_by_name_binding(dependency).is_some()
+                || body_tokens.iter().any(|token| {
+                    token.effective_type_name() == "NAME" && token.value == *dependency
+                })
+            {
+                return (None, None);
+            }
         }
 
         let saved_reals = self.static_real_slots.clone();
@@ -9177,12 +9192,21 @@ mod tests {
     }
 
     #[test]
-    fn al4_static_while_dependency_remains_conservative() {
-        let err = compile_source(
+    fn al4_static_while_preserves_stable_local_dependency() {
+        compile_source(
             "begin integer i, n; n := 3; i := 0; for i := i + 1 while i < n do print(''); print(i + 0.25) end",
             "test",
         )
-        .expect_err("an external while dependency remains conservative");
+        .expect("a known local dependency untouched by the body is stable");
+    }
+
+    #[test]
+    fn al4_body_mutated_while_dependency_remains_conservative() {
+        let err = compile_source(
+            "begin integer i, n; n := 3; i := 0; for i := i + 1 while i < n do n := n + 1; print(i + 0.25) end",
+            "test",
+        )
+        .expect_err("a dependency referenced by the body may change each iteration");
         assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
