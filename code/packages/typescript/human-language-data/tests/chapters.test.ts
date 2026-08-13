@@ -341,7 +341,7 @@ describe("corpus snapshot", () => {
     // exactly 2/4 (0.50), which clears the floor rather than falling below it. So this is
     // +2 and not +4, and the difference is one atom of arithmetic, not a difference in
     // kind. Both new members are recorded in tamil/chapters.json's own payoff notes.
-    expect(report.summary.payoffsNotRepresentative).toBe(31); // +1: HL-C88 slices 5-6
+    expect(report.summary.payoffsNotRepresentative).toBe(34); // +1: HL-C88 slices 5-6
   });
 
   it("names the tracks whose chapter debt is already zero", () => {

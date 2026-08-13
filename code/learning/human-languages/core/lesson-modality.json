@@ -7,12 +7,12 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:975414adf300218e",
+  "sourceHash": "fnv1a64:7f55988f89161a11",
   "summary": {
-    "totalLessons": 1966,
+    "totalLessons": 1975,
     "voice": 1336,
     "sight": 561,
-    "pen": 69,
+    "pen": 78,
     "drivableLessons": 1336,
     "drivablePercent": 68,
     "trackCount": 22,
@@ -10672,11 +10672,11 @@
     },
     {
       "language": "tamil",
-      "lessonCount": 132,
+      "lessonCount": 141,
       "voice": 76,
       "sight": 32,
-      "pen": 24,
-      "drivablePercent": 58,
+      "pen": 33,
+      "drivablePercent": 54,
       "drivablePrefixTotal": 60,
       "modalities": [
         "voice",
@@ -10789,17 +10789,17 @@
         },
         {
           "chapter": 6,
-          "lessonCount": 6,
+          "lessonCount": 8,
           "voice": 4,
           "sight": 0,
-          "pen": 2,
+          "pen": 4,
           "modalities": [
             "voice",
             "sight",
             "pen"
           ],
           "drivablePrefix": 1,
-          "firstNonVoiceLesson": "TA-W02-ma-retroflex-na",
+          "firstNonVoiceLesson": "TA-S01-va",
           "drivable": false,
           "drivableLessonIds": [
             "TA-C06-dative-ukku"
@@ -10807,10 +10807,10 @@
         },
         {
           "chapter": 7,
-          "lessonCount": 5,
+          "lessonCount": 6,
           "voice": 1,
           "sight": 3,
-          "pen": 1,
+          "pen": 2,
           "modalities": [
             "voice",
             "sight",
@@ -10823,10 +10823,10 @@
         },
         {
           "chapter": 8,
-          "lessonCount": 3,
+          "lessonCount": 4,
           "voice": 1,
           "sight": 1,
-          "pen": 1,
+          "pen": 2,
           "modalities": [
             "voice",
             "sight",
@@ -10858,17 +10858,17 @@
         },
         {
           "chapter": 10,
-          "lessonCount": 2,
+          "lessonCount": 3,
           "voice": 1,
           "sight": 0,
-          "pen": 1,
+          "pen": 2,
           "modalities": [
             "voice",
             "sight",
             "pen"
           ],
           "drivablePrefix": 1,
-          "firstNonVoiceLesson": "TA-W04-vowel-signs-nandri",
+          "firstNonVoiceLesson": "TA-S05-rra",
           "drivable": false,
           "drivableLessonIds": [
             "TA-C10-vaara-kizhamai"
@@ -10906,17 +10906,17 @@
         },
         {
           "chapter": 13,
-          "lessonCount": 2,
+          "lessonCount": 3,
           "voice": 1,
           "sight": 0,
-          "pen": 1,
+          "pen": 2,
           "modalities": [
             "voice",
             "sight",
             "pen"
           ],
           "drivablePrefix": 1,
-          "firstNonVoiceLesson": "TA-W04-i-sign-write-nandri",
+          "firstNonVoiceLesson": "TA-S06-ka",
           "drivable": false,
           "drivableLessonIds": [
             "TA-C13-udal-uruppugal"
@@ -10956,17 +10956,17 @@
         },
         {
           "chapter": 16,
-          "lessonCount": 2,
+          "lessonCount": 3,
           "voice": 1,
           "sight": 0,
-          "pen": 1,
+          "pen": 2,
           "modalities": [
             "voice",
             "sight",
             "pen"
           ],
           "drivablePrefix": 1,
-          "firstNonVoiceLesson": "TA-W05-write-aam",
+          "firstNonVoiceLesson": "TA-S07-ma",
           "drivable": false,
           "drivableLessonIds": [
             "TA-C16-thamizh-maadangal"
@@ -10991,17 +10991,17 @@
         },
         {
           "chapter": 18,
-          "lessonCount": 3,
+          "lessonCount": 4,
           "voice": 2,
           "sight": 0,
-          "pen": 1,
+          "pen": 2,
           "modalities": [
             "voice",
             "sight",
             "pen"
           ],
           "drivablePrefix": 1,
-          "firstNonVoiceLesson": "TA-W06-write-illai",
+          "firstNonVoiceLesson": "TA-S08-pulli",
           "drivable": false,
           "drivableLessonIds": [
             "TA-C18-mani"
@@ -11009,17 +11009,17 @@
         },
         {
           "chapter": 19,
-          "lessonCount": 3,
+          "lessonCount": 4,
           "voice": 2,
           "sight": 0,
-          "pen": 1,
+          "pen": 2,
           "modalities": [
             "voice",
             "sight",
             "pen"
           ],
           "drivablePrefix": 2,
-          "firstNonVoiceLesson": "TA-W07-write-sari",
+          "firstNonVoiceLesson": "TA-S09-i-sign",
           "drivable": false,
           "drivableLessonIds": [
             "TA-C19-vayathu",
@@ -44541,6 +44541,31 @@
       "sourceHash": "fnv1a64:fefd6585b85ebcb8"
     },
     {
+      "id": "TA-S01-va",
+      "language": "tamil",
+      "chapter": 6,
+      "sequence": 365,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:af5549a6703340c5",
+      "detachableSegments": [
+        "Script you'll notice: வ",
+        "Writing: வ"
+      ],
+      "delivery": "script"
+    },
+    {
       "id": "TA-W02-ma-retroflex-na",
       "language": "tamil",
       "chapter": 6,
@@ -44617,6 +44642,31 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:15d841e1d8f9bd2f"
+    },
+    {
+      "id": "TA-S02-nna",
+      "language": "tamil",
+      "chapter": 6,
+      "sequence": 405,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:2a1e1f702ce9cc6c",
+      "detachableSegments": [
+        "Script you'll notice: ண",
+        "Writing: ண"
+      ],
+      "delivery": "script"
     },
     {
       "id": "TA-W02-three-ns",
@@ -44696,6 +44746,33 @@
       ],
       "coreDrivable": false,
       "sourceHash": "fnv1a64:401209a5981f3533"
+    },
+    {
+      "id": "TA-S03-nnna",
+      "language": "tamil",
+      "chapter": 7,
+      "sequence": 445,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "sight-cue"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type",
+        "sight-cue"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:68cb16365e7b3e60",
+      "detachableSegments": [
+        "Script you'll notice: ன",
+        "Writing: ன"
+      ],
+      "delivery": "script"
     },
     {
       "id": "TA-W03-pulli-vanakkam",
@@ -44780,6 +44857,31 @@
       ]
     },
     {
+      "id": "TA-S04-na",
+      "language": "tamil",
+      "chapter": 8,
+      "sequence": 485,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:78499275c22a8e65",
+      "detachableSegments": [
+        "Script you'll notice: ந",
+        "Writing: ந"
+      ],
+      "delivery": "script"
+    },
+    {
       "id": "TA-W03-write-vanakkam",
       "language": "tamil",
       "chapter": 8,
@@ -44860,6 +44962,31 @@
       "sourceHash": "fnv1a64:ff31b17db43deacb"
     },
     {
+      "id": "TA-S05-rra",
+      "language": "tamil",
+      "chapter": 10,
+      "sequence": 525,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:440ab96ba5c13ab1",
+      "detachableSegments": [
+        "Script you'll notice: ற",
+        "Writing: ற"
+      ],
+      "delivery": "script"
+    },
+    {
       "id": "TA-W04-vowel-signs-nandri",
       "language": "tamil",
       "chapter": 10,
@@ -44936,6 +45063,31 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:667b2e88be342205"
+    },
+    {
+      "id": "TA-S06-ka",
+      "language": "tamil",
+      "chapter": 13,
+      "sequence": 565,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:c397b1492a77fc20",
+      "detachableSegments": [
+        "Script you'll notice: க",
+        "Writing: க"
+      ],
+      "delivery": "script"
     },
     {
       "id": "TA-W04-i-sign-write-nandri",
@@ -45016,6 +45168,31 @@
       "sourceHash": "fnv1a64:14dab8c9cd8fec07"
     },
     {
+      "id": "TA-S07-ma",
+      "language": "tamil",
+      "chapter": 16,
+      "sequence": 605,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:119ab23920501a81",
+      "detachableSegments": [
+        "Script you'll notice: ம",
+        "Writing: ம"
+      ],
+      "delivery": "script"
+    },
+    {
       "id": "TA-W05-write-aam",
       "language": "tamil",
       "chapter": 16,
@@ -45094,6 +45271,32 @@
       "sourceHash": "fnv1a64:d305720b49f4f434"
     },
     {
+      "id": "TA-S08-pulli",
+      "language": "tamil",
+      "chapter": 18,
+      "sequence": 645,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "sight-cue"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:a586475de0c005cb",
+      "detachableSegments": [
+        "Script you'll notice: ்",
+        "Writing: ்"
+      ],
+      "delivery": "script"
+    },
+    {
       "id": "TA-W06-write-illai",
       "language": "tamil",
       "chapter": 18,
@@ -45170,6 +45373,32 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:e56e7a5816e08838"
+    },
+    {
+      "id": "TA-S09-i-sign",
+      "language": "tamil",
+      "chapter": 19,
+      "sequence": 685,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "sight-cue"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:f7cee15ff2197e76",
+      "detachableSegments": [
+        "Script you'll notice: ி",
+        "Writing: ி"
+      ],
+      "delivery": "script"
     },
     {
       "id": "TA-W07-write-sari",
