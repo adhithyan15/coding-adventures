@@ -167,13 +167,15 @@ where
 fn map_core_error<S, A>(error: OrchestratorCoreError<S, A>) -> ControlPlaneError {
     match error {
         OrchestratorCoreError::Registry(error) => map_registry_error(error),
-        OrchestratorCoreError::Authorization(_) => ControlPlaneError::Forbidden,
+        OrchestratorCoreError::Authorization(_)
+        | OrchestratorCoreError::PipelineAuthorization(_) => ControlPlaneError::Forbidden,
         OrchestratorCoreError::HostDesiredRunning(_)
         | OrchestratorCoreError::HostStillActive(_)
         | OrchestratorCoreError::ClockRegressed => ControlPlaneError::Conflict,
         OrchestratorCoreError::Reconciliation(_)
         | OrchestratorCoreError::Supervisor { .. }
-        | OrchestratorCoreError::Channel(_) => ControlPlaneError::Internal,
+        | OrchestratorCoreError::Channel(_)
+        | OrchestratorCoreError::Pipeline(_) => ControlPlaneError::Internal,
     }
 }
 

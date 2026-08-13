@@ -4,7 +4,9 @@
 #![deny(missing_docs)]
 
 use chief_of_staff_daemon_api::{Operation, SessionAuthorizer};
-use chief_of_staff_orchestrator_core::{ChannelWiringAuthorizer, ChannelWiringRequest};
+use chief_of_staff_orchestrator_core::{
+    ChannelWiringAuthorizer, ChannelWiringRequest, PipelineWiringAuthorizer, PipelineWiringRequest,
+};
 use chief_of_staff_trust_checker::TrustRequestContext;
 use coding_adventures_csprng::random_array;
 use coding_adventures_ct_compare::ct_eq_fixed;
@@ -142,6 +144,18 @@ impl ChannelWiringAuthorizer for DenyChannelWiring {
     }
 }
 
+impl PipelineWiringAuthorizer for DenyChannelWiring {
+    type Error = ChannelWiringDenied;
+
+    fn authorize_pipeline(
+        &mut self,
+        _context: &TrustRequestContext,
+        _request: PipelineWiringRequest<'_>,
+    ) -> Result<(), Self::Error> {
+        Err(ChannelWiringDenied)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -237,6 +251,8 @@ mod tests {
             policy.authorize(&context, ChannelWiringRequest::Destroy(&definition)),
             Err(ChannelWiringDenied)
         );
+        fn assert_pipeline_policy<T: PipelineWiringAuthorizer<Error = ChannelWiringDenied>>() {}
+        assert_pipeline_policy::<DenyChannelWiring>();
     }
 
     #[test]
