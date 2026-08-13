@@ -1312,6 +1312,25 @@ fn parse_quadrant_config(source: &str) -> QuadrantConfig {
         quadrant_text_top_padding: number("quadrantTextTopPadding"),
         point_label_font_size: number("pointLabelFontSize"),
         point_text_padding: number("pointTextPadding"),
+        quadrant_fills: std::array::from_fn(|index| {
+            quadrant_directive_value(source, &format!("quadrant{}Fill", index + 1))
+        }),
+        quadrant_text_fills: std::array::from_fn(|index| {
+            quadrant_directive_value(source, &format!("quadrant{}TextFill", index + 1))
+        }),
+        point_fill: quadrant_directive_value(source, "quadrantPointFill"),
+        point_text_fill: quadrant_directive_value(source, "quadrantPointTextFill"),
+        x_axis_text_fill: quadrant_directive_value(source, "quadrantXAxisTextFill"),
+        y_axis_text_fill: quadrant_directive_value(source, "quadrantYAxisTextFill"),
+        internal_border_stroke_fill: quadrant_directive_value(
+            source,
+            "quadrantInternalBorderStrokeFill",
+        ),
+        external_border_stroke_fill: quadrant_directive_value(
+            source,
+            "quadrantExternalBorderStrokeFill",
+        ),
+        title_fill: quadrant_directive_value(source, "quadrantTitleFill"),
     }
 }
 
@@ -4752,7 +4771,7 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     #[test]
     fn quadrant_parses_layout_init_config() {
         let diagram = parse_quadrant_chart(
-            "%%{init: {\"quadrantChart\": {\"chartWidth\": 720, \"chartHeight\": 540, \"xAxisPosition\": \"top\", \"yAxisPosition\": \"right\", \"pointRadius\": 11, \"quadrantPadding\": 18, \"quadrantInternalBorderStrokeWidth\": 3, \"quadrantExternalBorderStrokeWidth\": 5, \"titleFontSize\": 22, \"titlePadding\": 12, \"xAxisLabelFontSize\": 15, \"xAxisLabelPadding\": 21, \"yAxisLabelFontSize\": 16, \"yAxisLabelPadding\": 23, \"quadrantLabelFontSize\": 17, \"quadrantTextTopPadding\": 19, \"pointLabelFontSize\": 14, \"pointTextPadding\": 9}}}%%\nquadrantChart\nMetal: [0.75, 0.8]\n",
+            "%%{init: {\"quadrantChart\": {\"chartWidth\": 720, \"chartHeight\": 540, \"xAxisPosition\": \"top\", \"yAxisPosition\": \"right\", \"pointRadius\": 11, \"quadrantPadding\": 18, \"quadrantInternalBorderStrokeWidth\": 3, \"quadrantExternalBorderStrokeWidth\": 5, \"titleFontSize\": 22, \"titlePadding\": 12, \"xAxisLabelFontSize\": 15, \"xAxisLabelPadding\": 21, \"yAxisLabelFontSize\": 16, \"yAxisLabelPadding\": 23, \"quadrantLabelFontSize\": 17, \"quadrantTextTopPadding\": 19, \"pointLabelFontSize\": 14, \"pointTextPadding\": 9}, \"themeVariables\": {\"quadrant1Fill\": \"#111111\", \"quadrant2Fill\": \"#222222\", \"quadrant3Fill\": \"#333333\", \"quadrant4Fill\": \"#444444\", \"quadrant1TextFill\": \"#aaaaaa\", \"quadrant2TextFill\": \"#bbbbbb\", \"quadrant3TextFill\": \"#cccccc\", \"quadrant4TextFill\": \"#dddddd\", \"quadrantPointFill\": \"#123456\", \"quadrantPointTextFill\": \"#234567\", \"quadrantXAxisTextFill\": \"#345678\", \"quadrantYAxisTextFill\": \"#456789\", \"quadrantInternalBorderStrokeFill\": \"#56789a\", \"quadrantExternalBorderStrokeFill\": \"#6789ab\", \"quadrantTitleFill\": \"#789abc\"}}}%%\nquadrantChart\nMetal: [0.75, 0.8]\n",
         )
         .unwrap();
 
@@ -4783,6 +4802,34 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         );
         assert_eq!(diagram.quadrant_config.point_label_font_size, Some(14.0));
         assert_eq!(diagram.quadrant_config.point_text_padding, Some(9.0));
+        assert_eq!(
+            diagram.quadrant_config.quadrant_fills,
+            ["#111111", "#222222", "#333333", "#444444"].map(|value| Some(value.into()))
+        );
+        assert_eq!(
+            diagram.quadrant_config.quadrant_text_fills,
+            ["#aaaaaa", "#bbbbbb", "#cccccc", "#dddddd"].map(|value| Some(value.into()))
+        );
+        assert_eq!(
+            diagram.quadrant_config.point_fill.as_deref(),
+            Some("#123456")
+        );
+        assert_eq!(
+            diagram.quadrant_config.point_text_fill.as_deref(),
+            Some("#234567")
+        );
+        assert_eq!(
+            diagram.quadrant_config.x_axis_text_fill.as_deref(),
+            Some("#345678")
+        );
+        assert_eq!(
+            diagram.quadrant_config.y_axis_text_fill.as_deref(),
+            Some("#456789")
+        );
+        assert_eq!(
+            diagram.quadrant_config.title_fill.as_deref(),
+            Some("#789abc")
+        );
     }
 
     #[test]

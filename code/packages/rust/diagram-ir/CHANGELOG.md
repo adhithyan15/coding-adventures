@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.43.0
+
+- Preserve all pinned quadrant theme-variable colors through semantic and layout IR.
+
 ## 0.42.0
 
 - Preserve quadrant title, axis, region, and point-label typography and spacing through semantic and layout IR.

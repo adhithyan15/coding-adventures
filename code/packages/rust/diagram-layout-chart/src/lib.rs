@@ -103,6 +103,7 @@ fn layout_xy(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagram {
             y: MARGIN + TITLE_H * 0.5,
             text: t.clone(),
             font_size: None,
+            color: None,
         });
     }
 
@@ -241,6 +242,7 @@ fn layout_pie(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagram 
             y: MARGIN + TITLE_H * 0.5,
             text: t.clone(),
             font_size: None,
+            color: None,
         });
     }
 
@@ -294,6 +296,7 @@ fn layout_sankey(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagr
             y: y_off + band_h / 2.0,
             text: format!("{} → {} ({})", flow.source, flow.target, flow.weight),
             font_size: None,
+            color: None,
         });
         y_off += band_h + 4.0;
     }
@@ -329,7 +332,7 @@ fn layout_quadrant(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDia
     let height = (bottom - top).max(1.0);
     let half_width = width / 2.0;
     let half_height = height / 2.0;
-    let colors = ["#dbeafe", "#dcfce7", "#fef3c7", "#fee2e2"];
+    let default_colors = ["#dbeafe", "#dcfce7", "#fef3c7", "#fee2e2"];
     let regions = [
         (left + half_width, top),
         (left, top),
@@ -346,6 +349,7 @@ fn layout_quadrant(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDia
                 + diagram.quadrant_config.title_font_size.unwrap_or(TITLE_H) / 2.0,
             text: title.clone(),
             font_size: diagram.quadrant_config.title_font_size,
+            color: diagram.quadrant_config.title_fill.clone(),
         });
     }
 
@@ -355,13 +359,18 @@ fn layout_quadrant(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDia
             y,
             width: half_width,
             height: half_height,
-            color: colors[index].to_string(),
+            color: diagram.quadrant_config.quadrant_fills[index]
+                .clone()
+                .unwrap_or_else(|| default_colors[index].to_string()),
             label: diagram.quadrant_labels[index].clone(),
             label_font_size: diagram.quadrant_config.quadrant_label_font_size,
             label_top_padding: diagram
                 .quadrant_config
                 .quadrant_text_top_padding
                 .unwrap_or(8.0),
+            label_color: diagram.quadrant_config.quadrant_text_fills[index]
+                .clone()
+                .unwrap_or_else(|| "#334155".to_string()),
         });
     }
     items.push(LayoutedChartItem::QuadrantBorder {
@@ -369,7 +378,16 @@ fn layout_quadrant(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDia
         y: top,
         width,
         height,
-        color: "#64748b".to_string(),
+        internal_color: diagram
+            .quadrant_config
+            .internal_border_stroke_fill
+            .clone()
+            .unwrap_or_else(|| "#64748b".to_string()),
+        external_color: diagram
+            .quadrant_config
+            .external_border_stroke_fill
+            .clone()
+            .unwrap_or_else(|| "#64748b".to_string()),
         internal_width: diagram.quadrant_config.internal_border_width.unwrap_or(1.0),
         external_width: diagram.quadrant_config.external_border_width.unwrap_or(1.0),
     });
@@ -385,6 +403,7 @@ fn layout_quadrant(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDia
                 },
                 text: label.clone(),
                 font_size: diagram.quadrant_config.x_axis_label_font_size,
+                color: diagram.quadrant_config.x_axis_text_fill.clone(),
             });
         }
         if let Some(label) = axis.categories.get(1) {
@@ -397,6 +416,7 @@ fn layout_quadrant(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDia
                 },
                 text: label.clone(),
                 font_size: diagram.quadrant_config.x_axis_label_font_size,
+                color: diagram.quadrant_config.x_axis_text_fill.clone(),
             });
         }
     }
@@ -411,6 +431,7 @@ fn layout_quadrant(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDia
                 y: bottom,
                 text: label.clone(),
                 font_size: diagram.quadrant_config.y_axis_label_font_size,
+                color: diagram.quadrant_config.y_axis_text_fill.clone(),
             });
         }
         if let Some(label) = axis.categories.get(1) {
@@ -423,6 +444,7 @@ fn layout_quadrant(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDia
                 y: top,
                 text: label.clone(),
                 font_size: diagram.quadrant_config.y_axis_label_font_size,
+                color: diagram.quadrant_config.y_axis_text_fill.clone(),
             });
         }
     }
@@ -435,7 +457,11 @@ fn layout_quadrant(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDia
                 .radius
                 .or(diagram.quadrant_config.point_radius)
                 .unwrap_or(6.0),
-            color: point.color.clone().unwrap_or_else(|| "#2563eb".to_string()),
+            color: point
+                .color
+                .clone()
+                .or_else(|| diagram.quadrant_config.point_fill.clone())
+                .unwrap_or_else(|| "#2563eb".to_string()),
             stroke_color: point
                 .stroke_color
                 .clone()
@@ -444,6 +470,11 @@ fn layout_quadrant(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDia
             label: point.label.clone(),
             label_font_size: diagram.quadrant_config.point_label_font_size,
             label_padding: diagram.quadrant_config.point_text_padding.unwrap_or(4.0),
+            label_color: diagram
+                .quadrant_config
+                .point_text_fill
+                .clone()
+                .unwrap_or_else(|| "#1e293b".to_string()),
         });
     }
 
@@ -718,6 +749,13 @@ mod tests {
             quadrant_text_top_padding: Some(19.0),
             point_label_font_size: Some(14.0),
             point_text_padding: Some(9.0),
+            quadrant_fills: [Some("#111111".into()), None, None, None],
+            quadrant_text_fills: [Some("#aaaaaa".into()), None, None, None],
+            point_fill: Some("#123456".into()),
+            point_text_fill: Some("#234567".into()),
+            internal_border_stroke_fill: Some("#345678".into()),
+            external_border_stroke_fill: Some("#456789".into()),
+            ..QuadrantConfig::default()
         };
 
         let layout = layout_chart_diagram(&diagram, 400.0, 300.0);
@@ -736,6 +774,14 @@ mod tests {
             _ => None,
         });
         assert_eq!(point_text, Some((Some(14.0), 9.0)));
+        assert!(layout.items.iter().any(|item| matches!(item,
+            LayoutedChartItem::ScatterPoint { color, label_color, .. }
+                if color == "#123456" && label_color == "#234567"
+        )));
+        assert!(layout.items.iter().any(|item| matches!(item,
+            LayoutedChartItem::QuadrantRegion { color, label_color, .. }
+                if color == "#111111" && label_color == "#aaaaaa"
+        )));
         let border = layout.items.iter().find_map(|item| match item {
             LayoutedChartItem::QuadrantBorder {
                 x,

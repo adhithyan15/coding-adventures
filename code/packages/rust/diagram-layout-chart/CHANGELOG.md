@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.8.0
+
+- Resolve quadrant region, label, point, axis, title, and independent border theme colors.
+
 ## 0.7.0 — 2026-08-13
 
 ### Added

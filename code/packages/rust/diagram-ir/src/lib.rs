@@ -566,6 +566,15 @@ pub struct QuadrantConfig {
     pub quadrant_text_top_padding: Option<f64>,
     pub point_label_font_size: Option<f64>,
     pub point_text_padding: Option<f64>,
+    pub quadrant_fills: [Option<String>; 4],
+    pub quadrant_text_fills: [Option<String>; 4],
+    pub point_fill: Option<String>,
+    pub point_text_fill: Option<String>,
+    pub x_axis_text_fill: Option<String>,
+    pub y_axis_text_fill: Option<String>,
+    pub internal_border_stroke_fill: Option<String>,
+    pub external_border_stroke_fill: Option<String>,
+    pub title_fill: Option<String>,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -663,13 +672,15 @@ pub enum LayoutedChartItem {
         label: Option<String>,
         label_font_size: Option<f64>,
         label_top_padding: f64,
+        label_color: String,
     },
     QuadrantBorder {
         x: f64,
         y: f64,
         width: f64,
         height: f64,
-        color: String,
+        internal_color: String,
+        external_color: String,
         internal_width: f64,
         external_width: f64,
     },
@@ -683,12 +694,14 @@ pub enum LayoutedChartItem {
         label: String,
         label_font_size: Option<f64>,
         label_padding: f64,
+        label_color: String,
     },
     DataLabel {
         x: f64,
         y: f64,
         text: String,
         font_size: Option<f64>,
+        color: Option<String>,
     },
     Legend {
         x: f64,
