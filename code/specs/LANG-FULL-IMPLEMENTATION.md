@@ -873,7 +873,8 @@ backend immediately) come before the enabler-dependent items.
   numeric comparison, evaluated after abstractly assigning its initial
   controlled value, proves the first condition true. Known comparison leaves
   compose through `not`, `and`, `or`, `impl`, and `eqv`; bare literals,
-  unsupported shapes, and dynamic predicates preserve the entry set. A
+  including direct `true` and `false`, compose through those operators;
+  unsupported shapes and dynamic predicates preserve the entry set. A
   conditional predicate with a statically known selector evaluates only its
   selected branch; dynamic selectors remain conservative. The conditional
   predicate proof runs on native/LLVM/WASM/JVM/CLR/VM/JIT. LLVM preserves the
