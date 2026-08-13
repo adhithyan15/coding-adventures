@@ -523,6 +523,8 @@ struct Compiler {
     /// tracked integer along the same straight-line path. These snapshots may
     /// widen into static real expressions only within binary64's exact range.
     static_integer_slots: HashMap<String, i64>,
+    /// Static values for local boolean scalars along the current path.
+    static_boolean_slots: HashMap<String, bool>,
     static_real_tracking_disabled: bool,
 }
 
@@ -563,6 +565,7 @@ impl Default for Compiler {
             initialized_string_slots: HashSet::new(),
             static_real_slots: HashMap::new(),
             static_integer_slots: HashMap::new(),
+            static_boolean_slots: HashMap::new(),
             static_real_tracking_disabled: false,
         }
     }
@@ -1798,6 +1801,7 @@ impl Compiler {
             std::mem::take(&mut self.initialized_string_slots);
         let saved_static_real_slots = std::mem::take(&mut self.static_real_slots);
         let saved_static_integer_slots = std::mem::take(&mut self.static_integer_slots);
+        let saved_static_boolean_slots = std::mem::take(&mut self.static_boolean_slots);
         let saved_static_real_tracking_disabled =
             std::mem::replace(&mut self.static_real_tracking_disabled, true);
         let saved_scopes = std::mem::replace(&mut self.scopes, vec![HashMap::new()]);
@@ -2039,6 +2043,7 @@ impl Compiler {
         self.initialized_string_slots = saved_initialized_string_slots;
         self.static_real_slots = saved_static_real_slots;
         self.static_integer_slots = saved_static_integer_slots;
+        self.static_boolean_slots = saved_static_boolean_slots;
         self.static_real_tracking_disabled = saved_static_real_tracking_disabled;
         self.scopes = saved_scopes;
         self.by_name_bindings = saved_by_name_bindings;
@@ -2161,7 +2166,7 @@ impl Compiler {
                 && is_supported_standard_function(&target_name)
         });
         if !is_pure_standard_function {
-            self.disable_static_real_tracking();
+            self.disable_static_tracking();
         }
         self.emit_call_common(node, true)?.ok_or_else(|| {
             CompileError::Type("proper procedure call has no return value".into())
@@ -2185,7 +2190,7 @@ impl Compiler {
         if self.try_emit_standard_output_stmt(&target_source_name, node)? {
             return Ok(());
         }
-        self.disable_static_real_tracking();
+        self.disable_static_tracking();
         self.emit_call_common(node, false)?;
         Ok(())
     }
@@ -2702,9 +2707,10 @@ impl Compiler {
         self.emit_label(&end_label);
     }
 
-    fn disable_static_real_tracking(&mut self) {
+    fn disable_static_tracking(&mut self) {
         self.static_real_slots.clear();
         self.static_integer_slots.clear();
+        self.static_boolean_slots.clear();
         self.static_real_tracking_disabled = true;
     }
 
@@ -3988,7 +3994,7 @@ impl Compiler {
 
         let children = direct_nodes(node);
         if children.iter().any(|node| node.rule_name == "label") {
-            self.disable_static_real_tracking();
+            self.disable_static_tracking();
         }
         for label in children.iter().filter(|node| node.rule_name == "label") {
             let source_name = self.label_name(label)?;
@@ -4064,6 +4070,9 @@ impl Compiler {
             .map(|value| value.to_string());
         let static_integer_value = (!self.static_real_tracking_disabled)
             .then(|| self.static_assigned_integer_value(expr))
+            .flatten();
+        let static_boolean_value = (!self.static_real_tracking_disabled)
+            .then(|| self.static_boolean_value(expr))
             .flatten();
 
         if let Some(literal) = expr_string_literal(expr) {
@@ -4331,6 +4340,13 @@ impl Compiler {
                     self.static_integer_slots.remove(&binding.slot);
                 }
             }
+            if binding.ty == ScalarType::Boolean && !binding.is_global {
+                if let Some(boolean) = static_boolean_value {
+                    self.static_boolean_slots.insert(binding.slot.clone(), boolean);
+                } else {
+                    self.static_boolean_slots.remove(&binding.slot);
+                }
+            }
             if binding.is_global {
                 // E6: a captured block scalar is a module global.
                 self.emit(IIRInstr::new(
@@ -4353,7 +4369,7 @@ impl Compiler {
 
     fn emit_goto(&mut self, node: &GrammarASTNode) -> Result<(), CompileError> {
         self.set_loc(node);
-        self.disable_static_real_tracking();
+        self.disable_static_tracking();
         let desig = first_direct_node(node, "desig_expr")
             .ok_or_else(|| CompileError::Malformed("goto_stmt has no desig_expr".into()))?;
         self.emit_desig_jump(desig)
@@ -4645,6 +4661,7 @@ impl Compiler {
 
         let entry_real_slots = self.static_real_slots.clone();
         let entry_integer_slots = self.static_integer_slots.clone();
+        let entry_boolean_slots = self.static_boolean_slots.clone();
         let entry_tracking_disabled = self.static_real_tracking_disabled;
         let entry_initialized_string_slots = self.initialized_string_slots.clone();
 
@@ -4670,6 +4687,7 @@ impl Compiler {
         self.emit_branch_node(then_branch)?;
         let mut then_real_slots = self.static_real_slots.clone();
         let mut then_integer_slots = self.static_integer_slots.clone();
+        let mut then_boolean_slots = self.static_boolean_slots.clone();
         let then_tracking_disabled = self.static_real_tracking_disabled;
         let then_initialized_string_slots = self.initialized_string_slots.clone();
         self.emit(IIRInstr::new(
@@ -4681,6 +4699,7 @@ impl Compiler {
         self.emit_label(&else_label);
         self.static_real_slots = entry_real_slots;
         self.static_integer_slots = entry_integer_slots;
+        self.static_boolean_slots = entry_boolean_slots;
         self.static_real_tracking_disabled = entry_tracking_disabled;
         self.initialized_string_slots = entry_initialized_string_slots;
         if let Some(branch) = else_branch {
@@ -4688,6 +4707,7 @@ impl Compiler {
         }
         let else_real_slots = self.static_real_slots.clone();
         let else_integer_slots = self.static_integer_slots.clone();
+        let else_boolean_slots = self.static_boolean_slots.clone();
         let else_tracking_disabled = self.static_real_tracking_disabled;
         let else_initialized_string_slots = self.initialized_string_slots.clone();
         self.emit_label(&end_label);
@@ -4698,12 +4718,14 @@ impl Compiler {
             .collect();
 
         if then_tracking_disabled || else_tracking_disabled {
-            self.disable_static_real_tracking();
+            self.disable_static_tracking();
         } else {
             then_real_slots.retain(|slot, value| else_real_slots.get(slot) == Some(value));
             then_integer_slots.retain(|slot, value| else_integer_slots.get(slot) == Some(value));
+            then_boolean_slots.retain(|slot, value| else_boolean_slots.get(slot) == Some(value));
             self.static_real_slots = then_real_slots;
             self.static_integer_slots = then_integer_slots;
+            self.static_boolean_slots = then_boolean_slots;
             self.static_real_tracking_disabled = false;
         }
         Ok(())
@@ -4753,7 +4775,7 @@ impl Compiler {
                 .iter()
                 .any(|token| token.value == "while" || token.value == "step")
             {
-                self.disable_static_real_tracking();
+                self.disable_static_tracking();
             }
             self.emit_for_element(target, var_ty, elem, body)?;
             if !executes_at_least_once {
@@ -4851,6 +4873,7 @@ impl Compiler {
 
         let saved_reals = self.static_real_slots.clone();
         let saved_integers = self.static_integer_slots.clone();
+        let saved_booleans = self.static_boolean_slots.clone();
         let static_real = (target_ty == ScalarType::Real)
             .then(|| self.static_assigned_real_value(value))
             .flatten()
@@ -4865,10 +4888,17 @@ impl Compiler {
         let executes = updated && self.static_boolean_value(condition) == Some(true);
         self.static_real_slots = saved_reals;
         self.static_integer_slots = saved_integers;
+        self.static_boolean_slots = saved_booleans;
         executes
     }
 
     fn static_boolean_value(&self, node: &GrammarASTNode) -> Option<bool> {
+        if let Some(name) = expr_variable_name(node) {
+            let binding = self.require_var(&name).ok()?;
+            if binding.ty == ScalarType::Boolean && !binding.is_global {
+                return self.static_boolean_slots.get(&binding.slot).copied();
+            }
+        }
         let tokens = direct_tokens(node);
         if tokens.len() == 1 && tokens[0].effective_type_name() == "KEYWORD" {
             match tokens[0].value.as_str() {
@@ -8778,6 +8808,28 @@ mod tests {
             "test",
         )
         .expect_err("equal false branches prove that the loop body does not execute");
+        assert!(format!("{err:?}").contains("requires initialized string variable"));
+    }
+
+    #[test]
+    fn al4_static_boolean_snapshots_initialize_string() {
+        for source in [
+            "begin integer i; boolean flag; string s; flag := true; for i := 1 while flag do s := 'OK'; print(s) end",
+            "begin integer i; boolean first, flag; string s; first := true; flag := first; for i := 1 while flag do s := 'OK'; print(s) end",
+            "begin integer i, n; boolean flag; string s; if i < n then flag := true else flag := true; for i := 1 while flag do s := 'OK'; print(s) end",
+        ] {
+            compile_source(source, "test")
+                .expect("a path-independent true boolean snapshot proves the first iteration");
+        }
+    }
+
+    #[test]
+    fn al4_dynamic_boolean_snapshot_remains_conservative() {
+        let err = compile_source(
+            "begin integer i, n; boolean flag; string s; flag := i < n; for i := 1 while flag do s := 'OK'; print(s) end",
+            "test",
+        )
+        .expect_err("a dynamic boolean assignment must invalidate its static snapshot");
         assert!(format!("{err:?}").contains("requires initialized string variable"));
     }
 

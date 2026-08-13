@@ -1,5 +1,11 @@
 # Changelog — `lang-aot`
 
+## 0.222.10 - 2026-08-13 (ALGOL static boolean snapshots)
+
+The ALGOL initial-`while` matrix cell now proves that a local boolean assigned
+`true` can establish definite string initialization across all seven standard
+backends.
+
 ## 0.222.9 - 2026-08-13 (ALGOL path-independent conditional predicates)
 
 The ALGOL initial-`while` matrix cell now proves that equal `true` branches

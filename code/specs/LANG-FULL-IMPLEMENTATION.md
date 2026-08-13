@@ -881,7 +881,9 @@ backend immediately) come before the enabler-dependent items.
   conditional predicate with a statically known selector evaluates only its
   selected branch; a dynamic selector also has a static result when both
   branches independently prove the same boolean, while differing or unknown
-  branches remain conservative. The conditional
+  branches remain conservative. Straight-line local boolean assignments and
+  copies also feed this proof; equal statement branches preserve a snapshot,
+  while dynamic assignments and existing control-flow/call boundaries clear it. The conditional
   predicate proof runs on native/LLVM/WASM/JVM/CLR/VM/JIT. LLVM preserves the
   comparison's `i1` sidecar when moving into a boolean merge slot, and WASM
   narrows an operand-width `i64` comparison local before an `i32` boolean move.
