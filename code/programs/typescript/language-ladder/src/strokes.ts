@@ -2631,6 +2631,39 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: devanagariAlphabetSource("प"),
   },
+  // JackPotte's animation circles counterclockwise around the oval, then
+  // separately descends the right stem, crosses down-right through the body,
+  // and finishes the headline. The Central Hindi Directorate deskbook shows
+  // the same four-part buildup and directions: four strokes, three lifts.
+  [ductusKey("devanagari", "ब")]: {
+    script: "devanagari",
+    glyph: "ब",
+    strokes: [
+      { segments: [{ label: "circle counterclockwise around the oval body", path: [
+        { x: 350, y: 390 }, { x: 320, y: 415 }, { x: 275, y: 432 }, { x: 225, y: 432 },
+        { x: 175, y: 415 }, { x: 135, y: 385 }, { x: 105, y: 345 },
+        { x: 88, y: 300 }, { x: 88, y: 255 }, { x: 105, y: 215 },
+        { x: 135, y: 182 }, { x: 175, y: 158 }, { x: 225, y: 147 },
+        { x: 275, y: 150 }, { x: 320, y: 168 }, { x: 350, y: 198 },
+      ] }] },
+      { segments: [{ label: "lift, then descend the right stem", path: [
+        { x: 442, y: 551 }, { x: 442, y: 475 }, { x: 442, y: 395 },
+        { x: 442, y: 315 }, { x: 442, y: 235 }, { x: 442, y: 155 },
+        { x: 442, y: 75 }, { x: 442, y: 5 },
+      ] }] },
+      { segments: [{ label: "lift, then cross the body down and right", path: [
+        { x: 175, y: 405 }, { x: 205, y: 365 }, { x: 235, y: 325 },
+        { x: 265, y: 285 }, { x: 295, y: 245 }, { x: 325, y: 205 },
+        { x: 354, y: 176 },
+      ] }] },
+      { segments: [{ label: "lift, then draw the shirorekha left-to-right", path: [
+        { x: 5, y: 585 }, { x: 85, y: 585 }, { x: 165, y: 585 },
+        { x: 245, y: 585 }, { x: 325, y: 585 }, { x: 405, y: 585 },
+        { x: 485, y: 585 }, { x: 580, y: 585 },
+      ] }] },
+    ],
+    source: devanagariAlphabetSource("ब"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the
