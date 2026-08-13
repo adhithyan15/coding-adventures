@@ -580,6 +580,44 @@ fn build_func(fields: &[SExpr], ctx: &mut ModuleCtx, func_idx: usize) -> Result<
     // local indices come out the same (wrong) way they always did; it will
     // fail validation regardless, for the missing type, not for this.
     let param_count = ctx.module.types.get(type_idx as usize).map(|t| t.params.len()).unwrap_or(0) as u32;
+
+    // Reject a func that gives BOTH an explicit `(type $sig)` reference
+    // AND its own literal `(param ...)` forms whose arity disagrees with
+    // `$sig`'s real params -- see `WastParseError::TypeUseParamCountMismatch`'s
+    // own doc comment for why local-index computation below depends on
+    // this invariant holding, not just on it being the common case. When
+    // a func has NO `(type ...)` reference at all, `resolve_func_signature_ref`
+    // synthesizes its type directly FROM these same literal params, so
+    // `param_count` and `literal_param_count` are equal by construction
+    // and this is always a no-op in that case.
+    let mut literal_param_count = 0u32;
+    let mut saw_literal_param = false;
+    for f in fields {
+        if f.is_keyword_list("param") {
+            saw_literal_param = true;
+            let items = f.as_list().unwrap();
+            // `(param $x i32)` is ONE named param (a name + its type), not
+            // two -- matches the identical named-vs-unnamed distinction
+            // the main loop below makes when it actually assigns indices.
+            if items.len() == 3 && items[1].as_atom().is_some_and(|s| s.starts_with('$')) {
+                literal_param_count += 1;
+            } else {
+                literal_param_count += (items.len() - 1) as u32;
+            }
+        } else if f.is_keyword_list("result") || f.is_keyword_list("type") {
+            continue;
+        } else {
+            break;
+        }
+    }
+    if saw_literal_param && literal_param_count != param_count {
+        return Err(WastParseError::TypeUseParamCountMismatch {
+            pos: fields.first().map(|f| f.pos()).unwrap_or(0),
+            declared: literal_param_count as usize,
+            referenced: param_count as usize,
+        });
+    }
+
     let mut local_names: HashMap<String, u32> = HashMap::new();
     let mut param_position = 0u32;
     // `next_local` isn't seeded until the FIRST `(local ...)` form is
@@ -1505,36 +1543,62 @@ mod tests {
         assert_eq!(code_of(&m, 0), &[0x20, 0x01, 0x0B]);
     }
 
-    /// A security review of the WASM14 fix above found a residual edge
-    /// case: it split one shared counter into two independent ones
-    /// (literal `(param ...)` forms counted as written, vs. the
-    /// referenced type's real param count), which only agree when a
-    /// function's literal params match its `(type $sig)` reference
-    /// exactly. `resolve_func_signature_ref` doesn't enforce that itself
-    /// (that's `wasm-validator`'s job) -- confirmed empirically that a
-    /// syntactically-valid module with MORE literal params than its
-    /// `(type $sig)` reference declares could make a declared local
-    /// silently alias one of the "extra" literal params instead of
-    /// getting its own free index. Fixed by seeding the local-index
-    /// counter from `max(literal param count, the type's real param
-    /// count)` the first time a `(local ...)` form is actually reached.
-    /// This case is deliberately adversarial/malformed input (a real
-    /// `.wat` file never disagrees with its own type reference), but the
-    /// fix must not let it alias a local onto a parameter's storage no
-    /// matter which count was smaller.
+    /// Two rounds of security review on the WASM14 fix above chased the
+    /// same underlying issue through two increasingly narrow patches: a
+    /// func that gives BOTH an explicit `(type $sig)` reference AND its
+    /// own literal `(param ...)` forms with a DIFFERENT arity is something
+    /// `resolve_func_signature_ref` never rejects, so `param_count` (from
+    /// the real type) and this function's own literal param count can
+    /// disagree. Round 1's fix (seed local indices from `param_count`)
+    /// could make a declared local collide with (alias the storage of) an
+    /// "extra" literal param. Round 2's fix (seed from `max` of the two
+    /// counts) closed that collision but, since the compiled
+    /// `FunctionBody` and real function type only ever account for
+    /// `param_count` real params, an "extra" literal param's `local.get`/
+    /// `.set`/`.tee` still encoded an index past the function's real local
+    /// array -- confirmed via `wasm-execution`'s raw, unchecked
+    /// `ctx.typed_locals[index]` panicking once such a module actually ran
+    /// (not memory-unsafe, but a real crash/DoS surface). The real fix is
+    /// upstream of both patches: REJECT the mismatch at parse time
+    /// (`WastParseError::TypeUseParamCountMismatch`) rather than silently
+    /// accepting it and hoping every later index computation stays safe.
+    /// This is also the spec-correct behavior — a real `.wat` file's
+    /// literal params, when given alongside a type reference, must always
+    /// already match it exactly. The round-1/round-2 `max()`-based local
+    /// index seeding stays in place as defense in depth (harmless — once
+    /// this check passes, `param_position` and `param_count` are always
+    /// equal whenever literal params were given), but this parse-time
+    /// rejection is what actually makes the invariant hold.
     #[test]
-    fn local_index_never_collides_with_a_param_even_if_literal_params_and_the_type_disagree() {
-        let m = parse_module(
+    fn func_rejects_type_reference_disagreeing_with_its_own_literal_params() {
+        let result = parse_module(
             "(module
                (type $sig (func (param i32) (result i32)))
                (func (export \"f\") (type $sig) (param i32) (param i32) (local $x i32)
                  (local.get $x)))",
+        );
+        assert!(matches!(
+            result,
+            Err(WastParseError::TypeUseParamCountMismatch { declared: 2, referenced: 1, .. })
+        ));
+    }
+
+    /// The legitimate counterpart to the rejection test above: a func that
+    /// repeats its `(param ...)` forms AGREEING with a `(type $sig)`
+    /// reference (purely for naming — `func.wast`'s own `"type-use-6"`
+    /// does exactly this: `(func (export "type-use-6") (type $sig-3)
+    /// (param i32))`) must still parse and index locals correctly.
+    #[test]
+    fn func_accepts_type_reference_agreeing_with_its_own_literal_params() {
+        let m = parse_module(
+            "(module
+               (type $sig (func (param i32) (result i32)))
+               (func (export \"f\") (type $sig) (param $x i32) (local $y i32)
+                 local.get $x local.get $y drop))",
         )
         .unwrap();
-        // $sig declares 1 param; the literal (param i32) (param i32) forms
-        // above declare 2 -- deliberately inconsistent. $x must land at
-        // index 2 (past BOTH counts), never at 0 or 1.
-        assert_eq!(code_of(&m, 0), &[0x20, 0x02, 0x0B]);
+        // $x (from the matching literal param) is local 0, $y is local 1.
+        assert_eq!(code_of(&m, 0), &[0x20, 0x00, 0x20, 0x01, 0x1A, 0x0B]);
     }
 
     #[test]

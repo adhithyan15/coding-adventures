@@ -50,6 +50,35 @@ regression test
 No conformance-baseline change (the real testsuite never disagrees with
 its own type references).
 
+**A second round of security review found that round 1's fix wasn't
+actually closed by round 2's `max()` patch — it moved the failure mode.**
+Since the compiled `FunctionBody` and the function's real type only ever
+account for the type's real param count, an "extra" literal param (in
+the same mismatched-arity scenario round 2 was defending against) still
+encoded a `local.get`/`.set`/`.tee` index past the function's real local
+array. Confirmed empirically: `wasm-execution`'s raw, unchecked
+`ctx.typed_locals[index]` panics once such a module actually runs — not
+memory-unsafe (checked Rust indexing), but a real crash/DoS surface
+reachable through this repo's own pipeline
+(`wasm-conformance`/`wasm-runtime`/`wasm-execution`), since the only
+validation currently wired up (`WasmRuntime::validate`) is structural
+only and doesn't check instruction operand bounds. The real fix is
+upstream of both prior patches: a new `WastParseError::TypeUseParamCountMismatch`
+now REJECTS at parse time when a func's literal `(param ...)` forms
+disagree in arity with an explicit `(type $sig)` reference, instead of
+silently accepting the inconsistency and hoping every later index
+computation stays safe. This is also the spec-correct behavior — a real
+`.wat` file's literal params, when given alongside a type reference,
+always already match it exactly. The `max()`-based local-index seeding
+from round 2 stays as defense in depth (harmless: once this new check
+passes, the two counts are always equal whenever literal params were
+given), but this rejection is what actually makes the invariant hold. 2
+more regression tests: the mismatched case now asserts a clean `Err`
+instead of successfully (and unsoundly) parsing, plus a new positive
+case confirming the legitimate "type reference + matching literal
+params" pattern (`func.wast`'s own `"type-use-6"` shape) still parses
+and indexes correctly.
+
 ## 0.1.1 — 2026-08-13 — 4 grammar bugs found running the real testsuite (W05 PR-4)
 
 `wasm-conformance` (W05 PR-4) is this crate's first real workout: running
