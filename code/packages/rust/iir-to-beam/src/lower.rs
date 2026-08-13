@@ -512,6 +512,34 @@ pub fn lower_iir_to_beam(
     let import_get     = imports.intern(erlang_atom, atom_get,     1); // erlang:get/1
     let import_put_chars = imports.intern(io_atom, atom_put_chars, 1); // io:put_chars/1
 
+    // ── Mutable memory: the `:atomics` module ─────────────────────────────
+    //
+    // BEAM has no raw memory. There is no linear address space and every term
+    // is immutable, so `alloc_bytes`/`alloc_array` cannot be "N bytes at an
+    // address" the way they are on every other backend — they have to become a
+    // runtime OBJECT.
+    //
+    // `atomics` is the right one. It is a fixed-size, off-heap array of 64-bit
+    // integers with destructive O(1) `get`/`put` (OTP 21.2+; CI pins 27.3.4.11).
+    // The alternatives all lose: `array` is persistent and O(log n) so every
+    // write would have to be threaded back through the caller, ETS copies the
+    // term into the process heap on every read, and a binary costs O(n) per
+    // mid-array write — fatal for a Brainfuck tape, which writes constantly.
+    //
+    // TWO PROPERTIES OF `atomics` THAT FAIL SILENTLY IF IGNORED:
+    //
+    //   1. **It is 1-INDEXED.** IIR indices are 0-based, so every index gets
+    //      +1 below. An off-by-one here does not raise — it reads or writes the
+    //      neighbouring cell, which on a tape is a wrong answer, not an error.
+    //   2. **BEAM integers are arbitrary-precision.** Nothing wraps at 8 bits,
+    //      so `store_byte` masks with `band 255` explicitly. Without it a
+    //      Brainfuck `+` past 255 keeps counting up instead of wrapping to 0.
+    let atomics_atom = atoms.intern("atomics");
+    let atom_new     = atoms.intern("new");
+    let import_atomics_new = imports.intern(atomics_atom, atom_new, 2); // atomics:new/2
+    let import_atomics_put = imports.intern(atomics_atom, atom_put, 3); // atomics:put/3
+    let import_atomics_get = imports.intern(atomics_atom, atom_get, 2); // atomics:get/2
+
     // ── Closure dispatch atoms and imports (LANG35) ───────────────────────
     //
     // `alloc_closure` / `call_closure` lower to two call_ext calls:
@@ -726,12 +754,99 @@ pub fn lower_iir_to_beam(
             }
         }
 
+        // Step (b2): extend `last_use` across BACKWARD BRANCHES.
+        //
+        // `last_use` above is the maximum *textual* index at which a variable is
+        // read, which is only correct for straight-line code. A loop reads its
+        // variables again on the next iteration, so a variable whose last
+        // textual use sits at the bottom of the loop is NOT dead there — and
+        // treating it as dead means it is never spilled around a call inside
+        // the loop, and the call clobbers it.
+        //
+        // That is not hypothetical: it is exactly the Brainfuck tape loop, the
+        // motivating workload for the `:atomics` memory ops. `[-]` lowers to a
+        // loop whose last textual use of the tape pointer is the `store_byte`
+        // at the bottom, so the pointer was never preserved and the next
+        // iteration called `atomics:get(1, 3)` on the leftover argument of the
+        // previous `atomics:put`.
+        //
+        // For every backward branch at `j` targeting a label at `i <= j`, every
+        // variable read anywhere in `[i, j]` is live at least until `j`. Iterate
+        // to a fixpoint so nested loops converge.
+        {
+            let label_at: HashMap<&str, usize> = func
+                .instructions
+                .iter()
+                .enumerate()
+                .filter(|(_, ins)| ins.op == "label")
+                .filter_map(|(idx, ins)| match ins.srcs.first() {
+                    Some(Operand::Var(name)) => Some((name.as_str(), idx)),
+                    _ => None,
+                })
+                .collect();
+
+            loop {
+                let mut changed = false;
+                for (j, ins) in func.instructions.iter().enumerate() {
+                    if !matches!(ins.op.as_str(), "jmp" | "jmp_if_true" | "jmp_if_false") {
+                        continue;
+                    }
+                    // The branch target is the LAST source operand: `jmp %L`
+                    // has one, `jmp_if_*` has `(cond, %L)`.
+                    let target = match ins.srcs.last() {
+                        Some(Operand::Var(name)) => label_at.get(name.as_str()).copied(),
+                        _ => None,
+                    };
+                    let Some(i) = target else { continue };
+                    if i > j {
+                        continue; // forward branch — textual order already covers it
+                    }
+                    for body in &func.instructions[i..=j] {
+                        for src in &body.srcs {
+                            if let Operand::Var(name) = src {
+                                if !reg_map.contains_key(name.as_str()) {
+                                    continue; // a label name, not a data variable
+                                }
+                                let entry = last_use.entry(name.clone()).or_insert(j);
+                                if *entry < j {
+                                    *entry = j;
+                                    changed = true;
+                                }
+                            }
+                        }
+                    }
+                }
+                if !changed {
+                    break;
+                }
+            }
+        }
+
         // Step (c): for each call instruction, determine which variables
         // are live across it.
         let mut live_across: HashMap<usize, Vec<String>> = HashMap::new();
 
         for (call_idx, instr) in func.instructions.iter().enumerate() {
-            if !matches!(instr.op.as_str(), "call" | "call_ext" | "str_concat" | "print_str") {
+            // EVERY op that emits a `call_ext` must be listed here, not just
+            // the ones that look like calls in the IIR. A call clobbers the
+            // x-registers, so an op missing from this list has its live
+            // variables silently destroyed — the failure is a wrong VALUE, not
+            // a crash. The six `:atomics` memory ops each emit a `call_ext`;
+            // omitting them made `atomics:get` receive `(1, 45)` instead of
+            // `(Ref, 1)`, because the reference and index had been overwritten
+            // by an earlier `atomics:put` return.
+            if !matches!(
+                instr.op.as_str(),
+                "call" | "call_ext" | "str_concat" | "print_str"
+                    | "alloc_bytes" | "alloc_array"
+                    | "store_byte" | "array_set"
+                    | "load_byte" | "array_get"
+                    // `call_closure` emits TWO call_ext (erlang:'++'/2 then
+                    // erlang:apply/3). It was missing here before the six
+                    // memory ops were added, so a variable live across a
+                    // closure call was silently destroyed.
+                    | "call_closure"
+            ) {
                 continue;
             }
 
@@ -2247,6 +2362,219 @@ pub fn lower_iir_to_beam(
                 // `tmp` and `dummy_dst` both use `meta.next_reg` (the first register
                 // beyond all SSA-variable assignments in this function).  `dummy_dst`
                 // is `next_reg + 1` — a second scratch slot we never read.
+                // ── alloc_bytes / alloc_array → atomics:new(N, []) ──────────
+                //
+                // Both allocate a fixed-size mutable integer array; the only
+                // difference upstream is what the elements mean. `[]` is the
+                // options list (BEAM nil, an immediate — no allocation), giving
+                // signed 64-bit cells.
+                //
+                //   x0 = N ; x1 = [] ; call_ext 2 atomics:new/2 ; dest = x0
+                "alloc_bytes" | "alloc_array" => {
+                    let rd = match &instr.dest {
+                        Some(name) => var_reg!(name),
+                        None => return Err(IIRBeamError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: format!("{} must have a dest", instr.op),
+                        }),
+                    };
+                    let rn = operand_reg!(get_src!(instr, 0));
+                    let cur_idx = instr_idx - 1;
+                    save_live_across_imported_call!(cur_idx);
+                    if rn != 0 {
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::x(rn), BEAMOperand::x(0),
+                        ]));
+                    }
+                    // The options list is written AFTER x0, so a size arriving
+                    // in x1 is already safely copied out.
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::a(0), BEAMOperand::x(1), // {a,0} = []
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_CALL_EXT, vec![
+                        BEAMOperand::u(2),
+                        BEAMOperand::u(import_atomics_new as u64),
+                    ]));
+                    if rd != 0 {
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::x(0), BEAMOperand::x(rd),
+                        ]));
+                    }
+                    restore_live_across_imported_call!(cur_idx);
+                }
+
+                // ── store_byte / array_set → atomics:put(Ref, I+1, V) ───────
+                //
+                // `store_byte` additionally masks the value to 8 bits, because
+                // BEAM integers are bignums and never wrap on their own.
+                //
+                // Arguments are staged through scratch registers ABOVE `live`
+                // before being moved down into x0/x1/x2. Moving them directly
+                // is a parallel-move hazard — writing x1 can clobber a source
+                // still sitting in x1 — and `move` never triggers GC, so the
+                // staging registers cannot be collected out from under us even
+                // though they hold the `atomics` reference.
+                "store_byte" | "array_set" => {
+                    let r_ref = operand_reg!(get_src!(instr, 0));
+                    let r_idx = operand_reg!(get_src!(instr, 1));
+                    let r_val = operand_reg!(get_src!(instr, 2));
+                    // Scratch registers are u8 and the bank tops out at 255.
+                    // Every other scratch-using arm guards this; without it a
+                    // 252-variable function panics in debug and, far worse,
+                    // WRAPS in release — `s_val` becomes x0, so the masked byte
+                    // lands in a live variable's register and the emitted
+                    // module runs with three wrong arguments.
+                    let top = meta.next_reg.checked_add(4).filter(|t| *t < 255);
+                    let Some(_) = top else {
+                        return Err(IIRBeamError::UnsupportedOp {
+                            function: fn_name.clone(),
+                            op: format!(
+                                "{}: needs 5 scratch registers but only {} remain below x255",
+                                instr.op,
+                                255u16 - meta.next_reg as u16
+                            ),
+                        });
+                    };
+                    let t_one   = meta.next_reg;      // literal 1, then I+1
+                    let t_mask  = meta.next_reg + 1;  // literal 255, then V band 255
+                    let s_ref   = meta.next_reg + 2;
+                    let s_idx   = meta.next_reg + 3;
+                    let s_val   = meta.next_reg + 4;
+                    let cur_idx = instr_idx - 1;
+
+                    // Stage EVERY scratch register with a valid term BEFORE any
+                    // GC-capable instruction, then raise `live` to cover them.
+                    //
+                    // `gc_bif2` can collect, and it scans only x[0..live-1]. A
+                    // heap term parked above `live` across one is a stale
+                    // pointer into the reclaimed heap the moment a collection
+                    // happens — the `atomics` reference and, for `array_set`, a
+                    // bignum value are both heap terms. Staging first means
+                    // every scratch register holds something valid, so it is
+                    // safe to include them in `live`; leaving one uninitialised
+                    // below `live` would be its own bug.
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::x(r_ref), BEAMOperand::x(s_ref),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::x(r_idx), BEAMOperand::x(s_idx),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::x(r_val), BEAMOperand::x(s_val),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::i(1), BEAMOperand::x(t_one),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::i(255), BEAMOperand::x(t_mask),
+                    ]));
+                    let live_staged = (s_val as u64) + 1;
+
+                    // I + 1 — atomics is 1-indexed, IIR is 0-indexed.
+                    instrs.push(BEAMInstruction::new(OP_GC_BIF2, vec![
+                        BEAMOperand::f(0),
+                        BEAMOperand::u(live_staged),
+                        BEAMOperand::u(import_add as u64),
+                        BEAMOperand::x(s_idx),
+                        BEAMOperand::x(t_one),
+                        BEAMOperand::x(s_idx),
+                    ]));
+
+                    // V band 255 — only for store_byte; array_set stores the
+                    // value as given (pinned by test 68).
+                    if instr.op == "store_byte" {
+                        instrs.push(BEAMInstruction::new(OP_GC_BIF2, vec![
+                            BEAMOperand::f(0),
+                            BEAMOperand::u(live_staged),
+                            BEAMOperand::u(import_and as u64),
+                            BEAMOperand::x(s_val),
+                            BEAMOperand::x(t_mask),
+                            BEAMOperand::x(s_val),
+                        ]));
+                    }
+
+                    save_live_across_imported_call!(cur_idx);
+                    for (from, to) in [(s_ref, 0u8), (s_idx, 1u8), (s_val, 2u8)] {
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::x(from), BEAMOperand::x(to),
+                        ]));
+                    }
+                    instrs.push(BEAMInstruction::new(OP_CALL_EXT, vec![
+                        BEAMOperand::u(3),
+                        BEAMOperand::u(import_atomics_put as u64),
+                    ]));
+                    restore_live_across_imported_call!(cur_idx);
+                }
+
+                // ── load_byte / array_get → atomics:get(Ref, I+1) ───────────
+                //
+                // No mask on the way out: a cell only ever holds what a
+                // matching store put there, and `store_byte` already masked.
+                "load_byte" | "array_get" => {
+                    let rd = match &instr.dest {
+                        Some(name) => var_reg!(name),
+                        None => return Err(IIRBeamError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: format!("{} must have a dest", instr.op),
+                        }),
+                    };
+                    let r_ref = operand_reg!(get_src!(instr, 0));
+                    let r_idx = operand_reg!(get_src!(instr, 1));
+                    let top = meta.next_reg.checked_add(2).filter(|t| *t < 255);
+                    let Some(_) = top else {
+                        return Err(IIRBeamError::UnsupportedOp {
+                            function: fn_name.clone(),
+                            op: format!(
+                                "{}: needs 3 scratch registers but only {} remain below x255",
+                                instr.op,
+                                255u16 - meta.next_reg as u16
+                            ),
+                        });
+                    };
+                    let t_one = meta.next_reg;
+                    let s_ref = meta.next_reg + 1;
+                    let s_idx = meta.next_reg + 2;
+                    let cur_idx = instr_idx - 1;
+
+                    // Stage before the GC-capable `gc_bif2` and raise `live` to
+                    // cover the scratch registers — see the store path above.
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::x(r_ref), BEAMOperand::x(s_ref),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::x(r_idx), BEAMOperand::x(s_idx),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::i(1), BEAMOperand::x(t_one),
+                    ]));
+                    let live_staged = (s_idx as u64) + 1;
+                    instrs.push(BEAMInstruction::new(OP_GC_BIF2, vec![
+                        BEAMOperand::f(0),
+                        BEAMOperand::u(live_staged),
+                        BEAMOperand::u(import_add as u64),
+                        BEAMOperand::x(s_idx),
+                        BEAMOperand::x(t_one),
+                        BEAMOperand::x(s_idx),
+                    ]));
+
+                    save_live_across_imported_call!(cur_idx);
+                    for (from, to) in [(s_ref, 0u8), (s_idx, 1u8)] {
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::x(from), BEAMOperand::x(to),
+                        ]));
+                    }
+                    instrs.push(BEAMInstruction::new(OP_CALL_EXT, vec![
+                        BEAMOperand::u(2),
+                        BEAMOperand::u(import_atomics_get as u64),
+                    ]));
+                    if rd != 0 {
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::x(0), BEAMOperand::x(rd),
+                        ]));
+                    }
+                    restore_live_across_imported_call!(cur_idx);
+                }
+
                 "global_store" => {
                     // srcs[0] = Str("name"), srcs[1] = Var(val_reg)
                     let global_name = match instr.srcs.first() {

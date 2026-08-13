@@ -1,5 +1,65 @@
 # Changelog — iir-to-beam
 
+
+## 0.8.0 - 2026-08-13 - mutable memory via `:atomics`
+
+The six memory/array ops now lower: `alloc_bytes`, `alloc_array`, `store_byte`,
+`load_byte`, `array_set`, `array_get`. This unblocks Brainfuck (which needs a
+mutable tape) and array-using programs on the BEAM column.
+
+**Why `:atomics`.** BEAM has no raw memory — no linear address space, and every
+term is immutable — so `alloc_bytes` cannot be "N bytes at an address" the way
+it is on every other backend; it has to become a runtime object. `atomics` is a
+fixed-size, off-heap array of 64-bit integers with destructive O(1) `get`/`put`
+(OTP 21.2+; CI pins 27.3.4.11). The alternatives all lose: `array` is persistent
+and O(log n), so every write would have to be threaded back through the caller;
+ETS copies the term into the process heap on every read; a binary costs O(n) per
+mid-array write, which is fatal for a tape that writes constantly.
+
+Three things here fail SILENTLY — wrong values, not crashes — and each has a
+run-verified test under real `erl`:
+
+* **`atomics` is 1-indexed, IIR is 0-indexed.** Every index gets +1. An
+  off-by-one does not raise; it reads or writes the neighbouring cell. The test
+  writes indices 0 and 3 with different values so a uniform shift cannot pass.
+* **BEAM integers are arbitrary precision and never wrap.** `store_byte` masks
+  with `band 255`, so storing 300 reads back as 44. `array_set`/`array_get` do
+  NOT mask, and a separate test pins that — otherwise a lowering that masked
+  everywhere would still look correct.
+* **Every op that emits a `call_ext` must be registered with the liveness
+  pass.** A call clobbers the x-registers, and the pass previously recognised
+  only `call`/`call_ext`/`str_concat`/`print_str`, so the new ops had their live
+  variables destroyed: `atomics:get` received `(1, 45)` instead of `(Ref, 1)`
+  because an earlier `atomics:put` return had overwritten the reference. Both
+  tests go red with that one list entry removed.
+
+Arguments are staged through scratch registers before being moved into
+x0/x1/x2, because moving them directly is a parallel-move hazard — writing x1
+can clobber a source still sitting in x1.
+
+Four defects found in security review, each confirmed by executing emitted
+bytecode rather than by reading the diff, and each now pinned by a test that
+goes red without its fix:
+
+* **Loop-carried liveness was not modelled** (the serious one). `last_use` was a
+  maximum TEXTUAL index, so a backward jump was invisible: a variable whose last
+  textual read sits at the bottom of a loop looked dead there and was never
+  spilled, and the `atomics:put` inside the loop clobbered it. That is precisely
+  the Brainfuck tape loop — the motivating workload — and the straight-line
+  tests could not reach it. `last_use` is now extended across backward branches
+  to a fixpoint. This also repairs the same pre-existing hole for a plain `call`
+  inside a loop.
+* **`call_closure` was missing from the call list**, though it emits two
+  `call_ext`s. A variable live across a closure call was silently destroyed
+  (a repro returned 16 instead of 15).
+* **`meta.next_reg + N` could overflow `u8`** — a panic in debug and, worse, a
+  silent wrap in release that put a masked byte into a live variable's register.
+  Now guarded with `checked_add`, matching the existing guards on the closure
+  and global paths.
+* **Scratch registers holding heap terms sat above `live` across a GC-capable
+  `gc_bif2`.** All scratch registers are now staged with valid terms first and
+  `live` is raised to cover them, so a collection cannot leave a stale pointer.
+
 ## [0.7.0] — 2026-07-30 — ASCII runtime string ordering
 
 Add `str_cmp` for validated printable-ASCII character lists. The lowering uses
