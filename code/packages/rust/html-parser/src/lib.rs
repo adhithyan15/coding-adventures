@@ -6989,6 +6989,22 @@ impl HtmlParser {
             self.handle_html_template_end_tag();
             return;
         }
+        if self.current_namespace().is_some()
+            && !self.current_element_is(name)
+            && is_scoped_block_end_tag(name)
+            && self.has_authored_open_html_element(name)
+            && self.open_html_element_in_scope_index(name).is_none()
+        {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-end-tag-in-foreign-content",
+                format!("end tag `</{name}>` did not match the current foreign element"),
+            ));
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-block-end-tag-outside-scope",
+                format!("end tag `</{name}>` targeted an element outside ordinary scope"),
+            ));
+            return;
+        }
         if self.has_open_svg_html_integration_point()
             && name != "template"
             && name != "p"
@@ -35541,14 +35557,37 @@ mod tests {
             );
         }
 
-        let foreign_integration = parse_html_with_diagnostics(
-            "<!doctype html><div id=outer><svg><foreignObject id=boundary></div>X",
-        )
-        .unwrap();
-        assert!(foreign_integration
-            .parser_diagnostics
-            .iter()
-            .all(|diagnostic| { diagnostic.code != "unexpected-block-end-tag-outside-scope" }));
+        for source in [
+            "<!doctype html><div id=outer><svg><foreignObject id=boundary></div>X</foreignObject></svg></div>",
+            "<!doctype html><div id=outer><svg><desc id=boundary></div>X</desc></svg></div>",
+            "<!doctype html><div id=outer><svg><title id=boundary></div>X</title></svg></div>",
+            "<!doctype html><div id=outer><math><mi id=boundary></div>X</mi></math></div>",
+            "<!doctype html><div id=outer><math><mtext id=boundary></div>X</mtext></math></div>",
+            "<!doctype html><div id=outer><math><annotation-xml encoding=text/html id=boundary></div>X</annotation-xml></math></div>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                output.parser_diagnostics,
+                vec![
+                    ParserDiagnostic::new(
+                        "unexpected-end-tag-in-foreign-content",
+                        "end tag `</div>` did not match the current foreign element"
+                    ),
+                    ParserDiagnostic::new(
+                        "unexpected-block-end-tag-outside-scope",
+                        "end tag `</div>` targeted an element outside ordinary scope"
+                    ),
+                ],
+                "source {source:?}"
+            );
+            let outer = find_element_by_id(&output.document.children, "outer").unwrap();
+            let boundary = find_element_by_id(&outer.children, "boundary").unwrap();
+            assert_eq!(
+                boundary.children,
+                vec![Node::text("X")],
+                "source {source:?}"
+            );
+        }
 
         let foreign_select = parse_html_with_diagnostics(
             "<!doctype html><div id=outer><svg><select id=foreign></div>X",
@@ -35562,6 +35601,22 @@ mod tests {
             body(&foreign_select.document).children.last(),
             Some(&Node::text("X"))
         );
+
+        let matching_foreign = parse_html_with_diagnostics(
+            "<!doctype html><section id=outer><svg><section id=foreign></section>X",
+        )
+        .unwrap();
+        assert!(matching_foreign
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "unexpected-block-end-tag-outside-scope"));
+        let outer = find_element_by_id(&matching_foreign.document.children, "outer").unwrap();
+        let svg = element(&outer.children[0]);
+        assert_eq!(svg.children.last(), Some(&Node::text("X")));
+
+        let matching_foreign_end =
+            parse_html_with_diagnostics("<!doctype html><div><svg><g></g>X</svg></div>").unwrap();
+        assert!(matching_foreign_end.parser_diagnostics.is_empty());
 
         let matching =
             parse_html_with_diagnostics("<!doctype html><div id=outer>X</div>Y").unwrap();
@@ -35599,6 +35654,14 @@ mod tests {
             .parser_diagnostics
             .iter()
             .all(|diagnostic| { diagnostic.code != "unexpected-block-end-tag-outside-scope" }));
+
+        let foreign_fragment =
+            parse_html_fragment_for_context_with_diagnostics("</div>X", "svg svg").unwrap();
+        assert_eq!(foreign_fragment.nodes, vec![Node::text("X")]);
+        assert!(foreign_fragment
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "unexpected-block-end-tag-outside-scope"));
     }
 
     #[test]
