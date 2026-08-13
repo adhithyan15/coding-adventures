@@ -2378,6 +2378,15 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — both leaves of a dynamic conditional preserve the same scalar,
+    // so the known body predicate remains stable.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, n, guard; boolean choose; n := 3; guard := 1; i := 0; for i := i + 1 while i < n do begin if guard = 0 then n := n + 1; guard := if choose then guard else guard end; print(i + 0.25) end",
+        expect: Expect::Stdout("3.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — an exactly-one-iteration step loop with a static controlled
     // assignment may retain the post-body increment when that value exits.
     Prog {
@@ -9587,6 +9596,31 @@ fn algol_idempotent_while_predicate_dependency_runs_on_every_available_standard_
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the idempotent while predicate did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_conditional_self_assignment_dependency_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("guard := if choose then guard else guard")
+        })
+        .expect("the ALGOL conditional self-assignment program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the conditional self-assignment did not run"
             );
             continue;
         };
