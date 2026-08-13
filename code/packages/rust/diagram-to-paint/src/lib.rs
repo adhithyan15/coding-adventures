@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.45.0";
+pub const VERSION: &str = "0.46.0";
 
 use std::collections::HashMap;
 
@@ -2625,6 +2625,8 @@ where
                 label,
                 people,
                 person_colors,
+                font_size,
+                font_family,
             } => {
                 let clamped = (*score).min(5);
                 let red = 239_u8.saturating_sub(clamped * 28);
@@ -2720,13 +2722,20 @@ where
                 } else {
                     format!(" · {}", people.join(", "))
                 };
+                let mut task_font = lf.clone();
+                if let Some(size) = font_size {
+                    task_font.size = *size;
+                }
+                if let Some(family) = font_family {
+                    task_font.family.clone_from(family);
+                }
                 text_children.push(text_node(
                     &format!("{label}  {score}/5{actors}"),
                     x + 10.0,
                     y + 6.0,
                     width - 52.0,
                     height - 12.0,
-                    lf.clone(),
+                    task_font,
                     Color {
                         r: 15,
                         g: 23,
@@ -3269,7 +3278,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.45.0");
+        assert_eq!(crate::VERSION, "0.46.0");
     }
 
     #[test]
@@ -3494,6 +3503,8 @@ mod tests {
                     label: "Find product".into(),
                     people: vec!["Alice".into()],
                     person_colors: vec!["#8fbc8f".into()],
+                    font_size: Some(18.0),
+                    font_family: Some("Avenir Next".into()),
                 },
             ],
         };

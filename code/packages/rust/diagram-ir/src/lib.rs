@@ -1,6 +1,6 @@
 //! diagram-ir v0.42.0 - DG00/DG04 semantic IR
 
-pub const VERSION: &str = "0.47.0";
+pub const VERSION: &str = "0.48.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramDirection {
@@ -879,6 +879,8 @@ pub struct JourneyConfig {
     pub task_width: Option<f64>,
     pub task_height: Option<f64>,
     pub task_margin: Option<f64>,
+    pub task_font_size: Option<f64>,
+    pub task_font_family: Option<String>,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -1053,6 +1055,8 @@ pub enum LayoutedTemporalItem {
         label: String,
         people: Vec<String>,
         person_colors: Vec<String>,
+        font_size: Option<f64>,
+        font_family: Option<String>,
     },
     JourneyActor {
         x: f64,
@@ -1151,7 +1155,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.47.0");
+        assert_eq!(VERSION, "0.48.0");
     }
     #[test]
     fn default_direction_is_tb() {

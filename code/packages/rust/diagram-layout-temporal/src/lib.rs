@@ -18,7 +18,7 @@ use diagram_ir::{
 };
 use std::collections::{BTreeSet, HashMap};
 
-pub const VERSION: &str = "0.5.0";
+pub const VERSION: &str = "0.6.0";
 
 // ── Constants ─────────────────────────────────────────────────────────────
 
@@ -96,6 +96,8 @@ fn layout_journey(title: &Option<String>, diagram: &JourneyDiagram, cw: f64) -> 
                 x: margin_x, y, width: task_width, height: task_height,
                 score: task.score, label: task.label.clone(), people: task.people.clone(),
                 person_colors: task.people.iter().filter_map(|person| actor_colors.get(person).cloned()).collect(),
+                font_size: diagram.config.task_font_size,
+                font_family: diagram.config.task_font_family.clone(),
             });
             y += task_height + task_margin;
         }
@@ -390,7 +392,7 @@ mod tests {
         }
     }
 
-    #[test] fn version_exists() { assert_eq!(crate::VERSION, "0.5.0"); }
+    #[test] fn version_exists() { assert_eq!(crate::VERSION, "0.6.0"); }
 
     #[test]
     fn gantt_has_task_bars() {
@@ -454,6 +456,8 @@ mod tests {
                     task_width: Some(280.0),
                     task_height: Some(52.0),
                     task_margin: Some(18.0),
+                    task_font_size: Some(18.0),
+                    task_font_family: Some("Avenir Next".into()),
                 },
                 sections: vec![JourneySection {
                     label: "Payment\nflow".into(),
@@ -475,6 +479,10 @@ mod tests {
         assert!(layout.items.iter().any(|item| matches!(item,
             LayoutedTemporalItem::JourneyTask { x, width, height, .. }
                 if *x == 24.0 && *width == 280.0 && *height >= 52.0
+        )));
+        assert!(layout.items.iter().any(|item| matches!(item,
+            LayoutedTemporalItem::JourneyTask { font_size, font_family, .. }
+                if *font_size == Some(18.0) && font_family.as_deref() == Some("Avenir Next")
         )));
     }
 }

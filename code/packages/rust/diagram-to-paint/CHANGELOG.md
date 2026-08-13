@@ -1,5 +1,9 @@
 # Changelog — diagram-to-paint
 
+## 0.46.0
+
+- Shape Journey task labels with their resolved font size and family.
+
 ## 0.45.0
 
 - Render Journey actor legends, task markers, and score sentiment faces with backend-neutral Paint instructions.
