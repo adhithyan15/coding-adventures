@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.154.0 — 2026-08-13 — static conditional while effects
+
+Capped `while` dependency analysis now scans only the selected branch of a
+variable-free statically decidable body conditional. Dynamic and
+variable-dependent conditions continue to scan both branches conservatively.
+
 ## 0.153.0 — 2026-08-13 — idempotent while dependencies
 
 Capped `while` control analysis now permits an exact scalar self-assignment to
