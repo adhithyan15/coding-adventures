@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 22,
-    "totalLessons": 1959,
+    "totalLessons": 1963,
     "authoredBooks": 22,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
@@ -26,20 +26,20 @@
     "rampOverBudgetLessons": 42,
     "scriptRampOverBudgetLessons": 61,
     "lessonsOpeningMultipleScripts": 5,
-    "scriptClosureViolations": 932,
-    "scriptExposureExemptedGlyphs": 1997,
+    "scriptClosureViolations": 873,
+    "scriptExposureExemptedGlyphs": 2925,
     "tracksTeachingNoScript": 12,
-    "headwordsWithoutRomanization": 489,
+    "headwordsWithoutRomanization": 305,
     "lessonsWithoutSequence": 477,
     "forwardReviews": 267,
-    "atomsNeverRevisited": 482,
+    "atomsNeverRevisited": 479,
     "forwardReferences": 458,
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 29,
     "chapterGateCleanTracks": 12,
-    "drivableLessons": 1767,
+    "drivableLessons": 1769,
     "drivablePercent": 90,
-    "chaptersWithoutDrivablePrefix": 68,
+    "chaptersWithoutDrivablePrefix": 70,
     "unexplainedModalityOverrides": 0
   },
   "duration": {
@@ -720,7 +720,11 @@
           210,
           211,
           212,
-          213
+          213,
+          214,
+          215,
+          216,
+          217
         ],
         "bookChapters": [
           1,
@@ -935,7 +939,11 @@
           210,
           211,
           212,
-          213
+          213,
+          214,
+          215,
+          216,
+          217
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -2179,9 +2187,9 @@
       {
         "language": "spanish",
         "status": "version-2",
-        "lessonCount": 359,
+        "lessonCount": 363,
         "versions": {
-          "2": 359
+          "2": 363
         }
       },
       {
@@ -2725,8 +2733,8 @@
       },
       {
         "language": "spanish",
-        "bookChapters": 213,
-        "declaredChapters": 213,
+        "bookChapters": 217,
+        "declaredChapters": 217,
         "missingCapability": 0,
         "findings": 5,
         "clean": false
@@ -2757,8 +2765,8 @@
       }
     ],
     "summary": {
-      "bookChapters": 713,
-      "declaredChapters": 713,
+      "bookChapters": 717,
+      "declaredChapters": 717,
       "chaptersWithoutCapability": 0,
       "payoffsNotClosed": 0,
       "payoffsNotRepresentative": 29,
@@ -2770,13 +2778,13 @@
     }
   },
   "levels": {
-    "totalLessons": 1959,
+    "totalLessons": 1963,
     "byLevel": {
       "pre-A1": 991,
       "A1": 361,
       "A2": 487,
       "B1": 31,
-      "B2": 3,
+      "B2": 7,
       "C1": 0,
       "C2": 0
     },
@@ -3055,13 +3063,13 @@
       },
       {
         "language": "spanish",
-        "lessonCount": 359,
+        "lessonCount": 363,
         "byLevel": {
           "pre-A1": 81,
           "A1": 93,
           "A2": 151,
           "B1": 31,
-          "B2": 3,
+          "B2": 7,
           "C1": 0,
           "C2": 0
         },
@@ -3712,9 +3720,9 @@
       },
       {
         "language": "spanish",
-        "lessonCount": 359,
-        "measurable": 281,
-        "unmeasurable": 78,
+        "lessonCount": 363,
+        "measurable": 283,
+        "unmeasurable": 80,
         "lessonViolations": 2,
         "chapterViolations": 0
       },
@@ -4662,7 +4670,7 @@
           "language": "spanish",
           "script": "latin",
           "latinScript": true,
-          "lessonCount": 359,
+          "lessonCount": 363,
           "totalGlyphs": 0,
           "lessonViolations": 0,
           "systemViolations": 0,
@@ -4720,7 +4728,7 @@
     "summary": {
       "lessonViolations": 42,
       "chapterViolations": 21,
-      "unmeasurableLessons": 589,
+      "unmeasurableLessons": 591,
       "measurablePercent": 70,
       "steepestLesson": {
         "lessonId": "BN-C06-numbers-1-5",
@@ -12063,6 +12071,19 @@
         "revisits": 0
       },
       {
+        "atom": "ES-ETYMON-AMARILLO-04",
+        "language": "spanish",
+        "introducedBy": "ES-C33-amarillo",
+        "introducedAt": 282,
+        "missed": [
+          "R1",
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 0
+      },
+      {
         "atom": "ES-ETYMON-ARIUS",
         "language": "spanish",
         "introducedBy": "ES-C09-ario",
@@ -12557,6 +12578,19 @@
         "revisits": 0
       },
       {
+        "atom": "ES-EVIDENCE-PERRO-04",
+        "language": "spanish",
+        "introducedBy": "ES-C32-perro",
+        "introducedAt": 280,
+        "missed": [
+          "R1",
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "ES-FORM-MANANA",
         "language": "spanish",
         "introducedBy": "ES-W02-enye-formas",
@@ -12743,6 +12777,19 @@
         "language": "spanish",
         "introducedBy": "ES-W03-inverted",
         "introducedAt": 51,
+        "missed": [
+          "R1",
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "ES-LEX-AMARILLO-03",
+        "language": "spanish",
+        "introducedBy": "ES-C33-amarillo",
+        "introducedAt": 282,
         "missed": [
           "R1",
           "R2",
@@ -14096,18 +14143,6 @@
         "revisits": 1
       },
       {
-        "atom": "ES-ETYMON-AMARILLO-04",
-        "language": "spanish",
-        "introducedBy": "ES-C33-amarillo",
-        "introducedAt": 282,
-        "missed": [
-          "R1",
-          "R2",
-          "R3"
-        ],
-        "revisits": 0
-      },
-      {
         "atom": "ES-ETYMON-BLANCO-04",
         "language": "spanish",
         "introducedBy": "ES-C22-blanco-germanico",
@@ -14246,6 +14281,18 @@
         "introducedAt": 68,
         "missed": [
           "R1",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "ES-ETYMON-GATO-02",
+        "language": "spanish",
+        "introducedBy": "ES-C32-gato",
+        "introducedAt": 279,
+        "missed": [
+          "R2",
           "R3",
           "R4"
         ],
@@ -14672,6 +14719,18 @@
         "revisits": 1
       },
       {
+        "atom": "ES-ETYMON-SI-LATIN",
+        "language": "spanish",
+        "introducedBy": "ES-C55-si",
+        "introducedAt": 341,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 0
+      },
+      {
         "atom": "ES-ETYMON-SPATIUM-02",
         "language": "spanish",
         "introducedBy": "ES-R02-mas-despacio",
@@ -14780,6 +14839,18 @@
         "revisits": 2
       },
       {
+        "atom": "ES-ETYMON-VERDE-02",
+        "language": "spanish",
+        "introducedBy": "ES-C33-verde",
+        "introducedAt": 281,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "ES-ETYMON-VINO-05",
         "language": "spanish",
         "introducedBy": "ES-C26-vino",
@@ -14838,18 +14909,6 @@
           "R4"
         ],
         "revisits": 2
-      },
-      {
-        "atom": "ES-EVIDENCE-PERRO-04",
-        "language": "spanish",
-        "introducedBy": "ES-C32-perro",
-        "introducedAt": 280,
-        "missed": [
-          "R1",
-          "R2",
-          "R3"
-        ],
-        "revisits": 1
       },
       {
         "atom": "ES-FORM-ESPANOL",
@@ -15497,7 +15556,7 @@
           "R2",
           "R3"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "ES-GRAMMAR-REASON-CHAIN-09",
@@ -15752,18 +15811,6 @@
         "revisits": 2
       },
       {
-        "atom": "ES-LEX-AMARILLO-03",
-        "language": "spanish",
-        "introducedBy": "ES-C33-amarillo",
-        "introducedAt": 282,
-        "missed": [
-          "R1",
-          "R2",
-          "R3"
-        ],
-        "revisits": 0
-      },
-      {
         "atom": "ES-LEX-AQUI",
         "language": "spanish",
         "introducedBy": "ES-C05-hasta-limits",
@@ -15906,6 +15953,18 @@
           "R3"
         ],
         "revisits": 0
+      },
+      {
+        "atom": "ES-LEX-GATO-01",
+        "language": "spanish",
+        "introducedBy": "ES-C32-gato",
+        "introducedAt": 279,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
       },
       {
         "atom": "ES-LEX-GRANDE",
@@ -16218,6 +16277,18 @@
           "R4"
         ],
         "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-VERDE-01",
+        "language": "spanish",
+        "introducedBy": "ES-C33-verde",
+        "introducedAt": 281,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
       },
       {
         "atom": "ES-LEX-VINO-04",
@@ -20582,6 +20653,17 @@
         "revisits": 1
       },
       {
+        "atom": "ES-ETYMON-DIJO-DIXIT",
+        "language": "spanish",
+        "introducedBy": "ES-C57-dijo",
+        "introducedAt": 357,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "ES-ETYMON-DORMIR-05",
         "language": "spanish",
         "introducedBy": "ES-C36-dormir",
@@ -20624,17 +20706,6 @@
           "R4"
         ],
         "revisits": 2
-      },
-      {
-        "atom": "ES-ETYMON-GATO-02",
-        "language": "spanish",
-        "introducedBy": "ES-C32-gato",
-        "introducedAt": 279,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 1
       },
       {
         "atom": "ES-ETYMON-GELO",
@@ -20802,17 +20873,6 @@
         "revisits": 1
       },
       {
-        "atom": "ES-ETYMON-SI-LATIN",
-        "language": "spanish",
-        "introducedBy": "ES-C55-si",
-        "introducedAt": 341,
-        "missed": [
-          "R1",
-          "R2"
-        ],
-        "revisits": 0
-      },
-      {
         "atom": "ES-ETYMON-SIC-04",
         "language": "spanish",
         "introducedBy": "ES-C41-asi-que",
@@ -20855,17 +20915,6 @@
           "R3"
         ],
         "revisits": 2
-      },
-      {
-        "atom": "ES-ETYMON-VERDE-02",
-        "language": "spanish",
-        "introducedBy": "ES-C33-verde",
-        "introducedAt": 281,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 1
       },
       {
         "atom": "ES-FRIEND-ANTE-ANT",
@@ -21207,6 +21256,17 @@
           "R4"
         ],
         "revisits": 2
+      },
+      {
+        "atom": "ES-GRAMMAR-J-STEM-PRETERITE-PLURAL",
+        "language": "spanish",
+        "introducedBy": "ES-C57-dijo",
+        "introducedAt": 357,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 1
       },
       {
         "atom": "ES-GRAMMAR-LUEGO-CONNECTIVE-01",
@@ -21822,7 +21882,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 7
+        "revisits": 8
       },
       {
         "atom": "ES-LEX-ENTENDER-03",
@@ -21856,17 +21916,6 @@
           "R3"
         ],
         "revisits": 3
-      },
-      {
-        "atom": "ES-LEX-GATO-01",
-        "language": "spanish",
-        "introducedBy": "ES-C32-gato",
-        "introducedAt": 279,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
       },
       {
         "atom": "ES-LEX-GRACIAS",
@@ -22056,6 +22105,17 @@
         "revisits": 4
       },
       {
+        "atom": "ES-LEX-PERRO-03",
+        "language": "spanish",
+        "introducedBy": "ES-C32-perro",
+        "introducedAt": 280,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
         "atom": "ES-LEX-PODER",
         "language": "spanish",
         "introducedBy": "ES-C11-poder",
@@ -22197,17 +22257,6 @@
           "R4"
         ],
         "revisits": 3
-      },
-      {
-        "atom": "ES-LEX-VERDE-01",
-        "language": "spanish",
-        "introducedBy": "ES-C33-verde",
-        "introducedAt": 281,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 1
       },
       {
         "atom": "ES-LEX-WEATHER-03",
@@ -31541,16 +31590,6 @@
         "revisits": 2
       },
       {
-        "atom": "ES-ETYMON-DIJO-DIXIT",
-        "language": "spanish",
-        "introducedBy": "ES-C57-dijo",
-        "introducedAt": 357,
-        "missed": [
-          "R1"
-        ],
-        "revisits": 0
-      },
-      {
         "atom": "ES-ETYMON-ENTENDER-04",
         "language": "spanish",
         "introducedBy": "ES-C34-entender",
@@ -31658,7 +31697,7 @@
         "missed": [
           "R1"
         ],
-        "revisits": 8
+        "revisits": 10
       },
       {
         "atom": "ES-GRAMMAR-AR-PRESENT-1SG",
@@ -31821,16 +31860,6 @@
         "revisits": 5
       },
       {
-        "atom": "ES-GRAMMAR-J-STEM-PRETERITE-PLURAL",
-        "language": "spanish",
-        "introducedBy": "ES-C57-dijo",
-        "introducedAt": 357,
-        "missed": [
-          "R1"
-        ],
-        "revisits": 0
-      },
-      {
         "atom": "ES-GRAMMAR-LO-QUE",
         "language": "spanish",
         "introducedBy": "ES-C53-lo-que",
@@ -31929,6 +31958,26 @@
           "R3"
         ],
         "revisits": 5
+      },
+      {
+        "atom": "ES-GRAMMAR-SI-FUTURE-RESULT",
+        "language": "spanish",
+        "introducedBy": "ES-C55-si-futuro",
+        "introducedAt": 342,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-GRAMMAR-SI-REAL-CONDITION",
+        "language": "spanish",
+        "introducedBy": "ES-C55-si",
+        "introducedAt": 341,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 6
       },
       {
         "atom": "ES-GRAMMAR-SI-UNREAL-CONDITION",
@@ -32141,16 +32190,6 @@
         "revisits": 5
       },
       {
-        "atom": "ES-LEX-PERRO-03",
-        "language": "spanish",
-        "introducedBy": "ES-C32-perro",
-        "introducedAt": 280,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
         "atom": "ES-LEX-PONER",
         "language": "spanish",
         "introducedBy": "ES-C13-poner",
@@ -32288,7 +32327,7 @@
         "missed": [
           "R2"
         ],
-        "revisits": 4
+        "revisits": 5
       },
       {
         "atom": "FA-DIALOGUE-NAME-EXCHANGE",
@@ -44670,12 +44709,12 @@
       },
       {
         "language": "spanish",
-        "lessonCount": 359,
+        "lessonCount": 363,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "atomsTaught": 552,
-        "atomsNeverRevisited": 78,
+        "atomsTaught": 554,
+        "atomsNeverRevisited": 75,
         "forwardReferences": 72
       },
       {
@@ -44714,14 +44753,14 @@
       "tracksWithUnorderedLessons": 17,
       "forwardPrerequisites": 225,
       "forwardReviews": 267,
-      "atomsTaught": 3014,
-      "atomsNeverRevisited": 482,
+      "atomsTaught": 3016,
+      "atomsNeverRevisited": 479,
       "neverRevisitedPercent": 16,
       "missedByWindow": {
         "R1": 927,
-        "R2": 2109,
-        "R3": 1623,
-        "R4": 365
+        "R2": 2111,
+        "R3": 1626,
+        "R4": 373
       },
       "forwardReferences": 458
     }
@@ -44788,10 +44827,10 @@
         "taughtGlyphs": 28,
         "shownGlyphs": 56,
         "neverTaughtGlyphs": 28,
-        "violations": 86,
-        "exposureOnly": 3,
-        "exposureExemptedGlyphs": 7,
-        "headwordsWithoutRomanization": 88
+        "violations": 83,
+        "exposureOnly": 6,
+        "exposureExemptedGlyphs": 22,
+        "headwordsWithoutRomanization": 70
       },
       {
         "language": "japanese",
@@ -44814,10 +44853,10 @@
         "taughtGlyphs": 0,
         "shownGlyphs": 66,
         "neverTaughtGlyphs": 66,
-        "violations": 85,
-        "exposureOnly": 0,
-        "exposureExemptedGlyphs": 138,
-        "headwordsWithoutRomanization": 52
+        "violations": 74,
+        "exposureOnly": 11,
+        "exposureExemptedGlyphs": 377,
+        "headwordsWithoutRomanization": 14
       },
       {
         "language": "malayalam",
@@ -44827,10 +44866,10 @@
         "taughtGlyphs": 0,
         "shownGlyphs": 66,
         "neverTaughtGlyphs": 66,
-        "violations": 90,
-        "exposureOnly": 0,
-        "exposureExemptedGlyphs": 168,
-        "headwordsWithoutRomanization": 57
+        "violations": 85,
+        "exposureOnly": 5,
+        "exposureExemptedGlyphs": 323,
+        "headwordsWithoutRomanization": 33
       },
       {
         "language": "marathi",
@@ -44892,10 +44931,10 @@
         "taughtGlyphs": 0,
         "shownGlyphs": 48,
         "neverTaughtGlyphs": 48,
-        "violations": 53,
-        "exposureOnly": 2,
-        "exposureExemptedGlyphs": 190,
-        "headwordsWithoutRomanization": 26
+        "violations": 43,
+        "exposureOnly": 12,
+        "exposureExemptedGlyphs": 312,
+        "headwordsWithoutRomanization": 4
       },
       {
         "language": "tamil",
@@ -44905,10 +44944,10 @@
         "taughtGlyphs": 40,
         "shownGlyphs": 51,
         "neverTaughtGlyphs": 11,
-        "violations": 68,
-        "exposureOnly": 5,
-        "exposureExemptedGlyphs": 14,
-        "headwordsWithoutRomanization": 68
+        "violations": 50,
+        "exposureOnly": 23,
+        "exposureExemptedGlyphs": 171,
+        "headwordsWithoutRomanization": 22
       },
       {
         "language": "telugu",
@@ -44918,10 +44957,10 @@
         "taughtGlyphs": 0,
         "shownGlyphs": 62,
         "neverTaughtGlyphs": 62,
-        "violations": 83,
-        "exposureOnly": 1,
-        "exposureExemptedGlyphs": 158,
-        "headwordsWithoutRomanization": 53
+        "violations": 71,
+        "exposureOnly": 13,
+        "exposureExemptedGlyphs": 398,
+        "headwordsWithoutRomanization": 17
       },
       {
         "language": "urdu",
@@ -44988,13 +45027,6 @@
         "count": 23
       },
       {
-        "lessonId": "KA-C29-shubhodaya",
-        "language": "kannada",
-        "chapter": 29,
-        "glyphs": "ಂಉಕಗಜತದನಬಭಮಯರಳಶಸಾುೂೆೋ್",
-        "count": 22
-      },
-      {
         "lessonId": "ML-C02-practice",
         "language": "malayalam",
         "chapter": 2,
@@ -45013,20 +45045,6 @@
         "language": "russian",
         "chapter": 1,
         "glyphs": "ДЗНПСабвдежзийлнопрсту",
-        "count": 22
-      },
-      {
-        "lessonId": "TE-C07-numbers-1-5",
-        "language": "telugu",
-        "chapter": 7,
-        "glyphs": "ంఐఒకగటడదనమరలాిుూె౧౨౩౪౫",
-        "count": 22
-      },
-      {
-        "lessonId": "TE-C29-subhodayam",
-        "language": "telugu",
-        "chapter": 29,
-        "glyphs": "ంఉకటతదనపభమయరలవశసాిుొో్",
         "count": 22
       },
       {
@@ -45065,13 +45083,6 @@
         "count": 21
       },
       {
-        "lessonId": "TE-C26-udayam",
-        "language": "telugu",
-        "chapter": 26,
-        "glyphs": "ంఉకచజదనపభమయరలవశాుేొో్",
-        "count": 21
-      },
-      {
         "lessonId": "UR-C14-koat",
         "language": "urdu",
         "chapter": 14,
@@ -45083,13 +45094,6 @@
         "language": "persian",
         "chapter": 11,
         "glyphs": "آتحخدرسشطظفلموًِپچکی",
-        "count": 20
-      },
-      {
-        "lessonId": "KA-C07-numbers-1-5",
-        "language": "kannada",
-        "chapter": 7,
-        "glyphs": "ಂಎಐಒಕಡದನಮರಲಾುೂ್೧೨೩೪೫",
         "count": 20
       },
       {
@@ -45160,13 +45164,6 @@
         "language": "kannada",
         "chapter": 9,
         "glyphs": "ಂಇಕಟಡದಪಬಭಮಯರವಷಸಾಿು್",
-        "count": 19
-      },
-      {
-        "lessonId": "KA-C26-belagge",
-        "language": "kannada",
-        "chapter": 26,
-        "glyphs": "ಕಗಡತದಧನಬಮಯರಲಳಹಾಿುೆ್",
         "count": 19
       },
       {
@@ -45268,13 +45265,6 @@
         "count": 18
       },
       {
-        "lessonId": "KA-C30-shubha-sanje",
-        "language": "kannada",
-        "chapter": 30,
-        "glyphs": "ಂಕಜಝದಧನಭಮಯರಶಸಾುೆೋ್",
-        "count": 18
-      },
-      {
         "lessonId": "ML-C07-numbers-1-5",
         "language": "malayalam",
         "chapter": 7,
@@ -45352,13 +45342,6 @@
         "count": 17
       },
       {
-        "lessonId": "KA-C05-iru",
-        "language": "kannada",
-        "chapter": 5,
-        "glyphs": "ಂಅಇಗದನಬರಲಳಾಿುೂೆೇ್",
-        "count": 17
-      },
-      {
         "lessonId": "KA-C14-kaalagalu",
         "language": "kannada",
         "chapter": 14,
@@ -45374,13 +45357,6 @@
       },
       {
         "lessonId": "ML-C31-afternoon-convergence",
-        "language": "malayalam",
-        "chapter": 31,
-        "glyphs": "ംഉകചഞധനഭമയഴശഹാിു്",
-        "count": 17
-      },
-      {
-        "lessonId": "ML-C31-shubha-madhyaahnam",
         "language": "malayalam",
         "chapter": 31,
         "glyphs": "ംഉകചഞധനഭമയഴശഹാിു്",
@@ -45426,6 +45402,13 @@
         "language": "punjabi",
         "chapter": 13,
         "glyphs": "ਅਕਖਣਤਧਨਮਸਹਾੁੂੈੋੰੱ",
+        "count": 17
+      },
+      {
+        "lessonId": "TE-C26-udayam",
+        "language": "telugu",
+        "chapter": 26,
+        "glyphs": "కచజనపభమరలవశాుేొో్",
         "count": 17
       },
       {
@@ -45492,31 +45475,10 @@
         "count": 16
       },
       {
-        "lessonId": "KA-C02-santosha",
+        "lessonId": "KA-C29-shubhodaya",
         "language": "kannada",
-        "chapter": 2,
-        "glyphs": "ಂಗಟತನಭಮಯಷಸಾಿುೇೋ್",
-        "count": 16
-      },
-      {
-        "lessonId": "KA-C05-kelasa-maadu",
-        "language": "kannada",
-        "chapter": 5,
-        "glyphs": "ಅಕಗಡತನಮಯಲಸಹಾುೆೇ್",
-        "count": 16
-      },
-      {
-        "lessonId": "KA-C22-hasiru-haladi",
-        "language": "kannada",
-        "chapter": 22,
-        "glyphs": "ಅಚದನಪರಲಳಶಸಹಿೀುೆ್",
-        "count": 16
-      },
-      {
-        "lessonId": "KA-C27-sanje",
-        "language": "kannada",
-        "chapter": 27,
-        "glyphs": "ಂಜಝತದಧನಮಯರಸಹಾಿೆ್",
+        "chapter": 29,
+        "glyphs": "ಂಉಕಗಜತನಬಮರಳಸಾೂೆ್",
         "count": 16
       },
       {
@@ -45534,13 +45496,6 @@
         "count": 16
       },
       {
-        "lessonId": "ML-C05-joli-ceyyuka",
-        "language": "malayalam",
-        "chapter": 5,
-        "glyphs": "കചജഞനയലസഹാിുെോ്ൻ",
-        "count": 16
-      },
-      {
         "lessonId": "ML-C05-njaan-malayalam-samsaarikkunnu",
         "language": "malayalam",
         "chapter": 5,
@@ -45548,31 +45503,10 @@
         "count": 16
       },
       {
-        "lessonId": "ML-C05-taamasikkuka",
-        "language": "malayalam",
-        "chapter": 5,
-        "glyphs": "ഇകചഞതനമയസാിുൊ്ൻൽ",
-        "count": 16
-      },
-      {
-        "lessonId": "ML-C08-dayavayi",
-        "language": "malayalam",
-        "chapter": 8,
-        "glyphs": "ംആഇകണദപയരറവാിുൂ്",
-        "count": 16
-      },
-      {
         "lessonId": "ML-C14-kaalangal",
         "language": "malayalam",
         "chapter": 14,
         "glyphs": "ംകതനമയലഴവശസാേൈ്ൽ",
-        "count": 16
-      },
-      {
-        "lessonId": "ML-C20-kalavastha",
-        "language": "malayalam",
-        "chapter": 20,
-        "glyphs": "ംഅകഥനപമയലഴവസാുെ്",
         "count": 16
       },
       {
@@ -45601,34 +45535,6 @@
         "language": "russian",
         "chapter": 2,
         "glyphs": "АВЗИКМОПЯзкмучыь",
-        "count": 16
-      },
-      {
-        "lessonId": "TE-C05-undu",
-        "language": "telugu",
-        "chapter": 5,
-        "glyphs": "ంఉటడదనబరలహాుేైో్",
-        "count": 16
-      },
-      {
-        "lessonId": "TE-C08-dayachesi",
-        "language": "telugu",
-        "chapter": 8,
-        "glyphs": "ంకచడదపయరసిుూెేో్",
-        "count": 16
-      },
-      {
-        "lessonId": "TE-C20-padakondu-iravai",
-        "language": "telugu",
-        "chapter": 20,
-        "glyphs": "ంఇకడదనపమరవిుెైొ్",
-        "count": 16
-      },
-      {
-        "lessonId": "TE-C20-vatavaranam",
-        "language": "telugu",
-        "chapter": 20,
-        "glyphs": "ంఆడణతదపయరవషాిుో్",
         "count": 16
       },
       {
@@ -45688,13 +45594,6 @@
         "count": 15
       },
       {
-        "lessonId": "KA-C08-dayavittu",
-        "language": "kannada",
-        "chapter": 8,
-        "glyphs": "ಇಕಟಡತದಯಳವಹಿುೇೊ್",
-        "count": 15
-      },
-      {
         "lessonId": "KA-C20-hannondu-ippattu",
         "language": "kannada",
         "chapter": 20,
@@ -45702,38 +45601,10 @@
         "count": 15
       },
       {
-        "lessonId": "KA-C31-shubha-madhyahna",
-        "language": "kannada",
-        "chapter": 31,
-        "glyphs": "ಅಕಧನಪಭಮಯರಶಸಹಾು್",
-        "count": 15
-      },
-      {
         "lessonId": "KA-C33-bare",
         "language": "kannada",
         "chapter": 33,
         "glyphs": "ಆಕಡತದನಮಯಳಹಾಿುೇ್",
-        "count": 15
-      },
-      {
-        "lessonId": "ML-C02-santosham",
-        "language": "malayalam",
-        "chapter": 2,
-        "glyphs": "ംകങടണതനളഷസിെോ്ൽ",
-        "count": 15
-      },
-      {
-        "lessonId": "ML-C26-raavile",
-        "language": "malayalam",
-        "chapter": 26,
-        "glyphs": "ംഇചതപഭരലവാിുെ്ർ",
-        "count": 15
-      },
-      {
-        "lessonId": "ML-C30-shubha-sayaahnam",
-        "language": "malayalam",
-        "chapter": 30,
-        "glyphs": "ംകനഭയരവശസഹാുേൈ്",
         "count": 15
       },
       {
@@ -45786,24 +45657,10 @@
         "count": 15
       },
       {
-        "lessonId": "TA-C01-answering",
-        "language": "tamil",
-        "chapter": 1,
-        "glyphs": "ஆஇகசணநனமரறலவிை்",
-        "count": 15
-      },
-      {
-        "lessonId": "TE-C05-pani-ceyu",
+        "lessonId": "TE-C29-subhodayam",
         "language": "telugu",
-        "chapter": 5,
-        "glyphs": "ంచటతనపయవసహాిుే్",
-        "count": 15
-      },
-      {
-        "lessonId": "TE-C30-subha-sayantram",
-        "language": "telugu",
-        "chapter": 30,
-        "glyphs": "ంకతదనభమయరశసాుో్",
+        "chapter": 29,
+        "glyphs": "ఉకటతనపమరలవసాిొ్",
         "count": 15
       },
       {
@@ -45877,31 +45734,17 @@
         "count": 14
       },
       {
-        "lessonId": "KA-C03-niivu-hegiddiira",
+        "lessonId": "KA-C05-iru",
         "language": "kannada",
-        "chapter": 3,
-        "glyphs": "ಇಗದನಯರವಹಾಿೀುೇ್",
+        "chapter": 5,
+        "glyphs": "ಂಅಗದನಬಲಳಾಿೂೆೇ್",
         "count": 14
       },
       {
-        "lessonId": "KA-C20-havamana",
+        "lessonId": "KA-C26-belagge",
         "language": "kannada",
-        "chapter": 20,
-        "glyphs": "ತದನಬಮರಳವಹಾಿುೆ್",
-        "count": 14
-      },
-      {
-        "lessonId": "ML-C09-kshamikkanam",
-        "language": "malayalam",
-        "chapter": 9,
-        "glyphs": "ംഇകണദമയവഷാിുൂ്",
-        "count": 14
-      },
-      {
-        "lessonId": "ML-C27-vaikunneram",
-        "language": "malayalam",
-        "chapter": 27,
-        "glyphs": "ംഉകചഞനരഴവിുേൈ്",
+        "chapter": 26,
+        "glyphs": "ಕಡತದಧನಮಯರಲಹಾಿು",
         "count": 14
       },
       {
@@ -45968,20 +45811,6 @@
         "count": 14
       },
       {
-        "lessonId": "SA-C05-aham-samskritam-vadami",
-        "language": "sanskrit",
-        "chapter": 5,
-        "glyphs": "ंअऋकतदमवसहािृ्",
-        "count": 14
-      },
-      {
-        "lessonId": "SA-C05-karomi",
-        "language": "sanskrit",
-        "chapter": 5,
-        "glyphs": "ंःकतनमयरसािृो्",
-        "count": 14
-      },
-      {
         "lessonId": "SA-C12-karnah",
         "language": "sanskrit",
         "chapter": 12,
@@ -46000,27 +45829,6 @@
         "language": "telugu",
         "chapter": 14,
         "glyphs": "ంఋకతనలవశసాిీుే",
-        "count": 14
-      },
-      {
-        "lessonId": "TE-C19-vayasu",
-        "language": "telugu",
-        "chapter": 19,
-        "glyphs": "ంఇతనయరవసాీుెై్",
-        "count": 14
-      },
-      {
-        "lessonId": "TE-C24-ratri",
-        "language": "telugu",
-        "chapter": 24,
-        "glyphs": "అఇతధపమయరలాిుే్",
-        "count": 14
-      },
-      {
-        "lessonId": "TE-C31-subha-madhyahnam",
-        "language": "telugu",
-        "chapter": 31,
-        "glyphs": "ంఅధనపభమయరశహాు్",
         "count": 14
       },
       {
@@ -46199,24 +46007,10 @@
         "count": 13
       },
       {
-        "lessonId": "SA-C02-anandah",
-        "language": "sanskrit",
-        "chapter": 2,
-        "glyphs": "ंःआटतदनभवषाृ्",
-        "count": 13
-      },
-      {
         "lessonId": "SA-C03-bhavan-katham-asti",
         "language": "sanskrit",
         "chapter": 3,
         "glyphs": "ंअकतथनभमवसाि्",
-        "count": 13
-      },
-      {
-        "lessonId": "SA-C05-vasami",
-        "language": "sanskrit",
-        "chapter": 5,
-        "glyphs": "ंअगनमरवसहािे्",
         "count": 13
       },
       {
@@ -46241,20 +46035,6 @@
         "count": 13
       },
       {
-        "lessonId": "TA-C03-nalam",
-        "language": "tamil",
-        "chapter": 3,
-        "glyphs": "இகநனமரறலாிுே்",
-        "count": 13
-      },
-      {
-        "lessonId": "TA-C04-poy-varugiren",
-        "language": "tamil",
-        "chapter": 4,
-        "glyphs": "கனபயரறவாிுேோ்",
-        "count": 13
-      },
-      {
         "lessonId": "TA-C07-numbers-1-5",
         "language": "tamil",
         "chapter": 7,
@@ -46273,13 +46053,6 @@
         "language": "telugu",
         "chapter": 3,
         "glyphs": "ంఉఎడనమరలవాీు్",
-        "count": 13
-      },
-      {
-        "lessonId": "TE-C04-velli-vastaanu",
-        "language": "telugu",
-        "chapter": 4,
-        "glyphs": "ండతనరళవసాిుె్",
         "count": 13
       },
       {
@@ -46360,24 +46133,17 @@
         "count": 12
       },
       {
-        "lessonId": "KA-C04-hoogi-baruttene",
-        "language": "kannada",
-        "chapter": 4,
-        "glyphs": "ಗತನಬರಹಿುೆೇೋ್",
-        "count": 12
-      },
-      {
-        "lessonId": "KA-C04-naale-sigona",
-        "language": "kannada",
-        "chapter": 4,
-        "glyphs": "ಓಗಣನಳಸಾಿುೆೋ್",
-        "count": 12
-      },
-      {
         "lessonId": "KA-C11-bannagalu",
         "language": "kannada",
         "chapter": 11,
         "glyphs": "ಂಕನಪಬಲಳಿೀುೆ್",
+        "count": 12
+      },
+      {
+        "lessonId": "KA-C27-sanje",
+        "language": "kannada",
+        "chapter": 27,
+        "glyphs": "ಝತದಧನಮಯರಹಾಿ್",
         "count": 12
       },
       {
@@ -46486,13 +46252,6 @@
         "count": 12
       },
       {
-        "lessonId": "SA-C03-kushalam",
-        "language": "sanskrit",
-        "chapter": 3,
-        "glyphs": "ंअकमलशसहिीु्",
-        "count": 12
-      },
-      {
         "lessonId": "SA-C10-paniyam",
         "language": "sanskrit",
         "chapter": 10,
@@ -46507,17 +46266,17 @@
         "count": 12
       },
       {
-        "lessonId": "TA-C04-mindum-sandippom",
-        "language": "tamil",
-        "chapter": 4,
-        "glyphs": "சடணதநபமிீுோ்",
-        "count": 12
-      },
-      {
         "lessonId": "TE-C05-nenu-telugu-maatlaadataanu",
         "language": "telugu",
         "chapter": 5,
         "glyphs": "గటడతనమలాుెే్",
+        "count": 12
+      },
+      {
+        "lessonId": "TE-C05-undu",
+        "language": "telugu",
+        "chapter": 5,
+        "glyphs": "టదనబరలహాేైో్",
         "count": 12
       },
       {
@@ -46696,17 +46455,17 @@
         "count": 11
       },
       {
-        "lessonId": "KA-C17-madhyaahna-madhyaraatri",
+        "lessonId": "KA-C02-santosha",
         "language": "kannada",
-        "chapter": 17,
-        "glyphs": "ಅತಧನಮಯರಹಾಿ್",
+        "chapter": 2,
+        "glyphs": "ಗಟನಭಮಯಾಿುೇ್",
         "count": 11
       },
       {
-        "lessonId": "KA-C24-ratri",
+        "lessonId": "KA-C30-shubha-sanje",
         "language": "kannada",
-        "chapter": 24,
-        "glyphs": "ಇತಧಮಯರಳಾಿು್",
+        "chapter": 30,
+        "glyphs": "ಕಝದಧನಮಯರಾೋ್",
         "count": 11
       },
       {
@@ -46749,6 +46508,13 @@
         "language": "malayalam",
         "chapter": 6,
         "glyphs": "എജഞനപരലാേോൻ",
+        "count": 11
+      },
+      {
+        "lessonId": "ML-C08-dayavayi",
+        "language": "malayalam",
+        "chapter": 8,
+        "glyphs": "ംആഇകണപരറുൂ്",
         "count": 11
       },
       {
@@ -46836,31 +46602,10 @@
         "count": 11
       },
       {
-        "lessonId": "TA-C05-velai-sey",
-        "language": "tamil",
-        "chapter": 5,
-        "glyphs": "உசநனயறலாெேை",
-        "count": 11
-      },
-      {
         "lessonId": "TA-C07-numbers-6-10",
         "language": "tamil",
         "chapter": 7,
         "glyphs": "ஆஏஒடபற௬௭௮௯௰",
-        "count": 11
-      },
-      {
-        "lessonId": "TE-C03-paravaaledu",
-        "language": "telugu",
-        "chapter": 3,
-        "glyphs": "ంఉదపరలవాిుే",
-        "count": 11
-      },
-      {
-        "lessonId": "TE-C28-madhyahnam-widened",
-        "language": "telugu",
-        "chapter": 28,
-        "glyphs": "ంఅధనపమయరహా్",
         "count": 11
       },
       {
@@ -47032,20 +46777,6 @@
         "count": 10
       },
       {
-        "lessonId": "KA-C03-cennaagi",
-        "language": "kannada",
-        "chapter": 3,
-        "glyphs": "ಗಚದನಾಿುೆೇ್",
-        "count": 10
-      },
-      {
-        "lessonId": "KA-C05-maatanaadu",
-        "language": "kannada",
-        "chapter": 5,
-        "glyphs": "ಏಡತನಮಾುೆೇ್",
-        "count": 10
-      },
-      {
         "lessonId": "KA-C05-naanu-kannada-maatanaaduttene",
         "language": "kannada",
         "chapter": 5,
@@ -47064,20 +46795,6 @@
         "language": "kannada",
         "chapter": 12,
         "glyphs": "ಂಅಕಗಣತಪಮಿ್",
-        "count": 10
-      },
-      {
-        "lessonId": "KA-C18-gante",
-        "language": "kannada",
-        "chapter": 18,
-        "glyphs": "ಂಎಒಗಟಡದರುೆ",
-        "count": 10
-      },
-      {
-        "lessonId": "KA-C28-aparahna",
-        "language": "kannada",
-        "chapter": 28,
-        "glyphs": "ಅಧನಪಮಯರಹಾ್",
         "count": 10
       },
       {
@@ -47102,38 +46819,10 @@
         "count": 10
       },
       {
-        "lessonId": "ML-C04-naale-kaanaam",
-        "language": "malayalam",
-        "chapter": 4,
-        "glyphs": "ംആകണനളാുെൾ",
-        "count": 10
-      },
-      {
-        "lessonId": "ML-C04-poyi-varaam",
-        "language": "malayalam",
-        "chapter": 4,
-        "glyphs": "ംആപയരവാിൂോ",
-        "count": 10
-      },
-      {
         "lessonId": "ML-C05-samsaarikkuka",
         "language": "malayalam",
         "chapter": 5,
         "glyphs": "ംഉകനരസാിു്",
-        "count": 10
-      },
-      {
-        "lessonId": "ML-C23-divasam",
-        "language": "malayalam",
-        "chapter": 23,
-        "glyphs": "ംജദനമവസിൂ്",
-        "count": 10
-      },
-      {
-        "lessonId": "ML-C29-suprabhaatham",
-        "language": "malayalam",
-        "chapter": 29,
-        "glyphs": "ംതപഭരശസാു്",
         "count": 10
       },
       {
@@ -47256,34 +46945,6 @@
         "count": 10
       },
       {
-        "lessonId": "SA-C04-gacchami",
-        "language": "sanskrit",
-        "chapter": 4,
-        "glyphs": "गचछतमवसाि्",
-        "count": 10
-      },
-      {
-        "lessonId": "SA-C04-punar-darshanaya",
-        "language": "sanskrit",
-        "chapter": 4,
-        "glyphs": "आदनपयरशाु्",
-        "count": 10
-      },
-      {
-        "lessonId": "SA-C04-shvah",
-        "language": "sanskrit",
-        "chapter": 4,
-        "glyphs": "ःदनपमरवशु्",
-        "count": 10
-      },
-      {
-        "lessonId": "SA-C05-vadami",
-        "language": "sanskrit",
-        "chapter": 5,
-        "glyphs": "ःदधनमयवाि्",
-        "count": 10
-      },
-      {
         "lessonId": "SA-C07-agacchati",
         "language": "sanskrit",
         "chapter": 7,
@@ -47298,20 +46959,6 @@
         "count": 10
       },
       {
-        "lessonId": "TA-C03-paravayillai",
-        "language": "tamil",
-        "chapter": 3,
-        "glyphs": "இபயரலவாிை்",
-        "count": 10
-      },
-      {
-        "lessonId": "TA-C04-naalai",
-        "language": "tamil",
-        "chapter": 4,
-        "glyphs": "கநபமரலளாை்",
-        "count": 10
-      },
-      {
         "lessonId": "TA-C06-dative-ukku",
         "language": "tamil",
         "chapter": 6,
@@ -47319,24 +46966,10 @@
         "count": 10
       },
       {
-        "lessonId": "TE-C01-dhanyavadamulu",
+        "lessonId": "TE-C08-dayachesi",
         "language": "telugu",
-        "chapter": 1,
-        "glyphs": "దధనమయలవాు్",
-        "count": 10
-      },
-      {
-        "lessonId": "TE-C04-malli-kaluddaam",
-        "language": "telugu",
-        "chapter": 4,
-        "glyphs": "ంకదమలళాీు్",
-        "count": 10
-      },
-      {
-        "lessonId": "TE-C04-reepu-kaluddaam",
-        "language": "telugu",
-        "chapter": 4,
-        "glyphs": "ంకదపరలాుే్",
+        "chapter": 8,
+        "glyphs": "ంకడపరుూెో్",
         "count": 10
       },
       {
@@ -47354,10 +46987,10 @@
         "count": 10
       },
       {
-        "lessonId": "TE-C18-ganta",
+        "lessonId": "TE-C20-vatavaranam",
         "language": "telugu",
-        "chapter": 18,
-        "glyphs": "ంఒకగటడరలుె",
+        "chapter": 20,
+        "glyphs": "ఆడదపయషిుో్",
         "count": 10
       },
       {
@@ -47438,17 +47071,10 @@
         "count": 9
       },
       {
-        "lessonId": "KA-C03-paravaagilla",
+        "lessonId": "KA-C20-havamana",
         "language": "kannada",
-        "chapter": 3,
-        "glyphs": "ಇಗಪರಲವಾಿ್",
-        "count": 9
-      },
-      {
-        "lessonId": "KA-C04-matte-sigona",
-        "language": "kannada",
-        "chapter": 4,
-        "glyphs": "ಗಣತಮಸಿೆೋ್",
+        "chapter": 20,
+        "glyphs": "ತದಬರಳಿುೆ್",
         "count": 9
       },
       {
@@ -47456,6 +47082,13 @@
         "language": "kannada",
         "chapter": 21,
         "glyphs": "ಕನಬಯಾಿುೆ್",
+        "count": 9
+      },
+      {
+        "lessonId": "KA-C22-hasiru-haladi",
+        "language": "kannada",
+        "chapter": 22,
+        "glyphs": "ಅಚನಪಲಶೀೆ್",
         "count": 9
       },
       {
@@ -47480,13 +47113,6 @@
         "count": 9
       },
       {
-        "lessonId": "ML-C03-saaramilla",
-        "language": "malayalam",
-        "chapter": 3,
-        "glyphs": "ംഇമരലസാി്",
-        "count": 9
-      },
-      {
         "lessonId": "ML-C04-veendum-kaanaam",
         "language": "malayalam",
         "chapter": 4,
@@ -47494,10 +47120,24 @@
         "count": 9
       },
       {
+        "lessonId": "ML-C20-kalavastha",
+        "language": "malayalam",
+        "chapter": 20,
+        "glyphs": "ംഅനപമയഴുെ",
+        "count": 9
+      },
+      {
         "lessonId": "ML-C24-native-night-words",
         "language": "malayalam",
         "chapter": 24,
         "glyphs": "ഇതരവാിു്ൾ",
+        "count": 9
+      },
+      {
+        "lessonId": "ML-C26-raavile",
+        "language": "malayalam",
+        "chapter": 26,
+        "glyphs": "ംഇചതപഭു്ർ",
         "count": 9
       },
       {
@@ -47606,6 +47246,13 @@
         "count": 9
       },
       {
+        "lessonId": "SA-C05-karomi",
+        "language": "sanskrit",
+        "chapter": 5,
+        "glyphs": "ंःतनयसाृ्",
+        "count": 9
+      },
+      {
         "lessonId": "SA-C10-kshiram",
         "language": "sanskrit",
         "chapter": 10,
@@ -47634,10 +47281,10 @@
         "count": 9
       },
       {
-        "lessonId": "TA-C01-vanakkam-family-register",
+        "lessonId": "TA-C03-nalam",
         "language": "tamil",
-        "chapter": 1,
-        "glyphs": "கணநமரவஸா்",
+        "chapter": 3,
+        "glyphs": "இகனரறாிுே",
         "count": 9
       },
       {
@@ -47648,17 +47295,17 @@
         "count": 9
       },
       {
-        "lessonId": "TE-C05-maatlaadu",
-        "language": "telugu",
-        "chapter": 5,
-        "glyphs": "టడతనమలాు్",
-        "count": 9
-      },
-      {
         "lessonId": "TE-C21-kukka-pilli",
         "language": "telugu",
         "chapter": 21,
         "glyphs": "కనపయలాిు్",
+        "count": 9
+      },
+      {
+        "lessonId": "TE-C24-ratri",
+        "language": "telugu",
+        "chapter": 24,
+        "glyphs": "అఇధపమయలుే",
         "count": 9
       },
       {
@@ -47900,17 +47547,17 @@
         "count": 8
       },
       {
-        "lessonId": "KA-C15-niiru-akki",
+        "lessonId": "KA-C05-kelasa-maadu",
         "language": "kannada",
-        "chapter": 15,
-        "glyphs": "ಅಕನರಿೀು್",
+        "chapter": 5,
+        "glyphs": "ಅಗತನಯಹೇ್",
         "count": 8
       },
       {
-        "lessonId": "KA-C25-shubha-ratri",
+        "lessonId": "KA-C08-dayavittu",
         "language": "kannada",
-        "chapter": 25,
-        "glyphs": "ತಭರಶಾಿು್",
+        "chapter": 8,
+        "glyphs": "ಇಕಡತಳಹೇೊ",
         "count": 8
       },
       {
@@ -47928,17 +47575,10 @@
         "count": 8
       },
       {
-        "lessonId": "ML-C01-namaskaram",
-        "language": "malayalam",
-        "chapter": 1,
-        "glyphs": "ംകനമരസാ്",
-        "count": 8
-      },
-      {
-        "lessonId": "ML-C02-enre",
+        "lessonId": "ML-C02-santosham",
         "language": "malayalam",
         "chapter": 2,
-        "glyphs": "എഞനറാെ്ൻ",
+        "glyphs": "കങടണളിെൽ",
         "count": 8
       },
       {
@@ -47949,17 +47589,17 @@
         "count": 8
       },
       {
-        "lessonId": "ML-C03-sukham",
-        "language": "malayalam",
-        "chapter": 3,
-        "glyphs": "ംഖണമസാു്",
-        "count": 8
-      },
-      {
         "lessonId": "ML-C04-pokuka",
         "language": "malayalam",
         "chapter": 4,
         "glyphs": "ഉകപരവിുോ",
+        "count": 8
+      },
+      {
+        "lessonId": "ML-C05-taamasikkuka",
+        "language": "malayalam",
+        "chapter": 5,
+        "glyphs": "ഇചഞനയൊൻൽ",
         "count": 8
       },
       {
@@ -48103,10 +47743,10 @@
         "count": 8
       },
       {
-        "lessonId": "SA-C01-namaskara",
+        "lessonId": "SA-C02-anandah",
         "language": "sanskrit",
-        "chapter": 1,
-        "glyphs": "ःकनमरसा्",
+        "chapter": 2,
+        "glyphs": "ंटतभवषाृ",
         "count": 8
       },
       {
@@ -48117,17 +47757,17 @@
         "count": 8
       },
       {
+        "lessonId": "SA-C05-vasami",
+        "language": "sanskrit",
+        "chapter": 5,
+        "glyphs": "ंअगनरहे्",
+        "count": 8
+      },
+      {
         "lessonId": "SA-C06-numbers-1-5",
         "language": "sanskrit",
         "chapter": 6,
         "glyphs": "ःणमयाीेौ",
-        "count": 8
-      },
-      {
-        "lessonId": "TA-C08-please-register",
-        "language": "tamil",
-        "chapter": 8,
-        "glyphs": "உசடயலாெொ",
         "count": 8
       },
       {
@@ -48138,24 +47778,10 @@
         "count": 8
       },
       {
-        "lessonId": "TE-C01-namaskaram",
+        "lessonId": "TE-C05-pani-ceyu",
         "language": "telugu",
-        "chapter": 1,
-        "glyphs": "ంకనమరసా్",
-        "count": 8
-      },
-      {
-        "lessonId": "TE-C23-roju",
-        "language": "telugu",
-        "chapter": 23,
-        "glyphs": "జదనమరిుో",
-        "count": 8
-      },
-      {
-        "lessonId": "TE-C25-shubha-ratri",
-        "language": "telugu",
-        "chapter": 25,
-        "glyphs": "తభరశాిు్",
+        "chapter": 5,
+        "glyphs": "ంటతవసహా్",
         "count": 8
       },
       {
@@ -48313,20 +47939,6 @@
         "count": 7
       },
       {
-        "lessonId": "KA-C01-dhanyavada",
-        "language": "kannada",
-        "chapter": 1,
-        "glyphs": "ದಧನಯವಾ್",
-        "count": 7
-      },
-      {
-        "lessonId": "KA-C01-namaskara",
-        "language": "kannada",
-        "chapter": 1,
-        "glyphs": "ಕನಮರಸಾ್",
-        "count": 7
-      },
-      {
         "lessonId": "KA-C02-nanna-hesaru",
         "language": "kannada",
         "chapter": 2,
@@ -48334,24 +47946,10 @@
         "count": 7
       },
       {
-        "lessonId": "KA-C03-hege",
-        "language": "kannada",
-        "chapter": 3,
-        "glyphs": "ಏಗನಹುೆೇ",
-        "count": 7
-      },
-      {
-        "lessonId": "KA-C23-dina",
-        "language": "kannada",
-        "chapter": 23,
-        "glyphs": "ಗದನಲಹಿು",
-        "count": 7
-      },
-      {
-        "lessonId": "ML-C01-illa",
+        "lessonId": "ML-C09-kshamikkanam",
         "language": "malayalam",
-        "chapter": 1,
-        "glyphs": "അഇഉടണല്",
+        "chapter": 9,
+        "glyphs": "ഇദയവാുൂ",
         "count": 7
       },
       {
@@ -48530,20 +48128,6 @@
         "count": 7
       },
       {
-        "lessonId": "SA-C01-svagatam",
-        "language": "sanskrit",
-        "chapter": 1,
-        "glyphs": "गतमवसा्",
-        "count": 7
-      },
-      {
-        "lessonId": "SA-C02-bhavan-tvam",
-        "language": "sanskrit",
-        "chapter": 2,
-        "glyphs": "तनभमवा्",
-        "count": 7
-      },
-      {
         "lessonId": "SA-C09-snihyati",
         "language": "sanskrit",
         "chapter": 9,
@@ -48558,41 +48142,6 @@
         "count": 7
       },
       {
-        "lessonId": "TA-C02-en-peyar",
-        "language": "tamil",
-        "chapter": 2,
-        "glyphs": "எனபயரெ்",
-        "count": 7
-      },
-      {
-        "lessonId": "TA-C05-naan-tamizh-pesugiren",
-        "language": "tamil",
-        "chapter": 5,
-        "glyphs": "சநனபறாே",
-        "count": 7
-      },
-      {
-        "lessonId": "TA-C07-numbers-1-5-family",
-        "language": "tamil",
-        "chapter": 7,
-        "glyphs": "இஐடரறாூ",
-        "count": 7
-      },
-      {
-        "lessonId": "TE-C02-nuvvu-miiru",
-        "language": "telugu",
-        "chapter": 2,
-        "glyphs": "నమరవీు్",
-        "count": 7
-      },
-      {
-        "lessonId": "TE-C03-baagaa",
-        "language": "telugu",
-        "chapter": 3,
-        "glyphs": "గనబాుే్",
-        "count": 7
-      },
-      {
         "lessonId": "TE-C03-elaa",
         "language": "telugu",
         "chapter": 3,
@@ -48600,17 +48149,10 @@
         "count": 7
       },
       {
-        "lessonId": "TE-C13-sharira-bhagalu",
+        "lessonId": "TE-C18-ganta",
         "language": "telugu",
-        "chapter": 13,
-        "glyphs": "చతయలిె్",
-        "count": 7
-      },
-      {
-        "lessonId": "TE-C27-sayantram",
-        "language": "telugu",
-        "chapter": 27,
-        "glyphs": "ంతయరసా్",
+        "chapter": 18,
+        "glyphs": "ఒకడరలుె",
         "count": 7
       },
       {
@@ -48754,13 +48296,6 @@
         "count": 6
       },
       {
-        "lessonId": "HI-C39-baccha",
-        "language": "hindi",
-        "chapter": 39,
-        "glyphs": "छडब़ीु",
-        "count": 6
-      },
-      {
         "lessonId": "JA-C01-arigatou",
         "language": "japanese",
         "chapter": 1,
@@ -48775,10 +48310,17 @@
         "count": 6
       },
       {
-        "lessonId": "KA-C04-hoogu",
+        "lessonId": "KA-C18-gante",
         "language": "kannada",
-        "chapter": 4,
-        "glyphs": "ಗಬಹಾುೋ",
+        "chapter": 18,
+        "glyphs": "ಎಒಡದರು",
+        "count": 6
+      },
+      {
+        "lessonId": "KA-C24-ratri",
+        "language": "kannada",
+        "chapter": 24,
+        "glyphs": "ಇಧಮಯಳು",
         "count": 6
       },
       {
@@ -48796,10 +48338,10 @@
         "count": 6
       },
       {
-        "lessonId": "ML-C03-engane",
+        "lessonId": "ML-C05-joli-ceyyuka",
         "language": "malayalam",
-        "chapter": 3,
-        "glyphs": "എങതനെ്",
+        "chapter": 5,
+        "glyphs": "ഞനസഹാൻ",
         "count": 6
       },
       {
@@ -48814,6 +48356,13 @@
         "language": "malayalam",
         "chapter": 24,
         "glyphs": "തപരാി്",
+        "count": 6
+      },
+      {
+        "lessonId": "ML-C31-shubha-madhyaahnam",
+        "language": "malayalam",
+        "chapter": 31,
+        "glyphs": "ഉകചഞഴി",
         "count": 6
       },
       {
@@ -48894,17 +48443,17 @@
         "count": 6
       },
       {
-        "lessonId": "SA-C01-namaste",
+        "lessonId": "SA-C03-kushalam",
         "language": "sanskrit",
-        "chapter": 1,
-        "glyphs": "तनमसे्",
+        "chapter": 3,
+        "glyphs": "ंअसहिी",
         "count": 6
       },
       {
-        "lessonId": "SA-C03-na-cinta",
+        "lessonId": "SA-C04-shvah",
         "language": "sanskrit",
-        "chapter": 3,
-        "glyphs": "चतनाि्",
+        "chapter": 4,
+        "glyphs": "दनपमरु",
         "count": 6
       },
       {
@@ -48957,31 +48506,10 @@
         "count": 6
       },
       {
-        "lessonId": "TA-C02-nii-niingal",
+        "lessonId": "TA-C01-answering",
         "language": "tamil",
-        "chapter": 2,
-        "glyphs": "கஙநளீ்",
-        "count": 6
-      },
-      {
-        "lessonId": "TA-C03-eppadi",
-        "language": "tamil",
-        "chapter": 3,
-        "glyphs": "எடனபி்",
-        "count": 6
-      },
-      {
-        "lessonId": "TA-C05-pesu",
-        "language": "tamil",
-        "chapter": 5,
-        "glyphs": "ஏசனபறே",
-        "count": 6
-      },
-      {
-        "lessonId": "TA-C05-vaazh",
-        "language": "tamil",
-        "chapter": 5,
-        "glyphs": "நனறாேை",
+        "chapter": 1,
+        "glyphs": "கணநனறவ",
         "count": 6
       },
       {
@@ -48992,13 +48520,6 @@
         "count": 6
       },
       {
-        "lessonId": "TE-C01-ledu",
-        "language": "telugu",
-        "chapter": 1,
-        "glyphs": "కదలాుే",
-        "count": 6
-      },
-      {
         "lessonId": "TE-C02-naa-peru",
         "language": "telugu",
         "chapter": 2,
@@ -49006,17 +48527,17 @@
         "count": 6
       },
       {
-        "lessonId": "TE-C04-vellu",
-        "language": "telugu",
-        "chapter": 4,
-        "glyphs": "చళవుె్",
-        "count": 6
-      },
-      {
         "lessonId": "TE-C06-dative-ku",
         "language": "telugu",
         "chapter": 6,
         "glyphs": "నపరాిే",
+        "count": 6
+      },
+      {
+        "lessonId": "TE-C19-vayasu",
+        "language": "telugu",
+        "chapter": 19,
+        "glyphs": "ఇరాుై్",
         "count": 6
       },
       {
@@ -49209,13 +48730,6 @@
         "count": 5
       },
       {
-        "lessonId": "HI-C08-kripaya",
-        "language": "hindi",
-        "chapter": 8,
-        "glyphs": "इएगयृ",
-        "count": 5
-      },
-      {
         "lessonId": "HI-C19-age-grammar",
         "language": "hindi",
         "chapter": 19,
@@ -49265,17 +48779,17 @@
         "count": 5
       },
       {
-        "lessonId": "KA-C01-illa",
-        "language": "kannada",
-        "chapter": 1,
-        "glyphs": "ಇದಲೆ್",
+        "lessonId": "HI-C39-baccha",
+        "language": "hindi",
+        "chapter": 39,
+        "glyphs": "छड़ीु",
         "count": 5
       },
       {
-        "lessonId": "KA-C02-hesaru",
+        "lessonId": "KA-C07-numbers-1-5",
         "language": "kannada",
-        "chapter": 2,
-        "glyphs": "ರಸಹುೆ",
+        "chapter": 7,
+        "glyphs": "೧೨೩೪೫",
         "count": 5
       },
       {
@@ -49283,6 +48797,13 @@
         "language": "kannada",
         "chapter": 13,
         "glyphs": "ಕತಲೆೈ",
+        "count": 5
+      },
+      {
+        "lessonId": "KA-C31-shubha-madhyahna",
+        "language": "kannada",
+        "chapter": 31,
+        "glyphs": "ಅಕಪರಸ",
         "count": 5
       },
       {
@@ -49318,6 +48839,27 @@
         "language": "malayalam",
         "chapter": 6,
         "glyphs": "ഞരസുൻ",
+        "count": 5
+      },
+      {
+        "lessonId": "ML-C23-divasam",
+        "language": "malayalam",
+        "chapter": 23,
+        "glyphs": "ജനമൂ്",
+        "count": 5
+      },
+      {
+        "lessonId": "ML-C27-vaikunneram",
+        "language": "malayalam",
+        "chapter": 27,
+        "glyphs": "ഉചഞഴി",
+        "count": 5
+      },
+      {
+        "lessonId": "ML-C30-shubha-sayaahnam",
+        "language": "malayalam",
+        "chapter": 30,
+        "glyphs": "കരവേൈ",
         "count": 5
       },
       {
@@ -49482,24 +49024,10 @@
         "count": 5
       },
       {
-        "lessonId": "SA-C02-asti",
+        "lessonId": "SA-C05-vadami",
         "language": "sanskrit",
-        "chapter": 2,
-        "glyphs": "अतसि्",
-        "count": 5
-      },
-      {
-        "lessonId": "SA-C03-katham",
-        "language": "sanskrit",
-        "chapter": 3,
-        "glyphs": "कथमि्",
-        "count": 5
-      },
-      {
-        "lessonId": "TA-C01-nandri",
-        "language": "tamil",
-        "chapter": 1,
-        "glyphs": "நனறி்",
+        "chapter": 5,
+        "glyphs": "ःधनय्",
         "count": 5
       },
       {
@@ -49510,38 +49038,38 @@
         "count": 5
       },
       {
-        "lessonId": "TA-C01-vanakkam",
+        "lessonId": "TA-C05-vaazh",
         "language": "tamil",
-        "chapter": 1,
-        "glyphs": "கணமவ்",
+        "chapter": 5,
+        "glyphs": "நனறேை",
         "count": 5
       },
       {
-        "lessonId": "TA-C02-en",
+        "lessonId": "TA-C05-velai-sey",
         "language": "tamil",
-        "chapter": 2,
-        "glyphs": "எநனா்",
+        "chapter": 5,
+        "glyphs": "உநனறா",
         "count": 5
       },
       {
-        "lessonId": "TA-C02-peyar",
-        "language": "tamil",
-        "chapter": 2,
-        "glyphs": "பயரெ்",
-        "count": 5
-      },
-      {
-        "lessonId": "TA-C03-naan",
-        "language": "tamil",
-        "chapter": 3,
-        "glyphs": "எநனா்",
-        "count": 5
-      },
-      {
-        "lessonId": "TE-C22-pacha-pasupu",
+        "lessonId": "TE-C07-numbers-1-5",
         "language": "telugu",
-        "chapter": 22,
-        "glyphs": "చపసు్",
+        "chapter": 7,
+        "glyphs": "౧౨౩౪౫",
+        "count": 5
+      },
+      {
+        "lessonId": "TE-C20-padakondu-iravai",
+        "language": "telugu",
+        "chapter": 20,
+        "glyphs": "నమిె్",
+        "count": 5
+      },
+      {
+        "lessonId": "TE-C30-subha-sayantram",
+        "language": "telugu",
+        "chapter": 30,
+        "glyphs": "కదనమో",
         "count": 5
       },
       {
@@ -49720,13 +49248,6 @@
         "count": 4
       },
       {
-        "lessonId": "HI-C03-kaise",
-        "language": "hindi",
-        "chapter": 3,
-        "glyphs": "यीृै",
-        "count": 4
-      },
-      {
         "lessonId": "HI-C05-karna",
         "language": "hindi",
         "chapter": 5,
@@ -49738,13 +49259,6 @@
         "language": "hindi",
         "chapter": 14,
         "glyphs": "ऋगीु",
-        "count": 4
-      },
-      {
-        "lessonId": "HI-C18-ghanta",
-        "language": "hindi",
-        "chapter": 18,
-        "glyphs": "एघबै",
         "count": 4
       },
       {
@@ -49790,13 +49304,6 @@
         "count": 4
       },
       {
-        "lessonId": "HI-C36-kursi",
-        "language": "hindi",
-        "chapter": 36,
-        "glyphs": "घ़ीु",
-        "count": 4
-      },
-      {
         "lessonId": "HI-C39-dost",
         "language": "hindi",
         "chapter": 39,
@@ -49818,31 +49325,17 @@
         "count": 4
       },
       {
-        "lessonId": "KA-C01-haudu",
+        "lessonId": "KA-C05-maatanaadu",
         "language": "kannada",
-        "chapter": 1,
-        "glyphs": "ದಹುೌ",
+        "chapter": 5,
+        "glyphs": "ಏೆೇ್",
         "count": 4
       },
       {
-        "lessonId": "KA-C02-nanna",
+        "lessonId": "KA-C23-dina",
         "language": "kannada",
-        "chapter": 2,
-        "glyphs": "ನಾು್",
-        "count": 4
-      },
-      {
-        "lessonId": "KA-C02-niinu-niivu",
-        "language": "kannada",
-        "chapter": 2,
-        "glyphs": "ನವೀು",
-        "count": 4
-      },
-      {
-        "lessonId": "KA-C03-naanu",
-        "language": "kannada",
-        "chapter": 3,
-        "glyphs": "ನಾು್",
+        "chapter": 23,
+        "glyphs": "ಗಲಹು",
         "count": 4
       },
       {
@@ -49874,10 +49367,10 @@
         "count": 4
       },
       {
-        "lessonId": "ML-C01-nandi",
+        "lessonId": "ML-C01-illa",
         "language": "malayalam",
         "chapter": 1,
-        "glyphs": "ദനി്",
+        "glyphs": "അഉടണ",
         "count": 4
       },
       {
@@ -49895,10 +49388,10 @@
         "count": 4
       },
       {
-        "lessonId": "ML-C02-peru",
+        "lessonId": "ML-C03-sukham",
         "language": "malayalam",
-        "chapter": 2,
-        "glyphs": "പരേ്",
+        "chapter": 3,
+        "glyphs": "ണമാ്",
         "count": 4
       },
       {
@@ -49972,48 +49465,6 @@
         "count": 4
       },
       {
-        "lessonId": "SA-C01-am-na",
-        "language": "sanskrit",
-        "chapter": 1,
-        "glyphs": "आनम्",
-        "count": 4
-      },
-      {
-        "lessonId": "SA-C02-kim",
-        "language": "sanskrit",
-        "chapter": 2,
-        "glyphs": "कमि्",
-        "count": 4
-      },
-      {
-        "lessonId": "SA-C02-mama",
-        "language": "sanskrit",
-        "chapter": 2,
-        "glyphs": "अमह्",
-        "count": 4
-      },
-      {
-        "lessonId": "SA-C02-nama",
-        "language": "sanskrit",
-        "chapter": 2,
-        "glyphs": "नमा्",
-        "count": 4
-      },
-      {
-        "lessonId": "SA-C03-aham",
-        "language": "sanskrit",
-        "chapter": 3,
-        "glyphs": "अमह्",
-        "count": 4
-      },
-      {
-        "lessonId": "SA-C04-punah",
-        "language": "sanskrit",
-        "chapter": 4,
-        "glyphs": "ःनपु",
-        "count": 4
-      },
-      {
         "lessonId": "SA-C07-khadati",
         "language": "sanskrit",
         "chapter": 7,
@@ -50042,17 +49493,10 @@
         "count": 4
       },
       {
-        "lessonId": "TA-C01-illai",
+        "lessonId": "TA-C08-please-register",
         "language": "tamil",
-        "chapter": 1,
-        "glyphs": "இலை்",
-        "count": 4
-      },
-      {
-        "lessonId": "TA-C04-po",
-        "language": "tamil",
-        "chapter": 4,
-        "glyphs": "பவாோ",
+        "chapter": 8,
+        "glyphs": "டலாொ",
         "count": 4
       },
       {
@@ -50098,45 +49542,17 @@
         "count": 4
       },
       {
-        "lessonId": "TE-C01-avunu",
-        "language": "telugu",
-        "chapter": 1,
-        "glyphs": "అనవు",
-        "count": 4
-      },
-      {
-        "lessonId": "TE-C01-sare",
-        "language": "telugu",
-        "chapter": 1,
-        "glyphs": "రసిే",
-        "count": 4
-      },
-      {
-        "lessonId": "TE-C02-emiti",
-        "language": "telugu",
-        "chapter": 2,
-        "glyphs": "ఏటమి",
-        "count": 4
-      },
-      {
-        "lessonId": "TE-C02-naa",
-        "language": "telugu",
-        "chapter": 2,
-        "glyphs": "నాుే",
-        "count": 4
-      },
-      {
-        "lessonId": "TE-C02-peru",
-        "language": "telugu",
-        "chapter": 2,
-        "glyphs": "పరుే",
-        "count": 4
-      },
-      {
-        "lessonId": "TE-C03-nenu",
+        "lessonId": "TE-C03-baagaa",
         "language": "telugu",
         "chapter": 3,
-        "glyphs": "నాుే",
+        "glyphs": "నుే్",
+        "count": 4
+      },
+      {
+        "lessonId": "TE-C23-roju",
+        "language": "telugu",
+        "chapter": 23,
+        "glyphs": "దనమి",
         "count": 4
       },
       {
@@ -50259,6 +49675,13 @@
         "count": 3
       },
       {
+        "lessonId": "HI-C03-kaise",
+        "language": "hindi",
+        "chapter": 3,
+        "glyphs": "यीृ",
+        "count": 3
+      },
+      {
         "lessonId": "HI-C05-rahna",
         "language": "hindi",
         "chapter": 5,
@@ -50277,6 +49700,13 @@
         "language": "hindi",
         "chapter": 7,
         "glyphs": "आीै",
+        "count": 3
+      },
+      {
+        "lessonId": "HI-C08-kripaya",
+        "language": "hindi",
+        "chapter": 8,
+        "glyphs": "इएग",
         "count": 3
       },
       {
@@ -50301,10 +49731,10 @@
         "count": 3
       },
       {
-        "lessonId": "HI-C15-paani-roti",
+        "lessonId": "HI-C18-ghanta",
         "language": "hindi",
-        "chapter": 15,
-        "glyphs": "आयी",
+        "chapter": 18,
+        "glyphs": "एबै",
         "count": 3
       },
       {
@@ -50329,24 +49759,24 @@
         "count": 3
       },
       {
-        "lessonId": "HI-C38-daant",
-        "language": "hindi",
-        "chapter": 38,
-        "glyphs": "ँआी",
+        "lessonId": "KA-C03-cennaagi",
+        "language": "kannada",
+        "chapter": 3,
+        "glyphs": "ದುೇ",
         "count": 3
       },
       {
-        "lessonId": "KA-C01-sari",
+        "lessonId": "KA-C03-hege",
         "language": "kannada",
-        "chapter": 1,
-        "glyphs": "ರಸಿ",
-        "count": 3
-      },
-      {
-        "lessonId": "KA-C02-enu",
-        "language": "kannada",
-        "chapter": 2,
+        "chapter": 3,
         "glyphs": "ಏನು",
+        "count": 3
+      },
+      {
+        "lessonId": "KA-C04-naale-sigona",
+        "language": "kannada",
+        "chapter": 4,
+        "glyphs": "ಓು್",
         "count": 3
       },
       {
@@ -50357,17 +49787,24 @@
         "count": 3
       },
       {
-        "lessonId": "ML-C01-sari",
-        "language": "malayalam",
-        "chapter": 1,
-        "glyphs": "രശി",
+        "lessonId": "KA-C28-aparahna",
+        "language": "kannada",
+        "chapter": 28,
+        "glyphs": "ಧಮಯ",
         "count": 3
       },
       {
-        "lessonId": "ML-C17-ucha-paathira",
+        "lessonId": "ML-C02-enre",
         "language": "malayalam",
-        "chapter": 17,
-        "glyphs": "ഉച്",
+        "chapter": 2,
+        "glyphs": "ഞാൻ",
+        "count": 3
+      },
+      {
+        "lessonId": "ML-C04-naale-kaanaam",
+        "language": "malayalam",
+        "chapter": 4,
+        "glyphs": "ആുൾ",
         "count": 3
       },
       {
@@ -50441,6 +49878,20 @@
         "count": 3
       },
       {
+        "lessonId": "SA-C02-mama",
+        "language": "sanskrit",
+        "chapter": 2,
+        "glyphs": "अह्",
+        "count": 3
+      },
+      {
+        "lessonId": "SA-C04-gacchami",
+        "language": "sanskrit",
+        "chapter": 4,
+        "glyphs": "तवस",
+        "count": 3
+      },
+      {
         "lessonId": "SA-C07-gacchati",
         "language": "sanskrit",
         "chapter": 7,
@@ -50448,31 +49899,10 @@
         "count": 3
       },
       {
-        "lessonId": "TA-C01-sari",
+        "lessonId": "TA-C05-pesu",
         "language": "tamil",
-        "chapter": 1,
-        "glyphs": "சரி",
-        "count": 3
-      },
-      {
-        "lessonId": "TA-C02-enna",
-        "language": "tamil",
-        "chapter": 2,
-        "glyphs": "என்",
-        "count": 3
-      },
-      {
-        "lessonId": "TA-C07-numbers-6-10-family",
-        "language": "tamil",
-        "chapter": 7,
-        "glyphs": "ஆஏற",
-        "count": 3
-      },
-      {
-        "lessonId": "TA-C08-tayavuseytu",
-        "language": "tamil",
-        "chapter": 8,
-        "glyphs": "சயெ",
+        "chapter": 5,
+        "glyphs": "ஏனற",
         "count": 3
       },
       {
@@ -50497,10 +49927,31 @@
         "count": 3
       },
       {
-        "lessonId": "TA-C20-vaanilai",
-        "language": "tamil",
-        "chapter": 20,
-        "glyphs": "யாெ",
+        "lessonId": "TE-C03-paravaaledu",
+        "language": "telugu",
+        "chapter": 3,
+        "glyphs": "ంఉి",
+        "count": 3
+      },
+      {
+        "lessonId": "TE-C04-velli-vastaanu",
+        "language": "telugu",
+        "chapter": 4,
+        "glyphs": "ండర",
+        "count": 3
+      },
+      {
+        "lessonId": "TE-C28-madhyahnam-widened",
+        "language": "telugu",
+        "chapter": 28,
+        "glyphs": "అపర",
+        "count": 3
+      },
+      {
+        "lessonId": "TE-C31-subha-madhyahnam",
+        "language": "telugu",
+        "chapter": 31,
+        "glyphs": "అపర",
         "count": 3
       },
       {
@@ -50791,31 +50242,10 @@
         "count": 2
       },
       {
-        "lessonId": "HI-C03-hun",
-        "language": "hindi",
-        "chapter": 3,
-        "glyphs": "ँै",
-        "count": 2
-      },
-      {
-        "lessonId": "HI-C03-main",
-        "language": "hindi",
-        "chapter": 3,
-        "glyphs": "यै",
-        "count": 2
-      },
-      {
         "lessonId": "HI-C04-chalta-hun",
         "language": "hindi",
         "chapter": 4,
         "glyphs": "ँी",
-        "count": 2
-      },
-      {
-        "lessonId": "HI-C04-milenge",
-        "language": "hindi",
-        "chapter": 4,
-        "glyphs": "एग",
         "count": 2
       },
       {
@@ -50830,6 +50260,13 @@
         "language": "hindi",
         "chapter": 7,
         "glyphs": "ँी",
+        "count": 2
+      },
+      {
+        "lessonId": "HI-C15-paani-roti",
+        "language": "hindi",
+        "chapter": 15,
+        "glyphs": "आय",
         "count": 2
       },
       {
@@ -50875,6 +50312,48 @@
         "count": 2
       },
       {
+        "lessonId": "HI-C36-kursi",
+        "language": "hindi",
+        "chapter": 36,
+        "glyphs": "घ़",
+        "count": 2
+      },
+      {
+        "lessonId": "HI-C38-daant",
+        "language": "hindi",
+        "chapter": 38,
+        "glyphs": "आी",
+        "count": 2
+      },
+      {
+        "lessonId": "KA-C01-illa",
+        "language": "kannada",
+        "chapter": 1,
+        "glyphs": "ದೆ",
+        "count": 2
+      },
+      {
+        "lessonId": "KA-C02-nanna",
+        "language": "kannada",
+        "chapter": 2,
+        "glyphs": "ಾು",
+        "count": 2
+      },
+      {
+        "lessonId": "KA-C03-niivu-hegiddiira",
+        "language": "kannada",
+        "chapter": 3,
+        "glyphs": "ಇಯ",
+        "count": 2
+      },
+      {
+        "lessonId": "KA-C04-hoogu",
+        "language": "kannada",
+        "chapter": 4,
+        "glyphs": "ಬಾ",
+        "count": 2
+      },
+      {
         "lessonId": "KA-C37-kivi",
         "language": "kannada",
         "chapter": 37,
@@ -50886,6 +50365,20 @@
         "language": "kannada",
         "chapter": 37,
         "glyphs": "ನ್",
+        "count": 2
+      },
+      {
+        "lessonId": "ML-C03-saaramilla",
+        "language": "malayalam",
+        "chapter": 3,
+        "glyphs": "ംഇ",
+        "count": 2
+      },
+      {
+        "lessonId": "ML-C04-poyi-varaam",
+        "language": "malayalam",
+        "chapter": 4,
+        "glyphs": "ആൂ",
         "count": 2
       },
       {
@@ -50931,10 +50424,17 @@
         "count": 2
       },
       {
-        "lessonId": "TA-C13-udal-uruppugal",
+        "lessonId": "TA-C02-en",
         "language": "tamil",
-        "chapter": 13,
-        "glyphs": "லை",
+        "chapter": 2,
+        "glyphs": "நா",
+        "count": 2
+      },
+      {
+        "lessonId": "TA-C04-po",
+        "language": "tamil",
+        "chapter": 4,
+        "glyphs": "வா",
         "count": 2
       },
       {
@@ -50959,10 +50459,10 @@
         "count": 2
       },
       {
-        "lessonId": "TA-C23-naal",
+        "lessonId": "TA-C20-vaanilai",
         "language": "tamil",
-        "chapter": 23,
-        "glyphs": "ாூ",
+        "chapter": 20,
+        "glyphs": "யெ",
         "count": 2
       },
       {
@@ -50984,6 +50484,27 @@
         "language": "tamil",
         "chapter": 32,
         "glyphs": "ேோ",
+        "count": 2
+      },
+      {
+        "lessonId": "TE-C01-ledu",
+        "language": "telugu",
+        "chapter": 1,
+        "glyphs": "కా",
+        "count": 2
+      },
+      {
+        "lessonId": "TE-C02-naa",
+        "language": "telugu",
+        "chapter": 2,
+        "glyphs": "ుే",
+        "count": 2
+      },
+      {
+        "lessonId": "TE-C05-maatlaadu",
+        "language": "telugu",
+        "chapter": 5,
+        "glyphs": "తన",
         "count": 2
       },
       {
@@ -51232,20 +50753,6 @@
         "count": 1
       },
       {
-        "lessonId": "HI-C02-hai",
-        "language": "hindi",
-        "chapter": 2,
-        "glyphs": "ै",
-        "count": 1
-      },
-      {
-        "lessonId": "HI-C02-kya",
-        "language": "hindi",
-        "chapter": 2,
-        "glyphs": "य",
-        "count": 1
-      },
-      {
         "lessonId": "HI-C02-mera-naam-hai",
         "language": "hindi",
         "chapter": 2,
@@ -51253,10 +50760,31 @@
         "count": 1
       },
       {
+        "lessonId": "HI-C03-hun",
+        "language": "hindi",
+        "chapter": 3,
+        "glyphs": "ै",
+        "count": 1
+      },
+      {
+        "lessonId": "HI-C03-main",
+        "language": "hindi",
+        "chapter": 3,
+        "glyphs": "य",
+        "count": 1
+      },
+      {
         "lessonId": "HI-C04-kal-milte-hain",
         "language": "hindi",
         "chapter": 4,
         "glyphs": "ै",
+        "count": 1
+      },
+      {
+        "lessonId": "HI-C04-milenge",
+        "language": "hindi",
+        "chapter": 4,
+        "glyphs": "ए",
         "count": 1
       },
       {
@@ -51302,13 +50830,6 @@
         "count": 1
       },
       {
-        "lessonId": "HI-C23-kutta-billi",
-        "language": "hindi",
-        "chapter": 23,
-        "glyphs": "ु",
-        "count": 1
-      },
-      {
         "lessonId": "JA-C01-hai",
         "language": "japanese",
         "chapter": 1,
@@ -51323,10 +50844,45 @@
         "count": 1
       },
       {
+        "lessonId": "KA-C03-naanu",
+        "language": "kannada",
+        "chapter": 3,
+        "glyphs": "್",
+        "count": 1
+      },
+      {
+        "lessonId": "KA-C03-paravaagilla",
+        "language": "kannada",
+        "chapter": 3,
+        "glyphs": "ಇ",
+        "count": 1
+      },
+      {
         "lessonId": "KA-C06-dative-stacking",
         "language": "kannada",
         "chapter": 6,
         "glyphs": "ನ",
+        "count": 1
+      },
+      {
+        "lessonId": "KA-C17-madhyaahna-madhyaraatri",
+        "language": "kannada",
+        "chapter": 17,
+        "glyphs": "ಅ",
+        "count": 1
+      },
+      {
+        "lessonId": "ML-C03-engane",
+        "language": "malayalam",
+        "chapter": 3,
+        "glyphs": "ത",
+        "count": 1
+      },
+      {
+        "lessonId": "ML-C29-suprabhaatham",
+        "language": "malayalam",
+        "chapter": 29,
+        "glyphs": "ശ",
         "count": 1
       },
       {
@@ -51365,6 +50921,62 @@
         "count": 1
       },
       {
+        "lessonId": "SA-C02-nama",
+        "language": "sanskrit",
+        "chapter": 2,
+        "glyphs": "्",
+        "count": 1
+      },
+      {
+        "lessonId": "SA-C03-katham",
+        "language": "sanskrit",
+        "chapter": 3,
+        "glyphs": "ि",
+        "count": 1
+      },
+      {
+        "lessonId": "SA-C04-punar-darshanaya",
+        "language": "sanskrit",
+        "chapter": 4,
+        "glyphs": "आ",
+        "count": 1
+      },
+      {
+        "lessonId": "SA-C05-aham-samskritam-vadami",
+        "language": "sanskrit",
+        "chapter": 5,
+        "glyphs": "ऋ",
+        "count": 1
+      },
+      {
+        "lessonId": "TA-C03-eppadi",
+        "language": "tamil",
+        "chapter": 3,
+        "glyphs": "ன",
+        "count": 1
+      },
+      {
+        "lessonId": "TA-C03-naan",
+        "language": "tamil",
+        "chapter": 3,
+        "glyphs": "எ",
+        "count": 1
+      },
+      {
+        "lessonId": "TA-C03-paravayillai",
+        "language": "tamil",
+        "chapter": 3,
+        "glyphs": "இ",
+        "count": 1
+      },
+      {
+        "lessonId": "TA-C04-poy-varugiren",
+        "language": "tamil",
+        "chapter": 4,
+        "glyphs": "ா",
+        "count": 1
+      },
+      {
         "lessonId": "TA-C18-mani-homophone-time",
         "language": "tamil",
         "chapter": 18,
@@ -51379,21 +50991,14 @@
         "count": 1
       },
       {
-        "lessonId": "TA-C23-day-family-register",
+        "lessonId": "TA-C23-naal",
         "language": "tamil",
         "chapter": 23,
-        "glyphs": "ா",
+        "glyphs": "ூ",
         "count": 1
       },
       {
         "lessonId": "TA-C24-iravu",
-        "language": "tamil",
-        "chapter": 24,
-        "glyphs": "ா",
-        "count": 1
-      },
-      {
-        "lessonId": "TA-C24-night-register-darkness",
         "language": "tamil",
         "chapter": 24,
         "glyphs": "ா",
@@ -51442,6 +51047,27 @@
         "count": 1
       },
       {
+        "lessonId": "TE-C01-sare",
+        "language": "telugu",
+        "chapter": 1,
+        "glyphs": "ి",
+        "count": 1
+      },
+      {
+        "lessonId": "TE-C03-nenu",
+        "language": "telugu",
+        "chapter": 3,
+        "glyphs": "ా",
+        "count": 1
+      },
+      {
+        "lessonId": "TE-C04-vellu",
+        "language": "telugu",
+        "chapter": 4,
+        "glyphs": "చ",
+        "count": 1
+      },
+      {
         "lessonId": "UR-C02-mera-naam",
         "language": "urdu",
         "chapter": 2,
@@ -51466,10 +51092,10 @@
     "summary": {
       "tracksWithScript": 16,
       "tracksTeachingNothing": 12,
-      "violations": 932,
-      "exposureOnly": 49,
-      "exposureExemptedGlyphs": 1997,
-      "headwordsWithoutRomanization": 489,
+      "violations": 873,
+      "exposureOnly": 108,
+      "exposureExemptedGlyphs": 2925,
+      "headwordsWithoutRomanization": 305,
       "tracksWithUnknownScript": 0
     },
     "unknownScriptTracks": []
@@ -51940,11 +51566,11 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 1959,
-    "voice": 1331,
-    "sight": 559,
+    "totalLessons": 1963,
+    "voice": 1333,
+    "sight": 561,
     "pen": 69,
-    "coreVoice": 1767,
+    "coreVoice": 1769,
     "lessonsWithWritingSegments": 0,
     "drivablePercent": 90,
     "tracks": [
@@ -57949,13 +57575,13 @@
       },
       {
         "language": "spanish",
-        "lessonCount": 359,
-        "voice": 319,
-        "sight": 33,
+        "lessonCount": 363,
+        "voice": 321,
+        "sight": 35,
         "pen": 7,
-        "coreVoice": 319,
-        "drivablePercent": 89,
-        "drivablePrefixTotal": 306,
+        "coreVoice": 321,
+        "drivablePercent": 88,
+        "drivablePrefixTotal": 308,
         "chapters": [
           {
             "language": "spanish",
@@ -60951,6 +60577,62 @@
             ],
             "drivablePrefix": 1,
             "firstNonVoiceLesson": null
+          },
+          {
+            "language": "spanish",
+            "chapter": 214,
+            "lessonCount": 1,
+            "voice": 0,
+            "sight": 1,
+            "pen": 0,
+            "coreVoice": 0,
+            "modalities": [
+              "sight"
+            ],
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "ES-C57-pregunto-si"
+          },
+          {
+            "language": "spanish",
+            "chapter": 215,
+            "lessonCount": 1,
+            "voice": 0,
+            "sight": 1,
+            "pen": 0,
+            "coreVoice": 0,
+            "modalities": [
+              "sight"
+            ],
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "ES-C57-pregunto-donde"
+          },
+          {
+            "language": "spanish",
+            "chapter": 216,
+            "lessonCount": 1,
+            "voice": 1,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 1,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "spanish",
+            "chapter": 217,
+            "lessonCount": 1,
+            "voice": 1,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 1,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": null
           }
         ]
       },
@@ -62844,10 +62526,10 @@
   "rootLedger": {
     "roots": 2964,
     "underspent": 2851,
-    "neverSpent": 1958,
+    "neverSpent": 1957,
     "payoffDistribution": {
-      "0": 1958,
-      "1": 636,
+      "0": 1957,
+      "1": 637,
       "2": 257,
       "3": 65,
       "4": 18,
@@ -62861,7 +62543,7 @@
     "underspentPercent": 96
   },
   "infoDump": {
-    "lessons": 1959,
+    "lessons": 1963,
     "lessonsWithFindings": 117,
     "ruleStatements": 26,
     "paradigmTables": 95,
@@ -62871,14 +62553,14 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 49,
-    "lessonsUsingTerms": 1943,
-    "usesBeforeIntroduction": 8968,
-    "technicalUsesBeforeIntroduction": 2720,
-    "technicalLessons": 1350,
+    "lessonsUsingTerms": 1947,
+    "usesBeforeIntroduction": 8984,
+    "technicalUsesBeforeIntroduction": 2728,
+    "technicalLessons": 1354,
     "worstTerms": [
       {
         "term": "verb",
-        "lessons": 915
+        "lessons": 919
       },
       {
         "term": "noun",
@@ -62886,7 +62568,7 @@
       },
       {
         "term": "tense",
-        "lessons": 144
+        "lessons": 145
       },
       {
         "term": "regular",
