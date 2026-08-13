@@ -1,5 +1,10 @@
 # Changelog — `lang-aot`
 
+## 0.225.9 - 2026-08-13 (ALGOL real while-control snapshots)
+
+The seven-backend ALGOL matrix now proves that capped binary64 `while` control
+updates retain their first false-predicate exit value.
+
 ## 0.225.8 - 2026-08-13 (ALGOL standard-function while controls)
 
 The seven-backend ALGOL matrix now proves a bounded static `while` exit whose

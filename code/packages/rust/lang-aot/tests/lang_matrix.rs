@@ -2281,6 +2281,15 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — capped abstract execution mirrors each emitted binary64
+    // update and retains the first real control value whose predicate is false.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real x; x := 0.0; for x := x + 0.5 while x < 2.0 do print(''); print(x + 0.25) end",
+        expect: Expect::Stdout("2.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — an exactly-one-iteration step loop with a static controlled
     // assignment may retain the post-body increment when that value exits.
     Prog {
@@ -9742,6 +9751,37 @@ fn algol_static_while_control_exit_runs_on_every_available_standard_backend() {
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the static while control exit did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_static_real_while_control_exit_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("for x := x + 0.5 while x < 2.0 do print('')")
+        })
+        .expect("the ALGOL static real while control-exit program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the static real while control exit did not run"
             );
             continue;
         };
