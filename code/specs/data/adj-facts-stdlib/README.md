@@ -51,6 +51,7 @@ per rotation, in parallel):
 | subject | example library | source |
 |---|---|---|
 | `geometry/` | polygon → number of sides | Wolfram MathWorld |
+| `geometry/` | triangle → the alternate word the same MathWorld source table also uses for it (`polygon_alt_name(shape, alt_name)`, triangle → trigon) — a sibling to `shapes.adj`, decoding the parenthetical half of a span already sitting unused in that table's own `source` field; honest abstention on the other seven polygons, whose own source-table rows name no alternate word | Wolfram MathWorld (authoritative; see `polygon-alt-name.adj`'s header — same source `shapes.adj` already cites) |
 | `geometry/` | angle type → defining measure-condition (acute → between_0_and_90, right → equals_90, reflex → greater_than_180) | Mathematics LibreTexts (consensus) |
 | `geometry/` | triangle (by sides) → defining side-condition (equilateral → three_equal_sides, isosceles → two_equal_sides, scalene → three_unequal_sides) | Wolfram MathWorld (authoritative) |
 | `geometry/` | equilateral triangle → the alternate word the same MathWorld sentence also uses for it (`triangle_alt_name(triangle, alt_name)`, equilateral → regular) — a sibling to `triangle-types.adj`, decoding a clause already sitting unused in that table's equilateral row's own already-quoted sentence; honest abstention on isosceles and scalene, whose own cited spans name no alternate word | Wolfram MathWorld (authoritative; see `triangle-alt-name.adj`'s header — same source `triangle-types.adj` already cites) |
