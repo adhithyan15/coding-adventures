@@ -1,0 +1,235 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 225,
+  "title": "Review --- Three Places, One Question",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:3d2a27db058a1ee2",
+  "lessons": [
+    {
+      "id": "ES-C59-repaso-demostrativos",
+      "sequence": 2360,
+      "title": "(review)",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "three places and one question — said aloud, because a grid of twelve forms is not what you reach for when somebody is waiting for an answer",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:689798517b4fb580",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three words, three places, in order. (Este, ese, aquel.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three chants. Say each one, then say who it belongs to."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "First. Este libro — by me. The word Latin used to point at you, walked one step closer."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Second. Ese libro — by you. The word that used to mean self, moved in when the first one left."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Third. Aquel libro — by neither. The word that also became el, kept stressed and propped up so it could go on pointing."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: one question, asked twice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Everything else here is two questions, in this order."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Do I have a noun? If no, use the -o form and stop: esto, eso, aquello. Nothing to agree with, so nothing agrees."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "If yes — whose side is it on? Then pick from the three, agree it with the noun, and put it in front, in the article's place. Never el este libro; the pointing word already did the article's job."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three chants, in order, without looking",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three chants, in order, without looking]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "¿Qué es esto?, then answer it and point again with a noun",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *¿Qué es esto?*, then answer it and point again with a noun]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C59-repaso-demostrativos-side",
+              "prompt": "A book is an arm's length away, right next to the person you are speaking to. Este or ese?",
+              "assesses": [
+                "ES-GRAMMAR-DEMONSTRATIVE-ESE"
+              ],
+              "responseSeconds": 13,
+              "acceptedResponses": [
+                "ese",
+                "ese, it is on their side"
+              ],
+              "feedback": {
+                "correct": "Sides, not metres.",
+                "incorrect": "Ese -- it is on their side, however close it is to you."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C59-repaso-demostrativos-noun",
+              "prompt": "Which question do you ask first, before choosing a form?",
+              "assesses": [
+                "ES-GRAMMAR-DEMONSTRATIVE-NEUTER"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "do i have a noun",
+                "whether there is a noun at all"
+              ],
+              "feedback": {
+                "correct": "No noun, no agreement -- take the -o form.",
+                "incorrect": "Whether you have a noun at all."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C59-repaso-demostrativos-article",
+              "prompt": "What does the pointing word push out of the sentence?",
+              "assesses": [
+                "ES-GRAMMAR-DEMONSTRATIVE-BEFORE-NOUN"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "the article",
+                "el, la -- the article"
+              ],
+              "feedback": {
+                "correct": "One word per job.",
+                "incorrect": "The article. Never el este libro."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two origins worth keeping. What did ese mean in Latin? (Self.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And which everyday word is aquel related to? (El — both from ille, one worn down, one propped up.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

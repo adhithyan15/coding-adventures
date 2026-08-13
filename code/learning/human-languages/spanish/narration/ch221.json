@@ -1,0 +1,254 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 221,
+  "title": "Este --- Pointing at What Is in Your Hand",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:b2826a8e66c61b8f",
+  "lessons": [
+    {
+      "id": "ES-C59-este",
+      "sequence": 2340,
+      "title": "este — pointing at what is in your hand",
+      "headword": "este",
+      "romanization": "este",
+      "gloss": "this one, here, next to me — the first of three words for pointing, and the reason Spanish never needs to say \"the this book\"",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ba1cd76c4e592a83",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "El libro names a book. But which one?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "If it is in your hand, you need a word that points."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart: este",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "este libro — this book, the one right here."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "It agrees like any other word that leans on a noun:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "este libro, this book.",
+                "esta casa, this house.",
+                "estos libros, these books.",
+                "estas casas, these houses."
+              ]
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Latin's word was iste, and it did not mean this. It meant that of yours — it pointed at the person being spoken to. Spanish walked it one step closer, off the listener and onto the speaker's own hand, and it has stayed there ever since."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Now the part English speakers get wrong, and it is a rule rather than a habit."
+            },
+            {
+              "kind": "speech",
+              "text": "este libro — never el este libro."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The pointing word goes in front of the noun, and it takes the article's place. It does not stand beside it. You cannot have both, because both are doing the same job — saying which one — and Spanish only lets one word do that job at a time."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "So the moment you reach for este, the el you were about to say is already spoken for."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "este libro, esta casa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *este libro*, *esta casa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "estos libros, estas casas",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *estos libros*, *estas casas*]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C59-este-say",
+              "prompt": "Say: this book.",
+              "assesses": [
+                "ES-GRAMMAR-DEMONSTRATIVE-ESTE"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "este libro",
+                "este libro."
+              ],
+              "feedback": {
+                "correct": "And it is in your hand.",
+                "incorrect": "Este libro."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C59-este-agree",
+              "prompt": "Now: this house.",
+              "assesses": [
+                "ES-GRAMMAR-DEMONSTRATIVE-ESTE"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "esta casa",
+                "esta casa."
+              ],
+              "feedback": {
+                "correct": "It agrees, like everything else that leans on a noun.",
+                "incorrect": "Esta casa -- casa is feminine."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C59-este-article",
+              "prompt": "Is el este libro possible?",
+              "assesses": [
+                "ES-GRAMMAR-DEMONSTRATIVE-BEFORE-NOUN"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "no",
+                "no, este replaces the article"
+              ],
+              "feedback": {
+                "correct": "One word per job.",
+                "incorrect": "No. Este takes the article's place."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does este stand, and what does it push out? (Before the noun, in the article's place.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And who did Latin's iste originally point at? (You — the person being spoken to. Spanish moved it closer.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

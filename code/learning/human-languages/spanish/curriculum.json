@@ -2413,6 +2413,66 @@
         "ES-EXT-B2-TAMPOCO"
       ],
       "after": []
+    },
+    {
+      "id": "ES-PATH-A1-ESTE",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C59-este"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-ESTE"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-A1-ESE",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C59-ese"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-ESE"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-A1-AQUEL",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C59-aquel"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-AQUEL"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-A1-NEUTRO",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C59-esto-eso-aquello"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-NEUTRO"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-A1-REVIEW-DEM",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C59-repaso-demostrativos"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-REVIEW-DEM"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -2561,7 +2621,12 @@
         "ES-PATH-003-REVIEW-DBL",
         "ES-PATH-003-SYNTH-DBL",
         "ES-PATH-020",
-        "ES-PATH-027"
+        "ES-PATH-027",
+        "ES-PATH-A1-ESTE",
+        "ES-PATH-A1-ESE",
+        "ES-PATH-A1-AQUEL",
+        "ES-PATH-A1-NEUTRO",
+        "ES-PATH-A1-REVIEW-DEM"
       ],
       "omits": [],
       "relocates": {}
@@ -5304,6 +5369,61 @@
       "prerequisites": [],
       "lessons": [
         "ES-C58-tampoco"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-ESTE",
+      "stage": "A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C59-este"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-ESE",
+      "stage": "A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C59-ese"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-AQUEL",
+      "stage": "A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C59-aquel"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-NEUTRO",
+      "stage": "A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C59-esto-eso-aquello"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-REVIEW-DEM",
+      "stage": "A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C59-repaso-demostrativos"
       ]
     }
   ]

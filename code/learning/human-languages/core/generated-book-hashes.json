@@ -5613,6 +5613,51 @@
       "tex": "spanish/book/chapters/ch220-tampoco.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 221,
+      "sourceHash": "fnv1a64:911a83dee709a194",
+      "lessonIds": [
+        "ES-C59-este"
+      ],
+      "tex": "spanish/book/chapters/ch221-este.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 222,
+      "sourceHash": "fnv1a64:1e6dc5d561eb2fcc",
+      "lessonIds": [
+        "ES-C59-ese"
+      ],
+      "tex": "spanish/book/chapters/ch222-ese.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 223,
+      "sourceHash": "fnv1a64:1509577691415c0c",
+      "lessonIds": [
+        "ES-C59-aquel"
+      ],
+      "tex": "spanish/book/chapters/ch223-aquel.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 224,
+      "sourceHash": "fnv1a64:fb19bbdd6ef8c699",
+      "lessonIds": [
+        "ES-C59-esto-eso-aquello"
+      ],
+      "tex": "spanish/book/chapters/ch224-esto-eso-aquello.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 225,
+      "sourceHash": "fnv1a64:0ae835f36517e259",
+      "lessonIds": [
+        "ES-C59-repaso-demostrativos"
+      ],
+      "tex": "spanish/book/chapters/ch225-review-demostrativos.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "sourceHash": "fnv1a64:5f56402811418e13",

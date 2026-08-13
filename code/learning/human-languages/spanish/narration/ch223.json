@@ -1,0 +1,275 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 223,
+  "title": "Aquel --- The Far One, and an Old Friend",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:3052e26e25835dd8",
+  "lessons": [
+    {
+      "id": "ES-C59-aquel",
+      "sequence": 2350,
+      "title": "aquel — the far one, and an old friend in disguise",
+      "headword": "aquel",
+      "romanization": "aquel",
+      "gloss": "that one over there, away from us both — and the second life of the word that became el in your very first chapter",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:cc14bfaf151c2c66",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Mine, here: este libro. Yours, there: ese libro."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now the one across the room, belonging to neither of us."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart: aquel",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "aquel libro — that book over there."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "aquel libro, that book, over there.",
+                "aquella casa, that house, over there.",
+                "aquellos libros, those books, over there.",
+                "aquellas casas, those houses, over there."
+              ]
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Look at the middle of that word. -el-. You have met it before, in your first chapter."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Latin ille went two ways at once. Said quickly and without stress, leaning on the noun after it, it wore down to el — the article. Said with stress, and propped up in front with accu- (roughly look, there), it stayed a pointing word: accu + ille becomes aquel."
+            },
+            {
+              "kind": "speech",
+              "text": "So el and aquel are the same Latin word, and the difference between them is two thousand years of one being emphasised and the other not."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "That leaves Spanish with three, where English has two:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "este, by me.",
+                "ese, by you.",
+                "aquel, by neither of us."
+              ]
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "English collapses the last two into that and then patches the difference back on when it matters — that one over there. Spanish keeps the three apart in the word itself, so it never needs the patch."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And the middle one is the one to watch. If you find yourself reaching for aquel because the thing is a few steps away, stop and ask the real question: is it near the person you are talking to? If it is, it is ese, however far it is from you."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "este libro, ese libro, aquel libro",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *este libro*, *ese libro*, *aquel libro*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aquella casa, aquellos libros",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aquella casa*, *aquellos libros*]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C59-aquel-say",
+              "prompt": "The house is across the street, near neither of you. Say: that house.",
+              "assesses": [
+                "ES-GRAMMAR-DEMONSTRATIVE-AQUEL"
+              ],
+              "responseSeconds": 13,
+              "acceptedResponses": [
+                "aquella casa",
+                "aquella casa."
+              ],
+              "feedback": {
+                "correct": "Away from you both.",
+                "incorrect": "Aquella casa."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C59-aquel-three",
+              "prompt": "Name the three, in order: by me, by you, by neither.",
+              "assesses": [
+                "ES-GRAMMAR-DEMONSTRATIVE-THREE-DISTANCES"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "este ese aquel",
+                "este, ese, aquel"
+              ],
+              "feedback": {
+                "correct": "Three where English has two.",
+                "incorrect": "Este, ese, aquel."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C59-aquel-ille",
+              "prompt": "Which word from chapter one is hiding inside aquel?",
+              "assesses": [
+                "ES-ETYMON-AQUEL-ACCU-ILLE"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "el",
+                "el, from latin ille"
+              ],
+              "feedback": {
+                "correct": "One Latin word, two Spanish fates.",
+                "incorrect": "El -- both come from Latin ille."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three words, three places. Which one is by the person you are talking to? (Ese.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And what did el and aquel both start out as? (Latin ille — one worn down, one propped up.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
