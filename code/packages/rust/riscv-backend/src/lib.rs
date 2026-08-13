@@ -23,6 +23,7 @@ const DEFAULT_STEP_LIMIT: usize = 100_000;
 const ARG_REGISTERS: [u32; 8] = [10, 11, 12, 13, 14, 15, 16, 17];
 const A1: u32 = 11;
 const SCRATCH_REGISTER: u32 = 31;
+const SECOND_SCRATCH_REGISTER: u32 = 27;
 const VALUE_REGISTERS: [u32; 6] = [5, 6, 7, 28, 29, 30];
 
 /// The RV32I backend.  Stateless — every compilation gets fresh allocation.
@@ -160,6 +161,7 @@ struct Lowerer {
     labels: HashMap<String, usize>,
     branches: Vec<PendingBranch>,
     next_value_register: usize,
+    next_internal_label: usize,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -228,6 +230,7 @@ impl Lowerer {
             labels: HashMap::new(),
             branches: Vec::new(),
             next_value_register: 0,
+            next_internal_label: 0,
         })
     }
 
@@ -344,6 +347,9 @@ impl Lowerer {
         }
 
         if let Some((relation, ty)) = comparison_parts(op) {
+            if matches!(ty, "i64" | "u64") {
+                return self.lower_wide_comparison(instr, op, relation, is_signed(ty));
+            }
             self.require_comparison_type(instr, ty, op)?;
             let rd = self.dest(instr, op)?;
             let lhs = self.var_src(instr, 0, op)?;
@@ -445,6 +451,25 @@ impl Lowerer {
         });
         self.words.push(0);
         Ok(())
+    }
+
+    fn record_named_branch(&mut self, label: String, kind: BranchKind) {
+        self.branches.push(PendingBranch {
+            word_index: self.words.len(),
+            label,
+            kind,
+        });
+        self.words.push(0);
+    }
+
+    fn mark_label(&mut self, label: String) {
+        self.labels.insert(label, self.words.len() * 4);
+    }
+
+    fn internal_label(&mut self, suffix: &str) -> String {
+        let label = format!(".__riscv_wide_cmp_{}_{}", self.next_internal_label, suffix);
+        self.next_internal_label += 1;
+        label
     }
 
     fn dest(&mut self, instr: &CIRInstr, op: &str) -> Result<u32, BackendError> {
@@ -595,6 +620,90 @@ impl Lowerer {
             .push(encode_sltu(SCRATCH_REGISTER, lhs_lo, rhs.low()));
         self.words.push(encode_sub(hi, hi, SCRATCH_REGISTER));
         Ok(())
+    }
+
+    fn lower_wide_comparison(
+        &mut self,
+        instr: &CIRInstr,
+        op: &str,
+        relation: &str,
+        signed: bool,
+    ) -> Result<(), BackendError> {
+        let rd = self.dest(instr, op)?;
+        let lhs = self.var_location(instr, 0, op)?;
+        let rhs = self.var_location(instr, 1, op)?;
+
+        if matches!(relation, "eq" | "ne") {
+            self.words.push(encode_xor(rd, lhs.low(), rhs.low()));
+            self.copy_or_extend_high(SCRATCH_REGISTER, lhs, signed);
+            self.copy_or_extend_high(SECOND_SCRATCH_REGISTER, rhs, signed);
+            self.words.push(encode_xor(
+                SCRATCH_REGISTER,
+                SCRATCH_REGISTER,
+                SECOND_SCRATCH_REGISTER,
+            ));
+            self.words.push(encode_or(rd, rd, SCRATCH_REGISTER));
+            self.words.push(match relation {
+                "eq" => riscv_encoder::encode_sltiu(rd, rd, 1),
+                "ne" => encode_sltu(rd, X0_ZERO, rd),
+                _ => unreachable!(),
+            });
+            return Ok(());
+        }
+
+        let different_label = self.internal_label("different");
+        let end_label = self.internal_label("end");
+        self.copy_or_extend_high(SCRATCH_REGISTER, lhs, signed);
+        self.copy_or_extend_high(SECOND_SCRATCH_REGISTER, rhs, signed);
+        self.words.push(encode_xor(
+            SCRATCH_REGISTER,
+            SCRATCH_REGISTER,
+            SECOND_SCRATCH_REGISTER,
+        ));
+        self.record_named_branch(
+            different_label.clone(),
+            BranchKind::NeZero {
+                rs1: SCRATCH_REGISTER,
+            },
+        );
+
+        self.emit_compare_words(rd, lhs.low(), rhs.low(), relation, false);
+        self.record_named_branch(end_label.clone(), BranchKind::Jump);
+        self.mark_label(different_label);
+        self.copy_or_extend_high(SCRATCH_REGISTER, lhs, signed);
+        self.copy_or_extend_high(SECOND_SCRATCH_REGISTER, rhs, signed);
+        self.emit_compare_words(
+            rd,
+            SCRATCH_REGISTER,
+            SECOND_SCRATCH_REGISTER,
+            relation,
+            signed,
+        );
+        self.mark_label(end_label);
+        Ok(())
+    }
+
+    fn emit_compare_words(&mut self, rd: u32, lhs: u32, rhs: u32, relation: &str, signed: bool) {
+        let less = |lhs, rhs| {
+            if signed {
+                encode_slt(rd, lhs, rhs)
+            } else {
+                encode_sltu(rd, lhs, rhs)
+            }
+        };
+        match relation {
+            "lt" => self.words.push(less(lhs, rhs)),
+            "gt" => self.words.push(less(rhs, lhs)),
+            "le" => {
+                self.words.push(less(rhs, lhs));
+                self.words.push(encode_xori(rd, rd, 1));
+            }
+            "ge" => {
+                self.words.push(less(lhs, rhs));
+                self.words.push(encode_xori(rd, rd, 1));
+            }
+            _ => unreachable!("equality uses the non-branching pair path"),
+        }
     }
 
     fn copy_or_extend_high(&mut self, dest: u32, location: ValueLocation, signed: bool) {
