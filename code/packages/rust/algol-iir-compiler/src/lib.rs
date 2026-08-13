@@ -4914,15 +4914,16 @@ impl Compiler {
             return None;
         };
         if matches!(op.as_str(), "and" | "or" | "impl" | "eqv") {
-            let lhs = self.static_boolean_value(lhs)?;
-            let rhs = self.static_boolean_value(rhs)?;
-            return Some(match op.as_str() {
-                "and" => lhs && rhs,
-                "or" => lhs || rhs,
-                "impl" => !lhs || rhs,
-                "eqv" => lhs == rhs,
-                _ => unreachable!(),
-            });
+            let lhs = self.static_boolean_value(lhs);
+            return match (op.as_str(), lhs) {
+                ("and", Some(false)) => Some(false),
+                ("or", Some(true)) | ("impl", Some(false)) => Some(true),
+                ("and", Some(true)) | ("or" | "impl", Some(false | true)) => {
+                    self.static_boolean_value(rhs)
+                }
+                ("eqv", Some(lhs)) => self.static_boolean_value(rhs).map(|rhs| lhs == rhs),
+                _ => None,
+            };
         }
         if !matches!(op.as_str(), "=" | "!=" | "<>" | "<" | "<=" | ">" | ">=") {
             return None;
@@ -8700,6 +8701,32 @@ mod tests {
         )
         .expect_err("a composed condition with an unknown leaf must fail closed");
         assert!(format!("{err:?}").contains("requires initialized string variable"));
+    }
+
+    #[test]
+    fn al4_truth_dominating_while_conditions_initialize_string() {
+        compile_source(
+            "begin integer i, n; string s; for i := 1 while true or i < n do s := 'OK'; print(s) end",
+            "test",
+        )
+        .expect("true or an unknown predicate is unconditionally true");
+        compile_source(
+            "begin integer i, n; string s; for i := 1 while false impl i < n do s := 'OK'; print(s) end",
+            "test",
+        )
+        .expect("false implies an unknown predicate is unconditionally true");
+    }
+
+    #[test]
+    fn al4_non_dominating_while_conditions_remain_conservative() {
+        for source in [
+            "begin integer i, n; string s; for i := 1 while false or i < n do s := 'OK'; print(s) end",
+            "begin integer i, n; string s; for i := 1 while true and i < n do s := 'OK'; print(s) end",
+        ] {
+            let err = compile_source(source, "test")
+                .expect_err("a non-dominating literal still requires the unknown predicate");
+            assert!(format!("{err:?}").contains("requires initialized string variable"));
+        }
     }
 
     #[test]
