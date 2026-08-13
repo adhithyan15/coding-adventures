@@ -163,6 +163,8 @@ and backend-neutral Paint glyph shaping.
 Transitions entering or leaving a composite retain the group ID as their
 semantic endpoint. Graph layout attaches those edges to the resolved group
 boundary before existing Paint paths and arrowheads render them.
+Pinned `#` comments are discarded by the portable state token grammar while
+decimal or named entities and hexadecimal style colors remain semantic input.
 
 ### Sequence Native Slice
 
