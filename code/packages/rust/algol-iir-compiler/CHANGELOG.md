@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.147.0 — 2026-08-13 — static while-body snapshots
+
+A `while` for-list element whose initial predicate is statically true now
+retains path-independent integer, real, and boolean constants established by a
+body that does not reference the controlled scalar. The final controlled value,
+control-dependent bodies, and unknown initial predicates remain conservative.
+
 ## 0.146.0 — 2026-08-13 — finite loop-body snapshots
 
 Finite static `step`/`until` loops now retain path-independent integer, real,
