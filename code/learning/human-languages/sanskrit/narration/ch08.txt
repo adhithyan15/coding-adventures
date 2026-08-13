@@ -169,6 +169,11 @@ One character this time. Just one — and you have been saying it for pages with
 Script you'll notice: म.
 म — ma.
 It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not m, it is ma.
+What it is made of:
+a lower loop.
+an upper loop.
+right spine.
+top bar.
 You already say these, and every one of them has म (ma) somewhere inside it:
 नमस्ते namaste — hello (lit. "a bow to you") (namaste).
 नमस्कारः namaskāraḥ — hello (lit. "the making of a bow") (namaskāraḥ).
@@ -183,7 +188,7 @@ Guided Practice.
 [pause 1 second]
 [your turn — look: at these words, and find म (ma) in the ones that have it]
 [pause 8 seconds for the answer]
-नमस्ते, नमस्कारः, धन्यवादः.
+नमस्ते, नमस्कारः, अस्ति.
 [once you have stopped driving — trace: म three times, saying ma as you finish each one]
 [your turn — look: back at any page of this chapter and find म (ma) once more]
 [pause 8 seconds for the answer]

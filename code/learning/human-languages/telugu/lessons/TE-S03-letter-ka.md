@@ -50,7 +50,7 @@ You already say these, and every one of them has క somewhere inside it:
 - **నమస్కారం** *namaskāram* — hello / greetings (namaskāram — "a making of a bow")
 - **రేపు కలుద్దాం** *rēpu kaluddām* — see you tomorrow
 - **మళ్ళీ కలుద్దాం** *maḷḷī kaluddām* — we'll meet again
-- **-కు** *-ku* — the dative suffix -ku, 'to / for' — and the idea of stacking
+- **నాకు తెలుగు వచ్చు** *nāku telugu vaccu* — 'I know Telugu'
 
 ## Writing: క — copy what you see
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-03] -->

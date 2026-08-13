@@ -50,7 +50,7 @@ You already say these, and every one of them has ರ somewhere inside it:
 - **ನಮಸ್ಕಾರ** *namaskāra* — hello / greetings (namaskāra — "a making of a bow")
 - **ಸರಿ** *sari* — okay / alright / correct (sari)
 - **ಹೆಸರು** *hesaru* — name
-- **ನನ್ನ ಹೆಸರು …** — my name is… (with no "is")
+- **ನೀವು ಹೇಗಿದ್ದೀರಾ?** *nīvu hēgiddīrā* — how are you? (respectful)
 
 ## Writing: ರ — copy what you see
 <!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-07] -->

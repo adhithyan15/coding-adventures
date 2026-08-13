@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Head and Hand",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:50cd27c420a8adac",
+  "sourceHash": "fnv1a64:ded70b008f59c2b4",
   "lessons": [
     {
       "id": "ML-C13-shareera-bhaagangal",
@@ -132,7 +132,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b4103eff4b5069b1",
+      "sourceHash": "fnv1a64:891e6a4f03ca67a7",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -200,11 +200,11 @@
             },
             {
               "kind": "speech",
-              "text": "നിന്റെ പേര് എന്താണ്? — what's your name?"
+              "text": "സന്തോഷം santōṣam — joy / pleased to meet you."
             },
             {
               "kind": "speech",
-              "text": "സന്തോഷം santōṣam — joy / pleased to meet you."
+              "text": "താമസിക്കുക tāmasikkuka — to live, to stay."
             }
           ]
         },

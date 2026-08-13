@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Case Endings and Dative Subjects",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:0e0927ef71067392",
+  "sourceHash": "fnv1a64:a05c57b1966dfe9f",
   "lessons": [
     {
       "id": "ML-C06-dative-ikku",
@@ -390,7 +390,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:623958a5a4b34003",
+      "sourceHash": "fnv1a64:3bc0b99bfa35c9a5",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -454,15 +454,15 @@
             },
             {
               "kind": "speech",
-              "text": "പോകുക — to go (and വരിക, to come)."
-            },
-            {
-              "kind": "speech",
               "text": "നാളെ കാണാം nāḷe kāṇāṁ — see you tomorrow."
             },
             {
               "kind": "speech",
-              "text": "വീണ്ടും കാണാം — we'll meet again."
+              "text": "താമസിക്കുക tāmasikkuka — to live, to stay."
+            },
+            {
+              "kind": "speech",
+              "text": "ജോലി ചെയ്യുക jōli ceyyuka — to work (lit. \"work-do\")."
             }
           ]
         },
@@ -503,7 +503,7 @@
             },
             {
               "kind": "speech",
-              "text": "നമസ്കാരം, പോകുക, നന്ദി."
+              "text": "നമസ്കാരം, നാളെ കാണാം, നന്ദി."
             },
             {
               "kind": "prompt",

@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "Please",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:cc66d6c05af0e364",
+  "sourceHash": "fnv1a64:9731669726c002fc",
   "lessons": [
     {
       "id": "HI-C08-kripaya",
@@ -127,6 +127,203 @@
             {
               "kind": "speech",
               "text": "What is the formal Hindi word for please? (कृपया kṛpayā.) What does its root kṛpā mean, and which other languages ask the same way? (\"Grace / compassion\" — like Arabic min faḍlik and Dravidian daya.) Is kṛpayā what people usually say out loud? (No — it's formal; everyday politeness rides on the verb ending -iye/-iyegā, or people say English \"please.\")"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-S03-letter-a",
+      "sequence": 515,
+      "title": "अ — one character, met inside words you already say",
+      "headword": "अ",
+      "romanization": "a",
+      "gloss": "the single character अ — recognised inside words you already say",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:86f90b720c42e955",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: अ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: अ and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: न — what does it do?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One character this time. Just one — and you have been saying it for pages without knowing which mark on the page it was."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: अ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अ — a."
+            },
+            {
+              "kind": "speech",
+              "text": "It is an independent vowel — the shape the vowel a takes when a word begins with it, rather than the sign it becomes inside a word."
+            },
+            {
+              "kind": "speech",
+              "text": "What it is made of:"
+            },
+            {
+              "kind": "speech",
+              "text": "a joined upper-and-lower left body."
+            },
+            {
+              "kind": "speech",
+              "text": "a middle shoulder."
+            },
+            {
+              "kind": "speech",
+              "text": "a right vertical stem."
+            },
+            {
+              "kind": "speech",
+              "text": "the top shirorekhā."
+            },
+            {
+              "kind": "speech",
+              "text": "You already say these, and every one of them has अ somewhere inside it:"
+            },
+            {
+              "kind": "speech",
+              "text": "अलविदा — goodbye (alvidā — a final farewell, Persian/Arabic-derived)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: अ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "1. curve around the upper bowl, then continue down and around the lower bowl without lifting."
+            },
+            {
+              "kind": "speech",
+              "text": "2. lift and sweep the middle shoulder right."
+            },
+            {
+              "kind": "speech",
+              "text": "3. lift and draw the right stem top-to-bottom."
+            },
+            {
+              "kind": "speech",
+              "text": "4. lift and draw the top shirorekhā left-to-right."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 3. The pen comes up 3 times and no more."
+            },
+            {
+              "kind": "speech",
+              "text": "Verified modern printed teaching form; other Devanagari traditions split the body into more strokes."
+            },
+            {
+              "kind": "speech",
+              "text": "This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Saurmandal, ‘Devanagari अ stroke order.svg’, frames 1–4, Wikimedia Commons, 5 August 2023."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at these words, and find अ in the ones that have it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at these words, and find अ in the ones that have it]"
+            },
+            {
+              "kind": "speech",
+              "text": "अलविदा, नमस्ते."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "अ three times, saying a as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: अ three times, saying *a* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "back at any page of this chapter and find अ once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: back at any page of this chapter and find अ once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — अ? What sound does it carry? (a.) Name one word you already say that contains it."
             }
           ]
         }

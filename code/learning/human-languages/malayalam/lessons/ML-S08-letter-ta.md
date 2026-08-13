@@ -49,8 +49,8 @@ You already say these, and every one of them has ത somewhere inside it:
 
 - **അതെ** — yes (athe — "that [is so]")
 - **എന്ത്** — what
-- **നിന്റെ പേര് എന്താണ്?** — what's your name?
 - **സന്തോഷം** *santōṣam* — joy / pleased to meet you
+- **താമസിക്കുക** *tāmasikkuka* — to live, to stay
 
 ## Writing: ത — copy what you see
 <!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-08] -->

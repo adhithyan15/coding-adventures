@@ -48,9 +48,9 @@ It is a **nasal**, written as a mark rather than as a letter. It rides on the sy
 You already say these, and every one of them has ◌ం somewhere inside it:
 
 - **నమస్కారం** *namaskāram* — hello / greetings (namaskāram — "a making of a bow")
-- **సంతోషం** — joy / pleased to meet you
 - **రేపు కలుద్దాం** *rēpu kaluddām* — see you tomorrow
 - **మళ్ళీ కలుద్దాం** *maḷḷī kaluddām* — we'll meet again
+- **ఉండు** *uṇḍu* — to be, to stay, to live
 
 ## Writing: ◌ం — copy what you see
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-04] -->
@@ -70,7 +70,7 @@ and larger than it is printed.
 [PAUSE 1s]
 - [YOU LOOK: at these words, and find ◌ం in the ones that have it]
 
-> నమస్కారం  ·  సంతోషం  ·  ధన్యవాదములు
+> నమస్కారం  ·  రేపు కలుద్దాం  ·  ధన్యవాదములు
 
 - [YOU TRACE: ◌ం three times, humming the nasal at the end of the syllable as you finish each one]
 - [YOU LOOK: back at any page of this chapter and find ◌ం once more]

@@ -48,9 +48,9 @@ It is a **consonant**, and in this script a consonant is never bare: it comes wi
 You already say these, and every one of them has ക somewhere inside it:
 
 - **നമസ്കാരം** *namaskāram* — hello / greetings (namaskāram — "a making of a bow")
-- **പോകുക** — to go (and വരിക, to come)
 - **നാളെ കാണാം** *nāḷe kāṇāṁ* — see you tomorrow
-- **വീണ്ടും കാണാം** — we'll meet again
+- **താമസിക്കുക** *tāmasikkuka* — to live, to stay
+- **ജോലി ചെയ്യുക** *jōli ceyyuka* — to work (lit. "work-do")
 
 ## Writing: ക — copy what you see
 <!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-01] -->
@@ -70,7 +70,7 @@ and larger than it is printed.
 [PAUSE 1s]
 - [YOU LOOK: at these words, and find ക in the ones that have it]
 
-> നമസ്കാരം  ·  പോകുക  ·  നന്ദി
+> നമസ്കാരം  ·  നാളെ കാണാം  ·  നന്ദി
 
 - [YOU TRACE: ക three times, saying *ka* as you finish each one]
 - [YOU LOOK: back at any page of this chapter and find ക once more]

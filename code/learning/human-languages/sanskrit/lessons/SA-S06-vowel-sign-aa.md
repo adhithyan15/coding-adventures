@@ -45,12 +45,16 @@ for pages without knowing which mark on the page it was.
 
 It is a **vowel sign**. It is not a letter and never stands alone: it attaches to a consonant and **replaces** the *a* built into it with *ā*. Replaces, not adds — the *a* is gone.
 
+Where it sits: a vertical bar to the right of the consonant.
+
+Worked through: **न** + **◌ा** = **ना** — *nā*.
+
 You already say these, and every one of them has ◌ा somewhere inside it:
 
 - **नमस्कारः** *namaskāraḥ* — hello (lit. "the making of a bow") (namaskāraḥ)
-- **धन्यवादः** — thank you (dhanyavādaḥ)
 - **स्वागतम्** *svāgatam* — welcome (lit. "well come") (svāgatam)
 - **नाम** *nāma* — name
+- **भवान् / त्वम्** *bhavān / tvam* — you (respectful / familiar)
 
 ## Writing: ◌ा — copy what you see
 <!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-06] -->
@@ -70,7 +74,7 @@ and larger than it is printed.
 [PAUSE 1s]
 - [YOU LOOK: at these words, and find ◌ा in the ones that have it]
 
-> नमस्कारः  ·  धन्यवादः  ·  नमस्ते
+> नमस्कारः  ·  स्वागतम्  ·  नमस्ते
 
 - [YOU TRACE: ◌ा three times, saying *ā* as you finish each one]
 - [YOU LOOK: back at any page of this chapter and find ◌ा once more]

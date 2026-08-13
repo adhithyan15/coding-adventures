@@ -133,7 +133,7 @@ enter cross-language review only after focused retrieval.
 | [French](./french/README.md) | Romance / Latin | 105 | 91 | 31 chapters; through Ch. 31; 15 generated |
 | [German](./german/README.md) | Germanic / Latin | 106 | 91 | 31 chapters; through Ch. 31; 15 generated |
 | [Arabic](./arabic/README.md) | Semitic / Arabic | 100 | 98 | 36 chapters; through Ch. 36; 34 generated |
-| [Hindi](./hindi/README.md) | Indo-Aryan / Devanagari | 109 | 103 | 39 chapters; through Ch. 39; 34 generated |
+| [Hindi](./hindi/README.md) | Indo-Aryan / Devanagari | 117 | 111 | 39 chapters; through Ch. 39; 34 generated |
 | [Tamil](./tamil/README.md) | Dravidian / Tamil | 141 | 137 | 39 chapters; through Ch. 39; 34 generated |
 | [Kannada](./kannada/README.md) | Dravidian / Kannada | 96 | 92 | 40 chapters; through Ch. 40; 35 generated |
 | [Telugu](./telugu/README.md) | Dravidian / Telugu | 95 | 91 | 40 chapters; through Ch. 40; 35 generated |

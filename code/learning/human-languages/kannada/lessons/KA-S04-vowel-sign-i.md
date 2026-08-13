@@ -48,9 +48,9 @@ It is a **vowel sign**. It is not a letter and never stands alone: it attaches t
 You already say these, and every one of them has ◌ಿ somewhere inside it:
 
 - **ಸರಿ** *sari* — okay / alright / correct (sari)
-- **ನಿಮ್ಮ ಹೆಸರು ಏನು?** — what's your name?
 - **ನೀವು ಹೇಗಿದ್ದೀರಾ?** *nīvu hēgiddīrā* — how are you? (respectful)
 - **ಚೆನ್ನಾಗಿ** *cennāgi* — well, nicely — and the reply "ನಾನು ಚೆನ್ನಾಗಿದ್ದೇನೆ
+- **ಪರವಾಗಿಲ್ಲ** *paravāgilla* — it's okay / no problem / you're welcome
 
 ## Writing: ◌ಿ — copy what you see
 <!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-04] -->
@@ -70,7 +70,7 @@ and larger than it is printed.
 [PAUSE 1s]
 - [YOU LOOK: at these words, and find ◌ಿ in the ones that have it]
 
-> ಸರಿ  ·  ನಿಮ್ಮ ಹೆಸರು ಏನು?  ·  ನಮಸ್ಕಾರ
+> ಸರಿ  ·  ನೀವು ಹೇಗಿದ್ದೀರಾ?  ·  ನಮಸ್ಕಾರ
 
 - [YOU TRACE: ◌ಿ three times, saying *i* as you finish each one]
 - [YOU LOOK: back at any page of this chapter and find ◌ಿ once more]

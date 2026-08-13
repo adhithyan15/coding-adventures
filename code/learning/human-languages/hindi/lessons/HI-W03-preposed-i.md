@@ -3,6 +3,7 @@ schema_version: 2
 id: HI-W03-preposed-i
 spine_node: SPINE-EXCHANGE-NAMES
 sequence: 200
+delivery: script
 chapter: 2
 type: writing
 headword: "ि"

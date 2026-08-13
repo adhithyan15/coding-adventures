@@ -41,6 +41,25 @@
       "after": []
     },
     {
+      "id": "HI-PATH-100",
+      "spine_node": "SPINE-MEET-GREET",
+      "lessons": [
+        "HI-S01-letter-ma",
+        "HI-S02-letter-na",
+        "HI-S03-letter-a",
+        "HI-S04-letter-aa",
+        "HI-S05-sign-virama",
+        "HI-S06-vowel-sign-aa",
+        "HI-S07-letter-ta",
+        "HI-S08-letter-sa"
+      ],
+      "before": [],
+      "inline": [
+        "HI-EXT-100-SCRIPT-RECOGNITION"
+      ],
+      "after": []
+    },
+    {
       "id": "HI-PATH-004",
       "spine_node": "SPINE-EXCHANGE-NAMES",
       "lessons": [
@@ -455,6 +474,7 @@
     "SPINE-MEET-GREET": {
       "segments": [
         "HI-PATH-001",
+        "HI-PATH-100",
         "HI-PATH-030"
       ],
       "omits": [
@@ -809,6 +829,24 @@
     }
   },
   "extensions": [
+    {
+      "id": "HI-EXT-100-SCRIPT-RECOGNITION",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can pick out each of these Devanagari characters inside the words I already say, and copy its shape by tracing.",
+      "prerequisites": [],
+      "lessons": [
+        "HI-S01-letter-ma",
+        "HI-S02-letter-na",
+        "HI-S03-letter-a",
+        "HI-S04-letter-aa",
+        "HI-S05-sign-virama",
+        "HI-S06-vowel-sign-aa",
+        "HI-S07-letter-ta",
+        "HI-S08-letter-sa"
+      ]
+    },
     {
       "id": "HI-EXT-001-SCRIPT",
       "stage": "pre-A1",

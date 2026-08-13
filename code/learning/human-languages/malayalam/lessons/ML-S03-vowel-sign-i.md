@@ -49,8 +49,8 @@ You already say these, and every one of them has ◌ി somewhere inside it:
 
 - **നന്ദി** *nandi* — thank you
 - **ശരി** *sari* — okay / alright / correct (śari)
-- **നീ / നിങ്ങൾ** — you (familiar / respectful)
-- **നിന്റെ പേര് എന്താണ്?** — what's your name?
+- **സാരമില്ല** *sāramilla* — it doesn't matter / no problem / you're welcome
+- **പോയി വരാം** *pōyi varāṁ* — goodbye (lit. "I'll go and come back")
 
 ## Writing: ◌ി — copy what you see
 <!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-03] -->

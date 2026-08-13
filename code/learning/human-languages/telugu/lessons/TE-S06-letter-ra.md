@@ -50,7 +50,7 @@ You already say these, and every one of them has ర somewhere inside it:
 - **నమస్కారం** *namaskāram* — hello / greetings (namaskāram — "a making of a bow")
 - **సరే** *sarē* — okay / alright (sarē)
 - **పేరు** *pēru* — name
-- **నా పేరు …** — my name is… (with no "is")
+- **నువ్వు / మీరు** *nuvvu / mīru* — you (familiar / respectful)
 
 ## Writing: ర — copy what you see
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-06] -->

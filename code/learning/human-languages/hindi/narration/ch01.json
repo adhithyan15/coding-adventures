@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:b2ac48d98cb11e22",
+  "sourceHash": "fnv1a64:6554397bdd3829cf",
   "lessons": [
     {
       "id": "HI-C01-namaste",
@@ -826,7 +826,7 @@
         "writing-type",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:4469df131111f6aa",
+      "sourceHash": "fnv1a64:8ae058c673870bf5",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -990,7 +990,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:6192e9ac65625a86",
+      "sourceHash": "fnv1a64:4b729464aac5330f",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1156,7 +1156,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:bae859caa091f9e5",
+      "sourceHash": "fnv1a64:287f1a4c2a402674",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1331,7 +1331,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:4e43d2bb5e827c2a",
+      "sourceHash": "fnv1a64:e1be6db0eb11c96d",
       "notice": {
         "modality": "pen",
         "needs": [

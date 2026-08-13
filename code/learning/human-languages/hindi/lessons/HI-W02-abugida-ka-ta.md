@@ -3,6 +3,7 @@ schema_version: 2
 id: HI-W02-abugida-ka-ta
 spine_node: SPINE-MEET-GREET
 sequence: 80
+delivery: script
 chapter: 1
 type: writing
 headword: "अ"

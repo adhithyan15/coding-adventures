@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "The Mind and the Palm Leaf",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:95ec10ace1c3f27b",
+  "sourceHash": "fnv1a64:b2c12f201d49a8be",
   "lessons": [
     {
       "id": "SA-C08-cintayati",
@@ -659,7 +659,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:63a52b8e7a9b66c0",
+      "sourceHash": "fnv1a64:a3a031f78de6c184",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -712,6 +712,26 @@
             {
               "kind": "speech",
               "text": "It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not m, it is ma."
+            },
+            {
+              "kind": "speech",
+              "text": "What it is made of:"
+            },
+            {
+              "kind": "speech",
+              "text": "a lower loop."
+            },
+            {
+              "kind": "speech",
+              "text": "an upper loop."
+            },
+            {
+              "kind": "speech",
+              "text": "right spine."
+            },
+            {
+              "kind": "speech",
+              "text": "top bar."
             },
             {
               "kind": "speech",
@@ -772,7 +792,7 @@
             },
             {
               "kind": "speech",
-              "text": "नमस्ते, नमस्कारः, धन्यवादः."
+              "text": "नमस्ते, नमस्कारः, अस्ति."
             },
             {
               "kind": "prompt",

@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "Sorry",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:7aa09a4492748db5",
+  "sourceHash": "fnv1a64:3e27667e1b1fb2d3",
   "lessons": [
     {
       "id": "ML-C09-kshamikkanam",
@@ -170,7 +170,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6cc371fcfa4be349",
+      "sourceHash": "fnv1a64:ca7bd872d637f851",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -234,15 +234,15 @@
             },
             {
               "kind": "speech",
-              "text": "നിന്റെ പേര് എന്താണ്? — what's your name?"
+              "text": "സാരമില്ല sāramilla — it doesn't matter / no problem / you're welcome."
             },
             {
               "kind": "speech",
-              "text": "സുഖമാണോ? — how are you? (lit. \"are you well?\")"
+              "text": "പോയി വരാം pōyi varāṁ — goodbye (lit. \"I'll go and come back\")."
             },
             {
               "kind": "speech",
-              "text": "ഞാൻ — I."
+              "text": "നാളെ കാണാം nāḷe kāṇāṁ — see you tomorrow."
             }
           ]
         },
@@ -283,7 +283,7 @@
             },
             {
               "kind": "speech",
-              "text": "നമസ്കാരം, നിന്റെ പേര് എന്താണ്?, നന്ദി."
+              "text": "നമസ്കാരം, സാരമില്ല, നന്ദി."
             },
             {
               "kind": "prompt",

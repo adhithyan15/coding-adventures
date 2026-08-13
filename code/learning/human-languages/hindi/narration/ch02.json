@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:02ebb571163cb0c9",
+  "sourceHash": "fnv1a64:966f7b063e67d596",
   "lessons": [
     {
       "id": "HI-C02-naam",
@@ -1027,7 +1027,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:35d09535842a5035",
+      "sourceHash": "fnv1a64:a3a4f992c53ceb0e",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1202,7 +1202,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:37c7371c5105faf2",
+      "sourceHash": "fnv1a64:c2ae6bb3cfba4b4f",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1334,7 +1334,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:10859363e1081ed0",
+      "sourceHash": "fnv1a64:0ee94523cc6876d9",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1513,7 +1513,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:816454c956f38323",
+      "sourceHash": "fnv1a64:fb8f9b5730381090",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1646,7 +1646,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:2ed3a73cd278b3bd",
+      "sourceHash": "fnv1a64:ba56a8aa108b98f2",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1775,7 +1775,7 @@
         "writing-type",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:83d77302c28e7619",
+      "sourceHash": "fnv1a64:8fb1652ba09974ca",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1911,7 +1911,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:02b63111d99095c1",
+      "sourceHash": "fnv1a64:982531436c9f0ff0",
       "notice": {
         "modality": "pen",
         "needs": [

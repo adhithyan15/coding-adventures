@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "The Face, Part Two",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:422fea886284cafe",
+  "sourceHash": "fnv1a64:56ca33f79e639761",
   "lessons": [
     {
       "id": "SA-C13-nasika",
@@ -336,7 +336,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:720215319350fae8",
+      "sourceHash": "fnv1a64:c22f0d95290784ea",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -392,6 +392,14 @@
             },
             {
               "kind": "speech",
+              "text": "Where it sits: a vertical bar to the right of the consonant."
+            },
+            {
+              "kind": "speech",
+              "text": "Worked through: न + ◌ा = ना — nā."
+            },
+            {
+              "kind": "speech",
               "text": "You already say these, and every one of them has ◌ा (ā) somewhere inside it:"
             },
             {
@@ -400,15 +408,15 @@
             },
             {
               "kind": "speech",
-              "text": "धन्यवादः — thank you (dhanyavādaḥ)."
-            },
-            {
-              "kind": "speech",
               "text": "स्वागतम् svāgatam — welcome (lit. \"well come\") (svāgatam)."
             },
             {
               "kind": "speech",
               "text": "नाम nāma — name."
+            },
+            {
+              "kind": "speech",
+              "text": "भवान् / त्वम् bhavān / tvam — you (respectful / familiar)."
             }
           ]
         },
@@ -449,7 +457,7 @@
             },
             {
               "kind": "speech",
-              "text": "नमस्कारः, धन्यवादः, नमस्ते."
+              "text": "नमस्कारः, स्वागतम्, नमस्ते."
             },
             {
               "kind": "prompt",

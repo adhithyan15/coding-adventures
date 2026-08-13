@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Numbers One to Ten",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:675305cd2a6914af",
+  "sourceHash": "fnv1a64:1348caa4b9598e46",
   "lessons": [
     {
       "id": "ML-C07-numbers-1-5",
@@ -351,7 +351,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1ddf6755ba2d2964",
+      "sourceHash": "fnv1a64:a62861def2b487dc",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -464,7 +464,7 @@
             },
             {
               "kind": "speech",
-              "text": "നമസ്കാരം, നന്ദി, അതെ."
+              "text": "നമസ്കാരം, നന്ദി, ശരി."
             },
             {
               "kind": "prompt",

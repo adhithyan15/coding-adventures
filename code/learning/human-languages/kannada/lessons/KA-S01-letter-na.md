@@ -50,7 +50,7 @@ You already say these, and every one of them has ನ somewhere inside it:
 - **ನಮಸ್ಕಾರ** *namaskāra* — hello / greetings (namaskāra — "a making of a bow")
 - **ಧನ್ಯವಾದ** *dhanyavāda* — thank you (dhanyavāda — "an utterance of 'worthy'")
 - **ನನ್ನ** *nanna* — my
-- **ನನ್ನ ಹೆಸರು …** — my name is… (with no "is")
+- **ನೀನು / ನೀವು** *nīnu / nīvu* — you (familiar / respectful)
 
 ## Writing: ನ — copy what you see
 <!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-01] -->

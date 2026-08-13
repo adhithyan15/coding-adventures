@@ -566,7 +566,7 @@ orders letters by payoff and records the order as a per-script letter ledger.
 | HL-C120 | Not started | Author the missing script strand for Telugu, Kannada, Malayalam and Sanskrit, which have none, and migrate the six tracks' 233 schema-v1 lessons so they enter the gates at all. Fix the 30–34 lessons per track that carry no `sequence` — until that is done, no claim in HL11 is verifiable, because every one of them is a claim about order. | Closure violations reach zero per track; `firstWritableWord` lands near sequence 50; every book still builds and every `check:*` still passes. |
 
 | HL-C119 | Not started | Redistribute the script strands that already exist. Tamil's twenty `TA-W*` lessons are good material clustered at `sequence: 270`; Hindi's eleven include `HI-W01-shirorekha-na-ma`, the steepest lesson in the corpus at twelve glyphs. Both are re-cut into one-letter segments across the early sequences. | The prose survives the re-cut; each segment teaches exactly one letter; `drivablePercent` **does not fall** when the detachable writing segments land, which is the design's own falsification test. |
-| HL-C120 | **In progress** — 30 recognition segments landed for Telugu, Kannada, Malayalam and Sanskrit (the four that taught nothing); schema-v1 migration and the missing `sequence` values not started | Author the missing script strand for Telugu, Kannada, Malayalam and Sanskrit, which have none, and migrate the six tracks' 233 schema-v1 lessons so they enter the gates at all. Fix the 30–34 lessons per track that carry no `sequence` — until that is done, no claim in HL11 is verifiable, because every one of them is a claim about order. | Closure violations reach zero per track; `firstWritableWord` lands near sequence 50; every book still builds and every `check:*` still passes. |
+| HL-C120 | **In progress** — 38 script segments landed across all five non-Tamil Indic tracks for Telugu, Kannada, Malayalam and Sanskrit (the four that taught nothing); schema-v1 migration and the missing `sequence` values not started | Author the missing script strand for Telugu, Kannada, Malayalam and Sanskrit, which have none, and migrate the six tracks' 233 schema-v1 lessons so they enter the gates at all. Fix the 30–34 lessons per track that carry no `sequence` — until that is done, no claim in HL11 is verifiable, because every one of them is a claim about order. | Closure violations reach zero per track; `firstWritableWord` lands near sequence 50; every book still builds and every `check:*` still passes. |
 
 ## Findings from HL-C120, payment one — the four silent tracks
 
@@ -601,6 +601,41 @@ orders letters by payoff and records the order as a per-script letter ledger.
 - **Still open on this row**: the six tracks' schema-v1 lessons, the 30-34
   per track carrying no `sequence`, and the rest of each letter ledger — 24
   positions authored, 6-8 taught.
+
+## Findings from HL-C120, payment two — Hindi, and the citations nobody used
+
+- **Hindi's writing strand existed and was unreachable.** All eleven `HI-W*`
+  lessons sit in chapters 1-5, which are handwritten and protected from
+  generation, so they rendered only in the answer key — while chapter 1's own
+  prose promised the reader that each lesson introduces the letters its word
+  needs. Eight new segments in chapters 6-13 are the first Hindi script lessons
+  the book actually shows.
+- **Two cited stroke orders were sitting unused.** `devanagari.json` cites nine
+  letters, and अ and आ fall in the letter ledger's first positions — so the
+  Sanskrit segments shipped in payment one asked the reader to trace letters
+  whose pen path was already in the corpus. Both tracks now print the numbered
+  path, the pen-lift count and the source. The lesson generalises: check what the
+  data HAS before deciding what a lesson can claim.
+- **Print what the script records, not the least common denominator.** Devanagari
+  carries component breakdowns and a worked base+sign example for every mark
+  (न + ◌ा = ना, *nā*); the three Dravidian files carry a sound and nothing else.
+  Segments now show whatever their own script file has, so the Devanagari ones are
+  longer and the Dravidian ones are not padded.
+- **An example word the reader cannot say is a poor example.** Selection now
+  prefers headwords carrying a `romanization`; Malayalam's first segment page had
+  two of four bullets in script the reader had no way to pronounce.
+- **A headword is not always a word.** Hindi's inherent-vowel lesson has the
+  headword अ, so अ was offered as a word containing अ; `HI-W03-matras-naam` has the
+  headword `ा, े`, a list of marks. Both are now rejected by requiring two Unicode
+  letters that are not combining marks.
+- **Adopting a marker turns on the check that guards it.** Marking the new
+  segments `delivery: script` made the *"script strand is declared, not
+  inferred"* corpus check apply to Hindi, which immediately found all eleven
+  existing writing lessons undeclared.
+- **Hindi chapters 10, 11 and 12 sat at exactly 2/4 atoms in their payoff** — on
+  the 0.5 floor — and one segment atom took each to 2/5. Not repaired by widening
+  the payoffs: a chapter promises what the reader can DO with the language, and
+  recognising a character is the other ramp. Recorded in `hindi/chapters.json`.
 
 ## Findings from HL-C117
 

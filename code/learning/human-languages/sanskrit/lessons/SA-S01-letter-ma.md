@@ -45,6 +45,13 @@ for pages without knowing which mark on the page it was.
 
 It is a **consonant**, and in this script a consonant is never bare: it comes with an *a* already in it. So it is not *m*, it is **ma**.
 
+What it is made of:
+
+- a lower loop
+- an upper loop
+- right spine
+- top bar
+
 You already say these, and every one of them has म somewhere inside it:
 
 - **नमस्ते** *namaste* — hello (lit. "a bow to you") (namaste)
@@ -70,7 +77,7 @@ and larger than it is printed.
 [PAUSE 1s]
 - [YOU LOOK: at these words, and find म in the ones that have it]
 
-> नमस्ते  ·  नमस्कारः  ·  धन्यवादः
+> नमस्ते  ·  नमस्कारः  ·  अस्ति
 
 - [YOU TRACE: म three times, saying *ma* as you finish each one]
 - [YOU LOOK: back at any page of this chapter and find म once more]

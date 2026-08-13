@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Numbers One to Ten",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:550bbd4ccbe50481",
+  "sourceHash": "fnv1a64:5111cb783694b325",
   "lessons": [
     {
       "id": "KA-C07-numbers-1-5",
@@ -362,7 +362,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:80e6a83febbba217",
+      "sourceHash": "fnv1a64:3bb45505dab994c7",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -430,11 +430,11 @@
             },
             {
               "kind": "speech",
-              "text": "ನನ್ನ ಹೆಸರು … — my name is… (with no \"is\")."
+              "text": "ನೀನು / ನೀವು nīnu / nīvu — you (familiar / respectful)."
             },
             {
               "kind": "speech",
-              "text": "ನೀನು / ನೀವು nīnu / nīvu — you (familiar / respectful)."
+              "text": "ಏನು ēnu — what."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "Days of the Week",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:7b679134fe288199",
+  "sourceHash": "fnv1a64:f39be8085df2badb",
   "lessons": [
     {
       "id": "ML-C10-azhcha",
@@ -153,7 +153,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:4e657e9ad6739def",
+      "sourceHash": "fnv1a64:20953f8f6911f5ad",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -225,7 +225,7 @@
             },
             {
               "kind": "speech",
-              "text": "എന്റെ പേര് … ആണ് — my name is…"
+              "text": "സന്തോഷം santōṣam — joy / pleased to meet you."
             }
           ]
         },
@@ -266,7 +266,7 @@
             },
             {
               "kind": "speech",
-              "text": "നമസ്കാരം, നന്ദി, അതെ."
+              "text": "നമസ്കാരം, നന്ദി, ഇല്ല."
             },
             {
               "kind": "prompt",

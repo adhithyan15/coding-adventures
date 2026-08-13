@@ -2091,7 +2091,7 @@
     {
       "language": "hindi",
       "chapter": 1,
-      "sourceHash": "fnv1a64:b2ac48d98cb11e22",
+      "sourceHash": "fnv1a64:6554397bdd3829cf",
       "lessonIds": [
         "HI-C01-namaste",
         "HI-C01-namaskar",
@@ -2109,12 +2109,12 @@
       "text": "hindi/narration/ch01.txt",
       "json": "hindi/narration/ch01.json",
       "textHash": "fnv1a64:7da24f87b20d7f72",
-      "jsonHash": "fnv1a64:5d4f6bbfc863afa2"
+      "jsonHash": "fnv1a64:7a1c049f9f1c0bd6"
     },
     {
       "language": "hindi",
       "chapter": 2,
-      "sourceHash": "fnv1a64:02ebb571163cb0c9",
+      "sourceHash": "fnv1a64:966f7b063e67d596",
       "lessonIds": [
         "HI-C02-naam",
         "HI-C02-meraa",
@@ -2138,7 +2138,7 @@
       "text": "hindi/narration/ch02.txt",
       "json": "hindi/narration/ch02.json",
       "textHash": "fnv1a64:9eb1ac8e0ac749bc",
-      "jsonHash": "fnv1a64:910e647b97929d37"
+      "jsonHash": "fnv1a64:4acef677915b359e"
     },
     {
       "language": "hindi",
@@ -2201,121 +2201,129 @@
     {
       "language": "hindi",
       "chapter": 6,
-      "sourceHash": "fnv1a64:7255a1423e0aa6d2",
+      "sourceHash": "fnv1a64:f7085ecb6861e754",
       "lessonIds": [
         "HI-C06-numbers-1-5",
         "HI-C06-tin-char-history",
-        "HI-C06-paanch-nasal"
+        "HI-C06-paanch-nasal",
+        "HI-S01-letter-ma"
       ],
       "voiceLessons": 3,
       "drivablePrefix": 3,
       "text": "hindi/narration/ch06.txt",
       "json": "hindi/narration/ch06.json",
-      "textHash": "fnv1a64:121f100271e49c8f",
-      "jsonHash": "fnv1a64:61e593dd7d3958d7"
+      "textHash": "fnv1a64:d6e54ca14134544b",
+      "jsonHash": "fnv1a64:2db5818fac475bbe"
     },
     {
       "language": "hindi",
       "chapter": 7,
-      "sourceHash": "fnv1a64:e3d719166a97c059",
+      "sourceHash": "fnv1a64:75ad9049b795e967",
       "lessonIds": [
         "HI-C07-haan",
-        "HI-C07-nahin"
+        "HI-C07-nahin",
+        "HI-S02-letter-na"
       ],
       "voiceLessons": 2,
       "drivablePrefix": 2,
       "text": "hindi/narration/ch07.txt",
       "json": "hindi/narration/ch07.json",
-      "textHash": "fnv1a64:6f542c0260fc78b2",
-      "jsonHash": "fnv1a64:a706a16dc2c4bc95"
+      "textHash": "fnv1a64:cf00ec147cd3c658",
+      "jsonHash": "fnv1a64:7cba0c91415cb0de"
     },
     {
       "language": "hindi",
       "chapter": 8,
-      "sourceHash": "fnv1a64:cc66d6c05af0e364",
+      "sourceHash": "fnv1a64:9731669726c002fc",
       "lessonIds": [
-        "HI-C08-kripaya"
+        "HI-C08-kripaya",
+        "HI-S03-letter-a"
       ],
       "voiceLessons": 1,
       "drivablePrefix": 1,
       "text": "hindi/narration/ch08.txt",
       "json": "hindi/narration/ch08.json",
-      "textHash": "fnv1a64:b1f088b0f71e39a7",
-      "jsonHash": "fnv1a64:7e0fb6a72866e6bf"
+      "textHash": "fnv1a64:275ed039f815bc7c",
+      "jsonHash": "fnv1a64:763c03bd5215a78e"
     },
     {
       "language": "hindi",
       "chapter": 9,
-      "sourceHash": "fnv1a64:4ee99f9ff6cad537",
+      "sourceHash": "fnv1a64:256c1aec96d4e847",
       "lessonIds": [
-        "HI-C09-maaf-kijiye"
+        "HI-C09-maaf-kijiye",
+        "HI-S04-letter-aa"
       ],
       "voiceLessons": 1,
       "drivablePrefix": 1,
       "text": "hindi/narration/ch09.txt",
       "json": "hindi/narration/ch09.json",
-      "textHash": "fnv1a64:59ecf496cbc7f4da",
-      "jsonHash": "fnv1a64:3c9720d62e179520"
+      "textHash": "fnv1a64:f8ce5873611f8959",
+      "jsonHash": "fnv1a64:4f40168f7d2a532e"
     },
     {
       "language": "hindi",
       "chapter": 10,
-      "sourceHash": "fnv1a64:f14857cb26da0e4c",
+      "sourceHash": "fnv1a64:e7c8985a9e0af447",
       "lessonIds": [
         "HI-C10-somavaar-shukravaar",
-        "HI-C10-shanivaar-ravivaar"
+        "HI-C10-shanivaar-ravivaar",
+        "HI-S05-sign-virama"
       ],
       "voiceLessons": 1,
       "drivablePrefix": 0,
       "text": "hindi/narration/ch10.txt",
       "json": "hindi/narration/ch10.json",
-      "textHash": "fnv1a64:381c4d8f1cb438a0",
-      "jsonHash": "fnv1a64:2c5f220efaa27b28"
+      "textHash": "fnv1a64:9e6bbc24c8894611",
+      "jsonHash": "fnv1a64:346393b6dd3af14e"
     },
     {
       "language": "hindi",
       "chapter": 11,
-      "sourceHash": "fnv1a64:53c55daaa1b0c79e",
+      "sourceHash": "fnv1a64:007bbcd46efff218",
       "lessonIds": [
         "HI-C11-kaalaa-safed",
-        "HI-C11-laal-niila"
+        "HI-C11-laal-niila",
+        "HI-S06-vowel-sign-aa"
       ],
       "voiceLessons": 2,
       "drivablePrefix": 2,
       "text": "hindi/narration/ch11.txt",
       "json": "hindi/narration/ch11.json",
-      "textHash": "fnv1a64:c19c3cede888dda3",
-      "jsonHash": "fnv1a64:0deca9c5096edf9e"
+      "textHash": "fnv1a64:aa2b0c8fd6e3a8c8",
+      "jsonHash": "fnv1a64:90cebb222f52f672"
     },
     {
       "language": "hindi",
       "chapter": 12,
-      "sourceHash": "fnv1a64:9c5f31520227b2da",
+      "sourceHash": "fnv1a64:df4fb45ceae8d6ac",
       "lessonIds": [
         "HI-C12-pitaa-maataa",
-        "HI-C12-bhaai-bahin"
+        "HI-C12-bhaai-bahin",
+        "HI-S07-letter-ta"
       ],
       "voiceLessons": 2,
       "drivablePrefix": 2,
       "text": "hindi/narration/ch12.txt",
       "json": "hindi/narration/ch12.json",
-      "textHash": "fnv1a64:f50e9234fc86cb5f",
-      "jsonHash": "fnv1a64:b6130faabecd6b17"
+      "textHash": "fnv1a64:cd2cd8092285134b",
+      "jsonHash": "fnv1a64:0ae9f4d6cfed5480"
     },
     {
       "language": "hindi",
       "chapter": 13,
-      "sourceHash": "fnv1a64:d2d9effff91f41aa",
+      "sourceHash": "fnv1a64:ce7597fd32cb9ffe",
       "lessonIds": [
         "HI-C13-sir",
-        "HI-C13-haath"
+        "HI-C13-haath",
+        "HI-S08-letter-sa"
       ],
       "voiceLessons": 2,
       "drivablePrefix": 2,
       "text": "hindi/narration/ch13.txt",
       "json": "hindi/narration/ch13.json",
-      "textHash": "fnv1a64:740955fd65d6fe55",
-      "jsonHash": "fnv1a64:8e543bfd099cff1e"
+      "textHash": "fnv1a64:4ca4484718979aa6",
+      "jsonHash": "fnv1a64:c318a98ca0386c4b"
     },
     {
       "language": "hindi",
@@ -3236,7 +3244,7 @@
     {
       "language": "kannada",
       "chapter": 6,
-      "sourceHash": "fnv1a64:2ad17e232b5966c4",
+      "sourceHash": "fnv1a64:266b9d774b6a3470",
       "lessonIds": [
         "KA-C06-dative-ge",
         "KA-C06-dative-stacking",
@@ -3247,13 +3255,13 @@
       "drivablePrefix": 0,
       "text": "kannada/narration/ch06.txt",
       "json": "kannada/narration/ch06.json",
-      "textHash": "fnv1a64:252233d8a8559154",
-      "jsonHash": "fnv1a64:c4b25946b5f1cb28"
+      "textHash": "fnv1a64:0b6a4941b2a935b1",
+      "jsonHash": "fnv1a64:9a32132de4a8974d"
     },
     {
       "language": "kannada",
       "chapter": 7,
-      "sourceHash": "fnv1a64:550bbd4ccbe50481",
+      "sourceHash": "fnv1a64:5111cb783694b325",
       "lessonIds": [
         "KA-C07-numbers-1-5",
         "KA-C07-numbers-6-10",
@@ -3263,8 +3271,8 @@
       "drivablePrefix": 0,
       "text": "kannada/narration/ch07.txt",
       "json": "kannada/narration/ch07.json",
-      "textHash": "fnv1a64:842c4d216551eecd",
-      "jsonHash": "fnv1a64:e5a92500abdbb5fa"
+      "textHash": "fnv1a64:1224cc0a5c8c66a3",
+      "jsonHash": "fnv1a64:8650d43286656973"
     },
     {
       "language": "kannada",
@@ -3284,7 +3292,7 @@
     {
       "language": "kannada",
       "chapter": 9,
-      "sourceHash": "fnv1a64:7bd3d81beea32113",
+      "sourceHash": "fnv1a64:b03e982f58e5c494",
       "lessonIds": [
         "KA-C09-kshamisi",
         "KA-S04-vowel-sign-i"
@@ -3293,8 +3301,8 @@
       "drivablePrefix": 1,
       "text": "kannada/narration/ch09.txt",
       "json": "kannada/narration/ch09.json",
-      "textHash": "fnv1a64:893ab1452aee39db",
-      "jsonHash": "fnv1a64:93e3e42e68e91681"
+      "textHash": "fnv1a64:326f3ef96d8ac62e",
+      "jsonHash": "fnv1a64:df18246e782d83af"
     },
     {
       "language": "kannada",
@@ -3329,7 +3337,7 @@
     {
       "language": "kannada",
       "chapter": 12,
-      "sourceHash": "fnv1a64:aa985fc0cf8aa5d7",
+      "sourceHash": "fnv1a64:b8d18a4f6fe30072",
       "lessonIds": [
         "KA-C12-kutumba",
         "KA-S07-letter-ra"
@@ -3338,8 +3346,8 @@
       "drivablePrefix": 1,
       "text": "kannada/narration/ch12.txt",
       "json": "kannada/narration/ch12.json",
-      "textHash": "fnv1a64:cf33c2dba5dfe654",
-      "jsonHash": "fnv1a64:0e4bf49265451342"
+      "textHash": "fnv1a64:d60b6ee13fbc9e9b",
+      "jsonHash": "fnv1a64:077388a7fddb1c29"
     },
     {
       "language": "kannada",
@@ -4500,7 +4508,7 @@
     {
       "language": "malayalam",
       "chapter": 6,
-      "sourceHash": "fnv1a64:0e0927ef71067392",
+      "sourceHash": "fnv1a64:a05c57b1966dfe9f",
       "lessonIds": [
         "ML-C06-dative-ikku",
         "ML-C06-dative-subject",
@@ -4510,13 +4518,13 @@
       "drivablePrefix": 0,
       "text": "malayalam/narration/ch06.txt",
       "json": "malayalam/narration/ch06.json",
-      "textHash": "fnv1a64:3e9cc9ab687e1e21",
-      "jsonHash": "fnv1a64:835c5ac5e38d91a8"
+      "textHash": "fnv1a64:566af3f1d4c68573",
+      "jsonHash": "fnv1a64:c4ebd108a380465f"
     },
     {
       "language": "malayalam",
       "chapter": 7,
-      "sourceHash": "fnv1a64:675305cd2a6914af",
+      "sourceHash": "fnv1a64:1348caa4b9598e46",
       "lessonIds": [
         "ML-C07-numbers-1-5",
         "ML-C07-numbers-6-10",
@@ -4526,13 +4534,13 @@
       "drivablePrefix": 0,
       "text": "malayalam/narration/ch07.txt",
       "json": "malayalam/narration/ch07.json",
-      "textHash": "fnv1a64:801016b5c88c9eda",
-      "jsonHash": "fnv1a64:feef26273bbe6991"
+      "textHash": "fnv1a64:0cb816870e9207f3",
+      "jsonHash": "fnv1a64:4fd5ca1e7ab788db"
     },
     {
       "language": "malayalam",
       "chapter": 8,
-      "sourceHash": "fnv1a64:4853daf73733ca86",
+      "sourceHash": "fnv1a64:bb447960d213ee52",
       "lessonIds": [
         "ML-C08-dayavayi",
         "ML-S03-vowel-sign-i"
@@ -4541,13 +4549,13 @@
       "drivablePrefix": 1,
       "text": "malayalam/narration/ch08.txt",
       "json": "malayalam/narration/ch08.json",
-      "textHash": "fnv1a64:ad4798d443a57742",
-      "jsonHash": "fnv1a64:060d2230f20dc5c6"
+      "textHash": "fnv1a64:bc3ef28dda0eaf14",
+      "jsonHash": "fnv1a64:076a719dfdcf5737"
     },
     {
       "language": "malayalam",
       "chapter": 9,
-      "sourceHash": "fnv1a64:7aa09a4492748db5",
+      "sourceHash": "fnv1a64:3e27667e1b1fb2d3",
       "lessonIds": [
         "ML-C09-kshamikkanam",
         "ML-S04-vowel-sign-aa"
@@ -4556,13 +4564,13 @@
       "drivablePrefix": 1,
       "text": "malayalam/narration/ch09.txt",
       "json": "malayalam/narration/ch09.json",
-      "textHash": "fnv1a64:23d0433ccb82576e",
-      "jsonHash": "fnv1a64:0396314d20e04698"
+      "textHash": "fnv1a64:dd037ec9506802e4",
+      "jsonHash": "fnv1a64:a4b07b2db817b602"
     },
     {
       "language": "malayalam",
       "chapter": 10,
-      "sourceHash": "fnv1a64:7b679134fe288199",
+      "sourceHash": "fnv1a64:f39be8085df2badb",
       "lessonIds": [
         "ML-C10-azhcha",
         "ML-S05-letter-na"
@@ -4571,8 +4579,8 @@
       "drivablePrefix": 0,
       "text": "malayalam/narration/ch10.txt",
       "json": "malayalam/narration/ch10.json",
-      "textHash": "fnv1a64:dfa85295b6ecb36e",
-      "jsonHash": "fnv1a64:e27d48ef31b6708f"
+      "textHash": "fnv1a64:7708860efaa64db3",
+      "jsonHash": "fnv1a64:9573494be7f42512"
     },
     {
       "language": "malayalam",
@@ -4592,7 +4600,7 @@
     {
       "language": "malayalam",
       "chapter": 12,
-      "sourceHash": "fnv1a64:8c9271004fa507db",
+      "sourceHash": "fnv1a64:b495063311fbd22b",
       "lessonIds": [
         "ML-C12-kudumbam",
         "ML-S07-vowel-sign-u"
@@ -4601,13 +4609,13 @@
       "drivablePrefix": 1,
       "text": "malayalam/narration/ch12.txt",
       "json": "malayalam/narration/ch12.json",
-      "textHash": "fnv1a64:4ed300b7aa933cb4",
-      "jsonHash": "fnv1a64:74b6c0c8e9d07109"
+      "textHash": "fnv1a64:57bbe053c62783ae",
+      "jsonHash": "fnv1a64:9b2f823cda494dc2"
     },
     {
       "language": "malayalam",
       "chapter": 13,
-      "sourceHash": "fnv1a64:50cd27c420a8adac",
+      "sourceHash": "fnv1a64:ded70b008f59c2b4",
       "lessonIds": [
         "ML-C13-shareera-bhaagangal",
         "ML-S08-letter-ta"
@@ -4616,8 +4624,8 @@
       "drivablePrefix": 1,
       "text": "malayalam/narration/ch13.txt",
       "json": "malayalam/narration/ch13.json",
-      "textHash": "fnv1a64:21c1f334074ac013",
-      "jsonHash": "fnv1a64:b04cb254671c5bc8"
+      "textHash": "fnv1a64:cb20f869791147d8",
+      "jsonHash": "fnv1a64:cc8ccecf441462e6"
     },
     {
       "language": "malayalam",
@@ -6524,7 +6532,7 @@
     {
       "language": "sanskrit",
       "chapter": 8,
-      "sourceHash": "fnv1a64:95ec10ace1c3f27b",
+      "sourceHash": "fnv1a64:b2c12f201d49a8be",
       "lessonIds": [
         "SA-C08-cintayati",
         "SA-C08-avagacchati",
@@ -6536,13 +6544,13 @@
       "drivablePrefix": 4,
       "text": "sanskrit/narration/ch08.txt",
       "json": "sanskrit/narration/ch08.json",
-      "textHash": "fnv1a64:1475b9580db44d39",
-      "jsonHash": "fnv1a64:9887cc32e02d3fcf"
+      "textHash": "fnv1a64:49882d266f9799aa",
+      "jsonHash": "fnv1a64:2b154da94efc3d9c"
     },
     {
       "language": "sanskrit",
       "chapter": 9,
-      "sourceHash": "fnv1a64:d3987c6eee47ed6f",
+      "sourceHash": "fnv1a64:044c1f02a1f489e1",
       "lessonIds": [
         "SA-C09-grhnati",
         "SA-C09-prcchati",
@@ -6554,13 +6562,13 @@
       "drivablePrefix": 4,
       "text": "sanskrit/narration/ch09.txt",
       "json": "sanskrit/narration/ch09.json",
-      "textHash": "fnv1a64:3aff6490884d2d34",
-      "jsonHash": "fnv1a64:882b0be59b9d2e65"
+      "textHash": "fnv1a64:5e76bc9da91907b5",
+      "jsonHash": "fnv1a64:140c016b02efeaf0"
     },
     {
       "language": "sanskrit",
       "chapter": 10,
-      "sourceHash": "fnv1a64:a4c02c2e5a2a18ad",
+      "sourceHash": "fnv1a64:1b04bd86cfeafdce",
       "lessonIds": [
         "SA-C10-paniyam",
         "SA-C10-kshiram",
@@ -6571,13 +6579,13 @@
       "drivablePrefix": 0,
       "text": "sanskrit/narration/ch10.txt",
       "json": "sanskrit/narration/ch10.json",
-      "textHash": "fnv1a64:3e78d0c8da852654",
-      "jsonHash": "fnv1a64:4fea0ed55892986c"
+      "textHash": "fnv1a64:a714a0a239c1c407",
+      "jsonHash": "fnv1a64:f6e190c4a9b3b331"
     },
     {
       "language": "sanskrit",
       "chapter": 11,
-      "sourceHash": "fnv1a64:ed1b856e18016174",
+      "sourceHash": "fnv1a64:115929ae087ceb6f",
       "lessonIds": [
         "SA-C11-mitram",
         "SA-C11-kutumbam",
@@ -6589,13 +6597,13 @@
       "drivablePrefix": 0,
       "text": "sanskrit/narration/ch11.txt",
       "json": "sanskrit/narration/ch11.json",
-      "textHash": "fnv1a64:ec9dde912fff8c1d",
-      "jsonHash": "fnv1a64:7e83c33d3079b169"
+      "textHash": "fnv1a64:453ead275301b311",
+      "jsonHash": "fnv1a64:2a6e9e7376d961e4"
     },
     {
       "language": "sanskrit",
       "chapter": 12,
-      "sourceHash": "fnv1a64:c298f2452d64462e",
+      "sourceHash": "fnv1a64:6a0a57a8d46c7199",
       "lessonIds": [
         "SA-C12-akshi",
         "SA-C12-karnah",
@@ -6606,13 +6614,13 @@
       "drivablePrefix": 0,
       "text": "sanskrit/narration/ch12.txt",
       "json": "sanskrit/narration/ch12.json",
-      "textHash": "fnv1a64:bb73a77368c345d5",
-      "jsonHash": "fnv1a64:3ecc25ea24879546"
+      "textHash": "fnv1a64:d06f35a6f47f148a",
+      "jsonHash": "fnv1a64:c400c9822ebcbc3b"
     },
     {
       "language": "sanskrit",
       "chapter": 13,
-      "sourceHash": "fnv1a64:422fea886284cafe",
+      "sourceHash": "fnv1a64:56ca33f79e639761",
       "lessonIds": [
         "SA-C13-nasika",
         "SA-C13-hridayam",
@@ -6622,8 +6630,8 @@
       "drivablePrefix": 0,
       "text": "sanskrit/narration/ch13.txt",
       "json": "sanskrit/narration/ch13.json",
-      "textHash": "fnv1a64:ab14fbf2370d2268",
-      "jsonHash": "fnv1a64:1919cd500ebafd78"
+      "textHash": "fnv1a64:d84299791fb2aba4",
+      "jsonHash": "fnv1a64:7363e78ec0ab630e"
     },
     {
       "language": "spanish",
@@ -10629,7 +10637,7 @@
     {
       "language": "telugu",
       "chapter": 8,
-      "sourceHash": "fnv1a64:3c20eb659236e4d7",
+      "sourceHash": "fnv1a64:8c3c0fa3d4df9a20",
       "lessonIds": [
         "TE-C08-dayachesi",
         "TE-S03-letter-ka"
@@ -10638,13 +10646,13 @@
       "drivablePrefix": 0,
       "text": "telugu/narration/ch08.txt",
       "json": "telugu/narration/ch08.json",
-      "textHash": "fnv1a64:f730240ab2d8e054",
-      "jsonHash": "fnv1a64:68fc6a37e6e4d82e"
+      "textHash": "fnv1a64:54561625ce391cc9",
+      "jsonHash": "fnv1a64:4805188134415fd3"
     },
     {
       "language": "telugu",
       "chapter": 9,
-      "sourceHash": "fnv1a64:a7d05d63d06faa95",
+      "sourceHash": "fnv1a64:43ac10d8ecd54283",
       "lessonIds": [
         "TE-C09-kshaminchandi",
         "TE-S04-sign-anusvara"
@@ -10653,13 +10661,13 @@
       "drivablePrefix": 1,
       "text": "telugu/narration/ch09.txt",
       "json": "telugu/narration/ch09.json",
-      "textHash": "fnv1a64:b0d1711ae700e22a",
-      "jsonHash": "fnv1a64:2c601ca68132f5d8"
+      "textHash": "fnv1a64:3fac754a74d693c9",
+      "jsonHash": "fnv1a64:467d41bdf58bff73"
     },
     {
       "language": "telugu",
       "chapter": 10,
-      "sourceHash": "fnv1a64:e61e0073683cfc7d",
+      "sourceHash": "fnv1a64:ad6a1df3760d0717",
       "lessonIds": [
         "TE-C10-vaaram",
         "TE-S05-sign-virama"
@@ -10668,13 +10676,13 @@
       "drivablePrefix": 1,
       "text": "telugu/narration/ch10.txt",
       "json": "telugu/narration/ch10.json",
-      "textHash": "fnv1a64:e62db424e9a28edb",
-      "jsonHash": "fnv1a64:497c53d592b28ac9"
+      "textHash": "fnv1a64:10e208fc78365535",
+      "jsonHash": "fnv1a64:9f4481be45f93b42"
     },
     {
       "language": "telugu",
       "chapter": 11,
-      "sourceHash": "fnv1a64:a3bc77bd3db96b64",
+      "sourceHash": "fnv1a64:ff6f8f61cdda867e",
       "lessonIds": [
         "TE-C11-rangulu",
         "TE-S06-letter-ra"
@@ -10683,13 +10691,13 @@
       "drivablePrefix": 1,
       "text": "telugu/narration/ch11.txt",
       "json": "telugu/narration/ch11.json",
-      "textHash": "fnv1a64:2444df3a2dd9d2c9",
-      "jsonHash": "fnv1a64:31de8579823f3df1"
+      "textHash": "fnv1a64:ea3c8666a2549a9d",
+      "jsonHash": "fnv1a64:b024a14d64829f53"
     },
     {
       "language": "telugu",
       "chapter": 12,
-      "sourceHash": "fnv1a64:f49f7a8c65a2a182",
+      "sourceHash": "fnv1a64:1f129fea54e33f0b",
       "lessonIds": [
         "TE-C12-kutumbam",
         "TE-S07-vowel-sign-aa"
@@ -10698,13 +10706,13 @@
       "drivablePrefix": 1,
       "text": "telugu/narration/ch12.txt",
       "json": "telugu/narration/ch12.json",
-      "textHash": "fnv1a64:435c1bd1925074fc",
-      "jsonHash": "fnv1a64:1ec605fedc1d5f03"
+      "textHash": "fnv1a64:0822275c178cbee9",
+      "jsonHash": "fnv1a64:02d0f6e1ec1b547e"
     },
     {
       "language": "telugu",
       "chapter": 13,
-      "sourceHash": "fnv1a64:da0b496fb8e5f919",
+      "sourceHash": "fnv1a64:abd72661fb5ee2f7",
       "lessonIds": [
         "TE-C13-sharira-bhagalu",
         "TE-S08-vowel-sign-i"
@@ -10713,8 +10721,8 @@
       "drivablePrefix": 1,
       "text": "telugu/narration/ch13.txt",
       "json": "telugu/narration/ch13.json",
-      "textHash": "fnv1a64:c143ab8013f1dce9",
-      "jsonHash": "fnv1a64:2fdbf3bff026d333"
+      "textHash": "fnv1a64:1fbeb3a8aad9b8cc",
+      "jsonHash": "fnv1a64:73061f5d74175154"
     },
     {
       "language": "telugu",

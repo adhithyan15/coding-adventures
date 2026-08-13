@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "Sorry",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:7bd3d81beea32113",
+  "sourceHash": "fnv1a64:b03e982f58e5c494",
   "lessons": [
     {
       "id": "KA-C09-kshamisi",
@@ -178,7 +178,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:440673f7f5730079",
+      "sourceHash": "fnv1a64:143d5ccba6d8ebc7",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -242,15 +242,15 @@
             },
             {
               "kind": "speech",
-              "text": "ನಿಮ್ಮ ಹೆಸರು ಏನು? — what's your name?"
-            },
-            {
-              "kind": "speech",
               "text": "ನೀವು ಹೇಗಿದ್ದೀರಾ? nīvu hēgiddīrā — how are you? (respectful)."
             },
             {
               "kind": "speech",
               "text": "ಚೆನ್ನಾಗಿ cennāgi — well, nicely — and the reply \"ನಾನು ಚೆನ್ನಾಗಿದ್ದೇನೆ."
+            },
+            {
+              "kind": "speech",
+              "text": "ಪರವಾಗಿಲ್ಲ paravāgilla — it's okay / no problem / you're welcome."
             }
           ]
         },
@@ -291,7 +291,7 @@
             },
             {
               "kind": "speech",
-              "text": "ಸರಿ, ನಿಮ್ಮ ಹೆಸರು ಏನು?, ನಮಸ್ಕಾರ."
+              "text": "ಸರಿ, ನೀವು ಹೇಗಿದ್ದೀರಾ?, ನಮಸ್ಕಾರ."
             },
             {
               "kind": "prompt",
