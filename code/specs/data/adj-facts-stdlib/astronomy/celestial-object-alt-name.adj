@@ -1,0 +1,63 @@
+% ============================================================================
+% celestial-object-alt-name — an alternate name NASA gives a basic celestial
+% object, where the source names one (adj-facts-stdlib, ASTRONOMY).
+% ============================================================================
+% A sibling to the already-shipped `celestial-objects.adj`
+% (`celestial_property(object, property)`, ONE defining property per object):
+% a new `celestial_object_alt_name(object, alt_name)` table names an
+% ALTERNATE NAME the source uses for an object, decoded from spans already
+% sitting unused inside `celestial-objects.adj`'s own provenance block —
+% no new WebFetch. That table's `property` column has room for only ONE
+% defining fact per object; it already spent moon's slot on `orbits_planet`
+% and asteroid's on `rocky`, so the synonyms the SAME already-quoted NASA
+% sentences also state were left un-tabled:
+%
+%   moon → planetary_satellites
+%     "Naturally-formed bodies that orbit planets are called moons, or
+%      planetary satellites."
+%   asteroid → minor_planets
+%     "Asteroids, sometimes called minor planets, are rocky, airless
+%      remnants left over from the early formation of our solar system
+%      about 4.6 billion years ago."
+%
+% Recall is a binding query:
+%
+%     ? celestial_object_alt_name(moon, $AltName)      % planetary_satellites
+%     ? celestial_object_alt_name(asteroid, $AltName)  % minor_planets
+%
+% This is a native `table` (ADJ-TABLES RS-5, a TWO-column table like
+% `celestial-objects.adj`'s own `celestial_property`): each `row` lowers to a
+% ground relation `celestial_object_alt_name(object, alt_name)` carrying the
+% citation, so the lookup above is the ordinary SLD binding query — the
+% engine returns the alternate name WITH its source, on the CPU, with zero
+% model calls, and abstains on any object the source does not give a second
+% name for (`star`, `planet`, and `comet`'s cited NASA spans name only one
+% term each — no alternate name to decode).
+%
+% Only these TWO of `celestial-objects.adj`'s five basic types have an
+% alternate name in the ALREADY-cited spans; this table is deliberately
+% narrow rather than inventing synonyms the source does not state.
+%
+% Provenance: reproduces, byte-for-byte, the SAME two spans already quoted
+% inside `celestial-objects.adj`'s own provenance block, from the SAME NASA
+% Science pages that table already cites — no new WebFetch, only a
+% different schema decoding a part of each already-verified quote. An ADJ
+% `table` carries ONE provenance envelope (per `celestial-objects.adj`'s own
+% convention), so `source`/`locator`/`trust` below hold the moon span; the
+% asteroid row's own span and locator are listed above for independent
+% auditability. `trust authoritative` — the same tier `celestial-objects.adj`
+% already carries (NASA Science, a primary U.S. government source).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table celestial_object_alt_name {
+    columns object, alt_name
+
+    row (moon, planetary_satellites)
+    row (asteroid, minor_planets)
+
+    source "Naturally-formed bodies that orbit planets are called moons, or planetary satellites."
+    locator "https://science.nasa.gov/solar-system/moons/"
+    trust authoritative
+}

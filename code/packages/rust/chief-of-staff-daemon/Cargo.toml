@@ -43,6 +43,7 @@ coding_adventures_storage_fs = { path = "../storage-fs" }
 coding-adventures-json-serializer = { path = "../json-serializer" }
 coding-adventures-json-value = { path = "../json-value" }
 smart-home-controller-runtime = { path = "../smart-home-controller-runtime" }
+smart-home-automation-runtime = { path = "../smart-home-automation-runtime" }
 smart-home-core = { path = "../smart-home-core" }
 smart-home-axis-pairing-service = { path = "../smart-home-axis-pairing-service" }
 smart-home-discovery = { path = "../smart-home-discovery" }

@@ -1,6 +1,6 @@
-//! diagram-ir v0.39.0 - DG00/DG04 semantic IR
+//! diagram-ir v0.40.0 - DG00/DG04 semantic IR
 
-pub const VERSION: &str = "0.39.0";
+pub const VERSION: &str = "0.40.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramDirection {
@@ -546,6 +546,15 @@ pub struct QuadrantPoint {
     pub stroke_width: Option<f64>,
 }
 
+#[derive(Clone, Debug, Default, PartialEq)]
+pub struct QuadrantConfig {
+    pub chart_width: Option<f64>,
+    pub chart_height: Option<f64>,
+    pub x_axis_position: Option<String>,
+    pub y_axis_position: Option<String>,
+    pub point_radius: Option<f64>,
+}
+
 #[derive(Clone, Debug, PartialEq)]
 pub struct ChartDiagram {
     pub title: Option<String>,
@@ -560,6 +569,7 @@ pub struct ChartDiagram {
     pub flows: Vec<SankeyFlow>,
     pub quadrant_labels: [Option<String>; 4],
     pub quadrant_points: Vec<QuadrantPoint>,
+    pub quadrant_config: QuadrantConfig,
     pub orientation: ChartOrientation,
 }
 
@@ -1051,7 +1061,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.39.0");
+        assert_eq!(VERSION, "0.40.0");
     }
     #[test]
     fn default_direction_is_tb() {
@@ -1147,6 +1157,7 @@ mod tests {
             flows: vec![],
             quadrant_labels: [None, None, None, None],
             quadrant_points: vec![],
+            quadrant_config: QuadrantConfig::default(),
             orientation: ChartOrientation::Vertical,
         };
         assert_eq!(d.series[0].data.len(), 2);

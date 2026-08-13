@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.83.0";
+pub const VERSION: &str = "0.84.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -485,9 +485,9 @@ fn token_name(token: &Token) -> &str {
 use diagram_ir::{
     Axis, AxisKind, ChartDiagram, ChartKind, ChartOrientation, ChartSeries, Compartment,
     CompartmentKind, GanttDiagram, GanttSection, GanttTask, GitBranch, GitCommitType, GitDiagram,
-    GitEvent, PieSlice, QuadrantPoint, RelKind, SankeyFlow, SankeyNode, SequenceArrowhead,
-    SequenceBlockKind, SequenceCentralConnection, SequenceDiagram, SequenceEvent,
-    SequenceLineStyle, SequenceLink, SequenceNotePlacement, SequenceParticipant,
+    GitEvent, PieSlice, QuadrantConfig, QuadrantPoint, RelKind, SankeyFlow, SankeyNode,
+    SequenceArrowhead, SequenceBlockKind, SequenceCentralConnection, SequenceDiagram,
+    SequenceEvent, SequenceLineStyle, SequenceLink, SequenceNotePlacement, SequenceParticipant,
     SequenceParticipantGroup, SequenceParticipantKind, SequenceProperty, SequenceTextWrap,
     SeriesKind, StructuralDiagram, StructuralGroup, StructuralKind, StructuralNode,
     StructuralNodeKind, StructuralRelationship, TaskStart, TaskStatus, TemporalBody,
@@ -1037,6 +1037,7 @@ pub fn parse_xychart(source: &str) -> Result<ChartDiagram, ParseError> {
         flows: vec![],
         quadrant_labels: [None, None, None, None],
         quadrant_points: vec![],
+        quadrant_config: QuadrantConfig::default(),
         orientation: ChartOrientation::Vertical,
     })
 }
@@ -1110,6 +1111,9 @@ fn parse_quadrant_point_style(raw: &str, token: &Token) -> Result<QuadrantPointS
 }
 
 pub fn parse_quadrant_chart(source: &str) -> Result<ChartDiagram, ParseError> {
+    let quadrant_config = parse_quadrant_config(source);
+    let preprocessed = preprocess_mermaid_source(source)?;
+    let source = preprocessed.source.as_str();
     parse_mermaid_quadrant_ast(source)?;
 
     let mut cursor = TokenCursor::new(tokenize_mermaid_quadrant(source));
@@ -1282,8 +1286,41 @@ pub fn parse_quadrant_chart(source: &str) -> Result<ChartDiagram, ParseError> {
         flows: vec![],
         quadrant_labels,
         quadrant_points,
+        quadrant_config,
         orientation: ChartOrientation::Vertical,
     })
+}
+
+fn parse_quadrant_config(source: &str) -> QuadrantConfig {
+    let number = |key| quadrant_directive_value(source, key).and_then(|value| value.parse().ok());
+    QuadrantConfig {
+        chart_width: number("chartWidth"),
+        chart_height: number("chartHeight"),
+        x_axis_position: quadrant_directive_value(source, "xAxisPosition"),
+        y_axis_position: quadrant_directive_value(source, "yAxisPosition"),
+        point_radius: number("pointRadius"),
+    }
+}
+
+fn quadrant_directive_value(source: &str, key: &str) -> Option<String> {
+    for quote in ['"', '\''] {
+        let needle = format!("{quote}{key}{quote}");
+        let Some(after_key) = source
+            .find(&needle)
+            .map(|index| &source[index + needle.len()..])
+        else {
+            continue;
+        };
+        let after_colon = after_key.split_once(':')?.1.trim_start();
+        if let Some(value) = after_colon.strip_prefix(['"', '\'']) {
+            return value.find(['"', '\'']).map(|end| value[..end].to_string());
+        }
+        let end = after_colon
+            .find([',', '}', ' '])
+            .unwrap_or(after_colon.len());
+        return Some(after_colon[..end].trim().to_string());
+    }
+    None
 }
 
 fn parse_bracket_list(s: &str) -> Vec<String> {
@@ -3571,6 +3608,7 @@ pub fn parse_pie(source: &str) -> Result<ChartDiagram, ParseError> {
         flows: vec![],
         quadrant_labels: [None, None, None, None],
         quadrant_points: vec![],
+        quadrant_config: QuadrantConfig::default(),
         orientation: ChartOrientation::Vertical,
     })
 }
@@ -3702,6 +3740,7 @@ pub fn parse_sankey(source: &str) -> Result<ChartDiagram, ParseError> {
         flows,
         quadrant_labels: [None, None, None, None],
         quadrant_points: vec![],
+        quadrant_config: QuadrantConfig::default(),
         orientation: ChartOrientation::Horizontal,
     })
 }
@@ -4695,6 +4734,26 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         assert_eq!(diagram.y_axis.unwrap().categories, ["Engagement"]);
         assert_eq!(diagram.quadrant_labels[0].as_deref(), Some("Plan"));
         assert_eq!(diagram.quadrant_points[0].label, "Point1 : (* +=[❤");
+    }
+
+    #[test]
+    fn quadrant_parses_layout_init_config() {
+        let diagram = parse_quadrant_chart(
+            "%%{init: {\"quadrantChart\": {\"chartWidth\": 720, \"chartHeight\": 540, \"xAxisPosition\": \"top\", \"yAxisPosition\": \"right\", \"pointRadius\": 11}}}%%\nquadrantChart\nMetal: [0.75, 0.8]\n",
+        )
+        .unwrap();
+
+        assert_eq!(diagram.quadrant_config.chart_width, Some(720.0));
+        assert_eq!(diagram.quadrant_config.chart_height, Some(540.0));
+        assert_eq!(
+            diagram.quadrant_config.x_axis_position.as_deref(),
+            Some("top")
+        );
+        assert_eq!(
+            diagram.quadrant_config.y_axis_position.as_deref(),
+            Some("right")
+        );
+        assert_eq!(diagram.quadrant_config.point_radius, Some(11.0));
     }
 
     #[test]
@@ -6299,7 +6358,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.83.0");
+        assert_eq!(crate::VERSION, "0.84.0");
     }
 
     #[test]

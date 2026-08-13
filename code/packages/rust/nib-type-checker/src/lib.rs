@@ -344,7 +344,7 @@ impl Checker {
                     .and_then(|child| self.infer_expr(child, env, expected))
             }
             "unary_expr" => self.infer_unary_expr(node, env, expected),
-            "add_expr" | "mul_expr" => {
+            "add_expr" | "shift_expr" | "mul_expr" => {
                 let operands = child_nodes(node);
                 // The expected width flows to BOTH operands (an arithmetic op
                 // preserves width), so `200 + 100 : u8` types each literal u8.
@@ -367,7 +367,16 @@ impl Checker {
                     _ => None,
                 }
             }
-            "primary" => infer_primary(node, env, expected),
+            "primary" => {
+                // Parentheses contain an `expr` child. Route it through the
+                // checker rather than the literal-only primary helper so every
+                // nested expression receives a stable type annotation.
+                child_nodes(node)
+                    .into_iter()
+                    .find(|child| child.rule_name == "expr")
+                    .and_then(|child| self.infer_expr(child, env, expected))
+                    .or_else(|| infer_primary(node, env, expected))
+            }
             "type" => parse_type(node),
             _ => {
                 let children = child_nodes(node);
@@ -437,6 +446,7 @@ fn is_expr_rule(name: &str) -> bool {
             | "eq_expr"
             | "cmp_expr"
             | "add_expr"
+            | "shift_expr"
             | "mul_expr"
             | "bitwise_expr"
             | "unary_expr"
@@ -657,6 +667,18 @@ mod tests {
     #[test]
     fn check_source_accepts_logical_not_bool_binding() {
         let result = check_source("fn main() { let b: bool = !false; }");
+        assert!(result.ok, "expected success, got {:?}", result.errors);
+    }
+
+    #[test]
+    fn check_source_accepts_numeric_shifts() {
+        let result = check_source("fn main() -> u8 { return 1 << 5; }");
+        assert!(result.ok, "expected success, got {:?}", result.errors);
+    }
+
+    #[test]
+    fn check_source_accepts_parenthesized_shift_chains() {
+        let result = check_source("fn main() -> u8 { return (1 << 6) >> 1; }");
         assert!(result.ok, "expected success, got {:?}", result.errors);
     }
 }

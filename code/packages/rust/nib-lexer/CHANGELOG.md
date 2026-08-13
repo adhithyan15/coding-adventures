@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Add `SHL` (`<<`) and `SHR` (`>>`) tokens ahead of comparison tokens so Nib
+  source can express logical shifts without token splitting.
+
 ## 0.2.1 — 2026-06-13 (LANG-FULL N1)
 
 - `src/_grammar.rs` regenerated after `nib.tokens` doc updates (the `STAR`/`SLASH`

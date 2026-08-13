@@ -119,9 +119,10 @@ impl std::error::Error for BackendError {}
 
 /// Lower a single typed CIR function to a flat little-endian RV32I binary.
 pub fn compile(ctx: &FunctionContext<'_>, cir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
-    let mut lowerer = Lowerer::new(ctx)?;
+    let mut lowerer = Lowerer::new(ctx, cir)?;
     for instr in cir {
         lowerer.lower(instr)?;
+        lowerer.consume_value_sources(instr);
     }
     lowerer.resolve_branches()?;
     if lowerer.words.is_empty() {
@@ -178,6 +179,9 @@ struct Lowerer {
     word_sized_values: HashSet<String>,
     labels: HashMap<String, usize>,
     branches: Vec<PendingBranch>,
+    /// Value uses still to be lowered. This supports the small in-place reuse
+    /// path below without claiming to be a complete register allocator.
+    remaining_uses: HashMap<String, usize>,
     next_value_register: usize,
     next_internal_label: usize,
 }
@@ -211,7 +215,7 @@ struct PendingBranch {
 }
 
 impl Lowerer {
-    fn new(ctx: &FunctionContext<'_>) -> Result<Self, BackendError> {
+    fn new(ctx: &FunctionContext<'_>, cir: &[CIRInstr]) -> Result<Self, BackendError> {
         if ctx.params.len() > ARG_REGISTERS.len() {
             return Err(BackendError::TooManyArguments(ctx.params.len()));
         }
@@ -247,6 +251,7 @@ impl Lowerer {
             word_sized_values: HashSet::new(),
             labels: HashMap::new(),
             branches: Vec::new(),
+            remaining_uses: count_value_uses(cir),
             next_value_register: 0,
             next_internal_label: 0,
         })
@@ -519,6 +524,35 @@ impl Lowerer {
         self.allocate_pair(name)
     }
 
+    /// A right shift reads its low word before writing it and preserves the
+    /// source high word in `SECOND_SCRATCH_REGISTER`, so its dead left-hand
+    /// pair can safely become the destination.
+    fn dest_pair_reusing_dead_lhs(
+        &mut self,
+        instr: &CIRInstr,
+        op: &str,
+    ) -> Result<ValueLocation, BackendError> {
+        let destination = instr
+            .dest
+            .as_deref()
+            .ok_or_else(|| BackendError::InvalidOperand(format!("{op} requires a dest")))?;
+        let Some(CIROperand::Var(source)) = instr.srcs.first() else {
+            return Err(BackendError::InvalidOperand(format!(
+                "{op} srcs[0] must be Var"
+            )));
+        };
+
+        if self.remaining_uses.get(source) == Some(&value_source_occurrences(instr, source)) {
+            if let ValueLocation::Pair { lo, hi } = self.lookup_location(source)? {
+                let location = ValueLocation::Pair { lo, hi };
+                self.env.push((destination.to_owned(), location));
+                return Ok(location);
+            }
+        }
+
+        self.allocate_pair(destination)
+    }
+
     fn var_src(&self, instr: &CIRInstr, index: usize, op: &str) -> Result<u32, BackendError> {
         let name = match instr.srcs.get(index) {
             Some(CIROperand::Var(name)) => name,
@@ -610,6 +644,20 @@ impl Lowerer {
             .iter()
             .find_map(|(existing, location)| (existing == name).then_some(*location))
             .ok_or_else(|| BackendError::UndefinedVariable(name.to_owned()))
+    }
+
+    fn consume_value_sources(&mut self, instr: &CIRInstr) {
+        for (index, operand) in instr.srcs.iter().enumerate() {
+            if !is_value_source(instr, index) {
+                continue;
+            }
+            let CIROperand::Var(name) = operand else {
+                continue;
+            };
+            if let Some(remaining) = self.remaining_uses.get_mut(name) {
+                *remaining = remaining.saturating_sub(1);
+            }
+        }
     }
 
     fn lower_wide_add(
@@ -727,7 +775,12 @@ impl Lowerer {
         left: bool,
         arithmetic_right: bool,
     ) -> Result<(), BackendError> {
-        let ValueLocation::Pair { lo, hi } = self.dest_pair(instr, op)? else {
+        let destination = if left {
+            self.dest_pair(instr, op)?
+        } else {
+            self.dest_pair_reusing_dead_lhs(instr, op)?
+        };
+        let ValueLocation::Pair { lo, hi } = destination else {
             unreachable!("dest_pair always returns a pair")
         };
         let value = self.var_location(instr, 0, op)?;
@@ -1025,6 +1078,41 @@ impl Lowerer {
             }
         }
         Ok(())
+    }
+}
+
+fn count_value_uses(cir: &[CIRInstr]) -> HashMap<String, usize> {
+    let mut uses = HashMap::new();
+    for instr in cir {
+        for (index, operand) in instr.srcs.iter().enumerate() {
+            if !is_value_source(instr, index) {
+                continue;
+            }
+            if let CIROperand::Var(name) = operand {
+                *uses.entry(name.clone()).or_insert(0) += 1;
+            }
+        }
+    }
+    uses
+}
+
+fn value_source_occurrences(instr: &CIRInstr, name: &str) -> usize {
+    instr
+        .srcs
+        .iter()
+        .enumerate()
+        .filter(|(index, operand)| {
+            is_value_source(instr, *index)
+                && matches!(operand, CIROperand::Var(candidate) if candidate == name)
+        })
+        .count()
+}
+
+fn is_value_source(instr: &CIRInstr, index: usize) -> bool {
+    match instr.op.as_str() {
+        "label" | "jmp" => false,
+        "jmp_if_false" | "br_false_bool" | "jmp_if_true" | "br_true_bool" => index == 0,
+        _ => true,
     }
 }
 

@@ -755,7 +755,7 @@ impl Compiler {
             // single-operand case is handled by the passthrough above).
             "or_expr" => self.compile_short_circuit(node, false, types, env, out),
             "and_expr" => self.compile_short_circuit(node, true, types, env, out),
-            "eq_expr" | "cmp_expr" | "add_expr" | "mul_expr" | "bitwise_expr" => {
+            "eq_expr" | "cmp_expr" | "add_expr" | "shift_expr" | "mul_expr" | "bitwise_expr" => {
                 self.compile_binary_chain(node, types, env, out)
             }
             "unary_expr" => self.compile_unary(node, types, env, out),
@@ -1064,7 +1064,7 @@ impl Compiler {
 
     /// Compile a left-associative binary chain like `a + b + c` by walking
     /// children pairwise.  The grammar uses rules like
-    /// `add_expr = bitwise_expr { (PLUS|MINUS|...) bitwise_expr }`.
+    /// `add_expr = shift_expr { (PLUS|MINUS|...) shift_expr }`.
     fn compile_binary_chain(
         &mut self,
         node: &GrammarASTNode,
@@ -1446,8 +1446,8 @@ fn const_expr_value(
 
     match expr.rule_name.as_str() {
         "expr" => fold_single_const_child(expr, consts, declared),
-        "or_expr" | "and_expr" | "eq_expr" | "cmp_expr" | "add_expr" | "mul_expr"
-        | "bitwise_expr" => fold_const_chain(expr, consts, declared),
+        "or_expr" | "and_expr" | "eq_expr" | "cmp_expr" | "add_expr" | "shift_expr"
+        | "mul_expr" | "bitwise_expr" => fold_const_chain(expr, consts, declared),
         "unary_expr" => fold_const_unary(expr, consts, declared),
         "primary" => fold_const_primary(expr, consts, declared),
         "call_expr" => Err("calls are not const-expressions".to_string()),
@@ -1536,6 +1536,20 @@ fn fold_const_binary(
         ("&", _) | (_, "AMP") => fold_width(lhs & rhs, declared),
         ("|", _) | (_, "PIPE") => fold_width(lhs | rhs, declared),
         ("^", _) | (_, "CARET") => fold_width(lhs ^ rhs, declared),
+        ("<<", _) | (_, "SHL") => {
+            if rhs >= 64 {
+                0
+            } else {
+                fold_width(lhs << rhs, declared)
+            }
+        }
+        (">>", _) | (_, "SHR") => {
+            if rhs >= 64 {
+                0
+            } else {
+                fold_width(lhs >> rhs, declared)
+            }
+        }
         ("==", _) | (_, "EQ_EQ") => bool_int(lhs == rhs),
         ("!=", _) | (_, "NEQ") => bool_int(lhs != rhs),
         ("<", _) | (_, "LT") => bool_int(lhs < rhs),
@@ -1674,6 +1688,7 @@ fn is_expr_rule(name: &str) -> bool {
             | "eq_expr"
             | "cmp_expr"
             | "add_expr"
+            | "shift_expr"
             | "mul_expr"
             | "bitwise_expr"
             | "unary_expr"
@@ -1882,6 +1897,10 @@ fn cir_op_for(text: &str, type_name: &str) -> Option<&'static str> {
         ("&", _) | (_, "AMP") => Some("and"),
         ("|", _) | (_, "PIPE") => Some("or"),
         ("^", _) | (_, "CARET") => Some("xor"),
+        // Shifts preserve the integer type. The RV32 backend selects logical
+        // versus arithmetic right shift from the CIR type's signedness.
+        ("<<", _) | (_, "SHL") => Some("shl"),
+        (">>", _) | (_, "SHR") => Some("shr"),
         // Comparisons
         ("==", _) | (_, "EQ_EQ") => Some("cmp_eq"),
         ("!=", _) | (_, "NEQ") => Some("cmp_ne"),
@@ -2622,6 +2641,24 @@ mod tests {
         assert!(
             !ops.contains(&"call_builtin"),
             "for loop must not leak a call_builtin; got {ops:?}"
+        );
+    }
+
+    #[test]
+    fn compiles_shift_operators_to_typed_iir() {
+        let m = compile_source("fn main() -> u8 { return (1 << 5) >> 1; }", "test")
+            .expect("shift expression must compile");
+        let shifts: Vec<_> = m.functions[0]
+            .instructions
+            .iter()
+            .filter(|instr| matches!(instr.op.as_str(), "shl" | "shr"))
+            .collect();
+        assert_eq!(shifts.len(), 2, "expected both shifts; got {shifts:?}");
+        assert!(shifts.iter().any(|instr| instr.op == "shl"));
+        assert!(shifts.iter().any(|instr| instr.op == "shr"));
+        assert!(
+            shifts.iter().all(|instr| instr.type_hint == "u8"),
+            "parenthesized u8 shifts must stay narrow; got {shifts:?}"
         );
     }
 

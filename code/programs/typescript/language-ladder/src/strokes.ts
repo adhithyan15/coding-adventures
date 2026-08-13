@@ -2603,6 +2603,34 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: devanagariAlphabetSource("न"),
   },
+  // Opiaterein's animation descends the left stem and curves right around the
+  // lower bowl, then separately descends the right stem and finishes the
+  // headline. The Central Hindi Directorate deskbook independently shows the
+  // same three-part buildup and directions: three strokes, two lifts.
+  [ductusKey("devanagari", "प")]: {
+    script: "devanagari",
+    glyph: "प",
+    strokes: [
+      { segments: [{ label: "descend the left stem and curve right around the lower bowl", path: [
+        { x: 120, y: 551 }, { x: 120, y: 480 }, { x: 120, y: 410 },
+        { x: 120, y: 355 }, { x: 128, y: 310 }, { x: 145, y: 270 },
+        { x: 170, y: 238 }, { x: 205, y: 215 }, { x: 245, y: 202 },
+        { x: 285, y: 202 }, { x: 325, y: 215 }, { x: 360, y: 238 },
+        { x: 385, y: 265 }, { x: 402, y: 295 }, { x: 408, y: 320 },
+      ] }] },
+      { segments: [{ label: "lift, then descend the right stem", path: [
+        { x: 438, y: 551 }, { x: 438, y: 475 }, { x: 438, y: 395 },
+        { x: 438, y: 315 }, { x: 438, y: 235 }, { x: 438, y: 155 },
+        { x: 438, y: 75 }, { x: 438, y: 5 },
+      ] }] },
+      { segments: [{ label: "lift, then draw the shirorekha left-to-right", path: [
+        { x: 5, y: 585 }, { x: 85, y: 585 }, { x: 165, y: 585 },
+        { x: 245, y: 585 }, { x: 325, y: 585 }, { x: 405, y: 585 },
+        { x: 485, y: 585 }, { x: 578, y: 585 },
+      ] }] },
+    ],
+    source: devanagariAlphabetSource("प"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the

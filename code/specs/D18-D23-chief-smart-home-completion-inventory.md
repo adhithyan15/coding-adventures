@@ -2159,11 +2159,28 @@ controller:
 - Tests prove exact-bridge selection, central commit visibility, secret-free
   durable state, cooperative stop, and failure propagation.
 
-The remaining central-composition backlog still takes priority over adding
-another isolated integration or Chief read model:
+## Current Chief Automation Schedule Worker Slice
 
-1. Move automation schedule workers into the same process and prove restart-safe
-   tick recovery and HTTP/model-tool visibility under coordinated shutdown.
+The Chief smart-home composition now owns the existing automation schedule
+loop instead of leaving scheduled definitions inert unless the standalone
+local-controller process is also running:
+
+- The worker evaluates through the exact `SmartHomePlatformHttpRuntime` shared
+  by the Home Assistant surface. That reuses the same controller, principal,
+  fallible clock, automation/runtime handles, and central persistence adapters
+  without creating another runtime owner.
+- Matched occurrences and audit records commit atomically, and resulting
+  runtime changes are immediately visible to HTTP and D18D consumers. The
+  durable occurrence ledger prevents a restart in the same schedule window
+  from executing an occurrence twice; empty ticks do not churn the controller
+  revision.
+- The worker starts only after both listeners bind, stops cooperatively, and is
+  joined before controller teardown. Clock, evaluation, or persistence failure
+  stops both listeners instead of leaving a partially live daemon.
+
+The central controller composition backlog is now complete. Future executable
+work must come from the protocol- and vendor-specific inventory below after its
+recorded ownership, authentication, and secret-handling prerequisites are met.
 
 The protocol- and vendor-specific backlog below remains valid after those
 central ownership steps:

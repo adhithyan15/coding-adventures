@@ -20,6 +20,11 @@ NativeAot/Clr, and the COBOL `COMPUTE` int32 literal on Clr/Jvm).
 Verified with a full `LANG_MATRIX_REPORT_ALL` sweep (every failure re-verified in
 a fresh process), the McCarthy nine-backend conformance capstone, and all 41
 lang-aot test targets.
+## 0.224.2 - 2026-08-13 (ALGOL single-step controlled snapshots)
+
+The ALGOL matrix now proves across all seven standard backends that an
+exactly-one-iteration step loop retains a static assignment to its controlled
+real scalar.
 
 ## 0.224.1 - 2026-08-13 (ALGOL zero-trip while-loop snapshots)
 
