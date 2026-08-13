@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.43.0";
+pub const VERSION: &str = "0.44.0";
 
 use std::collections::HashMap;
 
@@ -2376,7 +2376,7 @@ where
                     *x + 8.0,
                     *y + (*height - ls) / 2.0,
                     *width - 16.0,
-                    ls * 1.2,
+                    *height,
                     options.title_font.clone(),
                     Color {
                         r: 17,
@@ -2621,9 +2621,9 @@ where
                 text_children.push(text_node(
                     &format!("{label}  {score}/5{actors}"),
                     x + 10.0,
-                    y + (height - ls) / 2.0,
+                    y + 6.0,
                     width - 20.0,
-                    ls * 1.2,
+                    height - 12.0,
                     lf.clone(),
                     Color {
                         r: 15,
@@ -2663,6 +2663,13 @@ where
     let text_scene = layout_to_paint(&text_root, &text_opts);
     instructions.extend(text_scene.instructions);
 
+    let mut metadata = HashMap::new();
+    if let Some(title) = &diagram.accessibility_title {
+        metadata.insert("accessibility.title".to_string(), title.clone());
+    }
+    if let Some(description) = &diagram.accessibility_description {
+        metadata.insert("accessibility.description".to_string(), description.clone());
+    }
     let bg = options.background;
     PaintScene {
         width: diagram.width,
@@ -2670,7 +2677,7 @@ where
         background: format!("rgb({},{},{})", bg.r, bg.g, bg.b),
         instructions,
         id: None,
-        metadata: None,
+        metadata: (!metadata.is_empty()).then_some(metadata),
     }
 }
 
@@ -3160,7 +3167,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.43.0");
+        assert_eq!(crate::VERSION, "0.44.0");
     }
 
     #[test]

@@ -18,7 +18,7 @@ use diagram_ir::{
 };
 use std::collections::HashMap;
 
-pub const VERSION: &str = "0.2.0";
+pub const VERSION: &str = "0.3.0";
 
 // ── Constants ─────────────────────────────────────────────────────────────
 
@@ -54,19 +54,27 @@ fn layout_journey(title: &Option<String>, diagram: &JourneyDiagram, cw: f64) -> 
         y += 36.0;
     }
     for section in &diagram.sections {
+        let section_height = 12.0 + section.label.lines().count().max(1) as f64 * 16.0;
         items.push(LayoutedTemporalItem::SectionHeader {
-            x: 0.0, y, width: cw, height: 24.0, label: section.label.clone(),
+            x: 0.0, y, width: cw, height: section_height, label: section.label.clone(),
         });
-        y += 28.0;
+        y += section_height + 4.0;
         for task in &section.tasks {
+            let task_height = (16.0 + task.label.lines().count().max(1) as f64 * 16.0).max(36.0);
             items.push(LayoutedTemporalItem::JourneyTask {
-                x: 16.0, y, width: (cw - 32.0).max(120.0), height: 36.0,
+                x: 16.0, y, width: (cw - 32.0).max(120.0), height: task_height,
                 score: task.score, label: task.label.clone(), people: task.people.clone(),
             });
-            y += 42.0;
+            y += task_height + 6.0;
         }
     }
-    LayoutedTemporalDiagram { width: cw, height: y + 16.0, items }
+    LayoutedTemporalDiagram {
+        width: cw,
+        height: y + 16.0,
+        accessibility_title: diagram.accessibility_title.clone(),
+        accessibility_description: diagram.accessibility_description.clone(),
+        items,
+    }
 }
 
 // ── Date helpers ──────────────────────────────────────────────────────────
@@ -187,7 +195,10 @@ fn layout_gantt(
         }
     }
 
-    LayoutedTemporalDiagram { width: cw, height: y + 16.0, items }
+    LayoutedTemporalDiagram {
+        width: cw, height: y + 16.0,
+        accessibility_title: None, accessibility_description: None, items,
+    }
 }
 
 // ── Git layout ────────────────────────────────────────────────────────────
@@ -284,7 +295,10 @@ fn layout_git(diagram: &GitDiagram, cw: f64) -> LayoutedTemporalDiagram {
     }
 
     let ch = lane_y(next_lane - 1) + LANE_H;
-    LayoutedTemporalDiagram { width: cw.max(x_cursor + 60.0), height: ch, items }
+    LayoutedTemporalDiagram {
+        width: cw.max(x_cursor + 60.0), height: ch,
+        accessibility_title: None, accessibility_description: None, items,
+    }
 }
 
 // ── Tests ─────────────────────────────────────────────────────────────────
@@ -344,7 +358,7 @@ mod tests {
         }
     }
 
-    #[test] fn version_exists() { assert_eq!(crate::VERSION, "0.2.0"); }
+    #[test] fn version_exists() { assert_eq!(crate::VERSION, "0.3.0"); }
 
     #[test]
     fn gantt_has_task_bars() {
@@ -400,10 +414,12 @@ mod tests {
             kind: TemporalKind::Journey,
             title: Some("Checkout".into()),
             body: TemporalBody::Journey(JourneyDiagram {
+                accessibility_title: Some("Checkout journey".into()),
+                accessibility_description: Some("Payment experience".into()),
                 sections: vec![JourneySection {
-                    label: "Payment".into(),
+                    label: "Payment\nflow".into(),
                     tasks: vec![JourneyTask {
-                        label: "Pay".into(), score: 2, people: vec!["Bob".into()],
+                        label: "Pay\nsecurely".into(), score: 2, people: vec!["Bob".into()],
                     }],
                 }],
             }),
@@ -411,7 +427,11 @@ mod tests {
         let layout = layout_temporal_diagram(&diagram, 640.0);
         assert!(layout.items.iter().any(|item| matches!(item,
             LayoutedTemporalItem::JourneyTask { score: 2, label, people, .. }
-                if label == "Pay" && people == &["Bob"]
+                if label == "Pay\nsecurely" && people == &["Bob"]
+        )));
+        assert_eq!(layout.accessibility_title.as_deref(), Some("Checkout journey"));
+        assert!(layout.items.iter().any(|item| matches!(item,
+            LayoutedTemporalItem::JourneyTask { height, .. } if *height > 36.0
         )));
     }
 }

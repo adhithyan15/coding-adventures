@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.0
+
+- Reserve dynamic Journey row heights for normalized multiline labels.
+
 ## 0.2.0
 
 - Lay out Mermaid user-journey sections and scored task rows.

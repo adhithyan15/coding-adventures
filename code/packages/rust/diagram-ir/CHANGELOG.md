@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.45.0
+
+- Preserve Journey accessibility metadata through semantic and resolved temporal IR.
+
 ## 0.44.0
 
 - Add typed Journey sections, scored tasks, actors, and resolved layout items.

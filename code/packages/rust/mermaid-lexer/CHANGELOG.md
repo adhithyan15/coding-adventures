@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.51.0
+
+- Tokenize Journey accessibility statements and multiline descriptions.
+
 ## 0.50.0
 
 - Add portable Mermaid 11.16.1 user-journey tokens and fallible tokenization.
