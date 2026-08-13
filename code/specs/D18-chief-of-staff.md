@@ -1627,6 +1627,13 @@ documents, a physical security key is required.
 
 A pipeline's effective tier is the **maximum** tier of any resource it touches.
 
+The transport-independent `chief-of-staff-trust-checker` package owns this
+calculation and the tier decision below. It accepts an exact bounded non-secret
+resource set and delegates notification, biometric, hardware-key, timeout, and
+platform interaction to an injected approval provider. Provider failure,
+insufficient authentication assurance, and Tier 2 or Tier 3 timeout fail
+closed. Tier 1 timeout is the sole auto-approval path.
+
 ```
 Pipeline: "Check bank balance and email it to accountant"
 ├── Email Responder: Tier 1 (sends email)
