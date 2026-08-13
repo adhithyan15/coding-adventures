@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-C31-suprabhat
 spine_node: SPINE-TIME-OF-DAY
-sequence: 570
+sequence: 820
 chapter: 31
 type: phrase
 headword: सुप्रभात

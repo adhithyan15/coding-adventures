@@ -3,6 +3,38 @@ Hindi, chapter 3: How Are You?.
 
 
 Lesson 1 of 7.
+कैसे (kaise) — "how," another of the k- questions.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+You already met क्या (kyā, "what"). Here is its sibling — and, like all of Hindi's question-words, it starts with k-.
+
+The letters in this word.
+(Skim if you read Devanagari.) क (ka) + ै (the ai-mātrā) becomes कै (kai); स (sa) + े (the e-mātrā) becomes से (se). Read कै, से becomes kaise.
+
+The word, taken apart.
+कैसे (kaise, "how") from Sanskrit कीदृश (kīdṛśa, "of what kind") / the interrogative stem क- (ka-), from Proto-Indo-European kʷo- — the same question-root behind English wh- (what, who, how) and Latin qu-. Notice the pattern: Hindi's question-words are nearly all k- words — kyā (what), kaun (who), kab (when), kahāṁ (where), kaise (how). Learn to hear the k- and you can spot a question.
+
+Grammar Lens: कैसा agrees.
+The adjective form कैसा (kaisā) changes to match what it describes: kaisā (m.), kaisī (f.), kaise (m. plural / respectful). Because the respectful "you" (āp) takes a plural verb, "how are you?" uses the plural कैसे — that is the form you will use next.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "kaise"]
+[pause 8 seconds for the answer]
+[your turn — say: the k- question family — kyā, kaun, kab, kahāṁ, kaise]
+[pause 8 seconds for the answer]
+[your turn — say: which English question-words share the root (what, who, how)]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What root do all of Hindi's question-words share, and what English family is it cousin to? (The interrogative k-, PIE kʷo-; the English wh- words.)
+
+
+Lesson 2 of 7.
 आप कैसे हैं? (āp kaise haiṁ?) — "how are you?"
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -34,39 +66,37 @@ Wrap-up Recall.
 Why is it haiṁ (plural) and not hai with āp? (Because respect in Hindi is grammatically plural — āp always takes the plural verb.)
 
 
-Lesson 2 of 7.
-आपका स्वागत है (āpkā svāgat hai) — "you're welcome".
+Lesson 3 of 7.
+मैं (maiṁ) — "I," the m- of the first person.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-When someone thanks you, this is what you say back — and it hides a word Sanskrit uses whole, unchanged.
+To answer "how are you?" you first need "I." In Chapter 2 you learned merā ("my"); here is its owner.
 
 The letters in this word.
-The key word is स्वागत (svāgat): the conjunct स्व (स् s + व va becomes sva) + ग (ga) + त (ta). Add आपका (āpkā, "your," from Chapter 2) and है (hai, "is").
+म (ma) + ै (the ai-mātrā) + the anusvāra nasal ं becomes मैं (maiṁ). One nasal syllable.
 
-The phrase, taken apart.
-आपका स्वागत है = "your welcome is" becomes "you are welcome." The heart of it, स्वागत (svāgat, "welcome"), is Sanskrit सु (su-, "well, good") + आगत (āgata, "come") — literally "well come," exactly like English welcome. Two deep roots hide inside:
-su- "good" is the twin of Greek eu- (euphoria, eulogy).
-āgata is from the root गम् (gam, "to go/come"), cousin of English come.
-Sanskrit's own svāgatam is this very word, unchanged — here it is again, worn into everyday Hindi.
+The word, taken apart.
+मैं (maiṁ, "I") from Sanskrit मया (mayā, "by me"), on the first-person root म- (ma-) — the same root that gave you merā ("my") last chapter, and the same m- behind English me, my, mine and Latin mē. Hindi's "I," its "my," and English's "me/my" all grow from one ancient first-person sound.
+
+Grammar Lens: the pronoun you can often drop.
+Hindi verbs carry the person in their ending, so maiṁ is frequently left out once context is clear — much like Spanish or Latin. You will still learn it first, because the answer to āp kaise haiṁ? begins with it: maiṁ …
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "āpkā svāgat hai"]
+[your turn — say: "maiṁ"]
 [pause 8 seconds for the answer]
-[your turn — say: what svāgat is built from (su "well" + āgata "come")]
-[pause 8 seconds for the answer]
-[your turn — say: the exchange — dhanyavād / āpkā svāgat hai]
+[your turn — say: the m- family — maiṁ (I), merā (my), English me, my]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does svāgat literally mean, and what English word matches it piece for piece? ("Well come"; English welcome.)
+What root links maiṁ, merā, and English me? (The first-person m-, from Sanskrit ma- / PIE me-.)
 
 
-Lesson 3 of 7.
+Lesson 4 of 7.
 हूँ (hūṁ) — "am," cousin of English am.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -102,69 +132,73 @@ Wrap-up Recall.
 What Sanskrit word is hūṁ from, and its English cousin? (Asmi, "I am"; English am — same PIE root h₁es-.)
 
 
-Lesson 4 of 7.
-कैसे (kaise) — "how," another of the k- questions.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-You already met क्या (kyā, "what"). Here is its sibling — and, like all of Hindi's question-words, it starts with k-.
-
-The letters in this word.
-(Skim if you read Devanagari.) क (ka) + ै (the ai-mātrā) becomes कै (kai); स (sa) + े (the e-mātrā) becomes से (se). Read कै, से becomes kaise.
-
-The word, taken apart.
-कैसे (kaise, "how") from Sanskrit कीदृश (kīdṛśa, "of what kind") / the interrogative stem क- (ka-), from Proto-Indo-European kʷo- — the same question-root behind English wh- (what, who, how) and Latin qu-. Notice the pattern: Hindi's question-words are nearly all k- words — kyā (what), kaun (who), kab (when), kahāṁ (where), kaise (how). Learn to hear the k- and you can spot a question.
-
-Grammar Lens: कैसा agrees.
-The adjective form कैसा (kaisā) changes to match what it describes: kaisā (m.), kaisī (f.), kaise (m. plural / respectful). Because the respectful "you" (āp) takes a plural verb, "how are you?" uses the plural कैसे — that is the form you will use next.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "kaise"]
-[pause 8 seconds for the answer]
-[your turn — say: the k- question family — kyā, kaun, kab, kahāṁ, kaise]
-[pause 8 seconds for the answer]
-[your turn — say: which English question-words share the root (what, who, how)]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What root do all of Hindi's question-words share, and what English family is it cousin to? (The interrogative k-, PIE kʷo-; the English wh- words.)
-
-
 Lesson 5 of 7.
-मैं (maiṁ) — "I," the m- of the first person.
+ठीक (ṭhīk) — "fine," and how to answer.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-To answer "how are you?" you first need "I." In Chapter 2 you learned merā ("my"); here is its owner.
+The word that answers "how are you?" — and does a dozen other jobs besides.
 
 The letters in this word.
-म (ma) + ै (the ai-mātrā) + the anusvāra nasal ं becomes मैं (maiṁ). One nasal syllable.
+ठ (ṭha, a retroflex th — tongue curled back to the roof of the mouth).
+ी (the long-ī mātrā) + क (ka) becomes ठीक (ṭhīk). The retroflex ट-ठ-ड series is a hallmark of Indian languages; the tongue touches further back than for an English "t."
 
 The word, taken apart.
-मैं (maiṁ, "I") from Sanskrit मया (mayā, "by me"), on the first-person root म- (ma-) — the same root that gave you merā ("my") last chapter, and the same m- behind English me, my, mine and Latin mē. Hindi's "I," its "my," and English's "me/my" all grow from one ancient first-person sound.
+ठीक (ṭhīk) means "correct, right, fine, exactly, OK." It is a genuinely native Indian word — no European cousin to hand — and one of the most useful in the language: ṭhīk hai ("OK / agreed"), ṭhīk samay ("the right time"), sab ṭhīk? ("all well?"). Not every word has a far-flung cognate, and that is worth seeing too: ṭhīk is Indian to the core.
 
-Grammar Lens: the pronoun you can often drop.
-Hindi verbs carry the person in their ending, so maiṁ is frequently left out once context is clear — much like Spanish or Latin. You will still learn it first, because the answer to āp kaise haiṁ? begins with it: maiṁ …
+The reply.
+Put it together with Chapter 3's atoms: मैं ठीक हूँ (maiṁ ṭhīk hūṁ) — "I am fine." Literally "I fine am," verb last. Add thanks: maiṁ ṭhīk hūṁ, dhanyavād. And the whole exchange stands:
+— āp kaise haiṁ? ("How are you?") — maiṁ ṭhīk hūṁ, dhanyavād. ("I'm fine, thank you.")
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "maiṁ"]
+[your turn — say: "ṭhīk" — feel the retroflex ṭh]
 [pause 8 seconds for the answer]
-[your turn — say: the m- family — maiṁ (I), merā (my), English me, my]
+[your turn — say: the full reply — maiṁ ṭhīk hūṁ]
+[pause 8 seconds for the answer]
+[your turn — say: the casual "OK" — ṭhīk hai]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What root links maiṁ, merā, and English me? (The first-person m-, from Sanskrit ma- / PIE me-.)
+Give the whole reply to āp kaise haiṁ?, and say what is special about ṭhīk's origin. (Maiṁ ṭhīk hūṁ; it is a native Indian word with no European cognate.)
 
 
 Lesson 6 of 7.
+आपका स्वागत है (āpkā svāgat hai) — "you're welcome".
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+When someone thanks you, this is what you say back — and it hides a word Sanskrit uses whole, unchanged.
+
+The letters in this word.
+The key word is स्वागत (svāgat): the conjunct स्व (स् s + व va becomes sva) + ग (ga) + त (ta). Add आपका (āpkā, "your," from Chapter 2) and है (hai, "is").
+
+The phrase, taken apart.
+आपका स्वागत है = "your welcome is" becomes "you are welcome." The heart of it, स्वागत (svāgat, "welcome"), is Sanskrit सु (su-, "well, good") + आगत (āgata, "come") — literally "well come," exactly like English welcome. Two deep roots hide inside:
+su- "good" is the twin of Greek eu- (euphoria, eulogy).
+āgata is from the root गम् (gam, "to go/come"), cousin of English come.
+Sanskrit's own svāgatam is this very word, unchanged — here it is again, worn into everyday Hindi.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "āpkā svāgat hai"]
+[pause 8 seconds for the answer]
+[your turn — say: what svāgat is built from (su "well" + āgata "come")]
+[pause 8 seconds for the answer]
+[your turn — say: the exchange — dhanyavād / āpkā svāgat hai]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does svāgat literally mean, and what English word matches it piece for piece? ("Well come"; English welcome.)
+
+
+Lesson 7 of 7.
 Chapter 3 — The how-are-you exchange.
 
 Warm-up.
@@ -201,37 +235,3 @@ svāgat from su + āgata = "well come," matching English welcome.
 Wrap-up Recall.
 [pause 3 seconds]
 A stranger asks āp kaise haiṁ? — give a complete, polite reply, then thank-and-welcome the exchange back. (Maiṁ ṭhīk hūṁ, dhanyavād. — and if thanked, āpkā svāgat hai.)
-
-
-Lesson 7 of 7.
-ठीक (ṭhīk) — "fine," and how to answer.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-The word that answers "how are you?" — and does a dozen other jobs besides.
-
-The letters in this word.
-ठ (ṭha, a retroflex th — tongue curled back to the roof of the mouth).
-ी (the long-ī mātrā) + क (ka) becomes ठीक (ṭhīk). The retroflex ट-ठ-ड series is a hallmark of Indian languages; the tongue touches further back than for an English "t."
-
-The word, taken apart.
-ठीक (ṭhīk) means "correct, right, fine, exactly, OK." It is a genuinely native Indian word — no European cousin to hand — and one of the most useful in the language: ṭhīk hai ("OK / agreed"), ṭhīk samay ("the right time"), sab ṭhīk? ("all well?"). Not every word has a far-flung cognate, and that is worth seeing too: ṭhīk is Indian to the core.
-
-The reply.
-Put it together with Chapter 3's atoms: मैं ठीक हूँ (maiṁ ṭhīk hūṁ) — "I am fine." Literally "I fine am," verb last. Add thanks: maiṁ ṭhīk hūṁ, dhanyavād. And the whole exchange stands:
-— āp kaise haiṁ? ("How are you?") — maiṁ ṭhīk hūṁ, dhanyavād. ("I'm fine, thank you.")
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "ṭhīk" — feel the retroflex ṭh]
-[pause 8 seconds for the answer]
-[your turn — say: the full reply — maiṁ ṭhīk hūṁ]
-[pause 8 seconds for the answer]
-[your turn — say: the casual "OK" — ṭhīk hai]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Give the whole reply to āp kaise haiṁ?, and say what is special about ṭhīk's origin. (Maiṁ ṭhīk hūṁ; it is a native Indian word with no European cognate.)

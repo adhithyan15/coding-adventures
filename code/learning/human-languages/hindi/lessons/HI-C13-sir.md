@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-C13-sir
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 340
+sequence: 590
 chapter: 13
 type: word
 headword: सिर

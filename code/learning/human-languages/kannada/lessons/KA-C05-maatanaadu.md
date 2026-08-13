@@ -1,5 +1,6 @@
 ---
 id: KA-C05-maatanaadu
+sequence: 260
 chapter: 5
 type: word
 headword: ಮಾತನಾಡು

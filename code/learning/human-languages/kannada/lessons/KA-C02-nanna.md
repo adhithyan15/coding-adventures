@@ -1,5 +1,6 @@
 ---
 id: KA-C02-nanna
+sequence: 80
 chapter: 2
 type: word
 headword: ನನ್ನ

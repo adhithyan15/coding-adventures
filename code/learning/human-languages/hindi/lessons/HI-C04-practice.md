@@ -1,5 +1,6 @@
 ---
 id: HI-C04-practice
+sequence: 390
 chapter: 4
 type: practice
 headword: (dialogue)

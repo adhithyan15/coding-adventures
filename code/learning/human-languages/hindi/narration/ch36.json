@@ -4,11 +4,11 @@
   "chapter": 36,
   "title": "One House, Four Languages",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:679fea2b20c1bf03",
+  "sourceHash": "fnv1a64:6b415dff491322be",
   "lessons": [
     {
       "id": "HI-C36-ghar",
-      "sequence": 690,
+      "sequence": 940,
       "title": "घर (ghar) — \"house,\" and the fence that came first",
       "headword": "घर",
       "romanization": "",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e1bda72998180443",
+      "sourceHash": "fnv1a64:5d7cf3973b50e02f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -175,7 +175,7 @@
     },
     {
       "id": "HI-C36-darvaaza",
-      "sequence": 700,
+      "sequence": 950,
       "title": "दरवाज़ा (darvāzā) — the door, and the oldest word you already know",
       "headword": "दरवाज़ा",
       "romanization": "",
@@ -186,7 +186,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:cc3dacc2fb708c31",
+      "sourceHash": "fnv1a64:ece8edc0c8ff0a94",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -342,7 +342,7 @@
     },
     {
       "id": "HI-C36-kamra",
-      "sequence": 710,
+      "sequence": 960,
       "title": "कमरा (kamrā) — the room that is also a camera",
       "headword": "कमरा",
       "romanization": "",
@@ -353,7 +353,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:437068c5d1bd4e49",
+      "sourceHash": "fnv1a64:7383936482facd58",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -509,7 +509,7 @@
     },
     {
       "id": "HI-C36-kursi",
-      "sequence": 720,
+      "sequence": 970,
       "title": "कुर्सी (kursī) — sit down, and watch मेरा change",
       "headword": "कुर्सी",
       "romanization": "kursī",
@@ -520,7 +520,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b6473f82d115a0d2",
+      "sourceHash": "fnv1a64:acd34c6f351f46b1",
       "notice": {
         "modality": "sight",
         "needs": [

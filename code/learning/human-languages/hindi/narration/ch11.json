@@ -4,11 +4,11 @@
   "chapter": 11,
   "title": "Four Core Colours",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:5cc0b729b5b2ccd4",
+  "sourceHash": "fnv1a64:53c55daaa1b0c79e",
   "lessons": [
     {
       "id": "HI-C11-kaalaa-safed",
-      "sequence": 300,
+      "sequence": 550,
       "title": "काला, सफ़ेद (kālā, safed) — black and white",
       "headword": "काला सफ़ेद",
       "romanization": "",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:10613c571f209ea4",
+      "sourceHash": "fnv1a64:753fd886ee0ffb9d",
       "notice": null,
       "blocks": [
         {
@@ -122,7 +122,7 @@
     },
     {
       "id": "HI-C11-laal-niila",
-      "sequence": 310,
+      "sequence": 560,
       "title": "लाल, नीला (lāl, nīlā) — a gemstone's name, and India's dye",
       "headword": "लाल नीला",
       "romanization": "",
@@ -133,7 +133,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0fd29499da36df2b",
+      "sourceHash": "fnv1a64:5eb9a51874c94ac6",
       "notice": null,
       "blocks": [
         {

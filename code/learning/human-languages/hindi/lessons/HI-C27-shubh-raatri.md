@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-C27-shubh-raatri
 spine_node: SPINE-TAKE-LEAVE
-sequence: 530
+sequence: 780
 chapter: 27
 type: phrase
 headword: शुभ रात्रि

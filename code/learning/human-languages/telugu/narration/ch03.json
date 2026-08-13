@@ -4,146 +4,11 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:0155f019dc7ee2b8",
+  "sourceHash": "fnv1a64:7264ded7dd768ccf",
   "lessons": [
     {
-      "id": "TE-C03-baagaa",
-      "sequence": null,
-      "title": "బాగా (bāgā) — \"well,\" and how to answer",
-      "headword": "బాగా",
-      "romanization": "bāgā",
-      "gloss": "well, fine — and the reply \"నేను బాగున్నాను\"",
-      "script": "telugu",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:5bc22d14bf3bbe9b",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "The word that answers \"how are you?\" — and one Telugu says all the time."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "బా (bā, ba + long ā) + గా (gā, ga + long ā) becomes బాగా (bāgā)."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "బాగా (bāgā, \"well, nicely, very\") comes from బాగు (bāgu, \"goodness, well-being\"). It is the everyday \"well/good/very much\": bāgā undi (\"it's good\"), bāgā ceppāru (\"well said\"). To answer \"how are you,\" fuse it with the uṇḍu verb:"
-            },
-            {
-              "kind": "speech",
-              "text": "నేను బాగున్నాను (nēnu bāgunnānu) — \"I am well\" (bāgā + unnānu, \"I am,\" run together)."
-            },
-            {
-              "kind": "speech",
-              "text": "The whole exchange:"
-            },
-            {
-              "kind": "speech",
-              "text": "— mīru elā unnāru? (\"How are you?\") — nēnu bāgunnānu, dhanyavādamulu. (\"I'm well, thank you.\")"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"bāgā\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"bāgā\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the full reply — nēnu bāgunnānu",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the full reply — *nēnu bāgunnānu*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "add thanks (from Chapter 1) — dhanyavādamulu",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: add thanks (from Chapter 1) — *dhanyavādamulu*]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Give the full reply to mīru elā unnāru?. (Nēnu bāgunnānu — bāgā \"well\" fused with unnānu \"I am.\")"
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "TE-C03-elaa",
-      "sequence": null,
+      "sequence": 150,
       "title": "ఎలా (elā) — \"how,\" another of the e- questions",
       "headword": "ఎలా",
       "romanization": "",
@@ -154,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:290d6f92cdec1fa7",
+      "sourceHash": "fnv1a64:783f9f06a68c2f4c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -257,7 +122,7 @@
     },
     {
       "id": "TE-C03-miiru-elaa-unnaaru",
-      "sequence": null,
+      "sequence": 160,
       "title": "మీరు ఎలా ఉన్నారు? (mīru elā unnāru?)",
       "headword": "మీరు ఎలా ఉన్నారు?",
       "romanization": "",
@@ -268,7 +133,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:cdaadb9998d4dc78",
+      "sourceHash": "fnv1a64:ace8ded04e327c56",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -391,7 +256,7 @@
     },
     {
       "id": "TE-C03-nenu",
-      "sequence": null,
+      "sequence": 170,
       "title": "నేను (nēnu) — \"I,\" the Dravidian first person",
       "headword": "నేను",
       "romanization": "nēnu",
@@ -402,7 +267,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6e164f64a524796e",
+      "sourceHash": "fnv1a64:356fabe710b9194f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -524,8 +389,143 @@
       ]
     },
     {
+      "id": "TE-C03-baagaa",
+      "sequence": 180,
+      "title": "బాగా (bāgā) — \"well,\" and how to answer",
+      "headword": "బాగా",
+      "romanization": "bāgā",
+      "gloss": "well, fine — and the reply \"నేను బాగున్నాను\"",
+      "script": "telugu",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:7fb7222145f2e0fb",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word that answers \"how are you?\" — and one Telugu says all the time."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "బా (bā, ba + long ā) + గా (gā, ga + long ā) becomes బాగా (bāgā)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "బాగా (bāgā, \"well, nicely, very\") comes from బాగు (bāgu, \"goodness, well-being\"). It is the everyday \"well/good/very much\": bāgā undi (\"it's good\"), bāgā ceppāru (\"well said\"). To answer \"how are you,\" fuse it with the uṇḍu verb:"
+            },
+            {
+              "kind": "speech",
+              "text": "నేను బాగున్నాను (nēnu bāgunnānu) — \"I am well\" (bāgā + unnānu, \"I am,\" run together)."
+            },
+            {
+              "kind": "speech",
+              "text": "The whole exchange:"
+            },
+            {
+              "kind": "speech",
+              "text": "— mīru elā unnāru? (\"How are you?\") — nēnu bāgunnānu, dhanyavādamulu. (\"I'm well, thank you.\")"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"bāgā\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"bāgā\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the full reply — nēnu bāgunnānu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the full reply — *nēnu bāgunnānu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "add thanks (from Chapter 1) — dhanyavādamulu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: add thanks (from Chapter 1) — *dhanyavādamulu*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the full reply to mīru elā unnāru?. (Nēnu bāgunnānu — bāgā \"well\" fused with unnānu \"I am.\")"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "TE-C03-paravaaledu",
-      "sequence": null,
+      "sequence": 190,
       "title": "పరవాలేదు (paravālēdu) — \"no problem\"",
       "headword": "పరవాలేదు",
       "romanization": "paravālēdu",
@@ -536,7 +536,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1bcdd5b99080e43f",
+      "sourceHash": "fnv1a64:59e80057d845f2ea",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -659,7 +659,7 @@
     },
     {
       "id": "TE-C03-practice",
-      "sequence": null,
+      "sequence": 200,
       "title": "Chapter 3 — The how-are-you exchange",
       "headword": "(dialogue)",
       "romanization": "",
@@ -670,7 +670,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b0ba2ac8f4f5a194",
+      "sourceHash": "fnv1a64:8d917a6b65d8a951",
       "notice": null,
       "blocks": [
         {

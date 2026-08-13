@@ -4,11 +4,11 @@
   "chapter": 18,
   "title": "Telling Time",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:fdb0dddee83d2690",
+  "sourceHash": "fnv1a64:d5b507a7534451e1",
   "lessons": [
     {
       "id": "HI-C18-ghanta",
-      "sequence": 400,
+      "sequence": 650,
       "title": "घंटा (ghaṇṭā) — \"hour,\" literally \"bell\"",
       "headword": "घंटा",
       "romanization": "ghaṇṭā",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c839d2ce20177497",
+      "sourceHash": "fnv1a64:35185c5a23f5dd30",
       "notice": null,
       "blocks": [
         {

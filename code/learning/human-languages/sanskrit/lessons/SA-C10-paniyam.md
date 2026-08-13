@@ -2,7 +2,7 @@
 schema_version: 2
 id: SA-C10-paniyam
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 510
+sequence: 480
 chapter: 10
 type: word
 headword: पानीयम्

@@ -1,5 +1,6 @@
 ---
 id: KA-C01-illa
+sequence: 40
 chapter: 1
 type: word
 headword: ಇಲ್ಲ

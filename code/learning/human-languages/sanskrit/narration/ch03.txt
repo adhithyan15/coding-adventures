@@ -3,35 +3,30 @@ Sanskrit, chapter 3: How Are You?.
 
 
 Lesson 1 of 6.
-अहम् (aham) — "I," the ancestor of ego and I.
+कथम् (katham) — "how," another of the ka- questions.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-To answer "how are you?" you first need "I" — and it is the grandparent of both English I and the word ego.
+You met किम् (kim, "what") in Chapter 2. Here is its sibling in the question-family.
 
 The letters in this word.
-अ (independent a) + ह (ha) + म् (bare m, halant) becomes अहम् (aham).
+क (ka) + थ (tha) + म् (bare m, halant) becomes कथम् (katham).
 
 The word, taken apart.
-अहम् (aham, "I") is from Proto-Indo-European h₁eǵ(H)om — the direct ancestor of Latin ego (whence English ego, egotist), Greek egō, and, worn all the way down, English I itself. So Sanskrit aham, Latin ego, and English I are one word across three continents of time. Its possessive is the मम (mama, "my") from Chapter 2 — and, curiously, "I" (aham) and "my" (mama) come from different ancient roots (eǵ- and me-), a quirk Sanskrit shares with English (I vs. my/me).
-
-Grammar Lens: "I" can be dropped.
-Sanskrit verbs carry the person in their ending — asmi already means "I am" — so aham is often left out. You still learn it first, because the answer to katham asi? begins with it.
+कथम् (katham, "how, in what way") is from the interrogative stem क- (ka-), PIE kʷo- — the same root that gave kim and, in the west, English wh- and Latin qu-. It heads the same ka- question-family: kim (what), kaḥ (who), kadā (when), kutra (where), katham (how). From katham comes the abstract noun kathā ("a telling, a story" — "the how of a thing"), and, worn down, Hindi's kaise.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "aham"]
+[your turn — say: "katham"]
 [pause 8 seconds for the answer]
-[your turn — say: the family — aham / Latin ego / English I]
-[pause 8 seconds for the answer]
-[your turn — say: the odd pair — "I" (aham, root eǵ-) and "my" (mama, root me-) differ, as in English I vs. my]
+[your turn — say: the ka- question family — kim, kaḥ, kadā, kutra, katham]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What PIE root is aham from, and its cousins? (h₁eǵ(H)om; Latin ego, English I.)
+What root do Sanskrit's question-words share, and its western cousins? (The interrogative ka-, PIE kʷo-; English wh-, Latin qu-.)
 
 
 Lesson 2 of 6.
@@ -62,30 +57,35 @@ Why is it asti ("is") with bhavān, and what are the three copula forms? (Bhavā
 
 
 Lesson 3 of 6.
-कथम् (katham) — "how," another of the ka- questions.
+अहम् (aham) — "I," the ancestor of ego and I.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-You met किम् (kim, "what") in Chapter 2. Here is its sibling in the question-family.
+To answer "how are you?" you first need "I" — and it is the grandparent of both English I and the word ego.
 
 The letters in this word.
-क (ka) + थ (tha) + म् (bare m, halant) becomes कथम् (katham).
+अ (independent a) + ह (ha) + म् (bare m, halant) becomes अहम् (aham).
 
 The word, taken apart.
-कथम् (katham, "how, in what way") is from the interrogative stem क- (ka-), PIE kʷo- — the same root that gave kim and, in the west, English wh- and Latin qu-. It heads the same ka- question-family: kim (what), kaḥ (who), kadā (when), kutra (where), katham (how). From katham comes the abstract noun kathā ("a telling, a story" — "the how of a thing"), and, worn down, Hindi's kaise.
+अहम् (aham, "I") is from Proto-Indo-European h₁eǵ(H)om — the direct ancestor of Latin ego (whence English ego, egotist), Greek egō, and, worn all the way down, English I itself. So Sanskrit aham, Latin ego, and English I are one word across three continents of time. Its possessive is the मम (mama, "my") from Chapter 2 — and, curiously, "I" (aham) and "my" (mama) come from different ancient roots (eǵ- and me-), a quirk Sanskrit shares with English (I vs. my/me).
+
+Grammar Lens: "I" can be dropped.
+Sanskrit verbs carry the person in their ending — asmi already means "I am" — so aham is often left out. You still learn it first, because the answer to katham asi? begins with it.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "katham"]
+[your turn — say: "aham"]
 [pause 8 seconds for the answer]
-[your turn — say: the ka- question family — kim, kaḥ, kadā, kutra, katham]
+[your turn — say: the family — aham / Latin ego / English I]
+[pause 8 seconds for the answer]
+[your turn — say: the odd pair — "I" (aham, root eǵ-) and "my" (mama, root me-) differ, as in English I vs. my]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What root do Sanskrit's question-words share, and its western cousins? (The interrogative ka-, PIE kʷo-; English wh-, Latin qu-.)
+What PIE root is aham from, and its cousins? (h₁eǵ(H)om; Latin ego, English I.)
 
 
 Lesson 4 of 6.

@@ -4,11 +4,11 @@
   "chapter": 8,
   "title": "The Mind and the Palm Leaf",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:0ee70e63a1bd3fbc",
+  "sourceHash": "fnv1a64:ac3f906074f87495",
   "lessons": [
     {
       "id": "SA-C08-cintayati",
-      "sequence": 430,
+      "sequence": 400,
       "title": "चिन्तयति (cintayati) — \"thinks,\" and a root that never reached English",
       "headword": "चिन्तयति",
       "romanization": "cintayati",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3ab6a3b5b466e409",
+      "sourceHash": "fnv1a64:3ecd71e50065d6f8",
       "notice": null,
       "blocks": [
         {
@@ -170,7 +170,7 @@
     },
     {
       "id": "SA-C08-avagacchati",
-      "sequence": 440,
+      "sequence": 410,
       "title": "अवगच्छति (avagacchati) — \"understands,\" going down into it",
       "headword": "अवगच्छति · बुध्यते",
       "romanization": "avagacchati · budhyate",
@@ -181,7 +181,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:df200f517ac15a66",
+      "sourceHash": "fnv1a64:ce0858a1cd760739",
       "notice": null,
       "blocks": [
         {
@@ -330,7 +330,7 @@
     },
     {
       "id": "SA-C08-pathati",
-      "sequence": 450,
+      "sequence": 420,
       "title": "पठति (paṭhati) — \"reads,\" and where the word went afterwards",
       "headword": "पठति",
       "romanization": "paṭhati",
@@ -341,7 +341,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e9af1425f8c25258",
+      "sourceHash": "fnv1a64:2c09b3f70c86c7cf",
       "notice": null,
       "blocks": [
         {
@@ -488,7 +488,7 @@
     },
     {
       "id": "SA-C08-likhati",
-      "sequence": 460,
+      "sequence": 430,
       "title": "लिखति (likhati) — \"writes,\" and the scratch it started as",
       "headword": "लिखति",
       "romanization": "likhati",
@@ -499,7 +499,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:094a75e4cda64eba",
+      "sourceHash": "fnv1a64:ce24506e6dea766d",
       "notice": null,
       "blocks": [
         {

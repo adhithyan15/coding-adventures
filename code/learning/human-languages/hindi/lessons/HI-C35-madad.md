@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-C35-madad
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 670
+sequence: 920
 chapter: 35
 type: word
 headword: मदद करना

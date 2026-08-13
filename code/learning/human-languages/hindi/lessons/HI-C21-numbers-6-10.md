@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-C21-numbers-6-10
 spine_node: SPINE-COUNT-ONE-TO-FIVE
-sequence: 440
+sequence: 690
 chapter: 21
 type: word
 headword: छह सात आठ नौ दस

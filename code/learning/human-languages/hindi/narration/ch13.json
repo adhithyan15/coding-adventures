@@ -4,11 +4,11 @@
   "chapter": 13,
   "title": "Head and Hand",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:f4a891a22720b76e",
+  "sourceHash": "fnv1a64:d2d9effff91f41aa",
   "lessons": [
     {
       "id": "HI-C13-sir",
-      "sequence": 340,
+      "sequence": 590,
       "title": "सिर (sir) — the head",
       "headword": "सिर",
       "romanization": "",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:50b7026bd518c80e",
+      "sourceHash": "fnv1a64:cbc94e6c0e39a311",
       "notice": null,
       "blocks": [
         {
@@ -115,7 +115,7 @@
     },
     {
       "id": "HI-C13-haath",
-      "sequence": 350,
+      "sequence": 600,
       "title": "हाथ (hāth) — the hand",
       "headword": "हाथ",
       "romanization": "",
@@ -126,7 +126,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:354c67609f0b4649",
+      "sourceHash": "fnv1a64:842f60a59c8cdfbf",
       "notice": null,
       "blocks": [
         {

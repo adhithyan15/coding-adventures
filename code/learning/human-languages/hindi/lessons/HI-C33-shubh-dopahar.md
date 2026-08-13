@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-C33-shubh-dopahar
 spine_node: SPINE-TIME-OF-DAY
-sequence: 600
+sequence: 850
 chapter: 33
 type: phrase
 headword: शुभ दोपहर

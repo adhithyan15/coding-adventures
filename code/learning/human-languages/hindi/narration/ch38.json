@@ -4,11 +4,11 @@
   "chapter": 38,
   "title": "Six Words for Where It Hurts",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:39ef798f1c58f74c",
+  "sourceHash": "fnv1a64:f180ca06271bbf4e",
   "lessons": [
     {
       "id": "HI-C38-aankh",
-      "sequence": 770,
+      "sequence": 1020,
       "title": "आँख (āṁkh) — the eye, which is the same word in English",
       "headword": "आँख",
       "romanization": "",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:90b1e52415eb4bdd",
+      "sourceHash": "fnv1a64:13ec42675c456624",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -191,7 +191,7 @@
     },
     {
       "id": "HI-C38-daant",
-      "sequence": 780,
+      "sequence": 1030,
       "title": "दाँत (danta) (dāṁt) — the tooth, and the gender trap of this chapter",
       "headword": "दाँत",
       "romanization": "danta",
@@ -202,7 +202,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:34a83d9992bfd9cc",
+      "sourceHash": "fnv1a64:30d47cc496069e6d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -379,7 +379,7 @@
     },
     {
       "id": "HI-C38-pair",
-      "sequence": 790,
+      "sequence": 1040,
       "title": "पैर (pair) — the foot, and the ancestor it does not have",
       "headword": "पैर",
       "romanization": "",
@@ -390,7 +390,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:adb4e1318685cd65",
+      "sourceHash": "fnv1a64:016c55e73df42d3e",
       "notice": null,
       "blocks": [
         {
@@ -538,7 +538,7 @@
     },
     {
       "id": "HI-C38-pet",
-      "sequence": 800,
+      "sequence": 1050,
       "title": "पेट (peṭ) — the belly, and a trail that genuinely stops",
       "headword": "पेट",
       "romanization": "",
@@ -549,7 +549,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0605633691de8b02",
+      "sourceHash": "fnv1a64:02a457b6f8e4305e",
       "notice": {
         "modality": "sight",
         "needs": [

@@ -1,5 +1,6 @@
 ---
 id: HI-C04-phir
+sequence: 340
 chapter: 4
 type: word
 headword: फिर

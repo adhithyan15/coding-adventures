@@ -4,11 +4,11 @@
   "chapter": 29,
   "title": "Evening",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f6f1e36cd9fc2d17",
+  "sourceHash": "fnv1a64:1c9e0f1751013b5b",
   "lessons": [
     {
       "id": "HI-C29-shaam",
-      "sequence": 550,
+      "sequence": 800,
       "title": "शाम (shaam) — \"evening,\" and a tempting false cognate",
       "headword": "शाम",
       "romanization": "",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bc2ba2db2a9d977c",
+      "sourceHash": "fnv1a64:103f50321889502a",
       "notice": null,
       "blocks": [
         {

@@ -1,5 +1,6 @@
 ---
 id: KA-C02-enu
+sequence: 110
 chapter: 2
 type: word
 headword: ಏನು

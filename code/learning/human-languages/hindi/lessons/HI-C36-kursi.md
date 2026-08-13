@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-C36-kursi
 spine_node: SPINE-MEET-GREET
-sequence: 720
+sequence: 970
 chapter: 36
 type: word
 headword: कुर्सी

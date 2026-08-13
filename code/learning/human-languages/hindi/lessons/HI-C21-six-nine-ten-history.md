@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-C21-six-nine-ten-history
 spine_node: SPINE-COUNT-ONE-TO-FIVE
-sequence: 450
+sequence: 700
 chapter: 21
 type: etymology
 headword: छह, नौ, दस

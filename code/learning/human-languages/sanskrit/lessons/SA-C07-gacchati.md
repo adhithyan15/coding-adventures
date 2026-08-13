@@ -2,7 +2,7 @@
 schema_version: 2
 id: SA-C07-gacchati
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 380
+sequence: 350
 chapter: 7
 type: word
 headword: गच्छति

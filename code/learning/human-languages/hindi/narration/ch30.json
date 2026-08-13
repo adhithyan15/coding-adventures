@@ -4,11 +4,11 @@
   "chapter": 30,
   "title": "Afternoon",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:6c4a5388df1e208c",
+  "sourceHash": "fnv1a64:c0a2f7cfa602ad7e",
   "lessons": [
     {
       "id": "HI-C30-dopahar-widened",
-      "sequence": 560,
+      "sequence": 810,
       "title": "दोपहर — the same word, a wider job than its etymology promised",
       "headword": "दोपहर",
       "romanization": "",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a4973a8f414380c6",
+      "sourceHash": "fnv1a64:8b7d50452a0584da",
       "notice": null,
       "blocks": [
         {

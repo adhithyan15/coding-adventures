@@ -4,11 +4,239 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:d17260b497a1a61b",
+  "sourceHash": "fnv1a64:b089fe3d35ef4a66",
   "lessons": [
     {
+      "id": "SA-C03-katham",
+      "sequence": 150,
+      "title": "कथम् (katham) — \"how,\" another of the ka- questions",
+      "headword": "कथम्",
+      "romanization": "katham",
+      "gloss": "how",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:8277df7c7009a07e",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You met किम् (kim, \"what\") in Chapter 2. Here is its sibling in the question-family."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "क (ka) + थ (tha) + म् (bare m, halant) becomes कथम् (katham)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कथम् (katham, \"how, in what way\") is from the interrogative stem क- (ka-), PIE kʷo- — the same root that gave kim and, in the west, English wh- and Latin qu-. It heads the same ka- question-family: kim (what), kaḥ (who), kadā (when), kutra (where), katham (how). From katham comes the abstract noun kathā (\"a telling, a story\" — \"the how of a thing\"), and, worn down, Hindi's kaise."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"katham\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"katham\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the ka- question family — kim, kaḥ, kadā, kutra, katham",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the ka- question family — *kim, kaḥ, kadā, kutra, katham*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What root do Sanskrit's question-words share, and its western cousins? (The interrogative ka-, PIE kʷo-; English wh-, Latin qu-.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C03-bhavan-katham-asti",
+      "sequence": 160,
+      "title": "भवान् कथम् अस्ति? (bhavān katham asti?) — \"how are you?\"",
+      "headword": "भवान् कथम् अस्ति?",
+      "romanization": "",
+      "gloss": "how are you? (respectful)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3e8ed54663edb1f0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three words you own, assembled into the first thing you ask after hello."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भवान् कथम् अस्ति? = भवान् (bhavān, respectful \"you\") + कथम् (katham, \"how\") + अस्ति (asti, \"is\") — literally \"your honour how is?\" Recall from Chapter 2 that bhavān (\"your honour\") takes a third-person verb — so it is asti (\"is\"), not \"are.\" The familiar version uses tvam and the second-person verb: त्वं कथम् असि? (tvaṁ katham asi? — asi, \"you are\")."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the copula, three persons",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You now hold the \"to be\" verb across persons: अस्मि (asmi, \"I am\"), असि (asi, \"you are\"), अस्ति (asti, \"is\") — the ancestors, respectively, of English am, and (through Latin/Greek) of is/est. \"How are you?\" simply asks after a state, and Sanskrit, unlike Tamil, has always kept a verb for it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the respectful question — bhavān katham asti?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the respectful question — *bhavān katham asti?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the familiar version — tvaṁ katham asi?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the familiar version — *tvaṁ katham asi?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the copula trio — asmi (am), asi (are), asti (is)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the copula trio — *asmi* (am), *asi* (are), *asti* (is)]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Why is it asti (\"is\") with bhavān, and what are the three copula forms? (Bhavān = \"your honour,\" a 3rd-person subject; asmi/asi/asti — am / you are / is.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "SA-C03-aham",
-      "sequence": null,
+      "sequence": 170,
       "title": "अहम् (aham) — \"I,\" the ancestor of ego and I",
       "headword": "अहम्",
       "romanization": "aham",
@@ -19,7 +247,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e4d464718ba5ab00",
+      "sourceHash": "fnv1a64:f2cae91caeb5ea99",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -141,236 +369,8 @@
       ]
     },
     {
-      "id": "SA-C03-bhavan-katham-asti",
-      "sequence": null,
-      "title": "भवान् कथम् अस्ति? (bhavān katham asti?) — \"how are you?\"",
-      "headword": "भवान् कथम् अस्ति?",
-      "romanization": "",
-      "gloss": "how are you? (respectful)",
-      "script": "devanagari",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:c818ed9314a76d14",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Three words you own, assembled into the first thing you ask after hello."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "etymology",
-          "title": "The phrase, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "भवान् कथम् अस्ति? = भवान् (bhavān, respectful \"you\") + कथम् (katham, \"how\") + अस्ति (asti, \"is\") — literally \"your honour how is?\" Recall from Chapter 2 that bhavān (\"your honour\") takes a third-person verb — so it is asti (\"is\"), not \"are.\" The familiar version uses tvam and the second-person verb: त्वं कथम् असि? (tvaṁ katham asi? — asi, \"you are\")."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: the copula, three persons",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "You now hold the \"to be\" verb across persons: अस्मि (asmi, \"I am\"), असि (asi, \"you are\"), अस्ति (asti, \"is\") — the ancestors, respectively, of English am, and (through Latin/Greek) of is/est. \"How are you?\" simply asks after a state, and Sanskrit, unlike Tamil, has always kept a verb for it."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the respectful question — bhavān katham asti?",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the respectful question — *bhavān katham asti?*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the familiar version — tvaṁ katham asi?",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the familiar version — *tvaṁ katham asi?*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the copula trio — asmi (am), asi (are), asti (is)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the copula trio — *asmi* (am), *asi* (are), *asti* (is)]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Why is it asti (\"is\") with bhavān, and what are the three copula forms? (Bhavān = \"your honour,\" a 3rd-person subject; asmi/asi/asti — am / you are / is.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "SA-C03-katham",
-      "sequence": null,
-      "title": "कथम् (katham) — \"how,\" another of the ka- questions",
-      "headword": "कथम्",
-      "romanization": "katham",
-      "gloss": "how",
-      "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:ea990077d737ff9d",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "You met किम् (kim, \"what\") in Chapter 2. Here is its sibling in the question-family."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "क (ka) + थ (tha) + म् (bare m, halant) becomes कथम् (katham)."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "कथम् (katham, \"how, in what way\") is from the interrogative stem क- (ka-), PIE kʷo- — the same root that gave kim and, in the west, English wh- and Latin qu-. It heads the same ka- question-family: kim (what), kaḥ (who), kadā (when), kutra (where), katham (how). From katham comes the abstract noun kathā (\"a telling, a story\" — \"the how of a thing\"), and, worn down, Hindi's kaise."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"katham\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"katham\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the ka- question family — kim, kaḥ, kadā, kutra, katham",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the ka- question family — *kim, kaḥ, kadā, kutra, katham*]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What root do Sanskrit's question-words share, and its western cousins? (The interrogative ka-, PIE kʷo-; English wh-, Latin qu-.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "SA-C03-kushalam",
-      "sequence": null,
+      "sequence": 180,
       "title": "कुशलम् (kuśalam) — \"well-being,\" and how to answer",
       "headword": "कुशलम्",
       "romanization": "kuśalam",
@@ -381,7 +381,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:eb5b5c3c0329f734",
+      "sourceHash": "fnv1a64:9b0fa063054236d8",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -508,7 +508,7 @@
     },
     {
       "id": "SA-C03-na-cinta",
-      "sequence": null,
+      "sequence": 190,
       "title": "न चिन्ता (na cintā) — \"no worry\"",
       "headword": "न चिन्ता",
       "romanization": "na cintā",
@@ -519,7 +519,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:dad6ae7aacfbb389",
+      "sourceHash": "fnv1a64:5db6f7dffc43bfa4",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -631,7 +631,7 @@
     },
     {
       "id": "SA-C03-practice",
-      "sequence": null,
+      "sequence": 200,
       "title": "Chapter 3 — The how-are-you exchange",
       "headword": "(dialogue)",
       "romanization": "",
@@ -642,7 +642,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:852bd85b8bf75efc",
+      "sourceHash": "fnv1a64:9bc296d87696bd85",
       "notice": null,
       "blocks": [
         {

@@ -2,7 +2,7 @@
 schema_version: 2
 id: SA-C11-kutumbam
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 550
+sequence: 520
 chapter: 11
 type: word
 headword: कुटुम्बम्

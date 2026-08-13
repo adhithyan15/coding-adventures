@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-C07-nahin
 spine_node: SPINE-RESPOND-BASIC
-sequence: 250
+sequence: 500
 chapter: 7
 type: word
 headword: नहीं

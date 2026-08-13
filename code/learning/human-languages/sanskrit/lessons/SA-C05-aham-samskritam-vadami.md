@@ -1,5 +1,6 @@
 ---
 id: SA-C05-aham-samskritam-vadami
+sequence: 270
 chapter: 5
 type: phrase
 headword: अहं संस्कृतं वदामि

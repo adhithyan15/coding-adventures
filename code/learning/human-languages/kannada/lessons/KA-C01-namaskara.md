@@ -1,5 +1,6 @@
 ---
 id: KA-C01-namaskara
+sequence: 10
 chapter: 1
 type: word
 headword: ನಮಸ್ಕಾರ

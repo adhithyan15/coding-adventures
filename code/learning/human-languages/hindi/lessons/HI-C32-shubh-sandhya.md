@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-C32-shubh-sandhya
 spine_node: SPINE-TIME-OF-DAY
-sequence: 580
+sequence: 830
 chapter: 32
 type: phrase
 headword: शुभ संध्या

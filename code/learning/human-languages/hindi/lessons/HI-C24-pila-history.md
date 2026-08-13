@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-C24-pila-history
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 500
+sequence: 750
 chapter: 24
 type: etymology
 headword: पीला

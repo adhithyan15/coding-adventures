@@ -4,11 +4,287 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:c1da3b24b783ef2d",
+  "sourceHash": "fnv1a64:e5a458d4c853825c",
   "lessons": [
     {
+      "id": "KA-C05-maatanaadu",
+      "sequence": 260,
+      "title": "ಮಾತನಾಡು (mātanāḍu) — \"to speak,\" your first full verb",
+      "headword": "ಮಾತನಾಡು",
+      "romanization": "mātanāḍu",
+      "gloss": "to speak",
+      "script": "kannada",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:6445191d6e83cc03",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "So far, \"to be.\" Here is a verb that does something — and it shows how Kannada builds \"I do X.\""
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮಾ (mā) + ತ (ta) + ನಾ (nā) + ಡು (ḍu) becomes ಮಾತನಾಡು (mātanāḍu)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮಾತನಾಡು (mātanāḍu, \"to speak, to talk\") is native Dravidian, built on ಮಾತು (mātu, \"word, speech\") + āḍu (\"to play/do\") — \"to word-play,\" i.e. to converse. To say \"I speak,\" Kannada adds a two-part ending to the stem:"
+            },
+            {
+              "kind": "speech",
+              "text": "mātanāḍ- + -utt- (present) + -ēne (\"I\") becomes ಮಾತನಾಡುತ್ತೇನೆ (mātanāḍuttēne), \"I speak.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The -ಏನೆ (-ēne) ending is \"I,\" so nānu is rarely needed. Change the ending, change the person: mātanāḍuttāne (he), mātanāḍuttāḷe (she), mātanāḍuttāre (they / you-respectful)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: stem + tense + person",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Every Kannada verb is built this way — a stem, a tense-marker, a person-ending. And, like Tamil and Telugu, Kannada marks no gender in the first person: mātanāḍuttēne is the same for a man or a woman."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"mātanāḍu\" (speak)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"mātanāḍu\" (speak)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I speak\" — mātanāḍuttēne",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I speak\" — *mātanāḍuttēne*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the word \"speech\" inside it (mātu)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the word \"speech\" inside it (*mātu*)]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Build \"I speak\" from mātanāḍu, and name the noun it's built on. (Mātanāḍuttēne; mātu, \"word / speech.\")"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C05-naanu-kannada-maatanaaduttene",
+      "sequence": 270,
+      "title": "ನಾನು ಕನ್ನಡ ಮಾತನಾಡುತ್ತೇನೆ (nānu kannaḍa mātanāḍuttēne) — \"I speak Kannada\"",
+      "headword": "ನಾನು ಕನ್ನಡ ಮಾತನಾಡುತ್ತೇನೆ",
+      "romanization": "",
+      "gloss": "I speak Kannada",
+      "script": "kannada",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:fae01a51e273ed91",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Your first full, moving sentence — and it names one of the classical languages of India."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕನ್ನಡ (kannaḍa): ಕ (ka) + ನ್ನ (nna, doubled) + ಡ (ḍa)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The sentence, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನಾನು ಕನ್ನಡ ಮಾತನಾಡುತ್ತೇನೆ = ನಾನು (nānu, \"I\") + ಕನ್ನಡ (kannaḍa, the object) + ಮಾತನಾಡುತ್ತೇನೆ (mātanāḍuttēne, \"speak\") — \"I Kannada speak,\" the verb last as always. The name ಕನ್ನಡ (kannaḍa) is native (often linked to kar-nāḍu, \"the black/high land,\" whence Karnataka). Kannada has a literature over a thousand years old and holds the second-most Jnanpith literary awards of any Indian language — a classical tongue, spoken by some fifty million."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: no gender on \"I speak\"",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Mātanāḍuttēne is the same whether a man or a woman says it — Kannada, like Tamil and Telugu, marks no gender in the first or second person (only the third: -āne he, -āḷe she). This is unlike Hindi, where even \"I speak\" changes for the speaker's gender (boltā/boltī)."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"nānu kannaḍa mātanāḍuttēne\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"nānu kannaḍa mātanāḍuttēne\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the likely meaning of kannaḍa (kar-nāḍu, \"the high/black land\" becomes Karnataka)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the likely meaning of *kannaḍa* (*kar-nāḍu*, \"the high/black land\" → *Karnataka*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "does \"I speak\" change for a man vs. a woman? (No — no 1st-person gender)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: does \"I speak\" change for a man vs. a woman? (No — no 1st-person gender)]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I speak Kannada,\" and give the likely root of the name. (Nānu kannaḍa mātanāḍuttēne; kar-nāḍu, \"the high/black land.\")"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "KA-C05-iru",
-      "sequence": null,
+      "sequence": 280,
       "title": "ಇರು (iru) — \"to be, to stay, to live\"",
       "headword": "ಇರು",
       "romanization": "iru",
@@ -19,7 +295,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b453c3b887b30ee1",
+      "sourceHash": "fnv1a64:5356e4c5fb6d672e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -142,7 +418,7 @@
     },
     {
       "id": "KA-C05-kelasa-maadu",
-      "sequence": null,
+      "sequence": 290,
       "title": "ಕೆಲಸ ಮಾಡು (kelasa māḍu) — \"to work\"",
       "headword": "ಕೆಲಸ ಮಾಡು",
       "romanization": "kelasa māḍu",
@@ -153,7 +429,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3da81fd2fe26575f",
+      "sourceHash": "fnv1a64:60ff5c01ea880037",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -291,284 +567,8 @@
       ]
     },
     {
-      "id": "KA-C05-maatanaadu",
-      "sequence": null,
-      "title": "ಮಾತನಾಡು (mātanāḍu) — \"to speak,\" your first full verb",
-      "headword": "ಮಾತನಾಡು",
-      "romanization": "mātanāḍu",
-      "gloss": "to speak",
-      "script": "kannada",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:efa011474f105076",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "So far, \"to be.\" Here is a verb that does something — and it shows how Kannada builds \"I do X.\""
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ಮಾ (mā) + ತ (ta) + ನಾ (nā) + ಡು (ḍu) becomes ಮಾತನಾಡು (mātanāḍu)."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ಮಾತನಾಡು (mātanāḍu, \"to speak, to talk\") is native Dravidian, built on ಮಾತು (mātu, \"word, speech\") + āḍu (\"to play/do\") — \"to word-play,\" i.e. to converse. To say \"I speak,\" Kannada adds a two-part ending to the stem:"
-            },
-            {
-              "kind": "speech",
-              "text": "mātanāḍ- + -utt- (present) + -ēne (\"I\") becomes ಮಾತನಾಡುತ್ತೇನೆ (mātanāḍuttēne), \"I speak.\""
-            },
-            {
-              "kind": "speech",
-              "text": "The -ಏನೆ (-ēne) ending is \"I,\" so nānu is rarely needed. Change the ending, change the person: mātanāḍuttāne (he), mātanāḍuttāḷe (she), mātanāḍuttāre (they / you-respectful)."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: stem + tense + person",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Every Kannada verb is built this way — a stem, a tense-marker, a person-ending. And, like Tamil and Telugu, Kannada marks no gender in the first person: mātanāḍuttēne is the same for a man or a woman."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"mātanāḍu\" (speak)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"mātanāḍu\" (speak)]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"I speak\" — mātanāḍuttēne",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"I speak\" — *mātanāḍuttēne*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the word \"speech\" inside it (mātu)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the word \"speech\" inside it (*mātu*)]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Build \"I speak\" from mātanāḍu, and name the noun it's built on. (Mātanāḍuttēne; mātu, \"word / speech.\")"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "KA-C05-naanu-kannada-maatanaaduttene",
-      "sequence": null,
-      "title": "ನಾನು ಕನ್ನಡ ಮಾತನಾಡುತ್ತೇನೆ (nānu kannaḍa mātanāḍuttēne) — \"I speak Kannada\"",
-      "headword": "ನಾನು ಕನ್ನಡ ಮಾತನಾಡುತ್ತೇನೆ",
-      "romanization": "",
-      "gloss": "I speak Kannada",
-      "script": "kannada",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:c58b743e977f94c7",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Your first full, moving sentence — and it names one of the classical languages of India."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ಕನ್ನಡ (kannaḍa): ಕ (ka) + ನ್ನ (nna, doubled) + ಡ (ḍa)."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The sentence, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ನಾನು ಕನ್ನಡ ಮಾತನಾಡುತ್ತೇನೆ = ನಾನು (nānu, \"I\") + ಕನ್ನಡ (kannaḍa, the object) + ಮಾತನಾಡುತ್ತೇನೆ (mātanāḍuttēne, \"speak\") — \"I Kannada speak,\" the verb last as always. The name ಕನ್ನಡ (kannaḍa) is native (often linked to kar-nāḍu, \"the black/high land,\" whence Karnataka). Kannada has a literature over a thousand years old and holds the second-most Jnanpith literary awards of any Indian language — a classical tongue, spoken by some fifty million."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: no gender on \"I speak\"",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Mātanāḍuttēne is the same whether a man or a woman says it — Kannada, like Tamil and Telugu, marks no gender in the first or second person (only the third: -āne he, -āḷe she). This is unlike Hindi, where even \"I speak\" changes for the speaker's gender (boltā/boltī)."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"nānu kannaḍa mātanāḍuttēne\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"nānu kannaḍa mātanāḍuttēne\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the likely meaning of kannaḍa (kar-nāḍu, \"the high/black land\" becomes Karnataka)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the likely meaning of *kannaḍa* (*kar-nāḍu*, \"the high/black land\" → *Karnataka*)]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "does \"I speak\" change for a man vs. a woman? (No — no 1st-person gender)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: does \"I speak\" change for a man vs. a woman? (No — no 1st-person gender)]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Say \"I speak Kannada,\" and give the likely root of the name. (Nānu kannaḍa mātanāḍuttēne; kar-nāḍu, \"the high/black land.\")"
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "KA-C05-practice",
-      "sequence": null,
+      "sequence": 300,
       "title": "Chapter 5 — The first verbs",
       "headword": "(dialogue)",
       "romanization": "",
@@ -579,7 +579,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6c4002fdd5f2263d",
+      "sourceHash": "fnv1a64:05f3abbe98b985e3",
       "notice": null,
       "blocks": [
         {

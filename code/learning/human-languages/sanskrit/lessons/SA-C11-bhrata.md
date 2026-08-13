@@ -2,7 +2,7 @@
 schema_version: 2
 id: SA-C11-bhrata
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 560
+sequence: 530
 chapter: 11
 type: word
 headword: भ्राता

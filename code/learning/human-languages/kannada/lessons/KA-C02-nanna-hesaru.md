@@ -1,5 +1,6 @@
 ---
 id: KA-C02-nanna-hesaru
+sequence: 90
 chapter: 2
 type: phrase
 headword: ನನ್ನ ಹೆಸರು …

@@ -1,5 +1,6 @@
 ---
 id: ML-C02-entu
+sequence: 120
 chapter: 2
 type: word
 headword: എന്ത്

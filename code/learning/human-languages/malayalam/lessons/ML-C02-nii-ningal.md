@@ -1,5 +1,6 @@
 ---
 id: ML-C02-nii-ningal
+sequence: 110
 chapter: 2
 type: word
 headword: നീ / നിങ്ങൾ

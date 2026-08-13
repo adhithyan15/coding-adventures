@@ -2,7 +2,7 @@
 schema_version: 2
 id: SA-C06-pancha-travels
 spine_node: SPINE-COUNT-ONE-TO-FIVE
-sequence: 360
+sequence: 330
 chapter: 6
 type: etymology
 headword: पञ्च

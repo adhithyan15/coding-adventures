@@ -1,5 +1,6 @@
 ---
 id: HI-C05-rahna
+sequence: 420
 chapter: 5
 type: word
 headword: रहना

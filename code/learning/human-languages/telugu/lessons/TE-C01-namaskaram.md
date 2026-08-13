@@ -1,5 +1,6 @@
 ---
 id: TE-C01-namaskaram
+sequence: 10
 chapter: 1
 type: word
 headword: నమస్కారం

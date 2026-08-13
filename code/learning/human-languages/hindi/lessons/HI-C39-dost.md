@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-C39-dost
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 810
+sequence: 1060
 chapter: 39
 type: word
 headword: दोस्त

@@ -2,7 +2,7 @@
 schema_version: 2
 id: SA-C08-pathati
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 450
+sequence: 420
 chapter: 8
 type: word
 headword: पठति

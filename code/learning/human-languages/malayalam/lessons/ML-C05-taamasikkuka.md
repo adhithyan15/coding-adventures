@@ -1,5 +1,6 @@
 ---
 id: ML-C05-taamasikkuka
+sequence: 290
 chapter: 5
 type: word
 headword: താമസിക്കുക

@@ -1,5 +1,6 @@
 ---
 id: HI-C02-aap-tum
+sequence: 150
 chapter: 2
 type: word
 headword: आप / तुम

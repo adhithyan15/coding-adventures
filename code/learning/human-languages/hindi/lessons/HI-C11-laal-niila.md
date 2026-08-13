@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-C11-laal-niila
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 310
+sequence: 560
 chapter: 11
 type: word
 headword: लाल नीला

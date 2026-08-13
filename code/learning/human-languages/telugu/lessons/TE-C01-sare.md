@@ -1,5 +1,6 @@
 ---
 id: TE-C01-sare
+sequence: 50
 chapter: 1
 type: word
 headword: సరే

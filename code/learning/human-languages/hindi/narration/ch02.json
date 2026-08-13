@@ -4,11 +4,1019 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:636265b7173f066e",
+  "sourceHash": "fnv1a64:02ebb571163cb0c9",
   "lessons": [
     {
-      "id": "HI-W03-matras-naam",
+      "id": "HI-C02-naam",
+      "sequence": 110,
+      "title": "नाम (nām) — \"name,\" a word older than Europe",
+      "headword": "नाम",
+      "romanization": "",
+      "gloss": "name",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:9d12833dbdd4b9a7",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To introduce yourself you need \"name.\" Hindi's is one you already own in English — from before either language was born."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "(Skim if you read Devanagari.) Left to right: न (na) + ा (the long-ā mātrā) becomes ना (nā), then म (ma). Read ना, म becomes nām."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नाम (nām) from Sanskrit नामन् (nāman), from Proto-Indo-European h₃nómn̥ — the same ancient root as:"
+            },
+            {
+              "kind": "speech",
+              "text": "English name, Latin nōmen ( becomes English noun, nominate), Greek onoma."
+            },
+            {
+              "kind": "speech",
+              "text": "So Hindi nām and English name are cousins from before either language existed — one of the clearest bridges between the Indian and European branches of one family."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"nām\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"nām\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the cousins — Hindi nām, English name, Latin nōmen becomes noun",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the cousins — Hindi *nām*, English *name*, Latin *nōmen* → *noun*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What Sanskrit and PIE root is नाम from, and what English words share it? (nāman / h₃nómn̥ — name, noun, nominate.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C02-meraa",
+      "sequence": 120,
+      "title": "मेरा (merā) — \"my\"",
+      "headword": "मेरा",
+      "romanization": "merā",
+      "gloss": "my",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:5bc85e6fefc56a37",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word for \"my\" — and, like name, a first-person word English shares to the root."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "(Skim if you read Devanagari.) म (ma) + े (the e-mātrā) becomes मे (me); र (ra) + ा (long ā) becomes रा (rā). Read मे, रा becomes merā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मेरा (merā, \"my\") descends from Sanskrit madīya (\"of me\"), on the first-person root ma- — the same ma-/me- behind English me, my, mine and Latin meus. Hindi \"my\" and English \"my\" are, at root, one word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: \"my\" agrees with the noun",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hindi possessives change to match what's owned: merā (masculine), merī (feminine), mere (plural). nām is masculine becomes merā nām. (You'll meet merī at your first feminine noun.)"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"merā\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"merā\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the cousins — merā / English my, mine",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the cousins — *merā* / English *my*, *mine*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three forms — merā (m.) / merī (f.) / mere (pl.)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three forms — merā (m.) / merī (f.) / mere (pl.)]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What root is मेरा built on, and its English cousins? (ma- — me, my, mine.) Why merā nām and not merī? (nām is masculine.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C02-hai",
+      "sequence": 130,
+      "title": "है (hai) — \"is,\" cousin of English is",
+      "headword": "है",
+      "romanization": "hai",
+      "gloss": "is",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:29dd3d969fa9aacd",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The little verb \"is\" — and it's the same \"is\" spoken from Ireland to India."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "(Skim if you read Devanagari.) ह (ha) + ै (the ai-mātrā) becomes है (hai). One syllable."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "है (hai, \"is\") from Sanskrit अस्ति (asti, \"is\"), from Proto-Indo-European h₁es- — the root of \"to be\" across the whole family:"
+            },
+            {
+              "kind": "speech",
+              "text": "English is, German ist, Latin est, Spanish es, French est."
+            },
+            {
+              "kind": "speech",
+              "text": "Hindi hai is the Indian cousin of the same tiny verb. \"Is\" really is one word, stretched across a continent."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: the verb comes last",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hindi is subject–object–verb: \"my name Arun is.\" hai sits at the end of the sentence, where English puts \"is\" in the middle. Bank the shape — in Hindi the verb waits until the end."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"hai\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"hai\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the family — hai / is / ist / est / es",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the family — *hai* / *is* / *ist* / *est* / *es*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"merā nām Arun hai\" — note hai at the end",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"merā nām Arun hai\" — note *hai* at the end]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What Sanskrit/PIE root is है (hai) from, and its cousins? (asti / h₁es- — is, ist, est, es.) Where does the verb sit in a Hindi sentence? (At the end.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C02-mera-naam-hai",
       "sequence": 140,
+      "title": "मेरा नाम … है (merā nām … hai) — \"my name is…\"",
+      "headword": "मेरा नाम … है",
+      "romanization": "",
+      "gloss": "my name is…",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5415803e9711177b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Assemble the three atoms you just traced — merā, nām, hai — into the sentence for meeting anyone."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "The phrase, assembled",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three atoms, each already rooted — merā (my, from ma-), nām (name, from nāman), hai (is, from asti):"
+            },
+            {
+              "kind": "speech",
+              "text": "मेरा नाम (merā nām) … है (hai) = \"my name … is\" = \"my name is…\""
+            },
+            {
+              "kind": "speech",
+              "text": "Merā nām Arun hai. becomes \"My name is Arun.\" Slot your name into the gap; hai stays at the end."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: subject–object–verb",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Literally the Hindi is \"my name Arun is\" — the verb last. English puts \"is\" in the middle (\"my name is Arun\"); Hindi holds it to the end. Every Hindi sentence you build will end on its verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"merā nām … hai\" with your own name",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"merā nām … hai\" with your own name]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "notice the order — my / name / [name] / is",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: notice the order — my / name / [name] / is]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give your name in Hindi. (Merā nām … hai.) What's different about where \"is\" sits, versus English? (Hindi puts the verb last.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C02-aap-tum",
+      "sequence": 150,
+      "title": "आप / तुम (āp / tum) — \"you,\" respectful and familiar",
+      "headword": "आप / तुम",
+      "romanization": "",
+      "gloss": "you (respectful / familiar)",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:0c9a40f1902dd168",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To ask someone's name, you need \"you\" — and Hindi grades it in three levels of respect."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "(Skim if you read Devanagari.) आप: independent vowel आ (ā, word-initial) + प (pa) becomes āp. तुम: त (ta) + ु (the u-sign) + म (ma) becomes tum."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तुम (tum, familiar \"you\") from Sanskrit tvam, from PIE tū — the same root as English archaic thou, Latin tū, French tu."
+            },
+            {
+              "kind": "speech",
+              "text": "आप (āp, respectful \"you\") is a separate honorific word (originally \"oneself\")."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: three levels of \"you\"",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hindi grades respect three ways: āp (respectful — strangers, elders), tum (familiar — friends, peers), tū (intimate or to a child; can insult if misused). The European tracks had two levels each; Hindi has three. For a first meeting, always āp."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"āp\" (respectful), \"tum\" (familiar)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"āp\" (respectful), \"tum\" (familiar)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the cousin of tum — archaic English thou",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the cousin of *tum* — archaic English *thou*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which to use with a stranger (āp)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which to use with a stranger (*āp*)]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name Hindi's three \"you\"s and when āp is used. (āp / tum / tū; āp for respect, strangers, first meetings.) What English word is tum's cousin? (thou.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C02-kya",
+      "sequence": 160,
+      "title": "क्या (kyā) — \"what\"",
+      "headword": "क्या",
+      "romanization": "kyā",
+      "gloss": "what",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:f1f02463d232832c",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "German asks a name with \"how\"; Hindi uses \"what\" — so here's kyā."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "(Skim if you read Devanagari.) A conjunct: क (ka) loses its vowel (a halant) and joins य (ya) becomes क्य (kya); add the long-ā mātrā becomes क्या (kyā)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "क्या (kyā, \"what\") from Sanskrit kim / the interrogative stem ka-, from PIE kʷo- — the same question-root behind English wh- words (what, who, which) and Latin qu-. Hindi's question-words nearly all start with this k-: kyā (what), kaun (who), kab (when), kyūn (why)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"kyā\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"kyā\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the English wh- cousins — what, who, which",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the English *wh-* cousins — what, who, which]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the Hindi k- question family — kyā, kaun, kab",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the Hindi *k-* question family — kyā, kaun, kab]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What root is क्या (kyā) from, and its English cousins? (ka- / kʷo- — what, who, which.) What sound do most Hindi question-words start with? (k-.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C02-aapka-naam-kya-hai",
+      "sequence": 170,
+      "title": "आपका नाम क्या है? (āpkā nām kyā hai?) — \"what's your name?\"",
+      "headword": "आपका नाम क्या है?",
+      "romanization": "",
+      "gloss": "what's your name?",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:30fa2e8fa0e3865c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Assemble the question: your + name + what + is."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "The phrase, assembled",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आपका (āpkā, \"your\") = आप (you) + का (kā, the possessive \"of,\" the same agreeing kā/kī/ke that matches the noun)."
+            },
+            {
+              "kind": "speech",
+              "text": "आपका नाम क्या (kyā) है (hai)? = literally \"your name what is?\" = \"what's your name?\""
+            },
+            {
+              "kind": "speech",
+              "text": "Hindi keeps the verb last again, and simply drops the question-word kyā into the object slot — no reordering, no inversion."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: answer, and the informal version",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Answer with the sentence you built: Merā nām Arun hai. The informal \"your\" swaps āpkā for tumhārā: tumhārā nām kyā hai?"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"āpkā nām kyā hai?\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"āpkā nām kyā hai?\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ask, then answer — \"āpkā nām kyā hai?\" / \"merā nām … hai\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: ask, then answer — \"āpkā nām kyā hai?\" / \"merā nām … hai\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the informal — \"tumhārā nām kyā hai?\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the informal — \"tumhārā nām kyā hai?\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आपका नाम क्या (kyā) है? literally say, and where's the verb? (\"Your name what is?\"; the verb hai is last.) What's āpkā made of? (āp + kā, \"you\" + possessive.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C02-khushi",
+      "sequence": 180,
+      "title": "ख़ुशी (khushī) — \"happiness,\" and \"pleased to meet you\"",
+      "headword": "ख़ुशी",
+      "romanization": "",
+      "gloss": "happiness / pleased to meet you",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:df58106d9cfc133f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The close to an introduction — and a word from Hindi's other vocabulary."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "The phrase",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The Hindi \"pleased to meet you\" is आपसे मिलकर ख़ुशी हुई (āp-se milkar khushī huī) — literally \"having met you, happiness happened.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The key word ख़ुशी (khushī, \"happiness\") is not Sanskrit — it's Persian (khush, \"happy, pleasant\"), one of the thousands of Persian words in everyday Hindi. (The dot under ख़ — a nukta — marks the Persian kh sound.) So even introducing yourself draws on Hindi's two vocabularies: Sanskrit (nām, hai) and Perso-Arabic (khushī) — the same double heritage you met with shukriyā and alvidā in Chapter 1."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"āpse milkar khushī huī\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"āpse milkar khushī huī\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the key word — khushī (\"happiness\"), a Persian word",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the key word — *khushī* (\"happiness\"), a Persian word]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two heritages — Sanskrit nām, Persian khushī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two heritages — Sanskrit *nām*, Persian *khushī*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does the Hindi \"pleased to meet you\" literally mean, and where is khushī from? (\"Having met you, happiness happened\"; Persian.) What does the nukta dot under ख़ mark? (A Persian/Arabic sound.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-W03-matras-naam",
+      "sequence": 190,
       "title": "Mātrās — swapping the built-in vowel",
       "headword": "ा, े",
       "romanization": "ā, e",
@@ -19,7 +1027,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:a2f6742312f65e6a",
+      "sourceHash": "fnv1a64:35d09535842a5035",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -183,7 +1191,7 @@
     },
     {
       "id": "HI-W03-preposed-i",
-      "sequence": 150,
+      "sequence": 200,
       "title": "ि — left on the page, right in the mouth",
       "headword": "ि",
       "romanization": "i",
@@ -194,7 +1202,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:a729b2ab4b1ac55e",
+      "sourceHash": "fnv1a64:37c7371c5105faf2",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -315,7 +1323,7 @@
     },
     {
       "id": "HI-W04-ra-sa-mera-naam",
-      "sequence": 160,
+      "sequence": 210,
       "title": "र and स — a spineless letter and a possible cousin",
       "headword": "र, स",
       "romanization": "ra, sa",
@@ -326,7 +1334,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:957899b91224e536",
+      "sourceHash": "fnv1a64:10859363e1081ed0",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -494,7 +1502,7 @@
     },
     {
       "id": "HI-W04-write-mera-naam",
-      "sequence": 170,
+      "sequence": 220,
       "title": "मेरा नाम (merā nām) — two words, two head-lines",
       "headword": "मेरा नाम",
       "romanization": "merā nām",
@@ -505,7 +1513,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:3532e6c1694adccf",
+      "sourceHash": "fnv1a64:816454c956f38323",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -627,7 +1635,7 @@
     },
     {
       "id": "HI-W05-virama-namaste",
-      "sequence": 180,
+      "sequence": 230,
       "title": "The vowel killer — virama and halant",
       "headword": "्",
       "romanization": "(vowel killer)",
@@ -638,7 +1646,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:b24b2dec7fbdd6d7",
+      "sourceHash": "fnv1a64:2ed3a73cd278b3bd",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -755,7 +1763,7 @@
     },
     {
       "id": "HI-W05-conjuncts",
-      "sequence": 190,
+      "sequence": 240,
       "title": "स्त (sta) — two consonants squeezed together",
       "headword": "स्त",
       "romanization": "sta",
@@ -767,7 +1775,7 @@
         "writing-type",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:c5ff75676d1cd255",
+      "sourceHash": "fnv1a64:83d77302c28e7619",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -892,7 +1900,7 @@
     },
     {
       "id": "HI-W05-write-namaste",
-      "sequence": 200,
+      "sequence": 250,
       "title": "नमस्ते (namaste) — assemble the greeting at last",
       "headword": "नमस्ते",
       "romanization": "namaste",
@@ -903,7 +1911,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:18e81f0badd3c6fc",
+      "sourceHash": "fnv1a64:02b63111d99095c1",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1059,1016 +2067,8 @@
       ]
     },
     {
-      "id": "HI-C02-aap-tum",
-      "sequence": null,
-      "title": "आप / तुम (āp / tum) — \"you,\" respectful and familiar",
-      "headword": "आप / तुम",
-      "romanization": "",
-      "gloss": "you (respectful / familiar)",
-      "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:7bf9dd1fbfeaa979",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "To ask someone's name, you need \"you\" — and Hindi grades it in three levels of respect."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "(Skim if you read Devanagari.) आप: independent vowel आ (ā, word-initial) + प (pa) becomes āp. तुम: त (ta) + ु (the u-sign) + म (ma) becomes tum."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "तुम (tum, familiar \"you\") from Sanskrit tvam, from PIE tū — the same root as English archaic thou, Latin tū, French tu."
-            },
-            {
-              "kind": "speech",
-              "text": "आप (āp, respectful \"you\") is a separate honorific word (originally \"oneself\")."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: three levels of \"you\"",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Hindi grades respect three ways: āp (respectful — strangers, elders), tum (familiar — friends, peers), tū (intimate or to a child; can insult if misused). The European tracks had two levels each; Hindi has three. For a first meeting, always āp."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"āp\" (respectful), \"tum\" (familiar)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"āp\" (respectful), \"tum\" (familiar)]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the cousin of tum — archaic English thou",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the cousin of *tum* — archaic English *thou*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "which to use with a stranger (āp)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: which to use with a stranger (*āp*)]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Name Hindi's three \"you\"s and when āp is used. (āp / tum / tū; āp for respect, strangers, first meetings.) What English word is tum's cousin? (thou.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "HI-C02-aapka-naam-kya-hai",
-      "sequence": null,
-      "title": "आपका नाम क्या है? (āpkā nām kyā hai?) — \"what's your name?\"",
-      "headword": "आपका नाम क्या है?",
-      "romanization": "",
-      "gloss": "what's your name?",
-      "script": "devanagari",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:c4f86737591b1807",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Assemble the question: your + name + what + is."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "unknown",
-          "title": "The phrase, assembled",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "आपका (āpkā, \"your\") = आप (you) + का (kā, the possessive \"of,\" the same agreeing kā/kī/ke that matches the noun)."
-            },
-            {
-              "kind": "speech",
-              "text": "आपका नाम क्या (kyā) है (hai)? = literally \"your name what is?\" = \"what's your name?\""
-            },
-            {
-              "kind": "speech",
-              "text": "Hindi keeps the verb last again, and simply drops the question-word kyā into the object slot — no reordering, no inversion."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: answer, and the informal version",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Answer with the sentence you built: Merā nām Arun hai. The informal \"your\" swaps āpkā for tumhārā: tumhārā nām kyā hai?"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"āpkā nām kyā hai?\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"āpkā nām kyā hai?\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "ask, then answer — \"āpkā nām kyā hai?\" / \"merā nām … hai\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: ask, then answer — \"āpkā nām kyā hai?\" / \"merā nām … hai\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the informal — \"tumhārā nām kyā hai?\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the informal — \"tumhārā nām kyā hai?\"]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What does आपका नाम क्या (kyā) है? literally say, and where's the verb? (\"Your name what is?\"; the verb hai is last.) What's āpkā made of? (āp + kā, \"you\" + possessive.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "HI-C02-hai",
-      "sequence": null,
-      "title": "है (hai) — \"is,\" cousin of English is",
-      "headword": "है",
-      "romanization": "hai",
-      "gloss": "is",
-      "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:6f81f677f00ecce8",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "The little verb \"is\" — and it's the same \"is\" spoken from Ireland to India."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "(Skim if you read Devanagari.) ह (ha) + ै (the ai-mātrā) becomes है (hai). One syllable."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "है (hai, \"is\") from Sanskrit अस्ति (asti, \"is\"), from Proto-Indo-European h₁es- — the root of \"to be\" across the whole family:"
-            },
-            {
-              "kind": "speech",
-              "text": "English is, German ist, Latin est, Spanish es, French est."
-            },
-            {
-              "kind": "speech",
-              "text": "Hindi hai is the Indian cousin of the same tiny verb. \"Is\" really is one word, stretched across a continent."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: the verb comes last",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Hindi is subject–object–verb: \"my name Arun is.\" hai sits at the end of the sentence, where English puts \"is\" in the middle. Bank the shape — in Hindi the verb waits until the end."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"hai\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"hai\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the family — hai / is / ist / est / es",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the family — *hai* / *is* / *ist* / *est* / *es*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"merā nām Arun hai\" — note hai at the end",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"merā nām Arun hai\" — note *hai* at the end]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What Sanskrit/PIE root is है (hai) from, and its cousins? (asti / h₁es- — is, ist, est, es.) Where does the verb sit in a Hindi sentence? (At the end.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "HI-C02-khushi",
-      "sequence": null,
-      "title": "ख़ुशी (khushī) — \"happiness,\" and \"pleased to meet you\"",
-      "headword": "ख़ुशी",
-      "romanization": "",
-      "gloss": "happiness / pleased to meet you",
-      "script": "devanagari",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:86c47193cf8000df",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "The close to an introduction — and a word from Hindi's other vocabulary."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "unknown",
-          "title": "The phrase",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "The Hindi \"pleased to meet you\" is आपसे मिलकर ख़ुशी हुई (āp-se milkar khushī huī) — literally \"having met you, happiness happened.\""
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "The key word ख़ुशी (khushī, \"happiness\") is not Sanskrit — it's Persian (khush, \"happy, pleasant\"), one of the thousands of Persian words in everyday Hindi. (The dot under ख़ — a nukta — marks the Persian kh sound.) So even introducing yourself draws on Hindi's two vocabularies: Sanskrit (nām, hai) and Perso-Arabic (khushī) — the same double heritage you met with shukriyā and alvidā in Chapter 1."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"āpse milkar khushī huī\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"āpse milkar khushī huī\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the key word — khushī (\"happiness\"), a Persian word",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the key word — *khushī* (\"happiness\"), a Persian word]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the two heritages — Sanskrit nām, Persian khushī",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the two heritages — Sanskrit *nām*, Persian *khushī*]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What does the Hindi \"pleased to meet you\" literally mean, and where is khushī from? (\"Having met you, happiness happened\"; Persian.) What does the nukta dot under ख़ mark? (A Persian/Arabic sound.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "HI-C02-kya",
-      "sequence": null,
-      "title": "क्या (kyā) — \"what\"",
-      "headword": "क्या",
-      "romanization": "kyā",
-      "gloss": "what",
-      "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:a75c0ec3e0dbbf96",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "German asks a name with \"how\"; Hindi uses \"what\" — so here's kyā."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "(Skim if you read Devanagari.) A conjunct: क (ka) loses its vowel (a halant) and joins य (ya) becomes क्य (kya); add the long-ā mātrā becomes क्या (kyā)."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "क्या (kyā, \"what\") from Sanskrit kim / the interrogative stem ka-, from PIE kʷo- — the same question-root behind English wh- words (what, who, which) and Latin qu-. Hindi's question-words nearly all start with this k-: kyā (what), kaun (who), kab (when), kyūn (why)."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"kyā\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"kyā\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the English wh- cousins — what, who, which",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the English *wh-* cousins — what, who, which]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the Hindi k- question family — kyā, kaun, kab",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the Hindi *k-* question family — kyā, kaun, kab]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What root is क्या (kyā) from, and its English cousins? (ka- / kʷo- — what, who, which.) What sound do most Hindi question-words start with? (k-.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "HI-C02-mera-naam-hai",
-      "sequence": null,
-      "title": "मेरा नाम … है (merā nām … hai) — \"my name is…\"",
-      "headword": "मेरा नाम … है",
-      "romanization": "",
-      "gloss": "my name is…",
-      "script": "devanagari",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:90ca854c67ed9189",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Assemble the three atoms you just traced — merā, nām, hai — into the sentence for meeting anyone."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "unknown",
-          "title": "The phrase, assembled",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Three atoms, each already rooted — merā (my, from ma-), nām (name, from nāman), hai (is, from asti):"
-            },
-            {
-              "kind": "speech",
-              "text": "मेरा नाम (merā nām) … है (hai) = \"my name … is\" = \"my name is…\""
-            },
-            {
-              "kind": "speech",
-              "text": "Merā nām Arun hai. becomes \"My name is Arun.\" Slot your name into the gap; hai stays at the end."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: subject–object–verb",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Literally the Hindi is \"my name Arun is\" — the verb last. English puts \"is\" in the middle (\"my name is Arun\"); Hindi holds it to the end. Every Hindi sentence you build will end on its verb."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"merā nām … hai\" with your own name",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"merā nām … hai\" with your own name]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "notice the order — my / name / [name] / is",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: notice the order — my / name / [name] / is]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Give your name in Hindi. (Merā nām … hai.) What's different about where \"is\" sits, versus English? (Hindi puts the verb last.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "HI-C02-meraa",
-      "sequence": null,
-      "title": "मेरा (merā) — \"my\"",
-      "headword": "मेरा",
-      "romanization": "merā",
-      "gloss": "my",
-      "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:9307d749d245ebcd",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "The word for \"my\" — and, like name, a first-person word English shares to the root."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "(Skim if you read Devanagari.) म (ma) + े (the e-mātrā) becomes मे (me); र (ra) + ा (long ā) becomes रा (rā). Read मे, रा becomes merā."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "मेरा (merā, \"my\") descends from Sanskrit madīya (\"of me\"), on the first-person root ma- — the same ma-/me- behind English me, my, mine and Latin meus. Hindi \"my\" and English \"my\" are, at root, one word."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: \"my\" agrees with the noun",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Hindi possessives change to match what's owned: merā (masculine), merī (feminine), mere (plural). nām is masculine becomes merā nām. (You'll meet merī at your first feminine noun.)"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"merā\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"merā\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the cousins — merā / English my, mine",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the cousins — *merā* / English *my*, *mine*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the three forms — merā (m.) / merī (f.) / mere (pl.)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the three forms — merā (m.) / merī (f.) / mere (pl.)]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What root is मेरा built on, and its English cousins? (ma- — me, my, mine.) Why merā nām and not merī? (nām is masculine.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "HI-C02-naam",
-      "sequence": null,
-      "title": "नाम (nām) — \"name,\" a word older than Europe",
-      "headword": "नाम",
-      "romanization": "",
-      "gloss": "name",
-      "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:a0371fc3206c766e",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "To introduce yourself you need \"name.\" Hindi's is one you already own in English — from before either language was born."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "(Skim if you read Devanagari.) Left to right: न (na) + ा (the long-ā mātrā) becomes ना (nā), then म (ma). Read ना, म becomes nām."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "नाम (nām) from Sanskrit नामन् (nāman), from Proto-Indo-European h₃nómn̥ — the same ancient root as:"
-            },
-            {
-              "kind": "speech",
-              "text": "English name, Latin nōmen ( becomes English noun, nominate), Greek onoma."
-            },
-            {
-              "kind": "speech",
-              "text": "So Hindi nām and English name are cousins from before either language existed — one of the clearest bridges between the Indian and European branches of one family."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"nām\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"nām\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the cousins — Hindi nām, English name, Latin nōmen becomes noun",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the cousins — Hindi *nām*, English *name*, Latin *nōmen* → *noun*]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What Sanskrit and PIE root is नाम from, and what English words share it? (nāman / h₃nómn̥ — name, noun, nominate.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "HI-C02-practice",
-      "sequence": null,
+      "sequence": 260,
       "title": "Chapter 2 — the introduction, whole",
       "headword": "(dialogue)",
       "romanization": "",
@@ -2079,7 +2079,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:38ed1322267b1ad9",
+      "sourceHash": "fnv1a64:6634a7fe9463a844",
       "notice": null,
       "blocks": [
         {

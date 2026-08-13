@@ -4,11 +4,11 @@
   "chapter": 19,
   "title": "Asking Someone's Age",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:9a434df12509f11d",
+  "sourceHash": "fnv1a64:86c6b20a573d0a84",
   "lessons": [
     {
       "id": "HI-C19-umr",
-      "sequence": 410,
+      "sequence": 660,
       "title": "उम्र — the same word as Arabic",
       "headword": "उम्र",
       "romanization": "",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0d79970c96a92694",
+      "sourceHash": "fnv1a64:d0b8d5a237a2ce8f",
       "notice": null,
       "blocks": [
         {
@@ -102,7 +102,7 @@
     },
     {
       "id": "HI-C19-age-grammar",
-      "sequence": 420,
+      "sequence": 670,
       "title": "कितने साल के हो? (kitne sāl ke ho?) — belonging to so many years",
       "headword": "कितने साल के हो?",
       "romanization": "kitne sāl ke ho?",
@@ -113,7 +113,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e1f8e0e5e8aa336a",
+      "sourceHash": "fnv1a64:e933beb6aa73aa49",
       "notice": null,
       "blocks": [
         {

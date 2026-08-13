@@ -1,5 +1,6 @@
 ---
 id: HI-C02-naam
+sequence: 110
 chapter: 2
 type: word
 headword: नाम

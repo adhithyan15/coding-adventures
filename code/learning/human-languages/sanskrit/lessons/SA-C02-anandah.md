@@ -1,5 +1,6 @@
 ---
 id: SA-C02-anandah
+sequence: 140
 chapter: 2
 type: phrase
 headword: आनन्दः

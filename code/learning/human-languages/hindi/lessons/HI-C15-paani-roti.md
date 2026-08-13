@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-C15-paani-roti
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 370
+sequence: 620
 chapter: 15
 type: word
 headword: पानी रोटी

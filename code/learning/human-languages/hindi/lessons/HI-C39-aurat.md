@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-C39-aurat
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 840
+sequence: 1090
 chapter: 39
 type: word
 headword: औरत

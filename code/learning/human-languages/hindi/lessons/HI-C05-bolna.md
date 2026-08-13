@@ -1,5 +1,6 @@
 ---
 id: HI-C05-bolna
+sequence: 400
 chapter: 5
 type: word
 headword: बोलना

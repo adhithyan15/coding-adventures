@@ -4,11 +4,11 @@
   "chapter": 10,
   "title": "What You'd Ask For",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:34bb059ff0b55e76",
+  "sourceHash": "fnv1a64:387169195aa4f0dd",
   "lessons": [
     {
       "id": "SA-C10-paniyam",
-      "sequence": 510,
+      "sequence": 480,
       "title": "पानीयम् (pānīyam) — \"water,\" the thing to be drunk",
       "headword": "पानीयम्",
       "romanization": "pānīyam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:9188c5753343aa38",
+      "sourceHash": "fnv1a64:dbf67fc3ae1f717e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -164,7 +164,7 @@
     },
     {
       "id": "SA-C10-kshiram",
-      "sequence": 520,
+      "sequence": 490,
       "title": "क्षीरम् (kṣīram) — \"milk,\" and the dessert it left behind",
       "headword": "क्षीरम्",
       "romanization": "kṣīram",
@@ -175,7 +175,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:24fd0c5de4ef7a12",
+      "sourceHash": "fnv1a64:13fe21645e7188ce",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -320,7 +320,7 @@
     },
     {
       "id": "SA-C10-annam",
-      "sequence": 530,
+      "sequence": 500,
       "title": "अन्नम् (annam) — \"food,\" the eaten thing",
       "headword": "अन्नम्",
       "romanization": "annam",
@@ -331,7 +331,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6c78c02377a4c751",
+      "sourceHash": "fnv1a64:b2a505852ac4b3a4",
       "notice": {
         "modality": "sight",
         "needs": [

@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-C29-shaam
 spine_node: SPINE-TIME-OF-DAY
-sequence: 550
+sequence: 800
 chapter: 29
 type: word
 headword: शाम

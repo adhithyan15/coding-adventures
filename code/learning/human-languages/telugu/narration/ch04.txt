@@ -3,6 +3,94 @@ Telugu, chapter 4: Farewells.
 
 
 Lesson 1 of 5.
+వెళ్ళు (veḷḷu) — "go," and వచ్చు (come).
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Two everyday verbs — and together they make the Telugu goodbye.
+
+The letters in this word.
+వె (ve) + ళ్ళు (ḷḷu, a doubled retroflex ళ ḷ) becomes వెళ్ళు (veḷḷu). Its partner: వచ్చు (vaccu, "come") with the doubled చ్చ (cc).
+
+The word, taken apart.
+వెళ్ళు (veḷḷu, "to go") and వచ్చు (vaccu, "to come") are native Dravidian verbs. As commands they are whole words: veḷḷu! ("go!"), rā! ("come!"). You need both, because Telugu — like every Dravidian language — does not say a plain "goodbye." It says "I go, and I come back."
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "veḷḷu" (go) and "vaccu" (come)]
+[pause 8 seconds for the answer]
+[your turn — say: why you need both to say goodbye (Telugu's farewell is "I'll go and come back")]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What do veḷḷu and vaccu mean, and why will you need them both to part? ("Go" and "come"; the Telugu goodbye is "I'll go and come back.")
+
+
+Lesson 2 of 5.
+వెళ్ళి వస్తాను (veḷḷi vastānu) — "I'll go and come back".
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+The everyday Telugu goodbye — a promise, not a parting.
+
+The letters in this word.
+వెళ్ళి (veḷḷi, "having gone") is veḷḷu + the "-i" that means "having …d." వస్తాను (vastānu, "I come/will come") is from vaccu ("come") + "I."
+
+The word, taken apart.
+వెళ్ళి వస్తాను (veḷḷi vastānu) = వెళ్ళి (veḷḷi, "having gone") + వస్తాను (vastānu, "I come") — literally "having gone, I come [back]," i.e. "I'll go and come back." A Telugu speaker never signs off with a bare "I'm leaving" — that sounds final. Instead they promise return. It is the same "go-and-come-back" farewell you meet across the Dravidian south (Tamil pōy varugiṟēṉ, Kannada hōgi baruttēne, Malayalam pōyi varāṁ) and echoing into the Indo-Aryan tracks (Bengali āshi). The warm reply is వెళ్ళి రండి (veḷḷi raṇḍi, "go and come [back]").
+
+Grammar Lens: the "having …d" participle.
+Veḷḷi is Telugu's way of chaining actions: "having gone, (then) I come." Like its sisters, Telugu strings verbs with one in the participle form and the last one fully conjugated.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the goodbye — veḷḷi vastānu]
+[pause 8 seconds for the answer]
+[your turn — say: its literal meaning ("having gone, I come" becomes "I'll come back")]
+[pause 8 seconds for the answer]
+[your turn — say: the warm reply — veḷḷi raṇḍi]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does the Telugu goodbye literally promise, and how do you answer? ("I'll go and come back"; reply veḷḷi raṇḍi, "go and come back".)
+
+
+Lesson 3 of 5.
+రేపు కలుద్దాం (rēpu kaluddām) — "see you tomorrow".
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+A goodbye with a date on it.
+
+The letters in this word.
+రే (rē) + పు (pu) becomes రేపు (rēpu). కలుద్దాం (kaluddām) = kalu ("meet") + -ddām ("let's").
+
+The word, taken apart.
+రేపు (rēpu, "tomorrow") is native Dravidian. కలుద్దాం (kaluddām, "let's meet") is from కలు (kalu, "to meet, to join") — so the phrase is "tomorrow, let's meet," the Telugu "see you tomorrow." The -దాం (-ddām) ending is Telugu's "let's ___" — a first-person-plural invitation: veḷḷddām ("let's go"), tindām ("let's eat").
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "rēpu kaluddām"]
+[pause 8 seconds for the answer]
+[your turn — say: "tomorrow" and "to meet" (rēpu, kalu)]
+[pause 8 seconds for the answer]
+[your turn — say: the "let's ___" ending (-ddām)]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What are the two pieces of rēpu kaluddām, and what does -ddām mean? (Rēpu "tomorrow" + kalu "meet"; -ddām = "let's ___.")
+
+
+Lesson 4 of 5.
 మళ్ళీ కలుద్దాం (maḷḷī kaluddām) — "we'll meet again".
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -29,7 +117,7 @@ Wrap-up Recall.
 What does the phrase mean, and which Dravidian verb does Telugu use for "meet" here? ("We'll meet again"; the native kalu — where Tamil used the Sanskrit loan sandi.)
 
 
-Lesson 2 of 5.
+Lesson 5 of 5.
 Chapter 4 — The farewells.
 
 Warm-up.
@@ -65,91 +153,3 @@ maḷḷī from maral "to return".
 Wrap-up Recall.
 [pause 3 seconds]
 Why does Telugu never say a plain "I'm leaving," and what does its everyday goodbye promise instead? (It sounds too final; veḷḷi vastānu promises "I'll go and come back.")
-
-
-Lesson 3 of 5.
-రేపు కలుద్దాం (rēpu kaluddām) — "see you tomorrow".
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-A goodbye with a date on it.
-
-The letters in this word.
-రే (rē) + పు (pu) becomes రేపు (rēpu). కలుద్దాం (kaluddām) = kalu ("meet") + -ddām ("let's").
-
-The word, taken apart.
-రేపు (rēpu, "tomorrow") is native Dravidian. కలుద్దాం (kaluddām, "let's meet") is from కలు (kalu, "to meet, to join") — so the phrase is "tomorrow, let's meet," the Telugu "see you tomorrow." The -దాం (-ddām) ending is Telugu's "let's ___" — a first-person-plural invitation: veḷḷddām ("let's go"), tindām ("let's eat").
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "rēpu kaluddām"]
-[pause 8 seconds for the answer]
-[your turn — say: "tomorrow" and "to meet" (rēpu, kalu)]
-[pause 8 seconds for the answer]
-[your turn — say: the "let's ___" ending (-ddām)]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What are the two pieces of rēpu kaluddām, and what does -ddām mean? (Rēpu "tomorrow" + kalu "meet"; -ddām = "let's ___.")
-
-
-Lesson 4 of 5.
-వెళ్ళి వస్తాను (veḷḷi vastānu) — "I'll go and come back".
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-The everyday Telugu goodbye — a promise, not a parting.
-
-The letters in this word.
-వెళ్ళి (veḷḷi, "having gone") is veḷḷu + the "-i" that means "having …d." వస్తాను (vastānu, "I come/will come") is from vaccu ("come") + "I."
-
-The word, taken apart.
-వెళ్ళి వస్తాను (veḷḷi vastānu) = వెళ్ళి (veḷḷi, "having gone") + వస్తాను (vastānu, "I come") — literally "having gone, I come [back]," i.e. "I'll go and come back." A Telugu speaker never signs off with a bare "I'm leaving" — that sounds final. Instead they promise return. It is the same "go-and-come-back" farewell you meet across the Dravidian south (Tamil pōy varugiṟēṉ, Kannada hōgi baruttēne, Malayalam pōyi varāṁ) and echoing into the Indo-Aryan tracks (Bengali āshi). The warm reply is వెళ్ళి రండి (veḷḷi raṇḍi, "go and come [back]").
-
-Grammar Lens: the "having …d" participle.
-Veḷḷi is Telugu's way of chaining actions: "having gone, (then) I come." Like its sisters, Telugu strings verbs with one in the participle form and the last one fully conjugated.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: the goodbye — veḷḷi vastānu]
-[pause 8 seconds for the answer]
-[your turn — say: its literal meaning ("having gone, I come" becomes "I'll come back")]
-[pause 8 seconds for the answer]
-[your turn — say: the warm reply — veḷḷi raṇḍi]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What does the Telugu goodbye literally promise, and how do you answer? ("I'll go and come back"; reply veḷḷi raṇḍi, "go and come back".)
-
-
-Lesson 5 of 5.
-వెళ్ళు (veḷḷu) — "go," and వచ్చు (come).
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-Two everyday verbs — and together they make the Telugu goodbye.
-
-The letters in this word.
-వె (ve) + ళ్ళు (ḷḷu, a doubled retroflex ళ ḷ) becomes వెళ్ళు (veḷḷu). Its partner: వచ్చు (vaccu, "come") with the doubled చ్చ (cc).
-
-The word, taken apart.
-వెళ్ళు (veḷḷu, "to go") and వచ్చు (vaccu, "to come") are native Dravidian verbs. As commands they are whole words: veḷḷu! ("go!"), rā! ("come!"). You need both, because Telugu — like every Dravidian language — does not say a plain "goodbye." It says "I go, and I come back."
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "veḷḷu" (go) and "vaccu" (come)]
-[pause 8 seconds for the answer]
-[your turn — say: why you need both to say goodbye (Telugu's farewell is "I'll go and come back")]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What do veḷḷu and vaccu mean, and why will you need them both to part? ("Go" and "come"; the Telugu goodbye is "I'll go and come back.")

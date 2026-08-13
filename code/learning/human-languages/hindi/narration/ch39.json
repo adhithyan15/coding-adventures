@@ -4,11 +4,11 @@
   "chapter": 39,
   "title": "The People Around You",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:e070c2ca9359862e",
+  "sourceHash": "fnv1a64:15308ea7c5833105",
   "lessons": [
     {
       "id": "HI-C39-dost",
-      "sequence": 810,
+      "sequence": 1060,
       "title": "दोस्त (dost) — the friend, who is \"the one chosen\"",
       "headword": "दोस्त",
       "romanization": "",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:245865f8519a8100",
+      "sourceHash": "fnv1a64:094b540aec89f672",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -190,7 +190,7 @@
     },
     {
       "id": "HI-C39-baccha",
-      "sequence": 820,
+      "sequence": 1070,
       "title": "बच्चा (bacca) (bacchā) — the child, who is a \"yearling\"",
       "headword": "बच्चा",
       "romanization": "bacca",
@@ -201,7 +201,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:79b100130230a337",
+      "sourceHash": "fnv1a64:beec7c097a166057",
       "notice": null,
       "blocks": [
         {
@@ -341,7 +341,7 @@
     },
     {
       "id": "HI-C39-aadmi",
-      "sequence": 830,
+      "sequence": 1080,
       "title": "आदमी (ādmī) — the man, and the lean breaking backwards",
       "headword": "आदमी",
       "romanization": "",
@@ -352,7 +352,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5b0959e1158d768d",
+      "sourceHash": "fnv1a64:57d4d5259b48859f",
       "notice": null,
       "blocks": [
         {
@@ -492,7 +492,7 @@
     },
     {
       "id": "HI-C39-aurat",
-      "sequence": 840,
+      "sequence": 1090,
       "title": "औरत (aurat) — the word for \"woman,\" and which one to use",
       "headword": "औरत",
       "romanization": "",
@@ -503,7 +503,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:78acad32b8b61cfe",
+      "sourceHash": "fnv1a64:96d1c27b396fe010",
       "notice": null,
       "blocks": [
         {

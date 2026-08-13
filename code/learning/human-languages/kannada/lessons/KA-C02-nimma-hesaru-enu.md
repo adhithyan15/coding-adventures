@@ -1,5 +1,6 @@
 ---
 id: KA-C02-nimma-hesaru-enu
+sequence: 120
 chapter: 2
 type: phrase
 headword: ನಿಮ್ಮ ಹೆಸರು ಏನು?

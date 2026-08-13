@@ -1,5 +1,6 @@
 ---
 id: TE-C02-peru
+sequence: 70
 chapter: 2
 type: word
 headword: పేరు

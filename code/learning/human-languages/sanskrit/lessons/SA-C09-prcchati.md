@@ -2,7 +2,7 @@
 schema_version: 2
 id: SA-C09-prcchati
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 480
+sequence: 450
 chapter: 9
 type: word
 headword: पृच्छति

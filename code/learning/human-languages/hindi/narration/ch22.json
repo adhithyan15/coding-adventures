@@ -4,11 +4,11 @@
   "chapter": 22,
   "title": "Numbers Eleven to Twenty",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:b8dba90a72b12b25",
+  "sourceHash": "fnv1a64:3d53759c519dce7d",
   "lessons": [
     {
       "id": "HI-C22-gyarah-bees",
-      "sequence": 460,
+      "sequence": 710,
       "title": "ग्यारह, बीस — genuinely irregular, and one honest exception",
       "headword": "ग्यारह — बीस",
       "romanization": "",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7654234c3bf74681",
+      "sourceHash": "fnv1a64:99c63c9e02caf853",
       "notice": null,
       "blocks": [
         {

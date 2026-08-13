@@ -4,11 +4,11 @@
   "chapter": 11,
   "title": "The People You'd Introduce",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:5cbad10f5013c79e",
+  "sourceHash": "fnv1a64:834f11d4b679c4e5",
   "lessons": [
     {
       "id": "SA-C11-mitram",
-      "sequence": 540,
+      "sequence": 510,
       "title": "मित्रम् (mitram) — \"friend,\" and the god of the given word",
       "headword": "मित्रम्",
       "romanization": "mitram",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:22203044d329a15c",
+      "sourceHash": "fnv1a64:6ef1f7ef5e087913",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -167,7 +167,7 @@
     },
     {
       "id": "SA-C11-kutumbam",
-      "sequence": 550,
+      "sequence": 520,
       "title": "कुटुम्बम् (kuṭumbam) — \"family,\" a word that made a round trip",
       "headword": "कुटुम्बम्",
       "romanization": "kuṭumbam",
@@ -178,7 +178,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a852d9aa465d1d1d",
+      "sourceHash": "fnv1a64:d0b8b998f9c37f6e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -315,7 +315,7 @@
     },
     {
       "id": "SA-C11-bhrata",
-      "sequence": 560,
+      "sequence": 530,
       "title": "भ्राता (bhrātā) — \"brother,\" the same word, worn two ways",
       "headword": "भ्राता",
       "romanization": "bhrātā",
@@ -326,7 +326,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5a9bf0cfc707336a",
+      "sourceHash": "fnv1a64:c1ad6275067f4371",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -471,7 +471,7 @@
     },
     {
       "id": "SA-C11-bhagini",
-      "sequence": 570,
+      "sequence": 540,
       "title": "भगिनी (bhaginī) — \"sister,\" one with a share",
       "headword": "भगिनी",
       "romanization": "bhaginī",
@@ -482,7 +482,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:74f96fcbf1881c5a",
+      "sourceHash": "fnv1a64:eb00a80ad07f65d3",
       "notice": {
         "modality": "sight",
         "needs": [

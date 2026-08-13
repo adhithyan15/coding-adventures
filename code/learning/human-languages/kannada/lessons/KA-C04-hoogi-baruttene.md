@@ -1,5 +1,6 @@
 ---
 id: KA-C04-hoogi-baruttene
+sequence: 220
 chapter: 4
 type: phrase
 headword: ಹೋಗಿ ಬರುತ್ತೇನೆ

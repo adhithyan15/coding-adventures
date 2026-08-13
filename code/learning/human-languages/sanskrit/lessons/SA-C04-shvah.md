@@ -1,5 +1,6 @@
 ---
 id: SA-C04-shvah
+sequence: 240
 chapter: 4
 type: word
 headword: श्वः

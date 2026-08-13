@@ -4,11 +4,11 @@
   "chapter": 7,
   "title": "The Core Verbs",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:a2c6c3cb9ac3dffa",
+  "sourceHash": "fnv1a64:ff231d44e04fb65e",
   "lessons": [
     {
       "id": "SA-C07-asti",
-      "sequence": 370,
+      "sequence": 340,
       "title": "अस्ति and भवति — Sanskrit's two words for \"is\"",
       "headword": "अस्ति · भवति",
       "romanization": "asti · bhavati",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:acba716e7ca6b5c4",
+      "sourceHash": "fnv1a64:da647236cc33b4bb",
       "notice": null,
       "blocks": [
         {
@@ -183,7 +183,7 @@
     },
     {
       "id": "SA-C07-gacchati",
-      "sequence": 380,
+      "sequence": 350,
       "title": "गच्छति (gacchati) — \"goes,\" and why dictionaries file it elsewhere",
       "headword": "गच्छति",
       "romanization": "gacchati",
@@ -194,7 +194,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:625c2624967f0670",
+      "sourceHash": "fnv1a64:31e31234b5c9e20f",
       "notice": null,
       "blocks": [
         {
@@ -350,7 +350,7 @@
     },
     {
       "id": "SA-C07-agacchati",
-      "sequence": 390,
+      "sequence": 360,
       "title": "आगच्छति (āgacchati) — \"comes,\" or \"goes\" reversed",
       "headword": "आगच्छति",
       "romanization": "āgacchati",
@@ -361,7 +361,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cb62d733b276b4c5",
+      "sourceHash": "fnv1a64:e8accb66197c17c2",
       "notice": null,
       "blocks": [
         {
@@ -523,7 +523,7 @@
     },
     {
       "id": "SA-C07-khadati",
-      "sequence": 400,
+      "sequence": 370,
       "title": "खादति (khādati) — \"eats,\" and the cousin it is not",
       "headword": "खादति",
       "romanization": "khādati",
@@ -534,7 +534,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:684286f6f5882df7",
+      "sourceHash": "fnv1a64:c4464d06b060f1cd",
       "notice": null,
       "blocks": [
         {
@@ -685,7 +685,7 @@
     },
     {
       "id": "SA-C07-pashyati",
-      "sequence": 410,
+      "sequence": 380,
       "title": "पश्यति (paśyati) — \"sees,\" a verb with two roots",
       "headword": "पश्यति",
       "romanization": "paśyati",
@@ -696,7 +696,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7f8841a36a6c95f0",
+      "sourceHash": "fnv1a64:e576e1f8abb9292c",
       "notice": null,
       "blocks": [
         {
@@ -845,7 +845,7 @@
     },
     {
       "id": "SA-C07-janati",
-      "sequence": 420,
+      "sequence": 390,
       "title": "जानाति (jānāti) — \"knows,\" and English know is the same word",
       "headword": "जानाति",
       "romanization": "jānāti",
@@ -856,7 +856,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:96cb8ccb4a739c4c",
+      "sourceHash": "fnv1a64:68e4987bf3a51ba2",
       "notice": null,
       "blocks": [
         {

@@ -4,11 +4,11 @@
   "chapter": 33,
   "title": "Good Afternoon",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:c139b9d53fd52489",
+  "sourceHash": "fnv1a64:7ea738cf085a92be",
   "lessons": [
     {
       "id": "HI-C33-shubh-dopahar",
-      "sequence": 600,
+      "sequence": 850,
       "title": "शुभ दोपहर (shubh dopahar) — \"good afternoon,\" this arc's rarest greeting",
       "headword": "शुभ दोपहर",
       "romanization": "",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:34614427f8c8c4ec",
+      "sourceHash": "fnv1a64:9d84a15fe3b1a2f5",
       "notice": null,
       "blocks": [
         {

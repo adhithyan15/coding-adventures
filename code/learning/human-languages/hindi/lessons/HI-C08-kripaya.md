@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-C08-kripaya
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 260
+sequence: 510
 chapter: 8
 type: word
 headword: कृपया

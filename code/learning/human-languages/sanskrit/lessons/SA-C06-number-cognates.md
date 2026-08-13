@@ -2,7 +2,7 @@
 schema_version: 2
 id: SA-C06-number-cognates
 spine_node: SPINE-COUNT-ONE-TO-FIVE
-sequence: 350
+sequence: 320
 chapter: 6
 type: etymology
 headword: एक · द्व · त्रि · चतुर् · पञ्च

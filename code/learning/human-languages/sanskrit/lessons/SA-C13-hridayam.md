@@ -2,7 +2,7 @@
 schema_version: 2
 id: SA-C13-hridayam
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 620
+sequence: 590
 chapter: 13
 type: word
 headword: हृदयम्

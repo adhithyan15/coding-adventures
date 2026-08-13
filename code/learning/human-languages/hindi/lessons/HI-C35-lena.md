@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-C35-lena
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 650
+sequence: 900
 chapter: 35
 type: word
 headword: लेना

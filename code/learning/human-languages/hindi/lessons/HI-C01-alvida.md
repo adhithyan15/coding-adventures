@@ -1,5 +1,6 @@
 ---
 id: HI-C01-alvida
+sequence: 50
 chapter: 1
 type: word
 headword: अलविदा

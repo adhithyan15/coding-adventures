@@ -1,5 +1,6 @@
 ---
 id: HI-C01-namaste
+sequence: 10
 chapter: 1
 type: word
 headword: नमस्ते

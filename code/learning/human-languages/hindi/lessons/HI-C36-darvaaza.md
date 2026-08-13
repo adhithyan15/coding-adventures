@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-C36-darvaaza
 spine_node: SPINE-MEET-GREET
-sequence: 700
+sequence: 950
 chapter: 36
 type: word
 headword: दरवाज़ा

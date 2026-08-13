@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-W05-write-namaste
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 200
+sequence: 250
 chapter: 2
 type: writing
 headword: "नमस्ते"

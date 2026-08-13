@@ -4,11 +4,11 @@
   "chapter": 7,
   "title": "Yes and No",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:e4fdb1c6208acaf8",
+  "sourceHash": "fnv1a64:e3d719166a97c059",
   "lessons": [
     {
       "id": "HI-C07-haan",
-      "sequence": 240,
+      "sequence": 490,
       "title": "हाँ (hāṃ) — yes",
       "headword": "हाँ",
       "romanization": "",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e19d43f24244f62e",
+      "sourceHash": "fnv1a64:6c497f2ebf367b87",
       "notice": null,
       "blocks": [
         {
@@ -134,7 +134,7 @@
     },
     {
       "id": "HI-C07-nahin",
-      "sequence": 250,
+      "sequence": 500,
       "title": "नहीं (nahīṃ) — no / not",
       "headword": "नहीं",
       "romanization": "",
@@ -145,7 +145,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:79169e506f53d6cd",
+      "sourceHash": "fnv1a64:8c687f982fec7e2d",
       "notice": null,
       "blocks": [
         {

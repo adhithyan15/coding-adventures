@@ -2,7 +2,7 @@
 schema_version: 2
 id: SA-C09-grhnati
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 470
+sequence: 440
 chapter: 9
 type: word
 headword: गृह्णाति

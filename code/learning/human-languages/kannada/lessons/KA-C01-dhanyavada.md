@@ -1,5 +1,6 @@
 ---
 id: KA-C01-dhanyavada
+sequence: 20
 chapter: 1
 type: word
 headword: ಧನ್ಯವಾದ

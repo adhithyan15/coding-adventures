@@ -4,11 +4,11 @@
   "chapter": 20,
   "title": "Weather",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:6d86ec71fd68d1c5",
+  "sourceHash": "fnv1a64:4f58f5b1e5fad2eb",
   "lessons": [
     {
       "id": "HI-C20-mausam",
-      "sequence": 430,
+      "sequence": 680,
       "title": "मौसम — another Perso-Arabic loan, and a false-friend trap",
       "headword": "मौसम",
       "romanization": "",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ef9e7b274f925034",
+      "sourceHash": "fnv1a64:fd0a486ea0643f9b",
       "notice": null,
       "blocks": [
         {

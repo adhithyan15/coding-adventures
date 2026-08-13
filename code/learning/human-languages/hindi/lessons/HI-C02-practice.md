@@ -1,5 +1,6 @@
 ---
 id: HI-C02-practice
+sequence: 260
 chapter: 2
 type: practice
 headword: (dialogue)
