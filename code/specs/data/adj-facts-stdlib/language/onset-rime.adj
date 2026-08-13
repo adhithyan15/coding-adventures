@@ -25,33 +25,60 @@
 %
 %     ? onset_rime($Word, bl, ast)   % blast
 %
-% The two words and their splits, as a little truth table:
+% The four words and their splits, as a little truth table:
 %
 %     word     onset   rime   the cited split
 %     ------   -----   ----   -------------------------------------
 %     sleep    sl      eep    "sleep could be broken into /sl/ and /eep/"
 %     blast    bl      ast    "Onset (bl) – Rime (ast)"
+%     map      m       ap     "in the word 'map,' /m/ is the onset and /ap/
+%                               is the rime" (added this cycle)
+%     tape     t       ape    "The word is 'tape'. The first part is /t/ ...
+%                               /Ape/" (added this cycle)
 %
-% Provenance: quoted verbatim from Reading Rockets' "Tuning In to the Sounds
-% in Words" article, WebFetch-verified TWICE for consistency before writing.
+% EXTENDED this cycle from 2 to 4 rows: discovered while scoping the next
+% literacy slice, a fresh WebFetch of Reading Rockets' "Phonological and
+% Phonemic Awareness: In Practice" module -- the SAME already-vetted page
+% `syllable-count.adj`/`phoneme-substitution.adj`/`phoneme-deletion.adj`/
+% `syllable-substitution.adj`/`syllable-deletion.adj` already cite -- surfaced
+% its "Blending Onset and Rime" and "Onset-rime Completion" sections, each
+% naming a word/onset/rime triple in the SAME `onset_rime(word, onset, rime)`
+% shape this table already carries. Both new rows are a pure addition; the
+% original `sleep`/`blast` rows are untouched. WebFetch-verified THREE
+% separate times for consistency before writing, all byte-identical.
+%
+% Provenance: `sleep` and `blast` are quoted verbatim from Reading Rockets'
+% "Tuning In to the Sounds in Words" article, WebFetch-verified TWICE for
+% consistency before writing (as originally shipped). `map` and `tape` are
+% quoted verbatim from the "In Practice" module's onset/rime sections above.
 % The exact spans:
 %
 %   sleep -> sl / eep:
 %     "One way to break down the syllable is into onset (everything before
 %      the vowel) and rime (the vowel and everything after it). For example,
 %      sleep could be broken into /sl/ and /eep/."
+%     — https://www.readingrockets.org/topics/phonological-and-phonemic-awareness/articles/tuning-sounds-words
 %   blast -> bl / ast:
 %     "Here are two ways to break up the word blast: Onset (bl) – Rime (ast)"
+%     — https://www.readingrockets.org/topics/phonological-and-phonemic-awareness/articles/tuning-sounds-words
+%   map -> m / ap (added this cycle):
+%     "So in the word 'map,' /m/ is the onset and /ap/ is the rime."
+%     — https://www.readingrockets.org/reading-101/reading-101-learning-modules/course-modules/phonological-and-phonemic-awareness/practice
+%   tape -> t / ape (added this cycle):
+%     "The word is 'tape'. The first part is /t/ ... What's the rest of the
+%      word? /Ape/."
+%     — https://www.readingrockets.org/reading-101/reading-101-learning-modules/course-modules/phonological-and-phonemic-awareness/practice
 %
-% `trust consensus` — Reading Rockets is a widely-used literacy
-% parent/educator resource, the same tier `word-families.adj`'s and
-% `syllable-count.adj`'s Reading Rockets sources earned. Deliberately
-% scoped to ONLY these two words this single cited page splits explicitly
-% — honestly narrow (mirroring `syllable-count.adj`'s and
-% `initial-sound.adj`'s precedent) rather than inventing a split for a word
-% the source does not explicitly break down. A future slice can add a third
-% split once a comparably clean citation is found. (See ../README.md;
-% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the single strongest span: the original `sleep` sentence
+% from the "Tuning In to the Sounds in Words" article. Every OTHER row's
+% per-fact source and verbatim span is listed above, so each split remains
+% independently checkable. `trust consensus` — Reading Rockets is a
+% widely-used literacy parent/educator resource, the same tier
+% `word-families.adj`'s and `syllable-count.adj`'s Reading Rockets sources
+% earned. A future slice can add a fifth split once a comparably clean
+% citation is found. (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
 % ============================================================================
 
 table onset_rime {
@@ -59,6 +86,8 @@ table onset_rime {
 
     row (sleep, sl, eep)
     row (blast, bl, ast)
+    row (map, m, ap)
+    row (tape, t, ape)
 
     source "For example, sleep could be broken into /sl/ and /eep/."
     locator "https://www.readingrockets.org/topics/phonological-and-phonemic-awareness/articles/tuning-sounds-words"
