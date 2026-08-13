@@ -12,8 +12,8 @@ use chief_of_staff_daemon_authority_provisioning::{
     provision_authorities, AuthorityProvisioningError,
 };
 use chief_of_staff_daemon_config::{
-    parse_config, ChiefConfig, ConfigError, SmartHomeListenerConfig, SmartHomeToolGrantConfig,
-    SmartHomeToolGrantStatus,
+    parse_config, ChiefConfig, ConfigError, OnvifPairingConfig, SmartHomeListenerConfig,
+    SmartHomeToolGrantConfig, SmartHomeToolGrantStatus,
 };
 use chief_of_staff_daemon_credential::{load_or_create_credential, CredentialFileError};
 use chief_of_staff_daemon_keyring::{load_package_keyring, KeyringLoadError};
@@ -69,6 +69,10 @@ use smart_home_hue_pairing_service::{
     install_hue_pairing_service_actor, HueLanRegistrationTransport, HuePairingRequest,
     HuePairingServiceActorState, HuePairingServiceError,
 };
+use smart_home_onvif_pairing_service::{
+    install_onvif_pairing_service_actor, NativeOnvifPairingVerifier, OnvifPairingRequest,
+    OnvifPairingServiceActorState, OnvifPairingServiceError, OwnerOnlyOnvifCredentialInput,
+};
 use smart_home_platform_http::{
     home_assistant_runtime_web_app, SmartHomePlatformHttpConfig, SmartHomePlatformHttpRuntime,
 };
@@ -110,7 +114,11 @@ const HUE_PAIRING_ACTOR_ID: &str = "chief-hue-pairing";
 const HUE_PAIRING_SENDER_ID: &str = "chief-of-staff-daemon";
 const HUE_PAIRING_APP_NAME: &str = "coding-adventures";
 const HUE_PAIRING_TICK_INTERVAL_MS: u64 = 1_000;
-const HUE_PAIRING_KEK_BYTES: usize = 32;
+const SMART_HOME_PAIRING_KEK_BYTES: usize = 32;
+const ONVIF_PAIRING_ACTOR_ID: &str = "chief-onvif-pairing";
+const ONVIF_PAIRING_SENDER_ID: &str = "chief-of-staff-daemon";
+const ONVIF_PAIRING_TICK_INTERVAL_MS: u64 = 1_000;
+const ONVIF_INTEGRATION_ID: &str = "onvif";
 
 /// Stable payload-blind startup, serving, and teardown failure.
 #[derive(Debug)]
@@ -169,6 +177,20 @@ pub enum ChiefDaemonError {
     SmartHomePairingWorkerUnavailable,
     /// The Hue pairing worker thread panicked.
     SmartHomePairingWorkerPanicked,
+    /// The configured ONVIF pairing KEK file could not be loaded safely.
+    SmartHomeOnvifPairingSecret(SecretFileError),
+    /// The configured ONVIF pairing Vault could not initialize or unseal.
+    SmartHomeOnvifPairingVault(SealedStoreError),
+    /// The ONVIF pairing service could not recover or execute its transaction state.
+    SmartHomeOnvifPairing(OnvifPairingServiceError),
+    /// The ONVIF pairing actor could not be installed or driven.
+    SmartHomeOnvifPairingActor(ActorError),
+    /// The production wall clock was unavailable to the ONVIF pairing worker.
+    SmartHomeOnvifPairingClock,
+    /// The operating system could not create the ONVIF pairing worker thread.
+    SmartHomeOnvifPairingWorkerUnavailable,
+    /// The ONVIF pairing worker thread panicked.
+    SmartHomeOnvifPairingWorkerPanicked,
     /// The local operator credential could not be loaded or created safely.
     Credential(CredentialFileError),
     /// Local bearer policy construction failed.
@@ -236,6 +258,19 @@ impl Display for ChiefDaemonError {
             }
             Self::SmartHomePairingWorkerPanicked => {
                 "chief daemon: smart-home pairing worker panicked"
+            }
+            Self::SmartHomeOnvifPairingSecret(_) => {
+                "chief daemon: ONVIF pairing secret file failed"
+            }
+            Self::SmartHomeOnvifPairingVault(_) => "chief daemon: ONVIF pairing vault failed",
+            Self::SmartHomeOnvifPairing(_) => "chief daemon: ONVIF pairing failed",
+            Self::SmartHomeOnvifPairingActor(_) => "chief daemon: ONVIF pairing actor failed",
+            Self::SmartHomeOnvifPairingClock => "chief daemon: ONVIF pairing clock unavailable",
+            Self::SmartHomeOnvifPairingWorkerUnavailable => {
+                "chief daemon: ONVIF pairing worker unavailable"
+            }
+            Self::SmartHomeOnvifPairingWorkerPanicked => {
+                "chief daemon: ONVIF pairing worker panicked"
             }
             Self::Credential(_) => "chief daemon: operator credential failed",
             Self::Authentication(_) => "chief daemon: local authentication policy failed",
@@ -435,11 +470,26 @@ pub fn run(config: ChiefConfig, home: &Path) -> Result<(), ChiefDaemonError> {
                     .map_err(ChiefDaemonError::Config)?;
                 let kek_path = kek_path.resolve(home).map_err(ChiefDaemonError::Config)?;
                 service.hue_pairing = Some(configure_hue_pairing_service(
-                    controller,
+                    controller.clone(),
                     &state_dir,
                     &vault_dir,
                     &kek_path,
                     listener.instance_name(),
+                    Arc::clone(&unix_clock),
+                )?);
+            }
+            if let Some(pairing) = listener.onvif_pairing() {
+                let vault_dir = config
+                    .vault()
+                    .storage_path()
+                    .resolve(home)
+                    .map_err(ChiefDaemonError::Config)?;
+                service.onvif_pairing = Some(configure_onvif_pairing_service(
+                    controller,
+                    &state_dir,
+                    &vault_dir,
+                    pairing,
+                    home,
                     Arc::clone(&unix_clock),
                 )?);
             }
@@ -635,6 +685,7 @@ struct SmartHomeHttpService {
     app: Arc<WebApp>,
     hue_discovery: Option<ChiefHueDiscoveryService>,
     hue_pairing: Option<ChiefHuePairingService>,
+    onvif_pairing: Option<ChiefOnvifPairingService>,
 }
 
 type ChiefHueDiscoveryState = DiscoveryServiceActorState<
@@ -657,6 +708,20 @@ struct ChiefHuePairingService {
     controller: SmartHomeControllerRuntime<FsStorageBackend>,
     clock: Arc<dyn UnixTimeClock>,
     instance_name: String,
+}
+
+type ChiefOnvifPairingState = OnvifPairingServiceActorState<
+    OwnerOnlyOnvifCredentialInput,
+    NativeOnvifPairingVerifier,
+    FsStorageBackend,
+    FsStorageBackend,
+>;
+
+struct ChiefOnvifPairingService {
+    state: ChiefOnvifPairingState,
+    controller: SmartHomeControllerRuntime<FsStorageBackend>,
+    clock: Arc<dyn UnixTimeClock>,
+    bridge_id: smart_home_core::BridgeId,
 }
 
 #[derive(Debug, Default)]
@@ -699,6 +764,7 @@ fn compose_smart_home_http_service(
         app: Arc::new(home_assistant_runtime_web_app(runtime)),
         hue_discovery,
         hue_pairing: None,
+        onvif_pairing: None,
     })
 }
 
@@ -716,9 +782,9 @@ fn configure_hue_pairing_service(
         .initialize()
         .map_err(ChiefDaemonError::Storage)?;
     let vault = Arc::new(SealedStore::new(vault_backend));
-    let kek = read_owner_only_secret(kek_path, HUE_PAIRING_KEK_BYTES)
+    let kek = read_owner_only_secret(kek_path, SMART_HOME_PAIRING_KEK_BYTES)
         .map_err(ChiefDaemonError::SmartHomePairingSecret)?;
-    let kek: &[u8; HUE_PAIRING_KEK_BYTES] = kek
+    let kek: &[u8; SMART_HOME_PAIRING_KEK_BYTES] = kek
         .as_slice()
         .try_into()
         .map_err(|_| ChiefDaemonError::SmartHomePairingSecret(SecretFileError::InvalidLength))?;
@@ -747,6 +813,76 @@ fn configure_hue_pairing_service(
         controller,
         clock,
         instance_name: instance_name.to_string(),
+    })
+}
+
+fn configure_onvif_pairing_service(
+    controller: SmartHomeControllerRuntime<FsStorageBackend>,
+    state_dir: &Path,
+    vault_dir: &Path,
+    config: &OnvifPairingConfig,
+    home: &Path,
+    clock: Arc<dyn UnixTimeClock>,
+) -> Result<ChiefOnvifPairingService, ChiefDaemonError> {
+    let vault_backend: Arc<dyn StorageBackend> =
+        Arc::new(FsStorageBackend::new(vault_dir.to_path_buf()));
+    vault_backend
+        .initialize()
+        .map_err(ChiefDaemonError::Storage)?;
+    let vault = Arc::new(SealedStore::new(vault_backend));
+    let kek_path = config
+        .kek_path()
+        .resolve(home)
+        .map_err(ChiefDaemonError::Config)?;
+    let kek = read_owner_only_secret(&kek_path, SMART_HOME_PAIRING_KEK_BYTES)
+        .map_err(ChiefDaemonError::SmartHomeOnvifPairingSecret)?;
+    let kek: &[u8; SMART_HOME_PAIRING_KEK_BYTES] = kek.as_slice().try_into().map_err(|_| {
+        ChiefDaemonError::SmartHomeOnvifPairingSecret(SecretFileError::InvalidLength)
+    })?;
+    if vault
+        .status()
+        .map_err(ChiefDaemonError::SmartHomeOnvifPairingVault)?
+        .initialized
+    {
+        vault
+            .unseal_with_kek(kek)
+            .map_err(ChiefDaemonError::SmartHomeOnvifPairingVault)?;
+    } else {
+        vault
+            .init_with_kek(kek)
+            .map_err(ChiefDaemonError::SmartHomeOnvifPairingVault)?;
+    }
+    let bridge_id = smart_home_core::BridgeId::new(config.bridge_id()).map_err(|error| {
+        ChiefDaemonError::SmartHomeOnvifPairing(OnvifPairingServiceError::InvalidRequest(
+            error.to_string(),
+        ))
+    })?;
+    let credential_input = OwnerOnlyOnvifCredentialInput::new(
+        bridge_id.clone(),
+        config
+            .username_path()
+            .resolve(home)
+            .map_err(ChiefDaemonError::Config)?,
+        config.username_length(),
+        config
+            .password_path()
+            .resolve(home)
+            .map_err(ChiefDaemonError::Config)?,
+        config.password_length(),
+    );
+    let state = OnvifPairingServiceActorState::restore(
+        FsStorageBackend::new(state_dir),
+        vault,
+        controller.clone(),
+        credential_input,
+        NativeOnvifPairingVerifier,
+    )
+    .map_err(ChiefDaemonError::SmartHomeOnvifPairing)?;
+    Ok(ChiefOnvifPairingService {
+        state,
+        controller,
+        clock,
+        bridge_id,
     })
 }
 
@@ -1080,6 +1216,150 @@ fn drive_hue_pairing_tick(
     Ok(())
 }
 
+struct OwnedOnvifPairingWorker {
+    stop: Arc<AtomicBool>,
+    thread: Option<JoinHandle<Result<(), ChiefDaemonError>>>,
+}
+
+impl OwnedOnvifPairingWorker {
+    fn start(
+        service: ChiefOnvifPairingService,
+        on_failure: Arc<dyn Fn() + Send + Sync>,
+    ) -> Result<Self, ChiefDaemonError> {
+        Self::start_with_interval(
+            service,
+            on_failure,
+            Duration::from_millis(ONVIF_PAIRING_TICK_INTERVAL_MS),
+        )
+    }
+
+    fn start_with_interval(
+        service: ChiefOnvifPairingService,
+        on_failure: Arc<dyn Fn() + Send + Sync>,
+        tick_interval: Duration,
+    ) -> Result<Self, ChiefDaemonError> {
+        let stop = Arc::new(AtomicBool::new(false));
+        let worker_stop = Arc::clone(&stop);
+        let (startup_sender, startup_receiver) = std::sync::mpsc::sync_channel(0);
+        let thread = thread::Builder::new()
+            .name("chief-onvif-pairing".to_string())
+            .spawn(move || {
+                let ChiefOnvifPairingService {
+                    state,
+                    controller,
+                    clock,
+                    bridge_id,
+                } = service;
+                let mut system = ActorSystem::new();
+                if let Err(error) =
+                    install_onvif_pairing_service_actor(&mut system, ONVIF_PAIRING_ACTOR_ID, state)
+                {
+                    let _ = startup_sender.send(Err(error));
+                    return Ok(());
+                }
+                if startup_sender.send(Ok(())).is_err() {
+                    return Ok(());
+                }
+                while !worker_stop.load(Ordering::Acquire) {
+                    thread::park_timeout(tick_interval);
+                    if worker_stop.load(Ordering::Acquire) {
+                        break;
+                    }
+                    if let Err(error) = drive_onvif_pairing_tick(
+                        &mut system,
+                        &controller,
+                        clock.as_ref(),
+                        &bridge_id,
+                    ) {
+                        on_failure();
+                        return Err(error);
+                    }
+                }
+                Ok(())
+            })
+            .map_err(|_| ChiefDaemonError::SmartHomeOnvifPairingWorkerUnavailable)?;
+        match startup_receiver.recv() {
+            Ok(Ok(())) => {}
+            Ok(Err(error)) => {
+                let _ = thread.join();
+                return Err(ChiefDaemonError::SmartHomeOnvifPairingActor(error));
+            }
+            Err(_) => {
+                let _ = thread.join();
+                return Err(ChiefDaemonError::SmartHomeOnvifPairingWorkerUnavailable);
+            }
+        }
+        Ok(Self {
+            stop,
+            thread: Some(thread),
+        })
+    }
+
+    fn stop_and_join(&mut self) -> Result<(), ChiefDaemonError> {
+        self.stop.store(true, Ordering::Release);
+        let Some(thread) = self.thread.take() else {
+            return Ok(());
+        };
+        thread.thread().unpark();
+        thread
+            .join()
+            .map_err(|_| ChiefDaemonError::SmartHomeOnvifPairingWorkerPanicked)?
+    }
+}
+
+impl Drop for OwnedOnvifPairingWorker {
+    fn drop(&mut self) {
+        let _ = self.stop_and_join();
+    }
+}
+
+fn drive_onvif_pairing_tick(
+    system: &mut ActorSystem,
+    controller: &SmartHomeControllerRuntime<FsStorageBackend>,
+    clock: &dyn UnixTimeClock,
+    bridge_id: &smart_home_core::BridgeId,
+) -> Result<(), ChiefDaemonError> {
+    let now_ms = clock
+        .now_ms()
+        .ok_or(ChiefDaemonError::SmartHomeOnvifPairingClock)?;
+    let restored = controller
+        .durable_snapshot()
+        .map_err(OnvifPairingServiceError::from)
+        .map_err(ChiefDaemonError::SmartHomeOnvifPairing)?
+        .ok_or(ChiefDaemonError::SmartHomeOnvifPairing(
+            OnvifPairingServiceError::MissingDurableRuntime,
+        ))?;
+    let query = RuntimePairingSessionQuery::new()
+        .for_integration(smart_home_core::IntegrationId::trusted(
+            ONVIF_INTEGRATION_ID,
+        ))
+        .with_status(PairingSessionStatus::PendingUserPresence);
+    let Some(session) = restored
+        .runtime
+        .query_pairing_sessions(&query)
+        .into_iter()
+        .find(|session| session.bridge_id == *bridge_id && !session.is_expired_at(now_ms))
+    else {
+        return Ok(());
+    };
+    let request = OnvifPairingRequest::new(
+        session.session_id.clone(),
+        session.requested_by.clone(),
+        restored.revision,
+        now_ms,
+    );
+    let message = request
+        .into_message(ONVIF_PAIRING_SENDER_ID)
+        .map_err(ChiefDaemonError::SmartHomeOnvifPairing)?;
+    system
+        .send(ONVIF_PAIRING_ACTOR_ID, message)
+        .map_err(ChiefDaemonError::SmartHomeOnvifPairingActor)?;
+    system
+        .process_next(ONVIF_PAIRING_ACTOR_ID)
+        .map_err(ChiefDaemonError::SmartHomeOnvifPairingActor)?;
+    Ok(())
+}
+
 fn compose_smart_home_http_runtime<B: StorageBackend + 'static>(
     config: &SmartHomeListenerConfig,
     controller: SmartHomeControllerRuntime<B>,
@@ -1364,13 +1644,14 @@ where
         schedule,
     )
     .map_err(ChiefDaemonError::Runtime)?;
-    let (mut smart_home_server, hue_discovery, hue_pairing) = match smart_home {
+    let (mut smart_home_server, hue_discovery, hue_pairing, onvif_pairing) = match smart_home {
         Some((platform, service)) => {
             let SmartHomeHttpService {
                 address,
                 app,
                 hue_discovery,
                 hue_pairing,
+                onvif_pairing,
             } = service;
             let server = WebServer::bind(
                 platform,
@@ -1379,9 +1660,9 @@ where
                 app,
             )
             .map_err(ChiefDaemonError::SmartHomeHttp)?;
-            (Some(server), hue_discovery, hue_pairing)
+            (Some(server), hue_discovery, hue_pairing, onvif_pairing)
         }
-        None => (None, None, None),
+        None => (None, None, None, None),
     };
     let daemon_stop = runtime.stop_handle();
     let smart_home_stop = smart_home_server.as_ref().map(WebServer::stop_handle);
@@ -1411,6 +1692,19 @@ where
             OwnedHuePairingWorker::start(service, on_failure)
         })
         .transpose()?;
+    let mut onvif_pairing_worker = onvif_pairing
+        .map(|service| {
+            let failure_daemon_stop = daemon_stop.clone();
+            let failure_smart_home_stop = smart_home_stop.clone();
+            let on_failure: Arc<dyn Fn() + Send + Sync> = Arc::new(move || {
+                failure_daemon_stop.stop();
+                if let Some(stop) = failure_smart_home_stop.as_ref() {
+                    stop.stop();
+                }
+            });
+            OwnedOnvifPairingWorker::start(service, on_failure)
+        })
+        .transpose()?;
     let listener_daemon_stop = daemon_stop.clone();
     let listener_smart_home_stop = smart_home_stop.clone();
     let listener = match ShutdownListener::install(move |_| {
@@ -1429,6 +1723,9 @@ where
                 let _ = worker.stop_and_join();
             }
             if let Some(worker) = pairing_worker.as_mut() {
+                let _ = worker.stop_and_join();
+            }
+            if let Some(worker) = onvif_pairing_worker.as_mut() {
                 let _ = worker.stop_and_join();
             }
             return Err(ChiefDaemonError::Shutdown(error));
@@ -1459,6 +1756,10 @@ where
         .as_mut()
         .map(OwnedHuePairingWorker::stop_and_join)
         .transpose();
+    let onvif_pairing_result = onvif_pairing_worker
+        .as_mut()
+        .map(OwnedOnvifPairingWorker::stop_and_join)
+        .transpose();
     let smart_home_result = smart_home_thread
         .map(|thread| {
             thread
@@ -1478,6 +1779,7 @@ where
     runtime_result.map_err(ChiefDaemonError::Runtime)?;
     discovery_result?;
     pairing_result?;
+    onvif_pairing_result?;
     smart_home_result?;
     shutdown_result.map_err(ChiefDaemonError::Shutdown)?;
     recovery_result
@@ -1633,7 +1935,11 @@ mod tests {
     use smart_home_core::{
         AgentId, AuthorizationOutcome, Bridge, BridgeId, BridgeTransport, CapabilityGrant,
         CapabilityGrantId, CapabilityId, Device, DeviceId, Entity, EntityId, EntityKind, Health,
-        IntegrationId, Metadata as SmartHomeMetadata, SmartHomeTool,
+        IntegrationId, Metadata as SmartHomeMetadata, ProtocolFamily, ProtocolIdentifier,
+        SmartHomeTool,
+    };
+    use smart_home_onvif_pairing_service::{
+        OnvifCredentialInput, OnvifCredentialSecret, OnvifPairingVerifier, VerifiedOnvifCamera,
     };
     use smart_home_runtime::{RuntimePairingSession, RuntimePairingSessionId};
     use std::convert::Infallible;
@@ -2226,7 +2532,9 @@ hardware_key_timeout = 60
             Arc::new(FsStorageBackend::new(directory.0.join("smart-home-vault")));
         vault_backend.initialize().unwrap();
         let vault = Arc::new(SealedStore::new(vault_backend));
-        vault.init_with_kek(&[0x42; HUE_PAIRING_KEK_BYTES]).unwrap();
+        vault
+            .init_with_kek(&[0x42; SMART_HOME_PAIRING_KEK_BYTES])
+            .unwrap();
         let state = HuePairingServiceActorState::restore(
             FsStorageBackend::new(&state_dir),
             Arc::clone(&vault),
@@ -2293,7 +2601,9 @@ hardware_key_timeout = 60
         ));
         vault_backend.initialize().unwrap();
         let vault = Arc::new(SealedStore::new(vault_backend));
-        vault.init_with_kek(&[0x24; HUE_PAIRING_KEK_BYTES]).unwrap();
+        vault
+            .init_with_kek(&[0x24; SMART_HOME_PAIRING_KEK_BYTES])
+            .unwrap();
         let state = HuePairingServiceActorState::restore(
             FsStorageBackend::new(&state_dir),
             vault,
@@ -2322,6 +2632,203 @@ hardware_key_timeout = 60
         assert!(matches!(
             worker.stop_and_join(),
             Err(ChiefDaemonError::SmartHomePairingClock)
+        ));
+        assert!(failure_seen.load(Ordering::Acquire));
+    }
+
+    struct TestOnvifCredentialInput;
+
+    impl OnvifCredentialInput for TestOnvifCredentialInput {
+        fn take_for_bridge(
+            &mut self,
+            bridge: &Bridge,
+        ) -> Result<OnvifCredentialSecret, OnvifPairingServiceError> {
+            assert_eq!(bridge.bridge_id.as_str(), "onvif-camera-front");
+            OnvifCredentialSecret::new("chief-onvif-user", "chief-onvif-password")
+        }
+    }
+
+    struct TestOnvifVerifier;
+
+    impl OnvifPairingVerifier for TestOnvifVerifier {
+        fn verify(
+            &mut self,
+            bridge: &Bridge,
+            _credentials: &OnvifCredentialSecret,
+        ) -> Result<VerifiedOnvifCamera, OnvifPairingServiceError> {
+            assert_eq!(
+                bridge.address.as_deref(),
+                Some("https://camera.local/onvif/device_service")
+            );
+            Ok(VerifiedOnvifCamera { profile_count: 2 })
+        }
+    }
+
+    #[test]
+    fn chief_onvif_pairing_tick_commits_only_the_bound_bridge_through_shared_controller() {
+        let directory = TestDir::new();
+        let state_dir = directory.0.join("smart-home-onvif-pairing-state");
+        let controller =
+            SmartHomeControllerRuntime::restore(FsStorageBackend::new(&state_dir)).unwrap();
+        controller
+            .transaction(1_500, |runtime, _| {
+                let principal = AgentId::trusted("operator:onvif-pairing");
+                for (bridge_id, session_id) in [
+                    ("onvif-camera-other", "pairing-chief-onvif-other"),
+                    ("onvif-camera-front", "pairing-chief-onvif-front"),
+                ] {
+                    let mut bridge = Bridge::new(
+                        BridgeId::trusted(bridge_id),
+                        IntegrationId::trusted(ONVIF_INTEGRATION_ID),
+                        BridgeTransport::LanHttp,
+                    );
+                    bridge.address = Some("https://camera.local/onvif/device_service".to_string());
+                    bridge.health = Health::Unpaired;
+                    bridge.identifiers.push(
+                        ProtocolIdentifier::new(
+                            ProtocolFamily::Onvif,
+                            "endpoint_reference",
+                            format!("urn:uuid:{bridge_id}"),
+                        )
+                        .unwrap(),
+                    );
+                    runtime.upsert_bridge(bridge.clone()).unwrap();
+                    runtime
+                        .start_pairing_session(RuntimePairingSession::pending(
+                            RuntimePairingSessionId::trusted(session_id),
+                            &bridge,
+                            principal.clone(),
+                            1_500,
+                            30_000,
+                            vec![SmartHomeMetadata::new(
+                                "pairing.mode",
+                                "explicit_credentials",
+                            )],
+                        ))
+                        .unwrap();
+                }
+                runtime
+                    .registry_mut()
+                    .upsert_capability_grant(CapabilityGrant::for_capability(
+                        CapabilityGrantId::trusted("grant-chief-onvif-pairing"),
+                        principal,
+                        CapabilityId::trusted("smart_home.pair"),
+                        PrivilegeTier::HumanApproval,
+                        "operator:test",
+                        1_500,
+                    ));
+                Ok::<(), Infallible>(())
+            })
+            .unwrap();
+        let vault_backend: Arc<dyn StorageBackend> = Arc::new(FsStorageBackend::new(
+            directory.0.join("smart-home-onvif-vault"),
+        ));
+        vault_backend.initialize().unwrap();
+        let vault = Arc::new(SealedStore::new(vault_backend));
+        vault
+            .init_with_kek(&[0x36; SMART_HOME_PAIRING_KEK_BYTES])
+            .unwrap();
+        let state = OnvifPairingServiceActorState::restore(
+            FsStorageBackend::new(&state_dir),
+            Arc::clone(&vault),
+            controller.clone(),
+            TestOnvifCredentialInput,
+            TestOnvifVerifier,
+        )
+        .unwrap();
+        let mut system = ActorSystem::new();
+        install_onvif_pairing_service_actor(&mut system, ONVIF_PAIRING_ACTOR_ID, state).unwrap();
+
+        drive_onvif_pairing_tick(
+            &mut system,
+            &controller,
+            &TestUnixTimeClock::new(2_000),
+            &BridgeId::trusted("onvif-camera-front"),
+        )
+        .unwrap();
+
+        let restored = controller.durable_snapshot().unwrap().unwrap();
+        let completed = restored
+            .runtime
+            .pairing_session(&RuntimePairingSessionId::trusted(
+                "pairing-chief-onvif-front",
+            ))
+            .unwrap();
+        assert_eq!(completed.status, PairingSessionStatus::Completed);
+        assert!(completed
+            .vault_ref
+            .as_ref()
+            .unwrap()
+            .as_str()
+            .starts_with("vault://smart-home/onvif/"));
+        assert_eq!(
+            restored
+                .runtime
+                .pairing_session(&RuntimePairingSessionId::trusted(
+                    "pairing-chief-onvif-other",
+                ))
+                .unwrap()
+                .status,
+            PairingSessionStatus::PendingUserPresence
+        );
+        let durable_text = format!("{restored:?}");
+        assert!(!durable_text.contains("chief-onvif-user"));
+        assert!(!durable_text.contains("chief-onvif-password"));
+    }
+
+    #[test]
+    fn chief_onvif_pairing_worker_stops_and_propagates_clock_failure() {
+        let directory = TestDir::new();
+        let state_dir = directory.0.join("smart-home-onvif-worker-state");
+        let controller =
+            SmartHomeControllerRuntime::restore(FsStorageBackend::new(&state_dir)).unwrap();
+        controller
+            .transaction(1_500, |_, _| Ok::<(), Infallible>(()))
+            .unwrap();
+        let vault_backend: Arc<dyn StorageBackend> = Arc::new(FsStorageBackend::new(
+            directory.0.join("smart-home-onvif-worker-vault"),
+        ));
+        vault_backend.initialize().unwrap();
+        let vault = Arc::new(SealedStore::new(vault_backend));
+        vault
+            .init_with_kek(&[0x17; SMART_HOME_PAIRING_KEK_BYTES])
+            .unwrap();
+        let bridge_id = BridgeId::trusted("onvif-camera-front");
+        let state = OnvifPairingServiceActorState::restore(
+            FsStorageBackend::new(&state_dir),
+            vault,
+            controller.clone(),
+            OwnerOnlyOnvifCredentialInput::new(
+                bridge_id.clone(),
+                directory.0.join("unused-user"),
+                1,
+                directory.0.join("unused-password"),
+                1,
+            ),
+            NativeOnvifPairingVerifier,
+        )
+        .unwrap();
+        let service = ChiefOnvifPairingService {
+            state,
+            controller,
+            clock: Arc::new(UnavailableUnixTimeClock),
+            bridge_id,
+        };
+        let failure_seen = Arc::new(AtomicBool::new(false));
+        let failure_probe = Arc::clone(&failure_seen);
+        let on_failure: Arc<dyn Fn() + Send + Sync> = Arc::new(move || {
+            failure_probe.store(true, Ordering::Release);
+        });
+        let mut worker = OwnedOnvifPairingWorker::start_with_interval(
+            service,
+            on_failure,
+            Duration::from_millis(1),
+        )
+        .unwrap();
+        thread::sleep(Duration::from_millis(20));
+        assert!(matches!(
+            worker.stop_and_join(),
+            Err(ChiefDaemonError::SmartHomeOnvifPairingClock)
         ));
         assert!(failure_seen.load(Ordering::Acquire));
     }

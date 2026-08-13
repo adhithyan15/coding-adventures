@@ -26,6 +26,10 @@ Hue pairing worker with a 32-byte owner-only injected-KEK file. That setting is
 accepted only when `[vault].container = false`, making in-process Vault custody
 an explicit operator choice instead of silently crossing a configured
 containment boundary.
+An optional complete `onvif_pairing_*` tuple binds one supervised ONVIF worker
+to an exact bridge ID, owner-only 32-byte KEK file, and owner-only username and
+password files with exact positive byte lengths capped at 4 KiB. Partial tuples
+and `[vault].container = true` fail closed.
 
 An optional `[data_plane]` table declares exact production authorities without
 putting secret bytes in TOML. Directional channel-key entries bind canonical

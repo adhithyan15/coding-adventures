@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add optional Chief-owned ONVIF pairing over the shared durable controller.
+  One complete owner-only configuration tuple binds credential input to an
+  exact bridge, startup restores transaction state, and worker failure joins
+  the coordinated shutdown path without exposing credentials in durable state.
 - Add optional Chief-owned Hue pairing over the shared durable controller. An
   owner-only injected KEK explicitly enables in-process Vault custody; pending
   sessions retain their principal and exact revision, transaction recovery runs

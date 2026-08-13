@@ -47,6 +47,7 @@ smart-home-core = { path = "../smart-home-core" }
 smart-home-discovery = { path = "../smart-home-discovery" }
 smart-home-discovery-service = { path = "../smart-home-discovery-service" }
 smart-home-hue-pairing-service = { path = "../smart-home-hue-pairing-service" }
+smart-home-onvif-pairing-service = { path = "../smart-home-onvif-pairing-service" }
 smart-home-platform-http = { path = "../smart-home-platform-http" }
 smart-home-runtime = { path = "../smart-home-runtime" }
 transport-platform = { path = "../transport-platform" }

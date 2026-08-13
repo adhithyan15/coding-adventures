@@ -20,3 +20,6 @@
   Chief-owned supervised discovery.
 - Accept an optional `hue_pairing_kek_path` only with explicit in-process Vault
   custody, preserving strict owner-only secret-file handling at composition.
+- Accept an all-or-none ONVIF pairing tuple for one exact bridge, owner-only KEK,
+  and exact-length owner-only username/password files only with explicit
+  in-process Vault custody.

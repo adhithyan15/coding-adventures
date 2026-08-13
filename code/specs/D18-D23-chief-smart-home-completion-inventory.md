@@ -2061,10 +2061,33 @@ pairing without restoring a second D23 runtime:
   durable state, while worker tests prove cooperative stop and failure
   propagation.
 
+## Current Chief ONVIF Pairing Worker Slice
+
+The optional Chief smart-home composition now owns one exact ONVIF credential
+pairing worker against the same live central controller:
+
+- A complete `onvif_pairing_*` tuple binds the worker to one installed bridge,
+  an owner-only 32-byte KEK, and owner-only username/password files with exact
+  bounded byte lengths; partial configuration and containerized Vault custody
+  fail closed.
+- Startup initializes or unseals the configured Vault and resolves pending
+  pairing transaction journals before installing the existing ONVIF pairing
+  actor against the shared controller.
+- Each tick selects only an unexpired pending ONVIF session for the configured
+  bridge, preserves its principal and exact durable revision, and delegates
+  authenticated native inspection plus sealed credential handoff to the
+  existing service.
+- Successful completion publishes only the opaque ONVIF `VaultRef` to HTTP,
+  model tools, and every other shared consumer. Clock or actor failure stops
+  both listeners, and normal shutdown joins the worker before controller and
+  Vault teardown.
+- Tests prove exact-bridge selection, central commit visibility, secret-free
+  durable state, cooperative stop, and failure propagation.
+
 The remaining central-composition backlog still takes priority over adding
 another isolated integration or Chief read model:
 
-1. Move the remaining ONVIF, Axis, ZoneMinder, Synology, and Reolink supervised
+1. Move the remaining Axis, ZoneMinder, Synology, and Reolink supervised
    pairing workers into the Chief-owned controller process with explicit
    owner-only credential-input and Vault-custody boundaries.
 2. Move automation schedule workers into the same process and prove restart-safe
