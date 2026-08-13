@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.74.0
+
+- Preserve quoted or unquoted state `font-family` declarations in graph IR.
+
 ## 0.73.0
 
 - Preserve normal and italic state `font-style` declarations in graph IR.

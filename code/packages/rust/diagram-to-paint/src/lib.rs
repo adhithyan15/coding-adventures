@@ -438,6 +438,7 @@ where
                 f.size = group.style.font_size;
                 f.weight = group.style.font_weight;
                 f.italic = group.style.font_italic;
+                f.family.clone_from(&group.style.font_family);
                 f
             },
             css_to_color(&group.style.text_color),
@@ -476,6 +477,7 @@ where
                     f.size = edge.style.font_size;
                     f.weight = edge.style.font_weight;
                     f.italic = edge.style.font_italic;
+                    f.family.clone_from(&edge.style.font_family);
                     f
                 },
                 css_to_color(&edge.style.text_color),
@@ -501,6 +503,7 @@ where
                 f.size = node.style.font_size;
                 f.weight = node.style.font_weight;
                 f.italic = node.style.font_italic;
+                f.family.clone_from(&node.style.font_family);
                 f
             },
             css_to_color(&node.style.text_color),
@@ -2916,6 +2919,7 @@ mod tests {
             font_size: 12.0,
             font_weight: 400,
             font_italic: false,
+            font_family: "Helvetica".into(),
             corner_radius: 0.0,
         }
     }
@@ -3364,6 +3368,7 @@ mod tests {
                 font_size: 14.0,
                 font_weight: 400,
                 font_italic: false,
+                font_family: "Helvetica".into(),
                 corner_radius: 8.0,
             },
         });
