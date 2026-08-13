@@ -1,6 +1,6 @@
 //! diagram-ir v0.42.0 - DG00/DG04 semantic IR
 
-pub const VERSION: &str = "0.54.0";
+pub const VERSION: &str = "0.55.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramDirection {
@@ -756,11 +756,47 @@ pub struct Compartment {
 }
 
 #[derive(Clone, Debug, PartialEq)]
+pub enum RequirementRisk {
+    Low,
+    Medium,
+    High,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub enum RequirementVerifyMethod {
+    Analysis,
+    Inspection,
+    Test,
+    Demonstration,
+}
+
+#[derive(Clone, Debug, PartialEq, Default)]
+pub struct RequirementMetadata {
+    pub external_id: Option<String>,
+    pub text: Option<String>,
+    pub risk: Option<RequirementRisk>,
+    pub verify_method: Option<RequirementVerifyMethod>,
+}
+
+#[derive(Clone, Debug, PartialEq, Default)]
+pub struct RequirementElementMetadata {
+    pub element_type: Option<String>,
+    pub document_reference: Option<String>,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub enum StructuralNodeMetadata {
+    Requirement(RequirementMetadata),
+    RequirementElement(RequirementElementMetadata),
+}
+
+#[derive(Clone, Debug, PartialEq)]
 pub struct StructuralNode {
     pub id: String,
     pub label: String,
     pub stereotype: Option<String>,
     pub node_kind: StructuralNodeKind,
+    pub metadata: Option<StructuralNodeMetadata>,
     pub compartments: Vec<Compartment>,
     pub parent_group: Option<String>,
 }
@@ -1201,7 +1237,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.54.0");
+        assert_eq!(VERSION, "0.55.0");
     }
     #[test]
     fn default_direction_is_tb() {
@@ -1309,6 +1345,7 @@ mod tests {
             label: "A".into(),
             stereotype: None,
             node_kind: StructuralNodeKind::Class,
+            metadata: None,
             compartments: vec![],
             parent_group: None,
         };

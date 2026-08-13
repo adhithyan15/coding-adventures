@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.0
+
+- Accept typed structural node metadata without changing resolved geometry.
+
 ## 0.3.0
 
 - Honor explicit TB, BT, LR, and RL structural diagram directions.

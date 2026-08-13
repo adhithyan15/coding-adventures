@@ -12,7 +12,7 @@ use diagram_ir::{
 };
 use std::collections::{HashMap, HashSet};
 
-pub const VERSION: &str = "0.3.0";
+pub const VERSION: &str = "0.4.0";
 
 const MIN_NODE_W: f64 = 160.0;
 const HEADER_H:   f64 = 40.0;
@@ -376,6 +376,7 @@ mod tests {
                     id: "Animal".into(), label: "Animal".into(),
                     stereotype: None,
                     node_kind: StructuralNodeKind::Abstract,
+                    metadata: None,
                     compartments: vec![Compartment {
                         kind: CompartmentKind::Methods,
                         entries: vec!["speak() void".into()],
@@ -386,6 +387,7 @@ mod tests {
                     id: "Dog".into(), label: "Dog".into(),
                     stereotype: None,
                     node_kind: StructuralNodeKind::Class,
+                    metadata: None,
                     compartments: vec![Compartment {
                         kind: CompartmentKind::Fields,
                         entries: vec!["name: String".into()],
@@ -402,7 +404,7 @@ mod tests {
         }
     }
 
-    #[test] fn version_exists() { assert_eq!(crate::VERSION, "0.3.0"); }
+    #[test] fn version_exists() { assert_eq!(crate::VERSION, "0.4.0"); }
 
     #[test]
     fn two_nodes_laid_out() {

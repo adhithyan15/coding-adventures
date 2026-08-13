@@ -3,5 +3,9 @@
 
 document = { NEWLINE } HEADER { NEWLINE | statement } EOF ;
 statement = TITLE | DIRECTION | relationship | definition ;
-definition = DEFINITION_START { NEWLINE | FIELD } RBRACE ;
+definition = requirement_definition | element_definition ;
+requirement_definition = REQUIREMENT_START { NEWLINE | requirement_field } RBRACE ;
+element_definition = ELEMENT_START { NEWLINE | element_field } RBRACE ;
+requirement_field = ID_FIELD | TEXT_FIELD | RISK_FIELD | VERIFY_FIELD ;
+element_field = TYPE_FIELD | DOCREF_FIELD ;
 relationship = RELATIONSHIP ;

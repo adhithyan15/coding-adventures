@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.55.0
+
+- Add typed Requirement and element metadata to structural nodes.
+
 ## 0.54.0
 
 - Preserve optional layout direction for structural diagrams.
