@@ -4,11 +4,11 @@
   "chapter": 27,
   "title": "Good Night",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f646044fadb6cb52",
+  "sourceHash": "fnv1a64:fd695bdb907dc7b6",
   "lessons": [
     {
       "id": "HI-C27-shubh-raatri",
-      "sequence": 530,
+      "sequence": 780,
       "title": "शुभ रात्रि (śubh rātri) — \"good night,\" the formal doublet in action",
       "headword": "शुभ रात्रि",
       "romanization": "",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:358bef2c319bcb67",
+      "sourceHash": "fnv1a64:df802107ec88621e",
       "notice": null,
       "blocks": [
         {

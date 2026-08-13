@@ -4,11 +4,125 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:c5c4a66622c17ba9",
+  "sourceHash": "fnv1a64:17ddc6c3489e3d15",
   "lessons": [
     {
+      "id": "KA-C04-hoogu",
+      "sequence": 210,
+      "title": "ಹೋಗು (hōgu) — \"go,\" and ಬಾ (come)",
+      "headword": "ಹೋಗು",
+      "romanization": "hōgu",
+      "gloss": "to go (and ಬಾ, come)",
+      "script": "kannada",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:026084a6c21d7d8c",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two everyday verbs — and together they make the Kannada goodbye."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹೋ (hō, ha + long-ō sign) + ಗು (gu) becomes ಹೋಗು (hōgu). Its partner: ಬಾ (bā, \"come\")."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹೋಗು (hōgu, \"to go\") and ಬಾ (bā, \"come\") are native Dravidian verbs. As commands they are whole words: hōgu! (\"go!\"), bā! (\"come!\"). You need both, because Kannada — like every Dravidian language — does not say a plain \"goodbye.\" It says \"I go, and I come back.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"hōgu\" (go) and \"bā\" (come)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"hōgu\" (go) and \"bā\" (come)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "why you need both to say goodbye (Kannada's farewell is \"I'll go and come back\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: why you need both to say goodbye (Kannada's farewell is \"I'll go and come back\")]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What do hōgu and bā mean, and why will you need both to part? (\"Go\" and \"come\"; the Kannada goodbye is \"I'll go and come back.\")"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "KA-C04-hoogi-baruttene",
-      "sequence": null,
+      "sequence": 220,
       "title": "ಹೋಗಿ ಬರುತ್ತೇನೆ (hōgi baruttēne) — \"I'll go and come back\"",
       "headword": "ಹೋಗಿ ಬರುತ್ತೇನೆ",
       "romanization": "hōgi baruttēne",
@@ -19,7 +133,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:163fe9b04e84446c",
+      "sourceHash": "fnv1a64:a699e8d1dec42ba7",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -141,236 +255,8 @@
       ]
     },
     {
-      "id": "KA-C04-hoogu",
-      "sequence": null,
-      "title": "ಹೋಗು (hōgu) — \"go,\" and ಬಾ (come)",
-      "headword": "ಹೋಗು",
-      "romanization": "hōgu",
-      "gloss": "to go (and ಬಾ, come)",
-      "script": "kannada",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:18d2e096c02b8b7c",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Two everyday verbs — and together they make the Kannada goodbye."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ಹೋ (hō, ha + long-ō sign) + ಗು (gu) becomes ಹೋಗು (hōgu). Its partner: ಬಾ (bā, \"come\")."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ಹೋಗು (hōgu, \"to go\") and ಬಾ (bā, \"come\") are native Dravidian verbs. As commands they are whole words: hōgu! (\"go!\"), bā! (\"come!\"). You need both, because Kannada — like every Dravidian language — does not say a plain \"goodbye.\" It says \"I go, and I come back.\""
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"hōgu\" (go) and \"bā\" (come)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"hōgu\" (go) and \"bā\" (come)]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "why you need both to say goodbye (Kannada's farewell is \"I'll go and come back\")",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: why you need both to say goodbye (Kannada's farewell is \"I'll go and come back\")]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What do hōgu and bā mean, and why will you need both to part? (\"Go\" and \"come\"; the Kannada goodbye is \"I'll go and come back.\")"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "KA-C04-matte-sigona",
-      "sequence": null,
-      "title": "ಮತ್ತೆ ಸಿಗೋಣ (matte sigōṇa) — \"we'll meet again\"",
-      "headword": "ಮತ್ತೆ ಸಿಗೋಣ",
-      "romanization": "matte sigōṇa",
-      "gloss": "we'll meet again",
-      "script": "kannada",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:702193f26b67e288",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "The open-ended, warm goodbye — no date, just a promise."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ಮತ್ತೆ (matte): note the doubled ತ್ತ (tt). ಸಿಗೋಣ (sigōṇa, \"let's meet\") you just learned."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ಮತ್ತೆ ಸಿಗೋಣ (matte sigōṇa) = ಮತ್ತೆ (matte, \"again\") + ಸಿಗೋಣ (sigōṇa, \"let's meet\") — \"we'll meet again.\" Both words are native Dravidian: matte (\"again\") and sigu (\"to meet\"). Where Tamil's \"we'll meet again\" (mīṇḍum sandippōm) reaches for the Sanskrit loan sandi to say \"meet,\" Kannada keeps the native sigu — the same phrase, from home-grown stock."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"matte sigōṇa\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"matte sigōṇa\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"again\" and \"let's meet\" (matte, sigōṇa)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"again\" and \"let's meet\" (*matte*, *sigōṇa*)]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What does the phrase mean, and which native verb does Kannada use for \"meet\"? (\"We'll meet again\"; sigu — where Tamil borrowed the Sanskrit sandi.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "KA-C04-naale-sigona",
-      "sequence": null,
+      "sequence": 230,
       "title": "ನಾಳೆ ಸಿಗೋಣ (nāḷe sigōṇa) — \"see you tomorrow\"",
       "headword": "ನಾಳೆ ಸಿಗೋಣ",
       "romanization": "nāḷe sigōṇa",
@@ -381,7 +267,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7585162fb5f98807",
+      "sourceHash": "fnv1a64:c8f2005de4040f93",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -492,8 +378,122 @@
       ]
     },
     {
+      "id": "KA-C04-matte-sigona",
+      "sequence": 240,
+      "title": "ಮತ್ತೆ ಸಿಗೋಣ (matte sigōṇa) — \"we'll meet again\"",
+      "headword": "ಮತ್ತೆ ಸಿಗೋಣ",
+      "romanization": "matte sigōṇa",
+      "gloss": "we'll meet again",
+      "script": "kannada",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:6090987658b368d5",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The open-ended, warm goodbye — no date, just a promise."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮತ್ತೆ (matte): note the doubled ತ್ತ (tt). ಸಿಗೋಣ (sigōṇa, \"let's meet\") you just learned."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮತ್ತೆ ಸಿಗೋಣ (matte sigōṇa) = ಮತ್ತೆ (matte, \"again\") + ಸಿಗೋಣ (sigōṇa, \"let's meet\") — \"we'll meet again.\" Both words are native Dravidian: matte (\"again\") and sigu (\"to meet\"). Where Tamil's \"we'll meet again\" (mīṇḍum sandippōm) reaches for the Sanskrit loan sandi to say \"meet,\" Kannada keeps the native sigu — the same phrase, from home-grown stock."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"matte sigōṇa\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"matte sigōṇa\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"again\" and \"let's meet\" (matte, sigōṇa)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"again\" and \"let's meet\" (*matte*, *sigōṇa*)]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does the phrase mean, and which native verb does Kannada use for \"meet\"? (\"We'll meet again\"; sigu — where Tamil borrowed the Sanskrit sandi.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "KA-C04-practice",
-      "sequence": null,
+      "sequence": 250,
       "title": "Chapter 4 — The farewells",
       "headword": "(dialogue)",
       "romanization": "",
@@ -504,7 +504,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b97400c0ccd8d1c1",
+      "sourceHash": "fnv1a64:55c86584195c1115",
       "notice": null,
       "blocks": [
         {

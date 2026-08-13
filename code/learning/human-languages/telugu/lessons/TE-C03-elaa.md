@@ -1,5 +1,6 @@
 ---
 id: TE-C03-elaa
+sequence: 150
 chapter: 3
 type: word
 headword: ఎలా

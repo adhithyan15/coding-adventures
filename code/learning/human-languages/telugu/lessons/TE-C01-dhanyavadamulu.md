@@ -1,5 +1,6 @@
 ---
 id: TE-C01-dhanyavadamulu
+sequence: 20
 chapter: 1
 type: word
 headword: ధన్యవాదములు

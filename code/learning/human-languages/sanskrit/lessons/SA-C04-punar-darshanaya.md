@@ -1,5 +1,6 @@
 ---
 id: SA-C04-punar-darshanaya
+sequence: 230
 chapter: 4
 type: phrase
 headword: पुनर्दर्शनाय

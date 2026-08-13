@@ -1,5 +1,6 @@
 ---
 id: TE-C04-reepu-kaluddaam
+sequence: 230
 chapter: 4
 type: phrase
 headword: రేపు కలుద్దాం

@@ -1,5 +1,6 @@
 ---
 id: KA-C02-niinu-niivu
+sequence: 100
 chapter: 2
 type: word
 headword: ನೀನು / ನೀವು

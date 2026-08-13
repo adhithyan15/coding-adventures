@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-W05-virama-namaste
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 180
+sequence: 230
 chapter: 2
 type: writing
 headword: "्"

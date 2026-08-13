@@ -1,5 +1,6 @@
 ---
 id: TE-C01-avunu
+sequence: 30
 chapter: 1
 type: word
 headword: అవును

@@ -4,11 +4,11 @@
   "chapter": 6,
   "title": "Numbers One to Five",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:6442776b5a8abb61",
+  "sourceHash": "fnv1a64:7255a1423e0aa6d2",
   "lessons": [
     {
       "id": "HI-C06-numbers-1-5",
-      "sequence": 210,
+      "sequence": 460,
       "title": "एक, दो, तीन, चार, पाँच (pāṁch) — the five forms",
       "headword": "एक दो तीन चार पाँच",
       "romanization": "",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fc316aab6f08c2c1",
+      "sourceHash": "fnv1a64:2f17e9eadf0fc762",
       "notice": null,
       "blocks": [
         {
@@ -136,7 +136,7 @@
     },
     {
       "id": "HI-C06-tin-char-history",
-      "sequence": 220,
+      "sequence": 470,
       "title": "तीन and चार — weight moves from consonants to vowels",
       "headword": "तीन, चार",
       "romanization": "",
@@ -147,7 +147,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d80113a6ecd3bbde",
+      "sourceHash": "fnv1a64:0085c72fcb524b49",
       "notice": null,
       "blocks": [
         {
@@ -297,7 +297,7 @@
     },
     {
       "id": "HI-C06-paanch-nasal",
-      "sequence": 230,
+      "sequence": 480,
       "title": "पाँच (pāṁch) — the nasal moved into the vowel",
       "headword": "पाँच",
       "romanization": "pāṁch",
@@ -308,7 +308,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b20a5bf68c0e2db5",
+      "sourceHash": "fnv1a64:425565e199a1eef8",
       "notice": null,
       "blocks": [
         {

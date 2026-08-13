@@ -2,7 +2,7 @@
 schema_version: 2
 id: SA-C06-numbers-1-5
 spine_node: SPINE-COUNT-ONE-TO-FIVE
-sequence: 340
+sequence: 310
 chapter: 6
 type: word
 headword: एक द्व त्रि चतुर् पञ्च

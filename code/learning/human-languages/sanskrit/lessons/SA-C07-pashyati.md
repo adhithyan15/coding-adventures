@@ -2,7 +2,7 @@
 schema_version: 2
 id: SA-C07-pashyati
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 410
+sequence: 380
 chapter: 7
 type: word
 headword: पश्यति

@@ -4,11 +4,11 @@
   "chapter": 21,
   "title": "Numbers Six to Ten",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:0999275d157d7bf0",
+  "sourceHash": "fnv1a64:ecaddd9f9884f0f7",
   "lessons": [
     {
       "id": "HI-C21-numbers-6-10",
-      "sequence": 440,
+      "sequence": 690,
       "title": "छह, सात, आठ, नौ, दस — six to ten, the same erosion twice more",
       "headword": "छह सात आठ नौ दस",
       "romanization": "",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:431011ca0063eb4d",
+      "sourceHash": "fnv1a64:57756c7dea35bfca",
       "notice": null,
       "blocks": [
         {
@@ -156,7 +156,7 @@
     },
     {
       "id": "HI-C21-six-nine-ten-history",
-      "sequence": 450,
+      "sequence": 700,
       "title": "छह, नौ, दस — three different paths",
       "headword": "छह, नौ, दस",
       "romanization": "",
@@ -167,7 +167,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8d3379d6b844a796",
+      "sourceHash": "fnv1a64:d27aa98aba6dfbfe",
       "notice": null,
       "blocks": [
         {

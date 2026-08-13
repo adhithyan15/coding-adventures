@@ -1,5 +1,6 @@
 ---
 id: KA-C01-haudu
+sequence: 30
 chapter: 1
 type: word
 headword: ಹೌದು

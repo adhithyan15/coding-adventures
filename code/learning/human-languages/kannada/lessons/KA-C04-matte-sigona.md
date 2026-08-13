@@ -1,5 +1,6 @@
 ---
 id: KA-C04-matte-sigona
+sequence: 240
 chapter: 4
 type: phrase
 headword: ಮತ್ತೆ ಸಿಗೋಣ

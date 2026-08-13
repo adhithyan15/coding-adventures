@@ -1,5 +1,6 @@
 ---
 id: ML-C04-pokuka
+sequence: 220
 chapter: 4
 type: word
 headword: പോകുക

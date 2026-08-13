@@ -1,5 +1,6 @@
 ---
 id: KA-C03-paravaagilla
+sequence: 190
 chapter: 3
 type: phrase
 headword: ಪರವಾಗಿಲ್ಲ

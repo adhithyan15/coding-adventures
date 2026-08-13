@@ -1,5 +1,6 @@
 ---
 id: ML-C03-njaan
+sequence: 180
 chapter: 3
 type: word
 headword: ഞാൻ

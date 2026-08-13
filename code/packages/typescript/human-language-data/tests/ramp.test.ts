@@ -326,14 +326,14 @@ describe("the script ramp against the real corpus", () => {
     // 173 -> 184: vocabulary wave 5's telugu/malayalam lessons cite Dravidian cousin
     // forms in cousin scripts the same way.
     expect(report.summary.lessonsWithForeignScript).toBe(184);
-    expect(report.summary.maxForeignGlyphsInALesson).toBe(26);
+    expect(report.summary.maxForeignGlyphsInALesson).toBe(27); // HL11: +1. Reordering moved which lesson is the FIRST to show a given cousin-script glyph, so one cousin table now carries one more first-sighting. Cousin glyphs are counted and never charged to the budget (HL08)
   });
 
   it("names the steepest lesson: one atom, twelve glyphs", () => {
     const { lessons } = loadEverything();
     const report = measureRamp(lessons, loadChapterPolicy()).script;
     expect(report.summary.steepestLesson).toMatchObject({
-      lessonId: "HI-W01-shirorekha-na-ma",
+      lessonId: "MR-C01-dhanyavad", // HL11: Hindi lost this title by having its order fixed. HI-W01 still shows twelve glyphs, but Hindi's WORDS now come before it, so it is no longer the first place those glyphs appear. Marathi inherits the record with the same twelve -- and Marathi still has no declared order, which is why
       glyphs: 12,
       budget: 3,
     });

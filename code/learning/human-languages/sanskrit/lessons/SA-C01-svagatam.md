@@ -1,5 +1,6 @@
 ---
 id: SA-C01-svagatam
+sequence: 40
 chapter: 1
 type: word
 headword: स्वागतम्

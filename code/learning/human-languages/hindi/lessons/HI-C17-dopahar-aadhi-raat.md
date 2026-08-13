@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-C17-dopahar-aadhi-raat
 spine_node: SPINE-TIME-OF-DAY
-sequence: 390
+sequence: 640
 chapter: 17
 type: phrase
 headword: दोपहर आधी रात

@@ -4,11 +4,11 @@
   "chapter": 8,
   "title": "Please",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:1367b60c6d335b73",
+  "sourceHash": "fnv1a64:cc66d6c05af0e364",
   "lessons": [
     {
       "id": "HI-C08-kripaya",
-      "sequence": 260,
+      "sequence": 510,
       "title": "कृपया (kṛpayā) — please (kindly)",
       "headword": "कृपया",
       "romanization": "kṛpayā",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cb7e3d593b9452b5",
+      "sourceHash": "fnv1a64:21bf316288fa186f",
       "notice": null,
       "blocks": [
         {

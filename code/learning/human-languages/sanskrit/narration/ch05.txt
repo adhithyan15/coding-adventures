@@ -3,110 +3,6 @@ Sanskrit, chapter 5: The First Verbs.
 
 
 Lesson 1 of 5.
-अहं संस्कृतं वदामि (ahaṁ saṁskṛtaṁ vadāmi) — "I speak Sanskrit".
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-Your first full, moving sentence — and the language's name is itself a little lesson in how Sanskrit builds words.
-
-The letters in this word.
-संस्कृत (saṁskṛta): सं (saṁ, with the anusvāra) + स्कृ (the conjunct skṛ, with the vocalic ऋ ṛ) + त (ta).
-
-The sentence, taken apart.
-अहं संस्कृतं वदामि (ahaṁ saṁskṛtaṁ vadāmi) = अहम् (aham, "I") + संस्कृतम् (saṁskṛtam, the object) + वदामि (vadāmi, "speak") — "I Sanskrit speak," the verb last (as in every daughter language). The name संस्कृत (saṁskṛta) means "put together, refined, perfected" — from सम् (sam-, "together," cousin of English same, Greek syn-) + कृत (kṛta, "made, done," from the root कृ kṛ you met in namaskāra). So "Sanskrit" literally means "the perfected [language]," named in contrast to prākṛta ("natural, raw" — Prakrit, the everyday speech from which Hindi, Bengali, and the rest descend).
-
-Grammar Lens: sandhi joins the words.
-Say it aloud and aham + saṁskṛtam runs together as ahaṁ saṁskṛtam — the m softening to the anusvāra before the next consonant. That is sandhi, the sound-joining you met in Chapter 1's svāgatam; it is why Sanskrit flows.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "ahaṁ saṁskṛtaṁ vadāmi"]
-[pause 8 seconds for the answer]
-[your turn — say: what saṁskṛta means (sam "together" + kṛta "made" = "perfected")]
-[pause 8 seconds for the answer]
-[your turn — say: its opposite, the source of the modern languages (prākṛta, "natural")]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Say "I speak Sanskrit," and unpack the name. (Ahaṁ saṁskṛtaṁ vadāmi; saṁskṛta = sam "together" + kṛta "made" — "the perfected language.")
-
-
-Lesson 2 of 5.
-करोमि (karomi) — "I do," from the root behind karma and namaskāra.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-The last verb of the chapter — from the single most productive root in Sanskrit, one you have met again and again.
-
-The letters in this word.
-क (ka) + रो (ro) + मि (mi) becomes करोमि (karomi).
-
-The word, taken apart.
-करोमि (karomi, "I do, I make") is from the root कृ (kṛ, "to do, make"), from Proto-Indo-European kʷer-. This is the root at the heart of this book:
-नमस्कारः (namaskāraḥ) — "the making of a bow" (namas + kāra).
-कर्म (karma) — "a thing done," an action.
-संस्कृत (saṁskṛta) — "put together, perfected" (this very language).
-To say "I work," Sanskrit says कार्यं करोमि (kāryaṁ karomi) — "I do work," where कार्यम् (kāryam, "work, task") is itself from kṛ ("a thing-to-be-done"). So "I work" is, at root, "kṛ-thing I kṛ-do." Hindi's kām karnā and Bengali's kāj karā are its worn-down grandchildren.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "karomi" — I do]
-[pause 8 seconds for the answer]
-[your turn — say: "I work" — kāryaṁ karomi]
-[pause 8 seconds for the answer]
-[your turn — say: three words from the root kṛ (namaskāra, karma, saṁskṛta)]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What root is karomi from, and name three words built on it. (Kṛ, "to do," PIE kʷer-; namaskāra, karma, saṁskṛta — among many.)
-
-
-Lesson 3 of 5.
-Chapter 5 — The first verbs.
-
-Warm-up.
-[pause 2 seconds]
-No new words. Three verbs, one engine — and Sanskrit's count-to-three.
-
-Build the sentences.
-[pause 1 second after each]
-[your turn — say: "I speak Sanskrit" — ahaṁ saṁskṛtaṁ vadāmi]
-[pause 8 seconds for the answer]
-[your turn — say: "I live in the city" — ahaṁ nagare vasāmi]
-[pause 8 seconds for the answer]
-[your turn — say: "I work" — ahaṁ kāryaṁ karomi]
-[pause 8 seconds for the answer]
-[your turn — say: "we two speak" — vadāvaḥ (the dual!)]
-[pause 8 seconds for the answer]
-
-The engine.
-[pause 2 seconds]
-[your turn — say: the ending that means "I" (-mi, as in asmi, vadāmi)]
-[pause 8 seconds for the answer]
-[your turn — say: Sanskrit's three numbers (singular / dual / plural)]
-[pause 8 seconds for the answer]
-[your turn — say: where the verb sits, and how "in" is shown (verb last; a case-ending, the locative -e)]
-[pause 8 seconds for the answer]
-
-Roots you now carry (the taproot, both ways).
-[pause 2 seconds]
-vad "to speak" ( becomes dhanyavāda).
-vas "to dwell" from PIE wes- becomes English was.
-kṛ "to do" from kʷer- becomes the root of namaskāra, karma, saṁskṛta; kāryam "work".
-saṁskṛta = sam ("together," English same) + kṛta ("made") = "perfected".
-
-Wrap-up Recall.
-[pause 3 seconds]
-In one breath, say your language, your city, and your work in Sanskrit — then say "we two speak." (Ahaṁ saṁskṛtaṁ vadāmi. Ahaṁ nagare vasāmi. Ahaṁ kāryaṁ karomi. Vadāvaḥ.)
-
-
-Lesson 4 of 5.
 वदामि (vadāmi) — "I speak," and the Sanskrit verb.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -143,7 +39,39 @@ Wrap-up Recall.
 What root is vadāmi from, and what third "number" does Sanskrit have that English lacks? (Vad, "to speak"; the dual, for exactly two — vadāvaḥ, "we two speak.")
 
 
-Lesson 5 of 5.
+Lesson 2 of 5.
+अहं संस्कृतं वदामि (ahaṁ saṁskṛtaṁ vadāmi) — "I speak Sanskrit".
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Your first full, moving sentence — and the language's name is itself a little lesson in how Sanskrit builds words.
+
+The letters in this word.
+संस्कृत (saṁskṛta): सं (saṁ, with the anusvāra) + स्कृ (the conjunct skṛ, with the vocalic ऋ ṛ) + त (ta).
+
+The sentence, taken apart.
+अहं संस्कृतं वदामि (ahaṁ saṁskṛtaṁ vadāmi) = अहम् (aham, "I") + संस्कृतम् (saṁskṛtam, the object) + वदामि (vadāmi, "speak") — "I Sanskrit speak," the verb last (as in every daughter language). The name संस्कृत (saṁskṛta) means "put together, refined, perfected" — from सम् (sam-, "together," cousin of English same, Greek syn-) + कृत (kṛta, "made, done," from the root कृ kṛ you met in namaskāra). So "Sanskrit" literally means "the perfected [language]," named in contrast to prākṛta ("natural, raw" — Prakrit, the everyday speech from which Hindi, Bengali, and the rest descend).
+
+Grammar Lens: sandhi joins the words.
+Say it aloud and aham + saṁskṛtam runs together as ahaṁ saṁskṛtam — the m softening to the anusvāra before the next consonant. That is sandhi, the sound-joining you met in Chapter 1's svāgatam; it is why Sanskrit flows.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "ahaṁ saṁskṛtaṁ vadāmi"]
+[pause 8 seconds for the answer]
+[your turn — say: what saṁskṛta means (sam "together" + kṛta "made" = "perfected")]
+[pause 8 seconds for the answer]
+[your turn — say: its opposite, the source of the modern languages (prākṛta, "natural")]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "I speak Sanskrit," and unpack the name. (Ahaṁ saṁskṛtaṁ vadāmi; saṁskṛta = sam "together" + kṛta "made" — "the perfected language.")
+
+
+Lesson 3 of 5.
 वसामि (vasāmi) — "I live, I dwell".
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -173,3 +101,75 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 What PIE root is vasāmi from, its English cousin, and how does Sanskrit say "in"? (wes- "to dwell"; English was; with a case-ending, the locative -e.)
+
+
+Lesson 4 of 5.
+करोमि (karomi) — "I do," from the root behind karma and namaskāra.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+The last verb of the chapter — from the single most productive root in Sanskrit, one you have met again and again.
+
+The letters in this word.
+क (ka) + रो (ro) + मि (mi) becomes करोमि (karomi).
+
+The word, taken apart.
+करोमि (karomi, "I do, I make") is from the root कृ (kṛ, "to do, make"), from Proto-Indo-European kʷer-. This is the root at the heart of this book:
+नमस्कारः (namaskāraḥ) — "the making of a bow" (namas + kāra).
+कर्म (karma) — "a thing done," an action.
+संस्कृत (saṁskṛta) — "put together, perfected" (this very language).
+To say "I work," Sanskrit says कार्यं करोमि (kāryaṁ karomi) — "I do work," where कार्यम् (kāryam, "work, task") is itself from kṛ ("a thing-to-be-done"). So "I work" is, at root, "kṛ-thing I kṛ-do." Hindi's kām karnā and Bengali's kāj karā are its worn-down grandchildren.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "karomi" — I do]
+[pause 8 seconds for the answer]
+[your turn — say: "I work" — kāryaṁ karomi]
+[pause 8 seconds for the answer]
+[your turn — say: three words from the root kṛ (namaskāra, karma, saṁskṛta)]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What root is karomi from, and name three words built on it. (Kṛ, "to do," PIE kʷer-; namaskāra, karma, saṁskṛta — among many.)
+
+
+Lesson 5 of 5.
+Chapter 5 — The first verbs.
+
+Warm-up.
+[pause 2 seconds]
+No new words. Three verbs, one engine — and Sanskrit's count-to-three.
+
+Build the sentences.
+[pause 1 second after each]
+[your turn — say: "I speak Sanskrit" — ahaṁ saṁskṛtaṁ vadāmi]
+[pause 8 seconds for the answer]
+[your turn — say: "I live in the city" — ahaṁ nagare vasāmi]
+[pause 8 seconds for the answer]
+[your turn — say: "I work" — ahaṁ kāryaṁ karomi]
+[pause 8 seconds for the answer]
+[your turn — say: "we two speak" — vadāvaḥ (the dual!)]
+[pause 8 seconds for the answer]
+
+The engine.
+[pause 2 seconds]
+[your turn — say: the ending that means "I" (-mi, as in asmi, vadāmi)]
+[pause 8 seconds for the answer]
+[your turn — say: Sanskrit's three numbers (singular / dual / plural)]
+[pause 8 seconds for the answer]
+[your turn — say: where the verb sits, and how "in" is shown (verb last; a case-ending, the locative -e)]
+[pause 8 seconds for the answer]
+
+Roots you now carry (the taproot, both ways).
+[pause 2 seconds]
+vad "to speak" ( becomes dhanyavāda).
+vas "to dwell" from PIE wes- becomes English was.
+kṛ "to do" from kʷer- becomes the root of namaskāra, karma, saṁskṛta; kāryam "work".
+saṁskṛta = sam ("together," English same) + kṛta ("made") = "perfected".
+
+Wrap-up Recall.
+[pause 3 seconds]
+In one breath, say your language, your city, and your work in Sanskrit — then say "we two speak." (Ahaṁ saṁskṛtaṁ vadāmi. Ahaṁ nagare vasāmi. Ahaṁ kāryaṁ karomi. Vadāvaḥ.)

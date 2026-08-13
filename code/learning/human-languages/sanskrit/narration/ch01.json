@@ -4,22 +4,22 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:99f04a882485d4a4",
+  "sourceHash": "fnv1a64:00c2829605c0f442",
   "lessons": [
     {
-      "id": "SA-C01-am-na",
-      "sequence": null,
-      "title": "आम् / न (ām / na) — \"yes\" and \"no\"",
-      "headword": "आम् / न",
-      "romanization": "ām / na",
-      "gloss": "yes / no (ām / na)",
+      "id": "SA-C01-namaste",
+      "sequence": 10,
+      "title": "नमस्ते (namaste) — \"I bow to you\"",
+      "headword": "नमस्ते",
+      "romanization": "namaste",
+      "gloss": "hello (lit. \"a bow to you\") (namaste)",
       "script": "devanagari",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6620bb2dac91dd52",
+      "sourceHash": "fnv1a64:1921daab27a404ea",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -44,7 +44,7 @@
             },
             {
               "kind": "speech",
-              "text": "Two tiny words — and one of them may be the oldest thing in this whole book."
+              "text": "The first Sanskrit word — and the original that Hindi, Marathi, Punjabi, and Bengali all wore down into their own greetings."
             }
           ]
         },
@@ -55,7 +55,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "New: आ — the independent vowel ā (the shape for a word-initial vowel) — closed by the halant म् m: आम् ām. And न na, a single consonant with its built-in \"a.\""
+              "text": "Devanagari runs left to right under a top line; every consonant carries a built-in \"a.\" न na, म ma, ते te (त + the e-sign े). A halant under स् strips its vowel so it joins the next: स् + त becomes स्त. Read न, म, स्, ते, namaste."
             }
           ]
         },
@@ -66,7 +66,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "आम् (ām, \"yes\") and न (na, \"no, not\"). That na you have already met wearing other clothes: it is Proto-Indo-European ne \"not,\" the same negative as the Latin nōn of the last track, as English no, not, none, as German nein, and as Hindi nahīṇ. Of every word in this book, na may reach furthest unchanged — one syllable spoken, in some form, from Iceland to India for five thousand years."
+              "text": "नमस्ते = namas (\"a bow, obeisance\") + te (\"to you\") — literally \"a bow to you.\" This is the source: the word every Indo-Aryan namaste descends from. Namas is from the root √nam \"to bend, bow\" (PIE nem-). And te \"to you\" is a family heirloom — the same Indo-European pronoun behind Latin tē, Greek se, and archaic English thee. Say namas-te and you speak a word Cicero and Chaucer would each half-recognise."
             }
           ]
         },
@@ -77,7 +77,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Classical Sanskrit, like Latin, leans on more than a bare \"yes\": one answers by echoing the verb, or with ām, evam (\"so it is\"), or bāḍham (\"certainly\"). The blunt yes/no habit of English is not universal — these old languages preferred to say what they meant."
+              "text": "Palms pressed together (the gesture is añjali), a slight bow: hands and word say the same thing. Namaste greets the person before you as worthy of a bow — hello, and on parting, goodbye. It is the greeting Sanskrit gave to half of South Asia."
             }
           ]
         },
@@ -95,29 +95,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "read them — ām / na",
+              "instruction": "read it — na, ma, s, te",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: read them — ām / na]"
+              "source": "[YOU SAY: read it — na · ma · s · te]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the English cousins of na (no, not, none)",
+              "instruction": "the two parts (namas \"a bow\" + te \"to you\")",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the English cousins of *na* (no, not, none)]"
+              "source": "[YOU SAY: the two parts (*namas* \"a bow\" + *te* \"to you\")]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the Latin cousin you just learned (nōn)",
+              "instruction": "the English cousin of te (thee)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the Latin cousin you just learned (*nōn*)]"
+              "source": "[YOU SAY: the English cousin of *te* (**thee**)]"
             }
           ]
         },
@@ -134,7 +134,143 @@
             },
             {
               "kind": "speech",
-              "text": "What is the ancient root of na, and name three of its living cousins. (PIE ne \"not\"; English no/not/none, Latin nōn, Hindi nahīṇ — any three.)"
+              "text": "What does namaste literally mean, and what English pronoun is te cousin to? (\"A bow to you\"; thee.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C01-namaskara",
+      "sequence": 20,
+      "title": "नमस्कारः (namaskāraḥ) — the fuller form",
+      "headword": "नमस्कारः",
+      "romanization": "namaskāraḥ",
+      "gloss": "hello (lit. \"the making of a bow\") (namaskāraḥ)",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:9cc259568591cf1e",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Same bow, different grammar — and your first case-ending."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "New: का kā (क + the ā-sign ा), र ra, and the visarga ः — a soft breathed \"ḥ\" at a word's end, written as two dots. नमस्कारः (namaskāraḥ) = namas-kā-raḥ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नमस्कारः (namaskāraḥ) = namas (\"a bow\") + kāra (\"the making, the doing,\" from the root √kṛ \"to do/make\"). So namaskāra is \"the making of a bow\" — an act, where namaste is an address. That root √kṛ \"to do\" is among Sanskrit's most productive (it gives karma, \"a thing done\"); it is PIE kʷer-. The final visarga -aḥ marks the masculine singular — your first case-ending."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Namaste and namaskāra share the same first half, namas, but end differently because they do different grammatical jobs — one takes a pronoun (te \"to you\"), the other builds a noun (-kāra \"the making of\"). Sanskrit words are transparently assembled from roots and endings; once you see the seams, long words stop being frightening."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "read it — na, mas, kā, raḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: read it — na · mas · kā · raḥ]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "how it differs in sense from namaste (\"the making of a bow\" vs. \"a bow to you\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: how it differs in sense from *namaste* (\"the making of a bow\" vs. \"a bow to you\")]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what the final visarga -aḥ marks (masculine singular)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what the final visarga *-aḥ* marks (masculine singular)]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Namaskāra is built from which two parts, and what does its visarga ending tell you? (Namas \"a bow\" + kāra \"the making of\"; masculine singular.)"
             }
           ]
         }
@@ -142,7 +278,7 @@
     },
     {
       "id": "SA-C01-dhanyavada",
-      "sequence": null,
+      "sequence": 30,
       "title": "धन्यवादः (dhanyavādaḥ) — \"thank you\"",
       "headword": "धन्यवादः",
       "romanization": "",
@@ -153,7 +289,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ea7c7dc97c584b3a",
+      "sourceHash": "fnv1a64:a4ecffb1a457ed78",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -279,155 +415,19 @@
       ]
     },
     {
-      "id": "SA-C01-namaskara",
-      "sequence": null,
-      "title": "नमस्कारः (namaskāraḥ) — the fuller form",
-      "headword": "नमस्कारः",
-      "romanization": "namaskāraḥ",
-      "gloss": "hello (lit. \"the making of a bow\") (namaskāraḥ)",
-      "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block",
-        "sight-cue"
-      ],
-      "sourceHash": "fnv1a64:be3ba3dfbee27e2d",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page",
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Same bow, different grammar — and your first case-ending."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "New: का kā (क + the ā-sign ा), र ra, and the visarga ः — a soft breathed \"ḥ\" at a word's end, written as two dots. नमस्कारः (namaskāraḥ) = namas-kā-raḥ."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "नमस्कारः (namaskāraḥ) = namas (\"a bow\") + kāra (\"the making, the doing,\" from the root √kṛ \"to do/make\"). So namaskāra is \"the making of a bow\" — an act, where namaste is an address. That root √kṛ \"to do\" is among Sanskrit's most productive (it gives karma, \"a thing done\"); it is PIE kʷer-. The final visarga -aḥ marks the masculine singular — your first case-ending."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Namaste and namaskāra share the same first half, namas, but end differently because they do different grammatical jobs — one takes a pronoun (te \"to you\"), the other builds a noun (-kāra \"the making of\"). Sanskrit words are transparently assembled from roots and endings; once you see the seams, long words stop being frightening."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "read it — na, mas, kā, raḥ",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: read it — na · mas · kā · raḥ]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "how it differs in sense from namaste (\"the making of a bow\" vs. \"a bow to you\")",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: how it differs in sense from *namaste* (\"the making of a bow\" vs. \"a bow to you\")]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "what the final visarga -aḥ marks (masculine singular)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: what the final visarga *-aḥ* marks (masculine singular)]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Namaskāra is built from which two parts, and what does its visarga ending tell you? (Namas \"a bow\" + kāra \"the making of\"; masculine singular.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "SA-C01-namaste",
-      "sequence": null,
-      "title": "नमस्ते (namaste) — \"I bow to you\"",
-      "headword": "नमस्ते",
-      "romanization": "namaste",
-      "gloss": "hello (lit. \"a bow to you\") (namaste)",
+      "id": "SA-C01-svagatam",
+      "sequence": 40,
+      "title": "स्वागतम् (svāgatam) — \"welcome\"",
+      "headword": "स्वागतम्",
+      "romanization": "svāgatam",
+      "gloss": "welcome (lit. \"well come\") (svāgatam)",
       "script": "devanagari",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e083b9e09a50f57a",
+      "sourceHash": "fnv1a64:bae2bbc170af3401",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -452,7 +452,7 @@
             },
             {
               "kind": "speech",
-              "text": "The first Sanskrit word — and the original that Hindi, Marathi, Punjabi, and Bengali all wore down into their own greetings."
+              "text": "One word that is cognate with English \"welcome\" — not just a translation of it."
             }
           ]
         },
@@ -463,7 +463,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Devanagari runs left to right under a top line; every consonant carries a built-in \"a.\" न na, म ma, ते te (त + the e-sign े). A halant under स् strips its vowel so it joins the next: स् + त becomes स्त. Read न, म, स्, ते, namaste."
+              "text": "New: the conjunct स्व (स् + व va) = sva, ग ga, and the halant म् m closing the word with no vowel. Read स्वा, ग, तम्, svā-ga-tam."
             }
           ]
         },
@@ -474,7 +474,19 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "नमस्ते = namas (\"a bow, obeisance\") + te (\"to you\") — literally \"a bow to you.\" This is the source: the word every Indo-Aryan namaste descends from. Namas is from the root √nam \"to bend, bow\" (PIE nem-). And te \"to you\" is a family heirloom — the same Indo-European pronoun behind Latin tē, Greek se, and archaic English thee. Say namas-te and you speak a word Cicero and Chaucer would each half-recognise."
+              "text": "स्वागतम् (svāgatam) = su (\"well, good\") + āgata (\"come,\" from ā \"toward\" + the root √gam \"to go/come\") — \"well come,\" which is exactly what English welcome means too. Two deep Indo-European threads surface:"
+            },
+            {
+              "kind": "speech",
+              "text": "su- \"good\" is the twin of Greek eu- — the eu of euphoria, eulogy, euphemism. Sanskrit su- and Greek eu- are the same prefix."
+            },
+            {
+              "kind": "speech",
+              "text": "the root √gam \"to go/come\" is PIE gʷem- — the very root of English come (and of Latin venīre, hence venue, convene)."
+            },
+            {
+              "kind": "speech",
+              "text": "So svāgatam and welcome are not just parallel ideas but partly cognate ones."
             }
           ]
         },
@@ -485,7 +497,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Palms pressed together (the gesture is añjali), a slight bow: hands and word say the same thing. Namaste greets the person before you as worthy of a bow — hello, and on parting, goodbye. It is the greeting Sanskrit gave to half of South Asia."
+              "text": "Su + āgata fuses into svāgata by sandhi — Sanskrit's rule that u before a vowel becomes the glide v. You will see sandhi everywhere; it is why Sanskrit words seem to melt into one another. The neuter ending -am makes it \"a welcome / it is welcomed.\""
             }
           ]
         },
@@ -503,29 +515,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "read it — na, ma, s, te",
+              "instruction": "read it — svā, ga, tam",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: read it — na · ma · s · te]"
+              "source": "[YOU SAY: read it — svā · ga · tam]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the two parts (namas \"a bow\" + te \"to you\")",
+              "instruction": "the two parts (su \"well\" + āgata \"come\")",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the two parts (*namas* \"a bow\" + *te* \"to you\")]"
+              "source": "[YOU SAY: the two parts (*su* \"well\" + *āgata* \"come\")]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the English cousin of te (thee)",
+              "instruction": "the English word that is su-'s Greek twin (eu-, as in euphoria)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the English cousin of *te* (**thee**)]"
+              "source": "[YOU SAY: the English word that is *su-*'s Greek twin (*eu-*, as in *euphoria*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the English cousin of the root √gam (come)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the English cousin of the root √gam (**come**)]"
             }
           ]
         },
@@ -542,7 +563,141 @@
             },
             {
               "kind": "speech",
-              "text": "What does namaste literally mean, and what English pronoun is te cousin to? (\"A bow to you\"; thee.)"
+              "text": "Svāgatam literally means what, and name two of its far-flung cousins. (\"Well come\" = welcome; Greek eu- (from su-) and English come (from √gam).)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C01-am-na",
+      "sequence": 50,
+      "title": "आम् / न (ām / na) — \"yes\" and \"no\"",
+      "headword": "आम् / न",
+      "romanization": "ām / na",
+      "gloss": "yes / no (ām / na)",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:26f0b8249ddcfa9e",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two tiny words — and one of them may be the oldest thing in this whole book."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "New: आ — the independent vowel ā (the shape for a word-initial vowel) — closed by the halant म् m: आम् ām. And न na, a single consonant with its built-in \"a.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आम् (ām, \"yes\") and न (na, \"no, not\"). That na you have already met wearing other clothes: it is Proto-Indo-European ne \"not,\" the same negative as the Latin nōn of the last track, as English no, not, none, as German nein, and as Hindi nahīṇ. Of every word in this book, na may reach furthest unchanged — one syllable spoken, in some form, from Iceland to India for five thousand years."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Classical Sanskrit, like Latin, leans on more than a bare \"yes\": one answers by echoing the verb, or with ām, evam (\"so it is\"), or bāḍham (\"certainly\"). The blunt yes/no habit of English is not universal — these old languages preferred to say what they meant."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "read them — ām / na",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: read them — ām / na]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the English cousins of na (no, not, none)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the English cousins of *na* (no, not, none)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the Latin cousin you just learned (nōn)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the Latin cousin you just learned (*nōn*)]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is the ancient root of na, and name three of its living cousins. (PIE ne \"not\"; English no/not/none, Latin nōn, Hindi nahīṇ — any three.)"
             }
           ]
         }
@@ -550,7 +705,7 @@
     },
     {
       "id": "SA-C01-practice",
-      "sequence": null,
+      "sequence": 60,
       "title": "Chapter 1 — Practice and Recall",
       "headword": "—",
       "romanization": "",
@@ -561,7 +716,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c6eab9947be19d00",
+      "sourceHash": "fnv1a64:0d2400947c830b29",
       "notice": null,
       "blocks": [
         {
@@ -739,161 +894,6 @@
             {
               "kind": "speech",
               "text": "In 1786 Sir William Jones said Sanskrit, Latin, and Greek shared \"a stronger affinity than could have been produced by accident.\" Name two words from this chapter that show it. (Any two: te corresponds to thee/tē, su- corresponds to eu-, √gam corresponds to come, na corresponds to nōn.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "SA-C01-svagatam",
-      "sequence": null,
-      "title": "स्वागतम् (svāgatam) — \"welcome\"",
-      "headword": "स्वागतम्",
-      "romanization": "svāgatam",
-      "gloss": "welcome (lit. \"well come\") (svāgatam)",
-      "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:9301b9a1c3a2bdae",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "One word that is cognate with English \"welcome\" — not just a translation of it."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "New: the conjunct स्व (स् + व va) = sva, ग ga, and the halant म् m closing the word with no vowel. Read स्वा, ग, तम्, svā-ga-tam."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "स्वागतम् (svāgatam) = su (\"well, good\") + āgata (\"come,\" from ā \"toward\" + the root √gam \"to go/come\") — \"well come,\" which is exactly what English welcome means too. Two deep Indo-European threads surface:"
-            },
-            {
-              "kind": "speech",
-              "text": "su- \"good\" is the twin of Greek eu- — the eu of euphoria, eulogy, euphemism. Sanskrit su- and Greek eu- are the same prefix."
-            },
-            {
-              "kind": "speech",
-              "text": "the root √gam \"to go/come\" is PIE gʷem- — the very root of English come (and of Latin venīre, hence venue, convene)."
-            },
-            {
-              "kind": "speech",
-              "text": "So svāgatam and welcome are not just parallel ideas but partly cognate ones."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Su + āgata fuses into svāgata by sandhi — Sanskrit's rule that u before a vowel becomes the glide v. You will see sandhi everywhere; it is why Sanskrit words seem to melt into one another. The neuter ending -am makes it \"a welcome / it is welcomed.\""
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "read it — svā, ga, tam",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: read it — svā · ga · tam]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the two parts (su \"well\" + āgata \"come\")",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the two parts (*su* \"well\" + *āgata* \"come\")]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the English word that is su-'s Greek twin (eu-, as in euphoria)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the English word that is *su-*'s Greek twin (*eu-*, as in *euphoria*)]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the English cousin of the root √gam (come)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the English cousin of the root √gam (**come**)]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Svāgatam literally means what, and name two of its far-flung cousins. (\"Well come\" = welcome; Greek eu- (from su-) and English come (from √gam).)"
             }
           ]
         }

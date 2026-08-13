@@ -1,5 +1,6 @@
 ---
 id: HI-C03-hun
+sequence: 300
 chapter: 3
 type: word
 headword: हूँ

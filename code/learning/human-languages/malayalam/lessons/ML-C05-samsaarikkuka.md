@@ -1,5 +1,6 @@
 ---
 id: ML-C05-samsaarikkuka
+sequence: 270
 chapter: 5
 type: word
 headword: സംസാരിക്കുക

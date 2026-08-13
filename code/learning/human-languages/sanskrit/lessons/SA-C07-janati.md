@@ -2,7 +2,7 @@
 schema_version: 2
 id: SA-C07-janati
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 420
+sequence: 390
 chapter: 7
 type: word
 headword: जानाति

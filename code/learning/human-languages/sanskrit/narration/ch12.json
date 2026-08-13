@@ -4,11 +4,11 @@
   "chapter": 12,
   "title": "The Face, Part One",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:3b3967ec6966db1f",
+  "sourceHash": "fnv1a64:38488813df95f421",
   "lessons": [
     {
       "id": "SA-C12-akshi",
-      "sequence": 580,
+      "sequence": 550,
       "title": "अक्षि (akṣi) — \"eye,\" and the number Sanskrit built for it",
       "headword": "अक्षि",
       "romanization": "akṣi",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:27a44bbc4eddc678",
+      "sourceHash": "fnv1a64:5301b376028e7b2d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -160,7 +160,7 @@
     },
     {
       "id": "SA-C12-karnah",
-      "sequence": 590,
+      "sequence": 560,
       "title": "कर्णः (karṇaḥ) — \"ear,\" a word without a settled parent",
       "headword": "कर्णः",
       "romanization": "karṇaḥ",
@@ -171,7 +171,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b39894ef4a87c563",
+      "sourceHash": "fnv1a64:06be3f898bcc6470",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -312,7 +312,7 @@
     },
     {
       "id": "SA-C12-mukham",
-      "sequence": 600,
+      "sequence": 570,
       "title": "मुखम् (mukham) — \"mouth,\" a word two families both claim",
       "headword": "मुखम्",
       "romanization": "mukham",
@@ -323,7 +323,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f93d46858ae9c8a1",
+      "sourceHash": "fnv1a64:577149aa3fbaf3f3",
       "notice": {
         "modality": "sight",
         "needs": [

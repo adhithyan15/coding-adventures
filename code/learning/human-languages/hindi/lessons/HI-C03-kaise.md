@@ -1,5 +1,6 @@
 ---
 id: HI-C03-kaise
+sequence: 270
 chapter: 3
 type: word
 headword: कैसे

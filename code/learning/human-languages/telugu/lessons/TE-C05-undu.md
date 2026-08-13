@@ -1,5 +1,6 @@
 ---
 id: TE-C05-undu
+sequence: 280
 chapter: 5
 type: word
 headword: ఉండు

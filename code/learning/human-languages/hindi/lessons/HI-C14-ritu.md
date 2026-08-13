@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-C14-ritu
 spine_node: SPINE-TIME-OF-DAY
-sequence: 360
+sequence: 610
 chapter: 14
 type: word
 headword: वसंत ग्रीष्म वर्षा शरद् हेमंत शिशिर

@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-C10-shanivaar-ravivaar
 spine_node: SPINE-TIME-OF-DAY
-sequence: 290
+sequence: 540
 chapter: 10
 type: word
 headword: शनिवार रविवार

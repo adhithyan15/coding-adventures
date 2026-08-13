@@ -1,5 +1,6 @@
 ---
 id: KA-C05-kelasa-maadu
+sequence: 290
 chapter: 5
 type: word
 headword: ಕೆಲಸ ಮಾಡು

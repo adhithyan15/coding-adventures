@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-C38-pet
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 800
+sequence: 1050
 chapter: 38
 type: word
 headword: पेट

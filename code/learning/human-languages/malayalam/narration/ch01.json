@@ -4,347 +4,11 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:b925cb988099ec1e",
+  "sourceHash": "fnv1a64:5734fc6b2c7fa0c6",
   "lessons": [
     {
-      "id": "ML-C01-athe",
-      "sequence": null,
-      "title": "അതെ (athe) — \"yes,\" literally \"that [is so]\"",
-      "headword": "അതെ",
-      "romanization": "",
-      "gloss": "yes (athe — \"that [is so]\")",
-      "script": "malayalam",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:b5428b9487e2b5ca",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "The plain \"yes\" — and a small window into how Malayalam thinks, because the word is really the pointing-word \"that.\""
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "(Skim if you read Malayalam.)"
-            },
-            {
-              "kind": "speech",
-              "text": "അ = \"a\" — an independent vowel (the word starts with a vowel, so it gets a full letter)."
-            },
-            {
-              "kind": "speech",
-              "text": "തെ = \"the\" — ത (tha, a soft th as in this) with the \"e\" vowel sign written in front of the consonant."
-            },
-            {
-              "kind": "speech",
-              "text": "Left to right: അ, തെ = a-the, which gives:"
-            },
-            {
-              "kind": "speech",
-              "text": "അതെ = athe = \"yes.\""
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "അതെ (athe) is native Malayalam, and it grows from അത് (athu), \"that.\" To say \"yes,\" Malayalam essentially says \"that [is so]\" — you affirm by pointing at the truth of what was said. Its natural partner is the negative alla, \"[it is] not that\" — the next lesson."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: yes and no as \"that is\" / \"not that\"",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Malayalam's yes/no pair are demonstratives in disguise: athe (\"that [is so]\") and alla (\"not that\"). Like its sisters, Malayalam also readily answers by echoing the verb of the question (vannu, \"[I] came,\" for \"did you come?\"). Bank athe as the simple word, but hear the logic underneath — you agree by confirming that is how things are."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "a, the becomes \"athe\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: a · the → \"athe\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "note the \"e\" sign sits before ത but is read after it",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: note the \"e\" sign sits *before* ത but is read *after* it]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"athe\" — \"yes, that's so\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"athe\" — \"yes, that's so\"]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Read അതെ. What everyday word is it built from, and so what does \"yes\" literally assert? (athu, \"that\" — so \"yes\" = \"that [is so]\".) Where does the \"e\" vowel sign sit, and where is it read? (Written before the consonant, read after.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ML-C01-illa",
-      "sequence": null,
-      "title": "ഇല്ല (illa) — \"no,\" the word Malayalam and Tamil share almost exactly",
-      "headword": "ഇല്ല",
-      "romanization": "illa",
-      "gloss": "no / there isn't (illa — the negative)",
-      "script": "malayalam",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:c377ce81161a892c",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "The partner of athe, and more family evidence: this Malayalam \"no\" is essentially the same word as Tamil's illai and Kannada's illa — the old Dravidian il- runs right through."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "(Skim if you read Malayalam.)"
-            },
-            {
-              "kind": "speech",
-              "text": "ഇ = \"i\" — an independent vowel (word-initial, so a full letter, like അ in athe)."
-            },
-            {
-              "kind": "speech",
-              "text": "ല്ല = \"lla\" — a conjunct: ല (la) loses its vowel and joins another ല (la) into a doubled, held \"ll.\""
-            },
-            {
-              "kind": "speech",
-              "text": "Left to right: ഇ, ല്ല = i-lla, which gives:"
-            },
-            {
-              "kind": "speech",
-              "text": "ഇല്ല = illa."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ഇല്ല (illa) is built on the ancient Dravidian root il, \"not-being, absence\" — so, exactly like Tamil illai, it really means \"[it] is not, [there] is not,\" and serves as the everyday \"no.\" Its positive twin is ഉണ്ട് (uṇṭŭ), \"there is.\""
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: Dravidian negates by being",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "English inserts not / no. Malayalam — like Tamil and Kannada — instead swaps in the negative verb of existence:"
-            },
-            {
-              "kind": "speech",
-              "text": "pustakam uṇṭŭ — \"there is a book.\""
-            },
-            {
-              "kind": "speech",
-              "text": "pustakam illa — \"there is not a book.\""
-            },
-            {
-              "kind": "speech",
-              "text": "So illa is both the plain \"no\" and the word that negates a whole sentence. This is a shared Dravidian inheritance, strongest across the Tamil–Malayalam pair: Tamil illai, Malayalam illa, Kannada illa — one family, one way to say a thing is not. (Recall Telugu was the outlier here, using lēdu.)"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "unknown",
-          "title": "Across the family — the same idea, five ways",
-          "segments": [
-            {
-              "kind": "table",
-              "headers": [
-                "Language",
-                "\"No / isn't\"",
-                "Note"
-              ],
-              "columns": 3,
-              "rowCount": 5,
-              "utterances": [
-                "Language: Malayalam. \"No / isn't\": illa (ഇല്ല). Note: native, root il-.",
-                "Language: Tamil. \"No / isn't\": illai (இல்லை). Note: the same root.",
-                "Language: Kannada. \"No / isn't\": illa (ಇಲ್ಲ). Note: the same root.",
-                "Language: Telugu. \"No / isn't\": lēdu (లేదు). Note: native, a different root.",
-                "Language: Hindi. \"No / isn't\": nahīṁ (नहीं). Note: Indo-European (unrelated)."
-              ]
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "i, lla becomes \"illa\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: i · lla → \"illa\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the pair — athe (\"yes\") / illa (\"no\")",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the pair — *athe* (\"yes\") / *illa* (\"no\")]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"pustakam illa\" — \"there is no book\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"pustakam illa\" — \"there is no book\"]"
-            }
-          ]
-        },
-        {
-          "index": 6,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Read ഇല്ല (illa). Literally, is it closer to \"no\" or \"is not\"? (\"Is not / there is not.\") Which languages share this exact il- root, and which Dravidian sister does not? (Tamil and Kannada share it; Telugu is the outlier, with lēdu.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "ML-C01-namaskaram",
-      "sequence": null,
+      "sequence": 10,
       "title": "നമസ്കാരം (namaskāram) — \"greetings,\" a making of a bow",
       "headword": "നമസ്കാരം",
       "romanization": "namaskāram",
@@ -355,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ccd411311e0764f1",
+      "sourceHash": "fnv1a64:a57afa3bc6c094f1",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -535,7 +199,7 @@
     },
     {
       "id": "ML-C01-nandi",
-      "sequence": null,
+      "sequence": 20,
       "title": "നന്ദി (nandi) — \"thank you,\" and the Tamil kinship made visible",
       "headword": "നന്ദി",
       "romanization": "nandi",
@@ -546,7 +210,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:4690f7c84094b174",
+      "sourceHash": "fnv1a64:752147cf992ef12b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -712,8 +376,494 @@
       ]
     },
     {
+      "id": "ML-C01-athe",
+      "sequence": 30,
+      "title": "അതെ (athe) — \"yes,\" literally \"that [is so]\"",
+      "headword": "അതെ",
+      "romanization": "",
+      "gloss": "yes (athe — \"that [is so]\")",
+      "script": "malayalam",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:86b671b212716394",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The plain \"yes\" — and a small window into how Malayalam thinks, because the word is really the pointing-word \"that.\""
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "(Skim if you read Malayalam.)"
+            },
+            {
+              "kind": "speech",
+              "text": "അ = \"a\" — an independent vowel (the word starts with a vowel, so it gets a full letter)."
+            },
+            {
+              "kind": "speech",
+              "text": "തെ = \"the\" — ത (tha, a soft th as in this) with the \"e\" vowel sign written in front of the consonant."
+            },
+            {
+              "kind": "speech",
+              "text": "Left to right: അ, തെ = a-the, which gives:"
+            },
+            {
+              "kind": "speech",
+              "text": "അതെ = athe = \"yes.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അതെ (athe) is native Malayalam, and it grows from അത് (athu), \"that.\" To say \"yes,\" Malayalam essentially says \"that [is so]\" — you affirm by pointing at the truth of what was said. Its natural partner is the negative alla, \"[it is] not that\" — the next lesson."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: yes and no as \"that is\" / \"not that\"",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Malayalam's yes/no pair are demonstratives in disguise: athe (\"that [is so]\") and alla (\"not that\"). Like its sisters, Malayalam also readily answers by echoing the verb of the question (vannu, \"[I] came,\" for \"did you come?\"). Bank athe as the simple word, but hear the logic underneath — you agree by confirming that is how things are."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a, the becomes \"athe\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a · the → \"athe\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "note the \"e\" sign sits before ത but is read after it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: note the \"e\" sign sits *before* ത but is read *after* it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"athe\" — \"yes, that's so\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"athe\" — \"yes, that's so\"]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read അതെ. What everyday word is it built from, and so what does \"yes\" literally assert? (athu, \"that\" — so \"yes\" = \"that [is so]\".) Where does the \"e\" vowel sign sit, and where is it read? (Written before the consonant, read after.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C01-illa",
+      "sequence": 40,
+      "title": "ഇല്ല (illa) — \"no,\" the word Malayalam and Tamil share almost exactly",
+      "headword": "ഇല്ല",
+      "romanization": "illa",
+      "gloss": "no / there isn't (illa — the negative)",
+      "script": "malayalam",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:15a41103b7634715",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The partner of athe, and more family evidence: this Malayalam \"no\" is essentially the same word as Tamil's illai and Kannada's illa — the old Dravidian il- runs right through."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "(Skim if you read Malayalam.)"
+            },
+            {
+              "kind": "speech",
+              "text": "ഇ = \"i\" — an independent vowel (word-initial, so a full letter, like അ in athe)."
+            },
+            {
+              "kind": "speech",
+              "text": "ല്ല = \"lla\" — a conjunct: ല (la) loses its vowel and joins another ല (la) into a doubled, held \"ll.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Left to right: ഇ, ല്ല = i-lla, which gives:"
+            },
+            {
+              "kind": "speech",
+              "text": "ഇല്ല = illa."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഇല്ല (illa) is built on the ancient Dravidian root il, \"not-being, absence\" — so, exactly like Tamil illai, it really means \"[it] is not, [there] is not,\" and serves as the everyday \"no.\" Its positive twin is ഉണ്ട് (uṇṭŭ), \"there is.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: Dravidian negates by being",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "English inserts not / no. Malayalam — like Tamil and Kannada — instead swaps in the negative verb of existence:"
+            },
+            {
+              "kind": "speech",
+              "text": "pustakam uṇṭŭ — \"there is a book.\""
+            },
+            {
+              "kind": "speech",
+              "text": "pustakam illa — \"there is not a book.\""
+            },
+            {
+              "kind": "speech",
+              "text": "So illa is both the plain \"no\" and the word that negates a whole sentence. This is a shared Dravidian inheritance, strongest across the Tamil–Malayalam pair: Tamil illai, Malayalam illa, Kannada illa — one family, one way to say a thing is not. (Recall Telugu was the outlier here, using lēdu.)"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "unknown",
+          "title": "Across the family — the same idea, five ways",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "Language",
+                "\"No / isn't\"",
+                "Note"
+              ],
+              "columns": 3,
+              "rowCount": 5,
+              "utterances": [
+                "Language: Malayalam. \"No / isn't\": illa (ഇല്ല). Note: native, root il-.",
+                "Language: Tamil. \"No / isn't\": illai (இல்லை). Note: the same root.",
+                "Language: Kannada. \"No / isn't\": illa (ಇಲ್ಲ). Note: the same root.",
+                "Language: Telugu. \"No / isn't\": lēdu (లేదు). Note: native, a different root.",
+                "Language: Hindi. \"No / isn't\": nahīṁ (नहीं). Note: Indo-European (unrelated)."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "i, lla becomes \"illa\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: i · lla → \"illa\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pair — athe (\"yes\") / illa (\"no\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pair — *athe* (\"yes\") / *illa* (\"no\")]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"pustakam illa\" — \"there is no book\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"pustakam illa\" — \"there is no book\"]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read ഇല്ല (illa). Literally, is it closer to \"no\" or \"is not\"? (\"Is not / there is not.\") Which languages share this exact il- root, and which Dravidian sister does not? (Tamil and Kannada share it; Telugu is the outlier, with lēdu.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C01-sari",
+      "sequence": 50,
+      "title": "ശരി (sari) (śari) — \"okay,\" the whole-family word once more",
+      "headword": "ശരി",
+      "romanization": "sari",
+      "gloss": "okay / alright / correct (śari)",
+      "script": "malayalam",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:7754e489c664fb53",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The easy middle between \"yes\" and \"no\": \"okay, alright, correct.\" You have now met it in four languages — Tamil and Kannada sari, Telugu sarē, and here Malayalam śari."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "(Skim if you read Malayalam.)"
+            },
+            {
+              "kind": "speech",
+              "text": "ശ = \"śa\" — a sh-sound (the palatal ś). Malayalam, having borrowed so much Sanskrit, keeps the full set of Sanskrit sibilants (ś, ṣ, s) as separate letters — more than Tamil, which makes do with one."
+            },
+            {
+              "kind": "speech",
+              "text": "രി = \"ri\" — ര (ra) with the \"i\" vowel sign."
+            },
+            {
+              "kind": "speech",
+              "text": "Left to right: ശ, രി = śa-ri, which gives:"
+            },
+            {
+              "kind": "speech",
+              "text": "ശരി (sari) = śari = \"okay / correct.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ശരി (śari) is the pan-Dravidian \"correct, right becomes okay, agreed,\" the verbal nod of Malayalam. It is the same family word carried by Tamil and Kannada as sari and Telugu as sarē; Malayalam simply spells its opening sound with ശ (ś). Doubled, śari śari, it means \"yes yes, fine.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: one word, four scripts",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sari / sarē / śari is the clearest single proof of how close these four languages are: essentially one word and one meaning, wearing four different scripts. As you learn to read each, catching a shared word change its clothes but not its sense is the fastest way to feel the whole Dravidian family at once — and the reason the four are worth seeing side by side."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śa, ri becomes \"śari\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: śa · ri → \"śari\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the everyday triple — athe (yes), illa (no), śari (okay)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the everyday triple — *athe* (yes) · *illa* (no) · *śari* (okay)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the word across the family — sari / sarē / śari",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the word across the family — *sari* / *sarē* / *śari*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read ശരി. What does it mean, and how do its Tamil, Kannada, and Telugu twins sound? (\"Okay, correct\"; sari, sari, sarē.) Why does Malayalam keep a separate ശ (ś) letter where Tamil uses one all-purpose sibilant? (It borrowed heavily from Sanskrit and kept Sanskrit's sibilant letters.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "ML-C01-practice",
-      "sequence": null,
+      "sequence": 60,
       "title": "Chapter 1 — recap, and how Malayalam says goodbye",
       "headword": "(recap)",
       "romanization": "",
@@ -724,7 +874,7 @@
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:5f48e1f8ca2ef8d8",
+      "sourceHash": "fnv1a64:479c8e92f19dcd81",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -862,156 +1012,6 @@
             {
               "kind": "speech",
               "text": "That completes the four Dravidian first chapters — Tamil, Kannada, Telugu, Malayalam. Next chapter: introducing yourself — enṟe pēru… (\"my name…\") — and Malayalam's nī / niṅṅaḷ (familiar / respectful \"you\")."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ML-C01-sari",
-      "sequence": null,
-      "title": "ശരി (sari) (śari) — \"okay,\" the whole-family word once more",
-      "headword": "ശരി",
-      "romanization": "sari",
-      "gloss": "okay / alright / correct (śari)",
-      "script": "malayalam",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:203bb2f266e73be7",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "The easy middle between \"yes\" and \"no\": \"okay, alright, correct.\" You have now met it in four languages — Tamil and Kannada sari, Telugu sarē, and here Malayalam śari."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "(Skim if you read Malayalam.)"
-            },
-            {
-              "kind": "speech",
-              "text": "ശ = \"śa\" — a sh-sound (the palatal ś). Malayalam, having borrowed so much Sanskrit, keeps the full set of Sanskrit sibilants (ś, ṣ, s) as separate letters — more than Tamil, which makes do with one."
-            },
-            {
-              "kind": "speech",
-              "text": "രി = \"ri\" — ര (ra) with the \"i\" vowel sign."
-            },
-            {
-              "kind": "speech",
-              "text": "Left to right: ശ, രി = śa-ri, which gives:"
-            },
-            {
-              "kind": "speech",
-              "text": "ശരി (sari) = śari = \"okay / correct.\""
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ശരി (śari) is the pan-Dravidian \"correct, right becomes okay, agreed,\" the verbal nod of Malayalam. It is the same family word carried by Tamil and Kannada as sari and Telugu as sarē; Malayalam simply spells its opening sound with ശ (ś). Doubled, śari śari, it means \"yes yes, fine.\""
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: one word, four scripts",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "sari / sarē / śari is the clearest single proof of how close these four languages are: essentially one word and one meaning, wearing four different scripts. As you learn to read each, catching a shared word change its clothes but not its sense is the fastest way to feel the whole Dravidian family at once — and the reason the four are worth seeing side by side."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "śa, ri becomes \"śari\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: śa · ri → \"śari\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the everyday triple — athe (yes), illa (no), śari (okay)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the everyday triple — *athe* (yes) · *illa* (no) · *śari* (okay)]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the word across the family — sari / sarē / śari",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the word across the family — *sari* / *sarē* / *śari*]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Read ശരി. What does it mean, and how do its Tamil, Kannada, and Telugu twins sound? (\"Okay, correct\"; sari, sari, sarē.) Why does Malayalam keep a separate ശ (ś) letter where Tamil uses one all-purpose sibilant? (It borrowed heavily from Sanskrit and kept Sanskrit's sibilant letters.)"
             }
           ]
         }

@@ -1,5 +1,6 @@
 ---
 id: TE-C03-baagaa
+sequence: 180
 chapter: 3
 type: word
 headword: బాగా

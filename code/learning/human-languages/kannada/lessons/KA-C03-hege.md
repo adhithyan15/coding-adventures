@@ -1,5 +1,6 @@
 ---
 id: KA-C03-hege
+sequence: 150
 chapter: 3
 type: word
 headword: ಹೇಗೆ

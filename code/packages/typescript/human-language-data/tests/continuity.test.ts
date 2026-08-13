@@ -312,15 +312,15 @@ describe("the real corpus", () => {
     // has no order to contradict.
     // HL-C65 resolves the six Chapter-7 lessons from their prerequisite chain, so
     // Spanish becomes fully ordered: 483 -> 477 and 18 -> 17 tracks with debt.
-    expect(report.summary.lessonsWithoutSequence).toBe(477);    // 19 -> 18: Tamil joins chinese, japanese and latin as a fully-ordered track —
+    expect(report.summary.lessonsWithoutSequence).toBe(322);    // 19 -> 18: Tamil joins chinese, japanese and latin as a fully-ordered track — // HL11: -155. Hindi, Telugu, Kannada, Malayalam and Sanskrit each had ~30 lessons with no declared reading order, so the corpus believed their words came after their script -- the opposite of what their books print. The order was recovered from the books' own section labels, which is the only place it was ever written down
     // the fourth of 22, not the first.
-    expect(report.summary.tracksWithUnorderedLessons).toBe(17);
+    expect(report.summary.tracksWithUnorderedLessons).toBe(12); // HL11: -5. Hindi, Telugu, Kannada, Malayalam and Sanskrit now declare a reading order for every lesson, recovered from their own books
         // 245 -> 240. Not five prerequisites fixed — five that were never real. Without a
     // `sequence` the walk falls back to alphabetical, so "TA-C01-aam requires
     // TA-C01-vanakkam-family-register" read as a forward prerequisite purely because
     // `aam` sorts first. Declaring chapter 1's order removed the artifact.    // 240 -> 230, and forwardReviews 285 -> 273 below: ten lessons each stopped
     // depending on something taught later. No lesson changed; only Tamil's order did.
-    expect(report.summary.forwardPrerequisites).toBe(225);
+    expect(report.summary.forwardPrerequisites).toBe(143); // HL11: -82, and this is the payoff of the order fix rather than a side effect. A forward prerequisite is a lesson requiring something the reader has not reached; when five tracks had no declared order at all, their words sorted AFTER the script lessons that depended on them, so most of these were artifacts of an undeclared order rather than real gaps in the ramp
 
     // Lessons claiming to review material the learner has not reached yet.
     // 300 -> 285. Fourteen are the same alphabetical-fallback artifact as
@@ -332,7 +332,7 @@ describe("the real corpus", () => {
     // reviewed TA-C04-naalai, both before those lessons existed. Both were forward
     // under the old alphabetical fallback too; the hand-authored book runs them the
     // other way round, so the sequences now follow the book. Tamil forward reviews: 0.
-    expect(report.summary.forwardReviews).toBe(267);
+    expect(report.summary.forwardReviews).toBe(168); // HL11: -99, same cause as forwardPrerequisites above. With five tracks carrying no declared order, a lesson reviewing an earlier one looked like it reviewed a later one. Recovering the order from their books turned most of these back into what they always were: ordinary backward references
 
     // REINFORCEMENT. The founding promise is that the course "constantly
     // re-emphasizes what was learnt previously". It shipped with HALF taught once.
@@ -569,7 +569,7 @@ describe("the real corpus", () => {
     // measure the distance against and stayed silent. Naming a teacher is what made
     // the existing early use visible. It also argues ஒரு belongs earlier than 39,
     // which the runway did not allow.
-    expect(report.summary.forwardReferences).toBe(467); // -1: HL-C98 removes a forward reference // -5: HL-C103 census adds comes/hand/regular to ENGLISH_COLLISIONS, and drops an untaught tres from an accepted list // +19: vocabulary wave 5 // +8: HL-C88 slices 5-6 // -8: HL-C112 moves casa and libro ahead of the adjective arc, so uses that were early are now taught // +7: vocabulary wave 6
+    expect(report.summary.forwardReferences).toBe(454); // -1: HL-C98 removes a forward reference // -5: HL-C103 census adds comes/hand/regular to ENGLISH_COLLISIONS, and drops an untaught tres from an accepted list // +19: vocabulary wave 5 // +8: HL-C88 slices 5-6 // -8: HL-C112 moves casa and libro ahead of the adjective arc, so uses that were early are now taught // +7: vocabulary wave 6 // HL11: five tracks gained a declared reading order, recovered from their own books; every continuity window is measured in that order, so each of these moves
 
     // HL09 step 3 closed 17 R1 windows in chapters 3-6, measured on the corpus of the
     // day as 766 -> 749. The absolute figures drift as main lands lessons; what the

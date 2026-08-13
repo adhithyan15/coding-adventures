@@ -3,74 +3,6 @@ Kannada, chapter 5: The First Verbs.
 
 
 Lesson 1 of 5.
-ಇರು (iru) — "to be, to stay, to live".
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-You have already used this verb — in "how are you." Now meet it in its own right, and use it to say where you live.
-
-The letters in this word.
-ಇ (independent i) + ರು (ru) becomes ಇರು (iru).
-
-The word, taken apart.
-ಇರು (iru, "to be, to exist, to stay, to live") is native Dravidian — the very same iru Tamil uses, and the verb behind Chapter 3's hēgiddīrā ("how are you") and cennāgiddēne ("I'm well"). It also means "to reside": ನಾನು ಬೆಂಗಳೂರಿನಲ್ಲಿ ಇದ್ದೇನೆ (nānu Beṅgaḷūrinalli iddēne, "I live in Bangalore"). One verb covers "be," "stay," and "live."
-
-Grammar Lens: "in" comes after the noun.
-ಬೆಂಗಳೂರಿನಲ್ಲಿ (Beṅgaḷūrinalli) = Bengaḷūru + -ಅಲ್ಲಿ (-alli, "in"), glued to the end of the noun. Kannada uses postpositions (case-suffixes) where English uses prepositions: "Bangalore-in I am," the verb last.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "iru"]
-[pause 8 seconds for the answer]
-[your turn — say: "I live in Bangalore" — nānu Beṅgaḷūrinalli iddēne]
-[pause 8 seconds for the answer]
-[your turn — say: where "in" (-alli) sits — glued to the end of the noun]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Name three things the one verb iru can mean, and say where "in" goes. ("To be / to stay / to live"; -alli "in" attaches to the end of the noun.)
-
-
-Lesson 2 of 5.
-ಕೆಲಸ ಮಾಡು (kelasa māḍu) — "to work".
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-The last verb of the chapter — and, like Hindi's karnā and Tamil's sey, it is a "do" verb that builds a hundred others.
-
-The letters in this word.
-ಕೆಲಸ (kelasa, "work"): ಕೆ (ke) + ಲ (la) + ಸ (sa). ಮಾಡು (māḍu, "do"): ಮಾ (mā) + ಡು (ḍu).
-
-The word, taken apart.
-ಮಾಡು (māḍu, "to do, to make") is a core native Dravidian verb, and Kannada — like Hindi with karnā, Tamil with sey, and Telugu with cēyu — builds compound verbs by putting a noun in front of it:
-ಕೆಲಸ ಮಾಡು (kelasa māḍu) = "work-do" = "to work" (kelasa, "work").
-ಅಡುಗೆ ಮಾಡು (aḍuge māḍu) = "to cook".
-ಸಹಾಯ ಮಾಡು (sahāya māḍu) = "to help" (sahāya from Sanskrit).
-So "I work" is ನಾನು ಕೆಲಸ ಮಾಡುತ್ತೇನೆ (nānu kelasa māḍuttēne). Notice sahāya māḍu ("to help") pairs a Sanskrit noun with the native māḍu — Kannada's two vocabularies working together in one verb.
-
-Grammar Lens: noun + ಮಾಡು = a new verb.
-This "noun + māḍu" pattern is the exact twin of Hindi's "noun + karnā," Tamil's "noun + sey," and Telugu's "noun + cēyu." Four languages — two of them from an unrelated family — all landed on the same trick.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "kelasa māḍu" (to work)]
-[pause 8 seconds for the answer]
-[your turn — say: "I work" — nānu kelasa māḍuttēne]
-[pause 8 seconds for the answer]
-[your turn — say: the Hindi, Tamil, and Telugu twins of this trick (karnā, sey, cēyu)]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-How does Kannada turn "work" into "to work," and what verbs work the same way in its neighbours? (Kelasa + māḍu = "work-do"; Hindi karnā, Tamil sey, Telugu cēyu.)
-
-
-Lesson 3 of 5.
 ಮಾತನಾಡು (mātanāḍu) — "to speak," your first full verb.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -104,7 +36,7 @@ Wrap-up Recall.
 Build "I speak" from mātanāḍu, and name the noun it's built on. (Mātanāḍuttēne; mātu, "word / speech.")
 
 
-Lesson 4 of 5.
+Lesson 2 of 5.
 ನಾನು ಕನ್ನಡ ಮಾತನಾಡುತ್ತೇನೆ (nānu kannaḍa mātanāḍuttēne) — "I speak Kannada".
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -134,6 +66,74 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Say "I speak Kannada," and give the likely root of the name. (Nānu kannaḍa mātanāḍuttēne; kar-nāḍu, "the high/black land.")
+
+
+Lesson 3 of 5.
+ಇರು (iru) — "to be, to stay, to live".
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+You have already used this verb — in "how are you." Now meet it in its own right, and use it to say where you live.
+
+The letters in this word.
+ಇ (independent i) + ರು (ru) becomes ಇರು (iru).
+
+The word, taken apart.
+ಇರು (iru, "to be, to exist, to stay, to live") is native Dravidian — the very same iru Tamil uses, and the verb behind Chapter 3's hēgiddīrā ("how are you") and cennāgiddēne ("I'm well"). It also means "to reside": ನಾನು ಬೆಂಗಳೂರಿನಲ್ಲಿ ಇದ್ದೇನೆ (nānu Beṅgaḷūrinalli iddēne, "I live in Bangalore"). One verb covers "be," "stay," and "live."
+
+Grammar Lens: "in" comes after the noun.
+ಬೆಂಗಳೂರಿನಲ್ಲಿ (Beṅgaḷūrinalli) = Bengaḷūru + -ಅಲ್ಲಿ (-alli, "in"), glued to the end of the noun. Kannada uses postpositions (case-suffixes) where English uses prepositions: "Bangalore-in I am," the verb last.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "iru"]
+[pause 8 seconds for the answer]
+[your turn — say: "I live in Bangalore" — nānu Beṅgaḷūrinalli iddēne]
+[pause 8 seconds for the answer]
+[your turn — say: where "in" (-alli) sits — glued to the end of the noun]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Name three things the one verb iru can mean, and say where "in" goes. ("To be / to stay / to live"; -alli "in" attaches to the end of the noun.)
+
+
+Lesson 4 of 5.
+ಕೆಲಸ ಮಾಡು (kelasa māḍu) — "to work".
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+The last verb of the chapter — and, like Hindi's karnā and Tamil's sey, it is a "do" verb that builds a hundred others.
+
+The letters in this word.
+ಕೆಲಸ (kelasa, "work"): ಕೆ (ke) + ಲ (la) + ಸ (sa). ಮಾಡು (māḍu, "do"): ಮಾ (mā) + ಡು (ḍu).
+
+The word, taken apart.
+ಮಾಡು (māḍu, "to do, to make") is a core native Dravidian verb, and Kannada — like Hindi with karnā, Tamil with sey, and Telugu with cēyu — builds compound verbs by putting a noun in front of it:
+ಕೆಲಸ ಮಾಡು (kelasa māḍu) = "work-do" = "to work" (kelasa, "work").
+ಅಡುಗೆ ಮಾಡು (aḍuge māḍu) = "to cook".
+ಸಹಾಯ ಮಾಡು (sahāya māḍu) = "to help" (sahāya from Sanskrit).
+So "I work" is ನಾನು ಕೆಲಸ ಮಾಡುತ್ತೇನೆ (nānu kelasa māḍuttēne). Notice sahāya māḍu ("to help") pairs a Sanskrit noun with the native māḍu — Kannada's two vocabularies working together in one verb.
+
+Grammar Lens: noun + ಮಾಡು = a new verb.
+This "noun + māḍu" pattern is the exact twin of Hindi's "noun + karnā," Tamil's "noun + sey," and Telugu's "noun + cēyu." Four languages — two of them from an unrelated family — all landed on the same trick.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "kelasa māḍu" (to work)]
+[pause 8 seconds for the answer]
+[your turn — say: "I work" — nānu kelasa māḍuttēne]
+[pause 8 seconds for the answer]
+[your turn — say: the Hindi, Tamil, and Telugu twins of this trick (karnā, sey, cēyu)]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How does Kannada turn "work" into "to work," and what verbs work the same way in its neighbours? (Kelasa + māḍu = "work-do"; Hindi karnā, Tamil sey, Telugu cēyu.)
 
 
 Lesson 5 of 5.

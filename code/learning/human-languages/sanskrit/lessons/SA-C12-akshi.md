@@ -2,7 +2,7 @@
 schema_version: 2
 id: SA-C12-akshi
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 580
+sequence: 550
 chapter: 12
 type: word
 headword: अक्षि

@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-C12-bhaai-bahin
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 330
+sequence: 580
 chapter: 12
 type: word
 headword: भाई बहन

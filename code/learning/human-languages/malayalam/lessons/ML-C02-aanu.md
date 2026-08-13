@@ -1,5 +1,6 @@
 ---
 id: ML-C02-aanu
+sequence: 90
 chapter: 2
 type: word
 headword: ആണ്

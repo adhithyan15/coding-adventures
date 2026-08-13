@@ -1,5 +1,6 @@
 ---
 id: SA-C02-bhavan-tvam
+sequence: 110
 chapter: 2
 type: word
 headword: भवान् / त्वम्

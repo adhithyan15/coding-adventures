@@ -4,125 +4,11 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:3f287b31c8736cd5",
+  "sourceHash": "fnv1a64:da4c98fe9a740c73",
   "lessons": [
     {
-      "id": "KA-C02-enu",
-      "sequence": null,
-      "title": "ಏನು (ēnu) — \"what\"",
-      "headword": "ಏನು",
-      "romanization": "ēnu",
-      "gloss": "what",
-      "script": "kannada",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:a8de9a75878f579a",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "The last piece of the question: \"what.\""
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "(Skim if you read Kannada.) ಏ (independent long ē, word-initial) + ನು (nu) becomes ēnu."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ಏನು (ēnu, \"what\") is native Dravidian, on the interrogative stem yā- / e- — the same Dravidian question-root as Tamil eṉṉa, heading Kannada's question family: ēnu (what), yāru (who), elli (where), yāke (why)."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"ēnu\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"ēnu\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the question family — ēnu, yāru, elli",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the question family — ēnu, yāru, elli]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What Dravidian stem heads ಏನು (ēnu) and Kannada's other question-words? (yā-/e-, the same as Tamil eṉṉa.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "KA-C02-hesaru",
-      "sequence": null,
+      "sequence": 70,
       "title": "ಹೆಸರು (hesaru) — \"name,\" and the p becomes h shift",
       "headword": "ಹೆಸರು",
       "romanization": "hesaru",
@@ -133,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:68e69e98f1f071e7",
+      "sourceHash": "fnv1a64:9579a0ccd39b22d1",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -249,7 +135,7 @@
     },
     {
       "id": "KA-C02-nanna",
-      "sequence": null,
+      "sequence": 80,
       "title": "ನನ್ನ (nanna) — \"my\"",
       "headword": "ನನ್ನ",
       "romanization": "nanna",
@@ -260,7 +146,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c8b98f6f730abc23",
+      "sourceHash": "fnv1a64:229bda84c825c47a",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -363,7 +249,7 @@
     },
     {
       "id": "KA-C02-nanna-hesaru",
-      "sequence": null,
+      "sequence": 90,
       "title": "ನನ್ನ ಹೆಸರು … (nanna hesaru …) — \"my name is…,\" with no \"is\"",
       "headword": "ನನ್ನ ಹೆಸರು …",
       "romanization": "",
@@ -374,7 +260,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e51b27c4418575da",
+      "sourceHash": "fnv1a64:85e9c18fd0cc0d7a",
       "notice": null,
       "blocks": [
         {
@@ -476,7 +362,7 @@
     },
     {
       "id": "KA-C02-niinu-niivu",
-      "sequence": null,
+      "sequence": 100,
       "title": "ನೀನು / ನೀವು (nīnu / nīvu) — \"you,\" familiar and respectful",
       "headword": "ನೀನು / ನೀವು",
       "romanization": "nīnu / nīvu",
@@ -487,7 +373,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:9463b8a631b7bc98",
+      "sourceHash": "fnv1a64:53e893ba224f55ae",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -591,8 +477,122 @@
       ]
     },
     {
+      "id": "KA-C02-enu",
+      "sequence": 110,
+      "title": "ಏನು (ēnu) — \"what\"",
+      "headword": "ಏನು",
+      "romanization": "ēnu",
+      "gloss": "what",
+      "script": "kannada",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:062cc85675e84d85",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The last piece of the question: \"what.\""
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "(Skim if you read Kannada.) ಏ (independent long ē, word-initial) + ನು (nu) becomes ēnu."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಏನು (ēnu, \"what\") is native Dravidian, on the interrogative stem yā- / e- — the same Dravidian question-root as Tamil eṉṉa, heading Kannada's question family: ēnu (what), yāru (who), elli (where), yāke (why)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ēnu\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ēnu\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the question family — ēnu, yāru, elli",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the question family — ēnu, yāru, elli]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What Dravidian stem heads ಏನು (ēnu) and Kannada's other question-words? (yā-/e-, the same as Tamil eṉṉa.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "KA-C02-nimma-hesaru-enu",
-      "sequence": null,
+      "sequence": 120,
       "title": "ನಿಮ್ಮ ಹೆಸರು ಏನು? (nimma hesaru ēnu?) — \"what's your name?\"",
       "headword": "ನಿಮ್ಮ ಹೆಸರು ಏನು?",
       "romanization": "",
@@ -603,7 +603,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cb5beb5aca69aced",
+      "sourceHash": "fnv1a64:f28777e6918f37ad",
       "notice": null,
       "blocks": [
         {
@@ -704,8 +704,113 @@
       ]
     },
     {
+      "id": "KA-C02-santosha",
+      "sequence": 130,
+      "title": "ಸಂತೋಷ (santōṣa) — \"joy,\" and \"pleased to meet you\"",
+      "headword": "ಸಂತೋಷ",
+      "romanization": "santōṣa",
+      "gloss": "joy / pleased to meet you",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8bc5630bf887c4d9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The warm close — and, true to Kannada, a Sanskrit word where Tamil used a native one."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "The phrase",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The full form is ನಿಮ್ಮನ್ನು ಭೇಟಿಯಾಗಿ ಸಂತೋಷ (nimmannu bhēṭiyāgi santōṣa) — \"having met you, joy.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಂತೋಷ (santōṣa, \"joy, contentment\") is Sanskrit — sam- (\"fully\") + toṣa (\"satisfaction\") — not native. Where Tamil reaches for its home-grown magiḻcci, Kannada uses a Sanskrit word even for \"pleased.\" The same split you saw over \"hello\" (namaskāra) and \"thanks\" (dhanyavāda) runs right through the introductions: Kannada borrows, Tamil keeps its own."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"santōṣa\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"santōṣa\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the split — Kannada santōṣa (Sanskrit) vs. Tamil magiḻcci (native)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the split — Kannada *santōṣa* (Sanskrit) vs. Tamil *magiḻcci* (native)]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Is ಸಂತೋಷ (santōṣa) native or borrowed, and what does the contrast with Tamil show? (Sanskrit; Kannada borrows Sanskrit — here for \"pleased\" — where Tamil keeps native magiḻcci.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "KA-C02-practice",
-      "sequence": null,
+      "sequence": 140,
       "title": "Chapter 2 — the introduction, whole",
       "headword": "(dialogue)",
       "romanization": "",
@@ -716,7 +821,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:93db0cc0cb61a43e",
+      "sourceHash": "fnv1a64:f9bef401e1b671ae",
       "notice": null,
       "blocks": [
         {
@@ -840,111 +945,6 @@
             {
               "kind": "speech",
               "text": "Next chapter: hēgiddīra? (\"how are you?\") and answering with chennāgiddēne — the responding cycle."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "KA-C02-santosha",
-      "sequence": null,
-      "title": "ಸಂತೋಷ (santōṣa) — \"joy,\" and \"pleased to meet you\"",
-      "headword": "ಸಂತೋಷ",
-      "romanization": "santōṣa",
-      "gloss": "joy / pleased to meet you",
-      "script": "kannada",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:8d65e8920c63c57a",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "The warm close — and, true to Kannada, a Sanskrit word where Tamil used a native one."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "unknown",
-          "title": "The phrase",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "The full form is ನಿಮ್ಮನ್ನು ಭೇಟಿಯಾಗಿ ಸಂತೋಷ (nimmannu bhēṭiyāgi santōṣa) — \"having met you, joy.\""
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ಸಂತೋಷ (santōṣa, \"joy, contentment\") is Sanskrit — sam- (\"fully\") + toṣa (\"satisfaction\") — not native. Where Tamil reaches for its home-grown magiḻcci, Kannada uses a Sanskrit word even for \"pleased.\" The same split you saw over \"hello\" (namaskāra) and \"thanks\" (dhanyavāda) runs right through the introductions: Kannada borrows, Tamil keeps its own."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"santōṣa\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"santōṣa\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the split — Kannada santōṣa (Sanskrit) vs. Tamil magiḻcci (native)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the split — Kannada *santōṣa* (Sanskrit) vs. Tamil *magiḻcci* (native)]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Is ಸಂತೋಷ (santōṣa) native or borrowed, and what does the contrast with Tamil show? (Sanskrit; Kannada borrows Sanskrit — here for \"pleased\" — where Tamil keeps native magiḻcci.)"
             }
           ]
         }

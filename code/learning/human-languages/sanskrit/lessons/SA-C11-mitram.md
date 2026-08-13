@@ -2,7 +2,7 @@
 schema_version: 2
 id: SA-C11-mitram
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 540
+sequence: 510
 chapter: 11
 type: word
 headword: मित्रम्

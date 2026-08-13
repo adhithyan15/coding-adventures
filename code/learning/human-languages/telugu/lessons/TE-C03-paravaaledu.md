@@ -1,5 +1,6 @@
 ---
 id: TE-C03-paravaaledu
+sequence: 190
 chapter: 3
 type: phrase
 headword: పరవాలేదు

@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-C12-pitaa-maataa
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 320
+sequence: 570
 chapter: 12
 type: word
 headword: पिता माता

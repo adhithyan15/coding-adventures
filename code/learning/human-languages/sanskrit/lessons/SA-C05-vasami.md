@@ -1,5 +1,6 @@
 ---
 id: SA-C05-vasami
+sequence: 280
 chapter: 5
 type: word
 headword: वसामि

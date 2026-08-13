@@ -1,5 +1,6 @@
 ---
 id: TE-C01-ledu
+sequence: 40
 chapter: 1
 type: word
 headword: లేదు

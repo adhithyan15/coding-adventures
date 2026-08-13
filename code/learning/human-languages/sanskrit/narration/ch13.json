@@ -4,11 +4,11 @@
   "chapter": 13,
   "title": "The Face, Part Two",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:bb32722196955299",
+  "sourceHash": "fnv1a64:19d2f1c57581d691",
   "lessons": [
     {
       "id": "SA-C13-nasika",
-      "sequence": 610,
+      "sequence": 580,
       "title": "नासिका (nāsikā) — \"nose,\" kin to two words but parent of neither",
       "headword": "नासिका",
       "romanization": "nāsikā",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:626511c513d9d8dd",
+      "sourceHash": "fnv1a64:edb764e6f5bc94fd",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -160,7 +160,7 @@
     },
     {
       "id": "SA-C13-hridayam",
-      "sequence": 620,
+      "sequence": 590,
       "title": "हृदयम् (hṛdayam) — \"heart,\" a root barely disguised anywhere",
       "headword": "हृदयम्",
       "romanization": "hṛdayam",
@@ -171,7 +171,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1e022be321ef11a6",
+      "sourceHash": "fnv1a64:e40d196baed8339c",
       "notice": {
         "modality": "sight",
         "needs": [

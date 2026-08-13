@@ -2,7 +2,7 @@
 schema_version: 2
 id: SA-C07-khadati
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 400
+sequence: 370
 chapter: 7
 type: word
 headword: खादति

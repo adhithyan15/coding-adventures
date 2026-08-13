@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-C38-pair
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 790
+sequence: 1040
 chapter: 38
 type: word
 headword: पैर

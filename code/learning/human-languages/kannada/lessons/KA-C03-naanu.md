@@ -1,5 +1,6 @@
 ---
 id: KA-C03-naanu
+sequence: 170
 chapter: 3
 type: word
 headword: ನಾನು

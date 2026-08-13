@@ -1,5 +1,6 @@
 ---
 id: KA-C02-santosha
+sequence: 130
 chapter: 2
 type: phrase
 headword: ಸಂತೋಷ

@@ -1,5 +1,6 @@
 ---
 id: HI-C05-bolta-hun
+sequence: 440
 chapter: 5
 type: word
 headword: बोलता हूँ, बोलती हूँ, बोलते हैं

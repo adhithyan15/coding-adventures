@@ -1,5 +1,6 @@
 ---
 id: TE-C05-nenu-telugu-maatlaadataanu
+sequence: 270
 chapter: 5
 type: phrase
 headword: నేను తెలుగు మాట్లాడతాను

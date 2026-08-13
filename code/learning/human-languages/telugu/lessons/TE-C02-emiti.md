@@ -1,5 +1,6 @@
 ---
 id: TE-C02-emiti
+sequence: 110
 chapter: 2
 type: word
 headword: ఏమిటి

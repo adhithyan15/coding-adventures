@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-C13-haath
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 350
+sequence: 600
 chapter: 13
 type: word
 headword: हाथ

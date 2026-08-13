@@ -1,5 +1,6 @@
 ---
 id: HI-C02-khushi
+sequence: 180
 chapter: 2
 type: phrase
 headword: ख़ुशी

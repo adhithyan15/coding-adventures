@@ -4,11 +4,11 @@
   "chapter": 24,
   "title": "Green and Yellow",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:3d1b0937d7ec6c72",
+  "sourceHash": "fnv1a64:23b5644f154e5450",
   "lessons": [
     {
       "id": "HI-C24-hara-pila",
-      "sequence": 490,
+      "sequence": 740,
       "title": "हरा (harā) — a color cousin hiding in plain sight",
       "headword": "हरा",
       "romanization": "harā",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:265e57f6824884ee",
+      "sourceHash": "fnv1a64:74a7089fc59c56de",
       "notice": null,
       "blocks": [
         {
@@ -102,7 +102,7 @@
     },
     {
       "id": "HI-C24-pila-history",
-      "sequence": 500,
+      "sequence": 750,
       "title": "पीला (pīlā) — clear sounds, uncertain meaning",
       "headword": "पीला",
       "romanization": "pīlā",
@@ -113,7 +113,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f09a4eff599a6f0b",
+      "sourceHash": "fnv1a64:290c98113103da8c",
       "notice": null,
       "blocks": [
         {

@@ -1,5 +1,6 @@
 ---
 id: SA-C03-kushalam
+sequence: 180
 chapter: 3
 type: word
 headword: कुशलम्

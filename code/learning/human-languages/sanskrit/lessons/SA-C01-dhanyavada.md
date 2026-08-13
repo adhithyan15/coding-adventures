@@ -1,5 +1,6 @@
 ---
 id: SA-C01-dhanyavada
+sequence: 30
 chapter: 1
 type: word
 headword: धन्यवादः

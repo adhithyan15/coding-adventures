@@ -1,5 +1,6 @@
 ---
 id: SA-C02-asti
+sequence: 90
 chapter: 2
 type: word
 headword: अस्ति

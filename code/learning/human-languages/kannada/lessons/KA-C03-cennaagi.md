@@ -1,5 +1,6 @@
 ---
 id: KA-C03-cennaagi
+sequence: 180
 chapter: 3
 type: word
 headword: ಚೆನ್ನಾಗಿ

@@ -1,5 +1,6 @@
 ---
 id: ML-C03-sukham
+sequence: 190
 chapter: 3
 type: word
 headword: സുഖം

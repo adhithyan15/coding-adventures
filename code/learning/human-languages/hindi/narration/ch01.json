@@ -4,11 +4,817 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:68855e2a810996e8",
+  "sourceHash": "fnv1a64:b2ac48d98cb11e22",
   "lessons": [
     {
+      "id": "HI-C01-namaste",
+      "sequence": 10,
+      "title": "नमस्ते (namaste) — \"I bow to you\"",
+      "headword": "नमस्ते",
+      "romanization": "namaste",
+      "gloss": "hello / goodbye (namaste — \"I bow to you\")",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:3e0647363489d9a9",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The first Hindi word, and the most important — a greeting that is literally a small act of reverence. You'll learn to read it and to understand it in the same breath."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "(If you already read Devanagari, skim this — it's here so the book needs no prior knowledge.) Hindi is written left to right, and every consonant carries a built-in \"a\" unless something removes it."
+            },
+            {
+              "kind": "speech",
+              "text": "न = \"na\", म = \"ma\", स = \"sa\", त = \"ta\" — four consonants, each with its built-in a."
+            },
+            {
+              "kind": "speech",
+              "text": "े is a vowel sign (a mātrā) that changes the built-in a to \"e\": त + े becomes ते = \"te.\""
+            },
+            {
+              "kind": "speech",
+              "text": "स् — the little stroke under स (called a halant) kills the vowel, leaving a bare \"s.\" A vowel-less consonant then leans onto the next one, forming a conjunct: स् + ते becomes स्ते = \"ste.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Put them in order, left to right: न, म (na, ma), स्, ते = na-ma-s-te, which gives:"
+            },
+            {
+              "kind": "speech",
+              "text": "नमस्ते = namaste."
+            },
+            {
+              "kind": "speech",
+              "text": "You just read Hindi. Three facts did it: consonants carry a, a mātrā changes the vowel, a halant removes it. That's most of how Devanagari works."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नमस्ते = नमः (namaḥ, \"a bow, reverence, homage\") + ते (te, \"to you\") = literally \"reverence to you,\" \"I bow to you.\" The root is Sanskrit नम् (nam), \"to bow, bend, pay homage\" — the same root behind namaskār (next lesson) and borrowed whole into English as namaste and namaskar."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "namaste is a genuine gesture, not a neutral \"hi\": it's said with the palms pressed together (the añjali gesture), acknowledging the other person with respect. It works as both hello and goodbye, at any time of day, and it's polite/respectful without being stiff — safe with almost anyone. (Hindi also has warmer and more casual options you'll meet, and a whole second, Persian- flavored set of words — coming in a few lessons.)"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "read it left to right — na, ma, s, te becomes \"namaste\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: read it left to right — na · ma · s · te → \"namaste\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what the halant under स does (kills its vowel: sa becomes s)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what the *halant* under स does (kills its vowel: sa → s)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"namaste,\" and mean it — \"I bow to you\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"namaste,\" and mean it — \"I bow to you\"]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read नमस्ते (namaste). What does it literally mean? (\"I bow to you\" — namaḥ + te.) What does a halant do to a consonant? (Removes its built-in a.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C01-namaskar",
+      "sequence": 20,
+      "title": "नमस्कार (namaskār) — the more formal bow",
+      "headword": "नमस्कार",
+      "romanization": "",
+      "gloss": "hello (namaskār — more formal)",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:e937779a0f8ee11c",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The dressier sibling of namaste — same root, one new piece, and two new letters."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नमस्ते (namaste) — you already know न म स, the halant, and how consonants carry \"a.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two new consonants, and one new vowel sign:"
+            },
+            {
+              "kind": "speech",
+              "text": "क = \"ka\", र = \"ra.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ा is the mātrā for long \"ā\": क + ा becomes का = \"kā.\""
+            },
+            {
+              "kind": "speech",
+              "text": "So the tail of the word, कार, reads kā-r (the final र here has its inherent a softened) — kār. And नमस् you can already read (namas, with the halant on स). Left to right: न, म (na, ma), स्, का, र, which gives:"
+            },
+            {
+              "kind": "speech",
+              "text": "नमस्कार = namaskār."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नमस्कार = नमः (namaḥ, \"a bow,\" from root नम् nam, as in namaste) + कार (kāra, \"the making or doing of\" — from the Sanskrit root कृ kṛ, \"to do, make\"). So namaskār is literally \"the making of a bow,\" \"the act of homage.\" Where namaste says \"bow to you,\" namaskār names the bow itself — a touch more formal and ceremonial."
+            },
+            {
+              "kind": "speech",
+              "text": "That piece कार (-kāra, \"the making/doing of\") is a Sanskrit building block you'll see again — e.g. in ahaṃkāra (\"the making of 'I'\" becomes ego). Learn it once as \"the act of ___.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "namaskār is a notch more formal than namaste — common in respectful, official, or ceremonial settings, and as a courteous greeting to elders or in writing. Both are \"hello\"; namaskār wears a tie."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "read \"नमस्कार\" — na, ma, s, kā, r",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: read \"नमस्कार\" — na · ma · s · kā · r]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the shared root — nam (\"bow\") in both namaste and namaskār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the shared root — *nam* (\"bow\") in both *namaste* and *namaskār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which is more formal? (namaskār)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which is more formal? (*namaskār*)]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does the piece कार (-kāra) mean? (\"The making/doing of.\") So namaskār literally names what? (\"The making of a bow.\")"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C01-dhanyavad",
+      "sequence": 30,
+      "title": "धन्यवाद (dhanyavād) — \"thank you,\" the Sanskrit way",
+      "headword": "धन्यवाद",
+      "romanization": "",
+      "gloss": "thank you (dhanyavād — formal, Sanskritic)",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:c155316e068c9dae",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Thank you\" — and the first hint of a big fact about Hindi: it has two vocabularies for many everyday things, one Sanskrit, one Persian. This is the Sanskrit one."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नमस्कार — you know the halant/conjunct idea and the ा (\"ā\") sign."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "New consonants: ध = \"dha\", य = \"ya\", व = \"va\", द = \"da.\" And a new conjunct:"
+            },
+            {
+              "kind": "speech",
+              "text": "न् + य becomes न्य = \"nya\" (the halant kills न's vowel, so it joins य)."
+            },
+            {
+              "kind": "speech",
+              "text": "Left to right: ध, न्, य, वा, द = dha-n-ya-vā-d, which gives:"
+            },
+            {
+              "kind": "speech",
+              "text": "धन्यवाद = dhanyavād."
+            },
+            {
+              "kind": "speech",
+              "text": "(You've now met two conjuncts — स्त in namaste, न्य here. A vowel-less consonant always leans onto the next; that's the whole trick.)"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "धन्यवाद = धन्य (dhanya, \"worthy, blessed, fortunate\") + वाद (vāda, \"a saying, an utterance,\" from the Sanskrit root वद् vad, \"to speak\"). So dhanyavād literally offers \"an utterance of [you are] worthy/blessed\" — a formal, almost literary way to say thanks. (dhanya comes from धन dhana, \"wealth\" — to call someone dhanya is to call them enriched, fortunate.)"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dhanyavād is the formal, Sanskritic \"thank you\" — the one you'd write, or say in respectful or official settings. It can even feel a little heavy for small everyday thanks, where Hindi speakers often reach for a lighter, Persian- derived word instead — शुक्रिया (shukriyā), your next lesson. Holding those two side by side is the single best window into how Hindi works."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "read \"धन्यवाद\" — dha, n, ya, vā, d",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: read \"धन्यवाद\" — dha · n · ya · vā · d]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two pieces — dhanya (\"worthy\") + vāda (\"saying\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two pieces — *dhanya* (\"worthy\") + *vāda* (\"saying\")]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the new conjunct न्य (\"nya\") — halant on न, joined to य",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the new conjunct न्य (\"nya\") — halant on न, joined to य]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read धन्यवाद. What are its two parts? (dhanya \"worthy\" + vāda \"saying.\") Is it the formal or casual \"thanks\"? (Formal, Sanskritic — the casual one is Persian-derived, next.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C01-shukriya",
+      "sequence": 40,
+      "title": "शुक्रिया (shukriyā) — \"thanks,\" Hindi's other heritage",
+      "headword": "शुक्रिया",
+      "romanization": "",
+      "gloss": "thanks (shukriyā — everyday, Persian/Arabic-derived)",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:4d2725fa4f4d31ff",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The everyday \"thanks\" — and it is not a Sanskrit word at all. It came into Hindi from Persian and, before that, Arabic. This lesson is where you meet Hindi's second bloodstream."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "धन्यवाद — the formal, Sanskrit \"thanks\"; this is its casual counterpart."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "New: श = \"sha,\" and the vowel sign ि for \"i\" (note: ि is written before the consonant but read after it). Reusing क र य ा:"
+            },
+            {
+              "kind": "speech",
+              "text": "क् + र becomes क्र = \"kra\" (halant on क, joined to र — another conjunct)."
+            },
+            {
+              "kind": "speech",
+              "text": "रि = \"ri\" (with the ि sign), या = \"yā.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Left to right: शु, क्, रि, या = shu-k-ri-yā, which gives:"
+            },
+            {
+              "kind": "speech",
+              "text": "शुक्रिया = shukriyā."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शुक्रिया comes, through Persian (شکریه), from Arabic شكر (shukr, \"gratitude, thanks\") — root sh-k-r. It is the same word as the Arabic shukran (\"thank you\"): Hindi and Arabic, two utterly different languages and scripts, saying thanks with one Semitic root. No Sanskrit here at all."
+            },
+            {
+              "kind": "speech",
+              "text": "Why does Hindi have an Arabic word for \"thanks\"? Centuries of Persian as the language of courts and administration in South Asia poured thousands of Persian (and, through Persian, Arabic) words into everyday Hindi/Urdu. So Hindi carries two vocabularies: a Sanskrit layer (dhanyavād, namaste) and a Perso-Arabic layer (shukriyā, and alvidā next). Often the Sanskrit word feels formal/literary and the Persian one feels everyday — though both are fully Hindi."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "shukriyā is the casual, everyday \"thanks\" — what you'd say to a friend, a shopkeeper, a waiter. dhanyavād is its formal twin. Choosing between them is choosing a register — and, quietly, a heritage."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "read \"शुक्रिया\" — shu, k, ri, yā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: read \"शुक्रिया\" — shu · k · ri · yā]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"shukriyā\" — and note it shares a root with Arabic shukran",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"shukriyā\" — and note it shares a root with Arabic *shukran*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "formal vs casual \"thanks\" — dhanyavād / shukriyā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: formal vs casual \"thanks\" — *dhanyavād* / *shukriyā*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does shukriyā come from — Sanskrit or Persian/Arabic? (Persian, from Arabic shukr — same root as Arabic shukran.) What are Hindi's two vocabulary layers? (Sanskrit and Perso-Arabic.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C01-alvida",
+      "sequence": 50,
+      "title": "अलविदा (alvidā) — \"farewell,\" and the Arabic al- again",
+      "headword": "अलविदा",
+      "romanization": "",
+      "gloss": "goodbye (alvidā — a final farewell, Persian/Arabic-derived)",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:3af777560e37c2a8",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A goodbye — and another Perso-Arabic word, carrying a piece of Arabic grammar you may have met from the other side."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शुक्रिया — Hindi's Persian/Arabic layer; here's another word from it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "New: the independent vowel अ = \"a\" (used when a word starts with a vowel — consonants have their built-in a, but a standalone one needs its own letter), and ल = \"la.\" Reusing व द and the ि/ा signs:"
+            },
+            {
+              "kind": "speech",
+              "text": "अल = \"al\", वि = \"vi\" (with the ि sign), दा = \"dā.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Left to right: अ, ल, वि, दा = a-l-vi-dā, which gives:"
+            },
+            {
+              "kind": "speech",
+              "text": "अलविदा = alvidā."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अलविदा comes through Persian/Urdu from Arabic الوداع (al-widāʿ, \"the farewell\"), from the Arabic root w-d-ʿ, \"to leave, to bid farewell.\" And there at the front is अल — the Arabic article al-, \"the,\" the very same \"the\" that rode into English on algebra and alcohol. So alvidā is literally \"the farewell.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "alvidā carries a note of finality — it's the goodbye for a long or final parting, more weighted than an everyday \"see you.\" For casual \"bye,\" Hindi speakers more often use namaste again, or the English \"bye,\" or phir milenge (\"we'll meet again\"). But alvidā is the word when the parting matters — and, like shukriyā, it quietly carries centuries of Persian in it."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "read \"अलविदा\" — a, l, vi, dā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: read \"अलविदा\" — a · l · vi · dā]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the al- at the front — the Arabic \"the,\" as in \"the farewell\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the *al-* at the front — the Arabic \"the,\" as in \"the farewell\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "when would you use alvidā vs a casual bye? (a weighty/final parting)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: when would you use *alvidā* vs a casual bye? (a weighty/final parting)]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "alvidā literally means what, and what's the little al- doing there? (\"The farewell\" — al- is the Arabic \"the.\") Sanskrit or Perso-Arabic? (Perso-Arabic.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "HI-W01-shirorekha-na-ma",
-      "sequence": 100,
+      "sequence": 60,
       "title": "The line on top — Devanagari's head-line",
       "headword": "शिरोरेखा",
       "romanization": "shirorekhā",
@@ -20,7 +826,7 @@
         "writing-type",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:2cad481346ffbd91",
+      "sourceHash": "fnv1a64:4469df131111f6aa",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -173,7 +979,7 @@
     },
     {
       "id": "HI-W01-na-ma",
-      "sequence": 110,
+      "sequence": 70,
       "title": "न and म — two bodies under one head-line",
       "headword": "न, म",
       "romanization": "na, ma",
@@ -184,7 +990,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:45827ebdae0b68b3",
+      "sourceHash": "fnv1a64:6192e9ac65625a86",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -339,7 +1145,7 @@
     },
     {
       "id": "HI-W02-abugida-ka-ta",
-      "sequence": 120,
+      "sequence": 80,
       "title": "The vowel that is already there — the abugida",
       "headword": "अ",
       "romanization": "a",
@@ -350,7 +1156,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:bf84e48cdb65d54e",
+      "sourceHash": "fnv1a64:bae859caa091f9e5",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -514,7 +1320,7 @@
     },
     {
       "id": "HI-W02-ka-ta-mouth-order",
-      "sequence": 130,
+      "sequence": 90,
       "title": "क and त — two letters on a map of the mouth",
       "headword": "क, त",
       "romanization": "ka, ta",
@@ -525,7 +1331,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:26af03d5de07dead",
+      "sourceHash": "fnv1a64:4e43d2bb5e827c2a",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -679,649 +1485,8 @@
       ]
     },
     {
-      "id": "HI-C01-alvida",
-      "sequence": null,
-      "title": "अलविदा (alvidā) — \"farewell,\" and the Arabic al- again",
-      "headword": "अलविदा",
-      "romanization": "",
-      "gloss": "goodbye (alvidā — a final farewell, Persian/Arabic-derived)",
-      "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:89abbff53db9e06c",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "A goodbye — and another Perso-Arabic word, carrying a piece of Arabic grammar you may have met from the other side."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know first",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "शुक्रिया — Hindi's Persian/Arabic layer; here's another word from it."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "New: the independent vowel अ = \"a\" (used when a word starts with a vowel — consonants have their built-in a, but a standalone one needs its own letter), and ल = \"la.\" Reusing व द and the ि/ा signs:"
-            },
-            {
-              "kind": "speech",
-              "text": "अल = \"al\", वि = \"vi\" (with the ि sign), दा = \"dā.\""
-            },
-            {
-              "kind": "speech",
-              "text": "Left to right: अ, ल, वि, दा = a-l-vi-dā, which gives:"
-            },
-            {
-              "kind": "speech",
-              "text": "अलविदा = alvidā."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "अलविदा comes through Persian/Urdu from Arabic الوداع (al-widāʿ, \"the farewell\"), from the Arabic root w-d-ʿ, \"to leave, to bid farewell.\" And there at the front is अल — the Arabic article al-, \"the,\" the very same \"the\" that rode into English on algebra and alcohol. So alvidā is literally \"the farewell.\""
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "alvidā carries a note of finality — it's the goodbye for a long or final parting, more weighted than an everyday \"see you.\" For casual \"bye,\" Hindi speakers more often use namaste again, or the English \"bye,\" or phir milenge (\"we'll meet again\"). But alvidā is the word when the parting matters — and, like shukriyā, it quietly carries centuries of Persian in it."
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "read \"अलविदा\" — a, l, vi, dā",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: read \"अलविदा\" — a · l · vi · dā]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the al- at the front — the Arabic \"the,\" as in \"the farewell\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the *al-* at the front — the Arabic \"the,\" as in \"the farewell\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "when would you use alvidā vs a casual bye? (a weighty/final parting)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: when would you use *alvidā* vs a casual bye? (a weighty/final parting)]"
-            }
-          ]
-        },
-        {
-          "index": 6,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "alvidā literally means what, and what's the little al- doing there? (\"The farewell\" — al- is the Arabic \"the.\") Sanskrit or Perso-Arabic? (Perso-Arabic.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "HI-C01-dhanyavad",
-      "sequence": null,
-      "title": "धन्यवाद (dhanyavād) — \"thank you,\" the Sanskrit way",
-      "headword": "धन्यवाद",
-      "romanization": "",
-      "gloss": "thank you (dhanyavād — formal, Sanskritic)",
-      "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:1ef2eb843b696428",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "\"Thank you\" — and the first hint of a big fact about Hindi: it has two vocabularies for many everyday things, one Sanskrit, one Persian. This is the Sanskrit one."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know first",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "नमस्कार — you know the halant/conjunct idea and the ा (\"ā\") sign."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "New consonants: ध = \"dha\", य = \"ya\", व = \"va\", द = \"da.\" And a new conjunct:"
-            },
-            {
-              "kind": "speech",
-              "text": "न् + य becomes न्य = \"nya\" (the halant kills न's vowel, so it joins य)."
-            },
-            {
-              "kind": "speech",
-              "text": "Left to right: ध, न्, य, वा, द = dha-n-ya-vā-d, which gives:"
-            },
-            {
-              "kind": "speech",
-              "text": "धन्यवाद = dhanyavād."
-            },
-            {
-              "kind": "speech",
-              "text": "(You've now met two conjuncts — स्त in namaste, न्य here. A vowel-less consonant always leans onto the next; that's the whole trick.)"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "धन्यवाद = धन्य (dhanya, \"worthy, blessed, fortunate\") + वाद (vāda, \"a saying, an utterance,\" from the Sanskrit root वद् vad, \"to speak\"). So dhanyavād literally offers \"an utterance of [you are] worthy/blessed\" — a formal, almost literary way to say thanks. (dhanya comes from धन dhana, \"wealth\" — to call someone dhanya is to call them enriched, fortunate.)"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "dhanyavād is the formal, Sanskritic \"thank you\" — the one you'd write, or say in respectful or official settings. It can even feel a little heavy for small everyday thanks, where Hindi speakers often reach for a lighter, Persian- derived word instead — शुक्रिया (shukriyā), your next lesson. Holding those two side by side is the single best window into how Hindi works."
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "read \"धन्यवाद\" — dha, n, ya, vā, d",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: read \"धन्यवाद\" — dha · n · ya · vā · d]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the two pieces — dhanya (\"worthy\") + vāda (\"saying\")",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the two pieces — *dhanya* (\"worthy\") + *vāda* (\"saying\")]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the new conjunct न्य (\"nya\") — halant on न, joined to य",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the new conjunct न्य (\"nya\") — halant on न, joined to य]"
-            }
-          ]
-        },
-        {
-          "index": 6,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Read धन्यवाद. What are its two parts? (dhanya \"worthy\" + vāda \"saying.\") Is it the formal or casual \"thanks\"? (Formal, Sanskritic — the casual one is Persian-derived, next.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "HI-C01-namaskar",
-      "sequence": null,
-      "title": "नमस्कार (namaskār) — the more formal bow",
-      "headword": "नमस्कार",
-      "romanization": "",
-      "gloss": "hello (namaskār — more formal)",
-      "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:dd0f0aa5fdb9b145",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "The dressier sibling of namaste — same root, one new piece, and two new letters."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know first",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "नमस्ते (namaste) — you already know न म स, the halant, and how consonants carry \"a.\""
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Two new consonants, and one new vowel sign:"
-            },
-            {
-              "kind": "speech",
-              "text": "क = \"ka\", र = \"ra.\""
-            },
-            {
-              "kind": "speech",
-              "text": "ा is the mātrā for long \"ā\": क + ा becomes का = \"kā.\""
-            },
-            {
-              "kind": "speech",
-              "text": "So the tail of the word, कार, reads kā-r (the final र here has its inherent a softened) — kār. And नमस् you can already read (namas, with the halant on स). Left to right: न, म (na, ma), स्, का, र, which gives:"
-            },
-            {
-              "kind": "speech",
-              "text": "नमस्कार = namaskār."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "नमस्कार = नमः (namaḥ, \"a bow,\" from root नम् nam, as in namaste) + कार (kāra, \"the making or doing of\" — from the Sanskrit root कृ kṛ, \"to do, make\"). So namaskār is literally \"the making of a bow,\" \"the act of homage.\" Where namaste says \"bow to you,\" namaskār names the bow itself — a touch more formal and ceremonial."
-            },
-            {
-              "kind": "speech",
-              "text": "That piece कार (-kāra, \"the making/doing of\") is a Sanskrit building block you'll see again — e.g. in ahaṃkāra (\"the making of 'I'\" becomes ego). Learn it once as \"the act of ___.\""
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "namaskār is a notch more formal than namaste — common in respectful, official, or ceremonial settings, and as a courteous greeting to elders or in writing. Both are \"hello\"; namaskār wears a tie."
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "read \"नमस्कार\" — na, ma, s, kā, r",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: read \"नमस्कार\" — na · ma · s · kā · r]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the shared root — nam (\"bow\") in both namaste and namaskār",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the shared root — *nam* (\"bow\") in both *namaste* and *namaskār*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "which is more formal? (namaskār)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: which is more formal? (*namaskār*)]"
-            }
-          ]
-        },
-        {
-          "index": 6,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What does the piece कार (-kāra) mean? (\"The making/doing of.\") So namaskār literally names what? (\"The making of a bow.\")"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "HI-C01-namaste",
-      "sequence": null,
-      "title": "नमस्ते (namaste) — \"I bow to you\"",
-      "headword": "नमस्ते",
-      "romanization": "namaste",
-      "gloss": "hello / goodbye (namaste — \"I bow to you\")",
-      "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:003f029fbcf7f5e1",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "The first Hindi word, and the most important — a greeting that is literally a small act of reverence. You'll learn to read it and to understand it in the same breath."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "(If you already read Devanagari, skim this — it's here so the book needs no prior knowledge.) Hindi is written left to right, and every consonant carries a built-in \"a\" unless something removes it."
-            },
-            {
-              "kind": "speech",
-              "text": "न = \"na\", म = \"ma\", स = \"sa\", त = \"ta\" — four consonants, each with its built-in a."
-            },
-            {
-              "kind": "speech",
-              "text": "े is a vowel sign (a mātrā) that changes the built-in a to \"e\": त + े becomes ते = \"te.\""
-            },
-            {
-              "kind": "speech",
-              "text": "स् — the little stroke under स (called a halant) kills the vowel, leaving a bare \"s.\" A vowel-less consonant then leans onto the next one, forming a conjunct: स् + ते becomes स्ते = \"ste.\""
-            },
-            {
-              "kind": "speech",
-              "text": "Put them in order, left to right: न, म (na, ma), स्, ते = na-ma-s-te, which gives:"
-            },
-            {
-              "kind": "speech",
-              "text": "नमस्ते = namaste."
-            },
-            {
-              "kind": "speech",
-              "text": "You just read Hindi. Three facts did it: consonants carry a, a mātrā changes the vowel, a halant removes it. That's most of how Devanagari works."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "नमस्ते = नमः (namaḥ, \"a bow, reverence, homage\") + ते (te, \"to you\") = literally \"reverence to you,\" \"I bow to you.\" The root is Sanskrit नम् (nam), \"to bow, bend, pay homage\" — the same root behind namaskār (next lesson) and borrowed whole into English as namaste and namaskar."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "namaste is a genuine gesture, not a neutral \"hi\": it's said with the palms pressed together (the añjali gesture), acknowledging the other person with respect. It works as both hello and goodbye, at any time of day, and it's polite/respectful without being stiff — safe with almost anyone. (Hindi also has warmer and more casual options you'll meet, and a whole second, Persian- flavored set of words — coming in a few lessons.)"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "read it left to right — na, ma, s, te becomes \"namaste\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: read it left to right — na · ma · s · te → \"namaste\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "what the halant under स does (kills its vowel: sa becomes s)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: what the *halant* under स does (kills its vowel: sa → s)]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"namaste,\" and mean it — \"I bow to you\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"namaste,\" and mean it — \"I bow to you\"]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Read नमस्ते (namaste). What does it literally mean? (\"I bow to you\" — namaḥ + te.) What does a halant do to a consonant? (Removes its built-in a.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "HI-C01-practice",
-      "sequence": null,
+      "sequence": 100,
       "title": "Practice — the Hindi greetings, read and understood",
       "headword": "(practice)",
       "romanization": "",
@@ -1332,7 +1497,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e06d1360ac7b383d",
+      "sourceHash": "fnv1a64:0c45b634daf5db69",
       "notice": null,
       "blocks": [
         {
@@ -1437,171 +1602,6 @@
             {
               "kind": "speech",
               "text": "Which \"thanks\" is Sanskrit and which is Persian? (dhanyavād / shukriyā.) What three facts let you read Devanagari? (Consonants carry a; a mātrā changes the vowel; a halant removes it.) Next chapter: āp and tum — Hindi's formal and informal \"you\" — and introducing yourself."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "HI-C01-shukriya",
-      "sequence": null,
-      "title": "शुक्रिया (shukriyā) — \"thanks,\" Hindi's other heritage",
-      "headword": "शुक्रिया",
-      "romanization": "",
-      "gloss": "thanks (shukriyā — everyday, Persian/Arabic-derived)",
-      "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:49b311784186967c",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "The everyday \"thanks\" — and it is not a Sanskrit word at all. It came into Hindi from Persian and, before that, Arabic. This lesson is where you meet Hindi's second bloodstream."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know first",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "धन्यवाद — the formal, Sanskrit \"thanks\"; this is its casual counterpart."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "New: श = \"sha,\" and the vowel sign ि for \"i\" (note: ि is written before the consonant but read after it). Reusing क र य ा:"
-            },
-            {
-              "kind": "speech",
-              "text": "क् + र becomes क्र = \"kra\" (halant on क, joined to र — another conjunct)."
-            },
-            {
-              "kind": "speech",
-              "text": "रि = \"ri\" (with the ि sign), या = \"yā.\""
-            },
-            {
-              "kind": "speech",
-              "text": "Left to right: शु, क्, रि, या = shu-k-ri-yā, which gives:"
-            },
-            {
-              "kind": "speech",
-              "text": "शुक्रिया = shukriyā."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "शुक्रिया comes, through Persian (شکریه), from Arabic شكر (shukr, \"gratitude, thanks\") — root sh-k-r. It is the same word as the Arabic shukran (\"thank you\"): Hindi and Arabic, two utterly different languages and scripts, saying thanks with one Semitic root. No Sanskrit here at all."
-            },
-            {
-              "kind": "speech",
-              "text": "Why does Hindi have an Arabic word for \"thanks\"? Centuries of Persian as the language of courts and administration in South Asia poured thousands of Persian (and, through Persian, Arabic) words into everyday Hindi/Urdu. So Hindi carries two vocabularies: a Sanskrit layer (dhanyavād, namaste) and a Perso-Arabic layer (shukriyā, and alvidā next). Often the Sanskrit word feels formal/literary and the Persian one feels everyday — though both are fully Hindi."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "shukriyā is the casual, everyday \"thanks\" — what you'd say to a friend, a shopkeeper, a waiter. dhanyavād is its formal twin. Choosing between them is choosing a register — and, quietly, a heritage."
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "read \"शुक्रिया\" — shu, k, ri, yā",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: read \"शुक्रिया\" — shu · k · ri · yā]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"shukriyā\" — and note it shares a root with Arabic shukran",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"shukriyā\" — and note it shares a root with Arabic *shukran*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "formal vs casual \"thanks\" — dhanyavād / shukriyā",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: formal vs casual \"thanks\" — *dhanyavād* / *shukriyā*]"
-            }
-          ]
-        },
-        {
-          "index": 6,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Where does shukriyā come from — Sanskrit or Persian/Arabic? (Persian, from Arabic shukr — same root as Arabic shukran.) What are Hindi's two vocabulary layers? (Sanskrit and Perso-Arabic.)"
             }
           ]
         }

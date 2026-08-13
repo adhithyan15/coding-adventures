@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-C19-umr
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 410
+sequence: 660
 chapter: 19
 type: phrase
 headword: उम्र

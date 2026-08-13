@@ -1,5 +1,6 @@
 ---
 id: TE-C02-naa-peru
+sequence: 90
 chapter: 2
 type: phrase
 headword: నా పేరు …

@@ -1,5 +1,6 @@
 ---
 id: SA-C03-na-cinta
+sequence: 190
 chapter: 3
 type: phrase
 headword: न चिन्ता

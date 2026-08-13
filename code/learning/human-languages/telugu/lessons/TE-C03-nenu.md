@@ -1,5 +1,6 @@
 ---
 id: TE-C03-nenu
+sequence: 170
 chapter: 3
 type: word
 headword: నేను

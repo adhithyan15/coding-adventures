@@ -1,5 +1,6 @@
 ---
 id: ML-C01-nandi
+sequence: 20
 chapter: 1
 type: word
 headword: നന്ദി

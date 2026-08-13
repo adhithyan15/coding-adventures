@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-C09-maaf-kijiye
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 270
+sequence: 520
 chapter: 9
 type: phrase
 headword: माफ़ कीजिए

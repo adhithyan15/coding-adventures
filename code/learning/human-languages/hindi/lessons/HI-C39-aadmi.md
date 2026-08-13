@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-C39-aadmi
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 830
+sequence: 1080
 chapter: 39
 type: word
 headword: आदमी

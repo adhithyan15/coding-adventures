@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-C24-hara-pila
 spine_node: SPINE-DEFINITE-REFERENCE
-sequence: 490
+sequence: 740
 chapter: 24
 type: word
 headword: हरा

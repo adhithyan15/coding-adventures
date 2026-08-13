@@ -1,5 +1,6 @@
 ---
 id: TE-C04-velli-vastaanu
+sequence: 220
 chapter: 4
 type: phrase
 headword: వెళ్ళి వస్తాను

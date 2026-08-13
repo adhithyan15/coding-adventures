@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-C37-kitaab
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 760
+sequence: 1010
 chapter: 37
 type: word
 headword: किताब

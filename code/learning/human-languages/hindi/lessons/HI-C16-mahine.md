@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-C16-mahine
 spine_node: SPINE-TIME-OF-DAY
-sequence: 380
+sequence: 630
 chapter: 16
 type: word
 headword: जनवरी फ़रवरी मार्च अप्रैल मई जून जुलाई अगस्त सितंबर अक्टूबर नवंबर दिसंबर

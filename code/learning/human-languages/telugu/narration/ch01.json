@@ -4,535 +4,11 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:1f90c5a082a1b028",
+  "sourceHash": "fnv1a64:265df7c4fe1a1389",
   "lessons": [
     {
-      "id": "TE-C01-avunu",
-      "sequence": null,
-      "title": "అవును (avunu) — \"yes\"",
-      "headword": "అవును",
-      "romanization": "avunu",
-      "gloss": "yes (avunu)",
-      "script": "telugu",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:a1171fcd96f01b85",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "After two Sanskrit loans, a native Telugu word: the plain \"yes.\""
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "(Skim if you read Telugu.)"
-            },
-            {
-              "kind": "speech",
-              "text": "అ = \"a\" — an independent vowel (the word starts with a vowel, so it gets a full letter, not a hooked-on sign)."
-            },
-            {
-              "kind": "speech",
-              "text": "వు = \"vu\" — వ (va) with the \"u\" vowel sign."
-            },
-            {
-              "kind": "speech",
-              "text": "ను = \"nu\" — న (na) with the \"u\" sign."
-            },
-            {
-              "kind": "speech",
-              "text": "Left to right: అ, వు, ను = a-vu-nu, which gives:"
-            },
-            {
-              "kind": "speech",
-              "text": "అవును = avunu = \"yes.\""
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "అవును (avunu) is the everyday \"yes / it is so,\" a native Telugu word. It comes from the verb of being — literally close to \"it is\" — which is why the next lesson's \"no\" (kādu, \"is not\") is its exact mirror."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: yes and no as \"it is\" / \"it is not\"",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Telugu's yes/no pair are really little statements of being: avunu (\"it is [so]\") and kādu (\"it is not\"). This is a very Dravidian instinct — answer by asserting or denying existence, rather than with a bare particle. You'll also hear a \"yes\" come back as the question's own verb, echoed (vaccānu, \"I came,\" for \"did you come?\"). Bank avunu as the simple word."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "a, vu, nu becomes \"avunu\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: a · vu · nu → \"avunu\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "why అ is a full letter here (the word starts with the vowel)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: why అ is a full letter here (the word starts with the vowel)]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"avunu\" — \"yes, it is so\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"avunu\" — \"yes, it is so\"]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Read అవును (avunu). Native Telugu or Sanskrit loan? (Native.) At root, what kind of statement is a Telugu \"yes\"? (An assertion of being — \"it is [so],\" mirrored by kādu, \"it is not.\")"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "TE-C01-dhanyavadamulu",
-      "sequence": null,
-      "title": "ధన్యవాదములు (dhanyavādamulu) — \"thank you,\" utterances of \"worthy\"",
-      "headword": "ధన్యవాదములు",
-      "romanization": "dhanyavādamulu",
-      "gloss": "thank you (dhanyavādamulu — \"utterances of 'worthy'\")",
-      "script": "telugu",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block",
-        "sight-cue"
-      ],
-      "sourceHash": "fnv1a64:01180c3b06f07cd3",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page",
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Another Sanskrit loan — and a first look at a Telugu ending, the plural that turns \"a thanks\" into \"thanks.\""
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "(Skim if you read Telugu.)"
-            },
-            {
-              "kind": "speech",
-              "text": "ధ = \"dha\" — an aspirated d (a puff of breath after it)."
-            },
-            {
-              "kind": "speech",
-              "text": "న్య = \"nya\" — న (na) vowel-stripped and stacked with య (ya)."
-            },
-            {
-              "kind": "speech",
-              "text": "వా = \"vā\", ద = \"da\", ము = \"mu\", లు = \"lu.\""
-            },
-            {
-              "kind": "speech",
-              "text": "Left to right: ధ, న్య, వా, ద, ము, లు = dha-nya-vā-da-mu-lu, which gives:"
-            },
-            {
-              "kind": "speech",
-              "text": "ధన్యవాదములు = dhanyavādamulu."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "The core is Sanskrit: dhanya (\"worthy, blessed,\" from dhana, \"wealth\") + vāda (\"a saying,\" root vad, \"to speak\") = \"an utterance of '[you are] worthy.'\" Telugu then adds its own plural ending -mulu, so dhanyavāda-mulu is literally \"worthy-sayings,\" thanks in the plural of courtesy. (You'll also hear the shorter dhanyavādālu.) The Sanskrit stem is the same one inside Hindi dhanyavād and Kannada dhanyavāda."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: Telugu builds words by gluing endings on",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "-mulu is your first taste of how Telugu (like all Dravidian languages) works: it is agglutinative — it stacks meaning by gluing endings onto a stem, one after another, rather than using separate little words. Here a plural rides on a borrowed Sanskrit noun. Later endings will mark case (\"to,\" \"from,\" \"with\") the same way. Bank the idea: in Telugu, grammar is mostly suffixes."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "unknown",
-          "title": "Across the family — the same idea, five ways",
-          "segments": [
-            {
-              "kind": "table",
-              "headers": [
-                "Language",
-                "\"Thanks\"",
-                "Note"
-              ],
-              "columns": 3,
-              "rowCount": 5,
-              "utterances": [
-                "Language: Telugu. \"Thanks\": dhanyavādamulu (ధన్యవాదములు). Note: Sanskrit stem + Telugu plural.",
-                "Language: Kannada. \"Thanks\": dhanyavāda (ಧನ್ಯವಾದ). Note: Sanskrit — same stem.",
-                "Language: Hindi. \"Thanks\": dhanyavād (धन्यवाद). Note: Sanskrit — same stem.",
-                "Language: Tamil. \"Thanks\": naṉṟi (நன்றி). Note: native (\"goodness\").",
-                "Language: Malayalam. \"Thanks\": nandi (നന്ദി). Note: native — Tamil's cousin."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Telugu, Kannada, and Hindi share the Sanskrit stem; Tamil and Malayalam keep the native naṉṟi / nandi."
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "dha, nya, vā, da, mu, lu becomes \"dhanyavādamulu\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: dha · nya · vā · da · mu · lu → \"dhanyavādamulu\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the pieces — Sanskrit dhanya-vāda + Telugu plural -mulu",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the pieces — Sanskrit *dhanya-vāda* + Telugu plural *-mulu*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the shorter everyday form, \"dhanyavādālu\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the shorter everyday form, \"dhanyavādālu\"]"
-            }
-          ]
-        },
-        {
-          "index": 6,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Read ధన్యవాదములు (dhanyavādamulu). What is Sanskrit in it, and what is Telugu? (dhanya-vāda is Sanskrit; the plural -mulu is Telugu.) What does \"agglutinative\" mean for how Telugu builds words? (It glues endings onto a stem.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "TE-C01-ledu",
-      "sequence": null,
-      "title": "లేదు (lēdu) — \"no,\" where Telugu parts ways with its sisters",
-      "headword": "లేదు",
-      "romanization": "lēdu",
-      "gloss": "no / there isn't (lēdu)",
-      "script": "telugu",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:24a4d36df8acba14",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "The partner of avunu — and a small surprise. Tamil, Kannada, and Malayalam all say \"no\" with a word built on il- (illai / illa). Telugu does not: it goes its own way with lēdu."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "(Skim if you read Telugu.)"
-            },
-            {
-              "kind": "speech",
-              "text": "లే = \"lē\" — ల (la) with the long-\"ē\" vowel sign."
-            },
-            {
-              "kind": "speech",
-              "text": "దు = \"du\" — ద (da) with the \"u\" sign."
-            },
-            {
-              "kind": "speech",
-              "text": "Left to right: లే, దు = lē-du, which gives:"
-            },
-            {
-              "kind": "speech",
-              "text": "లేదు = lēdu."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "లేదు (lēdu) means \"there is not, it is absent.\" It is native Dravidian, but built on a different root (lē-, absence) from the il- of Tamil and Kannada. Telugu also has కాదు (kādu), \"it is not [that]\" — so Telugu splits \"no\" into two:"
-            },
-            {
-              "kind": "speech",
-              "text": "lēdu — denies existence (\"there isn't\"): pustakam lēdu, \"there is no book.\""
-            },
-            {
-              "kind": "speech",
-              "text": "kādu — denies identity (\"it isn't [that]\"): idi pustakam kādu, \"this is not a book.\""
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: two \"no\"s, existence vs. identity",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "English leans on one flat \"no.\" Telugu — carefully — keeps two negatives: lēdu for \"there isn't / doesn't exist,\" kādu for \"is not [the thing you said].\" Choosing between them is choosing what you're denying. (This two-way negative is a Dravidian trait; Tamil has an echo of it too, but Telugu draws the line most sharply — and with a different root-word from its sisters.)"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "unknown",
-          "title": "Across the family — the same idea, five ways",
-          "segments": [
-            {
-              "kind": "table",
-              "headers": [
-                "Language",
-                "\"No / isn't\"",
-                "Note"
-              ],
-              "columns": 3,
-              "rowCount": 5,
-              "utterances": [
-                "Language: Telugu. \"No / isn't\": lēdu / kādu (లేదు / కాదు). Note: native, but a different root (lē-, kā-).",
-                "Language: Tamil. \"No / isn't\": illai (இல்லை). Note: native, root il-.",
-                "Language: Kannada. \"No / isn't\": illa (ಇಲ್ಲ). Note: native, root il-.",
-                "Language: Malayalam. \"No / isn't\": illa (ഇല്ല). Note: native, root il-.",
-                "Language: Hindi. \"No / isn't\": nahīṁ (नहीं). Note: Indo-European (unrelated)."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Three sisters share il-; Telugu alone picked lē- / kā-. Same family, not a uniform one — a reminder that Dravidian has real internal branches."
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "lē, du becomes \"lēdu\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: lē · du → \"lēdu\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the pair — avunu (\"yes\") / lēdu (\"no\")",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the pair — *avunu* (\"yes\") / *lēdu* (\"no\")]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the two no's — pustakam lēdu (\"no book\") vs. idi pustakam kādu (\"this isn't a book\")",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the two no's — *pustakam lēdu* (\"no book\") vs. *idi pustakam kādu* (\"this isn't a book\")]"
-            }
-          ]
-        },
-        {
-          "index": 6,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Read లేదు (lēdu). What does it deny — existence or identity? (Existence — \"there isn't\"; kādu denies identity.) How does Telugu's \"no\" differ from Tamil's and Kannada's? (Different root: lē- / kā-, not the shared il-.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "TE-C01-namaskaram",
-      "sequence": null,
+      "sequence": 10,
       "title": "నమస్కారం (namaskāram) — \"greetings,\" a making of a bow",
       "headword": "నమస్కారం",
       "romanization": "namaskāram",
@@ -543,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ff3c7a1094f3e782",
+      "sourceHash": "fnv1a64:11bfe549191f20ea",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -722,8 +198,682 @@
       ]
     },
     {
+      "id": "TE-C01-dhanyavadamulu",
+      "sequence": 20,
+      "title": "ధన్యవాదములు (dhanyavādamulu) — \"thank you,\" utterances of \"worthy\"",
+      "headword": "ధన్యవాదములు",
+      "romanization": "dhanyavādamulu",
+      "gloss": "thank you (dhanyavādamulu — \"utterances of 'worthy'\")",
+      "script": "telugu",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:b95b1ffaab292294",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Another Sanskrit loan — and a first look at a Telugu ending, the plural that turns \"a thanks\" into \"thanks.\""
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "(Skim if you read Telugu.)"
+            },
+            {
+              "kind": "speech",
+              "text": "ధ = \"dha\" — an aspirated d (a puff of breath after it)."
+            },
+            {
+              "kind": "speech",
+              "text": "న్య = \"nya\" — న (na) vowel-stripped and stacked with య (ya)."
+            },
+            {
+              "kind": "speech",
+              "text": "వా = \"vā\", ద = \"da\", ము = \"mu\", లు = \"lu.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Left to right: ధ, న్య, వా, ద, ము, లు = dha-nya-vā-da-mu-lu, which gives:"
+            },
+            {
+              "kind": "speech",
+              "text": "ధన్యవాదములు = dhanyavādamulu."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The core is Sanskrit: dhanya (\"worthy, blessed,\" from dhana, \"wealth\") + vāda (\"a saying,\" root vad, \"to speak\") = \"an utterance of '[you are] worthy.'\" Telugu then adds its own plural ending -mulu, so dhanyavāda-mulu is literally \"worthy-sayings,\" thanks in the plural of courtesy. (You'll also hear the shorter dhanyavādālu.) The Sanskrit stem is the same one inside Hindi dhanyavād and Kannada dhanyavāda."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: Telugu builds words by gluing endings on",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "-mulu is your first taste of how Telugu (like all Dravidian languages) works: it is agglutinative — it stacks meaning by gluing endings onto a stem, one after another, rather than using separate little words. Here a plural rides on a borrowed Sanskrit noun. Later endings will mark case (\"to,\" \"from,\" \"with\") the same way. Bank the idea: in Telugu, grammar is mostly suffixes."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "unknown",
+          "title": "Across the family — the same idea, five ways",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "Language",
+                "\"Thanks\"",
+                "Note"
+              ],
+              "columns": 3,
+              "rowCount": 5,
+              "utterances": [
+                "Language: Telugu. \"Thanks\": dhanyavādamulu (ధన్యవాదములు). Note: Sanskrit stem + Telugu plural.",
+                "Language: Kannada. \"Thanks\": dhanyavāda (ಧನ್ಯವಾದ). Note: Sanskrit — same stem.",
+                "Language: Hindi. \"Thanks\": dhanyavād (धन्यवाद). Note: Sanskrit — same stem.",
+                "Language: Tamil. \"Thanks\": naṉṟi (நன்றி). Note: native (\"goodness\").",
+                "Language: Malayalam. \"Thanks\": nandi (നന്ദി). Note: native — Tamil's cousin."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Telugu, Kannada, and Hindi share the Sanskrit stem; Tamil and Malayalam keep the native naṉṟi / nandi."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dha, nya, vā, da, mu, lu becomes \"dhanyavādamulu\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: dha · nya · vā · da · mu · lu → \"dhanyavādamulu\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pieces — Sanskrit dhanya-vāda + Telugu plural -mulu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pieces — Sanskrit *dhanya-vāda* + Telugu plural *-mulu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the shorter everyday form, \"dhanyavādālu\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the shorter everyday form, \"dhanyavādālu\"]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read ధన్యవాదములు (dhanyavādamulu). What is Sanskrit in it, and what is Telugu? (dhanya-vāda is Sanskrit; the plural -mulu is Telugu.) What does \"agglutinative\" mean for how Telugu builds words? (It glues endings onto a stem.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C01-avunu",
+      "sequence": 30,
+      "title": "అవును (avunu) — \"yes\"",
+      "headword": "అవును",
+      "romanization": "avunu",
+      "gloss": "yes (avunu)",
+      "script": "telugu",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:3bdb2697ebb97b2f",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "After two Sanskrit loans, a native Telugu word: the plain \"yes.\""
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "(Skim if you read Telugu.)"
+            },
+            {
+              "kind": "speech",
+              "text": "అ = \"a\" — an independent vowel (the word starts with a vowel, so it gets a full letter, not a hooked-on sign)."
+            },
+            {
+              "kind": "speech",
+              "text": "వు = \"vu\" — వ (va) with the \"u\" vowel sign."
+            },
+            {
+              "kind": "speech",
+              "text": "ను = \"nu\" — న (na) with the \"u\" sign."
+            },
+            {
+              "kind": "speech",
+              "text": "Left to right: అ, వు, ను = a-vu-nu, which gives:"
+            },
+            {
+              "kind": "speech",
+              "text": "అవును = avunu = \"yes.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అవును (avunu) is the everyday \"yes / it is so,\" a native Telugu word. It comes from the verb of being — literally close to \"it is\" — which is why the next lesson's \"no\" (kādu, \"is not\") is its exact mirror."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: yes and no as \"it is\" / \"it is not\"",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Telugu's yes/no pair are really little statements of being: avunu (\"it is [so]\") and kādu (\"it is not\"). This is a very Dravidian instinct — answer by asserting or denying existence, rather than with a bare particle. You'll also hear a \"yes\" come back as the question's own verb, echoed (vaccānu, \"I came,\" for \"did you come?\"). Bank avunu as the simple word."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a, vu, nu becomes \"avunu\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a · vu · nu → \"avunu\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "why అ is a full letter here (the word starts with the vowel)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: why అ is a full letter here (the word starts with the vowel)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"avunu\" — \"yes, it is so\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"avunu\" — \"yes, it is so\"]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read అవును (avunu). Native Telugu or Sanskrit loan? (Native.) At root, what kind of statement is a Telugu \"yes\"? (An assertion of being — \"it is [so],\" mirrored by kādu, \"it is not.\")"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C01-ledu",
+      "sequence": 40,
+      "title": "లేదు (lēdu) — \"no,\" where Telugu parts ways with its sisters",
+      "headword": "లేదు",
+      "romanization": "lēdu",
+      "gloss": "no / there isn't (lēdu)",
+      "script": "telugu",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:bce4236ad2652e65",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The partner of avunu — and a small surprise. Tamil, Kannada, and Malayalam all say \"no\" with a word built on il- (illai / illa). Telugu does not: it goes its own way with lēdu."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "(Skim if you read Telugu.)"
+            },
+            {
+              "kind": "speech",
+              "text": "లే = \"lē\" — ల (la) with the long-\"ē\" vowel sign."
+            },
+            {
+              "kind": "speech",
+              "text": "దు = \"du\" — ద (da) with the \"u\" sign."
+            },
+            {
+              "kind": "speech",
+              "text": "Left to right: లే, దు = lē-du, which gives:"
+            },
+            {
+              "kind": "speech",
+              "text": "లేదు = lēdu."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "లేదు (lēdu) means \"there is not, it is absent.\" It is native Dravidian, but built on a different root (lē-, absence) from the il- of Tamil and Kannada. Telugu also has కాదు (kādu), \"it is not [that]\" — so Telugu splits \"no\" into two:"
+            },
+            {
+              "kind": "speech",
+              "text": "lēdu — denies existence (\"there isn't\"): pustakam lēdu, \"there is no book.\""
+            },
+            {
+              "kind": "speech",
+              "text": "kādu — denies identity (\"it isn't [that]\"): idi pustakam kādu, \"this is not a book.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: two \"no\"s, existence vs. identity",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "English leans on one flat \"no.\" Telugu — carefully — keeps two negatives: lēdu for \"there isn't / doesn't exist,\" kādu for \"is not [the thing you said].\" Choosing between them is choosing what you're denying. (This two-way negative is a Dravidian trait; Tamil has an echo of it too, but Telugu draws the line most sharply — and with a different root-word from its sisters.)"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "unknown",
+          "title": "Across the family — the same idea, five ways",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "Language",
+                "\"No / isn't\"",
+                "Note"
+              ],
+              "columns": 3,
+              "rowCount": 5,
+              "utterances": [
+                "Language: Telugu. \"No / isn't\": lēdu / kādu (లేదు / కాదు). Note: native, but a different root (lē-, kā-).",
+                "Language: Tamil. \"No / isn't\": illai (இல்லை). Note: native, root il-.",
+                "Language: Kannada. \"No / isn't\": illa (ಇಲ್ಲ). Note: native, root il-.",
+                "Language: Malayalam. \"No / isn't\": illa (ഇല്ല). Note: native, root il-.",
+                "Language: Hindi. \"No / isn't\": nahīṁ (नहीं). Note: Indo-European (unrelated)."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Three sisters share il-; Telugu alone picked lē- / kā-. Same family, not a uniform one — a reminder that Dravidian has real internal branches."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lē, du becomes \"lēdu\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: lē · du → \"lēdu\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pair — avunu (\"yes\") / lēdu (\"no\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pair — *avunu* (\"yes\") / *lēdu* (\"no\")]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two no's — pustakam lēdu (\"no book\") vs. idi pustakam kādu (\"this isn't a book\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two no's — *pustakam lēdu* (\"no book\") vs. *idi pustakam kādu* (\"this isn't a book\")]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read లేదు (lēdu). What does it deny — existence or identity? (Existence — \"there isn't\"; kādu denies identity.) How does Telugu's \"no\" differ from Tamil's and Kannada's? (Different root: lē- / kā-, not the shared il-.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C01-sare",
+      "sequence": 50,
+      "title": "సరే (sarē) — \"okay,\" the family word in Telugu dress",
+      "headword": "సరే",
+      "romanization": "sarē",
+      "gloss": "okay / alright (sarē)",
+      "script": "telugu",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:c44c9232557d1566",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The easy middle between \"yes\" and \"no\": \"okay, alright, fine.\" It's the same Dravidian word you'd meet as sari in Tamil and Kannada — Telugu just rounds it off to sarē."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "(Skim if you read Telugu.)"
+            },
+            {
+              "kind": "speech",
+              "text": "స = \"sa.\""
+            },
+            {
+              "kind": "speech",
+              "text": "రే = \"rē\" — ర (ra) with the long-\"ē\" vowel sign (the same sign you met on lē in lēdu)."
+            },
+            {
+              "kind": "speech",
+              "text": "Left to right: స, రే = sa-rē, which gives:"
+            },
+            {
+              "kind": "speech",
+              "text": "సరే = sarē = \"okay / alright.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సరే (sarē) is native Dravidian \"correct, right becomes okay, agreed\" — the verbal nod of Telugu. It is the same family word as Tamil and Kannada సరి/ಸರಿ/சரி (sari), worn to sarē in Telugu. Say it once to agree; say sarē sarē to mean \"yes yes, fine, enough.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: one Dravidian word, three scripts",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sari / sarē is a clean demonstration of family closeness: essentially one word, one meaning, dressed in three different scripts — Tamil, Kannada, Telugu. As you learn to read each, spotting a shared word shift its shape but not its sense is the quickest way to feel the relationship (and the whole reason to learn these four side by side)."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sa, rē becomes \"sarē\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: sa · rē → \"sarē\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the everyday triple — avunu (yes), lēdu (no), sarē (okay)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the everyday triple — *avunu* (yes) · *lēdu* (no) · *sarē* (okay)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"sarē sarē\" — \"alright, alright\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"sarē sarē\" — \"alright, alright\"]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read సరే (sarē). What does it mean, and what is its Tamil/Kannada twin? (\"Okay, agreed\"; sari.) Which vowel sign does rē share with lēdu? (The long-\"ē\" sign.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "TE-C01-practice",
-      "sequence": null,
+      "sequence": 60,
       "title": "Chapter 1 — recap, and how Telugu says goodbye",
       "headword": "(recap)",
       "romanization": "",
@@ -734,7 +884,7 @@
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:95fea69b15a25359",
+      "sourceHash": "fnv1a64:eaf5f00962498e18",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -872,156 +1022,6 @@
             {
               "kind": "speech",
               "text": "Next chapter: introducing yourself — nā pēru… (\"my name…\") — and Telugu's nuvvu / mīru (familiar / respectful \"you\")."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "TE-C01-sare",
-      "sequence": null,
-      "title": "సరే (sarē) — \"okay,\" the family word in Telugu dress",
-      "headword": "సరే",
-      "romanization": "sarē",
-      "gloss": "okay / alright (sarē)",
-      "script": "telugu",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:607cdc58a80a738a",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "The easy middle between \"yes\" and \"no\": \"okay, alright, fine.\" It's the same Dravidian word you'd meet as sari in Tamil and Kannada — Telugu just rounds it off to sarē."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "(Skim if you read Telugu.)"
-            },
-            {
-              "kind": "speech",
-              "text": "స = \"sa.\""
-            },
-            {
-              "kind": "speech",
-              "text": "రే = \"rē\" — ర (ra) with the long-\"ē\" vowel sign (the same sign you met on lē in lēdu)."
-            },
-            {
-              "kind": "speech",
-              "text": "Left to right: స, రే = sa-rē, which gives:"
-            },
-            {
-              "kind": "speech",
-              "text": "సరే = sarē = \"okay / alright.\""
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "సరే (sarē) is native Dravidian \"correct, right becomes okay, agreed\" — the verbal nod of Telugu. It is the same family word as Tamil and Kannada సరి/ಸರಿ/சரி (sari), worn to sarē in Telugu. Say it once to agree; say sarē sarē to mean \"yes yes, fine, enough.\""
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: one Dravidian word, three scripts",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "sari / sarē is a clean demonstration of family closeness: essentially one word, one meaning, dressed in three different scripts — Tamil, Kannada, Telugu. As you learn to read each, spotting a shared word shift its shape but not its sense is the quickest way to feel the relationship (and the whole reason to learn these four side by side)."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "sa, rē becomes \"sarē\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: sa · rē → \"sarē\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the everyday triple — avunu (yes), lēdu (no), sarē (okay)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the everyday triple — *avunu* (yes) · *lēdu* (no) · *sarē* (okay)]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"sarē sarē\" — \"alright, alright\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"sarē sarē\" — \"alright, alright\"]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Read సరే (sarē). What does it mean, and what is its Tamil/Kannada twin? (\"Okay, agreed\"; sari.) Which vowel sign does rē share with lēdu? (The long-\"ē\" sign.)"
             }
           ]
         }

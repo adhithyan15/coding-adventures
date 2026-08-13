@@ -4,11 +4,11 @@
   "chapter": 10,
   "title": "Days of the Week",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:74d9dfe51926b5a9",
+  "sourceHash": "fnv1a64:f14857cb26da0e4c",
   "lessons": [
     {
       "id": "HI-C10-somavaar-shukravaar",
-      "sequence": 280,
+      "sequence": 530,
       "title": "सोमवार to शुक्रवार — Hindi's own planet-week",
       "headword": "सोमवार मंगलवार बुधवार गुरुवार शुक्रवार",
       "romanization": "",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:f7cc8ce278f973ce",
+      "sourceHash": "fnv1a64:77ca7041f463e3f0",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -144,7 +144,7 @@
     },
     {
       "id": "HI-C10-shanivaar-ravivaar",
-      "sequence": 290,
+      "sequence": 540,
       "title": "शनिवार and रविवार — Saturday and Sunday, no rewrite needed",
       "headword": "शनिवार रविवार",
       "romanization": "",
@@ -155,7 +155,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b1cc093e07662b42",
+      "sourceHash": "fnv1a64:25352c40eebfb01e",
       "notice": null,
       "blocks": [
         {

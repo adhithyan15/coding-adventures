@@ -2,7 +2,7 @@
 schema_version: 2
 id: HI-C25-din
 spine_node: SPINE-TIME-OF-DAY
-sequence: 510
+sequence: 760
 chapter: 25
 type: word
 headword: दिन

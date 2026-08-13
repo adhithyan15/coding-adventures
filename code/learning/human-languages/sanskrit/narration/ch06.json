@@ -4,11 +4,11 @@
   "chapter": 6,
   "title": "Numbers One to Five",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:9af53af00e5fce0a",
+  "sourceHash": "fnv1a64:13ed263f4eceffa1",
   "lessons": [
     {
       "id": "SA-C06-numbers-1-5",
-      "sequence": 340,
+      "sequence": 310,
       "title": "एक, द्व, त्रि, चतुर्, पञ्च (pañca) — one to five",
       "headword": "एक द्व त्रि चतुर् पञ्च",
       "romanization": "eka dva tri catur pañca",
@@ -20,7 +20,7 @@
         "sight-cue",
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:d11d09bd8e57ad00",
+      "sourceHash": "fnv1a64:3168021dc7f91b41",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -158,7 +158,7 @@
     },
     {
       "id": "SA-C06-number-cognates",
-      "sequence": 350,
+      "sequence": 320,
       "title": "The Sanskrit numbers are English cousins",
       "headword": "एक · द्व · त्रि · चतुर् · पञ्च",
       "romanization": "eka · dva · tri · catur · pañca",
@@ -169,7 +169,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7bfc7b92461bc6f1",
+      "sourceHash": "fnv1a64:57765fa65fcfe9d2",
       "notice": null,
       "blocks": [
         {
@@ -356,7 +356,7 @@
     },
     {
       "id": "SA-C06-pancha-travels",
-      "sequence": 360,
+      "sequence": 330,
       "title": "Pañca hiding in familiar words",
       "headword": "पञ्च",
       "romanization": "pañca",
@@ -367,7 +367,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b9ff587c9b04cf7a",
+      "sourceHash": "fnv1a64:5331f9d89fc516c1",
       "notice": null,
       "blocks": [
         {

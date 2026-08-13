@@ -1,5 +1,6 @@
 ---
 id: SA-C02-mama
+sequence: 80
 chapter: 2
 type: word
 headword: मम

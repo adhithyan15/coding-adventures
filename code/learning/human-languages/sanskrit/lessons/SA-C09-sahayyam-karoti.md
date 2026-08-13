@@ -2,7 +2,7 @@
 schema_version: 2
 id: SA-C09-sahayyam-karoti
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 490
+sequence: 460
 chapter: 9
 type: phrase
 headword: साहाय्यं करोति

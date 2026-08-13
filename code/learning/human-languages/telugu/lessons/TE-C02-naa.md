@@ -1,5 +1,6 @@
 ---
 id: TE-C02-naa
+sequence: 80
 chapter: 2
 type: word
 headword: నా

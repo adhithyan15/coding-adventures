@@ -1,5 +1,6 @@
 ---
 id: SA-C02-kim
+sequence: 120
 chapter: 2
 type: word
 headword: किम्

@@ -4,11 +4,11 @@
   "chapter": 32,
   "title": "Good Evening",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:623dae6a35c8d188",
+  "sourceHash": "fnv1a64:fda23278fd78481e",
   "lessons": [
     {
       "id": "HI-C32-shubh-sandhya",
-      "sequence": 580,
+      "sequence": 830,
       "title": "शुभ संध्या (shubh sandhyā) — \"good evening,\" a twilight word with two lives",
       "headword": "शुभ संध्या",
       "romanization": "",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dd5e73e34d5bb135",
+      "sourceHash": "fnv1a64:855f30fc2772ef89",
       "notice": null,
       "blocks": [
         {
@@ -122,7 +122,7 @@
     },
     {
       "id": "HI-C32-evening-register",
-      "sequence": 590,
+      "sequence": 840,
       "title": "शुभ संध्या or नमस्ते? — choose by setting",
       "headword": "शुभ संध्या / नमस्ते",
       "romanization": "shubh sandhyā / namaste",
@@ -133,7 +133,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:59d547d969da7cee",
+      "sourceHash": "fnv1a64:9b41f026b8708730",
       "notice": null,
       "blocks": [
         {

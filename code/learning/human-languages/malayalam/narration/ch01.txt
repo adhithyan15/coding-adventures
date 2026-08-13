@@ -3,89 +3,6 @@ Malayalam, chapter 1: Greetings.
 
 
 Lesson 1 of 6.
-അതെ (athe) — "yes," literally "that [is so]".
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-The plain "yes" — and a small window into how Malayalam thinks, because the word is really the pointing-word "that."
-
-The letters in this word.
-(Skim if you read Malayalam.)
-അ = "a" — an independent vowel (the word starts with a vowel, so it gets a full letter).
-തെ = "the" — ത (tha, a soft th as in this) with the "e" vowel sign written in front of the consonant.
-Left to right: അ, തെ = a-the, which gives:
-അതെ = athe = "yes."
-
-The word, taken apart.
-അതെ (athe) is native Malayalam, and it grows from അത് (athu), "that." To say "yes," Malayalam essentially says "that [is so]" — you affirm by pointing at the truth of what was said. Its natural partner is the negative alla, "[it is] not that" — the next lesson.
-
-Grammar Lens: yes and no as "that is" / "not that".
-Malayalam's yes/no pair are demonstratives in disguise: athe ("that [is so]") and alla ("not that"). Like its sisters, Malayalam also readily answers by echoing the verb of the question (vannu, "[I] came," for "did you come?"). Bank athe as the simple word, but hear the logic underneath — you agree by confirming that is how things are.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: a, the becomes "athe"]
-[pause 8 seconds for the answer]
-[your turn — say: note the "e" sign sits before ത but is read after it]
-[pause 8 seconds for the answer]
-[your turn — say: "athe" — "yes, that's so"]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Read അതെ. What everyday word is it built from, and so what does "yes" literally assert? (athu, "that" — so "yes" = "that [is so]".) Where does the "e" vowel sign sit, and where is it read? (Written before the consonant, read after.)
-
-
-Lesson 2 of 6.
-ഇല്ല (illa) — "no," the word Malayalam and Tamil share almost exactly.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-The partner of athe, and more family evidence: this Malayalam "no" is essentially the same word as Tamil's illai and Kannada's illa — the old Dravidian il- runs right through.
-
-The letters in this word.
-(Skim if you read Malayalam.)
-ഇ = "i" — an independent vowel (word-initial, so a full letter, like അ in athe).
-ല്ല = "lla" — a conjunct: ല (la) loses its vowel and joins another ല (la) into a doubled, held "ll."
-Left to right: ഇ, ല്ല = i-lla, which gives:
-ഇല്ല = illa.
-
-The word, taken apart.
-ഇല്ല (illa) is built on the ancient Dravidian root il, "not-being, absence" — so, exactly like Tamil illai, it really means "[it] is not, [there] is not," and serves as the everyday "no." Its positive twin is ഉണ്ട് (uṇṭŭ), "there is."
-
-Grammar Lens: Dravidian negates by being.
-English inserts not / no. Malayalam — like Tamil and Kannada — instead swaps in the negative verb of existence:
-pustakam uṇṭŭ — "there is a book."
-pustakam illa — "there is not a book."
-So illa is both the plain "no" and the word that negates a whole sentence. This is a shared Dravidian inheritance, strongest across the Tamil–Malayalam pair: Tamil illai, Malayalam illa, Kannada illa — one family, one way to say a thing is not. (Recall Telugu was the outlier here, using lēdu.)
-
-Across the family — the same idea, five ways.
-[a table of 5 rows, read aloud]
-Language: Malayalam. "No / isn't": illa (ഇല്ല). Note: native, root il-.
-Language: Tamil. "No / isn't": illai (இல்லை). Note: the same root.
-Language: Kannada. "No / isn't": illa (ಇಲ್ಲ). Note: the same root.
-Language: Telugu. "No / isn't": lēdu (లేదు). Note: native, a different root.
-Language: Hindi. "No / isn't": nahīṁ (नहीं). Note: Indo-European (unrelated).
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: i, lla becomes "illa"]
-[pause 8 seconds for the answer]
-[your turn — say: the pair — athe ("yes") / illa ("no")]
-[pause 8 seconds for the answer]
-[your turn — say: "pustakam illa" — "there is no book"]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Read ഇല്ല (illa). Literally, is it closer to "no" or "is not"? ("Is not / there is not.") Which languages share this exact il- root, and which Dravidian sister does not? (Tamil and Kannada share it; Telugu is the outlier, with lēdu.)
-
-
-Lesson 3 of 6.
 നമസ്കാരം (namaskāram) — "greetings," a making of a bow.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -134,7 +51,7 @@ Wrap-up Recall.
 Read നമസ്കാരം (namaskāram). Native Malayalam or a borrowing, and what does it literally mean? (Sanskrit namas + kāra, "the making of a bow.") Which language is Malayalam's closest sister? (Tamil.)
 
 
-Lesson 4 of 6.
+Lesson 2 of 6.
 നന്ദി (nandi) — "thank you," and the Tamil kinship made visible.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -179,42 +96,90 @@ Wrap-up Recall.
 Read നന്ദി (nandi). Is it native or a Sanskrit loan, and which language has the twin word? (Native — root nal, "good"; Tamil's naṉṟi.) Which two Dravidian languages use the Sanskrit word for thanks instead? (Kannada, Telugu.)
 
 
-Lesson 5 of 6.
-Chapter 1 — recap, and how Malayalam says goodbye.
+Lesson 3 of 6.
+അതെ (athe) — "yes," literally "that [is so]".
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called Read them back until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-Five words, and a first handful of Malayalam letters read straight off the page. Let's gather them — and add the farewell, which is almost word-for-word the Tamil one.
+The plain "yes" — and a small window into how Malayalam thinks, because the word is really the pointing-word "that."
 
-Read them back.
-Sound each out, left to right, before checking:
-There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: Read, one with no heading, Meaning, Origin. Come back and look at it when you have stopped.
-The letters that did it: consonants carry a built-in "a"; the chandrakkala strips that vowel so consonants can join into conjuncts (സ്ക, ന്ദ, ല്ല); a vowel sign swaps the vowel (ാ ā, ി i, െ e — the e-sign written before its consonant); the anusvāram (ം) adds a final nasal; and a word-initial vowel gets a full letter (അ, ഇ).
-Notice how Tamil-like the native core is: four of the five everyday words (nandi, athe, illa, śari) are shared with Tamil — because Malayalam is Tamil's closest sister — while only the formal greeting reached for Sanskrit.
+The letters in this word.
+(Skim if you read Malayalam.)
+അ = "a" — an independent vowel (the word starts with a vowel, so it gets a full letter).
+തെ = "the" — ത (tha, a soft th as in this) with the "e" vowel sign written in front of the consonant.
+Left to right: അ, തെ = a-the, which gives:
+അതെ = athe = "yes."
 
-The farewell — nearly the Tamil words exactly.
-Malayalam, like Tamil, will not say a bare "I'm leaving." The everyday goodbye is:
-പോയി വരാം (pōyi varām) — literally "having gone, I [will] come [back]."
-Set it beside Tamil's pōy varugiṟēṉ and Kannada's hōgi baruttēne: the same sentence, the same worldview — never simply depart, always promise a return — and in Malayalam and Tamil, almost the same words. (Casually, Malayalam also uses śari — "okay" — to sign off, or repeats namaskāram.)
+The word, taken apart.
+അതെ (athe) is native Malayalam, and it grows from അത് (athu), "that." To say "yes," Malayalam essentially says "that [is so]" — you affirm by pointing at the truth of what was said. Its natural partner is the negative alla, "[it is] not that" — the next lesson.
+
+Grammar Lens: yes and no as "that is" / "not that".
+Malayalam's yes/no pair are demonstratives in disguise: athe ("that [is so]") and alla ("not that"). Like its sisters, Malayalam also readily answers by echoing the verb of the question (vannu, "[I] came," for "did you come?"). Bank athe as the simple word, but hear the logic underneath — you agree by confirming that is how things are.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: all five — namaskāram, nandi, athe, illa, śari]
+[your turn — say: a, the becomes "athe"]
 [pause 8 seconds for the answer]
-[your turn — say: greet and thank — "namaskāram!" … "nandi."]
+[your turn — say: note the "e" sign sits before ത but is read after it]
 [pause 8 seconds for the answer]
-[your turn — say: the farewell — "pōyi varām," and its Tamil twin "pōy varugiṟēṉ"]
+[your turn — say: "athe" — "yes, that's so"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Read all five aloud. Which one is Sanskrit, and which four are native Dravidian shared with Tamil? (Sanskrit: namaskāram. Native: nandi, athe, illa, śari.) What does the Malayalam goodbye literally mean, and which Tamil farewell does it almost exactly match? ("Having gone, I'll come back" — Tamil pōy varugiṟēṉ.)
-That completes the four Dravidian first chapters — Tamil, Kannada, Telugu, Malayalam. Next chapter: introducing yourself — enṟe pēru… ("my name…") — and Malayalam's nī / niṅṅaḷ (familiar / respectful "you").
+Read അതെ. What everyday word is it built from, and so what does "yes" literally assert? (athu, "that" — so "yes" = "that [is so]".) Where does the "e" vowel sign sit, and where is it read? (Written before the consonant, read after.)
 
 
-Lesson 6 of 6.
+Lesson 4 of 6.
+ഇല്ല (illa) — "no," the word Malayalam and Tamil share almost exactly.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+The partner of athe, and more family evidence: this Malayalam "no" is essentially the same word as Tamil's illai and Kannada's illa — the old Dravidian il- runs right through.
+
+The letters in this word.
+(Skim if you read Malayalam.)
+ഇ = "i" — an independent vowel (word-initial, so a full letter, like അ in athe).
+ല്ല = "lla" — a conjunct: ല (la) loses its vowel and joins another ല (la) into a doubled, held "ll."
+Left to right: ഇ, ല്ല = i-lla, which gives:
+ഇല്ല = illa.
+
+The word, taken apart.
+ഇല്ല (illa) is built on the ancient Dravidian root il, "not-being, absence" — so, exactly like Tamil illai, it really means "[it] is not, [there] is not," and serves as the everyday "no." Its positive twin is ഉണ്ട് (uṇṭŭ), "there is."
+
+Grammar Lens: Dravidian negates by being.
+English inserts not / no. Malayalam — like Tamil and Kannada — instead swaps in the negative verb of existence:
+pustakam uṇṭŭ — "there is a book."
+pustakam illa — "there is not a book."
+So illa is both the plain "no" and the word that negates a whole sentence. This is a shared Dravidian inheritance, strongest across the Tamil–Malayalam pair: Tamil illai, Malayalam illa, Kannada illa — one family, one way to say a thing is not. (Recall Telugu was the outlier here, using lēdu.)
+
+Across the family — the same idea, five ways.
+[a table of 5 rows, read aloud]
+Language: Malayalam. "No / isn't": illa (ഇല്ല). Note: native, root il-.
+Language: Tamil. "No / isn't": illai (இல்லை). Note: the same root.
+Language: Kannada. "No / isn't": illa (ಇಲ್ಲ). Note: the same root.
+Language: Telugu. "No / isn't": lēdu (లేదు). Note: native, a different root.
+Language: Hindi. "No / isn't": nahīṁ (नहीं). Note: Indo-European (unrelated).
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: i, lla becomes "illa"]
+[pause 8 seconds for the answer]
+[your turn — say: the pair — athe ("yes") / illa ("no")]
+[pause 8 seconds for the answer]
+[your turn — say: "pustakam illa" — "there is no book"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Read ഇല്ല (illa). Literally, is it closer to "no" or "is not"? ("Is not / there is not.") Which languages share this exact il- root, and which Dravidian sister does not? (Tamil and Kannada share it; Telugu is the outlier, with lēdu.)
+
+
+Lesson 5 of 6.
 ശരി (sari) (śari) — "okay," the whole-family word once more.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -248,3 +213,38 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Read ശരി. What does it mean, and how do its Tamil, Kannada, and Telugu twins sound? ("Okay, correct"; sari, sari, sarē.) Why does Malayalam keep a separate ശ (ś) letter where Tamil uses one all-purpose sibilant? (It borrowed heavily from Sanskrit and kept Sanskrit's sibilant letters.)
+
+
+Lesson 6 of 6.
+Chapter 1 — recap, and how Malayalam says goodbye.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called Read them back until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Five words, and a first handful of Malayalam letters read straight off the page. Let's gather them — and add the farewell, which is almost word-for-word the Tamil one.
+
+Read them back.
+Sound each out, left to right, before checking:
+There is a table here I cannot read to you — 4 columns and 5 rows, and it has more columns than can be held in the ear at once. Its columns are: Read, one with no heading, Meaning, Origin. Come back and look at it when you have stopped.
+The letters that did it: consonants carry a built-in "a"; the chandrakkala strips that vowel so consonants can join into conjuncts (സ്ക, ന്ദ, ല്ല); a vowel sign swaps the vowel (ാ ā, ി i, െ e — the e-sign written before its consonant); the anusvāram (ം) adds a final nasal; and a word-initial vowel gets a full letter (അ, ഇ).
+Notice how Tamil-like the native core is: four of the five everyday words (nandi, athe, illa, śari) are shared with Tamil — because Malayalam is Tamil's closest sister — while only the formal greeting reached for Sanskrit.
+
+The farewell — nearly the Tamil words exactly.
+Malayalam, like Tamil, will not say a bare "I'm leaving." The everyday goodbye is:
+പോയി വരാം (pōyi varām) — literally "having gone, I [will] come [back]."
+Set it beside Tamil's pōy varugiṟēṉ and Kannada's hōgi baruttēne: the same sentence, the same worldview — never simply depart, always promise a return — and in Malayalam and Tamil, almost the same words. (Casually, Malayalam also uses śari — "okay" — to sign off, or repeats namaskāram.)
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: all five — namaskāram, nandi, athe, illa, śari]
+[pause 8 seconds for the answer]
+[your turn — say: greet and thank — "namaskāram!" … "nandi."]
+[pause 8 seconds for the answer]
+[your turn — say: the farewell — "pōyi varām," and its Tamil twin "pōy varugiṟēṉ"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Read all five aloud. Which one is Sanskrit, and which four are native Dravidian shared with Tamil? (Sanskrit: namaskāram. Native: nandi, athe, illa, śari.) What does the Malayalam goodbye literally mean, and which Tamil farewell does it almost exactly match? ("Having gone, I'll come back" — Tamil pōy varugiṟēṉ.)
+That completes the four Dravidian first chapters — Tamil, Kannada, Telugu, Malayalam. Next chapter: introducing yourself — enṟe pēru… ("my name…") — and Malayalam's nī / niṅṅaḷ (familiar / respectful "you").

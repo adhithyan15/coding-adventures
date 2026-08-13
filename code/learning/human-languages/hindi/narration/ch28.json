@@ -4,11 +4,11 @@
   "chapter": 28,
   "title": "Morning",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:edb856d15627ca1e",
+  "sourceHash": "fnv1a64:8a4c730f2f560ab9",
   "lessons": [
     {
       "id": "HI-C28-subah",
-      "sequence": 540,
+      "sequence": 790,
       "title": "सुबह (subah) — \"morning,\" and a root that also sits in Arabic",
       "headword": "सुबह",
       "romanization": "",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1312ac6766ba1c4c",
+      "sourceHash": "fnv1a64:b908e5ccea472875",
       "notice": null,
       "blocks": [
         {
