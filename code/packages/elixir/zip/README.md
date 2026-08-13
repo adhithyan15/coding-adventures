@@ -59,6 +59,24 @@ data = CodingAdventures.Zip.read_by_name(reader, "hello.txt")
 CodingAdventures.Zip.crc32("hello world")  # => 0x0D4A1185
 ```
 
+### Raw RFC 1951
+
+ZIP method 8 carries raw DEFLATE bytes without ZIP, zlib, or gzip framing. The
+portable codec surface is available directly for sibling container codecs:
+
+```elixir
+compressed = CodingAdventures.Zip.raw_deflate("hello hello hello")
+result = CodingAdventures.Zip.raw_inflate_counted(compressed)
+result.output         # => "hello hello hello"
+result.bytes_consumed # exact bytes through BFINAL
+```
+
+`raw_inflate/2` and `raw_inflate_counted/2` accept a caller-lowerable output
+limit. The hard and default ceiling is 256 MiB. Decoding covers stored, fixed,
+and dynamic Huffman blocks, rejects trailing compressed-payload cavities at
+the ZIP boundary, returns no partial output, and exposes one of 14 stable,
+payload-blind errors through `CodingAdventures.Zip.RawInflateError`.
+
 ## API
 
 | Function | Description |
@@ -74,6 +92,10 @@ CodingAdventures.Zip.crc32("hello world")  # => 0x0D4A1185
 | `zip/2` | One-shot compress. |
 | `unzip/1` | One-shot decompress → map. |
 | `crc32/2` | CRC-32 (polynomial 0xEDB88320). |
+| `raw_deflate/1` | Encode raw RFC 1951 bytes with the ZIP-owned fixed-Huffman encoder. |
+| `raw_inflate/2` | Strictly decode stored, fixed, or dynamic raw RFC 1951 bytes. |
+| `raw_inflate_counted/2` | Decode and report exact bytes consumed through BFINAL. |
+| `raw_inflate_max_output/0` | Return the 256 MiB hard/default output ceiling. |
 | `dos_datetime/6` | MS-DOS timestamp. |
 | `dos_epoch/0` | `0x00210000` — 1980-01-01 00:00:00. |
 
@@ -83,3 +105,7 @@ CodingAdventures.Zip.crc32("hello world")  # => 0x0D4A1185
 mix deps.get
 mix test --cover
 ```
+
+Production is a pure in-memory transform with an explicit empty capability
+profile. Fixture file reads, Jason, and Erlang `:zlib` are test-only. CRC-32
+detects accidental corruption; it is not authentication.
