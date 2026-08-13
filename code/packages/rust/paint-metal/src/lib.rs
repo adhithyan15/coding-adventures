@@ -76,7 +76,7 @@
 // Platform-conditional: code for the non-native platform is intentionally inactive; allow the resulting dead_code/unused lints only where it does not compile in.
 #![cfg_attr(not(target_vendor = "apple"), allow(dead_code, unused_imports))]
 
-pub const VERSION: &str = "0.3.0";
+pub const VERSION: &str = "0.4.0";
 
 pub use paint_instructions::PixelContainer;
 
@@ -529,6 +529,35 @@ fn add_ellipse_vertices(ellipse: &PaintEllipse, positions: &mut Vec<f32>, colors
     }
 }
 
+fn add_path_stroke_quad(
+    start: (f32, f32),
+    end: (f32, f32),
+    half_width: f32,
+    color: (f32, f32, f32, f32),
+    positions: &mut Vec<f32>,
+    colors: &mut Vec<f32>,
+) {
+    let (x1, y1) = start;
+    let (x2, y2) = end;
+    let dx = x2 - x1;
+    let dy = y2 - y1;
+    let len = (dx * dx + dy * dy).sqrt();
+    if len < 0.001 {
+        return;
+    }
+    let nx = -dy / len * half_width;
+    let ny = dx / len * half_width;
+    let (ax, ay) = (x1 + nx, y1 + ny);
+    let (bx, by) = (x1 - nx, y1 - ny);
+    let (cx, cy) = (x2 + nx, y2 + ny);
+    let (dx, dy) = (x2 - nx, y2 - ny);
+    let (r, g, b, a) = color;
+    positions.extend_from_slice(&[ax, ay, cx, cy, bx, by, cx, cy, dx, dy, bx, by]);
+    for _ in 0..6 {
+        colors.extend_from_slice(&[r, g, b, a]);
+    }
+}
+
 /// Tessellate a `PaintPath` into GPU triangles.
 ///
 /// ## Fill — fan tessellation from first point
@@ -681,7 +710,34 @@ fn add_path_vertices(path: &PaintPath, positions: &mut Vec<f32>, colors: &mut Ve
         if sa > 0.0 {
             let (sr, sg, sb, sa) = (sr as f32, sg as f32, sb as f32, sa as f32);
             let half_sw = (path.stroke_width.unwrap_or(1.0) as f32) / 2.0;
+            let mut dash_pattern: Vec<f32> = path
+                .stroke_dash
+                .as_deref()
+                .unwrap_or_default()
+                .iter()
+                .copied()
+                .filter(|length| *length > 0.0)
+                .map(|length| length as f32)
+                .collect();
+            if dash_pattern.len() % 2 == 1 {
+                dash_pattern.extend_from_within(..);
+            }
             for pts in &subpaths {
+                let mut dash_index = 0;
+                let mut dash_remaining = dash_pattern.first().copied().unwrap_or(0.0);
+                if !dash_pattern.is_empty() {
+                    let cycle: f32 = dash_pattern.iter().sum();
+                    let mut offset = path.stroke_dash_offset.unwrap_or(0.0) as f32 % cycle;
+                    if offset < 0.0 {
+                        offset += cycle;
+                    }
+                    while offset >= dash_remaining {
+                        offset -= dash_remaining;
+                        dash_index = (dash_index + 1) % dash_pattern.len();
+                        dash_remaining = dash_pattern[dash_index];
+                    }
+                    dash_remaining -= offset;
+                }
                 for i in 0..pts.len().saturating_sub(1) {
                     let (x1, y1) = pts[i];
                     let (x2, y2) = pts[i + 1];
@@ -691,17 +747,39 @@ fn add_path_vertices(path: &PaintPath, positions: &mut Vec<f32>, colors: &mut Ve
                     if len < 0.001 {
                         continue;
                     }
-                    let nx = -dy / len * half_sw;
-                    let ny = dx / len * half_sw;
-                    // Quad corners
-                    let (ax, ay) = (x1 + nx, y1 + ny);
-                    let (bx, by) = (x1 - nx, y1 - ny);
-                    let (cx2, cy2) = (x2 + nx, y2 + ny);
-                    let (dx2, dy2) = (x2 - nx, y2 - ny);
-                    positions.extend_from_slice(&[ax, ay, cx2, cy2, bx, by]);
-                    colors.extend_from_slice(&[sr, sg, sb, sa, sr, sg, sb, sa, sr, sg, sb, sa]);
-                    positions.extend_from_slice(&[cx2, cy2, dx2, dy2, bx, by]);
-                    colors.extend_from_slice(&[sr, sg, sb, sa, sr, sg, sb, sa, sr, sg, sb, sa]);
+                    if dash_pattern.is_empty() {
+                        add_path_stroke_quad(
+                            (x1, y1),
+                            (x2, y2),
+                            half_sw,
+                            (sr, sg, sb, sa),
+                            positions,
+                            colors,
+                        );
+                        continue;
+                    }
+                    let mut consumed = 0.0;
+                    while consumed < len {
+                        let step = dash_remaining.min(len - consumed);
+                        if dash_index % 2 == 0 {
+                            let start_t = consumed / len;
+                            let end_t = (consumed + step) / len;
+                            add_path_stroke_quad(
+                                (x1 + dx * start_t, y1 + dy * start_t),
+                                (x1 + dx * end_t, y1 + dy * end_t),
+                                half_sw,
+                                (sr, sg, sb, sa),
+                                positions,
+                                colors,
+                            );
+                        }
+                        consumed += step;
+                        dash_remaining -= step;
+                        if dash_remaining <= f32::EPSILON {
+                            dash_index = (dash_index + 1) % dash_pattern.len();
+                            dash_remaining = dash_pattern[dash_index];
+                        }
+                    }
                 }
             }
         }
@@ -1408,7 +1486,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.3.0");
+        assert_eq!(VERSION, "0.4.0");
     }
 
     // ─── Color parser tests ──────────────────────────────────────────────────
@@ -1578,6 +1656,32 @@ mod tests {
             positions.len() >= 18,
             "diamond fill should have at least 3 triangles"
         );
+    }
+
+    #[test]
+    fn dashed_path_stroke_generates_separate_quads() {
+        let dashed = PaintInstruction::Path(PaintPath {
+            base: PaintBase::default(),
+            commands: vec![
+                PathCommand::MoveTo { x: 0.0, y: 10.0 },
+                PathCommand::LineTo { x: 20.0, y: 10.0 },
+            ],
+            fill: None,
+            fill_rule: None,
+            stroke: Some("#ff0000".to_string()),
+            stroke_width: Some(2.0),
+            stroke_cap: None,
+            stroke_join: None,
+            stroke_dash: Some(vec![4.0, 4.0]),
+            stroke_dash_offset: Some(2.0),
+        });
+        let mut positions = Vec::new();
+        let mut colors = Vec::new();
+        collect_geometry(&[dashed], &mut positions, &mut colors, 0);
+
+        assert_eq!(positions.len(), 36, "three dash quads");
+        assert_eq!(colors.len(), 72, "six colored vertices per dash");
+        assert_eq!(positions[2], 2.0, "offset shortens the first dash");
     }
 
     #[test]

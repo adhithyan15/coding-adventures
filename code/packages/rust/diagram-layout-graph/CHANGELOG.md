@@ -1,5 +1,9 @@
 # Changelog — diagram-layout-graph
 
+## 0.17.0
+
+- Place state notes beside composite-group bounds and route their associations to group endpoints.
+
 ## 0.16.0
 
 - Measure graph labels using their resolved font family.
