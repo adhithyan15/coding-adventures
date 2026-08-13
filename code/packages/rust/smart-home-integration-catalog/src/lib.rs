@@ -44918,6 +44918,7 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
             &[AuthMode::MqttCredentials],
             "mqtt",
         ),
+        bacnet_ip_entry(),
         modbus_tcp_entry(),
         protocol_entry(
             "matter",
@@ -49065,6 +49066,35 @@ fn hue_entry() -> IntegrationCatalogEntry {
         PrimitiveFamily::VaultLease,
         PrimitiveFamily::Supervision,
         PrimitiveFamily::TestSimulator,
+    ])
+}
+
+fn bacnet_ip_entry() -> IntegrationCatalogEntry {
+    base_entry(
+        "bacnet_ip",
+        "BACnet/IP",
+        "Bounded Who-Is/I-Am discovery for local building-automation devices.",
+        IntegrationCategory::ProtocolStandard,
+        ConnectivityClass::LocalPolling,
+        ImplementationStatus::FirstPartyRuntime,
+        1,
+        "bacnet",
+    )
+    .with_protocols(vec![ProtocolFamily::Vendor("bacnet_ip".to_string())])
+    .with_capabilities(&["smart_home.read"])
+    .with_discovery(&[DiscoveryMechanism::UdpBroadcast, DiscoveryMechanism::Manual])
+    .with_auth(&[AuthMode::None])
+    .with_primitives(&[
+        PrimitiveFamily::DiscoveryIndex,
+        PrimitiveFamily::Udp,
+        PrimitiveFamily::NormalizedModel,
+        PrimitiveFamily::CapabilityPolicy,
+        PrimitiveFamily::Supervision,
+        PrimitiveFamily::TestSimulator,
+    ])
+    .with_notes(&[
+        "The first-party runtime supports only bounded Who-Is/I-Am device discovery.",
+        "Property reads, writes, controls, BBMD management, foreign-device registration, and BACnet/SC remain out of scope.",
     ])
 }
 
@@ -81711,6 +81741,38 @@ mod tests {
         ] {
             assert!(homewizard.required_primitives.contains(&primitive));
         }
+    }
+
+    #[test]
+    fn bacnet_entry_exposes_bounded_discovery_only_runtime() {
+        let catalog = first_party_catalog();
+        let bacnet = find_entry(&catalog, &IntegrationId::trusted("bacnet_ip")).unwrap();
+        assert_eq!(
+            bacnet.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(bacnet.connectivity, ConnectivityClass::LocalPolling);
+        assert_eq!(bacnet.auth_modes, vec![AuthMode::None]);
+        assert_eq!(
+            bacnet.supported_protocols,
+            vec![ProtocolFamily::Vendor("bacnet_ip".to_string())]
+        );
+        assert_eq!(
+            bacnet.required_capabilities,
+            vec![CapabilityId::trusted("smart_home.read")]
+        );
+        assert!(bacnet.target_entity_kinds.is_empty());
+        for primitive in [
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::Udp,
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::Supervision,
+            PrimitiveFamily::TestSimulator,
+        ] {
+            assert!(bacnet.required_primitives.contains(&primitive));
+        }
+        assert!(!bacnet.required_primitives.contains(&PrimitiveFamily::Tcp));
     }
 
     #[test]

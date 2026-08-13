@@ -600,6 +600,7 @@ These should be implemented before most vendor-specific adapters:
 | `smart-home-event-streams` | Hue SSE, WebSocket workers, subscription health |
 | `smart-home-usb-serial` | Zigbee, Z-Wave, Thread, Modbus RTU |
 | `modbus-protocol` and `smart-home-modbus-tcp-integration` | bounded read-only Modbus TCP register telemetry and D23 sensor projection |
+| `bacnet-protocol` and `smart-home-bacnet-ip-integration` | bounded BACnet/IP Who-Is/I-Am discovery and D23 bridge-candidate projection |
 | `smart-home-camera-media` | ONVIF, RTSP, snapshots, privacy-sensitive state |
 | `smart-home-cloud-account` | OAuth/API-key cloud integrations and webhook registration |
 | `smart-home-data-governance` | purpose-bound consent, coarse-location configuration, and exact-destination telemetry egress |
@@ -615,6 +616,7 @@ These should be implemented before most vendor-specific adapters:
 | ESPHome | DIY/local ecosystem |
 | Tasmota | MQTT-native device ecosystem |
 | Modbus | HVAC, energy, industrial |
+| BACnet/IP | vendor-neutral building automation discovery |
 | KNX | building automation |
 
 ### Wave 3 - High-Leverage Local Hubs And Devices
