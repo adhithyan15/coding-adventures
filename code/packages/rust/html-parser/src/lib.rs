@@ -7390,6 +7390,15 @@ impl HtmlParser {
                     ));
                 }
             }
+            name if is_scoped_block_end_tag(name)
+                && self.has_authored_open_html_element(name)
+                && self.open_html_element_in_scope_index(name).is_none() =>
+            {
+                self.diagnostics.push(ParserDiagnostic::new(
+                    "unexpected-block-end-tag-outside-scope",
+                    format!("end tag `</{name}>` targeted an element outside ordinary scope"),
+                ));
+            }
             _ => self.close_element(name),
         }
     }
@@ -11764,6 +11773,39 @@ fn is_thoroughly_implied_end_tag_element(name: &str) -> bool {
 
 fn is_heading_element(name: &str) -> bool {
     matches!(name, "h1" | "h2" | "h3" | "h4" | "h5" | "h6")
+}
+
+fn is_scoped_block_end_tag(name: &str) -> bool {
+    matches!(
+        name,
+        "address"
+            | "article"
+            | "aside"
+            | "blockquote"
+            | "button"
+            | "center"
+            | "details"
+            | "dialog"
+            | "dir"
+            | "div"
+            | "dl"
+            | "fieldset"
+            | "figcaption"
+            | "figure"
+            | "footer"
+            | "header"
+            | "hgroup"
+            | "listing"
+            | "main"
+            | "menu"
+            | "nav"
+            | "ol"
+            | "pre"
+            | "search"
+            | "section"
+            | "summary"
+            | "ul"
+    )
 }
 
 fn is_ordinary_scope_boundary(element: &Element) -> bool {
@@ -35444,6 +35486,119 @@ mod tests {
                 "end tag `</h1>` targeted a seeded fragment context element"
             )]
         );
+    }
+
+    #[test]
+    fn grouped_block_end_tags_respect_full_ordinary_scope() {
+        for (block_name, boundary_name) in [
+            ("div", "object"),
+            ("section", "applet"),
+            ("article", "marquee"),
+            ("nav", "select"),
+        ] {
+            let source = format!(
+                "<!doctype html><{block_name} id=outer><{boundary_name} id=boundary></{block_name}>X</{boundary_name}>Y"
+            );
+            let output = parse_html_with_diagnostics(&source).unwrap();
+            assert!(
+                output.parser_diagnostics.iter().any(|diagnostic| {
+                    diagnostic.code == "unexpected-block-end-tag-outside-scope"
+                }),
+                "source {source:?}"
+            );
+            let outer = find_element_by_id(&output.document.children, "outer").unwrap();
+            let boundary = find_element_by_id(&outer.children, "boundary").unwrap();
+            assert_eq!(
+                boundary.children,
+                vec![Node::text("X")],
+                "source {source:?}"
+            );
+            assert_eq!(
+                outer.children.last(),
+                Some(&Node::text("Y")),
+                "source {source:?}"
+            );
+        }
+
+        for source in [
+            "<!doctype html><div id=outer><table><tr><td id=boundary></div>X",
+            "<!doctype html><div id=outer><template id=boundary></div>X</template>Y",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(
+                output.parser_diagnostics.iter().any(|diagnostic| {
+                    diagnostic.code == "unexpected-block-end-tag-outside-scope"
+                }),
+                "source {source:?}: {:?}",
+                output.parser_diagnostics
+            );
+            let outer = find_element_by_id(&output.document.children, "outer").unwrap();
+            let boundary = find_element_by_id(&outer.children, "boundary").unwrap();
+            assert_eq!(
+                boundary.children,
+                vec![Node::text("X")],
+                "source {source:?}"
+            );
+        }
+
+        let foreign_integration = parse_html_with_diagnostics(
+            "<!doctype html><div id=outer><svg><foreignObject id=boundary></div>X",
+        )
+        .unwrap();
+        assert!(foreign_integration
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| { diagnostic.code != "unexpected-block-end-tag-outside-scope" }));
+
+        let foreign_select = parse_html_with_diagnostics(
+            "<!doctype html><div id=outer><svg><select id=foreign></div>X",
+        )
+        .unwrap();
+        assert!(foreign_select
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| { diagnostic.code != "unexpected-block-end-tag-outside-scope" }));
+        assert_eq!(
+            body(&foreign_select.document).children.last(),
+            Some(&Node::text("X"))
+        );
+
+        let matching =
+            parse_html_with_diagnostics("<!doctype html><div id=outer>X</div>Y").unwrap();
+        assert!(matching.parser_diagnostics.is_empty());
+        assert_eq!(
+            body(&matching.document).children.last(),
+            Some(&Node::text("Y"))
+        );
+
+        let implied =
+            parse_html_with_diagnostics("<!doctype html><section id=outer><p>X</section>Y")
+                .unwrap();
+        assert!(implied
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| { diagnostic.code != "unexpected-block-end-tag-outside-scope" }));
+        assert_eq!(
+            body(&implied.document).children.last(),
+            Some(&Node::text("Y"))
+        );
+
+        let unmatched = parse_html_with_diagnostics("<!doctype html></section>X").unwrap();
+        assert!(unmatched
+            .parser_diagnostics
+            .iter()
+            .any(|diagnostic| { diagnostic.code == "unexpected-end-tag" }));
+        assert!(unmatched
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| { diagnostic.code != "unexpected-block-end-tag-outside-scope" }));
+
+        let fragment = parse_html_fragment_for_context_with_diagnostics("</div>X", "div").unwrap();
+        assert_eq!(fragment.nodes, vec![Node::text("X")]);
+        assert!(fragment
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| { diagnostic.code != "unexpected-block-end-tag-outside-scope" }));
     }
 
     #[test]
