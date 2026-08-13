@@ -715,10 +715,15 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   loop, descends to the baseline, and continues counterclockwise around the
   lower bowl without lifting. Its two-frame font fit preserves that one-run
   order while routing the cursive ascender through Noto Sans Cyrillic's compact
-  printed upper bowl and straight left stem. The remaining **100** prose part
+  printed upper bowl and straight left stem. Lowercase **г** follows at
+  01:54–01:57 as one rounded two-hump cursive run: rise from the baseline,
+  descend and turn there, then continue through a smaller exit arch without
+  lifting. Its two-frame Noto fit preserves that zero-lift evidence by climbing
+  the block glyph's upright, sweeping and retracing its top bar, and descending;
+  the variation note records the absent cursive exit arch. The remaining **99** prose part
   orders across four scripts
   (`arabic` 3,
-  `cyrillic` 30,
+  `cyrillic` 29,
   `gujarati` 33, `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a
   citation without a count), and Language Ladder's ductus test proves every

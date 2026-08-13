@@ -79,6 +79,7 @@ const DEVANAGARI_HA = DUCTUS[ductusKey("devanagari", "ह")];
 const CYRILLIC_A = DUCTUS[ductusKey("cyrillic", "а")];
 const CYRILLIC_BE = DUCTUS[ductusKey("cyrillic", "б")];
 const CYRILLIC_VE = DUCTUS[ductusKey("cyrillic", "в")];
+const CYRILLIC_GE = DUCTUS[ductusKey("cyrillic", "г")];
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
@@ -1214,6 +1215,19 @@ describe("handwriting ductus", () => {
     expect(lower.at(-1)!.y).toBeGreaterThan(lower[0].y);
   });
 
+  it("Cyrillic г climbs, retraces its top bar, and descends without lifting", () => {
+    expect(CYRILLIC_GE.script).toBe("cyrillic");
+    expect(penLifts(CYRILLIC_GE)).toBe(0);
+    expect(CYRILLIC_GE.strokes).toHaveLength(1);
+    expect(CYRILLIC_GE.strokes[0].segments).toHaveLength(2);
+    const outward = CYRILLIC_GE.strokes[0].segments[0].path;
+    const returnPath = CYRILLIC_GE.strokes[0].segments[1].path;
+    expect(outward.at(-1)).toEqual(returnPath[0]);
+    expect(outward[0].y).toBeLessThan(outward.at(-1)!.y);
+    expect(outward[0].x).toBeLessThan(outward.at(-1)!.x);
+    expect(returnPath.at(-1)).toEqual(outward[0]);
+  });
+
   it("Hebrew א uses two crossed pen-down runs with one lift", () => {
     expect(HEBREW_ALEF.script).toBe("hebrew");
     expect(penLifts(HEBREW_ALEF)).toBe(1);
@@ -2254,6 +2268,9 @@ describe("handwriting ductus", () => {
     expect(verifiedLetterFont("в", CYRILLIC_VE.source.url)).toBe(
       "_fonts/NotoSansCyrillic-Static.ttf",
     );
+    expect(verifiedLetterFont("г", CYRILLIC_GE.source.url)).toBe(
+      "_fonts/NotoSansCyrillic-Static.ttf",
+    );
     expect(verifiedLetterFont("א", HEBREW_ALEF.source.url)).toBe(
       "_fonts/NotoSansHebrew-Static.ttf",
     );
@@ -3039,6 +3056,17 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /all 33 Russian letters.*classic handwritten form taught at school.*01:33–01:38.*starts at the baseline.*tall upper loop.*descends to the baseline.*counterclockwise.*lower bowl.*one continuous pen-down run.*zero intervening lifts.*looped Latin cursive b.*bundled Noto Sans Cyrillic.*two stacked bowls.*straight left stem.*baseline-to-upper-loop-to-baseline-to-lower-bowl order.*printed upper bowl.*font's ink.*connected cursive.*entry and exit joins/i,
+    );
+  });
+
+  it("Cyrillic г traces its zero-lift cursive humps to the all-letter native lesson", () => {
+    const src = CYRILLIC_GE.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=tqDLDfYoO2o");
+    expect(src.citation).toMatch(
+      /RussianIrina.*Learning Russian - Alphabet letters, handwriting.*lowercase г.*01:54–01:57.*5 February 2013/i,
+    );
+    expect(src.variation).toMatch(
+      /all 33 Russian letters.*classic handwritten form taught at school.*01:54–01:57.*rises from the baseline.*main shoulder.*turns at the baseline.*smaller rising-and-falling exit arch.*one continuous pen-down run.*zero intervening lifts.*rounded cursive form.*two humps.*bundled Noto Sans Cyrillic.*block-like printed form.*straight upright.*top bar.*no exit arch.*baseline-to-shoulder-to-baseline lift count.*climb the upright.*reverse to the junction.*descend the upright.*connected cursive restores.*exit arch/i,
     );
   });
 
