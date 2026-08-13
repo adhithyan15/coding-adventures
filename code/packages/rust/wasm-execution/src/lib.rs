@@ -3514,17 +3514,30 @@ impl WasmExecutionEngine {
         self.vm.reset();
         register_all_handlers(&mut self.vm);
 
-        self.vm
-            .execute_with_context(&code, &mut ctx)
-            .map_err(|e| TrapError::new(format!("{}", e)))?;
+        let exec_result = self.vm.execute_with_context(&code, &mut ctx);
 
-        // Update globals back.
+        // Update globals back UNCONDITIONALLY, before propagating a trap
+        // (WASM07 security review): `self.host_functions` was moved out via
+        // `mem::take` above, so on a trapped call the ONLY way it's ever
+        // seen again is `ctx.host_functions` here. Propagating the error
+        // via `?` before this line (the original shape) permanently left
+        // `self.host_functions` empty after the FIRST trap on this engine
+        // — every later call, however unrelated, would then fail with "no
+        // body for function N" for what used to be a host-imported
+        // function. `wasm-runtime`'s real embedding path wires WASI
+        // imports (fd_write, random_get, clock_time_get, ...) through
+        // exactly this field, so this was a real, reachable bug, not a
+        // theoretical one: `wasm-runtime`'s own `call_engine` had the
+        // identical bug for `instance.memory`/`instance.tables` (fixed in
+        // this same PR) one layer further out.
         self.globals = ctx.globals;
         self.host_functions = ctx.host_functions;
         // gc_heap itself is not persisted (see its own doc comment above);
         // the counters are, so a caller can inspect this call's GC activity
         // via gc_live_object_count()/gc_profile() (W04).
         self.last_gc_state = ctx.gc_state;
+
+        exec_result.map_err(|e| TrapError::new(format!("{}", e)))?;
 
         // Collect return values.
         let mut results = Vec::new();

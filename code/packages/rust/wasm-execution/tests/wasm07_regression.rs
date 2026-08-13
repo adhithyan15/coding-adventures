@@ -157,3 +157,55 @@ fn call_indirect_still_traps_on_a_genuine_type_mismatch() {
     assert!(result.is_err(), "a genuine call_indirect type mismatch must still trap");
     assert!(result.unwrap_err().to_string().contains("indirect call type mismatch"));
 }
+
+/// A host-imported function returning a fixed value -- stands in for a real
+/// WASI import (`fd_write`, `random_get`, ...), which is exactly what
+/// `wasm-runtime::instantiate()` wires through this same `host_functions`
+/// field.
+struct EchoI32(FuncType);
+impl HostFunction for EchoI32 {
+    fn func_type(&self) -> &FuncType {
+        &self.0
+    }
+    fn call(&self, _args: &[WasmValue], _memory: Option<&mut wasm_execution::LinearMemory>) -> Result<Vec<WasmValue>, wasm_execution::TrapError> {
+        Ok(vec![WasmValue::I32(99)])
+    }
+}
+
+/// A security review of this PR's `wasm-runtime` fix (a trapped call must
+/// not permanently lose `instance.memory`/`instance.tables`) found the
+/// SAME bug pattern one layer further in: `WasmExecutionEngine::call_function`
+/// itself moves `self.host_functions` out via `mem::take` before running,
+/// and its OWN restore line (`self.host_functions = ctx.host_functions;`)
+/// used to sit AFTER `execute_with_context(...)?` -- skipped on any trap,
+/// same as the bug this PR's headline fix addresses. Confirmed here
+/// directly rather than by inspection: call a host-imported function once,
+/// trigger an unrelated trap, then call the SAME host-imported function
+/// again on the SAME engine.
+#[test]
+fn host_functions_survive_a_trapped_call_and_are_usable_by_a_later_call() {
+    let echo_type = FuncType { params: vec![], results: vec![ValueType::I32] };
+    let trap_type = FuncType { params: vec![], results: vec![] };
+    let engine_config = WasmEngineConfig {
+        memory: None,
+        tables: vec![],
+        globals: vec![],
+        global_types: vec![],
+        func_types: vec![echo_type.clone(), trap_type],
+        // fn 0 is a host import (no body); fn 1 is `unreachable; end`.
+        func_bodies: vec![None, Some(FunctionBody { locals: vec![], code: vec![0x00, 0x0B] })],
+        host_functions: vec![Some(Box::new(EchoI32(echo_type)) as Box<dyn HostFunction>), None],
+    };
+    let mut engine = WasmExecutionEngine::new(engine_config);
+
+    let before = engine.call_function(0, &[]).expect("host function should succeed before any trap");
+    assert_eq!(before, vec![WasmValue::I32(99)]);
+
+    let trapped = engine.call_function(1, &[]);
+    assert!(trapped.is_err(), "function 1 should trap");
+
+    let after = engine
+        .call_function(0, &[])
+        .expect("the host function must still work after an unrelated trapped call");
+    assert_eq!(after, vec![WasmValue::I32(99)]);
+}

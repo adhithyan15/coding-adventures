@@ -2,7 +2,7 @@
 
 All notable changes to this package will be documented in this file.
 
-## [0.6.3] — 2026-08-13 (WASM07 — two real assert_return correctness bugs)
+## [0.6.3] — 2026-08-13 (WASM07 — two real assert_return correctness bugs + a security-review fix)
 
 Investigating why `wasm-conformance`'s `assert_return` pass rate sat at
 98.3% (208 real failures, not opcode-coverage gaps) surfaced two genuine
@@ -47,13 +47,35 @@ inspection.
   (permissive — "no type info available" is not the same claim as "the
   type section is empty"); `wasm-runtime`'s real embedding path always
   sets it now (see that crate's own changelog).
-- 4 new regression tests (`tests/wasm07_regression.rs`): a bare top-level
+- **A security review of this PR's `wasm-runtime` fix (a trapped call must
+  not permanently lose an instance's memory/tables — see that crate's own
+  changelog) found the identical bug pattern one layer further in.**
+  `WasmExecutionEngine::call_function` (the public, top-level entry point)
+  also `mem::take`s `self.host_functions` before running, and its own
+  restore line (`self.host_functions = ctx.host_functions;`) used to sit
+  AFTER `execute_with_context(...)?` — skipped on any trap, exactly the
+  same bug the `wasm-runtime` fix addressed one call frame further out.
+  Since `wasm-runtime::instantiate()` wires real WASI imports (`fd_write`,
+  `random_get`, `clock_time_get`, `environ_get`, `proc_exit`, ...)
+  through this exact field, ANY instance that trapped even once would
+  silently and permanently lose every WASI import for the rest of its
+  life — the `wasm-runtime` fix alone only restored `instance.memory`/
+  `instance.tables` (pointer-aliased into the engine, never moved, so
+  they survived a trap fine even with the old code) but not
+  `host_functions` (genuinely moved via `mem::take`, one layer further
+  in). Fixed the same way: capture the `Result` from
+  `execute_with_context` first, restore `self.globals`/
+  `self.host_functions`/`self.last_gc_state` unconditionally, THEN
+  propagate the trap.
+- 5 new regression tests (`tests/wasm07_regression.rs`): a bare top-level
   `br 0` returning correctly through both call-entry paths, a
   `call_indirect` case specifically shaped so the old bug (grabbing an
   unrelated function's type) is unmissable, verified both unset
   (permissive) and set (the real check) against the module's own actual
-  parsed type section, and a case confirming a genuine type mismatch
-  still traps once the real type section is wired in.
+  parsed type section, a case confirming a genuine type mismatch still
+  traps once the real type section is wired in, and a host-imported
+  function confirmed to survive an unrelated trapped call and remain
+  callable afterward.
 
 Together with the matching `wasm-runtime` 0.5.1 fix (a trapped call
 losing an instance's memory/tables forever after — see that crate's own
@@ -70,7 +92,7 @@ WASM01 trade-off), and `br.wast`'s one remaining case (a genuine
 multi-value block signature, already tracked as WASM04) — each is its
 own investigation, not a continuation of these three.
 
-177 tests passing (up from 173: 4 new `wasm07_regression.rs` cases),
+178 tests passing (up from 173: 5 new `wasm07_regression.rs` cases),
 clippy clean.
 
 ## [0.6.2] — 2026-08-13 (WASM01 — a real call-depth guard)
