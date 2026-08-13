@@ -71,6 +71,14 @@ fn encode_jalr_ecall_distinct() {
 }
 
 #[test]
+fn encode_rv32m_divide_and_remainder() {
+    // `div x3, x1, x2` = funct7=1 | rs2=2 | rs1=1 | funct3=4 | rd=3 | OP.
+    assert_eq!(encode_div(3, 1, 2), 0x0220_c1b3);
+    assert_ne!(encode_div(3, 1, 2), encode_divu(3, 1, 2));
+    assert_ne!(encode_rem(3, 1, 2), encode_remu(3, 1, 2));
+}
+
+#[test]
 fn assemble_little_endian_byte_order() {
     // `assemble` is the re-exported convenience to flatten a
     // Vec<u32> of instruction words into a `Vec<u8>` of

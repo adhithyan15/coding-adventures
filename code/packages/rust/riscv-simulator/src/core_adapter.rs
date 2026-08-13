@@ -119,7 +119,8 @@ impl RiscVISADecoder {
         token.immediate = get_field(&decoded.fields, "imm", 0);
 
         match decoded.mnemonic.as_str() {
-            "add" | "sub" | "mul" | "mulhu" | "sll" | "slt" | "sltu" | "xor" | "srl" | "sra" | "or" | "and" => {
+            "add" | "sub" | "mul" | "mulhu" | "div" | "divu" | "rem" | "remu"
+            | "sll" | "slt" | "sltu" | "xor" | "srl" | "sra" | "or" | "and" => {
                 token.reg_write = true;
             }
             "addi" | "slti" | "sltiu" | "xori" | "ori" | "andi" | "slli" | "srli" | "srai" => {
@@ -186,6 +187,38 @@ impl RiscVISADecoder {
             }
             "mulhu" => {
                 let result = ((rs1_u as u64 * rs2_u as u64) >> 32) as i32;
+                token.alu_result = result;
+                token.write_data = result;
+            }
+            "div" => {
+                let result = if rs2_val == 0 {
+                    -1
+                } else if rs1_val == i32::MIN && rs2_val == -1 {
+                    i32::MIN
+                } else {
+                    rs1_val / rs2_val
+                };
+                token.alu_result = result;
+                token.write_data = result;
+            }
+            "divu" => {
+                let result = (if rs2_u == 0 { u32::MAX } else { rs1_u / rs2_u }) as i32;
+                token.alu_result = result;
+                token.write_data = result;
+            }
+            "rem" => {
+                let result = if rs2_val == 0 {
+                    rs1_val
+                } else if rs1_val == i32::MIN && rs2_val == -1 {
+                    0
+                } else {
+                    rs1_val % rs2_val
+                };
+                token.alu_result = result;
+                token.write_data = result;
+            }
+            "remu" => {
+                let result = (if rs2_u == 0 { rs1_u } else { rs1_u % rs2_u }) as i32;
                 token.alu_result = result;
                 token.write_data = result;
             }
@@ -449,6 +482,8 @@ mod tests {
         for raw in [
             encode_add(3, 1, 2), encode_sub(3, 1, 2), encode_sll(3, 1, 2),
             encode_mul(3, 1, 2), encode_mulhu(3, 1, 2),
+            encode_div(3, 1, 2), encode_divu(3, 1, 2),
+            encode_rem(3, 1, 2), encode_remu(3, 1, 2),
             encode_slt(3, 1, 2), encode_sltu(3, 1, 2), encode_xor(3, 1, 2),
             encode_srl(3, 1, 2), encode_sra(3, 1, 2), encode_or(3, 1, 2),
             encode_and(3, 1, 2),
@@ -536,6 +571,10 @@ mod tests {
             ("sub", encode_sub(3, 1, 2), 7),
             ("mul", encode_mul(3, 1, 2), 30),
             ("mulhu", encode_mulhu(3, 1, 2), 0),
+            ("div", encode_div(3, 1, 2), 3),
+            ("divu", encode_divu(3, 1, 2), 3),
+            ("rem", encode_rem(3, 1, 2), 1),
+            ("remu", encode_remu(3, 1, 2), 1),
             ("sll", encode_sll(3, 1, 2), 80),
             ("srl", encode_srl(3, 1, 2), 1),
             ("xor", encode_xor(3, 1, 2), (10i32 ^ 3)),
@@ -554,6 +593,38 @@ mod tests {
             decoder.decode(raw, &mut token);
             decoder.execute(&mut token, &regs);
             assert_eq!(token.alu_result, expected_alu, "{}: ALU result", name);
+        }
+    }
+
+    #[test]
+    fn test_execute_division_edge_cases() {
+        let mut decoder = RiscVISADecoder::new();
+        let mut regs = SimpleRegisterFile::new(32);
+        regs.write(1, -20);
+        regs.write(2, 0);
+
+        for (name, raw, expected) in [
+            ("div by zero", encode_div(3, 1, 2), -1),
+            ("divu by zero", encode_divu(3, 1, 2), -1),
+            ("rem by zero", encode_rem(3, 1, 2), -20),
+            ("remu by zero", encode_remu(3, 1, 2), -20),
+        ] {
+            let mut token = make_token(0);
+            decoder.decode(raw, &mut token);
+            decoder.execute(&mut token, &regs);
+            assert_eq!(token.alu_result, expected, "{}", name);
+        }
+
+        regs.write(1, i32::MIN);
+        regs.write(2, -1);
+        for (name, raw, expected) in [
+            ("div overflow", encode_div(3, 1, 2), i32::MIN),
+            ("rem overflow", encode_rem(3, 1, 2), 0),
+        ] {
+            let mut token = make_token(0);
+            decoder.decode(raw, &mut token);
+            decoder.execute(&mut token, &regs);
+            assert_eq!(token.alu_result, expected, "{}", name);
         }
     }
 

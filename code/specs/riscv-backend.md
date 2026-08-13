@@ -129,18 +129,20 @@ implemented.
 8. [x] **Chained wide shifts:** reuse a dead left-hand register pair for a
    following wide right shift, with direct CIR and Nib source-to-simulator
    fixtures for `(1 << 6) >> 1`. General spilling remains the allocator item.
-9. [ ] **Wide division and modulo:** pair-aware restoring division or a larger
+9. [x] **RV32M divide/modulo substrate:** encoder and simulator support for
+   `div` / `divu` / `rem` / `remu`, including defined zero-divisor behavior.
+10. [ ] **Wide division and modulo:** pair-aware restoring division or a larger
    RV32M lowering pass for full-width values. Nib still needs these for all of
    its ordinary numeric expressions.
-10. [ ] **Register allocation:** spill live values to stack slots and emit a proper
+11. [ ] **Register allocation:** spill live values to stack slots and emit a proper
    frame, removing the six-temporary limit.
-11. [ ] **Calls and modules:** lower direct calls, add relocations/linking for flat
+12. [ ] **Calls and modules:** lower direct calls, add relocations/linking for flat
    binaries, and preserve the RISC-V calling convention across calls.
-12. [ ] **Host runtime ABI:** define simulator `ecall` services for exit and integer
+13. [ ] **Host runtime ABI:** define simulator `ecall` services for exit and integer
    output, then lower language print primitives through that ABI.
-13. [ ] **Memory and data:** globals, addresses, loads/stores, and a data-image
+14. [ ] **Memory and data:** globals, addresses, loads/stores, and a data-image
    loader for programs needing strings or arrays.
-14. [ ] **BASIC real values:** Dartmouth BASIC currently lowers numeric values
+15. [ ] **BASIC real values:** Dartmouth BASIC currently lowers numeric values
    such as `PRINT 42` through `f64`; direct RISC-V execution needs either a
    floating-point ABI or an integer-only lowering path before those programs
    can run on the simulator.
