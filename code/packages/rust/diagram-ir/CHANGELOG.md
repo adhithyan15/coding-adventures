@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.36.0
+
+- Preserve optional and resolved graph text font families.
+
 ## 0.35.0
 
 - Preserve optional and resolved graph text italic styling.

@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Shape graph node, group, and edge text using resolved font families.
 - Shape graph node, group, and edge text using resolved italic styling.
 - Shape graph node, group, and edge text using resolved font weights.
 - Center graph labels using their resolved authored font size.

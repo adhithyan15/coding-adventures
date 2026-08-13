@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.73.0";
+pub const VERSION: &str = "0.74.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -1718,6 +1718,13 @@ fn apply_state_style(
                 }
             });
         }
+        "font-family" => {
+            let family = strip_state_string(&value.value);
+            if family.trim().is_empty() {
+                return Err(token_error(value, "state font family cannot be empty"));
+            }
+            style.font_family = Some(family);
+        }
         _ => {
             return Err(token_error(
                 value,
@@ -1738,7 +1745,7 @@ fn parse_state_style_assignments(
             token_error(cursor.current(), "expected ':' in state style assignment")
         })?;
         let value = cursor.advance().clone();
-        if !matches!(token_name(&value), "HASH_COLOR" | "ID" | "WORD") {
+        if !matches!(token_name(&value), "HASH_COLOR" | "ID" | "WORD" | "STRING") {
             return Err(token_error(&value, "expected state style value"));
         }
         apply_state_style(style, &property, &value)?;
@@ -1776,6 +1783,9 @@ fn merge_state_style(target: &mut DiagramStyle, source: &DiagramStyle) {
     }
     if source.font_italic.is_some() {
         target.font_italic = source.font_italic;
+    }
+    if source.font_family.is_some() {
+        target.font_family.clone_from(&source.font_family);
     }
 }
 
@@ -4538,7 +4548,7 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     #[test]
     fn state_parses_inline_styles() {
         let diagram = parse_state_diagram(
-            "stateDiagram-v2\nReady --> Running\nstyle Ready fill:#fee2e2,stroke:#991b1b,color:#111827,stroke-width:3px,font-size:24px,font-weight:bold,font-style:italic\n",
+            "stateDiagram-v2\nReady --> Running\nstyle Ready fill:#fee2e2,stroke:#991b1b,color:#111827,stroke-width:3px,font-size:24px,font-weight:bold,font-style:italic,font-family:\"Avenir Next\"\n",
         )
         .expect("state inline styles should parse");
         let style = diagram
@@ -4557,6 +4567,7 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         assert_eq!(style.font_size, Some(24.0));
         assert_eq!(style.font_weight, Some(700));
         assert_eq!(style.font_italic, Some(true));
+        assert_eq!(style.font_family.as_deref(), Some("Avenir Next"));
     }
 
     #[test]
@@ -5698,7 +5709,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.73.0");
+        assert_eq!(crate::VERSION, "0.74.0");
     }
 
     #[test]

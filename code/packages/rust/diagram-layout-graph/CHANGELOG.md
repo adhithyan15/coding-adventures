@@ -1,5 +1,9 @@
 # Changelog — diagram-layout-graph
 
+## 0.16.0
+
+- Measure graph labels using their resolved font family.
+
 ## 0.15.0
 
 - Measure graph labels using their resolved italic styling.

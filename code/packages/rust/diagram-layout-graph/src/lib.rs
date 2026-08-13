@@ -38,7 +38,7 @@
 //! | `h_padding`     | 24      | Horizontal text padding inside a node    |
 //! | `char_width`    | 8       | Approximate width per character (px)     |
 
-pub const VERSION: &str = "0.15.0";
+pub const VERSION: &str = "0.16.0";
 
 use diagram_ir::{
     DiagramDirection, DiagramShape, GraphDiagram, LayoutedGraphDiagram, LayoutedGraphEdge,
@@ -100,9 +100,9 @@ impl Opts {
 // ============================================================================
 
 /// Label font spec matching the graph Paint text bridge.
-fn label_font_spec(size: f64, weight: u16, italic: bool) -> FontSpec {
+fn label_font_spec(family: &str, size: f64, weight: u16, italic: bool) -> FontSpec {
     FontSpec {
-        family: "Helvetica".to_string(),
+        family: family.to_string(),
         size,
         weight,
         italic,
@@ -123,13 +123,14 @@ fn node_width(
     font_size: f64,
     font_weight: u16,
     font_italic: bool,
+    font_family: &str,
     opts: &Opts,
     measurer: Option<&dyn TextMeasurer>,
 ) -> f64 {
     let text_width = if let Some(m) = measurer {
         let result = m.measure(
             label,
-            &label_font_spec(font_size, font_weight, font_italic),
+            &label_font_spec(font_family, font_size, font_weight, font_italic),
             None,
         );
         opts.h_padding * 2.0 + result.width
@@ -148,6 +149,7 @@ fn node_dimensions(
     let font_size = resolved_style.font_size;
     let font_weight = resolved_style.font_weight;
     let font_italic = resolved_style.font_italic;
+    let font_family = &resolved_style.font_family;
     let line_height = (font_size * 1.2).max(18.0);
     match node.shape {
         Some(DiagramShape::Bar) => (64.0, 8.0),
@@ -158,7 +160,15 @@ fn node_dimensions(
                 .text
                 .lines()
                 .map(|line| {
-                    node_width(line, font_size, font_weight, font_italic, opts, measurer)
+                    node_width(
+                        line,
+                        font_size,
+                        font_weight,
+                        font_italic,
+                        font_family,
+                        opts,
+                        measurer,
+                    )
                 })
                 .fold(opts.min_node_width, f64::max);
             (width, (24.0 + line_count * line_height).max(opts.node_height))
@@ -169,7 +179,15 @@ fn node_dimensions(
                 .text
                 .lines()
                 .map(|line| {
-                    node_width(line, font_size, font_weight, font_italic, opts, measurer)
+                    node_width(
+                        line,
+                        font_size,
+                        font_weight,
+                        font_italic,
+                        font_family,
+                        opts,
+                        measurer,
+                    )
                 })
                 .fold(opts.min_node_width, f64::max);
             let line_count = node.label.text.lines().count().max(1) as f64;
@@ -435,6 +453,7 @@ fn route_edge(
         font_size:     12.0,
         font_weight:   400,
         font_italic:   false,
+        font_family:   "Helvetica".into(),
         corner_radius: 0.0,
     };
     let style = resolve_style_with_base(edge.style.as_ref(), edge_base);
@@ -603,6 +622,7 @@ fn layout_groups(diagram: &GraphDiagram, nodes: &[LayoutedGraphNode]) -> Vec<Lay
                         font_size: 14.0,
                         font_weight: 400,
                         font_italic: false,
+                        font_family: "Helvetica".into(),
                         corner_radius: 8.0,
                     },
                 ),
@@ -863,7 +883,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.15.0");
+        assert_eq!(VERSION, "0.16.0");
     }
 
     #[test]
@@ -1048,6 +1068,7 @@ mod tests {
             font_size: Some(28.0),
             font_weight: Some(700),
             font_italic: Some(true),
+            font_family: Some("Avenir Next".into()),
             ..Default::default()
         });
         d.nodes[1].label = DiagramLabel::new("Large label");
@@ -1061,6 +1082,7 @@ mod tests {
         assert_eq!(large.style.font_size, 28.0);
         assert_eq!(large.style.font_weight, 700);
         assert!(large.style.font_italic);
+        assert_eq!(large.style.font_family, "Avenir Next");
     }
 
     #[test]
