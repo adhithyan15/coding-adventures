@@ -141,7 +141,13 @@ describe("corpus snapshot", () => {
     // calls "correctly atom-free". The blind spot they add is real but it is not
     // unmigrated corpus, and migrating them would mean inventing atoms for lessons
     // whose whole job is to revisit.
-    expect(report.summary.unmeasurableLessons).toBe(584); // +2: HL-C88 slice 8 review + synthesis, correctly atom-free
+    //
+    // HL-C113 adds one more for the same reason: ES-C55-sintesis-condicion
+    // closes the B1 si-condition rung and declares no atoms, because a
+    // synthesis re-practises what the two teaching chapters introduced. A
+    // ratchet that only moves down should not accept a cross-reference in
+    // place of its own justification, so it is written out here.
+    expect(report.summary.unmeasurableLessons).toBe(585); // +2: HL-C88 slice 8 review + synthesis, correctly atom-free // +1: B1 si-condition synthesis, same reason
     // 65 -> 66: vocabulary wave 4 added 52 schema-v2 lessons. Chapter 10's three
     // newly measurable teaching lessons carry the corpus across one point, and the
     // five-step Chapter-15 migration carries it across the next. Chapter 18's eight

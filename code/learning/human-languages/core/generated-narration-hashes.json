@@ -9480,6 +9480,48 @@
       "jsonHash": "fnv1a64:7742985746693c88"
     },
     {
+      "language": "spanish",
+      "chapter": 196,
+      "sourceHash": "fnv1a64:10175d988bec359f",
+      "lessonIds": [
+        "ES-C55-si"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch196.txt",
+      "json": "spanish/narration/ch196.json",
+      "textHash": "fnv1a64:592643af6a3d0366",
+      "jsonHash": "fnv1a64:587329b0abdd8973"
+    },
+    {
+      "language": "spanish",
+      "chapter": 197,
+      "sourceHash": "fnv1a64:e29790b66ca25dad",
+      "lessonIds": [
+        "ES-C55-si-futuro"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch197.txt",
+      "json": "spanish/narration/ch197.json",
+      "textHash": "fnv1a64:e0908d7debf4fb9e",
+      "jsonHash": "fnv1a64:e06496698e2d36a2"
+    },
+    {
+      "language": "spanish",
+      "chapter": 198,
+      "sourceHash": "fnv1a64:8fe10f0363f191f6",
+      "lessonIds": [
+        "ES-C55-sintesis-condicion"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch198.txt",
+      "json": "spanish/narration/ch198.json",
+      "textHash": "fnv1a64:8a6c7f908a460e50",
+      "jsonHash": "fnv1a64:f2e41f84d659666b"
+    },
+    {
       "language": "tamil",
       "chapter": 1,
       "sourceHash": "fnv1a64:4ba983e1f562762e",

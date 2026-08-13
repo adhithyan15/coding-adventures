@@ -240,9 +240,12 @@ describe("corpus snapshot", () => {
     // in `omits`; chapter 39 realizes the node, so the omission is removed with it.
     expect(summary.byLevel.A2).toBe(480); // +39: Spanish chapters 11-18 plus prerequisite closure // +3: HL-C88 slice 8 // +1: HL-C88 slice 9 (falsos amigos)
     // 8, not 0: Spanish chapters 38 and 41 realize SPINE-NARRATE-EVENTS and
-    // SPINE-GIVE-REASONS, four lessons each — the only B1 nodes any track has touched.
+    // SPINE-GIVE-REASONS, four lessons each.
+    // HL-C113 makes SPINE-EXPRESS-CONDITION the THIRD realized B1 node -- the
+    // sentence that used to stand here, "the only B1 nodes any track has
+    // touched", stopped being true the moment chapters 196-198 landed.
     // B2-C2 remain authored-but-unrealized, in every track.
-    expect(summary.byLevel.B1).toBe(23);
+    expect(summary.byLevel.B1).toBe(26); // +3: HL-C113 realizes SPINE-EXPRESS-CONDITION, the third B1 node
     expect(summary.byLevel.B2).toBe(0);
     expect(summary.byLevel.C1).toBe(0);
     expect(summary.byLevel.C2).toBe(0);

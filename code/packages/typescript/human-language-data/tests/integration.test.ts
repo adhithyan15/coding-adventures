@@ -104,7 +104,7 @@ describe("real curriculum", () => {
     // 40 (esperar, contestar, comprar). Two sessions authored a chapter 38 in parallel;
     // the collision surfaced as a merge conflict on chapters.json rather than silently,
     // because both sides must edit it.
-    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(195); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis // +3: HL-C88 slice 8 // +1: HL-C88 slice 9 (falsos amigos)
+    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(198); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis // +3: HL-C88 slice 8 // +1: HL-C88 slice 9 (falsos amigos) // +3: HL-C113 (B1 si-condition rung)
     expect(
       books.books
         .find((book) => book.language === "persian")
@@ -783,6 +783,15 @@ describe("real curriculum", () => {
       "ES-C55-la-bebo-drink",
       "ES-C55-la-bebo-test",
       "ES-C55-la-bebo-why",
+      "ES-C55-si-accent",
+      "ES-C55-si-etymon",
+      "ES-C55-si-futuro-say",
+      "ES-C55-si-futuro-trap",
+      "ES-C55-si-futuro-why",
+      "ES-C55-si-say",
+      "ES-C55-sintesis-condicion-habit",
+      "ES-C55-sintesis-condicion-plan",
+      "ES-C55-sintesis-condicion-two",
       "ES-C56-cion-gender",
       "ES-C56-cion-make",
       "ES-C56-cion-why",

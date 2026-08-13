@@ -3908,6 +3908,57 @@
         ],
         "note": "Final synthesis of the HL10 rung audit. Four pieces from four chapters stack in one line, and the reader can read comerlo without ever having been taught it."
       }
+    },
+    {
+      "chapter": 196,
+      "title": "Si --- If, and the Word Yes Is Made Of",
+      "label": "ch:si",
+      "canDo": "I can make a real condition with si and the present.",
+      "spineNodes": [
+        "SPINE-ASK-LOCATION"
+      ],
+      "payoff": {
+        "lesson": "ES-C55-si",
+        "kind": "task",
+        "summary": "I can make a real condition with si and the present.",
+        "assesses": [
+          "ES-GRAMMAR-SI-REAL-CONDITION"
+        ]
+      }
+    },
+    {
+      "chapter": 197,
+      "title": "Si + Futuro --- What Will Happen If",
+      "label": "ch:si-futuro",
+      "canDo": "I can put the result of a condition in the future, and keep si in the present.",
+      "spineNodes": [
+        "SPINE-ASK-LOCATION"
+      ],
+      "payoff": {
+        "lesson": "ES-C55-si-futuro",
+        "kind": "task",
+        "summary": "I can put the result of a condition in the future, and keep si in the present.",
+        "assesses": [
+          "ES-GRAMMAR-SI-FUTURE-RESULT"
+        ]
+      }
+    },
+    {
+      "chapter": 198,
+      "title": "Synthesis --- Real Conditions",
+      "label": "ch:sintesis-condicion",
+      "canDo": "I can say what happens, or will happen, if something else does.",
+      "spineNodes": [
+        "SPINE-ASK-LOCATION"
+      ],
+      "payoff": {
+        "lesson": "ES-C55-sintesis-condicion",
+        "kind": "task",
+        "summary": "I can say what happens, or will happen, if something else does.",
+        "assesses": [
+          "ES-GRAMMAR-SI-REAL-CONDITION"
+        ]
+      }
     }
   ]
 }

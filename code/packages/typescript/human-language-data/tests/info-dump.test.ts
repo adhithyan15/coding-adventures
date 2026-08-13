@@ -241,7 +241,7 @@ describe("the committed corpus", () => {
 
   it("pins the first measurement", () => {
     const report = measureInfoDump(lessons, budget);
-    expect(report.summary.lessons).toBe(1941); // +8: HL-C94 payoff lessons // +4: HL-C98 // +40: vocabulary wave 5 // +4: HL-C88 slices 5-6 // +3: HL-C88 slice 8 // +54: vocabulary wave 6
+    expect(report.summary.lessons).toBe(1944); // +8: HL-C94 payoff lessons // +4: HL-C98 // +40: vocabulary wave 5 // +4: HL-C88 slices 5-6 // +3: HL-C88 slice 8 // +54: vocabulary wave 6 // +3: HL-C113 (B1 si-condition rung)
 
     // The finding that reframed this gate: the PROSE is fine. Seventeen rule
     // statements across 1,694 lessons is a corpus whose writing is already
