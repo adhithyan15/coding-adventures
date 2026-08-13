@@ -42,7 +42,9 @@ fn chemistry_acid_or_base_recall_binds_class_with_citation() {
          ? acid_or_base(hydrochloric_acid, $Class)\n\
          ? acid_or_base(sodium_hydroxide, $Class)\n\
          ? acid_or_base($S, base)\n\
-         ? acid_or_base(vinegar, $Class)\n",
+         ? acid_or_base(vinegar, $Class)\n\
+         ? acid_or_base(chloric_acid, $Class)\n\
+         ? acid_or_base(rubidium_hydroxide, $Class)\n",
     )
     .unwrap();
 
@@ -73,4 +75,45 @@ fn chemistry_acid_or_base_recall_binds_class_with_citation() {
     );
     // "vinegar" is not in the table — honest abstention, never a fabricated class.
     assert!(out.contains("\"abstained\":true"), "vinegar abstains: {out}");
+}
+
+#[test]
+fn chemistry_acid_or_base_recalls_the_four_substances_added_this_cycle() {
+    let dir = scratch("acidsbases_ext");
+    let src = facts_stdlib().join("chemistry/acids-bases.adj");
+    std::fs::copy(&src, dir.join("acids-bases.adj")).expect("copy shipped acids-bases.adj");
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"acids-bases.adj\"\n\
+         ? acid_or_base(chloric_acid, $Class)\n\
+         ? acid_or_base(rubidium_hydroxide, $Class)\n\
+         ? acid_or_base(caesium_hydroxide, $Class)\n\
+         ? acid_or_base(strontium_hydroxide, $Class)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // The table's own header always documented these four as grounded in the
+    // same already-cited source table but originally omitted "to keep the set
+    // balanced" — this cycle folded them in as real rows (extend from 12 to 16).
+    // Check the resolved (substance, class) pair unambiguously via the governing
+    // term, since all four queries share the same unbound variable name `Class`.
+    assert!(
+        out.contains("\"term\":\"acid_or_base(chloric_acid, acid)\""),
+        "chloric_acid -> acid: {out}"
+    );
+    assert!(
+        out.contains("\"term\":\"acid_or_base(rubidium_hydroxide, base)\""),
+        "rubidium_hydroxide -> base: {out}"
+    );
+    assert!(
+        out.contains("\"term\":\"acid_or_base(caesium_hydroxide, base)\""),
+        "caesium_hydroxide -> base: {out}"
+    );
+    assert!(
+        out.contains("\"term\":\"acid_or_base(strontium_hydroxide, base)\""),
+        "strontium_hydroxide -> base: {out}"
+    );
+    assert!(!out.contains("\"abstained\":true"), "none of these four abstain: {out}");
 }
