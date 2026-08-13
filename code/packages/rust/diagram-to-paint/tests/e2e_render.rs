@@ -9,7 +9,7 @@
 
 #[cfg(target_vendor = "apple")]
 mod apple {
-    use diagram_ir::{SequenceBlockKind, SequenceEvent, SequenceLink, SequenceProperty};
+    use diagram_ir::{EdgeKind, SequenceBlockKind, SequenceEvent, SequenceLink, SequenceProperty};
     use diagram_layout_chart::layout_chart_diagram;
     use diagram_layout_graph::layout_graph_diagram;
     use diagram_layout_sequence::layout_sequence_diagram;
@@ -218,6 +218,50 @@ mod apple {
             .edges
             .iter()
             .any(|edge| edge.from_node_id == "Processing"));
+    }
+
+    #[test]
+    fn render_mermaid_composite_state_note_to_png() {
+        let graph = parse_state_diagram(
+            "stateDiagram-v2\nstate \"Not Shooting State\" as NotShooting {\nIdle --> Configuring\n}\nnote right of NotShooting: Composite state note\n",
+        )
+        .expect("Mermaid composite state note parse failed");
+        assert!(!graph.nodes.iter().any(|node| node.id == "NotShooting"));
+
+        let layout = layout_graph_diagram(&graph, None, None);
+        assert!(layout.edges.iter().any(|edge| {
+            edge.kind == EdgeKind::NoteAssociation && edge.from_node_id == "NotShooting"
+        }));
+
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint(
+            &layout,
+            &DiagramToPaintOptions {
+                background: layout_ir::Color {
+                    r: 255,
+                    g: 255,
+                    b: 255,
+                    a: 255,
+                },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 14.0),
+                title_font: font_spec("Helvetica", 18.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            },
+        );
+        assert!(scene.instructions.iter().any(|instruction| {
+            matches!(instruction, paint_instructions::PaintInstruction::Path(path) if path.stroke_dash.is_some())
+        }));
+
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_composite_state_note_e2e.png")
+            .expect("PNG write failed");
+        assert!(pixels.width > 0);
+        assert!(pixels.height > 0);
     }
 
     #[test]

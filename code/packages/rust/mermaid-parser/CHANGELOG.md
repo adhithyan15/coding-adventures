@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.76.0
+
+- Attach state notes to composite-group endpoints without creating duplicate ordinary nodes.
+
 ## 0.75.0
 
 - Lower Mermaid state `background` and CSS-like solid `border` styles into backend-neutral graph fill, stroke, and stroke-width fields.

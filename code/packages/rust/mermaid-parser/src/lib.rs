@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.75.0";
+pub const VERSION: &str = "0.76.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -1289,7 +1289,9 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
                 })?;
                 take_state_multiline_note_text(&mut cursor)?
             };
-            if !node_indices.contains_key(&state_id) {
+            if !node_indices.contains_key(&state_id)
+                && !groups.iter().any(|group| group.id == state_id)
+            {
                 upsert_state_node(
                     &mut nodes,
                     &mut node_indices,
@@ -4756,6 +4758,24 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     }
 
     #[test]
+    fn state_attaches_notes_to_composite_groups_without_duplicate_nodes() {
+        let diagram = parse_state_diagram(
+            "stateDiagram-v2\nstate \"Not Shooting State\" as NotShooting {\nIdle --> Configuring\n}\nnote right of NotShooting: This is a note on a composite state\n",
+        )
+        .expect("composite state note should parse");
+
+        assert!(diagram.groups.iter().any(|group| group.id == "NotShooting"));
+        assert!(!diagram.nodes.iter().any(|node| node.id == "NotShooting"));
+        let association = diagram
+            .edges
+            .iter()
+            .find(|edge| edge.kind == EdgeKind::NoteAssociation)
+            .expect("composite note association");
+        assert_eq!(association.from, "NotShooting");
+        assert!(association.to.starts_with("__state_note_"));
+    }
+
+    #[test]
     fn state_preserves_accessibility_metadata() {
         let diagram = parse_state_diagram(
             "stateDiagram-v2\naccTitle: State lifecycle\naccDescr {\nReady transitions to running\nAcross two lines\n}\nReady --> Running\n",
@@ -5770,7 +5790,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.75.0");
+        assert_eq!(crate::VERSION, "0.76.0");
     }
 
     #[test]

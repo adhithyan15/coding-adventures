@@ -1,5 +1,9 @@
 # Changelog — paint-metal
 
+## 0.4.0 — 2026-08-13
+
+- Tessellate dashed `PaintPath` strokes, including dash offsets, for Metal rendering.
+
 ## 0.3.0 — 2026-08-09
 
 - Added CSS named-color support for backend-neutral PaintInstructions.

@@ -38,7 +38,7 @@
 //! | `h_padding`     | 24      | Horizontal text padding inside a node    |
 //! | `char_width`    | 8       | Approximate width per character (px)     |
 
-pub const VERSION: &str = "0.16.0";
+pub const VERSION: &str = "0.17.0";
 
 use diagram_ir::{
     DiagramDirection, DiagramShape, GraphDiagram, LayoutedGraphDiagram, LayoutedGraphEdge,
@@ -715,6 +715,36 @@ pub fn layout_graph_diagram(
     stack_concurrent_regions(diagram, &mut nodes, opts.node_gap);
     let mut groups = layout_groups(diagram, &nodes);
 
+    for edge in diagram
+        .edges
+        .iter()
+        .filter(|edge| edge.kind == diagram_ir::EdgeKind::NoteAssociation)
+    {
+        let (note_id, group_id, note_is_left) = if diagram
+            .nodes
+            .iter()
+            .any(|node| node.id == edge.from && node.shape == Some(DiagramShape::Note))
+        {
+            (&edge.from, &edge.to, true)
+        } else {
+            (&edge.to, &edge.from, false)
+        };
+        let Some(note_index) = nodes.iter().position(|node| &node.id == note_id) else {
+            continue;
+        };
+        let Some(group) = groups.iter().find(|group| &group.id == group_id) else {
+            continue;
+        };
+        let note = &mut nodes[note_index];
+        note.x = if note_is_left {
+            group.x - opts.node_gap - note.width
+        } else {
+            group.x + group.width + opts.node_gap
+        };
+        note.y = group.y + (group.height - note.height) / 2.0;
+    }
+    groups = layout_groups(diagram, &nodes);
+
     let min_x = nodes
         .iter()
         .map(|node| node.x)
@@ -883,7 +913,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.16.0");
+        assert_eq!(VERSION, "0.17.0");
     }
 
     #[test]
@@ -1095,6 +1125,35 @@ mod tests {
         let state = l.nodes.iter().find(|node| node.id == "B").unwrap();
 
         assert!(note.x + note.width < state.x);
+        assert_eq!(l.edges[0].points[0].y, note.y + note.height / 2.0);
+    }
+
+    #[test]
+    fn note_associations_place_notes_beside_composite_groups() {
+        let mut d = two_node_diagram(DiagramDirection::Tb);
+        d.nodes[0].shape = Some(DiagramShape::Note);
+        d.edges[0].to = "Processing".into();
+        d.edges[0].kind = EdgeKind::NoteAssociation;
+        d.groups.push(diagram_ir::GraphGroup {
+            id: "Processing".into(),
+            label: DiagramLabel::new("Processing"),
+            parent_id: None,
+            node_ids: vec!["B".into()],
+            regions: vec![vec!["B".into()]],
+            direction: None,
+            style: None,
+        });
+
+        let l = layout_graph_diagram(&d, None, None);
+        let note = l.nodes.iter().find(|node| node.id == "A").unwrap();
+        let group = l
+            .groups
+            .iter()
+            .find(|group| group.id == "Processing")
+            .unwrap();
+
+        assert!(note.x + note.width < group.x);
+        assert_eq!(l.edges[0].to_node_id, "Processing");
         assert_eq!(l.edges[0].points[0].y, note.y + note.height / 2.0);
     }
 
