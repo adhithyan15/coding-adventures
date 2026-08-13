@@ -67,6 +67,11 @@ const devanagariOutline = (character: string): GlyphOutline => {
   return { path: g.path, bounds: boundsOf(g.contours) };
 };
 
+const cyrillicOutline = (character: string): GlyphOutline => {
+  const g = parseFont(load("NotoSansCyrillic-Static.ttf")).glyphFor(character)!;
+  return { path: g.path, bounds: boundsOf(g.contours) };
+};
+
 const MA = DUCTUS["ம"];
 const outline = tamilOutline("ம");
 const A = DUCTUS["அ"];
@@ -193,6 +198,8 @@ const DEVANAGARI_SA = ductusFor("स", "devanagari")!;
 const devanagariSaOutline = devanagariOutline("स");
 const DEVANAGARI_HA = ductusFor("ह", "devanagari")!;
 const devanagariHaOutline = devanagariOutline("ह");
+const CYRILLIC_A = ductusFor("а", "cyrillic")!;
+const cyrillicAOutline = cyrillicOutline("а");
 const HEBREW_ALEF = ductusFor("א", "hebrew")!;
 const hebrewAlefOutline = hebrewOutline("א");
 const HEBREW_BET = ductusFor("ב", "hebrew")!;
@@ -2372,6 +2379,33 @@ describe("Devanagari ह — joined stem and hooked body before the outer tail",
     );
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(DEVANAGARI_HA.strokes[2], 1),
+    );
+  });
+});
+
+describe("Cyrillic а — one joined body and finishing stem", () => {
+  const steps = ductusSteps(CYRILLIC_A);
+  const strip = ductusFilmstrip(CYRILLIC_A, cyrillicAOutline);
+
+  it("shows two movements within one sourced pen-down run", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "sweep over the shoulder and around the round body",
+      "continue down the right-hand finishing stem",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0]);
+    expect(strip.frames).toHaveLength(2);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 2 movements");
+  });
+
+  it("draws the exact Noto Sans Cyrillic character behind the finishing stem", () => {
+    const paths = byTag(strip.frames[1], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      cyrillicAOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(CYRILLIC_A.strokes[0], 1),
     );
   });
 });
