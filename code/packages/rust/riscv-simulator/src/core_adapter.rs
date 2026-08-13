@@ -202,7 +202,7 @@ impl RiscVISADecoder {
                 token.write_data = result;
             }
             "divu" => {
-                let result = (if rs2_u == 0 { u32::MAX } else { rs1_u / rs2_u }) as i32;
+                let result = rs1_u.checked_div(rs2_u).unwrap_or(u32::MAX) as i32;
                 token.alu_result = result;
                 token.write_data = result;
             }
@@ -218,7 +218,7 @@ impl RiscVISADecoder {
                 token.write_data = result;
             }
             "remu" => {
-                let result = (if rs2_u == 0 { rs1_u } else { rs1_u % rs2_u }) as i32;
+                let result = rs1_u.checked_rem(rs2_u).unwrap_or(rs1_u) as i32;
                 token.alu_result = result;
                 token.write_data = result;
             }
