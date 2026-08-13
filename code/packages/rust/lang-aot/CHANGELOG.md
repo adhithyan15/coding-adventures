@@ -11,6 +11,11 @@ The seven-backend ALGOL matrix now proves that a bounded finite real step loop
 retains the controlled scalar's first post-limit value after mirroring each
 binary64 increment.
 
+## Unreleased
+
+- Added a Nib `/` source-to-RISC-V-simulator fixture, proving typed division
+  reaches the RV32M backend and returns `42` for `84 / 2`.
+
 ## 0.225.1 - 2026-08-13 (ALGOL finite step-loop control exits)
 
 The seven-backend ALGOL matrix now proves that a finite integer step loop

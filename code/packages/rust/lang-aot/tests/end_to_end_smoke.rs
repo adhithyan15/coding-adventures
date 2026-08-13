@@ -1121,6 +1121,24 @@ fn end_to_end_nib_multiplication_executes_in_the_riscv_simulator() {
 }
 
 #[test]
+fn end_to_end_nib_division_executes_in_the_riscv_simulator() {
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("division.nib");
+    let bin = dir.path().join("division.bin");
+    std::fs::write(&src, b"fn main() -> u8 { return 84 / 2; }\n").unwrap();
+
+    lang_aot::compile_file_to_riscv32_bin(&src, &bin, lang_aot::Language::Nib)
+        .expect("Nib division must compile through the RV32M division core");
+
+    let bytes = std::fs::read(&bin).expect("read .bin");
+    let run = riscv_backend::run_binary(&bytes, &[])
+        .expect("the Nib RV32M division binary must execute in the simulator");
+    assert!(run.halted, "the simulator return trampoline must halt");
+    assert_eq!(run.return_value, 42);
+    assert_eq!(run.return_value_high, 0);
+}
+
+#[test]
 fn end_to_end_nib_shift_executes_in_the_riscv_simulator() {
     let dir = tempfile::tempdir().expect("tempdir");
     let src = dir.path().join("shift.nib");
