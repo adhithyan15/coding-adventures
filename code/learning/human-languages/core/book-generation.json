@@ -3508,6 +3508,26 @@
       "output": "spanish/book/chapters/ch213-dijo-que.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 214,
+      "output": "spanish/book/chapters/ch214-pregunto-si.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 215,
+      "output": "spanish/book/chapters/ch215-pregunto-donde.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 216,
+      "output": "spanish/book/chapters/ch216-review-reportar.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 217,
+      "output": "spanish/book/chapters/ch217-synthesis-reportar.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "output": "tamil/book/chapters/ch06-dative-case.tex",

@@ -4119,7 +4119,7 @@
       "label": "ch:si-tuviera",
       "canDo": "I can say what would happen if something untrue were true.",
       "spineNodes": [
-        "SPINE-ASK-LOCATION"
+        "SPINE-EXPRESS-CONDITION"
       ],
       "payoff": {
         "lesson": "ES-C56-si-tuviera",
@@ -4136,7 +4136,7 @@
       "label": "ch:repaso-condiciones",
       "canDo": "I can choose between a real and an unreal condition and get both halves right.",
       "spineNodes": [
-        "SPINE-ASK-LOCATION"
+        "SPINE-EXPRESS-CONDITION"
       ],
       "payoff": {
         "lesson": "ES-C56-repaso-condiciones",
@@ -4153,7 +4153,7 @@
       "label": "ch:sintesis-condiciones",
       "canDo": "I can speak about a world that does not exist.",
       "spineNodes": [
-        "SPINE-ASK-LOCATION"
+        "SPINE-EXPRESS-CONDITION"
       ],
       "payoff": {
         "lesson": "ES-C56-sintesis-condiciones",
@@ -4170,7 +4170,7 @@
       "label": "ch:dice-que",
       "canDo": "I can report what someone says right now.",
       "spineNodes": [
-        "SPINE-ASK-LOCATION"
+        "SPINE-REPORT-WHAT-OTHERS-SAID"
       ],
       "payoff": {
         "lesson": "ES-C57-dice-que",
@@ -4187,7 +4187,7 @@
       "label": "ch:dijo",
       "canDo": "I can say what someone said, and say it in the plural without inventing a syllable.",
       "spineNodes": [
-        "SPINE-ASK-LOCATION"
+        "SPINE-REPORT-WHAT-OTHERS-SAID"
       ],
       "payoff": {
         "lesson": "ES-C57-dijo",
@@ -4204,12 +4204,80 @@
       "label": "ch:dijo-que",
       "canDo": "I can report what someone said, with the tense the report actually needs.",
       "spineNodes": [
-        "SPINE-ASK-LOCATION"
+        "SPINE-REPORT-WHAT-OTHERS-SAID"
       ],
       "payoff": {
         "lesson": "ES-C57-dijo-que",
         "kind": "task",
         "summary": "I can report what someone said, with the tense the report actually needs.",
+        "assesses": [
+          "ES-GRAMMAR-REPORTED-BACKSHIFT"
+        ]
+      }
+    },
+    {
+      "chapter": 214,
+      "title": "Preguntó Si --- A Question That Stops Being One",
+      "label": "ch:pregunto-si",
+      "canDo": "I can report a yes-or-no question somebody asked.",
+      "spineNodes": [
+        "SPINE-REPORT-WHAT-OTHERS-SAID"
+      ],
+      "payoff": {
+        "lesson": "ES-C57-pregunto-si",
+        "kind": "task",
+        "summary": "I can report a yes-or-no question somebody asked.",
+        "assesses": [
+          "ES-GRAMMAR-REPORTED-YESNO-SI"
+        ]
+      }
+    },
+    {
+      "chapter": 215,
+      "title": "Preguntó Dónde --- What the Accent Was Always For",
+      "label": "ch:pregunto-donde",
+      "canDo": "I can report a question that begins with an asking word, accent intact.",
+      "spineNodes": [
+        "SPINE-REPORT-WHAT-OTHERS-SAID"
+      ],
+      "payoff": {
+        "lesson": "ES-C57-pregunto-donde",
+        "kind": "task",
+        "summary": "I can report a question that begins with an asking word, accent intact.",
+        "assesses": [
+          "ES-GRAMMAR-REPORTED-WH-ACCENT"
+        ]
+      }
+    },
+    {
+      "chapter": 216,
+      "title": "Review --- Three Joints, Two Constants",
+      "label": "ch:repaso-reportar",
+      "canDo": "I can choose the right joint for anything I am reporting.",
+      "spineNodes": [
+        "SPINE-REPORT-WHAT-OTHERS-SAID"
+      ],
+      "payoff": {
+        "lesson": "ES-C57-repaso-reportar",
+        "kind": "task",
+        "summary": "I can choose the right joint for anything I am reporting.",
+        "assesses": [
+          "ES-GRAMMAR-REPORTED-WH-ACCENT"
+        ]
+      }
+    },
+    {
+      "chapter": 217,
+      "title": "Synthesis --- Carrying a Conversation",
+      "label": "ch:sintesis-reportar",
+      "canDo": "I can report a whole exchange to somebody who was not there.",
+      "spineNodes": [
+        "SPINE-REPORT-WHAT-OTHERS-SAID"
+      ],
+      "payoff": {
+        "lesson": "ES-C57-sintesis-reportar",
+        "kind": "task",
+        "summary": "I can report a whole exchange to somebody who was not there.",
         "assesses": [
           "ES-GRAMMAR-REPORTED-BACKSHIFT"
         ]

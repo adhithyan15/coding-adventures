@@ -2329,6 +2329,54 @@
         "ES-EXT-B2-DIJO-QUE"
       ],
       "after": []
+    },
+    {
+      "id": "ES-PATH-B2-PREGUNTO-SI",
+      "spine_node": "SPINE-REPORT-WHAT-OTHERS-SAID",
+      "lessons": [
+        "ES-C57-pregunto-si"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-B2-PREGUNTO-SI"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-B2-PREGUNTO-DONDE",
+      "spine_node": "SPINE-REPORT-WHAT-OTHERS-SAID",
+      "lessons": [
+        "ES-C57-pregunto-donde"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-B2-PREGUNTO-DONDE"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-B2-REVIEW-REPORT",
+      "spine_node": "SPINE-REPORT-WHAT-OTHERS-SAID",
+      "lessons": [
+        "ES-C57-repaso-reportar"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-B2-REVIEW-REPORT"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-B2-SYNTH-REPORT",
+      "spine_node": "SPINE-REPORT-WHAT-OTHERS-SAID",
+      "lessons": [
+        "ES-C57-sintesis-reportar"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-B2-SYNTH-REPORT"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -2701,7 +2749,11 @@
       "segments": [
         "ES-PATH-B2-DICE-QUE",
         "ES-PATH-B2-DIJO",
-        "ES-PATH-B2-DIJO-QUE"
+        "ES-PATH-B2-DIJO-QUE",
+        "ES-PATH-B2-PREGUNTO-SI",
+        "ES-PATH-B2-PREGUNTO-DONDE",
+        "ES-PATH-B2-REVIEW-REPORT",
+        "ES-PATH-B2-SYNTH-REPORT"
       ],
       "omits": [
         "REPORTED-SPEECH",
@@ -5135,6 +5187,50 @@
       "prerequisites": [],
       "lessons": [
         "ES-C57-dijo-que"
+      ]
+    },
+    {
+      "id": "ES-EXT-B2-PREGUNTO-SI",
+      "stage": "B2",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C57-pregunto-si"
+      ]
+    },
+    {
+      "id": "ES-EXT-B2-PREGUNTO-DONDE",
+      "stage": "B2",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C57-pregunto-donde"
+      ]
+    },
+    {
+      "id": "ES-EXT-B2-REVIEW-REPORT",
+      "stage": "B2",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C57-repaso-reportar"
+      ]
+    },
+    {
+      "id": "ES-EXT-B2-SYNTH-REPORT",
+      "stage": "B2",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C57-sintesis-reportar"
       ]
     }
   ]
