@@ -1,0 +1,30 @@
+This directory vendors a slice of the official WebAssembly conformance
+test suite, unmodified, for use by the `wasm-conformance` crate (see
+`code/specs/W05-wasm-conformance-harness.md`).
+
+Source:        https://github.com/WebAssembly/testsuite
+Pinned commit: 28864811cf03bdbf880733786148feaba339582d
+Fetched:       2026-08-13
+Fetch method:  code/packages/rust/wasm-conformance/tests/fixtures/fetch_testsuite.py
+
+The pinned commit was resolved via:
+    git ls-remote https://github.com/WebAssembly/testsuite.git refs/heads/main
+
+`main` is a live, moving branch that interleaves post-MVP proposal files
+(GC, exceptions, tail calls, SIMD, threads/atomics) with plain WASM 1.0
+MVP-core ones, so a pinned SHA -- not `main` itself -- is vendored to keep
+this repo's conformance baseline reproducible across re-fetches. Bumping
+the pin is a deliberate, reviewed decision, not something a re-run of the
+fetch script does casually.
+
+Only the WASM 1.0 MVP-core `.wast` files are vendored here; see
+`code/specs/W05-wasm-conformance-harness.md` section 6 for the full list
+of what's deliberately excluded from this initial slice (SIMD, threads,
+exceptions, tail calls, GC/reference-types beyond this repo's existing
+narrow slice, memory64, the component model, and files needing the
+`spectest` host-import module) and why each becomes its own future
+phase's vendored slice.
+
+The vendored files are licensed under the Apache License, Version 2.0 --
+see the accompanying LICENSE file, itself vendored verbatim from the same
+pinned commit.
