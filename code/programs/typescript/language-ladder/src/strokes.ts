@@ -2854,6 +2854,39 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: devanagariAlphabetSource("व"),
   },
+  // Both animations and the Central Hindi Directorate deskbook agree on three
+  // parts: one joined double-loop body and tail, the descending right stem,
+  // and the final headline. Opiaterein's holds make the two lifts explicit.
+  [ductusKey("devanagari", "श")]: {
+    script: "devanagari",
+    glyph: "श",
+    strokes: [
+      { segments: [{ label: "trace the joined double-loop body and diagonal tail", path: [
+        { x: 240, y: 380 }, { x: 220, y: 395 }, { x: 175, y: 410 },
+        { x: 135, y: 440 }, { x: 110, y: 480 }, { x: 105, y: 520 },
+        { x: 120, y: 560 }, { x: 155, y: 590 }, { x: 200, y: 605 },
+        { x: 245, y: 600 }, { x: 285, y: 580 }, { x: 315, y: 545 },
+        { x: 335, y: 500 }, { x: 340, y: 450 }, { x: 330, y: 400 },
+        { x: 310, y: 350 }, { x: 275, y: 310 }, { x: 235, y: 280 },
+        { x: 190, y: 260 }, { x: 175, y: 265 }, { x: 155, y: 278 },
+        { x: 115, y: 290 }, { x: 75, y: 280 }, { x: 50, y: 255 },
+        { x: 55, y: 225 }, { x: 85, y: 200 }, { x: 125, y: 192 },
+        { x: 165, y: 210 }, { x: 200, y: 245 }, { x: 205, y: 220 },
+        { x: 235, y: 185 }, { x: 270, y: 145 }, { x: 330, y: 80 },
+        { x: 350, y: 25 },
+      ] }] },
+      { segments: [{ label: "lift, then descend the right stem", path: [
+        { x: 550, y: 550 }, { x: 550, y: 475 }, { x: 550, y: 395 },
+        { x: 550, y: 315 }, { x: 550, y: 235 }, { x: 550, y: 155 },
+        { x: 550, y: 75 }, { x: 550, y: 5 },
+      ] }] },
+      { segments: [{ label: "lift, then draw the shirorekha left-to-right", path: [
+        { x: 425, y: 585 }, { x: 480, y: 585 }, { x: 535, y: 585 },
+        { x: 590, y: 585 }, { x: 645, y: 585 }, { x: 690, y: 585 },
+      ] }] },
+    ],
+    source: devanagariAlphabetSource("श"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the

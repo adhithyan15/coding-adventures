@@ -679,10 +679,17 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   shirorekhā. Its three-frame Noto Sans Devanagari path follows JackPotte's
   11-frame animation with two lifts. The Directorate's deskbook independently
   confirms the same loop, right-stem, and headline buildup, while the animation
-  supplies the within-run directions and lift evidence. The remaining **106** prose part
+  supplies the within-run directions and lift evidence. **श** then starts at
+  the upper loop's lower inner tip, sweeps left and clockwise around that loop,
+  descends through the outer curve, curls around the lower loop, and continues
+  down-right through the diagonal tail before two lifted runs descend the right
+  stem and finish the shirorekhā. Its three-frame Noto Sans Devanagari path
+  follows Opiaterein's 25-frame animation with two lifts. JackPotte's separate
+  26-frame animation and the Directorate's deskbook independently corroborate
+  the same joined-body, right-stem, and headline buildup. The remaining **105** prose part
   orders across five scripts
   (`arabic` 3,
-  `cyrillic` 33, `devanagari` 3,
+  `cyrillic` 33, `devanagari` 2,
   `gujarati` 33, `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a
   citation without a count), and Language Ladder's ductus test proves every
