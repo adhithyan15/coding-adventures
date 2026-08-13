@@ -71,3 +71,40 @@ fn anatomy_brain_parts_recall_binds_function_with_citation() {
     // abstention, never a fabricated function.
     assert!(out.contains("\"abstained\":true"), "unknown part abstains: {out}");
 }
+
+#[test]
+fn anatomy_brain_parts_extension_recalls_newly_added_brainstem_functions() {
+    let dir = scratch("brainparts_ext");
+    let src = facts_stdlib().join("anatomy/brain-parts.adj");
+    std::fs::copy(&src, dir.join("brain-parts.adj")).expect("copy shipped brain-parts.adj");
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"brain-parts.adj\"\n\
+         ? brain_part_function(brainstem, $Job)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // brainstem's own cited source sentence always listed ten autonomic
+    // functions, but only "breathing" was ever shipped as a row until this
+    // cycle -- the other nine are pure additions, each a new row sharing
+    // the same brainstem key.
+    for job in [
+        "breathing",
+        "temperature_regulation",
+        "respiration",
+        "heart_rate",
+        "wake_sleep_cycles",
+        "coughing",
+        "sneezing",
+        "digestion",
+        "vomiting",
+        "swallowing",
+    ] {
+        assert!(
+            out.contains(&format!("brain_part_function(brainstem, {job})")),
+            "brainstem recalls {job} (added this cycle unless it's breathing): {out}"
+        );
+    }
+}
