@@ -2,7 +2,7 @@
 //!
 //! This backend deliberately consumes `CIRInstr`, never dynamic IIR.  It is a
 //! small but executable scalar lane: supported functions lower to real RV32I
-//! bytes, with RV32M `mul` / `mulhu` used for wide multiplication, and
+//! bytes, with RV32M multiplication plus unsigned wide division/modulo, and
 //! `run_binary` executes those bytes in the in-tree simulator.
 
 use std::collections::{HashMap, HashSet};
@@ -12,8 +12,9 @@ use jit_core::backend::{Backend, FunctionContext};
 use jit_core::cir::{CIRInstr, CIROperand};
 use riscv_encoder::{
     assemble, encode_add, encode_addi, encode_and, encode_andi, encode_beq, encode_bne,
-    encode_ecall, encode_jal, encode_lui, encode_mul, encode_mulhu, encode_or, encode_sll,
-    encode_slt, encode_sltu, encode_sra, encode_srai, encode_srl, encode_sub, encode_xor,
+    encode_div, encode_divu, encode_ecall, encode_jal, encode_lui, encode_mul, encode_mulhu,
+    encode_or, encode_ori, encode_rem, encode_remu, encode_sll, encode_slli, encode_slt,
+    encode_sltu, encode_sra, encode_srai, encode_srl, encode_srli, encode_sub, encode_xor,
     encode_xori, A0, RET_WORD,
     X0_ZERO, X1_RA,
 };
@@ -26,6 +27,9 @@ const ARG_REGISTERS: [u32; 8] = [10, 11, 12, 13, 14, 15, 16, 17];
 const A1: u32 = 11;
 const SCRATCH_REGISTER: u32 = 31;
 const SECOND_SCRATCH_REGISTER: u32 = 27;
+const DIVISION_TEMP_REGISTER: u32 = 18;
+const DIVISION_BORROW_REGISTER: u32 = 19;
+const DIVISION_COUNTER_REGISTER: u32 = 20;
 const VALUE_REGISTERS: [u32; 6] = [5, 6, 7, 28, 29, 30];
 
 /// The RV32I backend.  Stateless — every compilation gets fresh allocation.
@@ -324,13 +328,16 @@ impl Lowerer {
             return Ok(());
         }
 
-        for family in ["add", "sub", "mul", "and", "or", "xor", "shl", "shr"] {
+        for family in ["add", "sub", "mul", "div", "mod", "and", "or", "xor", "shl", "shr"] {
             if let Some(ty) = op.strip_prefix(&format!("{family}_")) {
                 if matches!(ty, "i64" | "u64") {
                     return match family {
                         "add" => self.lower_wide_add(instr, op, is_signed(ty)),
                         "sub" => self.lower_wide_sub(instr, op, is_signed(ty)),
                         "mul" => self.lower_wide_mul(instr, op, is_signed(ty)),
+                        "div" | "mod" if !is_signed(ty) => {
+                            self.lower_wide_unsigned_divmod(instr, op, family)
+                        }
                         "and" | "or" | "xor" => {
                             self.lower_wide_bitwise(instr, op, family, is_signed(ty))
                         }
@@ -347,6 +354,10 @@ impl Lowerer {
                     "add" => encode_add(rd, lhs, rhs),
                     "sub" => encode_sub(rd, lhs, rhs),
                     "mul" => encode_mul(rd, lhs, rhs),
+                    "div" if is_signed(ty) => encode_div(rd, lhs, rhs),
+                    "div" => encode_divu(rd, lhs, rhs),
+                    "mod" if is_signed(ty) => encode_rem(rd, lhs, rhs),
+                    "mod" => encode_remu(rd, lhs, rhs),
                     "and" => encode_and(rd, lhs, rhs),
                     "or" => encode_or(rd, lhs, rhs),
                     "xor" => encode_xor(rd, lhs, rhs),
@@ -723,6 +734,153 @@ impl Lowerer {
         self.words.push(encode_add(hi, hi, SCRATCH_REGISTER));
         self.words.push(encode_mul(SCRATCH_REGISTER, SECOND_SCRATCH_REGISTER, rhs.low()));
         self.words.push(encode_add(hi, hi, SCRATCH_REGISTER));
+        Ok(())
+    }
+
+    /// Lower unsigned 64-bit division and remainder with the standard
+    /// restoring algorithm. The quotient lives in the destination pair while
+    /// `x31`/`x27` hold the low/high running remainder, leaving the divisor
+    /// untouched.
+    /// A zero divisor deliberately needs no special branch: every remainder is
+    /// greater than or equal to zero, so the loop produces all-one quotient
+    /// bits and preserves the dividend as the remainder, matching RV32M.
+    fn lower_wide_unsigned_divmod(
+        &mut self,
+        instr: &CIRInstr,
+        op: &str,
+        family: &str,
+    ) -> Result<(), BackendError> {
+        let ValueLocation::Pair { lo, hi } = self.dest_pair(instr, op)? else {
+            unreachable!("dest_pair always returns a pair")
+        };
+        let lhs = self.var_location(instr, 0, op)?;
+        let rhs = self.var_location(instr, 1, op)?;
+        let rhs_hi = match rhs {
+            ValueLocation::Pair { hi, .. } => hi,
+            ValueLocation::Word(_) => X0_ZERO,
+        };
+
+        self.words.push(encode_addi(lo, lhs.low(), 0));
+        self.copy_or_extend_high(hi, lhs, false);
+        self.words.push(encode_addi(SCRATCH_REGISTER, X0_ZERO, 0));
+        self.words
+            .push(encode_addi(SECOND_SCRATCH_REGISTER, X0_ZERO, 0));
+        self.words
+            .push(encode_addi(DIVISION_COUNTER_REGISTER, X0_ZERO, 64));
+
+        let loop_label = self.internal_label("udiv_loop");
+        let subtract_label = self.internal_label("udiv_subtract");
+        let next_label = self.internal_label("udiv_next");
+        self.mark_label(loop_label.clone());
+
+        // Shift the next quotient bit into the remainder, then left-shift
+        // the quotient so its low bit can record whether subtraction occurs.
+        self.words
+            .push(encode_srli(DIVISION_TEMP_REGISTER, hi, 31));
+        self.words.push(encode_srli(
+            DIVISION_BORROW_REGISTER,
+            SCRATCH_REGISTER,
+            31,
+        ));
+        self.words.push(encode_slli(
+            SECOND_SCRATCH_REGISTER,
+            SECOND_SCRATCH_REGISTER,
+            1,
+        ));
+        self.words.push(encode_or(
+            SECOND_SCRATCH_REGISTER,
+            SECOND_SCRATCH_REGISTER,
+            DIVISION_BORROW_REGISTER,
+        ));
+        self.words
+            .push(encode_slli(SCRATCH_REGISTER, SCRATCH_REGISTER, 1));
+        self.words.push(encode_or(
+            SCRATCH_REGISTER,
+            SCRATCH_REGISTER,
+            DIVISION_TEMP_REGISTER,
+        ));
+        self.words
+            .push(encode_srli(DIVISION_TEMP_REGISTER, lo, 31));
+        self.words.push(encode_slli(hi, hi, 1));
+        self.words
+            .push(encode_or(hi, hi, DIVISION_TEMP_REGISTER));
+        self.words.push(encode_slli(lo, lo, 1));
+
+        // Compare the two-word remainder with the divisor without needing a
+        // branch kind beyond "nonzero". A high-word difference decides first;
+        // equal highs fall through to the unsigned low-word comparison.
+        self.words.push(encode_sltu(
+            DIVISION_TEMP_REGISTER,
+            SECOND_SCRATCH_REGISTER,
+            rhs_hi,
+        ));
+        self.record_named_branch(
+            next_label.clone(),
+            BranchKind::NeZero {
+                rs1: DIVISION_TEMP_REGISTER,
+            },
+        );
+        self.words.push(encode_sltu(
+            DIVISION_TEMP_REGISTER,
+            rhs_hi,
+            SECOND_SCRATCH_REGISTER,
+        ));
+        self.record_named_branch(
+            subtract_label.clone(),
+            BranchKind::NeZero {
+                rs1: DIVISION_TEMP_REGISTER,
+            },
+        );
+        self.words.push(encode_sltu(
+            DIVISION_TEMP_REGISTER,
+            SCRATCH_REGISTER,
+            rhs.low(),
+        ));
+        self.record_named_branch(
+            next_label.clone(),
+            BranchKind::NeZero {
+                rs1: DIVISION_TEMP_REGISTER,
+            },
+        );
+
+        self.mark_label(subtract_label);
+        self.words.push(encode_sltu(
+            DIVISION_BORROW_REGISTER,
+            SCRATCH_REGISTER,
+            rhs.low(),
+        ));
+        self.words
+            .push(encode_sub(SCRATCH_REGISTER, SCRATCH_REGISTER, rhs.low()));
+        self.words.push(encode_sub(
+            SECOND_SCRATCH_REGISTER,
+            SECOND_SCRATCH_REGISTER,
+            rhs_hi,
+        ));
+        self.words.push(encode_sub(
+            SECOND_SCRATCH_REGISTER,
+            SECOND_SCRATCH_REGISTER,
+            DIVISION_BORROW_REGISTER,
+        ));
+        self.words.push(encode_ori(lo, lo, 1));
+
+        self.mark_label(next_label);
+        self.words.push(encode_addi(
+            DIVISION_COUNTER_REGISTER,
+            DIVISION_COUNTER_REGISTER,
+            -1,
+        ));
+        self.record_named_branch(
+            loop_label,
+            BranchKind::NeZero {
+                rs1: DIVISION_COUNTER_REGISTER,
+            },
+        );
+
+        if family == "mod" {
+            self.words.push(encode_addi(lo, SCRATCH_REGISTER, 0));
+            self.words
+                .push(encode_addi(hi, SECOND_SCRATCH_REGISTER, 0));
+        }
         Ok(())
     }
 

@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Added scalar RV32M `div` / `divu` / `rem` / `remu` lowering and pair-aware
+  restoring `div_u64` / `mod_u64` lowering, including cross-word and
+  zero-divisor simulator fixtures.
 - Track remaining CIR value uses and let a wide right shift overwrite a dead
   left-hand register pair. This enables chained pair shifts within the
   six-register starter allocator; general spilling remains a later allocator
