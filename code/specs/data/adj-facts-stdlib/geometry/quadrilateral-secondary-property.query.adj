@@ -1,0 +1,21 @@
+% ============================================================================
+% quadrilateral-secondary-property.query.adj — a worked recall over the
+% geometry quadrilateral-secondary-property library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what else is true of a
+% rectangle's sides, besides the right angles?": it states no geometry fact
+% of its own — it only `import`s the grounded table and asks binding
+% queries. The engine resolves each `?` against the
+% `quadrilateral_secondary_property` rows and returns the secondary
+% property + the table's source/locator/trust. A shape the cited spans give
+% no second property for abstains honestly — the engine never invents one.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli quadrilateral-secondary-property.query.adj
+% ============================================================================
+
+import "quadrilateral-secondary-property.adj"
+
+? quadrilateral_secondary_property(rectangle, $Property)         % expect opposite_sides_equal_length
+? quadrilateral_secondary_property($Shape, opposite_angles_equal) % reverse bind — expect parallelogram
+? quadrilateral_secondary_property(square, $Property)             % expect abstain — square's own cited span names only one property, no second

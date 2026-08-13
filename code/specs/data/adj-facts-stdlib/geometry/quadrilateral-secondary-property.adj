@@ -1,0 +1,65 @@
+% ============================================================================
+% quadrilateral-secondary-property — for the quadrilaterals where the SAME
+% source states a SECOND property in the same defining sentence, that
+% second property (adj-facts-stdlib, GEOMETRY).
+% ============================================================================
+% A sibling to the already-shipped `quadrilateral-types.adj`
+% (`quadrilateral_property(shape, property)`, ONE defining property per
+% quadrilateral: square, rectangle, rhombus, parallelogram, trapezoid). That
+% table's `property` column has room for only the PRIMARY defining property;
+% the SAME already-quoted MathWorld sentences also state a SECOND, distinct
+% property for two of the five quadrilaterals that never made it into a row:
+%
+%   rectangle → opposite_sides_equal_length
+%     "A closed planar quadrilateral with opposite sides of equal lengths a
+%      and b, and with four right angles."
+%   parallelogram → opposite_angles_equal
+%     "A parallelogram is a quadrilateral with opposite sides parallel (and
+%      therefore opposite angles equal)."
+%
+% Recall is a binding query:
+%
+%     ? quadrilateral_secondary_property(rectangle, $Property)   % opposite_sides_equal_length
+%
+% This is a native `table` (ADJ-TABLES RS-5, a TWO-column table like
+% `quadrilateral-types.adj`'s own `quadrilateral_property`): each `row`
+% lowers to a ground relation `quadrilateral_secondary_property(shape,
+% property)` carrying the citation, so the lookup above is the ordinary SLD
+% binding query — the engine returns the secondary property WITH its
+% source, on the CPU, with zero model calls, and abstains on square,
+% rhombus, and trapezoid, whose own already-cited spans in
+% `quadrilateral-types.adj` state only the single primary property, with no
+% second property to decode here.
+%
+% Only TWO of `quadrilateral-types.adj`'s five quadrilaterals have a
+% genuinely second, distinct property in the ALREADY-cited spans; this table
+% is deliberately narrow rather than inventing a property the source does
+% not state. The query also runs BACKWARD — bind a property and recall
+% which quadrilateral it describes:
+%
+%     ? quadrilateral_secondary_property($Shape, opposite_angles_equal)   % parallelogram
+%
+% Provenance: reproduces, byte-for-byte, the SAME rectangle span already
+% quoted inside `quadrilateral-types.adj`'s own provenance block, from the
+% SAME MathWorld "Rectangle" page that table already cites — no new
+% WebFetch, only a different schema decoding a part of each
+% already-verified quote. An ADJ `table` carries ONE provenance envelope
+% (per `quadrilateral-types.adj`'s own convention), so `source`/`locator`/
+% `trust` below hold the rectangle span; the parallelogram row's own span is
+% listed above for independent auditability. `trust authoritative` — the
+% same tier `quadrilateral-types.adj` already carries (Wolfram MathWorld, a
+% primary mathematics reference).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table quadrilateral_secondary_property {
+    columns shape, property
+
+    row (rectangle, opposite_sides_equal_length)
+    row (parallelogram, opposite_angles_equal)
+
+    source "A closed planar quadrilateral with opposite sides of equal lengths a and b, and with four right angles."
+    locator "https://mathworld.wolfram.com/Rectangle.html"
+    trust authoritative
+}
