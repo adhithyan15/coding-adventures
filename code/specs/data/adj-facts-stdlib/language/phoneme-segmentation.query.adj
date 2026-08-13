@@ -1,0 +1,22 @@
+% ============================================================================
+% phoneme-segmentation.query.adj — a worked recall over the literacy
+% phoneme-segmentation library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what sounds does 'feet'
+% break into?": it states no linguistics fact — it only `import`s the
+% grounded table and asks binding queries. The engine resolves each `?`
+% against the `phoneme_segmentation` rows and returns the sounds + the
+% table's source/locator/trust. The second query runs the relation BACKWARD
+% (bind the three sounds `f`, `ee`, `t`, recall the word they segment from).
+% A word this source does not demonstrate segmenting is not in the table, so
+% a recall on it abstains honestly — the engine never invents a segmentation.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli phoneme-segmentation.query.adj
+% ============================================================================
+
+import "phoneme-segmentation.adj"
+
+? phoneme_segmentation(feet, $S1, $S2, $S3)   % expect f, ee, t
+? phoneme_segmentation($Word, f, ee, t)       % expect feet — reverse recall
+? phoneme_segmentation(cat, $S1, $S2, $S3)    % expect abstain — not the word this source demonstrates
