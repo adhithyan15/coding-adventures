@@ -704,7 +704,7 @@ impl Lowerer {
                 .ok_or_else(|| BackendError::UndefinedLabel(call.function.clone()))?;
             let call_site = function_offset + call.word_index * 4;
             let offset = target as i64 - call_site as i64;
-            if offset < -(1 << 20) || offset >= (1 << 20) {
+            if !(-(1 << 20)..(1 << 20)).contains(&offset) {
                 return Err(BackendError::CallOutOfRange {
                     function: call.function.clone(),
                     offset,
