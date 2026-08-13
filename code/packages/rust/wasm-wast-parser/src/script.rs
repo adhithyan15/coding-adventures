@@ -1,0 +1,438 @@
+//! # Script-directive parsing — a whole `.wast` file (modules + directives).
+//!
+//! The official WebAssembly spec testsuite ships as `.wast` files: a
+//! sequence of top-level forms mixing real `(module ...)` definitions with
+//! **test directives** — `register`, `invoke`, `assert_return`,
+//! `assert_trap`, `assert_exhaustion`, `assert_invalid`, `assert_malformed`,
+//! `assert_unlinkable`. This module recognizes that outer shape; it does
+//! not itself decide pass/fail — that's `wasm-conformance`'s job, this
+//! crate just hands back a typed [`Directive`] per top-level form for the
+//! harness to execute and grade.
+//!
+//! ## A deliberate asymmetry: eager vs. lazy module building
+//!
+//! A plain `(module ...)` directive is built **eagerly** — encoded to a
+//! real [`WasmModule`] right here, propagating any real syntax error up
+//! through this function's own `Result`, since `assert_return`/
+//! `assert_trap` need an already-valid module to invoke against.
+//!
+//! `assert_invalid`/`assert_malformed`'s module, by contrast, is kept as a
+//! **raw, unparsed [`SExpr`]** — because for these two directive kinds,
+//! failing to parse or encode is exactly the thing the harness is
+//! *testing for*. Eagerly building it here would turn every legitimate
+//! `assert_malformed` fixture into a hard error that aborts the whole
+//! script. The harness calls [`crate::module::parse_module_expr`] itself,
+//! at the point it actually wants to observe whether that call succeeds or
+//! fails.
+
+use crate::module::parse_module_expr;
+use crate::numeric::{parse_f32_bits, parse_f64_bits, parse_i32, parse_i64};
+use crate::sexpr::{expect_get, parse_source, SExpr};
+use crate::WastParseError;
+use wasm_types::WasmModule;
+
+/// A test action: invoke an exported function, or read an exported global.
+#[derive(Debug, Clone, PartialEq)]
+pub enum Action {
+    Invoke { module: Option<String>, name: String, args: Vec<ConstValue> },
+    Get { module: Option<String>, name: String },
+}
+
+/// A concrete constant value — either a literal argument to `invoke`, or an
+/// exact expected result in `assert_return`.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub enum ConstValue {
+    I32(i32),
+    I64(i64),
+    /// Stored as raw bits, not `f32`/`f64` — `PartialEq` on floats is the
+    /// wrong notion of equality for conformance grading (NaN != NaN, but
+    /// two NaNs with the same bit pattern ARE the same test outcome); the
+    /// harness compares bits directly, never `==` on the float value.
+    F32Bits(u32),
+    F64Bits(u64),
+}
+
+/// One expected result slot in `assert_return` — either an exact value, or
+/// (float-only) a NaN *class*: any quiet or signaling NaN bit pattern
+/// satisfies `NanArithmetic`; only the canonical quiet-NaN bit pattern (or
+/// its negation) satisfies `NanCanonical`. See the WebAssembly spec's own
+/// NaN propagation rules for why exact NaN payloads aren't always
+/// deterministic across conforming implementations.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub enum Expected {
+    Value(ConstValue),
+    NanCanonicalF32,
+    NanArithmeticF32,
+    NanCanonicalF64,
+    NanArithmeticF64,
+}
+
+/// The three ways a `.wast` script can embed a module for `assert_invalid`/
+/// `assert_malformed`/`assert_unlinkable` — captured RAW, not built, since
+/// these directives test whether building it fails. `Text` carries the
+/// original `(module ...)` [`SExpr`] for `parse_module_expr` to re-attempt;
+/// `Binary`/`Quote` carry the concatenated raw bytes/text a caller can feed
+/// to `wasm-module-parser`/this crate's own text path respectively.
+#[derive(Debug, Clone, PartialEq)]
+pub enum ModuleSource {
+    Text(SExpr),
+    Binary(Vec<u8>),
+    Quote(Vec<u8>),
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum Directive {
+    Module(WasmModule),
+    Register { name: String, module_name: Option<String> },
+    Action(Action),
+    AssertReturn { action: Action, expected: Vec<Expected> },
+    AssertTrap { action: Action, message: String },
+    AssertExhaustion { action: Action, message: String },
+    AssertInvalid { module: ModuleSource, message: String },
+    AssertMalformed { module: ModuleSource, message: String },
+    AssertUnlinkable { module: ModuleSource, message: String },
+}
+
+pub fn parse_script(src: &str) -> Result<Vec<Directive>, WastParseError> {
+    let exprs = parse_source(src)?;
+    exprs.iter().map(parse_directive).collect()
+}
+
+fn parse_directive(e: &SExpr) -> Result<Directive, WastParseError> {
+    let items = e.as_list().ok_or(WastParseError::UnexpectedToken {
+        pos: e.pos(),
+        found: "atom".into(),
+        expected: "a top-level script form",
+    })?;
+    let head = items.first().and_then(|i| i.as_atom()).ok_or(WastParseError::UnexpectedToken {
+        pos: e.pos(),
+        found: "".into(),
+        expected: "a directive keyword",
+    })?;
+    match head {
+        "module" => Ok(Directive::Module(parse_module_expr(e)?)),
+        "register" => {
+            let name = expect_str(expect_get(items, 1)?)?;
+            let module_name = items.get(2).and_then(|m| m.as_atom()).map(|s| s.to_string());
+            Ok(Directive::Register { name, module_name })
+        }
+        "invoke" | "get" => Ok(Directive::Action(parse_action(e)?)),
+        "assert_return" => {
+            let action = parse_action(expect_get(items, 1)?)?;
+            let expected = items.get(2..).unwrap_or(&[]).iter().map(parse_expected).collect::<Result<_, _>>()?;
+            Ok(Directive::AssertReturn { action, expected })
+        }
+        "assert_trap" => {
+            let (action_or_module, message) = parse_assert_with_message(items)?;
+            match action_or_module {
+                ActionOrModule::Action(a) => Ok(Directive::AssertTrap { action: a, message }),
+                ActionOrModule::Module(m) => Ok(Directive::AssertUnlinkable { module: m, message }),
+            }
+        }
+        "assert_exhaustion" => {
+            let action = parse_action(expect_get(items, 1)?)?;
+            let message = expect_str(expect_get(items, 2)?)?;
+            Ok(Directive::AssertExhaustion { action, message })
+        }
+        "assert_invalid" => {
+            let module = parse_module_source(expect_get(items, 1)?)?;
+            let message = expect_str(expect_get(items, 2)?)?;
+            Ok(Directive::AssertInvalid { module, message })
+        }
+        "assert_malformed" => {
+            let module = parse_module_source(expect_get(items, 1)?)?;
+            let message = expect_str(expect_get(items, 2)?)?;
+            Ok(Directive::AssertMalformed { module, message })
+        }
+        "assert_unlinkable" => {
+            let module = parse_module_source(expect_get(items, 1)?)?;
+            let message = expect_str(expect_get(items, 2)?)?;
+            Ok(Directive::AssertUnlinkable { module, message })
+        }
+        other => Err(WastParseError::UnexpectedToken { pos: e.pos(), found: other.to_string(), expected: "a known directive" }),
+    }
+}
+
+enum ActionOrModule {
+    Action(Action),
+    Module(ModuleSource),
+}
+
+/// `assert_trap` takes either `(invoke/get ...)` (a runtime trap) OR a
+/// `(module ...)` form (a *link-time* trap, which the spec's own test
+/// corpus files as `assert_trap` even though every other unlinkable case
+/// uses `assert_unlinkable` — both shapes carry the identical `(thing,
+/// message)` structure, so this one helper serves `assert_trap` and
+/// `assert_unlinkable` alike.
+fn parse_assert_with_message(items: &[SExpr]) -> Result<(ActionOrModule, String), WastParseError> {
+    let thing = expect_get(items, 1)?;
+    let message = expect_str(expect_get(items, 2)?)?;
+    if thing.is_keyword_list("invoke") || thing.is_keyword_list("get") {
+        Ok((ActionOrModule::Action(parse_action(thing)?), message))
+    } else {
+        Ok((ActionOrModule::Module(parse_module_source(thing)?), message))
+    }
+}
+
+fn parse_action(e: &SExpr) -> Result<Action, WastParseError> {
+    let items = e.as_list().ok_or(WastParseError::UnexpectedToken { pos: e.pos(), found: "".into(), expected: "an action" })?;
+    match items.first().and_then(|i| i.as_atom()) {
+        Some("invoke") => {
+            // `(invoke $module? "name" arg-expr*)` -- the optional module
+            // reference, if present, is a bare `$name` atom right after
+            // `invoke`, distinguishing it from the always-quoted export name.
+            let mut i = 1;
+            let module = if matches!(items.get(i), Some(SExpr::Atom(s, _)) if s.starts_with('$')) {
+                let m = items[i].as_atom().unwrap().to_string();
+                i += 1;
+                Some(m)
+            } else {
+                None
+            };
+            let name = expect_str(expect_get(items, i)?)?;
+            i += 1;
+            let args = items.get(i..).unwrap_or(&[]).iter().map(parse_const_value).collect::<Result<_, _>>()?;
+            Ok(Action::Invoke { module, name, args })
+        }
+        Some("get") => {
+            let mut i = 1;
+            let module = if matches!(items.get(i), Some(SExpr::Atom(s, _)) if s.starts_with('$')) {
+                let m = items[i].as_atom().unwrap().to_string();
+                i += 1;
+                Some(m)
+            } else {
+                None
+            };
+            let name = expect_str(expect_get(items, i)?)?;
+            Ok(Action::Get { module, name })
+        }
+        other => Err(WastParseError::UnexpectedToken {
+            pos: e.pos(),
+            found: other.unwrap_or("").to_string(),
+            expected: "'invoke' or 'get'",
+        }),
+    }
+}
+
+/// Parse a `(i32.const 1)`-shaped const expression to a [`ConstValue`] —
+/// the argument-list shape `assert_return`/`invoke` both use for concrete
+/// values (as opposed to [`parse_expected`], which additionally accepts
+/// the NaN-class result forms only `assert_return` allows).
+fn parse_const_value(e: &SExpr) -> Result<ConstValue, WastParseError> {
+    let items = e.as_list().ok_or(WastParseError::UnexpectedToken { pos: e.pos(), found: "".into(), expected: "a const expression" })?;
+    let head = expect_get(items, 0)?;
+    let (kind, pos) = (head.as_atom().unwrap_or(""), head.pos());
+    let lit = items.get(1).and_then(|a| a.as_atom()).ok_or(WastParseError::UnexpectedEof)?;
+    match kind {
+        "i32.const" => Ok(ConstValue::I32(parse_i32(lit, pos)?)),
+        "i64.const" => Ok(ConstValue::I64(parse_i64(lit, pos)?)),
+        "f32.const" => Ok(ConstValue::F32Bits(parse_f32_bits(lit, pos)?)),
+        "f64.const" => Ok(ConstValue::F64Bits(parse_f64_bits(lit, pos)?)),
+        other => Err(WastParseError::UnexpectedToken { pos, found: other.to_string(), expected: "a *.const expression" }),
+    }
+}
+
+fn parse_expected(e: &SExpr) -> Result<Expected, WastParseError> {
+    let items = e.as_list().ok_or(WastParseError::UnexpectedToken { pos: e.pos(), found: "".into(), expected: "an expected result" })?;
+    let kind = expect_get(items, 0)?.as_atom().unwrap_or("");
+    let lit = items.get(1).and_then(|a| a.as_atom());
+    match (kind, lit) {
+        ("f32.const", Some("nan:canonical")) => Ok(Expected::NanCanonicalF32),
+        ("f32.const", Some("nan:arithmetic")) => Ok(Expected::NanArithmeticF32),
+        ("f64.const", Some("nan:canonical")) => Ok(Expected::NanCanonicalF64),
+        ("f64.const", Some("nan:arithmetic")) => Ok(Expected::NanArithmeticF64),
+        _ => Ok(Expected::Value(parse_const_value(e)?)),
+    }
+}
+
+fn parse_module_source(e: &SExpr) -> Result<ModuleSource, WastParseError> {
+    let items = e.as_list().ok_or(WastParseError::UnexpectedToken { pos: e.pos(), found: "".into(), expected: "a module form" })?;
+    // Skip `module`, an optional `$name`, then look for a `binary`/`quote`
+    // tag -- its absence means this is a plain text module.
+    let mut i = 1;
+    if matches!(items.get(i), Some(SExpr::Atom(s, _)) if s.starts_with('$')) {
+        i += 1;
+    }
+    match items.get(i).and_then(|a| a.as_atom()) {
+        Some("binary") => {
+            let bytes = concat_strings(&items[i + 1..])?;
+            Ok(ModuleSource::Binary(bytes))
+        }
+        Some("quote") => {
+            let bytes = concat_strings(&items[i + 1..])?;
+            Ok(ModuleSource::Quote(bytes))
+        }
+        _ => Ok(ModuleSource::Text(e.clone())),
+    }
+}
+
+fn concat_strings(items: &[SExpr]) -> Result<Vec<u8>, WastParseError> {
+    let mut out = Vec::new();
+    for it in items {
+        match it {
+            SExpr::Str(b, _) => out.extend_from_slice(b),
+            other => return Err(WastParseError::UnexpectedToken { pos: other.pos(), found: "".into(), expected: "a string literal" }),
+        }
+    }
+    Ok(out)
+}
+
+fn expect_str(e: &SExpr) -> Result<String, WastParseError> {
+    match e {
+        SExpr::Str(b, _) => Ok(String::from_utf8_lossy(b).to_string()),
+        other => Err(WastParseError::UnexpectedToken { pos: other.pos(), found: "".into(), expected: "a string literal" }),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn parses_bare_module_directive() {
+        let dirs = parse_script("(module (func (result i32) (i32.const 42)))").unwrap();
+        assert_eq!(dirs.len(), 1);
+        assert!(matches!(dirs[0], Directive::Module(_)));
+    }
+
+    #[test]
+    fn parses_assert_return_with_exact_values() {
+        let dirs = parse_script(r#"(assert_return (invoke "f" (i32.const 1) (i64.const 2)) (i32.const 3))"#).unwrap();
+        match &dirs[0] {
+            Directive::AssertReturn { action: Action::Invoke { name, args, module }, expected } => {
+                assert_eq!(name, "f");
+                assert_eq!(module, &None);
+                assert_eq!(args, &vec![ConstValue::I32(1), ConstValue::I64(2)]);
+                assert_eq!(expected, &vec![Expected::Value(ConstValue::I32(3))]);
+            }
+            other => panic!("unexpected directive: {other:?}"),
+        }
+    }
+
+    #[test]
+    fn parses_assert_return_nan_classes() {
+        let dirs = parse_script(r#"(assert_return (invoke "f") (f32.const nan:canonical) (f64.const nan:arithmetic))"#).unwrap();
+        match &dirs[0] {
+            Directive::AssertReturn { expected, .. } => {
+                assert_eq!(expected, &vec![Expected::NanCanonicalF32, Expected::NanArithmeticF64]);
+            }
+            other => panic!("unexpected directive: {other:?}"),
+        }
+    }
+
+    #[test]
+    fn parses_assert_trap_with_message() {
+        let dirs = parse_script(r#"(assert_trap (invoke "div0" (i32.const 1) (i32.const 0)) "integer divide by zero")"#).unwrap();
+        match &dirs[0] {
+            Directive::AssertTrap { action: Action::Invoke { name, .. }, message } => {
+                assert_eq!(name, "div0");
+                assert_eq!(message, "integer divide by zero");
+            }
+            other => panic!("unexpected directive: {other:?}"),
+        }
+    }
+
+    #[test]
+    fn parses_register_directive() {
+        let dirs = parse_script(r#"(register "test-module" $M)"#).unwrap();
+        assert_eq!(dirs[0], Directive::Register { name: "test-module".to_string(), module_name: Some("$M".to_string()) });
+    }
+
+    #[test]
+    fn parses_get_action() {
+        let dirs = parse_script(r#"(assert_return (get "g") (i32.const 42))"#).unwrap();
+        match &dirs[0] {
+            Directive::AssertReturn { action: Action::Get { name, .. }, .. } => assert_eq!(name, "g"),
+            other => panic!("unexpected directive: {other:?}"),
+        }
+    }
+
+    #[test]
+    fn assert_invalid_captures_raw_module_without_building_it() {
+        // A module that WOULD fail type-checking (an i32 result declared,
+        // an i64 actually produced) if we tried to encode it eagerly --
+        // proves this directive kind doesn't call parse_module_expr here.
+        let dirs = parse_script(
+            r#"(assert_invalid (module (func (result i32) (i64.const 1))) "type mismatch")"#,
+        )
+        .unwrap();
+        match &dirs[0] {
+            Directive::AssertInvalid { module: ModuleSource::Text(_), message } => {
+                assert_eq!(message, "type mismatch");
+            }
+            other => panic!("unexpected directive: {other:?}"),
+        }
+    }
+
+    #[test]
+    fn assert_malformed_binary_variant_concatenates_string_bytes() {
+        let dirs = parse_script(r#"(assert_malformed (module binary "\00\61\73\6d" "\01\00\00\00") "bad")"#).unwrap();
+        match &dirs[0] {
+            Directive::AssertMalformed { module: ModuleSource::Binary(bytes), .. } => {
+                assert_eq!(bytes, &[0x00, 0x61, 0x73, 0x6d, 0x01, 0x00, 0x00, 0x00]);
+            }
+            other => panic!("unexpected directive: {other:?}"),
+        }
+    }
+
+    #[test]
+    fn multi_directive_script_parses_in_order() {
+        let dirs = parse_script(
+            r#"(module $m (func (export "f") (result i32) (i32.const 42)))
+               (assert_return (invoke $m "f") (i32.const 42))"#,
+        )
+        .unwrap();
+        assert_eq!(dirs.len(), 2);
+        assert!(matches!(dirs[0], Directive::Module(_)));
+        assert!(matches!(&dirs[1], Directive::AssertReturn { action: Action::Invoke { module: Some(_), .. }, .. }));
+    }
+
+    // ── Security-review regressions: a directive missing a required
+    // trailing field must produce a clean Err, never index-panic. Every
+    // directive kind that indexes a positional field is covered. ─────────
+
+    #[test]
+    fn register_missing_name_errors_cleanly_not_panics() {
+        assert!(matches!(parse_script("(register)"), Err(WastParseError::UnexpectedEof)));
+    }
+
+    #[test]
+    fn assert_return_missing_action_errors_cleanly_not_panics() {
+        assert!(matches!(parse_script("(assert_return)"), Err(WastParseError::UnexpectedEof)));
+    }
+
+    #[test]
+    fn assert_exhaustion_missing_message_errors_cleanly_not_panics() {
+        let err = parse_script(r#"(assert_exhaustion (invoke "f"))"#).unwrap_err();
+        assert!(matches!(err, WastParseError::UnexpectedEof));
+    }
+
+    #[test]
+    fn assert_trap_missing_message_errors_cleanly_not_panics() {
+        let err = parse_script(r#"(assert_trap (invoke "f" (i32.const 1)))"#).unwrap_err();
+        assert!(matches!(err, WastParseError::UnexpectedEof));
+    }
+
+    #[test]
+    fn assert_malformed_missing_message_errors_cleanly_not_panics() {
+        let err = parse_script(r#"(assert_malformed (module binary "\00"))"#).unwrap_err();
+        assert!(matches!(err, WastParseError::UnexpectedEof));
+    }
+
+    #[test]
+    fn invoke_with_empty_list_argument_errors_cleanly_not_panics() {
+        // `()` as an arg where a const expression is expected -- empty
+        // list, so `items[0]` in the old code would index-panic.
+        let err = parse_script(r#"(assert_return (invoke "f" ()) (i32.const 1))"#).unwrap_err();
+        assert!(matches!(err, WastParseError::UnexpectedEof));
+    }
+
+    #[test]
+    fn action_with_no_kind_errors_cleanly_not_panics() {
+        let err = parse_script(r#"(assert_return () (i32.const 1))"#).unwrap_err();
+        assert!(matches!(
+            err,
+            WastParseError::UnexpectedToken { .. } | WastParseError::UnexpectedEof
+        ));
+    }
+}
