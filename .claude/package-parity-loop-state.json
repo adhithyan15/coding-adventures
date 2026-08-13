@@ -11,7 +11,7 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": 11111,
   "last_inventory": {
     "revision": "3786127cf65f09be93a374dfcb8c9b3f3d7c0dda",
     "schema_version": 3,
@@ -982,12 +982,17 @@
     {
       "id": "build-tool-python-dart-field-aware-resolution-and-filter",
       "title": "Add field-aware Dart support to the Python build tool",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-python-haskell-language-filter"],
       "branch": "codex/python-dart-field-aware-filter",
-      "pr_number": null,
+      "pr_number": 11111,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/11111",
+      "pr_opened_at": "2026-08-13T04:04:31Z",
       "selection_revision": "86f47eb4c343e4b9b29039fc62282919d42e1bf8",
       "selection_notes": "Selected after PR #10936 merged externally, the collision-clean refresh added the newly owned ZIP raw-RFC1951 and PNG codec chain, and a live overlap plus dependency/leverage audit compared every ready unowned item. This bounded standard-library tranche closes Python build-tool discovery, field-aware resolution, and filtering for all 83 Dart roots while consuming an already closed pubspec grammar and proving exact equality with the Go oracle. The Windows atomic plan overwrite remains a separate write-path owner; ZIP raw RFC 1951 is a broader fifteen-lane prerequisite; and direct PNG work remains dependency-blocked.",
+      "implementation_revision": "15b2e1337268c450e223aa11d0f27a0ac1709964",
+      "validation_notes": "Both Python BUILD front doors pass 405 tests with 89.58% total coverage, 91% resolver coverage, and 96% discovery coverage under Python 3.13.14; the post-rebase focused discovery, resolver, CLI, and toolchain suite passes 175 tests. The 58-case language-neutral corpus validates 253 files, and its schema/runner suites pass 17 plus 42 tests. Go passes all packages, vet, module verification, a trimpath build, and the strengthened ambiguous-Dart-alias fixture. Unique Windows plan paths avoid the separately owned atomic-overwrite debt while exact Python-versus-Go equality holds for 83 Dart nodes, 68 edges, and 3 program identities with zero one-sided nodes or edges. The real Dart filter BUILD validation and forced dry run pass with all 83 roots. Native Dart pub get, fatal-info analysis, coverage tests pass for algol-parser downstream with 10 tests and state-machine downstream with 11 tests. Focused MyPy, added-line Ruff, Bandit security review, strict JSON, state graph, credential-pattern, diff, and collision gates pass; full-package Ruff still exposes pre-existing formatting/import debt outside this tranche. The collision-clean report remains 1,303 identities, 4,459 slots, 853 singletons, 11,942 singleton gaps, 656 Rust singletons, zero collisions, and zero unknown buckets.",
+      "publication_notes": "Ready-for-review PR #11111 opened from 15b2e13372 on exact base 3786127cf6. GitHub reports it open, non-draft, and mergeable; CI, CodeQL, and neutral auxiliary checks are queued, so the loop is monitor-only until they finish.",
       "notes": "Discovered by the post-#10751 filter audit. Python currently classifies established Dart package roots as unknown, has no pubspec resolver branch, and omits the Dart filter even though the shared field-aware Dart fixture defines the closed dependency grammar. Consume that fixture, preserve package/program identities, prove complete graph equality with Go, and expose Dart in its own manifest-shaped tranche."
     },
     {
