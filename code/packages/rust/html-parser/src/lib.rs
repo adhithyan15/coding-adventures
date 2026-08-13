@@ -7182,6 +7182,20 @@ impl HtmlParser {
             ));
         }
         match name {
+            "button"
+                if self.open_elements.iter().any(|path| {
+                    element_ref_at_path(&self.document, path).is_some_and(|element| {
+                        element.namespace.is_none()
+                            && element.name == "button"
+                            && !has_fragment_context_marker(element)
+                    })
+                }) && self.open_html_element_in_scope_index("button").is_none() =>
+            {
+                self.diagnostics.push(ParserDiagnostic::new(
+                    "unexpected-button-end-tag-outside-scope",
+                    "end tag `</button>` targeted a button outside button scope",
+                ));
+            }
             "head" if !self.has_open_element("head") && !self.has_open_element("body") => {
                 self.strip_next_leading_lf = false;
             }
@@ -31231,6 +31245,76 @@ mod tests {
             .parser_diagnostics
             .iter()
             .all(|diagnostic| diagnostic.code != "nested-button-start-tag"));
+    }
+
+    #[test]
+    fn reports_button_end_tags_blocked_by_button_scope() {
+        let output = parse_html_with_diagnostics(
+            "<!doctype html><button id=b><table id=t></button><tr><td>X</table>Y",
+        )
+        .unwrap();
+        assert_eq!(
+            output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| {
+                    diagnostic.code == "unexpected-button-end-tag-outside-scope"
+                })
+                .count(),
+            1
+        );
+        let button = find_element_by_id(&output.document.children, "b")
+            .expect("the blocked end tag should leave the button open");
+        let table = find_element_by_id(&button.children, "t")
+            .expect("the original table should receive the following row");
+        let cell = find_first_element_in_nodes(&table.children, "td")
+            .expect("the row should remain in the original table");
+        assert_eq!(cell.children, vec![Node::text("X")]);
+        assert_eq!(button.children.last(), Some(&Node::text("Y")));
+
+        for source in [
+            "<!doctype html><button><object></button></object>",
+            "<!doctype html><button><marquee></button></marquee>",
+            "<!doctype html><button><template></button></template>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .filter(|diagnostic| {
+                        diagnostic.code == "unexpected-button-end-tag-outside-scope"
+                    })
+                    .count(),
+                1,
+                "source {source:?}: {:?}",
+                output.parser_diagnostics
+            );
+        }
+
+        for source in [
+            "<!doctype html><button></button>",
+            "<!doctype html><button><p></button>",
+            "<!doctype html><table><tr><td><button></button></td></tr></table>",
+            "<!doctype html></button>",
+            "<!doctype html><svg><button><table></button></table></svg>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(
+                output.parser_diagnostics.iter().all(|diagnostic| {
+                    diagnostic.code != "unexpected-button-end-tag-outside-scope"
+                }),
+                "source {source:?}: {:?}",
+                output.parser_diagnostics
+            );
+        }
+
+        let fragment =
+            parse_html_fragment_for_context_with_diagnostics("</button><span>X", "button")
+                .unwrap();
+        assert!(fragment.parser_diagnostics.iter().all(|diagnostic| {
+            diagnostic.code != "unexpected-button-end-tag-outside-scope"
+        }));
     }
 
     #[test]
