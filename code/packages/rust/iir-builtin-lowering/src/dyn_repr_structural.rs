@@ -261,15 +261,56 @@ fn seeded_lisp_functions(module: &IIRModule, include_heap_bodies: bool) -> HashS
 /// The argument `srcs` indices of a `call` to a **lisp function** (so each atom
 /// argument is boxed as an `i31ref` before crossing the function boundary). The
 /// callee name is `srcs[0]`; the arguments are `srcs[1..]`.
-fn call_lisp_arg_indices(instr: &IIRInstr, lisp_funcs: &HashSet<String>) -> Vec<usize> {
+fn call_lisp_arg_indices(
+    instr: &IIRInstr,
+    lisp_funcs: &HashSet<String>,
+    signatures: &HashMap<String, Vec<String>>,
+) -> Vec<usize> {
     if instr.op == "call" {
         if let Some(Operand::Var(callee)) = instr.srcs.first() {
             if lisp_funcs.contains(callee) {
-                return (1..instr.srcs.len()).collect();
+                return (1..instr.srcs.len())
+                    .filter(|idx| callee_param_is_tagged(callee, *idx, signatures))
+                    .collect();
             }
         }
     }
     Vec::new()
+}
+
+/// Does the callee declare argument position `idx` (1-based over `srcs`, where
+/// index 0 is the callee name) as a **tagged** parameter?
+///
+/// This is what decides whether an argument must be boxed before the call, and
+/// it has to come from the CALLEE'S SIGNATURE rather than from the caller's
+/// wishes. Boxing every argument of every lisp call — the previous behaviour —
+/// pushed a boxed value into a parameter the callee reads raw:
+///
+/// ```text
+/// unbox cd_arg_0_0_raw      <- dispatcher unboxes the arg
+/// box   cd_arg_0_0_raw.box  <- ...and immediately boxes it again
+/// call  __lambda_0(cd_arg_0_0_raw.box)   <- but x: any is RAW
+/// ```
+///
+/// so `((lambda (x) (+ x 1)) 41)` added 1 to a tagged word.
+///
+/// An unknown callee or an out-of-range position keeps the old boxing
+/// behaviour: without a signature there is nothing better to go on, and a
+/// spurious box is a wrong value only if the callee is raw, whereas a missing
+/// box on a genuinely tagged parameter hands the callee an untagged word.
+fn callee_param_is_tagged(
+    callee: &str,
+    idx: usize,
+    signatures: &HashMap<String, Vec<String>>,
+) -> bool {
+    let Some(params) = signatures.get(callee) else {
+        return true;
+    };
+    // `srcs[0]` is the callee name, so argument N sits at index N+1.
+    match params.get(idx - 1) {
+        Some(ty) => ty == "symbol" || ty.starts_with("ref<"),
+        None => true,
+    }
 }
 
 /// Apply the structural representation pass to every lisp function.
@@ -284,12 +325,26 @@ fn call_lisp_arg_indices(instr: &IIRInstr, lisp_funcs: &HashSet<String>) -> Vec<
 pub fn lower_dyn_repr_structural(module: &mut IIRModule) {
     let entry = module.entry_point.clone();
     let lisp_funcs = lisp_functions(module);
+    // Whether a call argument must be boxed is a property of the CALLEE, so
+    // snapshot every declared parameter list before rewriting anything. Taken
+    // up front because the per-function pass below borrows `module.functions`
+    // mutably — and because a caller may be lowered before its callee.
+    let signatures: HashMap<String, Vec<String>> = module
+        .functions
+        .iter()
+        .map(|f| {
+            (
+                f.name.clone(),
+                f.params.iter().map(|(_, ty)| ty.clone()).collect(),
+            )
+        })
+        .collect();
     for func in &mut module.functions {
         if !lisp_funcs.contains(&func.name) {
             continue; // pure scalar — concretize_scalar_any_for_wasm owns it.
         }
         let is_entry = entry.as_deref() == Some(func.name.as_str());
-        lower_structural_function(func, is_entry, &lisp_funcs);
+        lower_structural_function(func, is_entry, &lisp_funcs, &signatures);
     }
 }
 
@@ -321,18 +376,125 @@ fn reference_registers(func: &IIRFunction) -> HashSet<String> {
     refs
 }
 
+/// Does this function's body use `param` as a **raw machine word** — and never
+/// as a reference?
+///
+/// Both answers are reachable from a bare `any` parameter, and picking the
+/// wrong one is a miscompile on every strict backend:
+///
+///   * `((lambda (x) (+ x 1)) 41)` adds to `x` directly. Calling it a reference
+///     makes the caller box, and the body then adds 1 to a tagged word.
+///   * `(point-x (Point 42 7))` loads a field out of its parameter. Calling
+///     that an `i64` puts a record pointer through a long-width slot.
+///
+/// So the question is answered from the body, not from the declaration.
+/// Reference evidence wins over raw evidence: a parameter that is BOTH
+/// dereferenced and arithmetic'd is a reference that gets unboxed somewhere,
+/// and treating it as raw would drop the tag. A parameter the body never uses
+/// (or uses only in ways that say nothing) is left a reference — that is the
+/// long-standing behaviour every non-closure program was built on.
+fn param_is_used_raw(func: &IIRFunction, param: &str) -> bool {
+    let mentions = |instr: &IIRInstr, idx: usize| {
+        matches!(instr.srcs.get(idx), Some(Operand::Var(v)) if v == param)
+    };
+    let mut raw_evidence = false;
+    for instr in &func.instructions {
+        // ── Reference evidence — decisive, so return immediately. ──
+        // A base operand of a structural access, or an unbox of the parameter.
+        if matches!(instr.op.as_str(), "field_load" | "field_store" | "is_null" | "unbox")
+            && mentions(instr, 0)
+        {
+            return false;
+        }
+        // A lisp-value position: a cons field's value, a `pair?`/`equal?`
+        // argument. Those take references, so the parameter is one.
+        if lisp_value_src_indices(instr)
+            .into_iter()
+            .any(|idx| mentions(instr, idx))
+        {
+            return false;
+        }
+        if lisp_builtin_name(instr).is_some()
+            && (1..instr.srcs.len()).any(|idx| mentions(instr, idx))
+        {
+            return false;
+        }
+
+        // ── Raw evidence — arithmetic, comparison, or being boxed. ──
+        let is_machine_op = matches!(
+            instr.op.as_str(),
+            "add" | "sub" | "mul" | "div" | "mod" | "neg"
+                | "and" | "or" | "xor" | "shl" | "shr" | "not"
+        ) || instr.op.starts_with("cmp_");
+        if is_machine_op && (0..instr.srcs.len()).any(|idx| mentions(instr, idx)) {
+            raw_evidence = true;
+        }
+        if instr.op == "box" && mentions(instr, 0) {
+            raw_evidence = true;
+        }
+    }
+    raw_evidence
+}
+
 fn lower_structural_function(
     func: &mut IIRFunction,
     is_entry: bool,
     lisp_funcs: &HashSet<String>,
+    signatures: &HashMap<String, Vec<String>>,
 ) {
-    // ── 0. The function boundary is uniform-anyref. Every lisp parameter is an
-    //       `anyref` (a reference), and so is every result of a `call` to a lisp
-    //       function. Retype the params and seed the reference set with both. ──
-    for (_, ty) in func.params.iter_mut() {
-        if ty == "any" || ty == "symbol" {
-            *ty = REF_ANY.to_string();
-        }
+    // ── 0. Seed the reference set from the parameters that are ALREADY tagged.
+    //
+    //       This pass may box values crossing a boundary; it may NOT redefine
+    //       what the boundary is. It used to retype every `any` parameter to
+    //       `ref<any>` here, on the theory that a lisp function's boundary is
+    //       uniformly anyref — but that rewrote the SIGNATURE without rewriting
+    //       the BODY, and the two then disagreed about the representation:
+    //
+    //           fn __lambda_0(x: ref<any>)      <- retyped to tagged
+    //               add _r2.raw1 = x + 1  i64   <- body still reads it RAW
+    //
+    //       Callers dutifully boxed for the new signature, so `((lambda (x)
+    //       (+ x 1)) 41)` computed `(41 << 3) + 1 = 329` instead of 42 on
+    //       every managed backend. `symbol` is different and still promoted
+    //       below: it names a heap-interned value, so it is tagged already and
+    //       the retype only makes the existing representation explicit.
+    //
+    //       A frontend that wants a tagged parameter declares `ref<any>` (as
+    //       mccarthy-lisp-iir-compiler does). Bare `any` means a raw machine
+    //       word, and this pass must leave it that way.
+    //
+    //       A bare `any` parameter is still CONCRETIZED, because the backends
+    //       need a definite type — but to WHICH type is decided by how the body
+    //       uses it, the same use-site-directed rule this pass applies
+    //       everywhere else. `any` covers both cases and the two are not
+    //       interchangeable:
+    //
+    //         * used in arithmetic → `i64`, a raw machine word. Left as `any`
+    //           the JVM picks `I` while the body adds at long width:
+    //           `VerifyError: (method: __lambda_0 signature: (I)…) Expecting to
+    //           find long on stack`. `i64` is also the width the closure
+    //           dispatcher unboxes arguments to, so the two agree.
+    //         * used as a reference (`field_load`/`field_store`/`unbox`/a
+    //           lisp-value position) → `ref<any>`. Concretizing one of these to
+    //           `i64` put a record pointer through a long-width `main` and the
+    //           verifier rejected THAT instead.
+    //
+    //       Neither is a boundary redefinition: each makes explicit what the
+    //       body already assumed. Where the body says nothing either way the
+    //       parameter stays a reference, which is what it was before any of
+    //       this and what every non-closure program depends on.
+    let param_types: Vec<String> = func
+        .params
+        .iter()
+        .map(|(name, ty)| match ty.as_str() {
+            "symbol" => REF_ANY.to_string(),
+            "any" if param_is_used_raw(func, name) => "i64".to_string(),
+            "any" => REF_ANY.to_string(),
+            other => other.to_string(),
+        })
+        .collect();
+    for ((_, ty), resolved) in func.params.iter_mut().zip(param_types) {
+        *ty = resolved;
     }
     let mut ref_regs = reference_registers(func);
     for (name, ty) in &func.params {
@@ -343,7 +505,7 @@ fn lower_structural_function(
     for instr in &mut func.instructions {
         let is_lisp_call = instr.op == "call"
             && matches!(instr.srcs.first(), Some(Operand::Var(c)) if lisp_funcs.contains(c));
-        if is_lisp_call || !call_lisp_arg_indices(instr, lisp_funcs).is_empty() {
+        if is_lisp_call || !call_lisp_arg_indices(instr, lisp_funcs, signatures).is_empty() {
             if let Some(dest) = &instr.dest {
                 ref_regs.insert(dest.clone()); // a lisp call returns an anyref.
             }
@@ -393,7 +555,7 @@ fn lower_structural_function(
     // to a lisp function (boxed before crossing the boundary).
     let value_idxs_of = |instr: &IIRInstr| -> Vec<usize> {
         let mut idxs = lisp_value_src_indices(instr);
-        idxs.extend(call_lisp_arg_indices(instr, lisp_funcs));
+        idxs.extend(call_lisp_arg_indices(instr, lisp_funcs, signatures));
         idxs
     };
 

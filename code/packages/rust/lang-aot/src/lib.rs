@@ -870,6 +870,11 @@ pub fn compile_source_to_jvm_class(
     let mut module = compile_source_to_iir(language, source, class_name)?;
     // E6d-8: dynamic global builtins → typed global_load/global_store.
     iir_builtin_lowering::lower_global_io(&mut module);
+    // Closures first: `lower_closures_to_heap` emits `cons`/`car`/`cdr`, which
+    // `lower_heap_builtins` then makes structural. Running it here gives the
+    // managed backends the same closure model wasm already had, instead of the
+    // `UnsupportedOp alloc_closure` refusal.
+    iir_builtin_lowering::lower_closures_to_heap(&mut module);
     iir_builtin_lowering::lower_heap_builtins(&mut module);
     iir_builtin_lowering::lower_dynamic_arith(&mut module);
     iir_builtin_lowering::intern_symbols_structural(&mut module);
@@ -987,6 +992,11 @@ pub fn compile_source_to_cil_artifact(
     // `alloc`/`field_*` to `box [int32]`/`unbox.any` + `object[]` cons cells
     // (where wasm uses `i31ref`/`$LispyPair` and the JVM `Integer`/`Object[]`).
     // A no-op for a module without cons/symbols (W6a scalar still flows through).
+    // Closures first: `lower_closures_to_heap` emits `cons`/`car`/`cdr`, which
+    // `lower_heap_builtins` then makes structural. Running it here gives the
+    // managed backends the same closure model wasm already had, instead of the
+    // `UnsupportedOp alloc_closure` refusal.
+    iir_builtin_lowering::lower_closures_to_heap(&mut module);
     iir_builtin_lowering::lower_heap_builtins(&mut module);
     iir_builtin_lowering::lower_dynamic_arith(&mut module);
     iir_builtin_lowering::intern_symbols_structural(&mut module);
@@ -1023,6 +1033,11 @@ pub fn compile_source_to_cil_text(
     iir_builtin_lowering::lower_global_io(&mut module);
     // The same managed value-model pipeline the binary CIL path uses, so the
     // textual and binary emitters lower an identical program.
+    // Closures first: `lower_closures_to_heap` emits `cons`/`car`/`cdr`, which
+    // `lower_heap_builtins` then makes structural. Running it here gives the
+    // managed backends the same closure model wasm already had, instead of the
+    // `UnsupportedOp alloc_closure` refusal.
+    iir_builtin_lowering::lower_closures_to_heap(&mut module);
     iir_builtin_lowering::lower_heap_builtins(&mut module);
     iir_builtin_lowering::lower_dynamic_arith(&mut module);
     iir_builtin_lowering::intern_symbols_structural(&mut module);
