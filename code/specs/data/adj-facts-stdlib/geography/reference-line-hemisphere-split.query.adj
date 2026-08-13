@@ -1,0 +1,21 @@
+% ============================================================================
+% reference-line-hemisphere-split.query.adj — a worked recall over the
+% geography reference-line-hemisphere-split library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "which hemispheres does
+% the equator divide?": it states no geography fact of its own — it only
+% `import`s the grounded table and asks binding queries. The engine resolves
+% each `?` against the `reference_line_hemisphere_split` rows and returns
+% the hemisphere split + the table's source/locator/trust. A reference line
+% the cited spans give no hemisphere split for abstains honestly — the
+% engine never invents one.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli reference-line-hemisphere-split.query.adj
+% ============================================================================
+
+import "reference-line-hemisphere-split.adj"
+
+? reference_line_hemisphere_split(equator, $Hemispheres)          % expect northern_southern
+? reference_line_hemisphere_split($Line, eastern_western)         % reverse bind — expect prime_meridian
+? reference_line_hemisphere_split(tropic_of_cancer, $Hemispheres) % expect abstain — the tropic's own cited span states a latitude limit, not a hemisphere split
