@@ -15,50 +15,60 @@ HL-C113 had already been taken by the CEFR B1→C2 climb, which eight merged PRs
 their commit messages. The climb keeps **HL-C113**; the script block is
 therefore **HL-C114…HL-C120 plus HL-C122** (the PNG encoder, renumbered).
 
-## Prioritization, 2026-08-12 (second pass)
+## Prioritization, 2026-08-12 (third pass)
 
-Reordered after the CEFR climb reached B2 and three measurements landed. The
-argument for this order is that **two independent gates now say the same thing**,
-and neither of them says "climb faster".
+The owner reset the target: *"The goal is not whether something touches some
+level. The goal is can someone pass that level of exam with just reading the
+book and slowly following its gentle ramp."* That is a different question from
+the one this backlog had been answering, and measuring against it moved the top
+of the list again.
 
-**P0 — vocabulary breadth. The binding constraint.**
+**The honest answer today is that a reader could not pass DELE at any level,
+and grammar is not why.** Three measurements, taken 2026-08-12 over all 220
+Spanish chapters:
 
-1. **HL-C123** — the level gate: Spanish teaches **48 headwords at or below
-   pre-A1 against a target of 300**, has `attained: null`, and is `inProgressAt:
-   pre-A1` while `touches` reads B2. The track has been adding structures for
-   200 chapters against a gate that has never once said structures were missing.
-2. **HL-C121** — the owner's target of ~500 verbs, against **43 distinct verb
-   lemmas** taught. Same finding from the other direction, and the more concrete
-   of the two, because it names a number and a part of speech. Do it *inside*
-   HL-C123 rather than beside it: verbs are the cheapest way to move the
-   headword count, and every one carries an etymology, which is what the book is
-   for.
-3. **HL-C125** — the four connectives that occur **zero times** in 217 chapters
-   (`aunque`, `sin embargo`, `por eso`, `mejor`). Small, and it unblocks a node
-   that is already open.
+| what the exam asks for | what the book has |
+|---|---|
+| four papers, and **≥30/50 in each of two groups** independently | 704 of 704 activities are one shape: `kind: "text"`, a prompt and a short answer |
+| a reading paper over connected texts (A1: 25 questions, 4 tasks, 45 min) | longest continuous Spanish anywhere in the book: **10 words**; passages of 20+ words: **zero** |
+| a written-expression paper at every level | `writing` claimed by 44 of 366 lessons (**12%**); 7 lessons of `type: writing` |
+| ~80-100 enumerated A1 grammar points (Plan Curricular) | no mapping exists, so coverage is unknown rather than low |
 
-**P1 — reachability. Cheap work that unlocks disproportionate ground.**
+**P0 — make the target measurable, then measure against it.**
 
-4. **HL-C126** — `SPINE-DESCRIBE-EXPERIENCE` has 0 segments and gates
-   `READ-EXTENDED-PROSE`, which gates `DISCUSS-ABSTRACT`. One unbuilt B1 node
-   holds three nodes across two levels. But it needs `mejor` first, so it runs
-   *after* HL-C125, not before.
-5. **HL-C127** — the `vosotros` and strong `nosotros` preterite forms. Two
-   lessons, and chapter 204 already promised them to the reader in print.
+1. **HL-C128** — replace `touches`/`attained` with Plan Curricular coverage.
+   Until this exists, every other number in this file is a proxy for something
+   nobody is graded on. It is also the cheapest row here: the inventory is
+   published, finite and already split by level.
+2. **HL-C130** — the task shapes. A candidate must clear both groups
+   independently, so the book's 12% writing coverage is not a weakness to
+   improve later, it is a guaranteed fail of Group 1 on its own.
+3. **HL-C129** — connected prose. The 10-word ceiling is the single most
+   damning number in this file, and it also happens to be the cheapest way to
+   fix HL-C123's reinforcement blocker: a passage revisits fifty headwords at
+   once, which fifty flashcards do not.
 
-**P2 — the gates that keep the above honest.**
+**P1 — breadth, now with a target that comes from the exam rather than from us.**
 
-6. **HL-C124** — `spineNodes` drift in 32 of 217 chapters. Ships with a test or
-   not at all; the field rotted precisely because nothing read it.
-7. **HL-C43** — the voice-capable review format. Chapters 209, 216 and 217 are
-   now worked examples of the fix (chants rather than grids), so the pattern is
-   proven and the remaining work is mechanical.
+4. **HL-C123** / **HL-C121** — headwords and verbs (48 at-or-below-pre-A1 of a
+   300 target; 43 verb lemmas of the owner's ~500). Still real, still large,
+   but re-scope the targets against the Plan Curricular inventories rather than
+   against numbers this repository invented.
+5. **HL-C125** — the four zero-occurrence connectives, which are on the A1/A2
+   inventory and block an already-open node.
 
-**Demoted: further CEFR climbing (HL-C113 steps 9+).** C1 and C2 remain at zero
-lessons and will stay there. Climbing further would move `touches` without
-moving `attained`, and the gap between those two numbers is already the finding
-rather than the progress. The climb resumes when the headword count clears
-pre-A1.
+**P2 — reachability and hygiene.**
+
+6. **HL-C126** — `SPINE-DESCRIBE-EXPERIENCE` has 0 segments and gates two
+   further nodes. 7. **HL-C127** — the promised `vosotros` and strong
+   `nosotros` preterite forms. 8. **HL-C124** — `spineNodes` drift, ships with
+   a test or not at all. 9. **HL-C43** — the voice-capable review format, now
+   with three worked examples.
+
+**Demoted: further CEFR climbing (HL-C113 steps 9+).** C1 and C2 stay at zero.
+The climb was moving a number the exam does not award marks for. It resumes
+when a level has been *passed* on HL-C128's criteria rather than *touched*.
+
 
 Previously prioritized: 2026-08-12, when HL11 opened the drizzled script ramp for the
 six Indic tracks. It sits at P0 alongside HL10 because it is the
@@ -854,6 +864,9 @@ direction, and no gate may penalise page, lesson, or chapter count.
 | HL-C125 | Not started | **The rest of `SPINE-ARGUE-A-VIEW` is blocked on four words the corpus has never used.** Measured 2026-08-12 across all 217 chapters: `aunque` 0 occurrences, `sin embargo` 0, `por eso` 0, `mejor` 0. The node's own concepts are CONNECTIVE-HOWEVER and CONNECTIVE-ALTHOUGH, so it cannot be finished without them. HL-C113 step 8 opened the node with `pero`, `también` and `tampoco` (and minted `tan`, `poco`); still owed are `sin` (needed by `sin embargo`), `aunque` with the indicative (a fact conceded) and `aunque` with the subjunctive (a supposition conceded — which pays off the imperfect-subjunctive arc at 206-210), `sin embargo` as the formal register partner to `pero`, then the node's review and synthesis. `muy` is also untaught and is wanted for ARGUMENT-EVIDENCE. |
 | HL-C126 | Not started | **One unbuilt B1 node gates the entire remaining ladder.** Measured 2026-08-12: `SPINE-DESCRIBE-EXPERIENCE` has **0 segments**, and so does `SPINE-HANDLE-TRAVEL`. `SPINE-READ-EXTENDED-PROSE` (B2) lists DESCRIBE-EXPERIENCE as its prerequisite, and `SPINE-DISCUSS-ABSTRACT` (B2) requires READ-EXTENDED-PROSE — so three nodes across two levels are unreachable until one B1 node is authored. B1 therefore is **not** finished, despite HL-C113 closing `SPINE-EXPRESS-CONDITION`: 31 lessons across three of five nodes. DESCRIBE-EXPERIENCE's concepts are ADJECTIVE-FEELING, AMBITION-EXPRESS, COMPARISON-BASIC and TIME-DURATION; **check the lexical inventory for each before authoring** — COMPARISON-BASIC needs `más`/`menos`/`mejor`, and `mejor` is not taught anywhere (see HL-C125). HANDLE-TRAVEL (DIRECTION-ASK, TRANSPORT-TICKET, LODGING-ROOM, PROBLEM-REPORT) is a pure vocabulary node and should be scheduled with HL-C123. |
 | HL-C127 | Not started | **Two preterite debts, named out loud in chapter 204 and still owed.** The `vosotros` forms (`hablasteis`, `comisteis`, `tuvisteis`) and the strong `nosotros` forms (`tuvimos`, `hicimos`, `estuvimos`). Chapter 204 tells the reader both are coming, which makes this a promise in the text rather than a nice-to-have. Small — two lessons, possibly three with a review — and it closes the preterite properly before anything else builds on it. |
+| HL-C128 | Not started | **Replace `touches`/`attained` with a gate that asks whether a reader could PASS the exam.** Owner correction, 2026-08-12: *"The goal is not whether something touches some level. The goal is can someone pass that level of exam with just reading the book and slowly following its gentle ramp."* Both current numbers are corpus-internal — they measure whether lessons exist and whether atoms were revisited, neither of which is what an examiner tests. The replacement has a source: the **Plan Curricular del Instituto Cervantes** publishes a *finite, enumerable* grammar inventory per level (15 categories, two columns marked A1 and A2, **roughly 80-100 distinct grammar points at A1 alone**), plus inventories for nociones generales/específicas, ortografía and fonética. Needs: map every taught atom onto a Plan Curricular point, report per-level coverage as *points covered / points enumerated*, and let a track claim a level only when coverage is complete **and** HL-C130's task-shape criteria are met. That number, unlike `touches`, cannot be moved by adding a lesson on something the exam does not test. Source: <https://cvc.cervantes.es/ensenanza/biblioteca_ele/plan_curricular/indice.htm> |
+| HL-C129 | Not started | **The longest continuous Spanish in the whole book is 10 words.** Measured 2026-08-12 across all 220 chapters, counting only genuinely Spanish emphasised runs: 1 stretch of 10 words, 3 of 9, 7 of 8, and **zero of 20 or more** — and several of the longest are conjugation lists (`viví · viviste · vivió · vivimos · vivieron`) rather than prose. A reader can finish this book having never read a Spanish **paragraph**. The DELE A1 reading paper is 25 questions over four tasks in 45 minutes, on connected texts; B1 and above are longer still. This is a gap in **shape**, not size, and no amount of additional vocabulary closes it. Needs: graded reading passages as a first-class lesson type, built only from already-taught words so the ramp holds, starting short (30-40 words) and growing with the level; a measurement of the longest-passage ceiling per level; and a rule that the ceiling must rise before a level is claimed. Note this interacts with HL-C123: connected prose is also the cheapest way to *revisit* headwords, which is the gate's second blocker. |
+| HL-C130 | Not started | **Every one of the 704 activities in the corpus is the same task shape, and the exam has four.** Measured 2026-08-12: all 704 `hl-activity` blocks are `kind: "text"` — a one-line prompt with a short expected answer. The DELE structure is four papers in two groups, and **a candidate must score at least 30/50 in EACH group independently** (Group 1 = reading + written expression; Group 2 = listening + oral expression), so being strong at half the exam is a fail, not a partial pass. Against that: `writing` is claimed by **44 of 366 lessons (12%)**, and only 7 lessons have `type: writing`, while `speaking` and `listening` are claimed by 98% each. There is no reading-comprehension item over a passage, no listening item, no free written production of the length the exam asks for, and no oral prompt. Needs: new activity kinds (`reading-comprehension`, `listening`, `free-writing`, `oral-prompt`), a written-production strand that reaches the exam's word counts, and at least one full mock paper per level so the reader has rehearsed the shape before sitting it. Source for structure and the per-group pass rule: <https://londres.cervantes.es/en/courses_spanish/students_spanish/dele_diplomas_info/exam_format.htm> |
 | HL-C78 | Complete (#10202) | Reconcile the early foundational backlog rows against what later deliveries actually shipped. | Every pre-HL-C19 queued row is checked against direct code and test evidence; work that is already complete is closed with the PRs or concrete implementation that delivered it, partially complete rows state only their measured remainder, and genuinely absent work stays queued in priority order. |
 | HL-C30 | Closed — no move is both legal and useful | Recover Arabic's drivable prefix by moving the writing lessons that open Chapters 3 and 4 later in their chapters. | Measured and answered: zero. Both chapters are prefix-0 under **every** legal ordering because neither has a `voice` lesson without an in-chapter prerequisite, and all 18 of Arabic's `sight` lessons are tables, not script. Corpus-wide only 2 chapters (`portuguese ch2`, `italian ch2`, +4 lessons) can be improved by reordering at all; 116 of the 123 zero-prefix chapters are table-blocked at the root and belong to HL-C17. See *Findings from HL-C30*. |
 | HL-C24 | Complete (#9979) | Pilot real chapter payoff lessons on the weakest Latin chapters. | Latin chapters 19, 21, 33, and 36 each own a dedicated terminal consolidation lesson built only from already-taught material, and `chapters.json` points their `payoff.lesson` at it. |
