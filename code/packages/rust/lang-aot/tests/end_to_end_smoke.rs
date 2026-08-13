@@ -29,6 +29,10 @@
 // their matching CI runner; suppress the host-specific dead_code noise here.
 #![allow(dead_code)]
 
+// `Write` is only needed by the `writeln!` calls inside the Windows-gated
+// tests below, so importing it unconditionally is an unused import on every
+// other host (and `-D warnings` is a blocking CI gate).
+#[cfg(target_os = "windows")]
 use std::io::Write;
 use std::process::Command;
 
@@ -926,46 +930,83 @@ fn end_to_end_basic_print_emits_llvm_ir_with_print_extern() {
 // arch backend migration — the FINAL lane).  Produces a flat
 // little-endian .bin of 32-bit RV32I instruction words.
 
+/// Dartmouth BASIC on RV32I: a *precise refusal*, not a binary.
+///
+/// # Why this program cannot become RV32I bytes
+///
+/// Dartmouth BASIC has exactly one numeric type, and it is REAL.  `10 PRINT
+/// 42` therefore does NOT carry the integer 42 — the BA7 floating-point
+/// conversion (`code/specs/lang-full-ba7-floating-point.md`) makes the literal
+/// the double `42.0`, so `main` opens with `const_f64 _t0 = 42.0` and hands it
+/// to `__basic_print_real(x : f64)`.  That is the language being honest, not
+/// an over-widened integer: the sibling LLVM test above pins the very same
+/// shape (`call i64 @__basic_print_real(double ...)`).
+///
+/// RV32I is the RISC-V **base integer** ISA.  Its architectural state is 32
+/// integer registers; there is no `f0`..`f31` bank and no `fadd.d`.  Floating
+/// point is a separate optional extension — `F` (RV32F, single) and `D`
+/// (RV32D, double).  So an `f64` on RV32I is not a lowering we simply have
+/// not written yet; it is a value the target cannot hold.  The only honest
+/// outcomes are a loud refusal (this test), retargeting to a float-capable
+/// backend (LLVM/JVM/CLR/wasm — all covered elsewhere in this file), or a
+/// future soft-float pass that decomposes the double into integer sequences.
+/// Emitting *some* bytes by quietly truncating 42.0 to an integer would be a
+/// silent wrong answer, which is strictly worse than no binary at all.
+///
+/// This test therefore pins the refusal itself: which target refused, which
+/// function it was in, which op carried the float, which type, and that the
+/// message explains RV32I has no floating-point registers.  If a soft-float
+/// pass ever lands, this test fails loudly and gets rewritten into the
+/// byte-pinning test it used to pretend to be.
 #[test]
-fn end_to_end_basic_print_emits_riscv32_bin_via_lang_aot() {
+fn basic_print_refuses_riscv32_because_basic_numbers_are_f64() {
     let dir = tempfile::tempdir().expect("tempdir");
     let src = dir.path().join("smoke.bas");
     let bin = dir.path().join("smoke.bin");
     std::fs::write(&src, b"10 PRINT 42\n20 END\n").unwrap();
 
-    if let Err(e) = lang_aot::compile_file_to_riscv32_bin(&src, &bin, lang_aot::Language::DartmouthBasic) {
-        // Tolerate not-yet-covered op gaps - same convention as the LLVM path.
-        // Phase 7 added the lowercase `unsupported op` form (Display string
-        // of `BackendError::UnsupportedOp` on `riscv-backend` v0.1.0); the
-        // CamelCase forms remain valid for any future Display drift.
-        let msg = format!("{e}");
-        if msg.contains("UnsupportedOp")
-            || msg.contains("unsupported op")
-            || msg.contains("UnsupportedType")
-            || msg.contains("UnsupportedCallShape")
-            || msg.contains("ImmediateOutOfRange")
-            || msg.contains("immediate")
-            || msg.contains("OutOfRegisters")
-            || msg.contains("temp-register pool exhausted")
-        {
-            eprintln!("skipping: BASIC RV32I lowering gap (expected): {msg}");
-            return;
-        }
-        panic!("unexpected BASIC -> RV32I error: {e}");
-    }
+    let err = lang_aot::compile_file_to_riscv32_bin(
+        &src,
+        &bin,
+        lang_aot::Language::DartmouthBasic,
+    )
+    .expect_err(
+        "BASIC's numeric type is f64 and RV32I has no floating-point registers, \
+         so this must refuse rather than emit bytes",
+    );
+    let msg = format!("{err}");
 
-    let bytes = std::fs::read(&bin).expect("read .bin");
-    assert!(!bytes.is_empty(),
-        "BASIC PRINT 42 should produce a non-empty .bin");
-    assert_eq!(bytes.len() % 4, 0,
-        ".bin length should be a multiple of 4; got {} bytes",
-        bytes.len());
+    assert!(
+        msg.starts_with("riscv32:"),
+        "the refusal must name the target that refused; got: {msg}"
+    );
+    assert!(
+        msg.contains("function \"main\""),
+        "the refusal must name the offending function (a BASIC module also \
+         carries the whole __basic_print_* runtime); got: {msg}"
+    );
+    assert!(
+        msg.contains("op \"const_f64\""),
+        "the refusal must name the CIR op that carried the float; got: {msg}"
+    );
+    assert!(
+        msg.contains("\"f64\""),
+        "the refusal must name the offending type; got: {msg}"
+    );
+    assert!(
+        msg.contains("no floating-point registers"),
+        "the refusal must explain WHY RV32I cannot carry an f64, so the reader \
+         does not go looking for a missing lowering; got: {msg}"
+    );
+    assert!(
+        msg.contains("RV32F/RV32D"),
+        "the refusal must name the extensions that WOULD carry it; got: {msg}"
+    );
 
-    // The last 4 bytes should encode the canonical ret = jalr x0, x1, 0 = 0x0000_8067.
-    // Stored little-endian: 0x67, 0x80, 0x00, 0x00.
-    let last_word_le = &bytes[bytes.len() - 4..];
-    assert_eq!(last_word_le, &[0x67, 0x80, 0x00, 0x00],
-        "last 4 bytes should be the canonical ret encoded little-endian; got: {last_word_le:02x?}");
+    assert!(
+        !bin.exists(),
+        "a refused compilation must not leave a partial/garbage .bin behind"
+    );
 }
 
 // Phase 7 of the historical-arch backend migration: a Twig `42`

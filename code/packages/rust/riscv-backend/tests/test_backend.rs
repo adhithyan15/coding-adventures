@@ -641,6 +641,118 @@ fn rejects_calls_until_the_linker_and_frame_abi_exist() {
     assert!(matches!(err, BackendError::UnsupportedOp(op) if op == "call"));
 }
 
+// ---------------------------------------------------------------------------
+// Floating point: a refusal with a reason, never bytes.
+//
+// RV32I is the RISC-V *base integer* ISA — 32 integer registers, no `f0`..`f31`
+// bank, no `fadd.d`.  Single/double precision live in the optional `F`/`D`
+// extensions (RV32F/RV32D).  So a float here is not "a lowering nobody wrote
+// yet"; it is a value the target cannot hold, and the two have opposite fixes
+// (implement an op vs. retarget or soft-float).  `UnsupportedFloat` says which
+// one the reader is looking at, and names the site so a multi-function module
+// (Dartmouth BASIC drags in its whole `__basic_print_*` runtime) points at the
+// exact instruction.  Truncating the double to an integer to "make it work"
+// would be a silent wrong answer — never acceptable.
+// ---------------------------------------------------------------------------
+
+#[test]
+fn rejects_a_float_constant_with_a_reason_not_bytes() {
+    let cir = vec![ci(
+        "const_f64",
+        Some("x"),
+        vec![CIROperand::Float(42.0)],
+        "f64",
+    )];
+    let err = compile(&ctx("main", &[], "i32"), &cir)
+        .expect_err("RV32I has no floating-point registers");
+    assert_eq!(
+        err,
+        BackendError::UnsupportedFloat {
+            site: "op \"const_f64\"".to_owned(),
+            ty: "f64".to_owned(),
+        }
+    );
+    let msg = err.to_string();
+    assert!(msg.contains("no floating-point registers"), "got: {msg}");
+    assert!(msg.contains("RV32F/RV32D"), "got: {msg}");
+}
+
+#[test]
+fn rejects_float_arithmetic_comparison_return_and_parameters() {
+    // Arithmetic: `add_f64` never reaches an `add` encoding.
+    let arithmetic = vec![ci(
+        "add_f64",
+        Some("sum"),
+        vec![CIROperand::Var("a".into()), CIROperand::Var("b".into())],
+        "f64",
+    )];
+    assert_eq!(
+        compile(&ctx("main", &[], "i32"), &arithmetic).expect_err("no f registers"),
+        BackendError::UnsupportedFloat {
+            site: "op \"add_f64\"".to_owned(),
+            ty: "f64".to_owned(),
+        }
+    );
+
+    // Comparison: `cmp_lt_f64` is not an integer `slt` in disguise.
+    let comparison = vec![ci(
+        "cmp_lt_f64",
+        Some("less"),
+        vec![CIROperand::Var("a".into()), CIROperand::Var("b".into())],
+        "bool",
+    )];
+    assert_eq!(
+        compile(&ctx("main", &[], "bool"), &comparison).expect_err("no f registers"),
+        BackendError::UnsupportedFloat {
+            site: "op \"cmp_lt_f64\"".to_owned(),
+            ty: "f64".to_owned(),
+        }
+    );
+
+    // Return: an f64 cannot ride home in `a0`.
+    let returned = vec![ci(
+        "ret_f32",
+        None,
+        vec![CIROperand::Var("x".into())],
+        "f32",
+    )];
+    assert_eq!(
+        compile(&ctx("main", &[], "f32"), &returned).expect_err("no f registers"),
+        BackendError::UnsupportedFloat {
+            site: "op \"ret_f32\"".to_owned(),
+            ty: "f32".to_owned(),
+        }
+    );
+
+    // Parameter: the refusal happens before a single word is emitted, and it
+    // names the parameter (this is the `__basic_print_real(x : f64)` shape).
+    let params = vec![("mag".to_owned(), "f64".to_owned())];
+    assert_eq!(
+        compile(&ctx("__basic_print_real", &params, "i64"), &[])
+            .expect_err("an f64 argument has no RV32I register to arrive in"),
+        BackendError::UnsupportedFloat {
+            site: "parameter \"mag\"".to_owned(),
+            ty: "f64".to_owned(),
+        }
+    );
+}
+
+#[test]
+fn non_float_unsupported_types_keep_the_generic_refusal() {
+    // The float refusal must not swallow the ordinary "no lowering yet" case:
+    // a `str` is unsupported for a different reason and keeps its own error.
+    let cir = vec![ci(
+        "const_str",
+        Some("s"),
+        vec![CIROperand::Var("hello".into())],
+        "str",
+    )];
+    assert_eq!(
+        compile(&ctx("main", &[], "i32"), &cir).expect_err("no string lowering"),
+        BackendError::UnsupportedType("str".to_owned())
+    );
+}
+
 #[test]
 fn executes_conditional_and_unconditional_control_flow() {
     let conditional = vec![
