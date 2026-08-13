@@ -2172,13 +2172,12 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
-    // ALGOL 60 — abstractly assign the initial while-element value before
-    // evaluating its finite static comparison. The first body execution then
-    // establishes definite string initialization for the post-loop read.
+    // ALGOL 60 — a literal-true while predicate guarantees the first body
+    // execution and therefore establishes definite string initialization.
     Prog {
         lang: Language::Algol60,
         ext: "alg",
-        src: "begin integer i, result; string s; i := 0; for i := i + 1 while if i = 1 then i < 2 else i < 0 do s := 'OK'; if s = 'OK' then result := 42 else result := 0 end",
+        src: "begin integer i, result; string s; for i := 1 while true do begin s := 'OK'; goto done end; done: if s = 'OK' then result := 42 else result := 0 end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
@@ -8674,7 +8673,7 @@ fn algol_static_initial_while_condition_runs_on_every_available_standard_backend
             program.lang == Language::Algol60
                 && program
                     .src
-                    .contains("for i := i + 1 while if i = 1 then i < 2 else i < 0")
+                    .contains("for i := 1 while true")
                 && program.src.contains("string s")
         })
         .expect("the ALGOL initial while-condition program must remain in the matrix");
@@ -8690,7 +8689,7 @@ fn algol_static_initial_while_condition_runs_on_every_available_standard_backend
         let Some(result) = run(backend, program) else {
             assert!(
                 !toolchain_available,
-                "{backend:?} toolchain is present but static conditional while predicate did not run"
+                "{backend:?} toolchain is present but literal-true while predicate did not run"
             );
             continue;
         };

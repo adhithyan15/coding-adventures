@@ -4869,7 +4869,15 @@ impl Compiler {
     }
 
     fn static_boolean_value(&self, node: &GrammarASTNode) -> Option<bool> {
-        if direct_tokens(node).iter().any(|token| token.value == "if") {
+        let tokens = direct_tokens(node);
+        if tokens.len() == 1 && tokens[0].effective_type_name() == "KEYWORD" {
+            match tokens[0].value.as_str() {
+                "true" => return Some(true),
+                "false" => return Some(false),
+                _ => {}
+            }
+        }
+        if tokens.iter().any(|token| token.value == "if") {
             let branches: Vec<&GrammarASTNode> = direct_nodes(node)
                 .into_iter()
                 .filter(|child| child.rule_name == "bool_expr")
@@ -4883,7 +4891,7 @@ impl Compiler {
                 self.static_boolean_value(branches[2])
             };
         }
-        if direct_tokens(node).iter().any(|token| token.value == "not") {
+        if tokens.iter().any(|token| token.value == "not") {
             let children = direct_nodes(node);
             if children.len() != 1 {
                 return None;
@@ -8658,11 +8666,20 @@ mod tests {
 
     #[test]
     fn al4_non_numeric_initial_while_condition_remains_conservative() {
-        let err = compile_source(
+        compile_source(
             "begin integer i; string s; for i := 1 while true do s := 'OK'; print(s) end",
             "test",
         )
-        .expect_err("only bounded numeric while comparisons establish initialization");
+        .expect("a literal-true while condition guarantees the first iteration");
+    }
+
+    #[test]
+    fn al4_literal_false_initial_while_condition_does_not_initialize_string() {
+        let err = compile_source(
+            "begin integer i; string s; for i := 1 while false do s := 'OK'; print(s) end",
+            "test",
+        )
+        .expect_err("a literal-false while condition has no body execution");
         assert!(format!("{err:?}").contains("requires initialized string variable"));
     }
 
