@@ -1,8 +1,8 @@
 //! End-to-end test for the language FACTS library
 //! (`adj-facts-stdlib/language/contraction.adj`) driven through the built
-//! CLI: a native `table` naming three contractions and the two-word
-//! phrase each stands for, per Grammarly's "What Are Contractions in
-//! Writing?" article. 0 answer-time model calls.
+//! CLI: a native `table` naming sixteen negative contractions and the
+//! two-word phrase each stands for, per Grammarly's "What Are Contractions
+//! in Writing?" article. 0 answer-time model calls.
 
 use std::path::{Path, PathBuf};
 use std::process::Command;
@@ -78,13 +78,13 @@ fn contraction_reverse_binds_the_word_for_that_expansion() {
 }
 
 #[test]
-fn contraction_abstains_honestly_on_an_untabled_contraction() {
+fn contraction_abstains_honestly_on_a_genuinely_ambiguous_contraction() {
     let dir = scratch("abstain");
     place_lib(&dir);
     std::fs::write(
         dir.join("case.adj"),
         "import \"contraction.adj\"\n\
-         ? contraction(shouldnt, $Expansion)\n",
+         ? contraction(hes, $Expansion)\n",
     )
     .unwrap();
 
@@ -92,6 +92,38 @@ fn contraction_abstains_honestly_on_an_untabled_contraction() {
     assert!(ok, "cli should succeed: {out}");
     assert!(
         out.contains("\"abstained\":true"),
-        "shouldnt is a real contraction (should not) but has no shipped expansion in this table -- honest abstention, never invented: {out}"
+        "he's is genuinely ambiguous in the source (he has / he is) so it is deliberately not a row -- honest abstention, never invented: {out}"
+    );
+}
+
+#[test]
+fn contraction_extension_recalls_newly_added_negative_contractions() {
+    let dir = scratch("ext");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"contraction.adj\"\n\
+         ? contraction(shouldnt, $Expansion)\n\
+         ? contraction(arent, $Expansion)\n\
+         ? contraction(wouldnt, $Expansion)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // shouldnt was previously the abstention example in this test suite --
+    // it is now a real shipped row, part of the 13 rows added this cycle
+    // from the source page's "Negative Contractions" table.
+    assert!(
+        out.contains("contraction(shouldnt, should_not)"),
+        "shouldnt expands to should_not (added this cycle): {out}"
+    );
+    assert!(
+        out.contains("contraction(arent, are_not)"),
+        "arent expands to are_not (added this cycle): {out}"
+    );
+    assert!(
+        out.contains("contraction(wouldnt, would_not)"),
+        "wouldnt expands to would_not (added this cycle): {out}"
     );
 }

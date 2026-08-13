@@ -29,35 +29,72 @@
 % mapping remains independently checkable against the cited page.
 %
 % Provenance: quoted verbatim from Grammarly's "What Are Contractions in
-% Writing? Definition and Examples" article, whose contraction-list tables
-% give each contraction's expansion directly:
+% Writing? Definition and Examples" article, whose "Negative Contractions"
+% table gives each contraction's expansion directly:
 %
 %     word (this table's atom label)   expansion (atom label)   source pair (verbatim)
 %     --------------------------------  ------------------------  ---------------------------------
-%     dont                               do_not                    "don't" = "do not"
+%     arent                              are_not                   "aren't" = "are not"
 %     cant                               can_not                   "can't" = "can not"
+%     couldnt                            could_not                 "couldn't" = "could not"
+%     didnt                              did_not                   "didn't" = "did not"
+%     doesnt                             does_not                  "doesn't" = "does not"
+%     dont                               do_not                    "don't" = "do not"
+%     hadnt                              had_not                   "hadn't" = "had not"
+%     hasnt                              has_not                   "hasn't" = "has not"
+%     havent                             have_not                  "haven't" = "have not"
+%     isnt                               is_not                    "isn't" = "is not"
+%     mustnt                             must_not                  "mustn't" = "must not"
+%     shouldnt                           should_not                "shouldn't" = "should not"
+%     wasnt                              was_not                   "wasn't" = "was not"
+%     werent                             were_not                  "weren't" = "were not"
 %     wont                               will_not                  "won't" = "will not"
+%     wouldnt                            would_not                 "wouldn't" = "would not"
 %
-% WebFetch-verified before writing. `trust consensus` — Grammarly is a
+% EXTENDED this cycle from 3 to 16 rows: the original dont/cant/wont rows
+% turn out to be exactly THREE members of a larger 16-row "Negative
+% Contractions" table on the same already-cited page — every negative
+% contraction the source lists, and every row has exactly ONE unambiguous
+% expansion (unlike the page's separate "Common Contractions" table, whose
+% entries like "he's" -> "he has, he is" are genuinely ambiguous and were
+% correctly left out). WebFetch re-verified the full 16-row table across
+% two separate passes before writing — both passes returned byte-identical
+% rows, and both confirmed every row has a single expansion with no
+% comma-separated alternatives. `trust consensus` — Grammarly is a
 % reputable, widely-cited grammar-content company, the same tier this
 % stdlib already reserves for other non-.gov language sources and the same
 % source family already cited by `sentence-type.adj`/`part-of-speech.adj`.
 % Note the source's own table expands "can't" to the TWO-word "can not,"
 % not the more common single-word spelling "cannot" — this table uses
 % exactly what the source states, not a silently "corrected" spelling.
-% A contraction that is NOT one of these three — e.g. "shouldn't," a real
-% contraction, but not one this specific cited page's table this row set
-% draws from — is deliberately NOT a row, so a recall ABSTAINS on it rather
-% than inventing an expansion. (See ../README.md;
-% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% A contraction that is NOT one of these sixteen — e.g. "he's," a real
+% contraction from the page's SEPARATE, genuinely ambiguous "Common
+% Contractions" table (it means either "he has" or "he is," and the source
+% never disambiguates which) — is deliberately NOT a row, so a recall
+% ABSTAINS on it rather than inventing a single expansion the source itself
+% does not commit to. (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
 % ============================================================================
 
 table contraction {
     columns word, expansion
 
-    row (dont, do_not)
+    row (arent, are_not)
     row (cant, can_not)
+    row (couldnt, could_not)
+    row (didnt, did_not)
+    row (doesnt, does_not)
+    row (dont, do_not)
+    row (hadnt, had_not)
+    row (hasnt, has_not)
+    row (havent, have_not)
+    row (isnt, is_not)
+    row (mustnt, must_not)
+    row (shouldnt, should_not)
+    row (wasnt, was_not)
+    row (werent, were_not)
     row (wont, will_not)
+    row (wouldnt, would_not)
 
     source "don't = do not"
     locator "https://www.grammarly.com/blog/grammar/contractions/"
