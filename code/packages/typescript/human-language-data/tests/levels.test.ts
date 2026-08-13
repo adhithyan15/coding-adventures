@@ -314,7 +314,7 @@ describe("corpus snapshot", () => {
     // that joins, not inferred from the total.
     // +1, measured as a set difference: TA-W20-read-onru is the only lesson that
     // joins. The three A2 speaking lessons are above the A1 cut and do not.
-    expect(ramp.length).toBeGreaterThanOrEqual(1404 // FLOOR — content only grows; // +3: HL-C97 adds the repair kit (no entiendo, mas despacio) at chapter 14 // +40: vocabulary wave 5, all of it pre-A1 // +54: vocabulary wave 6, all of it pre-A1 // HL12: +30 recognition segments (telugu/kannada/malayalam 8 each, sanskrit 6) -- all of it below the A1 cut // HL12 payment two: +8 Hindi segments
+    expect(ramp.length).toBeGreaterThanOrEqual(1404); // FLOOR — content only grows; // +3: HL-C97 adds the repair kit (no entiendo, mas despacio) at chapter 14 // +40: vocabulary wave 5, all of it pre-A1 // +54: vocabulary wave 6, all of it pre-A1 // HL12: +30 recognition segments (telugu/kannada/malayalam 8 each, sanskrit 6) -- all of it below the A1 cut // HL12 payment two: +8 Hindi segments
     expect(ramp.length).toBeLessThan(lessons.length);
   });
 });
