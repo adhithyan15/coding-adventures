@@ -73,6 +73,12 @@ namespace-aware ordinary-scope boundary before generating implied end tags, so
 remain ignored instead of closing across the boundary. Matching current and
 implied-descendant items, cross-name endings, real cells, foreign named
 elements, and synthetic fragment contexts retain their existing recovery.
+Paragraph end tags now use the full namespace-aware button-scope boundary for
+authored HTML `p` elements, so `applet`, `object`, `marquee`, and `button`
+boundaries synthesize and close the required empty paragraph instead of closing
+an older paragraph across the boundary. Current and implied-descendant
+paragraphs, real cells, foreign namespace names, template insertion mode, and
+synthetic fragment contexts retain their existing recovery.
 
 There are no residual malformed tree-construction cases without a lexer or
 parser diagnostic. HTML `p` and `br` start tags recovered from seeded foreign
@@ -351,6 +357,13 @@ Prioritized work items:
    content, unmatched endings, and synthetic fragments retain their existing
    recovery paths. The shared ordinary-scope helper remains namespace-aware for
    MathML text integration points and SVG HTML integration points.
+   Paragraph end tags now honor the complete HTML button-scope boundary rather
+   than only a literal button ancestor. An authored paragraph below `applet`,
+   `object`, `marquee`, or `button` remains open while recovery creates and
+   closes an empty paragraph at the current insertion location. Template-mode
+   end tags remain ignored, foreign names do not act as HTML scope boundaries,
+   and current, implied-descendant, cell, unmatched, and synthetic-fragment
+   paths preserve their existing behavior.
 3. **Diagnostic positions and error taxonomy.** Carry source positions into
    tree construction and map diagnostics to current WHATWG concepts. Legacy
    WPT/html5lib error labels are evidence hints, not a normative public API.
