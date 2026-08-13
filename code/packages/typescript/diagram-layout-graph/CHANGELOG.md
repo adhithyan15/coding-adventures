@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.0] - 2026-08-13
+
+### Fixed
+
+- Keep mixed-width nodes in the same rank from overlapping.
+
 ## [0.1.0] - 2026-04-23
 
 ### Added
