@@ -6208,10 +6208,11 @@ fn matrix_every_proven_cell_agrees() {
     // time.
     let report_all = std::env::var_os("LANG_MATRIX_REPORT_ALL").is_some();
     // Silence the default panic printer once for the whole sweep rather than per
-    // cell. The hook is process-global and libtest runs tests concurrently in one
-    // binary, so a per-cell take/set window swallows the diagnostics of every
-    // *other* test that happens to panic during it — the opposite of this file's
-    // whole purpose.
+    // cell. The hook is process-global, and taking/restoring it once per cell —
+    // thousands of times, from a libtest thread running concurrently with others —
+    // races: two threads interleaving `take_hook`/`set_hook` can leave the empty
+    // hook installed permanently, silencing the rest of the binary. One
+    // take/restore pair has no interleaving to lose.
     let restore_hook = report_all.then(|| {
         let hook = std::panic::take_hook();
         std::panic::set_hook(Box::new(|_| {}));

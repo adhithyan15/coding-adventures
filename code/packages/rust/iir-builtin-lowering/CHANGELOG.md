@@ -56,8 +56,13 @@ So this representation is sound only while every raw-model capture and argument
 is a non-pointer — true of every closure program today, and the interim contract
 until closure lowering grows tag-directed extraction. `store` now asserts it
 rather than describing it: capturing a string, a cons, or another closure from a
-raw-model closure fires in any debug build instead of silently producing a
-dangling reference. (Found in security review.)
+raw-model closure fires — in release as well as debug, since what it guards is a
+memory-safety property of the *generated* code — instead of silently producing a
+dangling reference. The predicate covers `ref<…>`, `closure` and `str`; bare
+`any` remains indistinguishable from a machine integer and is the residual hole
+that tag-directed extraction closes. (Found in security review, in two rounds:
+the first predicate tested only `ref<…>` and missed the `closure` and `str`
+hints a Twig frontend actually stamps on pointer destinations.)
 
 ### Tests
 

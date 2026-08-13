@@ -261,17 +261,42 @@ fn store(
     if !box_it {
         return v;
     }
-    debug_assert!(
-        !matches!(&v, Operand::Var(name)
-            if types.get(name).is_some_and(|t| t.starts_with("ref<"))),
-        "closure_heap: a raw-model closure captured/passed the reference-typed value {v:?}. \
-         Boxing it into the cons chain would shift its heap tag out of recognition and make \
-         the referent invisible to the collector. Closure lowering needs tag-directed \
-         extraction before a raw-model closure can carry a pointer."
+    // `assert!`, not `debug_assert!`: what this guards is a memory-safety property
+    // of the code we *generate* (a dangling reference collected out from under a
+    // live chain), and a release build of the compiler would emit it silently. One
+    // map lookup per capture at compile time is not a price worth trading for that.
+    assert!(
+        !matches!(&v, Operand::Var(name) if types.get(name).is_some_and(|t| may_hold_a_pointer(t))),
+        "closure_heap: a raw-model closure captured/passed the pointer-valued operand {v:?}. \
+         Boxing it into the cons chain shifts its heap tag out of recognition, so the \
+         collector can no longer find the referent through the chain that holds it. \
+         Closure lowering needs tag-directed extraction before a raw-model closure can \
+         carry a pointer."
     );
     let boxed = fresh(counter, "clobox");
     out.push(IIRInstr::new("box", Some(boxed.clone()), vec![v], REF_ANY));
     Operand::Var(boxed)
+}
+
+/// Could a value with this type hint be a heap pointer under the tagged-word
+/// model? These are the hints a raw-model (Twig/Nib) frontend stamps on a
+/// destination whose runtime value is a handle:
+///
+/// * `ref<…>` — an explicit reference (`ref<any>`, `ref<LispyPair>`).
+/// * `closure` — what `alloc_closure` itself produces, so a closure capturing
+///   another closure lands here.
+/// * `str` — a Twig string is a heap handle on the native/LLVM backends.
+///
+/// **`any` is the residual hole, and it cannot be closed here.** A bare-`any`
+/// destination in a raw-model module is usually a machine integer — that is the
+/// whole premise of the `is_lisp_language` gate — but a higher-order Twig
+/// function receiving a closure, list, or string also gets `any`. The two are
+/// indistinguishable in the type hints, so asserting on `any` would reject every
+/// closure program that works today. This assert therefore catches the cases the
+/// frontend types precisely and leaves the ambiguous one to the tag-directed
+/// extraction that supersedes this whole scheme.
+fn may_hold_a_pointer(hint: &str) -> bool {
+    hint.starts_with("ref<") || hint == "closure" || hint == "str"
 }
 
 /// Map each destination (and parameter) in `f` to the type hint it was produced
@@ -550,6 +575,57 @@ mod tests {
         // One `car` reads the dispatch index (which the `=` test unboxes itself);
         // the rest read captures/args and must each be unboxed.
         assert_eq!(unboxes, cars - 1, "every extracted capture/arg is unboxed");
+    }
+
+    /// A raw-model closure that captures another **closure** must be rejected, not
+    /// silently boxed: the capture is a heap handle (`addr | 0b111`), and shifting
+    /// it left by 3 hides it from the collector while the chain is its only root.
+    ///
+    /// The first version of this guard tested `starts_with("ref<")`, which misses
+    /// the two hints a Twig frontend actually stamps on pointer destinations —
+    /// `closure` (from `alloc_closure` itself) and `str` — so the exact case its
+    /// own doc comment promised to catch sailed through. Found in security review.
+    #[test]
+    #[should_panic(expected = "pointer-valued operand")]
+    fn raw_model_closure_capturing_a_closure_is_rejected() {
+        // `outer` allocates one closure, then captures THAT handle in a second —
+        // the shape `let f = fn…; let g = fn(y) => f(y)` lowers to.
+        let inner = IIRFunction::new(
+            "__lambda_0",
+            vec![("x".into(), "any".into())],
+            "any",
+            vec![IIRInstr::new("ret", None, vec![Operand::Var("x".into())], "any")],
+        );
+        let outer = IIRFunction::new(
+            "__lambda_1",
+            vec![("f".into(), "any".into()), ("y".into(), "any".into())],
+            "any",
+            vec![IIRInstr::new("ret", None, vec![Operand::Var("y".into())], "any")],
+        );
+        let main = IIRFunction::new(
+            "main",
+            vec![],
+            "any",
+            vec![
+                // `f` is produced by `alloc_closure`, so its hint is `closure`.
+                IIRInstr::new(
+                    "alloc_closure",
+                    Some("f".into()),
+                    vec![Operand::Str("__lambda_0".into())],
+                    "closure",
+                ),
+                // …and is then captured by a second closure.
+                IIRInstr::new(
+                    "alloc_closure",
+                    Some("g".into()),
+                    vec![Operand::Str("__lambda_1".into()), Operand::Var("f".into())],
+                    "closure",
+                ),
+                IIRInstr::new("ret", None, vec![Operand::Var("g".into())], "any"),
+            ],
+        );
+        let mut m = module_with(vec![inner, outer, main]);
+        lower_closures_to_heap(&mut m);
     }
 
     /// The mirror image: a genuinely tagged (lisp) module passes values through
