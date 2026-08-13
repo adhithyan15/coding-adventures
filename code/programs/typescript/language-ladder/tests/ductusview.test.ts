@@ -147,6 +147,8 @@ const DEVANAGARI_II = ductusFor("ई", "devanagari")!;
 const devanagariIiOutline = devanagariOutline("ई");
 const DEVANAGARI_U = ductusFor("उ", "devanagari")!;
 const devanagariUOutline = devanagariOutline("उ");
+const DEVANAGARI_UU = ductusFor("ऊ", "devanagari")!;
+const devanagariUuOutline = devanagariOutline("ऊ");
 const HEBREW_ALEF = ductusFor("א", "hebrew")!;
 const hebrewAlefOutline = hebrewOutline("א");
 const HEBREW_BET = ductusFor("ב", "hebrew")!;
@@ -1623,6 +1625,35 @@ describe("Devanagari उ — joined upper bowl and lower loop before the headlin
     );
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(DEVANAGARI_U.strokes[1], 1),
+    );
+  });
+});
+
+describe("Devanagari ऊ — shared body before the right loop and headline", () => {
+  const steps = ductusSteps(DEVANAGARI_UU);
+  const strip = ductusFilmstrip(DEVANAGARI_UU, devanagariUuOutline);
+
+  it("shows four movements across three sourced strokes", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "curve down and left around the upper bowl",
+      "sweep back through the waist and around the lower loop without lifting",
+      "lift, then sweep the right-hand loop up, around, and down-left",
+      "lift, then draw the shirorekha left-to-right",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, true, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 1, 2]);
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(2);
+    expect(strip.summary).toBe("3 strokes · 2 pen lifts · 4 movements");
+  });
+
+  it("draws the exact Noto Sans Devanagari character behind the headline", () => {
+    const paths = byTag(strip.frames[3], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      devanagariUuOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(DEVANAGARI_UU.strokes[2], 1),
     );
   });
 });
