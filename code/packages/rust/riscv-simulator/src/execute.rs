@@ -1,4 +1,4 @@
-//! Instruction executor for RV32I, the multiply subset of RV32M, and M-mode instructions.
+//! Instruction executor for RV32I, the compiler-needed RV32M subset, and M-mode instructions.
 
 use cpu_simulator::{RegisterFile, Memory};
 use crate::csr::*;
@@ -43,6 +43,10 @@ pub fn execute(
         "sub"   => exec_reg_arith(decoded, regs, pc, |a, b| (a as i32).wrapping_sub(b as i32) as u32),
         "mul"   => exec_reg_arith(decoded, regs, pc, |a, b| a.wrapping_mul(b)),
         "mulhu" => exec_reg_arith(decoded, regs, pc, |a, b| ((a as u64 * b as u64) >> 32) as u32),
+        "div"   => exec_reg_arith(decoded, regs, pc, rv32m_div),
+        "divu"  => exec_reg_arith(decoded, regs, pc, |a, b| a.checked_div(b).unwrap_or(u32::MAX)),
+        "rem"   => exec_reg_arith(decoded, regs, pc, rv32m_rem),
+        "remu"  => exec_reg_arith(decoded, regs, pc, |a, b| a.checked_rem(b).unwrap_or(a)),
         "sll"   => exec_reg_arith(decoded, regs, pc, |a, b| a << (b & 0x1F)),
         "slt"   => exec_reg_arith(decoded, regs, pc, |a, b| if (a as i32) < (b as i32) { 1 } else { 0 }),
         "sltu"  => exec_reg_arith(decoded, regs, pc, |a, b| if a < b { 1 } else { 0 }),
@@ -75,6 +79,30 @@ pub fn execute(
         "csrrs" => exec_csrrs(decoded, regs, csr, pc),
         "csrrc" => exec_csrrc(decoded, regs, csr, pc),
         _ => ExecuteResult { next_pc: pc + 4, halted: false },
+    }
+}
+
+fn rv32m_div(lhs: u32, rhs: u32) -> u32 {
+    let lhs = lhs as i32;
+    let rhs = rhs as i32;
+    if rhs == 0 {
+        u32::MAX
+    } else if lhs == i32::MIN && rhs == -1 {
+        i32::MIN as u32
+    } else {
+        (lhs / rhs) as u32
+    }
+}
+
+fn rv32m_rem(lhs: u32, rhs: u32) -> u32 {
+    let lhs = lhs as i32;
+    let rhs = rhs as i32;
+    if rhs == 0 {
+        lhs as u32
+    } else if lhs == i32::MIN && rhs == -1 {
+        0
+    } else {
+        (lhs % rhs) as u32
     }
 }
 

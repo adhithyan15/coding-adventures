@@ -148,6 +148,27 @@ mod tests {
     // R-type arithmetic
     #[test] fn test_add_sub() { let sim = run_program(&[encode_addi(1,0,10), encode_addi(2,0,20), encode_add(3,1,2), encode_sub(4,1,2), encode_ecall()]); assert_eq!(sim.regs.read(3), 30); assert_eq!(sim.regs.read(4) as i32, -10); }
     #[test] fn test_mul_and_mulhu() { let sim = run_program(&[encode_addi(1, 0, -1), encode_addi(2, 0, 2), encode_mul(3, 1, 2), encode_mulhu(4, 1, 2), encode_ecall()]); assert_eq!(sim.regs.read(3), 0xffff_fffe); assert_eq!(sim.regs.read(4), 1); }
+    #[test] fn test_division_and_remainder() {
+        let sim = run_program(&[
+            encode_addi(1, 0, -20), encode_addi(2, 0, 6),
+            encode_div(3, 1, 2), encode_rem(4, 1, 2),
+            encode_divu(5, 2, 1), encode_remu(6, 2, 1),
+            encode_div(7, 1, 0), encode_rem(8, 1, 0),
+            encode_divu(9, 1, 0), encode_remu(10, 1, 0),
+            encode_lui(11, 0x80000), encode_addi(12, 0, -1),
+            encode_div(13, 11, 12), encode_rem(14, 11, 12), encode_ecall(),
+        ]);
+        assert_eq!(sim.regs.read(3) as i32, -3);
+        assert_eq!(sim.regs.read(4) as i32, -2);
+        assert_eq!(sim.regs.read(5), 0);
+        assert_eq!(sim.regs.read(6), 6);
+        assert_eq!(sim.regs.read(7), u32::MAX);
+        assert_eq!(sim.regs.read(8) as i32, -20);
+        assert_eq!(sim.regs.read(9), u32::MAX);
+        assert_eq!(sim.regs.read(10) as i32, -20);
+        assert_eq!(sim.regs.read(13), 0x8000_0000);
+        assert_eq!(sim.regs.read(14), 0);
+    }
     #[test] fn test_sll() { let sim = run_program(&[encode_addi(1,0,1), encode_addi(2,0,8), encode_sll(3,1,2), encode_ecall()]); assert_eq!(sim.regs.read(3), 256); }
     #[test] fn test_slt() { let sim = run_program(&[encode_addi(1,0,-5), encode_addi(2,0,3), encode_slt(3,1,2), encode_slt(4,2,1), encode_ecall()]); assert_eq!(sim.regs.read(3), 1); assert_eq!(sim.regs.read(4), 0); }
     #[test] fn test_sltu() { let sim = run_program(&[encode_addi(1,0,-1), encode_addi(2,0,1), encode_sltu(3,2,1), encode_sltu(4,1,2), encode_ecall()]); assert_eq!(sim.regs.read(3), 1); assert_eq!(sim.regs.read(4), 0); }

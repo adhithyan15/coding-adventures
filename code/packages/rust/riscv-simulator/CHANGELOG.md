@@ -2,8 +2,9 @@
 
 ## Unreleased
 
-- Added the standard RV32M `mul` and `mulhu` instructions to both simulator
-  execution paths and the test encoder.
+- Added the standard RV32M `mul`, `mulhu`, `div`, `divu`, `rem`, and `remu`
+  instructions to both simulator execution paths and the test encoder,
+  including RISC-V-defined division-by-zero and signed-overflow results.
 - Added bounded `run_loaded_with_limit` execution with an observable
   `ExecutionResult`, allowing compiler backends to distinguish a halted guest
   from one that exhausted its instruction budget.

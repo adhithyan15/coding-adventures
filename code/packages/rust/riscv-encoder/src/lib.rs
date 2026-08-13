@@ -1,4 +1,4 @@
-//! # `riscv-encoder` — pure RV32I plus RV32M-multiply instruction encoder.
+//! # `riscv-encoder` — pure RV32I plus compiler-needed RV32M instruction encoder.
 //!
 //! Mirror of [`ge225-encoder`] / [`intel4004-encoder`] /
 //! [`armv7-encoder`] / [`intel8008-encoder`] for the RISC-V RV32I
@@ -70,8 +70,9 @@
 pub use riscv_simulator::encoding::{
     assemble, encode_add, encode_addi, encode_and, encode_andi, encode_auipc,
     encode_beq, encode_bge, encode_bgeu, encode_blt, encode_bltu, encode_bne,
-    encode_ecall, encode_jal, encode_jalr, encode_lb, encode_lbu, encode_lh,
-    encode_lhu, encode_lui, encode_lw, encode_mul, encode_mulhu, encode_or, encode_ori, encode_sb,
+    encode_div, encode_divu, encode_ecall, encode_jal, encode_jalr, encode_lb,
+    encode_lbu, encode_lh, encode_lhu, encode_lui, encode_lw, encode_mul,
+    encode_mulhu, encode_or, encode_ori, encode_rem, encode_remu, encode_sb,
     encode_sh, encode_sll, encode_slli, encode_slt, encode_slti, encode_sltiu,
     encode_sltu, encode_sra, encode_srai, encode_srl, encode_srli, encode_sub,
     encode_sw, encode_xor, encode_xori,

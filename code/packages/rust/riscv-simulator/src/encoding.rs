@@ -31,6 +31,10 @@ pub fn encode_add(rd: u32, rs1: u32, rs2: u32) -> u32 { encode_r_type(rd, rs1, r
 pub fn encode_sub(rd: u32, rs1: u32, rs2: u32) -> u32 { encode_r_type(rd, rs1, rs2, FUNCT3_ADD, FUNCT7_ALT) }
 pub fn encode_mul(rd: u32, rs1: u32, rs2: u32) -> u32 { encode_r_type(rd, rs1, rs2, FUNCT3_MUL, FUNCT7_M) }
 pub fn encode_mulhu(rd: u32, rs1: u32, rs2: u32) -> u32 { encode_r_type(rd, rs1, rs2, FUNCT3_MULHU, FUNCT7_M) }
+pub fn encode_div(rd: u32, rs1: u32, rs2: u32) -> u32 { encode_r_type(rd, rs1, rs2, FUNCT3_DIV, FUNCT7_M) }
+pub fn encode_divu(rd: u32, rs1: u32, rs2: u32) -> u32 { encode_r_type(rd, rs1, rs2, FUNCT3_DIVU, FUNCT7_M) }
+pub fn encode_rem(rd: u32, rs1: u32, rs2: u32) -> u32 { encode_r_type(rd, rs1, rs2, FUNCT3_REM, FUNCT7_M) }
+pub fn encode_remu(rd: u32, rs1: u32, rs2: u32) -> u32 { encode_r_type(rd, rs1, rs2, FUNCT3_REMU, FUNCT7_M) }
 pub fn encode_sll(rd: u32, rs1: u32, rs2: u32) -> u32 { encode_r_type(rd, rs1, rs2, FUNCT3_SLL, FUNCT7_NORMAL) }
 pub fn encode_slt(rd: u32, rs1: u32, rs2: u32) -> u32 { encode_r_type(rd, rs1, rs2, FUNCT3_SLT, FUNCT7_NORMAL) }
 pub fn encode_sltu(rd: u32, rs1: u32, rs2: u32) -> u32 { encode_r_type(rd, rs1, rs2, FUNCT3_SLTU, FUNCT7_NORMAL) }

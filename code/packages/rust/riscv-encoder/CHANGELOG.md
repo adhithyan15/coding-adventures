@@ -2,8 +2,8 @@
 
 ## Unreleased
 
-- Re-exported RV32M `encode_mul` and `encode_mulhu` helpers for the RISC-V
-  backend's 64-bit pair multiplication lowering.
+- Re-exported RV32M `encode_mul`, `encode_mulhu`, `encode_div`, `encode_divu`,
+  `encode_rem`, and `encode_remu` helpers for RISC-V backend lowering.
 
 ## v0.1.0 — 2026-06-03 — initial carve-out
 
