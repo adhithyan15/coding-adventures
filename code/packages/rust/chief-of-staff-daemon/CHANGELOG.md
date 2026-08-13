@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add optional Chief-owned Axis VAPIX pairing over the shared durable
+  controller. One complete owner-only configuration tuple binds credential
+  input to an exact bridge, startup restores transaction state, and worker
+  failure joins coordinated shutdown without exposing raw credentials.
 - Add optional Chief-owned ONVIF pairing over the shared durable controller.
   One complete owner-only configuration tuple binds credential input to an
   exact bridge, startup restores transaction state, and worker failure joins

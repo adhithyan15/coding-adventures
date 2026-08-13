@@ -44,6 +44,7 @@ coding-adventures-json-serializer = { path = "../json-serializer" }
 coding-adventures-json-value = { path = "../json-value" }
 smart-home-controller-runtime = { path = "../smart-home-controller-runtime" }
 smart-home-core = { path = "../smart-home-core" }
+smart-home-axis-pairing-service = { path = "../smart-home-axis-pairing-service" }
 smart-home-discovery = { path = "../smart-home-discovery" }
 smart-home-discovery-service = { path = "../smart-home-discovery-service" }
 smart-home-hue-pairing-service = { path = "../smart-home-hue-pairing-service" }

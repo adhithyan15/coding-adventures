@@ -12,8 +12,8 @@ use chief_of_staff_daemon_authority_provisioning::{
     provision_authorities, AuthorityProvisioningError,
 };
 use chief_of_staff_daemon_config::{
-    parse_config, ChiefConfig, ConfigError, OnvifPairingConfig, SmartHomeListenerConfig,
-    SmartHomeToolGrantConfig, SmartHomeToolGrantStatus,
+    parse_config, AxisPairingConfig, ChiefConfig, ConfigError, OnvifPairingConfig,
+    SmartHomeListenerConfig, SmartHomeToolGrantConfig, SmartHomeToolGrantStatus,
 };
 use chief_of_staff_daemon_credential::{load_or_create_credential, CredentialFileError};
 use chief_of_staff_daemon_keyring::{load_package_keyring, KeyringLoadError};
@@ -52,6 +52,10 @@ use hue_core::{
     HUE_MDNS_SERVICE_TYPE,
 };
 use process_shutdown::{ShutdownError, ShutdownListener};
+use smart_home_axis_pairing_service::{
+    install_axis_pairing_service_actor, AxisPairingRequest, AxisPairingServiceActorState,
+    AxisPairingServiceError, NativeAxisPairingVerifier, OwnerOnlyAxisCredentialInput,
+};
 use smart_home_controller_runtime::{ControllerRestoreError, SmartHomeControllerRuntime};
 use smart_home_core::{
     AgentId as SmartHomeAgentId, CapabilityGrant, CapabilityGrantId, CapabilityGrantScope,
@@ -119,6 +123,10 @@ const ONVIF_PAIRING_ACTOR_ID: &str = "chief-onvif-pairing";
 const ONVIF_PAIRING_SENDER_ID: &str = "chief-of-staff-daemon";
 const ONVIF_PAIRING_TICK_INTERVAL_MS: u64 = 1_000;
 const ONVIF_INTEGRATION_ID: &str = "onvif";
+const AXIS_PAIRING_ACTOR_ID: &str = "chief-axis-pairing";
+const AXIS_PAIRING_SENDER_ID: &str = "chief-of-staff-daemon";
+const AXIS_PAIRING_TICK_INTERVAL_MS: u64 = 1_000;
+const AXIS_INTEGRATION_ID: &str = "axis_vapix";
 
 /// Stable payload-blind startup, serving, and teardown failure.
 #[derive(Debug)]
@@ -191,6 +199,20 @@ pub enum ChiefDaemonError {
     SmartHomeOnvifPairingWorkerUnavailable,
     /// The ONVIF pairing worker thread panicked.
     SmartHomeOnvifPairingWorkerPanicked,
+    /// The configured Axis pairing KEK file could not be loaded safely.
+    SmartHomeAxisPairingSecret(SecretFileError),
+    /// The configured Axis pairing Vault could not initialize or unseal.
+    SmartHomeAxisPairingVault(SealedStoreError),
+    /// The Axis pairing service could not recover or execute its transaction state.
+    SmartHomeAxisPairing(AxisPairingServiceError),
+    /// The Axis pairing actor could not be installed or driven.
+    SmartHomeAxisPairingActor(ActorError),
+    /// The production wall clock was unavailable to the Axis pairing worker.
+    SmartHomeAxisPairingClock,
+    /// The operating system could not create the Axis pairing worker thread.
+    SmartHomeAxisPairingWorkerUnavailable,
+    /// The Axis pairing worker thread panicked.
+    SmartHomeAxisPairingWorkerPanicked,
     /// The local operator credential could not be loaded or created safely.
     Credential(CredentialFileError),
     /// Local bearer policy construction failed.
@@ -271,6 +293,17 @@ impl Display for ChiefDaemonError {
             }
             Self::SmartHomeOnvifPairingWorkerPanicked => {
                 "chief daemon: ONVIF pairing worker panicked"
+            }
+            Self::SmartHomeAxisPairingSecret(_) => "chief daemon: Axis pairing secret file failed",
+            Self::SmartHomeAxisPairingVault(_) => "chief daemon: Axis pairing vault failed",
+            Self::SmartHomeAxisPairing(_) => "chief daemon: Axis pairing failed",
+            Self::SmartHomeAxisPairingActor(_) => "chief daemon: Axis pairing actor failed",
+            Self::SmartHomeAxisPairingClock => "chief daemon: Axis pairing clock unavailable",
+            Self::SmartHomeAxisPairingWorkerUnavailable => {
+                "chief daemon: Axis pairing worker unavailable"
+            }
+            Self::SmartHomeAxisPairingWorkerPanicked => {
+                "chief daemon: Axis pairing worker panicked"
             }
             Self::Credential(_) => "chief daemon: operator credential failed",
             Self::Authentication(_) => "chief daemon: local authentication policy failed",
@@ -485,6 +518,21 @@ pub fn run(config: ChiefConfig, home: &Path) -> Result<(), ChiefDaemonError> {
                     .resolve(home)
                     .map_err(ChiefDaemonError::Config)?;
                 service.onvif_pairing = Some(configure_onvif_pairing_service(
+                    controller.clone(),
+                    &state_dir,
+                    &vault_dir,
+                    pairing,
+                    home,
+                    Arc::clone(&unix_clock),
+                )?);
+            }
+            if let Some(pairing) = listener.axis_pairing() {
+                let vault_dir = config
+                    .vault()
+                    .storage_path()
+                    .resolve(home)
+                    .map_err(ChiefDaemonError::Config)?;
+                service.axis_pairing = Some(configure_axis_pairing_service(
                     controller,
                     &state_dir,
                     &vault_dir,
@@ -686,6 +734,7 @@ struct SmartHomeHttpService {
     hue_discovery: Option<ChiefHueDiscoveryService>,
     hue_pairing: Option<ChiefHuePairingService>,
     onvif_pairing: Option<ChiefOnvifPairingService>,
+    axis_pairing: Option<ChiefAxisPairingService>,
 }
 
 type ChiefHueDiscoveryState = DiscoveryServiceActorState<
@@ -719,6 +768,20 @@ type ChiefOnvifPairingState = OnvifPairingServiceActorState<
 
 struct ChiefOnvifPairingService {
     state: ChiefOnvifPairingState,
+    controller: SmartHomeControllerRuntime<FsStorageBackend>,
+    clock: Arc<dyn UnixTimeClock>,
+    bridge_id: smart_home_core::BridgeId,
+}
+
+type ChiefAxisPairingState = AxisPairingServiceActorState<
+    OwnerOnlyAxisCredentialInput,
+    NativeAxisPairingVerifier,
+    FsStorageBackend,
+    FsStorageBackend,
+>;
+
+struct ChiefAxisPairingService {
+    state: ChiefAxisPairingState,
     controller: SmartHomeControllerRuntime<FsStorageBackend>,
     clock: Arc<dyn UnixTimeClock>,
     bridge_id: smart_home_core::BridgeId,
@@ -765,6 +828,7 @@ fn compose_smart_home_http_service(
         hue_discovery,
         hue_pairing: None,
         onvif_pairing: None,
+        axis_pairing: None,
     })
 }
 
@@ -879,6 +943,76 @@ fn configure_onvif_pairing_service(
     )
     .map_err(ChiefDaemonError::SmartHomeOnvifPairing)?;
     Ok(ChiefOnvifPairingService {
+        state,
+        controller,
+        clock,
+        bridge_id,
+    })
+}
+
+fn configure_axis_pairing_service(
+    controller: SmartHomeControllerRuntime<FsStorageBackend>,
+    state_dir: &Path,
+    vault_dir: &Path,
+    config: &AxisPairingConfig,
+    home: &Path,
+    clock: Arc<dyn UnixTimeClock>,
+) -> Result<ChiefAxisPairingService, ChiefDaemonError> {
+    let vault_backend: Arc<dyn StorageBackend> =
+        Arc::new(FsStorageBackend::new(vault_dir.to_path_buf()));
+    vault_backend
+        .initialize()
+        .map_err(ChiefDaemonError::Storage)?;
+    let vault = Arc::new(SealedStore::new(vault_backend));
+    let kek_path = config
+        .kek_path()
+        .resolve(home)
+        .map_err(ChiefDaemonError::Config)?;
+    let kek = read_owner_only_secret(&kek_path, SMART_HOME_PAIRING_KEK_BYTES)
+        .map_err(ChiefDaemonError::SmartHomeAxisPairingSecret)?;
+    let kek: &[u8; SMART_HOME_PAIRING_KEK_BYTES] = kek.as_slice().try_into().map_err(|_| {
+        ChiefDaemonError::SmartHomeAxisPairingSecret(SecretFileError::InvalidLength)
+    })?;
+    if vault
+        .status()
+        .map_err(ChiefDaemonError::SmartHomeAxisPairingVault)?
+        .initialized
+    {
+        vault
+            .unseal_with_kek(kek)
+            .map_err(ChiefDaemonError::SmartHomeAxisPairingVault)?;
+    } else {
+        vault
+            .init_with_kek(kek)
+            .map_err(ChiefDaemonError::SmartHomeAxisPairingVault)?;
+    }
+    let bridge_id = smart_home_core::BridgeId::new(config.bridge_id()).map_err(|error| {
+        ChiefDaemonError::SmartHomeAxisPairing(AxisPairingServiceError::InvalidRequest(
+            error.to_string(),
+        ))
+    })?;
+    let credential_input = OwnerOnlyAxisCredentialInput::new(
+        bridge_id.clone(),
+        config
+            .username_path()
+            .resolve(home)
+            .map_err(ChiefDaemonError::Config)?,
+        config.username_length(),
+        config
+            .password_path()
+            .resolve(home)
+            .map_err(ChiefDaemonError::Config)?,
+        config.password_length(),
+    );
+    let state = AxisPairingServiceActorState::restore(
+        FsStorageBackend::new(state_dir),
+        vault,
+        controller.clone(),
+        credential_input,
+        NativeAxisPairingVerifier,
+    )
+    .map_err(ChiefDaemonError::SmartHomeAxisPairing)?;
+    Ok(ChiefAxisPairingService {
         state,
         controller,
         clock,
@@ -1360,6 +1494,148 @@ fn drive_onvif_pairing_tick(
     Ok(())
 }
 
+struct OwnedAxisPairingWorker {
+    stop: Arc<AtomicBool>,
+    thread: Option<JoinHandle<Result<(), ChiefDaemonError>>>,
+}
+
+impl OwnedAxisPairingWorker {
+    fn start(
+        service: ChiefAxisPairingService,
+        on_failure: Arc<dyn Fn() + Send + Sync>,
+    ) -> Result<Self, ChiefDaemonError> {
+        Self::start_with_interval(
+            service,
+            on_failure,
+            Duration::from_millis(AXIS_PAIRING_TICK_INTERVAL_MS),
+        )
+    }
+
+    fn start_with_interval(
+        service: ChiefAxisPairingService,
+        on_failure: Arc<dyn Fn() + Send + Sync>,
+        tick_interval: Duration,
+    ) -> Result<Self, ChiefDaemonError> {
+        let stop = Arc::new(AtomicBool::new(false));
+        let worker_stop = Arc::clone(&stop);
+        let (startup_sender, startup_receiver) = std::sync::mpsc::sync_channel(0);
+        let thread = thread::Builder::new()
+            .name("chief-axis-pairing".to_string())
+            .spawn(move || {
+                let ChiefAxisPairingService {
+                    state,
+                    controller,
+                    clock,
+                    bridge_id,
+                } = service;
+                let mut system = ActorSystem::new();
+                if let Err(error) =
+                    install_axis_pairing_service_actor(&mut system, AXIS_PAIRING_ACTOR_ID, state)
+                {
+                    let _ = startup_sender.send(Err(error));
+                    return Ok(());
+                }
+                if startup_sender.send(Ok(())).is_err() {
+                    return Ok(());
+                }
+                while !worker_stop.load(Ordering::Acquire) {
+                    thread::park_timeout(tick_interval);
+                    if worker_stop.load(Ordering::Acquire) {
+                        break;
+                    }
+                    if let Err(error) = drive_axis_pairing_tick(
+                        &mut system,
+                        &controller,
+                        clock.as_ref(),
+                        &bridge_id,
+                    ) {
+                        on_failure();
+                        return Err(error);
+                    }
+                }
+                Ok(())
+            })
+            .map_err(|_| ChiefDaemonError::SmartHomeAxisPairingWorkerUnavailable)?;
+        match startup_receiver.recv() {
+            Ok(Ok(())) => {}
+            Ok(Err(error)) => {
+                let _ = thread.join();
+                return Err(ChiefDaemonError::SmartHomeAxisPairingActor(error));
+            }
+            Err(_) => {
+                let _ = thread.join();
+                return Err(ChiefDaemonError::SmartHomeAxisPairingWorkerUnavailable);
+            }
+        }
+        Ok(Self {
+            stop,
+            thread: Some(thread),
+        })
+    }
+
+    fn stop_and_join(&mut self) -> Result<(), ChiefDaemonError> {
+        self.stop.store(true, Ordering::Release);
+        let Some(thread) = self.thread.take() else {
+            return Ok(());
+        };
+        thread.thread().unpark();
+        thread
+            .join()
+            .map_err(|_| ChiefDaemonError::SmartHomeAxisPairingWorkerPanicked)?
+    }
+}
+
+impl Drop for OwnedAxisPairingWorker {
+    fn drop(&mut self) {
+        let _ = self.stop_and_join();
+    }
+}
+
+fn drive_axis_pairing_tick(
+    system: &mut ActorSystem,
+    controller: &SmartHomeControllerRuntime<FsStorageBackend>,
+    clock: &dyn UnixTimeClock,
+    bridge_id: &smart_home_core::BridgeId,
+) -> Result<(), ChiefDaemonError> {
+    let now_ms = clock
+        .now_ms()
+        .ok_or(ChiefDaemonError::SmartHomeAxisPairingClock)?;
+    let restored = controller
+        .durable_snapshot()
+        .map_err(AxisPairingServiceError::from)
+        .map_err(ChiefDaemonError::SmartHomeAxisPairing)?
+        .ok_or(ChiefDaemonError::SmartHomeAxisPairing(
+            AxisPairingServiceError::MissingDurableRuntime,
+        ))?;
+    let query = RuntimePairingSessionQuery::new()
+        .for_integration(smart_home_core::IntegrationId::trusted(AXIS_INTEGRATION_ID))
+        .with_status(PairingSessionStatus::PendingUserPresence);
+    let Some(session) = restored
+        .runtime
+        .query_pairing_sessions(&query)
+        .into_iter()
+        .find(|session| session.bridge_id == *bridge_id && !session.is_expired_at(now_ms))
+    else {
+        return Ok(());
+    };
+    let request = AxisPairingRequest::new(
+        session.session_id.clone(),
+        session.requested_by.clone(),
+        restored.revision,
+        now_ms,
+    );
+    let message = request
+        .into_message(AXIS_PAIRING_SENDER_ID)
+        .map_err(ChiefDaemonError::SmartHomeAxisPairing)?;
+    system
+        .send(AXIS_PAIRING_ACTOR_ID, message)
+        .map_err(ChiefDaemonError::SmartHomeAxisPairingActor)?;
+    system
+        .process_next(AXIS_PAIRING_ACTOR_ID)
+        .map_err(ChiefDaemonError::SmartHomeAxisPairingActor)?;
+    Ok(())
+}
+
 fn compose_smart_home_http_runtime<B: StorageBackend + 'static>(
     config: &SmartHomeListenerConfig,
     controller: SmartHomeControllerRuntime<B>,
@@ -1644,26 +1920,34 @@ where
         schedule,
     )
     .map_err(ChiefDaemonError::Runtime)?;
-    let (mut smart_home_server, hue_discovery, hue_pairing, onvif_pairing) = match smart_home {
-        Some((platform, service)) => {
-            let SmartHomeHttpService {
-                address,
-                app,
-                hue_discovery,
-                hue_pairing,
-                onvif_pairing,
-            } = service;
-            let server = WebServer::bind(
-                platform,
-                BindAddress::Ip(address),
-                HttpServerOptions::default(),
-                app,
-            )
-            .map_err(ChiefDaemonError::SmartHomeHttp)?;
-            (Some(server), hue_discovery, hue_pairing, onvif_pairing)
-        }
-        None => (None, None, None, None),
-    };
+    let (mut smart_home_server, hue_discovery, hue_pairing, onvif_pairing, axis_pairing) =
+        match smart_home {
+            Some((platform, service)) => {
+                let SmartHomeHttpService {
+                    address,
+                    app,
+                    hue_discovery,
+                    hue_pairing,
+                    onvif_pairing,
+                    axis_pairing,
+                } = service;
+                let server = WebServer::bind(
+                    platform,
+                    BindAddress::Ip(address),
+                    HttpServerOptions::default(),
+                    app,
+                )
+                .map_err(ChiefDaemonError::SmartHomeHttp)?;
+                (
+                    Some(server),
+                    hue_discovery,
+                    hue_pairing,
+                    onvif_pairing,
+                    axis_pairing,
+                )
+            }
+            None => (None, None, None, None, None),
+        };
     let daemon_stop = runtime.stop_handle();
     let smart_home_stop = smart_home_server.as_ref().map(WebServer::stop_handle);
     let mut discovery_worker = hue_discovery
@@ -1705,6 +1989,19 @@ where
             OwnedOnvifPairingWorker::start(service, on_failure)
         })
         .transpose()?;
+    let mut axis_pairing_worker = axis_pairing
+        .map(|service| {
+            let failure_daemon_stop = daemon_stop.clone();
+            let failure_smart_home_stop = smart_home_stop.clone();
+            let on_failure: Arc<dyn Fn() + Send + Sync> = Arc::new(move || {
+                failure_daemon_stop.stop();
+                if let Some(stop) = failure_smart_home_stop.as_ref() {
+                    stop.stop();
+                }
+            });
+            OwnedAxisPairingWorker::start(service, on_failure)
+        })
+        .transpose()?;
     let listener_daemon_stop = daemon_stop.clone();
     let listener_smart_home_stop = smart_home_stop.clone();
     let listener = match ShutdownListener::install(move |_| {
@@ -1726,6 +2023,9 @@ where
                 let _ = worker.stop_and_join();
             }
             if let Some(worker) = onvif_pairing_worker.as_mut() {
+                let _ = worker.stop_and_join();
+            }
+            if let Some(worker) = axis_pairing_worker.as_mut() {
                 let _ = worker.stop_and_join();
             }
             return Err(ChiefDaemonError::Shutdown(error));
@@ -1760,6 +2060,10 @@ where
         .as_mut()
         .map(OwnedOnvifPairingWorker::stop_and_join)
         .transpose();
+    let axis_pairing_result = axis_pairing_worker
+        .as_mut()
+        .map(OwnedAxisPairingWorker::stop_and_join)
+        .transpose();
     let smart_home_result = smart_home_thread
         .map(|thread| {
             thread
@@ -1780,6 +2084,7 @@ where
     discovery_result?;
     pairing_result?;
     onvif_pairing_result?;
+    axis_pairing_result?;
     smart_home_result?;
     shutdown_result.map_err(ChiefDaemonError::Shutdown)?;
     recovery_result
@@ -1932,6 +2237,9 @@ mod tests {
     use chief_of_staff_host_control_protocol::{LaunchBindings, LevelOneModelBinding};
     use chief_of_staff_pipeline_bindings::{HostPipelineBinding, PipelineId};
     use chief_of_staff_service_registry::{HostName, HostRegistration, PackagePath, RestartPolicy};
+    use smart_home_axis_pairing_service::{
+        AxisCredentialInput, AxisCredentialSecret, AxisPairingVerifier, VerifiedAxisCamera,
+    };
     use smart_home_core::{
         AgentId, AuthorizationOutcome, Bridge, BridgeId, BridgeTransport, CapabilityGrant,
         CapabilityGrantId, CapabilityId, Device, DeviceId, Entity, EntityId, EntityKind, Health,
@@ -2829,6 +3137,208 @@ hardware_key_timeout = 60
         assert!(matches!(
             worker.stop_and_join(),
             Err(ChiefDaemonError::SmartHomeOnvifPairingClock)
+        ));
+        assert!(failure_seen.load(Ordering::Acquire));
+    }
+
+    struct TestAxisCredentialInput;
+
+    impl AxisCredentialInput for TestAxisCredentialInput {
+        fn take_for_bridge(
+            &mut self,
+            bridge: &Bridge,
+        ) -> Result<AxisCredentialSecret, AxisPairingServiceError> {
+            assert_eq!(bridge.bridge_id.as_str(), "axis-camera-front");
+            AxisCredentialSecret::new("chief-axis-user", "chief-axis-password")
+        }
+    }
+
+    struct TestAxisVerifier;
+
+    impl AxisPairingVerifier for TestAxisVerifier {
+        fn verify(
+            &mut self,
+            bridge: &Bridge,
+            _credentials: &AxisCredentialSecret,
+            expected_serial_number: Option<&str>,
+        ) -> Result<VerifiedAxisCamera, AxisPairingServiceError> {
+            assert_eq!(
+                bridge.address.as_deref(),
+                Some("https://axis-camera-front.local")
+            );
+            assert_eq!(expected_serial_number, None);
+            Ok(VerifiedAxisCamera {
+                serial_number: "ACCC8EAF8C30".to_string(),
+            })
+        }
+    }
+
+    #[test]
+    fn chief_axis_pairing_tick_commits_only_the_bound_bridge_through_shared_controller() {
+        let directory = TestDir::new();
+        let state_dir = directory.0.join("smart-home-axis-pairing-state");
+        let controller =
+            SmartHomeControllerRuntime::restore(FsStorageBackend::new(&state_dir)).unwrap();
+        controller
+            .transaction(1_500, |runtime, _| {
+                let principal = AgentId::trusted("operator:axis-pairing");
+                for (bridge_id, session_id) in [
+                    ("axis-camera-other", "pairing-chief-axis-other"),
+                    ("axis-camera-front", "pairing-chief-axis-front"),
+                ] {
+                    let mut bridge = Bridge::new(
+                        BridgeId::trusted(bridge_id),
+                        IntegrationId::trusted(AXIS_INTEGRATION_ID),
+                        BridgeTransport::LanHttp,
+                    );
+                    let endpoint = format!("https://{bridge_id}.local");
+                    bridge.address = Some(endpoint.clone());
+                    bridge.health = Health::Unpaired;
+                    bridge.identifiers.push(
+                        ProtocolIdentifier::new(
+                            ProtocolFamily::Vendor("axis_vapix".to_string()),
+                            "https_endpoint",
+                            endpoint,
+                        )
+                        .unwrap(),
+                    );
+                    runtime.upsert_bridge(bridge.clone()).unwrap();
+                    runtime
+                        .start_pairing_session(RuntimePairingSession::pending(
+                            RuntimePairingSessionId::trusted(session_id),
+                            &bridge,
+                            principal.clone(),
+                            1_500,
+                            30_000,
+                            vec![SmartHomeMetadata::new(
+                                "pairing.mode",
+                                "explicit_credentials",
+                            )],
+                        ))
+                        .unwrap();
+                }
+                runtime
+                    .registry_mut()
+                    .upsert_capability_grant(CapabilityGrant::for_capability(
+                        CapabilityGrantId::trusted("grant-chief-axis-pairing"),
+                        principal,
+                        CapabilityId::trusted("smart_home.pair"),
+                        PrivilegeTier::HumanApproval,
+                        "operator:test",
+                        1_500,
+                    ));
+                Ok::<(), Infallible>(())
+            })
+            .unwrap();
+        let vault_backend: Arc<dyn StorageBackend> = Arc::new(FsStorageBackend::new(
+            directory.0.join("smart-home-axis-vault"),
+        ));
+        vault_backend.initialize().unwrap();
+        let vault = Arc::new(SealedStore::new(vault_backend));
+        vault
+            .init_with_kek(&[0x48; SMART_HOME_PAIRING_KEK_BYTES])
+            .unwrap();
+        let state = AxisPairingServiceActorState::restore(
+            FsStorageBackend::new(&state_dir),
+            vault,
+            controller.clone(),
+            TestAxisCredentialInput,
+            TestAxisVerifier,
+        )
+        .unwrap();
+        let mut system = ActorSystem::new();
+        install_axis_pairing_service_actor(&mut system, AXIS_PAIRING_ACTOR_ID, state).unwrap();
+
+        drive_axis_pairing_tick(
+            &mut system,
+            &controller,
+            &TestUnixTimeClock::new(2_000),
+            &BridgeId::trusted("axis-camera-front"),
+        )
+        .unwrap();
+
+        let restored = controller.durable_snapshot().unwrap().unwrap();
+        let completed = restored
+            .runtime
+            .pairing_session(&RuntimePairingSessionId::trusted(
+                "pairing-chief-axis-front",
+            ))
+            .unwrap();
+        assert_eq!(completed.status, PairingSessionStatus::Completed);
+        assert!(completed
+            .vault_ref
+            .as_ref()
+            .unwrap()
+            .as_str()
+            .starts_with("vault://smart-home/axis-vapix/"));
+        assert_eq!(
+            restored
+                .runtime
+                .pairing_session(&RuntimePairingSessionId::trusted(
+                    "pairing-chief-axis-other",
+                ))
+                .unwrap()
+                .status,
+            PairingSessionStatus::PendingUserPresence
+        );
+        let durable_text = format!("{restored:?}");
+        assert!(!durable_text.contains("chief-axis-user"));
+        assert!(!durable_text.contains("chief-axis-password"));
+    }
+
+    #[test]
+    fn chief_axis_pairing_worker_stops_and_propagates_clock_failure() {
+        let directory = TestDir::new();
+        let state_dir = directory.0.join("smart-home-axis-worker-state");
+        let controller =
+            SmartHomeControllerRuntime::restore(FsStorageBackend::new(&state_dir)).unwrap();
+        controller
+            .transaction(1_500, |_, _| Ok::<(), Infallible>(()))
+            .unwrap();
+        let vault_backend: Arc<dyn StorageBackend> = Arc::new(FsStorageBackend::new(
+            directory.0.join("smart-home-axis-worker-vault"),
+        ));
+        vault_backend.initialize().unwrap();
+        let vault = Arc::new(SealedStore::new(vault_backend));
+        vault
+            .init_with_kek(&[0x58; SMART_HOME_PAIRING_KEK_BYTES])
+            .unwrap();
+        let bridge_id = BridgeId::trusted("axis-camera-front");
+        let state = AxisPairingServiceActorState::restore(
+            FsStorageBackend::new(&state_dir),
+            vault,
+            controller.clone(),
+            OwnerOnlyAxisCredentialInput::new(
+                bridge_id.clone(),
+                directory.0.join("unused-user"),
+                1,
+                directory.0.join("unused-password"),
+                1,
+            ),
+            NativeAxisPairingVerifier,
+        )
+        .unwrap();
+        let service = ChiefAxisPairingService {
+            state,
+            controller,
+            clock: Arc::new(UnavailableUnixTimeClock),
+            bridge_id,
+        };
+        let failure_seen = Arc::new(AtomicBool::new(false));
+        let failure_probe = Arc::clone(&failure_seen);
+        let on_failure: Arc<dyn Fn() + Send + Sync> = Arc::new(move || {
+            failure_probe.store(true, Ordering::Release);
+        });
+        let mut worker = OwnedAxisPairingWorker::start_with_interval(
+            service,
+            on_failure,
+            Duration::from_millis(1),
+        )
+        .unwrap();
+        thread::sleep(Duration::from_millis(20));
+        assert!(matches!(
+            worker.stop_and_join(),
+            Err(ChiefDaemonError::SmartHomeAxisPairingClock)
         ));
         assert!(failure_seen.load(Ordering::Acquire));
     }

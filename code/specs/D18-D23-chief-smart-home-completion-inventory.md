@@ -2084,10 +2084,33 @@ pairing worker against the same live central controller:
 - Tests prove exact-bridge selection, central commit visibility, secret-free
   durable state, cooperative stop, and failure propagation.
 
+## Current Chief Axis Pairing Worker Slice
+
+The optional Chief smart-home composition now owns one exact Axis credential
+pairing worker against the same live central controller:
+
+- A complete `axis_pairing_*` tuple binds the worker to one installed bridge,
+  an owner-only 32-byte KEK, and owner-only username/password files with exact
+  bounded byte lengths; partial configuration and containerized Vault custody
+  fail closed.
+- Startup initializes or unseals the configured Vault and resolves pending
+  pairing transaction journals before installing the existing Axis pairing
+  actor against the shared controller.
+- Each tick selects only an unexpired pending Axis session for the configured
+  bridge, preserves its principal and exact durable revision, and delegates
+  exact HTTPS endpoint validation, native VAPIX inspection, and sealed
+  credential handoff to the existing service.
+- Successful completion publishes only the opaque Axis `VaultRef` to HTTP,
+  model tools, and every other shared consumer. Clock or actor failure stops
+  both listeners, and normal shutdown joins the worker before controller and
+  Vault teardown.
+- Tests prove exact-bridge selection, central commit visibility, secret-free
+  durable state, cooperative stop, and failure propagation.
+
 The remaining central-composition backlog still takes priority over adding
 another isolated integration or Chief read model:
 
-1. Move the remaining Axis, ZoneMinder, Synology, and Reolink supervised
+1. Move the remaining ZoneMinder, Synology, and Reolink supervised
    pairing workers into the Chief-owned controller process with explicit
    owner-only credential-input and Vault-custody boundaries.
 2. Move automation schedule workers into the same process and prove restart-safe
