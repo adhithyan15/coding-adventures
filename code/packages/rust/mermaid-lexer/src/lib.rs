@@ -1,6 +1,6 @@
 //! Grammar-driven lexers for Mermaid diagram families.
 
-pub const VERSION: &str = "0.50.0";
+pub const VERSION: &str = "0.51.0";
 
 use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
@@ -271,13 +271,13 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.50.0");
+        assert_eq!(VERSION, "0.51.0");
     }
 
     #[test]
     fn journey_tokenizes_sections_and_scored_tasks() {
         let tokens = try_tokenize_mermaid_journey(
-            "JoUrNeY\ntitle Checkout\nsection Payment\nPay: 2: Alice, Bob",
+            "JoUrNeY\naccTitle: Checkout\naccDescr {\nNative journey\n}\ntitle Checkout\nsection Payment<br/>Flow\nPay: 2: Alice, Bob",
         )
         .expect("journey tokenization");
         assert!(tokens
@@ -289,6 +289,12 @@ mod tests {
         assert!(tokens
             .iter()
             .any(|token| token.type_name.as_deref() == Some("TASK_STATEMENT")));
+        assert!(tokens
+            .iter()
+            .any(|token| token.type_name.as_deref() == Some("ACC_TITLE_STATEMENT")));
+        assert!(tokens
+            .iter()
+            .any(|token| token.type_name.as_deref() == Some("ACC_DESCR_BLOCK")));
     }
 
     #[test]

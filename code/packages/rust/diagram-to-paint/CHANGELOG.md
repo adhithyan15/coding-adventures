@@ -1,5 +1,9 @@
 # Changelog — diagram-to-paint
 
+## 0.44.0
+
+- Emit Journey accessibility metadata and shape multiline labels within resolved rows.
+
 ## 0.43.0
 
 - Lower Journey score rows and actor labels into backend-neutral Paint instructions and shaped glyphs.

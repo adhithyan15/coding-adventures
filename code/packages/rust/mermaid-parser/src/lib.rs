@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.89.0";
+pub const VERSION: &str = "0.90.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -736,19 +736,47 @@ pub fn parse_journey(source: &str) -> Result<(Option<String>, JourneyDiagram), P
     })?;
 
     let mut title = None;
+    let mut accessibility_title = None;
+    let mut accessibility_description = None;
     let mut sections = Vec::<JourneySection>::new();
     for token in tokens {
         match token.type_name.as_deref() {
             Some("TITLE_STATEMENT") => {
-                title = Some(token.value["title".len()..].trim().to_string());
+                title = Some(normalize_journey_label(
+                    token.value["title".len()..].trim(),
+                ));
+            }
+            Some("ACC_TITLE_STATEMENT") => {
+                accessibility_title = token
+                    .value
+                    .split_once(':')
+                    .map(|(_, value)| value.trim().to_string());
+            }
+            Some("ACC_DESCR_STATEMENT") => {
+                accessibility_description = token
+                    .value
+                    .split_once(':')
+                    .map(|(_, value)| value.trim().to_string());
+            }
+            Some("ACC_DESCR_BLOCK") => {
+                let open = token.value.find('{').expect("journey token requires '{'");
+                let close = token.value.rfind('}').expect("journey token requires '}'");
+                accessibility_description = Some(
+                    token.value[open + 1..close]
+                        .lines()
+                        .map(str::trim)
+                        .filter(|line| !line.is_empty())
+                        .collect::<Vec<_>>()
+                        .join("\n"),
+                );
             }
             Some("SECTION_STATEMENT") => sections.push(JourneySection {
-                label: token.value["section".len()..].trim().to_string(),
+                label: normalize_journey_label(token.value["section".len()..].trim()),
                 tasks: Vec::new(),
             }),
             Some("TASK_STATEMENT") => {
                 let mut parts = token.value.split(':');
-                let label = parts.next().unwrap_or_default().trim().to_string();
+                let label = normalize_journey_label(parts.next().unwrap_or_default().trim());
                 let score = parts
                     .next()
                     .unwrap_or_default()
@@ -778,7 +806,40 @@ pub fn parse_journey(source: &str) -> Result<(Option<String>, JourneyDiagram), P
             _ => {}
         }
     }
-    Ok((title, JourneyDiagram { sections }))
+    Ok((
+        title,
+        JourneyDiagram {
+            accessibility_title,
+            accessibility_description,
+            sections,
+        },
+    ))
+}
+
+fn normalize_journey_label(source: &str) -> String {
+    let mut output = String::new();
+    let mut rest = source;
+    while let Some(open) = rest.find('<') {
+        output.push_str(&rest[..open]);
+        let Some(relative_close) = rest[open + 1..].find('>') else {
+            output.push_str(&rest[open..]);
+            return output;
+        };
+        let close = open + 1 + relative_close;
+        let tag = rest[open + 1..close]
+            .chars()
+            .filter(|character| !character.is_whitespace())
+            .flat_map(char::to_lowercase)
+            .collect::<String>();
+        if matches!(tag.as_str(), "br" | "br/" | "/br" | "/br/") {
+            output.push('\n');
+        } else {
+            output.push_str(&rest[open..=close]);
+        }
+        rest = &rest[close + 1..];
+    }
+    output.push_str(rest);
+    output
 }
 
 fn first_keyword(source: &str) -> String {
@@ -6537,7 +6598,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.89.0");
+        assert_eq!(crate::VERSION, "0.90.0");
     }
 
     #[test]

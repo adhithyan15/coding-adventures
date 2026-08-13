@@ -45,7 +45,8 @@ variables. The pinned upstream parser/style corpus and native Metal render
 fixture pass, so `quadrantChart` is tracked at `full` compatibility.
 
 The initial `journey` subset covers titles, sections, integer task scores, and
-comma-separated actors through typed Journey IR, temporal layout, and Paint.
+comma-separated actors, accessibility metadata, and multiline break-tag labels
+through typed Journey IR, temporal layout, and Paint.
 
 The sequence subset includes participants and actors, aliases, standard solid
 and dotted message arrows, bidirectional/cross/point arrowheads, notes,

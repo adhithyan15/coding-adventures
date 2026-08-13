@@ -11,6 +11,9 @@ skip:
 NEWLINE             = /\r?\n/
 SEMICOLON           = ";"
 HEADER              = /journey/
+ACC_DESCR_BLOCK     = /accDescr[ \t]*\{[^}]*\}/
+ACC_TITLE_STATEMENT = /accTitle[ \t]*:[^#\r\n;]+/
+ACC_DESCR_STATEMENT = /accDescr[ \t]*:[^#\r\n;]+/
 TITLE_STATEMENT     = /title[ \t]+[^#\r\n;]+/
 SECTION_STATEMENT   = /section[ \t]+[^#:\r\n;]+/
 TASK_STATEMENT      = /[^#:\r\n;]+:[ \t]*[0-9]+(?:[ \t]*:[^#\r\n;]*)?/

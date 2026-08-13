@@ -605,7 +605,7 @@ mod apple {
     #[test]
     fn render_mermaid_journey_to_png() {
         let (title, journey) = parse_journey(
-            "journey\ntitle Checkout experience\nsection Discovery\nFind product: 5: Alice, Bob\nsection Payment\nPay: 2: Bob",
+            "journey\naccTitle: Checkout journey\naccDescr: Native checkout experience\ntitle Checkout<br/>experience\nsection Discover<br>products\nFind<br />product: 5: Alice, Bob\nsection Payment\nPay: 2: Bob",
         )
         .expect("journey parse failed");
         let layout = layout_temporal_diagram(
@@ -646,6 +646,22 @@ mod apple {
                 ))
                 .count(),
             2
+        );
+        assert_eq!(
+            scene
+                .metadata
+                .as_ref()
+                .and_then(|metadata| metadata.get("accessibility.title"))
+                .map(String::as_str),
+            Some("Checkout journey")
+        );
+        assert_eq!(
+            scene
+                .metadata
+                .as_ref()
+                .and_then(|metadata| metadata.get("accessibility.description"))
+                .map(String::as_str),
+            Some("Native checkout experience")
         );
         let pixels = render(&scene);
         write_png(&pixels, "/tmp/mermaid_journey_e2e.png").expect("PNG write failed");

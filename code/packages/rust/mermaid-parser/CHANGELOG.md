@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.90.0
+
+- Parse Journey accessibility metadata and normalize upstream HTML break-tag label forms.
+
 ## 0.89.0
 
 - Parse the core Journey grammar into typed semantic IR and native dispatch.

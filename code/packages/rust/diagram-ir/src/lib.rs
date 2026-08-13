@@ -1,6 +1,6 @@
 //! diagram-ir v0.42.0 - DG00/DG04 semantic IR
 
-pub const VERSION: &str = "0.44.0";
+pub const VERSION: &str = "0.45.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramDirection {
@@ -874,6 +874,8 @@ pub struct JourneySection {
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct JourneyDiagram {
+    pub accessibility_title: Option<String>,
+    pub accessibility_description: Option<String>,
     pub sections: Vec<JourneySection>,
 }
 
@@ -1047,6 +1049,8 @@ pub enum LayoutedTemporalItem {
 pub struct LayoutedTemporalDiagram {
     pub width: f64,
     pub height: f64,
+    pub accessibility_title: Option<String>,
+    pub accessibility_description: Option<String>,
     pub items: Vec<LayoutedTemporalItem>,
 }
 
@@ -1130,7 +1134,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.44.0");
+        assert_eq!(VERSION, "0.45.0");
     }
     #[test]
     fn default_direction_is_tb() {
