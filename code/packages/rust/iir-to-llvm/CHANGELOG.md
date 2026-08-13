@@ -1,5 +1,30 @@
 # Changelog — iir-to-llvm
 
+## 0.57.0 - 2026-08-13 - a global's storage type is declared, not inferred from a store
+
+`global_load` took the slot's type from the instruction's hint; `global_store`
+took it from the width of the value being stored. Those disagree whenever a
+narrower value is written into a wider slot, which is exactly what Nib and Oct
+do — `static counter: u8` lowers to an `i64` slot, and the addition result
+carries the source declaration's `u8`:
+
+    global_load  [Str("counter")] -> _n0 : i64     (hint i64)
+    add          [_n0, step]      -> _n1 : u8      (value is u8)
+    global_store [Str("counter"), _n1] : i64       (hint i64)
+
+The load registered `i64`, the store registered `i8`, and the backend refused
+the module: `global "counter" has incompatible LLVM storage types i64 and i8`.
+Both hints already agreed; only the value was narrower, and the narrow-width
+WRAP is applied as a mask on the value (`and i64 %next, 255`), not by narrowing
+the slot.
+
+The hint is now authoritative on both sides. A `global_store` produces no value,
+so a frontend may legitimately type it `void` — that names no storage, and only
+then does the stored value decide.
+
+Fixes matrix cells #71 (Nib) and #81 (Oct) on LLVM.
+
+
 ## 0.56.0 - 2026-08-13 - a reassigned string loses its compile-time length
 
 `str_lens` / `str_values` are *literal* facts — "this variable holds this exact

@@ -3301,3 +3301,65 @@ fn a_runtime_string_is_not_constant_folded_against_its_stale_literal() {
          run time, not fold the stale literal's 0; got:\n{ll}"
     );
 }
+
+/// A global's storage type comes from the instruction's type hint, not from the
+/// width of whatever value happens to be stored into it.
+///
+/// Nib and Oct both declare `static counter: u8` and lower it as an `i64` slot:
+/// the `global_load` and `global_store` hints both say `i64`, while the value
+/// being stored is the `u8`-typed result of the addition. Deriving the slot type
+/// from the value gave the load `i64` and the store `i8`, and the backend
+/// refused the module:
+///
+/// ```text
+/// global "counter" has incompatible LLVM storage types i64 and i8
+/// ```
+///
+/// A `global_store` produces no value, so a frontend may legitimately type it
+/// `void` — that names no storage, and only then does the stored value decide.
+#[test]
+fn a_narrower_stored_value_does_not_change_a_globals_storage_type() {
+    let f = IIRFunction::new(
+        "bump",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new("global_load", Some("cur".into()), vec![Operand::Str("counter".into())], "i64"),
+            IIRInstr::new("const", Some("one".into()), vec![Operand::Int(1)], "i64"),
+            // The sum is typed by the source declaration (`u8`), narrower than
+            // the slot it is written back into.
+            IIRInstr::new(
+                "add",
+                Some("next".into()),
+                vec![Operand::Var("cur".into()), Operand::Var("one".into())],
+                "u8",
+            ),
+            IIRInstr::new(
+                "global_store",
+                None,
+                vec![Operand::Str("counter".into()), Operand::Var("next".into())],
+                "i64",
+            ),
+            IIRInstr::new("global_load", Some("out".into()), vec![Operand::Str("counter".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("out".into())], "i64"),
+        ],
+    );
+    let mut m = module_with(f);
+    m.entry_point = Some("bump".into());
+    // The point of the test: this must lower at all.
+    let ll = lower(&m);
+    // Globals are name-mangled, so assert on the storage type and the access
+    // widths rather than the symbol: one `i64` slot, loaded and stored as `i64`,
+    // with the `u8` wrap applied as a mask on the value rather than by narrowing
+    // the slot.
+    assert!(
+        ll.contains("internal global i64"),
+        "the global keeps its declared i64 storage; got:\n{ll}"
+    );
+    assert!(ll.contains("store i64"), "stored at slot width; got:\n{ll}");
+    assert!(ll.contains("load i64"), "loaded at slot width; got:\n{ll}");
+    assert!(
+        ll.contains("and i64") && ll.contains("255"),
+        "the u8 wrap is a mask on the value, not a narrower slot; got:\n{ll}"
+    );
+}
