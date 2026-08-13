@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.141.0 — 2026-08-13 — single-iteration step-loop snapshots
+
+Statically proven single-iteration `step`/`until` elements now retain scalar
+constants established by a body that does not reference the controlled
+variable. Multi-iteration loops, calls, and other barriers remain conservative.
+
 ## 0.140.0 — 2026-08-13 — zero-trip controlled-variable snapshots
 
 A statically empty `step`/`until` element now records the initial value assigned

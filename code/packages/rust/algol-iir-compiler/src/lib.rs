@@ -4828,7 +4828,15 @@ impl Compiler {
             } else {
                 (None, None)
             };
-            if tokens
+            let tracks_step_body = is_step_element
+                && self.for_step_executes_exactly_once(var_ty, elem)
+                && self.for_body_avoids_target(target, body)
+                && !entry_tracking_disabled;
+            if tracks_step_body {
+                self.static_real_slots.clear();
+                self.static_integer_slots.clear();
+                self.static_boolean_slots.clear();
+            } else if tokens
                 .iter()
                 .any(|token| token.value == "while" || token.value == "step")
             {
@@ -4850,6 +4858,8 @@ impl Compiler {
                         static_initial_integer,
                     )?;
                 }
+            } else if tracks_step_body && !self.static_real_tracking_disabled {
+                self.update_for_target_snapshot(target, None, None)?;
             }
         }
         Ok(())
@@ -4876,6 +4886,67 @@ impl Compiler {
             ScalarType::Integer => (None, self.static_assigned_integer_value(initial)),
             ScalarType::Boolean | ScalarType::String => (None, None),
         }
+    }
+
+    fn for_step_executes_exactly_once(
+        &self,
+        target_ty: ScalarType,
+        elem: &GrammarASTNode,
+    ) -> bool {
+        let values: Vec<&GrammarASTNode> = direct_nodes(elem)
+            .into_iter()
+            .filter(|node| node.rule_name == "arith_expr")
+            .collect();
+        if values.len() != 3 {
+            return false;
+        }
+        match target_ty {
+            ScalarType::Integer => {
+                let Some(start) = self.static_assigned_integer_value(values[0]) else {
+                    return false;
+                };
+                let Some(step) = self.static_assigned_integer_value(values[1]) else {
+                    return false;
+                };
+                let Some(limit) = self.static_assigned_integer_value(values[2]) else {
+                    return false;
+                };
+                let Some(next) = start.checked_add(step) else {
+                    return false;
+                };
+                (step > 0 && start <= limit && next > limit)
+                    || (step < 0 && start >= limit && next < limit)
+            }
+            ScalarType::Real => {
+                let Some(start) = self.static_assigned_real_value(values[0]) else {
+                    return false;
+                };
+                let Some(step) = self.static_assigned_real_value(values[1]) else {
+                    return false;
+                };
+                let Some(limit) = self.static_assigned_real_value(values[2]) else {
+                    return false;
+                };
+                let next = start + step;
+                next.is_finite()
+                    && ((step > 0.0 && start <= limit && next > limit)
+                        || (step < 0.0 && start >= limit && next < limit))
+            }
+            ScalarType::Boolean | ScalarType::String => false,
+        }
+    }
+
+    fn for_body_avoids_target(
+        &self,
+        target: &GrammarASTNode,
+        body: &GrammarASTNode,
+    ) -> bool {
+        let Ok(target_name) = self.simple_variable_name(target) else {
+            return false;
+        };
+        !recursive_tokens(body).iter().any(|token| {
+            token.effective_type_name() == "NAME" && token.value == target_name
+        })
     }
 
     fn for_element_execution(
@@ -8998,12 +9069,31 @@ mod tests {
     }
 
     #[test]
-    fn al4_step_loop_still_invalidates_static_real_snapshot() {
-        let err = compile_source(
+    fn al4_single_iteration_step_loop_preserves_snapshot() {
+        compile_source(
             "begin integer i; real r; for i := 1 step 1 until 1 do r := 6.25; print(r) end",
             "test",
         )
-        .expect_err("a step loop may execute zero times and cannot establish a snapshot");
+        .expect("a statically single-iteration step loop establishes a snapshot");
+    }
+
+    #[test]
+    fn al4_multi_iteration_step_loop_remains_conservative() {
+        let err = compile_source(
+            "begin integer i; real r; for i := 1 step 1 until 3 do r := 6.25; print(r) end",
+            "test",
+        )
+        .expect_err("multiple iterations remain conservative without a fixed-point proof");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_step_loop_does_not_preserve_controlled_variable_snapshot() {
+        let err = compile_source(
+            "begin real x; for x := 1.0 step 1.0 until 3.0 do x := 1.5; print(x) end",
+            "test",
+        )
+        .expect_err("the loop increment keeps the controlled variable dynamic");
         assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
