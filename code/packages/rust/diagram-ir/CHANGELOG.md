@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.47.0
+
+- Preserve Journey geometry configuration in semantic IR.
+
 ## 0.46.0
 
 - Carry resolved Journey actor colors through temporal layout items.

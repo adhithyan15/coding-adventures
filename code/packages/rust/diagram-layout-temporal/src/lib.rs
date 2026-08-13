@@ -18,7 +18,7 @@ use diagram_ir::{
 };
 use std::collections::{BTreeSet, HashMap};
 
-pub const VERSION: &str = "0.4.0";
+pub const VERSION: &str = "0.5.0";
 
 // ── Constants ─────────────────────────────────────────────────────────────
 
@@ -49,7 +49,11 @@ pub fn layout_temporal_diagram(d: &TemporalDiagram, cw: f64) -> LayoutedTemporal
 
 fn layout_journey(title: &Option<String>, diagram: &JourneyDiagram, cw: f64) -> LayoutedTemporalDiagram {
     let mut items = Vec::new();
-    let mut y = 0.0;
+    let margin_x = diagram.config.diagram_margin_x.unwrap_or(16.0);
+    let margin_y = diagram.config.diagram_margin_y.unwrap_or(0.0);
+    let task_margin = diagram.config.task_margin.unwrap_or(6.0);
+    let task_width = diagram.config.task_width.unwrap_or(cw - margin_x * 2.0).max(1.0);
+    let mut y = margin_y;
     if let Some(title) = title {
         items.push(LayoutedTemporalItem::SectionHeader {
             x: 0.0, y, width: cw, height: 32.0, label: title.clone(),
@@ -86,18 +90,19 @@ fn layout_journey(title: &Option<String>, diagram: &JourneyDiagram, cw: f64) -> 
         });
         y += section_height + 4.0;
         for task in &section.tasks {
-            let task_height = (16.0 + task.label.lines().count().max(1) as f64 * 16.0).max(36.0);
+            let task_height = (16.0 + task.label.lines().count().max(1) as f64 * 16.0)
+                .max(diagram.config.task_height.unwrap_or(36.0));
             items.push(LayoutedTemporalItem::JourneyTask {
-                x: 16.0, y, width: (cw - 32.0).max(120.0), height: task_height,
+                x: margin_x, y, width: task_width, height: task_height,
                 score: task.score, label: task.label.clone(), people: task.people.clone(),
                 person_colors: task.people.iter().filter_map(|person| actor_colors.get(person).cloned()).collect(),
             });
-            y += task_height + 6.0;
+            y += task_height + task_margin;
         }
     }
     LayoutedTemporalDiagram {
         width: cw,
-        height: y + 16.0,
+        height: y + margin_y + 16.0,
         accessibility_title: diagram.accessibility_title.clone(),
         accessibility_description: diagram.accessibility_description.clone(),
         items,
@@ -385,7 +390,7 @@ mod tests {
         }
     }
 
-    #[test] fn version_exists() { assert_eq!(crate::VERSION, "0.4.0"); }
+    #[test] fn version_exists() { assert_eq!(crate::VERSION, "0.5.0"); }
 
     #[test]
     fn gantt_has_task_bars() {
@@ -443,6 +448,13 @@ mod tests {
             body: TemporalBody::Journey(JourneyDiagram {
                 accessibility_title: Some("Checkout journey".into()),
                 accessibility_description: Some("Payment experience".into()),
+                config: diagram_ir::JourneyConfig {
+                    diagram_margin_x: Some(24.0),
+                    diagram_margin_y: Some(12.0),
+                    task_width: Some(280.0),
+                    task_height: Some(52.0),
+                    task_margin: Some(18.0),
+                },
                 sections: vec![JourneySection {
                     label: "Payment\nflow".into(),
                     tasks: vec![JourneyTask {
@@ -461,7 +473,8 @@ mod tests {
             LayoutedTemporalItem::JourneyActor { label, .. } if label == "Bob"
         )));
         assert!(layout.items.iter().any(|item| matches!(item,
-            LayoutedTemporalItem::JourneyTask { height, .. } if *height > 36.0
+            LayoutedTemporalItem::JourneyTask { x, width, height, .. }
+                if *x == 24.0 && *width == 280.0 && *height >= 52.0
         )));
     }
 }
