@@ -465,7 +465,10 @@ Prioritized work items:
    closed are now diagnosed and ignored in the document-only after-frameset
    state, preserving the first frameset and its following tail nodes. Valid
    nested framesets, after-after-frameset ignored-token recovery, and seeded
-   HTML fragment behavior remain distinct.
+   HTML fragment behavior remain distinct. Unexpected tokens in the
+   after-after-frameset state are now consumed by that insertion mode after its
+   single required diagnostic, preventing `frame`, `frameset`, and other start
+   or end tags from also emitting an unrelated downstream recovery error.
    Continue with the remaining after-body and after-after-body token classes,
    frameset tail modes, and trailing-token recovery.
 3. **Diagnostic positions and error taxonomy.** Carry source positions into

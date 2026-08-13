@@ -4630,7 +4630,9 @@ impl HtmlParser {
 
     fn process_token(&mut self, token: Token) {
         self.process_initial_insertion_mode(&token);
-        self.process_document_tail_mode(&token);
+        if self.process_document_tail_mode(&token) {
+            return;
+        }
         if matches!(token, Token::Eof) {
             self.flush_foreign_cdata_text();
         }
@@ -4737,17 +4739,16 @@ impl HtmlParser {
         }
     }
 
-    fn process_document_tail_mode(&mut self, token: &Token) {
+    fn process_document_tail_mode(&mut self, token: &Token) -> bool {
         if self.is_fragment && self.open_fragment_context_name() != Some("html") {
-            return;
+            return false;
         }
         if self.document_has_closed_frameset() {
-            self.process_closed_frameset_tail_mode(token);
-            return;
+            return self.process_closed_frameset_tail_mode(token);
         }
 
         if matches!(self.document_tail_mode, DocumentTailMode::InBody) {
-            return;
+            return false;
         }
         let allowed_in_both_modes = matches!(
             token,
@@ -4795,11 +4796,12 @@ impl HtmlParser {
                 }
             }
         }
+        false
     }
 
-    fn process_closed_frameset_tail_mode(&mut self, token: &Token) {
+    fn process_closed_frameset_tail_mode(&mut self, token: &Token) -> bool {
         if !self.explicit_html_end_seen || self.current_element_is("noframes") {
-            return;
+            return false;
         }
 
         let allowed = matches!(
@@ -4820,7 +4822,9 @@ impl HtmlParser {
                 "unexpected-token-after-after-frameset",
                 "unexpected token was ignored in the after after frameset insertion mode",
             ));
+            return true;
         }
+        false
     }
 
     fn process_initial_insertion_mode(&mut self, token: &Token) {
@@ -40017,6 +40021,9 @@ mod tests {
             ("<!doctype html><frameset></frameset></html>text", 1),
             ("<!doctype html><frameset></frameset></html><p>", 1),
             ("<!doctype html><frameset></frameset></html></p>", 1),
+            ("<!doctype html><frameset></frameset></html><frameset>", 1),
+            ("<!doctype html><frameset></frameset></html><frame>", 1),
+            ("<!doctype html><frameset></frameset></html></frameset>", 1),
             (
                 "<!doctype html><frameset></frameset></html><plaintext></plaintext>",
                 2,
@@ -40034,6 +40041,11 @@ mod tests {
                 expected_count,
                 "source {source:?}"
             );
+            assert_eq!(
+                output.parser_diagnostics.len(),
+                expected_count,
+                "source {source:?} should emit exactly one tail diagnostic per token"
+            );
         }
 
         let allowed = parse_html_with_diagnostics(
@@ -40041,6 +40053,28 @@ mod tests {
         )
         .unwrap();
         assert!(allowed.parser_diagnostics.iter().all(|diagnostic| {
+            diagnostic.code != "unexpected-token-after-after-frameset"
+        }));
+
+        for source in [
+            "<!doctype html><frameset></frameset><frame>",
+            "<!doctype html><frameset></frameset></frameset>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(output.parser_diagnostics.len(), 1, "source {source:?}");
+            assert_ne!(
+                output.parser_diagnostics[0].code,
+                "unexpected-token-after-after-frameset",
+                "direct after-frameset recovery should retain its own diagnostic"
+            );
+        }
+
+        let fragment = parse_html_fragment_for_context_with_diagnostics(
+            "<frameset></frameset></html><frame>",
+            "html",
+        )
+        .unwrap();
+        assert!(fragment.parser_diagnostics.iter().all(|diagnostic| {
             diagnostic.code != "unexpected-token-after-after-frameset"
         }));
     }
