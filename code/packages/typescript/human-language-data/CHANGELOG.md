@@ -71,6 +71,12 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
 
 ## [Unreleased]
 
+### Added - source-verified Devanagari ग (HL-C09DI)
+
+- Verify ग as three ordered strokes with two lifts against an 18-frame animated source, independently corroborated by the Central Hindi Directorate's three-part learner buildup.
+- Carry the counterclockwise left loop directly up its joined stem before the top-to-bottom right stem and left-to-right shirorekhā in a Noto Sans Devanagari fit.
+- Reduce measured HL-C09 debt to 119 entries and queue Devanagari च next.
+
 ### Added - source-verified Devanagari क (HL-C09DH)
 
 - Verify क as four ordered strokes with three lifts against a 27-frame animated source, independently corroborated by the Central Hindi Directorate's four-part learner buildup.
