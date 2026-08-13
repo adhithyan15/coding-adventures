@@ -4747,7 +4747,8 @@ impl Compiler {
 
         for elem in elems {
             let entry_initialized_string_slots = self.initialized_string_slots.clone();
-            let executes_at_least_once = self.for_element_executes_at_least_once(var_ty, elem);
+            let executes_at_least_once =
+                self.for_element_executes_at_least_once(target, var_ty, elem);
             if direct_tokens(elem)
                 .iter()
                 .any(|token| token.value == "while" || token.value == "step")
@@ -4763,13 +4764,14 @@ impl Compiler {
     }
 
     fn for_element_executes_at_least_once(
-        &self,
+        &mut self,
+        target: &GrammarASTNode,
         target_ty: ScalarType,
         elem: &GrammarASTNode,
     ) -> bool {
         let tokens = direct_tokens(elem);
         if tokens.iter().any(|token| token.value == "while") {
-            return false;
+            return self.for_while_executes_at_least_once(target, target_ty, elem);
         }
         if !tokens.iter().any(|token| token.value == "step") {
             return true;
@@ -4817,6 +4819,84 @@ impl Compiler {
             }
             ScalarType::Boolean | ScalarType::String => false,
         }
+    }
+
+    fn for_while_executes_at_least_once(
+        &mut self,
+        target: &GrammarASTNode,
+        target_ty: ScalarType,
+        elem: &GrammarASTNode,
+    ) -> bool {
+        if array_subscripts(target).is_some() {
+            return false;
+        }
+        let Ok(target_name) = self.simple_variable_name(target) else {
+            return false;
+        };
+        let Ok(target_binding) = self.require_var(&target_name) else {
+            return false;
+        };
+        if self.active_by_name_binding(&target_name).is_some() || target_binding.is_global {
+            return false;
+        }
+        let Some(value) = direct_nodes(elem)
+            .into_iter()
+            .find(|node| node.rule_name == "arith_expr")
+        else {
+            return false;
+        };
+        let Some(condition) = first_direct_node(elem, "bool_expr") else {
+            return false;
+        };
+
+        let saved_reals = self.static_real_slots.clone();
+        let saved_integers = self.static_integer_slots.clone();
+        let static_real = (target_ty == ScalarType::Real)
+            .then(|| self.static_assigned_real_value(value))
+            .flatten()
+            .filter(|value| value.is_finite())
+            .map(|value| value.to_string());
+        let static_integer = (target_ty == ScalarType::Integer)
+            .then(|| self.static_assigned_integer_value(value))
+            .flatten();
+        let updated = self
+            .update_for_target_snapshot(target, static_real, static_integer)
+            .is_ok();
+        let executes = updated && self.static_boolean_value(condition) == Some(true);
+        self.static_real_slots = saved_reals;
+        self.static_integer_slots = saved_integers;
+        executes
+    }
+
+    fn static_boolean_value(&self, node: &GrammarASTNode) -> Option<bool> {
+        let sequence = pieces(node);
+        if sequence.len() == 1 {
+            return match sequence[0] {
+                Piece::Node(child) => self.static_boolean_value(child),
+                Piece::Op(_) => None,
+            };
+        }
+        if sequence.len() != 3 {
+            return None;
+        }
+        let (Piece::Node(lhs), Piece::Op(op), Piece::Node(rhs)) =
+            (&sequence[0], &sequence[1], &sequence[2])
+        else {
+            return None;
+        };
+        if !matches!(op.as_str(), "=" | "!=" | "<>" | "<" | "<=" | ">" | ">=") {
+            return None;
+        }
+
+        if let (Some(lhs), Some(rhs)) = (
+            self.static_assigned_integer_value(lhs),
+            self.static_assigned_integer_value(rhs),
+        ) {
+            return Some(compare_static_values(op, lhs, rhs));
+        }
+        let lhs = self.static_assigned_real_value(lhs)?;
+        let rhs = self.static_assigned_real_value(rhs)?;
+        (lhs.is_finite() && rhs.is_finite()).then(|| compare_static_values(op, lhs, rhs))
     }
 
     fn for_target_type(&self, target: &GrammarASTNode) -> Result<ScalarType, CompileError> {
@@ -6632,6 +6712,18 @@ fn expr_string_literal(node: &GrammarASTNode) -> Option<String> {
     }
 
     None
+}
+
+fn compare_static_values<T: PartialEq + PartialOrd>(op: &str, lhs: T, rhs: T) -> bool {
+    match op {
+        "=" => lhs == rhs,
+        "!=" | "<>" => lhs != rhs,
+        "<" => lhs < rhs,
+        "<=" => lhs <= rhs,
+        ">" => lhs > rhs,
+        ">=" => lhs >= rhs,
+        _ => false,
+    }
 }
 
 fn expr_real_literal_text(node: &GrammarASTNode) -> Option<String> {
@@ -8500,6 +8592,45 @@ mod tests {
             "test",
         )
         .expect_err("a dynamic step-loop bound must fail closed");
+        assert!(format!("{err:?}").contains("requires initialized string variable"));
+    }
+
+    #[test]
+    fn al4_static_initial_while_condition_definitely_initializes_string() {
+        compile_source(
+            "begin integer i; string s; i := 0; for i := i + 1 while i < 2 do s := 'OK'; print(s) end",
+            "test",
+        )
+        .expect("the initial controlled value makes the while condition true");
+    }
+
+    #[test]
+    fn al4_static_false_initial_while_condition_does_not_initialize_string() {
+        let err = compile_source(
+            "begin integer i; string s; i := 2; for i := i + 1 while i < 2 do s := 'OK'; print(s) end",
+            "test",
+        )
+        .expect_err("a false initial while condition cannot initialize a string");
+        assert!(format!("{err:?}").contains("requires initialized string variable"));
+    }
+
+    #[test]
+    fn al4_dynamic_initial_while_condition_does_not_initialize_string() {
+        let err = compile_source(
+            "begin integer i, n; string s; i := 0; for i := i + 1 while i < n do s := 'OK'; print(s) end",
+            "test",
+        )
+        .expect_err("an unknown initial while condition must fail closed");
+        assert!(format!("{err:?}").contains("requires initialized string variable"));
+    }
+
+    #[test]
+    fn al4_non_numeric_initial_while_condition_remains_conservative() {
+        let err = compile_source(
+            "begin integer i; string s; for i := 1 while true do s := 'OK'; print(s) end",
+            "test",
+        )
+        .expect_err("only bounded numeric while comparisons establish initialization");
         assert!(format!("{err:?}").contains("requires initialized string variable"));
     }
 

@@ -2172,6 +2172,16 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — abstractly assign the initial while-element value before
+    // evaluating its finite static comparison. The first body execution then
+    // establishes definite string initialization for the post-loop read.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, result; string s; i := 0; for i := i + 1 while i < 2 do s := 'OK'; if s = 'OK' then result := 42 else result := 0 end",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a list containing only single-value elements is straight-line
     // repetition with no zero-trip path or backedge. Its final static real
     // assignment therefore remains available to the portable output path.
@@ -8649,6 +8659,36 @@ fn algol_tracked_step_bounds_run_on_every_available_standard_backend() {
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but tracked step bounds did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_static_initial_while_condition_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("for i := i + 1 while i < 2")
+                && program.src.contains("string s")
+        })
+        .expect("the ALGOL initial while-condition program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but static initial while condition did not run"
             );
             continue;
         };
