@@ -1,5 +1,51 @@
 # Changelog
 
+## 0.13.0 — Wire type-directed operator selection into the emitter (SIR21 T3c-3)
+
+Wires `semantic-ir`'s `op_select::resolve_binary`/`type_env::TypeEnv`
+(SIR21 T3c-1/2/3-prereq) into this backend's `emit.rs`. Each function's
+emitter now builds a `TypeEnv` while walking the body (seeded from
+params/captures via `TypeEnv::from_function`, updated via
+`observe_stmt` at every statement-list walk, including the
+block-as-expression "walrus tuple" path, which threads the *same* env
+since Python's `:=` binds in the enclosing scope, and clones it only
+where a nested `def __block_N():` opens a real new Python scope).
+
+At every binary-operator `BuiltinCall` site (`+ - * < > <= >= == !=`,
+two-arg only), `emit_builtin_call` now consults
+`resolve_binary(op, env.expr_type(lhs), env.expr_type(rhs))` *before*
+falling through to the existing runtime-dispatch-helper table:
+
+- `IntArith`/`FloatArith`/`TypedCompare` (both operands share a
+  concrete, matching type) → emit native Python infix, e.g. `(a + b)`
+  instead of `_sir_plus(a, b)`. Python's own spellings of these nine
+  operators are already correct for two operands of the same type, so
+  no translation table is needed.
+- `StrConcat` (string `+`) and `RuntimeDispatch` (anything
+  `Dynamic`/mismatched — today's universal case absent a typed
+  frontend reaching this backend) fall through to the existing
+  `_sir_plus`/`_sir_lt`/… helper-call path, byte-for-byte unchanged.
+
+Behavior-preserving for every existing untyped program: every operand
+in every pre-existing test resolves to `RuntimeDispatch`, so output is
+identical (all 109 pre-existing tests pass unaffected). Six new unit
+tests cover: matching typed int `+`, matching `Float` `*`, matching
+typed int `<`, `Str` `+` staying on the runtime-helper path, a
+typed+untyped mismatch staying on the runtime-helper path, and a
+walrus-tuple `let x = <int>; x + <int>` case exercising the
+`env.declare` call the walrus path makes after each `LetBinding`.
+
+Note: `c-to-semantic-ir` is the only frontend that populates `sir_type`
+today, and this backend does not accept `Feature::Conversions` (only
+`semantic-ir-to-c`/`semantic-ir-to-ruby` do), so no real
+frontend-sourced program can exercise the native-infix path
+end-to-end yet — that gap is tracked separately (see `semantic-ir`
+0.25.1's changelog) and intentionally out of scope here. This PR is
+scoped to making the wiring correct and unit-tested.
+
+Requires `semantic-ir` >= 0.25.1 (path dependency; no functional
+requirement, just the doc-comment corrections landing alongside).
+
 ## 0.12.0 — SIR28 §7: remove dead bare `print`/`puts` handling
 
 Every frontend now emits `__sys_write__` instead of bare `print`/`puts`

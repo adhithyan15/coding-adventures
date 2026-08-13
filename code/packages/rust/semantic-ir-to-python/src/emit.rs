@@ -12,7 +12,8 @@ use std::collections::{BTreeSet, HashMap};
 use std::fmt::Write;
 
 use semantic_ir::{
-    Block, Expr, Feature, Function, Global, IndexArg, Module, ParamKind, Scope, Stmt,
+    resolve_binary, BinaryLowering, Block, Expr, Feature, Function, Global, IndexArg, Module,
+    ParamKind, Scope, Stmt, TypeEnv,
 };
 
 use crate::runtime::RUNTIME;
@@ -707,6 +708,13 @@ fn emit_function(out: &mut String, f: &Function) {
     }
     out.push_str("):\n");
 
+    // SIR21 T3c-3: seed the type environment from this function's params/
+    // captures — the bindings visible at the top of its body, before any
+    // statement runs. Threaded through every downstream call below (the
+    // default-parameter prologue and the body) so `emit_builtin_call` can
+    // consult `resolve_binary` with each operand's statically-known type.
+    let mut env = TypeEnv::from_function(f);
+
     // M3 Rest-param normalization. Python's `*rest` binds a *tuple*, but SIR
     // sequence semantics (and Ruby's `*rest`, which is an `Array`) require a
     // *list* — every downstream sequence op (`len`, indexing, dispatched
@@ -741,13 +749,13 @@ fn emit_function(out: &mut String, f: &Function) {
         let mut tmp = String::new();
         let _ = writeln!(tmp, "{pad}if {name} is _SIR_MISSING:");
         let _ = write!(tmp, "{inner_pad}{name} = ");
-        emit_expr(&mut tmp, default, 1);
+        emit_expr(&mut tmp, default, 1, &mut env);
         tmp.push('\n');
         flush_hoist(out);
         out.push_str(&tmp);
     }
 
-    emit_function_body(out, &f.body, 1);
+    emit_function_body(out, &f.body, 1, &mut env);
 }
 
 fn function_emit_name(name: &str) -> String {
@@ -758,16 +766,17 @@ fn function_emit_name(name: &str) -> String {
     }
 }
 
-fn emit_function_body(out: &mut String, b: &Block, indent: usize) {
+fn emit_function_body(out: &mut String, b: &Block, indent: usize, env: &mut TypeEnv) {
     let pad = indent_str(indent);
     for s in &b.stmts {
-        emit_stmt(out, s, indent);
+        emit_stmt(out, s, indent, env);
+        env.observe_stmt(s);
     }
     // Render the return expression into a scratch buffer first so any
     // nested defs it hoists are flushed *before* the `return` line.
     let mut tmp = String::new();
     let _ = write!(tmp, "{}return ", pad);
-    emit_expr(&mut tmp, &b.value, indent);
+    emit_expr(&mut tmp, &b.value, indent, env);
     tmp.push('\n');
     flush_hoist(out);
     out.push_str(&tmp);
@@ -781,19 +790,19 @@ fn emit_function_body(out: &mut String, b: &Block, indent: usize) {
 /// generates *before* the statement itself.  The statement is rendered
 /// into a scratch buffer (so `emit_expr` can queue hoists), then the
 /// hoist buffer is drained into `out`, then the scratch buffer appended.
-fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
+fn emit_stmt(out: &mut String, s: &Stmt, indent: usize, env: &mut TypeEnv) {
     let mut tmp = String::new();
-    emit_stmt_inner(&mut tmp, s, indent);
+    emit_stmt_inner(&mut tmp, s, indent, env);
     flush_hoist(out);
     out.push_str(&tmp);
 }
 
-fn emit_stmt_inner(out: &mut String, s: &Stmt, indent: usize) {
+fn emit_stmt_inner(out: &mut String, s: &Stmt, indent: usize, env: &mut TypeEnv) {
     let pad = indent_str(indent);
     match s {
         Stmt::LetBinding { name, value, .. } | Stmt::LetStarBinding { name, value, .. } => {
             let _ = write!(out, "{}{} = ", pad, sanitize_ident(name));
-            emit_expr(out, value, indent);
+            emit_expr(out, value, indent, env);
             out.push('\n');
         }
         Stmt::ExprStmt { expr, .. } => {
@@ -803,11 +812,11 @@ fn emit_stmt_inner(out: &mut String, s: &Stmt, indent: usize) {
             // statement.
             if let Some((global, value)) = pick_global_set(expr) {
                 let _ = write!(out, "{}_globals[{}] = ", pad, quote_py_string(global));
-                emit_expr(out, value, indent);
+                emit_expr(out, value, indent, env);
                 out.push('\n');
             } else {
                 let _ = write!(out, "{}", pad);
-                emit_expr(out, expr, indent);
+                emit_expr(out, expr, indent, env);
                 out.push('\n');
             }
         }
@@ -825,7 +834,7 @@ fn emit_stmt_inner(out: &mut String, s: &Stmt, indent: usize) {
             ..
         } => {
             let _ = write!(out, "{}{} = ", pad, sanitize_ident(name));
-            emit_expr(out, value, indent);
+            emit_expr(out, value, indent, env);
             out.push('\n');
         }
         Stmt::Assign {
@@ -835,7 +844,7 @@ fn emit_stmt_inner(out: &mut String, s: &Stmt, indent: usize) {
             ..
         } => {
             let _ = write!(out, "{}_globals[{}] = ", pad, quote_py_string(name));
-            emit_expr(out, value, indent);
+            emit_expr(out, value, indent, env);
             out.push('\n');
         }
         // `seq[index] = value`
@@ -843,11 +852,11 @@ fn emit_stmt_inner(out: &mut String, s: &Stmt, indent: usize) {
             seq, index, value, ..
         } => {
             out.push_str(&pad);
-            emit_expr(out, seq, indent);
+            emit_expr(out, seq, indent, env);
             out.push('[');
-            emit_expr(out, index, indent);
+            emit_expr(out, index, indent, env);
             out.push_str("] = ");
-            emit_expr(out, value, indent);
+            emit_expr(out, value, indent, env);
             out.push('\n');
         }
         // `map[key] = value`
@@ -855,11 +864,11 @@ fn emit_stmt_inner(out: &mut String, s: &Stmt, indent: usize) {
             map, key, value, ..
         } => {
             out.push_str(&pad);
-            emit_expr(out, map, indent);
+            emit_expr(out, map, indent, env);
             out.push('[');
-            emit_expr(out, key, indent);
+            emit_expr(out, key, indent, env);
             out.push_str("] = ");
-            emit_expr(out, value, indent);
+            emit_expr(out, value, indent, env);
             out.push('\n');
         }
         // ── SIR16 loops ─────────────────────────────────────────────
@@ -868,9 +877,9 @@ fn emit_stmt_inner(out: &mut String, s: &Stmt, indent: usize) {
         Stmt::While { cond, body, .. } => {
             out.push_str(&pad);
             out.push_str("while _sir_truthy(");
-            emit_expr(out, cond, indent);
+            emit_expr(out, cond, indent, env);
             out.push_str("):\n");
-            emit_block_as_stmts(out, body, indent + 1);
+            emit_block_as_stmts(out, body, indent + 1, env);
         }
         // `for var in range(start, stop, step):` — Python's `range` is
         // already half-open (`stop` exclusive) and direction-aware (a
@@ -884,22 +893,22 @@ fn emit_stmt_inner(out: &mut String, s: &Stmt, indent: usize) {
             ..
         } => {
             let _ = write!(out, "{}for {} in range(", pad, sanitize_ident(var));
-            emit_expr(out, start, indent);
+            emit_expr(out, start, indent, env);
             out.push_str(", ");
-            emit_expr(out, stop, indent);
+            emit_expr(out, stop, indent, env);
             out.push_str(", ");
-            emit_expr(out, step, indent);
+            emit_expr(out, step, indent, env);
             out.push_str("):\n");
-            emit_block_as_stmts(out, body, indent + 1);
+            emit_block_as_stmts(out, body, indent + 1, env);
         }
         // `for var in iter:` — iterate a Seq.
         Stmt::ForEach {
             var, iter, body, ..
         } => {
             let _ = write!(out, "{}for {} in ", pad, sanitize_ident(var));
-            emit_expr(out, iter, indent);
+            emit_expr(out, iter, indent, env);
             out.push_str(":\n");
-            emit_block_as_stmts(out, body, indent + 1);
+            emit_block_as_stmts(out, body, indent + 1, env);
         }
         // ── SIR17 scopes (assignment) ───────────────────────────────
         // `@x = v` → current-self instance-variable write via the OOP
@@ -911,7 +920,7 @@ fn emit_stmt_inner(out: &mut String, s: &Stmt, indent: usize) {
             ..
         } => {
             let _ = write!(out, "{}_sir_oop_ivar_set({}, ", pad, quote_py_string(name));
-            emit_expr(out, value, indent);
+            emit_expr(out, value, indent, env);
             out.push_str(")\n");
         }
         // `@@x = v` → class-variable store write.
@@ -922,7 +931,7 @@ fn emit_stmt_inner(out: &mut String, s: &Stmt, indent: usize) {
             ..
         } => {
             let _ = write!(out, "{}_sir_oop_cvar_set({}, ", pad, quote_py_string(name));
-            emit_expr(out, value, indent);
+            emit_expr(out, value, indent, env);
             out.push_str(")\n");
         }
         // `CONST = v` → an ordinary module-level binding; reads elsewhere
@@ -934,7 +943,7 @@ fn emit_stmt_inner(out: &mut String, s: &Stmt, indent: usize) {
             ..
         } => {
             let _ = write!(out, "{}{} = ", pad, sanitize_ident(name));
-            emit_expr(out, value, indent);
+            emit_expr(out, value, indent, env);
             out.push('\n');
         }
         // `Assign` to a builtin is never produced by any frontend (you
@@ -973,7 +982,7 @@ fn emit_stmt_inner(out: &mut String, s: &Stmt, indent: usize) {
             }
             out.push_str(")\n");
             for st in body {
-                emit_stmt(out, st, indent);
+                emit_stmt(out, st, indent, env);
             }
         }
         // A module is a namespace with no superclass; register it so it
@@ -986,14 +995,14 @@ fn emit_stmt_inner(out: &mut String, s: &Stmt, indent: usize) {
                 quote_py_string(name)
             );
             for st in body {
-                emit_stmt(out, st, indent);
+                emit_stmt(out, st, indent, env);
             }
         }
         // `class << receiver; …; end` — method `def`s are hoisted out by
         // the frontend, so only the body's non-`def` statements remain.
         Stmt::SingletonClassDef { body, .. } => {
             for st in body {
-                emit_stmt(out, st, indent);
+                emit_stmt(out, st, indent, env);
             }
         }
         // `begin … rescue … ensure … end` → native `try: … except Exception
@@ -1011,7 +1020,7 @@ fn emit_stmt_inner(out: &mut String, s: &Stmt, indent: usize) {
             ..
         } => {
             let _ = writeln!(out, "{}try:", pad);
-            emit_stmt_list(out, body, indent + 1);
+            emit_stmt_list(out, body, indent + 1, env);
             if !rescues.is_empty() {
                 // Catch broadly (matching the TS backend's catch-all) so a
                 // native Python error can still be matched by `rescue
@@ -1037,9 +1046,9 @@ fn emit_stmt_inner(out: &mut String, s: &Stmt, indent: usize) {
                     if let Some(bind) = &r.binding {
                         let bpad = indent_str(indent + 2);
                         let _ = writeln!(out, "{}{} = __exc", bpad, sanitize_ident(bind));
-                        emit_stmt_list_allow_only_value(out, &r.body, indent + 2, false);
+                        emit_stmt_list_allow_only_value(out, &r.body, indent + 2, false, env);
                     } else {
-                        emit_stmt_list(out, &r.body, indent + 2);
+                        emit_stmt_list(out, &r.body, indent + 2, env);
                     }
                 }
                 // No clause matched → propagate the original exception.
@@ -1049,7 +1058,7 @@ fn emit_stmt_inner(out: &mut String, s: &Stmt, indent: usize) {
             }
             if let Some(ens) = ensure_body {
                 let _ = writeln!(out, "{}finally:", pad);
-                emit_stmt_list(out, ens, indent + 1);
+                emit_stmt_list(out, ens, indent + 1, env);
             }
         }
         // SIR22 `target[indices...] = value`. This backend does not declare
@@ -1069,13 +1078,14 @@ fn emit_stmt_inner(out: &mut String, s: &Stmt, indent: usize) {
 /// Emit a bare statement list (as carried by `TryCatch` bodies / rescue
 /// clauses / `ensure`) at `indent`, emitting `pass` when empty so the Python
 /// block is non-empty.
-fn emit_stmt_list(out: &mut String, stmts: &[Stmt], indent: usize) {
+fn emit_stmt_list(out: &mut String, stmts: &[Stmt], indent: usize, env: &mut TypeEnv) {
     if stmts.is_empty() {
         let _ = writeln!(out, "{}pass", indent_str(indent));
         return;
     }
     for s in stmts {
-        emit_stmt(out, s, indent);
+        emit_stmt(out, s, indent, env);
+        env.observe_stmt(s);
     }
 }
 
@@ -1088,6 +1098,7 @@ fn emit_stmt_list_allow_only_value(
     stmts: &[Stmt],
     indent: usize,
     emit_pass_if_empty: bool,
+    env: &mut TypeEnv,
 ) {
     if stmts.is_empty() {
         if emit_pass_if_empty {
@@ -1096,7 +1107,8 @@ fn emit_stmt_list_allow_only_value(
         return;
     }
     for s in stmts {
-        emit_stmt(out, s, indent);
+        emit_stmt(out, s, indent, env);
+        env.observe_stmt(s);
     }
 }
 
@@ -1115,7 +1127,7 @@ fn pick_global_set(e: &Expr) -> Option<(&str, &Expr)> {
 // Expressions
 // ---------------------------------------------------------------------------
 
-fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
+fn emit_expr(out: &mut String, e: &Expr, indent: usize, env: &mut TypeEnv) {
     match e {
         Expr::IntLit { value, .. } => {
             let _ = write!(out, "{}", value);
@@ -1139,27 +1151,27 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
         } => {
             // Python ternary: (then if cond else else)
             out.push('(');
-            emit_block_as_expr(out, then_branch, indent);
+            emit_block_as_expr(out, then_branch, indent, env);
             out.push_str(" if _sir_truthy(");
-            emit_expr(out, cond, indent);
+            emit_expr(out, cond, indent, env);
             out.push_str(") else ");
-            emit_block_as_expr(out, else_branch, indent);
+            emit_block_as_expr(out, else_branch, indent, env);
             out.push(')');
         }
-        Expr::Block(b) => emit_block_as_expr(out, b, indent),
+        Expr::Block(b) => emit_block_as_expr(out, b, indent, env),
         Expr::DirectCall { fn_name, args, .. } => {
             let _ = write!(out, "{}(", function_emit_name(fn_name));
-            emit_args(out, args, indent);
+            emit_args(out, args, indent, env);
             out.push(')');
         }
         Expr::IndirectCall { target, args, .. } => {
             out.push_str("_sir_apply(");
-            emit_expr(out, target, indent);
+            emit_expr(out, target, indent, env);
             out.push_str(", [");
-            emit_args(out, args, indent);
+            emit_args(out, args, indent, env);
             out.push_str("])");
         }
-        Expr::BuiltinCall { name, args, .. } => emit_builtin_call(out, name, args, indent),
+        Expr::BuiltinCall { name, args, .. } => emit_builtin_call(out, name, args, indent, env),
         Expr::MakeClosure {
             fn_name, captures, ..
         } => {
@@ -1168,7 +1180,7 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
                 if i > 0 {
                     out.push_str(", ");
                 }
-                emit_expr(out, &c.value, indent);
+                emit_expr(out, &c.value, indent, env);
             }
             out.push_str("])");
         }
@@ -1186,18 +1198,18 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
         }
         Expr::SeqLit { items, .. } => {
             out.push('[');
-            emit_args(out, items, indent);
+            emit_args(out, items, indent, env);
             out.push(']');
         }
         Expr::SeqIndex { seq, index, .. } => {
-            emit_expr(out, seq, indent);
+            emit_expr(out, seq, indent, env);
             out.push('[');
-            emit_expr(out, index, indent);
+            emit_expr(out, index, indent, env);
             out.push(']');
         }
         Expr::SeqLen { seq, .. } => {
             out.push_str("len(");
-            emit_expr(out, seq, indent);
+            emit_expr(out, seq, indent, env);
             out.push(')');
         }
         Expr::MapLit { entries, .. } => {
@@ -1206,16 +1218,16 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
                 if i > 0 {
                     out.push_str(", ");
                 }
-                emit_expr(out, &entry.key, indent);
+                emit_expr(out, &entry.key, indent, env);
                 out.push_str(": ");
-                emit_expr(out, &entry.value, indent);
+                emit_expr(out, &entry.value, indent, env);
             }
             out.push('}');
         }
         Expr::MapGet { map, key, .. } => {
-            emit_expr(out, map, indent);
+            emit_expr(out, map, indent, env);
             out.push('[');
-            emit_expr(out, key, indent);
+            emit_expr(out, key, indent, env);
             out.push(']');
         }
         // Short-circuit: a lambda keeps the rhs unevaluated until the
@@ -1225,16 +1237,16 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
         // `&&`/`||` never collide.
         Expr::LogicalAnd { lhs, rhs, .. } => {
             out.push_str("(lambda __l: (");
-            emit_expr(out, rhs, indent);
+            emit_expr(out, rhs, indent, env);
             out.push_str(") if _sir_truthy(__l) else __l)(");
-            emit_expr(out, lhs, indent);
+            emit_expr(out, lhs, indent, env);
             out.push(')');
         }
         Expr::LogicalOr { lhs, rhs, .. } => {
             out.push_str("(lambda __l: __l if _sir_truthy(__l) else (");
-            emit_expr(out, rhs, indent);
+            emit_expr(out, rhs, indent, env);
             out.push_str("))(");
-            emit_expr(out, lhs, indent);
+            emit_expr(out, lhs, indent, env);
             out.push(')');
         }
         // String interpolation: every part rendered through the SIR
@@ -1249,7 +1261,7 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
                     out.push_str(" + ");
                 }
                 out.push_str("_sir_to_display(");
-                emit_expr(out, p, indent);
+                emit_expr(out, p, indent, env);
                 out.push(')');
             }
             out.push(')');
@@ -1264,7 +1276,7 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
         Expr::KeywordArg { name, value, .. } => {
             out.push_str(&sanitize_ident(name));
             out.push('=');
-            emit_expr(out, value, indent);
+            emit_expr(out, value, indent, env);
         }
         // SIR22 array/matrix expressions. This backend does not declare
         // `Feature::NDArrays`/`Feature::MatrixOps` in `ACCEPTED_FEATURES`
@@ -1350,12 +1362,12 @@ fn emit_var_ref(out: &mut String, name: &str, scope: Scope) {
     }
 }
 
-fn emit_args(out: &mut String, args: &[Expr], indent: usize) {
+fn emit_args(out: &mut String, args: &[Expr], indent: usize, env: &mut TypeEnv) {
     for (i, a) in args.iter().enumerate() {
         if i > 0 {
             out.push_str(", ");
         }
-        emit_arg(out, a, indent);
+        emit_arg(out, a, indent, env);
     }
 }
 
@@ -1375,23 +1387,23 @@ fn emit_args(out: &mut String, args: &[Expr], indent: usize) {
 /// `double_splat` only ever appears in keyword-argument position in the SIR the
 /// Ruby frontend produces, so `**h` lands where Python accepts it; it is never
 /// emitted into a list literal.)
-fn emit_arg(out: &mut String, a: &Expr, indent: usize) {
+fn emit_arg(out: &mut String, a: &Expr, indent: usize, env: &mut TypeEnv) {
     if let Expr::BuiltinCall { name, args, .. } = a {
         if name == "splat" && args.len() == 1 {
             out.push('*');
-            emit_expr(out, &args[0], indent);
+            emit_expr(out, &args[0], indent, env);
             return;
         }
         if name == "double_splat" && args.len() == 1 {
             out.push_str("**");
-            emit_expr(out, &args[0], indent);
+            emit_expr(out, &args[0], indent, env);
             return;
         }
     }
-    if try_emit_block_pass(out, a, indent) {
+    if try_emit_block_pass(out, a, indent, env) {
         return;
     }
-    emit_expr(out, a, indent);
+    emit_expr(out, a, indent, env);
 }
 
 /// Emit a `&expr` block-pass argument that survived frontend normalization
@@ -1409,15 +1421,15 @@ fn emit_arg(out: &mut String, a: &Expr, indent: usize) {
 /// Returns `true` when it handled a `block_pass` envelope (so the caller does
 /// not also `emit_expr` it).  A malformed envelope (not exactly one operand)
 /// is left for the generic path.
-fn try_emit_block_pass(out: &mut String, a: &Expr, indent: usize) -> bool {
+fn try_emit_block_pass(out: &mut String, a: &Expr, indent: usize, env: &mut TypeEnv) -> bool {
     if let Expr::BuiltinCall { name, args, .. } = a {
         if name == "block_pass" && args.len() == 1 {
             if let Expr::SymLit { .. } = &args[0] {
                 out.push_str("_sir_oop_sym_to_proc(");
-                emit_expr(out, &args[0], indent);
+                emit_expr(out, &args[0], indent, env);
                 out.push(')');
             } else {
-                emit_expr(out, &args[0], indent);
+                emit_expr(out, &args[0], indent, env);
             }
             return true;
         }
@@ -1425,7 +1437,13 @@ fn try_emit_block_pass(out: &mut String, a: &Expr, indent: usize) -> bool {
     false
 }
 
-fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize) {
+fn emit_builtin_call(
+    out: &mut String,
+    name: &str,
+    args: &[Expr],
+    indent: usize,
+    env: &mut TypeEnv,
+) {
     // Reflective method dispatch: the Ruby→SIR frontend lowers
     // `recv.meth(args…)` to `BuiltinCall("__method__", [recv, "meth",
     // args…])`.  Route it through the OOP runtime's `call_method`.  For
@@ -1435,7 +1453,7 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
     if name == "__method__" && args.len() >= 2 {
         if let Expr::StrLit { value: meth, .. } = &args[1] {
             out.push_str("_sir_oop_call_method(");
-            emit_expr(out, &args[0], indent);
+            emit_expr(out, &args[0], indent, env);
             let _ = write!(out, ", {}", quote_py_string(meth));
             let is_class_pred = matches!(meth.as_str(), "is_a?" | "kind_of?" | "instance_of?");
             for (i, a) in args[2..].iter().enumerate() {
@@ -1451,8 +1469,8 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
                     // A `&:sym` / `&proc` block argument on a dispatched call
                     // (`recv.map(&:to_s)`) survives as a `block_pass` envelope
                     // (Q9f only unwraps these at user-method DirectCalls).
-                    _ if try_emit_block_pass(out, a, indent) => {}
-                    _ => emit_expr(out, a, indent),
+                    _ if try_emit_block_pass(out, a, indent, env) => {}
+                    _ => emit_expr(out, a, indent, env),
                 }
             }
             out.push(')');
@@ -1476,13 +1494,13 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
     // for the method body), so a plain `emit_args` is correct and safe.
     if name == "__new__" && !args.is_empty() {
         out.push_str("_sir_oop_call_new(");
-        emit_args(out, args, indent);
+        emit_args(out, args, indent, env);
         out.push(')');
         return;
     }
     if name == "__super__" && args.len() >= 2 {
         out.push_str("_sir_oop_call_super(");
-        emit_args(out, args, indent);
+        emit_args(out, args, indent, env);
         out.push(')');
         return;
     }
@@ -1492,19 +1510,19 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
     // (`quote_py_string`), so no source-derived name is interpolated raw.
     if name == "__class_method__" && args.len() >= 2 {
         out.push_str("_sir_oop_call_class_method(");
-        emit_args(out, args, indent);
+        emit_args(out, args, indent, env);
         out.push(')');
         return;
     }
     if name == "__def_method__" && args.len() == 3 {
         out.push_str("_sir_oop_def_method(");
-        emit_args(out, args, indent);
+        emit_args(out, args, indent, env);
         out.push(')');
         return;
     }
     if name == "__def_class_method__" && args.len() == 3 {
         out.push_str("_sir_oop_def_class_method(");
-        emit_args(out, args, indent);
+        emit_args(out, args, indent, env);
         out.push(')');
         return;
     }
@@ -1518,13 +1536,13 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
     // RCE lesson).
     if name == "__include__" && args.len() == 2 {
         out.push_str("_sir_oop_include_module(");
-        emit_args(out, args, indent);
+        emit_args(out, args, indent, env);
         out.push(')');
         return;
     }
     if name == "__extend__" && args.len() == 2 {
         out.push_str("_sir_oop_extend_module(");
-        emit_args(out, args, indent);
+        emit_args(out, args, indent, env);
         out.push(')');
         return;
     }
@@ -1538,9 +1556,9 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
     // which dispatches Range→membership, Regexp→match, else `==`.
     if name == "case_eq" && args.len() == 2 {
         out.push_str("_sir_oop_case_eq(");
-        emit_expr(out, &args[0], indent);
+        emit_expr(out, &args[0], indent, env);
         out.push_str(", ");
-        emit_expr(out, &args[1], indent);
+        emit_expr(out, &args[1], indent, env);
         out.push(')');
         return;
     }
@@ -1564,12 +1582,12 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
                 out.push_str(&quote_py_string(cn));
                 if let Some(msg) = args.get(1) {
                     out.push_str(", ");
-                    emit_expr(out, msg, indent);
+                    emit_expr(out, msg, indent, env);
                 }
             }
             Some(other) => {
                 out.push_str("\"RuntimeError\", ");
-                emit_expr(out, other, indent);
+                emit_expr(out, other, indent, env);
             }
         }
         out.push(')');
@@ -1580,7 +1598,7 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
     // dedicated package's `compile`, gated by `uses_regex`.
     if name == "regex" {
         out.push_str("_sir_regex_compile(");
-        emit_args(out, args, indent);
+        emit_args(out, args, indent, env);
         out.push(')');
         return;
     }
@@ -1588,7 +1606,7 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
     // returning the command's stdout.  Gated by `uses_shell`.
     if name == "backtick" {
         out.push_str("_sir_shell_backtick(");
-        emit_args(out, args, indent);
+        emit_args(out, args, indent, env);
         out.push(')');
         return;
     }
@@ -1598,7 +1616,7 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
     // `uses_range`.
     if name == "range" {
         out.push_str("_sir_range(");
-        emit_args(out, args, indent);
+        emit_args(out, args, indent, env);
         out.push(')');
         return;
     }
@@ -1610,17 +1628,17 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
     // both operands and lose Ruby semantics).
     if name == "and" && args.len() == 2 {
         out.push_str("(lambda __l: (");
-        emit_expr(out, &args[1], indent);
+        emit_expr(out, &args[1], indent, env);
         out.push_str(") if _sir_truthy(__l) else __l)(");
-        emit_expr(out, &args[0], indent);
+        emit_expr(out, &args[0], indent, env);
         out.push(')');
         return;
     }
     if name == "or" && args.len() == 2 {
         out.push_str("(lambda __l: __l if _sir_truthy(__l) else (");
-        emit_expr(out, &args[1], indent);
+        emit_expr(out, &args[1], indent, env);
         out.push_str("))(");
-        emit_expr(out, &args[0], indent);
+        emit_expr(out, &args[0], indent, env);
         out.push(')');
         return;
     }
@@ -1628,13 +1646,13 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
     // operand-returning `not`).  `-x` (unary minus) → numeric negation.
     if name == "not" && args.len() == 1 {
         out.push_str("(not _sir_truthy(");
-        emit_expr(out, &args[0], indent);
+        emit_expr(out, &args[0], indent, env);
         out.push_str("))");
         return;
     }
     if name == "neg" && args.len() == 1 {
         out.push_str("(-(");
-        emit_expr(out, &args[0], indent);
+        emit_expr(out, &args[0], indent, env);
         out.push_str("))");
         return;
     }
@@ -1651,7 +1669,7 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
     // then raises, the analogue of Ruby's `ArgumentError`).
     if name == "lambda" && args.len() == 1 {
         out.push_str("_sir_as_lambda(");
-        emit_expr(out, &args[0], indent);
+        emit_expr(out, &args[0], indent, env);
         out.push(')');
         return;
     }
@@ -1699,6 +1717,42 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
         out.push_str(&quote_py_string(desc));
         return;
     }
+    // SIR21 T3c-3: type-directed operator selection. For the operators
+    // `resolve_binary` models (`+ - * < > <= >= == !=`), consult each
+    // operand's statically-known type (via `env`) *before* falling through
+    // to the generic runtime-dispatch table below. When both operands agree
+    // on a concrete numeric/comparable type, emit native Python infix —
+    // `+ - * < > <= >= == !=` are all valid identical spellings in Python,
+    // so no translation table is needed. `StrConcat` (string `+`) and
+    // `RuntimeDispatch` (anything `Dynamic`/mismatched) fall through to the
+    // existing helper-call path unchanged — this is safe because an
+    // untyped operand (today's universal case, absent a typed frontend
+    // reaching this backend — see the module doc comment) always resolves
+    // to `RuntimeDispatch`, so no existing program's output changes.
+    if args.len() == 2
+        && matches!(
+            name,
+            "+" | "-" | "*" | "<" | ">" | "<=" | ">=" | "==" | "!="
+        )
+    {
+        let lhs_ty = env.expr_type(&args[0]);
+        let rhs_ty = env.expr_type(&args[1]);
+        match resolve_binary(name, lhs_ty, rhs_ty) {
+            BinaryLowering::IntArith(_)
+            | BinaryLowering::FloatArith
+            | BinaryLowering::TypedCompare => {
+                out.push('(');
+                emit_expr(out, &args[0], indent, env);
+                let _ = write!(out, " {} ", name);
+                emit_expr(out, &args[1], indent, env);
+                out.push(')');
+                return;
+            }
+            BinaryLowering::StrConcat | BinaryLowering::RuntimeDispatch => {
+                // Fall through to the runtime-helper path below, unchanged.
+            }
+        }
+    }
     let helper = match name {
         "+" => "_sir_plus",
         "<<" => "_sir_shift_left",
@@ -1740,19 +1794,19 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
         "global_get" => "_sir_global_get",
         _ => {
             let _ = write!(out, "_sir_call_builtin({}, [", quote_py_string(name));
-            emit_args(out, args, indent);
+            emit_args(out, args, indent, env);
             out.push_str("])");
             return;
         }
     };
     let _ = write!(out, "{}(", helper);
-    emit_args(out, args, indent);
+    emit_args(out, args, indent, env);
     out.push(')');
 }
 
-fn emit_block_as_expr(out: &mut String, b: &Block, indent: usize) {
+fn emit_block_as_expr(out: &mut String, b: &Block, indent: usize, env: &mut TypeEnv) {
     if b.stmts.is_empty() {
-        emit_expr(out, &b.value, indent);
+        emit_expr(out, &b.value, indent, env);
         return;
     }
     // A block holding a loop in expression position cannot be expressed
@@ -1760,7 +1814,7 @@ fn emit_block_as_expr(out: &mut String, b: &Block, indent: usize) {
     // it is lifted to a nested `def` (queued in the hoist buffer) and
     // the call site emits `__block_N()`.
     if block_has_loop(b) {
-        emit_block_as_lifted_def(out, b, indent);
+        emit_block_as_lifted_def(out, b, indent, env);
         return;
     }
     // Otherwise: render the block as a left-to-right tuple of assignment
@@ -1772,19 +1826,42 @@ fn emit_block_as_expr(out: &mut String, b: &Block, indent: usize) {
     // - SeqSet `s[i] = v`         → `(s.__setitem__(i, v))` (returns None)
     // - MapSet `m[k] = v`         → `(m.__setitem__(k, v))`
     // - ExprStmt `e`              → `(e)` (value discarded)
+    //
+    // No new Python scope is opened here — the walrus operator binds in
+    // the *enclosing* scope, matching real Python semantics — so `env` is
+    // threaded through directly (never cloned). A `LetBinding`/
+    // `LetStarBinding` declares its name into `env` immediately after
+    // emitting its `(name := value)` arm, so a later element of the same
+    // tuple that references `name` sees its type (left-to-right emission
+    // order already matches evaluation order).
     out.push('(');
     for s in &b.stmts {
         match s {
-            Stmt::LetBinding { name, value, .. }
-            | Stmt::LetStarBinding { name, value, .. }
-            | Stmt::Assign {
+            Stmt::LetBinding {
+                name,
+                sir_type,
+                value,
+                ..
+            }
+            | Stmt::LetStarBinding {
+                name,
+                sir_type,
+                value,
+                ..
+            } => {
+                let _ = write!(out, "({} := ", sanitize_ident(name));
+                emit_expr(out, value, indent, env);
+                out.push_str("), ");
+                env.declare(name, sir_type.clone());
+            }
+            Stmt::Assign {
                 name,
                 scope: Scope::Local | Scope::Param | Scope::Capture,
                 value,
                 ..
             } => {
                 let _ = write!(out, "({} := ", sanitize_ident(name));
-                emit_expr(out, value, indent);
+                emit_expr(out, value, indent, env);
                 out.push_str("), ");
             }
             Stmt::Assign {
@@ -1794,34 +1871,34 @@ fn emit_block_as_expr(out: &mut String, b: &Block, indent: usize) {
                 ..
             } => {
                 let _ = write!(out, "(_globals.__setitem__({}, ", quote_py_string(name));
-                emit_expr(out, value, indent);
+                emit_expr(out, value, indent, env);
                 out.push_str(")), ");
             }
             Stmt::ExprStmt { expr, .. } => {
                 out.push('(');
-                emit_expr(out, expr, indent);
+                emit_expr(out, expr, indent, env);
                 out.push_str("), ");
             }
             Stmt::SeqSet {
                 seq, index, value, ..
             } => {
                 out.push('(');
-                emit_expr(out, seq, indent);
+                emit_expr(out, seq, indent, env);
                 out.push_str(".__setitem__(");
-                emit_expr(out, index, indent);
+                emit_expr(out, index, indent, env);
                 out.push_str(", ");
-                emit_expr(out, value, indent);
+                emit_expr(out, value, indent, env);
                 out.push_str(")), ");
             }
             Stmt::MapSet {
                 map, key, value, ..
             } => {
                 out.push('(');
-                emit_expr(out, map, indent);
+                emit_expr(out, map, indent, env);
                 out.push_str(".__setitem__(");
-                emit_expr(out, key, indent);
+                emit_expr(out, key, indent, env);
                 out.push_str(", ");
-                emit_expr(out, value, indent);
+                emit_expr(out, value, indent, env);
                 out.push_str(")), ");
             }
             // `@x = v` / `@@x = v` → OOP-store writes (return the value,
@@ -1833,7 +1910,7 @@ fn emit_block_as_expr(out: &mut String, b: &Block, indent: usize) {
                 ..
             } => {
                 let _ = write!(out, "(_sir_oop_ivar_set({}, ", quote_py_string(name));
-                emit_expr(out, value, indent);
+                emit_expr(out, value, indent, env);
                 out.push_str(")), ");
             }
             Stmt::Assign {
@@ -1843,7 +1920,7 @@ fn emit_block_as_expr(out: &mut String, b: &Block, indent: usize) {
                 ..
             } => {
                 let _ = write!(out, "(_sir_oop_cvar_set({}, ", quote_py_string(name));
-                emit_expr(out, value, indent);
+                emit_expr(out, value, indent, env);
                 out.push_str(")), ");
             }
             // `CONST = v` → walrus binding (the const name is a plain
@@ -1855,7 +1932,7 @@ fn emit_block_as_expr(out: &mut String, b: &Block, indent: usize) {
                 ..
             } => {
                 let _ = write!(out, "({} := ", sanitize_ident(name));
-                emit_expr(out, value, indent);
+                emit_expr(out, value, indent, env);
                 out.push_str("), ");
             }
             // Loops were diverted to the lifted-def path above.
@@ -1892,7 +1969,7 @@ fn emit_block_as_expr(out: &mut String, b: &Block, indent: usize) {
             }
         }
     }
-    emit_expr(out, &b.value, indent);
+    emit_expr(out, &b.value, indent, env);
     out.push_str(")[-1]");
 }
 
@@ -1900,7 +1977,7 @@ fn emit_block_as_expr(out: &mut String, b: &Block, indent: usize) {
 /// source is queued in the hoist buffer; emit `__block_N()` at the call
 /// site.  Used for expression-position blocks containing a loop, which
 /// cannot be inlined as a Python expression.
-fn emit_block_as_lifted_def(out: &mut String, b: &Block, indent: usize) {
+fn emit_block_as_lifted_def(out: &mut String, b: &Block, indent: usize, env: &mut TypeEnv) {
     let name = fresh_block_name();
     let pad = indent_str(indent);
     let mut def = String::new();
@@ -1915,23 +1992,30 @@ fn emit_block_as_lifted_def(out: &mut String, b: &Block, indent: usize) {
     for n in &nonlocals {
         let _ = writeln!(def, "{}nonlocal {}", inner_pad, sanitize_ident(n));
     }
+    // This `def` opens a *new* Python function scope, so clone `env`
+    // before recursing: any bindings introduced inside the lifted block
+    // must not leak back into the caller's environment once this function
+    // returns (matching real Python `def` scoping — the outer `env` is
+    // left unmodified).
+    let mut inner_env = env.clone();
     // Body statements, then `return <value>` — emitted via the normal
     // statement path so any further nested loops hoist correctly.
-    emit_block_as_stmts_with_return(&mut def, b, inner);
+    emit_block_as_stmts_with_return(&mut def, b, inner, &mut inner_env);
     HOIST.with(|h| h.borrow_mut().push(def));
     let _ = write!(out, "{}()", name);
 }
 
 /// Emit a block's statements followed by `return <value>` at `indent`
 /// (used for a lifted nested `def` body).
-fn emit_block_as_stmts_with_return(out: &mut String, b: &Block, indent: usize) {
+fn emit_block_as_stmts_with_return(out: &mut String, b: &Block, indent: usize, env: &mut TypeEnv) {
     for s in &b.stmts {
-        emit_stmt(out, s, indent);
+        emit_stmt(out, s, indent, env);
+        env.observe_stmt(s);
     }
     let pad = indent_str(indent);
     let mut tmp = String::new();
     let _ = write!(tmp, "{}return ", pad);
-    emit_expr(&mut tmp, &b.value, indent);
+    emit_expr(&mut tmp, &b.value, indent, env);
     tmp.push('\n');
     flush_hoist(out);
     out.push_str(&tmp);
@@ -1941,7 +2025,7 @@ fn emit_block_as_stmts_with_return(out: &mut String, b: &Block, indent: usize) {
 /// trailing value is discarded.  Each statement is emitted in order; a
 /// non-nil trailing value becomes an expression statement so its side
 /// effect still fires.  An otherwise-empty body emits `pass`.
-fn emit_block_as_stmts(out: &mut String, b: &Block, indent: usize) {
+fn emit_block_as_stmts(out: &mut String, b: &Block, indent: usize, env: &mut TypeEnv) {
     let pad = indent_str(indent);
     let has_value = !matches!(b.value, Expr::NilLit { .. });
     if b.stmts.is_empty() && !has_value {
@@ -1949,12 +2033,13 @@ fn emit_block_as_stmts(out: &mut String, b: &Block, indent: usize) {
         return;
     }
     for s in &b.stmts {
-        emit_stmt(out, s, indent);
+        emit_stmt(out, s, indent, env);
+        env.observe_stmt(s);
     }
     if has_value {
         let mut tmp = String::new();
         tmp.push_str(&pad);
-        emit_expr(&mut tmp, &b.value, indent);
+        emit_expr(&mut tmp, &b.value, indent, env);
         tmp.push('\n');
         flush_hoist(out);
         out.push_str(&tmp);
@@ -2223,7 +2308,9 @@ fn quote_py_string(s: &str) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use semantic_ir::{EffectSet, FeatureManifest, Metadata, Param, Span};
+    use semantic_ir::{
+        EffectSet, FeatureManifest, IntWidth, Metadata, Overflow, Param, SirType, Span,
+    };
 
     fn s() -> Span {
         Span::synthetic()
@@ -2564,7 +2651,7 @@ mod tests {
             span: s(),
         };
         let mut out = String::new();
-        emit_block_as_expr(&mut out, &b, 0);
+        emit_block_as_expr(&mut out, &b, 0, &mut TypeEnv::new());
         // Walrus form: ((x := 1), _sir_plus(x, 2))[-1]
         assert!(out.contains("(x := 1)"));
         assert!(out.contains("_sir_plus(x, 2)"));
@@ -2622,7 +2709,7 @@ mod tests {
         // Dog.new("Rex") → _sir_oop_call_new("Dog", "Rex").
         let e = builtin("__new__", vec![str_lit("Dog"), str_lit("Rex")]);
         let mut out = String::new();
-        emit_expr(&mut out, &e, 0);
+        emit_expr(&mut out, &e, 0, &mut TypeEnv::new());
         assert_eq!(out, r#"_sir_oop_call_new("Dog", "Rex")"#);
     }
 
@@ -2631,7 +2718,7 @@ mod tests {
         // super in Cat#describe → _sir_oop_call_super("describe", "Cat").
         let e = builtin("__super__", vec![str_lit("describe"), str_lit("Cat")]);
         let mut out = String::new();
-        emit_expr(&mut out, &e, 0);
+        emit_expr(&mut out, &e, 0, &mut TypeEnv::new());
         assert_eq!(out, r#"_sir_oop_call_super("describe", "Cat")"#);
     }
 
@@ -2649,7 +2736,7 @@ mod tests {
             vec![str_lit("Dog"), str_lit("speak"), closure],
         );
         let mut out = String::new();
-        emit_expr(&mut out, &e, 0);
+        emit_expr(&mut out, &e, 0, &mut TypeEnv::new());
         assert_eq!(
             out,
             r#"_sir_oop_def_method("Dog", "speak", _sir_make_closure(speak, []))"#
@@ -2668,7 +2755,7 @@ mod tests {
             vec![str_lit("Counter"), str_lit("zero"), closure],
         );
         let mut out = String::new();
-        emit_expr(&mut out, &e, 0);
+        emit_expr(&mut out, &e, 0, &mut TypeEnv::new());
         assert_eq!(
             out,
             r#"_sir_oop_def_class_method("Counter", "zero", _sir_make_closure(zero, []))"#
@@ -2679,7 +2766,7 @@ mod tests {
     fn oop_self_emits_current_self() {
         let e = builtin("__self__", vec![]);
         let mut out = String::new();
-        emit_expr(&mut out, &e, 0);
+        emit_expr(&mut out, &e, 0, &mut TypeEnv::new());
         assert_eq!(out, "_sir_oop_current_self()");
     }
 
@@ -2689,7 +2776,7 @@ mod tests {
         // → _sir_oop_include_module("Robot", "Greetable").
         let e = builtin("__include__", vec![str_lit("Robot"), str_lit("Greetable")]);
         let mut out = String::new();
-        emit_expr(&mut out, &e, 0);
+        emit_expr(&mut out, &e, 0, &mut TypeEnv::new());
         assert_eq!(out, r#"_sir_oop_include_module("Robot", "Greetable")"#);
     }
 
@@ -2699,7 +2786,7 @@ mod tests {
         // → _sir_oop_extend_module("Widget", "Counting").
         let e = builtin("__extend__", vec![str_lit("Widget"), str_lit("Counting")]);
         let mut out = String::new();
-        emit_expr(&mut out, &e, 0);
+        emit_expr(&mut out, &e, 0, &mut TypeEnv::new());
         assert_eq!(out, r#"_sir_oop_extend_module("Widget", "Counting")"#);
     }
 
@@ -2719,7 +2806,7 @@ mod tests {
             })],
         );
         let mut out = String::new();
-        emit_expr(&mut out, &e, 0);
+        emit_expr(&mut out, &e, 0, &mut TypeEnv::new());
         assert_eq!(
             out,
             r#"_sir_oop_call_method(arr, "map", _sir_oop_sym_to_proc(_sir_intern("to_s")))"#
@@ -2743,7 +2830,7 @@ mod tests {
             })],
         );
         let mut out = String::new();
-        emit_expr(&mut out, &e, 0);
+        emit_expr(&mut out, &e, 0, &mut TypeEnv::new());
         assert_eq!(out, r#"_sir_oop_call_method(arr, "each", p)"#);
     }
 
@@ -2758,7 +2845,175 @@ mod tests {
                 span: s(),
             }),
             0,
+            &mut TypeEnv::new(),
         );
         assert_eq!(out, r#"_sir_oop_sym_to_proc(_sir_intern("upcase"))"#);
+    }
+
+    // ── SIR21 T3c-3: op_select::resolve_binary / TypeEnv wiring ──────────────
+
+    fn i32_ty() -> SirType {
+        SirType::int(IntWidth::W32, true, Overflow::Wrap)
+    }
+
+    fn param_ref(name: &str) -> Expr {
+        Expr::VarRef {
+            name: name.into(),
+            scope: Scope::Param,
+            span: s(),
+        }
+    }
+
+    fn typed_param(name: &str, ty: Option<SirType>) -> Param {
+        Param {
+            name: name.into(),
+            sir_type: ty,
+            kind: ParamKind::Required,
+            default: None,
+            span: s(),
+        }
+    }
+
+    fn binary_call(op: &str, lhs: Expr, rhs: Expr) -> Expr {
+        Expr::BuiltinCall {
+            name: op.into(),
+            args: vec![lhs, rhs],
+            effects: EffectSet::PURE,
+            span: s(),
+        }
+    }
+
+    fn fn_with_body(params: Vec<Param>, value: Expr) -> Function {
+        Function {
+            name: "f".into(),
+            params,
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![],
+                value,
+                span: s(),
+            },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        }
+    }
+
+    #[test]
+    fn two_typed_int_params_plus_emits_native_infix() {
+        // Two matching-spec typed int params combined with `+` must emit
+        // native `(a + b)`, NOT the `_sir_plus(...)` runtime-dispatch call.
+        let f = fn_with_body(
+            vec![
+                typed_param("a", Some(i32_ty())),
+                typed_param("b", Some(i32_ty())),
+            ],
+            binary_call("+", param_ref("a"), param_ref("b")),
+        );
+        let mut out = String::new();
+        emit_function(&mut out, &f);
+        assert!(out.contains("return (a + b)"), "got:\n{out}");
+        assert!(!out.contains("_sir_plus"), "got:\n{out}");
+    }
+
+    #[test]
+    fn two_float_params_times_emits_native_infix() {
+        // Two `Float` params combined with `*` → native `(a * b)`.
+        let f = fn_with_body(
+            vec![
+                typed_param("a", Some(SirType::Float)),
+                typed_param("b", Some(SirType::Float)),
+            ],
+            binary_call("*", param_ref("a"), param_ref("b")),
+        );
+        let mut out = String::new();
+        emit_function(&mut out, &f);
+        assert!(out.contains("return (a * b)"), "got:\n{out}");
+        assert!(!out.contains("_sir_times"), "got:\n{out}");
+    }
+
+    #[test]
+    fn two_typed_int_params_lt_emits_native_infix() {
+        // Two matching-type params compared with `<` → native `(a < b)`.
+        let f = fn_with_body(
+            vec![
+                typed_param("a", Some(i32_ty())),
+                typed_param("b", Some(i32_ty())),
+            ],
+            binary_call("<", param_ref("a"), param_ref("b")),
+        );
+        let mut out = String::new();
+        emit_function(&mut out, &f);
+        assert!(out.contains("return (a < b)"), "got:\n{out}");
+        assert!(!out.contains("_sir_lt"), "got:\n{out}");
+    }
+
+    #[test]
+    fn two_str_params_plus_still_routes_through_runtime_helper() {
+        // `StrConcat` intentionally still routes through the existing
+        // runtime helper — wiring only changes the `IntArith`/`FloatArith`/
+        // `TypedCompare` branches. Pre-this-change, `+` always emitted
+        // `_sir_plus(a, b)` regardless of operand type (every operand was
+        // untyped); that exact string must be unchanged for a `Str` pair.
+        let f = fn_with_body(
+            vec![
+                typed_param("a", Some(SirType::Str)),
+                typed_param("b", Some(SirType::Str)),
+            ],
+            binary_call("+", param_ref("a"), param_ref("b")),
+        );
+        let mut out = String::new();
+        emit_function(&mut out, &f);
+        assert!(out.contains("return _sir_plus(a, b)"), "got:\n{out}");
+        assert!(!out.contains("(a + b)"), "got:\n{out}");
+    }
+
+    #[test]
+    fn typed_and_dynamic_param_plus_falls_back_to_runtime_dispatch() {
+        // One typed param + one untyped (Dynamic) param combined with `+`
+        // must still dispatch through the runtime helper — unchanged.
+        let f = fn_with_body(
+            vec![typed_param("a", Some(i32_ty())), typed_param("b", None)],
+            binary_call("+", param_ref("a"), param_ref("b")),
+        );
+        let mut out = String::new();
+        emit_function(&mut out, &f);
+        assert!(out.contains("return _sir_plus(a, b)"), "got:\n{out}");
+        assert!(!out.contains("(a + b)"), "got:\n{out}");
+    }
+
+    #[test]
+    fn walrus_block_let_binding_updates_env_for_later_native_infix() {
+        // A block-as-expression (walrus path): `let x = a; x + a`, where `a`
+        // is a typed int param already in `env`. This exercises the
+        // `env.declare` call `emit_block_as_expr`'s walrus arm makes after
+        // emitting `(x := a)`, so the later `x + a` resolves `x`'s type from
+        // `env` and goes native — the case most likely to be silently broken
+        // by an incomplete env-threading job.
+        let b = Block {
+            stmts: vec![Stmt::LetBinding {
+                name: "x".into(),
+                sir_type: Some(i32_ty()),
+                value: param_ref("a"),
+                span: s(),
+            }],
+            value: binary_call(
+                "+",
+                Expr::VarRef {
+                    name: "x".into(),
+                    scope: Scope::Local,
+                    span: s(),
+                },
+                param_ref("a"),
+            ),
+            span: s(),
+        };
+        let mut env = TypeEnv::new();
+        env.declare("a", Some(i32_ty()));
+        let mut out = String::new();
+        emit_block_as_expr(&mut out, &b, 0, &mut env);
+        assert!(out.contains("(x + a)"), "got: {out}");
+        assert!(!out.contains("_sir_plus"), "got: {out}");
     }
 }

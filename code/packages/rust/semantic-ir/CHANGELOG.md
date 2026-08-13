@@ -2,6 +2,30 @@
 
 All notable changes to the `semantic-ir` crate are documented here.
 
+## 0.25.1 — Doc-comment corrections: `op_select`/`type_env` are now consulted (SIR21 T3c-3)
+
+No code change. `semantic-ir-to-python` (see that crate's own changelog)
+is now the first backend to build a `type_env::TypeEnv` and consult
+`op_select::resolve_binary`, which made two module doc-comment claims in
+this crate stale:
+
+- `type_env`'s module doc said "Not yet consulted by any backend. No
+  frontend populates `sir_type` on any node today (every operand is
+  `Dynamic`)" — both halves were already inaccurate before this PR
+  (`c-to-semantic-ir` has populated `Param`/`Stmt::LetStarBinding`
+  `sir_type` for a while) and the "not yet consulted" half is now false
+  too. Rewritten to state accurately: `semantic-ir-to-python` is the
+  first consulting backend; `c-to-semantic-ir` is the first (and only)
+  populating frontend; but its typed output cannot reach
+  `semantic-ir-to-python` end-to-end yet because that backend does not
+  declare `Feature::Conversions` in `ACCEPTED_FEATURES` (only
+  `semantic-ir-to-c`/`semantic-ir-to-ruby` do) — the validator rejects
+  any such module before emission. That gap is tracked separately, not
+  fixed here.
+- `op_select`'s module doc had the matching stale claim ("as *every*
+  operand is in the current fully-dynamic pipeline") — corrected the
+  same way, consistent with the `type_env` fix.
+
 ## 0.25.0 — `Feature::ConsoleIO` + `__sys_write__` structural validation (SIR28)
 
 Core-IR slice of the SIR28 syscall-primitive arc (see
