@@ -18,6 +18,14 @@
   stream using the cheaper form — which a run of identical bytes reliably
   produces — was rejected as an invalid length symbol.
 
+- `rawInflateCounted(data, maxOutput?)` returns the output **and** how many
+  input bytes the stream actually used. DEFLATE announces its own end with
+  BFINAL, so a stream can finish well before the region its container allotted
+  it, and a plain inflate never reports the gap. A format that knows where its
+  compressed data should stop — PNG's `IDAT` before its Adler-32, gzip before
+  its CRC — needs that number to refuse the difference, which is otherwise free
+  carriage inside a file every tool calls valid.
+
 ### Changed
 
 - The fixed and dynamic block bodies now share one `decodeHuffmanBlock` routine
@@ -77,7 +85,7 @@
 - Cap behaviour: a caller-supplied ceiling, a stored block hitting it, a
   nonsensical ceiling rejected rather than ignored, and a 500:1 zlib-built bomb
   stopped at the stated byte count.
-- 58 tests; 98% line coverage. The clamp regression is verified adversarially:
+- 62 tests; 98% line coverage. The clamp regression is verified adversarially:
   with the `Math.min` removed it fails, which is the only way to know a guard
   test is testing the guard.
 

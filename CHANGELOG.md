@@ -66,6 +66,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   itself: Node's zlib inflates our `IDAT`, and the decoder reads PNGs assembled
   by hand from RFC 2083. The output was confirmed readable by `file`, macOS
   `sips` and Python's `zlib`.
+- Refuses four shapes of file that decode to exactly the right image while
+  carrying bytes the image does not need: a payload inside `IEND`, anything
+  after `IEND`, a chunk wedged between two `IDAT`s, and the `IDAT` cavity —
+  the dead space between where the DEFLATE stream announces its own end and
+  where the Adler-32 begins. The picture is identical either way, which is
+  exactly why tolerating them makes a valid-looking PNG into free carriage.
+- Caps the total pixel count, not just each edge: 16384 x 16384 passes an edge
+  cap and is 268 million pixels, roughly 3 GiB of peak allocation for about a
+  megabyte of input. BMP survives on an edge cap because its pixels have to be
+  in the file; PNG amplifies, and that is the whole difference.
+- `zip` gains `rawInflateCounted`, which reports how many input bytes a stream
+  actually used. Without it the `IDAT` cavity is undetectable.
 - Adds `IC18-image-codec-png.md`. PNG had fallen out of the IC series
   entirely: IC00's roadmap reserved IC04 for it, that number went to JPEG, and
   the table was never corrected — while IC08 (ICO) still names PNG as a

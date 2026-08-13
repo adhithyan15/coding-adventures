@@ -133,8 +133,23 @@ mis-reads a palette image is worse than one that says it cannot read it.
 - Every chunk CRC and the trailing Adler-32 are verified.
 - A chunk's declared length is checked against the file size **before** any
   arithmetic uses it.
-- Each edge is capped at 16,384 pixels, because `IHDR` is eight attacker-chosen
-  bytes and `width × height × 4` is allocated on their word.
+- Each edge is capped at 16,384 pixels **and the total at 64 mebipixels**,
+  because `IHDR` is eight attacker-chosen bytes and `width × height × 4` is
+  allocated on their word. An edge cap alone is not enough: 16384 × 16384 sits
+  inside it and is 268 million pixels, roughly 3 GiB of peak allocation — which
+  at DEFLATE's 1032:1 costs the attacker about a megabyte. BMP survives on an
+  edge cap because its pixels have to *be* in the file; PNG compresses, and that
+  amplification is the whole difference. Lower it with
+  `decodePng(bytes, { maxPixels })` or `new PngCodec({ maxPixels })`.
+- **`IEND` must be empty and last, `IDAT` chunks must be consecutive, and the
+  compressed data must end exactly where the Adler-32 begins.** Each of those
+  describes a file that decodes to precisely the right image while carrying
+  bytes the image does not need. The picture is identical either way, which is
+  why tolerating them turns a valid-looking PNG into free carriage: a scanner
+  that renders the image sees nothing wrong. The last one is the *`IDAT`
+  cavity* — DEFLATE announces its own end with BFINAL, so a stream can stop
+  early and everything up to the checksum is dead space a decoder asking only
+  for pixels never looks at.
 - Inflation is capped at **exactly** the size `IHDR` promises. DEFLATE's
   expansion ratio reaches 1032:1, so an uncapped inflate of a hostile `IDAT` is
   a denial-of-service with a few hundred kilobytes of input.
@@ -165,6 +180,6 @@ npx vitest run --coverage
 | Symbol | Description |
 |---|---|
 | `encodePng(pixels)` | `PixelContainer` → 8-bit RGBA PNG bytes |
-| `decodePng(bytes)` | PNG bytes → `PixelContainer` |
-| `PngCodec` | `ImageCodec` implementation, mime type `image/png` |
+| `decodePng(bytes, opts?)` | PNG bytes → `PixelContainer`. `opts.maxPixels` lowers the ceiling. |
+| `PngCodec` | `ImageCodec` implementation, mime type `image/png`. Takes the same options. |
 | `adler32(data)` | RFC 1950 checksum, exported because it is testable alone |

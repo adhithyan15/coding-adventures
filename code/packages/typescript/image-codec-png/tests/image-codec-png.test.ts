@@ -12,7 +12,7 @@
  */
 
 import { describe, it, expect } from "vitest";
-import { deflateSync, inflateSync } from "node:zlib";
+import { deflateSync, deflateRawSync, inflateSync } from "node:zlib";
 import {
   createPixelContainer,
   setPixel,
@@ -524,5 +524,138 @@ describe("encodePng rejections", () => {
   it("rejects a data array that disagrees with the dimensions", () => {
     expect(() => encodePng({ width: 4, height: 4, data: new Uint8Array(10) }))
       .toThrow(/pixel data is 10 bytes/);
+  });
+});
+
+// --- The total-pixel ceiling -------------------------------------------------
+//
+// A per-EDGE cap is not enough for a compressed format, and PNG is where that
+// stops being a theoretical distinction. 16384x16384 passes the edge cap and is
+// 268 million pixels -- roughly 3 GiB of peak allocation -- and DEFLATE's 1032:1
+// ratio means about one megabyte of input buys it. BMP survives on an edge cap
+// alone only because its pixels have to BE in the file.
+
+describe("total-pixel ceiling", () => {
+  /** An IHDR-only PNG claiming a size, with no IDAT: the header is the payload. */
+  function headerClaiming(w: number, h: number): Uint8Array {
+    return new Uint8Array([
+      ...SIGNATURE,
+      ...chunk("IHDR", [...u32be(w), ...u32be(h), 8, 6, 0, 0, 0]),
+      ...chunk("IEND", []),
+    ]);
+  }
+
+  it("rejects a 16384x16384 header, which is inside the per-edge cap", () => {
+    // Both edges are exactly at MAX_DIMENSION, so only the pixel-count check
+    // can stop this one.
+    expect(() => decodePng(headerClaiming(16384, 16384)))
+      .toThrow(/pixels, above the limit/);
+  });
+
+  it("rejects before allocating anything derived from the dimensions", () => {
+    // No IDAT at all: if the size were used before being checked, the failure
+    // would be an allocation rather than this message.
+    expect(() => decodePng(headerClaiming(16384, 16384)))
+      .toThrow(/268435456 pixels/);
+  });
+
+  it("honours a caller-supplied ceiling", () => {
+    const png = encodePng(sampleImage(10, 10));
+    expect(() => decodePng(png, { maxPixels: 99 })).toThrow(/above the limit of 99/);
+    expect(decodePng(png, { maxPixels: 100 }).width).toBe(10);
+  });
+
+  it("rejects a nonsensical ceiling rather than ignoring it", () => {
+    const png = encodePng(sampleImage(2, 2));
+    expect(() => decodePng(png, { maxPixels: 0 })).toThrow(/positive finite/);
+    expect(() => decodePng(png, { maxPixels: -1 })).toThrow(/positive finite/);
+    expect(() => decodePng(png, { maxPixels: Infinity })).toThrow(/positive finite/);
+    expect(() => decodePng(png, { maxPixels: Number.NaN })).toThrow(/positive finite/);
+  });
+
+  it("carries the ceiling through PngCodec, the shared interface", () => {
+    // ImageCodec.decode takes only bytes, so the option has to live on the
+    // codec instance or an embedder cannot express its budget at all.
+    const png = encodePng(sampleImage(10, 10));
+    expect(() => new PngCodec({ maxPixels: 50 }).decode(png)).toThrow(/above the limit/);
+    expect(new PngCodec().decode(png).width).toBe(10);
+  });
+});
+
+// --- Framing rules that keep a valid-looking PNG from carrying passengers ----
+//
+// Each of these describes a file that decodes to exactly the right image while
+// containing bytes the image does not need. That combination is the point: the
+// picture is identical either way, so nothing downstream notices, which is
+// precisely why the decoder has to refuse rather than tolerate.
+
+describe("framing rules", () => {
+  const ihdr = chunk("IHDR", [...u32be(1), ...u32be(1), 8, 6, 0, 0, 0]);
+  const okIdat = Array.from(deflateSync(Buffer.from([0, 1, 2, 3, 4])));
+
+  it("rejects bytes after IEND", () => {
+    const png = new Uint8Array([
+      ...SIGNATURE, ...ihdr, ...chunk("IDAT", okIdat), ...chunk("IEND", []),
+      0xde, 0xad, 0xbe, 0xef,
+    ]);
+    expect(() => decodePng(png)).toThrow(/4 bytes follow IEND/);
+  });
+
+  it("rejects a non-empty IEND", () => {
+    const png = new Uint8Array([
+      ...SIGNATURE, ...ihdr, ...chunk("IDAT", okIdat), ...chunk("IEND", [1, 2, 3, 4]),
+    ]);
+    expect(() => decodePng(png)).toThrow(/IEND must be empty/);
+  });
+
+  it("rejects IDAT chunks separated by another chunk", () => {
+    // RFC 2083 requires the IDATs to be consecutive. They are one stream cut
+    // into pieces; a chunk wedged between them is corruption or a passenger.
+    const png = new Uint8Array([
+      ...SIGNATURE, ...ihdr,
+      ...chunk("IDAT", okIdat.slice(0, 4)),
+      ...chunk("tEXt", [65, 66]),
+      ...chunk("IDAT", okIdat.slice(4)),
+      ...chunk("IEND", []),
+    ]);
+    expect(() => decodePng(png)).toThrow(/not consecutive/);
+  });
+
+  it("rejects unused bytes between the compressed data and its Adler-32", () => {
+    // The IDAT cavity. DEFLATE announces its own end with BFINAL, so a stream
+    // can stop early and everything up to the checksum is dead space that a
+    // decoder asking only for pixels never looks at.
+    const filtered = new Uint8Array([0, 9, 8, 7, 6]);
+    const raw = Array.from(deflateRawSync(filtered, { level: 9 }));
+    let a = 1, b = 0;
+    for (const byte of filtered) { a = (a + byte) % 65521; b = (b + a) % 65521; }
+    const adler = ((b << 16) | a) >>> 0;
+    const cavity = [0x41, 0x41, 0x41, 0x41, 0x41, 0x41, 0x41, 0x41]; // "AAAAAAAA"
+
+    const withCavity = new Uint8Array([
+      ...SIGNATURE, ...ihdr,
+      ...chunk("IDAT", [0x78, 0x9c, ...raw, ...cavity, ...u32be(adler)]),
+      ...chunk("IEND", []),
+    ]);
+    expect(() => decodePng(withCavity)).toThrow(/unused bytes/);
+
+    // The identical file without the cavity decodes, so the rejection is about
+    // the passengers and not about anything else in the construction.
+    const clean = new Uint8Array([
+      ...SIGNATURE, ...ihdr,
+      ...chunk("IDAT", [0x78, 0x9c, ...raw, ...u32be(adler)]),
+      ...chunk("IEND", []),
+    ]);
+    expect(pixelAt(decodePng(clean), 0, 0)).toEqual([9, 8, 7, 6]);
+  });
+
+  it("still accepts many zero-length ancillary chunks without stalling", () => {
+    // The walk must always advance: a zero-length chunk is legal and common.
+    const many: number[] = [];
+    for (let i = 0; i < 2000; i++) many.push(...chunk("tEXt", []));
+    const png = new Uint8Array([
+      ...SIGNATURE, ...ihdr, ...many, ...chunk("IDAT", okIdat), ...chunk("IEND", []),
+    ]);
+    expect(decodePng(png).width).toBe(1);
   });
 });

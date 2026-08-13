@@ -132,7 +132,7 @@ import {
   type ImageCodec,
   createPixelContainer,
 } from "@coding-adventures/pixel-container";
-import { crc32, rawDeflate, rawInflate } from "@coding-adventures/zip";
+import { crc32, rawDeflate, rawInflateCounted } from "@coding-adventures/zip";
 
 export { type PixelContainer, type ImageCodec };
 
@@ -141,13 +141,41 @@ export { type PixelContainer, type ImageCodec };
 // ============================================================================
 
 /**
- * Largest edge this codec will decode.
+ * Largest edge this codec will decode. The same ceiling as `image-codec-bmp`.
  *
  * A PNG header is eight bytes of attacker-controlled integers claiming a size,
- * and `width * height * 4` is allocated on the strength of it. The same ceiling
- * as `image-codec-bmp`, for the same reason.
+ * and `width * height * 4` is allocated on the strength of it.
  */
 const MAX_DIMENSION = 16384;
+
+/**
+ * Largest total pixel count this codec will decode. 64 mebipixels, which is a
+ * 256 MiB RGBA buffer.
+ *
+ * A per-edge cap alone is not enough, and PNG is where that stops being a
+ * theoretical distinction. 16384 x 16384 is within the edge cap and is 268
+ * million pixels: a 1 GiB container, a 1 GiB filtered buffer, and a transient
+ * second copy of the latter while it is sliced to size -- about 3 GiB peak.
+ *
+ * BMP could survive on the edge cap because its pixels have to BE in the file:
+ * demanding a gigabyte of memory costs a gigabyte of upload. PNG compresses,
+ * and DEFLATE's ratio reaches 1032:1, so the same demand costs about **one
+ * megabyte**. The amplification is the whole difference, and it is why this
+ * second ceiling exists here and not there.
+ */
+const MAX_PIXELS = 64 * 1024 * 1024;
+
+/** Options for {@link decodePng}. */
+export interface DecodePngOptions {
+  /**
+   * Largest total pixel count to accept, defaulting to {@link MAX_PIXELS}.
+   *
+   * Lower it whenever you know roughly how big the images should be -- a
+   * library reading files from strangers cannot know its embedder's budget.
+   * Must be a positive finite number.
+   */
+  maxPixels?: number;
+}
 
 /** PNG's fixed opening bytes. See the header comment for why each one is there. */
 const SIGNATURE = new Uint8Array([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
@@ -348,16 +376,24 @@ function pushChunk(out: number[], type: string, data: Uint8Array): void {
 // PngCodec
 // ============================================================================
 
-/** PNG image encoder and decoder implementing the `ImageCodec` interface. */
+/**
+ * PNG image encoder and decoder implementing the `ImageCodec` interface.
+ *
+ * `ImageCodec.decode` takes only the bytes, so a codec constructed with a
+ * tighter `maxPixels` carries it for every call. That is the only way an
+ * embedder can express its own budget through the shared interface.
+ */
 export class PngCodec implements ImageCodec {
   readonly mimeType = "image/png";
+
+  constructor(private readonly options: DecodePngOptions = {}) {}
 
   encode(pixels: PixelContainer): Uint8Array {
     return encodePng(pixels);
   }
 
   decode(bytes: Uint8Array): PixelContainer {
-    return decodePng(bytes);
+    return decodePng(bytes, this.options);
   }
 }
 
@@ -456,7 +492,11 @@ export function encodePng(pixels: PixelContainer): Uint8Array {
  * const pixels = decodePng(pngBytes);
  * pixels.width; pixels.height; pixels.data;
  */
-export function decodePng(bytes: Uint8Array): PixelContainer {
+export function decodePng(bytes: Uint8Array, options: DecodePngOptions = {}): PixelContainer {
+  const maxPixels = options.maxPixels ?? MAX_PIXELS;
+  if (!Number.isFinite(maxPixels) || maxPixels <= 0) {
+    throw new Error("PNG: maxPixels must be a positive finite number");
+  }
   if (bytes.length < SIGNATURE.length) throw new Error("PNG: file too short");
   for (let i = 0; i < SIGNATURE.length; i++) {
     if (bytes[i] !== SIGNATURE[i]) throw new Error("PNG: invalid signature");
@@ -469,6 +509,10 @@ export function decodePng(bytes: Uint8Array): PixelContainer {
   let sawIHDR = false;
   let sawIEND = false;
   const idatParts: Uint8Array[] = [];
+  // Tracks the IDAT run: once it has started and then stopped, no further IDAT
+  // may appear.
+  let inIdat = false;
+  let idatEnded = false;
 
   let pos = SIGNATURE.length;
   while (pos < bytes.length) {
@@ -511,6 +555,14 @@ export function decodePng(bytes: Uint8Array): PixelContainer {
       if (width > MAX_DIMENSION || height > MAX_DIMENSION) {
         throw new Error(`PNG: dimensions ${width}x${height} exceed maximum ${MAX_DIMENSION}`);
       }
+      // Checked here, before anything derived from the dimensions is computed
+      // or allocated. Both operands are already below 16384, so the product
+      // cannot leave the exactly-representable range.
+      if (width * height > maxPixels) {
+        throw new Error(
+          `PNG: ${width}x${height} is ${width * height} pixels, above the limit of ${maxPixels}`,
+        );
+      }
       if (compression !== 0) throw new Error(`PNG: unsupported compression method ${compression}`);
       if (filterMethod !== 0) throw new Error(`PNG: unsupported filter method ${filterMethod}`);
       if (interlace !== 0) throw new Error("PNG: Adam7 interlacing is not supported");
@@ -524,8 +576,21 @@ export function decodePng(bytes: Uint8Array): PixelContainer {
       sawIHDR = true;
     } else if (type === "IDAT") {
       if (!sawIHDR) throw new Error("PNG: IDAT before IHDR");
+      // RFC 2083: multiple IDATs "shall appear consecutively with no other
+      // intervening chunks". They are one stream cut into pieces, so a chunk
+      // between them is either corruption or someone using the gap.
+      if (idatEnded) throw new Error("PNG: IDAT chunks are not consecutive");
       idatParts.push(data);
+      inIdat = true;
     } else if (type === "IEND") {
+      // IEND is defined as empty and as the LAST chunk. Both are checked, and
+      // both are checked because a decoder that stops reading at IEND and looks
+      // no further turns the rest of the file into free carriage: bytes that
+      // travel inside something every tool calls a valid PNG.
+      if (length !== 0) throw new Error(`PNG: IEND must be empty, got ${length} bytes`);
+      if (dataEnd + 4 !== bytes.length) {
+        throw new Error(`PNG: ${bytes.length - (dataEnd + 4)} bytes follow IEND`);
+      }
       sawIEND = true;
       pos = dataEnd + 4;
       break;
@@ -537,6 +602,11 @@ export function decodePng(bytes: Uint8Array): PixelContainer {
     }
     // Anything else is ancillary (lowercase) -- gAMA, pHYs, tEXt and so on --
     // and is skipped by design.
+
+    if (type !== "IDAT" && inIdat) {
+      inIdat = false;
+      idatEnded = true;
+    }
 
     pos = dataEnd + 4;
   }
@@ -573,9 +643,23 @@ export function decodePng(bytes: Uint8Array): PixelContainer {
   // The cap is the exact size the header promises, so a bomb inside IDAT is
   // stopped at the size this image could possibly need rather than at a
   // generic ceiling.
-  const filtered = rawInflate(zlib.subarray(2, zlib.length - 4), expected);
+  const deflateStream = zlib.subarray(2, zlib.length - 4);
+  const { output: filtered, bytesConsumed } = rawInflateCounted(deflateStream, expected);
   if (filtered.length !== expected) {
     throw new Error(`PNG: decompressed ${filtered.length} bytes, expected ${expected}`);
+  }
+  // DEFLATE says where it ends -- the last block sets BFINAL -- so a stream can
+  // finish well before the Adler-32 that follows it, and everything in between
+  // is ignored by a decoder that only asks for the pixels. That gap is a place
+  // to hide things: a scanner that unpacks the image sees nothing while the
+  // bytes ride along inside a file every tool calls a valid PNG. The image is
+  // identical either way, which is exactly why it has to be rejected rather
+  // than tolerated.
+  if (bytesConsumed !== deflateStream.length) {
+    throw new Error(
+      `PNG: ${deflateStream.length - bytesConsumed} unused bytes between the ` +
+      `compressed data and its checksum`,
+    );
   }
 
   const declaredAdler =

@@ -78,8 +78,15 @@ Three chunk types are required:
 | Type | Position | Meaning |
 |---|---|---|
 | `IHDR` | first, exactly one | 13 bytes: dimensions and pixel format |
-| `IDAT` | one or more, consecutive | the zlib stream, possibly split |
-| `IEND` | last, empty | terminator |
+| `IDAT` | one or more, **consecutive** | the zlib stream, possibly split |
+| `IEND` | **last**, **empty** | terminator |
+
+Those emphases are normative and a decoder MUST enforce all three. Each
+describes a file that decodes to exactly the right image while carrying bytes
+the image does not need -- an intervening chunk between two `IDAT`s, a payload
+inside `IEND`, or anything after `IEND`. The picture is identical either way,
+which is why tolerating them turns a valid-looking PNG into free carriage: a
+scanner that renders the image sees nothing wrong.
 
 **Chunk type case is a bitfield.** Bit 5 of each of the four letters is a flag,
 and the first letter's is the one that matters here: uppercase means **critical**,
@@ -141,6 +148,15 @@ deliberately so: the chunk CRC already does the real integrity work.
 **Multiple `IDAT` chunks are one stream.** A split may fall anywhere, including
 mid-symbol, so a decoder MUST concatenate all `IDAT` data before parsing any of
 it.
+
+**The compressed data MUST end exactly where the Adler-32 begins.** DEFLATE
+announces its own end -- the last block sets BFINAL -- so a stream can finish
+well before the checksum after it, and a decoder that only asks for the pixels
+never looks at the gap. That gap is the `IDAT` cavity, and it is the same
+carriage problem as the chunk rules above, one layer down. A decoder MUST
+compare the bytes its inflater actually consumed against the length of the
+region and reject any difference. This requires an inflate that reports its
+consumption; CMP09 exports `raw_inflate_counted` for exactly this.
 
 ---
 
@@ -277,9 +293,19 @@ mis-reads a palette image is worse than one that says it cannot read it:
 
 PNG is a format a program reads from strangers, so these are normative.
 
-1. **Bound the dimensions.** `IHDR` is eight attacker-chosen bytes and
-   `width * height * channels` is allocated on their word. A port MUST cap each
-   edge; 16384 matches IC01.
+1. **Bound the dimensions -- both edges AND the product.** `IHDR` is eight
+   attacker-chosen bytes and `width * height * channels` is allocated on their
+   word. A per-edge cap alone is not enough: 16384 x 16384 sits inside a 16384
+   edge cap and is 268 million pixels, about 3 GiB once the container, the
+   filtered buffer and the transient copy made while sizing it are counted.
+   A port MUST cap the edges (16384, matching IC01) AND the total pixel count
+   (64 mebipixels, a 256 MiB RGBA buffer), and SHOULD let the caller lower the
+   latter.
+
+   This is where PNG parts company with BMP. BMP survives on an edge cap because
+   its pixels have to BE in the file, so demanding a gigabyte of memory costs a
+   gigabyte of upload. PNG compresses, and at DEFLATE's 1032:1 the same demand
+   costs about one megabyte. The amplification is the whole difference.
 2. **Cap decompression at the header's own promise.** The inflate call MUST be
    given `height * (width * channels + 1)` as its ceiling. DEFLATE's expansion
    ratio reaches 1032:1, so an unbounded inflate of a hostile `IDAT` is a
@@ -319,6 +345,11 @@ PngCodec implements ImageCodec # mime type "image/png"
 | inflated length != the header's promise | error |
 | Adler-32 mismatch | error |
 | filter byte above 4 | error naming the value |
+| bytes after `IEND` | error naming the count |
+| non-empty `IEND` | error |
+| non-consecutive `IDAT` chunks | error |
+| unused bytes between the DEFLATE stream and the Adler-32 | error naming the count |
+| pixel count above the cap | error naming both numbers |
 | encoding a 0-pixel image | error |
 | encoding data of the wrong length | error naming both lengths |
 

@@ -10,6 +10,7 @@ import {
   crc32,
   rawDeflate,
   rawInflate,
+  rawInflateCounted,
   dosDatetime,
   DOS_EPOCH,
   ZipWriter,
@@ -804,5 +805,47 @@ describe("ZipReaderOptions.maxOutput is validated where it enters", () => {
     const stored = zipBytes([["a.txt", enc.encode("hello")]], false);
     const reader = new ZipReader(stored, { maxOutput: 0 });
     expect(dec.decode(reader.readByName("a.txt"))).toBe("hello");
+  });
+});
+
+describe("rawInflateCounted reports where the stream actually ended", () => {
+  it("consumes exactly its own output's stream", () => {
+    const data = enc.encode("hello hello hello hello");
+    const stream = rawDeflate(data);
+    const { output, bytesConsumed } = rawInflateCounted(stream);
+    expect(output).toEqual(data);
+    expect(bytesConsumed).toBe(stream.length);
+  });
+
+  it("reports the boundary when bytes follow the stream", () => {
+    // DEFLATE announces its own end with BFINAL, so anything after it is dead
+    // space a plain inflate never looks at. A container that knows where its
+    // compressed data should stop -- PNG before its Adler-32, gzip before its
+    // CRC -- needs this number to refuse the difference.
+    const data = enc.encode("payload");
+    const stream = rawDeflate(data);
+    const padded = new Uint8Array(stream.length + 8);
+    padded.set(stream);
+    padded.fill(0x41, stream.length); // "AAAAAAAA" riding along
+
+    const { output, bytesConsumed } = rawInflateCounted(padded);
+    expect(output).toEqual(data);
+    expect(bytesConsumed).toBe(stream.length);
+    expect(padded.length - bytesConsumed).toBe(8);
+  });
+
+  it("counts a partially-read final byte as consumed", () => {
+    // A stream almost never ends on a byte boundary. The last byte is partly
+    // padding, and the reader can never un-see it, so it counts.
+    const stream = rawDeflate(enc.encode("x"));
+    const { bytesConsumed } = rawInflateCounted(stream);
+    expect(bytesConsumed).toBe(stream.length);
+  });
+
+  it("agrees with rawInflate on the output", () => {
+    const data = new Uint8Array(2000);
+    for (let i = 0; i < data.length; i++) data[i] = (i * 13) & 0xff;
+    const foreign = new Uint8Array(deflateRawSync(data));
+    expect(rawInflateCounted(foreign).output).toEqual(rawInflate(foreign));
   });
 });

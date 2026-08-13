@@ -38,15 +38,23 @@ one that says it cannot read it.
 - Every chunk CRC-32 and the trailing Adler-32 are verified.
 - A chunk's declared length is checked against the file size **before** any
   arithmetic uses it.
-- Each edge is capped at 16,384 pixels (matching IC01), because `IHDR` is eight
-  attacker-chosen bytes and `width × height × 4` is allocated on their word.
+- Each edge is capped at 16,384 pixels (matching IC01) **and the total pixel
+  count at 64 mebipixels**, configurable via `maxPixels`. An edge cap alone is
+  not enough: 16384 × 16384 passes it and is 268 million pixels, about 3 GiB of
+  peak allocation for roughly a megabyte of input. BMP survives on an edge cap
+  because its pixels must be present in the file; PNG amplifies.
+- `IEND` must be empty and last, `IDAT` chunks must be consecutive, and the
+  DEFLATE stream must end exactly where the Adler-32 begins. Each violation
+  yields a file that decodes to the right image while carrying bytes the image
+  does not need — the last being the `IDAT` cavity, since DEFLATE announces its
+  own end and a decoder asking only for pixels never inspects the remainder.
 - Inflation is capped at exactly the size `IHDR` promises, so a bomb inside
   `IDAT` is stopped at the only size the image could possibly need. DEFLATE's
   expansion ratio reaches 1032:1.
 
 ### Tests
 
-45 tests. Round-trip tests only prove the encoder and decoder agree with each
+55 tests. Round-trip tests only prove the encoder and decoder agree with each
 other, so the suite also tests against foreign implementations:
 
 - the encoder's `IDAT` is inflated with **Node's zlib** and its scanline count

@@ -156,6 +156,22 @@ class BitReader {
       this.bits -= discard;
     }
   }
+
+  /**
+   * How many bytes of the input the stream has actually reached.
+   *
+   * `pos` counts bytes pulled INTO the bit buffer, some of whose bits may still
+   * be unread, so whole unread bytes are subtracted back off. A partially-read
+   * byte counts as consumed, because the reader can never un-see it.
+   *
+   * Callers use this to ask "did the compressed data end where the container
+   * said it would?" -- a question a format like PNG or gzip has to be able to
+   * answer, because the bytes between the end of a DEFLATE stream and the
+   * checksum after it are a place to hide things.
+   */
+  bytesConsumed(): number {
+    return this.pos - (this.bits >> 3);
+  }
 }
 
 // =============================================================================
@@ -536,6 +552,37 @@ export function rawDeflate(data: Uint8Array): Uint8Array {
  * rawInflate(untrusted, 1 << 20);           // refuse anything over 1 MB
  */
 export function rawInflate(data: Uint8Array, maxOutput?: number): Uint8Array {
+  return deflateDecompress(data, maxOutput).output;
+}
+
+/** What {@link rawInflateCounted} returns. */
+export interface InflateResult {
+  output: Uint8Array;
+  /**
+   * How many bytes of `data` the stream actually used, including a final
+   * partially-consumed byte.
+   */
+  bytesConsumed: number;
+}
+
+/**
+ * As {@link rawInflate}, but also reporting how much of the input was used.
+ *
+ * DEFLATE says where it ends -- the last block sets BFINAL -- so a stream can
+ * finish well before its container claims, and every byte after that point is
+ * ignored by a decompressor that only asks for the data. That gap is a place to
+ * hide things: a scanner that unpacks the stream sees nothing, while the bytes
+ * still travel inside a file that every tool calls valid.
+ *
+ * A container that knows where its compressed data should end -- PNG's `IDAT`
+ * before its Adler-32, gzip before its CRC -- can compare that boundary against
+ * this number and refuse the difference.
+ *
+ * @example
+ * const { output, bytesConsumed } = rawInflateCounted(stream);
+ * if (bytesConsumed !== stream.length) throw new Error("trailing data");
+ */
+export function rawInflateCounted(data: Uint8Array, maxOutput?: number): InflateResult {
   return deflateDecompress(data, maxOutput);
 }
 
@@ -699,7 +746,7 @@ function decodeHuffmanBlock(
   }
 }
 
-function deflateDecompress(data: Uint8Array, maxOutput: number = MAX_OUTPUT): Uint8Array {
+function deflateDecompress(data: Uint8Array, maxOutput: number = MAX_OUTPUT): InflateResult {
   if (!Number.isFinite(maxOutput) || maxOutput < 0) {
     throw new Error("deflate: maxOutput must be a non-negative finite number");
   }
@@ -752,7 +799,7 @@ function deflateDecompress(data: Uint8Array, maxOutput: number = MAX_OUTPUT): Ui
 
     if (bfinal === 1) break;
   }
-  return out.finish();
+  return { output: out.finish(), bytesConsumed: br.bytesConsumed() };
 }
 
 // =============================================================================
@@ -1012,7 +1059,7 @@ export class ZipReader {
       // CRC-32 that finally catches the lie only runs after the memory has
       // already been committed. So the declared size is an OPTIMISATION and the
       // reader's own ceiling stays the LIMIT; whichever is smaller wins.
-      decompressed = deflateDecompress(compressed, Math.min(entry.size, this.maxOutput));
+      decompressed = deflateDecompress(compressed, Math.min(entry.size, this.maxOutput)).output;
     } else {
       throw new Error(`zip: unsupported compression method ${entry.method} for '${entry.name}'`);
     }
