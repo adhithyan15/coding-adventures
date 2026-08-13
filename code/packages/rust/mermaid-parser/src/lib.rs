@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.91.0";
+pub const VERSION: &str = "0.92.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -491,7 +491,7 @@ fn token_name(token: &Token) -> &str {
 use diagram_ir::{
     Axis, AxisKind, ChartDiagram, ChartKind, ChartOrientation, ChartSeries, Compartment,
     CompartmentKind, GanttDiagram, GanttSection, GanttTask, GitBranch, GitCommitType, GitDiagram,
-    GitEvent, JourneyDiagram, JourneySection, JourneyTask, PieSlice, QuadrantConfig, QuadrantPoint,
+    GitEvent, JourneyConfig, JourneyDiagram, JourneySection, JourneyTask, PieSlice, QuadrantConfig, QuadrantPoint,
     RelKind, SankeyFlow, SankeyNode, SequenceArrowhead, SequenceBlockKind,
     SequenceCentralConnection, SequenceDiagram, SequenceEvent, SequenceLineStyle, SequenceLink,
     SequenceNotePlacement, SequenceParticipant, SequenceParticipantGroup, SequenceParticipantKind,
@@ -718,6 +718,14 @@ pub fn parse_any_mermaid(source: &str) -> Result<MermaidDiagram, ParseError> {
 }
 
 pub fn parse_journey(source: &str) -> Result<(Option<String>, JourneyDiagram), ParseError> {
+    let number = |key| quadrant_directive_value(source, key).and_then(|value| value.parse().ok());
+    let config = JourneyConfig {
+        diagram_margin_x: number("diagramMarginX"),
+        diagram_margin_y: number("diagramMarginY"),
+        task_width: number("width"),
+        task_height: number("height"),
+        task_margin: number("taskMargin"),
+    };
     let preprocessed = preprocess_mermaid_source(source)?;
     let tokens =
         try_tokenize_mermaid_journey(&preprocessed.source).map_err(|message| ParseError {
@@ -811,6 +819,7 @@ pub fn parse_journey(source: &str) -> Result<(Option<String>, JourneyDiagram), P
         JourneyDiagram {
             accessibility_title,
             accessibility_description,
+            config,
             sections,
         },
     ))
@@ -6598,7 +6607,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.91.0");
+        assert_eq!(crate::VERSION, "0.92.0");
     }
 
     #[test]

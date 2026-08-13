@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.92.0
+
+- Parse Journey numeric geometry options from Mermaid init directives.
+
 ## 0.91.0
 
 - Gate the pinned Journey parser corpus and reject task scores outside Mermaid's documented one-to-five domain.

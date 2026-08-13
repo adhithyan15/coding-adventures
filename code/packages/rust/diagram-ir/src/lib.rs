@@ -1,6 +1,6 @@
 //! diagram-ir v0.42.0 - DG00/DG04 semantic IR
 
-pub const VERSION: &str = "0.46.0";
+pub const VERSION: &str = "0.47.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramDirection {
@@ -872,10 +872,20 @@ pub struct JourneySection {
     pub tasks: Vec<JourneyTask>,
 }
 
+#[derive(Clone, Debug, Default, PartialEq)]
+pub struct JourneyConfig {
+    pub diagram_margin_x: Option<f64>,
+    pub diagram_margin_y: Option<f64>,
+    pub task_width: Option<f64>,
+    pub task_height: Option<f64>,
+    pub task_margin: Option<f64>,
+}
+
 #[derive(Clone, Debug, PartialEq)]
 pub struct JourneyDiagram {
     pub accessibility_title: Option<String>,
     pub accessibility_description: Option<String>,
+    pub config: JourneyConfig,
     pub sections: Vec<JourneySection>,
 }
 
@@ -1141,7 +1151,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.46.0");
+        assert_eq!(VERSION, "0.47.0");
     }
     #[test]
     fn default_direction_is_tb() {

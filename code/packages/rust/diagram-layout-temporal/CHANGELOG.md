@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.0
+
+- Resolve Journey margins, task dimensions, and task spacing from Mermaid init configuration.
+
 ## 0.4.0
 
 - Resolve sorted Journey actor legends and deterministic actor colors.
