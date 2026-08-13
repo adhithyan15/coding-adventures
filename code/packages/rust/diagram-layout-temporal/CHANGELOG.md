@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.8.0
+
+- Resolve cyclic Journey actor, section fill, and section text palettes.
+
 ## 0.7.0
 
 - Resolve styled Journey titles into dedicated backend-neutral layout items.

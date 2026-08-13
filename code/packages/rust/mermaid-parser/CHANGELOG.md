@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.95.0
+
+- Parse Journey `actorColours`, `sectionFills`, and `sectionColours` init arrays.
+
 ## 0.94.0
 
 - Parse Journey `titleFontSize`, `titleFontFamily`, and `titleColor` init options.

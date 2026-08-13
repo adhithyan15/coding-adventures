@@ -18,7 +18,7 @@ use diagram_ir::{
 };
 use std::collections::{BTreeSet, HashMap};
 
-pub const VERSION: &str = "0.7.0";
+pub const VERSION: &str = "0.8.0";
 
 // ── Constants ─────────────────────────────────────────────────────────────
 
@@ -37,6 +37,10 @@ const BRANCH_COLORS: &[&str] = &[
 const JOURNEY_ACTOR_COLORS: &[&str] = &[
     "#8fbc8f", "#7cfc00", "#00ffff", "#20b2aa", "#b0e0e6", "#ffffe0",
 ];
+const JOURNEY_SECTION_FILLS: &[&str] = &[
+    "#191970", "#8b008b", "#4b0082", "#2f4f4f", "#800000", "#8b4513", "#00008b",
+];
+const JOURNEY_SECTION_COLORS: &[&str] = &["#ffffff"];
 
 /// Lay out a `TemporalDiagram` on a canvas of `cw` pixels wide.
 pub fn layout_temporal_diagram(d: &TemporalDiagram, cw: f64) -> LayoutedTemporalDiagram {
@@ -79,11 +83,16 @@ fn layout_journey(title: &Option<String>, diagram: &JourneyDiagram, cw: f64) -> 
         .filter(|person| !person.is_empty())
         .cloned()
         .collect::<BTreeSet<_>>();
+    let configured_actor_colors = &diagram.config.actor_colors;
     let actor_colors = actors
         .iter()
         .enumerate()
         .map(|(index, actor)| {
-            let color = JOURNEY_ACTOR_COLORS[index % JOURNEY_ACTOR_COLORS.len()].to_string();
+            let color = if configured_actor_colors.is_empty() {
+                JOURNEY_ACTOR_COLORS[index % JOURNEY_ACTOR_COLORS.len()].to_string()
+            } else {
+                configured_actor_colors[index % configured_actor_colors.len()].clone()
+            };
             items.push(LayoutedTemporalItem::JourneyActor {
                 x: 24.0, y: y + 10.0, color: color.clone(), label: actor.clone(),
             });
@@ -94,10 +103,21 @@ fn layout_journey(title: &Option<String>, diagram: &JourneyDiagram, cw: f64) -> 
     if !actor_colors.is_empty() {
         y += 4.0;
     }
-    for section in &diagram.sections {
+    for (section_index, section) in diagram.sections.iter().enumerate() {
+        let fill = if diagram.config.section_fills.is_empty() {
+            JOURNEY_SECTION_FILLS[section_index % JOURNEY_SECTION_FILLS.len()].to_string()
+        } else {
+            diagram.config.section_fills[section_index % diagram.config.section_fills.len()].clone()
+        };
+        let text_color = if diagram.config.section_colors.is_empty() {
+            JOURNEY_SECTION_COLORS[section_index % JOURNEY_SECTION_COLORS.len()].to_string()
+        } else {
+            diagram.config.section_colors[section_index % diagram.config.section_colors.len()].clone()
+        };
         let section_height = 12.0 + section.label.lines().count().max(1) as f64 * 16.0;
-        items.push(LayoutedTemporalItem::SectionHeader {
+        items.push(LayoutedTemporalItem::JourneySection {
             x: 0.0, y, width: cw, height: section_height, label: section.label.clone(),
+            fill: fill.clone(), text_color: text_color.clone(),
         });
         y += section_height + 4.0;
         for task in &section.tasks {
@@ -109,6 +129,8 @@ fn layout_journey(title: &Option<String>, diagram: &JourneyDiagram, cw: f64) -> 
                 person_colors: task.people.iter().filter_map(|person| actor_colors.get(person).cloned()).collect(),
                 font_size: diagram.config.task_font_size,
                 font_family: diagram.config.task_font_family.clone(),
+                fill: fill.clone(),
+                text_color: text_color.clone(),
             });
             y += task_height + task_margin;
         }
@@ -403,7 +425,7 @@ mod tests {
         }
     }
 
-    #[test] fn version_exists() { assert_eq!(crate::VERSION, "0.7.0"); }
+    #[test] fn version_exists() { assert_eq!(crate::VERSION, "0.8.0"); }
 
     #[test]
     fn gantt_has_task_bars() {
@@ -458,7 +480,7 @@ mod tests {
         let diagram = TemporalDiagram {
             kind: TemporalKind::Journey,
             title: Some("Checkout".into()),
-            body: TemporalBody::Journey(JourneyDiagram {
+            body: TemporalBody::Journey(Box::new(JourneyDiagram {
                 accessibility_title: Some("Checkout journey".into()),
                 accessibility_description: Some("Payment experience".into()),
                 config: diagram_ir::JourneyConfig {
@@ -472,6 +494,9 @@ mod tests {
                     title_font_size: Some(22.0),
                     title_font_family: Some("Georgia".into()),
                     title_color: Some("#123456".into()),
+                    actor_colors: vec!["#010203".into()],
+                    section_fills: vec!["#112233".into(), "#445566".into()],
+                    section_colors: vec!["#fefefe".into()],
                 },
                 sections: vec![JourneySection {
                     label: "Payment\nflow".into(),
@@ -479,7 +504,7 @@ mod tests {
                         label: "Pay\nsecurely".into(), score: 2, people: vec!["Bob".into()],
                     }],
                 }],
-            }),
+            })),
         };
         let layout = layout_temporal_diagram(&diagram, 640.0);
         assert!(layout.items.iter().any(|item| matches!(item,
@@ -503,6 +528,13 @@ mod tests {
                 if *font_size == Some(22.0)
                     && font_family.as_deref() == Some("Georgia")
                     && color.as_deref() == Some("#123456")
+        )));
+        assert!(layout.items.iter().any(|item| matches!(item,
+            LayoutedTemporalItem::JourneyActor { color, .. } if color == "#010203"
+        )));
+        assert!(layout.items.iter().any(|item| matches!(item,
+            LayoutedTemporalItem::JourneySection { fill, text_color, .. }
+                if fill == "#112233" && text_color == "#fefefe"
         )));
     }
 }

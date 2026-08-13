@@ -1,5 +1,10 @@
 # Changelog — diagram-ir
 
+## 0.50.0
+
+- Preserve Journey actor and section palettes through semantic and resolved IR.
+- Box the expanded Journey temporal body to keep the shared enum compact.
+
 ## 0.49.0
 
 - Preserve Journey title font size, family, and color through semantic and resolved IR.

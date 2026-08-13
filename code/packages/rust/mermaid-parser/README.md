@@ -53,6 +53,8 @@ task spacing through semantic IR and resolved temporal layout. Configured task
 font size and family reach backend-neutral Paint glyph shaping.
 Configured Journey title font size, family, and color follow the same resolved
 layout and Paint shaping path without changing other temporal families.
+Actor colors and cyclic section fill/text palettes also resolve before Paint,
+matching Mermaid's Journey-specific init configuration model.
 
 The sequence subset includes participants and actors, aliases, standard solid
 and dotted message arrows, bidirectional/cross/point arrowheads, notes,
