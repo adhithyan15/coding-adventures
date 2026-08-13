@@ -1,0 +1,67 @@
+% ============================================================================
+% band-secondary-use — for the EM bands where NASA names a SECOND everyday
+% use in the same sentence, that second use (adj-facts-stdlib, PHYSICS).
+% ============================================================================
+% A sibling to the already-shipped `em-spectrum.adj` (`band_use(band,
+% application)`, ONE representative everyday use per EM band): a new
+% `band_secondary_use(band, application)` table names a SECOND everyday use
+% the SAME already-cited NASA "Imagine the Universe!" page states for a band,
+% decoded from text already sitting unused inside `em-spectrum.adj`'s own
+% provenance block — no new WebFetch. That table's `application` column has
+% room for only the FIRST everyday use; the SAME already-quoted NASA
+% sentences also name a second, distinct use for two of the seven bands that
+% never made it into a row:
+%
+%   microwave → astronomy
+%     "Microwave radiation will cook your popcorn in just a few minutes, but
+%      is also used by astronomers to learn about the structure of nearby
+%      galaxies."
+%   x_ray → airport_security
+%     "A dentist uses X-rays to image your teeth, and airport security uses
+%      them to see through your bag."
+%
+% Recall is a binding query:
+%
+%     ? band_secondary_use(microwave, $Application)      % astronomy
+%
+% This is a native `table` (ADJ-TABLES RS-5, a TWO-column table like
+% `em-spectrum.adj`'s own `band_use`): each `row` lowers to a ground relation
+% `band_secondary_use(band, application)` carrying the citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the
+% secondary use WITH its source, on the CPU, with zero model calls, and
+% abstains on the other five bands (radio, infrared, visible, ultraviolet,
+% gamma_ray), whose own already-cited spans in `em-spectrum.adj` name only
+% ONE use each, with no second use to decode here.
+%
+% Only TWO of `em-spectrum.adj`'s seven bands have a genuinely second,
+% distinct everyday use in the ALREADY-cited spans; this table is
+% deliberately narrow rather than inventing a use the source does not state.
+% The query also runs BACKWARD — bind a use and recall which band it is an
+% instance of:
+%
+%     ? band_secondary_use($Band, airport_security)   % x_ray
+%
+% Provenance: reproduces, byte-for-byte, the SAME microwave span already
+% quoted inside `em-spectrum.adj`'s own provenance block, from the SAME NASA
+% Goddard Space Flight Center "Imagine the Universe!" education page that
+% table already cites — no new WebFetch, only a different schema decoding a
+% part of each already-verified quote. An ADJ `table` carries ONE provenance
+% envelope (per `em-spectrum.adj`'s own convention), so `source`/`locator`/
+% `trust` below hold the microwave span; the x_ray row's own span is listed
+% above for independent auditability. `trust authoritative` — the same tier
+% `em-spectrum.adj` already carries (a primary U.S. government NASA
+% education page).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table band_secondary_use {
+    columns band, application
+
+    row (microwave, astronomy)
+    row (x_ray, airport_security)
+
+    source "Microwave radiation will cook your popcorn in just a few minutes, but is also used by astronomers to learn about the structure of nearby galaxies."
+    locator "https://imagine.gsfc.nasa.gov/science/toolbox/emspectrum1.html"
+    trust authoritative
+}

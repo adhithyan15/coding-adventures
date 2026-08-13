@@ -1,0 +1,21 @@
+% ============================================================================
+% band-secondary-use.query.adj — a worked recall over the physics
+% band-secondary-use library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what else are
+% microwaves used for besides cooking?": it states no physics fact of its
+% own — it only `import`s the grounded table and asks binding queries. The
+% engine resolves each `?` against the `band_secondary_use` rows and returns
+% the secondary use + the table's source/locator/trust. A band the cited
+% spans give no second use for abstains honestly — the engine never invents
+% one.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli band-secondary-use.query.adj
+% ============================================================================
+
+import "band-secondary-use.adj"
+
+? band_secondary_use(microwave, $Application)   % expect astronomy
+? band_secondary_use($Band, airport_security)   % reverse bind — expect x_ray
+? band_secondary_use(radio, $Application)       % expect abstain — radio's own cited span names only one use (radio_stations), no second use
