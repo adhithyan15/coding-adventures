@@ -66,6 +66,29 @@ it used here?", and Linux is unix. The `target_arch` half matters too — on an
 Intel Mac every use site is still cfg'd out, so gating on `target_os` alone would
 just relocate the error.
 
+**Every remaining warning in the OS-gated code is cleared, found by sweeping the
+whole surface at once.** Fixing one CI error per round trip was a loop with no
+visible end: these files had never been compiled by CI, so each fix only revealed
+the next. Instead, `target_os` values were swapped so the gated code compiles on
+a macOS host (`macos` ↔ `linux`, then `macos` ↔ `windows`), with clippy run
+*without* `-D warnings` so warnings do not abort the compile and every diagnostic
+is collected in one pass. A third, stricter Windows pass also rewrites
+`cfg(unix)` → `cfg(windows)` and `cfg(not(unix))` → `cfg(not(windows))`, closing
+the blind spot where the host being Unix hides what Windows would see. Found and
+fixed:
+
+| where | diagnostic |
+|---|---|
+| `linux_x86_64_smoke.rs:202` | `unused_mut` — `let mut con = \|…\|`; the closure captures nothing mutable, so it is a plain `Fn` |
+| `windows_x86_64_smoke.rs:281` | the same `let mut con` in that file's copy of `build_heap_byte_io_module` |
+| `src/lib.rs` `invoke_ld` | `dead_code` on Windows — ungated, but its only caller is `#[cfg(unix)]` |
+| `src/lib.rs` `sdk_lib_path` | `dead_code` on Windows — same, called only from `invoke_ld` |
+
+Both lib functions are now `#[cfg(unix)]`, matching their callers; they are
+private and referenced nowhere else in the workspace. The Windows-side findings
+could not have come from CI at all, since Rust is never built on Windows. Nothing
+the sweep turned up was a behavioural bug — all four are hygiene.
+
 `macos_arm64_smoke` is **deliberately excluded and named in the BUILD file**
 rather than silently dropped — 13 of its 16 tests pass on Apple Silicon, and the
 3 that fail are all in the precise-GC-roots area: `end_to_end_typed_twig_returns_42`
