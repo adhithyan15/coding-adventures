@@ -72,4 +72,16 @@ and the official spec testsuite's `.wast` script dialect — into
   new `WastParseError::TooDeeplyNested` variant instead of a stack
   overflow. Each fix has a dedicated regression test proving the old code
   path would have panicked.
-- 70 unit tests across all five modules, ~95%+ line coverage.
+- **Hardening pass, round 2** (same pre-merge security review, second
+  pass over `module.rs` specifically): five more `items[N]`-style panics
+  of the exact same class, all in spots round 1's sweep missed —
+  `build_import_shell`'s error-path indexing an empty import description
+  (`(import "m" "n" ())`); `parse_global_type` indexing a `(mut)` form
+  with no trailing value type; the `"start"` directive with no function
+  reference (`(module (start))`); `handle_inline_export`'s `(export)`
+  shorthand with no name string; and a bare `(type)` reference with no
+  index/name, reachable from three call sites (`func` import
+  descriptions, and both the flat and folded forms of `call_indirect`).
+  All converted to `sexpr::expect_get`, each with its own regression
+  test.
+- 78 unit tests across all five modules, ~95%+ line coverage.

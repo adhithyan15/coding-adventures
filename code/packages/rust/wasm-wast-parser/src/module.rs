@@ -327,7 +327,11 @@ fn build_import_shell(items: &[SExpr], desc: &[SExpr], kind: &str) -> Result<Imp
             let gt = desc.get(1).ok_or(WastParseError::UnexpectedEof)?;
             ImportTypeInfo::Global(parse_global_type(gt)?)
         }
-        _ => return Err(WastParseError::UnexpectedToken { pos: desc[0].pos(), found: kind.to_string(), expected: "func/table/memory/global" }),
+        // `desc` can be an empty list (`(import "m" "n" ())`), in which case
+        // `kind` is already "" from `unwrap_or("")` above -- fall back to
+        // the enclosing `(import ...)` form's own position (always present,
+        // `items` is that form's own list) rather than indexing `desc[0]`.
+        _ => return Err(WastParseError::UnexpectedToken { pos: desc.first().map(|e| e.pos()).unwrap_or_else(|| items[0].pos()), found: kind.to_string(), expected: "func/table/memory/global" }),
     };
     Ok(Import {
         module_name,
@@ -374,7 +378,10 @@ fn parse_limits(fields: &[SExpr]) -> Result<Limits, WastParseError> {
 fn parse_global_type(expr: &SExpr) -> Result<GlobalType, WastParseError> {
     if expr.is_keyword_list("mut") {
         let items = expr.as_list().unwrap();
-        Ok(GlobalType { value_type: parse_value_type(&items[1])?, mutable: true })
+        // `(mut)` with no trailing value type is syntactically a valid
+        // keyword-list (arity isn't checked by `is_keyword_list`) but has
+        // no second element.
+        Ok(GlobalType { value_type: parse_value_type(expect_get(items, 1)?)?, mutable: true })
     } else {
         Ok(GlobalType { value_type: parse_value_type(expr)?, mutable: false })
     }
@@ -409,6 +416,13 @@ fn build(fields: &[&SExpr], ctx: &mut ModuleCtx) -> Result<(), WastParseError> {
         let head = items.first().and_then(|e| e.as_atom()).unwrap_or("");
         match head {
             "import" => {
+                // Safe: `collect_symbols` (pass 1) already ran to completion
+                // over this exact same `fields` list before `build` (pass 2)
+                // is ever called -- and pass 1's own `build_import_shell`
+                // already returns a clean `Err` (not a panic) unless
+                // `items[3]` is a list AND its first element is an atom
+                // matching one of func/table/memory/global. Reaching this
+                // arm at all is proof both hold for this form.
                 let desc = items[3].as_list().unwrap();
                 if desc[0].as_atom().unwrap() == "func" {
                     let type_idx = resolve_func_signature_ref(&desc[1..], ctx)?;
@@ -479,7 +493,7 @@ fn build(fields: &[&SExpr], ctx: &mut ModuleCtx) -> Result<(), WastParseError> {
             "elem" => build_elem(&items[1..], ctx)?,
             "data" => build_data(&items[1..], ctx)?,
             "start" => {
-                let idx = resolve_idx(&ctx.func_names, &items[1], "func")?;
+                let idx = resolve_idx(&ctx.func_names, expect_get(items, 1)?, "func")?;
                 ctx.module.start = Some(idx);
             }
             _ => {}
@@ -508,7 +522,9 @@ fn handle_inline_export(
     let mut i = 0;
     while i < rest.len() && rest[i].is_keyword_list("export") {
         let items = rest[i].as_list().unwrap();
-        if let SExpr::Str(b, _) = &items[1] {
+        // `(export)` with no trailing name string is syntactically a valid
+        // keyword-list but has no second element.
+        if let SExpr::Str(b, _) = expect_get(items, 1)? {
             ctx.module.exports.push(Export { name: String::from_utf8_lossy(b).to_string(), kind, index: idx as u32 });
         }
         i += 1;
@@ -522,7 +538,7 @@ fn handle_inline_export(
 fn resolve_func_signature_ref(desc_rest: &[SExpr], ctx: &mut ModuleCtx) -> Result<u32, WastParseError> {
     if let Some(type_ref) = desc_rest.iter().find(|e| e.is_keyword_list("type")) {
         let items = type_ref.as_list().unwrap();
-        return resolve_idx(&ctx.type_names, &items[1], "type");
+        return resolve_idx(&ctx.type_names, expect_get(items, 1)?, "type");
     }
     let sig_fields: Vec<&SExpr> = desc_rest.iter().collect();
     let ty = parse_func_signature(&sig_fields)?;
@@ -796,7 +812,7 @@ fn encode_stream_instr(
             let sig_fields = &following[..sig_end];
             let type_form = sig_fields.iter().find(|a| a.is_keyword_list("type"));
             let type_idx = if let Some(t) = type_form {
-                resolve_idx(&icx.module.type_names, &t.as_list().unwrap()[1], "type")?
+                resolve_idx(&icx.module.type_names, expect_get(t.as_list().unwrap(), 1)?, "type")?
             } else {
                 let refs: Vec<&SExpr> = sig_fields.iter().collect();
                 let ty = parse_func_signature(&refs)?;
@@ -1027,7 +1043,7 @@ fn encode_flat_instr(
             encode_instr_list(&args[operand_start..], icx, out)?;
             out.push(info.opcode);
             let type_idx = if let Some(t) = type_form {
-                resolve_idx(&icx.module.type_names, &t.as_list().unwrap()[1], "type")?
+                resolve_idx(&icx.module.type_names, expect_get(t.as_list().unwrap(), 1)?, "type")?
             } else {
                 let sig_fields: Vec<&SExpr> = args[..operand_start].iter().collect();
                 let ty = parse_func_signature(&sig_fields)?;
@@ -1459,6 +1475,59 @@ mod tests {
         let src = "(".repeat(crate::sexpr::MAX_NESTING_DEPTH + 1);
         let err = parse_module(&src).unwrap_err();
         assert!(matches!(err, WastParseError::TooDeeplyNested { .. }));
+    }
+
+    // ── Round 2 security-review regressions ─────────────────────────────
+
+    #[test]
+    fn import_with_empty_description_errors_cleanly_not_panics() {
+        // `desc` is `()` -- `kind` falls through to "" via unwrap_or, which
+        // used to index `desc[0]` on an empty slice to build the error.
+        let err = parse_module(r#"(module (import "m" "n" ()))"#).unwrap_err();
+        assert!(matches!(err, WastParseError::UnexpectedToken { .. }));
+    }
+
+    #[test]
+    fn global_mut_with_no_value_type_errors_cleanly_not_panics() {
+        let err = parse_module("(module (global (mut)))").unwrap_err();
+        assert!(matches!(err, WastParseError::UnexpectedEof));
+    }
+
+    #[test]
+    fn import_global_mut_with_no_value_type_errors_cleanly_not_panics() {
+        let err = parse_module(r#"(module (import "m" "g" (global (mut))))"#).unwrap_err();
+        assert!(matches!(err, WastParseError::UnexpectedEof));
+    }
+
+    #[test]
+    fn start_with_no_function_reference_errors_cleanly_not_panics() {
+        let err = parse_module("(module (start))").unwrap_err();
+        assert!(matches!(err, WastParseError::UnexpectedEof));
+    }
+
+    #[test]
+    fn inline_export_with_no_name_errors_cleanly_not_panics() {
+        let err = parse_module("(module (func (export) (result i32) i32.const 1))").unwrap_err();
+        assert!(matches!(err, WastParseError::UnexpectedEof));
+    }
+
+    #[test]
+    fn bare_type_reference_with_no_index_errors_cleanly_not_panics() {
+        // Import func description: `(type)` with no trailing index/name.
+        let err = parse_module(r#"(module (import "m" "f" (func (type))))"#).unwrap_err();
+        assert!(matches!(err, WastParseError::UnexpectedEof));
+    }
+
+    #[test]
+    fn flat_call_indirect_with_bare_type_reference_errors_cleanly_not_panics() {
+        let err = parse_module("(module (table 1 funcref) (func call_indirect (type)))").unwrap_err();
+        assert!(matches!(err, WastParseError::UnexpectedEof));
+    }
+
+    #[test]
+    fn folded_call_indirect_with_bare_type_reference_errors_cleanly_not_panics() {
+        let err = parse_module("(module (table 1 funcref) (func (call_indirect (type))))").unwrap_err();
+        assert!(matches!(err, WastParseError::UnexpectedEof));
     }
 
     /// Folded `call` with arguments -- catches the exact bug found during
