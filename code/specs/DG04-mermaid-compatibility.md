@@ -119,6 +119,8 @@ forms or lossy semantics.
 Repeated `State: description` statements accumulate as ordered multiline
 semantic labels; graph layout reserves line-aware node geometry before Paint
 shapes each authored line without backend soft wrapping.
+Quoted state aliases may include a trailing `: description`; both the primary
+label and trailing description survive as ordered multiline semantic text.
 Fork and join pseudostates accept both upstream marker spellings and lower to a
 compact backend-neutral graph-IR bar shape rendered by existing rectangle Paint
 instructions.

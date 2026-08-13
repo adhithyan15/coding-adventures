@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.67.0";
+pub const VERSION: &str = "0.68.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -1339,7 +1339,7 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
         } else if cursor.current().value.eq_ignore_ascii_case("state") {
             cursor.advance();
             let (id, label) = if token_name(cursor.current()) == "STRING" {
-                let label = strip_state_string(&cursor.advance().value);
+                let mut label = strip_state_string(&cursor.advance().value);
                 if !cursor.current().value.eq_ignore_ascii_case("as") {
                     return Err(token_error(
                         cursor.current(),
@@ -1347,7 +1347,12 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
                     ));
                 }
                 cursor.advance();
-                (take_state_ref(&mut cursor)?, label)
+                let id = take_state_ref(&mut cursor)?;
+                if cursor.consume_if("COLON").is_some() {
+                    label.push('\n');
+                    label.push_str(&take_state_text(&mut cursor));
+                }
+                (id, label)
             } else {
                 let id = take_state_ref(&mut cursor)?;
                 if cursor.consume_if("LBRACE").is_some() {
@@ -4820,6 +4825,21 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     }
 
     #[test]
+    fn state_alias_accepts_a_trailing_description() {
+        let diagram = parse_state_diagram(
+            "stateDiagram-v2\nstate \"Processing queue\" as Processing: Awaiting native work\n",
+        )
+        .expect("state alias with trailing description");
+
+        assert_eq!(diagram.nodes.len(), 1);
+        assert_eq!(diagram.nodes[0].id, "Processing");
+        assert_eq!(
+            diagram.nodes[0].label.text,
+            "Processing queue\nAwaiting native work"
+        );
+    }
+
+    #[test]
     fn sequence_parses_case_insensitive_keywords() {
         let diagram = parse_any_mermaid(
             "SeQuEnCeDiAgRaM\nPaRtIcIpAnT A As Alice\nA->>B: Hello\nAcTiVaTe B\nNoTe RiGhT Of B: WRAP: Ready\nDeAcTiVaTe B\n",
@@ -5590,7 +5610,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.67.0");
+        assert_eq!(crate::VERSION, "0.68.0");
     }
 
     #[test]

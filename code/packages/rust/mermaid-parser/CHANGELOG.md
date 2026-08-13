@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.68.0
+
+- Preserve trailing descriptions on quoted state aliases as ordered multiline labels.
+
 ## 0.67.0
 
 - Ignore pinned state-diagram `#` comments while preserving entities and hexadecimal style colors.
