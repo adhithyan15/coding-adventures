@@ -13,7 +13,7 @@ lane) of the historical-arch backend migration — see
   Per-function bytes can be concatenated directly — `lang-aot`
   flattens them straight into a `.bin`.
 
-## v0.1.0 scope — minimal viable
+## Current scope — executable scalar core
 
 Same scope as `intel8008-backend` v0.1.0 and `armv7-backend`
 v0.1.0: just enough to keep the existing lang-aot RV32I e2e smoke
@@ -21,16 +21,35 @@ tests passing byte-for-byte.
 
 | CIR family | Status |
 |------------|--------|
-| `const_*` (12-bit signed immediate, single-var case) | ✓ → `addi rd, x0, n` |
-| `ret_*` | ✓ → `addi a0, rs, 0` + `jalr x0, x1, 0` |
-| `ret_void` | ✓ → `jalr x0, x1, 0` |
-| Anything else | returns `None` (AOT reports the gap; JIT stays on the interpreter tier) |
+| `const_*` | ✓ signed/unsigned values that fit RV32I |
+| Integer scalar ops | ✓ `add`, `sub`, `and`, `or`, `xor`, `shl`, `shr`, `neg`, `not` |
+| Comparisons | ✓ signed/unsigned `eq ne lt le gt ge` |
+| `ret_*`, `ret_void` | ✓ result in `a0`, standard `ret` |
+| `i64` / `u64` arithmetic, floats, calls, branches, memory, I/O | not yet supported |
 
-Per the GUIDING CONSTRAINT, the architectural correctness win
-(IIR → CIR via Backend trait) is what Phase 7 delivers.  Future
-increments to `riscv-backend` can port the richer op coverage
-that `iir-to-riscv` v0.3.3 had (add/sub/cmp/branches/calls/ecall
-print_i64).
+`run_binary` executes a produced function binary in `riscv-simulator` and
+reports the `a0` return value, halt state, and instruction count. It installs a
+one-word `ecall` return trampoline, so normal function binaries remain usable
+both as callable code and as inputs to the simulator runner.
+
+```rust
+use jit_core::backend::FunctionContext;
+use jit_core::cir::{CIRInstr, CIROperand};
+use riscv_backend::{compile, run_binary};
+
+let cir = vec![
+    CIRInstr::new("const_i32", Some("answer"), vec![CIROperand::Int(42)], "i32"),
+    CIRInstr::new("ret_i32", None::<&str>, vec![CIROperand::Var("answer".into())], "i32"),
+];
+let context = FunctionContext { name: "main", params: &[], return_type: "i32" };
+let binary = compile(&context, &cir).unwrap();
+let result = run_binary(&binary, &[]).unwrap();
+assert_eq!(result.return_value, 42);
+```
+
+For compatibility with existing scalar source smoke tests, `const_i64` /
+`ret_i64` are accepted when the literal fits in an RV32 register. Wide
+arithmetic remains a validation error rather than silently truncating.
 
 ## Why this is the FINAL lane
 

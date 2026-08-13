@@ -1007,6 +1007,11 @@ fn end_to_end_twig_42_emits_riscv32_bin_via_lang_aot() {
         ],
         "Twig 42 -> RV32I byte sequence is the migration-pinned regression invariant for Phase 7"
     );
+
+    let run = riscv_backend::run_binary(&bytes, &[])
+        .expect("the emitted RV32I binary must execute in the in-tree simulator");
+    assert!(run.halted, "the simulator return trampoline must halt");
+    assert_eq!(run.return_value, 42, "Twig 42 must return 42 through a0");
 }
 
 // ===========================================================================

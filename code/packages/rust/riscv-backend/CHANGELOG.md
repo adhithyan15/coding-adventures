@@ -1,5 +1,14 @@
 # Changelog — riscv-backend
 
+## Unreleased
+
+- Added executable RV32I scalar lowering for typed CIR constants, arithmetic,
+  bitwise operations, shifts, unary operations, and signed/unsigned comparisons.
+- Added `run_binary`, which executes a flat function binary on the in-tree
+  `riscv-simulator` and reports its `a0` return value and instruction count.
+- Preserved the canonical Twig `42` byte sequence while proving that the
+  emitted bytes execute and return `42` in the simulator.
+
 ## v0.1.0 — 2026-06-03 — Phase 7 (FINAL lane) of historical-arch backend migration
 
 Initial release.  Minimal viable Backend trait impl over CIR.
