@@ -7,18 +7,18 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:2755b11a99c69a3e",
+  "sourceHash": "fnv1a64:1c1de3fac242d663",
   "summary": {
-    "totalLessons": 1951,
-    "voice": 1323,
+    "totalLessons": 1953,
+    "voice": 1325,
     "sight": 559,
     "pen": 69,
-    "drivableLessons": 1323,
+    "drivableLessons": 1325,
     "drivablePercent": 68,
     "trackCount": 22,
-    "chapterCount": 705,
-    "drivablePrefixTotal": 1123,
-    "fullyDrivableChapters": 476,
+    "chapterCount": 707,
+    "drivablePrefixTotal": 1125,
+    "fullyDrivableChapters": 478,
     "unstartableChapters": 171,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
@@ -7062,12 +7062,12 @@
     },
     {
       "language": "spanish",
-      "lessonCount": 351,
-      "voice": 311,
+      "lessonCount": 353,
+      "voice": 313,
       "sight": 33,
       "pen": 7,
       "drivablePercent": 89,
-      "drivablePrefixTotal": 298,
+      "drivablePrefixTotal": 300,
       "modalities": [
         "voice",
         "sight",
@@ -10430,6 +10430,38 @@
           "drivable": true,
           "drivableLessonIds": [
             "ES-C55-sintesis-preterito-completo"
+          ]
+        },
+        {
+          "chapter": 206,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C56-hablara"
+          ]
+        },
+        {
+          "chapter": 207,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C56-tuviera"
           ]
         }
       ]
@@ -43371,6 +43403,42 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:91bea38868b83f00"
+    },
+    {
+      "id": "ES-C56-hablara",
+      "language": "spanish",
+      "chapter": 206,
+      "sequence": 2265,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:3b41c82064c4d8d6"
+    },
+    {
+      "id": "ES-C56-tuviera",
+      "language": "spanish",
+      "chapter": 207,
+      "sequence": 2270,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:3e21b65637450380"
     },
     {
       "id": "TA-C01-vanakkam",

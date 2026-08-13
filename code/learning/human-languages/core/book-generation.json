@@ -3468,6 +3468,16 @@
       "output": "spanish/book/chapters/ch205-synthesis-preterito.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 206,
+      "output": "spanish/book/chapters/ch206-hablara.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 207,
+      "output": "spanish/book/chapters/ch207-tuviera.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "output": "tamil/book/chapters/ch06-dative-case.tex",

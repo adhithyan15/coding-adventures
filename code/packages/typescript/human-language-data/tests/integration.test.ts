@@ -104,7 +104,7 @@ describe("real curriculum", () => {
     // 40 (esperar, contestar, comprar). Two sessions authored a chapter 38 in parallel;
     // the collision surfaced as a merge conflict on chapters.json rather than silently,
     // because both sides must edit it.
-    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(205); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis // +3: HL-C88 slice 8 // +1: HL-C88 slice 9 (falsos amigos) // +3: HL-C113 (B1 si-condition rung) // +3: HL-C113 preterite plural
+    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(207); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis // +3: HL-C88 slice 8 // +1: HL-C88 slice 9 (falsos amigos) // +3: HL-C113 (B1 si-condition rung) // +3: HL-C113 preterite plural // HL-C113: HL-C113 imperfect subjunctive
     expect(
       books.books
         .find((book) => book.language === "persian")
@@ -819,6 +819,9 @@ describe("real curriculum", () => {
       "ES-C56-dad-make",
       "ES-C56-dad-read",
       "ES-C56-dad-why",
+      "ES-C56-hablara-build",
+      "ES-C56-hablara-etymon",
+      "ES-C56-hablara-why",
       "ES-C56-mente-fem",
       "ES-C56-mente-literal",
       "ES-C56-mente-make",
@@ -829,6 +832,9 @@ describe("real curriculum", () => {
       "ES-C56-sintesis-leer-limit",
       "ES-C56-sintesis-leer-read",
       "ES-C56-sintesis-leer-shape",
+      "ES-C56-tuviera-build",
+      "ES-C56-tuviera-cost",
+      "ES-C56-tuviera-ser",
       "ES-C57-f-a-h-decode",
       "ES-C57-f-a-h-hablar",
       "ES-C57-f-a-h-limit",

@@ -613,7 +613,7 @@ describe("the whole corpus", () => {
     // 659 -> 674: vocabulary wave 5 (persian/telugu/malayalam), 15 new chapters.
     // 674 -> 678: HL-C88 slices 5-6 (Spanish).
     // 682 -> 694: vocabulary wave 6, round 2 (russian/persian/urdu/bengali), 12 new chapters.
-    expect(chapters).toHaveLength(705); // +3: HL-C113 (B1 si-condition rung) // +3: HL-C113 preterite plural
+    expect(chapters).toHaveLength(707); // +3: HL-C113 (B1 si-condition rung) // +3: HL-C113 preterite plural // HL-C113: HL-C113 imperfect subjunctive
   });
 
   it("leaves no Markdown typography in the spoken script", () => {

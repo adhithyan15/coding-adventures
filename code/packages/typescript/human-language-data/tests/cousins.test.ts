@@ -165,7 +165,7 @@ describe("the real corpus", () => {
     const index = buildCousinIndex(lessons);
     const spanish = lessons.filter((entry) => entry.language === "spanish");
     const withCousins = spanish.filter((entry) => cousinsFor(index, entry).length > 0);
-    expect(withCousins.length).toBe(76);
+    expect(withCousins.length).toBe(77);
 
     // ...but 76 is the join's reach, NOT the number of panels worth printing.
     // A lesson's headword is often a phrase that merely CONTAINS the relative:
@@ -187,7 +187,7 @@ describe("the real corpus", () => {
     const strict = singleToken
       .filter((entry) => entry.language === "spanish")
       .filter((entry) => cousinsFor(strictIndex, entry).length > 0);
-    expect(strict.length).toBe(25);
+    expect(strict.length).toBe(26);
 
     // And the join really is etymological: every pairing names a root slug that
     // BOTH lessons declare.

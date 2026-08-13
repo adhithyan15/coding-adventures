@@ -4078,6 +4078,40 @@
           "ES-GRAMMAR-AR-PRETERITE-3PL"
         ]
       }
+    },
+    {
+      "chapter": 206,
+      "title": "Hablara --- the Form for Supposing",
+      "label": "ch:hablara",
+      "canDo": "I can build the supposing form of any verb from its they-past.",
+      "spineNodes": [
+        "SPINE-ASK-LOCATION"
+      ],
+      "payoff": {
+        "lesson": "ES-C56-hablara",
+        "kind": "task",
+        "summary": "I can build the supposing form of any verb from its they-past.",
+        "assesses": [
+          "ES-GRAMMAR-IMPERFECT-SUBJUNCTIVE-DERIVATION"
+        ]
+      }
+    },
+    {
+      "chapter": 207,
+      "title": "Tuviera --- the Hard Stems, Collected Free",
+      "label": "ch:tuviera",
+      "canDo": "I can build the supposing form of the strong verbs without learning a new stem.",
+      "spineNodes": [
+        "SPINE-ASK-LOCATION"
+      ],
+      "payoff": {
+        "lesson": "ES-C56-tuviera",
+        "kind": "task",
+        "summary": "I can build the supposing form of the strong verbs without learning a new stem.",
+        "assesses": [
+          "ES-GRAMMAR-IMPERFECT-SUBJUNCTIVE-STRONG"
+        ]
+      }
     }
   ]
 }

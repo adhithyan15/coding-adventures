@@ -9620,6 +9620,34 @@
       "jsonHash": "fnv1a64:babdf6059f33f316"
     },
     {
+      "language": "spanish",
+      "chapter": 206,
+      "sourceHash": "fnv1a64:69031ad012e5e834",
+      "lessonIds": [
+        "ES-C56-hablara"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch206.txt",
+      "json": "spanish/narration/ch206.json",
+      "textHash": "fnv1a64:78398c59b4ad61e0",
+      "jsonHash": "fnv1a64:e5b58e576b5aad8c"
+    },
+    {
+      "language": "spanish",
+      "chapter": 207,
+      "sourceHash": "fnv1a64:343ae577cfc778b3",
+      "lessonIds": [
+        "ES-C56-tuviera"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch207.txt",
+      "json": "spanish/narration/ch207.json",
+      "textHash": "fnv1a64:3059140e5b690844",
+      "jsonHash": "fnv1a64:e8d079377c6fdf66"
+    },
+    {
       "language": "tamil",
       "chapter": 1,
       "sourceHash": "fnv1a64:4ba983e1f562762e",
