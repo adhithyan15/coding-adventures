@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.96.0
+
+- Parse Journey `leftMargin` and `maxLabelWidth` init options.
+
 ## 0.95.0
 
 - Parse Journey `actorColours`, `sectionFills`, and `sectionColours` init arrays.

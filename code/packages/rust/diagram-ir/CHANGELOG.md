@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.51.0
+
+- Preserve Journey legend offset and label-width controls plus resolved actor bounds.
+
 ## 0.50.0
 
 - Preserve Journey actor and section palettes through semantic and resolved IR.
