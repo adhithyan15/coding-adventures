@@ -5334,7 +5334,7 @@ impl Compiler {
                                     && binding.array.is_none()
                                     && self.active_by_name_binding(dependency).is_none()
                             })
-                            && !for_body_assigns_name(effect_root, dependency)
+                            && !for_body_changes_name(effect_root, dependency)
                     })
             });
             if condition_is_variable_free || stable_scalar_condition {
@@ -7171,9 +7171,9 @@ fn collect_expression_dependency_names(
     }
 }
 
-fn for_body_assigns_name(node: &GrammarASTNode, name: &str) -> bool {
-    if node.rule_name == "assign_stmt"
-        && direct_nodes(node)
+fn for_body_changes_name(node: &GrammarASTNode, name: &str) -> bool {
+    if node.rule_name == "assign_stmt" {
+        let writes_name = direct_nodes(node)
             .into_iter()
             .filter(|child| child.rule_name == "left_part")
             .filter_map(|left| first_direct_node(left, "variable"))
@@ -7182,9 +7182,12 @@ fn for_body_assigns_name(node: &GrammarASTNode, name: &str) -> bool {
                     && direct_tokens(variable).into_iter().any(|token| {
                         token.effective_type_name() == "NAME" && token.value == name
                     })
-            })
-    {
-        return true;
+            });
+        if writes_name {
+            return first_direct_node(node, "expression")
+                .and_then(expr_variable_name)
+                .is_none_or(|source_name| source_name != name);
+        }
     }
     if node.rule_name == "for_stmt"
         && first_direct_node(node, "variable").is_some_and(|variable| {
@@ -7198,7 +7201,7 @@ fn for_body_assigns_name(node: &GrammarASTNode, name: &str) -> bool {
     }
     direct_nodes(node)
         .into_iter()
-        .any(|child| for_body_assigns_name(child, name))
+        .any(|child| for_body_changes_name(child, name))
 }
 
 fn collect_tokens<'a>(node: &'a GrammarASTNode, out: &mut Vec<&'a Token>) {
@@ -9447,6 +9450,15 @@ mod tests {
     }
 
     #[test]
+    fn al4_static_while_allows_idempotent_body_predicate_dependency() {
+        compile_source(
+            "begin integer i, n, guard; n := 3; guard := 1; i := 0; for i := i + 1 while i < n do begin if guard = 0 then n := n + 1; guard := guard end; print(i + 0.25) end",
+            "test",
+        )
+        .expect("an exact self-assignment preserves a body predicate dependency");
+    }
+
+    #[test]
     fn al4_static_while_preserves_standard_function_dependency() {
         compile_source(
             "begin integer i, n; n := -3; i := 0; for i := i + 1 while i < abs(n) do print(''); print(i + 0.25) end",
@@ -9532,6 +9544,16 @@ mod tests {
             "test",
         )
         .expect_err("a user function body predicate is not statically pure");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_computed_predicate_self_assignment_remains_conservative() {
+        let err = compile_source(
+            "begin integer i, n, guard; n := 3; guard := 1; i := 0; for i := i + 1 while i < n do begin if guard = 0 then n := n + 1; guard := guard + 0 end; print(i + 0.25) end",
+            "test",
+        )
+        .expect_err("a computed assignment may change a body predicate dependency");
         assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 

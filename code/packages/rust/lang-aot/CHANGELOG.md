@@ -1,5 +1,10 @@
 # Changelog — `lang-aot`
 
+## 0.225.16 - 2026-08-13 (ALGOL idempotent while-predicate dependencies)
+
+The seven-backend ALGOL matrix now proves that an exact self-assignment keeps a
+statically selected body-predicate dependency stable.
+
 ## 0.225.15 - 2026-08-13 (ALGOL stable function while predicates)
 
 The seven-backend ALGOL matrix now proves that a supported standard function

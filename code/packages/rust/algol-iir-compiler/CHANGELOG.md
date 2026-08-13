@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.159.0 — 2026-08-13 — idempotent while-predicate dependencies
+
+Capped `while` body-effect analysis now treats an exact scalar self-assignment
+as preserving a static body-predicate dependency. Computed assignments and
+nested controlled variables remain conservative.
+
 ## 0.158.0 — 2026-08-13 — stable standard-function while predicates
 
 Capped `while` body-effect analysis now permits supported deterministic
