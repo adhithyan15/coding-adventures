@@ -1,28 +1,46 @@
 % ============================================================================
-% synonyms — a common word and a word that means the same thing (synonym)
-% (adj-facts-stdlib, LANGUAGE).
+% synonyms — a common word and EVERY word the source's Synonyms line lists
+% for it that means the same thing (synonym) (adj-facts-stdlib, LANGUAGE).
 % ============================================================================
 % A sibling library to `opposites.adj`: many words come in pairs that mean
 % the SAME thing, not the opposite. HAPPY and CHEERFUL both describe feeling
 % good. The word for "means the same as" is a SYNONYM. This tiny library
-% records a handful of clean word→synonym pairs so an ADJ program can recall
-% them, each one cited to a dictionary. Recall is a binding query:
+% records clean word→synonym pairs so an ADJ program can recall them, each
+% one cited to a dictionary. Recall is a binding query:
 %
-%     ? synonym(happy, $Word)      % cheerful
+%     ? synonym(happy, $Word)      % cheerful ; content ; delighted ; ...
 %
 % This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
 % relation `synonym(word, synonym)` carrying the table's citation, so the
-% lookup above is the ordinary SLD binding query — the engine returns the
+% lookup above is the ordinary SLD binding query — the engine returns EVERY
 % synonym WITH its source, on the CPU, with zero model calls, and ABSTAINS on
-% any word not in the table (it never invents a synonym it cannot cite).
+% any word not in the table (it never invents a synonym it cannot cite). Each
+% word is deliberately ONE-TO-MANY: the source's own Synonyms line for each
+% word names several synonyms, not just one, so `synonym(happy, $Word)` binds
+% `$Word` to EACH of them in turn — the same single-valued-to-many-valued
+% shape `kingdoms.adj` and `flame-colors.adj` already established.
 %
 % The pairs, as a truth table:
 %
-%     word    synonym    read as…
-%     ------  ---------  ------------------------------
-%     happy   cheerful   "a synonym of happy is cheerful"
-%     smart   bright     "a synonym of smart is bright"
-%     quick   fast       "a synonym of quick is fast"
+%     word    synonym          read as…
+%     ------  ---------------  ------------------------------
+%     happy   cheerful         "a synonym of happy is cheerful"
+%     happy   content
+%     happy   delighted
+%     happy   elated
+%     happy   exultant
+%     happy   glad
+%     happy   joyful
+%     happy   jubilant
+%     happy   merry
+%     smart   bright           "a synonym of smart is bright"
+%     smart   capable
+%     smart   sophisticated
+%     smart   witty
+%     quick   fast             "a synonym of quick is fast"
+%     quick   speedy
+%     quick   rapid
+%     quick   swift
 %
 % Only ONE direction is shipped per pair (word → its synonym). A query like
 % `? synonym(cheerful, $W)` therefore ABSTAINS: the honest-abstention property
@@ -32,15 +50,27 @@
 %
 % Provenance — nothing here is from memory. Each pair is copied from the
 % English Wiktionary entry for the FIRST word, whose "Synonyms" line lists
-% the synonym verbatim. The per-pair citable spans (quoted exactly as
+% the synonyms verbatim. The per-word citable spans (quoted exactly as
 % printed) are:
 %
 %     happy  → en.wiktionary.org/wiki/happy  "cheerful, content, delighted, elated, exultant, glad, joyful, jubilant, merry"
 %     smart  → en.wiktionary.org/wiki/smart  "bright, capable, sophisticated, witty"  (sense: exhibiting social ability or cleverness)
 %     quick  → en.wiktionary.org/wiki/quick  "fast, speedy, rapid, swift"  (sense: moving with speed)
 %
+% EXTENDED this cycle from 3 to 17 rows: the header ABOVE already quoted the
+% full Synonyms line for each word when this table originally shipped — only
+% the FIRST synonym in each line had ever been turned into a row, even though
+% the same already-quoted span names eight more (happy), three more (smart),
+% and three more (quick). Zero new source page needed; WebFetch re-verified
+% all three Wiktionary "Synonyms" lines live before writing (confirming each
+% word's already-quoted span is accurate, unchanged, and, for `smart`/`quick`,
+% still scoped to the single sense already named in this header). This
+% mirrors `kingdoms.adj`'s single-to-many-valued-per-key extension shape,
+% but needed no new WebFetch to DISCOVER the extra values — they were already
+% sitting in this table's own header the whole time.
+%
 % The single `source` span below is the clearest one (the `happy` entry); the
-% `locator` points at that entry, and each remaining pair's own page + verbatim
+% `locator` points at that entry, and each remaining word's own page + verbatim
 % span is quoted above so every row is independently checkable. `trust
 % consensus` — a dictionary is a secondary reference, not a primary authority,
 % the same tier `opposites.adj` already established for the same Wiktionary
@@ -52,8 +82,22 @@ table synonym {
     columns word, synonym
 
     row (happy, cheerful)
+    row (happy, content)
+    row (happy, delighted)
+    row (happy, elated)
+    row (happy, exultant)
+    row (happy, glad)
+    row (happy, joyful)
+    row (happy, jubilant)
+    row (happy, merry)
     row (smart, bright)
+    row (smart, capable)
+    row (smart, sophisticated)
+    row (smart, witty)
     row (quick, fast)
+    row (quick, speedy)
+    row (quick, rapid)
+    row (quick, swift)
 
     source "cheerful, content, delighted, elated, exultant, glad, joyful, jubilant, merry"
     locator "https://en.wiktionary.org/wiki/happy"

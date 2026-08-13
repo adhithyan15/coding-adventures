@@ -95,3 +95,43 @@ fn synonym_abstains_honestly_on_an_untabled_word() {
         "purple is a real word but has no shipped synonym in this table -- honest abstention, never invented: {out}"
     );
 }
+
+#[test]
+fn synonym_extension_recalls_every_synonym_per_word() {
+    let dir = scratch("ext");
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"synonyms.adj\"\n\
+         ? synonym(happy, $Word)\n\
+         ? synonym(smart, $Word)\n\
+         ? synonym(quick, $Word)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // happy now recalls NINE synonyms, not just cheerful -- the header's own
+    // already-quoted Wiktionary span always named all nine, only the first
+    // had ever been turned into a row.
+    assert!(
+        out.contains("\"Word\":\"jubilant\""),
+        "happy → jubilant (added this cycle): {out}"
+    );
+    assert!(
+        out.contains("\"Word\":\"merry\""),
+        "happy → merry (added this cycle): {out}"
+    );
+    assert!(
+        out.contains("\"Word\":\"sophisticated\""),
+        "smart → sophisticated (added this cycle): {out}"
+    );
+    assert!(
+        out.contains("\"Word\":\"witty\""),
+        "smart → witty (added this cycle): {out}"
+    );
+    assert!(
+        out.contains("\"Word\":\"swift\""),
+        "quick → swift (added this cycle): {out}"
+    );
+}
