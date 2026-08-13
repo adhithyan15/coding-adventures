@@ -1,5 +1,9 @@
 # Changelog — diagram-to-paint
 
+## 0.48.0
+
+- Paint Journey sections, tasks, actors, and text with resolved palette colors.
+
 ## 0.47.0
 
 - Shape Journey titles with their resolved font size, family, and color.

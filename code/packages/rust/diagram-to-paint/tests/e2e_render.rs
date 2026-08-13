@@ -605,14 +605,14 @@ mod apple {
     #[test]
     fn render_mermaid_journey_to_png() {
         let (title, journey) = parse_journey(
-            "%%{init: {\"journey\": {\"diagramMarginX\": 24, \"diagramMarginY\": 12, \"width\": 640, \"height\": 52, \"taskMargin\": 18, \"taskFontSize\": \"18px\", \"taskFontFamily\": \"Avenir Next\", \"titleFontSize\": \"22px\", \"titleFontFamily\": \"Georgia\", \"titleColor\": \"#123456\"}}}%%\njourney\naccTitle: Checkout journey\naccDescr: Native checkout experience\ntitle Checkout<br/>experience\nsection Discover<br>products\nFind<br />product: 5: Alice, Bob\nsection Payment\nPay: 2: Bob",
+            "%%{init: {\"journey\": {\"diagramMarginX\": 24, \"diagramMarginY\": 12, \"width\": 640, \"height\": 52, \"taskMargin\": 18, \"taskFontSize\": \"18px\", \"taskFontFamily\": \"Avenir Next\", \"titleFontSize\": \"22px\", \"titleFontFamily\": \"Georgia\", \"titleColor\": \"#123456\", \"actorColours\": [\"#010203\", \"#040506\"], \"sectionFills\": [\"#112233\", \"#445566\"], \"sectionColours\": [\"#fefefe\"]}}}%%\njourney\naccTitle: Checkout journey\naccDescr: Native checkout experience\ntitle Checkout<br/>experience\nsection Discover<br>products\nFind<br />product: 5: Alice, Bob\nsection Payment\nPay: 2: Bob",
         )
         .expect("journey parse failed");
         let layout = layout_temporal_diagram(
             &TemporalDiagram {
                 kind: TemporalKind::Journey,
                 title,
-                body: TemporalBody::Journey(journey),
+                body: TemporalBody::Journey(Box::new(journey)),
             },
             720.0,
         );
@@ -669,6 +669,16 @@ mod apple {
                 .count(),
             2
         );
+        for expected in ["#112233", "#445566"] {
+            assert!(scene.instructions.iter().any(|instruction| matches!(
+                instruction,
+                PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some(expected)
+            )));
+        }
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::Ellipse(ellipse) if ellipse.fill.as_deref() == Some("#010203")
+        )));
         assert_eq!(
             scene
                 .metadata

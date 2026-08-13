@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.47.0";
+pub const VERSION: &str = "0.48.0";
 
 use std::collections::HashMap;
 
@@ -2355,6 +2355,38 @@ where
                     }),
                 ));
             }
+            LayoutedTemporalItem::JourneySection {
+                x,
+                y,
+                width,
+                height,
+                label,
+                fill,
+                text_color,
+            } => {
+                instructions.push(PaintInstruction::Rect(PaintRect {
+                    base: PaintBase::default(),
+                    x: *x,
+                    y: *y,
+                    width: *width,
+                    height: *height,
+                    fill: Some(fill.clone()),
+                    stroke: None,
+                    stroke_width: None,
+                    corner_radius: Some(3.0),
+                    stroke_dash: None,
+                    stroke_dash_offset: None,
+                }));
+                text_children.push(text_node(
+                    label,
+                    *x + 8.0,
+                    *y + 6.0,
+                    *width - 16.0,
+                    *height - 12.0,
+                    options.title_font.clone(),
+                    css_to_color(text_color),
+                ));
+            }
             LayoutedTemporalItem::TimeAxisSpine { x1, y1, x2, y2 } => {
                 instructions.push(PaintInstruction::Path(line_path(
                     &[Point { x: *x1, y: *y1 }, Point { x: *x2, y: *y2 }],
@@ -2659,18 +2691,16 @@ where
                 person_colors,
                 font_size,
                 font_family,
+                fill,
+                text_color,
             } => {
-                let clamped = (*score).min(5);
-                let red = 239_u8.saturating_sub(clamped * 28);
-                let green = 68_u8.saturating_add(clamped * 31);
-                let fill = format!("rgb({red},{green},120)");
                 instructions.push(PaintInstruction::Rect(PaintRect {
                     base: PaintBase::default(),
                     x: *x,
                     y: *y,
                     width: *width,
                     height: *height,
-                    fill: Some(fill),
+                    fill: Some(fill.clone()),
                     stroke: Some("#475569".into()),
                     stroke_width: Some(1.0),
                     corner_radius: Some(6.0),
@@ -2768,12 +2798,7 @@ where
                     width - 52.0,
                     height - 12.0,
                     task_font,
-                    Color {
-                        r: 15,
-                        g: 23,
-                        b: 42,
-                        a: 255,
-                    },
+                    css_to_color(text_color),
                 ));
             }
         }
@@ -3310,7 +3335,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.47.0");
+        assert_eq!(crate::VERSION, "0.48.0");
     }
 
     #[test]
@@ -3536,6 +3561,15 @@ mod tests {
                     color: "#8fbc8f".into(),
                     label: "Alice".into(),
                 },
+                LayoutedTemporalItem::JourneySection {
+                    x: 0.0,
+                    y: 28.0,
+                    width: 320.0,
+                    height: 32.0,
+                    label: "Discovery".into(),
+                    fill: "#112233".into(),
+                    text_color: "#fefefe".into(),
+                },
                 LayoutedTemporalItem::JourneyTask {
                     x: 16.0,
                     y: 40.0,
@@ -3547,6 +3581,8 @@ mod tests {
                     person_colors: vec!["#8fbc8f".into()],
                     font_size: Some(18.0),
                     font_family: Some("Avenir Next".into()),
+                    fill: "#112233".into(),
+                    text_color: "#fefefe".into(),
                 },
             ],
         };
