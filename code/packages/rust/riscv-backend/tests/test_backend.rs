@@ -1107,6 +1107,79 @@ fn linked_module_preserves_a_wide_value_live_across_a_call() {
 }
 
 #[test]
+fn linked_module_shares_a_wide_global_across_function_calls() {
+    let bump = vec![
+        ci(
+            "global_load",
+            Some("current"),
+            vec![CIROperand::Var("counter".into())],
+            "u64",
+        ),
+        ci("const_u64", Some("one"), vec![CIROperand::Int(1)], "u64"),
+        ci(
+            "add_u64",
+            Some("next"),
+            vec![
+                CIROperand::Var("current".into()),
+                CIROperand::Var("one".into()),
+            ],
+            "u64",
+        ),
+        ci(
+            "global_store",
+            None,
+            vec![
+                CIROperand::Var("counter".into()),
+                CIROperand::Var("next".into()),
+            ],
+            "u64",
+        ),
+        ci("ret_u64", None, vec![CIROperand::Var("next".into())], "u64"),
+    ];
+    let main = vec![
+        ci("const_u64", Some("seed"), vec![CIROperand::Int(40)], "u64"),
+        ci(
+            "global_store",
+            None,
+            vec![
+                CIROperand::Var("counter".into()),
+                CIROperand::Var("seed".into()),
+            ],
+            "u64",
+        ),
+        ci(
+            "call",
+            Some("first"),
+            vec![CIROperand::Var("bump".into())],
+            "u64",
+        ),
+        ci(
+            "call",
+            Some("second"),
+            vec![CIROperand::Var("bump".into())],
+            "u64",
+        ),
+        ci("ret_u64", None, vec![CIROperand::Var("second".into())], "u64"),
+    ];
+    let functions = [
+        ModuleFunction {
+            context: ctx("bump", &[], "u64"),
+            cir: &bump,
+        },
+        ModuleFunction {
+            context: ctx("main", &[], "u64"),
+            cir: &main,
+        },
+    ];
+
+    let binary = compile_module(&functions, Some("main")).expect("module linking");
+    let result = run_binary(&binary, &[]).expect("linked module execution");
+    assert!(result.halted);
+    assert_eq!(result.return_value, 42);
+    assert_eq!(result.return_value_high, 0);
+}
+
+#[test]
 fn moves_scalar_and_wide_values() {
     let scalar = vec![
         ci("const_i32", Some("source"), vec![CIROperand::Int(42)], "i32"),

@@ -1208,6 +1208,30 @@ fn end_to_end_nib_print_captures_integer_output_in_the_riscv_simulator() {
 }
 
 #[test]
+fn end_to_end_nib_static_is_shared_across_riscv_calls() {
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("static.nib");
+    let bin = dir.path().join("static.bin");
+    std::fs::write(
+        &src,
+        b"static counter: u8 = 40; \
+          fn bump() -> u8 { counter = counter + 1; return counter; } \
+          fn main() -> u8 { bump(); print(bump()); return 0; }\n",
+    )
+    .unwrap();
+
+    lang_aot::compile_file_to_riscv32_bin(&src, &bin, lang_aot::Language::Nib)
+        .expect("Nib statics must compile through the RV32I global-data section");
+
+    let bytes = std::fs::read(&bin).expect("read .bin");
+    let run = riscv_backend::run_binary(&bytes, &[])
+        .expect("the Nib static binary must execute in the simulator");
+    assert!(run.halted, "the simulator return trampoline must halt");
+    assert_eq!(run.output, vec![42]);
+    assert_eq!(run.return_value, 0);
+}
+
+#[test]
 fn end_to_end_nib_multiplication_executes_in_the_riscv_simulator() {
     let dir = tempfile::tempdir().expect("tempdir");
     let src = dir.path().join("multiplication.nib");

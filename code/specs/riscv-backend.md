@@ -130,6 +130,16 @@ a program's last host service cannot be replayed as the terminal halt.
 programs a source-to-RV32I-to-simulator printing path without requiring an
 external runtime image.
 
+## Module globals
+
+`compile_module` collects `global_load` and `global_store` names in stable
+first-seen order across the linked CIR module. Each name owns an aligned,
+zero-initialized eight-byte slot appended after the text image. Scalar globals
+use the low word; `i64` and `u64` globals use both words. The global name and
+its CIR type must agree at every access. Lowered code materializes the final
+slot address after module layout, so calls share one storage location while
+the selected entry function can seed language-level static initializers.
+
 ## Prioritized backlog
 
 1. [x] **Control flow:** label binding and branch backpatching for CIR conditional
@@ -177,16 +187,23 @@ external runtime image.
 18. [x] **Host runtime ABI:** simulator `ecall` services expose exit and signed
    64-bit integer output; `print_i64` lowers through that ABI and Nib output is
    captured by the source-to-simulator fixture.
-19. [ ] **Memory and data:** globals, addresses, loads/stores, and a data-image
-   loader for programs needing strings or arrays.
-20. [ ] **BASIC real values:** Dartmouth BASIC currently lowers numeric values
+19. [x] **Module globals:** collect typed `global_load` / `global_store` names
+   across a linked module, append zero-initialized 64-bit slots after code, and
+   lower scalar and pair accesses. Nib `static` values survive linked calls in
+   the source-to-simulator fixture.
+20. [ ] **Linear memory:** lower explicit byte/word addresses and loads/stores,
+   including bounds behavior in the simulator, for tape-like and array payload
+   users.
+21. [ ] **Data images:** load initialized byte data alongside code so string and
+   array runtimes can address immutable program data.
+22. [ ] **BASIC real values:** Dartmouth BASIC currently lowers numeric values
    such as `PRINT 42` through `f64`; direct RISC-V execution needs either a
    floating-point ABI or an integer-only lowering path before those programs
    can run on the simulator.
-21. [x] **Call argument ABI:** marshal scalar and pair-value arguments into
+23. [x] **Call argument ABI:** marshal scalar and pair-value arguments into
    `a0` through `a7`, including word-sized wide values, and preserve the narrow
    CIR view of ABI-normalized wide parameters.
-22. [x] **Typed CIR moves:** lower scalar and wide `mov_*` copies, including
+24. [x] **Typed CIR moves:** lower scalar and wide `mov_*` copies, including
    copies with a live wide source. Nib `let` bindings can now flow into direct
    calls and execute in the simulator.
 
