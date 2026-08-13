@@ -2,6 +2,12 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Devanagari भ ductus (HL-C09DQ)
+
+- Render **भ** in three source-aligned movements across three strokes.
+- Keep the clockwise upper loop, descending trunk, clockwise lower bowl, and rightward crossbar in one continuous body before the top-to-bottom right stem and final shirorekhā.
+- Preserve the source's two lifts, fit the path to Noto Sans Devanagari, and reduce measured HL-C09 debt to 111 entries.
+
 ### Added — cited Devanagari ब ductus (HL-C09DP)
 
 - Render **ब** in four source-aligned movements across four strokes.

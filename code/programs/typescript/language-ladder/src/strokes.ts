@@ -2664,6 +2664,41 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: devanagariAlphabetSource("ब"),
   },
+  // JackPotte's animation keeps the clockwise upper loop, descending trunk,
+  // clockwise lower bowl, and rightward crossbar in one continuous run, then
+  // separately descends the right stem and finishes the headline. The Central
+  // Hindi Directorate deskbook confirms the component order but stages the two
+  // body parts separately: three animation-backed strokes, two lifts.
+  [ductusKey("devanagari", "भ")]: {
+    script: "devanagari",
+    glyph: "भ",
+    strokes: [
+      { segments: [{ label: "circle clockwise through both loops and sweep right", path: [
+        { x: 200, y: 410 }, { x: 165, y: 414 }, { x: 135, y: 425 },
+        { x: 95, y: 455 }, { x: 75, y: 495 },
+        { x: 78, y: 540 }, { x: 100, y: 575 }, { x: 135, y: 595 },
+        { x: 180, y: 602 }, { x: 225, y: 592 }, { x: 260, y: 565 },
+        { x: 285, y: 528 }, { x: 292, y: 485 }, { x: 285, y: 450 },
+        { x: 292, y: 405 }, { x: 292, y: 360 }, { x: 292, y: 315 },
+        { x: 292, y: 265 }, { x: 286, y: 220 }, { x: 260, y: 188 },
+        { x: 225, y: 184 }, { x: 205, y: 215 }, { x: 180, y: 242 },
+        { x: 182, y: 278 }, { x: 200, y: 300 }, { x: 235, y: 285 },
+        { x: 275, y: 285 }, { x: 325, y: 285 }, { x: 380, y: 285 },
+        { x: 440, y: 285 }, { x: 495, y: 285 }, { x: 530, y: 285 },
+      ] }] },
+      { segments: [{ label: "lift, then descend the right stem", path: [
+        { x: 575, y: 551 }, { x: 575, y: 475 }, { x: 575, y: 395 },
+        { x: 575, y: 315 }, { x: 575, y: 235 }, { x: 575, y: 155 },
+        { x: 575, y: 75 }, { x: 575, y: 5 },
+      ] }] },
+      { segments: [{ label: "lift, then draw the shirorekha left-to-right", path: [
+        { x: 405, y: 585 }, { x: 455, y: 585 }, { x: 510, y: 585 },
+        { x: 565, y: 585 }, { x: 620, y: 585 }, { x: 675, y: 585 },
+        { x: 715, y: 585 },
+      ] }] },
+    ],
+    source: devanagariAlphabetSource("भ"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the
