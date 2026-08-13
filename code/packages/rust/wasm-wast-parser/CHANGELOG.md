@@ -1,5 +1,37 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.2 — 2026-08-13 — a local-index bug found investigating real assert_return failures (WASM14)
+
+`build_func` assigned local indices by re-walking a function's own literal
+`(param ...)` forms, incrementing a counter as it went. That undercounts
+the moment a function references its signature purely via `(type $sig)`
+(no `(param ...)` forms of its own at all — the official testsuite's
+`func.wast` has several such cases: `"type-use-1"` through `"type-use-5"`)
+and *also* declares a `(local ...)`: the counter never advances past 0
+for the (invisible-to-this-function) params from the referenced type, so
+the first declared local silently gets assigned parameter index 0 again
+instead of the index right after the real params. `local.get` on that
+local then read the PARAM's value instead of the local's own
+zero-initialized default — a real, wrong computed VALUE, not a trap
+(`func.wast`'s `"f"`/`"g"` cases expected 0, got 42, the argument passed
+in).
+
+Fixed by seeding the local-index counter from `ctx.module.types[type_idx]
+.params.len()` — the function's REAL resolved param count — rather than
+from a count built by re-walking this function's own literal `(param
+...)` forms, which can legitimately be empty. Uses `.get()`, not direct
+indexing: an already-regression-tested case
+(`func_with_out_of_range_numeric_type_reference_does_not_panic`) exercises
+a numeric `(type N)` reference with no matching `(type ...)` section entry
+at all, which this text-level parser deliberately does not reject (that's
+`wasm-validator`'s job) — falls back to a param count of 0 rather than
+panicking on the out-of-range index.
+
+1 new regression test
+(`local_declared_after_a_type_only_referenced_param_gets_the_next_free_index`)
+reproducing `func.wast`'s exact shape in isolation. Baseline: `assert_return`
+12169/12238 (99.4%) → 12171/12238 (99.5%).
+
 ## 0.1.1 — 2026-08-13 — 4 grammar bugs found running the real testsuite (W05 PR-4)
 
 `wasm-conformance` (W05 PR-4) is this crate's first real workout: running

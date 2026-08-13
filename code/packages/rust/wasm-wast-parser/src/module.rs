@@ -553,22 +553,46 @@ fn build_func(fields: &[SExpr], ctx: &mut ModuleCtx, func_idx: usize) -> Result<
     let type_idx = resolve_func_signature_ref(fields, ctx)?;
     ctx.module.functions[func_idx] = type_idx;
 
-    // Local scope: params first (from the signature just resolved,
-    // re-walking the param forms here only for their OPTIONAL names --
-    // `parse_func_signature` already captured the types), then declared
-    // `(local ...)` forms.
+    // Local scope: params first, then declared `(local ...)` forms right
+    // after them. The FIRST declared local's index must be the function's
+    // REAL param count -- `ctx.module.types[type_idx].params.len()` --
+    // not a count built by re-walking this function's own literal
+    // `(param ...)` forms below. Those two can differ: a function that
+    // references an out-of-line signature via `(type $sig)` (`func.wast`'s
+    // own "type-use-1".."type-use-5" cases, none of which repeat `(param
+    // ...)` inline) has ZERO literal `(param ...)` forms in `fields` at
+    // all, even though its real type has params occupying local indices
+    // 0..N. Seeding the local-index counter from 0 in that case makes the
+    // first declared `(local ...)` silently alias parameter index 0
+    // instead of starting after the params -- a real, previously-wrong
+    // computed VALUE (not a trap), since `local.get $var` then reads the
+    // param's value instead of the local's own zero-initialized default.
+    // The loop below still walks literal `(param ...)` forms (when
+    // present) to capture their OPTIONAL `$name`s at the correct
+    // POSITIONAL index, which is unaffected by this fix either way.
+    //
+    // `.get()`, not direct indexing: an out-of-range numeric `(type N)`
+    // reference (no `(type ...)` section entry at all) is a real, already
+    // regression-tested case (`func_with_out_of_range_numeric_type_reference_does_not_panic`)
+    // this text-level parser deliberately does NOT reject -- bounds-checking
+    // a type index is `wasm-validator`'s job, not this parser's. Falling
+    // back to 0 here just means this already-structurally-invalid module's
+    // local indices come out the same (wrong) way they always did; it will
+    // fail validation regardless, for the missing type, not for this.
+    let param_count = ctx.module.types.get(type_idx as usize).map(|t| t.params.len()).unwrap_or(0) as u32;
     let mut local_names: HashMap<String, u32> = HashMap::new();
-    let mut next_local = 0u32;
+    let mut param_position = 0u32;
+    let mut next_local = param_count;
     let mut locals_decl: Vec<ValueType> = Vec::new();
     let mut instr_start = 0usize;
     for (i, f) in fields.iter().enumerate() {
         if f.is_keyword_list("param") {
             let items = f.as_list().unwrap();
             if items.len() == 3 && items[1].as_atom().is_some_and(|s| s.starts_with('$')) {
-                local_names.insert(items[1].as_atom().unwrap().to_string(), next_local);
-                next_local += 1;
+                local_names.insert(items[1].as_atom().unwrap().to_string(), param_position);
+                param_position += 1;
             } else {
-                next_local += (items.len() - 1) as u32;
+                param_position += (items.len() - 1) as u32;
             }
             instr_start = i + 1;
         } else if f.is_keyword_list("result") || f.is_keyword_list("type") {
@@ -1434,6 +1458,30 @@ mod tests {
         .unwrap();
         // param is local 0, $x is local 1.
         assert_eq!(code_of(&m, 0), &[0x20, 0x00, 0x20, 0x01, 0x1A, 0x0B]);
+    }
+
+    /// WASM14: a function that references its signature via `(type $sig)`
+    /// and has ZERO literal `(param ...)` forms of its own must still seed
+    /// the local-index counter from the referenced type's REAL param count,
+    /// not from 0 -- otherwise a declared `(local ...)` silently aliases
+    /// parameter index 0 instead of starting right after the params. This
+    /// is exactly `func.wast`'s own "type-use-1" shape from the official
+    /// spec testsuite (`(func (export "f") (type $sig) (local $var i32)
+    /// (local.get $var))` returning the local's own zero-initialized
+    /// default, 0, not the param's value, 42), found because that real
+    /// case was returning the wrong VALUE (not trapping) -- the kind of
+    /// bug an inline-`(param ...)` test like the one above can't catch.
+    #[test]
+    fn local_declared_after_a_type_only_referenced_param_gets_the_next_free_index() {
+        let m = parse_module(
+            "(module
+               (type $sig (func (param i32) (result i32)))
+               (func (export \"f\") (type $sig) (local $var i32) (local.get $var)))",
+        )
+        .unwrap();
+        // The param occupies local 0 (from $sig, never spelled out here);
+        // $var must be local 1, NOT local 0 again.
+        assert_eq!(code_of(&m, 0), &[0x20, 0x01, 0x0B]);
     }
 
     #[test]
