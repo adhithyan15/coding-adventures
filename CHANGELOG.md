@@ -35,6 +35,25 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - `chapter-policy.json` gains the drizzle itself — one new letter per script
   segment, at least two lessons between segments, and the unspent-letter window.
 
+### Added — HL11 Script Closure: were the letters ever taught?
+- `measureScriptClosure` asks what HL08's glyph budget cannot. That budget caps
+  how FAST new glyphs arrive; a track satisfies it perfectly while teaching no
+  letters at all, and most non-Latin tracks do exactly that.
+- First measurement, now in the gap report: **931 lessons across 16 non-Latin
+  tracks ask the reader to decode a glyph nobody taught them**, and **12 of those
+  16 tracks teach no letters at all**. The pace budget flags 61 lessons. The gap
+  between 61 and 931 is the argument for the measurement.
+- The defect is not confined to the six Indic tracks it was written for: Arabic,
+  Bengali, Marathi, Russian, Punjabi, Gujarati, Persian, Urdu, Japanese and
+  Chinese show it too.
+- Exposure keeps the rule honest and is drawn mechanically: a headword is
+  exposure when its lesson declares a `romanization`, because that is the promise
+  the reader can use the word without reading it. **489** native-script headwords
+  carry none. Each becomes exempt the moment somebody writes down how to say it —
+  the rule names its own remediation, which is why it is the right one.
+- `exposureOnly` is reported beside the violations so the exemption cannot
+  quietly become the reason the number looks good.
+
 ### Added — HL11: The Drizzled Script Ramp
 - `code/specs/HL11-drizzled-script-ramp.md` specifies the curriculum ramp for a
   reader who does not already know the target alphabet. The book stays useful from

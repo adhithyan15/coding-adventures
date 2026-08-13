@@ -3,6 +3,7 @@ import { runChapterGates, type ChapterGateReport } from "./chapters.js";
 import { CEFR_LEVELS, summarizeLevels, type LevelSummary } from "./levels.js";
 import { measureRamp, type RampReport } from "./ramp.js";
 import { measureContinuity, type ContinuityReport } from "./continuity.js";
+import { measureScriptClosure, type ScriptClosureReport } from "./script-closure.js";
 import { runLevelGate, type LevelGateReport } from "./level-gate.js";
 import type {
   BookCorpus,
@@ -114,6 +115,25 @@ export interface CurriculumGapReport {
     scriptRampOverBudgetLessons: number | null;
     /** HL08: lessons opening more than one writing system at once. */
     lessonsOpeningMultipleScripts: number | null;
+    /**
+     * HL11: lessons asking the reader to decode a glyph nobody taught them.
+     *
+     * The question HL08's glyph budget cannot ask. A track satisfies that budget
+     * perfectly while teaching no letters at all, which is what most non-Latin
+     * tracks do, so a pace cap reports them as gentle.
+     */
+    scriptClosureViolations: number;
+    /** HL11: non-Latin tracks with no script lesson at all. */
+    tracksTeachingNoScript: number;
+    /**
+     * HL11: native-script headwords with no romanization.
+     *
+     * The remediation queue, not a violation count. A headword beside its
+     * romanization is exposure; without one it is something the reader has to
+     * decode, so each of these becomes exempt the moment somebody writes down
+     * how to say it.
+     */
+    headwordsWithoutRomanization: number;
     /** HL09: lessons with no declared reading order. Until zero, the rest is provisional. */
     lessonsWithoutSequence: number;
     /** HL09: lessons reviewing a lesson the learner has not reached yet. */
@@ -180,6 +200,14 @@ export interface CurriculumGapReport {
    * order, reinforcement and forward references are all properties of the lessons.
    */
   continuity: ContinuityReport;
+  /**
+   * HL11 — closure: whether the reader was ever taught the letters they are shown.
+   *
+   * Always present, like `continuity` and for the same reason: it needs no
+   * policy. Latin-script tracks are absent from it by construction, since their
+   * reader arrives already knowing the alphabet.
+   */
+  scriptClosure: ScriptClosureReport;
   /**
    * HL09 §3.1 — what it takes to CLAIM a level, as opposed to touch one.
    *
@@ -498,6 +526,7 @@ export function buildCurriculumGapReport(input: CurriculumGapReportInput): Curri
   // its own script, so unlike the chapter gates this does not wait on the ledgers.
   const ramp = input.chapterPolicy ? measureRamp(lessons, input.chapterPolicy) : undefined;
   const continuity = measureContinuity(lessons);
+  const scriptClosure = measureScriptClosure(lessons);
   const levelGate =
     levels && ramp && input.curricula && input.spine
       ? runLevelGate({ lessons, levels, curricula: input.curricula, spine: input.spine, ramp, continuity })
@@ -541,6 +570,9 @@ export function buildCurriculumGapReport(input: CurriculumGapReportInput): Curri
       rampOverBudgetLessons: ramp?.summary.lessonViolations ?? null,
       scriptRampOverBudgetLessons: ramp?.script.summary.lessonViolations ?? null,
       lessonsOpeningMultipleScripts: ramp?.script.summary.systemViolations ?? null,
+      scriptClosureViolations: scriptClosure.summary.violations,
+      tracksTeachingNoScript: scriptClosure.summary.tracksTeachingNothing,
+      headwordsWithoutRomanization: scriptClosure.summary.headwordsWithoutRomanization,
       lessonsWithoutSequence: continuity.summary.lessonsWithoutSequence,
       forwardReviews: continuity.summary.forwardReviews,
       atomsNeverRevisited: continuity.summary.atomsNeverRevisited,
@@ -563,6 +595,7 @@ export function buildCurriculumGapReport(input: CurriculumGapReportInput): Curri
     levels,
     ramp,
     continuity,
+    scriptClosure,
     levelGate,
     modality,
   };
@@ -603,6 +636,12 @@ export function renderCurriculumGapReport(report: CurriculumGapReport): string {
             `(max ${report.ramp.script.summary.maxForeignGlyphsInALesson} glyphs) — context, never charged to the budget`,
         ]
       : []),
+    `script closure: ${report.scriptClosure.summary.violations} lessons ask the reader to decode ` +
+      `a glyph nobody taught them, across ${report.scriptClosure.summary.tracksWithScript} non-Latin tracks; ` +
+      `${report.scriptClosure.summary.tracksTeachingNothing} of those tracks teach NO letters at all`,
+    `exposure: ${report.scriptClosure.summary.headwordsWithoutRomanization} native-script headwords carry no ` +
+      `romanization, so they are load-bearing rather than exposure; ` +
+      `${report.scriptClosure.summary.exposureOnly} lessons are clean only because of the exposure rule`,
     `order: ${report.continuity.summary.lessonsWithoutSequence} lessons with no declared sequence ` +
       `across ${report.continuity.summary.tracksWithUnorderedLessons} tracks; ` +
       `${report.continuity.summary.forwardPrerequisites} prerequisites and ` +

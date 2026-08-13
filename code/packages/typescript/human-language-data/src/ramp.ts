@@ -67,7 +67,7 @@ import { hasOwn } from "./constants.js";
  * `perso-arabic` and `urdu-nastaliq` are Arabic script in different hands, so
  * they resolve to the same Unicode script.
  */
-const SCRIPT_SYSTEMS: Record<string, string[]> = {
+export const SCRIPT_SYSTEMS: Record<string, string[]> = {
   latin: ["Latin"],
   devanagari: ["Devanagari"],
   bengali: ["Bengali"],
@@ -131,7 +131,7 @@ const SYSTEM_MATCHERS: ReadonlyArray<readonly [string, RegExp]> = ALL_SYSTEMS.ma
  * born to ASCII can already read, so a numbers lesson genuinely does teach script.
  * Latin digits never reach the matchers, so no exclusion is needed for them.
  */
-function systemOf(ch: string): string | null {
+export function systemOf(ch: string): string | null {
   if (/[\s\p{P}\p{C}]/u.test(ch)) return null;
   for (const [system, matcher] of SYSTEM_MATCHERS) {
     if (matcher.test(ch)) return system;

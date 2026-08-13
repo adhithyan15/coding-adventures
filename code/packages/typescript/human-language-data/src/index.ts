@@ -320,3 +320,10 @@ export {
   type LedgerIssue,
   type LedgerSummary,
 } from "./letter-ledger.js";
+
+export {
+  measureScriptClosure,
+  type ScriptClosureReport,
+  type ClosureViolation,
+  type TrackClosure,
+} from "./script-closure.js";

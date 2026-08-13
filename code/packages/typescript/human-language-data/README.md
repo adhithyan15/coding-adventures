@@ -367,6 +367,54 @@ Note that `loadScripts` deliberately skips `*-ledger.json`. Both files live in
 map would have had one silently overwrite the other, with the winner decided by
 filename sort order.
 
+### Script closure — was the reader ever taught these letters? (HL11)
+
+The glyph budget above measures **pace**. It caps how fast new glyphs arrive and
+it caught real spikes. But a track satisfies it perfectly while teaching no
+letters at all, and that is what most non-Latin tracks do.
+
+```ts
+import { loadEverything, measureScriptClosure } from "@coding-adventures/human-language-data";
+
+const { lessons } = loadEverything();
+const closure = measureScriptClosure(lessons);
+
+closure.summary.violations;                    // 931
+closure.summary.tracksTeachingNothing;         // 12 of 16 non-Latin tracks
+closure.summary.headwordsWithoutRomanization;  // 489
+closure.violations[0];                         // { lessonId: "TE-C16-nelalu", count: 30, … }
+```
+
+Put the two numbers beside each other and the gap is the argument for the whole
+measurement:
+
+| | flagged lessons |
+|---|---:|
+| script **ramp** — glyphs arriving faster than the budget | **61** |
+| script **closure** — glyphs arriving untaught | **931** |
+
+**Exposure is what keeps this from being absurd.** A word the reader is merely
+*shown* — the headword printed beside its romanization, so the eye starts
+recognising a shape long before the hand can make it — is not something they were
+asked to read. HL11 calls that exposure; it is counted, reported, and never
+required. That is what lets a Tamil course open on வணக்கம் while still promising
+the reader is never asked to decode something untaught.
+
+The distinction has to be mechanical or it is worthless, so it is drawn where the
+corpus already records the answer: **a headword is exposure when the lesson
+declares a `romanization`.** Which is also why it is the right rule — it names
+its own remediation. Adding a romanization converts a headword from load-bearing
+to exposure, and that is a real improvement to the lesson rather than a way of
+hiding from the measurement. 489 lessons are one romanization away.
+
+`exposureOnly` is published beside `violations` so the exemption cannot quietly
+become the reason the number looks good.
+
+A glyph counts as **taught** by any `type: writing` or `delivery: script` lesson
+that contains it. That is coarser than naming each letter in frontmatter, and
+deliberately so: it credits the corpus with everything it could plausibly be
+teaching, which makes the reported debt a *lower bound*.
+
 ### The narration export (HL08)
 
 The audio-script output [`HL04`](../../../specs/HL04-shared-spine-and-content-pipeline.md)'s

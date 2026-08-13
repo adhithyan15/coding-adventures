@@ -36,6 +36,23 @@
   carry the same `script` key, so reading both into one map would have had one
   silently overwrite the other — decided by filename sort order.
 
+### Added — Script closure (HL11)
+
+- `measureScriptClosure()` asks the question the glyph budget cannot: for each
+  glyph the reader is asked to read, had an earlier lesson taught it? Wired into
+  the gap report, always present, report-only.
+- First measurement: **931** lessons across 16 non-Latin tracks show a glyph
+  nobody taught, and **12 of those 16 teach no letters at all**. The pace budget
+  flags 61. A track can satisfy a cap on speed while teaching nothing.
+- Exposure is drawn mechanically: a headword is exposure when the lesson declares
+  a `romanization`. **489** native-script headwords carry none, so they are
+  load-bearing — and each becomes exempt the moment somebody writes down how to
+  say it, which is a real improvement rather than a way to hide from the number.
+- `exposureOnly` is published beside `violations`, so the exemption cannot become
+  the reason the count looks good.
+- `SCRIPT_SYSTEMS` and `systemOf` are exported from `ramp.ts` so the two script
+  measurements share one definition of what belongs to a script.
+
 All notable changes to `@coding-adventures/human-language-data` are documented here.
 
 ## [Unreleased]
