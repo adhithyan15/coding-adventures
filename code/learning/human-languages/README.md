@@ -17,8 +17,12 @@ book's visual system and inline script-writing figures in
 [`HL07`](../../specs/HL07-spine-expansion-to-b1.md).
 [`HL08`](../../specs/HL08-modality-gentle-ramp-and-the-drivable-course.md) marks which
 chapters need eyes or a pen and which can be learned entirely by ear, and defines the
-narration export a voice assistant reads aloud on a commute. This page is just an
-index.
+narration export a voice assistant reads aloud on a commute.
+[`HL11`](../../specs/HL11-drizzled-script-ramp.md) covers the ramp none of the
+others can express — the one climbed by a reader who does not already know the
+alphabet: the book stays useful from page 1 while the script drizzles in one letter
+at a time behind it, and no lesson may ask the reader to decode a glyph it has not
+taught. This page is just an index.
 
 Every track shares the same shape:
 

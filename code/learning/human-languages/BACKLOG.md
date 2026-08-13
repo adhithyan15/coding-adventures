@@ -5,7 +5,13 @@ and Language Ladder. Reprioritize it after every merged work item. Add newly
 discovered work here before starting it so the repository, rather than an agent
 session, remains the source of truth.
 
-Last prioritized: 2026-08-09, after merging #10219 for HL-C06. Spanish
+Last prioritized: 2026-08-12, when HL11 opened the drizzled script ramp for the
+six Indic tracks (HL-C113…HL-C120). It sits at P0 alongside HL10 because it is the
+same failure at a different layer: HL09 found a curriculum that measured gentle and
+read brutal, and HL11 finds six tracks that pass the glyph budget while asking the
+reader to decode letters no lesson ever taught.
+
+Previously prioritized: 2026-08-09, after merging #10219 for HL-C06. Spanish
 `ES-C17-comer-futuro` is now the first canonical
 productive frame, with ordered app-visible slots limited to already-known *comer*,
 *beber*, and *café*. Its three gates now exercise real content rather than passing over
@@ -394,6 +400,57 @@ A third directive, same day, added the **friends** system and the
 reader's brain can connect, and write for someone who knows no grammar
 vocabulary at all. Both are specified in HL10 §6.7, §7.4 and §7.5 and carried by
 HL-C88 and HL-C89 below.
+
+## P0 — The drizzled script ramp for the six Indic tracks (HL11)
+
+**2026-08-12.** [HL11](../../specs/HL11-drizzled-script-ramp.md) covers the ramp
+none of HL08–HL10 can express: the one a reader climbs who does not already know
+the alphabet. HL08 caps how fast glyphs arrive; nothing checks whether the reader
+was ever *taught* them, and the six Indic tracks — Tamil, Telugu, Kannada,
+Malayalam, Hindi, Sanskrit — fail on that axis in both directions at once.
+
+Measured over the committed corpus, walking each track in `sequence` order:
+
+| track | on page 1 | by lesson 10 | by lesson 50 | writing lessons | first one at |
+|---|---|---|---|---|---|
+| tamil | 4 letters + 1 mark | 15 + 8 | 38 + 11 | 20 | `sequence: 270` |
+| telugu | 4 + 4 | 38 + 11 | 49 + 12 | **0** | — |
+| kannada | 7 + 5 | 39 + 11 | 52 + 12 | **0** | — |
+| malayalam | 9 + 5 | 44 + 12 | 52 + 13 | **0** | — |
+| hindi | 7 + 5 | 21 + 7 | 41 + 14 | 11 | lesson 1 |
+| sanskrit | **12 + 8** | 24 + 11 | 35 + 13 | **0** | — |
+
+`TA-C01-vanakkam` prints வணக்கம் at `sequence: 10` with not one of its letters
+taught, and Tamil's writing strand does not begin for another 260 sequences.
+`SA-C06-numbers-1-5` opens twenty distinct Devanagari glyphs in one lesson. Four
+of the six tracks have no writing strand at all.
+
+**The owner's direction, 2026-08-12**, which rules out the obvious fix: *"The books
+have to be useful from page 1. So, do not start with script first. Instead, you can
+slowly ramp up on that. For example, teach greetings first and then slowly drizzle
+in one letter at a time. By the time we get to Lesson 50 or something like that we
+could have the readers be able to write a few words."* Also settled the same day:
+all six tracks advance in lockstep; figures are PNG raster; existing lessons are
+kept and re-placed where they work and rewritten where they do not; and a letter
+with no citable stroke order ships prose-only with no pen path and no figure.
+
+The measurement that makes the instruction easy rather than ambitious: choosing
+letters greedily by how many whole headwords each completes, **seven or eight
+glyphs unlock five real words in every one of the six tracks** (first writable
+word at 5, 2, 3, 3, 1, 1 glyphs respectively). The same walk in traditional
+recitation order completes zero words after twelve glyphs — which is why HL11 §4
+orders letters by payoff and records the order as a per-script letter ledger.
+
+| ID | Status | Work item | Completion signal |
+|---|---|---|---|
+| HL-C113 | Not started | Add `image-codec-png` under `code/packages/typescript/`: a zero-dep PNG encoder over the existing `deflate` and `pixel-container` packages, mirroring `image-codec-bmp`'s `ImageCodec` shape. PNG rather than BMP because the books are XeLaTeX and XeLaTeX embeds PNG. | `encodePng`/`decodePng`/`PngCodec` round-trip; the package carries BUILD, README, CHANGELOG and >95% coverage; an encoded strip opens in XeLaTeX. |
+| HL-C114 | Not started | Extract `script-ductus` from the app. `language-ladder/src/{strokes,ductusview,truetype}.ts` hold `DUCTUS`, the font-outline reader, and the filmstrip builder; nothing under `code/packages/` may depend on something under `code/programs/`, so the book generator cannot reach them today. `ductusview.ts`'s own header already anticipates the move. | The three modules live in a package, `language-ladder` imports it with no behaviour change, and the font-verification tests (`fractionOnInk`, segment-meeting, whole-ink coverage) move across intact and still pass. |
+| HL-C115 | Not started | Add the `letter-ductus` figure kind beside `etymology-route` — the only kind that exists today. One letter renders *n* panels, panel *k* showing strokes 1…*k*, the font's own outline behind in grey, the travelled path in ink, a dot at the pen, one caption per panel from the segment labels. | Declared in `core/figure-generation.json`, rasterised through HL-C113, byte-gated in `core/generated-figure-hashes.json`; proved on Tamil's eleven already-verified letters before any new research lands. |
+| HL-C116 | Not started | Measure the script ramp's missing half in `ramp.ts`, report-only: load-bearing versus exposure target-script text, closure violations, `firstWritableWord`, the writable-word curve, letters per script segment, and unspent letters. | Every number appears in the gap report; the corpus's real closure debt is published per track; nothing throws, per the HL05/HL08 precedent. |
+| HL-C117 | Not started | Add the `SCRIPT` strand and its pre-A1 nodes to `core/spine.json`, a drizzle budget to `core/chapter-policy.json` beside `maxNewGlyphsPerLesson`, and the per-script **letter ledger** — ordered by word payoff, authored intent, never rewritten by a validator. | Each of the five scripts has a ledger; every ledger entry names the words its letter completes; a letter that completes nothing for a long stretch is reported as unspent (the Root Ledger rule, applied to glyphs). |
+| HL-C118 | Not started | Research and author cited ductus for the five scripts in letter-ledger order — Tamil outward from its eleven, and Telugu, Kannada, Malayalam and Devanagari from zero. Base letters and vowel signs only; composed syllables derive from theirs. | Every authored pen path is font-verified and carries a `strokeOrderSource` with `citation`, `url` and `variation`. **No citation → no pen path → no figure**, and the gap is reported rather than filled. Telugu has a plausible academic candidate (Vemuri, *The Shapes of Telugu*, UC Davis); Kannada, Malayalam and Devanagari are unproven and may land partly prose-only. |
+| HL-C119 | Not started | Redistribute the script strands that already exist. Tamil's twenty `TA-W*` lessons are good material clustered at `sequence: 270`; Hindi's eleven include `HI-W01-shirorekha-na-ma`, the steepest lesson in the corpus at twelve glyphs. Both are re-cut into one-letter segments across the early sequences. | The prose survives the re-cut; each segment teaches exactly one letter; `drivablePercent` **does not fall** when the detachable writing segments land, which is the design's own falsification test. |
+| HL-C120 | Not started | Author the missing script strand for Telugu, Kannada, Malayalam and Sanskrit, which have none, and migrate the six tracks' 233 schema-v1 lessons so they enter the gates at all. Fix the 30–34 lessons per track that carry no `sequence` — until that is done, no claim in HL11 is verifiable, because every one of them is a claim about order. | Closure violations reach zero per track; `firstWritableWord` lands near sequence 50; every book still builds and every `check:*` still passes. |
 
 ## P0 — Step-by-Step capability program (HL05–HL08)
 
