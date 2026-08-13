@@ -164,6 +164,8 @@ omits unlabeled state geometry and glyphs while retaining graph connectivity.
 State labels, transition labels, notes, titles, and accessibility text decode
 Mermaid decimal or named entities and HTML line breaks before line-aware layout
 and backend-neutral Paint glyph shaping.
+State descriptions and transition labels preserve additional authored colons as
+text after the statement's leading delimiter.
 Transitions entering or leaving a composite retain the group ID as their
 semantic endpoint. Graph layout attaches those edges to the resolved group
 boundary before existing Paint paths and arrowheads render them.

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.70.0
+
+- Preserve authored colons inside state descriptions and transition labels.
+
 ## 0.69.0
 
 - Compose multiple named classes from one state `class` statement in source order.
