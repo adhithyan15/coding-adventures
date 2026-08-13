@@ -3433,6 +3433,21 @@
       "output": "spanish/book/chapters/ch198-synthesis-condicion.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 199,
+      "output": "spanish/book/chapters/ch199-hablaron.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 200,
+      "output": "spanish/book/chapters/ch200-hablamos-dos.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 201,
+      "output": "spanish/book/chapters/ch201-comieron.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "output": "tamil/book/chapters/ch06-dative-case.tex",

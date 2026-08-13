@@ -104,7 +104,7 @@ describe("real curriculum", () => {
     // 40 (esperar, contestar, comprar). Two sessions authored a chapter 38 in parallel;
     // the collision surfaced as a merge conflict on chapters.json rather than silently,
     // because both sides must edit it.
-    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(198); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis // +3: HL-C88 slice 8 // +1: HL-C88 slice 9 (falsos amigos) // +3: HL-C113 (B1 si-condition rung)
+    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(201); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis // +3: HL-C88 slice 8 // +1: HL-C88 slice 9 (falsos amigos) // +3: HL-C113 (B1 si-condition rung) // +3: HL-C113 preterite plural
     expect(
       books.books
         .find((book) => book.language === "persian")
@@ -780,6 +780,15 @@ describe("real curriculum", () => {
       "ES-C54-sintesis-lo-que-hay-done",
       "ES-C54-sintesis-lo-que-hay-must",
       "ES-C54-sintesis-lo-que-hay-pick",
+      "ES-C55-comieron-contrast",
+      "ES-C55-comieron-say",
+      "ES-C55-comieron-vivir",
+      "ES-C55-hablamos-dos-pair",
+      "ES-C55-hablamos-dos-say",
+      "ES-C55-hablamos-dos-which",
+      "ES-C55-hablaron-accent",
+      "ES-C55-hablaron-build",
+      "ES-C55-hablaron-say",
       "ES-C55-la-bebo-drink",
       "ES-C55-la-bebo-test",
       "ES-C55-la-bebo-why",
