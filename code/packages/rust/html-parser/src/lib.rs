@@ -7021,6 +7021,22 @@ impl HtmlParser {
             ));
             return;
         }
+        if self.current_namespace().is_some()
+            && !self.current_element_is(name)
+            && name == "li"
+            && self.has_authored_open_html_element("li")
+            && self.open_list_item_in_scope_index().is_none()
+        {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-end-tag-in-foreign-content",
+                "end tag `</li>` did not match the current foreign element",
+            ));
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-li-end-tag",
+                "end tag `</li>` did not match a list item in scope",
+            ));
+            return;
+        }
         if self.has_open_svg_html_integration_point()
             && name != "template"
             && name != "p"
@@ -32439,8 +32455,6 @@ mod tests {
             "<!doctype html><ul><li><p></li>Y</ul>",
             "<!doctype html><table><tr><td><ul><li></li></ul></td></tr></table>",
             "<!doctype html><ul><li><svg><object></li>Y</object></svg></ul>",
-            "<!doctype html><ul><li><math><mi></li>X</mi></math>Y</ul>",
-            "<!doctype html><ul><li><svg><desc></li>X</desc></svg>Y</ul>",
         ] {
             let output = parse_html_with_diagnostics(source).unwrap();
             assert!(
@@ -32452,6 +32466,68 @@ mod tests {
                 output.parser_diagnostics
             );
         }
+
+        for (root_name, boundary_start, boundary_name) in [
+            ("svg", "foreignObject", "foreignObject"),
+            ("svg", "desc", "desc"),
+            ("svg", "title", "title"),
+            ("math", "mi", "mi"),
+            ("math", "mtext", "mtext"),
+            (
+                "math",
+                "annotation-xml encoding=text/html",
+                "annotation-xml",
+            ),
+        ] {
+            let source = format!(
+                "<!doctype html><ul><li id=item><{root_name}><{boundary_start} id=boundary></li>X</{boundary_name}></{root_name}></li></ul>"
+            );
+            let output = parse_html_with_diagnostics(&source).unwrap();
+            assert_eq!(
+                output.parser_diagnostics,
+                vec![
+                    ParserDiagnostic::new(
+                        "unexpected-end-tag-in-foreign-content",
+                        "end tag `</li>` did not match the current foreign element"
+                    ),
+                    ParserDiagnostic::new(
+                        "unexpected-li-end-tag",
+                        "end tag `</li>` did not match a list item in scope"
+                    ),
+                ],
+                "source {source:?}"
+            );
+            let item = find_element_by_id(&output.document.children, "item").unwrap();
+            let boundary = find_element_by_id(&item.children, "boundary").unwrap();
+            assert_eq!(
+                boundary.children,
+                vec![Node::text("X")],
+                "source {source:?}"
+            );
+        }
+
+        let foreign_select = parse_html_with_diagnostics(
+            "<!doctype html><ul><li id=item><svg><select id=foreign></li>X",
+        )
+        .unwrap();
+        assert!(foreign_select
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "unexpected-li-end-tag"));
+        let list = element(&body(&foreign_select.document).children[0]);
+        assert_eq!(list.children.last(), Some(&Node::text("X")));
+
+        let no_html_list_item = parse_html_with_diagnostics(
+            "<!doctype html><svg><foreignObject id=boundary></li>X</foreignObject></svg>",
+        )
+        .unwrap();
+        assert!(no_html_list_item
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "unexpected-li-end-tag"));
+        let boundary =
+            find_element_by_id(&no_html_list_item.document.children, "boundary").unwrap();
+        assert_eq!(boundary.children, vec![Node::text("X")]);
 
         let unmatched = parse_html_with_diagnostics("<!doctype html></li>").unwrap();
         assert!(unmatched
