@@ -189,9 +189,9 @@ describe("the committed corpus", () => {
 
   it("pins the first ledger, and it is the reason the rule exists", () => {
     const l = buildRootLedger(lessons, minReuse);
-    expect(l.summary.roots).toBe(2964); // +5: vos-latin slug and ES-ETYMON-VOS-03 // +78: vocabulary wave 5 // +6: HL-C88 slices 5-6 // +2: HL-C88 slice 8 // +111: vocabulary wave 6 // +2: HL-C113 (B1 si-condition rung) // HL-C113: HL-C113 imperfect subjunctive
-    expect(l.summary.underspent).toBe(2851); // +3: a payoff lesson re-spends a root // +1: the vos-latin slug is unspent; ES-ETYMON-VOS-03 is spent three times, so it is NOT latin-vos, spent once so far // -1: HL-C98 spends fabulari-latin a third time // +76: vocabulary wave 5 // +6: HL-C88 slices 5-6 // +2: HL-C88 slice 8 // +108: vocabulary wave 6 // +1: HL-C113 (B1 si-condition rung) // HL-C113: HL-C113 imperfect subjunctive
-    expect(l.summary.neverSpent).toBe(1957); // -6: HL-C94 payoff lessons re-spend roots latin-vos, introduced and not yet re-spent // +1: HL-C98 // +51: vocabulary wave 5 // +6: HL-C88 slices 5-6 // +2: HL-C88 slice 8 // +72: vocabulary wave 6 // +2: HL-C113 (B1 si-condition rung) // HL-C113 preterite close // HL-C113: HL-C113 imperfect subjunctive
+    expect(l.summary.roots).toBe(2971); // +5: vos-latin slug and ES-ETYMON-VOS-03 // +78: vocabulary wave 5 // +6: HL-C88 slices 5-6 // +2: HL-C88 slice 8 // +111: vocabulary wave 6 // +2: HL-C113 (B1 si-condition rung) // HL-C113: HL-C113 imperfect subjunctive
+    expect(l.summary.underspent).toBe(2858); // +3: a payoff lesson re-spends a root // +1: the vos-latin slug is unspent; ES-ETYMON-VOS-03 is spent three times, so it is NOT latin-vos, spent once so far // -1: HL-C98 spends fabulari-latin a third time // +76: vocabulary wave 5 // +6: HL-C88 slices 5-6 // +2: HL-C88 slice 8 // +108: vocabulary wave 6 // +1: HL-C113 (B1 si-condition rung) // HL-C113: HL-C113 imperfect subjunctive
+    expect(l.summary.neverSpent).toBe(1961); // -6: HL-C94 payoff lessons re-spend roots latin-vos, introduced and not yet re-spent // +1: HL-C98 // +51: vocabulary wave 5 // +6: HL-C88 slices 5-6 // +2: HL-C88 slice 8 // +72: vocabulary wave 6 // +2: HL-C113 (B1 si-condition rung) // HL-C113 preterite close // HL-C113: HL-C113 imperfect subjunctive
     expect(l.summary.underspentPercent).toBe(96); // -1: HL-C98
 
     // Both namespaces contribute. If the etymon-atom count ever returns to
@@ -202,7 +202,7 @@ describe("the committed corpus", () => {
     }, {});
     // +1 roots: latin-vos, from ES-C03-vos.
     // +53 roots, +25 etymon-atom: vocabulary wave 5.
-    expect(byNamespace).toEqual({ roots: 2117, "etymon-atom": 847 }); // +1 root + 1 etymon atom: HL-C88 slice 8 // +72 roots, +39 etymon-atom: vocabulary wave 6 // +1 root + 1 etymon atom: HL-C113 (B1 si-condition rung) // HL-C113: HL-C113 imperfect subjunctive
+    expect(byNamespace).toEqual({ roots: 2121, "etymon-atom": 850 }); // +1 root + 1 etymon atom: HL-C88 slice 8 // +72 roots, +39 etymon-atom: vocabulary wave 6 // +1 root + 1 etymon atom: HL-C113 (B1 si-condition rung) // HL-C113: HL-C113 imperfect subjunctive // HL-C113 step 8: +4 roots (per-latin, hoc-latin, tam-latin, paucus-latin; bene is re-spent, not minted) and +3 etymon atoms (PERO-PER-HOC, TAMBIEN-TAN-BIEN, TAMPOCO-TAN-POCO)
   });
 
   it("pins Spanish, the pilot track", () => {
@@ -211,9 +211,9 @@ describe("the committed corpus", () => {
       minReuse,
     );
     expect(l.summary).toMatchObject({
-      roots: 361, // +3: HL-C88 slice 4 adds profiteri-latin, istes-greek and ES-ETYMON-PROFITERI // +6: HL-C88 slices 5-6 // +2: HL-C88 slice 8 adds arius-latin and ES-ETYMON-ARIUS // +2: HL-C88 slice 9 adds exitus-latin and ES-ETYMON-EXITUS // +2: B1 si-condition adds si-latin and ES-ETYMON-SI-LATIN // +1: HL-C113 imperfect subjunctive adds only ES-ETYMON-RA-PLUPERFECT; it re-spends fabulari-latin rather than minting a slug for a grammatical category
-      underspent: 333, // +2: HL-C88 slice 4 // +6: HL-C88 slices 5-6 // +2: HL-C88 slice 8 adds arius-latin and ES-ETYMON-ARIUS // +2: HL-C88 slice 9 adds exitus-latin and ES-ETYMON-EXITUS // +2: B1 si-condition adds si-latin and ES-ETYMON-SI-LATIN // HL-C113 step 6: +1 -- unspent until the reported-speech review revisits it
-      neverSpent: 217, // +3: HL-C88 slice 4 introduces three roots not yet re-spent // +6: HL-C88 slices 5-6 // +2: HL-C88 slice 8 adds arius-latin and ES-ETYMON-ARIUS // +2: HL-C88 slice 9 adds exitus-latin and ES-ETYMON-EXITUS // +2: B1 si-condition adds si-latin and ES-ETYMON-SI-LATIN // +1: HL-C113 imperfect subjunctive adds only ES-ETYMON-RA-PLUPERFECT; it re-spends fabulari-latin rather than minting a slug for a grammatical category // HL-C113 step 6 added ES-ETYMON-DIJO-DIXIT and step 7 spent it: the reported-speech review revisits the Latin x, so the net move is zero
+      roots: 368, // +3: HL-C88 slice 4 adds profiteri-latin, istes-greek and ES-ETYMON-PROFITERI // +6: HL-C88 slices 5-6 // +2: HL-C88 slice 8 adds arius-latin and ES-ETYMON-ARIUS // +2: HL-C88 slice 9 adds exitus-latin and ES-ETYMON-EXITUS // +2: B1 si-condition adds si-latin and ES-ETYMON-SI-LATIN // +1: HL-C113 imperfect subjunctive adds only ES-ETYMON-RA-PLUPERFECT; it re-spends fabulari-latin rather than minting a slug for a grammatical category // HL-C113 step 8: +7
+      underspent: 340, // +2: HL-C88 slice 4 // +6: HL-C88 slices 5-6 // +2: HL-C88 slice 8 adds arius-latin and ES-ETYMON-ARIUS // +2: HL-C88 slice 9 adds exitus-latin and ES-ETYMON-EXITUS // +2: B1 si-condition adds si-latin and ES-ETYMON-SI-LATIN // HL-C113 step 6: +1 -- unspent until the reported-speech review revisits it // HL-C113 step 8: +7
+      neverSpent: 221, // +3: HL-C88 slice 4 introduces three roots not yet re-spent // +6: HL-C88 slices 5-6 // +2: HL-C88 slice 8 adds arius-latin and ES-ETYMON-ARIUS // +2: HL-C88 slice 9 adds exitus-latin and ES-ETYMON-EXITUS // +2: B1 si-condition adds si-latin and ES-ETYMON-SI-LATIN // +1: HL-C113 imperfect subjunctive adds only ES-ETYMON-RA-PLUPERFECT; it re-spends fabulari-latin rather than minting a slug for a grammatical category // HL-C113 step 6 added ES-ETYMON-DIJO-DIXIT and step 7 spent it: the reported-speech review revisits the Latin x, so the net move is zero // HL-C113 step 8: +4 -- tam-latin is spent by tampoco reusing tambien's frame; the rest wait for the review rung
       underspentPercent: 92,
     });
   });

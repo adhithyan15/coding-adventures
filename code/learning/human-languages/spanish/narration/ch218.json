@@ -1,0 +1,240 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 218,
+  "title": "Pero --- Two True Things at Once",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:c5ddb83f592f20ce",
+  "lessons": [
+    {
+      "id": "ES-C58-pero",
+      "sequence": 2325,
+      "title": "pero — the word that lets two true things stand together",
+      "headword": "pero",
+      "romanization": "pero",
+      "gloss": "but — the first word you need to hold two true things against each other, and the first word of any argument",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:95d92ad375ca4533",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "With porque you can give a reason: one thing because of another. That word makes two facts agree."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now you need the opposite tool — the one for two facts that do not agree, and are both true anyway."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "r-tap — one flick of the tongue, not the rolled rr. pero = PEH-ro. (The rolled version is a different word entirely, so this flick is worth getting right.)"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart: pero",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pero was two Latin words: per hoc — by this, through this."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can still feel the route it took. By this became for all that, and for all that is already a contrast: I grant you the first thing, and here is the second anyway. The phrase wore down into one short word and kept only the contrast."
+            },
+            {
+              "kind": "speech",
+              "text": "Estoy cansado, pero estudio."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Notice what pero does not do. It does not deny the first half. Estoy cansado stays true — tiredness is not cancelled by studying."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "That is the whole job: two things that pull in opposite directions, both standing. Porque fuses two facts into one reason; pero keeps two facts apart and admits both. Between them you can say almost anything."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And it is the first word of every argument you will ever make. Nobody argues by listing things they agree with."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Estoy cansado, pero estudio",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Estoy cansado, pero estudio*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "something true about today, then pero, then something that pulls the other way",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: something true about today, then *pero*, then something that pulls the other way]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C58-pero-say",
+              "prompt": "Say: I am tired, but I study.",
+              "assesses": [
+                "ES-LEX-PERO"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "estoy cansado pero estudio",
+                "estoy cansada pero estudio"
+              ],
+              "feedback": {
+                "correct": "Both halves stay true.",
+                "incorrect": "Estoy cansado, pero estudio."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C58-pero-keeps",
+              "prompt": "Does pero cancel the first half of the sentence?",
+              "assesses": [
+                "ES-LEX-PERO"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "no",
+                "no, both halves stay true"
+              ],
+              "feedback": {
+                "correct": "It admits both; it denies neither.",
+                "incorrect": "No. Both halves remain true."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C58-pero-origin",
+              "prompt": "How many Latin words is pero, originally?",
+              "assesses": [
+                "ES-ETYMON-PERO-PER-HOC"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "two",
+                "two: per hoc"
+              ],
+              "feedback": {
+                "correct": "Per hoc -- by this, for all that.",
+                "incorrect": "Two: per hoc."
+              }
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Porque joins two facts into one reason. What does pero do with two facts? (Keeps them apart, and admits both.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And what were its two Latin words? (Per hoc — by this.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -5556,6 +5556,33 @@
       "tex": "spanish/book/chapters/ch217-synthesis-reportar.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 218,
+      "sourceHash": "fnv1a64:f24283571aae1cac",
+      "lessonIds": [
+        "ES-C58-pero"
+      ],
+      "tex": "spanish/book/chapters/ch218-pero.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 219,
+      "sourceHash": "fnv1a64:f98cdde3a6a8beb6",
+      "lessonIds": [
+        "ES-C58-tambien"
+      ],
+      "tex": "spanish/book/chapters/ch219-tambien.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 220,
+      "sourceHash": "fnv1a64:89f0f96e0eefe482",
+      "lessonIds": [
+        "ES-C58-tampoco"
+      ],
+      "tex": "spanish/book/chapters/ch220-tampoco.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "sourceHash": "fnv1a64:c0940889d5248bc5",

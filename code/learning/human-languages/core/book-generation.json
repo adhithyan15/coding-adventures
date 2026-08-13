@@ -3528,6 +3528,21 @@
       "output": "spanish/book/chapters/ch217-synthesis-reportar.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 218,
+      "output": "spanish/book/chapters/ch218-pero.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 219,
+      "output": "spanish/book/chapters/ch219-tambien.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 220,
+      "output": "spanish/book/chapters/ch220-tampoco.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "output": "tamil/book/chapters/ch06-dative-case.tex",

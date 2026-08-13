@@ -2377,6 +2377,42 @@
         "ES-EXT-B2-SYNTH-REPORT"
       ],
       "after": []
+    },
+    {
+      "id": "ES-PATH-B2-PERO",
+      "spine_node": "SPINE-ARGUE-A-VIEW",
+      "lessons": [
+        "ES-C58-pero"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-B2-PERO"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-B2-TAMBIEN",
+      "spine_node": "SPINE-ARGUE-A-VIEW",
+      "lessons": [
+        "ES-C58-tambien"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-B2-TAMBIEN"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-B2-TAMPOCO",
+      "spine_node": "SPINE-ARGUE-A-VIEW",
+      "lessons": [
+        "ES-C58-tampoco"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-B2-TAMPOCO"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -2736,7 +2772,11 @@
       "relocates": {}
     },
     "SPINE-ARGUE-A-VIEW": {
-      "segments": [],
+      "segments": [
+        "ES-PATH-B2-PERO",
+        "ES-PATH-B2-TAMBIEN",
+        "ES-PATH-B2-TAMPOCO"
+      ],
       "omits": [
         "ARGUMENT-CLAIM",
         "ARGUMENT-EVIDENCE",
@@ -5231,6 +5271,39 @@
       "prerequisites": [],
       "lessons": [
         "ES-C57-sintesis-reportar"
+      ]
+    },
+    {
+      "id": "ES-EXT-B2-PERO",
+      "stage": "B2",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C58-pero"
+      ]
+    },
+    {
+      "id": "ES-EXT-B2-TAMBIEN",
+      "stage": "B2",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C58-tambien"
+      ]
+    },
+    {
+      "id": "ES-EXT-B2-TAMPOCO",
+      "stage": "B2",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C58-tampoco"
       ]
     }
   ]
