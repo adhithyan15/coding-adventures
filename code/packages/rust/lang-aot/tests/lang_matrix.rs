@@ -2272,12 +2272,12 @@ const PROGRAMS: &[Prog] = &[
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // ALGOL 60 — capped abstract execution retains the first control value
-    // whose while predicate is false when its local dependency is read but not
-    // written by the body.
+    // whose while predicate applies an exact standard function to a stable
+    // local dependency that is read but not written by the body.
     Prog {
         lang: Language::Algol60,
         ext: "alg",
-        src: "begin integer i, n; n := 3; i := 0; for i := i + 1 while i < n do if n = 3 then print(''); print(i + 0.25) end",
+        src: "begin integer i, n; n := -3; i := 0; for i := i + 1 while i < abs(n) do if n = -3 then print(''); print(i + 0.25) end",
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
@@ -9726,7 +9726,7 @@ fn algol_static_while_control_exit_runs_on_every_available_standard_backend() {
             program.lang == Language::Algol60
                 && program
                     .src
-                    .contains("while i < n do if n = 3 then print('')")
+                    .contains("while i < abs(n) do if n = -3 then print('')")
         })
         .expect("the ALGOL static while control-exit program must remain in the matrix");
 
