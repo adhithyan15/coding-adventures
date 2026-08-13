@@ -438,7 +438,13 @@ Prioritized work items:
    not. Dedicated form end-tag scope and integration recovery is complete.
    Continue the in-body audit with `body` and `html` end tags, including their
    required scope and unclosed-special-element diagnostics, before moving to a
-   new algorithm family.
+   new algorithm family. Authored `body` and reprocessed `html` end tags at SVG
+   and MathML integration boundaries now report the foreign mismatch and body
+   ordinary-scope error, remain ignored, and keep following text inside the
+   integration point. Ordinary shell endings, foreign shell-named starts, and
+   seeded foreign fragments retain their existing recovery. Continue with the
+   ordinary body-in-scope and allowed-open-element diagnostic matrix, then
+   after-body reprocessing and trailing-token recovery.
 3. **Diagnostic positions and error taxonomy.** Carry source positions into
    tree construction and map diagnostics to current WHATWG concepts. Legacy
    WPT/html5lib error labels are evidence hints, not a normative public API.

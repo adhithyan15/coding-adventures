@@ -7029,6 +7029,27 @@ impl HtmlParser {
         }
         if self.current_namespace().is_some()
             && !self.current_element_is(name)
+            && matches!(name, "body" | "html")
+            && self.has_open_foreign_integration_point()
+        {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-end-tag-in-foreign-content",
+                format!("end tag `</{name}>` did not match the current foreign element"),
+            ));
+            if self.close_open_foreign_element_before_html_boundary(name) {
+                return;
+            }
+            if self.current_element_is_marked_foreign_fragment_context() {
+                return;
+            }
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-shell-end-tag-outside-scope",
+                format!("end tag `</{name}>` targeted a body element outside ordinary scope"),
+            ));
+            return;
+        }
+        if self.current_namespace().is_some()
+            && !self.current_element_is(name)
             && name == "button"
             && self.has_open_foreign_integration_point()
         {
@@ -36500,6 +36521,94 @@ mod tests {
 
         let allowed = parse_html_with_diagnostics("<!doctype html><p></body>").unwrap();
         assert!(allowed.parser_diagnostics.is_empty());
+    }
+
+    #[test]
+    fn shell_end_tags_respect_foreign_integration_scope() {
+        for end_tag in ["body", "html"] {
+            for (root_name, boundary_start, boundary_name) in [
+                ("svg", "foreignObject", "foreignObject"),
+                ("svg", "desc", "desc"),
+                ("svg", "title", "title"),
+                ("math", "mi", "mi"),
+                ("math", "mtext", "mtext"),
+                (
+                    "math",
+                    "annotation-xml encoding=text/html",
+                    "annotation-xml",
+                ),
+            ] {
+                let source = format!(
+                    "<!doctype html><{root_name}><{boundary_start} id=boundary></{end_tag}>X</{boundary_name}></{root_name}>Y"
+                );
+                let output = parse_html_with_diagnostics(&source).unwrap();
+                assert_eq!(
+                    output
+                        .parser_diagnostics
+                        .iter()
+                        .filter(|diagnostic| {
+                            matches!(
+                                diagnostic.code.as_str(),
+                                "unexpected-end-tag-in-foreign-content"
+                                    | "unexpected-shell-end-tag-outside-scope"
+                            )
+                        })
+                        .cloned()
+                        .collect::<Vec<_>>(),
+                    vec![
+                        ParserDiagnostic::new(
+                            "unexpected-end-tag-in-foreign-content",
+                            format!(
+                                "end tag `</{end_tag}>` did not match the current foreign element"
+                            )
+                        ),
+                        ParserDiagnostic::new(
+                            "unexpected-shell-end-tag-outside-scope",
+                            format!(
+                                "end tag `</{end_tag}>` targeted a body element outside ordinary scope"
+                            )
+                        ),
+                    ],
+                    "source {source:?}: {:?}",
+                    output.parser_diagnostics
+                );
+                let boundary = find_element_by_id(&output.document.children, "boundary")
+                    .expect("the integration boundary should remain open");
+                assert_eq!(boundary.children, vec![Node::text("X")]);
+                assert_eq!(body(&output.document).children.last(), Some(&Node::text("Y")));
+            }
+        }
+
+        for source in [
+            "<!doctype html><div></body>X",
+            "<!doctype html><div></html>X",
+            "<!doctype html><svg><body><g></body>X",
+            "<!doctype html><svg><html><g></html>X",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output.parser_diagnostics.iter().all(|diagnostic| {
+                diagnostic.code != "unexpected-shell-end-tag-outside-scope"
+            }));
+        }
+
+        for context in ["svg foreignObject", "math mtext"] {
+            for end_tag in ["body", "html"] {
+                let source = format!("</{end_tag}>X");
+                let fragment =
+                    parse_html_fragment_for_context_with_diagnostics(&source, context).unwrap();
+                assert_eq!(fragment.nodes, vec![Node::text("X")]);
+                assert_eq!(
+                    fragment.parser_diagnostics,
+                    vec![ParserDiagnostic::new(
+                        "unexpected-end-tag-in-foreign-content",
+                        format!(
+                            "end tag `</{end_tag}>` did not match the current foreign element"
+                        )
+                    )],
+                    "context {context:?}, source {source:?}"
+                );
+            }
+        }
     }
 
     #[test]
