@@ -21,37 +21,57 @@
 %     ? pronoun_type($T, changes_form_based_on_grammatical_person)
 %       % personal_pronoun
 %
-% The three pronoun types, as a little truth table:
+% The four pronoun types, as a little truth table:
 %
 %     type                    description                                              quote (verbatim)
 %     ------------------------  -------------------------------------------------------  --------------------------------------------------------------------------------
 %     personal_pronoun          changes_form_based_on_grammatical_person                 "Personal pronouns are pronouns that change form based on their grammatical person—that is, based on whether they refer to the person speaking or writing (the first person), the person or thing being spoken to (the second person), or the person or thing being spoken about (the third person)."
 %     indefinite_pronoun        refers_generally_without_specific_identification         "Indefinite pronouns are used to refer generally to a person or thing that doesn't need to be specifically identified or has already been mentioned."
 %     interrogative_pronoun     used_in_questions                                        "Interrogative pronouns are used in questions."
+%     distributive_pronoun      refers_to_nouns_as_individual_elements_of_larger_groups  "Distributive pronouns refer to nouns as individual elements of larger groups."
+%
+% EXTENDED this cycle from 3 to 4 rows: `distributive_pronoun` added.
+% WebFetch-re-verified the source page's "Distributive pronouns" section
+% across four separate fetches before writing (deliberately over-checked,
+% since an earlier fetch pass for the same page returned inconsistent
+% wording for two OTHER candidate terms — intensive and reciprocal
+% pronouns — that turned out not to match the page on careful re-check;
+% distributive_pronoun's sentence was confirmed byte-identical across all
+% four passes, immediately followed by a SEPARATE elaboration sentence
+% ("They enable you to single out individuals while acknowledging that
+% they're part of a group."), confirming the definition itself is
+% standalone and not bundled).
 %
 % Provenance: quoted verbatim from Grammarly's "Pronouns: Definition and
 % Examples" article, which also gives definitions for reflexive, intensive,
-% possessive, reciprocal, and distributive pronouns. WebFetch-verified
-% before writing (twice — the second pass confirmed the FULL sentences,
-% since a first, shorter-truncated fetch had clipped the personal-pronoun
-% sentence and undercounted the relative-pronoun passage's sentence
-% count). `trust consensus` — Grammarly is a reputable, widely-cited
-% grammar-content company, the same tier this stdlib already reserves for
-% other non-.gov language sources and the same source family already
-% cited by `noun-type.adj`/`verb-type.adj`. Picked using the mandatory
+% possessive, and reciprocal pronouns. WebFetch-verified before writing
+% (twice — the second pass confirmed the FULL sentences, since a first,
+% shorter-truncated fetch had clipped the personal-pronoun sentence and
+% undercounted the relative-pronoun passage's sentence count). `trust
+% consensus` — Grammarly is a reputable, widely-cited grammar-content
+% company, the same tier this stdlib already reserves for other non-.gov
+% language sources and the same source family already cited by
+% `noun-type.adj`/`verb-type.adj`. Picked using the mandatory
 % full-tree-grep-before-scoping discipline — `grep -rilE "\bpronoun_type\b|
 % \bpersonal_pronoun\b|\bindefinite_pronoun\b|\binterrogative_pronoun\b|
 % \brelative_pronoun\b" code/specs/data/adj-facts-stdlib/` found ZERO hits,
 % confirming a completely fresh topic before this file was written. A
-% pronoun type that is NOT one of these three — "relative_pronoun", a real
+% pronoun type that is NOT one of these four — "relative_pronoun", a real
 % pronoun type the same page also covers, but whose own explanation takes
 % THREE sentences ("Relative pronouns are another class of pronouns. They
 % connect relative clauses to independent clauses. Often, they introduce
 % additional information about something mentioned in the sentence.")
-% rather than one clean self-contained sentence like the three tabled here
-% — is deliberately NOT a row, so a recall ABSTAINS on it rather than
-% inventing a single-sentence description the source never gave. (See
-% ../README.md; feedback_nothing_human_authored,
+% rather than one clean self-contained sentence like the four tabled here;
+% "intensive_pronoun", whose own sentence ("Intensive pronouns look the
+% same as reflexive pronouns, but their purpose is different.") is a
+% comparison/contrast statement that never actually states what an
+% intensive pronoun's purpose IS; and "reciprocal_pronoun", whose own
+% sentence ("There are only two reciprocal pronouns: each other and one
+% another.") names a closed word-list rather than describing the
+% grammatical FUNCTION the way every other row here does — are all
+% deliberately NOT rows, so a recall ABSTAINS on each rather than
+% inventing a single-sentence description the source never cleanly gave.
+% (See ../README.md; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts.)
 % ============================================================================
 
@@ -61,6 +81,7 @@ table pronoun_type {
     row (personal_pronoun, changes_form_based_on_grammatical_person)
     row (indefinite_pronoun, refers_generally_without_specific_identification)
     row (interrogative_pronoun, used_in_questions)
+    row (distributive_pronoun, refers_to_nouns_as_individual_elements_of_larger_groups)
 
     source "Personal pronouns are pronouns that change form based on their grammatical person—that is, based on whether they refer to the person speaking or writing (the first person), the person or thing being spoken to (the second person), or the person or thing being spoken about (the third person)."
     locator "https://www.grammarly.com/blog/parts-of-speech/pronouns/"
