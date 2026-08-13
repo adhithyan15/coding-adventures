@@ -73,6 +73,7 @@ const DEVANAGARI_YA = DUCTUS[ductusKey("devanagari", "य")];
 const DEVANAGARI_RA = DUCTUS[ductusKey("devanagari", "र")];
 const DEVANAGARI_LA = DUCTUS[ductusKey("devanagari", "ल")];
 const DEVANAGARI_VA = DUCTUS[ductusKey("devanagari", "व")];
+const DEVANAGARI_SHA = DUCTUS[ductusKey("devanagari", "श")];
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
@@ -1107,6 +1108,24 @@ describe("handwriting ductus", () => {
     const stem = penPath(DEVANAGARI_VA.strokes[1]);
     expect(stem[0].y).toBeGreaterThan(stem.at(-1)!.y);
     const headline = penPath(DEVANAGARI_VA.strokes[2]);
+    expect(headline[0].x).toBeLessThan(headline.at(-1)!.x);
+  });
+
+  it("Devanagari श joins both loops and its tail before the right stem", () => {
+    expect(DEVANAGARI_SHA.script).toBe("devanagari");
+    expect(penLifts(DEVANAGARI_SHA)).toBe(2);
+    expect(DEVANAGARI_SHA.strokes).toHaveLength(3);
+    expect(DEVANAGARI_SHA.strokes.map((stroke) => stroke.segments.length)).toEqual([
+      1, 1, 1,
+    ]);
+    const body = penPath(DEVANAGARI_SHA.strokes[0]);
+    expect(Math.max(...body.map((point) => point.y))).toBeGreaterThan(body[0].y);
+    expect(Math.min(...body.map((point) => point.x))).toBeLessThan(body[0].x);
+    expect(body.at(-1)!.x).toBeGreaterThan(body[0].x);
+    expect(body.at(-1)!.y).toBeLessThan(body[0].y);
+    const stem = penPath(DEVANAGARI_SHA.strokes[1]);
+    expect(stem[0].y).toBeGreaterThan(stem.at(-1)!.y);
+    const headline = penPath(DEVANAGARI_SHA.strokes[2]);
     expect(headline[0].x).toBeLessThan(headline.at(-1)!.x);
   });
 
@@ -2854,6 +2873,19 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /11-frame animation.*three ordered pen-down runs.*frames 0–5.*upper-right of the body.*travel left around the top.*counterclockwise around the loop.*right-side junction.*frames 6–7.*right stem's headline junction.*descend top-to-bottom.*frames 8–10.*headline's left edge.*shirorekhā left-to-right.*two intervening lifts.*spatial restarts.*frames 6 and 8.*all frames last 100 ms.*no long inter-stroke holds.*Central Hindi Directorate.*2019 Deskbook on Orthography of Devanagari Script.*Lesson 2.*Unit VIII.*p\. 44.*loop.*right stem.*headline buildup.*animation supplies.*directions and lift evidence.*corroborated three-run form.*Noto Sans Devanagari.*simplify or narrow the loop/i,
+    );
+  });
+
+  it("Devanagari श traces its corroborated joined-body animation", () => {
+    const src = DEVANAGARI_SHA.source;
+    expect(src.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Deva-%E0%A4%B6-order.gif",
+    );
+    expect(src.citation).toMatch(
+      /Opiaterein.*Deva-श-order\.gif.*strokes 1–3.*Wikimedia Commons.*10 May 2009/i,
+    );
+    expect(src.variation).toMatch(
+      /25-frame animation.*three ordered pen-down runs.*gray guide.*frames 2–16.*upper loop's lower inner tip.*sweep left and clockwise around the upper loop.*descend the joined outer curve.*curl around the lower loop.*continue down-right through the diagonal tail.*without lifting.*frames 17–21.*right stem's headline junction.*descend top-to-bottom.*frames 22–24.*headline's left edge.*shirorekhā left-to-right.*two intervening lifts.*250 ms holds.*frames 16 and 21.*one-second completed frame 24.*JackPotte.*26-frame.*Devanagari ç श\.gif.*same joined body.*restarted right stem.*restarted headline.*spatial restarts.*frames 14 and 21.*all its frames last 100 ms.*Central Hindi Directorate.*2019 Deskbook on Orthography of Devanagari Script.*Lesson 2.*Unit IX.*p\. 45.*body.*right-stem.*headline buildup.*animations supply.*directions and lift evidence.*corroborated three-run form.*Noto Sans Devanagari.*simplify or narrow the loops/i,
     );
   });
 
