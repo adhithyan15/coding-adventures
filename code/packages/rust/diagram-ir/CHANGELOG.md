@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.53.0
+
+- Add Requirement structural diagram and node kinds.
+
 ## 0.52.0
 
 - Carry resolved Journey activity spines, task descenders, and score positions.

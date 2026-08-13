@@ -1,0 +1,7 @@
+# @version 1
+# Mermaid 11.16.1 requirement diagram parser grammar.
+
+document = { NEWLINE } HEADER { NEWLINE | statement } EOF ;
+statement = TITLE | DIRECTION | relationship | definition ;
+definition = DEFINITION_START { NEWLINE | FIELD } RBRACE ;
+relationship = RELATIONSHIP ;
