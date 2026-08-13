@@ -122,6 +122,8 @@ const CHINESE_PLEASE = ductusFor("请", "chinese")!;
 const chinesePleaseOutline = chineseOutline("请");
 const CHINESE_AGAIN = ductusFor("再", "chinese")!;
 const chineseAgainOutline = chineseOutline("再");
+const CHINESE_SEE = ductusFor("见", "chinese")!;
+const chineseSeeOutline = chineseOutline("见");
 const HEBREW_ALEF = ductusFor("א", "hebrew")!;
 const hebrewAlefOutline = hebrewOutline("א");
 const HEBREW_BET = ductusFor("ב", "hebrew")!;
@@ -1334,6 +1336,26 @@ describe("Chinese 再 — central frame before the closing bottom bar", () => {
     expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(chineseAgainOutline.path);
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(CHINESE_AGAIN.strokes[5], 1),
+    );
+  });
+});
+
+describe("Chinese 见 — open upper frame before the two lower runs", () => {
+  const steps = ductusSteps(CHINESE_SEE);
+  const strip = ductusFilmstrip(CHINESE_SEE, chineseSeeOutline);
+
+  it("preserves all three joined turns and three lifts", () => {
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 1, 1, 2, 3, 3, 3]);
+    expect(strip.frames).toHaveLength(7);
+    expect(strip.penLifts).toBe(3);
+    expect(strip.summary).toBe("4 strokes · 3 pen lifts · 7 movements");
+  });
+
+  it("draws the exact Noto Sans SC character behind the hooked second leg", () => {
+    const paths = byTag(strip.frames[6], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(chineseSeeOutline.path);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(CHINESE_SEE.strokes[3], 1),
     );
   });
 });

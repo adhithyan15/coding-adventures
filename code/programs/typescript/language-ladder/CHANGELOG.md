@@ -2,6 +2,11 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Chinese 见 ductus (HL-C09CS)
+
+- Render **见** in seven source-aligned movements across four strokes.
+- Preserve the frame-before-legs order, all three joined turns, and three lifts in Noto Sans SC.
+
 ### Changed — Spanish reaches 207 chapters
 
 - Re-pin the Spanish chapter table from the generated manifest.
