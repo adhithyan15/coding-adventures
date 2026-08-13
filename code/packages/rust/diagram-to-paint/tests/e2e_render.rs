@@ -320,6 +320,44 @@ mod apple {
     }
 
     #[test]
+    fn render_mermaid_single_percent_states_to_png() {
+        let graph = parse_state_diagram(
+            "stateDiagram-v2\n% not a comment\nMoving --> Still %inline\nStill%Active\n",
+        )
+        .expect("single-percent state syntax should parse");
+        assert_eq!(graph.nodes.len(), 8);
+
+        let layout = layout_graph_diagram(&graph, None, None);
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint(
+            &layout,
+            &DiagramToPaintOptions {
+                background: layout_ir::Color {
+                    r: 255,
+                    g: 255,
+                    b: 255,
+                    a: 255,
+                },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 14.0),
+                title_font: font_spec("Helvetica", 18.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            },
+        );
+        assert!(!scene.instructions.is_empty());
+
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_single_percent_states_e2e.png")
+            .expect("PNG write failed");
+        assert!(pixels.width > 0);
+        assert!(pixels.height > 0);
+    }
+
+    #[test]
     fn render_mermaid_pie_to_png() {
         let diagram = parse_pie(
             r#"pie showData

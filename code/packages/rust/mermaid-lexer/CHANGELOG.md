@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.43.0
+
+- Preserve internal percent signs in Mermaid state identifiers while retaining single-percent bare states.
+
 ## 0.42.0
 
 - Tokenize Mermaid state HTML line-break variants, including whitespace before the optional slash, as semantic `LINE_BREAK` tokens.
