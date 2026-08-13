@@ -137,6 +137,8 @@ State `font-size` styles survive semantic IR; graph layout measures matching
 node geometry before Paint shapes and centers text at the resolved size.
 State `font-weight` styles accept normal, bold, and numeric CSS weights; graph
 measurement and Paint glyph shaping consume the same resolved weight.
+State `font-style` accepts normal and italic; graph measurement and Paint glyph
+shaping consume the same resolved italic flag.
 One `class` statement may compose multiple named classes on every target;
 later classes override properties from earlier classes in authored order.
 Single-line and `end note` multiline `note left of`/`note right of` statements

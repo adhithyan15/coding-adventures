@@ -437,6 +437,7 @@ where
                 let mut f = label_font.clone();
                 f.size = group.style.font_size;
                 f.weight = group.style.font_weight;
+                f.italic = group.style.font_italic;
                 f
             },
             css_to_color(&group.style.text_color),
@@ -474,6 +475,7 @@ where
                     let mut f = label_font.clone();
                     f.size = edge.style.font_size;
                     f.weight = edge.style.font_weight;
+                    f.italic = edge.style.font_italic;
                     f
                 },
                 css_to_color(&edge.style.text_color),
@@ -498,6 +500,7 @@ where
                 let mut f = label_font.clone();
                 f.size = node.style.font_size;
                 f.weight = node.style.font_weight;
+                f.italic = node.style.font_italic;
                 f
             },
             css_to_color(&node.style.text_color),
@@ -2912,6 +2915,7 @@ mod tests {
             text_color: "#374151".to_string(),
             font_size: 12.0,
             font_weight: 400,
+            font_italic: false,
             corner_radius: 0.0,
         }
     }
@@ -3359,6 +3363,7 @@ mod tests {
                 text_color: "#78350f".into(),
                 font_size: 14.0,
                 font_weight: 400,
+                font_italic: false,
                 corner_radius: 8.0,
             },
         });

@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Shape graph node, group, and edge text using resolved italic styling.
 - Shape graph node, group, and edge text using resolved font weights.
 - Center graph labels using their resolved authored font size.
 - Validate colon-bearing state and transition text through native Metal PNG rendering.
