@@ -1173,3 +1173,60 @@ fn reloads_spilled_pairs_for_wide_arithmetic_and_bitwise_ops() {
     ]);
     assert_eq!(compile_and_run(&cir), -2);
 }
+
+#[test]
+fn shifts_a_spilled_wide_pair_with_a_parameterized_count() {
+    let params = vec![("count".to_owned(), "i32".to_owned())];
+    let cir = vec![
+        ci(
+            "const_u64",
+            Some("v1"),
+            vec![CIROperand::Int(4_294_967_297)],
+            "u64",
+        ),
+        ci(
+            "const_u64",
+            Some("v2"),
+            vec![CIROperand::Int(4_294_967_298)],
+            "u64",
+        ),
+        ci(
+            "const_u64",
+            Some("v3"),
+            vec![CIROperand::Int(4_294_967_299)],
+            "u64",
+        ),
+        ci(
+            "shl_u64",
+            Some("shifted"),
+            vec![
+                CIROperand::Var("v1".into()),
+                CIROperand::Var("count".into()),
+            ],
+            "u64",
+        ),
+        ci(
+            "add_u64",
+            Some("sum"),
+            vec![CIROperand::Var("shifted".into()), CIROperand::Var("v2".into())],
+            "u64",
+        ),
+        ci(
+            "add_u64",
+            Some("answer"),
+            vec![CIROperand::Var("sum".into()), CIROperand::Var("v3".into())],
+            "u64",
+        ),
+        ci(
+            "ret_u64",
+            None,
+            vec![CIROperand::Var("answer".into())],
+            "u64",
+        ),
+    ];
+
+    let bytes = compile(&ctx("spill_shift", &params, "u64"), &cir).expect("wide shift lowering");
+    let result = run_binary(&bytes, &[Value::Int(1)]).expect("wide shift execution");
+    assert_eq!(result.return_value, 7);
+    assert_eq!(result.return_value_high, 4);
+}

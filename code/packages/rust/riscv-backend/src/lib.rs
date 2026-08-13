@@ -1253,7 +1253,7 @@ impl Lowerer {
         let ValueLocation::Pair { lo, hi } = destination else {
             unreachable!("dest_pair always returns a pair")
         };
-        let value = self.var_location(instr, 0, op)?;
+        let value = self.wide_var_location(instr, 0, op)?;
         let count = match self.var_location(instr, 1, op)? {
             ValueLocation::Word(register) => register,
             ValueLocation::Pair { .. } => {
