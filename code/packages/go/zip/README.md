@@ -17,8 +17,10 @@ CMP05 (DEFLATE, 1996) — LZ77 + Huffman; ZIP/gzip/PNG/zlib.
 CMP09 (ZIP,     1989) — DEFLATE container; universal archive.  ← YOU ARE HERE
 ```
 
-This package uses `coding-adventures/go/lzss` for LZ77 tokenization and inlines a
-raw RFC 1951 DEFLATE codec (fixed Huffman, BTYPE=01).
+This package uses `coding-adventures/go/lzss` for LZ77 tokenization and owns the
+raw RFC 1951 codec required by ZIP. The encoder emits stored or fixed-Huffman
+blocks. The decoder accepts stored, fixed, and dynamic-Huffman blocks, including
+multi-block streams, overlapping copies, and the full 32 KiB distance window.
 
 ## Usage
 
@@ -69,6 +71,18 @@ data, err := zr.ReadByName("hello.txt")
 | `(*ZipReader).ReadByName(name) ([]byte, error)` | Find by name then read |
 | `Zip(entries) []byte` | Create archive from slice |
 | `Unzip(data) (map[string][]byte, error)` | Extract all files |
+| `RawDeflate(data) []byte` | Encode raw RFC 1951 bytes without ZIP/zlib/gzip framing |
+| `RawInflate(data, maxOutput...) ([]byte, error)` | Strictly decode raw RFC 1951 with an optional lower output cap |
+| `RawInflateCounted(data, maxOutput...) (RawInflateResult, error)` | Decode and report exact compressed bytes consumed |
+| `RawInflateMaxOutput` | Hard/default 256 MiB output ceiling |
+| `RawInflateError` | Typed failure carrying one stable payload-blind error code |
 | `CRC32(data, initial) uint32` | CRC-32 (polynomial 0xEDB88320) |
 | `DOSDatetime(y,m,d,h,min,s) uint32` | MS-DOS timestamp encoder |
 | `DOSEpoch` | Constant: 1980-01-01 00:00:00 |
+
+`ZipReader.Read` uses counted decoding and rejects a declared compressed payload
+that contains suffix bytes. It also requires the decoded size to match the
+Central Directory exactly; excess output is never silently trimmed.
+
+CRC-32 detects accidental corruption. It is not authentication and must not be
+used as a cryptographic integrity check.

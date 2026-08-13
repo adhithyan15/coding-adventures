@@ -43,8 +43,10 @@
 // # DEFLATE Inside ZIP
 //
 // ZIP method 8 stores raw RFC 1951 DEFLATE — no zlib wrapper. This
-// implementation produces RFC 1951 fixed-Huffman compressed blocks (BTYPE=01)
-// using the lzss package for LZ77 match-finding.
+// encoder produces RFC 1951 fixed-Huffman blocks (BTYPE=01) using the lzss
+// package for LZ77 match-finding. The strict decoder accepts stored, fixed, and
+// dynamic Huffman blocks, exposes exact compressed-byte consumption, and
+// enforces caller-lowerable output bounds.
 //
 // # Series
 //
@@ -97,6 +99,49 @@ func CRC32(data []byte, initial uint32) uint32 {
 		crc = crcTable[(crc^uint32(b))&0xFF] ^ (crc >> 8)
 	}
 	return crc ^ 0xFFFFFFFF
+}
+
+// RawInflateMaxOutput is the absolute output ceiling for one in-memory raw
+// RFC 1951 inflate operation. Callers may select any lower non-negative limit.
+const RawInflateMaxOutput int64 = 256 * 1024 * 1024
+
+// RawInflateErrorCode is a stable, payload-blind raw inflate failure identifier.
+type RawInflateErrorCode string
+
+const (
+	InvalidOutputLimit          RawInflateErrorCode = "invalid-output-limit"
+	UnexpectedEOF               RawInflateErrorCode = "unexpected-eof"
+	ReservedBlockType           RawInflateErrorCode = "reserved-block-type"
+	StoredLengthMismatch        RawInflateErrorCode = "stored-length-mismatch"
+	HuffmanOversubscribed       RawInflateErrorCode = "huffman-oversubscribed"
+	IncompleteCodeLengthTree    RawInflateErrorCode = "incomplete-code-length-tree"
+	IncompleteLiteralLengthTree RawInflateErrorCode = "incomplete-literal-length-tree"
+	IncompleteDistanceTree      RawInflateErrorCode = "incomplete-distance-tree"
+	RepeatWithoutPrevious       RawInflateErrorCode = "repeat-without-previous"
+	RepeatOverrun               RawInflateErrorCode = "repeat-overrun"
+	InvalidLiteralLengthSymbol  RawInflateErrorCode = "invalid-literal-length-symbol"
+	ReservedDistanceSymbol      RawInflateErrorCode = "reserved-distance-symbol"
+	InvalidBackReference        RawInflateErrorCode = "invalid-back-reference"
+	OutputLimitExceeded         RawInflateErrorCode = "output-limit-exceeded"
+)
+
+// RawInflateError deliberately carries no bytes, offsets, lengths, paths, or
+// other attacker-controlled details.
+type RawInflateError struct {
+	Code RawInflateErrorCode
+}
+
+func (e *RawInflateError) Error() string { return string(e.Code) }
+
+func inflateError(code RawInflateErrorCode) *RawInflateError {
+	return &RawInflateError{Code: code}
+}
+
+// RawInflateResult contains the complete output and the exact number of input
+// bytes reached through the BFINAL end-of-stream.
+type RawInflateResult struct {
+	Output        []byte
+	BytesConsumed int
 }
 
 // =============================================================================
@@ -193,15 +238,6 @@ func (br *bitReader) readLSB(nbits uint32) (uint32, bool) {
 	return val, true
 }
 
-// readMSB reads nbits bits and reverses them (for Huffman codes).
-func (br *bitReader) readMSB(nbits uint32) (uint32, bool) {
-	v, ok := br.readLSB(nbits)
-	if !ok {
-		return 0, false
-	}
-	return bits32Reverse(v, nbits), true
-}
-
 // align discards partial byte bits to align to byte boundary.
 func (br *bitReader) align() {
 	discard := br.bits % 8
@@ -236,50 +272,21 @@ func fixedLLEncode(sym uint16) (code uint32, nbits uint32) {
 	panic(fmt.Sprintf("fixedLLEncode: invalid symbol %d", sym))
 }
 
-func fixedLLDecode(br *bitReader) (uint16, bool) {
-	v7, ok := br.readMSB(7)
-	if !ok {
-		return 0, false
-	}
-	if v7 <= 23 {
-		return uint16(v7 + 256), true // 7-bit: symbols 256-279
-	}
-	extra, ok := br.readLSB(1)
-	if !ok {
-		return 0, false
-	}
-	v8 := (v7 << 1) | extra
-	switch {
-	case v8 >= 48 && v8 <= 191:
-		return uint16(v8 - 48), true // literals 0-143
-	case v8 >= 192 && v8 <= 199:
-		return uint16(v8 + 88), true // symbols 280-287
-	}
-	extra2, ok := br.readLSB(1)
-	if !ok {
-		return 0, false
-	}
-	v9 := (v8 << 1) | extra2
-	if v9 >= 400 && v9 <= 511 {
-		return uint16(v9 - 256), true // literals 144-255
-	}
-	return 0, false // malformed
-}
-
 // =============================================================================
 // RFC 1951 DEFLATE — Length / Distance Tables
 // =============================================================================
 
 type tableEntry struct{ base, extra uint32 }
 
-// lengthTable maps LL symbols 257..284 to (base_length, extra_bits).
-var lengthTable = [28]tableEntry{
+// lengthTable maps LL symbols 257..285 to (base_length, extra_bits).
+var lengthTable = [29]tableEntry{
 	{3, 0}, {4, 0}, {5, 0}, {6, 0}, {7, 0}, {8, 0}, {9, 0}, {10, 0}, // 257-264
 	{11, 1}, {13, 1}, {15, 1}, {17, 1}, // 265-268
 	{19, 2}, {23, 2}, {27, 2}, {31, 2}, // 269-272
 	{35, 3}, {43, 3}, {51, 3}, {59, 3}, // 273-276
 	{67, 4}, {83, 4}, {99, 4}, {115, 4}, // 277-280
 	{131, 5}, {163, 5}, {195, 5}, {227, 5}, // 281-284
+	{258, 0}, // 285
 }
 
 // distTable maps distance codes 0..29 to (base_offset, extra_bits).
@@ -323,8 +330,8 @@ func deflateCompress(data []byte) []byte {
 
 	if len(data) == 0 {
 		// Empty stored block: BFINAL=1 BTYPE=00 + LEN=0 + NLEN=0xFFFF.
-		bw.writeLSB(1, 1)       // BFINAL=1
-		bw.writeLSB(0, 2)       // BTYPE=00 (stored)
+		bw.writeLSB(1, 1) // BFINAL=1
+		bw.writeLSB(0, 2) // BTYPE=00 (stored)
 		bw.align()
 		bw.writeLSB(0x0000, 16) // LEN=0
 		bw.writeLSB(0xFFFF, 16) // NLEN=~0
@@ -367,127 +374,351 @@ func deflateCompress(data []byte) []byte {
 }
 
 // =============================================================================
-// RFC 1951 DEFLATE — Decompress
+// RFC 1951 DEFLATE — Strict raw decompression
 // =============================================================================
-//
-// Handles stored blocks (BTYPE=00) and fixed Huffman blocks (BTYPE=01).
 
-const maxOutput = 256 * 1024 * 1024 // 256 MB decompression bomb cap
+type huffmanDecoder struct {
+	table       map[uint32]uint16
+	complete    bool
+	symbolCount int
+	oneBitCount uint32
+}
 
-// decodeFixedHuffmanBlock decodes one BTYPE=01 block into out and returns it.
-func decodeFixedHuffmanBlock(br *bitReader, out []byte) ([]byte, error) {
-	for {
-		sym, ok := fixedLLDecode(br)
+func huffmanKey(code, length uint32) uint32 { return length<<16 | code }
+
+func buildHuffmanDecoder(lengths []uint8) (*huffmanDecoder, *RawInflateError) {
+	var counts [16]uint32
+	for _, length := range lengths {
+		if length > 15 {
+			return nil, inflateError(InvalidLiteralLengthSymbol)
+		}
+		if length > 0 {
+			counts[length]++
+		}
+	}
+
+	left := int64(1)
+	for length := 1; length <= 15; length++ {
+		left = left*2 - int64(counts[length])
+		if left < 0 {
+			return nil, inflateError(HuffmanOversubscribed)
+		}
+	}
+
+	var nextCode [16]uint32
+	var code uint32
+	for length := 1; length <= 15; length++ {
+		code = (code + counts[length-1]) << 1
+		nextCode[length] = code
+	}
+
+	table := make(map[uint32]uint16)
+	symbolCount := 0
+	for symbol, length := range lengths {
+		if length == 0 {
+			continue
+		}
+		code = nextCode[length]
+		table[huffmanKey(code, uint32(length))] = uint16(symbol)
+		nextCode[length]++
+		symbolCount++
+	}
+	return &huffmanDecoder{
+		table: table, complete: left == 0, symbolCount: symbolCount, oneBitCount: counts[1],
+	}, nil
+}
+
+func decodeSymbol(table *huffmanDecoder, br *bitReader, invalid RawInflateErrorCode) (uint16, *RawInflateError) {
+	var code uint32
+	for length := uint32(1); length <= 15; length++ {
+		bit, ok := br.readLSB(1)
 		if !ok {
-			return nil, errors.New("deflate: EOF decoding fixed Huffman symbol")
+			return 0, inflateError(UnexpectedEOF)
+		}
+		code = code<<1 | bit
+		if symbol, ok := table.table[huffmanKey(code, length)]; ok {
+			return symbol, nil
+		}
+	}
+	return 0, inflateError(invalid)
+}
+
+func fixedLLLengths() []uint8 {
+	lengths := make([]uint8, 288)
+	for i := 0; i <= 143; i++ {
+		lengths[i] = 8
+	}
+	for i := 144; i <= 255; i++ {
+		lengths[i] = 9
+	}
+	for i := 256; i <= 279; i++ {
+		lengths[i] = 7
+	}
+	for i := 280; i <= 287; i++ {
+		lengths[i] = 8
+	}
+	return lengths
+}
+
+func fixedDistLengths() []uint8 {
+	lengths := make([]uint8, 32)
+	for i := range lengths {
+		lengths[i] = 5
+	}
+	return lengths
+}
+
+func copyBackReference(out *[]byte, distance, length, maxOutput int) *RawInflateError {
+	if distance == 0 || distance > len(*out) {
+		return inflateError(InvalidBackReference)
+	}
+	if length > maxOutput-len(*out) {
+		return inflateError(OutputLimitExceeded)
+	}
+	start := len(*out) - distance
+	for i := 0; i < length; i++ {
+		*out = append(*out, (*out)[start+i])
+	}
+	return nil
+}
+
+var codeLengthOrder = [19]int{16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15}
+
+func decodeCodeLengths(table *huffmanDecoder, br *bitReader, total int) ([]uint8, *RawInflateError) {
+	lengths := make([]uint8, 0, total)
+	for len(lengths) < total {
+		symbol, err := decodeSymbol(table, br, InvalidLiteralLengthSymbol)
+		if err != nil {
+			return nil, err
 		}
 		switch {
-		case sym < 256:
-			if len(out) >= maxOutput {
-				return nil, errors.New("deflate: output size limit exceeded")
+		case symbol <= 15:
+			lengths = append(lengths, uint8(symbol))
+		case symbol == 16:
+			if len(lengths) == 0 {
+				return nil, inflateError(RepeatWithoutPrevious)
 			}
-			out = append(out, byte(sym))
-		case sym == 256:
-			return out, nil // end-of-block
-		case sym >= 257 && sym <= 285:
-			idx := int(sym - 257)
-			if idx >= len(lengthTable) {
-				return nil, fmt.Errorf("deflate: invalid length sym %d", sym)
-			}
-			baseLen, extraLenBits := lengthTable[idx].base, lengthTable[idx].extra
-			extraLen, ok := br.readLSB(extraLenBits)
+			extra, ok := br.readLSB(2)
 			if !ok {
-				return nil, errors.New("deflate: EOF reading length extra bits")
+				return nil, inflateError(UnexpectedEOF)
 			}
-			length := int(baseLen + extraLen)
-
-			distCode, ok := br.readMSB(5)
+			repeat := int(extra) + 3
+			if repeat > total-len(lengths) {
+				return nil, inflateError(RepeatOverrun)
+			}
+			previous := lengths[len(lengths)-1]
+			for i := 0; i < repeat; i++ {
+				lengths = append(lengths, previous)
+			}
+		case symbol == 17 || symbol == 18:
+			bits, base := uint32(3), 3
+			if symbol == 18 {
+				bits, base = 7, 11
+			}
+			extra, ok := br.readLSB(bits)
 			if !ok {
-				return nil, errors.New("deflate: EOF reading distance code")
+				return nil, inflateError(UnexpectedEOF)
 			}
-			if distCode >= uint32(len(distTable)) {
-				return nil, fmt.Errorf("deflate: invalid dist code %d", distCode)
+			repeat := int(extra) + base
+			if repeat > total-len(lengths) {
+				return nil, inflateError(RepeatOverrun)
 			}
-			baseDist, extraDistBits := distTable[distCode].base, distTable[distCode].extra
-			extraDist, ok := br.readLSB(extraDistBits)
-			if !ok {
-				return nil, errors.New("deflate: EOF reading distance extra bits")
-			}
-			offset := int(baseDist + extraDist)
-			if offset > len(out) {
-				return nil, fmt.Errorf("deflate: back-reference offset %d > output len %d", offset, len(out))
-			}
-			if len(out)+length > maxOutput {
-				return nil, errors.New("deflate: output size limit exceeded")
-			}
-			for i := 0; i < length; i++ {
-				out = append(out, out[len(out)-offset])
+			for i := 0; i < repeat; i++ {
+				lengths = append(lengths, 0)
 			}
 		default:
-			return nil, fmt.Errorf("deflate: invalid LL symbol %d", sym)
+			return nil, inflateError(InvalidLiteralLengthSymbol)
+		}
+	}
+	return lengths, nil
+}
+
+func decodeCompressedBlock(ll, distance *huffmanDecoder, br *bitReader, out *[]byte, maxOutput int) *RawInflateError {
+	for {
+		symbol, err := decodeSymbol(ll, br, InvalidLiteralLengthSymbol)
+		if err != nil {
+			return err
+		}
+		switch {
+		case symbol < 256:
+			if len(*out) >= maxOutput {
+				return inflateError(OutputLimitExceeded)
+			}
+			*out = append(*out, byte(symbol))
+		case symbol == 256:
+			return nil
+		case symbol > 285:
+			return inflateError(InvalidLiteralLengthSymbol)
+		default:
+			entry := lengthTable[int(symbol-257)]
+			extra, ok := br.readLSB(entry.extra)
+			if !ok {
+				return inflateError(UnexpectedEOF)
+			}
+			length := int(entry.base + extra)
+			distanceSymbol, decodeErr := decodeSymbol(distance, br, ReservedDistanceSymbol)
+			if decodeErr != nil {
+				return decodeErr
+			}
+			if int(distanceSymbol) >= len(distTable) {
+				return inflateError(ReservedDistanceSymbol)
+			}
+			distanceEntry := distTable[distanceSymbol]
+			distanceExtra, ok := br.readLSB(distanceEntry.extra)
+			if !ok {
+				return inflateError(UnexpectedEOF)
+			}
+			if copyErr := copyBackReference(out, int(distanceEntry.base+distanceExtra), length, maxOutput); copyErr != nil {
+				return copyErr
+			}
 		}
 	}
 }
 
-func deflateDecompress(data []byte) ([]byte, error) {
+// RawDeflate compresses data as raw RFC 1951 with no ZIP, zlib, or gzip framing.
+func RawDeflate(data []byte) []byte { return deflateCompress(data) }
+
+// RawInflateCounted strictly inflates a raw RFC 1951 stream. An omitted limit
+// uses RawInflateMaxOutput; a supplied limit may only lower the hard ceiling.
+func RawInflateCounted(data []byte, limits ...int64) (RawInflateResult, error) {
+	maxOutput := RawInflateMaxOutput
+	if len(limits) > 1 {
+		return RawInflateResult{}, inflateError(InvalidOutputLimit)
+	}
+	if len(limits) == 1 {
+		maxOutput = limits[0]
+	}
+	if maxOutput < 0 || maxOutput > RawInflateMaxOutput {
+		return RawInflateResult{}, inflateError(InvalidOutputLimit)
+	}
+
 	br := newBitReader(data)
-	var out []byte
-	var err error
-
+	out := make([]byte, 0)
 	for {
-		bfinal, ok := br.readLSB(1)
+		final, ok := br.readLSB(1)
 		if !ok {
-			return nil, errors.New("deflate: unexpected EOF reading BFINAL")
+			return RawInflateResult{}, inflateError(UnexpectedEOF)
 		}
-		btype, ok := br.readLSB(2)
+		blockType, ok := br.readLSB(2)
 		if !ok {
-			return nil, errors.New("deflate: unexpected EOF reading BTYPE")
+			return RawInflateResult{}, inflateError(UnexpectedEOF)
 		}
 
-		switch btype {
-		case 0b00:
-			// ── Stored block ─────────────────────────────────────────────
+		switch blockType {
+		case 0:
 			br.align()
-			lenVal, ok := br.readLSB(16)
+			length, ok := br.readLSB(16)
 			if !ok {
-				return nil, errors.New("deflate: EOF reading stored LEN")
+				return RawInflateResult{}, inflateError(UnexpectedEOF)
 			}
-			nlen, ok := br.readLSB(16)
+			complement, ok := br.readLSB(16)
 			if !ok {
-				return nil, errors.New("deflate: EOF reading stored NLEN")
+				return RawInflateResult{}, inflateError(UnexpectedEOF)
 			}
-			if (nlen^0xFFFF) != lenVal {
-				return nil, fmt.Errorf("deflate: stored block LEN/NLEN mismatch: %d vs %d", lenVal, nlen)
+			if complement^0xffff != length {
+				return RawInflateResult{}, inflateError(StoredLengthMismatch)
 			}
-			if len(out)+int(lenVal) > maxOutput {
-				return nil, errors.New("deflate: output size limit exceeded")
+			if int(length) > int(maxOutput)-len(out) {
+				return RawInflateResult{}, inflateError(OutputLimitExceeded)
 			}
-			for i := uint32(0); i < lenVal; i++ {
-				b, ok := br.readLSB(8)
-				if !ok {
-					return nil, errors.New("deflate: EOF inside stored block data")
+			for i := uint32(0); i < length; i++ {
+				if len(out) >= int(maxOutput) {
+					return RawInflateResult{}, inflateError(OutputLimitExceeded)
 				}
-				out = append(out, byte(b))
+				value, ok := br.readLSB(8)
+				if !ok {
+					return RawInflateResult{}, inflateError(UnexpectedEOF)
+				}
+				out = append(out, byte(value))
 			}
-
-		case 0b01:
-			// ── Fixed Huffman block ───────────────────────────────────────
-			if out, err = decodeFixedHuffmanBlock(br, out); err != nil {
-				return nil, err
+		case 1:
+			ll, buildErr := buildHuffmanDecoder(fixedLLLengths())
+			if buildErr != nil {
+				return RawInflateResult{}, buildErr
 			}
-
-		case 0b10:
-			return nil, errors.New("deflate: dynamic Huffman blocks (BTYPE=10) not supported")
+			distance, buildErr := buildHuffmanDecoder(fixedDistLengths())
+			if buildErr != nil {
+				return RawInflateResult{}, buildErr
+			}
+			if decodeErr := decodeCompressedBlock(ll, distance, br, &out, int(maxOutput)); decodeErr != nil {
+				return RawInflateResult{}, decodeErr
+			}
+		case 2:
+			hlitValue, ok := br.readLSB(5)
+			if !ok {
+				return RawInflateResult{}, inflateError(UnexpectedEOF)
+			}
+			hdistValue, ok := br.readLSB(5)
+			if !ok {
+				return RawInflateResult{}, inflateError(UnexpectedEOF)
+			}
+			hclenValue, ok := br.readLSB(4)
+			if !ok {
+				return RawInflateResult{}, inflateError(UnexpectedEOF)
+			}
+			hlit, hdist, hclen := int(hlitValue)+257, int(hdistValue)+1, int(hclenValue)+4
+			if hlit > 286 {
+				return RawInflateResult{}, inflateError(InvalidLiteralLengthSymbol)
+			}
+			clLengths := make([]uint8, 19)
+			for i := 0; i < hclen; i++ {
+				value, ok := br.readLSB(3)
+				if !ok {
+					return RawInflateResult{}, inflateError(UnexpectedEOF)
+				}
+				clLengths[codeLengthOrder[i]] = uint8(value)
+			}
+			cl, buildErr := buildHuffmanDecoder(clLengths)
+			if buildErr != nil {
+				return RawInflateResult{}, buildErr
+			}
+			if !cl.complete {
+				return RawInflateResult{}, inflateError(IncompleteCodeLengthTree)
+			}
+			lengths, decodeErr := decodeCodeLengths(cl, br, hlit+hdist)
+			if decodeErr != nil {
+				return RawInflateResult{}, decodeErr
+			}
+			ll, buildErr := buildHuffmanDecoder(lengths[:hlit])
+			if buildErr != nil {
+				return RawInflateResult{}, buildErr
+			}
+			if !ll.complete {
+				return RawInflateResult{}, inflateError(IncompleteLiteralLengthTree)
+			}
+			distance, buildErr := buildHuffmanDecoder(lengths[hlit:])
+			if buildErr != nil {
+				return RawInflateResult{}, buildErr
+			}
+			permittedDistance := distance.complete ||
+				(distance.symbolCount == 1 && distance.oneBitCount == 1) || distance.symbolCount == 0
+			if !permittedDistance {
+				return RawInflateResult{}, inflateError(IncompleteDistanceTree)
+			}
+			if decodeErr := decodeCompressedBlock(ll, distance, br, &out, int(maxOutput)); decodeErr != nil {
+				return RawInflateResult{}, decodeErr
+			}
 		default:
-			return nil, errors.New("deflate: reserved BTYPE=11")
+			return RawInflateResult{}, inflateError(ReservedBlockType)
 		}
-
-		if bfinal == 1 {
+		if final == 1 {
 			break
 		}
 	}
-	return out, nil
+	return RawInflateResult{Output: out, BytesConsumed: br.pos}, nil
 }
+
+// RawInflate returns only the complete output from RawInflateCounted.
+func RawInflate(data []byte, limits ...int64) ([]byte, error) {
+	result, err := RawInflateCounted(data, limits...)
+	if err != nil {
+		return nil, err
+	}
+	return result.Output, nil
+}
+
+// Historical private wrapper retained for package-internal compatibility.
+func deflateDecompress(data []byte) ([]byte, error) { return RawInflate(data) }
 
 // =============================================================================
 // MS-DOS Date / Time Encoding
@@ -582,8 +813,8 @@ func (zw *ZipWriter) addEntry(name string, data []byte, compress bool, unixMode 
 	zw.buf = appendLE16(zw.buf, versionNeeded)
 	zw.buf = appendLE16(zw.buf, flags)
 	zw.buf = appendLE16(zw.buf, method)
-	zw.buf = appendLE16(zw.buf, uint16(DOSEpoch&0xFFFF))   // mod_time
-	zw.buf = appendLE16(zw.buf, uint16(DOSEpoch>>16))      // mod_date
+	zw.buf = appendLE16(zw.buf, uint16(DOSEpoch&0xFFFF)) // mod_time
+	zw.buf = appendLE16(zw.buf, uint16(DOSEpoch>>16))    // mod_date
 	zw.buf = appendLE32(zw.buf, checksum)
 	zw.buf = appendLE32(zw.buf, compressedSize)
 	zw.buf = appendLE32(zw.buf, uncompressedSize)
@@ -619,10 +850,10 @@ func (zw *ZipWriter) Finish() []byte {
 		zw.buf = appendLE32(zw.buf, 0x02014B50) // signature
 		zw.buf = appendLE16(zw.buf, 0x031E)     // version_made_by (Unix, v30)
 		zw.buf = appendLE16(zw.buf, versionNeeded)
-		zw.buf = appendLE16(zw.buf, 0x0800)                         // flags (UTF-8)
+		zw.buf = appendLE16(zw.buf, 0x0800) // flags (UTF-8)
 		zw.buf = appendLE16(zw.buf, e.method)
-		zw.buf = appendLE16(zw.buf, uint16(e.dosDatetime))          // mod_time
-		zw.buf = appendLE16(zw.buf, uint16(e.dosDatetime>>16))      // mod_date
+		zw.buf = appendLE16(zw.buf, uint16(e.dosDatetime))     // mod_time
+		zw.buf = appendLE16(zw.buf, uint16(e.dosDatetime>>16)) // mod_date
 		zw.buf = appendLE32(zw.buf, e.crc)
 		zw.buf = appendLE32(zw.buf, e.compressedSize)
 		zw.buf = appendLE32(zw.buf, e.uncompressedSize)
@@ -663,13 +894,13 @@ func (zw *ZipWriter) Finish() []byte {
 
 // ZipEntry is the metadata for a single archive entry.
 type ZipEntry struct {
-	Name             string
-	Size             uint32 // uncompressed
-	CompressedSize   uint32
-	Method           uint16
-	CRC32            uint32
-	IsDirectory      bool
-	localOffset      uint32
+	Name           string
+	Size           uint32 // uncompressed
+	CompressedSize uint32
+	Method         uint16
+	CRC32          uint32
+	IsDirectory    bool
+	localOffset    uint32
 }
 
 // ZipReader reads entries from an in-memory ZIP archive.
@@ -779,18 +1010,21 @@ func (zr *ZipReader) Read(entry ZipEntry) ([]byte, error) {
 		decompressed = make([]byte, len(compressed))
 		copy(decompressed, compressed)
 	case 8:
-		var err error
-		decompressed, err = deflateDecompress(compressed)
+		result, err := RawInflateCounted(compressed, int64(entry.Size))
 		if err != nil {
-			return nil, fmt.Errorf("zip: entry %q: %w", entry.Name, err)
+			return nil, fmt.Errorf("zip: raw inflate: %w", err)
 		}
+		if result.BytesConsumed != len(compressed) {
+			return nil, errors.New("zip: compressed payload contains trailing bytes")
+		}
+		decompressed = result.Output
 	default:
 		return nil, fmt.Errorf("zip: unsupported compression method %d for %q", entry.Method, entry.Name)
 	}
 
-	// Trim to declared uncompressed size.
-	if len(decompressed) > int(entry.Size) {
-		decompressed = decompressed[:entry.Size]
+	// The Central Directory size is authoritative; never trim excess output.
+	if len(decompressed) != int(entry.Size) {
+		return nil, errors.New("zip: uncompressed size does not match the directory")
 	}
 
 	// Verify CRC-32.
@@ -849,7 +1083,10 @@ func (zr *ZipReader) findEOCD() (int, bool) {
 
 // Zip compresses a list of (name, data) pairs into a ZIP archive.
 // Each file is compressed with DEFLATE if it reduces size; otherwise stored.
-func Zip(entries []struct{ Name string; Data []byte }) []byte {
+func Zip(entries []struct {
+	Name string
+	Data []byte
+}) []byte {
 	zw := NewZipWriter()
 	for _, e := range entries {
 		zw.AddFile(e.Name, e.Data, true)
