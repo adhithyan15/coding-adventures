@@ -1168,6 +1168,28 @@ fn end_to_end_nib_call_preserves_a_live_value_in_the_riscv_simulator() {
 }
 
 #[test]
+fn end_to_end_nib_let_value_flows_into_a_riscv_call() {
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("let_call.nib");
+    let bin = dir.path().join("let_call.bin");
+    std::fs::write(
+        &src,
+        b"fn two() -> u8 { return 2; } \
+          fn main() -> u8 { let base: u8 = 40; return base + two(); }\n",
+    )
+    .unwrap();
+
+    lang_aot::compile_file_to_riscv32_bin(&src, &bin, lang_aot::Language::Nib)
+        .expect("a Nib let value must flow through the RV32I call path");
+
+    let bytes = std::fs::read(&bin).expect("read .bin");
+    let run = riscv_backend::run_binary(&bytes, &[])
+        .expect("the linked RV32I binary must execute in the simulator");
+    assert!(run.halted, "the simulator return trampoline must halt");
+    assert_eq!(run.return_value, 42);
+}
+
+#[test]
 fn end_to_end_nib_multiplication_executes_in_the_riscv_simulator() {
     let dir = tempfile::tempdir().expect("tempdir");
     let src = dir.path().join("multiplication.nib");

@@ -1078,6 +1078,50 @@ fn linked_module_preserves_a_wide_value_live_across_a_call() {
     assert_eq!(result.return_value_high, 1);
 }
 
+#[test]
+fn moves_scalar_and_wide_values() {
+    let scalar = vec![
+        ci("const_i32", Some("source"), vec![CIROperand::Int(42)], "i32"),
+        ci(
+            "mov_i32",
+            Some("copy"),
+            vec![CIROperand::Var("source".into())],
+            "i32",
+        ),
+        ci("ret_i32", None, vec![CIROperand::Var("copy".into())], "i32"),
+    ];
+    assert_eq!(compile_and_run(&scalar), 42);
+
+    let wide = vec![
+        ci(
+            "const_u64",
+            Some("source"),
+            vec![CIROperand::Int(4_294_967_296)],
+            "u64",
+        ),
+        ci(
+            "mov_u64",
+            Some("copy"),
+            vec![CIROperand::Var("source".into())],
+            "u64",
+        ),
+        ci(
+            "add_u64",
+            Some("sum"),
+            vec![
+                CIROperand::Var("source".into()),
+                CIROperand::Var("copy".into()),
+            ],
+            "u64",
+        ),
+        ci("ret_u64", None, vec![CIROperand::Var("sum".into())], "u64"),
+    ];
+    let bytes = compile(&ctx("wide_move", &[], "u64"), &wide).expect("wide move lowering");
+    let result = run_binary(&bytes, &[]).expect("wide move execution");
+    assert_eq!(result.return_value, 0);
+    assert_eq!(result.return_value_high, 2);
+}
+
 // ---------------------------------------------------------------------------
 // Floating point: a refusal with a reason, never bytes.
 //

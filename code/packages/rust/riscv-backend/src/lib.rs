@@ -575,6 +575,11 @@ impl Lowerer {
             return self.lower_direct_call(instr);
         }
 
+        if let Some(ty) = op.strip_prefix("mov_") {
+            self.require_scalar_type(ty, op)?;
+            return self.lower_move(instr, ty, op);
+        }
+
         for family in ["add", "sub", "mul", "div", "mod", "and", "or", "xor", "shl", "shr"] {
             if let Some(ty) = op.strip_prefix(&format!("{family}_")) {
                 if matches!(ty, "i64" | "u64") {
@@ -826,6 +831,77 @@ impl Lowerer {
                 "non-void call requires a destination".to_owned(),
             )),
         }
+    }
+
+    fn lower_move(&mut self, instr: &CIRInstr, ty: &str, op: &str) -> Result<(), BackendError> {
+        let source_name = match instr.srcs.first() {
+            Some(CIROperand::Var(name)) => name,
+            _ => {
+                return Err(BackendError::InvalidOperand(format!(
+                    "{op} srcs[0] must be Var"
+                )))
+            }
+        };
+        if !matches!(ty, "i64" | "u64") {
+            let source = self.var_src(instr, 0, op)?;
+            let destination = self.dest(instr, op)?;
+            self.words.push(encode_addi(destination, source, 0));
+            self.mask_unsigned(destination, ty);
+            return Ok(());
+        }
+
+        let destination_name = instr
+            .dest
+            .as_deref()
+            .ok_or_else(|| BackendError::InvalidOperand(format!("{op} requires a dest")))?;
+        let source_is_dead = self.remaining_uses.get(source_name).copied().unwrap_or_default()
+            == value_source_occurrences(instr, source_name);
+        let source = self.lookup_location(source_name)?;
+        if source_is_dead {
+            self.env.push((destination_name.to_owned(), source));
+            if matches!(source, ValueLocation::Word(_) | ValueLocation::Spill { .. }) {
+                self.word_sized_values.insert(destination_name.to_owned());
+            }
+            return Ok(());
+        }
+
+        // A live register pair must first get a stable stack home; its physical
+        // pair can then safely become the destination copy.
+        if let ValueLocation::Pair { lo, hi } = source {
+            self.spill_pair_value(lo, hi);
+        }
+        let ValueLocation::Pair { lo, hi } = self.dest_pair(instr, op)? else {
+            unreachable!("dest_pair always returns a pair")
+        };
+        match self.lookup_location(source_name)? {
+            ValueLocation::Word(source) => {
+                self.words.push(encode_addi(lo, source, 0));
+                self.words.push(if is_signed(ty) {
+                    encode_srai(hi, source, 31)
+                } else {
+                    encode_addi(hi, X0_ZERO, 0)
+                });
+                self.word_sized_values.insert(destination_name.to_owned());
+            }
+            ValueLocation::Spill { offset } => {
+                self.words.push(encode_lw(lo, STACK_POINTER, offset));
+                self.words.push(if is_signed(ty) {
+                    encode_srai(hi, lo, 31)
+                } else {
+                    encode_addi(hi, X0_ZERO, 0)
+                });
+                self.word_sized_values.insert(destination_name.to_owned());
+            }
+            ValueLocation::PairSpill {
+                lo_offset,
+                hi_offset,
+            } => {
+                self.words.push(encode_lw(lo, STACK_POINTER, lo_offset));
+                self.words.push(encode_lw(hi, STACK_POINTER, hi_offset));
+            }
+            ValueLocation::Pair { .. } => unreachable!("live pair was spilled above"),
+        }
+        Ok(())
     }
 
     fn save_live_values_across_call(&mut self, instr: &CIRInstr) -> Vec<SavedValue> {

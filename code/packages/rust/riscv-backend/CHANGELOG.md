@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Added typed CIR move lowering for scalar and full-width values. Dead moves
+  retain their source location, while live wide sources gain a stable spill
+  home before the pair copy. Nib `let` bindings can now flow through direct
+  module calls and execute in the simulator.
 - Added caller-save handling around direct module calls. Register-resident
   scalar and pair values that remain live after a `jal` now round-trip through
   reserved caller-frame slots, while values already spilled stay in place.
