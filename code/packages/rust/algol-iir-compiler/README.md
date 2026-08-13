@@ -200,6 +200,8 @@ For a `while` element, a bounded static numeric comparison may likewise prove
 the initial body execution after abstractly assigning the controlled value;
 such known comparisons compose through ALGOL's boolean operators, while bare
 boolean literals, unsupported shapes, and dynamic operands remain conservative.
+A conditional predicate is also evaluated when its selector is statically
+known; only the selected branch participates in the proof.
 Local string slots carry an empty verifier seed, but this is not a source-level
 initial value: reads remain gated by the compiler's definite-initialization set.
 Real literal bases also accept the existing

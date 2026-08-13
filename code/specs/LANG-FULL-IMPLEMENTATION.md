@@ -873,7 +873,9 @@ backend immediately) come before the enabler-dependent items.
   numeric comparison, evaluated after abstractly assigning its initial
   controlled value, proves the first condition true. Known comparison leaves
   compose through `not`, `and`, `or`, `impl`, and `eqv`; bare literals,
-  unsupported shapes, and dynamic predicates preserve the entry set.
+  unsupported shapes, and dynamic predicates preserve the entry set. A
+  conditional predicate with a statically known selector evaluates only its
+  selected branch; dynamic selectors remain conservative.
   Local string slots use an empty verifier seed on typed backends without
   changing source semantics; reads still require membership in the separate
   definite-initialization set.
