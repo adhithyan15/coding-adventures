@@ -135,18 +135,19 @@ implemented.
    `u64`, including RV32M-compatible zero-divisor results.
 11. [x] **Wide signed division and modulo:** normalize signs around the unsigned
    pair loop, including `i64::MIN / -1` behavior.
-12. [ ] **Nib divide/modulo frontend:** Nib has no `/` or `%` grammar lowering
-   today; add typed IIR emission and source-to-simulator fixtures once the
-   integer backend supports the corresponding operations.
-13. [ ] **Register allocation:** spill live values to stack slots and emit a proper
+12. [x] **Nib division frontend:** Nib `/` already lowers to typed `div`; add a
+   source-to-RISC-V-simulator fixture to keep that end-to-end path covered.
+13. [ ] **Nib modulo frontend:** add `%` grammar, typed `mod` IIR lowering, and
+   a source-to-simulator fixture. Nib currently has `/` but no `%` token.
+14. [ ] **Register allocation:** spill live values to stack slots and emit a proper
    frame, removing the six-temporary limit.
-14. [ ] **Calls and modules:** lower direct calls, add relocations/linking for flat
+15. [ ] **Calls and modules:** lower direct calls, add relocations/linking for flat
    binaries, and preserve the RISC-V calling convention across calls.
-15. [ ] **Host runtime ABI:** define simulator `ecall` services for exit and integer
+16. [ ] **Host runtime ABI:** define simulator `ecall` services for exit and integer
    output, then lower language print primitives through that ABI.
-16. [ ] **Memory and data:** globals, addresses, loads/stores, and a data-image
+17. [ ] **Memory and data:** globals, addresses, loads/stores, and a data-image
    loader for programs needing strings or arrays.
-17. [ ] **BASIC real values:** Dartmouth BASIC currently lowers numeric values
+18. [ ] **BASIC real values:** Dartmouth BASIC currently lowers numeric values
    such as `PRINT 42` through `f64`; direct RISC-V execution needs either a
    floating-point ABI or an integer-only lowering path before those programs
    can run on the simulator.
