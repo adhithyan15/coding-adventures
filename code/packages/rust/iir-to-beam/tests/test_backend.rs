@@ -2328,3 +2328,181 @@ fn test_66_real_erl_closure_adder() {
         "expected closure dispatch result \"7\", got {:?}", stdout.trim()
     );
 }
+
+// ===========================================================================
+// 67-68. Real-erl: the six memory/array ops on `:atomics`
+// ===========================================================================
+
+/// End-to-end proof that `alloc_bytes`/`store_byte`/`load_byte` work, aimed at
+/// the two properties of `atomics` that fail SILENTLY when botched.
+///
+/// * **1-indexing.** `atomics` indices start at 1 and IIR indices at 0, so the
+///   lowering adds 1. Index 0 is written and read back directly: an off-by-one
+///   does not raise, it touches the neighbouring cell. Indices 0 and 3 carry
+///   different values so a uniform shift cannot pass by accident.
+/// * **Byte masking.** BEAM integers are arbitrary precision and never wrap, so
+///   `store_byte` masks with `band 255`. Storing 300 must read back as 44.
+///
+/// `44 + 42 = 86`.
+#[test]
+fn test_67_real_erl_byte_tape_masks_and_is_zero_indexed() {
+    use iir_to_beam::encode_beam;
+
+    if !erl_available() {
+        return;
+    }
+
+    let m = make_module_fn("main", vec![], "i64", vec![
+        IIRInstr::new("const", Some("n".into()), vec![Operand::Int(8)], "i64"),
+        IIRInstr::new("alloc_bytes", Some("p".into()), vec![Operand::Var("n".into())], "i64"),
+        IIRInstr::new("const", Some("i0".into()), vec![Operand::Int(0)], "i64"),
+        IIRInstr::new("const", Some("i3".into()), vec![Operand::Int(3)], "i64"),
+        IIRInstr::new("const", Some("v300".into()), vec![Operand::Int(300)], "i64"),
+        IIRInstr::new("const", Some("v42".into()), vec![Operand::Int(42)], "i64"),
+        IIRInstr::new("store_byte", None,
+            vec![Operand::Var("p".into()), Operand::Var("i0".into()), Operand::Var("v300".into())], "void"),
+        IIRInstr::new("store_byte", None,
+            vec![Operand::Var("p".into()), Operand::Var("i3".into()), Operand::Var("v42".into())], "void"),
+        IIRInstr::new("load_byte", Some("a".into()),
+            vec![Operand::Var("p".into()), Operand::Var("i0".into())], "i64"),
+        IIRInstr::new("load_byte", Some("b".into()),
+            vec![Operand::Var("p".into()), Operand::Var("i3".into())], "i64"),
+        IIRInstr::new("add", Some("r".into()),
+            vec![Operand::Var("a".into()), Operand::Var("b".into())], "i64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+    ]);
+
+    let errs = validate_for_beam(&m);
+    assert!(errs.is_empty(), "byte-tape module must pass validation: {errs:?}");
+
+    let beam_mod = lower_iir_to_beam(&m, &IIRBeamConfig::new("iir_bytes_test")).unwrap();
+    let bytes = encode_beam(&beam_mod);
+    let tmp = std::env::temp_dir().join(format!("iir_to_beam_tests_{}", std::process::id()));
+    std::fs::create_dir_all(&tmp).expect("create temp dir");
+    std::fs::write(tmp.join("iir_bytes_test.beam"), &bytes).expect("write .beam");
+
+    let output = std::process::Command::new("erl")
+        .arg("-noshell")
+        .arg("-pa").arg(tmp.to_str().expect("tmp path is UTF-8"))
+        .arg("-eval")
+        .arg("io:format(\"~w~n\",[iir_bytes_test:main()]),halt(0).")
+        .output()
+        .expect("spawn erl");
+
+    assert!(output.status.success(),
+        "erl exited non-zero; stderr: {}", String::from_utf8_lossy(&output.stderr));
+    assert_eq!(String::from_utf8_lossy(&output.stdout).trim(), "86",
+        "expected 44 (300 masked) + 42 = 86");
+}
+
+/// The control for the mask: `array_set`/`array_get` ride the same substrate
+/// WITHOUT the byte mask, so a value above 255 must survive intact. Without
+/// this, a lowering that masked everywhere would still pass test 67.
+#[test]
+fn test_68_real_erl_array_ops_do_not_mask() {
+    use iir_to_beam::encode_beam;
+
+    if !erl_available() {
+        return;
+    }
+
+    let m = make_module_fn("main", vec![], "i64", vec![
+        IIRInstr::new("const", Some("n".into()), vec![Operand::Int(4)], "i64"),
+        IIRInstr::new("alloc_array", Some("p".into()), vec![Operand::Var("n".into())], "i64"),
+        IIRInstr::new("const", Some("i0".into()), vec![Operand::Int(0)], "i64"),
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(300)], "i64"),
+        IIRInstr::new("array_set", None,
+            vec![Operand::Var("p".into()), Operand::Var("i0".into()), Operand::Var("v".into())], "void"),
+        IIRInstr::new("array_get", Some("r".into()),
+            vec![Operand::Var("p".into()), Operand::Var("i0".into())], "i64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+    ]);
+
+    let errs = validate_for_beam(&m);
+    assert!(errs.is_empty(), "array module must pass validation: {errs:?}");
+
+    let beam_mod = lower_iir_to_beam(&m, &IIRBeamConfig::new("iir_array_test")).unwrap();
+    let bytes = encode_beam(&beam_mod);
+    let tmp = std::env::temp_dir().join(format!("iir_to_beam_tests_{}", std::process::id()));
+    std::fs::create_dir_all(&tmp).expect("create temp dir");
+    std::fs::write(tmp.join("iir_array_test.beam"), &bytes).expect("write .beam");
+
+    let output = std::process::Command::new("erl")
+        .arg("-noshell")
+        .arg("-pa").arg(tmp.to_str().expect("tmp path is UTF-8"))
+        .arg("-eval")
+        .arg("io:format(\"~w~n\",[iir_array_test:main()]),halt(0).")
+        .output()
+        .expect("spawn erl");
+
+    assert!(output.status.success(),
+        "erl exited non-zero; stderr: {}", String::from_utf8_lossy(&output.stderr));
+    assert_eq!(String::from_utf8_lossy(&output.stdout).trim(), "300",
+        "array_set/array_get must NOT mask");
+}
+
+/// The motivating workload: a LOOP over the tape. This is the shape Brainfuck
+/// `[-]` lowers to, and it is the case straight-line tests cannot reach.
+///
+/// `last_use` is a maximum *textual* index, so before the loop-aware extension
+/// a variable whose final textual read sits at the bottom of a loop looked dead
+/// there and was never spilled — and the `atomics:put` inside the loop then
+/// clobbered it. The next iteration called `atomics:get(1, 3)` on the leftover
+/// argument of the previous `put`. Register layouts where the leftovers happen
+/// to be valid terms give a silently WRONG VALUE instead of that crash.
+///
+/// Decrements tape[0] from 3 to 0, so `main()` returns 0.
+#[test]
+fn test_69_real_erl_tape_loop_preserves_pointer_across_iterations() {
+    use iir_to_beam::encode_beam;
+
+    if !erl_available() {
+        return;
+    }
+
+    let m = make_module_fn("main", vec![], "i64", vec![
+        IIRInstr::new("const", Some("n".into()), vec![Operand::Int(8)], "i64"),
+        IIRInstr::new("alloc_bytes", Some("p".into()), vec![Operand::Var("n".into())], "i64"),
+        IIRInstr::new("const", Some("i0".into()), vec![Operand::Int(0)], "i64"),
+        IIRInstr::new("const", Some("three".into()), vec![Operand::Int(3)], "i64"),
+        IIRInstr::new("const", Some("one".into()), vec![Operand::Int(1)], "i64"),
+        IIRInstr::new("const", Some("zero".into()), vec![Operand::Int(0)], "i64"),
+        IIRInstr::new("store_byte", None,
+            vec![Operand::Var("p".into()), Operand::Var("i0".into()), Operand::Var("three".into())], "void"),
+        IIRInstr::new("label", None, vec![Operand::Var("loop".into())], "void"),
+        IIRInstr::new("load_byte", Some("c".into()),
+            vec![Operand::Var("p".into()), Operand::Var("i0".into())], "i64"),
+        IIRInstr::new("sub", Some("c1".into()),
+            vec![Operand::Var("c".into()), Operand::Var("one".into())], "i64"),
+        // Last TEXTUAL use of p and i0 — but the loop reads them again.
+        IIRInstr::new("store_byte", None,
+            vec![Operand::Var("p".into()), Operand::Var("i0".into()), Operand::Var("c1".into())], "void"),
+        IIRInstr::new("cmp_gt", Some("b".into()),
+            vec![Operand::Var("c1".into()), Operand::Var("zero".into())], "bool"),
+        IIRInstr::new("jmp_if_true", None,
+            vec![Operand::Var("b".into()), Operand::Var("loop".into())], "void"),
+        IIRInstr::new("ret", None, vec![Operand::Var("c1".into())], "i64"),
+    ]);
+
+    let errs = validate_for_beam(&m);
+    assert!(errs.is_empty(), "tape-loop module must pass validation: {errs:?}");
+
+    let beam_mod = lower_iir_to_beam(&m, &IIRBeamConfig::new("iir_loop_test")).unwrap();
+    let bytes = encode_beam(&beam_mod);
+    let tmp = std::env::temp_dir().join(format!("iir_to_beam_tests_{}", std::process::id()));
+    std::fs::create_dir_all(&tmp).expect("create temp dir");
+    std::fs::write(tmp.join("iir_loop_test.beam"), &bytes).expect("write .beam");
+
+    let output = std::process::Command::new("erl")
+        .arg("-noshell")
+        .arg("-pa").arg(tmp.to_str().expect("tmp path is UTF-8"))
+        .arg("-eval")
+        .arg("io:format(\"~w~n\",[iir_loop_test:main()]),halt(0).")
+        .output()
+        .expect("spawn erl");
+
+    assert!(output.status.success(),
+        "erl exited non-zero; stderr: {}", String::from_utf8_lossy(&output.stderr));
+    assert_eq!(String::from_utf8_lossy(&output.stdout).trim(), "0",
+        "the tape pointer must survive every iteration");
+}
