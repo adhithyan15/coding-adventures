@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "Days of the Week",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:e70145e0b10eb0f9",
+  "sourceHash": "fnv1a64:a15a793b96033663",
   "lessons": [
     {
       "id": "TA-C10-vaara-kizhamai",
@@ -139,6 +139,187 @@
       ]
     },
     {
+      "id": "TA-S05-rra",
+      "sequence": 525,
+      "title": "ற (ṟa) — the last of the family, and the one that drops below the line",
+      "headword": "ற",
+      "romanization": "ṟa",
+      "gloss": "the single letter ற — met, then written",
+      "script": "tamil",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:440ab96ba5c13ab1",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ற",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ற and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the sound of ந."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One letter this time. Just one."
+            },
+            {
+              "kind": "speech",
+              "text": "The fourth member of this top-bar family, and the one with a habit none of the others have: its right leg keeps going below the baseline and sweeps left into a long descender. Tamil letters mostly sit on the line. This one hangs off it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ற",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ற — ṟa."
+            },
+            {
+              "kind": "speech",
+              "text": "What it is made of:"
+            },
+            {
+              "kind": "speech",
+              "text": "two arches side by side, giving three legs down to the baseline."
+            },
+            {
+              "kind": "speech",
+              "text": "the right leg continues BELOW the baseline, sweeps left, and drops into a long descender."
+            },
+            {
+              "kind": "speech",
+              "text": "It is the ṟ in நன்றி — and with it, every consonant of thank you."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ற",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "1. start at the lower left, climb the left side, and arch to the middle."
+            },
+            {
+              "kind": "speech",
+              "text": "2. without lifting, descend the first middle upright — then lift once."
+            },
+            {
+              "kind": "speech",
+              "text": "3. set the pen at the adjacent middle upright and descend — then lift a second time."
+            },
+            {
+              "kind": "speech",
+              "text": "4. set the pen at the middle top, arch over, and descend the right side."
+            },
+            {
+              "kind": "speech",
+              "text": "5. without lifting again, sweep left below the baseline and drop into the long descender — and only now lift."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 2. The pen comes up 2 times and no more."
+            },
+            {
+              "kind": "speech",
+              "text": "Stroke order is one attested teaching order, not a national standard — Tamil handwriting is taught with school-to-school variation. Source: Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 10, ற (ṟa) (Univ. of Texas at Austin), p. 194."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ற (ṟa) once, slowly, following the steps above",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ற once, slowly, following the steps above]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ṟa\" as you finish it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ṟa\" as you finish it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "it twice more, without looking back at the steps",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: it twice more, without looking back at the steps]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ற (ṟa) do that ண, ன and ந do not? (Drops below the baseline.) Which word have you now met all the consonants of? (நன்றி.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "TA-W04-vowel-signs-nandri",
       "sequence": 530,
       "title": "ந, ன, ற (na, ṉa, ṟa) — the letter bodies inside நன்றி",
@@ -254,7 +435,7 @@
             },
             {
               "kind": "speech",
-              "text": "It is the tallest thing you have drawn: most Tamil letters sit on the baseline, and ற hangs well beneath it."
+              "text": "It is the tallest thing you have drawn: most Tamil letters sit on the baseline, and ற (ṟa) hangs well beneath it."
             },
             {
               "kind": "speech",
@@ -294,7 +475,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "ற — \"two arches, then the leg that sweeps left and drops\"",
+              "instruction": "ற (ṟa) — \"two arches, then the leg that sweeps left and drops\"",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -315,7 +496,7 @@
             },
             {
               "kind": "speech",
-              "text": "Name Tamil's three n-letters and their tongue positions. (ந dental, ன alveolar, ண retroflex.) What are a consonant's three possibilities so far? (Keep the built-in a or remove it with the puḷḷi.) Which letter hangs below the baseline? (ற, the hard ṟ.) Next: the colours — black, white, red and blue."
+              "text": "Name Tamil's three n-letters and their tongue positions. (ந dental, ன alveolar, ண retroflex.) What are a consonant's three possibilities so far? (Keep the built-in a or remove it with the puḷḷi.) Which letter hangs below the baseline? (ற (ṟa), the hard ṟ.) Next: the colours — black, white, red and blue."
             }
           ]
         }

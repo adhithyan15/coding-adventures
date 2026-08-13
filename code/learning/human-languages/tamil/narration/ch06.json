@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Dative Case and Dative Subjects",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:46861411f2d2c948",
+  "sourceHash": "fnv1a64:f164f73f94999a01",
   "lessons": [
     {
       "id": "TA-C06-dative-ukku",
@@ -133,7 +133,182 @@
             },
             {
               "kind": "speech",
-              "text": "What does -உக்கு mean? (\"To\" or \"for.\") Where does it go? (On the end of the noun — Tamil adds, it doesn't put a word in front.) What is \"to me\"? (எனக்கு enakku — the pronoun's body changes to en- first.) Why does the suffix show up as -ukku and -kku? (One case, two shapes, chosen by the noun's ending.) Next: two more letters — ம and retroflex ண."
+              "text": "What does -உக்கு mean? (\"To\" or \"for.\") Where does it go? (On the end of the noun — Tamil adds, it doesn't put a word in front.) What is \"to me\"? (எனக்கு enakku — the pronoun's body changes to en- first.) Why does the suffix show up as -ukku and -kku? (One case, two shapes, chosen by the noun's ending.) Next: two more letters — ம and retroflex ண (ṇa)."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-S01-va",
+      "sequence": 365,
+      "title": "வ (va) — one spiral, one motion",
+      "headword": "வ",
+      "romanization": "va",
+      "gloss": "the single letter வ — met, then written",
+      "script": "tamil",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:af5549a6703340c5",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: வ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: வ and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One letter this time. Just one."
+            },
+            {
+              "kind": "speech",
+              "text": "It is the first letter of the first word you learned, and it is the easiest one in this book to write: the pen never leaves the paper."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: வ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வ — va."
+            },
+            {
+              "kind": "speech",
+              "text": "What it is made of:"
+            },
+            {
+              "kind": "speech",
+              "text": "a spiral loop on the left."
+            },
+            {
+              "kind": "speech",
+              "text": "a bottom bar."
+            },
+            {
+              "kind": "speech",
+              "text": "a tall right upright."
+            },
+            {
+              "kind": "speech",
+              "text": "வணக்கம் starts with it, and so does வாழ் — to live."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: வ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "1. start at the inner curl and spiral outward, climbing the left side."
+            },
+            {
+              "kind": "speech",
+              "text": "2. without lifting, arch over the top and descend on the right."
+            },
+            {
+              "kind": "speech",
+              "text": "3. without lifting, turn down to the baseline."
+            },
+            {
+              "kind": "speech",
+              "text": "4. without lifting, carry the bottom bar to the right."
+            },
+            {
+              "kind": "speech",
+              "text": "5. without lifting, rise up the right upright — and only now lift."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 0. The pen never leaves the paper."
+            },
+            {
+              "kind": "speech",
+              "text": "Stroke order is one attested teaching order, not a national standard — Tamil handwriting is taught with school-to-school variation. Source: Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 9, வ (Univ. of Texas at Austin), p. 194."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "வ (va) once, slowly, following the steps above",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: வ once, slowly, following the steps above]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"va\" as you finish it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"va\" as you finish it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "it twice more, without looking back at the steps",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: it twice more, without looking back at the steps]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many times does the pen lift while writing வ? (None — one unbroken motion.) What sound does it carry on its own? (va.)"
             }
           ]
         }
@@ -142,7 +317,7 @@
     {
       "id": "TA-W02-ma-retroflex-na",
       "sequence": 370,
-      "title": "ம and ண — a loop, and a curled tongue",
+      "title": "ம and ண (ṇa) — a loop, and a curled tongue",
       "headword": "ம, ண",
       "romanization": "ma, ṇa",
       "gloss": "write ம and retroflex ண while training the tongue to curl back",
@@ -281,7 +456,7 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "ண — \"top bar, left loop, two arches, straight vertical\"",
+              "instruction": "ண (ṇa) — \"top bar, left loop, two arches, straight vertical\"",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -311,7 +486,7 @@
             },
             {
               "kind": "speech",
-              "text": "Draw ம — which side is the upright on? (The left; the arch closes it on the right.) Draw ண — what makes it not ன? (One extra arch: ண has two arches where ன has one. Both end in the same straight vertical.) What does the dot in ṇ mean? (Retroflex — the tongue curls back to the roof of the mouth.) Why can't you hear it yet? (English has no such sound; the ear learns it after the hand.) Next: stacking that dative suffix where Latin would fuse several meanings."
+              "text": "Draw ம — which side is the upright on? (The left; the arch closes it on the right.) Draw ண (ṇa) — what makes it not ன? (One extra arch: ண (ṇa) has two arches where ன has one. Both end in the same straight vertical.) What does the dot in ṇ mean? (Retroflex — the tongue curls back to the roof of the mouth.) Why can't you hear it yet? (English has no such sound; the ear learns it after the hand.) Next: stacking that dative suffix where Latin would fuse several meanings."
             }
           ]
         }
@@ -726,6 +901,203 @@
       ]
     },
     {
+      "id": "TA-S02-nna",
+      "sequence": 405,
+      "title": "ண (ṇa) — the first of three n's",
+      "headword": "ண",
+      "romanization": "ṇa",
+      "gloss": "the single letter ண — met, then written",
+      "script": "tamil",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:2a1e1f702ce9cc6c",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ண",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ண and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the sound of வ (va)."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One letter this time. Just one."
+            },
+            {
+              "kind": "speech",
+              "text": "Tamil has three different letters for sounds English hears as one n. This is the first, and the dot under its romanization — ṇ, not plain n — is doing real work: the tongue curls back to the roof of the mouth. Words genuinely differ by it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ண",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ண — ṇa."
+            },
+            {
+              "kind": "speech",
+              "text": "What it is made of:"
+            },
+            {
+              "kind": "speech",
+              "text": "a spiral loop on the left."
+            },
+            {
+              "kind": "speech",
+              "text": "TWO rounded inner arches."
+            },
+            {
+              "kind": "speech",
+              "text": "a straight top bar."
+            },
+            {
+              "kind": "speech",
+              "text": "a separate straight vertical on the right, down to the baseline."
+            },
+            {
+              "kind": "speech",
+              "text": "It is the second letter of வணக்கம்."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ண",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "1. start in the lower-left curl and spiral outward, climbing the outer left side."
+            },
+            {
+              "kind": "speech",
+              "text": "2. without lifting, arch over the top of the left loop to the first junction."
+            },
+            {
+              "kind": "speech",
+              "text": "3. without lifting, descend around the outside of the first inner arch."
+            },
+            {
+              "kind": "speech",
+              "text": "4. without lifting, turn through its bottom and climb the inside back to the first junction."
+            },
+            {
+              "kind": "speech",
+              "text": "5. without lifting, sweep through the extra inner arch — over its top, around its outside and bottom, then up its inside to the right junction."
+            },
+            {
+              "kind": "speech",
+              "text": "6. without lifting, carry the top bar to the right edge — then lift once."
+            },
+            {
+              "kind": "speech",
+              "text": "7. set the pen at the top of the separate right upright and draw straight down — and only now lift."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 1. The pen comes up 1 time and no more."
+            },
+            {
+              "kind": "speech",
+              "text": "Stroke order is one attested teaching order, not a national standard — Tamil handwriting is taught with school-to-school variation. Source: Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 13, ண (ṇa) (Univ. of Texas at Austin), p. 195."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ண (ṇa) once, slowly, following the steps above",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ண once, slowly, following the steps above]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ṇa\" as you finish it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ṇa\" as you finish it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "it twice more, without looking back at the steps",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: it twice more, without looking back at the steps]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does the tongue go for ண (ṇa)? (Curled back, to the roof of the mouth.) How many pen lifts? (One — the body, then the upright.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "TA-W02-three-ns",
       "sequence": 410,
       "title": "ந, ன, ண (na, ṉa, ṇa) — three stops on one tongue-map",
@@ -796,7 +1168,7 @@
             },
             {
               "kind": "speech",
-              "text": "You will draw ந and ன when nandri needs them. For now compare the last pair: ண is ன with one extra arch. Both open with a top bar and loop and finish with the same vertical. ன has one middle arch; ண has two."
+              "text": "You will draw ந and ன when nandri needs them. For now compare the last pair: ண (ṇa) is ன with one extra arch. Both open with a top bar and loop and finish with the same vertical. ன has one middle arch; ண (ṇa) has two."
             },
             {
               "kind": "speech",
@@ -836,7 +1208,7 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "retroflex ண with the tongue curled back",
+              "instruction": "retroflex ண (ṇa) with the tongue curled back",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
@@ -845,7 +1217,7 @@
             {
               "kind": "prompt",
               "action": "TRACE",
-              "instruction": "one arch in ன, two arches in ண",
+              "instruction": "one arch in ன, two arches in ண (ṇa)",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -866,7 +1238,7 @@
             },
             {
               "kind": "speech",
-              "text": "How many n-letters does Tamil have? (Three.) What separates them? (Tongue position: dental, alveolar, retroflex.) Which two differ by one arch? (ன has one; ண has two.) Next: the numbers one to five."
+              "text": "How many n-letters does Tamil have? (Three.) What separates them? (Tongue position: dental, alveolar, retroflex.) Which two differ by one arch? (ன has one; ண (ṇa) has two.) Next: the numbers one to five."
             }
           ]
         }

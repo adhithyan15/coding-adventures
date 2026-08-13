@@ -961,14 +961,19 @@ describe("corpus regression", () => {
   //
   // When the first interspersed lesson lands, `lessonsWithWritingSegments` rises and
   // this equality breaks — which is the point. Record which track did it; never loosen.
-  it("pins the core as strictly better than the whole, with no writing segments yet", () => {
+  it("pins the core as strictly better than the whole, now that writing segments exist", () => {
     const { lessons } = loadEverything();
     const summary = summarizeModality(lessons);
-    // Still zero: no track has authored a `## Writing:` section. This is the assertion
-    // that caught the conflation — while `writingSegments` filtered on `detachable`, this
-    // read 276 the moment a second type became detachable, reporting writing sections
-    // that teach no writing.
-    expect(summary.lessonsWithWritingSegments).toBe(0);
+    // This read 0 for the whole life of the corpus: HL-C41 built the block-level
+    // modality machinery and nothing used it. Tamil's drizzled letter segments
+    // (HL11) are the first lessons to author a `## Writing:` section, so the
+    // machinery is finally exercised by real content rather than by fixtures.
+    //
+    // It stays an exact pin rather than a `toBeGreaterThan`, because the value
+    // this assertion originally caught was a conflation that made it read 276 —
+    // every lesson with any detachable block, not the ones that teach the hand.
+    // A number that can only grow would not have caught that.
+    expect(summary.lessonsWithWritingSegments).toBe(9);
     // coreVoice NO LONGER equals voice, and that is the whole point of the split: 240
     // inline-letters sections detach, so the core of those lessons is listenable even
     // though the lesson as printed needs eyes.
