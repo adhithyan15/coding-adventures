@@ -561,10 +561,14 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   lifted runs add the middle shoulder, top-to-bottom right stem, and
   left-to-right shirorekhā. Its five-frame Noto Sans Devanagari path follows the
   cited four-run modern printed form while recording a published six-stroke
-  traditional Sanskrit form as real variation. The remaining **130** prose part
+  traditional Sanskrit form as real variation. **आ** preserves that joined left
+  body, then separately adds the middle shoulder, inner stem, trailing stem,
+  and left-to-right shirorekhā. Its six-frame Noto Sans Devanagari path follows
+  the cited five-run modern printed form with four lifts while carrying the
+  published base-letter variation forward. The remaining **129** prose part
   orders across five scripts
   (`arabic` 3,
-  `cyrillic` 33, `devanagari` 27,
+  `cyrillic` 33, `devanagari` 26,
   `gujarati` 33, `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a
   citation without a count), and Language Ladder's ductus test proves every
