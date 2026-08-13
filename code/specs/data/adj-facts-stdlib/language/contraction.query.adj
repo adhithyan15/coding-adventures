@@ -17,4 +17,5 @@ import "contraction.adj"
 
 ? contraction(dont, $Expansion)     % expect do_not
 ? contraction($Word, will_not)      % expect wont
-? contraction(shouldnt, $Expansion) % expect abstain -- no expansion is shipped for this contraction
+? contraction(shouldnt, $Expansion) % expect should_not (added this cycle -- was previously an abstain example)
+? contraction(hes, $Expansion)      % expect abstain -- "he's" is genuinely ambiguous in the source (he has / he is), so it is deliberately not a row
