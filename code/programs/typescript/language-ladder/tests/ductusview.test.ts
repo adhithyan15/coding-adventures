@@ -62,6 +62,11 @@ const chineseOutline = (character: string): GlyphOutline => {
   return { path: g.path, bounds: boundsOf(g.contours) };
 };
 
+const devanagariOutline = (character: string): GlyphOutline => {
+  const g = parseFont(load("NotoSansDevanagari-Static.ttf")).glyphFor(character)!;
+  return { path: g.path, bounds: boundsOf(g.contours) };
+};
+
 const MA = DUCTUS["ம"];
 const outline = tamilOutline("ம");
 const A = DUCTUS["அ"];
@@ -132,6 +137,8 @@ const CHINESE_EARLY = ductusFor("早", "chinese")!;
 const chineseEarlyOutline = chineseOutline("早");
 const CHINESE_UP = ductusFor("上", "chinese")!;
 const chineseUpOutline = chineseOutline("上");
+const DEVANAGARI_A = ductusFor("अ", "devanagari")!;
+const devanagariAOutline = devanagariOutline("अ");
 const HEBREW_ALEF = ductusFor("א", "hebrew")!;
 const hebrewAlefOutline = hebrewOutline("א");
 const HEBREW_BET = ductusFor("ב", "hebrew")!;
@@ -1458,6 +1465,36 @@ describe("Chinese 上 — vertical before short and long horizontals", () => {
     );
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(CHINESE_UP.strokes[2], 1),
+    );
+  });
+});
+
+describe("Devanagari अ — joined left body before shoulder, stem, and headline", () => {
+  const steps = ductusSteps(DEVANAGARI_A);
+  const strip = ductusFilmstrip(DEVANAGARI_A, devanagariAOutline);
+
+  it("shows five movements across four sourced strokes", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "curve right around the upper bowl",
+      "continue down and around the lower bowl without lifting",
+      "lift, then sweep the middle shoulder right",
+      "lift, then descend the right stem",
+      "lift, then draw the shirorekha left-to-right",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, true, true, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 1, 2, 3]);
+    expect(strip.frames).toHaveLength(5);
+    expect(strip.penLifts).toBe(3);
+    expect(strip.summary).toBe("4 strokes · 3 pen lifts · 5 movements");
+  });
+
+  it("draws the exact Noto Sans Devanagari character behind the headline", () => {
+    const paths = byTag(strip.frames[4], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      devanagariAOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(DEVANAGARI_A.strokes[3], 1),
     );
   });
 });

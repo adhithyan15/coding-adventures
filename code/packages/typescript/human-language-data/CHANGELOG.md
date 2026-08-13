@@ -71,6 +71,12 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
 
 ## [Unreleased]
 
+### Added - source-verified Devanagari अ (HL-C09CX)
+
+- Verify अ as four ordered strokes with three lifts against a four-frame modern printed source.
+- Preserve its joined left body, lifted shoulder, top-to-bottom stem, and left-to-right shirorekhā in a Noto Sans Devanagari fit.
+- Record the published six-stroke traditional Sanskrit form as source variation and reduce HL-C09 debt to 130 entries.
+
 ### Added - source-verified Chinese 上 (HL-C09CW)
 
 - Verify 上 as three ordered strokes with two lifts against the pinned PRC source.

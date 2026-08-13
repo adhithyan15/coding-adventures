@@ -2,6 +2,12 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Devanagari अ ductus (HL-C09CX)
+
+- Render **अ** in five source-aligned movements across four strokes.
+- Preserve its joined upper-and-lower left body, separate shoulder, descending stem, left-to-right shirorekhā, and three lifts in Noto Sans Devanagari.
+- Record the six-stroke traditional Sanskrit form as explicit source variation.
+
 ### Added — cited Chinese 上 ductus (HL-C09CW)
 
 - Render **上** in three source-aligned movements across three strokes.
