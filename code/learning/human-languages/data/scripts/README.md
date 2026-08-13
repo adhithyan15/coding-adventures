@@ -591,11 +591,17 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   the cited six-run form with five lifts. **औ** reuses the same four-stroke
   base, then separately sweeps its lower and taller upper arcs upward and left
   before adding the left-to-right shirorekhā. Its eight-frame Noto Sans
-  Devanagari path follows the cited seven-run form with six lifts. The remaining
-  **121** prose part
+  Devanagari path follows the cited seven-run form with six lifts. **क** opens
+  the consonants from the older animated source collection: its left bowl
+  starts at the upper-right junction and circles counterclockwise before three
+  lifted runs descend the central stem, sweep the right-hand arch clockwise,
+  and finish the shirorekhā left-to-right. Its four-frame Noto Sans Devanagari
+  path follows the cited four-run animation with three lifts, corroborated by
+  the Central Hindi Directorate's four-part learner buildup. The remaining
+  **120** prose part
   orders across five scripts
   (`arabic` 3,
-  `cyrillic` 33, `devanagari` 18,
+  `cyrillic` 33, `devanagari` 17,
   `gujarati` 33, `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a
   citation without a count), and Language Ladder's ductus test proves every

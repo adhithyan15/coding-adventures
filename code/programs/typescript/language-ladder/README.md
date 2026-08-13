@@ -175,7 +175,7 @@ thirteen Urdu starter entries — ا, ج, ر, س, ش, ک, ل, م, ن, ں, ہ, ی
 all eighteen Arabic starter letters — ا, ب, ت, ج, ح, خ, د, ر, س, ش, ص, ض, ع, ك, ل, ه, و, and ي —,
 all twenty-two Hebrew starter letters א, ב, ג, ד, ה, ו, ז, ח, ט, י, כ, ל,
 מ, נ, ס, ע, פ, צ, ק, ר, ש, and ת, all twenty-four Chinese starter entries 人, 亻, 口, 女, 子, 日, 讠, 氵, 宀, 你, 好, 我, 是, 不, 名, 字, 谢, 请, 再, 见, 什, 么, 早, and 上,
-and Devanagari अ, आ, इ, ई, उ, ऊ, ए, ऐ, ओ, and औ
+and Devanagari अ, आ, इ, ई, उ, ऊ, ए, ऐ, ओ, औ, and क
 have authored pen paths today.**
 `DUCTUS` admits no letter without a citation
 for its stroke order, and hand-drawing a letter is forbidden
@@ -600,6 +600,12 @@ then separately sweeps its lower and taller upper arcs upward and left before
 adding the shirorekhā. Its Noto Sans Devanagari fit preserves the source's seven
 strokes and six lifts while keeping the modern printed sequence distinct from
 universal practice.
+The four-frame Devanagari **क** filmstrip starts at the left bowl's upper-right
+junction and circles counterclockwise before separately descending the central
+stem, sweeping the right-hand arch clockwise, and adding the shirorekhā. Its
+Noto Sans Devanagari fit preserves the animated source's four strokes and three
+lifts, with the same buildup independently corroborated by the Central Hindi
+Directorate's learner deskbook.
 The runtime resolves each cited path back to the owning script and lazily loads that
 script's font, while Tamil continues to use Noto Sans Tamil. Unverified letters
 still fall back to the numbered prose list, unchanged. Extending the coverage is HL-C09,

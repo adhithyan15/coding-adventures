@@ -2382,6 +2382,43 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: devanagariAlphabetSource("औ"),
   },
+  // Opiaterein's animation writes the left bowl counterclockwise, then places
+  // the central stem, right-hand arch, and headline as three separate runs.
+  // The Central Hindi Directorate's 2019 deskbook independently shows the
+  // same four-part buildup: four strokes and three lifts in all.
+  [ductusKey("devanagari", "क")]: {
+    script: "devanagari",
+    glyph: "क",
+    strokes: [
+      { segments: [{ label: "sweep left over the top and around the bowl", path: [
+        { x: 355, y: 430 }, { x: 315, y: 430 },
+        { x: 270, y: 435 }, { x: 225, y: 430 }, { x: 180, y: 415 },
+        { x: 140, y: 390 }, { x: 110, y: 360 }, { x: 90, y: 325 },
+        { x: 86, y: 290 }, { x: 95, y: 250 }, { x: 115, y: 215 },
+        { x: 145, y: 185 }, { x: 180, y: 165 }, { x: 220, y: 154 },
+        { x: 260, y: 155 }, { x: 300, y: 170 }, { x: 335, y: 195 },
+        { x: 360, y: 225 }, { x: 377, y: 260 }, { x: 387, y: 290 },
+      ] }] },
+      { segments: [{ label: "lift, then descend the central stem", path: [
+        { x: 417, y: 551 }, { x: 417, y: 480 }, { x: 417, y: 400 },
+        { x: 417, y: 320 }, { x: 417, y: 240 }, { x: 417, y: 160 },
+        { x: 417, y: 80 }, { x: 417, y: 5 },
+      ] }] },
+      { segments: [{ label: "lift, then sweep the right-hand arch clockwise", path: [
+        { x: 455, y: 350 }, { x: 490, y: 365 }, { x: 530, y: 370 },
+        { x: 570, y: 365 }, { x: 610, y: 345 }, { x: 645, y: 320 },
+        { x: 670, y: 285 }, { x: 685, y: 245 }, { x: 680, y: 205 },
+        { x: 660, y: 165 }, { x: 640, y: 125 }, { x: 620, y: 95 },
+        { x: 600, y: 70 },
+      ] }] },
+      { segments: [{ label: "lift, then draw the shirorekha left-to-right", path: [
+        { x: 5, y: 585 }, { x: 115, y: 585 }, { x: 225, y: 585 },
+        { x: 335, y: 585 }, { x: 445, y: 585 }, { x: 555, y: 585 },
+        { x: 665, y: 585 }, { x: 778, y: 585 },
+      ] }] },
+    ],
+    source: devanagariAlphabetSource("क"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the

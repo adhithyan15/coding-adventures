@@ -2,6 +2,12 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Devanagari क ductus (HL-C09DH)
+
+- Render **क** in four source-aligned movements across four strokes.
+- Draw the counterclockwise left bowl before the top-to-bottom central stem, clockwise right-hand arch, and final left-to-right shirorekhā.
+- Preserve the source's three lifts, fit the path to Noto Sans Devanagari, and reduce measured HL-C09 debt to 120 entries.
+
 ### Added — cited Devanagari औ ductus (HL-C09DG)
 
 - Render **औ** in eight source-aligned movements across seven strokes.
