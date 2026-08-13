@@ -155,7 +155,22 @@ fn project_dir() -> PathBuf {
 /// individual-file level, but at the directory (and its ancestor-path
 /// resolution) level instead.
 fn ensure_dir_secure(dir: &Path) {
-    match fs::create_dir(dir) {
+    // `0o700` (owner-only), set explicitly rather than left to the process
+    // umask — a permissive umask (e.g. `000`, seen in some CI containers)
+    // would otherwise create a directory that passes the uid check below
+    // yet is group/world-writable, letting a different local account write
+    // files into it (not symlink-swap through them — `write_new`'s
+    // `create_new` already refuses that — but writable is still more than
+    // intended for a directory only this process should touch).
+    #[cfg(unix)]
+    let create_result = {
+        use std::os::unix::fs::DirBuilderExt;
+        std::fs::DirBuilder::new().mode(0o700).create(dir)
+    };
+    #[cfg(not(unix))]
+    let create_result = fs::create_dir(dir);
+
+    match create_result {
         Ok(()) => return,
         Err(e) if e.kind() == std::io::ErrorKind::AlreadyExists => {}
         Err(e) => panic!("create {}: {e}", dir.display()),
@@ -185,6 +200,15 @@ fn ensure_dir_secure(dir: &Path) {
             meta.uid(),
             current_uid
         );
+        // Re-tighten permissions on a reused directory too, in case an
+        // earlier run (before this hardening landed, or under a different
+        // umask) left it more permissive than intended.
+        use std::os::unix::fs::PermissionsExt;
+        let mut perms = meta.permissions();
+        if perms.mode() & 0o077 != 0 {
+            perms.set_mode(0o700);
+            let _ = fs::set_permissions(dir, perms);
+        }
     }
 }
 
