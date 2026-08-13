@@ -179,6 +179,38 @@ int crc32(List<int> data, [int initial = 0]) {
   return (crc ^ _mask32) & _mask32;
 }
 
+/// Stable, payload-blind raw-inflate failures required by CMP09.
+class RawInflateError extends FormatException {
+  RawInflateError(this.code)
+      : super(_rawInflateErrorMessages[code] ?? 'raw inflate failed');
+
+  /// The language-neutral error identifier.
+  final String code;
+}
+
+const Map<String, String> _rawInflateErrorMessages = <String, String>{
+  'invalid-output-limit':
+      'raw inflate output limit must be within the hard ceiling',
+  'unexpected-eof': 'raw inflate input ended before the stream was complete',
+  'reserved-block-type': 'raw inflate encountered a reserved block type',
+  'stored-length-mismatch': 'raw inflate stored block length check failed',
+  'huffman-oversubscribed': 'raw inflate Huffman tree is over-subscribed',
+  'incomplete-code-length-tree': 'raw inflate code-length tree is incomplete',
+  'incomplete-literal-length-tree':
+      'raw inflate literal-length tree is incomplete',
+  'incomplete-distance-tree': 'raw inflate distance tree is incomplete',
+  'repeat-without-previous': 'raw inflate repeat has no previous code length',
+  'repeat-overrun':
+      'raw inflate code-length repeat overruns the declared alphabets',
+  'invalid-literal-length-symbol':
+      'raw inflate literal-length symbol is invalid',
+  'reserved-distance-symbol': 'raw inflate distance symbol is reserved',
+  'invalid-back-reference': 'raw inflate back-reference is invalid',
+  'output-limit-exceeded': 'raw inflate output size limit exceeded',
+};
+
+Never _inflateFail(String code) => throw RawInflateError(code);
+
 // =============================================================================
 // RFC 1951 DEFLATE — Bit I/O
 // =============================================================================
@@ -251,7 +283,7 @@ class _BitReader {
 
   int readBit() {
     if (_pos >= _data.length) {
-      throw const FormatException('deflate: unexpected end of bit stream');
+      _inflateFail('unexpected-eof');
     }
     final bit = (_data[_pos] >> _bit) & 1;
     _bit += 1;
@@ -285,14 +317,15 @@ class _BitReader {
   /// Read one raw byte. Only valid when [isByteAligned].
   int readByte() {
     if (_pos >= _data.length) {
-      throw const FormatException(
-        'deflate: unexpected end of stream inside a stored block',
-      );
+      _inflateFail('unexpected-eof');
     }
     final b = _data[_pos];
     _pos += 1;
     return b;
   }
+
+  /// Bytes reached through the last bit read, excluding whole trailing bytes.
+  int get bytesConsumed => _pos + (_bit == 0 ? 0 : 1);
 }
 
 // =============================================================================
@@ -318,8 +351,17 @@ class _BitReader {
 class _CanonicalDecoder {
   final Map<int, Map<int, int>> _codesByLength;
   final int _maxBits;
+  final bool isComplete;
+  final int symbolCount;
+  final int oneBitSymbolCount;
 
-  const _CanonicalDecoder._(this._codesByLength, this._maxBits);
+  const _CanonicalDecoder._(
+    this._codesByLength,
+    this._maxBits,
+    this.isComplete,
+    this.symbolCount,
+    this.oneBitSymbolCount,
+  );
 
   /// Build a decoder from per-symbol code lengths (index = symbol, 0 = unused).
   ///
@@ -338,11 +380,20 @@ class _CanonicalDecoder {
     var maxBits = 0;
     var symbolCount = 0;
     for (final len in lengths) {
+      if (len < 0 || len > 15) {
+        _inflateFail('invalid-literal-length-symbol');
+      }
       if (len > maxBits) maxBits = len;
       if (len > 0) symbolCount += 1;
     }
     if (maxBits == 0) {
-      return const _CanonicalDecoder._(<int, Map<int, int>>{}, 0);
+      return const _CanonicalDecoder._(
+        <int, Map<int, int>>{},
+        0,
+        false,
+        0,
+        0,
+      );
     }
 
     final blCount = List<int>.filled(maxBits + 1, 0);
@@ -350,15 +401,11 @@ class _CanonicalDecoder {
       if (len > 0) blCount[len] += 1;
     }
 
-    if (symbolCount > 1) {
-      var available = 1;
-      for (var bits = 1; bits <= maxBits; bits++) {
-        available = (available << 1) - blCount[bits];
-        if (available < 0) {
-          throw const FormatException(
-            'deflate: Huffman code lengths oversubscribe the prefix-code space',
-          );
-        }
+    var available = 1;
+    for (var bits = 1; bits <= maxBits; bits++) {
+      available = (available << 1) - blCount[bits];
+      if (available < 0) {
+        _inflateFail('huffman-oversubscribed');
       }
     }
 
@@ -378,21 +425,25 @@ class _CanonicalDecoder {
       codesByLength.putIfAbsent(len, () => <int, int>{})[assigned] = sym;
     }
 
-    return _CanonicalDecoder._(codesByLength, maxBits);
+    return _CanonicalDecoder._(
+      codesByLength,
+      maxBits,
+      available == 0,
+      symbolCount,
+      blCount.length > 1 ? blCount[1] : 0,
+    );
   }
 
   /// Decode one symbol: read bits one at a time, growing an MSB-first code
   /// accumulator, until it matches an assigned code of that length.
-  int readSymbol(_BitReader br) {
+  int readSymbol(_BitReader br, String invalidCode) {
     var code = 0;
     for (var len = 1; len <= _maxBits; len++) {
       code = (code << 1) | br.readBit();
       final sym = _codesByLength[len]?[code];
       if (sym != null) return sym;
     }
-    throw const FormatException(
-      'deflate: bit sequence does not match any Huffman code',
-    );
+    _inflateFail(invalidCode);
   }
 }
 
@@ -444,9 +495,8 @@ _CanonicalDecoder get _fixedLlDecoder =>
     _fixedLlDecoderCache ??= _CanonicalDecoder.fromLengths(_fixedLlLengths());
 
 _CanonicalDecoder? _fixedDistDecoderCache;
-_CanonicalDecoder get _fixedDistDecoder =>
-    _fixedDistDecoderCache ??=
-        _CanonicalDecoder.fromLengths(_fixedDistLengths());
+_CanonicalDecoder get _fixedDistDecoder => _fixedDistDecoderCache ??=
+    _CanonicalDecoder.fromLengths(_fixedDistLengths());
 
 // =============================================================================
 // RFC 1951 DEFLATE — Length / Distance Tables (§3.2.5)
@@ -482,14 +532,36 @@ const List<(int, int)> _lengthTable = <(int, int)>[
 
 /// `(base_offset, extra_bits)` for distance codes 0..=29.
 const List<(int, int)> _distTable = <(int, int)>[
-  (1, 0), (2, 0), (3, 0), (4, 0),
-  (5, 1), (7, 1), (9, 2), (13, 2),
-  (17, 3), (25, 3), (33, 4), (49, 4),
-  (65, 5), (97, 5), (129, 6), (193, 6),
-  (257, 7), (385, 7), (513, 8), (769, 8),
-  (1025, 9), (1537, 9), (2049, 10), (3073, 10),
-  (4097, 11), (6145, 11), (8193, 12), (12289, 12),
-  (16385, 13), (24577, 13),
+  (1, 0),
+  (2, 0),
+  (3, 0),
+  (4, 0),
+  (5, 1),
+  (7, 1),
+  (9, 2),
+  (13, 2),
+  (17, 3),
+  (25, 3),
+  (33, 4),
+  (49, 4),
+  (65, 5),
+  (97, 5),
+  (129, 6),
+  (193, 6),
+  (257, 7),
+  (385, 7),
+  (513, 8),
+  (769, 8),
+  (1025, 9),
+  (1537, 9),
+  (2049, 10),
+  (3073, 10),
+  (4097, 11),
+  (6145, 11),
+  (8193, 12),
+  (12289, 12),
+  (16385, 13),
+  (24577, 13),
 ];
 
 /// Map a match length (3–255) to its RFC 1951 LL symbol, base, and extra bits.
@@ -591,24 +663,43 @@ Uint8List deflateCompress(Uint8List data) {
 // amortized-O(1) doubling growth instead, so the byte cap enforced
 // elsewhere (`out.length > maxOutput`) tracks actual memory 1:1.
 class _ByteBuffer {
+  final int _limit;
   Uint8List _buf;
   int _length = 0;
 
-  _ByteBuffer([int initialCapacity = 64]) : _buf = Uint8List(initialCapacity);
+  _ByteBuffer(this._limit) : _buf = Uint8List(_limit < 64 ? _limit : 64);
 
   int get length => _length;
 
   int operator [](int index) => _buf[index];
 
   void add(int byte) {
-    if (_length == _buf.length) _grow(_length + 1);
+    _reserve(1);
     _buf[_length] = byte;
     _length += 1;
+  }
+
+  void copyBack(int distance, int count) {
+    _reserve(count);
+    for (var i = 0; i < count; i++) {
+      _buf[_length] = _buf[_length - distance];
+      _length += 1;
+    }
+  }
+
+  void _reserve(int extra) {
+    if (_length + extra > _limit) {
+      _inflateFail('output-limit-exceeded');
+    }
+    if (_length + extra <= _buf.length) return;
+    if (_length == _buf.length) _grow(_length + 1);
+    if (_length + extra > _buf.length) _grow(_length + extra);
   }
 
   void _grow(int minCapacity) {
     var newCapacity = _buf.isEmpty ? 64 : _buf.length * 2;
     if (newCapacity < minCapacity) newCapacity = minCapacity;
+    if (newCapacity > _limit) newCapacity = _limit;
     final newBuf = Uint8List(newCapacity);
     newBuf.setRange(0, _length, _buf);
     _buf = newBuf;
@@ -623,14 +714,41 @@ class _ByteBuffer {
 
 /// Default upper bound on decompressed output — a guard against
 /// decompression bombs (see the CMP09 spec's Security Considerations).
-const int defaultMaxOutputBytes = 256 * 1024 * 1024;
+const int rawInflateMaxOutput = 256 * 1024 * 1024;
+
+/// Backwards-compatible name for the raw-inflate hard and default ceiling.
+const int defaultMaxOutputBytes = rawInflateMaxOutput;
+
+void _validateOutputLimit(int maxOutput) {
+  if (maxOutput < 0 || maxOutput > rawInflateMaxOutput) {
+    _inflateFail('invalid-output-limit');
+  }
+}
 
 /// RFC 1951 code-length alphabet transmission order (§3.2.7) — the order in
 /// which the 3-bit code lengths for the *code-length alphabet itself*
 /// appear on the wire, chosen so that common archives (which rarely use
 /// the high-numbered CL symbols) can truncate the list early via `HCLEN`.
 const List<int> _clOrder = <int>[
-  16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15,
+  16,
+  17,
+  18,
+  0,
+  8,
+  7,
+  9,
+  6,
+  10,
+  5,
+  11,
+  4,
+  12,
+  3,
+  13,
+  2,
+  14,
+  1,
+  15,
 ];
 
 /// Read a dynamic block's transmitted Huffman tables (§3.2.7): the
@@ -645,11 +763,14 @@ const List<int> _clOrder = <int>[
   final hdist = br.readBits(5) + 1; // number of distance codes (1..32)
   final hclen = br.readBits(4) + 4; // number of CL codes transmitted (4..19)
 
+  if (hlit > 286) _inflateFail('invalid-literal-length-symbol');
+
   final clLengths = List<int>.filled(19, 0);
   for (var i = 0; i < hclen; i++) {
     clLengths[_clOrder[i]] = br.readBits(3);
   }
   final clDecoder = _CanonicalDecoder.fromLengths(clLengths);
+  if (!clDecoder.isComplete) _inflateFail('incomplete-code-length-tree');
 
   // Decode HLIT + HDIST code lengths via the CL alphabet's RLE scheme:
   //   0-15: literal code length.
@@ -659,47 +780,45 @@ const List<int> _clOrder = <int>[
   final allLengths = <int>[];
   final total = hlit + hdist;
   while (allLengths.length < total) {
-    final sym = clDecoder.readSymbol(br);
+    final sym = clDecoder.readSymbol(br, 'invalid-literal-length-symbol');
     if (sym <= 15) {
       allLengths.add(sym);
     } else if (sym == 16) {
       if (allLengths.isEmpty) {
-        throw const FormatException(
-          'deflate: code-length repeat (16) with no previous length',
-        );
+        _inflateFail('repeat-without-previous');
       }
       final repeat = br.readBits(2) + 3;
       final prev = allLengths.last;
-      for (var i = 0; i < repeat && allLengths.length < total; i++) {
-        allLengths.add(prev);
-      }
+      if (allLengths.length + repeat > total) _inflateFail('repeat-overrun');
+      for (var i = 0; i < repeat; i++) allLengths.add(prev);
     } else if (sym == 17) {
       final repeat = br.readBits(3) + 3;
-      for (var i = 0; i < repeat && allLengths.length < total; i++) {
-        allLengths.add(0);
-      }
+      if (allLengths.length + repeat > total) _inflateFail('repeat-overrun');
+      for (var i = 0; i < repeat; i++) allLengths.add(0);
     } else if (sym == 18) {
       final repeat = br.readBits(7) + 11;
-      for (var i = 0; i < repeat && allLengths.length < total; i++) {
-        allLengths.add(0);
-      }
+      if (allLengths.length + repeat > total) _inflateFail('repeat-overrun');
+      for (var i = 0; i < repeat; i++) allLengths.add(0);
     } else {
-      throw FormatException('deflate: invalid code-length symbol $sym');
+      _inflateFail('invalid-literal-length-symbol');
     }
-  }
-  if (allLengths.length != total) {
-    throw const FormatException(
-      'deflate: code-length RLE overran HLIT + HDIST',
-    );
   }
 
   final llLengths = allLengths.sublist(0, hlit);
   final distLengths = allLengths.sublist(hlit, total);
 
   final llDecoder = _CanonicalDecoder.fromLengths(llLengths);
+  if (!llDecoder.isComplete) {
+    _inflateFail('incomplete-literal-length-tree');
+  }
   final distDecoder = distLengths.any((len) => len > 0)
       ? _CanonicalDecoder.fromLengths(distLengths)
       : null;
+  if (distDecoder != null &&
+      !distDecoder.isComplete &&
+      !(distDecoder.symbolCount == 1 && distDecoder.oneBitSymbolCount == 1)) {
+    _inflateFail('incomplete-distance-tree');
+  }
 
   return (ll: llDecoder, dist: distDecoder);
 }
@@ -712,57 +831,39 @@ void _decodeHuffmanBlock(
   _ByteBuffer out,
   _CanonicalDecoder llDecoder,
   _CanonicalDecoder? distDecoder,
-  int maxOutput,
 ) {
   while (true) {
-    final sym = llDecoder.readSymbol(br);
+    final sym = llDecoder.readSymbol(br, 'invalid-literal-length-symbol');
     if (sym == 256) return; // end-of-block
     if (sym < 256) {
-      if (out.length + 1 > maxOutput) {
-        throw ArgumentError(
-          'deflate: decompressed size exceeds limit of $maxOutput bytes',
-        );
-      }
       out.add(sym);
       continue;
     }
     if (sym > 285) {
-      throw FormatException('deflate: invalid LL symbol $sym');
+      _inflateFail('invalid-literal-length-symbol');
     }
 
     final (base, extraBits) = _lengthTable[sym - 257];
     final length = base + (extraBits > 0 ? br.readBits(extraBits) : 0);
 
     if (distDecoder == null) {
-      throw const FormatException(
-        'deflate: length symbol present but no distance tree was transmitted',
-      );
+      _inflateFail('reserved-distance-symbol');
     }
-    final distSym = distDecoder.readSymbol(br);
+    final distSym = distDecoder.readSymbol(br, 'reserved-distance-symbol');
     if (distSym >= _distTable.length) {
-      throw FormatException('deflate: invalid distance symbol $distSym');
+      _inflateFail('reserved-distance-symbol');
     }
     final (distBase, extraDistBits) = _distTable[distSym];
     final distance =
         distBase + (extraDistBits > 0 ? br.readBits(extraDistBits) : 0);
 
     if (distance <= 0 || distance > out.length) {
-      throw FormatException(
-        'deflate: match distance $distance invalid for output length ${out.length}',
-      );
-    }
-    if (out.length + length > maxOutput) {
-      throw ArgumentError(
-        'deflate: decompressed size exceeds limit of $maxOutput bytes',
-      );
+      _inflateFail('invalid-back-reference');
     }
 
     // Copy byte-by-byte: overlapping back-references (distance < length)
     // are common and must read bytes this same loop just wrote.
-    final start = out.length - distance;
-    for (var i = 0; i < length; i++) {
-      out.add(out[start + i]);
-    }
+    out.copyBack(distance, length);
   }
 }
 
@@ -771,12 +872,13 @@ void _decodeHuffmanBlock(
 /// own fixed-Huffman-only output. Handles multiple blocks (loops until
 /// `BFINAL=1`), which real encoders sometimes emit even though our own
 /// writer never does.
-Uint8List inflate(
+({Uint8List output, int bytesConsumed}) _deflateDecompress(
   Uint8List data, {
   int maxOutput = defaultMaxOutputBytes,
 }) {
+  _validateOutputLimit(maxOutput);
   final br = _BitReader(data);
-  final out = _ByteBuffer();
+  final out = _ByteBuffer(maxOutput);
 
   while (true) {
     final bfinal = br.readBit();
@@ -790,14 +892,7 @@ Uint8List inflate(
         final len = br.readBits(16);
         final nlen = br.readBits(16);
         if ((len ^ 0xFFFF) & 0xFFFF != nlen) {
-          throw const FormatException(
-            'deflate: stored block LEN/NLEN mismatch',
-          );
-        }
-        if (out.length + len > maxOutput) {
-          throw ArgumentError(
-            'deflate: decompressed size exceeds limit of $maxOutput bytes',
-          );
+          _inflateFail('stored-length-mismatch');
         }
         for (var i = 0; i < len; i++) {
           out.add(br.readByte());
@@ -810,24 +905,47 @@ Uint8List inflate(
           out,
           _fixedLlDecoder,
           _fixedDistDecoder,
-          maxOutput,
         );
         break;
 
       case 2: // Dynamic Huffman.
         final tables = _readDynamicTables(br);
-        _decodeHuffmanBlock(br, out, tables.ll, tables.dist, maxOutput);
+        _decodeHuffmanBlock(br, out, tables.ll, tables.dist);
         break;
 
       default:
-        throw const FormatException('deflate: reserved BTYPE=11');
+        _inflateFail('reserved-block-type');
     }
 
     if (bfinal == 1) break;
   }
 
-  return out.toBytes();
+  return (output: out.toBytes(), bytesConsumed: br.bytesConsumed);
 }
+
+/// Compress [data] to a raw RFC 1951 stream with no ZIP, zlib, or gzip frame.
+Uint8List rawDeflate(Uint8List data) => deflateCompress(data);
+
+/// Decode a raw RFC 1951 stream and report the exact bytes consumed.
+({Uint8List output, int bytesConsumed}) rawInflateCounted(
+  Uint8List data, {
+  int maxOutput = defaultMaxOutputBytes,
+}) =>
+    _deflateDecompress(data, maxOutput: maxOutput);
+
+/// Decode a raw RFC 1951 stream with a caller-lowerable output ceiling.
+Uint8List rawInflate(
+  Uint8List data, {
+  int maxOutput = defaultMaxOutputBytes,
+}) =>
+    rawInflateCounted(data, maxOutput: maxOutput).output;
+
+/// Backwards-compatible alias for [rawInflate].
+Uint8List inflate(
+  Uint8List data, {
+  int maxOutput = defaultMaxOutputBytes,
+}) =>
+    rawInflate(data, maxOutput: maxOutput);
 
 // =============================================================================
 // MS-DOS Date / Time Encoding
@@ -841,7 +959,8 @@ Uint8List inflate(
 
 /// Encode a `(year, month, day, hour, minute, second)` tuple into the
 /// 32-bit MS-DOS datetime used by ZIP Local and Central Directory headers.
-int dosDatetime(int year, int month, int day, int hour, int minute, int second) {
+int dosDatetime(
+    int year, int month, int day, int hour, int minute, int second) {
   final t = (hour << 11) | (minute << 5) | (second ~/ 2);
   final d = ((year - 1980) << 9) | (month << 5) | day;
   return (d << 16) | t;
@@ -1306,10 +1425,18 @@ class ZipReader {
         decompressed = compressed;
         break;
       case 8:
-        decompressed = inflate(
+        final result = rawInflateCounted(
           compressed,
-          maxOutput: maxUncompressedBytes,
+          maxOutput: entry.size < maxUncompressedBytes
+              ? entry.size
+              : maxUncompressedBytes,
         );
+        if (result.bytesConsumed != compressed.length) {
+          throw const FormatException(
+            'zip: DEFLATE stream does not consume its declared payload',
+          );
+        }
+        decompressed = result.output;
         break;
       default:
         throw FormatException(

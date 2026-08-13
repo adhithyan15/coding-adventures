@@ -13,8 +13,10 @@ codec, with no native dependencies.
   `.zip` archive into a name → bytes map
 - `ZipWriter` — incremental archive builder (`addFile`, `addDirectory`, `finish`)
 - `ZipReader` — random-access archive reader (`entries`, `read`, `readByName`)
-- `crc32`, `deflateCompress`, `inflate`, `dosDatetime` — the building blocks,
-  exported for direct use
+- `rawDeflate`, `rawInflate`, `rawInflateCounted`, `crc32` — the closed CMP09
+  portable raw RFC 1951 profile, including exact compressed-byte consumption
+- `deflateCompress`, `inflate` — compatibility aliases for existing callers
+- `dosDatetime` — MS-DOS timestamp packing used by ZIP headers
 
 ### Algorithm Highlights
 
@@ -75,6 +77,12 @@ block types — stored, fixed Huffman, and dynamic Huffman — because
 real-world producers (`zip`(1), Python's `zipfile`, Java's `jar`, Microsoft
 Office) overwhelmingly emit dynamic-Huffman blocks.
 
+The raw codec follows the language-neutral `zip-raw-rfc1951-v1` corpus.
+`rawInflateCounted` returns both the decoded bytes and the exact number of input
+bytes reached through BFINAL, so ZIP, zlib, gzip, and PNG wrappers can reject
+unused compressed-payload cavities. Malformed streams throw `RawInflateError`
+with a stable payload-blind `code`.
+
 ### Compression Series
 
 ```
@@ -121,6 +129,8 @@ void main() {
 
 ```bash
 dart pub get
+dart format --output=none --set-exit-if-changed lib/coding_adventures_zip.dart test/portable_conformance_test.dart
+dart analyze --fatal-infos
 dart test
 ```
 
@@ -137,6 +147,11 @@ skips gracefully (does not fail) when Info-ZIP isn't on `PATH`.
 - The writer only emits fixed-Huffman DEFLATE blocks; it never chooses
   dynamic Huffman even when it would compress better (the reader supports
   both, so this only affects the ratio of archives *this* package writes).
-- Decompression is capped at 256 MB by default (`defaultMaxOutputBytes`) as
-  a decompression-bomb guard; pass a different limit to `read`/`unzip`/
-  `inflate` if you need more.
+- Raw decompression has a hard 256 MiB ceiling (`rawInflateMaxOutput`) and a
+  caller-lowerable `maxOutput`. The limit is validated before output-buffer
+  allocation and checked before stored bytes, literals, or back-references are
+  copied. ZIP entry reads additionally use the smaller of the declared size
+  and the caller's archive limit.
+- `rawInflateCounted` excludes whole trailing bytes, and `ZipReader` requires
+  exact consumption of each declared method-8 payload.
+- CRC-32 detects accidental corruption only; it is not authentication.
