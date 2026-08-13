@@ -108,4 +108,20 @@ and the official spec testsuite's `.wast` script dialect — into
   per-frame state than the lightweight S-expression tree-builder, so 512
   levels of it measurably overflows a real thread's stack around depth
   ~487, well before the counter would ever stop it.
-- 80 unit tests across all five modules, ~95%+ line coverage.
+- **Hardening pass, round 5**: round 4's guard only covered `block`/
+  `loop`/`if` recursion — a deeply nested FOLDED operand of an ordinary
+  instruction (`(i32.add (i32.add (i32.add ...) ...) ...)`, no control
+  flow involved at all) recurses through `encode_flat_instr` ->
+  `encode_instr_list` -> `encode_one` with no depth guard whatsoever, and
+  empirically aborted with a real stack overflow around depth ~165 — well
+  under `sexpr::MAX_NESTING_DEPTH` (512), so that guard never tripped
+  first either. Fixed by consolidating the depth guard into `encode_one`
+  itself — the single point every form of instruction nesting (folded
+  operands, folded `block`/`loop`/`if`, and flat `block`/`loop`/`if`)
+  funnels through — instead of gating only the `block`/`loop`/`if`-
+  specific encoders. The now-redundant per-block guards were removed to
+  keep exactly one depth-accounting mechanism. A regression test confirms
+  a long FLAT (sibling, not nested) instruction sequence well past
+  `MAX_INSTR_NESTING_DEPTH` in length still parses fine — the guard tracks
+  nesting depth, not instruction count.
+- 82 unit tests across all five modules, ~95%+ line coverage.

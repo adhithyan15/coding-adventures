@@ -672,18 +672,21 @@ fn build_data(fields: &[SExpr], ctx: &mut ModuleCtx) -> Result<(), WastParseErro
 // Instruction encoding — folded or flat, identical code path.
 // ─────────────────────────────────────────────────────────────────────────
 
-/// Nesting depth ceiling for `block`/`loop`/`if` BODIES specifically —
-/// deliberately much lower than [`crate::sexpr::MAX_NESTING_DEPTH`] (512).
-/// That guard bounds `(...)` nesting in the lightweight S-expression
-/// tree-builder; `encode_one`/`encode_stream_structured_instr` recurse
-/// through a heavier call chain (each level carries several locals,
-/// including an owned `Vec<u8>`/`Option<String>`), so 512 levels of THIS
-/// recursion measurably overflows a real thread's stack well before the
-/// counter would ever stop it (empirically, around depth ~487 on a
-/// standard `cargo test` worker thread). Still far above any real hand-
-/// written or official-testsuite `.wat` file's actual control-flow
-/// nesting (a few dozen levels at most, even for a deliberately deep
-/// `if`/`block` tower).
+/// Nesting depth ceiling for [`encode_one`]'s own recursion — deliberately
+/// much lower than [`crate::sexpr::MAX_NESTING_DEPTH`] (512). That guard
+/// bounds `(...)` nesting in the lightweight S-expression tree-builder;
+/// `encode_one` and the functions it dispatches to recurse through a
+/// heavier call chain (several locals per level, including an owned
+/// `Vec<u8>`/`Option<String>` in the `block`/`loop`/`if` path), so 512
+/// levels of THIS recursion measurably overflows a real thread's stack
+/// well before the counter would ever stop it -- empirically, deeply
+/// nested folded arithmetic (`(i32.add (i32.add ...) ...)`) aborted with a
+/// real stack overflow around depth ~165-170, and deeply nested
+/// `block`/`loop`/`if` bodies around depth ~487, both on a standard
+/// `cargo test` worker thread. 100 is comfortably under the lower of the
+/// two, and still far above any real hand-written or official-testsuite
+/// `.wat` file's actual nesting (a few dozen levels at most, even for a
+/// deliberately deep expression or control-flow tower).
 const MAX_INSTR_NESTING_DEPTH: usize = 100;
 
 struct InstrCtx<'a> {
@@ -694,8 +697,9 @@ struct InstrCtx<'a> {
     /// resolve either a plain depth number or a `$name` by scanning from
     /// the innermost label outward.
     labels: Vec<Option<String>>,
-    /// Nesting depth of `block`/`loop`/`if` bodies currently being encoded.
-    /// See [`InstrCtx::enter_block`].
+    /// Instruction-encoding recursion depth, incremented/decremented once
+    /// per [`encode_one`] call (every single instruction, not just
+    /// `block`/`loop`/`if`). See [`InstrCtx::enter_block`].
     depth: usize,
 }
 
@@ -705,15 +709,16 @@ impl<'a> InstrCtx<'a> {
     }
 
     /// Guard against unbounded Rust call-stack recursion through nested
-    /// `block`/`loop`/`if` bodies. `sexpr::MAX_NESTING_DEPTH` only bounds
-    /// S-expression `(...)` nesting, but WAT's **flat** instruction syntax
-    /// lets these three nest with no parentheses at all (`block block
-    /// block ... end end end`, all sibling atoms in one unnested list) --
-    /// each one drives one more level of `encode_one` <-> `encode_*_instr`
-    /// recursion that the S-expression-level guard never sees. This is a
-    /// second, independent depth counter for exactly that case (folded
-    /// structured instructions go through here too, uniformly, even though
-    /// they're additionally caught by the S-expression guard).
+    /// instructions. `sexpr::MAX_NESTING_DEPTH` only bounds S-expression
+    /// `(...)` nesting -- but a *folded* operand (`(i32.add (i32.add ...)
+    /// ...)`) recurses through this crate's own encoder, not the
+    /// S-expression tree-builder, and WAT's **flat** `block`/`loop`/`if`
+    /// syntax (`block block block ... end end end`, all sibling atoms in
+    /// one unnested list) drives that SAME encoder recursion with no
+    /// parentheses at all for the S-expression guard to see in the first
+    /// place. `encode_one` is the single point every one of these funnels
+    /// through, so this counter, called once per `encode_one` invocation,
+    /// bounds all of them uniformly with one mechanism.
     fn enter_block(&mut self, pos: usize) -> Result<(), WastParseError> {
         if self.depth >= MAX_INSTR_NESTING_DEPTH {
             return Err(WastParseError::TooDeeplyNested { pos });
@@ -781,7 +786,24 @@ fn encode_instr_list(exprs: &[SExpr], icx: &mut InstrCtx, out: &mut Vec<u8>) -> 
 /// Encode `exprs[i]` (and, for a flat bare-atom instruction, however many
 /// following elements it needs as immediates). Returns the index just past
 /// what was consumed.
+///
+/// This is the single point every form of instruction nesting funnels
+/// through -- a folded operand (`(i32.add (i32.add ...) ...)`), a folded
+/// `block`/`loop`/`if` body, and a flat `block`/`loop`/`if` body (whose
+/// own recursion happens one level up, in
+/// `encode_stream_structured_instr`, but which reaches back into this
+/// function for every element of its body) all recurse by calling this
+/// function again. So this is also the ONE place a depth guard needs to
+/// live to bound Rust call-stack recursion for ALL of them uniformly --
+/// see [`InstrCtx::enter_block`].
 fn encode_one(exprs: &[SExpr], i: usize, icx: &mut InstrCtx, out: &mut Vec<u8>) -> Result<usize, WastParseError> {
+    icx.enter_block(exprs[i].pos())?;
+    let result = encode_one_inner(exprs, i, icx, out);
+    icx.exit_block();
+    result
+}
+
+fn encode_one_inner(exprs: &[SExpr], i: usize, icx: &mut InstrCtx, out: &mut Vec<u8>) -> Result<usize, WastParseError> {
     match &exprs[i] {
         SExpr::List(items, pos) => {
             let name = items.first().and_then(|it| it.as_atom()).ok_or(WastParseError::UnexpectedToken {
@@ -968,7 +990,6 @@ fn encode_stream_structured_instr(
         vec![0x40]
     };
 
-    icx.enter_block(pos)?;
     out.push(opcode);
     out.extend(&blocktype_byte);
     icx.labels.push(label_name);
@@ -1020,7 +1041,6 @@ fn encode_stream_structured_instr(
     }
 
     icx.labels.pop();
-    icx.exit_block();
     out.push(0x0B);
     let _ = pos;
     Ok(i)
@@ -1275,7 +1295,6 @@ fn encode_structured_instr(
         let then_start = args[i..].iter().position(|a| a.is_keyword_list("then")).map(|p| p + i);
         let cond_end = then_start.unwrap_or(args.len());
         encode_instr_list(&args[i..cond_end], icx, out)?;
-        icx.enter_block(pos)?;
         out.push(opcode);
         out.extend(&blocktype_byte);
         icx.labels.push(label_name);
@@ -1307,13 +1326,11 @@ fn encode_structured_instr(
             }
         }
         icx.labels.pop();
-        icx.exit_block();
         out.push(0x0B);
         return Ok(());
     }
 
     // block / loop.
-    icx.enter_block(pos)?;
     out.push(opcode);
     out.extend(&blocktype_byte);
     icx.labels.push(label_name);
@@ -1321,7 +1338,6 @@ fn encode_structured_instr(
     let end_pos = body.iter().position(|a| matches!(a, SExpr::Atom(s, _) if s == "end")).unwrap_or(body.len());
     encode_instr_list(&body[..end_pos], icx, out)?;
     icx.labels.pop();
-    icx.exit_block();
     out.push(0x0B);
     let _ = pos;
     Ok(())
@@ -1603,6 +1619,49 @@ mod tests {
         let src = format!("(module (func {body}))");
         let err = parse_module(&src).unwrap_err();
         assert!(matches!(err, WastParseError::TooDeeplyNested { .. }));
+    }
+
+    // ── Round 5 security-review regressions ─────────────────────────────
+
+    #[test]
+    fn deeply_nested_folded_arithmetic_errors_cleanly_not_stack_overflow() {
+        // Round 4's fix only guarded `block`/`loop`/`if` recursion --
+        // deeply nested FOLDED operands of an ordinary instruction
+        // (`(i32.add (i32.add (i32.add ...) ...) ...)`) recurse through
+        // `encode_flat_instr` -> `encode_instr_list` -> `encode_one` with
+        // no depth guard at all, and empirically aborted with a real stack
+        // overflow around depth ~165 -- well below `sexpr::MAX_NESTING_
+        // DEPTH` (512), so that guard never tripped first either. The
+        // `MAX_INSTR_NESTING_DEPTH` guard now lives in `encode_one` itself,
+        // the single funnel every form of instruction recursion passes
+        // through, so it catches this the same way it catches flat
+        // `block`/`loop`/`if` nesting.
+        let mut src = "(module (func (result i32) ".to_string();
+        for _ in 0..MAX_INSTR_NESTING_DEPTH + 1 {
+            src.push_str("(i32.add (i32.const 1) ");
+        }
+        src.push_str("(i32.const 1)");
+        for _ in 0..MAX_INSTR_NESTING_DEPTH + 1 {
+            src.push(')');
+        }
+        src.push_str("))");
+        let err = parse_module(&src).unwrap_err();
+        assert!(matches!(err, WastParseError::TooDeeplyNested { .. }));
+    }
+
+    #[test]
+    fn long_flat_non_nested_instruction_sequence_does_not_trip_depth_guard() {
+        // The depth guard must track NESTING, not total instruction count
+        // -- a long flat (sibling, not nested) sequence well past
+        // `MAX_INSTR_NESTING_DEPTH` in length is completely ordinary WAT
+        // (e.g. a function that pushes many constants) and must still
+        // parse successfully.
+        let mut src = "(module (func (result i32) i32.const 0".to_string();
+        for _ in 0..(MAX_INSTR_NESTING_DEPTH * 3) {
+            src.push_str(" i32.const 1 i32.add");
+        }
+        src.push_str("))");
+        assert!(parse_module(&src).is_ok());
     }
 
     /// Folded `call` with arguments -- catches the exact bug found during
