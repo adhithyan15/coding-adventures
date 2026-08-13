@@ -35,6 +35,11 @@ pub const FUNCT3_AND: u32  = 7;
 // Funct7
 pub const FUNCT7_NORMAL: u32 = 0x00;
 pub const FUNCT7_ALT: u32    = 0x20;
+pub const FUNCT7_M: u32      = 0x01;
+
+// Funct3 for the RV32M multiply instructions.
+pub const FUNCT3_MUL: u32   = 0;
+pub const FUNCT3_MULHU: u32 = 3;
 
 // Funct3 for loads
 pub const FUNCT3_LB: u32  = 0;

@@ -119,7 +119,7 @@ impl RiscVISADecoder {
         token.immediate = get_field(&decoded.fields, "imm", 0);
 
         match decoded.mnemonic.as_str() {
-            "add" | "sub" | "sll" | "slt" | "sltu" | "xor" | "srl" | "sra" | "or" | "and" => {
+            "add" | "sub" | "mul" | "mulhu" | "sll" | "slt" | "sltu" | "xor" | "srl" | "sra" | "or" | "and" => {
                 token.reg_write = true;
             }
             "addi" | "slti" | "sltiu" | "xori" | "ori" | "andi" | "slli" | "srli" | "srai" => {
@@ -176,6 +176,16 @@ impl RiscVISADecoder {
             }
             "sub" => {
                 let result = (rs1_u as i32).wrapping_sub(rs2_u as i32);
+                token.alu_result = result;
+                token.write_data = result;
+            }
+            "mul" => {
+                let result = rs1_u.wrapping_mul(rs2_u) as i32;
+                token.alu_result = result;
+                token.write_data = result;
+            }
+            "mulhu" => {
+                let result = ((rs1_u as u64 * rs2_u as u64) >> 32) as i32;
                 token.alu_result = result;
                 token.write_data = result;
             }
@@ -438,6 +448,7 @@ mod tests {
     fn test_decode_r_type() {
         for raw in [
             encode_add(3, 1, 2), encode_sub(3, 1, 2), encode_sll(3, 1, 2),
+            encode_mul(3, 1, 2), encode_mulhu(3, 1, 2),
             encode_slt(3, 1, 2), encode_sltu(3, 1, 2), encode_xor(3, 1, 2),
             encode_srl(3, 1, 2), encode_sra(3, 1, 2), encode_or(3, 1, 2),
             encode_and(3, 1, 2),
@@ -523,6 +534,8 @@ mod tests {
         let cases: Vec<(&str, u32, i32)> = vec![
             ("add", encode_add(3, 1, 2), 13),
             ("sub", encode_sub(3, 1, 2), 7),
+            ("mul", encode_mul(3, 1, 2), 30),
+            ("mulhu", encode_mulhu(3, 1, 2), 0),
             ("sll", encode_sll(3, 1, 2), 80),
             ("srl", encode_srl(3, 1, 2), 1),
             ("xor", encode_xor(3, 1, 2), (10i32 ^ 3)),

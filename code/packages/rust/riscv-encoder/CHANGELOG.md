@@ -1,5 +1,10 @@
 # Changelog — riscv-encoder
 
+## Unreleased
+
+- Re-exported RV32M `encode_mul` and `encode_mulhu` helpers for the RISC-V
+  backend's 64-bit pair multiplication lowering.
+
 ## v0.1.0 — 2026-06-03 — initial carve-out
 
 Phase 7 (FINAL lane) of the historical-arch backend migration.

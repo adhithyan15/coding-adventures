@@ -1,6 +1,7 @@
 # riscv-backend
 
-RV32I backend for `jit-core` / `aot-core`.  Phase 7 (the FINAL
+RV32I backend for `jit-core` / `aot-core`, using the RV32M multiply subset
+for full-width products. Phase 7 (the FINAL
 lane) of the historical-arch backend migration — see
 [`HISTORICAL-ARCH-BACKEND-MIGRATION.md`](../../../specs/HISTORICAL-ARCH-BACKEND-MIGRATION.md).
 
@@ -22,14 +23,15 @@ tests passing byte-for-byte.
 | CIR family | Status |
 |------------|--------|
 | `const_*` | ✓ RV32 scalars and full-width `i64`/`u64` register pairs |
-| Integer scalar ops | ✓ `add`, `sub`, `and`, `or`, `xor`, `shl`, `shr`, `neg`, `not` |
-| Wide integer ops | ✓ `add_i64`, `sub_i64`, `add_u64`, `sub_u64` |
+| Integer scalar ops | ✓ `add`, `sub`, `mul`, `and`, `or`, `xor`, `shl`, `shr`, `neg`, `not` |
+| Wide integer ops | ✓ `add_i64`, `sub_i64`, `mul_i64`, `add_u64`, `sub_u64`, `mul_u64` |
 | Wide bitwise ops | ✓ `and_i64`, `or_i64`, `xor_i64`, `not_i64` and unsigned forms |
 | Wide shifts | ✓ left, logical-right, and arithmetic-right shifts for counts `0..63` |
+| Wide multiplication | ✓ signed and unsigned full-width products via RV32M `mul` / `mulhu` |
 | Comparisons | ✓ signed/unsigned `eq ne lt le gt ge`, including `i64`/`u64` pairs |
 | Control flow | ✓ `label`, `jmp`, `jmp_if_true`, `jmp_if_false` |
 | `ret_*`, `ret_void` | ✓ scalar result in `a0`; wide result in `a0:a1` |
-| Wide multiply/divide, calls, memory, I/O | not yet supported |
+| Wide divide/modulo, calls, memory, I/O | not yet supported |
 | Floating point (`f32`/`f64`) | ✗ **refused by design** — see below |
 
 ### Floating point is refused, not "unimplemented"
