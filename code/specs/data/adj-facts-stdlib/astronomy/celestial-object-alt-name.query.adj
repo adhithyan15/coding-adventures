@@ -1,0 +1,21 @@
+% ============================================================================
+% celestial-object-alt-name.query.adj — a worked recall over the astronomy
+% celestial-object-alt-name library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what else is a moon
+% called?": it states no astronomy fact of its own — it only `import`s the
+% grounded table and asks binding queries. The engine resolves each `?`
+% against the `celestial_object_alt_name` rows and returns the alternate
+% name + the table's source/locator/trust. An object the cited spans do not
+% give a second name for abstains honestly — the engine never invents a
+% synonym.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli celestial-object-alt-name.query.adj
+% ============================================================================
+
+import "celestial-object-alt-name.adj"
+
+? celestial_object_alt_name(moon, $AltName)      % expect planetary_satellites
+? celestial_object_alt_name(asteroid, $AltName)  % expect minor_planets
+? celestial_object_alt_name(star, $AltName)      % expect abstain — the cited span names no alternate term for star
