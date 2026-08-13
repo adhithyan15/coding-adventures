@@ -1251,7 +1251,33 @@ pub struct WasmExecutionContext {
     /// alongside `gc_heap` — see [`gc::GcState`](crate::gc::GcState).
     /// Module-global for the same reason `gc_heap` is.
     pub gc_state: gc::GcState,
+    /// Current WASM call-nesting depth — see [`MAX_CALL_DEPTH`].
+    pub call_depth: usize,
 }
+
+/// `call_function`'s own call-stack recursion ceiling. WASM's `call`/
+/// `call_indirect` recurse through this crate's *Rust* call stack one
+/// level per nested WASM call (see `call_function`'s own doc comment) —
+/// with no guard at all, a WASM program that recurses without bound (the
+/// official testsuite's own `call.wast`/`call_indirect.wast`/`fac.wast`
+/// deliberately test exactly this, expecting a clean "call stack
+/// exhausted" trap) would overflow the REAL host thread stack: an
+/// uncatchable process abort, not a WASM-level trap a caller could ever
+/// observe or recover from.
+///
+/// `call_function`'s own per-call frame is heavy (it clones the callee's
+/// function body and decodes/re-encodes its full instruction list on
+/// every single call, including recursive self-calls), so this is
+/// deliberately conservative rather than tuned to squeeze out maximum
+/// legal recursion depth — chosen well below where this crate's own
+/// `wasm-wast-parser` sibling empirically found a *lighter*-weight
+/// recursive encoder overflow a small worker thread's stack (~165-500),
+/// with a wide safety margin for a heavier frame on a smaller or
+/// differently-configured host stack. Still far above any real,
+/// intentionally-bounded recursive WASM program (a factorial/Fibonacci-
+/// style test computes at most a few dozen to a couple hundred levels
+/// deep, never anywhere near this).
+const MAX_CALL_DEPTH: usize = 200;
 
 /// One decoded WasmGC instruction's immediates — see [`DecodedOperand::Gc`].
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -2967,7 +2993,31 @@ fn register_control(vm: &mut GenericVM) {
 }
 
 /// Execute a function call within the WASM execution context.
+///
+/// Thin wrapper around [`call_function_inner`] enforcing [`MAX_CALL_DEPTH`]
+/// — see that constant's doc comment for why this can't be left unguarded.
+/// `ctx.call_depth` is incremented/decremented symmetrically around the
+/// inner call regardless of whether it succeeds or traps: an `Err` here
+/// unwinds the ENTIRE top-level `WasmExecutionEngine::call_function`
+/// invocation (nothing catches it and resumes execution partway through),
+/// which always starts the next top-level call with a freshly constructed
+/// `WasmExecutionContext` (`call_depth: 0`) — so a stale count from an
+/// aborted call can never leak into a later, unrelated one.
 fn call_function(
+    vm: &mut GenericVM,
+    ctx: &mut WasmExecutionContext,
+    func_index: usize,
+) -> VMResult<()> {
+    if ctx.call_depth >= MAX_CALL_DEPTH {
+        return Err(VMError::GenericError("call stack exhausted".to_string()));
+    }
+    ctx.call_depth += 1;
+    let result = call_function_inner(vm, ctx, func_index);
+    ctx.call_depth -= 1;
+    result
+}
+
+fn call_function_inner(
     vm: &mut GenericVM,
     ctx: &mut WasmExecutionContext,
     func_index: usize,
@@ -3327,6 +3377,7 @@ impl WasmExecutionEngine {
             gc_heap: Vec::new(),
             struct_field_counts: self.struct_field_counts.clone(),
             gc_state: gc::GcState::default(),
+            call_depth: 0,
         };
 
         let code = CodeObject {

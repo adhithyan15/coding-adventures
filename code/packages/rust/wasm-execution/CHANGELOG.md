@@ -2,6 +2,48 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.6.2] — 2026-08-13 (WASM01 — a real call-depth guard)
+
+`call_function` had NO limit on WASM call nesting: `call`/`call_indirect`
+recurse through this crate's own Rust call stack one level per nested
+WASM call, with no counter anywhere. A WASM program that recurses
+without bound — the official spec testsuite's own
+`call.wast`/`call_indirect.wast`/`fac.wast` deliberately test exactly
+this, expecting a clean "call stack exhausted" trap — used to overflow
+the REAL host thread stack: an uncatchable process abort, not a WASM
+trap any caller could observe or recover from. `wasm-conformance` had to
+route around this entirely (never executing `assert_exhaustion`
+directives at all) rather than test it, for exactly this reason.
+
+- **New `MAX_CALL_DEPTH` constant (200) and `WasmExecutionContext::call_depth`
+  field.** `call_function` is now a thin wrapper enforcing the limit
+  around the previously-unguarded body (renamed `call_function_inner`):
+  increments on entry, decrements on exit, traps with `"call stack
+  exhausted"` instead of recursing further once the limit is hit.
+  Deliberately conservative — `call_function`'s own per-call frame is
+  heavy (clones and re-decodes the callee's full instruction list on
+  every call, including recursive self-calls), so 200 leaves a wide
+  safety margin under where a lighter-weight recursive encoder in this
+  repo's `wasm-wast-parser` sibling was separately found to overflow a
+  small worker thread's stack (~165-500) — see that crate's own `0.1.1`
+  changelog entry. Verified empirically, not just reasoned about: real
+  recursive WASM modules built via `wasm-wast-parser` (not hand-assembled
+  bytes) actually run to confirm the guard traps cleanly rather than
+  crashing, on both macOS and a Linux container.
+- 4 new integration tests (`tests/call_depth_guard.rs`): unbounded
+  self-recursion, unbounded mutual recursion, ordinary bounded recursion
+  well under the limit still works, and a depth-counter-leak regression
+  guard (a trapped recursive call must not corrupt `call_depth` for a
+  later, unrelated top-level call on the same engine).
+- `wasm-conformance`'s `assert_exhaustion` directives are now genuinely
+  executed and graded (previously always `NotYetSupported`, unconditionally,
+  specifically because of this gap) — both vendored cases now pass for
+  real. See that crate's own changelog.
+
+172 tests passing (up from 168), clippy clean. Downstream consumers
+(`lang-aot` and the WASM-compiler crates) re-checked: no new failures
+attributable to this change.
+
 ## [0.6.1] — 2026-08-13 (W05 PR-4 — three float NaN/sign correctness bugs)
 
 Found running the official WebAssembly spec testsuite against this crate

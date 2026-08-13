@@ -1,6 +1,6 @@
 [package]
 name = "wasm-execution"
-version = "0.6.1"
+version = "0.6.2"
 edition = "2021"
 description = "WebAssembly 1.0 wasm-execution"
 
@@ -11,3 +11,6 @@ wasm-types          = { path = "../wasm-types" }
 wasm-opcodes        = { path = "../wasm-opcodes" }
 wasm-module-parser  = { path = "../wasm-module-parser" }
 virtual-machine     = { path = "../virtual-machine" }
+
+[dev-dependencies]
+wasm-wast-parser    = { path = "../wasm-wast-parser" }
