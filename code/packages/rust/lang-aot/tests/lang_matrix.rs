@@ -2181,6 +2181,15 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — a static selector preserves the reachable numeric branch's
+    // snapshot even when the conditional expression's branches differ.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean flag; real x; flag := false; x := if flag then 1.5 else 42.0; print(x) end",
+        expect: Expect::Stdout("42"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a list containing only single-value elements is straight-line
     // repetition with no zero-trip path or backedge. Its final static real
     // assignment therefore remains available to the portable output path.
@@ -9261,6 +9270,35 @@ fn algol_static_statement_condition_runs_on_every_available_standard_backend() {
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but truth-dominating while predicate did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_static_conditional_assignment_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("x := if flag then 1.5 else 42.0")
+        })
+        .expect("the ALGOL static conditional-assignment program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = match backend {
+            NativeAot => cfg!(any(target_os = "linux", target_os = "macos")),
+            Llvm => clang_ok(),
+            Wasm | Vm | Jit => true,
+            Jvm => java_ok(),
+            Clr => dotnet_ok() && clr_support::find_ilasm().is_some(),
+        };
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the static conditional assignment did not run"
             );
             continue;
         };

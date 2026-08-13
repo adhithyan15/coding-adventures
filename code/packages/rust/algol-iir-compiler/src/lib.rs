@@ -2389,7 +2389,12 @@ impl Compiler {
     }
 
     fn static_assigned_real_value(&self, node: &GrammarASTNode) -> Option<f64> {
-        if let Some((_, then_node, else_node)) = self.conditional_expression_parts(node) {
+        if let Some((condition, then_node, else_node)) = self.conditional_expression_parts(node) {
+            match self.static_boolean_value(condition) {
+                Some(true) => return self.static_assigned_real_value(then_node),
+                Some(false) => return self.static_assigned_real_value(else_node),
+                None => {}
+            }
             let then_value = self.static_assigned_real_value(then_node)?;
             let else_value = self.static_assigned_real_value(else_node)?;
             return (then_value.to_bits() == else_value.to_bits()).then_some(then_value);
@@ -2398,7 +2403,12 @@ impl Compiler {
     }
 
     fn static_assigned_integer_value(&self, node: &GrammarASTNode) -> Option<i64> {
-        if let Some((_, then_node, else_node)) = self.conditional_expression_parts(node) {
+        if let Some((condition, then_node, else_node)) = self.conditional_expression_parts(node) {
+            match self.static_boolean_value(condition) {
+                Some(true) => return self.static_assigned_integer_value(then_node),
+                Some(false) => return self.static_assigned_integer_value(else_node),
+                None => {}
+            }
             let then_value = self.static_assigned_integer_value(then_node)?;
             let else_value = self.static_assigned_integer_value(else_node)?;
             return (then_value == else_value).then_some(then_value);
@@ -8063,9 +8073,23 @@ mod tests {
     }
 
     #[test]
+    fn al4_static_conditional_assignments_select_reachable_snapshots() {
+        let module = compile_source(
+            "begin boolean flag; integer n; real x; flag := false; n := if flag then 1 else 40; x := if flag then 9.5 else 2.5; output(n + x) end",
+            "test",
+        )
+        .expect("static conditional selectors preserve their reachable snapshots");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "42.5")
+        }));
+    }
+
+    #[test]
     fn al4_different_conditional_integer_branches_invalidate_snapshot() {
         let err = compile_source(
-            "begin boolean flag; integer n; flag := false; n := if flag then 40 else 41; output(n + 2.5) end",
+            "begin integer i, n; n := if i = 0 then 40 else 41; output(n + 2.5) end",
             "test",
         )
         .expect_err("path-dependent integer values must invalidate metadata");
@@ -8075,7 +8099,7 @@ mod tests {
     #[test]
     fn al4_different_conditional_real_branches_invalidate_snapshot() {
         let err = compile_source(
-            "begin boolean flag; real x; flag := false; x := if flag then 2.5 else 3.5; output(x) end",
+            "begin integer i; real x; x := if i = 0 then 2.5 else 3.5; output(x) end",
             "test",
         )
         .expect_err("path-dependent real values must invalidate metadata");
