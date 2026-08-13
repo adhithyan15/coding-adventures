@@ -4395,6 +4395,7 @@ pub struct HtmlParser {
     explicit_body_start_seen: bool,
     explicit_html_end_seen: bool,
     document_tail_mode: DocumentTailMode,
+    document_tail_reentered_in_body: bool,
     template_insertion_modes: Vec<TemplateInsertionMode>,
     pending_table_text: String,
     strip_next_leading_noscript_literal: bool,
@@ -4421,6 +4422,7 @@ impl Default for HtmlParser {
             explicit_body_start_seen: false,
             explicit_html_end_seen: false,
             document_tail_mode: DocumentTailMode::InBody,
+            document_tail_reentered_in_body: false,
             template_insertion_modes: Vec::new(),
             pending_table_text: String::new(),
             strip_next_leading_noscript_literal: false,
@@ -4477,6 +4479,7 @@ impl HtmlParser {
             explicit_body_start_seen: false,
             explicit_html_end_seen: false,
             document_tail_mode: DocumentTailMode::InBody,
+            document_tail_reentered_in_body: false,
             template_insertion_modes: Vec::new(),
             pending_table_text: String::new(),
             strip_next_leading_noscript_literal: false,
@@ -4505,6 +4508,7 @@ impl HtmlParser {
             explicit_body_start_seen: matches!(context_element, "body"),
             explicit_html_end_seen: false,
             document_tail_mode: DocumentTailMode::InBody,
+            document_tail_reentered_in_body: false,
             template_insertion_modes: (context_element == "template")
                 .then_some(TemplateInsertionMode::Template)
                 .into_iter()
@@ -4772,6 +4776,7 @@ impl HtmlParser {
                 ),
             ));
             self.document_tail_mode = DocumentTailMode::InBody;
+            self.document_tail_reentered_in_body = true;
         }
     }
 
@@ -6180,6 +6185,13 @@ impl HtmlParser {
             self.document.children.push(node);
             return;
         }
+        if self.document_tail_reentered_in_body {
+            if self.open_elements.is_empty() && self.has_document_element() {
+                self.reopen_document_body();
+            }
+            self.append_node(node);
+            return;
+        }
         if self.explicit_html_end_seen {
             if self.current_element_is("body") && self.body_has_non_whitespace_child() {
                 self.append_node(node);
@@ -7387,6 +7399,7 @@ impl HtmlParser {
             && !self.has_disallowed_open_element_for_body_end_tag()
         {
             self.document_tail_mode = DocumentTailMode::AfterBody;
+            self.document_tail_reentered_in_body = false;
         }
         if !self.is_fragment
             && !self.document_has_closed_frameset()
@@ -7397,9 +7410,11 @@ impl HtmlParser {
                 || !self.has_disallowed_open_element_for_body_end_tag())
         {
             self.document_tail_mode = DocumentTailMode::AfterHtml;
+            self.document_tail_reentered_in_body = false;
         }
         if name == "body" {
             self.explicit_body_end_seen = true;
+            self.document_tail_reentered_in_body = false;
         }
         if name == "head" {
             self.explicit_head_end_seen = true;
@@ -39693,6 +39708,84 @@ mod tests {
         assert!(document.parser_diagnostics.iter().all(|diagnostic| {
             diagnostic.code != "unexpected-fragment-context-end-tag"
         }));
+    }
+
+    #[test]
+    fn routes_tail_comments_and_processing_instructions_after_in_body_reentry() {
+        let after_body = parse_html_with_diagnostics(
+            "<!doctype html><body>A</body><!--tail--><?tail data?>",
+        )
+        .unwrap();
+        assert_eq!(body(&after_body.document).children, vec![Node::text("A")]);
+        assert!(matches!(html(&after_body.document).children[2], Node::Comment(_)));
+        assert!(matches!(
+            html(&after_body.document).children[3],
+            Node::ProcessingInstruction(_)
+        ));
+
+        let reentered_after_body = parse_html_with_diagnostics(
+            "<!doctype html><body>A</body><div>B<!--body--><?body data?></div>",
+        )
+        .unwrap();
+        assert_eq!(
+            reentered_after_body.parser_diagnostics,
+            vec![ParserDiagnostic::new(
+                "unexpected-token-after-body",
+                "unexpected token was reprocessed from the after body insertion mode"
+            )]
+        );
+        assert_eq!(body(&reentered_after_body.document).children[0], Node::text("A"));
+        let reentered_div = element(&body(&reentered_after_body.document).children[1]);
+        assert_eq!(reentered_div.children[0], Node::text("B"));
+        assert!(matches!(
+            reentered_div.children[1],
+            Node::Comment(_)
+        ));
+        assert!(matches!(
+            reentered_div.children[2],
+            Node::ProcessingInstruction(_)
+        ));
+
+        let returned_after_body = parse_html_with_diagnostics(
+            "<!doctype html><body>A</body><div>B</body><!--tail-->",
+        )
+        .unwrap();
+        assert!(matches!(
+            html(&returned_after_body.document).children[2],
+            Node::Comment(_)
+        ));
+
+        let after_html = parse_html_with_diagnostics(
+            "<!doctype html><body>A</body></html><!--tail--><?tail data?>",
+        )
+        .unwrap();
+        assert!(matches!(after_html.document.children[2], Node::Comment(_)));
+        assert!(matches!(
+            after_html.document.children[3],
+            Node::ProcessingInstruction(_)
+        ));
+
+        let reentered_after_html = parse_html_with_diagnostics(
+            "<!doctype html><body>A</body></html>B<!--body--><?body data?>",
+        )
+        .unwrap();
+        assert_eq!(
+            reentered_after_html
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-token-after-html")
+                .count(),
+            1
+        );
+        assert_eq!(body(&reentered_after_html.document).children[0], Node::text("AB"));
+        assert!(matches!(
+            body(&reentered_after_html.document).children[1],
+            Node::Comment(_)
+        ));
+        assert!(matches!(
+            body(&reentered_after_html.document).children[2],
+            Node::ProcessingInstruction(_)
+        ));
     }
 
     #[test]
