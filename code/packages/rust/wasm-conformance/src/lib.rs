@@ -24,7 +24,7 @@
 //! ## Why some directives are graded `NotYetSupported`, never `Fail`
 //!
 //! Grading a directive `Fail` is a claim that `wasm-execution` got something
-//! wrong. Three specific gaps in this repo's WASM stack make that claim
+//! wrong. Two specific gaps in this repo's WASM stack make that claim
 //! impossible to back up honestly for certain directive kinds — see each
 //! one's own doc comment on [`Executor::execute`] for the reasoning, and
 //! `code/specs/W05-wasm-conformance-harness.md` section 4.3 for the design
@@ -34,12 +34,14 @@
 //! - `assert_unlinkable` needs `WasmRuntime::instantiate` to actually be
 //!   able to *fail* on an unresolved import — today it always silently
 //!   falls back to a default value instead.
-//! - `assert_exhaustion` is **never executed at all**: `wasm-execution` has
-//!   no call-depth guard, so the deliberately-unbounded recursion these
-//!   cases exist to trigger would overflow the real host thread stack — an
-//!   uncatchable process abort, not a gradeable trap. Marking these
-//!   `NotYetSupported` without running them is a safety requirement, not
-//!   just an honesty one.
+//!
+//! `assert_exhaustion` USED to be a third, unconditional case — this
+//! crate never ran it at all, because `wasm-execution` had no call-depth
+//! guard and the deliberately-unbounded recursion these cases trigger
+//! would have overflowed the real host thread stack (an uncatchable
+//! process abort, not a gradeable trap). WASM01 added that guard
+//! (`wasm_execution`'s `MAX_CALL_DEPTH`), so `assert_exhaustion` is now
+//! graded for real, the same way `assert_trap` is.
 
 pub mod report;
 
@@ -185,31 +187,18 @@ impl Executor {
                 Err(ActionError::NotYetSupported(m)) => DirectiveOutcome::NotYetSupported(m),
             },
 
-            // Never executed -- see this crate's module-level doc comment.
-            // `wasm-execution` has no call-depth guard, so the deliberately
-            // unbounded recursion these cases exist to trigger would
-            // overflow the real host stack (an uncatchable process abort),
-            // not produce a gradeable trap.
-            //
-            // IMPORTANT for whoever vendors more testsuite files or widens
-            // `wasm-wast-parser`'s grammar coverage: this guard is keyed on
-            // the DIRECTIVE'S SPELLING (`assert_exhaustion` in the source),
-            // not on anything semantic. A runaway-recursive function
-            // invoked through a plain `Directive::Action`/`AssertReturn`/
-            // `AssertTrap` -- not itself spelled `assert_exhaustion` --
-            // gets NO protection here and reaches `wasm-execution` directly.
-            // Today this is safe only because the two vendored files with
-            // such functions (`call_indirect.wast`'s "runaway"/
-            // "mutual-runaway", `fac.wast`'s "fac-rec") both currently fail
-            // to parse for unrelated grammar reasons -- an accident of
-            // corpus coverage, not a structural guarantee. The real fix is
-            // a call-depth guard in `wasm-execution` itself; until that
-            // exists, treat any newly-parseable file with unbounded
-            // recursion as a real risk, not something this harness already
-            // handles.
-            Directive::AssertExhaustion { .. } => DirectiveOutcome::NotYetSupported(
-                "wasm-execution has no call-depth guard; running this would overflow the host stack instead of trapping".to_string(),
-            ),
+            // `wasm-execution` (WASM01) now has a call-depth guard
+            // (`MAX_CALL_DEPTH`), so the deliberately unbounded recursion
+            // these cases exist to trigger traps cleanly with a real "call
+            // stack exhausted" error instead of overflowing the host
+            // stack -- graded the same way `assert_trap` is (any trap
+            // counts; the spec's own reference runners don't strict-match
+            // trap message text either).
+            Directive::AssertExhaustion { action, .. } => match self.run_action(&action) {
+                Ok(_) => DirectiveOutcome::Fail("expected exhaustion, action returned normally".to_string()),
+                Err(ActionError::Trap(_)) => DirectiveOutcome::Pass,
+                Err(ActionError::NotYetSupported(m)) => DirectiveOutcome::NotYetSupported(m),
+            },
 
             Directive::AssertInvalid { module, .. } => self.grade_assert_invalid(module),
             Directive::AssertMalformed { module, .. } => self.grade_assert_malformed(module),
@@ -477,22 +466,28 @@ mod tests {
     }
 
     #[test]
-    fn assert_exhaustion_is_never_executed() {
+    fn assert_exhaustion_passes_on_real_unbounded_recursion() {
+        // WASM01: wasm-execution's call-depth guard turns unbounded
+        // recursion into a real, gradeable trap instead of a host-crash
+        // risk this crate had to route around entirely.
         let results = outcomes(
             r#"
             (module (func $loop (export "loop") (result i32) call $loop))
             (assert_exhaustion (invoke "loop") "call stack exhausted")
             "#,
         );
-        assert_eq!(
-            results[1],
-            (
-                DirectiveKind::AssertExhaustion,
-                DirectiveOutcome::NotYetSupported(
-                    "wasm-execution has no call-depth guard; running this would overflow the host stack instead of trapping".to_string()
-                )
-            )
+        assert_eq!(results[1], (DirectiveKind::AssertExhaustion, DirectiveOutcome::Pass));
+    }
+
+    #[test]
+    fn assert_exhaustion_fails_if_the_action_returns_normally() {
+        let results = outcomes(
+            r#"
+            (module (func (export "one") (result i32) i32.const 1))
+            (assert_exhaustion (invoke "one") "call stack exhausted")
+            "#,
         );
+        assert!(matches!(results[1].1, DirectiveOutcome::Fail(_)));
     }
 
     #[test]

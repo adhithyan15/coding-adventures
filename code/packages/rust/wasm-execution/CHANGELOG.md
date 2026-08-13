@@ -2,6 +2,75 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.6.2] — 2026-08-13 (WASM01 — a real call-depth guard)
+
+`call_function` had NO limit on WASM call nesting: `call`/`call_indirect`
+recurse through this crate's own Rust call stack one level per nested
+WASM call, with no counter anywhere. A WASM program that recurses
+without bound — the official spec testsuite's own
+`call.wast`/`call_indirect.wast`/`fac.wast` deliberately test exactly
+this, expecting a clean "call stack exhausted" trap — used to overflow
+the REAL host thread stack: an uncatchable process abort, not a WASM
+trap any caller could observe or recover from. `wasm-conformance` had to
+route around this entirely (never executing `assert_exhaustion`
+directives at all) rather than test it, for exactly this reason.
+
+- **New `MAX_CALL_DEPTH` constant and `WasmExecutionContext::call_depth`
+  field.** `call_function` is now a thin wrapper enforcing the limit
+  around the previously-unguarded body (renamed `call_function_inner`):
+  increments on entry, decrements on exit, traps with `"call stack
+  exhausted"` instead of recursing further once the limit is hit.
+- **A security review of this PR's first version of the constant (200)
+  found its justification was wrong, and reproduced a real crash.** It
+  reasoned from a *different* crate's measured overflow floor on a
+  *different*, lighter recursive path, rather than measuring THIS
+  crate's own (heavier) recursion directly — 200 reliably overflowed the
+  real host stack in a **debug build** on any thread stack at or below
+  ~1 MiB, reproduced with the PR's own regression test. Corrected by
+  directly measuring this crate's own debug-build crash floor at a
+  documented minimum assumed caller stack (512 KiB — chosen well under
+  Rust's own 2 MiB default spawned-thread stack): safe at 120, crashes at
+  130. **`MAX_CALL_DEPTH` is 80**, a ~33% margin below that measured
+  floor, matching this repo's other recursive-descent crates' own
+  25-45%-margin convention (e.g. `mccarthy-lisp-parser`).
+- **Known, deliberate trade-off, not swept under the rug**: 80 is
+  genuinely too low for 2 legitimate, bounded (terminating) recursion
+  cases in the official testsuite's `call.wast` (`even(100)`/`odd(200)`,
+  mutual recursion) — they now correctly-but-unfortunately trap "call
+  stack exhausted" instead of completing (before this fix, they only
+  "passed" by relying on the previously-unguarded, unsafe recursion
+  path). The real fix for both safety AND depth capacity is running WASM
+  execution on a dedicated thread with a guaranteed larger stack
+  (tracked as its own follow-up; blocked on this crate's `*mut
+  LinearMemory`/`*mut Table` raw pointers not being `Send`) — shipping
+  the safe, conservative value now rather than leaving the host-crash
+  risk in place while that larger change is pending.
+- 5 new integration tests (`tests/call_depth_guard.rs`): unbounded
+  self-recursion, unbounded mutual recursion, ordinary bounded recursion
+  well under the limit still works, a depth-counter-leak regression guard
+  (a trapped recursive call must not corrupt `call_depth` for a later,
+  unrelated top-level call on the same engine), and a committed
+  regression test running the exact overflow scenario on a real 512 KiB
+  `Builder::stack_size` thread (no `RUST_MIN_STACK` simulation) so this
+  can never silently regress back to an unsafe value.
+- `wasm-conformance`'s `assert_exhaustion` directives are now genuinely
+  executed and graded (previously always `NotYetSupported`, unconditionally,
+  specifically because of this gap) — both vendored cases now pass for
+  real. See that crate's own changelog.
+- **A second security-review round** found the 512 KiB minimum-stack
+  assumption behind `MAX_CALL_DEPTH` lived only in a doc comment on a
+  *private* `const` — invisible to any downstream consumer reading just
+  the public API. Surfaced it directly on the public
+  `WasmExecutionEngine::call_function`'s own doc comment instead. Making
+  `MAX_CALL_DEPTH` itself caller-configurable (for embedders who know
+  they're running on a smaller stack) was judged out of scope for this
+  PR — folded into the WASM10 follow-up alongside the dedicated-thread
+  work, rather than widening this PR's surface further.
+
+173 tests passing (up from 168), clippy clean. Downstream consumers
+(`lang-aot` and the WASM-compiler crates) re-checked: no new failures
+attributable to this change.
+
 ## [0.6.1] — 2026-08-13 (W05 PR-4 — three float NaN/sign correctness bugs)
 
 Found running the official WebAssembly spec testsuite against this crate

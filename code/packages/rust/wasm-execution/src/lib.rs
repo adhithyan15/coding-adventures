@@ -1251,7 +1251,64 @@ pub struct WasmExecutionContext {
     /// alongside `gc_heap` — see [`gc::GcState`](crate::gc::GcState).
     /// Module-global for the same reason `gc_heap` is.
     pub gc_state: gc::GcState,
+    /// Current WASM call-nesting depth — see [`MAX_CALL_DEPTH`].
+    pub call_depth: usize,
 }
+
+/// `call_function`'s own call-stack recursion ceiling. WASM's `call`/
+/// `call_indirect` recurse through this crate's *Rust* call stack one
+/// level per nested WASM call (see `call_function`'s own doc comment) —
+/// with no guard at all, a WASM program that recurses without bound (the
+/// official testsuite's own `call.wast`/`call_indirect.wast`/`fac.wast`
+/// deliberately test exactly this, expecting a clean "call stack
+/// exhausted" trap) would overflow the REAL host thread stack: an
+/// uncatchable process abort, not a WASM-level trap a caller could ever
+/// observe or recover from.
+///
+/// A security review of the first version of this constant (200) found
+/// its justification was wrong: it reasoned from a *different* crate's
+/// (`wasm-wast-parser`'s) measured overflow floor on a *different*,
+/// lighter-weight recursive path, rather than measuring THIS crate's own
+/// (heavier — `call_function` clones and re-decodes the callee's full
+/// instruction list on every call) recursion directly. 200 reliably
+/// overflowed the real host stack in a **debug build** (the profile
+/// `cargo test` uses by default) on any thread stack at or below ~1 MiB —
+/// not a contrived scenario for a WASM interpreter specifically, which is
+/// commonly embedded in worker-thread-pool contexts with a reduced stack.
+///
+/// Corrected the same way this repo's other recursive-descent crates
+/// (e.g. `mccarthy-lisp-parser`) document their own limits: measured this
+/// crate's OWN actual debug-build crash floor directly, via a real
+/// recursive WASM module built through `wasm-wast-parser` and run on a
+/// thread with an explicit, deliberately-small stack size
+/// (`std::thread::Builder::stack_size`/`RUST_MIN_STACK`, bisected) —
+/// **512 KiB** was chosen as the assumed minimum caller-provided stack
+/// (well under Rust's own 2 MiB default spawned-thread stack, so any
+/// caller using ordinary defaults has headroom to spare; a caller running
+/// on a materially smaller stack than this is out of scope). At 512 KiB,
+/// unbounded recursion overflows the real stack at depth 130 and is still
+/// safe at 120 — `MAX_CALL_DEPTH` is **80**, a real ~33% margin below that
+/// measured floor (this repo's other crates document a 25-45% convention
+/// for the same kind of guard). Confirmed safe at 512 KiB, 768 KiB, and
+/// 1 MiB stacks in a debug build.
+///
+/// **Known, deliberate trade-off**: this is NOT "far above any real
+/// intentionally-bounded recursion" — the official testsuite's own
+/// `call.wast` has two genuinely bounded (terminating) mutual-recursion
+/// cases, `even(100)`/`odd(200)`, that need more than 80 levels and now
+/// correctly-but-unfortunately trap "call stack exhausted" instead of
+/// completing (before this fix, they only "passed" by relying on an
+/// unguarded, unsafe recursion depth). A materially higher ceiling isn't
+/// safe without also controlling the ACTUAL stack size WASM execution
+/// runs on — see the tracked follow-up (WASM10 in this session's backlog)
+/// for running `call_function` on a dedicated thread with a guaranteed
+/// larger stack, which would let this constant rise well past 200 safely.
+/// Shipping the conservative, safe value now and taking the small,
+/// honestly-documented regression in those 2 cases was judged better than
+/// leaving the unguarded host-crash risk in place while that larger,
+/// separate architectural change (blocked on this crate's `*mut
+/// LinearMemory`/`*mut Table` raw pointers not being `Send`) is pending.
+const MAX_CALL_DEPTH: usize = 80;
 
 /// One decoded WasmGC instruction's immediates — see [`DecodedOperand::Gc`].
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -2967,7 +3024,31 @@ fn register_control(vm: &mut GenericVM) {
 }
 
 /// Execute a function call within the WASM execution context.
+///
+/// Thin wrapper around [`call_function_inner`] enforcing [`MAX_CALL_DEPTH`]
+/// — see that constant's doc comment for why this can't be left unguarded.
+/// `ctx.call_depth` is incremented/decremented symmetrically around the
+/// inner call regardless of whether it succeeds or traps: an `Err` here
+/// unwinds the ENTIRE top-level `WasmExecutionEngine::call_function`
+/// invocation (nothing catches it and resumes execution partway through),
+/// which always starts the next top-level call with a freshly constructed
+/// `WasmExecutionContext` (`call_depth: 0`) — so a stale count from an
+/// aborted call can never leak into a later, unrelated one.
 fn call_function(
+    vm: &mut GenericVM,
+    ctx: &mut WasmExecutionContext,
+    func_index: usize,
+) -> VMResult<()> {
+    if ctx.call_depth >= MAX_CALL_DEPTH {
+        return Err(VMError::GenericError("call stack exhausted".to_string()));
+    }
+    ctx.call_depth += 1;
+    let result = call_function_inner(vm, ctx, func_index);
+    ctx.call_depth -= 1;
+    result
+}
+
+fn call_function_inner(
     vm: &mut GenericVM,
     ctx: &mut WasmExecutionContext,
     func_index: usize,
@@ -3235,6 +3316,20 @@ impl WasmExecutionEngine {
     }
 
     /// Call a WASM function by index.
+    ///
+    /// **Caller stack requirement**: nested WASM `call`/`call_indirect`
+    /// recurse through the calling thread's real Rust stack, one level per
+    /// nested call, up to [`MAX_CALL_DEPTH`] (currently 80) before this
+    /// returns a "call stack exhausted" trap. That ceiling was measured
+    /// assuming the calling thread has **at least 512 KiB** of stack space
+    /// available at the point this is called — Rust's own default spawned-
+    /// thread stack (2 MiB) and the main thread's default on every major OS
+    /// both clear this comfortably. If you invoke this on a thread you've
+    /// deliberately given a smaller stack than that (a constrained worker-
+    /// thread pool, an embedded target, a reactor/executor with small
+    /// per-task stacks), this guard cannot promise a clean trap instead of
+    /// a host-process abort — give the calling thread at least 512 KiB, or
+    /// treat a smaller stack as unsupported for now.
     pub fn call_function(
         &mut self,
         func_index: usize,
@@ -3327,6 +3422,7 @@ impl WasmExecutionEngine {
             gc_heap: Vec::new(),
             struct_field_counts: self.struct_field_counts.clone(),
             gc_state: gc::GcState::default(),
+            call_depth: 0,
         };
 
         let code = CodeObject {
