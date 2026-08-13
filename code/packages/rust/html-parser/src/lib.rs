@@ -5052,6 +5052,20 @@ impl HtmlParser {
             return;
         }
         if !in_foreign_content
+            && !self.is_fragment
+            && self.document_has_closed_frameset()
+            && !self.current_element_is("noframes")
+            && name == "frameset"
+        {
+            if !self.explicit_html_end_seen {
+                self.diagnostics.push(ParserDiagnostic::new(
+                    "unexpected-start-tag-after-frameset",
+                    "start tag `<frameset>` after a frameset was ignored",
+                ));
+            }
+            return;
+        }
+        if !in_foreign_content
             && self.open_elements.is_empty()
             && self.document_has_closed_frameset()
             && name != "noframes"
@@ -35183,6 +35197,52 @@ mod tests {
         assert_eq!(nested_frameset.name, "frameset");
         assert_eq!(element(&nested_frameset.children[0]).name, "frame");
         assert_eq!(element(&frameset.children[2]).name, "noframes");
+    }
+
+    #[test]
+    fn ignores_repeated_frameset_starts_after_a_closed_frameset() {
+        let after_frameset = parse_html_with_diagnostics(
+            "<!doctype html><frameset id=first><frame></frameset><frameset id=second><frame></frameset><!--tail-->",
+        )
+        .unwrap();
+        let document_html = html(&after_frameset.document);
+        assert_eq!(document_html.children.len(), 3);
+        assert_eq!(
+            element(&document_html.children[1]).attribute("id"),
+            Some("first")
+        );
+        assert!(matches!(document_html.children[2], Node::Comment(_)));
+        assert_eq!(
+            after_frameset
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-start-tag-after-frameset")
+                .count(),
+            2
+        );
+
+        let after_after_frameset = parse_html_with_diagnostics(
+            "<!doctype html><frameset id=first><frame></frameset></html><frameset id=second><frame></frameset><!--tail-->",
+        )
+        .unwrap();
+        let document_html = html(&after_after_frameset.document);
+        assert_eq!(document_html.children.len(), 2);
+        assert_eq!(
+            element(&document_html.children[1]).attribute("id"),
+            Some("first")
+        );
+        assert!(matches!(
+            after_after_frameset.document.children.last(),
+            Some(Node::Comment(_))
+        ));
+
+        let fragment = parse_html_fragment_for_context_with_diagnostics(
+            "<frameset id=first><frame></frameset><frameset id=second><frame></frameset>",
+            "html",
+        )
+        .unwrap();
+        assert!(find_element_by_id(&fragment.nodes, "first").is_some());
+        assert!(find_element_by_id(&fragment.nodes, "second").is_some());
     }
 
     #[test]
