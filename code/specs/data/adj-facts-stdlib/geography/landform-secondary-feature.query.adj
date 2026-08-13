@@ -1,0 +1,21 @@
+% ============================================================================
+% landform-secondary-feature.query.adj — a worked recall over the
+% geography landform-secondary-feature library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what structural
+% feature does a valley have?": it states no geography fact of its own — it
+% only `import`s the grounded table and asks binding queries. The engine
+% resolves each `?` against the `landform_secondary_feature` rows and
+% returns the secondary feature + the table's source/locator/trust. A
+% landform the cited spans give no secondary feature for abstains honestly
+% — the engine never invents one.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli landform-secondary-feature.query.adj
+% ============================================================================
+
+import "landform-secondary-feature.adj"
+
+? landform_secondary_feature(valley, $Feature)                    % expect contains_stream_with_outlet
+? landform_secondary_feature($Landform, continuous_slope_at_bottom) % reverse bind — expect canyon
+? landform_secondary_feature(mountain, $Feature)                  % expect abstain — mountain's own cited span states no second structural clause
