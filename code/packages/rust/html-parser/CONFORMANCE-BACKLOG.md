@@ -321,6 +321,11 @@ Prioritized work items:
    Form end tags now report when implied-end-tag generation leaves a non-form
    node current before the form is removed from the stack, matching WPT
    `tests6.dat` while preserving current-form and implied-descendant closures.
+   Form end tags whose pointer-owned form is blocked by table scope now report
+   before preserving the existing pointer clearing and DOM recovery, matching
+   WPT `tests16.dat`; template-owned forms blocked by the same boundary are
+   covered, while ordinary, foreign-content, cell, and fragment paths keep
+   their existing behavior.
 3. **Diagnostic positions and error taxonomy.** Carry source positions into
    tree construction and map diagnostics to current WHATWG concepts. Legacy
    WPT/html5lib error labels are evidence hints, not a normative public API.
