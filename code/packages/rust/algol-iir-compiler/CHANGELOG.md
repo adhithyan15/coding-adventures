@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.142.0 — 2026-08-13 — zero-trip while-loop snapshots
+
+Statically false `while` elements now preserve entry scalar snapshots and
+record the initial value assigned to their controlled scalar. Unknown and
+potentially repeating `while` elements remain conservative.
+
 ## 0.141.0 — 2026-08-13 — single-iteration step-loop snapshots
 
 Statically proven single-iteration `step`/`until` elements now retain scalar

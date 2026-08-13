@@ -4821,10 +4821,12 @@ impl Compiler {
             let executes = self.for_element_execution(target, var_ty, elem);
             let tokens = direct_tokens(elem);
             let is_step_element = tokens.iter().any(|token| token.value == "step");
-            let (static_initial_real, static_initial_integer) = if is_step_element
+            let is_while_element = tokens.iter().any(|token| token.value == "while");
+            let (static_initial_real, static_initial_integer) = if (is_step_element
+                || is_while_element)
                 && !entry_tracking_disabled
             {
-                self.for_step_initial_snapshot(var_ty, elem)
+                self.for_element_initial_snapshot(var_ty, elem)
             } else {
                 (None, None)
             };
@@ -4846,7 +4848,7 @@ impl Compiler {
             if executes != Some(true) {
                 self.initialized_string_slots = entry_initialized_string_slots;
             }
-            if is_step_element && executes == Some(false) {
+            if (is_step_element || is_while_element) && executes == Some(false) {
                 self.static_real_slots = entry_real_slots;
                 self.static_integer_slots = entry_integer_slots;
                 self.static_boolean_slots = entry_boolean_slots;
@@ -4865,7 +4867,7 @@ impl Compiler {
         Ok(())
     }
 
-    fn for_step_initial_snapshot(
+    fn for_element_initial_snapshot(
         &self,
         target_ty: ScalarType,
         elem: &GrammarASTNode,
@@ -9131,12 +9133,35 @@ mod tests {
     }
 
     #[test]
-    fn al4_zero_trip_while_still_invalidates_scalar_snapshots() {
-        let err = compile_source(
-            "begin integer i; real r; r := 42.0; for i := 1 while false do r := 1.5; print(r) end",
+    fn al4_zero_trip_while_preserves_scalar_snapshots() {
+        compile_source(
+            "begin integer i, n; real r; boolean flag; string s; n := 40; r := 42.0; flag := true; for i := 1 while false do begin n := 1; r := 1.5; flag := false end; if flag then s := 'OK'; output(n + 2.5, r, s) end",
             "test",
         )
-        .expect_err("evaluating a while condition keeps scalar snapshots conservative");
+        .expect("a statically false while element preserves entry scalar snapshots");
+    }
+
+    #[test]
+    fn al4_zero_trip_while_updates_controlled_variable_snapshot() {
+        let module = compile_source(
+            "begin real x; x := 9.0; for x := 2.0 while false do x := 1.5; print(x) end",
+            "test",
+        )
+        .expect("a zero-trip while element leaves its controlled variable at the initial value");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "2")
+        }));
+    }
+
+    #[test]
+    fn al4_dynamic_while_still_invalidates_scalar_snapshots() {
+        let err = compile_source(
+            "begin integer i, n; real r; r := 42.0; for i := 1 while n > 0 do r := 1.5; print(r) end",
+            "test",
+        )
+        .expect_err("an unknown while condition keeps scalar snapshots conservative");
         assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
