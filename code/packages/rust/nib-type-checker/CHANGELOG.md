@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Type-check `shift_expr` with the same numeric operand and result rules as
+  additive and multiplicative expressions.
+
 ## 0.6.0 — 2026-06-27 — const/static initializer expressions are typed (LANG-FULL N10)
 
 Top-level `const` declarations now seed the module typing environment alongside

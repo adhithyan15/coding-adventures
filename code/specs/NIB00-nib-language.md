@@ -239,9 +239,11 @@ Listed from lowest precedence (evaluated last) to highest (evaluated first):
 | 3     | `==`, `!=`          | Left          |
 | 4     | `<`, `>`, `<=`, `>=`| Left          |
 | 5     | `+`, `-`, `+%`, `+?`| Left          |
-| 6     | `&`, `\|`, `^`      | Left          |
-| 7     | `!`, `~` (unary)    | Right (prefix)|
-| 8     | Primary             | —             |
+| 6     | `<<`, `>>`          | Left          |
+| 7     | `*`, `/`            | Left          |
+| 8     | `&`, `\|`, `^`      | Left          |
+| 9     | `!`, `~` (unary)    | Right (prefix)|
+| 10    | Primary             | —             |
 
 ---
 
@@ -285,7 +287,9 @@ or_expr       = and_expr { "||" and_expr } ;
 and_expr      = eq_expr { "&&" eq_expr } ;
 eq_expr       = cmp_expr { ( "==" | "!=" ) cmp_expr } ;
 cmp_expr      = add_expr { ( "<" | ">" | "<=" | ">=" ) add_expr } ;
-add_expr      = bitwise_expr { ( "+" | "-" | "+%" | "+?" ) bitwise_expr } ;
+add_expr      = shift_expr { ( "+" | "-" | "+%" | "+?" ) shift_expr } ;
+shift_expr    = mul_expr { ( "<<" | ">>" ) mul_expr } ;
+mul_expr      = bitwise_expr { ( "*" | "/" ) bitwise_expr } ;
 bitwise_expr  = unary_expr { ( "&" | "|" | "^" ) unary_expr } ;
 unary_expr    = ( "!" | "~" ) unary_expr | primary ;
 primary       = INT_LIT
@@ -405,10 +409,7 @@ fn bcd_add(a: bcd, b: bcd) -> u8 {
 // Extract the high nibble of an 8-bit value.
 // Example: high_nibble(0xAB) = 0xA
 fn high_nibble(x: u8) -> u4 {
-    // Shift right by 4 positions using bitwise tricks.
-    // Nib v1 has no shift operator, so we rotate via carry.
-    // (In practice the compiler emits RAR x4 + mask sequence.)
-    let hi: u4 = (x & 0xF0) >> 4;  // Note: >> reserved for v2; shown for clarity
+    let hi: u4 = (x & 0xF0) >> 4;
     return hi;
 }
 
@@ -483,7 +484,6 @@ companion libraries.
 | Strings          | 4004 has no string support whatsoever                        |
 | Floating-point   | 4004 has no FPU; software float is impractical               |
 | Signed integers  | 4004 has no signed arithmetic instructions                   |
-| Shift operators  | Available via DAA/rotate workaround; explicit in v2          |
 | Struct/record    | No compound types; 4 primitive types are sufficient          |
 | Imports/modules  | Single-file programs only in v1                              |
 | Generics         | Not needed given the minimal type system                     |
