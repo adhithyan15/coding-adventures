@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.13.0 — APL display convention (found via the first real array-codegen execution proof)
+
+`emit_module` now emits `__Sir.setDisplayConvention("apl")` for an
+APL-sourced module, exactly mirroring the existing `"ruby"` branch
+immediately above it. Found and fixed while building
+`apl-to-semantic-ir/tests/e2e_typescript.rs` — the first test anywhere in
+the repo to run this backend's array/matrix codegen through a real
+`tsc`/`tsx` toolchain against the real `sir-runtime-core`/`sir-runtime-array`
+npm packages (as opposed to a self-contained JS backend or a hand-stubbed
+shim). Without this, `sir-runtime-core`'s `toDisplay` had no way to know an
+APL-sourced program's negative numbers/NDArray values should render with
+APL's own high-minus glyph (`¯`) rather than falling through to
+`String(v)` — see `sir-runtime-core`'s own 0.5.0 changelog entry for the
+runtime-side half of this fix.
+
 ## 0.12.0 — SIR28 §7: remove dead bare `print`/`puts` handling
 
 Every frontend now emits `__sys_write__` instead of bare `print`/`puts`

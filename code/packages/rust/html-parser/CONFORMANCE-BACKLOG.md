@@ -479,9 +479,12 @@ Prioritized work items:
    drains and unpositioned streaming parser callers remain compatible. The
    after-after-frameset ignored-token diagnostic is the first end-to-end tree
    construction slice to carry that position through UTF-8, Unicode-scalar,
-   line, column, and CRLF-preprocessing accounting. Continue migrating one
-   evidence-backed diagnostic family at a time; synthetic or directly supplied
-   tokens must remain explicitly unpositioned.
+   line, column, and CRLF-preprocessing accounting. Shared after-body and
+   after-after-body unexpected-token recovery now carries the reprocessed
+   token's same proven emission point exactly once, while allowed tail tokens
+   and directly supplied token streams remain unpositioned. Continue migrating
+   one evidence-backed diagnostic family at a time; synthetic or directly
+   supplied tokens must remain explicitly unpositioned.
 4. **Input boundary review.** Document the Unicode-code-point parser boundary
    and either add or explicitly separate byte decoding and encoding sniffing.
 5. **Algorithm and differential audit.** Map implemented states/modes to the

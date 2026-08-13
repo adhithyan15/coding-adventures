@@ -21,6 +21,12 @@ at the package. `scriptdata` stays out of that chunk on purpose — the shell ne
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Cyrillic д ductus (HL-C09ED)
+
+- Render **д** in two joined movements across one source-aligned stroke.
+- Circle the closed body counterclockwise, then descend through the right foot, sweep across the base shelf, retrace the left foot, and finish rightward without lifting.
+- Preserve the native-teacher lesson's zero-lift cursive body-to-descender order while documenting the block-font fit's shelf-and-feet replacement, and reduce measured HL-C09 debt to 98 entries.
+
 ### Added — cited Cyrillic г ductus (HL-C09EC)
 
 - Render **г** in two joined movements across one source-aligned stroke.

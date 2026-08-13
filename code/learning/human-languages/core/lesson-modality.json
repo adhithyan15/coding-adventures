@@ -7,19 +7,19 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:0b5f437993b782fa",
+  "sourceHash": "fnv1a64:f282a92f7eae4a0d",
   "summary": {
-    "totalLessons": 2033,
-    "voice": 1353,
-    "sight": 564,
+    "totalLessons": 2038,
+    "voice": 1356,
+    "sight": 566,
     "pen": 116,
-    "drivableLessons": 1353,
+    "drivableLessons": 1356,
     "drivablePercent": 67,
     "trackCount": 22,
-    "chapterCount": 740,
-    "drivablePrefixTotal": 1153,
-    "fullyDrivableChapters": 482,
-    "unstartableChapters": 176,
+    "chapterCount": 745,
+    "drivablePrefixTotal": 1156,
+    "fullyDrivableChapters": 485,
+    "unstartableChapters": 178,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
   },
@@ -7114,12 +7114,12 @@
     },
     {
       "language": "spanish",
-      "lessonCount": 386,
-      "voice": 341,
-      "sight": 38,
+      "lessonCount": 391,
+      "voice": 344,
+      "sight": 40,
       "pen": 7,
       "drivablePercent": 88,
-      "drivablePrefixTotal": 328,
+      "drivablePrefixTotal": 331,
       "modalities": [
         "voice",
         "sight",
@@ -11032,6 +11032,82 @@
           "drivable": true,
           "drivableLessonIds": [
             "ES-C62-repaso-gerundio"
+          ]
+        },
+        {
+          "chapter": 241,
+          "lessonCount": 1,
+          "voice": 0,
+          "sight": 1,
+          "pen": 0,
+          "modalities": [
+            "sight"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "ES-C63-hablasteis",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 242,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C63-comisteis"
+          ]
+        },
+        {
+          "chapter": 243,
+          "lessonCount": 1,
+          "voice": 0,
+          "sight": 1,
+          "pen": 0,
+          "modalities": [
+            "sight"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "ES-C63-hablabamos",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 244,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C63-comiamos"
+          ]
+        },
+        {
+          "chapter": 245,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C63-repaso-paradigmas"
           ]
         }
       ]
@@ -45378,6 +45454,96 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:6adbdefc146077da"
+    },
+    {
+      "id": "ES-C63-hablasteis",
+      "language": "spanish",
+      "chapter": 241,
+      "sequence": 2440,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "sight-cue"
+      ],
+      "coreModality": "sight",
+      "coreReasons": [
+        "sight-cue"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:0796815c679b7da0"
+    },
+    {
+      "id": "ES-C63-comisteis",
+      "language": "spanish",
+      "chapter": 242,
+      "sequence": 2445,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:5c866751a7306760"
+    },
+    {
+      "id": "ES-C63-hablabamos",
+      "language": "spanish",
+      "chapter": 243,
+      "sequence": 2450,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "sight-cue"
+      ],
+      "coreModality": "sight",
+      "coreReasons": [
+        "sight-cue"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:4599ba13a93cf342"
+    },
+    {
+      "id": "ES-C63-comiamos",
+      "language": "spanish",
+      "chapter": 244,
+      "sequence": 2455,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:21a9d71d525e99f4"
+    },
+    {
+      "id": "ES-C63-repaso-paradigmas",
+      "language": "spanish",
+      "chapter": 245,
+      "sequence": 2460,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:aaef7a550246dd47"
     },
     {
       "id": "TA-C01-vanakkam",

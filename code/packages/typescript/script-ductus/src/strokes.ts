@@ -3117,6 +3117,44 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: cyrillicAlphabetSource("г"),
   },
+  // RussianIrina writes lowercase д as one cursive body-to-descender run. The
+  // bundled Noto glyph is the block-like isolated form, so its zero-lift order
+  // is preserved by circling the body before retracing both feet through their
+  // joined base shelf. Connected cursive restores the below-baseline loop.
+  [ductusKey("cyrillic", "д")]: {
+    script: "cyrillic",
+    glyph: "д",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "circle counterclockwise around the closed body",
+            path: [
+              { x: 470, y: 462 }, { x: 390, y: 500 }, { x: 300, y: 500 },
+              { x: 205, y: 500 }, { x: 190, y: 420 }, { x: 185, y: 330 },
+              { x: 175, y: 240 }, { x: 150, y: 150 }, { x: 110, y: 74 },
+              { x: 190, y: 35 }, { x: 290, y: 35 }, { x: 390, y: 35 },
+              { x: 470, y: 74 }, { x: 470, y: 170 }, { x: 470, y: 270 },
+              { x: 470, y: 370 }, { x: 470, y: 462 },
+            ],
+          },
+          {
+            label: "descend, retrace both feet, and finish along the base shelf",
+            path: [
+              { x: 470, y: 462 }, { x: 470, y: 330 }, { x: 470, y: 200 },
+              { x: 470, y: 74 }, { x: 550, y: 35 }, { x: 550, y: -50 },
+              { x: 550, y: -110 }, { x: 550, y: -50 }, { x: 550, y: 35 },
+              { x: 450, y: 35 }, { x: 350, y: 35 }, { x: 250, y: 35 },
+              { x: 150, y: 35 }, { x: 55, y: 35 }, { x: 55, y: -50 },
+              { x: 55, y: -110 }, { x: 55, y: -50 }, { x: 55, y: 35 },
+              { x: 150, y: 35 }, { x: 250, y: 35 }, { x: 350, y: 35 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: cyrillicAlphabetSource("д"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the

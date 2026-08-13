@@ -739,10 +739,11 @@ mod apple {
     #[test]
     fn render_mermaid_requirement_to_png() {
         let diagram = parse_requirement_diagram(
-            "requirementDiagram\nrequirement test_req {\nid: 1\ntext: Test\nrisk: low\nverifyMethod: test\n}\nelement system {\ntype: service\n}\nsystem - satisfies -> test_req",
+            "requirementDiagram\ndirection LR\nrequirement test_req {\nid: 1\ntext: Test\nrisk: low\nverifyMethod: test\n}\nelement system {\ntype: service\n}\nsystem - satisfies -> test_req",
         )
         .expect("Mermaid requirement parse failed");
         let layout = layout_structural_diagram(&diagram);
+        assert!(layout.nodes[1].x > layout.nodes[0].x);
         let shaper = CoreTextShaper;
         let metrics = CoreTextMetrics;
         let resolver = CoreTextResolver::new();

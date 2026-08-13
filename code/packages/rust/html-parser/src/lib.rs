@@ -4808,13 +4808,16 @@ impl HtmlParser {
             self.document_tail_mode = DocumentTailMode::AfterHtml;
         } else if !allowed {
             let mode = self.document_tail_mode;
-            self.diagnostics.push(ParserDiagnostic::new(
-                mode.diagnostic_code(),
-                format!(
-                    "unexpected token was reprocessed from the {} insertion mode",
-                    mode.name()
-                ),
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    mode.diagnostic_code(),
+                    format!(
+                        "unexpected token was reprocessed from the {} insertion mode",
+                        mode.name()
+                    ),
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             match token {
                 Token::EndTag { name } if name == "body" => {
                     self.document_tail_mode = DocumentTailMode::AfterBody;
@@ -39799,6 +39802,88 @@ mod tests {
     }
 
     #[test]
+    fn positions_after_body_and_after_html_diagnostics_at_token_emission() {
+        for (source, code) in [
+            (
+                "<!doctype html>\r\n<body>é</body><!--ß--><main>",
+                "unexpected-token-after-body",
+            ),
+            (
+                "<!doctype html>\r\n<body>é</body></html><!--ß--><main>",
+                "unexpected-token-after-html",
+            ),
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            let diagnostics = output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == code)
+                .collect::<Vec<_>>();
+            let final_delimiter = source.rfind('>').unwrap();
+
+            assert_eq!(diagnostics.len(), 1, "source {source:?}");
+            assert_eq!(
+                diagnostics[0].position,
+                Some(SourcePosition {
+                    byte_offset: final_delimiter,
+                    char_offset: source[..final_delimiter].chars().count(),
+                    line: 2,
+                    column: source[source.rfind('\n').unwrap() + 1..final_delimiter]
+                        .chars()
+                        .count()
+                        + 1,
+                })
+            );
+            assert!(final_delimiter > source[..final_delimiter].chars().count());
+        }
+
+        for (include_html_end, code) in [
+            (false, "unexpected-token-after-body"),
+            (true, "unexpected-token-after-html"),
+        ] {
+            let mut parser = HtmlParser::new();
+            for token in [
+                Token::StartTag {
+                    name: "html".to_string(),
+                    attributes: Vec::new(),
+                    self_closing: false,
+                },
+                Token::StartTag {
+                    name: "body".to_string(),
+                    attributes: Vec::new(),
+                    self_closing: false,
+                },
+                Token::EndTag {
+                    name: "body".to_string(),
+                },
+            ] {
+                parser.process_token(token);
+            }
+            if include_html_end {
+                parser.process_token(Token::EndTag {
+                    name: "html".to_string(),
+                });
+            }
+            parser.process_token(Token::StartTag {
+                name: "main".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            });
+            parser.process_token(Token::Eof);
+
+            assert_eq!(
+                parser
+                    .diagnostics()
+                    .iter()
+                    .find(|diagnostic| diagnostic.code == code)
+                    .unwrap()
+                    .position,
+                None
+            );
+        }
+    }
+
+    #[test]
     fn reports_an_after_body_end_tag_in_a_seeded_html_fragment_context() {
         let output =
             parse_html_fragment_for_context_with_diagnostics("<body>X</body></body>", "html")
@@ -39813,7 +39898,13 @@ mod tests {
             vec![ParserDiagnostic::new(
                 "unexpected-token-after-body",
                 "unexpected token was reprocessed from the after body insertion mode"
-            )]
+            )
+            .at_emission(Some(SourcePosition {
+                byte_offset: 20,
+                char_offset: 20,
+                line: 1,
+                column: 21,
+            }))]
         );
     }
 
@@ -39839,7 +39930,13 @@ mod tests {
                 ParserDiagnostic::new(
                     "unexpected-token-after-body",
                     "unexpected token was reprocessed from the after body insertion mode"
-                ),
+                )
+                .at_emission(Some(SourcePosition {
+                    byte_offset: 22,
+                    char_offset: 22,
+                    line: 1,
+                    column: 23,
+                })),
             ]
         );
 
@@ -39875,7 +39972,13 @@ mod tests {
             vec![ParserDiagnostic::new(
                 "unexpected-token-after-body",
                 "unexpected token was reprocessed from the after body insertion mode"
-            )]
+            )
+            .at_emission(Some(SourcePosition {
+                byte_offset: 33,
+                char_offset: 33,
+                line: 1,
+                column: 34,
+            }))]
         );
         assert_eq!(body(&reentered_after_body.document).children[0], Node::text("A"));
         let reentered_div = element(&body(&reentered_after_body.document).children[1]);

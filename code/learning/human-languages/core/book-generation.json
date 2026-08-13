@@ -3643,6 +3643,31 @@
       "output": "spanish/book/chapters/ch240-review-gerundio.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 241,
+      "output": "spanish/book/chapters/ch241-hablasteis.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 242,
+      "output": "spanish/book/chapters/ch242-comisteis.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 243,
+      "output": "spanish/book/chapters/ch243-hablabamos.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 244,
+      "output": "spanish/book/chapters/ch244-comiamos.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 245,
+      "output": "spanish/book/chapters/ch245-review-paradigmas.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "output": "tamil/book/chapters/ch06-dative-case.tex",

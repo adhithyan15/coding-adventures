@@ -298,11 +298,32 @@ is lowered as a `Stmt`-position operation (like `Assign`), not a value-producing
   `assertValidPosition`, `range`'s `Number.isFinite` guard, `set`'s
   AND-negation bounds check, `elementwise`'s `toArrayValue` coercion), since
   this PR is what made the package's dormant code paths reachable for the
-  first time. The SIR22 "APL addendum" nodes below share these same three
-  features but remain deferred — this backend adds the identical dedicated
-  tree-walk check inside `compile()` the JS backend uses, so a module using
-  one of the nine still fails cleanly rather than reaching an emit-time
-  panic; see that crate's own `find_unimplemented_sir22_addendum_node`.
+  first time. **Update, since superseded:** the SIR22 "APL addendum" nodes
+  (`Reduce`/`Scan`/`OuterProduct`/`Shape`/`Reshape`/`IndexGenerator`/
+  `IndexOf`/`Ravel`/`Catenate`) are no longer deferred either — real
+  codegen for all nine landed in a later PR, and the dedicated
+  `find_unimplemented_sir22_addendum_node` tree-walk rejection this
+  paragraph used to describe was removed once it became dead code (see
+  `semantic-ir-to-typescript`'s own `compiles_reduce_node_instead_of_
+  rejecting_it`-style regression tests). Until this same rung of the
+  ladder, though, that codegen had never actually been run: no frontend
+  imported `semantic-ir-to-typescript` as a dev-dependency, and no test
+  drove a real TypeScript toolchain against the real
+  `sir-runtime-core`/`sir-runtime-array` packages (every other TS-backend
+  test hand-stubs the runtime imports instead, to avoid a toolchain
+  dependency — see `semantic-ir-to-typescript/tests/run_with_node.rs`'s own
+  module doc). `apl-to-semantic-ir/tests/e2e_typescript.rs` is that first
+  real proof (`compile_source` → `semantic_ir_to_typescript::compile` →
+  real `tsc --strict` → real `tsx`), and it found two genuine bugs neither
+  `find_unimplemented_sir22_addendum_node`'s removal nor any prior unit
+  test had caught: `sir-runtime-core`'s `toDisplay` never recognised an
+  NDArray value (no dependency between the two packages, so nothing
+  duck-typed the shape — fixed in `sir-runtime-core` 0.5.0, mirroring the
+  JS backend's own self-contained `formatSeen`), and `sir-runtime-array`'s
+  `indexGenerator` required a pre-wrapped `NDArray` where the emitter
+  hands it a bare number (fixed in `sir-runtime-array` 0.4.0, reusing the
+  `elementwise.ts` module's existing `toArrayValue` bare-scalar
+  normaliser rather than re-solving the same problem a third time).
 - **Rust/Go/Python backends**: not required to support this in the first
   wave; they reject modules declaring `NDArrays`/`MatrixOps` per the existing
   capability-rejection path. No code changes required to these backends for

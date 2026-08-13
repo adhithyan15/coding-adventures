@@ -389,8 +389,11 @@
       "id": "A1-V-04",
       "category": "El verbo",
       "label": "imperfect: regular forms and ser, ir, ver",
-      "probe": null,
-      "note": "Only the singular is taught (ch107, ch109); the plural of the imperfect is absent."
+      "probe": [
+        "ES-GRAMMAR-AR-IMPERFECT-PLURAL",
+        "ES-GRAMMAR-ER-IR-IMPERFECT-PLURAL",
+        "ES-GRAMMAR-IMPERFECT-IRREGULAR-PLURAL"
+      ]
     },
     {
       "id": "A1-V-05",
@@ -405,8 +408,11 @@
       "id": "A1-V-06",
       "category": "El verbo",
       "label": "preterite: the regular paradigm, all persons",
-      "probe": null,
-      "note": "Five of six persons are taught; the vosotros forms are owed (HL-C127)."
+      "probe": [
+        "ES-GRAMMAR-AR-PRETERITE-2PL",
+        "ES-GRAMMAR-ER-IR-PRETERITE-2PL",
+        "ES-GRAMMAR-PRETERITE-COMPLETE"
+      ]
     },
     {
       "id": "A1-V-07",

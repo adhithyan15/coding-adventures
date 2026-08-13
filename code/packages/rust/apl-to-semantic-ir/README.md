@@ -146,3 +146,14 @@ StrLit("once"), BoolLit(false), value])`), the same primitive
   and fixed in `semantic-ir-to-javascript` 0.43.0 (see this crate's own
   0.1.5 `CHANGELOG.md` entry and that crate's `CHANGELOG.md` for the full
   writeup).
+- `tests/e2e_typescript.rs` — a real end-to-end proof through the
+  **TypeScript** backend instead of JS: 8 programs (a representative pilot
+  slice of `tests/e2e_node.rs`'s own corpus, plus a bare negative scalar
+  and a directly-printed 2D matrix) compiled with
+  `semantic_ir_to_typescript::compile`, type-checked with a REAL `tsc
+  --strict` and executed with `tsx`, against the REAL
+  `@coding-adventures/sir-runtime-core`/`sir-runtime-array` npm packages —
+  not a hand-stubbed shim. First execution proof anywhere in the repo for
+  this backend's array/matrix codegen; found and fixed two real bugs (see
+  `CHANGELOG.md`'s 0.2.1 entry). `npm` is optional — skips gracefully when
+  unavailable, matching every `node_available()`-guarded test elsewhere.

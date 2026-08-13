@@ -145,7 +145,12 @@ describe("the committed A1 inventory", () => {
     // Not every null needs prose — "the gerund is not taught" is self-evident.
     // But the ones that are PARTLY there are the misleading ones, so they carry
     // a note saying which half exists.
-    const partiallyTrue = ["A1-ART-03", "A1-POS-02", "A1-ADV-01", "A1-ADV-02", "A1-V-04", "A1-V-06", "A1-V-08"];
+    // A1-V-04 and A1-V-06 were on this list and have since been CLOSED (chapters
+    // 241-245 taught the vosotros preterite and the imperfect plural), so they are
+    // no longer partly-true nulls. Removing them from the list is the point of the
+    // list rather than an erosion of it: it names nulls whose note has to explain
+    // which half exists, and these two no longer have a missing half.
+    const partiallyTrue = ["A1-ART-03", "A1-POS-02", "A1-ADV-01", "A1-ADV-02", "A1-V-08"];
     for (const id of partiallyTrue) {
       const point = inventory.points.find((candidate) => candidate.id === id);
       expect(point, id).toBeDefined();
@@ -292,8 +297,12 @@ describe("what the corpus actually covers", () => {
     // that point but is not it, and closing it with progressive atoms would be
     // exactly the gaming this gate exists to catch.
     //
+    // Chapters 241-245 then paid HL-C127's debt: the vosotros preterite and the
+    // imperfect plural, both of which chapter 204 promised the reader in print.
+    // Both past tenses are now complete paradigms.
+    //
     // Still untaught: the ordinals, the vocative, the stressed pronouns after a
-    // preposition, the exclamative `que`, and the paradigm gaps HL-C127 owes.
+    // preposition, the exclamative `que`, and the ver/dar preterite.
     //
     // This number is allowed to move only two ways. Up, when a lesson teaches
     // something the inventory lists. Down, when one is retired. It must NOT
@@ -301,8 +310,8 @@ describe("what the corpus actually covers", () => {
     // fails alongside an edit to exam-inventory-es-a1.json, read that edit
     // before re-pinning.
     expect(coverage.enumerated).toBe(85);
-    expect(coverage.covered).toBe(66); // +3: ch221-225 demonstratives // +4: ch226-229 degree words // +4: ch230-235 joining words // +2: ch236-240 the gerund and the personal a // +3: chapters 221-225 teach the demonstratives // +4: chapters 226-229 teach muy, bastante and mal // +4: chapters 230-235 teach al/del, quien, o and ni
-    expect(coverage.percent).toBe(78); // 53/85 -> 56 -> 60 -> 64/85
+    expect(coverage.covered).toBe(68); // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245: the vosotros preterite and the imperfect plural, both promised in chapter 204 // +3: ch221-225 demonstratives // +4: ch226-229 degree words // +4: ch230-235 joining words // +2: ch236-240 the gerund and the personal a // +3: chapters 221-225 teach the demonstratives // +4: chapters 226-229 teach muy, bastante and mal // +4: chapters 230-235 teach al/del, quien, o and ni
+    expect(coverage.percent).toBe(80); // 53/85 -> 56 -> 60 -> 64/85
 
     // Whole categories missing is a different failure from thin coverage, and
     // the report has to keep them distinguishable.
@@ -316,7 +325,7 @@ describe("what the corpus actually covers", () => {
     const report = formatExamCoverage(
       measureExamCoverage(loadExamInventory("spanish", "A1"), lessons),
     );
-    expect(report).toContain("spanish A1: 66/85 points covered (78%)");
+    expect(report).toContain("spanish A1: 68/85 points covered (80%)");
     // Worst category first: the line after the summary should be the emptiest
     // category, not the alphabetically first one. It USED to be
     // `El sintagma adjetival` at 0/1; chapters 226-229 closed that, and the

@@ -734,6 +734,12 @@ upright and top bar, then retraces the top and descends without lifting. The
 same native-teacher lesson demonstrates a rounded two-hump cursive г at
 01:54–01:57; the Noto Sans Cyrillic fit preserves its zero-lift evidence while
 documenting that the isolated block glyph has no smaller exit arch.
+The two-frame Cyrillic **д** filmstrip circles its closed body counterclockwise,
+then descends through the right foot, sweeps across the base shelf, retraces the
+left foot, and finishes rightward without lifting. The same lesson demonstrates
+a looped cursive д at 02:14–02:19; the Noto Sans Cyrillic fit preserves its
+body-before-descender order and zero-lift evidence while documenting that the
+isolated block glyph has a shelf and two feet instead of a descender loop.
 The runtime resolves each cited path back to the owning script and lazily loads that
 script's font, while Tamil continues to use Noto Sans Tamil. Unverified letters
 still fall back to the numbered prose list, unchanged. Extending the coverage is HL-C09,

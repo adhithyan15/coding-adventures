@@ -2653,6 +2653,66 @@
         "ES-EXT-A1-REVIEW-GER"
       ],
       "after": []
+    },
+    {
+      "id": "ES-PATH-A1-VOS-PRET-AR",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C63-hablasteis"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-VOS-PRET-AR"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-A1-VOS-PRET-REST",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C63-comisteis"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-VOS-PRET-REST"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-A1-IMP-PL-AR",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C63-hablabamos"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-IMP-PL-AR"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-A1-IMP-PL-REST",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C63-comiamos"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-IMP-PL-REST"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-A1-REVIEW-PARAD",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C63-repaso-paradigmas"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-REVIEW-PARAD"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -2821,7 +2881,12 @@
         "ES-PATH-A1-COMIENDO",
         "ES-PATH-A1-PROGRESIVO",
         "ES-PATH-A1-PERSONAL-A",
-        "ES-PATH-A1-REVIEW-GER"
+        "ES-PATH-A1-REVIEW-GER",
+        "ES-PATH-A1-VOS-PRET-AR",
+        "ES-PATH-A1-VOS-PRET-REST",
+        "ES-PATH-A1-IMP-PL-AR",
+        "ES-PATH-A1-IMP-PL-REST",
+        "ES-PATH-A1-REVIEW-PARAD"
       ],
       "omits": [],
       "relocates": {}
@@ -5784,6 +5849,61 @@
       "prerequisites": [],
       "lessons": [
         "ES-C62-repaso-gerundio"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-VOS-PRET-AR",
+      "stage": "A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C63-hablasteis"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-VOS-PRET-REST",
+      "stage": "A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C63-comisteis"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-IMP-PL-AR",
+      "stage": "A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C63-hablabamos"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-IMP-PL-REST",
+      "stage": "A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C63-comiamos"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-REVIEW-PARAD",
+      "stage": "A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C63-repaso-paradigmas"
       ]
     }
   ]
