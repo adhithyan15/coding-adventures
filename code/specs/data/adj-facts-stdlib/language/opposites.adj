@@ -1,32 +1,51 @@
 % ============================================================================
-% opposites — a common word and its opposite (antonym)
-% (adj-facts-stdlib, LANGUAGE).
+% opposites — a common word and EVERY opposite (antonym) its Wiktionary
+% Antonyms line names (adj-facts-stdlib, LANGUAGE).
 % ============================================================================
 % One of the very first things a child learns about words: many of them come in
 % pairs that mean the reverse of each other. HOT is the opposite of COLD, BIG is
-% the opposite of SMALL. The word for "the opposite of" is an ANTONYM. This tiny
-% library records a handful of clean word→opposite pairs so an ADJ program can
-% recall them, each one cited to a dictionary. Recall is a binding query:
+% the opposite of SMALL. The word for "the opposite of" is an ANTONYM. This
+% library records clean word→opposite pairs so an ADJ program can recall them,
+% each one cited to a dictionary. Recall is a binding query:
 %
-%     ? opposite(hot, $Word)      % cold
+%     ? opposite(hot, $Word)      % cold ; chilled
 %
 % This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
 % relation `opposite(word, opposite)` carrying the table's citation, so the
-% lookup above is the ordinary SLD binding query — the engine returns the
+% lookup above is the ordinary SLD binding query — the engine returns EVERY
 % opposite WITH its source, on the CPU, with zero model calls, and ABSTAINS on
-% any word not in the table (it never invents an opposite it cannot cite).
+% any word not in the table (it never invents an opposite it cannot cite). Some
+% words are deliberately ONE-TO-MANY: the source's own Antonyms line names
+% several opposites for `hot`/`big`/`happy`/`open`, not just one, so
+% `opposite(happy, $Word)` binds `$Word` to EACH of them in turn — the same
+% single-valued-to-many-valued shape `synonyms.adj` already established for
+% its sibling table.
 %
 % The pairs, as a truth table:
 %
-%     word    opposite    read as…
-%     ------  --------    ----------------------
-%     hot     cold        "the opposite of hot is cold"
-%     big     small       "the opposite of big is small"
-%     fast    slow        "the opposite of fast is slow"
-%     wet     dry         "the opposite of wet is dry"
-%     happy   sad         "the opposite of happy is sad"
-%     open    closed      "the opposite of open is closed"
-%     hard    soft        "the opposite of hard is soft"
+%     word    opposite     read as…
+%     ------  -----------  ----------------------
+%     hot     cold         "the opposite of hot is cold"
+%     hot     chilled
+%     big     small        "the opposite of big is small"
+%     big     little
+%     big     tiny
+%     big     minuscule
+%     big     miniature
+%     big     minute
+%     fast    slow         "the opposite of fast is slow"
+%     wet     dry          "the opposite of wet is dry"
+%     happy   sad          "the opposite of happy is sad"
+%     happy   blue
+%     happy   depressed
+%     happy   down
+%     happy   miserable
+%     happy   moody
+%     happy   morose
+%     happy   unhappy
+%     open    closed       "the opposite of open is closed"
+%     open    shut
+%     hard    soft         "the opposite of hard is soft"
 %
 % Only ONE direction is shipped per pair (word → its opposite). A query like
 % `? opposite(cold, $W)` therefore ABSTAINS: the honest-abstention property is
@@ -34,19 +53,34 @@
 % word with no shipped opposite (e.g. `purple`) returns no invented answer.
 %
 % Provenance — nothing here is from memory. Each pair is copied from the English
-% Wiktionary entry for the FIRST word, whose "Antonyms" line lists the opposite
-% verbatim. The per-pair citable spans (quoted exactly as printed) are:
+% Wiktionary entry for the FIRST word, whose "Antonyms" line lists the
+% opposites verbatim. The per-word citable spans (quoted exactly as printed)
+% are:
 %
 %     hot    → en.wiktionary.org/wiki/hot     "Antonyms: cold, chilled"
-%     big    → en.wiktionary.org/wiki/big     "little, small, tiny, minuscule, …"
+%     big    → en.wiktionary.org/wiki/big     "little, small, tiny, minuscule, miniature, minute"
 %     fast   → en.wiktionary.org/wiki/fast    "Antonyms: slow"  (sense: quick/rapid)
 %     wet    → en.wiktionary.org/wiki/wet     "Antonym: dry"
 %     happy  → en.wiktionary.org/wiki/happy   "blue, depressed, down, miserable, moody, morose, sad, unhappy"
-%     open   → en.wiktionary.org/wiki/open    "closed, shut"
+%     open   → en.wiktionary.org/wiki/open    "closed, shut"  (sense: accessible)
 %     hard   → en.wiktionary.org/wiki/hard    "Antonym: soft"  (sense: resistant to pressure)
 %
+% EXTENDED this cycle from 7 to 21 rows: the header ABOVE already quoted the
+% full Antonyms line for `hot`/`big`/`happy`/`open` when this table originally
+% shipped — only the FIRST antonym in each of those four lines had ever been
+% turned into a row, even though the same already-quoted span names one more
+% (hot), five more (big), seven more (happy), and one more (open). `fast`,
+% `wet`, and `hard` were already fully captured (their sources name only one
+% antonym each). Zero new source page needed; WebFetch re-verified all seven
+% Wiktionary "Antonyms" lines live before writing (confirming each word's
+% already-quoted span is accurate, unchanged, and, for `big`, that the header's
+% own truncating "…" in fact stopped at exactly six total antonyms). This
+% mirrors `synonyms.adj`'s single-to-many-valued-per-key extension shape,
+% needing no new WebFetch to DISCOVER the extra values for four of the seven
+% words — they were already sitting in this table's own header the whole time.
+%
 % The single `source` span below is the clearest one (the `hot` entry); the
-% `locator` points at that entry, and each remaining pair's own page + verbatim
+% `locator` points at that entry, and each remaining word's own page + verbatim
 % span is quoted above so every row is independently checkable. `trust
 % consensus` — a dictionary is a secondary reference, not a primary authority.
 % (See ../README.md; feedback_nothing_human_authored,
@@ -57,11 +91,25 @@ table opposite {
     columns word, opposite
 
     row (hot, cold)
+    row (hot, chilled)
     row (big, small)
+    row (big, little)
+    row (big, tiny)
+    row (big, minuscule)
+    row (big, miniature)
+    row (big, minute)
     row (fast, slow)
     row (wet, dry)
     row (happy, sad)
+    row (happy, blue)
+    row (happy, depressed)
+    row (happy, down)
+    row (happy, miserable)
+    row (happy, moody)
+    row (happy, morose)
+    row (happy, unhappy)
     row (open, closed)
+    row (open, shut)
     row (hard, soft)
 
     source "Antonyms: cold, chilled"

@@ -4,8 +4,11 @@
 % The shape a learner (or an LLM) produces to ANSWER "what is the opposite of
 % hot?": it states no fact of its own — it only `import`s the grounded table and
 % asks binding queries. The engine resolves each `?` against the `opposite` rows
-% and returns the opposite + the table's source/locator/trust. A word the table
-% does not carry abstains honestly — the engine never invents an opposite.
+% and returns EVERY opposite + the table's source/locator/trust (as of this
+% cycle's extension, a bound word can recall MULTIPLE opposites — `happy` now
+% recalls sad ; blue ; depressed ; ... ; unhappy, not just one). A word the
+% table does not carry abstains honestly — the engine never invents an
+% opposite.
 %
 % Run (from this directory so the relative import resolves):
 %     ../../../../packages/rust/target/debug/adj-lang-cli opposites.query.adj
@@ -13,6 +16,7 @@
 
 import "opposites.adj"
 
-? opposite(hot, $Word)         % expect cold
-? opposite(happy, $Word)       % expect sad
+? opposite(hot, $Word)         % expect cold ; chilled
+? opposite(happy, $Word)       % expect sad ; blue ; depressed ; down ; miserable ; moody ; morose ; unhappy
+? opposite(big, $Word)         % expect small ; little ; tiny ; minuscule ; miniature ; minute (added this cycle)
 ? opposite(purple, $Word)      % expect abstain — no opposite is shipped for purple
