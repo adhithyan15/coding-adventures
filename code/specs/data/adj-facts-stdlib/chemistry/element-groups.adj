@@ -22,28 +22,53 @@
 %
 %     ? element_group_family($E, noble_gas)     % helium — first gas in the family
 %
-% The fourteen elements, grouped by family (a little truth table — read down
-% each family to see which elements share a column and therefore behave alike):
+% The twenty-eight elements, grouped by family (a little truth table — read
+% down each family to see which elements share a column and therefore behave
+% alike):
 %
 %     element      family                  where it sits on the table
 %     ----------   ---------------------   ------------------------------------
 %     lithium      alkali_metal            Group 1 — soft, very reactive metals
 %     sodium       alkali_metal            Group 1
 %     potassium    alkali_metal            Group 1
+%     rubidium     alkali_metal            Group 1 (added this cycle)
+%     caesium      alkali_metal            Group 1 (added this cycle)
+%     francium     alkali_metal            Group 1 (added this cycle)
 %     beryllium    alkaline_earth_metal    Group 2 — reactive metals, +2 ions
 %     magnesium    alkaline_earth_metal    Group 2
 %     calcium      alkaline_earth_metal    Group 2
+%     strontium    alkaline_earth_metal    Group 2 (added this cycle)
+%     barium       alkaline_earth_metal    Group 2 (added this cycle)
+%     radium       alkaline_earth_metal    Group 2 (added this cycle)
 %     fluorine     halogen                 Group 17 — reactive nonmetals
 %     chlorine     halogen                 Group 17
 %     bromine      halogen                 Group 17
+%     iodine       halogen                 Group 17 (added this cycle)
+%     astatine     halogen                 Group 17 (added this cycle)
+%     tennessine   halogen                 Group 17 (added this cycle)
 %     helium       noble_gas               Group 18 — unreactive gases
 %     neon         noble_gas               Group 18
 %     argon        noble_gas               Group 18
+%     krypton      noble_gas               Group 18 (added this cycle)
+%     xenon        noble_gas               Group 18 (added this cycle)
+%     radon        noble_gas               Group 18 (added this cycle)
 %     iron         transition_metal        the d-block, Groups 3–12
 %     nickel       transition_metal        the d-block, Groups 3–12
+%     cobalt       transition_metal        the d-block, Groups 3–12 (added this cycle)
 %
-% An element that is not one of these fourteen — gold, carbon, uranium — has no
-% row, so a recall on it ABSTAINS rather than inventing a family. That
+% EXTENDED this cycle from 14 to 28 rows: each family's own cited Wikipedia
+% sentence, already quoted in full below, named MORE member elements than had
+% ever been turned into rows — only the first three of each family had been.
+% Every new row is a pure addition sharing an existing family key, the same
+% many-valued-per-key shape as `kingdoms.adj`/`opposites.adj`/`brain-parts.adj`.
+% `oganesson` is deliberately NOT added even though the noble_gas sentence names
+% it: the source hedges it as a noble gas only "in some cases" (its predicted
+% chemistry is debated), so that one clause does not support a firm row the way
+% every other name in the same sentences does — a considered exclusion, not an
+% oversight.
+%
+% An element that is not one of these twenty-eight — gold, carbon, uranium —
+% has no row, so a recall on it ABSTAINS rather than inventing a family. That
 % honest-abstention property is what makes the table safe to reason from.
 %
 % The `family` value of every row is a SINGLE lowercase atom, a faithful
@@ -58,30 +83,32 @@
 % opening text; each membership span is quoted here character-for-character so
 % any reader can re-check it:
 %
-%   alkali_metal (lithium, sodium, potassium)
+%   alkali_metal (lithium, sodium, potassium, rubidium, caesium, francium)
 %     "The alkali metals consist of the chemical elements lithium (Li), sodium
 %      (Na), potassium (K), rubidium (Rb), caesium (Cs), and francium (Fr)."
 %     — https://en.wikipedia.org/wiki/Alkali_metal
 %
-%   alkaline_earth_metal (beryllium, magnesium, calcium)
+%   alkaline_earth_metal (beryllium, magnesium, calcium, strontium, barium,
+%   radium)
 %     "They are beryllium (Be), magnesium (Mg), calcium (Ca), strontium (Sr),
 %      barium (Ba), and radium (Ra)."
 %     — https://en.wikipedia.org/wiki/Alkaline_earth_metal
 %
-%   halogen (fluorine, chlorine, bromine)
+%   halogen (fluorine, chlorine, bromine, iodine, astatine, tennessine)
 %     "The halogens are a group in the periodic table consisting of six
 %      chemically related elements: fluorine (F), chlorine (Cl), bromine (Br),
 %      iodine (I), and the radioactive elements astatine (At) and tennessine
 %      (Ts)."
 %     — https://en.wikipedia.org/wiki/Halogen
 %
-%   noble_gas (helium, neon, argon)
+%   noble_gas (helium, neon, argon, krypton, xenon, radon)
 %     "The noble gases ... are the members of group 18 of the periodic table:
 %      helium (He), neon (Ne), argon (Ar), krypton (Kr), xenon (Xe), radon (Rn)
-%      and, in some cases, oganesson (Og)."
+%      and, in some cases, oganesson (Og)." — oganesson excluded; see the
+%      considered-exclusion note above.
 %     — https://en.wikipedia.org/wiki/Noble_gas
 %
-%   transition_metal (iron, nickel)
+%   transition_metal (iron, nickel, cobalt)
 %     "All of the elements that are ferromagnetic near room temperature are
 %      transition metals (iron, cobalt and nickel)."
 %     — https://en.wikipedia.org/wiki/Transition_metal
@@ -103,17 +130,30 @@ table element_group_family {
     row (lithium, alkali_metal)
     row (sodium, alkali_metal)
     row (potassium, alkali_metal)
+    row (rubidium, alkali_metal)
+    row (caesium, alkali_metal)
+    row (francium, alkali_metal)
     row (beryllium, alkaline_earth_metal)
     row (magnesium, alkaline_earth_metal)
     row (calcium, alkaline_earth_metal)
+    row (strontium, alkaline_earth_metal)
+    row (barium, alkaline_earth_metal)
+    row (radium, alkaline_earth_metal)
     row (fluorine, halogen)
     row (chlorine, halogen)
     row (bromine, halogen)
+    row (iodine, halogen)
+    row (astatine, halogen)
+    row (tennessine, halogen)
     row (helium, noble_gas)
     row (neon, noble_gas)
     row (argon, noble_gas)
+    row (krypton, noble_gas)
+    row (xenon, noble_gas)
+    row (radon, noble_gas)
     row (iron, transition_metal)
     row (nickel, transition_metal)
+    row (cobalt, transition_metal)
 
     source "The alkali metals consist of the chemical elements lithium (Li), sodium (Na), potassium (K), rubidium (Rb), caesium (Cs), and francium (Fr)."
     locator "https://en.wikipedia.org/wiki/Alkali_metal"

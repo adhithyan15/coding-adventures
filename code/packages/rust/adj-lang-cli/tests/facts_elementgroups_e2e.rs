@@ -80,3 +80,42 @@ fn chemistry_element_group_family_recall_binds_family_with_citation() {
     // "gold" is not in the table — honest abstention, never a fabricated family.
     assert!(out.contains("\"abstained\":true"), "gold abstains: {out}");
 }
+
+#[test]
+fn chemistry_element_group_family_extension_recalls_newly_added_elements() {
+    let dir = scratch("elementgroups_ext");
+    let src = facts_stdlib().join("chemistry/element-groups.adj");
+    std::fs::copy(&src, dir.join("element-groups.adj")).expect("copy shipped element-groups.adj");
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"element-groups.adj\"\n\
+         ? element_group_family($E, noble_gas)\n\
+         ? element_group_family(caesium, $Family)\n\
+         ? element_group_family(cobalt, $Family)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // Each family's own cited Wikipedia sentence always named more members than
+    // had ever been turned into rows — this cycle added the rest as pure
+    // additions sharing the existing family key. The noble_gas reverse recall
+    // now returns all six shipped noble gases (oganesson deliberately excluded
+    // as a considered exclusion — its source sentence hedges it "in some
+    // cases").
+    for gas in ["helium", "neon", "argon", "krypton", "xenon", "radon"] {
+        assert!(
+            out.contains(&format!("element_group_family({gas}, noble_gas)")),
+            "noble_gas recalls {gas} (krypton/xenon/radon added this cycle): {out}"
+        );
+    }
+    assert!(!out.contains("oganesson"), "oganesson stays excluded: {out}");
+    assert!(
+        out.contains("\"Family\":\"alkali_metal\""),
+        "caesium → alkali_metal (added this cycle): {out}"
+    );
+    assert!(
+        out.contains("\"Family\":\"transition_metal\""),
+        "cobalt → transition_metal (added this cycle): {out}"
+    );
+}
