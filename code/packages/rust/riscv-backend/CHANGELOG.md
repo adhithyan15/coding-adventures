@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Added caller-save handling around direct module calls. Register-resident
+  scalar and pair values that remain live after a `jal` now round-trip through
+  reserved caller-frame slots, while values already spilled stay in place.
+  Direct and Nib source-to-simulator fixtures cover live scalar values, and a
+  direct fixture covers a live wide pair.
 - Added signature-aware direct-call argument lowering. Module calls stage
   scalar and `i64`/`u64` pair values in the caller frame before loading
   `a0` through `a7`, so ABI-register moves cannot overwrite a later argument.
