@@ -1,5 +1,38 @@
 # Changelog
 
+## [0.3.0] - 2026-08-13
+
+### Added
+
+- Consumption of the 34-case language-neutral ZIP raw RFC 1951 v1 corpus for
+  stored, fixed, dynamic, multi-block, foreign-decoder, counted-boundary,
+  malformed-stream, output-cap, and incremental CRC-32 behavior.
+- `RawInflateError` with a closed, payload-blind error-code taxonomy, plus the
+  exported `RAW_INFLATE_MAX_OUTPUT` hard ceiling.
+- Explicit empty capability metadata for the pure in-memory package.
+- Correct package and PNG-downstream BUILD front doors: dependency installs now
+  run in subshells so each gate returns to and tests its intended package.
+
+### Changed
+
+- `rawInflate` and `ZipReader` now require a non-negative safe-integer ceiling
+  no larger than 256 MiB and validate it before output allocation.
+- Dynamic blocks accept all 32 RFC 1951 distance code-length slots when the two
+  reserved slots are unused; actually decoding distance symbol 30 or 31 still
+  fails closed through both fixed and dynamic tables.
+- `rawInflateCounted` and every malformed-stream path now return stable error
+  codes without echoing attacker-controlled bytes, counts, offsets, or lengths.
+- `ZipReader` rejects suffix bytes hidden inside a DEFLATE entry's declared
+  compressed payload by enforcing exact BFINAL byte consumption.
+
+### Security
+
+- The hard ceiling cannot be disabled with infinity, unsafe integers,
+  fractions, or a larger number. Cap checks happen before every output growth
+  or back-reference copy, and failures return no partial output.
+- Exact consumed-byte reporting and stable payload-free errors are enforced by
+  the shared neutral corpus and an independent Python zlib/binascii validator.
+
 ## [0.2.0] - 2026-08-12
 
 ### Added

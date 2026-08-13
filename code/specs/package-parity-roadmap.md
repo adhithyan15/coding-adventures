@@ -3184,6 +3184,48 @@ the Python slice, inventories every `plan_v1_write` front door, and will be
 decomposed by shared engine or toolchain before selection. This PR deliberately
 does not change those independent implementations.
 
+## Post-#11162 Refresh and ZIP Raw-Conformance Selection
+
+External review merged ready-for-review PR #11162 as
+`d6cfc5a758af417620b6b0ad48652794fef8b45d` at
+2026-08-13T09:07:42Z after every required CI, CodeQL, and neutral auxiliary
+check reached terminal success or an expected skip. The final reviewed head is
+`e722f96ee5e7b4a305a34146171cbb35579ce8cd`. A fresh collision-checked report
+at `5574bc77277b1b047d09d6e696f9427e2a8c4ba7` covers 15 established lanes,
+1,305 normalized implementation identities, and 4,461 established slots. It
+reports 173 high-consensus identities with 269 missing slots, 855 singletons
+with 11,970 missing singleton slots, 658 Rust singletons, zero canonical
+collisions, and zero unknown buckets.
+
+The intervening ADJ fact-library commit is outside the established
+implementation denominator, so the topology and every stored count remain
+unchanged. No newly unowned package identity was discovered. The residual
+cross-writer plan-publication gap remains with the existing
+`build-tool-plan-atomic-overwrite-remaining-writers` owner, which is now
+dependency-ready but must be decomposed by shared writer engine before
+selection. The four WebAssembly parser and conformance owners remain blocked
+while external PR #11146 overlaps their Rust oracle and host surfaces.
+
+After selection, PR #11146 merged externally as `93a27bfec2`. A late
+collision-checked refresh at `e57bec074440fd7b3b4198597b42d3c059f659c4`
+remains exactly 1,305 identities and 4,461 slots with zero collisions and zero
+unknown buckets. The temporary overlap flags are therefore cleared from the
+WAST neutral contract and portable conformance core. Their dependency chain,
+the established-lane umbrella decomposition requirement, and the separate host
+authority review still prevent overlapping or over-broad selection.
+
+The dependency/leverage pass selected
+`zip-raw-rfc1951-language-neutral-conformance`. This dependency-free foundation
+closes the fallible raw encode, capped decode, exact counted decode,
+incremental CRC-32, malformed-stream, foreign-interoperability, and stable
+payload-free error contract before any lane port begins. It also corrects the
+RFC 1951 distance-header boundary: dynamic blocks may advertise all 32 distance
+code-length slots, while reserved symbols 30 and 31 fail only if decoded.
+Completing this tranche makes the reviewable ZIP lane children ready and, once
+their umbrella closes, unlocks the fourteen missing established PNG codec
+slots. It does not widen into those lane ports, the remaining build-plan
+writers, OCaml promotion, or the externally owned WebAssembly work.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

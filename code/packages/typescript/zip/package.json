@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/zip",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "ZIP archive format (PKZIP 1989) from scratch — CMP09",
   "type": "module",
   "main": "src/index.ts",

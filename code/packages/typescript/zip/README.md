@@ -83,6 +83,9 @@ crc32(new TextEncoder().encode("hello world")); // 0x0D4A1185
 | `crc32(data, initial?)` | CRC-32 (polynomial 0xEDB88320). |
 | `rawDeflate(data)` | Compress to a raw RFC 1951 stream — no ZIP, zlib, or gzip framing. |
 | `rawInflate(data, maxOutput?)` | Decompress a raw RFC 1951 stream. Reads all three block types. |
+| `rawInflateCounted(data, maxOutput?)` | Decompress and report the exact number of input bytes consumed. |
+| `RawInflateError` | Stable payload-blind failure with a portable `code`. |
+| `RAW_INFLATE_MAX_OUTPUT` | Hard 256 MiB output ceiling. Callers may only lower it. |
 | `dosDatetime(...)` | Encode MS-DOS timestamp. |
 | `DOS_EPOCH` | Constant `0x00210000` — 1980-01-01 00:00:00. |
 
@@ -103,14 +106,19 @@ rawInflate(raw); // the original bytes
 A second copy of this in another package would be a second place for a
 bit-packing bug to hide, which is why it is exported rather than duplicated.
 
-**`rawInflate` reads bytes you did not write.** Malformed input always throws —
-it never returns partial or wrong output — so be ready to catch. Output is
-capped at 256 MB by default, and you should lower it whenever you know the
+**`rawInflate` reads bytes you did not write.** Malformed input throws a
+`RawInflateError` with a stable, payload-blind `code`; it never returns partial
+or wrong output. Output is capped at 256 MiB by default, and you should lower it whenever you know the
 answer's size:
 
 ```typescript
 rawInflate(untrusted, 1 << 20); // refuse anything over 1 MB
 ```
+
+The limit must be a non-negative safe integer at or below the hard ceiling and
+is validated before the output buffer is allocated. `rawInflateCounted` also
+reports where BFINAL ended the stream, excluding whole trailing bytes so zlib,
+gzip, and PNG wrappers can reject covert cavities.
 
 The cap matters because DEFLATE's expansion ratio reaches **1032:1** — a
 two-symbol pair copies up to 258 bytes — so a few hundred kilobytes of hostile
@@ -133,8 +141,8 @@ dynamic (10) blocks. That is not an oversight in either direction. Fixed
 Huffman is simple, fast, and produces a perfectly legal archive that every tool
 accepts — so writing more is optional. But dynamic Huffman is what zlib and
 Info-ZIP emit for anything but the smallest inputs, so *reading* less means
-failing on most archives the world actually produces. The rule of thumb is
-Postel's: be conservative in what you write, liberal in what you accept.
+failing on most archives the world actually produces. Reading is exact rather
+than broadly permissive: malformed trees and reserved symbols fail closed.
 
 The same asymmetry shows up one level down, in length symbol **285**. RFC 1951
 gives length 258 — the longest match DEFLATE can express — two encodings:
@@ -143,11 +151,13 @@ using 284 so its output stays byte-stable; the decoder accepts both, because a
 258-byte match is exactly what a long run of one byte produces and most
 encoders reach for the cheaper symbol.
 
-The decoder's conformance is checked against **Node's own `zlib` as an oracle**
-rather than against itself: round-tripping our encoder through our decoder only
-proves the two agree with each other. The tests inflate streams produced by
-`deflateRawSync` at every compression level, including incompressible input and
-a 4 KB run that forces symbol 285.
+The decoder's conformance is checked against **foreign zlib encoders and
+decoders** rather than against itself: round-tripping our encoder through our
+decoder only proves the two agree with each other. The shared neutral corpus is
+also consumed by Python's standard zlib. Its one documented oracle exception is
+the RFC 1951 `HDIST + 1 = 32` header: the final two reserved-symbol slots may be
+advertised with zero lengths even though a default zlib build rejects that
+valid field width. Symbols 30 and 31 still fail if actually decoded.
 
 **BigInt accumulator.** JavaScript's bitwise operators are 32-bit. The DEFLATE bit buffer can hold up to ~48 bits, so `BitWriter`/`BitReader` use a `bigint` accumulator to avoid silent truncation.
 
@@ -160,4 +170,5 @@ a 4 KB run that forces symbol 285.
 ```bash
 npm install
 npx vitest run --coverage
+python -m pytest ../../../../scripts/tests/test_zip_raw_rfc1951_fixtures.py -q
 ```
