@@ -1535,6 +1535,64 @@ fn allocate_slots(
 /// the generic `"any"` string.
 /// A comparison op produces a 0/1 boolean `int`, whatever its operand width.
 /// Its dest slot must therefore be `int` on the JVM (see [`build_type_map`]).
+/// Store a 0/1 `int` result into `dest_slot` at the width that slot is typed for.
+///
+/// Every comparison and predicate leaves a one-slot `int` on the stack, and each
+/// of them used to `emit_istore` unconditionally, discarding the slot's type.
+/// That is correct whenever the slot is `Int` — which `build_type_map`'s
+/// comparison override arranges for a dest whose *producer* is a `cmp_*`. It is
+/// wrong whenever the slot's type was decided by something else, and for the
+/// predicate builtins it always is: `equal?`/`pair?`/`not` reach the backend as
+/// `call_builtin`, never as `cmp_*`, so that override never sees them and the
+/// dest keeps whatever hint it carries. A Twig `(equal? 'a 'a)` has its result
+/// retyped `any` → `i64` by `concretize_scalar_any_for_jvm` (the entry returns
+/// `J`), so the slot is `Long` and the store and the load disagreed:
+///
+/// ```text
+///   42: istore 4      ← int, one slot
+///   44: lload  4      ← long, slots 4/5
+///   46: lreturn
+///   VerifyError: Accessing value from uninitialized register pair 4/5
+/// ```
+///
+/// Widening at the store makes it agree with every later load by construction,
+/// whatever decided the slot's type. That is the invariant worth holding: a
+/// store and a load of one slot must never disagree about its width, and the
+/// store is the side that knows what it is actually pushing. BA-JVM-1 fixed the
+/// same disagreement from the other end, by forcing the *type* to `Int`; this
+/// covers the cases where the type is not ours to choose.
+fn emit_bool_result_store(
+    code: &mut Vec<u8>,
+    dest_slot: u16,
+    dest_ty: JvmType,
+    fname: &str,
+) -> Result<(), IIRJvmError> {
+    match dest_ty {
+        JvmType::Int => emit_istore(code, dest_slot),
+        JvmType::Long => {
+            code.push(I2L);
+            emit_typed_store(code, dest_slot, JvmType::Long);
+        }
+        // A 0/1 `int` has no meaning in a float, double, reference or void
+        // slot. Falling through to `istore` here would silently re-create the
+        // very disagreement this helper exists to prevent — an `istore` into a
+        // `Ref` slot followed by an `aload` is another VerifyError. Unreachable
+        // today (predicate dests type as `Int` or `Long`), so the point of
+        // spelling it out is that a future frontend hint fails here, loudly and
+        // with a name, rather than several steps later inside the JVM.
+        other => {
+            return Err(IIRJvmError::InvalidOperand {
+                function: fname.to_string(),
+                detail: format!(
+                    "a comparison/predicate produces a 0/1 int, but its destination \
+                     slot is typed {other:?} — no widening from int is defined"
+                ),
+            })
+        }
+    }
+    Ok(())
+}
+
 fn is_comparison_op(op: &str) -> bool {
     matches!(
         op,
@@ -2796,10 +2854,11 @@ fn lower_function(
                     };
                     emit_int_compare(&mut code, cmp_opcode);
                 }
-                // Result (0 or 1) is now on the stack; store it.
+                // Result (0 or 1) is now on the stack; store it at the width the
+                // destination slot is typed for (see `emit_bool_result_store`).
                 if let Some(dest) = &instr.dest {
-                    let (dest_slot, _) = lookup_var(dest)?;
-                    emit_istore(&mut code, dest_slot);
+                    let (dest_slot, dest_ty) = lookup_var(dest)?;
+                    emit_bool_result_store(&mut code, dest_slot, dest_ty, fname)?;
                 }
             }
 
@@ -3526,24 +3585,38 @@ fn lower_function(
                         // `Object[]`; an atom is an `Integer`; nil is `null`.
                         let dest_name = builtin_dest(instr, fname, "pair?")?;
                         let arg = builtin_arg(instr, fname, "pair?", 1)?;
-                        let (dest_slot, _) = lookup_var(dest_name)?;
+                        let (dest_slot, dest_ty) = lookup_var(dest_name)?;
                         let (arg_slot, _) = lookup_var(&arg)?;
                         emit_aload(&mut code, arg_slot);
                         let cidx = cp.add_class("[Ljava/lang/Object;");
                         code.push(INSTANCEOF);
                         code.extend_from_slice(&cidx.to_be_bytes());
-                        emit_istore(&mut code, dest_slot);
+                        emit_bool_result_store(&mut code, dest_slot, dest_ty, fname)?;
                     }
                     "not" => {
                         // Logical not of a 0/1 machine boolean: `arg ^ 1`.
                         let dest_name = builtin_dest(instr, fname, "not")?;
                         let arg = builtin_arg(instr, fname, "not", 1)?;
-                        let (dest_slot, _) = lookup_var(dest_name)?;
-                        let (arg_slot, _) = lookup_var(&arg)?;
-                        emit_iload(&mut code, arg_slot);
+                        let (dest_slot, dest_ty) = lookup_var(dest_name)?;
+                        // Load the argument at ITS slot's width, then narrow to the
+                        // `int` the `ixor` needs. Widening the *store* is only half
+                        // the invariant — `not`'s operand is very often another
+                        // predicate's result, so `(not (equal? 'a 'a))` stored a
+                        // long pair and then read it back as an int:
+                        //   43: lstore 4   ← equal? result, slots 4/5
+                        //   45: iload  4   ← not's argument
+                        //   VerifyError: Register 4 contains wrong type
+                        // Same shape as the `putchar` argument load above.
+                        let (arg_slot, arg_ty) = lookup_var(&arg)?;
+                        if arg_ty == JvmType::Long {
+                            emit_lload(&mut code, arg_slot);
+                            code.push(L2I);
+                        } else {
+                            emit_iload(&mut code, arg_slot);
+                        }
                         code.push(ICONST_1);
                         code.push(IXOR);
-                        emit_istore(&mut code, dest_slot);
+                        emit_bool_result_store(&mut code, dest_slot, dest_ty, fname)?;
                     }
                     "equal?" => {
                         // `EQ` on atoms: unbox both `Integer`s and compare. The
@@ -3553,7 +3626,7 @@ fn lower_function(
                         let dest_name = builtin_dest(instr, fname, "equal?")?;
                         let a = builtin_arg(instr, fname, "equal?", 1)?;
                         let b = builtin_arg(instr, fname, "equal?", 2)?;
-                        let (dest_slot, _) = lookup_var(dest_name)?;
+                        let (dest_slot, dest_ty) = lookup_var(dest_name)?;
                         let (a_slot, _) = lookup_var(&a)?;
                         let (b_slot, _) = lookup_var(&b)?;
                         let int_cidx = cp.add_class("java/lang/Integer");
@@ -3572,7 +3645,7 @@ fn lower_function(
                         code.extend_from_slice(&intval.to_be_bytes());
                         // a == b ? 1 : 0  (IF_ICMPNE skips the true arm when a≠b)
                         emit_int_compare(&mut code, IF_ICMPNE);
-                        emit_istore(&mut code, dest_slot);
+                        emit_bool_result_store(&mut code, dest_slot, dest_ty, fname)?;
                     }
                     _ => {
                         // Validator should have rejected this; defense in depth.
@@ -5290,6 +5363,118 @@ mod tests {
     fn config_default() {
         let cfg = IIRJvmConfig::default();
         assert_eq!(cfg.class_name, "IIRModule");
+    }
+
+    /// A store and a load of one local slot must not disagree about its width.
+    ///
+    /// A comparison leaves a one-slot `int`; when its destination slot is typed
+    /// `Long` (Twig's `any` result retyped to `i64` because the entry returns
+    /// `J`), the store must widen with `i2l`. Storing one slot and later reading
+    /// the pair gives `VerifyError: Accessing value from uninitialized register
+    /// pair`, which reaches the user as the far less helpful `Error: Unable to
+    /// initialize main class Main`.
+    #[test]
+    fn comparison_into_a_long_slot_widens_before_storing() {
+        let func = IIRFunction::new(
+            "main",
+            vec![],
+            "i64",
+            vec![
+                IIRInstr::new("const", Some("a".into()), vec![Operand::Int(1)], "i32"),
+                IIRInstr::new("const", Some("b".into()), vec![Operand::Int(1)], "i32"),
+                IIRInstr::new("box", Some("ab".into()), vec![Operand::Var("a".into())], "ref<any>"),
+                IIRInstr::new("box", Some("bb".into()), vec![Operand::Var("b".into())], "ref<any>"),
+                // The producer is a `call_builtin`, NOT a `cmp_*`, so
+                // `build_type_map`'s comparison override does not see it and the
+                // `i64` hint wins — a `Long` slot receiving a one-slot int.
+                // This is the shape Twig's `(equal? 'a 'a)` actually produces.
+                IIRInstr::new(
+                    "call_builtin",
+                    Some("r".into()),
+                    vec![
+                        Operand::Var("equal?".into()),
+                        Operand::Var("ab".into()),
+                        Operand::Var("bb".into()),
+                    ],
+                    "i64",
+                ),
+                IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+            ],
+        );
+        let class = lower_iir_to_jvm(&make_module(func), &make_cfg()).expect("lowers");
+        let code = method_code(&class, "main");
+        assert!(code.contains(&I2L), "the int result must be widened before a long store: {code:?}");
+        assert!(!code.contains(&LRETURN) || code.contains(&I2L));
+    }
+
+    /// `not`'s *argument* load has to respect its slot's width too — widening
+    /// only the store leaves the invariant half-held. `(not (equal? …))` stored
+    /// a long pair and then read it back with `iload`:
+    ///   `VerifyError: Register 4 contains wrong type`.
+    /// (Found in security review, which compiled the program and loaded it on a
+    /// real JVM rather than reading the emitter.)
+    #[test]
+    fn not_over_a_long_slotted_operand_loads_at_the_right_width() {
+        let func = IIRFunction::new(
+            "main",
+            vec![],
+            "i64",
+            vec![
+                IIRInstr::new("const", Some("a".into()), vec![Operand::Int(1)], "i32"),
+                IIRInstr::new("const", Some("b".into()), vec![Operand::Int(1)], "i32"),
+                IIRInstr::new("box", Some("ab".into()), vec![Operand::Var("a".into())], "ref<any>"),
+                IIRInstr::new("box", Some("bb".into()), vec![Operand::Var("b".into())], "ref<any>"),
+                // `p` lands in a `Long` slot (see the sibling test), so `not`'s
+                // argument load must read the pair, not one slot.
+                IIRInstr::new(
+                    "call_builtin",
+                    Some("p".into()),
+                    vec![
+                        Operand::Var("equal?".into()),
+                        Operand::Var("ab".into()),
+                        Operand::Var("bb".into()),
+                    ],
+                    "i64",
+                ),
+                IIRInstr::new(
+                    "call_builtin",
+                    Some("r".into()),
+                    vec![Operand::Var("not".into()), Operand::Var("p".into())],
+                    "i64",
+                ),
+                IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+            ],
+        );
+        let class = lower_iir_to_jvm(&make_module(func), &make_cfg()).expect("lowers");
+        let code = method_code(&class, "main");
+        assert!(code.contains(&L2I), "a Long-slotted operand must be narrowed for ixor: {code:?}");
+    }
+
+    /// A 0/1 int has no meaning in a float/double/reference slot, and silently
+    /// `istore`-ing it there would re-create the disagreement this all exists to
+    /// prevent. It must be a named error, not a fallback.
+    #[test]
+    fn a_bool_result_into_a_reference_slot_is_a_named_error() {
+        let mut code = Vec::new();
+        let err = emit_bool_result_store(&mut code, 0, JvmType::Ref, "main")
+            .expect_err("a Ref destination must be rejected");
+        let msg = format!("{err:?}");
+        assert!(msg.contains("no widening from int is defined"), "{msg}");
+    }
+
+    /// Pull one method's bytecode out of a lowered class.
+    fn method_code(class: &JvmClassFile, name: &str) -> Vec<u8> {
+        class
+            .methods
+            .iter()
+            .find(|m| m.name == name)
+            .and_then(|m| {
+                m.attributes.iter().find_map(|a| match a {
+                    JvmMethodAttribute::Code(c) => Some(c.code.clone()),
+                    _ => None,
+                })
+            })
+            .unwrap_or_else(|| panic!("method {name} has a Code attribute"))
     }
 
     #[test]

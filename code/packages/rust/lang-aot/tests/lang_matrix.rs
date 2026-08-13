@@ -5694,13 +5694,41 @@ fn run_jvm(p: &Prog) -> Option<RunResult> {
             code
         }
     };
+    // `max_stack` must count SLOTS, not values: `long` and `double` occupy two.
+    //
+    // The value path pushes `System.err` (1 slot) and then the entry's result on
+    // top of it, so a `()J` entry needs 3 — and the hardcoded 2 made the JVM
+    // reject the launcher outright with
+    //
+    //     VerifyError: (class: Main, method: main signature: ([Ljava/lang/String;)V)
+    //     Stack size too large
+    //
+    // which surfaces as `Error: Unable to initialize main class Main` — a message
+    // that says nothing about stack sizes and points at the emitted class rather
+    // than at the launcher this harness injects. Every Twig program whose entry
+    // returns a wide type failed that way.
+    //
+    // The discard path never holds two things at once: it pushes the result and
+    // immediately pops it, so its requirement is just the result's own width.
+    let result_slots = match ret.as_str() {
+        "J" | "D" => 2,
+        "V" => 0,
+        _ => 1,
+    };
+    // `print_refs` is `Some` exactly on the value path (`!prints`) — an I/O
+    // program prints for itself and the launcher discards the entry result.
+    let max_stack = if prints {
+        result_slots.max(1)
+    } else {
+        1 + result_slots // System.err beneath the value
+    };
     class.methods.push(JvmMethodInfo {
         access_flags: ACC_PUBLIC | ACC_STATIC,
         name: "main".into(),
         descriptor: "([Ljava/lang/String;)V".into(),
         attributes: vec![JvmMethodAttribute::Code(JvmCodeAttribute {
             name: "Code".into(),
-            max_stack: 2,
+            max_stack,
             max_locals: 1,
             code: main_code,
             nested_attributes: vec![],
