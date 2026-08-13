@@ -16,6 +16,7 @@ use core::fmt::{self, Display, Formatter};
 const SECRET_BYTES: usize = 32;
 const ENCODED_BYTES: usize = SECRET_BYTES * 2;
 const HEX: &[u8; 16] = b"0123456789abcdef";
+const LOCAL_OPERATOR_ID: &str = "operator:local";
 
 /// Stable payload-blind local authentication failure.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -114,6 +115,10 @@ impl SessionAuthorizer for LocalBearerAuthorizer {
     ) -> Result<bool, Self::Error> {
         Ok(true)
     }
+
+    fn requester_id<'a>(&self, _session: &'a Self::Session) -> &'a str {
+        LOCAL_OPERATOR_ID
+    }
 }
 
 /// Stable refusal from the placeholder channel-wiring trust boundary.
@@ -181,14 +186,18 @@ mod tests {
         let session = policy.authenticate(CREDENTIAL).unwrap();
         for operation in [
             Operation::RegisterHost,
+            Operation::ReloadHost,
             Operation::ListHosts,
             Operation::SetDesiredState,
             Operation::ReconcileOnce,
             Operation::HealthCheck,
             Operation::DeregisterHost,
+            Operation::WireHostPipeline,
+            Operation::UnwireHostPipeline,
         ] {
             assert!(policy.authorize(&session, operation).unwrap());
         }
+        assert_eq!(policy.requester_id(&session), LOCAL_OPERATOR_ID);
     }
 
     #[test]

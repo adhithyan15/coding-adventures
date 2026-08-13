@@ -12,5 +12,7 @@ websocket-runtime = { path = "../websocket-runtime" }
 
 [dev-dependencies]
 chief-of-staff-orchestrator-core = { path = "../chief-of-staff-orchestrator-core" }
+chief-of-staff-pipeline-bindings = { path = "../chief-of-staff-pipeline-bindings" }
 chief-of-staff-service-reconciler = { path = "../chief-of-staff-service-reconciler" }
 chief-of-staff-service-registry = { path = "../chief-of-staff-service-registry" }
+chief-of-staff-trust-checker = { path = "../chief-of-staff-trust-checker" }

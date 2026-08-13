@@ -265,6 +265,10 @@ mod tests {
         ) -> Result<bool, Self::Error> {
             Ok(true)
         }
+
+        fn requester_id<'a>(&self, _session: &'a Self::Session) -> &'a str {
+            "operator:test"
+        }
     }
 
     struct CountingControlPlane {
@@ -335,6 +339,24 @@ mod tests {
         }
 
         fn deregister_host(&mut self, _host_name: &HostName) -> Result<(), ControlPlaneError> {
+            Err(ControlPlaneError::NotFound)
+        }
+
+        fn wire_host_pipeline(
+            &mut self,
+            _context: &chief_of_staff_trust_checker::TrustRequestContext,
+            _binding: chief_of_staff_pipeline_bindings::HostPipelineBinding,
+        ) -> Result<chief_of_staff_pipeline_bindings::LoadedHostPipelineBinding, ControlPlaneError>
+        {
+            Err(ControlPlaneError::Internal)
+        }
+
+        fn unwire_host_pipeline(
+            &mut self,
+            _context: &chief_of_staff_trust_checker::TrustRequestContext,
+            _host_name: &HostName,
+        ) -> Result<Option<chief_of_staff_pipeline_bindings::HostPipelineBinding>, ControlPlaneError>
+        {
             Err(ControlPlaneError::NotFound)
         }
     }
