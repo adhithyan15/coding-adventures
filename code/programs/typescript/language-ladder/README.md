@@ -711,6 +711,12 @@ left-to-right shirorekhā. Its Noto Sans Devanagari fit preserves Opiaterein's
 22-frame animation and two lifts; the Central Hindi Directorate's learner
 deskbook corroborates component order while staging the joined first body across
 more buildup steps. This completes the source-verified Devanagari starter set.
+The two-frame Cyrillic **а** filmstrip sweeps over the upper shoulder and
+counterclockwise around the round lower body, then continues down the right-hand
+finishing stem without lifting. RussianIrina's native-teacher all-letter lesson
+demonstrates the one-run lowercase school hand at 00:50–00:55; the Noto Sans
+Cyrillic fit preserves its zero-lift single-storey motion while routing the
+entry through the bundled font's extra double-storey printed shoulder.
 The runtime resolves each cited path back to the owning script and lazily loads that
 script's font, while Tamil continues to use Noto Sans Tamil. Unverified letters
 still fall back to the numbered prose list, unchanged. Extending the coverage is HL-C09,

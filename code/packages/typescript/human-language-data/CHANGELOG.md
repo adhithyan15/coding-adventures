@@ -90,6 +90,12 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
 
 ## [Unreleased]
 
+### Added - source-verified Cyrillic а (HL-C09DZ)
+
+- Verify lowercase а as one continuous body-to-stem run with zero lifts against RussianIrina's native-teacher all-letter handwriting lesson.
+- Preserve the source's single-storey school-hand motion while fitting the upper entry through Noto Sans Cyrillic's extra double-storey printed shoulder.
+- Break the tied Cyrillic/Gujarati queue, establish a source that covers all 33 Russian letters, and reduce measured HL-C09 debt to 102 entries.
+
 ### Added - source-verified Devanagari ह (HL-C09DY)
 
 - Verify ह as three ordered strokes with two lifts against Opiaterein's 22-frame animation; the Central Hindi Directorate independently corroborates the same component order.

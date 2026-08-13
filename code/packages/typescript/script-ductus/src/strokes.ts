@@ -9,6 +9,7 @@
 
 import arabic from "../../../../learning/human-languages/data/scripts/arabic.json";
 import chinese from "../../../../learning/human-languages/data/scripts/chinese.json";
+import cyrillic from "../../../../learning/human-languages/data/scripts/cyrillic.json";
 import devanagari from "../../../../learning/human-languages/data/scripts/devanagari.json";
 import hebrew from "../../../../learning/human-languages/data/scripts/hebrew.json";
 import persoArabic from "../../../../learning/human-languages/data/scripts/perso-arabic.json";
@@ -209,6 +210,14 @@ const chineseCharacterSource = (glyph: string): StrokeSource => {
   return letter.strokeOrderSource;
 };
 
+const cyrillicAlphabetSource = (glyph: string): StrokeSource => {
+  const letter = cyrillic.letters.find((candidate) => candidate.glyph === glyph);
+  if (!letter || !("strokeOrderSource" in letter) || !letter.strokeOrderSource) {
+    throw new Error(`Cyrillic ${glyph} has no verified source`);
+  }
+  return letter.strokeOrderSource;
+};
+
 const devanagariAlphabetSource = (glyph: string): StrokeSource => {
   const letter = devanagari.letters.find((candidate) => candidate.glyph === glyph);
   if (!letter || !("strokeOrderSource" in letter) || !letter.strokeOrderSource) {
@@ -252,6 +261,11 @@ export const ductusKey = (script: string, glyph: string): string => `${script}:$
 // glyph (shape) and against `source` (order), not trusted because they look
 // plausible here.
 //
+// RussianIrina's all-letter school-hand video forms lowercase Cyrillic а as
+// one continuous round loop and right-hand finishing stem. The source's
+// handwritten form is single-storey; this learner path preserves that one-run
+// motion while widening the entry to cover Noto Sans Cyrillic's extra printed
+// upper shoulder before circling the lower bowl and descending the right stem.
 // Arabic ا opens the smallest remaining starter inventory from the University
 // of Oregon's instructional video: one top-to-bottom movement with no lift.
 // Its scoped key preserves Arabic provenance separately from the Persian and
@@ -2954,6 +2968,43 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       ] }] },
     ],
     source: devanagariAlphabetSource("ह"),
+  },
+  // The native-teacher demonstration keeps lowercase а in one pen-down run:
+  // its rounded body closes at the right and flows into the finishing stem.
+  // Noto Sans Cyrillic uses a double-storey printed outline, so the source's
+  // opening loop is fitted through the font's extra shoulder without adding a
+  // lift that the handwriting demonstration does not contain.
+  [ductusKey("cyrillic", "а")]: {
+    script: "cyrillic",
+    glyph: "а",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "sweep over the shoulder and around the round body",
+            path: [
+              { x: 110, y: 455 }, { x: 155, y: 495 }, { x: 215, y: 515 },
+              { x: 285, y: 515 }, { x: 345, y: 490 }, { x: 395, y: 445 },
+              { x: 420, y: 395 }, { x: 420, y: 345 }, { x: 390, y: 305 },
+              { x: 325, y: 300 }, { x: 250, y: 300 }, { x: 175, y: 300 },
+              { x: 145, y: 285 }, { x: 95, y: 245 }, { x: 75, y: 190 },
+              { x: 85, y: 125 }, { x: 120, y: 70 }, { x: 175, y: 35 },
+              { x: 240, y: 25 }, { x: 305, y: 45 }, { x: 355, y: 85 },
+              { x: 395, y: 140 }, { x: 420, y: 205 }, { x: 420, y: 265 },
+              { x: 420, y: 305 },
+            ],
+          },
+          {
+            label: "continue down the right-hand finishing stem",
+            path: [
+              { x: 420, y: 305 }, { x: 430, y: 250 }, { x: 435, y: 190 },
+              { x: 435, y: 125 }, { x: 435, y: 65 }, { x: 440, y: 20 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: cyrillicAlphabetSource("а"),
   },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
