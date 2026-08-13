@@ -2699,6 +2699,37 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: devanagariAlphabetSource("भ"),
   },
+  // JackPotte's animation joins the descending left stem directly to the
+  // clockwise lower loop and rightward crossbar, then separately descends the
+  // right stem and finishes the headline. The Central Hindi Directorate
+  // deskbook confirms the component order but stages the left stem and lower
+  // body separately: three animation-backed strokes, two lifts.
+  [ductusKey("devanagari", "म")]: {
+    script: "devanagari",
+    glyph: "म",
+    strokes: [
+      { segments: [{ label: "descend the left stem, circle clockwise through the loop, and sweep right", path: [
+        { x: 166, y: 551 }, { x: 166, y: 475 }, { x: 166, y: 405 },
+        { x: 166, y: 350 }, { x: 167, y: 315 }, { x: 167, y: 265 },
+        { x: 161, y: 220 }, { x: 135, y: 188 }, { x: 100, y: 184 },
+        { x: 80, y: 215 }, { x: 55, y: 242 }, { x: 57, y: 278 },
+        { x: 75, y: 300 }, { x: 110, y: 285 }, { x: 150, y: 285 },
+        { x: 200, y: 285 }, { x: 255, y: 285 }, { x: 315, y: 285 },
+        { x: 370, y: 285 }, { x: 405, y: 285 },
+      ] }] },
+      { segments: [{ label: "lift, then descend the right stem", path: [
+        { x: 468, y: 551 }, { x: 468, y: 475 }, { x: 468, y: 395 },
+        { x: 468, y: 315 }, { x: 468, y: 235 }, { x: 468, y: 155 },
+        { x: 468, y: 75 }, { x: 468, y: 5 },
+      ] }] },
+      { segments: [{ label: "lift, then draw the shirorekha left-to-right", path: [
+        { x: 5, y: 585 }, { x: 85, y: 585 }, { x: 165, y: 585 },
+        { x: 245, y: 585 }, { x: 325, y: 585 }, { x: 405, y: 585 },
+        { x: 485, y: 585 }, { x: 610, y: 585 },
+      ] }] },
+    ],
+    source: devanagariAlphabetSource("म"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the
