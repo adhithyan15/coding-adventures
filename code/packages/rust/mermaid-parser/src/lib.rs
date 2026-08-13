@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.74.0";
+pub const VERSION: &str = "0.75.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -1663,11 +1663,38 @@ fn upsert_state_note_node(
 fn apply_state_style(
     style: &mut DiagramStyle,
     property: &str,
-    value: &Token,
+    values: &[Token],
 ) -> Result<(), ParseError> {
-    match property.to_ascii_lowercase().as_str() {
-        "fill" => style.fill = Some(value.value.clone()),
+    let value = &values[0];
+    let property = property.to_ascii_lowercase();
+    if !matches!(property.as_str(), "border" | "font-family") && values.len() != 1 {
+        return Err(token_error(
+            value,
+            format!("state style property {property:?} requires one value"),
+        ));
+    }
+    match property.as_str() {
+        "fill" | "background" => style.fill = Some(value.value.clone()),
         "stroke" => style.stroke = Some(value.value.clone()),
+        "border" => {
+            if values.len() != 3 || !values[1].value.eq_ignore_ascii_case("solid") {
+                return Err(token_error(
+                    value,
+                    "state border must be '<width> solid <color>'",
+                ));
+            }
+            let width = value
+                .value
+                .strip_suffix("px")
+                .unwrap_or(&value.value)
+                .parse::<f64>()
+                .map_err(|_| token_error(value, "invalid state border width"))?;
+            if width <= 0.0 {
+                return Err(token_error(value, "state border width must be positive"));
+            }
+            style.stroke_width = Some(width);
+            style.stroke = Some(values[2].value.clone());
+        }
         "color" => style.text_color = Some(value.value.clone()),
         "stroke-width" => {
             let width = value
@@ -1719,7 +1746,11 @@ fn apply_state_style(
             });
         }
         "font-family" => {
-            let family = strip_state_string(&value.value);
+            let family = values
+                .iter()
+                .map(|token| strip_state_string(&token.value))
+                .collect::<Vec<_>>()
+                .join(" ");
             if family.trim().is_empty() {
                 return Err(token_error(value, "state font family cannot be empty"));
             }
@@ -1744,11 +1775,23 @@ fn parse_state_style_assignments(
         cursor.consume_if("COLON").ok_or_else(|| {
             token_error(cursor.current(), "expected ':' in state style assignment")
         })?;
-        let value = cursor.advance().clone();
-        if !matches!(token_name(&value), "HASH_COLOR" | "ID" | "WORD" | "STRING") {
-            return Err(token_error(&value, "expected state style value"));
+        let mut values = Vec::new();
+        while !cursor.at_eof()
+            && !matches!(
+                token_name(cursor.current()),
+                "COMMA" | "NEWLINE" | "SEMICOLON"
+            )
+        {
+            let value = cursor.advance().clone();
+            if !matches!(token_name(&value), "HASH_COLOR" | "ID" | "WORD" | "STRING") {
+                return Err(token_error(&value, "expected state style value"));
+            }
+            values.push(value);
         }
-        apply_state_style(style, &property, &value)?;
+        if values.is_empty() {
+            return Err(token_error(cursor.current(), "expected state style value"));
+        }
+        apply_state_style(style, &property, &values)?;
         if cursor.consume_if("COMMA").is_none() {
             return Ok(());
         }
@@ -4571,6 +4614,24 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     }
 
     #[test]
+    fn state_lowers_background_and_border_style_aliases() {
+        let diagram = parse_state_diagram(
+            "stateDiagram-v2\nclassDef emphasized background:  #bbb,border:1.5px solid red\nReady:::emphasized --> Done\n",
+        )
+        .expect("CSS-like state style aliases should parse");
+
+        let ready = diagram
+            .nodes
+            .iter()
+            .find(|node| node.id == "Ready")
+            .expect("styled state node");
+        let style = ready.style.as_ref().expect("resolved state style");
+        assert_eq!(style.fill.as_deref(), Some("#bbb"));
+        assert_eq!(style.stroke.as_deref(), Some("red"));
+        assert_eq!(style.stroke_width, Some(1.5));
+    }
+
+    #[test]
     fn state_resolves_reusable_style_classes() {
         let diagram = parse_state_diagram(
             "stateDiagram-v2\nclass Ready,Waiting warning\nclassDef warning fill:#fef3c7,stroke:#92400e,color:#451a03,stroke-width:2px\nReady --> Waiting\n",
@@ -5709,7 +5770,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.74.0");
+        assert_eq!(crate::VERSION, "0.75.0");
     }
 
     #[test]

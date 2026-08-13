@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.75.0
+
+- Lower Mermaid state `background` and CSS-like solid `border` styles into backend-neutral graph fill, stroke, and stroke-width fields.
+
 ## 0.74.0
 
 - Preserve quoted or unquoted state `font-family` declarations in graph IR.
