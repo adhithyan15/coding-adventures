@@ -6131,22 +6131,28 @@ fn run(backend: Backend, p: &Prog) -> Option<RunResult> {
 
 /// Assert a single matrix cell agrees with the program's known result.
 fn assert_cell(backend: Backend, p: &Prog, result: RunResult) {
+    // Every message names the *source*, not just the language and index. A bare
+    // "Twig: expected exit 42, got 73" tells you a cell is red; it does not tell you
+    // which of forty-seven Twig programs, and mapping an index back to a literal in a
+    // 9000-line array by hand is how a diagnosis turns into an afternoon.
     match (&p.expect, result) {
         (Expect::Exit(n), RunResult::Completed { code, stdout }) => assert_eq!(
             code,
             Some(*n),
-            "{backend:?} {:?}: expected exit {n}, got {code:?} (stdout {stdout:?})",
-            p.lang
+            "{backend:?} {:?}: expected exit {n}, got {code:?} (stdout {stdout:?})\nsource: {:?}",
+            p.lang,
+            p.src
         ),
         (Expect::Stdout(s), RunResult::Completed { stdout, .. }) => assert_eq!(
             stdout, *s,
-            "{backend:?} {:?}: expected stdout {s:?}, got {stdout:?}",
-            p.lang
+            "{backend:?} {:?}: expected stdout {s:?}, got {stdout:?}\nsource: {:?}",
+            p.lang,
+            p.src
         ),
         (Expect::Trap, RunResult::Trapped) => {}
         (expect, other) => panic!(
-            "{backend:?} {:?}: expected {expect:?}, got {other:?}",
-            p.lang
+            "{backend:?} {:?}: expected {expect:?}, got {other:?}\nsource: {:?}",
+            p.lang, p.src
         ),
     }
 }
@@ -6156,19 +6162,62 @@ fn assert_cell(backend: Backend, p: &Prog, result: RunResult) {
 /// gracefully; a cell whose toolchain is present but disagrees fails loudly.
 #[test]
 fn matrix_every_proven_cell_agrees() {
+    // Default behaviour is fail-fast: the first bad cell panics and the run stops,
+    // which is what CI wants. But when you are *repairing* the matrix, fail-fast
+    // means one 6-minute run per cell — and it hides how many siblings share a root
+    // cause, which is exactly the information that tells you whether you're looking
+    // at one backend bug or twenty. `LANG_MATRIX_REPORT_ALL=1` runs every cell,
+    // collects the failures, and reports them together at the end. The test still
+    // fails; it just tells you everything at once.
+    let report_all = std::env::var_os("LANG_MATRIX_REPORT_ALL").is_some();
     let mut ran = 0usize;
     let mut skipped = 0usize;
-    for p in PROGRAMS {
+    let mut failures: Vec<String> = Vec::new();
+    for (i, p) in PROGRAMS.iter().enumerate() {
         for &backend in p.backends {
-            let Some(result) = run(backend, p) else {
+            let cell = if report_all {
+                // A failing runner panics by design (`cell_failed`), so collecting
+                // rather than aborting means catching the unwind. The hook is
+                // silenced only for the duration of the sweep so the collected
+                // report is the single source of output.
+                let hook = std::panic::take_hook();
+                std::panic::set_hook(Box::new(|_| {}));
+                let caught = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+                    run(backend, p).map(|r| {
+                        assert_cell(backend, p, r);
+                    })
+                }));
+                std::panic::set_hook(hook);
+                match caught {
+                    Ok(outcome) => outcome,
+                    Err(e) => {
+                        let msg = e
+                            .downcast_ref::<String>()
+                            .cloned()
+                            .or_else(|| e.downcast_ref::<&str>().map(|s| (*s).to_string()))
+                            .unwrap_or_else(|| "<non-string panic>".to_string());
+                        failures.push(format!("── cell #{i} {backend:?} {:?}\n{msg}", p.lang));
+                        ran += 1;
+                        continue;
+                    }
+                }
+            } else {
+                run(backend, p).map(|r| assert_cell(backend, p, r))
+            };
+            if cell.is_none() {
                 skipped += 1;
                 continue;
-            };
-            assert_cell(backend, p, result);
+            }
             ran += 1;
         }
     }
     eprintln!("lang-matrix: {ran} proven cells exercised, {skipped} skipped");
+    if !failures.is_empty() {
+        for f in &failures {
+            eprintln!("{f}");
+        }
+        panic!("{} matrix cells failed (LANG_MATRIX_REPORT_ALL sweep)", failures.len());
+    }
 
     // The skip invariant. After `cell_failed`, a runner returns `None` for exactly
     // one reason: its `*_ok()` gate said the host has no such toolchain. So on a host

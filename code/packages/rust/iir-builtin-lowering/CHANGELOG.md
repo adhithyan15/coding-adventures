@@ -1,5 +1,54 @@
 # Changelog — iir-builtin-lowering
 
+## 0.34.0 - 2026-08-12 - closure calling convention + chained dynamic arithmetic
+
+Two confirmed miscompiles, both instances of the same bug class as 0.32.0 and
+0.33.0: **a value's recorded type did not describe what the value actually is
+after lowering.** Both reproduced only on the tagged-word backends (native-AOT
+and LLVM), because a backend whose `box` is the identity cannot tell the two
+representations apart — which is why the generic VM computed the right answer
+and agreed with nobody.
+
+### `closure_heap` — the cons chain held two representations at once
+
+A closure's captures and arguments travel through a cons chain, and a cons cell
+holds tagged `DynValue`s, so a raw-model (Twig/Nib) value must be boxed on the
+way in. That boxing was left to `dyn_repr`, which boxes what it can *prove* is
+raw: it proved a captured literal (`41` went in as the tagged word `328`) and
+could not prove a captured bare-`any` parameter (which went in untagged). The
+chain then held both forms and no single extraction rule was right for both.
+
+Symptoms, all silent wrong answers rather than crashes:
+
+* `((lambda (x) (+ x 1)) 41)` exited **73** — `(41 << 3) + 1 = 329`, `& 0xFF`.
+* `(((lambda (x) (lambda (y) (+ x y))) 40) 2)` exited **80**.
+* `(((lambda (a b) (lambda (c) (+ (+ a b) c))) 10 20) 12)` exited **252**.
+
+`lower_closures_to_heap` now owns *both* ends of the representation, gated on
+the same `is_lisp_language` test `dyn_repr`/`dynamic_arith` use for the same
+ambiguity: for a raw-model module it boxes every capture and argument into the
+chain explicitly and unboxes every value the dispatcher pulls back out. A lisp
+module is unchanged — its bodies genuinely take and return tagged words, so
+nothing is inserted.
+
+### `dynamic_arith` — the pass misread its own output
+
+`producer_types` was seeded once from the incoming instructions and never
+updated, but every dynamic op this pass rewrites ends in `box … : ref<any>`.
+So a *nested* expression classified the inner result by its pre-pass hint — the
+frontend's bare `any`, which for a non-lisp module means raw — and added the
+tagged word directly. `(+ (+ a b) c)` with `a,b,c = 10,20,12` computed
+`(30 << 3) + 12 = 252`.
+
+The map is now updated as the rewrite proceeds, so a later operand in the same
+function sees the boxed type its producer actually has.
+
+### Tests
+
+Three new unit tests pin the invariants: chained dynamic arithmetic emits
+exactly one unbox and it consumes the inner result; a raw-model closure boxes
+into the chain and unboxes out of it; a lisp-model closure does neither.
+
 ## 0.33.0 - 2026-08-12 - `dyn_car`/`dyn_cons`/`dyn_cdr` retype fix (boxed-`car` arithmetic miscompiled)
 
 Fixes a second, closely-related confirmed bug: `(+ (car (cons 41 0)) 1)` returned
