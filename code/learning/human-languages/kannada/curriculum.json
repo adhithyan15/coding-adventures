@@ -37,6 +37,25 @@
       "after": []
     },
     {
+      "id": "KA-PATH-100",
+      "spine_node": "SPINE-MEET-GREET",
+      "lessons": [
+        "KA-S01-letter-na",
+        "KA-S02-vowel-sign-u",
+        "KA-S03-sign-virama",
+        "KA-S04-vowel-sign-i",
+        "KA-S05-letter-ta",
+        "KA-S06-letter-da",
+        "KA-S07-letter-ra",
+        "KA-S08-vowel-sign-aa"
+      ],
+      "before": [],
+      "inline": [
+        "KA-EXT-100-SCRIPT-RECOGNITION"
+      ],
+      "after": []
+    },
+    {
       "id": "KA-PATH-004",
       "spine_node": "SPINE-EXCHANGE-NAMES",
       "lessons": [
@@ -429,7 +448,8 @@
   "spine": {
     "SPINE-MEET-GREET": {
       "segments": [
-        "KA-PATH-001"
+        "KA-PATH-001",
+        "KA-PATH-100"
       ],
       "omits": [
         "GREETING-FORMAL",
@@ -787,6 +807,24 @@
     }
   },
   "extensions": [
+    {
+      "id": "KA-EXT-100-SCRIPT-RECOGNITION",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can pick out each of these Kannada characters inside the words I already say, and copy its shape by tracing.",
+      "prerequisites": [],
+      "lessons": [
+        "KA-S01-letter-na",
+        "KA-S02-vowel-sign-u",
+        "KA-S03-sign-virama",
+        "KA-S04-vowel-sign-i",
+        "KA-S05-letter-ta",
+        "KA-S06-letter-da",
+        "KA-S07-letter-ra",
+        "KA-S08-vowel-sign-aa"
+      ]
+    },
     {
       "id": "KA-EXT-009-LANGUAGE-SPECIFIC",
       "stage": "pre-A1",

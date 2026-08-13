@@ -565,6 +565,43 @@ orders letters by payoff and records the order as a per-script letter ledger.
 | HL-C119 | **In progress** — nine Tamil one-letter segments authored and rendering (#11188); Hindi not started | Redistribute the script strands that already exist. Tamil's twenty `TA-W*` lessons are good material clustered at `sequence: 270`; Hindi's eleven include `HI-W01-shirorekha-na-ma`, the steepest lesson in the corpus at twelve glyphs. Both are re-cut into one-letter segments across the early sequences. | The prose survives the re-cut; each segment teaches exactly one letter; `drivablePercent` **does not fall** when the detachable writing segments land, which is the design's own falsification test. |
 | HL-C120 | Not started | Author the missing script strand for Telugu, Kannada, Malayalam and Sanskrit, which have none, and migrate the six tracks' 233 schema-v1 lessons so they enter the gates at all. Fix the 30–34 lessons per track that carry no `sequence` — until that is done, no claim in HL11 is verifiable, because every one of them is a claim about order. | Closure violations reach zero per track; `firstWritableWord` lands near sequence 50; every book still builds and every `check:*` still passes. |
 
+| HL-C119 | Not started | Redistribute the script strands that already exist. Tamil's twenty `TA-W*` lessons are good material clustered at `sequence: 270`; Hindi's eleven include `HI-W01-shirorekha-na-ma`, the steepest lesson in the corpus at twelve glyphs. Both are re-cut into one-letter segments across the early sequences. | The prose survives the re-cut; each segment teaches exactly one letter; `drivablePercent` **does not fall** when the detachable writing segments land, which is the design's own falsification test. |
+| HL-C120 | **In progress** — 30 recognition segments landed for Telugu, Kannada, Malayalam and Sanskrit (the four that taught nothing); schema-v1 migration and the missing `sequence` values not started | Author the missing script strand for Telugu, Kannada, Malayalam and Sanskrit, which have none, and migrate the six tracks' 233 schema-v1 lessons so they enter the gates at all. Fix the 30–34 lessons per track that carry no `sequence` — until that is done, no claim in HL11 is verifiable, because every one of them is a claim about order. | Closure violations reach zero per track; `firstWritableWord` lands near sequence 50; every book still builds and every `check:*` still passes. |
+
+## Findings from HL-C120, payment one — the four silent tracks
+
+- **What was actually wrong was worse than "no writing lessons."** Telugu,
+  Kannada and Malayalam do not merely lack a writing strand; their script files
+  carry no stroke order at all (0 of 455, 455 and 468 letters) and no component
+  decomposition — every `components` entry is the syllable restating itself. So
+  there was nothing to build a writing lesson out of, which is why four tracks
+  had none rather than a few.
+- **Recognition is a rung, not a consolation prize.** HL12 §2.2's decoding ladder
+  is recognition before production at every step, so the 30 segments teach the
+  eye and ask the pen only to trace a printed shape. Tracing needs no citation;
+  "start here, go this way" does. When HL-C118 sources the stroke orders, writing
+  segments slot in behind these without moving them.
+- **The corpus already had the placement answer and nobody had asked it.**
+  Measured both ways rather than argued: second-in-chapter costs 11 lessons from
+  the drivable prefixes, last-in-chapter costs zero. The drivable prefix ends at
+  the first lesson needing eyes, so a segment at the front truncates its whole
+  chapter and one at the back truncates nothing.
+- **A gentleness budget caught a real regression before it shipped.** Sanskrit's
+  chapter 7 sat at exactly 12 atoms of 12, and a segment tipped it to 13. The
+  generator now refuses any chapter that cannot afford one more atom, so Sanskrit
+  takes six segments and its chapters 6 and 7 take none. The first version of
+  that check silently passed everything because it read `introduces.knowledge` as
+  an unindented key — the frontmatter nests one level in the FILE and only the
+  parser flattens it to a dotted key.
+- **A missing glyph is invisible in a passing build.** All four books built with
+  exit 0, zero overfull and zero underfull — and 184 `Missing character`
+  warnings, every one of them U+25CC, printing nothing where the character being
+  taught should have been. Caught by grepping the log for the one warning class
+  the usual three do not cover.
+- **Still open on this row**: the six tracks' schema-v1 lessons, the 30-34
+  per track carrying no `sequence`, and the rest of each letter ledger — 24
+  positions authored, 6-8 taught.
+
 ## Findings from HL-C117
 
 - The ledgers exist for all five scripts and the validator runs clean against the

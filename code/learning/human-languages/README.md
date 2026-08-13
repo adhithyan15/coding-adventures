@@ -135,9 +135,9 @@ enter cross-language review only after focused retrieval.
 | [Arabic](./arabic/README.md) | Semitic / Arabic | 100 | 98 | 36 chapters; through Ch. 36; 34 generated |
 | [Hindi](./hindi/README.md) | Indo-Aryan / Devanagari | 109 | 103 | 39 chapters; through Ch. 39; 34 generated |
 | [Tamil](./tamil/README.md) | Dravidian / Tamil | 141 | 137 | 39 chapters; through Ch. 39; 34 generated |
-| [Kannada](./kannada/README.md) | Dravidian / Kannada | 88 | 84 | 40 chapters; through Ch. 40; 35 generated |
-| [Telugu](./telugu/README.md) | Dravidian / Telugu | 87 | 83 | 40 chapters; through Ch. 40; 35 generated |
-| [Malayalam](./malayalam/README.md) | Dravidian / Malayalam | 93 | 89 | 40 chapters; through Ch. 40; 35 generated |
+| [Kannada](./kannada/README.md) | Dravidian / Kannada | 96 | 92 | 40 chapters; through Ch. 40; 35 generated |
+| [Telugu](./telugu/README.md) | Dravidian / Telugu | 95 | 91 | 40 chapters; through Ch. 40; 35 generated |
+| [Malayalam](./malayalam/README.md) | Dravidian / Malayalam | 101 | 97 | 40 chapters; through Ch. 40; 35 generated |
 | [Italian](./italian/README.md) | Romance / Latin | 88 | 87 | 25 chapters; through Ch. 25; 24 generated |
 | [Portuguese](./portuguese/README.md) | Romance / Latin | 96 | 95 | 26 chapters; through Ch. 26; 25 generated |
 | [Marathi](./marathi/README.md) | Indo-Aryan / Devanagari | 62 | 57 | 13 chapters; through Ch. 13; 8 generated |
@@ -145,7 +145,7 @@ enter cross-language review only after focused retrieval.
 | [Bengali](./bengali/README.md) | Indo-Aryan / Bengali | 70 | 66 | 15 chapters; through Ch. 15; 10 generated |
 | [Gujarati](./gujarati/README.md) | Indo-Aryan / Gujarati | 59 | 55 | 12 chapters; through Ch. 12; 7 generated |
 | [Russian](./russian/README.md) | Slavic / Cyrillic | 64 | 56 | 13 chapters; through Ch. 13; 11 generated |
-| [Sanskrit](./sanskrit/README.md) | Indo-Aryan / Devanagari | 59 | 56 | 13 chapters; through Ch. 13; 8 generated |
+| [Sanskrit](./sanskrit/README.md) | Indo-Aryan / Devanagari | 65 | 62 | 13 chapters; through Ch. 13; 8 generated |
 | [Persian](./persian/README.md) | Iranian / Perso-Arabic | 59 | 59 | 14 chapters; through Ch. 14; 12 generated |
 | [Urdu](./urdu/README.md) | Indo-Aryan / Urdu-Nastaliq | 59 | 59 | 15 chapters; through Ch. 15; 13 generated |
 | [Mandarin Chinese](./chinese/README.md) | Sinitic / Chinese | 7 | 7 | 1 chapter; through Ch. 1; 1 generated |

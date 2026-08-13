@@ -892,6 +892,26 @@ describe("corpus regression", () => {
     // impossible to begin in the car, which `unstartableChapters` caught at 174.
     // Each now sits immediately before the word-writing lesson that uses its
     // letter, inside a chapter whose prefix a writing lesson had already ended.
+    //
+    // HL12 then added 30 recognition segments to Telugu, Kannada, Malayalam and
+    // Sanskrit, and the same falsification test still passes on the number that
+    // matters: `drivablePrefixTotal` is UNCHANGED at 1136. Not one existing
+    // lesson fell out of the run a commuter can do before hitting something that
+    // needs eyes, and `unstartableChapters` holds at 173 -- no segment opens a
+    // chapter.
+    //
+    // Two numbers do move, and both are the honest cost rather than a
+    // regression. `pen` rises by exactly the 30 new segments, taking
+    // `drivablePercent` from 68 to 67 -- a larger denominator, not fewer
+    // drivable lessons, which is why `drivableLessons` is unchanged at 1336. And
+    // `fullyDrivableChapters` falls 489 -> 472, because a chapter that teaches a
+    // letter now contains something that cannot be done at the wheel. It is
+    // 17 rather than 30 because 13 of those chapters already held a sight lesson.
+    //
+    // Placing each segment LAST in its chapter is what buys the unchanged
+    // prefix. Second-in-chapter was measured too and cost 11 prefix lessons: the
+    // prefix ends at the first lesson needing eyes, so a segment at the front
+    // truncates its whole chapter and one at the back truncates nothing.
     expect(manifest.summary).toEqual({
       // Both Spanish B1 chapters, 38 and 41, are entirely ear-only, so each is fully
       // drivable. They moved the whole-corpus figure from 66% to 67% — then the
@@ -921,7 +941,7 @@ describe("corpus regression", () => {
       // that point — ஏ, ஐ, ஒ and the ten digits ௧-௰ — and exhausting the runway that
       // existed after it. Chapter 39 below then extends the track and teaches ஒ,
       // leaving twelve.
-      totalLessons: 1975, // +3: HL-C97 adds the repair kit (no entiendo, mas despacio) at chapter 14 // +40: vocabulary wave 5 (persian 12, telugu 13, malayalam 15) // +4: HL-C88 slices 5-6 // +1: HL-C88 slice 7 (ES-C09-ncia) // +3: HL-C88 slice 8 (-ario, review, synthesis) // +54: vocabulary wave 6 (russian 14, persian 14, urdu 13, bengali 13) // +1: HL-C88 slice 9 (falsos amigos) // +3: B1 si-condition rung // +3: HL-C113 preterite plural // +4: HL-C113 preterite close (strong plurals, review, synthesis) // +2: HL-C113 imperfect subjunctive // +3: HL-C113 unreal condition // HL-C113 step 7: +4 // HL-C113 step 8: +3
+      totalLessons: 2005, // +3: HL-C97 adds the repair kit (no entiendo, mas despacio) at chapter 14 // +40: vocabulary wave 5 (persian 12, telugu 13, malayalam 15) // +4: HL-C88 slices 5-6 // +1: HL-C88 slice 7 (ES-C09-ncia) // +3: HL-C88 slice 8 (-ario, review, synthesis) // +54: vocabulary wave 6 (russian 14, persian 14, urdu 13, bengali 13) // +1: HL-C88 slice 9 (falsos amigos) // +3: B1 si-condition rung // +3: HL-C113 preterite plural // +4: HL-C113 preterite close (strong plurals, review, synthesis) // +2: HL-C113 imperfect subjunctive // +3: HL-C113 unreal condition // HL-C113 step 7: +4 // HL-C113 step 8: +3
       // Chapters 10 and 13 replace wide legacy tables with small singular-only
       // comparisons, so three more lessons move from sight to voice.
       // All seven Chapter-16 teaching steps are voice-first. Generating the book
@@ -964,11 +984,11 @@ describe("corpus regression", () => {
       // +2: both new lessons are `type: writing`. voice, sight, drivableLessons,
       // drivablePrefixTotal, fullyDrivableChapters and unstartableChapters ALL hold —
       // this tranche adds lessons and removes no inline section, so nothing flips.
-      pen: 78,
+      pen: 108,
       // +6: exactly the six lessons that moved sight -> voice; no other lesson changes.
       // +8: exactly the eight lessons that moved sight -> voice.
       drivableLessons: 1336, // +35: vocabulary wave 5 // +3: HL-C88 slices 5-6 // +1: HL-C88 slice 7 (ES-C09-ncia) // +3: HL-C88 slice 8 (-ario, review, synthesis) // +36: vocabulary wave 6 // +1: HL-C88 slice 9 (falsos amigos) // +3: B1 si-condition rung // +3: HL-C113 preterite plural // +4: HL-C113 preterite close (strong plurals, review, synthesis) // +2: HL-C113 imperfect subjunctive // +3: HL-C113 unreal condition // HL-C113 step 7: +2 -- the review and synthesis narrate; 214 and 215 are sight-cue, being ABOUT written marks // HL-C113 step 8: +3
-      drivablePercent: 68, // +1: vocabulary wave 5's lessons are mostly ear-only
+      drivablePercent: 67, // +1: vocabulary wave 5's lessons are mostly ear-only
       trackCount: 22,
       chapterCount: 720, // +15: vocabulary wave 5 (persian +3, telugu +6, malayalam +6) // +4: HL-C88 slices 5-6 // +1: HL-C88 slice 7 (ES-C09-ncia) // +3: HL-C88 slice 8 (-ario, review, synthesis) // +12: vocabulary wave 6 // +1: HL-C88 slice 9 (falsos amigos) // +3: B1 si-condition rung // +3: HL-C113 preterite plural // +4: HL-C113 preterite close (strong plurals, review, synthesis) // +2: HL-C113 imperfect subjunctive // +3: HL-C113 unreal condition // HL-C113 step 7: +4 // HL-C113 step 8: +3
       // Prerequisite order still costs a commuter 132 of the 965 ear-only lessons:
@@ -1028,7 +1048,7 @@ describe("corpus regression", () => {
       // classifies a `type: writing` lesson as pen without reading its body, so all four
       // record `coreDrivable: false`. It holds because the six lessons that flipped were
       // already core-drivable and the four new ones were never counted.
-      fullyDrivableChapters: 489, // +6: shorter chapters are more often drivable end to end // +10: vocabulary wave 5's new chapters // +3: HL-C88 slices 5-6 // +1: HL-C88 slice 7 (ES-C09-ncia) // +3: HL-C88 slice 8 (-ario, review, synthesis) // +5: vocabulary wave 6 // +1: HL-C88 slice 9 (falsos amigos) // +3: B1 si-condition rung // +3: HL-C113 preterite plural // +4: HL-C113 preterite close (strong plurals, review, synthesis) // +2: HL-C113 imperfect subjunctive // +3: HL-C113 unreal condition // HL-C113 step 7: +2 // HL-C113 step 8: +3
+      fullyDrivableChapters: 472, // +6: shorter chapters are more often drivable end to end // +10: vocabulary wave 5's new chapters // +3: HL-C88 slices 5-6 // +1: HL-C88 slice 7 (ES-C09-ncia) // +3: HL-C88 slice 8 (-ario, review, synthesis) // +5: vocabulary wave 6 // +1: HL-C88 slice 9 (falsos amigos) // +3: B1 si-condition rung // +3: HL-C113 preterite plural // +4: HL-C113 preterite close (strong plurals, review, synthesis) // +2: HL-C113 imperfect subjunctive // +3: HL-C113 unreal condition // HL-C113 step 7: +2 // HL-C113 step 8: +3
       // Tamil chapter 2, Spanish chapter 13, and Spanish chapter 18 can now start by ear.
       // -1: Tamil chapter 3 alone. It was unstartable because its first lesson needed
       // eyes; it now starts by ear. No other chapter moves.
