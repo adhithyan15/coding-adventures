@@ -404,8 +404,12 @@ Prioritized work items:
    foreign mismatch and ordinary-scope error at those same integration
    boundaries while keeping following content inside the foreign boundary and
    older authored HTML item.
-   Paragraph endings are the leading adjacent probe, followed by marker-element
-   and generic fallback endings.
+   Paragraph endings now apply the same integration-boundary recovery: an
+   authored HTML paragraph blocked by SVG or MathML button scope remains open,
+   the foreign mismatch and paragraph-scope errors are reported, and the
+   required empty paragraph is synthesized inside the foreign boundary without
+   moving following text. Continue with marker-element and generic fallback
+   endings.
 3. **Diagnostic positions and error taxonomy.** Carry source positions into
    tree construction and map diagnostics to current WHATWG concepts. Legacy
    WPT/html5lib error labels are evidence hints, not a normative public API.
