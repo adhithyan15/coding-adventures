@@ -2172,12 +2172,12 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
-    // ALGOL 60 — a straight-line boolean snapshot can prove the initial while
-    // predicate true and establish definite string initialization.
+    // ALGOL 60 — a straight-line boolean snapshot can select a statement
+    // branch that establishes definite string initialization.
     Prog {
         lang: Language::Algol60,
         ext: "alg",
-        src: "begin integer i, result; boolean flag; string s; flag := true; for i := 1 while flag do begin s := 'OK'; goto done end; done: if s = 'OK' then result := 42 else result := 0 end",
+        src: "begin integer result; boolean flag; string s; flag := true; if flag then s := 'OK'; if s = 'OK' then result := 42 else result := 0 end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
@@ -8936,14 +8936,14 @@ fn algol_tracked_step_bounds_run_on_every_available_standard_backend() {
 }
 
 #[test]
-fn algol_static_initial_while_condition_runs_on_every_available_standard_backend() {
+fn algol_static_statement_condition_runs_on_every_available_standard_backend() {
     let program = PROGRAMS
         .iter()
         .find(|program| {
             program.lang == Language::Algol60
                 && program
                     .src
-                    .contains("flag := true; for i := 1 while flag")
+                    .contains("flag := true; if flag then s := 'OK'")
                 && program.src.contains("string s")
         })
         .expect("the ALGOL initial while-condition program must remain in the matrix");

@@ -4654,6 +4654,7 @@ impl Compiler {
             .find(|n| n.rule_name == "bool_expr")
             .copied()
             .ok_or_else(|| CompileError::Malformed("cond_stmt missing bool_expr".into()))?;
+        let static_condition = self.static_boolean_value(cond_node);
         let cond = self.emit_expr(cond_node)?;
         if cond.ty != ScalarType::Boolean {
             return Err(CompileError::Type("if condition must be boolean".into()));
@@ -4712,21 +4713,40 @@ impl Compiler {
         let else_initialized_string_slots = self.initialized_string_slots.clone();
         self.emit_label(&end_label);
 
-        self.initialized_string_slots = then_initialized_string_slots
-            .intersection(&else_initialized_string_slots)
-            .cloned()
-            .collect();
-
-        if then_tracking_disabled || else_tracking_disabled {
-            self.disable_static_tracking();
-        } else {
-            then_real_slots.retain(|slot, value| else_real_slots.get(slot) == Some(value));
-            then_integer_slots.retain(|slot, value| else_integer_slots.get(slot) == Some(value));
-            then_boolean_slots.retain(|slot, value| else_boolean_slots.get(slot) == Some(value));
-            self.static_real_slots = then_real_slots;
-            self.static_integer_slots = then_integer_slots;
-            self.static_boolean_slots = then_boolean_slots;
-            self.static_real_tracking_disabled = false;
+        match static_condition {
+            Some(true) => {
+                self.initialized_string_slots = then_initialized_string_slots;
+                self.static_real_slots = then_real_slots;
+                self.static_integer_slots = then_integer_slots;
+                self.static_boolean_slots = then_boolean_slots;
+                self.static_real_tracking_disabled = then_tracking_disabled;
+            }
+            Some(false) => {
+                self.initialized_string_slots = else_initialized_string_slots;
+                self.static_real_slots = else_real_slots;
+                self.static_integer_slots = else_integer_slots;
+                self.static_boolean_slots = else_boolean_slots;
+                self.static_real_tracking_disabled = else_tracking_disabled;
+            }
+            None => {
+                self.initialized_string_slots = then_initialized_string_slots
+                    .intersection(&else_initialized_string_slots)
+                    .cloned()
+                    .collect();
+                if then_tracking_disabled || else_tracking_disabled {
+                    self.disable_static_tracking();
+                } else {
+                    then_real_slots.retain(|slot, value| else_real_slots.get(slot) == Some(value));
+                    then_integer_slots
+                        .retain(|slot, value| else_integer_slots.get(slot) == Some(value));
+                    then_boolean_slots
+                        .retain(|slot, value| else_boolean_slots.get(slot) == Some(value));
+                    self.static_real_slots = then_real_slots;
+                    self.static_integer_slots = then_integer_slots;
+                    self.static_boolean_slots = then_boolean_slots;
+                    self.static_real_tracking_disabled = false;
+                }
+            }
         }
         Ok(())
     }
@@ -7805,7 +7825,7 @@ mod tests {
     #[test]
     fn al4_print_different_statement_branches_invalidate_snapshot() {
         let err = compile_source(
-            "begin real x; boolean flag; x := 4.2; flag := false; if flag then x := 1.0 else x := 2.0; print(x) end",
+            "begin integer i; real x; x := 4.2; if i = 0 then x := 1.0 else x := 2.0; print(x) end",
             "test",
         )
         .expect_err("branch-selected scalar values still need runtime formatting");
@@ -7854,7 +7874,7 @@ mod tests {
     #[test]
     fn al4_call_in_one_statement_branch_invalidates_the_merge() {
         let err = compile_source(
-            "begin real procedure choose; choose := 2.5; boolean flag; real x; flag := false; x := 2.5; if flag then x := choose() else x := 2.5; output(x) end",
+            "begin real procedure choose; choose := 2.5; integer i; real x; x := 2.5; if i = 0 then x := choose() else x := 2.5; output(x) end",
             "test",
         )
         .expect_err("a call on either branch must poison the merged metadata");
@@ -8569,6 +8589,27 @@ mod tests {
             "test",
         )
         .expect_err("a then-only assignment does not definitely initialize the string");
+        assert!(format!("{err:?}").contains("requires initialized string variable"));
+    }
+
+    #[test]
+    fn al4_static_statement_condition_selects_initialized_branch() {
+        for source in [
+            "begin boolean flag; string s; flag := true; if flag then s := 'HI'; print(s) end",
+            "begin boolean flag; string s; flag := false; if flag then flag := true else s := 'LO'; print(s) end",
+        ] {
+            compile_source(source, "test")
+                .expect("a static statement condition preserves the selected branch state");
+        }
+    }
+
+    #[test]
+    fn al4_dynamic_statement_condition_remains_conservative() {
+        let err = compile_source(
+            "begin integer i; string s; if i = 0 then s := 'HI'; print(s) end",
+            "test",
+        )
+        .expect_err("an unknown statement condition must intersect both branch exits");
         assert!(format!("{err:?}").contains("requires initialized string variable"));
     }
 
