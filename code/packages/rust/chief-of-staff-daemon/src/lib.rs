@@ -19,6 +19,7 @@ use chief_of_staff_daemon_credential::{load_or_create_credential, CredentialFile
 use chief_of_staff_daemon_keyring::{load_package_keyring, KeyringLoadError};
 use chief_of_staff_daemon_policy::{DenyChannelWiring, LocalAuthError, LocalBearerAuthorizer};
 use chief_of_staff_daemon_runtime::{ChiefDaemonRuntime, DaemonRuntimeError, ReconcileSchedule};
+use chief_of_staff_daemon_secret_file::{read_owner_only_secret, SecretFileError};
 use chief_of_staff_host_control_protocol::{
     DataPlaneFailure, ModelToolCall, ModelToolDefinition, ModelToolResult,
 };
@@ -43,6 +44,7 @@ use chief_of_staff_tool_api::{RequestedBy, ToolInvocationRequest};
 use coding_adventures_json_serializer::serialize as serialize_json;
 use coding_adventures_json_value::{parse as parse_json, JsonValue};
 use coding_adventures_storage_fs::FsStorageBackend;
+use coding_adventures_vault_sealed_store::{SealedStore, SealedStoreError};
 use coding_adventures_x3dh::generate_identity_keypair;
 use embeddable_http_server::HttpServerOptions;
 use hue_core::{
@@ -63,10 +65,17 @@ use smart_home_discovery_service::{
     install_discovery_service_actor, DiscoveryServiceActorState, DiscoveryServiceError,
     DiscoveryServiceTick,
 };
+use smart_home_hue_pairing_service::{
+    install_hue_pairing_service_actor, HueLanRegistrationTransport, HuePairingRequest,
+    HuePairingServiceActorState, HuePairingServiceError,
+};
 use smart_home_platform_http::{
     home_assistant_runtime_web_app, SmartHomePlatformHttpConfig, SmartHomePlatformHttpRuntime,
 };
-use smart_home_runtime::{MdnsDiscoveryRunAdapter, ScheduledDiscoveryWorker};
+use smart_home_runtime::{
+    MdnsDiscoveryRunAdapter, PairingSessionStatus, RuntimePairingSessionQuery,
+    ScheduledDiscoveryWorker,
+};
 use std::convert::Infallible;
 use std::env;
 use std::ffi::OsString;
@@ -97,6 +106,11 @@ const HUE_MDNS_RUN_TIMEOUT_MS: u64 = 2_000;
 const HUE_MDNS_RETRY_DELAY_MS: u64 = 5_000;
 const HUE_MDNS_TTL_MS: u64 = 120_000;
 const DISCOVERY_TICK_INTERVAL_MS: u64 = 500;
+const HUE_PAIRING_ACTOR_ID: &str = "chief-hue-pairing";
+const HUE_PAIRING_SENDER_ID: &str = "chief-of-staff-daemon";
+const HUE_PAIRING_APP_NAME: &str = "coding-adventures";
+const HUE_PAIRING_TICK_INTERVAL_MS: u64 = 1_000;
+const HUE_PAIRING_KEK_BYTES: usize = 32;
 
 /// Stable payload-blind startup, serving, and teardown failure.
 #[derive(Debug)]
@@ -141,6 +155,20 @@ pub enum ChiefDaemonError {
     SmartHomeDiscoveryWorkerUnavailable,
     /// The Hue discovery worker thread panicked.
     SmartHomeDiscoveryWorkerPanicked,
+    /// The configured Hue pairing KEK file could not be loaded safely.
+    SmartHomePairingSecret(SecretFileError),
+    /// The configured Hue pairing Vault could not initialize or unseal.
+    SmartHomePairingVault(SealedStoreError),
+    /// The Hue pairing service could not recover or execute its transaction state.
+    SmartHomePairing(HuePairingServiceError),
+    /// The Hue pairing actor could not be installed or driven.
+    SmartHomePairingActor(ActorError),
+    /// The production wall clock was unavailable to the Hue pairing worker.
+    SmartHomePairingClock,
+    /// The operating system could not create the Hue pairing worker thread.
+    SmartHomePairingWorkerUnavailable,
+    /// The Hue pairing worker thread panicked.
+    SmartHomePairingWorkerPanicked,
     /// The local operator credential could not be loaded or created safely.
     Credential(CredentialFileError),
     /// Local bearer policy construction failed.
@@ -195,6 +223,19 @@ impl Display for ChiefDaemonError {
             }
             Self::SmartHomeDiscoveryWorkerPanicked => {
                 "chief daemon: smart-home discovery worker panicked"
+            }
+            Self::SmartHomePairingSecret(_) => {
+                "chief daemon: smart-home pairing secret file failed"
+            }
+            Self::SmartHomePairingVault(_) => "chief daemon: smart-home pairing vault failed",
+            Self::SmartHomePairing(_) => "chief daemon: smart-home pairing failed",
+            Self::SmartHomePairingActor(_) => "chief daemon: smart-home pairing actor failed",
+            Self::SmartHomePairingClock => "chief daemon: smart-home pairing clock unavailable",
+            Self::SmartHomePairingWorkerUnavailable => {
+                "chief daemon: smart-home pairing worker unavailable"
+            }
+            Self::SmartHomePairingWorkerPanicked => {
+                "chief daemon: smart-home pairing worker panicked"
             }
             Self::Credential(_) => "chief daemon: operator credential failed",
             Self::Authentication(_) => "chief daemon: local authentication policy failed",
@@ -380,12 +421,29 @@ pub fn run(config: ChiefConfig, home: &Path) -> Result<(), ChiefDaemonError> {
             let controller = smart_home_controller
                 .clone()
                 .ok_or(ChiefDaemonError::SmartHomeGrantProvisioning)?;
-            compose_smart_home_http_service(
+            let mut service = compose_smart_home_http_service(
                 listener,
-                controller,
+                controller.clone(),
                 &state_dir,
                 Arc::clone(&unix_clock),
-            )
+            )?;
+            if let Some(kek_path) = listener.hue_pairing_kek_path() {
+                let vault_dir = config
+                    .vault()
+                    .storage_path()
+                    .resolve(home)
+                    .map_err(ChiefDaemonError::Config)?;
+                let kek_path = kek_path.resolve(home).map_err(ChiefDaemonError::Config)?;
+                service.hue_pairing = Some(configure_hue_pairing_service(
+                    controller,
+                    &state_dir,
+                    &vault_dir,
+                    &kek_path,
+                    listener.instance_name(),
+                    Arc::clone(&unix_clock),
+                )?);
+            }
+            Ok(service)
         })
         .transpose()?;
     let core = OrchestratorCore::with_process_supervisor(
@@ -576,6 +634,7 @@ struct SmartHomeHttpService {
     address: SocketAddr,
     app: Arc<WebApp>,
     hue_discovery: Option<ChiefHueDiscoveryService>,
+    hue_pairing: Option<ChiefHuePairingService>,
 }
 
 type ChiefHueDiscoveryState = DiscoveryServiceActorState<
@@ -588,6 +647,16 @@ type ChiefHueDiscoveryState = DiscoveryServiceActorState<
 struct ChiefHueDiscoveryService {
     state: ChiefHueDiscoveryState,
     clock: Arc<dyn UnixTimeClock>,
+}
+
+type ChiefHuePairingState =
+    HuePairingServiceActorState<HueLanRegistrationTransport, FsStorageBackend, FsStorageBackend>;
+
+struct ChiefHuePairingService {
+    state: ChiefHuePairingState,
+    controller: SmartHomeControllerRuntime<FsStorageBackend>,
+    clock: Arc<dyn UnixTimeClock>,
+    instance_name: String,
 }
 
 #[derive(Debug, Default)]
@@ -629,6 +698,55 @@ fn compose_smart_home_http_service(
         address: SocketAddr::new(config.bind(), config.port()),
         app: Arc::new(home_assistant_runtime_web_app(runtime)),
         hue_discovery,
+        hue_pairing: None,
+    })
+}
+
+fn configure_hue_pairing_service(
+    controller: SmartHomeControllerRuntime<FsStorageBackend>,
+    state_dir: &Path,
+    vault_dir: &Path,
+    kek_path: &Path,
+    instance_name: &str,
+    clock: Arc<dyn UnixTimeClock>,
+) -> Result<ChiefHuePairingService, ChiefDaemonError> {
+    let vault_backend: Arc<dyn StorageBackend> =
+        Arc::new(FsStorageBackend::new(vault_dir.to_path_buf()));
+    vault_backend
+        .initialize()
+        .map_err(ChiefDaemonError::Storage)?;
+    let vault = Arc::new(SealedStore::new(vault_backend));
+    let kek = read_owner_only_secret(kek_path, HUE_PAIRING_KEK_BYTES)
+        .map_err(ChiefDaemonError::SmartHomePairingSecret)?;
+    let kek: &[u8; HUE_PAIRING_KEK_BYTES] = kek
+        .as_slice()
+        .try_into()
+        .map_err(|_| ChiefDaemonError::SmartHomePairingSecret(SecretFileError::InvalidLength))?;
+    if vault
+        .status()
+        .map_err(ChiefDaemonError::SmartHomePairingVault)?
+        .initialized
+    {
+        vault
+            .unseal_with_kek(kek)
+            .map_err(ChiefDaemonError::SmartHomePairingVault)?;
+    } else {
+        vault
+            .init_with_kek(kek)
+            .map_err(ChiefDaemonError::SmartHomePairingVault)?;
+    }
+    let state = HuePairingServiceActorState::restore(
+        FsStorageBackend::new(state_dir),
+        vault,
+        controller.clone(),
+        HueLanRegistrationTransport::default(),
+    )
+    .map_err(ChiefDaemonError::SmartHomePairing)?;
+    Ok(ChiefHuePairingService {
+        state,
+        controller,
+        clock,
+        instance_name: instance_name.to_string(),
     })
 }
 
@@ -814,6 +932,151 @@ fn drive_discovery_tick(
     system
         .process_next(HUE_MDNS_ACTOR_ID)
         .map_err(ChiefDaemonError::SmartHomeDiscoveryActor)?;
+    Ok(())
+}
+
+struct OwnedHuePairingWorker {
+    stop: Arc<AtomicBool>,
+    thread: Option<JoinHandle<Result<(), ChiefDaemonError>>>,
+}
+
+impl OwnedHuePairingWorker {
+    fn start(
+        service: ChiefHuePairingService,
+        on_failure: Arc<dyn Fn() + Send + Sync>,
+    ) -> Result<Self, ChiefDaemonError> {
+        Self::start_with_interval(
+            service,
+            on_failure,
+            Duration::from_millis(HUE_PAIRING_TICK_INTERVAL_MS),
+        )
+    }
+
+    fn start_with_interval(
+        service: ChiefHuePairingService,
+        on_failure: Arc<dyn Fn() + Send + Sync>,
+        tick_interval: Duration,
+    ) -> Result<Self, ChiefDaemonError> {
+        let stop = Arc::new(AtomicBool::new(false));
+        let worker_stop = Arc::clone(&stop);
+        let (startup_sender, startup_receiver) = std::sync::mpsc::sync_channel(0);
+        let thread = thread::Builder::new()
+            .name("chief-hue-pairing".to_string())
+            .spawn(move || {
+                let ChiefHuePairingService {
+                    state,
+                    controller,
+                    clock,
+                    instance_name,
+                } = service;
+                let mut system = ActorSystem::new();
+                if let Err(error) =
+                    install_hue_pairing_service_actor(&mut system, HUE_PAIRING_ACTOR_ID, state)
+                {
+                    let _ = startup_sender.send(Err(error));
+                    return Ok(());
+                }
+                if startup_sender.send(Ok(())).is_err() {
+                    return Ok(());
+                }
+                while !worker_stop.load(Ordering::Acquire) {
+                    thread::park_timeout(tick_interval);
+                    if worker_stop.load(Ordering::Acquire) {
+                        break;
+                    }
+                    if let Err(error) = drive_hue_pairing_tick(
+                        &mut system,
+                        &controller,
+                        clock.as_ref(),
+                        &instance_name,
+                    ) {
+                        on_failure();
+                        return Err(error);
+                    }
+                }
+                Ok(())
+            })
+            .map_err(|_| ChiefDaemonError::SmartHomePairingWorkerUnavailable)?;
+        match startup_receiver.recv() {
+            Ok(Ok(())) => {}
+            Ok(Err(error)) => {
+                let _ = thread.join();
+                return Err(ChiefDaemonError::SmartHomePairingActor(error));
+            }
+            Err(_) => {
+                let _ = thread.join();
+                return Err(ChiefDaemonError::SmartHomePairingWorkerUnavailable);
+            }
+        }
+        Ok(Self {
+            stop,
+            thread: Some(thread),
+        })
+    }
+
+    fn stop_and_join(&mut self) -> Result<(), ChiefDaemonError> {
+        self.stop.store(true, Ordering::Release);
+        let Some(thread) = self.thread.take() else {
+            return Ok(());
+        };
+        thread.thread().unpark();
+        thread
+            .join()
+            .map_err(|_| ChiefDaemonError::SmartHomePairingWorkerPanicked)?
+    }
+}
+
+impl Drop for OwnedHuePairingWorker {
+    fn drop(&mut self) {
+        let _ = self.stop_and_join();
+    }
+}
+
+fn drive_hue_pairing_tick(
+    system: &mut ActorSystem,
+    controller: &SmartHomeControllerRuntime<FsStorageBackend>,
+    clock: &dyn UnixTimeClock,
+    instance_name: &str,
+) -> Result<(), ChiefDaemonError> {
+    let now_ms = clock
+        .now_ms()
+        .ok_or(ChiefDaemonError::SmartHomePairingClock)?;
+    let restored = controller
+        .durable_snapshot()
+        .map_err(HuePairingServiceError::from)
+        .map_err(ChiefDaemonError::SmartHomePairing)?
+        .ok_or(ChiefDaemonError::SmartHomePairing(
+            HuePairingServiceError::MissingDurableRuntime,
+        ))?;
+    let query = RuntimePairingSessionQuery::new()
+        .for_integration(smart_home_core::IntegrationId::trusted(HUE_INTEGRATION_ID))
+        .with_status(PairingSessionStatus::PendingUserPresence);
+    let Some(session) = restored
+        .runtime
+        .query_pairing_sessions(&query)
+        .into_iter()
+        .find(|session| !session.is_expired_at(now_ms))
+    else {
+        return Ok(());
+    };
+    let request = HuePairingRequest::new(
+        session.session_id.clone(),
+        session.requested_by.clone(),
+        restored.revision,
+        HUE_PAIRING_APP_NAME,
+        instance_name,
+        now_ms,
+    )
+    .map_err(ChiefDaemonError::SmartHomePairing)?;
+    let message = request
+        .into_message(HUE_PAIRING_SENDER_ID)
+        .map_err(ChiefDaemonError::SmartHomePairing)?;
+    system
+        .send(HUE_PAIRING_ACTOR_ID, message)
+        .map_err(ChiefDaemonError::SmartHomePairingActor)?;
+    system
+        .process_next(HUE_PAIRING_ACTOR_ID)
+        .map_err(ChiefDaemonError::SmartHomePairingActor)?;
     Ok(())
 }
 
@@ -1101,12 +1364,13 @@ where
         schedule,
     )
     .map_err(ChiefDaemonError::Runtime)?;
-    let (mut smart_home_server, hue_discovery) = match smart_home {
+    let (mut smart_home_server, hue_discovery, hue_pairing) = match smart_home {
         Some((platform, service)) => {
             let SmartHomeHttpService {
                 address,
                 app,
                 hue_discovery,
+                hue_pairing,
             } = service;
             let server = WebServer::bind(
                 platform,
@@ -1115,9 +1379,9 @@ where
                 app,
             )
             .map_err(ChiefDaemonError::SmartHomeHttp)?;
-            (Some(server), hue_discovery)
+            (Some(server), hue_discovery, hue_pairing)
         }
-        None => (None, None),
+        None => (None, None, None),
     };
     let daemon_stop = runtime.stop_handle();
     let smart_home_stop = smart_home_server.as_ref().map(WebServer::stop_handle);
@@ -1132,6 +1396,19 @@ where
                 }
             });
             OwnedDiscoveryWorker::start(service.state, service.clock, on_failure)
+        })
+        .transpose()?;
+    let mut pairing_worker = hue_pairing
+        .map(|service| {
+            let failure_daemon_stop = daemon_stop.clone();
+            let failure_smart_home_stop = smart_home_stop.clone();
+            let on_failure: Arc<dyn Fn() + Send + Sync> = Arc::new(move || {
+                failure_daemon_stop.stop();
+                if let Some(stop) = failure_smart_home_stop.as_ref() {
+                    stop.stop();
+                }
+            });
+            OwnedHuePairingWorker::start(service, on_failure)
         })
         .transpose()?;
     let listener_daemon_stop = daemon_stop.clone();
@@ -1149,6 +1426,9 @@ where
                 stop.stop();
             }
             if let Some(worker) = discovery_worker.as_mut() {
+                let _ = worker.stop_and_join();
+            }
+            if let Some(worker) = pairing_worker.as_mut() {
                 let _ = worker.stop_and_join();
             }
             return Err(ChiefDaemonError::Shutdown(error));
@@ -1175,6 +1455,10 @@ where
         .as_mut()
         .map(OwnedDiscoveryWorker::stop_and_join)
         .transpose();
+    let pairing_result = pairing_worker
+        .as_mut()
+        .map(OwnedHuePairingWorker::stop_and_join)
+        .transpose();
     let smart_home_result = smart_home_thread
         .map(|thread| {
             thread
@@ -1193,6 +1477,7 @@ where
         });
     runtime_result.map_err(ChiefDaemonError::Runtime)?;
     discovery_result?;
+    pairing_result?;
     smart_home_result?;
     shutdown_result.map_err(ChiefDaemonError::Shutdown)?;
     recovery_result
@@ -1347,10 +1632,13 @@ mod tests {
     use chief_of_staff_service_registry::{HostName, HostRegistration, PackagePath, RestartPolicy};
     use smart_home_core::{
         AgentId, AuthorizationOutcome, Bridge, BridgeId, BridgeTransport, CapabilityGrant,
-        CapabilityGrantId, Device, DeviceId, Entity, EntityId, EntityKind, Health, IntegrationId,
-        SmartHomeTool,
+        CapabilityGrantId, CapabilityId, Device, DeviceId, Entity, EntityId, EntityKind, Health,
+        IntegrationId, Metadata as SmartHomeMetadata, SmartHomeTool,
     };
+    use smart_home_runtime::{RuntimePairingSession, RuntimePairingSessionId};
     use std::convert::Infallible;
+    use std::io::Write as _;
+    use std::net::TcpListener;
     use std::sync::atomic::{AtomicU64, Ordering};
     use storage_core::InMemoryStorageBackend;
 
@@ -1876,6 +2164,166 @@ hardware_key_timeout = 60
         )
         .unwrap();
         worker.stop_and_join().unwrap();
+    }
+
+    #[test]
+    fn chief_hue_pairing_tick_commits_through_the_shared_controller() {
+        let directory = TestDir::new();
+        let state_dir = directory.0.join("smart-home-pairing-state");
+        let controller =
+            SmartHomeControllerRuntime::restore(FsStorageBackend::new(&state_dir)).unwrap();
+        let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+        let address = format!("http://{}", listener.local_addr().unwrap());
+        let server = thread::spawn(move || {
+            let (mut stream, _) = listener.accept().unwrap();
+            let mut request = [0u8; 4096];
+            let _ = stream.read(&mut request).unwrap();
+            let body = br#"[{"success":{"username":"chief-hue-app-key","clientkey":"chief-hue-client-key"}}]"#;
+            write!(
+                stream,
+                "HTTP/1.0 200 OK\r\nContent-Length: {}\r\nConnection: close\r\n\r\n",
+                body.len()
+            )
+            .unwrap();
+            stream.write_all(body).unwrap();
+        });
+        controller
+            .transaction(1_500, |runtime, _| {
+                let mut bridge = Bridge::new(
+                    BridgeId::trusted("001788fffeabcdef"),
+                    IntegrationId::trusted(HUE_INTEGRATION_ID),
+                    BridgeTransport::LanHttp,
+                );
+                bridge.address = Some(address);
+                bridge.health = Health::Unpaired;
+                runtime.upsert_bridge(bridge.clone()).unwrap();
+                let principal = AgentId::trusted("operator:hue-pairing");
+                runtime
+                    .start_pairing_session(RuntimePairingSession::pending(
+                        RuntimePairingSessionId::trusted("pairing-chief-hue"),
+                        &bridge,
+                        principal.clone(),
+                        1_500,
+                        30_000,
+                        vec![SmartHomeMetadata::new("pairing.mode", "physical_presence")],
+                    ))
+                    .unwrap();
+                runtime
+                    .registry_mut()
+                    .upsert_capability_grant(CapabilityGrant::for_capability(
+                        CapabilityGrantId::trusted("grant-chief-hue-pairing"),
+                        principal,
+                        CapabilityId::trusted("smart_home.pair"),
+                        PrivilegeTier::HumanApproval,
+                        "operator:test",
+                        1_500,
+                    ));
+                Ok::<(), Infallible>(())
+            })
+            .unwrap();
+
+        let vault_backend: Arc<dyn StorageBackend> =
+            Arc::new(FsStorageBackend::new(directory.0.join("smart-home-vault")));
+        vault_backend.initialize().unwrap();
+        let vault = Arc::new(SealedStore::new(vault_backend));
+        vault.init_with_kek(&[0x42; HUE_PAIRING_KEK_BYTES]).unwrap();
+        let state = HuePairingServiceActorState::restore(
+            FsStorageBackend::new(&state_dir),
+            Arc::clone(&vault),
+            controller.clone(),
+            HueLanRegistrationTransport::default(),
+        )
+        .unwrap();
+        let mut system = ActorSystem::new();
+        install_hue_pairing_service_actor(&mut system, HUE_PAIRING_ACTOR_ID, state).unwrap();
+
+        drive_hue_pairing_tick(
+            &mut system,
+            &controller,
+            &TestUnixTimeClock::new(2_000),
+            "Chief Test Home",
+        )
+        .unwrap();
+        server.join().unwrap();
+
+        let restored = controller.durable_snapshot().unwrap().unwrap();
+        let session = restored
+            .runtime
+            .pairing_session(&RuntimePairingSessionId::trusted("pairing-chief-hue"))
+            .unwrap();
+        assert_eq!(session.status, PairingSessionStatus::Completed);
+        let vault_ref = session.vault_ref.as_ref().unwrap();
+        assert!(vault_ref.as_str().starts_with("vault://smart-home/hue/"));
+        assert_eq!(
+            restored
+                .runtime
+                .registry()
+                .bridge(&BridgeId::trusted("001788fffeabcdef"))
+                .unwrap()
+                .auth_ref
+                .as_ref(),
+            Some(vault_ref)
+        );
+        assert_eq!(
+            vault
+                .list(
+                    smart_home_hue_pairing_service::HUE_VAULT_NAMESPACE,
+                    Default::default()
+                )
+                .unwrap()
+                .len(),
+            1
+        );
+        let durable_text = format!("{restored:?}");
+        assert!(!durable_text.contains("chief-hue-app-key"));
+        assert!(!durable_text.contains("chief-hue-client-key"));
+    }
+
+    #[test]
+    fn chief_hue_pairing_worker_stops_cooperatively_and_propagates_clock_failure() {
+        let directory = TestDir::new();
+        let state_dir = directory.0.join("smart-home-pairing-worker-state");
+        let controller =
+            SmartHomeControllerRuntime::restore(FsStorageBackend::new(&state_dir)).unwrap();
+        controller
+            .transaction(1_500, |_, _| Ok::<(), Infallible>(()))
+            .unwrap();
+        let vault_backend: Arc<dyn StorageBackend> = Arc::new(FsStorageBackend::new(
+            directory.0.join("smart-home-worker-vault"),
+        ));
+        vault_backend.initialize().unwrap();
+        let vault = Arc::new(SealedStore::new(vault_backend));
+        vault.init_with_kek(&[0x24; HUE_PAIRING_KEK_BYTES]).unwrap();
+        let state = HuePairingServiceActorState::restore(
+            FsStorageBackend::new(&state_dir),
+            vault,
+            controller.clone(),
+            HueLanRegistrationTransport::default(),
+        )
+        .unwrap();
+        let service = ChiefHuePairingService {
+            state,
+            controller,
+            clock: Arc::new(UnavailableUnixTimeClock),
+            instance_name: "Chief Test Home".to_string(),
+        };
+        let failure_seen = Arc::new(AtomicBool::new(false));
+        let failure_probe = Arc::clone(&failure_seen);
+        let on_failure: Arc<dyn Fn() + Send + Sync> = Arc::new(move || {
+            failure_probe.store(true, Ordering::Release);
+        });
+        let mut worker = OwnedHuePairingWorker::start_with_interval(
+            service,
+            on_failure,
+            Duration::from_millis(1),
+        )
+        .unwrap();
+        thread::sleep(Duration::from_millis(20));
+        assert!(matches!(
+            worker.stop_and_join(),
+            Err(ChiefDaemonError::SmartHomePairingClock)
+        ));
+        assert!(failure_seen.load(Ordering::Acquire));
     }
 
     #[test]

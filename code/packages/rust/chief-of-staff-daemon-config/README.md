@@ -21,7 +21,11 @@ non-zero port, a bounded non-empty instance name, and an exact endpoint distinct
 from `[orchestrator]`; non-loopback addresses, control characters, duplicate
 fields, and unknown fields fail validation. Its optional bounded
 `hue_mdns_interface` enables Chief-owned supervised Hue discovery on one exact
-network interface.
+network interface. Its optional `hue_pairing_kek_path` enables the Chief-owned
+Hue pairing worker with a 32-byte owner-only injected-KEK file. That setting is
+accepted only when `[vault].container = false`, making in-process Vault custody
+an explicit operator choice instead of silently crossing a configured
+containment boundary.
 
 An optional `[data_plane]` table declares exact production authorities without
 putting secret bytes in TOML. Directional channel-key entries bind canonical

@@ -18,3 +18,5 @@
   distinct endpoint and bounded instance name.
 - Accept an optional bounded Hue mDNS interface in the smart-home table for
   Chief-owned supervised discovery.
+- Accept an optional `hue_pairing_kek_path` only with explicit in-process Vault
+  custody, preserving strict owner-only secret-file handling at composition.
