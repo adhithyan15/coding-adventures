@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.153.0 — 2026-08-13 — idempotent while dependencies
+
+Capped `while` control analysis now permits an exact scalar self-assignment to
+a stable local dependency in the loop body. Computed assignments, array targets,
+nested controls, globals, and by-name values remain conservative.
+
 ## 0.152.0 — 2026-08-13 — real while-control snapshots
 
 Capped `while` control analysis now has an explicit real-valued conformance

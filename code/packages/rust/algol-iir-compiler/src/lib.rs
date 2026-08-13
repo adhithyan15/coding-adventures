@@ -5301,14 +5301,21 @@ impl Compiler {
     }
 
     fn for_body_writes_name(&self, node: &GrammarASTNode, name: &str) -> bool {
-        if node.rule_name == "assign_stmt"
-            && direct_nodes(node)
+        if node.rule_name == "assign_stmt" {
+            let writes_name = direct_nodes(node)
                 .into_iter()
                 .filter(|child| child.rule_name == "left_part")
                 .filter_map(|left| first_direct_node(left, "variable"))
-                .any(|variable| self.simple_variable_name(variable).ok().as_deref() == Some(name))
-        {
-            return true;
+                .any(|variable| {
+                    array_subscripts(variable).is_none()
+                        && self.simple_variable_name(variable).ok().as_deref() == Some(name)
+                });
+            if writes_name {
+                let preserves_name = first_direct_node(node, "expression")
+                    .and_then(expr_variable_name)
+                    .is_some_and(|source_name| source_name == name);
+                return !preserves_name;
+            }
         }
         if node.rule_name == "for_stmt"
             && first_direct_node(node, "variable")
@@ -9254,6 +9261,15 @@ mod tests {
     }
 
     #[test]
+    fn al4_static_while_preserves_idempotently_assigned_dependency() {
+        compile_source(
+            "begin integer i, n; n := 3; i := 0; for i := i + 1 while i < n do n := n; print(i + 0.25) end",
+            "test",
+        )
+        .expect("an exact scalar self-assignment preserves the dependency");
+    }
+
+    #[test]
     fn al4_static_while_preserves_standard_function_dependency() {
         compile_source(
             "begin integer i, n; n := -3; i := 0; for i := i + 1 while i < abs(n) do print(''); print(i + 0.25) end",
@@ -9279,6 +9295,16 @@ mod tests {
             "test",
         )
         .expect_err("a dependency referenced by the body may change each iteration");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_computed_self_assignment_while_dependency_remains_conservative() {
+        let err = compile_source(
+            "begin integer i, n; n := 3; i := 0; for i := i + 1 while i < n do n := n + 0; print(i + 0.25) end",
+            "test",
+        )
+        .expect_err("only an exact bare self-assignment is treated as idempotent");
         assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
