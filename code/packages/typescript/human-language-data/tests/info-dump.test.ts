@@ -241,7 +241,7 @@ describe("the committed corpus", () => {
 
   it("pins the first measurement", () => {
     const report = measureInfoDump(lessons, budget);
-    expect(report.summary.lessons).toBe(2018); // +8: HL-C94 payoff lessons // +4: HL-C98 // +40: vocabulary wave 5 // +4: HL-C88 slices 5-6 // +3: HL-C88 slice 8 // +54: vocabulary wave 6 // +3: HL-C113 (B1 si-condition rung) // +3: HL-C113 preterite plural // HL-C113: HL-C113 imperfect subjunctive // HL12: +30 recognition segments (telugu/kannada/malayalam 8 each, sanskrit 6) // HL12 payment two: +8 Hindi segments
+    expect(report.summary.lessons).toBe(2060); // +8: HL-C94 payoff lessons // +4: HL-C98 // +40: vocabulary wave 5 // +4: HL-C88 slices 5-6 // +3: HL-C88 slice 8 // +54: vocabulary wave 6 // +3: HL-C113 (B1 si-condition rung) // +3: HL-C113 preterite plural // HL-C113: HL-C113 imperfect subjunctive // HL12: +30 recognition segments (telugu/kannada/malayalam 8 each, sanskrit 6) // HL12 payment two: +8 Hindi segments // HL-C136 wave I: +42 lessons, +6 chapters — 'Pointing, and Asking', six deixis words and the pattern behind them, one chapter per Indic track
 
     // The finding that reframed this gate: the PROSE is fine. Seventeen rule
     // statements across 1,694 lessons is a corpus whose writing is already

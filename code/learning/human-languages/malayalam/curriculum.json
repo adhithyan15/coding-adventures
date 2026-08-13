@@ -465,6 +465,24 @@
         "ML-EXT-034-MEAL"
       ],
       "after": []
+    },
+    {
+      "id": "ML-PATH-200",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ML-C41-this",
+        "ML-C41-that",
+        "ML-C41-here",
+        "ML-C41-there",
+        "ML-C41-who",
+        "ML-C41-where",
+        "ML-C41-deixis-system"
+      ],
+      "before": [],
+      "inline": [
+        "ML-EXT-200-DEIXIS"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -574,7 +592,8 @@
     "SPINE-DEFINITE-REFERENCE": {
       "segments": [
         "ML-PATH-015",
-        "ML-PATH-024"
+        "ML-PATH-024",
+        "ML-PATH-200"
       ],
       "omits": [
         "GRAMMAR-THE"
@@ -1159,6 +1178,23 @@
       "prerequisites": [],
       "lessons": [
         "ML-C01-namaskaram"
+      ]
+    },
+    {
+      "id": "ML-EXT-200-DEIXIS",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can point at something in Malayalam and ask who or where it is, and I can see the one pattern the six words are built from.",
+      "prerequisites": [],
+      "lessons": [
+        "ML-C41-this",
+        "ML-C41-that",
+        "ML-C41-here",
+        "ML-C41-there",
+        "ML-C41-who",
+        "ML-C41-where",
+        "ML-C41-deixis-system"
       ]
     }
   ]

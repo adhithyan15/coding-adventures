@@ -2713,6 +2713,26 @@
       "jsonHash": "fnv1a64:aec58f4f3a99b66c"
     },
     {
+      "language": "hindi",
+      "chapter": 40,
+      "sourceHash": "fnv1a64:55728eb26e67792e",
+      "lessonIds": [
+        "HI-C40-this",
+        "HI-C40-that",
+        "HI-C40-here",
+        "HI-C40-there",
+        "HI-C40-who",
+        "HI-C40-where",
+        "HI-C40-deixis-system"
+      ],
+      "voiceLessons": 7,
+      "drivablePrefix": 7,
+      "text": "hindi/narration/ch40.txt",
+      "json": "hindi/narration/ch40.json",
+      "textHash": "fnv1a64:9b8a9afbed6cfcee",
+      "jsonHash": "fnv1a64:1e9a1c8b96b6207c"
+    },
+    {
       "language": "italian",
       "chapter": 1,
       "sourceHash": "fnv1a64:3e905f2b1c3dd36b",
@@ -3761,6 +3781,26 @@
       "json": "kannada/narration/ch40.json",
       "textHash": "fnv1a64:461f363042c461c0",
       "jsonHash": "fnv1a64:cec391d462dc97d9"
+    },
+    {
+      "language": "kannada",
+      "chapter": 41,
+      "sourceHash": "fnv1a64:1d603d69882cd3bd",
+      "lessonIds": [
+        "KA-C41-this",
+        "KA-C41-that",
+        "KA-C41-here",
+        "KA-C41-there",
+        "KA-C41-who",
+        "KA-C41-where",
+        "KA-C41-deixis-system"
+      ],
+      "voiceLessons": 7,
+      "drivablePrefix": 7,
+      "text": "kannada/narration/ch41.txt",
+      "json": "kannada/narration/ch41.json",
+      "textHash": "fnv1a64:3f8705a89aa458a6",
+      "jsonHash": "fnv1a64:0aae170e0d371f47"
     },
     {
       "language": "latin",
@@ -5029,6 +5069,26 @@
       "json": "malayalam/narration/ch40.json",
       "textHash": "fnv1a64:9f91629139a6581a",
       "jsonHash": "fnv1a64:b4dd2ff004e9bc81"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 41,
+      "sourceHash": "fnv1a64:f8cfe20a43e46d43",
+      "lessonIds": [
+        "ML-C41-this",
+        "ML-C41-that",
+        "ML-C41-here",
+        "ML-C41-there",
+        "ML-C41-who",
+        "ML-C41-where",
+        "ML-C41-deixis-system"
+      ],
+      "voiceLessons": 7,
+      "drivablePrefix": 7,
+      "text": "malayalam/narration/ch41.txt",
+      "json": "malayalam/narration/ch41.json",
+      "textHash": "fnv1a64:921f51e6bf3298fe",
+      "jsonHash": "fnv1a64:997f38fbdaac58ab"
     },
     {
       "language": "marathi",
@@ -6632,6 +6692,26 @@
       "json": "sanskrit/narration/ch13.json",
       "textHash": "fnv1a64:d84299791fb2aba4",
       "jsonHash": "fnv1a64:7363e78ec0ab630e"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 14,
+      "sourceHash": "fnv1a64:ad68c62478b5a3cf",
+      "lessonIds": [
+        "SA-C14-this",
+        "SA-C14-that",
+        "SA-C14-here",
+        "SA-C14-there",
+        "SA-C14-who",
+        "SA-C14-where",
+        "SA-C14-deixis-system"
+      ],
+      "voiceLessons": 7,
+      "drivablePrefix": 7,
+      "text": "sanskrit/narration/ch14.txt",
+      "json": "sanskrit/narration/ch14.json",
+      "textHash": "fnv1a64:0affdc3d68c0b039",
+      "jsonHash": "fnv1a64:23955c00ecfbced3"
     },
     {
       "language": "spanish",
@@ -10578,6 +10658,26 @@
       "jsonHash": "fnv1a64:f0765b9f9a97d103"
     },
     {
+      "language": "tamil",
+      "chapter": 40,
+      "sourceHash": "fnv1a64:f9e06aff0f91fe83",
+      "lessonIds": [
+        "TA-C40-this",
+        "TA-C40-that",
+        "TA-C40-here",
+        "TA-C40-there",
+        "TA-C40-who",
+        "TA-C40-where",
+        "TA-C40-deixis-system"
+      ],
+      "voiceLessons": 7,
+      "drivablePrefix": 7,
+      "text": "tamil/narration/ch40.txt",
+      "json": "tamil/narration/ch40.json",
+      "textHash": "fnv1a64:adc7020e0441163c",
+      "jsonHash": "fnv1a64:e4d11b7cddb56cb7"
+    },
+    {
       "language": "telugu",
       "chapter": 1,
       "sourceHash": "fnv1a64:265df7c4fe1a1389",
@@ -11191,6 +11291,26 @@
       "json": "telugu/narration/ch40.json",
       "textHash": "fnv1a64:36b06e906966a50f",
       "jsonHash": "fnv1a64:d3079fc3b7fa3eff"
+    },
+    {
+      "language": "telugu",
+      "chapter": 41,
+      "sourceHash": "fnv1a64:4a7e6e51998f6cda",
+      "lessonIds": [
+        "TE-C41-this",
+        "TE-C41-that",
+        "TE-C41-here",
+        "TE-C41-there",
+        "TE-C41-who",
+        "TE-C41-where",
+        "TE-C41-deixis-system"
+      ],
+      "voiceLessons": 7,
+      "drivablePrefix": 7,
+      "text": "telugu/narration/ch41.txt",
+      "json": "telugu/narration/ch41.json",
+      "textHash": "fnv1a64:3f9fb4b8404fcceb",
+      "jsonHash": "fnv1a64:73399e019f83b003"
     },
     {
       "language": "urdu",

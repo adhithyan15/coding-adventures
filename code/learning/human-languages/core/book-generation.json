@@ -1229,6 +1229,12 @@
       "scriptSet": "hindi-main"
     },
     {
+      "language": "hindi",
+      "chapter": 40,
+      "output": "hindi/book/chapters/ch40-pointing-and-asking.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
       "language": "italian",
       "chapter": 2,
       "output": "italian/book/chapters/ch02-how-are-you.tex"
@@ -1562,6 +1568,12 @@
       "language": "kannada",
       "chapter": 40,
       "output": "kannada/book/chapters/ch40-a-meal.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 41,
+      "output": "kannada/book/chapters/ch41-pointing-and-asking.tex",
       "scriptSet": "kannada-comparisons"
     },
     {
@@ -1982,6 +1994,12 @@
       "language": "malayalam",
       "chapter": 40,
       "output": "malayalam/book/chapters/ch40-the-meal.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 41,
+      "output": "malayalam/book/chapters/ch41-pointing-and-asking.tex",
       "scriptSet": "malayalam-comparisons"
     },
     {
@@ -2437,6 +2455,13 @@
       "language": "sanskrit",
       "chapter": 13,
       "output": "sanskrit/book/chapters/ch13-face-nouns-2.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 14,
+      "output": "sanskrit/book/chapters/ch14-pointing-and-asking.tex",
       "unicodeScript": "Devanagari",
       "scriptCommand": "sk"
     },
@@ -3772,6 +3797,12 @@
       "scriptSet": "tamil-comparisons"
     },
     {
+      "language": "tamil",
+      "chapter": 40,
+      "output": "tamil/book/chapters/ch40-pointing-and-asking.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
       "language": "telugu",
       "chapter": 6,
       "output": "telugu/book/chapters/ch06-dative-case.tex",
@@ -3979,6 +4010,12 @@
       "language": "telugu",
       "chapter": 40,
       "output": "telugu/book/chapters/ch40-a-meal.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 41,
+      "output": "telugu/book/chapters/ch41-pointing-and-asking.tex",
       "scriptSet": "telugu-comparisons"
     },
     {

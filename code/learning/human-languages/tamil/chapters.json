@@ -234,11 +234,11 @@
         "lesson": "TA-C13-udal-uruppugal",
         "kind": "production",
         "summary": "Say talai and kai, then state the contrast with Hindi's Sanskrit-descended pair.",
-   "assesses": [
-    "TA-ETYMON-KUDUMBAM-01",
-    "TA-LEX-UDAL-URUPPUGAL-01"
-   ],
-   "note": "This chapter gained TA-W04-i-sign-write-nandri when the writing strand was spread out, and the payoff was not widened to match, so representativeness fell from 2/2 to 1/4 and this chapter is now the tamil entry in payoffsNotRepresentative — the slot chapter 1 used to hold. Widening it means authoring a payoff that assesses both the body-part vocabulary and the நன்றி spelling, which is HL-C25 work."
+        "assesses": [
+          "TA-ETYMON-KUDUMBAM-01",
+          "TA-LEX-UDAL-URUPPUGAL-01"
+        ],
+        "note": "This chapter gained TA-W04-i-sign-write-nandri when the writing strand was spread out, and the payoff was not widened to match, so representativeness fell from 2/2 to 1/4 and this chapter is now the tamil entry in payoffsNotRepresentative — the slot chapter 1 used to hold. Widening it means authoring a payoff that assesses both the body-part vocabulary and the நன்றி spelling, which is HL-C25 work."
       }
     },
     {
@@ -820,6 +820,29 @@
           "TA-GRAMMAR-DATIVE-UKKU-01",
           "TA-LEX-NUMBERS-1-5-01",
           "TA-LEX-TENEER-01"
+        ]
+      }
+    },
+    {
+      "chapter": 40,
+      "title": "Pointing, and Asking",
+      "label": "ch:ta-pointing-and-asking",
+      "canDo": "I can point at something in Tamil and ask who or where it is — and I can say what the six words have in common.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "TA-C40-deixis-system",
+        "kind": "production",
+        "summary": "Say the near word, the far word and the question word in a row, and name the part that changed.",
+        "assesses": [
+          "TA-LEX-C40-DEIXIS-01",
+          "TA-LEX-C40-DEIXIS-02",
+          "TA-LEX-C40-DEIXIS-03",
+          "TA-LEX-C40-DEIXIS-04",
+          "TA-LEX-C40-DEIXIS-05",
+          "TA-LEX-C40-DEIXIS-06",
+          "TA-GRAMMAR-C40-DEIXIS-SYSTEM"
         ]
       }
     }

@@ -230,7 +230,7 @@ describe("corpus snapshot", () => {
     // Chapter 10 adds singular ir and possessives at A1. Chapter 11 adds one more
     // definite-reference lesson there; its other work is A2. Chapter 12 adds its
     // newly mapped terminal checkpoints at A2 on SPINE-SAY-WHAT-I-DO.
-    expect(summary.byLevel.A1).toBe(366); // +1: ES-C02-concordancia sits on SPINE-TIME-OF-DAY
+    expect(summary.byLevel.A1).toBe(408); // +1: ES-C02-concordancia sits on SPINE-TIME-OF-DAY // HL-C136 wave I: +42 lessons, +6 chapters — 'Pointing, and Asking', six deixis words and the pattern behind them, one chapter per Indic track
     // Chapter 15's split adds three more mapped A2 lessons without changing its node.
     // Chapter 16's split adds five more mapped A2 lessons on the same node.
     // Chapter 17's split adds four more mapped A2 lessons on the same node.
@@ -314,7 +314,7 @@ describe("corpus snapshot", () => {
     // that joins, not inferred from the total.
     // +1, measured as a set difference: TA-W20-read-onru is the only lesson that
     // joins. The three A2 speaking lessons are above the A1 cut and do not.
-    expect(ramp).toHaveLength(1404); // +3: HL-C97 adds the repair kit (no entiendo, mas despacio) at chapter 14 // +40: vocabulary wave 5, all of it pre-A1 // +54: vocabulary wave 6, all of it pre-A1 // HL12: +30 recognition segments (telugu/kannada/malayalam 8 each, sanskrit 6) -- all of it below the A1 cut // HL12 payment two: +8 Hindi segments
+    expect(ramp).toHaveLength(1446); // +3: HL-C97 adds the repair kit (no entiendo, mas despacio) at chapter 14 // +40: vocabulary wave 5, all of it pre-A1 // +54: vocabulary wave 6, all of it pre-A1 // HL12: +30 recognition segments (telugu/kannada/malayalam 8 each, sanskrit 6) -- all of it below the A1 cut // HL12 payment two: +8 Hindi segments // HL-C136 wave I: +42 lessons, +6 chapters — 'Pointing, and Asking', six deixis words and the pattern behind them, one chapter per Indic track
     expect(ramp.length).toBeLessThan(lessons.length);
   });
 });
