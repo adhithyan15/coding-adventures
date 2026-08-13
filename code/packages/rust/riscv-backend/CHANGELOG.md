@@ -7,6 +7,8 @@
   the three-pair register pool.
 - Added pair-spill reloads for wide shifts, including a parameterized simulator
   fixture that shifts a stack-resident full-width value.
+- Added dedicated pair-spill reloads for signed and unsigned restoring division,
+  with simulator coverage for stack-resident dividends and divisors.
 - Added scalar register spilling: live values evict to aligned `sp`-relative
   stack slots, reload through dedicated operand registers, and restore the
   frame on every return. The simulator fixture now executes seven live scalar
