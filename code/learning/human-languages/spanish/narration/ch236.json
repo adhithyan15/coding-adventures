@@ -1,0 +1,230 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 236,
+  "title": "Hablando --- An Action Caught in the Middle",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:fedacdbaf3a7819c",
+  "lessons": [
+    {
+      "id": "ES-C62-hablando",
+      "sequence": 2415,
+      "title": "hablando — an action caught in the middle",
+      "headword": "hablando",
+      "romanization": "hablando",
+      "gloss": "speaking — the form for an action caught in the middle, built by swapping the infinitive's ending for -ando",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:91dba44114a297c1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Hablo says that I speak. It does not say I am speaking right now, this minute, with my mouth open."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish has a separate form for that, and it is built from the infinitive."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: swap the ending",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "habl- ar becomes habl- ando."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "hablar, hablando.",
+                "trabajar, trabajando.",
+                "estudiar, estudiando."
+              ]
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Take the -ar off, put -ando on. There is nothing to agree with and nothing to conjugate: one form, for everybody. After all the endings this book has asked you to learn, that is a holiday."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin had a form for an action thought of as a thing being done — the gerund, ending in -ndum. Spanish kept the ending almost untouched and threw away everything else about it: Latin's gerund had case endings, and Spanish's has none at all."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What survives is the meaning: not to speak, not I speak, but speaking — the action underway, with no beginning and no end attached."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "English built its -ing separately and lands in almost the same place, which is why hablando feels immediately familiar. Almost. The two part company later, and this book will show you where."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hablando, trabajando, estudiando",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hablando*, *trabajando*, *estudiando*]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C62-hablando-make",
+              "prompt": "Make the -ando form of trabajar.",
+              "assesses": [
+                "ES-GRAMMAR-GERUND-AR"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "trabajando",
+                "trabajando."
+              ],
+              "feedback": {
+                "correct": "Ending off, -ando on.",
+                "incorrect": "Trabajando."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C62-hablando-agree",
+              "prompt": "How many forms of hablando are there, for all the different people?",
+              "assesses": [
+                "ES-GRAMMAR-GERUND-AR"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "one",
+                "one, it never changes"
+              ],
+              "feedback": {
+                "correct": "Nothing to agree with.",
+                "incorrect": "One. It never changes."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C62-hablando-mean",
+              "prompt": "Does hablando mean to speak, I speak, or speaking?",
+              "assesses": [
+                "ES-GRAMMAR-GERUND-MEANING"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "speaking",
+                "speaking, the action underway"
+              ],
+              "feedback": {
+                "correct": "The action underway.",
+                "incorrect": "Speaking -- the action in the middle."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What replaces the -ar? (-ando.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And how many endings does this form have? (One. It agrees with nothing.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

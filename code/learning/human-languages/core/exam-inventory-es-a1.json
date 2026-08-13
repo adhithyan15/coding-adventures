@@ -382,7 +382,8 @@
       "id": "A1-V-03",
       "category": "El verbo",
       "label": "present indicative: actual and durative values",
-      "probe": null
+      "probe": null,
+      "note": "Chapter 238 teaches the PROGRESSIVE (estar + gerund) and contrasts it with the plain present, which is adjacent to this point but is not it: the inventory asks for the present indicative's own actual and durative readings -- that `hablo` alone can mean both `I speak` and `I am speaking`. Probing this with the progressive atoms would close it with a different construction, so it stays open."
     },
     {
       "id": "A1-V-04",
@@ -460,8 +461,10 @@
       "id": "A1-V-13",
       "category": "El verbo",
       "label": "the gerund",
-      "probe": null,
-      "note": "The gerund is not taught anywhere in the track."
+      "probe": [
+        "ES-GRAMMAR-GERUND-AR",
+        "ES-GRAMMAR-GERUND-ER-IR"
+      ]
     },
     {
       "id": "A1-V-14",
@@ -541,8 +544,9 @@
       "id": "A1-SV-04",
       "category": "El sintagma verbal",
       "label": "direct object: people take the preposition a, things do not",
-      "probe": null,
-      "note": "The personal a is not taught."
+      "probe": [
+        "ES-GRAMMAR-PERSONAL-A"
+      ]
     },
     {
       "id": "A1-SV-05",
