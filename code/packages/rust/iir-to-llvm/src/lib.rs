@@ -1811,7 +1811,10 @@ fn lower_instr(
         "const" => {
             let dest = require_dest(instr, "const", fn_name)?;
             let lit = render_literal(instr.srcs.first(), &instr.type_hint, fn_name)?;
-            state.env.insert(dest.to_string(), lit);
+            state.env.insert(dest.to_string(), lit.clone());
+            if matches!(instr.type_hint.as_str(), "bool" | "i1") {
+                state.env_i1.insert(dest.to_string(), lit);
+            }
             Ok(())
         }
 

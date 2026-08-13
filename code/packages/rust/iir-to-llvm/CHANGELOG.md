@@ -1,5 +1,11 @@
 # Changelog — iir-to-llvm
 
+## 0.55.0 - 2026-08-13 - boolean literal merge slots
+
+- Boolean constants now seed the LLVM `i1` sidecar used by promoted merge
+  slots, so branch-selected literal booleans store on every path instead of
+  leaving the slot uninitialized.
+
 ## 0.54.0 - 2026-08-12 - boolean conditional merge slots
 
 - `mov : bool` now propagates a comparison source's sidecar `i1` value, and a

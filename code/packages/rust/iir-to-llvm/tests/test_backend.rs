@@ -1652,6 +1652,49 @@ fn comparison_moves_store_i1_into_boolean_merge_slot() {
     assert!(!ll.contains("store i1 %then_cmp, ptr %merged.slot"), "must not store widened i64:\n{ll}");
 }
 
+#[test]
+fn boolean_literal_moves_store_into_boolean_merge_slot() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "bool",
+        vec![
+            IIRInstr::new("const", Some("cond".into()), vec![Operand::Bool(false)], "bool"),
+            IIRInstr::new(
+                "jmp_if_false",
+                None,
+                vec![Operand::Var("cond".into()), Operand::Var("else".into())],
+                "void",
+            ),
+            IIRInstr::new("const", Some("then_value".into()), vec![Operand::Bool(true)], "bool"),
+            IIRInstr::new(
+                "mov",
+                Some("merged".into()),
+                vec![Operand::Var("then_value".into())],
+                "bool",
+            ),
+            IIRInstr::new("jmp", None, vec![Operand::Var("end".into())], "void"),
+            IIRInstr::new("label", None, vec![Operand::Var("else".into())], "void"),
+            IIRInstr::new("const", Some("else_value".into()), vec![Operand::Bool(true)], "bool"),
+            IIRInstr::new(
+                "mov",
+                Some("merged".into()),
+                vec![Operand::Var("else_value".into())],
+                "bool",
+            ),
+            IIRInstr::new("label", None, vec![Operand::Var("end".into())], "void"),
+            IIRInstr::new("ret", None, vec![Operand::Var("merged".into())], "bool"),
+        ],
+    );
+    let ll = lower(&module_with(f));
+    assert!(ll.contains("%merged.slot = alloca i1"), "expected boolean merge slot:\n{ll}");
+    assert_eq!(
+        ll.matches("store i1 1, ptr %merged.slot").count(),
+        2,
+        "both literal branches must store into the merge slot:\n{ll}"
+    );
+}
+
 /// A purely straight-line function (no var assigned twice) takes the fast path:
 /// no `alloca`/`store`/`load` is emitted — the `const`/`mov` side-map still wins.
 #[test]
