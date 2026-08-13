@@ -7,6 +7,7 @@ chapter: 17
 type: word
 headword: ಮಧ್ಯಾಹ್ನ ಮಧ್ಯರಾತ್ರಿ
 gloss: noon and midnight — both direct Sanskrit tatsama compounds built on the SAME "middle" root, madhya
+romanization: "madhyāhna madhyarātri"
 concept_tag: KA-TIME-NOON-MIDNIGHT
 prerequisites: [KA-C16-tingalugalu]
 sounds: [kannada-conjunct-dhya, kannada-vowel-sign-aa]

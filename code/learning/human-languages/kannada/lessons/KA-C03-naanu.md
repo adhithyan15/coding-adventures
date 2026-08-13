@@ -4,6 +4,7 @@ chapter: 3
 type: word
 headword: ನಾನು
 gloss: I
+romanization: "nānu"
 concept_tag: PRONOUN-I
 prerequisites: [KA-C02-nanna]
 sounds: [long-aa]

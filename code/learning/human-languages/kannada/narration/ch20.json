@@ -4,7 +4,7 @@
   "chapter": 20,
   "title": "Numbers 11–20 and Weather",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:ebc489f9095368bd",
+  "sourceHash": "fnv1a64:6880622566b54cdb",
   "lessons": [
     {
       "id": "KA-C20-hannondu-ippattu",
@@ -123,9 +123,9 @@
     {
       "id": "KA-C20-havamana",
       "sequence": 490,
-      "title": "ಹವಾಮಾನ — a genuine two-language hybrid word",
+      "title": "ಹವಾಮಾನ (havāmāna) — a genuine two-language hybrid word",
       "headword": "ಹವಾಮಾನ",
-      "romanization": "",
+      "romanization": "havāmāna",
       "gloss": "weather — a Persian+Sanskrit HYBRID compound: hava (\"air,\" from Persian/Arabic) + maana (\"measure,\" Sanskrit)",
       "script": "kannada",
       "modality": "voice",
@@ -133,7 +133,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:36b6f5f3c841c2b3",
+      "sourceHash": "fnv1a64:3102b50b8d659389",
       "notice": null,
       "blocks": [
         {

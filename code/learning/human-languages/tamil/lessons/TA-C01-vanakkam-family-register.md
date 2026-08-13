@@ -5,6 +5,7 @@ chapter: 1
 type: etymology
 headword: வணக்கம் / நமஸ்காரம்
 gloss: Tamil kept a native bow-word where its neighbors borrowed Sanskrit, and uses it across settings
+romanization: "vaṇakkam / namaskāram"
 prerequisites: [TA-C01-vanakkam]
 sounds: [tamil-retroflex-n]
 roots: [vaṇaṅku, sanskrit-namas]

@@ -1,5 +1,49 @@
 # Changelog
 
+## 0.131.0 — 2026-08-12 — literal while predicates
+
+The initial `while` proof now recognizes direct boolean literals. A `true`
+predicate establishes the first body execution, while `false` remains a
+zero-trip path that cannot establish definite string initialization.
+
+## 0.130.0 — 2026-08-12 — static conditional while predicates
+
+The initial `while` proof now evaluates a conditional boolean predicate when
+its selector is statically known, inspecting only the selected branch. Dynamic
+selectors and unknown selected predicates remain fail-closed.
+
+## 0.129.0 — 2026-08-12 — composed static while conditions
+
+The initial `while` condition proof now composes already-known finite numeric
+comparisons through `not`, `and`, `or`, `impl`, and `eqv`. Every required leaf
+must remain statically known; bare boolean literals and dynamic operands still
+fail closed.
+
+## 0.128.0 — 2026-08-12 — static initial while conditions
+
+Definite string initialization now flows out of a `while` for-list element
+when a bounded static numeric comparison proves its initial condition true
+after abstractly assigning the controlled variable's first value. The abstract
+maps are restored before normal lowering; false, dynamic, call-bearing, array,
+by-name, and captured-global cases remain fail-closed.
+
+## 0.127.0 — 2026-08-12 — tracked step-loop bounds
+
+The statically nonempty `step`/`until` proof now consumes straight-line integer
+or real snapshots from the loop header before dynamic-loop lowering invalidates
+numeric metadata. Unknown and statically zero-trip bounds remain fail-closed,
+and snapshots are still disabled before the loop body is analyzed.
+
+## 0.126.0 — 2026-08-12 — statically nonempty step-loop initialization
+
+Definite string initialization now flows out of `step`/`until` elements when
+finite static start, step, and limit values prove the loop body executes at
+least once. Descending loops use the negative-step bound rule; zero-trip and
+dynamic cases continue to restore the entry initialization set.
+Local string slots receive an empty runtime seed so typed backends can verify
+the syntactic zero-trip predecessor; the compiler's separate initialization
+set still rejects every source-level read before assignment.
+
 ## 0.125.0 — 2026-08-11 — controlled-variable snapshots
 
 Plain single-value `for` elements now update the local controlled variable's

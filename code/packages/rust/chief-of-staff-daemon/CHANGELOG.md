@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- Add optional Chief-owned ONVIF pairing over the shared durable controller.
+  One complete owner-only configuration tuple binds credential input to an
+  exact bridge, startup restores transaction state, and worker failure joins
+  the coordinated shutdown path without exposing credentials in durable state.
+- Add optional Chief-owned Hue pairing over the shared durable controller. An
+  owner-only injected KEK explicitly enables in-process Vault custody; pending
+  sessions retain their principal and exact revision, transaction recovery runs
+  before serving, and worker failure participates in coordinated shutdown.
 - Add optional Chief-owned Hue mDNS discovery on the shared durable smart-home
   controller. Worker setup is idempotent, its lifecycle is explicitly
   start/stop/join managed with both listeners, and clock or actor failure stops

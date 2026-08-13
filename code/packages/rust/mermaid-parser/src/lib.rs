@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.66.0";
+pub const VERSION: &str = "0.72.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -1220,22 +1220,27 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
             while cursor.consume_if("COMMA").is_some() {
                 ids.push(take_state_ref(&mut cursor)?);
             }
-            let class_name = take_state_ref(&mut cursor)?;
+            let mut class_names = vec![take_state_ref(&mut cursor)?];
+            while matches!(token_name(cursor.current()), "ID" | "WORD") {
+                class_names.push(take_state_ref(&mut cursor)?);
+            }
             for id in &ids {
                 if !node_indices.contains_key(id) && !groups.iter().any(|group| &group.id == id) {
                     upsert_state_node(&mut nodes, &mut node_indices, id.clone(), id.clone());
                 }
             }
             for id in ids {
-                apply_or_defer_state_class(
-                    &id,
-                    class_name.clone(),
-                    &mut nodes,
-                    &node_indices,
-                    &mut groups,
-                    &class_styles,
-                    &mut pending_classes,
-                );
+                for class_name in &class_names {
+                    apply_or_defer_state_class(
+                        &id,
+                        class_name.clone(),
+                        &mut nodes,
+                        &node_indices,
+                        &mut groups,
+                        &class_styles,
+                        &mut pending_classes,
+                    );
+                }
             }
         } else if cursor.current().value.eq_ignore_ascii_case("note") {
             cursor.advance();
@@ -1339,7 +1344,7 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
         } else if cursor.current().value.eq_ignore_ascii_case("state") {
             cursor.advance();
             let (id, label) = if token_name(cursor.current()) == "STRING" {
-                let label = strip_state_string(&cursor.advance().value);
+                let mut label = strip_state_string(&cursor.advance().value);
                 if !cursor.current().value.eq_ignore_ascii_case("as") {
                     return Err(token_error(
                         cursor.current(),
@@ -1347,7 +1352,12 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
                     ));
                 }
                 cursor.advance();
-                (take_state_ref(&mut cursor)?, label)
+                let id = take_state_ref(&mut cursor)?;
+                if cursor.consume_if("COLON").is_some() {
+                    label.push('\n');
+                    label.push_str(&take_state_text(&mut cursor));
+                }
+                (id, label)
             } else {
                 let id = take_state_ref(&mut cursor)?;
                 if cursor.consume_if("LBRACE").is_some() {
@@ -1668,6 +1678,34 @@ fn apply_state_style(
                 .map_err(|_| token_error(value, "invalid state stroke width"))?;
             style.stroke_width = Some(width);
         }
+        "font-size" => {
+            let size = value
+                .value
+                .strip_suffix("px")
+                .unwrap_or(&value.value)
+                .parse::<f64>()
+                .map_err(|_| token_error(value, "invalid state font size"))?;
+            if size <= 0.0 {
+                return Err(token_error(value, "state font size must be positive"));
+            }
+            style.font_size = Some(size);
+        }
+        "font-weight" => {
+            let weight = match value.value.to_ascii_lowercase().as_str() {
+                "normal" => 400,
+                "bold" => 700,
+                numeric => numeric
+                    .parse::<u16>()
+                    .map_err(|_| token_error(value, "invalid state font weight"))?,
+            };
+            if !(100..=900).contains(&weight) || weight % 100 != 0 {
+                return Err(token_error(
+                    value,
+                    "state font weight must be normal, bold, or 100 through 900",
+                ));
+            }
+            style.font_weight = Some(weight);
+        }
         _ => {
             return Err(token_error(
                 value,
@@ -1718,6 +1756,12 @@ fn merge_state_style(target: &mut DiagramStyle, source: &DiagramStyle) {
     if source.text_color.is_some() {
         target.text_color.clone_from(&source.text_color);
     }
+    if source.font_size.is_some() {
+        target.font_size = source.font_size;
+    }
+    if source.font_weight.is_some() {
+        target.font_weight = source.font_weight;
+    }
 }
 
 fn apply_or_defer_state_class(
@@ -1756,6 +1800,8 @@ fn take_state_text(cursor: &mut TokenCursor) -> String {
         };
         if token_name(token) == "COMMA" {
             text.push(',');
+        } else if token_name(token) == "COLON" {
+            text.push(':');
         } else {
             if !text.is_empty() && !text.ends_with(',') {
                 text.push(' ');
@@ -4477,7 +4523,7 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     #[test]
     fn state_parses_inline_styles() {
         let diagram = parse_state_diagram(
-            "stateDiagram-v2\nReady --> Running\nstyle Ready fill:#fee2e2,stroke:#991b1b,color:#111827,stroke-width:3px\n",
+            "stateDiagram-v2\nReady --> Running\nstyle Ready fill:#fee2e2,stroke:#991b1b,color:#111827,stroke-width:3px,font-size:24px,font-weight:bold\n",
         )
         .expect("state inline styles should parse");
         let style = diagram
@@ -4493,6 +4539,8 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         assert_eq!(style.stroke.as_deref(), Some("#991b1b"));
         assert_eq!(style.text_color.as_deref(), Some("#111827"));
         assert_eq!(style.stroke_width, Some(3.0));
+        assert_eq!(style.font_size, Some(24.0));
+        assert_eq!(style.font_weight, Some(700));
     }
 
     #[test]
@@ -4790,6 +4838,76 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         assert_eq!(
             diagram.groups[0].style.as_ref().unwrap().fill.as_deref(),
             Some("#dcfce7")
+        );
+    }
+
+    #[test]
+    fn state_skips_hash_comments() {
+        let diagram = parse_state_diagram(
+            "stateDiagram-v2\n# lifecycle comment\n#abc color-looking comment\nReady --> Running # transition comment\nRunning: Metal #9829; native\nstyle Ready fill:#dbeafe\n",
+        )
+        .expect("hash comments should parse");
+
+        assert_eq!(diagram.edges.len(), 1);
+        assert_eq!(diagram.nodes.len(), 2);
+        let ready = diagram
+            .nodes
+            .iter()
+            .find(|node| node.id == "Ready")
+            .unwrap();
+        assert_eq!(
+            ready.style.as_ref().unwrap().fill.as_deref(),
+            Some("#dbeafe")
+        );
+        let running = diagram
+            .nodes
+            .iter()
+            .find(|node| node.id == "Running")
+            .unwrap();
+        assert_eq!(running.label.text, "Metal ♥ native");
+    }
+
+    #[test]
+    fn state_alias_accepts_a_trailing_description() {
+        let diagram = parse_state_diagram(
+            "stateDiagram-v2\nstate \"Processing queue\" as Processing: Awaiting native work\n",
+        )
+        .expect("state alias with trailing description");
+
+        assert_eq!(diagram.nodes.len(), 1);
+        assert_eq!(diagram.nodes[0].id, "Processing");
+        assert_eq!(
+            diagram.nodes[0].label.text,
+            "Processing queue\nAwaiting native work"
+        );
+    }
+
+    #[test]
+    fn state_composes_multiple_classes_in_source_order() {
+        let diagram = parse_state_diagram(
+            "stateDiagram-v2\nclassDef base fill:#dbeafe,stroke:#1d4ed8\nclassDef emphasized fill:#dcfce7,stroke-width:4px\nclass Ready,Waiting base emphasized\nReady --> Waiting\n",
+        )
+        .expect("multiple state classes");
+
+        for node in &diagram.nodes {
+            let style = node.style.as_ref().unwrap();
+            assert_eq!(style.fill.as_deref(), Some("#dcfce7"));
+            assert_eq!(style.stroke.as_deref(), Some("#1d4ed8"));
+            assert_eq!(style.stroke_width, Some(4.0));
+        }
+    }
+
+    #[test]
+    fn state_preserves_colons_inside_descriptions_and_transition_labels() {
+        let diagram = parse_state_diagram(
+            "stateDiagram-v2\nReady: Status: awaiting work\nReady --> Running: Trigger: native event\n",
+        )
+        .expect("colon-bearing state text");
+
+        assert_eq!(diagram.nodes[0].label.text, "Status: awaiting work");
+        assert_eq!(
+            diagram.edges[0].label.as_ref().unwrap().text,
+            "Trigger: native event"
         );
     }
 
@@ -5564,7 +5682,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.66.0");
+        assert_eq!(crate::VERSION, "0.72.0");
     }
 
     #[test]

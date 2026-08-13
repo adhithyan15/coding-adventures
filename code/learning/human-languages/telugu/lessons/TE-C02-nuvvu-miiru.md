@@ -4,6 +4,7 @@ chapter: 2
 type: word
 headword: నువ్వు / మీరు
 gloss: you (familiar / respectful)
+romanization: "nuvvu / mīru"
 concept_tag: PRONOUN-YOU
 prerequisites: [TE-C02-peru]
 sounds: [long-ii]

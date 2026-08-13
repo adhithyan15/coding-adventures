@@ -7,6 +7,7 @@ chapter: 20
 type: phrase
 headword: ಹವಾಮಾನ
 gloss: weather — a Persian+Sanskrit HYBRID compound: hava ("air," from Persian/Arabic) + maana ("measure," Sanskrit)
+romanization: "havāmāna"
 concept_tag: KA-WEATHER
 prerequisites: [KA-C18-gante]
 sounds: [kannada-vowel-sign-aa, kannada-compound-word]

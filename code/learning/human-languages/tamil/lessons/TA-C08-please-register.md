@@ -7,6 +7,7 @@ chapter: 8
 type: grammar
 headword: தயவுசெய்து / -உங்கள்
 gloss: standalone please is emphatic while everyday courtesy often lives in the respectful verb ending
+romanization: "tayavu seytu / uṅgaḷ"
 prerequisites: [TA-C08-tayavuseytu]
 sounds: [tamil-vowel-sign-e, pulli-virama]
 roots: [tamil-respectful-imperative]

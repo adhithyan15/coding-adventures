@@ -4,7 +4,7 @@
   "chapter": 36,
   "title": "One House, Four Languages",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:451b541e2e9dd5a5",
+  "sourceHash": "fnv1a64:679fea2b20c1bf03",
   "lessons": [
     {
       "id": "HI-C36-ghar",
@@ -512,7 +512,7 @@
       "sequence": 720,
       "title": "कुर्सी (kursī) — sit down, and watch मेरा change",
       "headword": "कुर्सी",
-      "romanization": "",
+      "romanization": "kursī",
       "gloss": "chair — your first feminine noun, and a word that has been passing between Middle Eastern languages for four thousand years",
       "script": "devanagari",
       "modality": "sight",
@@ -520,7 +520,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:146ec51e225cc113",
+      "sourceHash": "fnv1a64:b6473f82d115a0d2",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -579,7 +579,7 @@
             },
             {
               "kind": "speech",
-              "text": "So मेरी कुर्सी, not merā. When you learnt मेरा you were told you would meet मेरी at your first feminine noun. Here it is."
+              "text": "So मेरी कुर्सी (kursī), not merā. When you learnt मेरा you were told you would meet मेरी at your first feminine noun. Here it is."
             },
             {
               "kind": "speech",
@@ -617,7 +617,7 @@
             },
             {
               "kind": "speech",
-              "text": "And what this chapter has done: घर Sanskrit, दरवाज़ा Persian, कमरा Portuguese, कुर्सी Arabic. One room, four languages — that is Hindi, not an accident of these four words."
+              "text": "And what this chapter has done: घर Sanskrit, दरवाज़ा Persian, कमरा Portuguese, कुर्सी (kursī) Arabic. One room, four languages — that is Hindi, not an accident of these four words."
             }
           ]
         },

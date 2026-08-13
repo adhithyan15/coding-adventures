@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:2abf2f1a1a306578",
+  "sourceHash": "fnv1a64:fd193962437549d4",
   "lessons": [
     {
       "id": "HI-C04-chalta-hun",
@@ -286,7 +286,7 @@
       "sequence": null,
       "title": "मिलेंगे (milenge) — \"(we) will meet\"",
       "headword": "मिलेंगे",
-      "romanization": "",
+      "romanization": "milenge",
       "gloss": "(we) will meet",
       "script": "devanagari",
       "modality": "sight",
@@ -294,7 +294,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a70a0ef65533891a",
+      "sourceHash": "fnv1a64:960b0dfacf3f0eb0",
       "notice": {
         "modality": "sight",
         "needs": [

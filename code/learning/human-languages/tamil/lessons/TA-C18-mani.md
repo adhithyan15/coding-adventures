@@ -7,6 +7,7 @@ chapter: 18
 type: word
 headword: மணி
 gloss: hour — Tamil's OWN dictionaries treat this as a native Dravidian "bell" word, most likely NOT Kannada/Telugu/Hindi's Sanskrit ghaṇṭā, and a probable homophone trap with an unrelated Sanskrit "gem" word spelled the same way
+romanization: "maṇi"
 concept_tag: TA-TIME-HOUR
 prerequisites: [TA-C17-transparent-middle-synonyms]
 sounds: [tamil-retroflex-nna, tamil-vowel-sign-i]

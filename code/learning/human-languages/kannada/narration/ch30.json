@@ -4,14 +4,14 @@
   "chapter": 30,
   "title": "Good Evening",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:aebe084d534a27d6",
+  "sourceHash": "fnv1a64:3e567be5037739b3",
   "lessons": [
     {
       "id": "KA-C30-shubha-sanje",
       "sequence": 590,
       "title": "ಶುಭ ಸಂಜೆ (śubha sañje) — formal, and correctly citing where ಸಂಜೆ comes from",
       "headword": "ಶುಭ ಸಂಜೆ",
-      "romanization": "",
+      "romanization": "śubha sañje",
       "gloss": "\"good evening\" (śubha sañje) — pairs with ಸಂಜೆ, already established (KA-C27) as Sanskrit-via-Prakrit, NOT native Dravidian, whatever an unverified claim you might encounter elsewhere says; leans formal, with ನಮಸ್ಕಾರ likely covering casual use, echoing (with real hedging) the formal-skew question already raised for सुप्रभात and ಶುಭೋದಯ",
       "script": "kannada",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2027420fe9dd34a2",
+      "sourceHash": "fnv1a64:71f56fe687f930ba",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Here's where this lesson needs to be careful about its own sourcing, not just the etymology's. General impressions lean toward ಶುಭ ಸಂಜೆ skewing formal, with the all-purpose ನಮಸ್ಕಾರ — or, among younger urban speakers, borrowed English \"hello\" — more likely to cover ordinary casual conversation. But the evidence for this specific register claim is genuinely thin: it's the same kind of impression that, for both Hindi's सुप्रभात and Kannada's own ಶುಭೋದಯ, needed real digging to confirm or correct, and here that deeper digging hasn't turned up anything more solid than a general leaning. Treat this as an open question, echoing the same one already raised for those two greetings, not a third confirmed data point — this lesson doesn't have strong enough sourcing to settle it either way."
+              "text": "Here's where this lesson needs to be careful about its own sourcing, not just the etymology's. General impressions lean toward ಶುಭ ಸಂಜೆ (śubha sañje) skewing formal, with the all-purpose ನಮಸ್ಕಾರ — or, among younger urban speakers, borrowed English \"hello\" — more likely to cover ordinary casual conversation. But the evidence for this specific register claim is genuinely thin: it's the same kind of impression that, for both Hindi's सुप्रभात and Kannada's own ಶುಭೋದಯ, needed real digging to confirm or correct, and here that deeper digging hasn't turned up anything more solid than a general leaning. Treat this as an open question, echoing the same one already raised for those two greetings, not a third confirmed data point — this lesson doesn't have strong enough sourcing to settle it either way."
             }
           ]
         },
@@ -114,7 +114,7 @@
             },
             {
               "kind": "speech",
-              "text": "Is ಸಂಜೆ native Dravidian? (No — Sanskrit ಸಂಧ್ಯಾ via Maharashtri Prakrit, already established in Chapter 27; be skeptical of any claim otherwise.) Is it settled that ಶುಭ ಸಂಜೆ is formal/rare in casual speech, the way सुप्रभात and ಶುಭೋದಯ turned out to be? (Not settled — the impression leans that way, with ನಮಸ್ಕಾರ likely covering casual use, but the sourcing here is too thin to call it confirmed.)"
+              "text": "Is ಸಂಜೆ native Dravidian? (No — Sanskrit ಸಂಧ್ಯಾ via Maharashtri Prakrit, already established in Chapter 27; be skeptical of any claim otherwise.) Is it settled that ಶುಭ ಸಂಜೆ (śubha sañje) is formal/rare in casual speech, the way सुप्रभात and ಶುಭೋದಯ turned out to be? (Not settled — the impression leans that way, with ನಮಸ್ಕಾರ likely covering casual use, but the sourcing here is too thin to call it confirmed.)"
             }
           ]
         }

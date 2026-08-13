@@ -4,14 +4,14 @@
   "chapter": 24,
   "title": "Night",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:34c5748dc853de1e",
+  "sourceHash": "fnv1a64:cfffb9a83bfad045",
   "lessons": [
     {
       "id": "KA-C24-ratri",
       "sequence": 530,
       "title": "ರಾತ್ರಿ (rātri) — \"night,\" and its native cousin, pushed aside",
       "headword": "ರಾತ್ರಿ",
-      "romanization": "",
+      "romanization": "rātri",
       "gloss": "\"night\" — the same Sanskrit tatsama word already hiding inside madhyarātri; Kannada's real native Dravidian word, irulu, has been pushed into archaism, unlike hagalu's living daytime sense",
       "script": "kannada",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:671996cecd9c3bef",
+      "sourceHash": "fnv1a64:46dd7867144e74c6",
       "notice": null,
       "blocks": [
         {

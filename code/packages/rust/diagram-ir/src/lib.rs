@@ -1,6 +1,6 @@
-//! diagram-ir v0.33.0 - DG00/DG04 semantic IR
+//! diagram-ir v0.34.0 - DG00/DG04 semantic IR
 
-pub const VERSION: &str = "0.33.0";
+pub const VERSION: &str = "0.34.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramDirection {
@@ -39,6 +39,7 @@ pub struct DiagramStyle {
     pub stroke_width: Option<f64>,
     pub text_color: Option<String>,
     pub font_size: Option<f64>,
+    pub font_weight: Option<u16>,
     pub corner_radius: Option<f64>,
 }
 
@@ -49,6 +50,7 @@ pub struct ResolvedDiagramStyle {
     pub stroke_width: f64,
     pub text_color: String,
     pub font_size: f64,
+    pub font_weight: u16,
     pub corner_radius: f64,
 }
 impl Default for ResolvedDiagramStyle {
@@ -59,6 +61,7 @@ impl Default for ResolvedDiagramStyle {
             stroke_width: 2.0,
             text_color: "#1e40af".into(),
             font_size: 14.0,
+            font_weight: 400,
             corner_radius: 8.0,
         }
     }
@@ -78,6 +81,7 @@ pub fn resolve_style_with_base(
             stroke_width: s.stroke_width.unwrap_or(base.stroke_width),
             text_color: s.text_color.clone().unwrap_or(base.text_color),
             font_size: s.font_size.unwrap_or(base.font_size),
+            font_weight: s.font_weight.unwrap_or(base.font_weight),
             corner_radius: s.corner_radius.unwrap_or(base.corner_radius),
         },
     }
@@ -1003,8 +1007,8 @@ mod tests {
     use super::*;
 
     #[test]
-    fn version_is_0_24_0() {
-        assert_eq!(VERSION, "0.33.0");
+    fn version_exists() {
+        assert_eq!(VERSION, "0.34.0");
     }
     #[test]
     fn default_direction_is_tb() {
@@ -1038,6 +1042,7 @@ mod tests {
             stroke_width: 2.0,
             text_color: "#374151".into(),
             font_size: 12.0,
+            font_weight: 400,
             corner_radius: 0.0,
         };
         let s = resolve_style_with_base(None, base);

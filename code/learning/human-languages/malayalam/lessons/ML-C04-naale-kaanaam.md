@@ -4,6 +4,7 @@ chapter: 4
 type: phrase
 headword: നാളെ കാണാം
 gloss: see you tomorrow
+romanization: "nāḷe kāṇāṁ"
 concept_tag: FAREWELL-TOMORROW
 prerequisites: [ML-C04-poyi-varaam]
 sounds: [long-aa, retroflex-l]

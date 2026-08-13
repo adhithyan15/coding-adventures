@@ -131,7 +131,7 @@ Classical Sanskrit manuscripts often ran words together without spaces, so the b
 
 Guided Practice.
 [pause 1 second]
-[once you have stopped driving — write: मेरा — four pieces, one bar]
+[once you have stopped driving — write: मेरा (merā) — four pieces, one bar]
 [once you have stopped driving — write: नाम — three pieces, one bar]
 [once you have stopped driving — write: मेरा नाम (merā nām) — two words, two separate bars]
 
@@ -278,7 +278,7 @@ Assemble the question: your + name + what + is.
 
 The phrase, assembled.
 आपका (āpkā, "your") = आप (you) + का (kā, the possessive "of," the same agreeing kā/kī/ke that matches the noun).
-आपका नाम क्या है? = literally "your name what is?" = "what's your name?"
+आपका नाम क्या (kyā) है (hai)? = literally "your name what is?" = "what's your name?"
 Hindi keeps the verb last again, and simply drops the question-word kyā into the object slot — no reordering, no inversion.
 
 Grammar Lens: answer, and the informal version.
@@ -295,7 +295,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does आपका नाम क्या है? literally say, and where's the verb? ("Your name what is?"; the verb hai is last.) What's āpkā made of? (āp + kā, "you" + possessive.)
+What does आपका नाम क्या (kyā) है? literally say, and where's the verb? ("Your name what is?"; the verb hai is last.) What's āpkā made of? (āp + kā, "you" + possessive.)
 
 
 Lesson 10 of 16.
@@ -329,7 +329,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What Sanskrit/PIE root is है from, and its cousins? (asti / h₁es- — is, ist, est, es.) Where does the verb sit in a Hindi sentence? (At the end.)
+What Sanskrit/PIE root is है (hai) from, and its cousins? (asti / h₁es- — is, ist, est, es.) Where does the verb sit in a Hindi sentence? (At the end.)
 
 
 Lesson 11 of 16.
@@ -385,7 +385,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What root is क्या from, and its English cousins? (ka- / kʷo- — what, who, which.) What sound do most Hindi question-words start with? (k-.)
+What root is क्या (kyā) from, and its English cousins? (ka- / kʷo- — what, who, which.) What sound do most Hindi question-words start with? (k-.)
 
 
 Lesson 13 of 16.
@@ -397,7 +397,7 @@ Assemble the three atoms you just traced — merā, nām, hai — into the sente
 
 The phrase, assembled.
 Three atoms, each already rooted — merā (my, from ma-), nām (name, from nāman), hai (is, from asti):
-मेरा नाम (merā nām) … है = "my name … is" = "my name is…"
+मेरा नाम (merā nām) … है (hai) = "my name … is" = "my name is…"
 Merā nām Arun hai. becomes "My name is Arun." Slot your name into the gap; hai stays at the end.
 
 Grammar Lens: subject–object–verb.

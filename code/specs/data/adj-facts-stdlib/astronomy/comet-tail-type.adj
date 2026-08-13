@@ -1,0 +1,61 @@
+% ============================================================================
+% comet-tail-type — the two separate tails a comet actually has, and the
+% defining path each one traces (adj-facts-stdlib, ASTRONOMY).
+% ============================================================================
+% A sibling library to the already-shipped `comet-part.adj` (which names
+% nucleus/coma/tail as the three PHYSICAL PARTS of a comet) — this table
+% zooms into that third part, `tail`, and answers a DIFFERENT, more specific
+% question: a comet's tail is not one uniform streamer, it is actually TWO
+% separate tails, and each one traces its own characteristic path across the
+% sky. Recall is a binding query:
+%
+%     ? comet_tail_type(dust_tail, $D)
+%       % traces_a_broad_gently_curving_path_away_from_the_sun
+%
+% A native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground relation
+% `comet_tail_type(tail, description)` carrying the source citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the
+% description WITH its source, on the CPU, with zero model calls, and
+% abstains on a comet-related term that is not one of these two tails. The
+% query also runs BACKWARD — bind a description and recall the tail it
+% names:
+%
+%     ? comet_tail_type($T, always_points_directly_away_from_the_sun)
+%       % ion_tail
+%
+% The two tails, as a little truth table:
+%
+%     tail         description                                              quote (verbatim)
+%     -----------  -------------------------------------------------------  --------------------------------------------------------------------------------
+%     dust_tail     traces_a_broad_gently_curving_path_away_from_the_sun     "This dust tail traces a broad, gently curving path away from the Sun."
+%     ion_tail      always_points_directly_away_from_the_sun                 "The ion tail always points directly away from the Sun."
+%
+% Provenance: quoted verbatim from NASA Space Place's "What Is a Comet?"
+% page — the SAME page the sibling `comet-part.adj` already cites for
+% nucleus/coma/tail. That page states plainly, right after introducing the
+% single `tail`, "When astronomers look closely, they find that comets
+% actually have two separate tails" and then gives each of the two its own
+% complete, standalone sentence. WebFetch-verified before writing. `trust
+% authoritative` — NASA is a primary .gov source, the same tier
+% `comet-part.adj` (the sibling library this one refines) already uses.
+%
+% This is genuinely a CLOSED two-way split, not an arbitrary subset of a
+% longer list — the source's own sentence states a comet has exactly two
+% separate tails. A comet-related term that is NOT one of these two —
+% `nucleus`, `coma` — is a different physical part entirely (already tabled
+% in `comet-part.adj`, a coarser sibling table, not a tail sub-type), so a
+% recall on it here ABSTAINS rather than inventing a tail description. (See
+% ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table comet_tail_type {
+    columns tail, description
+
+    row (dust_tail, traces_a_broad_gently_curving_path_away_from_the_sun)
+    row (ion_tail, always_points_directly_away_from_the_sun)
+
+    source "This dust tail traces a broad, gently curving path away from the Sun."
+    locator "https://spaceplace.nasa.gov/comets/en/"
+    trust authoritative
+}

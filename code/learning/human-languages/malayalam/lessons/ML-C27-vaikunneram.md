@@ -7,6 +7,7 @@ chapter: 27
 type: word
 headword: വൈകുന്നേരം
 gloss: "evening" (vaikunnēraṁ) — native Dravidian compound, Wiktionary-glossed "latening time," from വൈക് (vaikŭ, plausibly the root of വൈകുക, "to get late" — a reasonable inference, not something Wiktionary's compound entry states outright) + -ഉം (-uṁ) + നേരം (nēraṁ, "time," itself native Dravidian, not Sanskrit); Wiktionary itself ALSO lists "afternoon" as a second sense, though phrasebook sources cleanly split evening (this word) from afternoon (a separate compound built on ഉച്ച, ML-C17's "noon," plus കഴിഞ്ഞ്) — an honest source-tension worth flagging, not smoothing over
+romanization: "vaikunnēraṁ"
 concept_tag: TIME-EVENING
 prerequisites: [ML-C17-paathira]
 sounds: [malayalam-vowel-sign-ai, malayalam-conjunct-nn]

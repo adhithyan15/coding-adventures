@@ -4,6 +4,7 @@ chapter: 4
 type: word
 headword: पुनः
 gloss: again
+romanization: "punaḥ"
 concept_tag: SA-WORD-PUNAH
 prerequisites: []
 sounds: [inherent-a, visarga]

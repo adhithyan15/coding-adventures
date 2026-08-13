@@ -4,6 +4,7 @@ chapter: 1
 type: word
 headword: നമസ്കാരം
 gloss: hello / greetings (namaskāram — "a making of a bow")
+romanization: "namaskāram"
 concept_tag: GREETING-HELLO
 prerequisites: []
 sounds: [malayalam-inherent-a, chandrakkala, conjunct, anusvara]

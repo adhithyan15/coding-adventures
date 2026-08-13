@@ -67,7 +67,12 @@ element before the HTML boundary, re-enter adoption-agency recovery for a
 matching HTML ancestor, and report the ordinary unmatched ending when neither
 exists. Description-list item start tags now report when implied-end-tag
 recovery closes a non-current `dt` or `dd`, without flagging adjacent
-description-list items.
+description-list items. Description-list item end tags now use the full
+namespace-aware ordinary-scope boundary before generating implied end tags, so
+`dd` and `dt` endings blocked by `object`, `marquee`, `template`, or table scope
+remain ignored instead of closing across the boundary. Matching current and
+implied-descendant items, cross-name endings, real cells, foreign named
+elements, and synthetic fragment contexts retain their existing recovery.
 
 There are no residual malformed tree-construction cases without a lexer or
 parser diagnostic. HTML `p` and `br` start tags recovered from seeded foreign
@@ -300,11 +305,17 @@ Prioritized work items:
    before preserving the existing implied closure, matching WPT `tests6.dat`
    and `tests20.dat`. First buttons in ordinary and real-cell contexts,
    already-closed buttons, marker-separated buttons, and synthetic button
-   fragment contexts remain quiet. A heading start tag now reports when its
-   current node is another heading before popping that heading, matching WPT
-   `tests1.dat`'s `<h1><h2>` rows. A non-current heading separated by an inline
-   or special element remains open, matching the current Standard and browser
-   behavior. Ruby annotation starts now generate the required implied end tags
+   fragment contexts remain quiet. Authored HTML `applet`, `marquee`, and
+   `object` end tags now report and remain ignored when the matching element is
+   blocked by an ordinary-scope boundary. This preserves the scoped element,
+   its intervening table or marker element, and follow-on content while keeping
+   in-scope endings, implied descendants, real cells, foreign elements, and
+   synthetic fragment contexts on their existing paths. A heading start tag
+   now reports when its current node is another heading before popping that
+   heading, matching WPT `tests1.dat`'s `<h1><h2>` rows. A non-current heading
+   separated by an inline or special element remains open, matching the current
+   Standard and browser behavior. Ruby annotation starts now generate the
+   required implied end tags
    when an authored HTML `ruby` is in scope and report when a non-ruby node
    remains current, matching WPT `tests19.dat` and `webkit01.dat` while keeping
    valid annotation transitions, outside-ruby starts, and synthetic ruby
@@ -321,6 +332,25 @@ Prioritized work items:
    Form end tags now report when implied-end-tag generation leaves a non-form
    node current before the form is removed from the stack, matching WPT
    `tests6.dat` while preserving current-form and implied-descendant closures.
+   Form end tags whose pointer-owned form is blocked by table scope now report
+   before preserving the existing pointer clearing and DOM recovery, matching
+   WPT `tests16.dat`; template-owned forms blocked by the same boundary are
+   covered, while ordinary, foreign-content, cell, and fragment paths keep
+   their existing behavior.
+   Button end tags blocked by a table, object, marquee, or template scope
+   boundary now report and remain ignored, preserving the open button and
+   table insertion state required by the current Standard. WPT `tests20.dat`
+   supplies the open button/table shape; a browser differential with a blocked
+   ending, following row, and trailing text makes the recovery state
+   observable. In-scope, unmatched, cell, foreign-content, and synthetic
+   fragment endings remain on their existing paths.
+   List-item end tags now use the full list-item-scope boundary set instead of
+   only nested `ol` and `ul` elements. An authored HTML `li` blocked by a table,
+   marker element, or template reports and remains open, preserving following
+   table and list content; in-scope implied descendants, real cells, foreign
+   content, unmatched endings, and synthetic fragments retain their existing
+   recovery paths. The shared ordinary-scope helper remains namespace-aware for
+   MathML text integration points and SVG HTML integration points.
 3. **Diagnostic positions and error taxonomy.** Carry source positions into
    tree construction and map diagnostics to current WHATWG concepts. Legacy
    WPT/html5lib error labels are evidence hints, not a normative public API.

@@ -4,14 +4,14 @@
   "chapter": 15,
   "title": "Water and Bread",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:af7d14a9901f6b3a",
+  "sourceHash": "fnv1a64:5cbc086480042fbe",
   "lessons": [
     {
       "id": "HI-C15-paani-roti",
       "sequence": 370,
       "title": "पानी, रोटी (pānī, roṭī) — water (the \"drinkable thing\") and bread",
       "headword": "पानी रोटी",
-      "romanization": "",
+      "romanization": "pānī roṭī",
       "gloss": "water (literally \"the drinkable one,\" not the ancient Sanskrit word for water) and bread/flatbread",
       "script": "devanagari",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bdbb462743bbf066",
+      "sourceHash": "fnv1a64:fcf4941c9c48d2d2",
       "notice": null,
       "blocks": [
         {

@@ -4,14 +4,14 @@
   "chapter": 28,
   "title": "Afternoon",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:a061c09bd6bf626d",
+  "sourceHash": "fnv1a64:bc9bacbd61c667ec",
   "lessons": [
     {
       "id": "TE-C28-madhyahnam-widened",
       "sequence": 560,
-      "title": "మధ్యాహ్నం — the same \"noon\" word, now also \"afternoon\"",
+      "title": "మధ్యాహ్నం (madhyāhnam) — the same \"noon\" word, now also \"afternoon\"",
       "headword": "మధ్యాహ్నం",
-      "romanization": "",
+      "romanization": "madhyāhnam",
       "gloss": "\"afternoon\" — the same word already met meaning precisely \"noon\" (TE-C17), confirmed via a directly-fetched source to also cover \"the time between noon and evening\" in modern usage — the same kind of semantic widening already found for Hindi's दोपहर and, more thinly, Kannada's మధ్యాహ్న",
       "script": "telugu",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3150420000d6d5b9",
+      "sourceHash": "fnv1a64:e95800e95f927a76",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "You already know మధ్యాహ్నం means \"noon\" — precisely, \"middle of the day.\" This lesson's honest twist: the word doesn't stay that precise in modern use."
+              "text": "You already know మధ్యాహ్నం (madhyāhnam) means \"noon\" — precisely, \"middle of the day.\" This lesson's honest twist: the word doesn't stay that precise in modern use."
             }
           ]
         },
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Telugu also has అపరాహ్నం (aparāhnam), from the same classical five-part Sanskrit day division already found behind Kannada's అపరాహ్న — prāta/udaya (sunrise), saṅgava, madhyāhna (noon), aparāhna (\"later afternoon\" specifically), sāyāhna (evening). Be honest about the sourcing here, echoing the same hedge already applied to Kannada's aparāhna: thin, informal evidence — a native-speaker forum discussion, general dictionary usage notes — points toward మధ్యాహ్నం winning colloquially, with అపరాహ్నం staying the more formally precise term. Real, but not corpus-linguistics-grade sourcing — treat it the same cautious way Kannada's own equivalent finding was treated, not as fully settled."
+              "text": "Telugu also has అపరాహ్నం (aparāhnam), from the same classical five-part Sanskrit day division already found behind Kannada's అపరాహ్న — prāta/udaya (sunrise), saṅgava, madhyāhna (noon), aparāhna (\"later afternoon\" specifically), sāyāhna (evening). Be honest about the sourcing here, echoing the same hedge already applied to Kannada's aparāhna: thin, informal evidence — a native-speaker forum discussion, general dictionary usage notes — points toward మధ్యాహ్నం (madhyāhnam) winning colloquially, with అపరాహ్నం staying the more formally precise term. Real, but not corpus-linguistics-grade sourcing — treat it the same cautious way Kannada's own equivalent finding was treated, not as fully settled."
             }
           ]
         },
@@ -114,7 +114,7 @@
             },
             {
               "kind": "speech",
-              "text": "Is మధ్యాహ్నం a new word, or the same one from Chapter 17? (The same word — \"middle\" + \"day.\") Does modern usage confirm మధ్యాహ్నం covers only the exact instant of noon? (No — a directly- fetched source confirms it now covers \"the time between noon and evening\" too.) Is it confirmed whether అపరాహ్నం or widened మధ్యాహ్నం is more common today? (Thin but real evidence points to మధ్యాహ్నం winning colloquially, అపరాహ్నం staying formally precise — not fully settled, but not silent either.)"
+              "text": "Is మధ్యాహ్నం (madhyāhnam) a new word, or the same one from Chapter 17? (The same word — \"middle\" + \"day.\") Does modern usage confirm మధ్యాహ్నం (madhyāhnam) covers only the exact instant of noon? (No — a directly- fetched source confirms it now covers \"the time between noon and evening\" too.) Is it confirmed whether అపరాహ్నం or widened మధ్యాహ్నం (madhyāhnam) is more common today? (Thin but real evidence points to మధ్యాహ్నం (madhyāhnam) winning colloquially, అపరాహ్నం staying formally precise — not fully settled, but not silent either.)"
             }
           ]
         }

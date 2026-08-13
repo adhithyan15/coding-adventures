@@ -36,7 +36,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Read అవును. Native Telugu or Sanskrit loan? (Native.) At root, what kind of statement is a Telugu "yes"? (An assertion of being — "it is [so]," mirrored by kādu, "it is not.")
+Read అవును (avunu). Native Telugu or Sanskrit loan? (Native.) At root, what kind of statement is a Telugu "yes"? (An assertion of being — "it is [so]," mirrored by kādu, "it is not.")
 
 
 Lesson 2 of 6.
@@ -82,7 +82,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Read ధన్యవాదములు. What is Sanskrit in it, and what is Telugu? (dhanya-vāda is Sanskrit; the plural -mulu is Telugu.) What does "agglutinative" mean for how Telugu builds words? (It glues endings onto a stem.)
+Read ధన్యవాదములు (dhanyavādamulu). What is Sanskrit in it, and what is Telugu? (dhanya-vāda is Sanskrit; the plural -mulu is Telugu.) What does "agglutinative" mean for how Telugu builds words? (It glues endings onto a stem.)
 
 
 Lesson 3 of 6.
@@ -129,7 +129,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Read లేదు. What does it deny — existence or identity? (Existence — "there isn't"; kādu denies identity.) How does Telugu's "no" differ from Tamil's and Kannada's? (Different root: lē- / kā-, not the shared il-.)
+Read లేదు (lēdu). What does it deny — existence or identity? (Existence — "there isn't"; kādu denies identity.) How does Telugu's "no" differ from Tamil's and Kannada's? (Different root: lē- / kā-, not the shared il-.)
 
 
 Lesson 4 of 6.
@@ -178,7 +178,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Read నమస్కారం. Native Telugu or a borrowing, and what does it literally mean? (Sanskrit namas + kāra, "the making of a bow.") What does the dot ం (anusvāra) do? (Adds a final nasal.) Which Dravidian language kept a native "hello"? (Tamil, vaṇakkam.)
+Read నమస్కారం (namaskāram). Native Telugu or a borrowing, and what does it literally mean? (Sanskrit namas + kāra, "the making of a bow.") What does the dot ం (anusvāra) do? (Adds a final nasal.) Which Dravidian language kept a native "hello"? (Tamil, vaṇakkam.)
 
 
 Lesson 5 of 6.
@@ -249,4 +249,4 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Read సరే. What does it mean, and what is its Tamil/Kannada twin? ("Okay, agreed"; sari.) Which vowel sign does rē share with lēdu? (The long-"ē" sign.)
+Read సరే (sarē). What does it mean, and what is its Tamil/Kannada twin? ("Okay, agreed"; sari.) Which vowel sign does rē share with lēdu? (The long-"ē" sign.)

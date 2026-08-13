@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased — 36 words a reader can now say
+
+Added `romanization` to 36 lessons that had none, so their headwords become
+HL11 *exposure* — something the reader is shown and can use — rather than script
+they are stuck on. Each is recovered from the pronunciation the lesson already
+gives in its own prose, then checked against the headword's script so a wrong
+grab cannot pass. Nothing is transliterated: a mechanical romanization of this
+script disagrees with its own authors often enough to teach mispronunciations.
+
 ## Chapters 35–40: pre-A1 vocabulary depth — family, face, heart, tea and a meal (2026-08-08)
 
 - **Telugu's pre-A1 vocabulary count was 33 distinct headwords against a 300-word

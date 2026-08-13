@@ -4,9 +4,11 @@
 % The shape a learner (or an LLM) produces to ANSWER "what sounds the same
 % as there?": it states no fact of its own — it only `import`s the grounded
 % table and asks binding queries. The engine resolves each `?` against the
-% `homophone` rows and returns the sound-alike word + the table's own
-% source/locator/trust. A word the table does not carry abstains honestly —
-% the engine never invents a homophone.
+% `homophone` rows and returns EVERY sound-alike word + the table's own
+% source/locator/trust (as of this cycle's extension, a bound word can
+% recall MULTIPLE sound-alikes — `there` now recalls their ; theyre, and
+% `to` now recalls too ; two). A word the table does not carry abstains
+% honestly — the engine never invents a homophone.
 %
 % Run (from this directory so the relative import resolves):
 %     ../../../../packages/rust/target/debug/adj-lang-cli homophones.query.adj
@@ -14,6 +16,7 @@
 
 import "homophones.adj"
 
-? homophone(there, $Word)      % expect their
+? homophone(there, $Word)      % expect their ; theyre
+? homophone(to, $Word)         % expect too ; two (added this cycle)
 ? homophone($Word, too)        % expect to
 ? homophone(here, $Word)       % expect abstain — no homophone is shipped for here

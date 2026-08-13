@@ -7,6 +7,7 @@ chapter: 24
 type: word
 headword: हरा
 gloss: green — a deep cousin of German gelb and English yellow from an ancient shining-color root
+romanization: "harā"
 concept_tag: HI-COLOUR-GREEN-YELLOW
 prerequisites: [HI-C23-billi-history]
 sounds: [retroflex-l, vowel-length-aa]

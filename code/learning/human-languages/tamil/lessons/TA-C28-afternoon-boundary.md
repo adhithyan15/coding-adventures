@@ -7,6 +7,7 @@ chapter: 28
 type: etymology
 headword: நடுப்பகல் / மதியம்
 gloss: dictionary synonymy blurs noon and afternoon while Sanskrit matiyam remains a noon-word
+romanization: "naṭuppakal / matiyam"
 prerequisites: [TA-C28-pirpakal]
 sounds: [tamil-vowel-sign-i]
 roots: [tamil-naTu-middle, sanskrit-madhya-middle]

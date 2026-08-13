@@ -1,6 +1,6 @@
 //! Grammar-driven lexers for Mermaid diagram families.
 
-pub const VERSION: &str = "0.40.0";
+pub const VERSION: &str = "0.41.0";
 
 use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
@@ -192,9 +192,45 @@ pub fn tokenize_mermaid_sequence(source: &str) -> Vec<Token> {
 
 pub fn tokenize_mermaid_state(source: &str) -> Vec<Token> {
     let mut lexer = create_mermaid_state_lexer(source);
-    lexer
+    let tokens = lexer
         .tokenize()
-        .unwrap_or_else(|e| panic!("Mermaid state tokenization failed: {e}"))
+        .unwrap_or_else(|e| panic!("Mermaid state tokenization failed: {e}"));
+    let mut filtered = Vec::with_capacity(tokens.len());
+    let mut semantic_hash_context = false;
+    let mut suppress_line = false;
+    for token in tokens {
+        if matches!(
+            token.type_,
+            lexer::token::TokenType::Newline
+                | lexer::token::TokenType::Semicolon
+                | lexer::token::TokenType::Eof
+        ) {
+            semantic_hash_context = false;
+            suppress_line = false;
+            filtered.push(token);
+            continue;
+        }
+        if suppress_line {
+            continue;
+        }
+
+        let token_name = token.type_name.as_deref();
+        if token.type_ == lexer::token::TokenType::Colon
+            || matches!(token_name, Some("ACC_TITLE" | "ACC_DESCR"))
+            || token.value.eq_ignore_ascii_case("title")
+        {
+            semantic_hash_context = true;
+        }
+        match token_name {
+            Some("HASH_COMMENT") => continue,
+            Some("HASH_COLOR" | "ENTITY") if !semantic_hash_context => {
+                suppress_line = true;
+                continue;
+            }
+            _ => filtered.push(token),
+        }
+    }
+    filtered
 }
 
 #[cfg(test)]
@@ -208,7 +244,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.40.0");
+        assert_eq!(VERSION, "0.41.0");
     }
 
     #[test]
@@ -398,6 +434,22 @@ mod tests {
         assert!(tokens
             .iter()
             .any(|token| token.type_name.as_deref() == Some("HASH_COLOR")));
+    }
+
+    #[test]
+    fn skips_state_hash_comments_without_consuming_entities_or_colors() {
+        let tokens = tokenize_mermaid_state(
+            "stateDiagram-v2\n# standalone comment\n#abc color-looking comment\nReady: Metal #9829; native\nReady --> Running # inline comment\nRunning --> Done #123; entity-looking comment\nstyle Ready fill:#dbeafe\n# final comment",
+        );
+
+        assert!(!tokens.iter().any(|token| token.value.contains("comment")));
+        assert!(tokens
+            .iter()
+            .any(|token| token.type_name.as_deref() == Some("ENTITY")));
+        assert!(tokens
+            .iter()
+            .any(|token| token.type_name.as_deref() == Some("HASH_COLOR")));
+        assert_eq!(tokens.last().unwrap().type_, TokenType::Eof);
     }
 
     #[test]

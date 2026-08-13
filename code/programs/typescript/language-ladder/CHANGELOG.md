@@ -2,6 +2,37 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Devanagari अ ductus (HL-C09CX)
+
+- Render **अ** in five source-aligned movements across four strokes.
+- Preserve its joined upper-and-lower left body, separate shoulder, descending stem, left-to-right shirorekhā, and three lifts in Noto Sans Devanagari.
+- Record the six-stroke traditional Sanskrit form as explicit source variation.
+
+### Added — cited Chinese 上 ductus (HL-C09CW)
+
+- Render **上** in three source-aligned movements across three strokes.
+- Preserve its vertical-first, short-before-long horizontal order and two lifts in Noto Sans SC.
+
+### Added — cited Chinese 早 ductus (HL-C09CV)
+
+- Render **早** in seven source-aligned movements across six strokes.
+- Preserve its complete 日-before-十 order, joined top-right turn, and five lifts in Noto Sans SC.
+
+### Added — cited Chinese 么 ductus (HL-C09CU)
+
+- Render **么** in four source-aligned movements across three strokes.
+- Preserve its joined falling-to-rightward sweep and two lifts in Noto Sans SC.
+
+### Added — cited Chinese 什 ductus (HL-C09CT)
+
+- Render **什** in four source-aligned movements across four strokes.
+- Preserve its complete 亻-before-十 order and three lifts in Noto Sans SC.
+
+### Added — cited Chinese 见 ductus (HL-C09CS)
+
+- Render **见** in seven source-aligned movements across four strokes.
+- Preserve the frame-before-legs order, all three joined turns, and three lifts in Noto Sans SC.
+
 ### Changed — Spanish reaches 207 chapters
 
 - Re-pin the Spanish chapter table from the generated manifest.
@@ -48,6 +79,10 @@
   A local LaTeX run rewrites `.log`, `.aux` and `.pdf` under the corpus tree, which
   left the guard permanently tripped — teaching the exact habit it exists to prevent.
 - Re-pin the Spanish chapter table from the generated manifest: 181 chapters.
+### Added — cited Chinese 再 ductus (HL-C09CR)
+
+- Render **再** in eight source-aligned movements across six strokes.
+- Preserve the joined frame, close-last order, and five lifts in Noto Sans SC.
 
 ### Added — cited Chinese 请 ductus (HL-C09CQ)
 

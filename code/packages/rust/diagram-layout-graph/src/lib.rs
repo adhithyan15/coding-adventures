@@ -38,7 +38,7 @@
 //! | `h_padding`     | 24      | Horizontal text padding inside a node    |
 //! | `char_width`    | 8       | Approximate width per character (px)     |
 
-pub const VERSION: &str = "0.12.0";
+pub const VERSION: &str = "0.14.0";
 
 use diagram_ir::{
     DiagramDirection, DiagramShape, GraphDiagram, LayoutedGraphDiagram, LayoutedGraphEdge,
@@ -99,12 +99,12 @@ impl Opts {
 // Node width calculation
 // ============================================================================
 
-/// Default label font spec: Helvetica 14 pt weight 400 (matches diagram-to-paint).
-fn label_font_spec() -> FontSpec {
+/// Label font spec matching the graph Paint text bridge.
+fn label_font_spec(size: f64, weight: u16) -> FontSpec {
     FontSpec {
         family: "Helvetica".to_string(),
-        size: 14.0,
-        weight: 400,
+        size,
+        weight,
         italic: false,
         line_height: 1.2,
     }
@@ -118,12 +118,18 @@ fn label_font_spec() -> FontSpec {
 /// When no measurer is supplied (tests, environments without a font stack),
 /// the heuristic fallback is used:
 ///   width = max(min_node_width, h_padding × 2 + label_chars × char_width)
-fn node_width(label: &str, opts: &Opts, measurer: Option<&dyn TextMeasurer>) -> f64 {
+fn node_width(
+    label: &str,
+    font_size: f64,
+    font_weight: u16,
+    opts: &Opts,
+    measurer: Option<&dyn TextMeasurer>,
+) -> f64 {
     let text_width = if let Some(m) = measurer {
-        let result = m.measure(label, &label_font_spec(), None);
+        let result = m.measure(label, &label_font_spec(font_size, font_weight), None);
         opts.h_padding * 2.0 + result.width
     } else {
-        opts.h_padding * 2.0 + label.len() as f64 * opts.char_width
+        opts.h_padding * 2.0 + label.len() as f64 * opts.char_width * font_size / 14.0
     };
     text_width.max(opts.min_node_width)
 }
@@ -133,6 +139,10 @@ fn node_dimensions(
     opts: &Opts,
     measurer: Option<&dyn TextMeasurer>,
 ) -> (f64, f64) {
+    let resolved_style = resolve_style(node.style.as_ref());
+    let font_size = resolved_style.font_size;
+    let font_weight = resolved_style.font_weight;
+    let line_height = (font_size * 1.2).max(18.0);
     match node.shape {
         Some(DiagramShape::Bar) => (64.0, 8.0),
         Some(DiagramShape::Note) => {
@@ -141,19 +151,19 @@ fn node_dimensions(
                 .label
                 .text
                 .lines()
-                .map(|line| node_width(line, opts, measurer))
+                .map(|line| node_width(line, font_size, font_weight, opts, measurer))
                 .fold(opts.min_node_width, f64::max);
-            (width, (24.0 + line_count * 18.0).max(opts.node_height))
+            (width, (24.0 + line_count * line_height).max(opts.node_height))
         }
         _ => {
             let width = node
                 .label
                 .text
                 .lines()
-                .map(|line| node_width(line, opts, measurer))
+                .map(|line| node_width(line, font_size, font_weight, opts, measurer))
                 .fold(opts.min_node_width, f64::max);
             let line_count = node.label.text.lines().count().max(1) as f64;
-            (width, opts.node_height.max(24.0 + line_count * 18.0))
+            (width, opts.node_height.max(24.0 + line_count * line_height))
         }
     }
 }
@@ -413,6 +423,7 @@ fn route_edge(
         stroke_width:  2.0,
         text_color:    "#374151".to_string(),
         font_size:     12.0,
+        font_weight:   400,
         corner_radius: 0.0,
     };
     let style = resolve_style_with_base(edge.style.as_ref(), edge_base);
@@ -579,6 +590,7 @@ fn layout_groups(diagram: &GraphDiagram, nodes: &[LayoutedGraphNode]) -> Vec<Lay
                         stroke_width: 1.5,
                         text_color: "#334155".into(),
                         font_size: 14.0,
+                        font_weight: 400,
                         corner_radius: 8.0,
                     },
                 ),
@@ -839,7 +851,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.12.0");
+        assert_eq!(VERSION, "0.14.0");
     }
 
     #[test]
@@ -1014,6 +1026,27 @@ mod tests {
 
         assert!(note.height >= 60.0);
         assert!(note.width >= 96.0);
+    }
+
+    #[test]
+    fn node_geometry_reserves_resolved_font_size() {
+        let mut d = two_node_diagram(DiagramDirection::Lr);
+        d.nodes[0].label = DiagramLabel::new("Large label");
+        d.nodes[0].style = Some(diagram_ir::DiagramStyle {
+            font_size: Some(28.0),
+            font_weight: Some(700),
+            ..Default::default()
+        });
+        d.nodes[1].label = DiagramLabel::new("Large label");
+
+        let l = layout_graph_diagram(&d, None, None);
+        let large = l.nodes.iter().find(|node| node.id == "A").unwrap();
+        let regular = l.nodes.iter().find(|node| node.id == "B").unwrap();
+
+        assert!(large.width > regular.width);
+        assert!(large.height > regular.height);
+        assert_eq!(large.style.font_size, 28.0);
+        assert_eq!(large.style.font_weight, 700);
     }
 
     #[test]

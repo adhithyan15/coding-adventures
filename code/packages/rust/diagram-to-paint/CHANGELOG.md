@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Shape graph node, group, and edge text using resolved font weights.
+- Center graph labels using their resolved authored font size.
+- Validate colon-bearing state and transition text through native Metal PNG rendering.
+- Validate composed state classes through resolved graph styles and native Metal PNG rendering.
+- Validate multiline labels from quoted state aliases with trailing descriptions through native Metal PNG rendering.
+- Validate state hash comments alongside semantic colors through native Metal PNG rendering.
 - Omit empty graph-state shapes and labels when the semantic directive requests it.
 - Shape multiline graph-node descriptions without backend soft rewrapping.
 - Lower concurrent state-region dividers to backend-neutral Paint paths.

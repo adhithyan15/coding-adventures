@@ -4,6 +4,7 @@ chapter: 2
 type: word
 headword: मेरा
 gloss: my
+romanization: "merā"
 concept_tag: PRONOUN-MY
 prerequisites: [HI-C02-naam]
 sounds: [matra-e, matra-aa]

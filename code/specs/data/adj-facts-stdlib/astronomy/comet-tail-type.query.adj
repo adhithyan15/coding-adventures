@@ -1,0 +1,21 @@
+% ============================================================================
+% comet-tail-type.query.adj — a worked recall over the comet-tail-type library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what's the difference
+% between a comet's two tails?": it states no fact of its own — it only
+% `import`s the grounded table and asks binding queries. The engine resolves
+% each `?` against the `comet_tail_type` rows and returns the description +
+% the table's own source/locator/trust. The second query runs BACKWARD (bind
+% the description, recall which tail it names). A comet-related term that is
+% not one of these two tails (e.g. `coma`, a different physical part
+% entirely) abstains honestly — the engine never invents a tail description.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli comet-tail-type.query.adj
+% ============================================================================
+
+import "comet-tail-type.adj"
+
+? comet_tail_type(dust_tail, $D)                                    % expect traces_a_broad_gently_curving_path_away_from_the_sun
+? comet_tail_type($T, always_points_directly_away_from_the_sun)     % expect ion_tail — reverse recall
+? comet_tail_type(coma, $D)                                          % expect abstain — coma is a different physical part, not a tail sub-type

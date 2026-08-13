@@ -4,14 +4,14 @@
   "chapter": 22,
   "title": "Green and Yellow",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:07cbedbaa5b02653",
+  "sourceHash": "fnv1a64:fd1ed5e909687fa0",
   "lessons": [
     {
       "id": "TE-C22-pacha-pasupu",
       "sequence": 500,
-      "title": "పచ్చ, పసుపు — two colors, one Dravidian root",
+      "title": "పచ్చ, పసుపు (pacca pasupu) — two colors, one Dravidian root",
       "headword": "పచ్చ, పసుపు",
-      "romanization": "",
+      "romanization": "pacca pasupu",
       "gloss": "green and yellow — a genuine Telugu doublet pair, both from the same Proto-Dravidian pac- root, unlike Kannada, where the yellow word broke away as a Sanskrit loan",
       "script": "telugu",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b0fe9f377036d9b9",
+      "sourceHash": "fnv1a64:a4962c7fe1f80f18",
       "notice": null,
       "blocks": [
         {

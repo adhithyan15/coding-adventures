@@ -4,6 +4,7 @@ chapter: 1
 type: word
 headword: ನಮಸ್ಕಾರ
 gloss: hello / greetings (namaskāra — "a making of a bow")
+romanization: "namaskāra"
 concept_tag: GREETING-HELLO
 prerequisites: []
 sounds: [kannada-inherent-a, virama, ottakshara-conjunct]

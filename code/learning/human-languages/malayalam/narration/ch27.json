@@ -4,14 +4,14 @@
   "chapter": 27,
   "title": "Evening",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:c2a9ff4b74bdfb8e",
+  "sourceHash": "fnv1a64:1614ca3f0cadb12e",
   "lessons": [
     {
       "id": "ML-C27-vaikunneram",
       "sequence": 590,
       "title": "വൈകുന്നേരം (vaikunnēraṁ) — \"evening,\" built from a verb meaning \"to get late\"",
       "headword": "വൈകുന്നേരം",
-      "romanization": "",
+      "romanization": "vaikunnēraṁ",
       "gloss": "\"evening\" (vaikunnēraṁ) — native Dravidian compound, Wiktionary-glossed \"latening time,\" from വൈക് (vaikŭ, plausibly the root of വൈകുക, \"to get late\" — a reasonable inference, not something Wiktionary's compound entry states outright) + -ഉം (-uṁ) + നേരം (nēraṁ, \"time,\" itself native Dravidian, not Sanskrit); Wiktionary itself ALSO lists \"afternoon\" as a second sense, though phrasebook sources cleanly split evening (this word) from afternoon (a separate compound built on ഉച്ച, ML-C17's \"noon,\" plus കഴിഞ്ഞ്) — an honest source-tension worth flagging, not smoothing over",
       "script": "malayalam",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f51751154852e81b",
+      "sourceHash": "fnv1a64:1ac20e914f716f35",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Here's a real tension, not smoothed over: Wiktionary's own entry lists both \"afternoon\" and \"evening\" as senses of this single word. But two independently-fetched phrasebook sources (ling-app.com, talkpal.ai) draw a cleaner line — evening is വൈകുന്നേരം, while afternoon gets its own, separate compound built on ഉച്ച (already met, Chapter 17, \"noon\") plus കഴിഞ്ഞ് (kazhinju, \"passed, gone by\"). This project's discipline is to flag genuine disagreement rather than quietly pick whichever source is more convenient — so treat the afternoon/evening boundary here as genuinely blurry in the dictionary sense, even though the two everyday phrasebook sources agree on a cleaner practical split."
+              "text": "Here's a real tension, not smoothed over: Wiktionary's own entry lists both \"afternoon\" and \"evening\" as senses of this single word. But two independently-fetched phrasebook sources (ling-app.com, talkpal.ai) draw a cleaner line — evening is വൈകുന്നേരം (vaikunnēraṁ), while afternoon gets its own, separate compound built on ഉച്ച (already met, Chapter 17, \"noon\") plus കഴിഞ്ഞ് (kazhinju, \"passed, gone by\"). This project's discipline is to flag genuine disagreement rather than quietly pick whichever source is more convenient — so treat the afternoon/evening boundary here as genuinely blurry in the dictionary sense, even though the two everyday phrasebook sources agree on a cleaner practical split."
             }
           ]
         },
@@ -114,7 +114,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does വൈകുന്നേരം literally mean, and what verb is it plausibly built from? (\"Latening time\" — from വൈകുക, \"to get late.\") Do all sources agree on where \"afternoon\" ends and \"evening\" begins for this word? (No — Wiktionary lists it as covering both senses; phrasebook sources instead draw a clean line, treating afternoon as a separate compound.) Is വൈകുന്നേരം a Sanskrit borrowing, like Telugu's సాయంత్రం? (No — it's a native Dravidian compound, built from an everyday verb and a native \"time\" word, നേരം.)"
+              "text": "What does വൈകുന്നേരം (vaikunnēraṁ) literally mean, and what verb is it plausibly built from? (\"Latening time\" — from വൈകുക, \"to get late.\") Do all sources agree on where \"afternoon\" ends and \"evening\" begins for this word? (No — Wiktionary lists it as covering both senses; phrasebook sources instead draw a clean line, treating afternoon as a separate compound.) Is വൈകുന്നേരം (vaikunnēraṁ) a Sanskrit borrowing, like Telugu's సాయంత్రం? (No — it's a native Dravidian compound, built from an everyday verb and a native \"time\" word, നേരം.)"
             }
           ]
         }

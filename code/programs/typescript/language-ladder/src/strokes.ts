@@ -9,6 +9,7 @@
 
 import arabic from "../../../../learning/human-languages/data/scripts/arabic.json";
 import chinese from "../../../../learning/human-languages/data/scripts/chinese.json";
+import devanagari from "../../../../learning/human-languages/data/scripts/devanagari.json";
 import hebrew from "../../../../learning/human-languages/data/scripts/hebrew.json";
 import persoArabic from "../../../../learning/human-languages/data/scripts/perso-arabic.json";
 import urduNastaliq from "../../../../learning/human-languages/data/scripts/urdu-nastaliq.json";
@@ -204,6 +205,14 @@ const chineseCharacterSource = (glyph: string): StrokeSource => {
   const letter = chinese.letters.find((candidate) => candidate.glyph === glyph);
   if (!letter || !("strokeOrderSource" in letter) || !letter.strokeOrderSource) {
     throw new Error(`Chinese ${glyph} has no verified source`);
+  }
+  return letter.strokeOrderSource;
+};
+
+const devanagariAlphabetSource = (glyph: string): StrokeSource => {
+  const letter = devanagari.letters.find((candidate) => candidate.glyph === glyph);
+  if (!letter || !("strokeOrderSource" in letter) || !letter.strokeOrderSource) {
+    throw new Error(`Devanagari ${glyph} has no verified source`);
   }
   return letter.strokeOrderSource;
 };
@@ -1718,6 +1727,273 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       ] }] },
     ],
     source: chineseCharacterSource("请"),
+  },
+  // 再 opens with the upper horizontal, then builds the central frame before
+  // closing with the long bottom bar: six strokes, five lifts, eight movements.
+  [ductusKey("chinese", "再")]: {
+    script: "chinese",
+    glyph: "再",
+    strokes: [
+      { segments: [{ label: "draw the top horizontal left-to-right", path: [
+        { x: 80, y: 745 }, { x: 220, y: 745 }, { x: 360, y: 745 },
+        { x: 500, y: 745 }, { x: 640, y: 745 }, { x: 780, y: 745 },
+        { x: 920, y: 745 },
+      ] }] },
+      { segments: [{ label: "lift, then descend the left side", path: [
+        { x: 195, y: 575 }, { x: 195, y: 475 }, { x: 195, y: 375 },
+        { x: 195, y: 275 }, { x: 195, y: 175 }, { x: 195, y: 75 },
+        { x: 195, y: -70 },
+      ] }] },
+      { segments: [
+        { label: "lift, then draw the frame's top horizontal", path: [
+          { x: 225, y: 575 }, { x: 315, y: 575 }, { x: 405, y: 575 },
+          { x: 495, y: 575 }, { x: 585, y: 575 }, { x: 675, y: 575 },
+          { x: 800, y: 575 },
+        ] },
+        { label: "turn and descend the right side without lifting", path: [
+          { x: 800, y: 575 }, { x: 800, y: 475 }, { x: 800, y: 375 },
+          { x: 800, y: 275 }, { x: 800, y: 175 }, { x: 800, y: 75 },
+          { x: 800, y: 10 },
+        ] },
+        { label: "hook left at the base without lifting", path: [
+          { x: 800, y: 10 }, { x: 785, y: -10 }, { x: 760, y: -25 },
+          { x: 730, y: -35 }, { x: 695, y: -35 }, { x: 655, y: -30 },
+        ] },
+      ] },
+      { segments: [{ label: "lift, then descend the central vertical", path: [
+        { x: 495, y: 755 }, { x: 495, y: 665 }, { x: 495, y: 575 },
+        { x: 495, y: 485 }, { x: 495, y: 395 }, { x: 495, y: 305 },
+        { x: 495, y: 205 },
+      ] }] },
+      { segments: [{ label: "lift, then draw the inner horizontal", path: [
+        { x: 210, y: 390 }, { x: 310, y: 390 }, { x: 410, y: 390 },
+        { x: 510, y: 390 }, { x: 610, y: 390 }, { x: 710, y: 390 },
+        { x: 790, y: 390 },
+      ] }] },
+      { segments: [{ label: "lift, then close with the long bottom horizontal", path: [
+        { x: 45, y: 195 }, { x: 195, y: 195 }, { x: 345, y: 195 },
+        { x: 495, y: 195 }, { x: 645, y: 195 }, { x: 795, y: 195 },
+        { x: 955, y: 195 },
+      ] }] },
+    ],
+    source: chineseCharacterSource("再"),
+  },
+  // 见 completes its open upper frame before drawing the two lower runs:
+  // four strokes, three lifts, seven movements.
+  [ductusKey("chinese", "见")]: {
+    script: "chinese",
+    glyph: "见",
+    strokes: [
+      { segments: [{ label: "descend the frame's left side", path: [
+        { x: 215, y: 755 }, { x: 215, y: 670 }, { x: 215, y: 585 },
+        { x: 215, y: 500 }, { x: 215, y: 415 }, { x: 215, y: 330 },
+        { x: 215, y: 235 },
+      ] }] },
+      { segments: [
+        { label: "lift, then draw the frame's top horizontal", path: [
+          { x: 220, y: 745 }, { x: 310, y: 745 }, { x: 400, y: 745 },
+          { x: 490, y: 745 }, { x: 580, y: 745 }, { x: 670, y: 745 },
+          { x: 780, y: 745 },
+        ] },
+        { label: "turn and descend the right side without lifting", path: [
+          { x: 780, y: 745 }, { x: 780, y: 660 }, { x: 780, y: 575 },
+          { x: 780, y: 490 }, { x: 780, y: 405 }, { x: 780, y: 320 },
+          { x: 780, y: 235 },
+        ] },
+      ] },
+      { segments: [{ label: "lift, then draw the inner left-falling leg", path: [
+        { x: 490, y: 600 }, { x: 490, y: 520 }, { x: 485, y: 430 },
+        { x: 475, y: 340 }, { x: 450, y: 250 }, { x: 420, y: 170 },
+        { x: 380, y: 100 }, { x: 325, y: 45 }, { x: 260, y: 0 },
+        { x: 180, y: -40 }, { x: 90, y: -65 },
+      ] }] },
+      { segments: [
+        { label: "lift, then descend the second leg", path: [
+          { x: 555, y: 285 }, { x: 555, y: 235 }, { x: 555, y: 185 },
+          { x: 555, y: 135 }, { x: 555, y: 85 }, { x: 555, y: 55 },
+        ] },
+        { label: "bend right along the base without lifting", path: [
+          { x: 555, y: 55 }, { x: 570, y: 20 }, { x: 610, y: -10 },
+          { x: 665, y: -20 }, { x: 725, y: -20 }, { x: 785, y: -15 },
+          { x: 835, y: 5 }, { x: 885, y: 40 },
+        ] },
+        { label: "finish with an upward hook without lifting", path: [
+          { x: 885, y: 40 }, { x: 895, y: 70 }, { x: 905, y: 100 },
+          { x: 915, y: 125 }, { x: 925, y: 145 }, { x: 930, y: 150 },
+        ] },
+      ] },
+    ],
+    source: chineseCharacterSource("见"),
+  },
+  // 什 completes both strokes of 亻 before writing 十: four separate strokes,
+  // three lifts, and four movements.
+  [ductusKey("chinese", "什")]: {
+    script: "chinese",
+    glyph: "什",
+    strokes: [
+      { segments: [{ label: "draw 亻's left-falling stroke from the upper centre down-left", path: [
+        { x: 280, y: 810 }, { x: 265, y: 760 }, { x: 245, y: 700 },
+        { x: 220, y: 640 }, { x: 190, y: 580 }, { x: 155, y: 525 },
+        { x: 120, y: 480 }, { x: 85, y: 450 }, { x: 50, y: 430 },
+      ] }] },
+      { segments: [{ label: "lift, then descend 亻's vertical stroke to the baseline", path: [
+        { x: 225, y: 590 }, { x: 225, y: 480 }, { x: 225, y: 370 },
+        { x: 225, y: 260 }, { x: 225, y: 150 }, { x: 225, y: 40 },
+        { x: 225, y: -65 },
+      ] }] },
+      { segments: [{ label: "lift, then draw 十's horizontal stroke left-to-right", path: [
+        { x: 340, y: 457 }, { x: 440, y: 457 }, { x: 540, y: 457 },
+        { x: 640, y: 457 }, { x: 740, y: 457 }, { x: 840, y: 457 },
+        { x: 940, y: 457 },
+      ] }] },
+      { segments: [{ label: "lift, then descend 十's vertical stroke through the horizontal", path: [
+        { x: 646, y: 810 }, { x: 646, y: 680 }, { x: 646, y: 550 },
+        { x: 646, y: 420 }, { x: 646, y: 290 }, { x: 646, y: 160 },
+        { x: 646, y: 30 }, { x: 646, y: -65 },
+      ] }] },
+    ],
+    source: chineseCharacterSource("什"),
+  },
+  // 么 places its upper falling stroke, joins the second fall to its rightward
+  // base sweep, then adds the final dot: three strokes, two lifts, four movements.
+  [ductusKey("chinese", "么")]: {
+    script: "chinese",
+    glyph: "么",
+    strokes: [
+      { segments: [{ label: "draw the upper left-falling stroke down-left", path: [
+        { x: 475, y: 805 }, { x: 455, y: 755 }, { x: 420, y: 700 },
+        { x: 375, y: 640 }, { x: 325, y: 580 }, { x: 270, y: 520 },
+        { x: 215, y: 470 }, { x: 165, y: 430 }, { x: 120, y: 400 },
+        { x: 75, y: 410 },
+      ] }] },
+      { segments: [
+        { label: "lift, then draw the second left-falling stroke down-left", path: [
+          { x: 650, y: 580 }, { x: 620, y: 520 }, { x: 575, y: 450 },
+          { x: 520, y: 375 }, { x: 455, y: 300 }, { x: 390, y: 225 },
+          { x: 325, y: 155 }, { x: 260, y: 95 }, { x: 205, y: 50 },
+          { x: 175, y: 30 },
+        ] },
+        { label: "turn and sweep right along the base without lifting", path: [
+          { x: 175, y: 30 }, { x: 270, y: 35 }, { x: 380, y: 45 },
+          { x: 490, y: 55 }, { x: 600, y: 70 }, { x: 705, y: 85 },
+          { x: 805, y: 105 },
+        ] },
+      ] },
+      { segments: [{ label: "lift, then place the final dot down-right", path: [
+        { x: 670, y: 295 }, { x: 715, y: 245 }, { x: 760, y: 185 },
+        { x: 805, y: 125 }, { x: 845, y: 65 }, { x: 885, y: 5 },
+        { x: 905, y: -30 },
+      ] }] },
+    ],
+    source: chineseCharacterSource("么"),
+  },
+  // 早 completes 日 before writing 十 below it. The top and right sides of 日
+  // stay joined: six strokes, five lifts, and seven learner movements.
+  [ductusKey("chinese", "早")]: {
+    script: "chinese",
+    glyph: "早",
+    strokes: [
+      { segments: [{ label: "descend 日's left side from the upper left", path: [
+        { x: 189, y: 759 }, { x: 189, y: 690 }, { x: 189, y: 620 },
+        { x: 189, y: 550 }, { x: 189, y: 480 }, { x: 189, y: 412 },
+      ] }] },
+      { segments: [
+        { label: "lift, then draw 日's top horizontal left-to-right", path: [
+          { x: 189, y: 759 }, { x: 290, y: 759 }, { x: 395, y: 759 },
+          { x: 500, y: 759 }, { x: 605, y: 759 }, { x: 710, y: 759 },
+          { x: 806, y: 759 },
+        ] },
+        { label: "turn without lifting and descend 日's right side", path: [
+          { x: 806, y: 759 }, { x: 806, y: 690 }, { x: 806, y: 620 },
+          { x: 806, y: 550 }, { x: 806, y: 480 }, { x: 806, y: 412 },
+        ] },
+      ] },
+      { segments: [{ label: "lift, then draw 日's middle horizontal left-to-right", path: [
+        { x: 189, y: 587 }, { x: 290, y: 587 }, { x: 395, y: 587 },
+        { x: 500, y: 587 }, { x: 605, y: 587 }, { x: 710, y: 587 },
+        { x: 806, y: 587 },
+      ] }] },
+      { segments: [{ label: "lift, then close 日 with its bottom horizontal left-to-right", path: [
+        { x: 189, y: 412 }, { x: 290, y: 412 }, { x: 395, y: 412 },
+        { x: 500, y: 412 }, { x: 605, y: 412 }, { x: 710, y: 412 },
+        { x: 806, y: 412 },
+      ] }] },
+      { segments: [{ label: "lift, then draw 十's horizontal left-to-right", path: [
+        { x: 60, y: 193 }, { x: 190, y: 193 }, { x: 345, y: 193 },
+        { x: 500, y: 193 }, { x: 655, y: 193 }, { x: 810, y: 193 },
+        { x: 944, y: 193 },
+      ] }] },
+      { segments: [{ label: "lift, then descend 十's vertical through the horizontal", path: [
+        { x: 496, y: 389 }, { x: 496, y: 310 }, { x: 496, y: 230 },
+        { x: 496, y: 150 }, { x: 496, y: 70 }, { x: 496, y: -65 },
+      ] }] },
+    ],
+    source: chineseCharacterSource("早"),
+  },
+  // 上 descends its vertical first, then places the short middle horizontal
+  // before the long base: three separate strokes, two lifts, three movements.
+  [ductusKey("chinese", "上")]: {
+    script: "chinese",
+    glyph: "上",
+    strokes: [
+      { segments: [{ label: "descend the central vertical from top to bottom", path: [
+        { x: 466, y: 810 }, { x: 466, y: 680 }, { x: 466, y: 550 },
+        { x: 466, y: 420 }, { x: 466, y: 290 }, { x: 466, y: 160 },
+        { x: 466, y: 20 },
+      ] }] },
+      { segments: [{ label: "lift, then draw the short middle horizontal left-to-right", path: [
+        { x: 470, y: 478 }, { x: 550, y: 478 }, { x: 630, y: 478 },
+        { x: 710, y: 478 }, { x: 790, y: 478 }, { x: 868, y: 478 },
+      ] }] },
+      { segments: [{ label: "lift, then draw the long base horizontal left-to-right", path: [
+        { x: 65, y: 5 }, { x: 210, y: 5 }, { x: 355, y: 5 },
+        { x: 500, y: 5 }, { x: 645, y: 5 }, { x: 790, y: 5 },
+        { x: 936, y: 5 },
+      ] }] },
+    ],
+    source: chineseCharacterSource("上"),
+  },
+  // The four-frame Commons sequence writes the complete left body in one
+  // continuous run, lifts for the middle shoulder, descends the right stem,
+  // then closes with the short shirorekha: four strokes and three lifts.
+  [ductusKey("devanagari", "अ")]: {
+    script: "devanagari",
+    glyph: "अ",
+    strokes: [
+      {
+        segments: [
+          { label: "curve right around the upper bowl", path: [
+            { x: 165, y: 545 }, { x: 205, y: 575 }, { x: 250, y: 595 },
+            { x: 300, y: 596 }, { x: 350, y: 580 }, { x: 395, y: 550 },
+            { x: 420, y: 510 }, { x: 420, y: 470 }, { x: 400, y: 430 },
+            { x: 360, y: 400 }, { x: 315, y: 375 }, { x: 275, y: 355 },
+          ] },
+          { label: "continue down and around the lower bowl without lifting", path: [
+            { x: 275, y: 355 }, { x: 335, y: 330 }, { x: 395, y: 295 },
+            { x: 430, y: 250 }, { x: 435, y: 205 }, { x: 415, y: 160 },
+            { x: 375, y: 125 }, { x: 325, y: 105 }, { x: 275, y: 100 },
+            { x: 225, y: 115 }, { x: 180, y: 145 }, { x: 140, y: 190 },
+            { x: 105, y: 245 }, { x: 80, y: 305 },
+          ] },
+        ],
+      },
+      { segments: [{ label: "lift, then sweep the middle shoulder right", path: [
+        { x: 290, y: 350 }, { x: 350, y: 340 }, { x: 410, y: 325 },
+        { x: 470, y: 317 }, { x: 530, y: 320 }, { x: 585, y: 330 },
+        { x: 625, y: 342 },
+      ] }] },
+      { segments: [{ label: "lift, then descend the right stem", path: [
+        { x: 635, y: 590 }, { x: 635, y: 500 }, { x: 635, y: 410 },
+        { x: 635, y: 320 }, { x: 635, y: 230 }, { x: 635, y: 140 },
+        { x: 635, y: 50 }, { x: 635, y: 5 },
+      ] }] },
+      { segments: [{ label: "lift, then draw the shirorekha left-to-right", path: [
+        { x: 525, y: 585 }, { x: 570, y: 585 }, { x: 615, y: 585 },
+        { x: 660, y: 585 }, { x: 705, y: 585 }, { x: 750, y: 585 },
+        { x: 775, y: 585 },
+      ] }] },
+    ],
+    source: devanagariAlphabetSource("अ"),
   },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner

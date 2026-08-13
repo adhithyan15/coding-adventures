@@ -5,6 +5,7 @@ sequence: 260
 type: phrase
 headword: மீண்டும் சந்திப்போம்
 gloss: we'll meet again
+romanization: "mīṇḍum sandippōm"
 concept_tag: FAREWELL-LATER
 prerequisites: [TA-C04-poy-varugiren]
 sounds: [retroflex-nd]

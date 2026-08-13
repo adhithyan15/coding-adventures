@@ -5,6 +5,7 @@ sequence: 330
 type: word
 headword: வாழ்
 gloss: to live, to flourish
+romanization: "vāḻ"
 concept_tag: TA-VERB-VAZH
 prerequisites: [TA-C05-pesu]
 sounds: [zh-retroflex, long-aa]

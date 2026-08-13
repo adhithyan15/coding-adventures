@@ -7,6 +7,7 @@ chapter: 13
 type: word
 headword: தலை கை
 gloss: head and hand — both native Dravidian words, unlike Hindi's Sanskrit-descended pair
+romanization: "talai kai"
 concept_tag: TA-BODY-BASIC
 prerequisites: [TA-C12-kudumbam]
 sounds: [tamil-vowel-sign-ai]

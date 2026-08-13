@@ -4,14 +4,14 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:1cf5973cc83511a8",
+  "sourceHash": "fnv1a64:3a7f9d32e7c9d098",
   "lessons": [
     {
       "id": "TE-C02-emiti",
       "sequence": null,
       "title": "ఏమిటి (ēmiṭi) — \"what\"",
       "headword": "ఏమిటి",
-      "romanization": "",
+      "romanization": "ēmiṭi",
       "gloss": "what",
       "script": "telugu",
       "modality": "sight",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c24865d86c900c57",
+      "sourceHash": "fnv1a64:22da1b54135c12bf",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -114,7 +114,7 @@
             },
             {
               "kind": "speech",
-              "text": "What Dravidian stem heads ఏమిటి and the other Telugu question-words? (yā-/e-, same as Tamil eṉṉa, Kannada ēnu.)"
+              "text": "What Dravidian stem heads ఏమిటి (ēmiṭi) and the other Telugu question-words? (yā-/e-, same as Tamil eṉṉa, Kannada ēnu.)"
             }
           ]
         }
@@ -164,7 +164,7 @@
             },
             {
               "kind": "speech",
-              "text": "మీ పేరు ఏమిటి? = literally \"your name what?\" = \"what's your name?\""
+              "text": "మీ పేరు (pēru) ఏమిటి (ēmiṭi)? = literally \"your name what?\" = \"what's your name?\""
             },
             {
               "kind": "speech",
@@ -227,7 +227,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does మీ పేరు ఏమిటి? literally say, and what's missing vs. English? (\"Your name what?\"; no \"is\" — zero copula.)"
+              "text": "What does మీ పేరు (pēru) ఏమిటి (ēmiṭi)? literally say, and what's missing vs. English? (\"Your name what?\"; no \"is\" — zero copula.)"
             }
           ]
         }
@@ -238,7 +238,7 @@
       "sequence": null,
       "title": "నా (nā) — \"my\"",
       "headword": "నా",
-      "romanization": "",
+      "romanization": "nā",
       "gloss": "my",
       "script": "telugu",
       "modality": "sight",
@@ -246,7 +246,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:66506069a92e1306",
+      "sourceHash": "fnv1a64:158c3faffcf1ccea",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -391,7 +391,7 @@
             },
             {
               "kind": "speech",
-              "text": "నా పేరు … = \"my name …\" becomes \"my name is…\""
+              "text": "నా (nā) పేరు (pēru) … = \"my name …\" becomes \"my name is…\""
             },
             {
               "kind": "speech",
@@ -465,7 +465,7 @@
       "sequence": null,
       "title": "నువ్వు / మీరు (nuvvu / mīru) — \"you,\" familiar and respectful",
       "headword": "నువ్వు / మీరు",
-      "romanization": "",
+      "romanization": "nuvvu / mīru",
       "gloss": "you (familiar / respectful)",
       "script": "telugu",
       "modality": "sight",
@@ -473,7 +473,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:354cf9f77192856b",
+      "sourceHash": "fnv1a64:a67661a7bebb1e06",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -585,7 +585,7 @@
       "sequence": null,
       "title": "పేరు (pēru) — \"name,\" the native Dravidian word",
       "headword": "పేరు",
-      "romanization": "",
+      "romanization": "pēru",
       "gloss": "name",
       "script": "telugu",
       "modality": "sight",
@@ -593,7 +593,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:282c8e00b4bab667",
+      "sourceHash": "fnv1a64:e13824c836ce17c0",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -692,7 +692,7 @@
             },
             {
               "kind": "speech",
-              "text": "Is పేరు native or a Sanskrit loan, and what Tamil word is its twin? (Native Dravidian, pēr; Tamil peyar.)"
+              "text": "Is పేరు (pēru) native or a Sanskrit loan, and what Tamil word is its twin? (Native Dravidian, pēr; Tamil peyar.)"
             }
           ]
         }

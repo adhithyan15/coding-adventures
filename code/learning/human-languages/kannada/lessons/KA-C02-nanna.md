@@ -4,6 +4,7 @@ chapter: 2
 type: word
 headword: ನನ್ನ
 gloss: my
+romanization: "nanna"
 concept_tag: PRONOUN-MY
 prerequisites: [KA-C02-hesaru]
 sounds: [nna-conjunct]

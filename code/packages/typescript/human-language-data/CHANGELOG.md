@@ -71,6 +71,86 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
 
 ## [Unreleased]
 
+### Added - source-verified Devanagari अ (HL-C09CX)
+
+- Verify अ as four ordered strokes with three lifts against a four-frame modern printed source.
+- Preserve its joined left body, lifted shoulder, top-to-bottom stem, and left-to-right shirorekhā in a Noto Sans Devanagari fit.
+- Record the published six-stroke traditional Sanskrit form as source variation and reduce HL-C09 debt to 130 entries.
+
+### Added - source-verified Chinese 上 (HL-C09CW)
+
+- Verify 上 as three ordered strokes with two lifts against the pinned PRC source.
+- Preserve its vertical-first, short-before-long horizontal order in a Noto Sans SC fit.
+- Reduce HL-C09 debt to 131 entries and complete the Chinese starter inventory.
+
+### Added - coverage against what the exam tests (HL-C128)
+- Add `core/exam-inventory-es-a1.json`, `src/exam-inventory.ts` and
+  `tests/exam-inventory.test.ts`: the first measurement in this package that
+  can FALL, and the first that does not rise merely because a lesson was added.
+- Every other number here walks our own lessons, so all of them improve when
+  the corpus grows -- including growth on something no examiner asks about. This
+  one resolves the corpus against an external, finite list: the A1 grammar an
+  examiner may expect, restated in our own words from the structure of the Plan
+  Curricular del Instituto Cervantes.
+- The mapping is an **executable probe**, not an annotation. A `coveredBy:`
+  field filled in once is a claim about the corpus frozen at a moment in time,
+  and it goes stale silently and flatteringly. `probe: ["ES-GRAMMAR-NOUN-GENDER"]`
+  is recomputed every run: retire the atom and coverage falls.
+- `probe: null` means UNCOVERED, never "skip". Excluding unmapped points from
+  the denominator would let the percentage be improved by deleting a mapping --
+  the one edit that changes nothing about what a reader knows.
+- **Spanish A1: 53 of 85 points, 62%**, after 220 chapters that had climbed to a
+  B2 node. Missing entirely: the demonstratives (3 of 3 points), `muy`, the
+  `al`/`del` contractions, the gerund, `quien`, the personal `a`.
+- The gate was verified adversarially rather than assumed: an empty probe --
+  the one malformed shape that scores as covered -- throws at load, and deleting
+  a point fails the pin.
+
+### Added - source-verified Chinese 早 (HL-C09CV)
+
+- Verify 早 as six ordered strokes with five lifts against the pinned PRC source.
+- Preserve its complete 日-before-十 order and joined top-right turn in a Noto Sans SC fit.
+- Reduce HL-C09 debt to 132 entries; Chinese has 1 outstanding.
+
+### Added - source-verified Chinese 么 (HL-C09CU)
+
+- Verify 么 as three ordered strokes with two lifts against the pinned PRC source.
+- Preserve the second stroke's joined falling-to-rightward sweep in a Noto Sans SC fit.
+- Reduce HL-C09 debt to 133 entries; Chinese has 2 outstanding.
+
+### Added - source-verified Chinese 什 (HL-C09CT)
+- Verify 什 as four separately ordered strokes with three lifts against the pinned PRC source.
+- Preserve its complete 亻-before-十 component order in a Noto Sans SC fit.
+- Reduce HL-C09 debt to 134 entries; Chinese has 3 outstanding.
+
+
+### Added - the connectives an argument runs on (HL-C113)
+
+- Add Spanish chapters 218-220, opening `SPINE-ARGUE-A-VIEW`. Measurement
+  redirected this rung before a word of it was written: the node's concepts are
+  CONNECTIVE-HOWEVER and CONNECTIVE-ALTHOUGH, and the corpus taught neither ---
+  nor `aunque`, `sin embargo`, `mejor`, `por eso`, which appear **nowhere** in
+  217 chapters. **`pero` itself had no lesson**, only seven incidental uses in
+  other lessons' prose from chapter 59 on. So the node opens with the
+  vocabulary it consumes, not with the argument.
+- 218 `pero`: two Latin words, `per hoc` -- "by this", which became "for all
+  that", which is already a contrast. The lesson's point is what `pero` does
+  NOT do: it denies neither half. `porque` fuses two facts into one reason;
+  `pero` keeps two apart and admits both.
+- 219 `tambien` = `tan` + `bien` -- "so well". The second half is the word the
+  reader has held since **chapter one**, still doing its old job inside a word
+  that no longer looks like it has parts. Introduces `tan` on the way past.
+- 220 `tampoco` = `tan` + `poco`. One frame, two fillings: the reader is not
+  learning a second word so much as turning the first one over. The rule for
+  choosing is about the OTHER person's sentence -- listen for the `no`.
+- `bene` is re-spent rather than re-minted, so `tambien` pays a root the corpus
+  already owns; `tam-latin` is minted by 219 and spent by 220.
+### Added - source-verified Chinese 见 (HL-C09CS)
+
+- Verify 见 as four ordered strokes with three lifts against the pinned PRC source.
+- Preserve its frame-before-legs order and all three joined turns in a Noto Sans SC fit.
+- Reduce HL-C09 debt to 135 entries; Chinese has 4 outstanding.
+
 ### Added - reported questions close the B2 node (HL-C113)
 
 - Add Spanish chapters 214-217, closing `SPINE-REPORT-WHAT-OTHERS-SAID` at
@@ -265,6 +345,11 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
 - Review `-CT- -> -ch-` rather than introduce it: `ES-C02-noche` already teaches it.
 - Shift 241 lessons at sequence >=548 by +20 sequence and +3 chapter, and rebuild the
   capability ledger, book targets, curriculum path segments and extension nodes with them.
+### Added - source-verified Chinese 再 (HL-C09CR)
+
+- Verify 再 as six ordered strokes with five lifts against the pinned PRC source.
+- Preserve its joined frame, close-last order, and both turns in a Noto Sans SC fit.
+- Reduce HL-C09 debt to 136 entries; Chinese has 5 outstanding.
 
 ### Added - source-verified Chinese 请 (HL-C09CQ)
 

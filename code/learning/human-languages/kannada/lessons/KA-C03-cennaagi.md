@@ -4,6 +4,7 @@ chapter: 3
 type: word
 headword: ಚೆನ್ನಾಗಿ
 gloss: well, nicely — and the reply "ನಾನು ಚೆನ್ನಾಗಿದ್ದೇನೆ"
+romanization: "cennāgi"
 concept_tag: WORD-WELL
 prerequisites: [KA-C03-naanu, KA-C03-niivu-hegiddiira]
 sounds: [ca-sound, double-nn]

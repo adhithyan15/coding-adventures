@@ -4,6 +4,7 @@ chapter: 4
 type: phrase
 headword: ಮತ್ತೆ ಸಿಗೋಣ
 gloss: we'll meet again
+romanization: "matte sigōṇa"
 concept_tag: FAREWELL-LATER
 prerequisites: [KA-C04-naale-sigona]
 sounds: [double-tt]

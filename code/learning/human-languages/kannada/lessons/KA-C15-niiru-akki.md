@@ -7,6 +7,7 @@ chapter: 15
 type: word
 headword: ನೀರು ಅಕ್ಕಿ ಅನ್ನ
 gloss: water (matching Tamil's neer, unlike Malayalam), and rice raw/cooked
+romanization: "nīru akki anna"
 concept_tag: KA-FOOD-BASIC
 prerequisites: [KA-C14-kaalagalu]
 sounds: [kannada-vowel-sign-ii, kannada-geminate-kka]

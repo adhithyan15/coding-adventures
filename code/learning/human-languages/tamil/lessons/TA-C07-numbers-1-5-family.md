@@ -7,6 +7,7 @@ chapter: 7
 type: etymology
 headword: இரண்டு மூன்று நான்கு ஐந்து
 gloss: two through five remain visible cousins across the Dravidian family while one is less tidy
+romanization: "iraṇṭu mūṉṟu nāṉku aintu"
 prerequisites: [TA-C07-numbers-1-5]
 sounds: [alveolar-n-r-cluster]
 roots: [proto-dravidian-numbers]

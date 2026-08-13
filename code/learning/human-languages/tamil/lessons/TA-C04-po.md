@@ -5,6 +5,7 @@ sequence: 240
 type: word
 headword: போ
 gloss: to go (and வா, to come)
+romanization: "pō"
 concept_tag: TA-VERB-PO
 prerequisites: [TA-C03-naan]
 sounds: [long-o]

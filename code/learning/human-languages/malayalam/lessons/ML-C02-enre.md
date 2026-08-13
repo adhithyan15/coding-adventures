@@ -4,6 +4,7 @@ chapter: 2
 type: word
 headword: എന്റെ
 gloss: my
+romanization: "enṟe"
 concept_tag: PRONOUN-MY
 prerequisites: [ML-C02-peru]
 sounds: [nre-conjunct]

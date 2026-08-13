@@ -4,14 +4,14 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:c43a92e2750d8991",
+  "sourceHash": "fnv1a64:c1da3b24b783ef2d",
   "lessons": [
     {
       "id": "KA-C05-iru",
       "sequence": null,
       "title": "ಇರು (iru) — \"to be, to stay, to live\"",
       "headword": "ಇರು",
-      "romanization": "",
+      "romanization": "iru",
       "gloss": "to be, to stay, to live",
       "script": "kannada",
       "modality": "sight",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6f539f1993b90d24",
+      "sourceHash": "fnv1a64:b453c3b887b30ee1",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -145,7 +145,7 @@
       "sequence": null,
       "title": "ಕೆಲಸ ಮಾಡು (kelasa māḍu) — \"to work\"",
       "headword": "ಕೆಲಸ ಮಾಡು",
-      "romanization": "",
+      "romanization": "kelasa māḍu",
       "gloss": "to work (lit. \"work-do\")",
       "script": "kannada",
       "modality": "sight",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:9f1823451187ac5a",
+      "sourceHash": "fnv1a64:3da81fd2fe26575f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -295,7 +295,7 @@
       "sequence": null,
       "title": "ಮಾತನಾಡು (mātanāḍu) — \"to speak,\" your first full verb",
       "headword": "ಮಾತನಾಡು",
-      "romanization": "",
+      "romanization": "mātanāḍu",
       "gloss": "to speak",
       "script": "kannada",
       "modality": "sight",
@@ -303,7 +303,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ea6df29016abfee2",
+      "sourceHash": "fnv1a64:efa011474f105076",
       "notice": {
         "modality": "sight",
         "needs": [

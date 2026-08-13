@@ -847,13 +847,26 @@ impl Compiler {
             // level it would be a dead register write shadowing the global.
             // A plain (register) scalar keeps its zero-init `const`.
             let is_global = is_own || self.block_captured.contains(&name);
-            if !is_global && ty != ScalarType::String {
-                self.emit(IIRInstr::new(
-                    "const",
-                    Some(slot.clone()),
-                    vec![ty.default_operand()],
-                    ty.iir(),
-                ));
+            if !is_global {
+                if ty == ScalarType::String {
+                    // Give every control-flow predecessor a verifier-safe
+                    // reference value. Definite-initialization checks remain
+                    // governed by `initialized_string_slots`, so source reads
+                    // before assignment still fail during lowering.
+                    self.emit(IIRInstr::new(
+                        "str_const",
+                        Some(slot.clone()),
+                        vec![Operand::Str(String::new())],
+                        "str",
+                    ));
+                } else {
+                    self.emit(IIRInstr::new(
+                        "const",
+                        Some(slot.clone()),
+                        vec![ty.default_operand()],
+                        ty.iir(),
+                    ));
+                }
             }
             if is_own && ty == ScalarType::String {
                 // A string handle cannot use the all-zero scalar default: the
@@ -4727,13 +4740,6 @@ impl Compiler {
         if elems.is_empty() {
             return Err(CompileError::Malformed("for_list has no elements".into()));
         }
-        if elems.iter().any(|elem| {
-            direct_tokens(elem)
-                .iter()
-                .any(|token| token.value == "while" || token.value == "step")
-        }) {
-            self.disable_static_real_tracking();
-        }
         let body = direct_nodes(node)
             .into_iter()
             .find(|n| n.rule_name == "statement")
@@ -4741,15 +4747,196 @@ impl Compiler {
 
         for elem in elems {
             let entry_initialized_string_slots = self.initialized_string_slots.clone();
-            let executes_once = !direct_tokens(elem)
+            let executes_at_least_once =
+                self.for_element_executes_at_least_once(target, var_ty, elem);
+            if direct_tokens(elem)
                 .iter()
-                .any(|token| token.value == "while" || token.value == "step");
+                .any(|token| token.value == "while" || token.value == "step")
+            {
+                self.disable_static_real_tracking();
+            }
             self.emit_for_element(target, var_ty, elem, body)?;
-            if !executes_once {
+            if !executes_at_least_once {
                 self.initialized_string_slots = entry_initialized_string_slots;
             }
         }
         Ok(())
+    }
+
+    fn for_element_executes_at_least_once(
+        &mut self,
+        target: &GrammarASTNode,
+        target_ty: ScalarType,
+        elem: &GrammarASTNode,
+    ) -> bool {
+        let tokens = direct_tokens(elem);
+        if tokens.iter().any(|token| token.value == "while") {
+            return self.for_while_executes_at_least_once(target, target_ty, elem);
+        }
+        if !tokens.iter().any(|token| token.value == "step") {
+            return true;
+        }
+
+        let values: Vec<&GrammarASTNode> = direct_nodes(elem)
+            .into_iter()
+            .filter(|node| node.rule_name == "arith_expr")
+            .collect();
+        if values.len() != 3 {
+            return false;
+        }
+        match target_ty {
+            ScalarType::Integer => {
+                let Some(start) = self.static_assigned_integer_value(values[0]) else {
+                    return false;
+                };
+                let Some(step) = self.static_assigned_integer_value(values[1]) else {
+                    return false;
+                };
+                let Some(limit) = self.static_assigned_integer_value(values[2]) else {
+                    return false;
+                };
+                if step >= 0 {
+                    start <= limit
+                } else {
+                    start >= limit
+                }
+            }
+            ScalarType::Real => {
+                let Some(start) = self.static_assigned_real_value(values[0]) else {
+                    return false;
+                };
+                let Some(step) = self.static_assigned_real_value(values[1]) else {
+                    return false;
+                };
+                let Some(limit) = self.static_assigned_real_value(values[2]) else {
+                    return false;
+                };
+                if step >= 0.0 {
+                    start <= limit
+                } else {
+                    start >= limit
+                }
+            }
+            ScalarType::Boolean | ScalarType::String => false,
+        }
+    }
+
+    fn for_while_executes_at_least_once(
+        &mut self,
+        target: &GrammarASTNode,
+        target_ty: ScalarType,
+        elem: &GrammarASTNode,
+    ) -> bool {
+        if array_subscripts(target).is_some() {
+            return false;
+        }
+        let Ok(target_name) = self.simple_variable_name(target) else {
+            return false;
+        };
+        let Ok(target_binding) = self.require_var(&target_name) else {
+            return false;
+        };
+        if self.active_by_name_binding(&target_name).is_some() || target_binding.is_global {
+            return false;
+        }
+        let Some(value) = direct_nodes(elem)
+            .into_iter()
+            .find(|node| node.rule_name == "arith_expr")
+        else {
+            return false;
+        };
+        let Some(condition) = first_direct_node(elem, "bool_expr") else {
+            return false;
+        };
+
+        let saved_reals = self.static_real_slots.clone();
+        let saved_integers = self.static_integer_slots.clone();
+        let static_real = (target_ty == ScalarType::Real)
+            .then(|| self.static_assigned_real_value(value))
+            .flatten()
+            .filter(|value| value.is_finite())
+            .map(|value| value.to_string());
+        let static_integer = (target_ty == ScalarType::Integer)
+            .then(|| self.static_assigned_integer_value(value))
+            .flatten();
+        let updated = self
+            .update_for_target_snapshot(target, static_real, static_integer)
+            .is_ok();
+        let executes = updated && self.static_boolean_value(condition) == Some(true);
+        self.static_real_slots = saved_reals;
+        self.static_integer_slots = saved_integers;
+        executes
+    }
+
+    fn static_boolean_value(&self, node: &GrammarASTNode) -> Option<bool> {
+        let tokens = direct_tokens(node);
+        if tokens.len() == 1 && tokens[0].effective_type_name() == "KEYWORD" {
+            match tokens[0].value.as_str() {
+                "true" => return Some(true),
+                "false" => return Some(false),
+                _ => {}
+            }
+        }
+        if tokens.iter().any(|token| token.value == "if") {
+            let branches: Vec<&GrammarASTNode> = direct_nodes(node)
+                .into_iter()
+                .filter(|child| child.rule_name == "bool_expr")
+                .collect();
+            if branches.len() != 3 {
+                return None;
+            }
+            return if self.static_boolean_value(branches[0])? {
+                self.static_boolean_value(branches[1])
+            } else {
+                self.static_boolean_value(branches[2])
+            };
+        }
+        if tokens.iter().any(|token| token.value == "not") {
+            let children = direct_nodes(node);
+            if children.len() != 1 {
+                return None;
+            }
+            return self.static_boolean_value(children[0]).map(|value| !value);
+        }
+        let sequence = pieces(node);
+        if sequence.len() == 1 {
+            return match sequence[0] {
+                Piece::Node(child) => self.static_boolean_value(child),
+                Piece::Op(_) => None,
+            };
+        }
+        if sequence.len() != 3 {
+            return None;
+        }
+        let (Piece::Node(lhs), Piece::Op(op), Piece::Node(rhs)) =
+            (&sequence[0], &sequence[1], &sequence[2])
+        else {
+            return None;
+        };
+        if matches!(op.as_str(), "and" | "or" | "impl" | "eqv") {
+            let lhs = self.static_boolean_value(lhs)?;
+            let rhs = self.static_boolean_value(rhs)?;
+            return Some(match op.as_str() {
+                "and" => lhs && rhs,
+                "or" => lhs || rhs,
+                "impl" => !lhs || rhs,
+                "eqv" => lhs == rhs,
+                _ => unreachable!(),
+            });
+        }
+        if !matches!(op.as_str(), "=" | "!=" | "<>" | "<" | "<=" | ">" | ">=") {
+            return None;
+        }
+
+        if let (Some(lhs), Some(rhs)) = (
+            self.static_assigned_integer_value(lhs),
+            self.static_assigned_integer_value(rhs),
+        ) {
+            return Some(compare_static_values(op, lhs, rhs));
+        }
+        let lhs = self.static_assigned_real_value(lhs)?;
+        let rhs = self.static_assigned_real_value(rhs)?;
+        (lhs.is_finite() && rhs.is_finite()).then(|| compare_static_values(op, lhs, rhs))
     }
 
     fn for_target_type(&self, target: &GrammarASTNode) -> Result<ScalarType, CompileError> {
@@ -6567,6 +6754,18 @@ fn expr_string_literal(node: &GrammarASTNode) -> Option<String> {
     None
 }
 
+fn compare_static_values<T: PartialEq + PartialOrd>(op: &str, lhs: T, rhs: T) -> bool {
+    match op {
+        "=" => lhs == rhs,
+        "!=" | "<>" => lhs != rhs,
+        "<" => lhs < rhs,
+        "<=" => lhs <= rhs,
+        ">" => lhs > rhs,
+        ">=" => lhs >= rhs,
+        _ => false,
+    }
+}
+
 fn expr_real_literal_text(node: &GrammarASTNode) -> Option<String> {
     let tokens = direct_tokens(node);
     if tokens.len() == 1 && tokens[0].effective_type_name() == "REAL_LIT" {
@@ -8380,6 +8579,149 @@ mod tests {
     }
 
     #[test]
+    fn al4_static_ascending_step_loop_definitely_initializes_string() {
+        compile_source(
+            "begin integer i; string s; for i := 1 step 1 until 2 do s := 'OK'; print(s) end",
+            "test",
+        )
+        .expect("a statically nonempty ascending step loop executes its body");
+    }
+
+    #[test]
+    fn al4_static_descending_step_loop_definitely_initializes_string() {
+        compile_source(
+            "begin integer i; string s; for i := 2 step -1 until 1 do s := 'OK'; print(s) end",
+            "test",
+        )
+        .expect("a statically nonempty descending step loop executes its body");
+    }
+
+    #[test]
+    fn al4_tracked_step_bounds_definitely_initialize_string() {
+        compile_source(
+            "begin integer i, first, stride, last; string s; first := 1; stride := 1; last := 2; for i := first step stride until last do s := 'OK'; print(s) end",
+            "test",
+        )
+        .expect("tracked straight-line bounds prove a nonempty step loop");
+    }
+
+    #[test]
+    fn al4_tracked_zero_trip_step_loop_does_not_initialize_string() {
+        let err = compile_source(
+            "begin integer i, first, last; string s; first := 2; last := 1; for i := first step 1 until last do s := 'OK'; print(s) end",
+            "test",
+        )
+        .expect_err("tracked bounds that prove zero trips cannot initialize a string");
+        assert!(format!("{err:?}").contains("requires initialized string variable"));
+    }
+
+    #[test]
+    fn al4_static_zero_trip_step_loop_does_not_initialize_string() {
+        let err = compile_source(
+            "begin integer i; string s; for i := 2 step 1 until 1 do s := 'OK'; print(s) end",
+            "test",
+        )
+        .expect_err("a statically empty step loop cannot initialize a string");
+        assert!(format!("{err:?}").contains("requires initialized string variable"));
+    }
+
+    #[test]
+    fn al4_dynamic_step_loop_does_not_initialize_string() {
+        let err = compile_source(
+            "begin integer i, n; string s; for i := 1 step 1 until n do s := 'OK'; print(s) end",
+            "test",
+        )
+        .expect_err("a dynamic step-loop bound must fail closed");
+        assert!(format!("{err:?}").contains("requires initialized string variable"));
+    }
+
+    #[test]
+    fn al4_static_initial_while_condition_definitely_initializes_string() {
+        compile_source(
+            "begin integer i; string s; i := 0; for i := i + 1 while i < 2 do s := 'OK'; print(s) end",
+            "test",
+        )
+        .expect("the initial controlled value makes the while condition true");
+    }
+
+    #[test]
+    fn al4_static_false_initial_while_condition_does_not_initialize_string() {
+        let err = compile_source(
+            "begin integer i; string s; i := 2; for i := i + 1 while i < 2 do s := 'OK'; print(s) end",
+            "test",
+        )
+        .expect_err("a false initial while condition cannot initialize a string");
+        assert!(format!("{err:?}").contains("requires initialized string variable"));
+    }
+
+    #[test]
+    fn al4_dynamic_initial_while_condition_does_not_initialize_string() {
+        let err = compile_source(
+            "begin integer i, n; string s; i := 0; for i := i + 1 while i < n do s := 'OK'; print(s) end",
+            "test",
+        )
+        .expect_err("an unknown initial while condition must fail closed");
+        assert!(format!("{err:?}").contains("requires initialized string variable"));
+    }
+
+    #[test]
+    fn al4_non_numeric_initial_while_condition_remains_conservative() {
+        compile_source(
+            "begin integer i; string s; for i := 1 while true do s := 'OK'; print(s) end",
+            "test",
+        )
+        .expect("a literal-true while condition guarantees the first iteration");
+    }
+
+    #[test]
+    fn al4_literal_false_initial_while_condition_does_not_initialize_string() {
+        let err = compile_source(
+            "begin integer i; string s; for i := 1 while false do s := 'OK'; print(s) end",
+            "test",
+        )
+        .expect_err("a literal-false while condition has no body execution");
+        assert!(format!("{err:?}").contains("requires initialized string variable"));
+    }
+
+    #[test]
+    fn al4_composed_static_initial_while_condition_initializes_string() {
+        compile_source(
+            "begin integer i; string s; i := 0; for i := i + 1 while i > 0 and not (i >= 2) do s := 'OK'; print(s) end",
+            "test",
+        )
+        .expect("known comparison leaves compose through boolean operators");
+    }
+
+    #[test]
+    fn al4_composed_dynamic_initial_while_condition_remains_conservative() {
+        let err = compile_source(
+            "begin integer i, n; string s; i := 0; for i := i + 1 while i > 0 and i < n do s := 'OK'; print(s) end",
+            "test",
+        )
+        .expect_err("a composed condition with an unknown leaf must fail closed");
+        assert!(format!("{err:?}").contains("requires initialized string variable"));
+    }
+
+    #[test]
+    fn al4_static_conditional_initial_while_predicate_initializes_string() {
+        compile_source(
+            "begin integer i; string s; i := 0; for i := i + 1 while if i = 1 then i < 2 else i < 0 do s := 'OK'; print(s) end",
+            "test",
+        )
+        .expect("a known selector evaluates only the selected static predicate");
+    }
+
+    #[test]
+    fn al4_dynamic_conditional_initial_while_predicate_remains_conservative() {
+        let err = compile_source(
+            "begin integer i, n; string s; i := 0; for i := i + 1 while if i = n then i < 2 else i < 0 do s := 'OK'; print(s) end",
+            "test",
+        )
+        .expect_err("an unknown conditional selector must fail closed");
+        assert!(format!("{err:?}").contains("requires initialized string variable"));
+    }
+
+    #[test]
     fn al4_mixed_loop_list_uses_later_definite_initialization() {
         compile_source(
             "begin integer i; string s; for i := 1 while false, 2 do s := 'OK'; print(s) end",
@@ -8583,23 +8925,30 @@ mod tests {
             .iter()
             .find(|f| f.name == "main")
             .expect("has main");
-        let empty_slot = main.instructions.iter()
-            .find(|i| {
-                i.op == "str_const"
-                    && matches!(i.srcs.first(), Some(Operand::Str(text)) if text.is_empty())
+        let copy_suffix = main
+            .instructions
+            .iter()
+            .find_map(|i| {
+                if i.op == "str_concat"
+                    && i.dest.as_deref() == Some("t")
+                    && matches!(i.srcs.first(), Some(Operand::Var(left)) if left == "s")
+                {
+                    match i.srcs.get(1) {
+                        Some(Operand::Var(right)) => Some(right.as_str()),
+                        _ => None,
+                    }
+                } else {
+                    None
+                }
             })
-            .and_then(|i| i.dest.as_deref())
-            .expect("copy should materialize an empty suffix");
+            .expect("t := s should copy through E4 str_concat");
         assert!(
             main.instructions.iter().any(|i| {
-                i.op == "str_concat"
-                    && i.dest.as_deref() == Some("t")
-                    && matches!(i.srcs.as_slice(), [
-                        Operand::Var(left),
-                        Operand::Var(right)
-                    ] if left == "s" && right == empty_slot)
+                i.op == "str_const"
+                    && i.dest.as_deref() == Some(copy_suffix)
+                    && matches!(i.srcs.first(), Some(Operand::Str(text)) if text.is_empty())
             }),
-            "t := s should copy through E4 str_concat with an empty suffix"
+            "the copy suffix must be an empty string"
         );
         assert!(
             main.instructions.iter().any(|i| {

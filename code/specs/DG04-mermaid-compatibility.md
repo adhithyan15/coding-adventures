@@ -119,6 +119,8 @@ forms or lossy semantics.
 Repeated `State: description` statements accumulate as ordered multiline
 semantic labels; graph layout reserves line-aware node geometry before Paint
 shapes each authored line without backend soft wrapping.
+Quoted state aliases may include a trailing `: description`; both the primary
+label and trailing description survive as ordered multiline semantic text.
 Fork and join pseudostates accept both upstream marker spellings and lower to a
 compact backend-neutral graph-IR bar shape rendered by existing rectangle Paint
 instructions.
@@ -131,6 +133,12 @@ assignments that precede their declaration. The `:::` shorthand applies named
 classes to standalone states and either endpoint of a transition, including
 start/end pseudostates. Inline and named styles can target composite groups and
 survive resolved layout style into backend-neutral Paint rectangles and labels.
+State `font-size` styles survive semantic IR; graph layout measures matching
+node geometry before Paint shapes and centers text at the resolved size.
+State `font-weight` styles accept normal, bold, and numeric CSS weights; graph
+measurement and Paint glyph shaping consume the same resolved weight.
+One `class` statement may compose multiple named classes on every target;
+later classes override properties from earlier classes in authored order.
 Single-line and `end note` multiline `note left of`/`note right of` statements
 lower to semantic note nodes and note-association edges. Quoted `note ... as`
 statements lower to standalone note nodes. Graph layout reserves line-aware note
@@ -160,9 +168,13 @@ omits unlabeled state geometry and glyphs while retaining graph connectivity.
 State labels, transition labels, notes, titles, and accessibility text decode
 Mermaid decimal or named entities and HTML line breaks before line-aware layout
 and backend-neutral Paint glyph shaping.
+State descriptions and transition labels preserve additional authored colons as
+text after the statement's leading delimiter.
 Transitions entering or leaving a composite retain the group ID as their
 semantic endpoint. Graph layout attaches those edges to the resolved group
 boundary before existing Paint paths and arrowheads render them.
+Pinned `#` comments are discarded by the portable state token grammar while
+decimal or named entities and hexadecimal style colors remain semantic input.
 
 ### Sequence Native Slice
 

@@ -4,6 +4,7 @@ chapter: 2
 type: word
 headword: मम
 gloss: my
+romanization: "mama"
 concept_tag: PRONOUN-MY
 prerequisites: [SA-C02-nama]
 sounds: [inherent-a]

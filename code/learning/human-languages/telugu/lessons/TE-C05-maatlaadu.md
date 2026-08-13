@@ -4,6 +4,7 @@ chapter: 5
 type: word
 headword: మాట్లాడు
 gloss: to speak
+romanization: "māṭlāḍu"
 concept_tag: TE-VERB-MATLADU
 prerequisites: [TE-C03-nenu]
 sounds: [retroflex-tl, long-aa]

@@ -4,14 +4,14 @@
   "chapter": 8,
   "title": "Please",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:0dd42921ebc1ff57",
+  "sourceHash": "fnv1a64:fc89d0b7175a5514",
   "lessons": [
     {
       "id": "KA-C08-dayavittu",
       "sequence": 360,
       "title": "ದಯವಿಟ್ಟು (dayaviṭṭu) — please (having placed compassion)",
       "headword": "ದಯವಿಟ್ಟು",
-      "romanization": "",
+      "romanization": "dayaviṭṭu",
       "gloss": "please (dayaviṭṭu — \"having placed compassion,\" from ದಯ daya \"compassion\")",
       "script": "kannada",
       "modality": "sight",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:a93811ff1388aa1d",
+      "sourceHash": "fnv1a64:914592b7c3ac64e7",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -53,7 +53,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ದಯವಿಟ್ಟು = please, literally \"having placed compassion / kindness.\" Two pieces:"
+              "text": "ದಯವಿಟ್ಟು (dayaviṭṭu) = please, literally \"having placed compassion / kindness.\" Two pieces:"
             },
             {
               "kind": "speech",
@@ -107,7 +107,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The honest note: a standalone please-word is a little formal / emphatic. Everyday Kannada politeness leans on the respectful command — the verb ending ‑ಿ (-i): ಕುಳಿತುಕೊಳ್ಳಿ (kuḷitukoḷḷi) \"please sit,\" ಹೇಳಿ (hēḷi) \"please tell me.\" That ending already means \"please\" do this. Add ದಯವಿಟ್ಟು in front when you want to underline the courtesy."
+              "text": "The honest note: a standalone please-word is a little formal / emphatic. Everyday Kannada politeness leans on the respectful command — the verb ending ‑ಿ (-i): ಕುಳಿತುಕೊಳ್ಳಿ (kuḷitukoḷḷi) \"please sit,\" ಹೇಳಿ (hēḷi) \"please tell me.\" That ending already means \"please\" do this. Add ದಯವಿಟ್ಟು (dayaviṭṭu) in front when you want to underline the courtesy."
             }
           ]
         },

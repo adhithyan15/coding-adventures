@@ -30,6 +30,7 @@ const MAX_GRANTED_BY_BYTES: usize = 4 * 1024;
 const MAX_TOOL_ID_BYTES: usize = 512;
 const MAX_SMART_HOME_INSTANCE_NAME_BYTES: usize = 200;
 const MAX_NETWORK_INTERFACE_BYTES: usize = 255;
+const MAX_PAIRING_SECRET_BYTES: u64 = 4 * 1024;
 const MAX_MODEL_BYTES: usize = 200;
 const MAX_ENDPOINT_BYTES: usize = 512;
 const MAX_PROCESS_TIMEOUT_MILLIS: u64 = 5 * 60 * 1000;
@@ -183,6 +184,51 @@ pub struct SmartHomeListenerConfig {
     port: u16,
     instance_name: String,
     hue_mdns_interface: Option<String>,
+    hue_pairing_kek_path: Option<ConfigPath>,
+    onvif_pairing: Option<OnvifPairingConfig>,
+}
+
+/// Exact owner-provisioned inputs for one supervised ONVIF pairing worker.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct OnvifPairingConfig {
+    bridge_id: String,
+    kek_path: ConfigPath,
+    username_path: ConfigPath,
+    username_length: usize,
+    password_path: ConfigPath,
+    password_length: usize,
+}
+
+impl OnvifPairingConfig {
+    /// Return the exact D23 bridge whose credentials may be consumed.
+    pub fn bridge_id(&self) -> &str {
+        &self.bridge_id
+    }
+
+    /// Return the owner-only KEK file used to initialize or unseal the Vault.
+    pub fn kek_path(&self) -> &ConfigPath {
+        &self.kek_path
+    }
+
+    /// Return the owner-only username file.
+    pub fn username_path(&self) -> &ConfigPath {
+        &self.username_path
+    }
+
+    /// Return the exact username byte length expected from the file.
+    pub fn username_length(&self) -> usize {
+        self.username_length
+    }
+
+    /// Return the owner-only password file.
+    pub fn password_path(&self) -> &ConfigPath {
+        &self.password_path
+    }
+
+    /// Return the exact password byte length expected from the file.
+    pub fn password_length(&self) -> usize {
+        self.password_length
+    }
 }
 
 impl SmartHomeListenerConfig {
@@ -204,6 +250,16 @@ impl SmartHomeListenerConfig {
     /// Return the network interface on which Chief supervises Hue mDNS discovery.
     pub fn hue_mdns_interface(&self) -> Option<&str> {
         self.hue_mdns_interface.as_deref()
+    }
+
+    /// Return the owner-only injected KEK file used by the Chief Hue pairing worker.
+    pub fn hue_pairing_kek_path(&self) -> Option<&ConfigPath> {
+        self.hue_pairing_kek_path.as_ref()
+    }
+
+    /// Return the exact owner-provisioned ONVIF pairing worker configuration.
+    pub fn onvif_pairing(&self) -> Option<&OnvifPairingConfig> {
+        self.onvif_pairing.as_ref()
     }
 }
 
@@ -619,11 +675,77 @@ pub fn parse_config(source: &str) -> Result<ChiefConfig, ConfigError> {
             .transpose()?
             .map(|value| bounded_identity(value, MAX_NETWORK_INTERFACE_BYTES))
             .transpose()?;
+        let hue_pairing_kek_path = document
+            .take_optional(SMART_HOME, "hue_pairing_kek_path")
+            .map(expect_string)
+            .transpose()?
+            .map(ConfigPath::parse)
+            .transpose()?;
+        let onvif_bridge_id = document
+            .take_optional(SMART_HOME, "onvif_pairing_bridge_id")
+            .map(expect_string)
+            .transpose()?
+            .map(|value| bounded_identity(value, MAX_AGENT_ID_BYTES))
+            .transpose()?;
+        let onvif_kek_path = document
+            .take_optional(SMART_HOME, "onvif_pairing_kek_path")
+            .map(expect_string)
+            .transpose()?
+            .map(ConfigPath::parse)
+            .transpose()?;
+        let onvif_username_path = document
+            .take_optional(SMART_HOME, "onvif_pairing_username_path")
+            .map(expect_string)
+            .transpose()?
+            .map(ConfigPath::parse)
+            .transpose()?;
+        let onvif_username_length = document
+            .take_optional(SMART_HOME, "onvif_pairing_username_length")
+            .map(bounded_pairing_secret_length)
+            .transpose()?;
+        let onvif_password_path = document
+            .take_optional(SMART_HOME, "onvif_pairing_password_path")
+            .map(expect_string)
+            .transpose()?
+            .map(ConfigPath::parse)
+            .transpose()?;
+        let onvif_password_length = document
+            .take_optional(SMART_HOME, "onvif_pairing_password_length")
+            .map(bounded_pairing_secret_length)
+            .transpose()?;
+        let onvif_pairing = match (
+            onvif_bridge_id,
+            onvif_kek_path,
+            onvif_username_path,
+            onvif_username_length,
+            onvif_password_path,
+            onvif_password_length,
+        ) {
+            (None, None, None, None, None, None) => None,
+            (
+                Some(bridge_id),
+                Some(kek_path),
+                Some(username_path),
+                Some(username_length),
+                Some(password_path),
+                Some(password_length),
+            ) => Some(OnvifPairingConfig {
+                bridge_id,
+                kek_path,
+                username_path,
+                username_length,
+                password_path,
+                password_length,
+            }),
+            _ => return Err(ConfigError::InvalidValue),
+        };
         Some(SmartHomeListenerConfig {
             bind,
             port,
             instance_name,
             hue_mdns_interface,
+            hue_pairing_kek_path,
+            onvif_pairing,
         })
     } else {
         None
@@ -631,6 +753,13 @@ pub fn parse_config(source: &str) -> Result<ChiefConfig, ConfigError> {
     if smart_home.as_ref().is_some_and(|listener| {
         listener.bind == orchestrator_bind && listener.port == orchestrator_port
     }) {
+        return Err(ConfigError::InvalidValue);
+    }
+    if container
+        && smart_home.as_ref().is_some_and(|listener| {
+            listener.hue_pairing_kek_path.is_some() || listener.onvif_pairing.is_some()
+        })
+    {
         return Err(ConfigError::InvalidValue);
     }
     let data_plane = if document.has_table(DATA_PLANE) {
@@ -978,6 +1107,14 @@ fn positive_integer(value: RawValue) -> Result<u64, ConfigError> {
         .ok_or(ConfigError::InvalidValue)
 }
 
+fn bounded_pairing_secret_length(value: RawValue) -> Result<usize, ConfigError> {
+    let value = positive_integer(value)?;
+    if value > MAX_PAIRING_SECRET_BYTES {
+        return Err(ConfigError::InvalidValue);
+    }
+    usize::try_from(value).map_err(|_| ConfigError::InvalidValue)
+}
+
 fn expect_string(value: RawValue) -> Result<String, ConfigError> {
     match value {
         RawValue::String(value) => Ok(value),
@@ -1319,6 +1456,8 @@ hardware_key_timeout = 60
         assert_eq!(listener.port(), 8123);
         assert_eq!(listener.instance_name(), "Codex Home");
         assert_eq!(listener.hue_mdns_interface(), Some("en0"));
+        assert!(listener.hue_pairing_kek_path().is_none());
+        assert!(listener.onvif_pairing().is_none());
 
         assert_eq!(
             parse_config(&source.replace("port = 8123", "port = 7463")),
@@ -1349,6 +1488,65 @@ hardware_key_timeout = 60
             parse_config(&source.replace(
                 "hue_mdns_interface = \"en0\"",
                 "hue_mdns_interface = \" en0\""
+            )),
+            Err(ConfigError::InvalidValue)
+        );
+    }
+
+    #[test]
+    fn hue_pairing_requires_explicit_in_process_vault_custody() {
+        let source = format!(
+            "{VALID}\n[smart_home]\nbind = \"127.0.0.1\"\nport = 8123\ninstance_name = \"Codex Home\"\nhue_pairing_kek_path = \"~/.chief-of-staff/keys/smart-home-vault.kek\"\n"
+        );
+        assert_eq!(parse_config(&source), Err(ConfigError::InvalidValue));
+
+        let source = source.replace("container = true", "container = false");
+        let config = parse_config(&source).unwrap();
+        assert_eq!(
+            config
+                .smart_home()
+                .unwrap()
+                .hue_pairing_kek_path()
+                .unwrap()
+                .as_str(),
+            "~/.chief-of-staff/keys/smart-home-vault.kek"
+        );
+    }
+
+    #[test]
+    fn onvif_pairing_requires_complete_owner_only_inputs_and_vault_custody() {
+        let source = format!(
+            "{VALID}\n[smart_home]\nbind = \"127.0.0.1\"\nport = 8123\ninstance_name = \"Codex Home\"\nonvif_pairing_bridge_id = \"camera-front\"\nonvif_pairing_kek_path = \"~/.chief-of-staff/keys/smart-home-vault.kek\"\nonvif_pairing_username_path = \"~/.chief-of-staff/keys/onvif-user\"\nonvif_pairing_username_length = 8\nonvif_pairing_password_path = \"~/.chief-of-staff/keys/onvif-password\"\nonvif_pairing_password_length = 19\n"
+        );
+        assert_eq!(parse_config(&source), Err(ConfigError::InvalidValue));
+
+        let source = source.replace("container = true", "container = false");
+        let config = parse_config(&source).unwrap();
+        let pairing = config.smart_home().unwrap().onvif_pairing().unwrap();
+        assert_eq!(pairing.bridge_id(), "camera-front");
+        assert_eq!(
+            pairing.kek_path().as_str(),
+            "~/.chief-of-staff/keys/smart-home-vault.kek"
+        );
+        assert_eq!(
+            pairing.username_path().as_str(),
+            "~/.chief-of-staff/keys/onvif-user"
+        );
+        assert_eq!(pairing.username_length(), 8);
+        assert_eq!(
+            pairing.password_path().as_str(),
+            "~/.chief-of-staff/keys/onvif-password"
+        );
+        assert_eq!(pairing.password_length(), 19);
+
+        assert_eq!(
+            parse_config(&source.replace("onvif_pairing_password_length = 19\n", "")),
+            Err(ConfigError::InvalidValue)
+        );
+        assert_eq!(
+            parse_config(&source.replace(
+                "onvif_pairing_password_length = 19",
+                "onvif_pairing_password_length = 4097"
             )),
             Err(ConfigError::InvalidValue)
         );

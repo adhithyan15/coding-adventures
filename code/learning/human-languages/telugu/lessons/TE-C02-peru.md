@@ -4,6 +4,7 @@ chapter: 2
 type: word
 headword: పేరు
 gloss: name
+romanization: "pēru"
 concept_tag: WORD-NAME
 prerequisites: []
 sounds: [ee-sign]

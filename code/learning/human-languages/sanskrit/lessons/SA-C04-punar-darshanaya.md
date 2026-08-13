@@ -4,6 +4,7 @@ chapter: 4
 type: phrase
 headword: पुनर्दर्शनाय
 gloss: until we meet again (lit. "for seeing again")
+romanization: "punardarśanāya"
 concept_tag: FAREWELL-LATER
 prerequisites: [SA-C04-punah, SA-C04-gacchami]
 sounds: [rd-conjunct, long-aa]

@@ -7,6 +7,7 @@ chapter: 18
 type: word
 headword: ಗಂಟೆ
 gloss: hour — the SAME Sanskrit "bell" word behind Hindi's ghantā, borrowed via Prakrit
+romanization: "gaṇṭe"
 concept_tag: KA-TIME-HOUR
 prerequisites: [KA-C17-madhyaahna-madhyaraatri]
 sounds: [kannada-anusvara, kannada-vowel-sign-e]

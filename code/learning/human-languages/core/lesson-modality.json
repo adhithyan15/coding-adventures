@@ -7,18 +7,18 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:7e994ced60e56460",
+  "sourceHash": "fnv1a64:975414adf300218e",
   "summary": {
-    "totalLessons": 1963,
-    "voice": 1333,
+    "totalLessons": 1966,
+    "voice": 1336,
     "sight": 561,
     "pen": 69,
-    "drivableLessons": 1333,
+    "drivableLessons": 1336,
     "drivablePercent": 68,
     "trackCount": 22,
-    "chapterCount": 717,
-    "drivablePrefixTotal": 1133,
-    "fullyDrivableChapters": 486,
+    "chapterCount": 720,
+    "drivablePrefixTotal": 1136,
+    "fullyDrivableChapters": 489,
     "unstartableChapters": 173,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
@@ -7062,12 +7062,12 @@
     },
     {
       "language": "spanish",
-      "lessonCount": 363,
-      "voice": 321,
+      "lessonCount": 366,
+      "voice": 324,
       "sight": 35,
       "pen": 7,
-      "drivablePercent": 88,
-      "drivablePrefixTotal": 308,
+      "drivablePercent": 89,
+      "drivablePrefixTotal": 311,
       "modalities": [
         "voice",
         "sight",
@@ -10618,6 +10618,54 @@
           "drivable": true,
           "drivableLessonIds": [
             "ES-C57-sintesis-reportar"
+          ]
+        },
+        {
+          "chapter": 218,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C58-pero"
+          ]
+        },
+        {
+          "chapter": 219,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C58-tambien"
+          ]
+        },
+        {
+          "chapter": 220,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C58-tampoco"
           ]
         }
       ]
@@ -20901,7 +20949,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:d41848618c702321",
+      "sourceHash": "fnv1a64:003f029fbcf7f5e1",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -21128,7 +21176,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:373276fb279897f5",
+      "sourceHash": "fnv1a64:6f81f677f00ecce8",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -21167,7 +21215,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:98b5bd2e8efd62f6",
+      "sourceHash": "fnv1a64:a75c0ec3e0dbbf96",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -21206,7 +21254,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:eeaa065b35da7455",
+      "sourceHash": "fnv1a64:9307d749d245ebcd",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -21308,7 +21356,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:75b0ccce17d974e7",
+      "sourceHash": "fnv1a64:bdb92f3f790827b5",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -21329,7 +21377,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:5a680be90e0f885f",
+      "sourceHash": "fnv1a64:b515c75fe5c2519f",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -21350,7 +21398,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:aea62ee6b7a4034b",
+      "sourceHash": "fnv1a64:f9a6b0ed381dc76a",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -21452,7 +21500,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:a70a0ef65533891a",
+      "sourceHash": "fnv1a64:960b0dfacf3f0eb0",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -21741,7 +21789,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:6611611ca45a2159"
+      "sourceHash": "fnv1a64:cb7e3d593b9452b5"
     },
     {
       "id": "HI-C09-maaf-kijiye",
@@ -21939,7 +21987,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:bdbb462743bbf066"
+      "sourceHash": "fnv1a64:fcf4941c9c48d2d2"
     },
     {
       "id": "HI-C16-mahine",
@@ -21993,7 +22041,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:feb6c6d4810251db"
+      "sourceHash": "fnv1a64:c839d2ce20177497"
     },
     {
       "id": "HI-C19-umr",
@@ -22119,7 +22167,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:1e4f97628c48b9b1"
+      "sourceHash": "fnv1a64:3a0be63459204cd5"
     },
     {
       "id": "HI-C23-billi-history",
@@ -22155,7 +22203,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:01d9eb13c4005aeb"
+      "sourceHash": "fnv1a64:265e57f6824884ee"
     },
     {
       "id": "HI-C24-pila-history",
@@ -22452,7 +22500,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:e9e64bdec332f5c3"
+      "sourceHash": "fnv1a64:9d066242cb4bddce"
     },
     {
       "id": "HI-C35-puchna",
@@ -22590,7 +22638,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:146ec51e225cc113",
+      "sourceHash": "fnv1a64:b6473f82d115a0d2",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -22647,7 +22695,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:c20131f51974a639",
+      "sourceHash": "fnv1a64:68e68e1f325a2271",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -22710,7 +22758,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:cb862bd64f6b136b",
+      "sourceHash": "fnv1a64:34a83d9992bfd9cc",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -22791,7 +22839,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:585b746e54384286"
+      "sourceHash": "fnv1a64:79b100130230a337"
     },
     {
       "id": "HI-C39-aadmi",
@@ -24597,7 +24645,7 @@
         "sight-cue"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:035084b4558bdd72",
+      "sourceHash": "fnv1a64:e076f11a393cf450",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -24618,7 +24666,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:762cd4edbe26fc8e",
+      "sourceHash": "fnv1a64:24a0fb20fb0d6d6c",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -24639,7 +24687,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:5d8cbb19876741f0",
+      "sourceHash": "fnv1a64:137f2e107f2fa603",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -24660,7 +24708,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:3466dc173743e691",
+      "sourceHash": "fnv1a64:1d1d261ef3641d39",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -24699,7 +24747,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:805a095b1041dc57",
+      "sourceHash": "fnv1a64:d7868413537d644d",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -24720,7 +24768,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:1be9909948d15d65",
+      "sourceHash": "fnv1a64:a8de9a75878f579a",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -24741,7 +24789,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:31cbf4d18c055096",
+      "sourceHash": "fnv1a64:68e69e98f1f071e7",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -24762,7 +24810,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:acd0ca42626d82bc",
+      "sourceHash": "fnv1a64:c8b98f6f730abc23",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -24801,7 +24849,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:d50a8710b4d9aea6",
+      "sourceHash": "fnv1a64:9463b8a631b7bc98",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -24858,7 +24906,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:9394454c9eb26055"
+      "sourceHash": "fnv1a64:8d65e8920c63c57a"
     },
     {
       "id": "KA-C03-cennaagi",
@@ -24876,7 +24924,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:93437e98f663cb1c",
+      "sourceHash": "fnv1a64:d40b6e622cb63c30",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -24897,7 +24945,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:8b830f9a970ffdec",
+      "sourceHash": "fnv1a64:1fd541f9cd0d8d12",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -24918,7 +24966,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:58de706b080bec57",
+      "sourceHash": "fnv1a64:7896e47ea2eaa584",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -24939,7 +24987,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b4afa9f62df6a322",
+      "sourceHash": "fnv1a64:61040d9467373d4e",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -24960,7 +25008,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:a41e1b1c079f7f0b",
+      "sourceHash": "fnv1a64:039860644f0adf38",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -24999,7 +25047,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:5424de3b9e5d6cef",
+      "sourceHash": "fnv1a64:163fe9b04e84446c",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -25020,7 +25068,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:30e99c8aa7d1463b",
+      "sourceHash": "fnv1a64:18d2e096c02b8b7c",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -25041,7 +25089,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:4340dca3b939a451",
+      "sourceHash": "fnv1a64:702193f26b67e288",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -25062,7 +25110,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:9c7fce2e8376967d",
+      "sourceHash": "fnv1a64:7585162fb5f98807",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -25101,7 +25149,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:6f539f1993b90d24",
+      "sourceHash": "fnv1a64:b453c3b887b30ee1",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -25122,7 +25170,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:9f1823451187ac5a",
+      "sourceHash": "fnv1a64:3da81fd2fe26575f",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -25143,7 +25191,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:ea6df29016abfee2",
+      "sourceHash": "fnv1a64:efa011474f105076",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -25257,7 +25305,7 @@
         "wide-table"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:073b63668004d352"
+      "sourceHash": "fnv1a64:20c4edbc920a80ec"
     },
     {
       "id": "KA-C07-numbers-6-10",
@@ -25293,7 +25341,7 @@
         "sight-cue"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:a93811ff1388aa1d"
+      "sourceHash": "fnv1a64:914592b7c3ac64e7"
     },
     {
       "id": "KA-C09-kshamisi",
@@ -25419,7 +25467,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:4e297f50c05aa28a"
+      "sourceHash": "fnv1a64:e75f2043dbe5a5b9"
     },
     {
       "id": "KA-C16-tingalugalu",
@@ -25455,7 +25503,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:3671dc98e0d34e40"
+      "sourceHash": "fnv1a64:d3cd6c08f92c685e"
     },
     {
       "id": "KA-C18-gante",
@@ -25473,7 +25521,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:f73a4d5c3f34c2df"
+      "sourceHash": "fnv1a64:5c0078edb9547165"
     },
     {
       "id": "KA-C19-vayassu",
@@ -25527,7 +25575,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:36b6f5f3c841c2b3"
+      "sourceHash": "fnv1a64:3102b50b8d659389"
     },
     {
       "id": "KA-C21-naayi-bekku",
@@ -25563,7 +25611,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:6b4ce584accf6c2a"
+      "sourceHash": "fnv1a64:65ba36cced6b0222"
     },
     {
       "id": "KA-C23-dina",
@@ -25581,7 +25629,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b23a67688711dae0"
+      "sourceHash": "fnv1a64:5bde450231503c37"
     },
     {
       "id": "KA-C24-ratri",
@@ -25599,7 +25647,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:671996cecd9c3bef"
+      "sourceHash": "fnv1a64:46dd7867144e74c6"
     },
     {
       "id": "KA-C25-shubha-ratri",
@@ -25617,7 +25665,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:a3df191ed7cba0c0"
+      "sourceHash": "fnv1a64:6c8aec35b231b411"
     },
     {
       "id": "KA-C26-belagge",
@@ -25635,7 +25683,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:d399a5e4a2aeb1ca"
+      "sourceHash": "fnv1a64:568fb3965db9e150"
     },
     {
       "id": "KA-C27-sanje",
@@ -25653,7 +25701,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:1466642b866e29ed"
+      "sourceHash": "fnv1a64:72a485ed0029a2cf"
     },
     {
       "id": "KA-C28-aparahna",
@@ -25671,7 +25719,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:12b4b4c06d6601f7"
+      "sourceHash": "fnv1a64:91a260dba281a7fa"
     },
     {
       "id": "KA-C29-shubhodaya",
@@ -25689,7 +25737,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:9dfa68bed3ca815c"
+      "sourceHash": "fnv1a64:a812b8b9ae20581f"
     },
     {
       "id": "KA-C30-shubha-sanje",
@@ -25707,7 +25755,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:2027420fe9dd34a2"
+      "sourceHash": "fnv1a64:71f56fe687f930ba"
     },
     {
       "id": "KA-C31-shubha-madhyahna",
@@ -25725,7 +25773,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:235151969cc736e2"
+      "sourceHash": "fnv1a64:7d10ac70762d2a6e"
     },
     {
       "id": "KA-C32-iru",
@@ -27863,7 +27911,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:a386c9616c67b3e7",
+      "sourceHash": "fnv1a64:c377ce81161a892c",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -27884,7 +27932,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:bd41bd8573b9cfb8",
+      "sourceHash": "fnv1a64:ccd411311e0764f1",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -27905,7 +27953,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:77fae88f5176850b",
+      "sourceHash": "fnv1a64:4690f7c84094b174",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -27944,7 +27992,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:65e56bc8c04f01a1",
+      "sourceHash": "fnv1a64:203bb2f266e73be7",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -27986,7 +28034,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:fdf49546f6b2b6ee",
+      "sourceHash": "fnv1a64:50983e3865948970",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -28085,7 +28133,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:fce78214aef0ef35",
+      "sourceHash": "fnv1a64:eeefd4f9a16486f7",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -28124,7 +28172,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:39689e1d6aa3ebb2"
+      "sourceHash": "fnv1a64:e75714ed42a88378"
     },
     {
       "id": "ML-C03-engane",
@@ -28142,7 +28190,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:64cd69a9348bd1f5",
+      "sourceHash": "fnv1a64:2e7cd01cd5c7839b",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -28202,7 +28250,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:9eae0087a7a99e4f",
+      "sourceHash": "fnv1a64:e555a147870ee374",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -28223,7 +28271,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:edfd9838cfc6c07f",
+      "sourceHash": "fnv1a64:d49c261ab75671db",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -28265,7 +28313,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:7f5e2b7fe9218475",
+      "sourceHash": "fnv1a64:4e2b06c59e372a3b",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -28307,7 +28355,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:887651ed8d638d32",
+      "sourceHash": "fnv1a64:701e4581b1215ff6",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -28367,7 +28415,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:31d528a76c0bd599",
+      "sourceHash": "fnv1a64:eb22149686f6cdec",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -28448,7 +28496,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:8af0e0a180efa543",
+      "sourceHash": "fnv1a64:9b4d197fa6baffc8",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -28541,7 +28589,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:4520f33cdb069b52"
+      "sourceHash": "fnv1a64:216fa0b67ea1f0c5"
     },
     {
       "id": "ML-C09-kshamikkanam",
@@ -28559,7 +28607,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:13a530938d324359"
+      "sourceHash": "fnv1a64:ca5b8c14bd082b01"
     },
     {
       "id": "ML-C10-azhcha",
@@ -28703,7 +28751,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:7d243c4083456d88"
+      "sourceHash": "fnv1a64:128d3273c3920f51"
     },
     {
       "id": "ML-C17-paathira",
@@ -28793,7 +28841,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:0ad30d747675aade"
+      "sourceHash": "fnv1a64:173012b20e03f833"
     },
     {
       "id": "ML-C21-naaya-poocha",
@@ -28847,7 +28895,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:c8a896f44b16eafa"
+      "sourceHash": "fnv1a64:4123f286c50e264a"
     },
     {
       "id": "ML-C23-naal",
@@ -28937,7 +28985,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:1f7e1a50dbcee8a6"
+      "sourceHash": "fnv1a64:68530daad528d198"
     },
     {
       "id": "ML-C27-vaikunneram",
@@ -28955,7 +29003,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:f51751154852e81b"
+      "sourceHash": "fnv1a64:1ac20e914f716f35"
     },
     {
       "id": "ML-C28-uchakazhinju",
@@ -28991,7 +29039,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:1243bf8f8bdb38de"
+      "sourceHash": "fnv1a64:3fb516320e0b30fd"
     },
     {
       "id": "ML-C30-shubha-sayaahnam",
@@ -29009,7 +29057,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:319b9cf0184e41fe"
+      "sourceHash": "fnv1a64:88a6fe956dca744b"
     },
     {
       "id": "ML-C31-shubha-madhyaahnam",
@@ -29027,7 +29075,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:fe01eca3969055a4"
+      "sourceHash": "fnv1a64:7cce686d227069e7"
     },
     {
       "id": "ML-C31-afternoon-convergence",
@@ -36062,7 +36110,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:487c7a73e21f5983",
+      "sourceHash": "fnv1a64:6620bb2dac91dd52",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -36105,7 +36153,7 @@
         "sight-cue"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:a0eb563a777d2f13",
+      "sourceHash": "fnv1a64:be3ba3dfbee27e2d",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -36126,7 +36174,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:386744037c9fab92",
+      "sourceHash": "fnv1a64:e083b9e09a50f57a",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -36165,7 +36213,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:cbf7ca601bf00a4f",
+      "sourceHash": "fnv1a64:9301b9a1c3a2bdae",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -36186,7 +36234,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:e8e0fd6673d824d6",
+      "sourceHash": "fnv1a64:85908ea8069f703c",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -36207,7 +36255,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:9088728915fcc1e6",
+      "sourceHash": "fnv1a64:3ad56dd0b8cb9d2e",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -36228,7 +36276,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:5f68b66f9b279a71",
+      "sourceHash": "fnv1a64:fd7e8ec37d4acc05",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -36249,7 +36297,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:4e40385ad96c7c3b",
+      "sourceHash": "fnv1a64:aa506d9fe99a3f71",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -36270,7 +36318,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:19cf8b63960c764f",
+      "sourceHash": "fnv1a64:e33bd01ad0a6f408",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -36309,7 +36357,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:dd8f39ca044c965c",
+      "sourceHash": "fnv1a64:fc1bbc2cea5e6668",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -36348,7 +36396,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:45944c82838832c8",
+      "sourceHash": "fnv1a64:e4d464718ba5ab00",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -36387,7 +36435,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:656fec3705a363e8",
+      "sourceHash": "fnv1a64:ea990077d737ff9d",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -36408,7 +36456,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:3fe117d8b3a2e1c0",
+      "sourceHash": "fnv1a64:eb5b5c3c0329f734",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -36429,7 +36477,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:3b49148c41bacfa4",
+      "sourceHash": "fnv1a64:dad6ae7aacfbb389",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -36468,7 +36516,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b682dedfea2ec53e",
+      "sourceHash": "fnv1a64:6cc098a2013b77ba",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -36507,7 +36555,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:ca5312471924cfcf",
+      "sourceHash": "fnv1a64:9a5fbfa7c32f6516",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -36528,7 +36576,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:c01517255bb7ee88",
+      "sourceHash": "fnv1a64:63e2173f0dd4ce5a",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -36549,7 +36597,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:4ded4e8244e80298",
+      "sourceHash": "fnv1a64:c668d84e7f45e3da",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -36570,7 +36618,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:6ce6fe49bf237194",
+      "sourceHash": "fnv1a64:3dc6c4a6d0b8391e",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -36591,7 +36639,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:0c5fd96530e11254",
+      "sourceHash": "fnv1a64:b3d5e2c87218460e",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -36630,7 +36678,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:dab4cb61ca2e0775",
+      "sourceHash": "fnv1a64:d61ce6ff0acbe8dc",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -36651,7 +36699,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:d03f17265b4a3ef7",
+      "sourceHash": "fnv1a64:bd21c613d45f700b",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -43777,6 +43825,60 @@
       "sourceHash": "fnv1a64:3a874d09bbaaee0a"
     },
     {
+      "id": "ES-C58-pero",
+      "language": "spanish",
+      "chapter": 218,
+      "sequence": 2325,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:95d92ad375ca4533"
+    },
+    {
+      "id": "ES-C58-tambien",
+      "language": "spanish",
+      "chapter": 219,
+      "sequence": 2330,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:0321215bd1bc7850"
+    },
+    {
+      "id": "ES-C58-tampoco",
+      "language": "spanish",
+      "chapter": 220,
+      "sequence": 2335,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:b449e45ff9771482"
+    },
+    {
       "id": "TA-C01-vanakkam",
       "language": "tamil",
       "chapter": 1,
@@ -43792,7 +43894,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:017a3556c7283313"
+      "sourceHash": "fnv1a64:90fd1fa8024e6c4b"
     },
     {
       "id": "TA-C01-vanakkam-family-register",
@@ -43810,7 +43912,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:ad7b57e45071d385"
+      "sourceHash": "fnv1a64:f7b2bbc20662a036"
     },
     {
       "id": "TA-C01-aam",
@@ -43846,7 +43948,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:fab96586503e281c"
+      "sourceHash": "fnv1a64:8b1c26dfb61a81fe"
     },
     {
       "id": "TA-C01-nandri",
@@ -43864,7 +43966,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:eabaf0f0e3333bf6"
+      "sourceHash": "fnv1a64:484e8cdb94d9ff95"
     },
     {
       "id": "TA-C01-nandri-family-register",
@@ -43900,7 +44002,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:17d7a2c78ef6c9c9"
+      "sourceHash": "fnv1a64:3050294875351187"
     },
     {
       "id": "TA-C01-answering",
@@ -43918,7 +44020,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:e3574d76d640bfad"
+      "sourceHash": "fnv1a64:d8b47a2a83f2b182"
     },
     {
       "id": "TA-C01-practice",
@@ -43954,7 +44056,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:2161da5980392e73"
+      "sourceHash": "fnv1a64:8cfd51ec9c416d3f"
     },
     {
       "id": "TA-C02-en",
@@ -43972,7 +44074,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:add24a5ae6f81e1d"
+      "sourceHash": "fnv1a64:0d61bcef1c87749a"
     },
     {
       "id": "TA-C02-en-peyar",
@@ -43990,7 +44092,7 @@
         "sight-cue"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:1170a1a64a27cac8"
+      "sourceHash": "fnv1a64:509c10f2dfb45a9a"
     },
     {
       "id": "TA-C02-nii-niingal",
@@ -44008,7 +44110,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:3b2dc0902dd010a2"
+      "sourceHash": "fnv1a64:98e137452fb83731"
     },
     {
       "id": "TA-C02-enna",
@@ -44026,7 +44128,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:421ac73fe9673ba4"
+      "sourceHash": "fnv1a64:062d05f9bb347ae1"
     },
     {
       "id": "TA-C02-ungal-peyar-enna",
@@ -44098,7 +44200,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:64342f32f2e5e919"
+      "sourceHash": "fnv1a64:721cce0594f7e7f7"
     },
     {
       "id": "TA-C03-eppadi-irukkirirgal",
@@ -44134,7 +44236,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:048724de9db451e5"
+      "sourceHash": "fnv1a64:26dddc33f0b1f1f0"
     },
     {
       "id": "TA-C03-nalam",
@@ -44152,7 +44254,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:45b455e9ad00a5f6"
+      "sourceHash": "fnv1a64:e307ac13eeeb378e"
     },
     {
       "id": "TA-C03-paravayillai",
@@ -44170,7 +44272,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:8a3e39237641211e"
+      "sourceHash": "fnv1a64:254f875eb66ed2a8"
     },
     {
       "id": "TA-C03-practice",
@@ -44206,7 +44308,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:4032f776949c58bb"
+      "sourceHash": "fnv1a64:e25cd027a196bbec"
     },
     {
       "id": "TA-C04-poy-varugiren",
@@ -44224,7 +44326,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:4db27cf81bd3a648"
+      "sourceHash": "fnv1a64:fa80fb4061e562bd"
     },
     {
       "id": "TA-C04-naalai",
@@ -44242,7 +44344,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:34d2538c5a595200"
+      "sourceHash": "fnv1a64:c0ddfaffb73c6c16"
     },
     {
       "id": "TA-C04-mindum-sandippom",
@@ -44260,7 +44362,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:5d3e6bac3fb15ffa"
+      "sourceHash": "fnv1a64:7f127eeb921f458c"
     },
     {
       "id": "TA-W01-curves-va-ka",
@@ -44321,7 +44423,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:fb566b65a21c956b"
+      "sourceHash": "fnv1a64:8cffed7ec5dda841"
     },
     {
       "id": "TA-C05-naan-tamizh-pesugiren",
@@ -44339,7 +44441,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:c8fbce5b84c6ca12"
+      "sourceHash": "fnv1a64:0cce51304bfb7ef8"
     },
     {
       "id": "TA-W01-abugida-va-ka",
@@ -44382,7 +44484,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:897c0df3eca3c5a6"
+      "sourceHash": "fnv1a64:9b65e09a8722fe40"
     },
     {
       "id": "TA-C05-velai-sey",
@@ -44400,7 +44502,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:41f470fad02f3716"
+      "sourceHash": "fnv1a64:f253c9fea41fd91d"
     },
     {
       "id": "TA-C05-practice",
@@ -44573,7 +44675,7 @@
         "wide-table"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:1348a3cd6d2254dc"
+      "sourceHash": "fnv1a64:1a1d31d055362221"
     },
     {
       "id": "TA-C07-numbers-6-10",
@@ -44636,7 +44738,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:cee9f967507bdf77"
+      "sourceHash": "fnv1a64:7cd6282c54e9b939"
     },
     {
       "id": "TA-C08-tayavuseytu",
@@ -44654,7 +44756,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b971e0b2bb303f4a"
+      "sourceHash": "fnv1a64:f617ae89e5cbc693"
     },
     {
       "id": "TA-C08-please-register",
@@ -44672,7 +44774,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:623569769d69e6a3",
+      "sourceHash": "fnv1a64:7f8aae22027949eb",
       "detachableSegments": [
         "Script you'll notice: Read the join in செய்து"
       ]
@@ -44734,7 +44836,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:0b10828379b8e21d",
+      "sourceHash": "fnv1a64:7599bd315f961f82",
       "detachableSegments": [
         "Script you'll notice: Read ன்னி"
       ]
@@ -44833,7 +44935,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:a126d778478d4902"
+      "sourceHash": "fnv1a64:667b2e88be342205"
     },
     {
       "id": "TA-W04-i-sign-write-nandri",
@@ -44989,7 +45091,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:f0c21e500c9a13b9"
+      "sourceHash": "fnv1a64:d305720b49f4f434"
     },
     {
       "id": "TA-W06-write-illai",
@@ -45031,7 +45133,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:e021e7775002900c"
+      "sourceHash": "fnv1a64:039a838086a43398"
     },
     {
       "id": "TA-C19-vayathu",
@@ -45127,7 +45229,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:661e8c72b79c3d22"
+      "sourceHash": "fnv1a64:c3eab369514507a8"
     },
     {
       "id": "TA-C21-naay-poonai",
@@ -45187,7 +45289,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:3114da16b86a47ea"
+      "sourceHash": "fnv1a64:315090b4ab998a0e"
     },
     {
       "id": "TA-C23-naal",
@@ -45205,7 +45307,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:01ed309a4046ac0d"
+      "sourceHash": "fnv1a64:5555c918817436eb"
     },
     {
       "id": "TA-C23-day-family-register",
@@ -45223,7 +45325,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:43a47e46c1189b5e"
+      "sourceHash": "fnv1a64:66f11d4091607d07"
     },
     {
       "id": "TA-W09-read-peyar",
@@ -45266,7 +45368,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:7838990e6a1e86ab"
+      "sourceHash": "fnv1a64:796ac5d8129c3245"
     },
     {
       "id": "TA-C24-night-register-darkness",
@@ -45284,7 +45386,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b3a2d9a756bc31c9"
+      "sourceHash": "fnv1a64:39c3cb1f85922cf4"
     },
     {
       "id": "TA-C25-iniya-iravu",
@@ -45302,7 +45404,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:93edd99cbcc26b5f"
+      "sourceHash": "fnv1a64:19dca1cf614ebed8"
     },
     {
       "id": "TA-W10-read-naan",
@@ -45362,7 +45464,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:be68ac32ac9c4962"
+      "sourceHash": "fnv1a64:c834ecb13aab21f5"
     },
     {
       "id": "TA-C27-maalai",
@@ -45380,7 +45482,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:9b58ae9e7d826a6f"
+      "sourceHash": "fnv1a64:41db8c56f6ad2596"
     },
     {
       "id": "TA-W11-read-niingal",
@@ -45423,7 +45525,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:f0692fb16627812a"
+      "sourceHash": "fnv1a64:d173c96694749db6"
     },
     {
       "id": "TA-C28-afternoon-boundary",
@@ -45441,7 +45543,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:52837d88f23a53f5"
+      "sourceHash": "fnv1a64:df550d5209024319"
     },
     {
       "id": "TA-C29-kaalai-vanakkam",
@@ -45459,7 +45561,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:824054e5b5c328eb"
+      "sourceHash": "fnv1a64:ec2aada931263b05"
     },
     {
       "id": "TA-W12-read-eppadi",
@@ -45501,7 +45603,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:a569e6a16620cd0e"
+      "sourceHash": "fnv1a64:9ec726b7fe435a3e"
     },
     {
       "id": "TA-C31-matiya-vanakkam",
@@ -45519,7 +45621,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:ed3341669544458b"
+      "sourceHash": "fnv1a64:e0fc68ea0a96a97e"
     },
     {
       "id": "TA-C31-afternoon-greeting-root",
@@ -45537,7 +45639,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:aebc39e8e3bbc929"
+      "sourceHash": "fnv1a64:bd3bfbc73f95cbb9"
     },
     {
       "id": "TA-W13-read-irukkirirgal",
@@ -46399,7 +46501,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:02c7e53b73ee6c0f",
+      "sourceHash": "fnv1a64:a1171fcd96f01b85",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -46421,7 +46523,7 @@
         "sight-cue"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:00aabcd9866ae9f2",
+      "sourceHash": "fnv1a64:01180c3b06f07cd3",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -46442,7 +46544,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:fa3ba3d6439ce271",
+      "sourceHash": "fnv1a64:24a4d36df8acba14",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -46463,7 +46565,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:86c4ca28846a9629",
+      "sourceHash": "fnv1a64:ff3c7a1094f3e782",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -46502,7 +46604,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:563edf856ad232b4",
+      "sourceHash": "fnv1a64:607cdc58a80a738a",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -46523,7 +46625,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:c24865d86c900c57",
+      "sourceHash": "fnv1a64:22da1b54135c12bf",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -46562,7 +46664,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:66506069a92e1306",
+      "sourceHash": "fnv1a64:158c3faffcf1ccea",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -46601,7 +46703,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:354cf9f77192856b",
+      "sourceHash": "fnv1a64:a67661a7bebb1e06",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -46622,7 +46724,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:282c8e00b4bab667",
+      "sourceHash": "fnv1a64:e13824c836ce17c0",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -46679,7 +46781,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:921926f70cd68931",
+      "sourceHash": "fnv1a64:5bc22d14bf3bbe9b",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -46742,7 +46844,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:c9f149c5d962518f",
+      "sourceHash": "fnv1a64:6e164f64a524796e",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -46763,7 +46865,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:4f0cfb3134d69cfb",
+      "sourceHash": "fnv1a64:1bcdd5b99080e43f",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -46802,7 +46904,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:515fec85b9e97e7c",
+      "sourceHash": "fnv1a64:cdab9fcf5a7a31c7",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -46841,7 +46943,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:f241961853fa1fdd",
+      "sourceHash": "fnv1a64:6b5d247b6d933685",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -46862,7 +46964,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:7a4b023ba6421195",
+      "sourceHash": "fnv1a64:cca05ae609b9418c",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -46883,7 +46985,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:662e875342cd06a1",
+      "sourceHash": "fnv1a64:aeeed251b66ac28a",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -46904,7 +47006,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:8d053f228fb6653b",
+      "sourceHash": "fnv1a64:61f3175a47fb4987",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -46946,7 +47048,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:eaa29c2ebacac405",
+      "sourceHash": "fnv1a64:c0fd459441846498",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -46985,7 +47087,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:26e4f178d9a9f193",
+      "sourceHash": "fnv1a64:8951a55fa2ad6f41",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -47043,7 +47145,7 @@
         "wide-table"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:d4f724de2a90e484",
+      "sourceHash": "fnv1a64:03c37e86ea6bfc16",
       "detachableSegments": [
         "Script you'll notice: A Telugu shape to notice"
       ]
@@ -47082,7 +47184,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b2afdcd482b62280",
+      "sourceHash": "fnv1a64:5da90112221b1c54",
       "detachableSegments": [
         "Script you'll notice: Sound & structure point"
       ]
@@ -47175,7 +47277,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:fcf0942176d96b7c"
+      "sourceHash": "fnv1a64:cede24ba7ccf678a"
     },
     {
       "id": "TE-C14-rutuvulu",
@@ -47265,7 +47367,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:46fbe5e7dd9ad73b"
+      "sourceHash": "fnv1a64:76a79508d5a71fce"
     },
     {
       "id": "TE-C19-vayasu",
@@ -47283,7 +47385,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:93863a8dc7d95c43"
+      "sourceHash": "fnv1a64:be9fdb231de44dad"
     },
     {
       "id": "TE-C20-padakondu-iravai",
@@ -47301,7 +47403,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:e884cbd15de39796"
+      "sourceHash": "fnv1a64:5bbfbf4e8b38b873"
     },
     {
       "id": "TE-C20-vatavaranam",
@@ -47319,7 +47421,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:37d9dac6f11c147a"
+      "sourceHash": "fnv1a64:2db943fdb4d27658"
     },
     {
       "id": "TE-C21-kukka-pilli",
@@ -47355,7 +47457,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b0fe9f377036d9b9"
+      "sourceHash": "fnv1a64:a4962c7fe1f80f18"
     },
     {
       "id": "TE-C23-roju",
@@ -47373,7 +47475,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:2a2be619494004e7"
+      "sourceHash": "fnv1a64:0e5f30243daa1733"
     },
     {
       "id": "TE-C24-ratri",
@@ -47391,7 +47493,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:767a5519fcd55de6"
+      "sourceHash": "fnv1a64:4d1a6d3aa41020d3"
     },
     {
       "id": "TE-C25-shubha-ratri",
@@ -47409,7 +47511,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b4f4970ab0dab434"
+      "sourceHash": "fnv1a64:83f579a6fb5c54f1"
     },
     {
       "id": "TE-C26-udayam",
@@ -47427,7 +47529,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:e273374a80112cc8"
+      "sourceHash": "fnv1a64:b94e62a1611d43a6"
     },
     {
       "id": "TE-C27-sayantram",
@@ -47445,7 +47547,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:d9da980866e3cf48"
+      "sourceHash": "fnv1a64:a0b5c2e9078f4669"
     },
     {
       "id": "TE-C28-madhyahnam-widened",
@@ -47463,7 +47565,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:3150420000d6d5b9"
+      "sourceHash": "fnv1a64:e95800e95f927a76"
     },
     {
       "id": "TE-C29-subhodayam",
@@ -47481,7 +47583,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:586b3a016969c36f"
+      "sourceHash": "fnv1a64:2dd423abc55ec4e1"
     },
     {
       "id": "TE-C30-subha-sayantram",
@@ -47499,7 +47601,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:bef920e3f643611d"
+      "sourceHash": "fnv1a64:e888b3152fcdca78"
     },
     {
       "id": "TE-C31-subha-madhyahnam",
@@ -47517,7 +47619,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:5f0f648bad51261c"
+      "sourceHash": "fnv1a64:be4e3b25d30485e7"
     },
     {
       "id": "TE-C31-subha-madhyahnam-register",

@@ -5,6 +5,67 @@ landed and why, not a semver-tracked API.
 
 ## Unreleased
 
+- `language/contraction.adj` (extended) — extended the already-shipped `contraction(word,
+  expansion)` table from 3 to 16 rows. The original dont/cant/wont rows turn out to be exactly
+  THREE members of a larger 16-row "Negative Contractions" table on the same already-cited
+  Grammarly page -- every negative contraction the source lists, each with exactly ONE
+  unambiguous expansion. Added arent, couldnt, didnt, doesnt, hadnt, hasnt, havent, isnt,
+  mustnt, shouldnt, wasnt, werent, wouldnt -> are_not/could_not/did_not/does_not/had_not/
+  has_not/have_not/is_not/must_not/should_not/was_not/were_not/would_not. Deliberately did
+  NOT pull from the page's separate "Common Contractions" table, whose entries (e.g. `he's`
+  -> "he has, he is") are genuinely ambiguous -- WebFetch re-verified the full Negative
+  Contractions table across two separate passes, both confirming byte-identical rows and that
+  every row has a single expansion with no comma-separated alternatives. `shouldnt` was
+  previously this table's own honest-abstention example; the query file and e2e tests were
+  updated to use `hes` (the genuinely ambiguous case) as the new abstention example instead.
+  New e2e test `contraction_extension_recalls_newly_added_negative_contractions`. No new
+  manifest objective (same library, same objective, 168 total unchanged).
+- `language/pronoun-type.adj` (extended) — extended the already-shipped `pronoun_type(type,
+  description)` table from 3 to 4 rows. Added `distributive_pronoun` -> `refers_to_nouns_as_
+  individual_elements_of_larger_groups`, quoted verbatim from the same already-cited Grammarly
+  "Pronouns: Definition and Examples" page. Discovered via a careful WebFetch re-check of the
+  page's reflexive/intensive/possessive/reciprocal/distributive material the header had always
+  named but never fully investigated — two other candidates (intensive_pronoun, reciprocal_pronoun)
+  were investigated and REJECTED after multiple WebFetch passes surfaced inconsistent/non-defining
+  sentences for them (intensive's own sentence is a comparison that never states its actual
+  function; reciprocal's own sentence names a closed word-list rather than a function), while
+  distributive_pronoun's sentence was confirmed byte-identical across four separate fetches and
+  matches the table's existing "type refers to/is X" pattern. New e2e test
+  `pronoun_type_extension_recalls_the_newly_added_distributive_pronoun`, alongside the 3
+  pre-existing tests. No new manifest objective (same library, same objective, 168 total unchanged).
+- `astronomy/comet-tail-type.adj` (new) — a sibling library to the already-shipped `comet-part.adj`:
+  a new `comet_tail_type(tail, description)` table names the two separate tails a comet actually
+  has (dust_tail, ion_tail) and the defining path each one traces, quoted verbatim from the SAME
+  NASA Space Place "What Is a Comet?" page `comet-part.adj` already cites — discovered while
+  investigating that page's own header note that it "goes on to further sub-divide the tail into
+  a dust tail and an ion tail," a genuinely new sub-question (not a `comet-part.adj` extend, since
+  dust/ion are sub-types of the single `tail` part, not new peer-level physical parts) using an
+  already-fetched source, re-verified live before writing. Honest abstention on `coma`/`nucleus`
+  (real comet parts, already tabled in the coarser sibling `comet-part.adj`, not tail sub-types).
+  This is genuinely a CLOSED two-way split — the source's own sentence states a comet has exactly
+  two separate tails. New manifest objective `adj.science.3to5.comet_tail_type` (168 total,
+  prerequisite on `adj.science.3to5.comet_part`) — the first genuinely NEW-topic content slice in
+  a while, after a run of extend-pattern wins; a full sweep of ~20 other science-lane tables this
+  cycle found nothing else extendable (all closed/exhaustive sets or documented considered
+  exclusions). New e2e test `facts_comettailtype_e2e.rs` (3 tests: direct recall, reverse binding,
+  honest abstention on a different physical part).
+- `language/homophones.adj` (extended) — extended the already-shipped `homophone(word,
+  sound_alike)` table from 3 to 5 rows. The header already quoted BOTH of `there`'s Wiktionary
+  homophones ("their, they're") and BOTH of `to`'s ("too, two") when this table originally
+  shipped, but only the FIRST homophone per word had ever been turned into a row — the same
+  header-only zero-new-WebFetch discovery technique already proven on `synonyms.adj`,
+  `opposites.adj`, and `wave-types.adj` (the TENTH extend-pattern win this window), generalized
+  to a table whose header quoted MULTIPLE items per word from day one, not just the newest
+  extension shape. Added `row(there, theyre)` and `row(to, two)` — `theyre` is the
+  apostrophe-free atom label for "they're," since ADJ atom labels cannot carry an apostrophe;
+  this mirrors the short-atom-label discipline `contraction.adj` already established (`dont`
+  for "don't"). `flower` was already fully captured (its source lists only one homophone).
+  WebFetch re-verified both `there`'s and `to`'s Wiktionary "Homophones" lines live before
+  writing — both quotes matched exactly. Extended `homophones.query.adj` with two new queries
+  documenting the multi-valued recall on `there`/`to`. New e2e test
+  `homophone_extension_recalls_the_newly_added_second_sound_alikes` covering both newly added
+  rows, alongside the 3 pre-existing tests (direct recall, reverse binding, honest abstention).
+  No new manifest objective (same library, same objective, 167 total unchanged).
 - Added this `CHANGELOG.md` (a standing gap flagged during the adj-curriculum loop's Wave 2
   literacy scoping pass, mirroring the same fix already made for `adj-formula-stdlib/`).
 - `language/word-families.adj` (new) — the FIRST literacy-domain library in the ADJ stdlib.
@@ -1876,3 +1937,54 @@ landed and why, not a semver-tracked API.
   library, same objective, 167 total unchanged). Also backfilled a
   pre-existing README.md documentation gap: `animal-babies.adj` had
   never been added to the per-directory documentation table.
+- `language/opposites.adj` (extended) -- extended the already-shipped
+  `opposite(word, opposite)` table from 7 to 21 rows. The header ABOVE
+  already quoted the full Wiktionary "Antonyms" line for `hot`, `big`,
+  `happy`, and `open` when this table originally shipped -- only the
+  FIRST antonym in each of those four lines had ever been turned into a
+  row, even though the same already-quoted span names one more (hot:
+  chilled), five more (big: little, tiny, minuscule, miniature,
+  minute), seven more (happy: blue, depressed, down, miserable, moody,
+  morose, unhappy), and one more (open: shut). `fast`, `wet`, and `hard`
+  were already fully captured (their sources name only one antonym
+  each). This is the EIGHTH successful extend-pattern win in this
+  loop's recent run. WebFetch re-verified all seven Wiktionary
+  "Antonyms" lines live before writing (confirming each already-quoted
+  span is accurate and unchanged, and specifically that `big`'s header
+  ellipsis stopped at exactly six total antonyms). Mirrors
+  `synonyms.adj`'s single-to-many-valued-per-key extension shape (a
+  bound word now recalls multiple opposites) -- the sibling table this
+  extension technique was first proven on. Extended the query file and
+  e2e test `facts_opposites_e2e.rs` to 2 tests (original recall/abstain
+  test + a new extension test covering three of the newly multi-valued
+  words). No new manifest objective (same library, same objective, 167
+  total unchanged). Also backfilled a pre-existing README.md
+  documentation gap: `opposites.adj` had never been added to the
+  per-directory documentation table (the THIRD such gap found this
+  window, after `kingdoms.adj` and `animal-babies.adj`).
+- `physics/wave-types.adj` (extended) -- extended the already-shipped
+  `wave_family(wave, family)` table from 7 to 10 rows. The header ABOVE
+  already quoted the SAME electromagnetic sentence naming seven
+  electromagnetic waves ("gamma rays, X-rays, ultraviolet light,
+  visible light, infrared light, microwaves, and radio waves") when
+  this table originally shipped -- only four of the seven had ever been
+  turned into a row. Added ultraviolet, infrared, and microwave, all
+  citing the same already-vetted NASA URL and authoritative trust tier.
+  This is the NINTH successful extend-pattern win in this loop's recent
+  run, and the first this cycle to apply the header-only zero-WebFetch
+  discovery technique (first proven on `synonyms.adj`/`opposites.adj`)
+  to adding new KEYS (more waves) rather than more values per an
+  existing key. Checked several other science candidates first this
+  cycle and ruled them out: `chemistry/lab-equipment.adj`'s header
+  explicitly documents its four dropped items (Erlenmeyer flask,
+  volumetric flask, pipet, wash bottle) as a deliberate prior exclusion
+  rather than an oversight; `biology/seed-parts.adj` is a fully closed
+  7-part anatomical set with no unused header material. Extended the
+  query file and e2e test `facts_wavetypes_e2e.rs` to 2 tests (original
+  recall/reverse/abstain test + a new extension test covering all three
+  newly-added electromagnetic waves). No new manifest objective (same
+  library, same objective, 167 total unchanged). Also backfilled a
+  pre-existing README.md documentation gap: `wave-types.adj` itself had
+  no dedicated per-directory documentation row (only mentioned in
+  passing from `seismic-wave-arrival-order.adj`'s row) -- the FOURTH
+  such gap found this window.

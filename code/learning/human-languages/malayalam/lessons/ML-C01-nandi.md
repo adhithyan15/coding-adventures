@@ -4,6 +4,7 @@ chapter: 1
 type: word
 headword: നന്ദി
 gloss: thank you (nandi — the native Dravidian word, Tamil's cousin)
+romanization: "nandi"
 concept_tag: COURTESY-THANKS
 prerequisites: [ML-C01-namaskaram]
 sounds: [nda-conjunct, i-vowel-sign]

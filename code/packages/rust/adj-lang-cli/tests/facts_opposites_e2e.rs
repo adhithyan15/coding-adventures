@@ -58,3 +58,36 @@ fn language_opposites_recall_binds_antonym_with_citation() {
     // No opposite is shipped for `purple` — honest abstention, never invented.
     assert!(out.contains("\"abstained\":true"), "purple abstains: {out}");
 }
+
+#[test]
+fn language_opposites_extension_recalls_every_antonym_per_word() {
+    let dir = scratch("opposites_ext");
+    let src = facts_stdlib().join("language/opposites.adj");
+    std::fs::copy(&src, dir.join("opposites.adj")).expect("copy shipped opposites.adj");
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"opposites.adj\"\n\
+         ? opposite(hot, $Word)\n\
+         ? opposite(big, $Word)\n\
+         ? opposite(open, $Word)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // hot now recalls TWO opposites (cold, chilled), not just the one
+    // originally shipped -- the table went from single-valued to
+    // many-valued per word this cycle.
+    assert!(
+        out.contains("\"Word\":\"chilled\""),
+        "hot → chilled (added this cycle): {out}"
+    );
+    assert!(
+        out.contains("\"Word\":\"minuscule\""),
+        "big → minuscule (added this cycle): {out}"
+    );
+    assert!(
+        out.contains("\"Word\":\"shut\""),
+        "open → shut (added this cycle): {out}"
+    );
+}

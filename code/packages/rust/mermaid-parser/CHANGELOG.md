@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.72.0
+
+- Preserve normal, bold, and numeric state `font-weight` styles in graph IR.
+
+## 0.71.0
+
+- Preserve state `font-size` styles in graph semantic IR.
+
+## 0.70.0
+
+- Preserve authored colons inside state descriptions and transition labels.
+
+## 0.69.0
+
+- Compose multiple named classes from one state `class` statement in source order.
+
+## 0.68.0
+
+- Preserve trailing descriptions on quoted state aliases as ordered multiline labels.
+
+## 0.67.0
+
+- Ignore pinned state-diagram `#` comments while preserving entities and hexadecimal style colors.
+
 ## 0.66.0
 
 - Apply one inline state style statement to comma-delimited nodes and groups.

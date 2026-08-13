@@ -1,5 +1,12 @@
 # Changelog — iir-to-llvm
 
+## 0.54.0 - 2026-08-12 - boolean conditional merge slots
+
+- `mov : bool` now propagates a comparison source's sidecar `i1` value, and a
+  promoted boolean destination stores that value into its `i1` slot. This fixes
+  invalid `store i1 <zext-i64>` IR for branch-selected boolean expressions,
+  including conditional predicates inside ALGOL `for ... while` loops.
+
 ## 0.53.0 - 2026-08-11 - records/unions join the movable GC kind (AOT00-T1y)
 
 - **`alloc`'s default/16-byte shape now allocates under `@__twig_gc_alloc_pair()`**,

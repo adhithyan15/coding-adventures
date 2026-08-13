@@ -7,6 +7,7 @@ chapter: 25
 type: phrase
 headword: இனிய இரவு
 gloss: "good night" — fully native Dravidian, "sweet/pleasant night," unlike Hindi, Kannada, Telugu, and Malayalam's shared Sanskrit-descended śubha rātri phrase; Tamil breaks the pattern this arc found in every other language
+romanization: "iṉiya iravu"
 concept_tag: GREETING-GOODNIGHT
 prerequisites: [TA-C24-night-register-darkness]
 sounds: [tamil-nnna, tamil-vowel-sign-i]

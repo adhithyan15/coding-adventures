@@ -4,14 +4,14 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:cd9c763fa849439d",
+  "sourceHash": "fnv1a64:b82e4987c74a6ba1",
   "lessons": [
     {
       "id": "KA-C03-cennaagi",
       "sequence": null,
       "title": "ಚೆನ್ನಾಗಿ (cennāgi) — \"well,\" and how to answer",
       "headword": "ಚೆನ್ನಾಗಿ",
-      "romanization": "",
+      "romanization": "cennāgi",
       "gloss": "well, nicely — and the reply \"ನಾನು ಚೆನ್ನಾಗಿದ್ದೇನೆ\"",
       "script": "kannada",
       "modality": "sight",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:93437e98f663cb1c",
+      "sourceHash": "fnv1a64:d40b6e622cb63c30",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -149,7 +149,7 @@
       "sequence": null,
       "title": "ಹೇಗೆ (hēge) — \"how,\" another of the ē- questions",
       "headword": "ಹೇಗೆ",
-      "romanization": "",
+      "romanization": "hēge",
       "gloss": "how",
       "script": "kannada",
       "modality": "sight",
@@ -157,7 +157,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:8b830f9a970ffdec",
+      "sourceHash": "fnv1a64:1fd541f9cd0d8d12",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -263,7 +263,7 @@
       "sequence": null,
       "title": "ನಾನು (nānu) — \"I,\" the Dravidian first person",
       "headword": "ನಾನು",
-      "romanization": "",
+      "romanization": "nānu",
       "gloss": "I",
       "script": "kannada",
       "modality": "sight",
@@ -271,7 +271,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:58de706b080bec57",
+      "sourceHash": "fnv1a64:7896e47ea2eaa584",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -397,7 +397,7 @@
       "sequence": null,
       "title": "ನೀವು ಹೇಗಿದ್ದೀರಾ? (nīvu hēgiddīrā?)",
       "headword": "ನೀವು ಹೇಗಿದ್ದೀರಾ?",
-      "romanization": "",
+      "romanization": "nīvu hēgiddīrā",
       "gloss": "how are you? (respectful)",
       "script": "kannada",
       "modality": "sight",
@@ -405,7 +405,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b4afa9f62df6a322",
+      "sourceHash": "fnv1a64:61040d9467373d4e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -452,7 +452,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ನೀವು ಹೇಗಿದ್ದೀರಾ? = ನೀವು (nīvu, \"you,\" respectful) + ಹೇಗಿದ್ದೀರಾ (hēgiddīrā, \"how are you\") — the verb last, as always. The verb is ಇರು (iru, \"to be / exist / stay\") — the same native Dravidian iru that Tamil uses for \"how are you,\" and (in Chapter 5) the verb for \"I live.\""
+              "text": "ನೀವು ಹೇಗಿದ್ದೀರಾ? (nīvu hēgiddīrā) = ನೀವು (nīvu, \"you,\" respectful) + ಹೇಗಿದ್ದೀರಾ (hēgiddīrā, \"how are you\") — the verb last, as always. The verb is ಇರು (iru, \"to be / exist / stay\") — the same native Dravidian iru that Tamil uses for \"how are you,\" and (in Chapter 5) the verb for \"I live.\""
             }
           ]
         },
@@ -531,7 +531,7 @@
       "sequence": null,
       "title": "ಪರವಾಗಿಲ್ಲ (paravāgilla) — \"no problem\"",
       "headword": "ಪರವಾಗಿಲ್ಲ",
-      "romanization": "",
+      "romanization": "paravāgilla",
       "gloss": "it's okay / no problem / you're welcome",
       "script": "kannada",
       "modality": "sight",
@@ -539,7 +539,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a41e1b1c079f7f0b",
+      "sourceHash": "fnv1a64:039860644f0adf38",
       "notice": {
         "modality": "sight",
         "needs": [

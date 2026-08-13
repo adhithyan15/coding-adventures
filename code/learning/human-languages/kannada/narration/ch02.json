@@ -4,14 +4,14 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:ebb799b08b06b8f8",
+  "sourceHash": "fnv1a64:3f287b31c8736cd5",
   "lessons": [
     {
       "id": "KA-C02-enu",
       "sequence": null,
       "title": "ಏನು (ēnu) — \"what\"",
       "headword": "ಏನು",
-      "romanization": "",
+      "romanization": "ēnu",
       "gloss": "what",
       "script": "kannada",
       "modality": "sight",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1be9909948d15d65",
+      "sourceHash": "fnv1a64:a8de9a75878f579a",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -114,7 +114,7 @@
             },
             {
               "kind": "speech",
-              "text": "What Dravidian stem heads ಏನು and Kannada's other question-words? (yā-/e-, the same as Tamil eṉṉa.)"
+              "text": "What Dravidian stem heads ಏನು (ēnu) and Kannada's other question-words? (yā-/e-, the same as Tamil eṉṉa.)"
             }
           ]
         }
@@ -125,7 +125,7 @@
       "sequence": null,
       "title": "ಹೆಸರು (hesaru) — \"name,\" and the p becomes h shift",
       "headword": "ಹೆಸರು",
-      "romanization": "",
+      "romanization": "hesaru",
       "gloss": "name",
       "script": "kannada",
       "modality": "sight",
@@ -133,7 +133,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:31cbf4d18c055096",
+      "sourceHash": "fnv1a64:68e69e98f1f071e7",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -252,7 +252,7 @@
       "sequence": null,
       "title": "ನನ್ನ (nanna) — \"my\"",
       "headword": "ನನ್ನ",
-      "romanization": "",
+      "romanization": "nanna",
       "gloss": "my",
       "script": "kannada",
       "modality": "sight",
@@ -260,7 +260,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:acd0ca42626d82bc",
+      "sourceHash": "fnv1a64:c8b98f6f730abc23",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -355,7 +355,7 @@
             },
             {
               "kind": "speech",
-              "text": "What word is ನನ್ನ the possessive of? (nānu, \"I\".) Which Tamil pronoun shares its root? (nāṉ.)"
+              "text": "What word is ನನ್ನ (nanna) the possessive of? (nānu, \"I\".) Which Tamil pronoun shares its root? (nāṉ.)"
             }
           ]
         }
@@ -405,7 +405,7 @@
             },
             {
               "kind": "speech",
-              "text": "ನನ್ನ ಹೆಸರು … = \"my name …\" becomes \"my name is…\""
+              "text": "ನನ್ನ (nanna) ಹೆಸರು (hesaru) … = \"my name …\" becomes \"my name is…\""
             },
             {
               "kind": "speech",
@@ -479,7 +479,7 @@
       "sequence": null,
       "title": "ನೀನು / ನೀವು (nīnu / nīvu) — \"you,\" familiar and respectful",
       "headword": "ನೀನು / ನೀವು",
-      "romanization": "",
+      "romanization": "nīnu / nīvu",
       "gloss": "you (familiar / respectful)",
       "script": "kannada",
       "modality": "sight",
@@ -487,7 +487,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d50a8710b4d9aea6",
+      "sourceHash": "fnv1a64:9463b8a631b7bc98",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -634,7 +634,7 @@
             },
             {
               "kind": "speech",
-              "text": "ನಿಮ್ಮ ಹೆಸರು ಏನು? = literally \"your name what?\" = \"what's your name?\""
+              "text": "ನಿಮ್ಮ ಹೆಸರು (hesaru) ಏನು (ēnu)? = literally \"your name what?\" = \"what's your name?\""
             },
             {
               "kind": "speech",
@@ -697,7 +697,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does ನಿಮ್ಮ ಹೆಸರು ಏನು? literally say, and what's missing vs. English? (\"Your name what?\"; no \"is\" — zero copula.)"
+              "text": "What does ನಿಮ್ಮ ಹೆಸರು (hesaru) ಏನು (ēnu)? literally say, and what's missing vs. English? (\"Your name what?\"; no \"is\" — zero copula.)"
             }
           ]
         }
@@ -850,7 +850,7 @@
       "sequence": null,
       "title": "ಸಂತೋಷ (santōṣa) — \"joy,\" and \"pleased to meet you\"",
       "headword": "ಸಂತೋಷ",
-      "romanization": "",
+      "romanization": "santōṣa",
       "gloss": "joy / pleased to meet you",
       "script": "kannada",
       "modality": "voice",
@@ -858,7 +858,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9394454c9eb26055",
+      "sourceHash": "fnv1a64:8d65e8920c63c57a",
       "notice": null,
       "blocks": [
         {
@@ -944,7 +944,7 @@
             },
             {
               "kind": "speech",
-              "text": "Is ಸಂತೋಷ native or borrowed, and what does the contrast with Tamil show? (Sanskrit; Kannada borrows Sanskrit — here for \"pleased\" — where Tamil keeps native magiḻcci.)"
+              "text": "Is ಸಂತೋಷ (santōṣa) native or borrowed, and what does the contrast with Tamil show? (Sanskrit; Kannada borrows Sanskrit — here for \"pleased\" — where Tamil keeps native magiḻcci.)"
             }
           ]
         }

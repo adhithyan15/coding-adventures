@@ -4,6 +4,7 @@ chapter: 1
 type: word
 headword: ഇല്ല
 gloss: no / there isn't (illa — the negative)
+romanization: "illa"
 concept_tag: RESPONSE-NO
 prerequisites: [ML-C01-athe]
 sounds: [independent-vowel-i, lla-conjunct]

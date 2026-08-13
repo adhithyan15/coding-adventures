@@ -4,14 +4,14 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:a828ffb52fb5052d",
+  "sourceHash": "fnv1a64:d337f4f804746cfe",
   "lessons": [
     {
       "id": "ML-C03-engane",
       "sequence": null,
       "title": "എങ്ങനെ (eṅṅane) — \"how,\" another of the e- questions",
       "headword": "എങ്ങനെ",
-      "romanization": "",
+      "romanization": "eṅṅane",
       "gloss": "how",
       "script": "malayalam",
       "modality": "sight",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:64cd69a9348bd1f5",
+      "sourceHash": "fnv1a64:2e7cd01cd5c7839b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -424,7 +424,7 @@
       "sequence": null,
       "title": "സാരമില്ല (sāramilla) — \"it doesn't matter\"",
       "headword": "സാരമില്ല",
-      "romanization": "",
+      "romanization": "sāramilla",
       "gloss": "it doesn't matter / no problem / you're welcome",
       "script": "malayalam",
       "modality": "sight",
@@ -432,7 +432,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:9eae0087a7a99e4f",
+      "sourceHash": "fnv1a64:e555a147870ee374",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -479,7 +479,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "സാരമില്ല means \"there's no matter to it / it doesn't matter\" — used for \"never mind / no worries / you're welcome.\" It is a perfect little emblem of Malayalam: സാരം (sāraṁ, \"substance, essence\") is a Sanskrit loan, while ഇല്ല (illa, \"is not\") is the native Dravidian negative from Chapter 1. Sanskrit noun, Dravidian verb, welded into one everyday word. That illa is the same \"is-not\" shared across Malayalam, Tamil, and Kannada — one of the deep bonds of the south (Telugu alone diverges, to lēdu)."
+              "text": "സാരമില്ല (sāramilla) means \"there's no matter to it / it doesn't matter\" — used for \"never mind / no worries / you're welcome.\" It is a perfect little emblem of Malayalam: സാരം (sāraṁ, \"substance, essence\") is a Sanskrit loan, while ഇല്ല (illa, \"is not\") is the native Dravidian negative from Chapter 1. Sanskrit noun, Dravidian verb, welded into one everyday word. That illa is the same \"is-not\" shared across Malayalam, Tamil, and Kannada — one of the deep bonds of the south (Telugu alone diverges, to lēdu)."
             }
           ]
         },
@@ -558,7 +558,7 @@
       "sequence": null,
       "title": "സുഖം (sukhaṁ) — \"well-being,\" and how to answer",
       "headword": "സുഖം",
-      "romanization": "",
+      "romanization": "sukhaṁ",
       "gloss": "well-being — and the reply \"സുഖമാണ്\"",
       "script": "malayalam",
       "modality": "sight",
@@ -566,7 +566,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:edfd9838cfc6c07f",
+      "sourceHash": "fnv1a64:d49c261ab75671db",
       "notice": {
         "modality": "sight",
         "needs": [

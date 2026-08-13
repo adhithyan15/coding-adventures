@@ -912,7 +912,7 @@
     {
       "language": "hindi",
       "chapter": 8,
-      "sourceHash": "fnv1a64:458451b42024aab4",
+      "sourceHash": "fnv1a64:fbb3b409c627d36b",
       "lessonIds": [
         "HI-C08-kripaya"
       ],
@@ -979,7 +979,7 @@
     {
       "language": "hindi",
       "chapter": 15,
-      "sourceHash": "fnv1a64:b9532791d4e3673c",
+      "sourceHash": "fnv1a64:b6e48db55e32906f",
       "lessonIds": [
         "HI-C15-paani-roti"
       ],
@@ -1006,7 +1006,7 @@
     {
       "language": "hindi",
       "chapter": 18,
-      "sourceHash": "fnv1a64:57d7add582c11bb8",
+      "sourceHash": "fnv1a64:6037d74c3dd4ad23",
       "lessonIds": [
         "HI-C18-ghanta"
       ],
@@ -1053,7 +1053,7 @@
     {
       "language": "hindi",
       "chapter": 23,
-      "sourceHash": "fnv1a64:5667230561b5fcfc",
+      "sourceHash": "fnv1a64:7f0ac80544c00749",
       "lessonIds": [
         "HI-C23-kutta-billi",
         "HI-C23-billi-history"
@@ -1063,7 +1063,7 @@
     {
       "language": "hindi",
       "chapter": 24,
-      "sourceHash": "fnv1a64:a087766eae161603",
+      "sourceHash": "fnv1a64:d4a0d55ef54ab9d4",
       "lessonIds": [
         "HI-C24-hara-pila",
         "HI-C24-pila-history"
@@ -1167,7 +1167,7 @@
     {
       "language": "hindi",
       "chapter": 35,
-      "sourceHash": "fnv1a64:d226af80b2c3dc58",
+      "sourceHash": "fnv1a64:c5265a5c3fb947dc",
       "lessonIds": [
         "HI-C35-lena",
         "HI-C35-puchna",
@@ -1179,7 +1179,7 @@
     {
       "language": "hindi",
       "chapter": 36,
-      "sourceHash": "fnv1a64:52f713925754c534",
+      "sourceHash": "fnv1a64:f42802e6de633453",
       "lessonIds": [
         "HI-C36-ghar",
         "HI-C36-darvaaza",
@@ -1191,7 +1191,7 @@
     {
       "language": "hindi",
       "chapter": 37,
-      "sourceHash": "fnv1a64:8fa37c2f91fbf8e0",
+      "sourceHash": "fnv1a64:43adecd4b0e39c25",
       "lessonIds": [
         "HI-C37-chai",
         "HI-C37-dudh",
@@ -1203,7 +1203,7 @@
     {
       "language": "hindi",
       "chapter": 38,
-      "sourceHash": "fnv1a64:f8426d8f08b7fc08",
+      "sourceHash": "fnv1a64:8bd7cf0685a0f2e0",
       "lessonIds": [
         "HI-C38-aankh",
         "HI-C38-daant",
@@ -1215,7 +1215,7 @@
     {
       "language": "hindi",
       "chapter": 39,
-      "sourceHash": "fnv1a64:5c68b16705d2b78c",
+      "sourceHash": "fnv1a64:d3f2dc3ab4e68579",
       "lessonIds": [
         "HI-C39-dost",
         "HI-C39-baccha",
@@ -1525,7 +1525,7 @@
     {
       "language": "kannada",
       "chapter": 7,
-      "sourceHash": "fnv1a64:28926f5fa53be9f6",
+      "sourceHash": "fnv1a64:3dbd5e92fe33f09d",
       "lessonIds": [
         "KA-C07-numbers-1-5",
         "KA-C07-numbers-6-10"
@@ -1535,7 +1535,7 @@
     {
       "language": "kannada",
       "chapter": 8,
-      "sourceHash": "fnv1a64:dac2748a22438f7c",
+      "sourceHash": "fnv1a64:258c9276cd22bde3",
       "lessonIds": [
         "KA-C08-dayavittu"
       ],
@@ -1598,7 +1598,7 @@
     {
       "language": "kannada",
       "chapter": 15,
-      "sourceHash": "fnv1a64:610fabe2dfb6ae8c",
+      "sourceHash": "fnv1a64:3264f58bc1464619",
       "lessonIds": [
         "KA-C15-niiru-akki"
       ],
@@ -1616,7 +1616,7 @@
     {
       "language": "kannada",
       "chapter": 17,
-      "sourceHash": "fnv1a64:48c4fc2ce8a71115",
+      "sourceHash": "fnv1a64:dbc139e32198cd15",
       "lessonIds": [
         "KA-C17-madhyaahna-madhyaraatri"
       ],
@@ -1625,7 +1625,7 @@
     {
       "language": "kannada",
       "chapter": 18,
-      "sourceHash": "fnv1a64:6ba24da51b133ff2",
+      "sourceHash": "fnv1a64:64594fad579acb37",
       "lessonIds": [
         "KA-C18-gante"
       ],
@@ -1643,7 +1643,7 @@
     {
       "language": "kannada",
       "chapter": 20,
-      "sourceHash": "fnv1a64:62460921001f0aa4",
+      "sourceHash": "fnv1a64:14474768864083cc",
       "lessonIds": [
         "KA-C20-hannondu-ippattu",
         "KA-C20-havamana"
@@ -1662,7 +1662,7 @@
     {
       "language": "kannada",
       "chapter": 22,
-      "sourceHash": "fnv1a64:06a5ea78be0c3bed",
+      "sourceHash": "fnv1a64:e5e8e199fc21d66a",
       "lessonIds": [
         "KA-C22-hasiru-haladi"
       ],
@@ -1671,7 +1671,7 @@
     {
       "language": "kannada",
       "chapter": 23,
-      "sourceHash": "fnv1a64:9153961d2b1e33b8",
+      "sourceHash": "fnv1a64:7b1f6eb65d21c5c0",
       "lessonIds": [
         "KA-C23-dina"
       ],
@@ -1680,7 +1680,7 @@
     {
       "language": "kannada",
       "chapter": 24,
-      "sourceHash": "fnv1a64:9faed2bc595aecf1",
+      "sourceHash": "fnv1a64:2475458804e5e6d1",
       "lessonIds": [
         "KA-C24-ratri"
       ],
@@ -1689,7 +1689,7 @@
     {
       "language": "kannada",
       "chapter": 25,
-      "sourceHash": "fnv1a64:c54ab65d1916942d",
+      "sourceHash": "fnv1a64:72a11fdbad023cb2",
       "lessonIds": [
         "KA-C25-shubha-ratri"
       ],
@@ -1698,7 +1698,7 @@
     {
       "language": "kannada",
       "chapter": 26,
-      "sourceHash": "fnv1a64:733dc8628eeb9536",
+      "sourceHash": "fnv1a64:58d490c8ac53e31a",
       "lessonIds": [
         "KA-C26-belagge"
       ],
@@ -1707,7 +1707,7 @@
     {
       "language": "kannada",
       "chapter": 27,
-      "sourceHash": "fnv1a64:a4b42598f9956103",
+      "sourceHash": "fnv1a64:c137c805a54982c3",
       "lessonIds": [
         "KA-C27-sanje"
       ],
@@ -1716,7 +1716,7 @@
     {
       "language": "kannada",
       "chapter": 28,
-      "sourceHash": "fnv1a64:72b19608d7065824",
+      "sourceHash": "fnv1a64:ece4242241f70e1c",
       "lessonIds": [
         "KA-C28-aparahna"
       ],
@@ -1725,7 +1725,7 @@
     {
       "language": "kannada",
       "chapter": 29,
-      "sourceHash": "fnv1a64:3f22d0ad0f1af413",
+      "sourceHash": "fnv1a64:f46fc5bfe289ad7a",
       "lessonIds": [
         "KA-C29-shubhodaya"
       ],
@@ -1734,7 +1734,7 @@
     {
       "language": "kannada",
       "chapter": 30,
-      "sourceHash": "fnv1a64:e0c908878b1e55f3",
+      "sourceHash": "fnv1a64:c477555e1fbe6600",
       "lessonIds": [
         "KA-C30-shubha-sanje"
       ],
@@ -1743,7 +1743,7 @@
     {
       "language": "kannada",
       "chapter": 31,
-      "sourceHash": "fnv1a64:cb3fdd67d305e608",
+      "sourceHash": "fnv1a64:49fa1caa1dae87f3",
       "lessonIds": [
         "KA-C31-shubha-madhyahna"
       ],
@@ -2290,7 +2290,7 @@
     {
       "language": "malayalam",
       "chapter": 8,
-      "sourceHash": "fnv1a64:f96b9fe8babd4a85",
+      "sourceHash": "fnv1a64:5c02da3e150ad6fa",
       "lessonIds": [
         "ML-C08-dayavayi"
       ],
@@ -2299,7 +2299,7 @@
     {
       "language": "malayalam",
       "chapter": 9,
-      "sourceHash": "fnv1a64:ac44e892ca931b88",
+      "sourceHash": "fnv1a64:307c345817208c3d",
       "lessonIds": [
         "ML-C09-kshamikkanam"
       ],
@@ -2371,7 +2371,7 @@
     {
       "language": "malayalam",
       "chapter": 17,
-      "sourceHash": "fnv1a64:46861cdb3987cd27",
+      "sourceHash": "fnv1a64:28f97387bdb8a1e1",
       "lessonIds": [
         "ML-C17-ucha-paathira",
         "ML-C17-paathira"
@@ -2399,7 +2399,7 @@
     {
       "language": "malayalam",
       "chapter": 20,
-      "sourceHash": "fnv1a64:b2825ff51a9e6fee",
+      "sourceHash": "fnv1a64:21922138f16ad4aa",
       "lessonIds": [
         "ML-C20-pathinonnu-irupathu",
         "ML-C20-kalavastha"
@@ -2427,7 +2427,7 @@
     {
       "language": "malayalam",
       "chapter": 23,
-      "sourceHash": "fnv1a64:2623855518b585dd",
+      "sourceHash": "fnv1a64:1c379fee1e9393a2",
       "lessonIds": [
         "ML-C23-divasam",
         "ML-C23-naal"
@@ -2456,7 +2456,7 @@
     {
       "language": "malayalam",
       "chapter": 26,
-      "sourceHash": "fnv1a64:20bbccb410e54a47",
+      "sourceHash": "fnv1a64:c69c20470fae1272",
       "lessonIds": [
         "ML-C26-raavile"
       ],
@@ -2465,7 +2465,7 @@
     {
       "language": "malayalam",
       "chapter": 27,
-      "sourceHash": "fnv1a64:c75aaa1a5aaf20a6",
+      "sourceHash": "fnv1a64:547a1f3df2684826",
       "lessonIds": [
         "ML-C27-vaikunneram"
       ],
@@ -2483,7 +2483,7 @@
     {
       "language": "malayalam",
       "chapter": 29,
-      "sourceHash": "fnv1a64:039f90850f96f17a",
+      "sourceHash": "fnv1a64:21de0029b5659b4e",
       "lessonIds": [
         "ML-C29-suprabhaatham"
       ],
@@ -2492,7 +2492,7 @@
     {
       "language": "malayalam",
       "chapter": 30,
-      "sourceHash": "fnv1a64:405b87b3eba757fa",
+      "sourceHash": "fnv1a64:9249e17dad58b977",
       "lessonIds": [
         "ML-C30-shubha-sayaahnam"
       ],
@@ -2501,7 +2501,7 @@
     {
       "language": "malayalam",
       "chapter": 31,
-      "sourceHash": "fnv1a64:222047c91d3091d7",
+      "sourceHash": "fnv1a64:c14934489e42d041",
       "lessonIds": [
         "ML-C31-shubha-madhyaahnam",
         "ML-C31-afternoon-convergence"
@@ -5556,6 +5556,33 @@
       "tex": "spanish/book/chapters/ch217-synthesis-reportar.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 218,
+      "sourceHash": "fnv1a64:f24283571aae1cac",
+      "lessonIds": [
+        "ES-C58-pero"
+      ],
+      "tex": "spanish/book/chapters/ch218-pero.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 219,
+      "sourceHash": "fnv1a64:f98cdde3a6a8beb6",
+      "lessonIds": [
+        "ES-C58-tambien"
+      ],
+      "tex": "spanish/book/chapters/ch219-tambien.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 220,
+      "sourceHash": "fnv1a64:89f0f96e0eefe482",
+      "lessonIds": [
+        "ES-C58-tampoco"
+      ],
+      "tex": "spanish/book/chapters/ch220-tampoco.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "sourceHash": "fnv1a64:c0940889d5248bc5",
@@ -5572,7 +5599,7 @@
     {
       "language": "tamil",
       "chapter": 7,
-      "sourceHash": "fnv1a64:70cbd01d5220dfd7",
+      "sourceHash": "fnv1a64:d9c130f5e50a68b7",
       "lessonIds": [
         "TA-C07-numbers-1-5",
         "TA-C07-numbers-1-5-family",
@@ -5585,7 +5612,7 @@
     {
       "language": "tamil",
       "chapter": 8,
-      "sourceHash": "fnv1a64:adacad55c45de512",
+      "sourceHash": "fnv1a64:11c3c341bacf36b8",
       "lessonIds": [
         "TA-C08-tayavuseytu",
         "TA-C08-please-register",
@@ -5596,7 +5623,7 @@
     {
       "language": "tamil",
       "chapter": 9,
-      "sourceHash": "fnv1a64:e323e82bbb0d3e86",
+      "sourceHash": "fnv1a64:008fde6278dc3ad3",
       "lessonIds": [
         "TA-C09-mannikkavum",
         "TA-C09-sorry-register"
@@ -5634,7 +5661,7 @@
     {
       "language": "tamil",
       "chapter": 13,
-      "sourceHash": "fnv1a64:a6f543a1bd2fb2b0",
+      "sourceHash": "fnv1a64:09b677bc02795704",
       "lessonIds": [
         "TA-C13-udal-uruppugal",
         "TA-W04-i-sign-write-nandri"
@@ -5682,7 +5709,7 @@
     {
       "language": "tamil",
       "chapter": 18,
-      "sourceHash": "fnv1a64:02fe0a3f622a8091",
+      "sourceHash": "fnv1a64:3705b02629d09c49",
       "lessonIds": [
         "TA-C18-mani",
         "TA-W06-write-illai",
@@ -5704,7 +5731,7 @@
     {
       "language": "tamil",
       "chapter": 20,
-      "sourceHash": "fnv1a64:66338ae50e53b167",
+      "sourceHash": "fnv1a64:548671cd1fafc0a1",
       "lessonIds": [
         "TA-C20-pathinondru-irupathu",
         "TA-C20-vaanilai"
@@ -5724,7 +5751,7 @@
     {
       "language": "tamil",
       "chapter": 22,
-      "sourceHash": "fnv1a64:a2b37feff53731ee",
+      "sourceHash": "fnv1a64:aa1a08d6cfbb3e79",
       "lessonIds": [
         "TA-C22-paccai-manjal"
       ],
@@ -5733,7 +5760,7 @@
     {
       "language": "tamil",
       "chapter": 23,
-      "sourceHash": "fnv1a64:70c830b7a9210412",
+      "sourceHash": "fnv1a64:c4a7df5eb5336177",
       "lessonIds": [
         "TA-C23-naal",
         "TA-C23-day-family-register",
@@ -5744,7 +5771,7 @@
     {
       "language": "tamil",
       "chapter": 24,
-      "sourceHash": "fnv1a64:8dd1eadb8505b226",
+      "sourceHash": "fnv1a64:4949e9ab31d17899",
       "lessonIds": [
         "TA-C24-iravu",
         "TA-C24-night-register-darkness"
@@ -5754,7 +5781,7 @@
     {
       "language": "tamil",
       "chapter": 25,
-      "sourceHash": "fnv1a64:98bf0d2bda9177c5",
+      "sourceHash": "fnv1a64:d34493da4106ab05",
       "lessonIds": [
         "TA-C25-iniya-iravu",
         "TA-W10-read-naan",
@@ -5765,7 +5792,7 @@
     {
       "language": "tamil",
       "chapter": 26,
-      "sourceHash": "fnv1a64:1c03cc5aa4e092bf",
+      "sourceHash": "fnv1a64:04494a9ec7c5a7b5",
       "lessonIds": [
         "TA-C26-kaalai"
       ],
@@ -5774,7 +5801,7 @@
     {
       "language": "tamil",
       "chapter": 27,
-      "sourceHash": "fnv1a64:9f987f9f4c88336d",
+      "sourceHash": "fnv1a64:1eef810c6efc16a4",
       "lessonIds": [
         "TA-C27-maalai",
         "TA-W11-read-niingal"
@@ -5784,7 +5811,7 @@
     {
       "language": "tamil",
       "chapter": 28,
-      "sourceHash": "fnv1a64:9ac0222bcd425f13",
+      "sourceHash": "fnv1a64:357a4eab08b6848c",
       "lessonIds": [
         "TA-C28-pirpakal",
         "TA-C28-afternoon-boundary"
@@ -5794,7 +5821,7 @@
     {
       "language": "tamil",
       "chapter": 29,
-      "sourceHash": "fnv1a64:02f13e86ba18eac0",
+      "sourceHash": "fnv1a64:70c9caac5e890db3",
       "lessonIds": [
         "TA-C29-kaalai-vanakkam",
         "TA-W12-read-eppadi"
@@ -5804,7 +5831,7 @@
     {
       "language": "tamil",
       "chapter": 30,
-      "sourceHash": "fnv1a64:f316f7c96650397e",
+      "sourceHash": "fnv1a64:532cabf9467dce62",
       "lessonIds": [
         "TA-C30-maalai-vanakkam"
       ],
@@ -5813,7 +5840,7 @@
     {
       "language": "tamil",
       "chapter": 31,
-      "sourceHash": "fnv1a64:69fe16e20cd758a3",
+      "sourceHash": "fnv1a64:2640c69e6c28ce48",
       "lessonIds": [
         "TA-C31-matiya-vanakkam",
         "TA-C31-afternoon-greeting-root",
@@ -5937,7 +5964,7 @@
     {
       "language": "telugu",
       "chapter": 7,
-      "sourceHash": "fnv1a64:d107cc00cc91e2a2",
+      "sourceHash": "fnv1a64:f63782cb86dc9cee",
       "lessonIds": [
         "TE-C07-numbers-1-5",
         "TE-C07-numbers-6-10"
@@ -5947,7 +5974,7 @@
     {
       "language": "telugu",
       "chapter": 8,
-      "sourceHash": "fnv1a64:929343aa3fd5c57e",
+      "sourceHash": "fnv1a64:883116a094e0a72d",
       "lessonIds": [
         "TE-C08-dayachesi"
       ],
@@ -5992,7 +6019,7 @@
     {
       "language": "telugu",
       "chapter": 13,
-      "sourceHash": "fnv1a64:cdd008a5d8e95a89",
+      "sourceHash": "fnv1a64:505f63d20c5645cd",
       "lessonIds": [
         "TE-C13-sharira-bhagalu"
       ],
@@ -6037,7 +6064,7 @@
     {
       "language": "telugu",
       "chapter": 18,
-      "sourceHash": "fnv1a64:88472286a26a6398",
+      "sourceHash": "fnv1a64:ed57f6b9a71d0a23",
       "lessonIds": [
         "TE-C18-ganta"
       ],
@@ -6046,7 +6073,7 @@
     {
       "language": "telugu",
       "chapter": 19,
-      "sourceHash": "fnv1a64:9a5055d83af4230e",
+      "sourceHash": "fnv1a64:723fbfe630b020fc",
       "lessonIds": [
         "TE-C19-vayasu"
       ],
@@ -6055,7 +6082,7 @@
     {
       "language": "telugu",
       "chapter": 20,
-      "sourceHash": "fnv1a64:b4f263daff1d57f8",
+      "sourceHash": "fnv1a64:daaa69af0a5f6b44",
       "lessonIds": [
         "TE-C20-padakondu-iravai",
         "TE-C20-vatavaranam"
@@ -6074,7 +6101,7 @@
     {
       "language": "telugu",
       "chapter": 22,
-      "sourceHash": "fnv1a64:8348184a469e6f04",
+      "sourceHash": "fnv1a64:a9f2338f9b0d7b70",
       "lessonIds": [
         "TE-C22-pacha-pasupu"
       ],
@@ -6083,7 +6110,7 @@
     {
       "language": "telugu",
       "chapter": 23,
-      "sourceHash": "fnv1a64:5e50e36a3c810d86",
+      "sourceHash": "fnv1a64:512981cf87b0ede8",
       "lessonIds": [
         "TE-C23-roju"
       ],
@@ -6092,7 +6119,7 @@
     {
       "language": "telugu",
       "chapter": 24,
-      "sourceHash": "fnv1a64:81356784ea53e728",
+      "sourceHash": "fnv1a64:415baca4453537e2",
       "lessonIds": [
         "TE-C24-ratri"
       ],
@@ -6101,7 +6128,7 @@
     {
       "language": "telugu",
       "chapter": 25,
-      "sourceHash": "fnv1a64:498562386ea0a8d9",
+      "sourceHash": "fnv1a64:a04c1830f3e529e5",
       "lessonIds": [
         "TE-C25-shubha-ratri"
       ],
@@ -6110,7 +6137,7 @@
     {
       "language": "telugu",
       "chapter": 26,
-      "sourceHash": "fnv1a64:463236ba9c57ffe7",
+      "sourceHash": "fnv1a64:ed5a94c8d8092c51",
       "lessonIds": [
         "TE-C26-udayam"
       ],
@@ -6119,7 +6146,7 @@
     {
       "language": "telugu",
       "chapter": 27,
-      "sourceHash": "fnv1a64:57501773650ac0e1",
+      "sourceHash": "fnv1a64:f89d7d33069a70dc",
       "lessonIds": [
         "TE-C27-sayantram"
       ],
@@ -6128,7 +6155,7 @@
     {
       "language": "telugu",
       "chapter": 28,
-      "sourceHash": "fnv1a64:fd67eff66f820b04",
+      "sourceHash": "fnv1a64:72fd246c76c54b47",
       "lessonIds": [
         "TE-C28-madhyahnam-widened"
       ],
@@ -6137,7 +6164,7 @@
     {
       "language": "telugu",
       "chapter": 29,
-      "sourceHash": "fnv1a64:aafaf66a09022d39",
+      "sourceHash": "fnv1a64:dab744b9f6ea8e8e",
       "lessonIds": [
         "TE-C29-subhodayam"
       ],
@@ -6146,7 +6173,7 @@
     {
       "language": "telugu",
       "chapter": 30,
-      "sourceHash": "fnv1a64:4f887c52e064b874",
+      "sourceHash": "fnv1a64:a873f62a72c3be6f",
       "lessonIds": [
         "TE-C30-subha-sayantram"
       ],
@@ -6155,7 +6182,7 @@
     {
       "language": "telugu",
       "chapter": 31,
-      "sourceHash": "fnv1a64:f38bd64b7bf871ff",
+      "sourceHash": "fnv1a64:6cd4c22919382e5a",
       "lessonIds": [
         "TE-C31-subha-madhyahnam",
         "TE-C31-subha-madhyahnam-register"

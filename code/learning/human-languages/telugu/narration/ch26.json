@@ -4,14 +4,14 @@
   "chapter": 26,
   "title": "Morning",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:3874dddb892a5b58",
+  "sourceHash": "fnv1a64:3d2d7fec277af520",
   "lessons": [
     {
       "id": "TE-C26-udayam",
       "sequence": 540,
       "title": "ఉదయం (udayam) — the same Sanskrit root, a different job than in Kannada",
       "headword": "ఉదయం",
-      "romanization": "",
+      "romanization": "udayam",
       "gloss": "\"morning\" (udayam) — Sanskrit tatsama from udaya (\"rise\") + Telugu -mu, Telugu's most general everyday word, though genuine native competitors (poddu/podduna, vēkuva) also do real everyday work; unlike Kannada, where the same Sanskrit root (udaya) shows up ONLY inside the greeting śubhōdaya, Telugu's everyday noun and its greeting-root are the SAME word",
       "script": "telugu",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e273374a80112cc8",
+      "sourceHash": "fnv1a64:b94e62a1611d43a6",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Here's the honest cross-language twist. Kannada also has this exact Sanskrit root, ఉదయ (udaya) — but only inside its greeting, ಶುಭೋದಯ (śubhōdaya, \"good morning\"). Kannada's actual everyday noun for \"morning\" is a completely unrelated native word, ಬೆಳಗ್ಗೆ (beḷagge, \"the shining\"). Telugu doesn't split the job that way: ఉదయం covers both the everyday noun AND, in శుభోదయం, the greeting root — one word, doing what Kannada spreads across two unrelated ones. And unlike రోజు (last lesson's genuine Persian surprise for \"day\"), Telugu's morning word holds no such twist — straightforwardly Sanskrit, start to finish."
+              "text": "Here's the honest cross-language twist. Kannada also has this exact Sanskrit root, ఉదయ (udaya) — but only inside its greeting, ಶುಭೋದಯ (śubhōdaya, \"good morning\"). Kannada's actual everyday noun for \"morning\" is a completely unrelated native word, ಬೆಳಗ್ಗೆ (beḷagge, \"the shining\"). Telugu doesn't split the job that way: ఉదయం (udayam) covers both the everyday noun AND, in శుభోదయం, the greeting root — one word, doing what Kannada spreads across two unrelated ones. And unlike రోజు (last lesson's genuine Persian surprise for \"day\"), Telugu's morning word holds no such twist — straightforwardly Sanskrit, start to finish."
             }
           ]
         },
@@ -84,7 +84,7 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the cross-language twist — Kannada's ఉదయ root only shows up in ITS greeting; Telugu uses ఉదయం for both the noun and the greeting",
+              "instruction": "the cross-language twist — Kannada's ఉదయ root only shows up in ITS greeting; Telugu uses ఉదయం (udayam) for both the noun and the greeting",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
@@ -114,7 +114,7 @@
             },
             {
               "kind": "speech",
-              "text": "Is ఉదయం the ONLY word Telugu speakers use for \"morning\"? (No — it's the broadest, most common one, but పొద్దు/పొద్దున and వేకువ, both genuinely native, do real everyday work too.) Does Kannada's everyday morning-noun share ఉదయం's root? (No — Kannada's ಬೆಳಗ್ಗೆ is native; the shared root, udaya, shows up only inside Kannada's GREETING, ಶುಭೋದಯ.) Does ఉదయం hold a surprise the way రోజు did? (No — straightforwardly Sanskrit throughout.)"
+              "text": "Is ఉదయం (udayam) the ONLY word Telugu speakers use for \"morning\"? (No — it's the broadest, most common one, but పొద్దు/పొద్దున and వేకువ, both genuinely native, do real everyday work too.) Does Kannada's everyday morning-noun share ఉదయం (udayam)'s root? (No — Kannada's ಬೆಳಗ್ಗೆ is native; the shared root, udaya, shows up only inside Kannada's GREETING, ಶುಭೋದಯ.) Does ఉదయం (udayam) hold a surprise the way రోజు did? (No — straightforwardly Sanskrit throughout.)"
             }
           ]
         }

@@ -7,6 +7,7 @@ chapter: 30
 type: phrase
 headword: ಶುಭ ಸಂಜೆ
 gloss: "good evening" (śubha sañje) — pairs with ಸಂಜೆ, already established (KA-C27) as Sanskrit-via-Prakrit, NOT native Dravidian, whatever an unverified claim you might encounter elsewhere says; leans formal, with ನಮಸ್ಕಾರ likely covering casual use, echoing (with real hedging) the formal-skew question already raised for सुप्रभात and ಶುಭೋದಯ
+romanization: "śubha sañje"
 concept_tag: GREETING-EVENING
 prerequisites: [KA-C27-sanje, KA-C29-shubhodaya]
 sounds: [kannada-sha, kannada-anusvara]

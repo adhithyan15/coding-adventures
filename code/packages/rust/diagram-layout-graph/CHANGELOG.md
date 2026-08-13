@@ -1,5 +1,13 @@
 # Changelog — diagram-layout-graph
 
+## 0.14.0
+
+- Measure graph labels using their resolved font weight.
+
+## 0.13.0
+
+- Measure graph-node labels and reserve line height using their resolved font size.
+
 ## 0.12.0
 
 - Scale graph geometry and resolved styles to an explicit requested canvas width.

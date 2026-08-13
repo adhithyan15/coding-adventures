@@ -7,6 +7,7 @@ chapter: 31
 type: phrase
 headword: శుభ మధ్యాహ్నం
 gloss: "good afternoon" (śubha madhyāhnam), built on the widened "noon" word rather than the classical later-afternoon term
+romanization: "śubha madhyāhnam"
 concept_tag: GREETING-AFTERNOON
 prerequisites: [TE-C28-madhyahnam-widened, TE-C29-subhodayam, TE-C30-subha-sayantram]
 sounds: [telugu-conjunct-dhya, telugu-anusvara]

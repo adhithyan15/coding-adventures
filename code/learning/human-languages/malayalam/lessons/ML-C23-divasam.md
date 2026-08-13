@@ -7,6 +7,7 @@ chapter: 23
 type: word
 headword: ദിവസം
 gloss: "day" — everyday Sanskrit divasam beside the more literary Sanskrit dinam
+romanization: "divasam"
 concept_tag: TIME-DAY
 prerequisites: [ML-C04-naale-kaanaam, ML-C17-paathira]
 sounds: [malayalam-vowel-sign-i, malayalam-anusvara]

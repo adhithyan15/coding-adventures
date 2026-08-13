@@ -4,6 +4,7 @@ chapter: 5
 type: word
 headword: वदामि
 gloss: I speak (from वद्, to speak)
+romanization: "vadāmi"
 concept_tag: SA-VERB-VAD
 prerequisites: [SA-C03-aham]
 sounds: [inherent-a, long-aa]

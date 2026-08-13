@@ -7,6 +7,7 @@ chapter: 31
 type: phrase
 headword: ശുഭ മധ്യാഹ്നം
 gloss: "good afternoon" (śubha madhyāhnaṁ), a formal greeting built on a noon synonym rather than the everyday afternoon compound
+romanization: "śubha madhyāhnaṁ"
 concept_tag: GREETING-AFTERNOON
 prerequisites: [ML-C17-paathira, ML-C28-uchakazhinju]
 sounds: [malayalam-conjunct-dhya, malayalam-anusvara]

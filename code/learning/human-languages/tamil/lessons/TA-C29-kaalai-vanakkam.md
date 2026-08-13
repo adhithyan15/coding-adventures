@@ -7,6 +7,7 @@ chapter: 29
 type: phrase
 headword: காலை வணக்கம்
 gloss: good morning (kālai vaṇakkam), literally "morning greetings" — a transparent compound of காலை (already met, TA-C26) + வணக்கம் (already met, TA-C01, "reverence, homage"); confirmed via TWO independently-fetched sources as the standard, formal greeting, used from sunrise until around 11 AM; NOT a śubha-equivalent construction, breaking the pattern its neighbours share; a WebSearch summary's claim that a Sanskrit-borrowed "suprabhatham" is a casual alternative could NOT be traced to either directly-fetched source and is therefore not asserted here
+romanization: "kālai vaṇakkam"
 concept_tag: GREETING-MORNING
 prerequisites: [TA-C26-kaalai, TA-C01-vanakkam-family-register]
 sounds: [tamil-geminate-kka, tamil-vowel-sign-ai]

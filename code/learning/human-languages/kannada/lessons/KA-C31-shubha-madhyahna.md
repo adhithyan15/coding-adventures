@@ -7,6 +7,7 @@ chapter: 31
 type: phrase
 headword: ಶುಭ ಮಧ್ಯಾಹ್ನ
 gloss: "good afternoon" (śubha madhyāhna) — reuses ಮಧ್ಯಾಹ್ನ, KA-C17's "noon" word, not the more precise ಅಪರಾಹ್ನ from KA-C28; one directly-fetched source describes it leaning formal/workplace, though this wasn't cross-corroborated the way ನಮಸ್ಕಾರ's universal, any-time-of-day status was
+romanization: "śubha madhyāhna"
 concept_tag: GREETING-AFTERNOON
 prerequisites: [KA-C17-madhyaahna-madhyaraatri, KA-C28-aparahna, KA-C30-shubha-sanje]
 sounds: [kannada-conjunct-dhya, kannada-vowel-sign-aa]

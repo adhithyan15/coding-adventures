@@ -7,6 +7,7 @@ chapter: 27
 type: word
 headword: மாலை
 gloss: evening (mālai) — a genuine HOMONYM: Wiktionary lists TWO separate etymologies for this exact spelling — "garland/necklace" (possibly a Dravidian word BORROWED INTO Sanskrit as माला/mālā, a reverse-direction loan) and, unrelated, "evening" (compared to மால், Proto-Dravidian *mā/*māl, whose senses include "கருமை," darkness); confidently native for the evening sense, unlike TA-C26's uncertain காலை, though the exact semantic mechanism ("evening" ← "darkness" specifically) isn't spelled out with full certainty by the source
+romanization: "mālai"
 concept_tag: TIME-EVENING
 prerequisites: [TA-C26-kaalai]
 sounds: [tamil-vowel-sign-aa, tamil-vowel-sign-ai]

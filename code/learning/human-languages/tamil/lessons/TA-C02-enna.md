@@ -5,6 +5,7 @@ sequence: 150
 type: word
 headword: என்ன
 gloss: what
+romanization: "eṉṉa"
 concept_tag: QUESTION-WHAT
 prerequisites: [TA-C02-nii-niingal]
 sounds: []

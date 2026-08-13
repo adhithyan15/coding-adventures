@@ -4,6 +4,7 @@ chapter: 2
 type: word
 headword: है
 gloss: is
+romanization: "hai"
 concept_tag: WORD-IS
 prerequisites: [HI-C02-naam]
 sounds: [matra-ai]

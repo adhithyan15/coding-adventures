@@ -4,14 +4,14 @@
   "chapter": 25,
   "title": "Good Night",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:2f31b122ac3d89dd",
+  "sourceHash": "fnv1a64:97c656d71a46eac9",
   "lessons": [
     {
       "id": "TA-C25-iniya-iravu",
       "sequence": 780,
       "title": "இனிய இரவு (iṉiya iravu) — \"good night,\" and Tamil breaking the pattern one more time",
       "headword": "இனிய இரவு",
-      "romanization": "",
+      "romanization": "iṉiya iravu",
       "gloss": "\"good night\" — fully native Dravidian, \"sweet/pleasant night,\" unlike Hindi, Kannada, Telugu, and Malayalam's shared Sanskrit-descended śubha rātri phrase; Tamil breaks the pattern this arc found in every other language",
       "script": "tamil",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:93edd99cbcc26b5f",
+      "sourceHash": "fnv1a64:19dca1cf614ebed8",
       "notice": null,
       "blocks": [
         {
@@ -105,7 +105,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does இனிய இரவு literally mean, and what root does இனிய come from? (\"Sweet/pleasant night\" — Proto-Dravidian in-, \"sweet.\") Does Tamil's \"good night\" share the same Sanskrit śubha rātri phrase as Hindi, Kannada, Telugu, and Malayalam? (No — no such form turned up in the sources checked for this lesson; Tamil's standard phrase is fully native, breaking the pattern shared by all four other languages.) Next: the ா sign, and reading நான் (nāṉ) off the page."
+              "text": "What does இனிய இரவு (iṉiya iravu) literally mean, and what root does இனிய come from? (\"Sweet/pleasant night\" — Proto-Dravidian in-, \"sweet.\") Does Tamil's \"good night\" share the same Sanskrit śubha rātri phrase as Hindi, Kannada, Telugu, and Malayalam? (No — no such form turned up in the sources checked for this lesson; Tamil's standard phrase is fully native, breaking the pattern shared by all four other languages.) Next: the ா sign, and reading நான் (nāṉ) off the page."
             }
           ]
         }
@@ -336,7 +336,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "வணக்கம் comes from native vaṇaṅku, \"bow,\" while neighboring greetings use Sanskrit namas-. At the other end of the day, இனிய இரவு is native while the same neighbors share Sanskrit śubha rātri."
+              "text": "வணக்கம் comes from native vaṇaṅku, \"bow,\" while neighboring greetings use Sanskrit namas-. At the other end of the day, இனிய இரவு (iṉiya iravu) is native while the same neighbors share Sanskrit śubha rātri."
             },
             {
               "kind": "speech",

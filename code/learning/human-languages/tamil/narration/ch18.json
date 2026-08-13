@@ -4,14 +4,14 @@
   "chapter": 18,
   "title": "Telling Time",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:6b1369c681d37000",
+  "sourceHash": "fnv1a64:8980c2df15c81780",
   "lessons": [
     {
       "id": "TA-C18-mani",
       "sequence": 640,
-      "title": "மணி — Tamil's native \"bell,\" and a real homophone trap",
+      "title": "மணி (maṇi) — Tamil's native \"bell,\" and a real homophone trap",
       "headword": "மணி",
-      "romanization": "",
+      "romanization": "maṇi",
       "gloss": "hour — Tamil's OWN dictionaries treat this as a native Dravidian \"bell\" word, most likely NOT Kannada/Telugu/Hindi's Sanskrit ghaṇṭā, and a probable homophone trap with an unrelated Sanskrit \"gem\" word spelled the same way",
       "script": "tamil",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f0c21e500c9a13b9",
+      "sourceHash": "fnv1a64:d305720b49f4f434",
       "notice": null,
       "blocks": [
         {
@@ -85,7 +85,7 @@
             },
             {
               "kind": "speech",
-              "text": "Is Tamil's மணி (\"hour\") from the same Sanskrit root as Kannada/Telugu/Hindi's hour-words? (Most likely no — it's treated as a native Dravidian \"bell\" word that independently reached \"hour\" the same way, though even DEDR flags this as not fully settled.) What semantic path links the meanings? (A bell announces the hour.) Next: writing இல்லை (illai) — a second independent vowel, ல, and the ai sign."
+              "text": "Is Tamil's மணி (maṇi) (\"hour\") from the same Sanskrit root as Kannada/Telugu/Hindi's hour-words? (Most likely no — it's treated as a native Dravidian \"bell\" word that independently reached \"hour\" the same way, though even DEDR flags this as not fully settled.) What semantic path links the meanings? (A bell announces the hour.) Next: writing இல்லை (illai) — a second independent vowel, ல, and the ai sign."
             }
           ]
         }
@@ -298,9 +298,9 @@
     {
       "id": "TA-C18-mani-homophone-time",
       "sequence": 660,
-      "title": "மணி — hour or jewel? Context decides",
+      "title": "மணி (maṇi) — hour or jewel? Context decides",
       "headword": "மணி / மணி",
-      "romanization": "",
+      "romanization": "maṇi / maṇi",
       "gloss": "the hour-word and Sanskrit gem-word are likely homophones, then maṇi tells clock time",
       "script": "tamil",
       "modality": "voice",
@@ -308,7 +308,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e021e7775002900c",
+      "sourceHash": "fnv1a64:039a838086a43398",
       "notice": null,
       "blocks": [
         {
@@ -350,7 +350,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ஒரு மணி. — one o'clock, literally \"one hour/bell\" இரண்டு மணி. — two o'clock."
+              "text": "ஒரு மணி (maṇi). — one o'clock, literally \"one hour/bell\" இரண்டு மணி (maṇi). — two o'clock."
             },
             {
               "kind": "speech",

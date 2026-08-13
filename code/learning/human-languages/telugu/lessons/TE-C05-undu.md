@@ -4,6 +4,7 @@ chapter: 5
 type: word
 headword: ఉండు
 gloss: to be, to stay, to live
+romanization: "uṇḍu"
 concept_tag: TE-VERB-UNDU
 prerequisites: [TE-C05-maatlaadu, TE-C03-miiru-elaa-unnaaru]
 sounds: [retroflex-nd]

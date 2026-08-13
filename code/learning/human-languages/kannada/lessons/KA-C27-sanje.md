@@ -7,6 +7,7 @@ chapter: 27
 type: word
 headword: ಸಂಜೆ
 gloss: "evening" (sañje) — borrowed from Maharashtri Prakrit sañjhā, itself from Sanskrit संध्या (saṃdhyā); a striking cross-family convergence with Hindi's साँझ/sāñjh, same Sanskrit root, arriving via a DIFFERENT sister Prakrit dialect
+romanization: "sañje"
 concept_tag: TIME-EVENING
 prerequisites: [KA-C24-ratri, KA-C26-belagge]
 sounds: [kannada-anusvara, kannada-ja]

@@ -4,14 +4,14 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:b828f372c82c3c3a",
+  "sourceHash": "fnv1a64:82987c003edaf36b",
   "lessons": [
     {
       "id": "TA-C02-peyar",
       "sequence": 100,
       "title": "பெயர் (peyar) — \"name,\" where the family is not Indo-European",
       "headword": "பெயர்",
-      "romanization": "",
+      "romanization": "peyar",
       "gloss": "name",
       "script": "tamil",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2161da5980392e73",
+      "sourceHash": "fnv1a64:8cfd51ec9c416d3f",
       "notice": null,
       "blocks": [
         {
@@ -118,7 +118,7 @@
       "sequence": 110,
       "title": "என் (eṉ) — \"my\"",
       "headword": "என்",
-      "romanization": "",
+      "romanization": "eṉ",
       "gloss": "my",
       "script": "tamil",
       "modality": "voice",
@@ -126,7 +126,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:add24a5ae6f81e1d",
+      "sourceHash": "fnv1a64:0d61bcef1c87749a",
       "notice": null,
       "blocks": [
         {
@@ -201,7 +201,7 @@
             },
             {
               "kind": "speech",
-              "text": "What word is என் the possessive of, and does it share a root with English my? (nāṉ, \"I\"; no — different family entirely.)"
+              "text": "What word is என் (eṉ) the possessive of, and does it share a root with English my? (nāṉ, \"I\"; no — different family entirely.)"
             }
           ]
         }
@@ -212,7 +212,7 @@
       "sequence": 120,
       "title": "என் பெயர் … (eṉ peyar …) — \"my name is…,\" with no \"is\"",
       "headword": "என் பெயர் …",
-      "romanization": "",
+      "romanization": "eṉ peyar …",
       "gloss": "my name is… (with no \"is\")",
       "script": "tamil",
       "modality": "sight",
@@ -220,7 +220,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:1170a1a64a27cac8",
+      "sourceHash": "fnv1a64:509c10f2dfb45a9a",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -258,7 +258,7 @@
             },
             {
               "kind": "speech",
-              "text": "என் பெயர் … = \"my name …\" becomes \"my name is…\""
+              "text": "என் பெயர் … (eṉ peyar …) = \"my name …\" becomes \"my name is…\""
             },
             {
               "kind": "speech",
@@ -332,7 +332,7 @@
       "sequence": 140,
       "title": "நீ / நீங்கள் (nī / nīṅgaḷ) — \"you,\" familiar and respectful",
       "headword": "நீ / நீங்கள்",
-      "romanization": "",
+      "romanization": "nī / nīṅgaḷ",
       "gloss": "you (familiar / respectful)",
       "script": "tamil",
       "modality": "voice",
@@ -340,7 +340,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3b2dc0902dd010a2",
+      "sourceHash": "fnv1a64:98e137452fb83731",
       "notice": null,
       "blocks": [
         {
@@ -437,7 +437,7 @@
       "sequence": 150,
       "title": "என்ன (eṉṉa) — \"what\"",
       "headword": "என்ன",
-      "romanization": "",
+      "romanization": "eṉṉa",
       "gloss": "what",
       "script": "tamil",
       "modality": "voice",
@@ -445,7 +445,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:421ac73fe9673ba4",
+      "sourceHash": "fnv1a64:062d05f9bb347ae1",
       "notice": null,
       "blocks": [
         {
@@ -570,7 +570,7 @@
             },
             {
               "kind": "speech",
-              "text": "உங்கள் பெயர் என்ன? = literally \"your name what?\" = \"what's your name?\""
+              "text": "உங்கள் பெயர் (peyar) என்ன (eṉṉa)? = literally \"your name what?\" = \"what's your name?\""
             },
             {
               "kind": "speech",
@@ -633,7 +633,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does உங்கள் பெயர் என்ன? literally say, and what's missing versus English? (\"Your name what?\"; no \"is\" — zero copula.)"
+              "text": "What does உங்கள் பெயர் (peyar) என்ன (eṉṉa)? literally say, and what's missing versus English? (\"Your name what?\"; no \"is\" — zero copula.)"
             }
           ]
         }

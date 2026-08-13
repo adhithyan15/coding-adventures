@@ -1,5 +1,39 @@
 # Changelog — `lang-aot`
 
+## 0.222.6 - 2026-08-12 (ALGOL literal while predicates — seven backends)
+
+The ALGOL initial-`while` matrix cell now proves that a literal `true`
+predicate establishes the first body execution and definite string
+initialization on all seven standard backends.
+
+## 0.222.5 - 2026-08-12 (ALGOL conditional while predicates — seven backends)
+
+The ALGOL initial-`while` matrix cell now runs a statically selected
+conditional boolean predicate on all seven standard backends. LLVM now stores
+the comparison's `i1` sidecar, rather than its widened `i64`, at the branch join.
+
+## 0.222.4 - 2026-08-12 (ALGOL composed while conditions — seven backends)
+
+The ALGOL initial-`while` matrix cell now proves that statically known numeric
+comparison leaves compose through conjunction on all seven standard backends.
+
+## 0.222.3 - 2026-08-12 (ALGOL initial while conditions — seven backends)
+
+The LANG matrix now proves that an initially true static numeric comparison in
+a `while` for-list element establishes scalar-string initialization on all
+seven standard backends.
+
+## 0.222.2 - 2026-08-12 (ALGOL tracked step bounds — seven backends)
+
+The LANG matrix now proves that straight-line integer snapshots in a
+`step`/`until` header establish scalar-string initialization on all seven
+standard backends.
+
+## 0.222.1 - 2026-08-12 (ALGOL nonempty step-loop initialization — seven backends)
+
+The LANG matrix now proves that a statically nonempty ascending `step`/`until`
+loop establishes scalar-string initialization on all seven standard backends.
+
 ## 0.220.99 - 2026-08-11 (ALGOL controlled-variable snapshots — seven backends)
 
 The single-value loop snapshot regression now explicitly depends on successive

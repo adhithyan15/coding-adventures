@@ -4,6 +4,7 @@ chapter: 3
 type: word
 headword: സുഖം
 gloss: well-being — and the reply "സുഖമാണ്"
+romanization: "sukhaṁ"
 concept_tag: WORD-WELL
 prerequisites: [ML-C03-sukhamaano, ML-C02-aanu]
 sounds: [kha-aspirate]

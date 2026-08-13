@@ -1592,6 +1592,66 @@ fn multi_assigned_var_is_promoted_to_alloca() {
     assert!(!ll.contains("trunc void"), "must never emit `trunc void`; got:\n{ll}");
 }
 
+#[test]
+fn comparison_moves_store_i1_into_boolean_merge_slot() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "bool",
+        vec![
+            IIRInstr::new("const", Some("x".into()), vec![Operand::Int(1)], "i64"),
+            IIRInstr::new(
+                "cmp_eq",
+                Some("cond".into()),
+                vec![Operand::Var("x".into()), Operand::Int(1)],
+                "i64",
+            ),
+            IIRInstr::new(
+                "jmp_if_false",
+                None,
+                vec![Operand::Var("cond".into()), Operand::Var("else".into())],
+                "void",
+            ),
+            IIRInstr::new(
+                "cmp_lt",
+                Some("then_cmp".into()),
+                vec![Operand::Var("x".into()), Operand::Int(2)],
+                "i64",
+            ),
+            IIRInstr::new(
+                "mov",
+                Some("merged".into()),
+                vec![Operand::Var("then_cmp".into())],
+                "bool",
+            ),
+            IIRInstr::new("jmp", None, vec![Operand::Var("end".into())], "void"),
+            IIRInstr::new("label", None, vec![Operand::Var("else".into())], "void"),
+            IIRInstr::new(
+                "cmp_lt",
+                Some("else_cmp".into()),
+                vec![Operand::Var("x".into()), Operand::Int(0)],
+                "i64",
+            ),
+            IIRInstr::new(
+                "mov",
+                Some("merged".into()),
+                vec![Operand::Var("else_cmp".into())],
+                "bool",
+            ),
+            IIRInstr::new("label", None, vec![Operand::Var("end".into())], "void"),
+            IIRInstr::new("ret", None, vec![Operand::Var("merged".into())], "bool"),
+        ],
+    );
+    let ll = lower(&module_with(f));
+    assert!(ll.contains("%merged.slot = alloca i1"), "expected boolean merge slot:\n{ll}");
+    assert!(
+        ll.contains("store i1 %then_cmp.i1, ptr %merged.slot")
+            && ll.contains("store i1 %else_cmp.i1, ptr %merged.slot"),
+        "comparison moves must store their i1 sidecars:\n{ll}"
+    );
+    assert!(!ll.contains("store i1 %then_cmp, ptr %merged.slot"), "must not store widened i64:\n{ll}");
+}
+
 /// A purely straight-line function (no var assigned twice) takes the fast path:
 /// no `alloca`/`store`/`load` is emitted — the `const`/`mov` side-map still wins.
 #[test]

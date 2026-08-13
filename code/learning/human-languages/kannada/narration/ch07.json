@@ -4,14 +4,14 @@
   "chapter": 7,
   "title": "Numbers One to Ten",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:d4a6f697bdb7fb98",
+  "sourceHash": "fnv1a64:09d84a4c895fac92",
   "lessons": [
     {
       "id": "KA-C07-numbers-1-5",
       "sequence": 340,
       "title": "ಒಂದು, ಎರಡು, ಮೂರು, ನಾಲ್ಕು, ಐದು — one to five",
       "headword": "ಒಂದು ಎರಡು ಮೂರು ನಾಲ್ಕು ಐದು",
-      "romanization": "",
+      "romanization": "ondu eraḍu mūru nālku aidu",
       "gloss": "one to five — the same Dravidian numbers as Tamil, with a Kannada accent",
       "script": "kannada",
       "modality": "sight",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:073b63668004d352",
+      "sourceHash": "fnv1a64:20c4edbc920a80ec",
       "notice": {
         "modality": "sight",
         "needs": [

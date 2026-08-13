@@ -13,7 +13,7 @@ The word, taken apart - సాయంత్రం — Sanskrit, built from "eveni
 సాయంత్రం (sāyantram) — "evening" — is a Sanskrit tatsama: from సాయం (sāyam, "in the evening") plus a Sanskrit -tana suffix that turns time-adverbs into adjectives — the same suffix pattern behind Sanskrit divātana ("of the day") and sanātana ("eternal, lasting").
 
 The word, taken apart - A genuine distant cousin: the same PIE root as Latin's sērus.
-Here's the striking part, checked directly against primary sources rather than assumed: సాయం itself traces to Proto-Indo-European seh₁- ("long, lasting") — and this is explicitly documented as "distantly related to Latin sērus" ("late"), itself confirmed independently to trace to the very same seh₁- root (via Proto-Italic sēros). sērus is worth a closer look: it's the Latin root well attested as the source of French soir and Italian sera — French and Italian's own everyday "evening" words. That makes సాయంత్రం and soir/sera genuine distant cognates — one route through Sanskrit tatsama borrowing into Telugu, one route through centuries of Vulgar Latin erosion into French and Italian, both ultimately the same Proto-Indo-European idea of something "long, lasting" stretching into "late in the day."
+Here's the striking part, checked directly against primary sources rather than assumed: సాయం itself traces to Proto-Indo-European seh₁- ("long, lasting") — and this is explicitly documented as "distantly related to Latin sērus" ("late"), itself confirmed independently to trace to the very same seh₁- root (via Proto-Italic sēros). sērus is worth a closer look: it's the Latin root well attested as the source of French soir and Italian sera — French and Italian's own everyday "evening" words. That makes సాయంత్రం (sāyantram) and soir/sera genuine distant cognates — one route through Sanskrit tatsama borrowing into Telugu, one route through centuries of Vulgar Latin erosion into French and Italian, both ultimately the same Proto-Indo-European idea of something "long, lasting" stretching into "late in the day."
 
 Guided Practice.
 [pause 1 second]
@@ -26,4 +26,4 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What is సాయంత్రం built from? (సాయం, "in the evening," + a Sanskrit "-tana" time-adjective suffix.) What PIE root does సాయం trace to? (seh₁-, "long, lasting.") What two Romance words are genuine distant cognates of సాయంత్రం, and through which Latin word? (French soir and Italian sera — both through Latin sērus, "late," which traces to the same seh₁- root.)
+What is సాయంత్రం (sāyantram) built from? (సాయం, "in the evening," + a Sanskrit "-tana" time-adjective suffix.) What PIE root does సాయం trace to? (seh₁-, "long, lasting.") What two Romance words are genuine distant cognates of సాయంత్రం (sāyantram), and through which Latin word? (French soir and Italian sera — both through Latin sērus, "late," which traces to the same seh₁- root.)
