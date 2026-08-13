@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.69.0
+
+- Compose multiple named classes from one state `class` statement in source order.
+
 ## 0.68.0
 
 - Preserve trailing descriptions on quoted state aliases as ordered multiline labels.

@@ -1,4 +1,4 @@
-# @version 20
+# @version 21
 # Mermaid 11.16.1 state diagram grammar: initial graph-compatible slice.
 
 document = { terminator } HEADER body EOF ;
@@ -19,7 +19,7 @@ transition_stmt = styled_endpoint ARROW styled_endpoint [ COLON text ] ;
 styled_state_stmt = endpoint STYLE_SEPARATOR state_ref ;
 style_stmt = "style" state_ref { COMMA state_ref } style_assignment { COMMA style_assignment } ;
 class_def_stmt = "classDef" state_ref style_assignment { COMMA style_assignment } ;
-class_stmt = "class" state_ref { COMMA state_ref } state_ref ;
+class_stmt = "class" state_ref { COMMA state_ref } state_ref { state_ref } ;
 click_stmt = "click" state_ref [ "href" ] STRING [ STRING ] ;
 note_stmt = "note" ( STRING "as" state_ref | note_position state_ref ( COLON text | NEWLINE multiline_note_text END_NOTE ) ) ;
 note_position = "left" "of" | "right" "of" ;

@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.68.0";
+pub const VERSION: &str = "0.69.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -1220,22 +1220,27 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
             while cursor.consume_if("COMMA").is_some() {
                 ids.push(take_state_ref(&mut cursor)?);
             }
-            let class_name = take_state_ref(&mut cursor)?;
+            let mut class_names = vec![take_state_ref(&mut cursor)?];
+            while matches!(token_name(cursor.current()), "ID" | "WORD") {
+                class_names.push(take_state_ref(&mut cursor)?);
+            }
             for id in &ids {
                 if !node_indices.contains_key(id) && !groups.iter().any(|group| &group.id == id) {
                     upsert_state_node(&mut nodes, &mut node_indices, id.clone(), id.clone());
                 }
             }
             for id in ids {
-                apply_or_defer_state_class(
-                    &id,
-                    class_name.clone(),
-                    &mut nodes,
-                    &node_indices,
-                    &mut groups,
-                    &class_styles,
-                    &mut pending_classes,
-                );
+                for class_name in &class_names {
+                    apply_or_defer_state_class(
+                        &id,
+                        class_name.clone(),
+                        &mut nodes,
+                        &node_indices,
+                        &mut groups,
+                        &class_styles,
+                        &mut pending_classes,
+                    );
+                }
             }
         } else if cursor.current().value.eq_ignore_ascii_case("note") {
             cursor.advance();
@@ -4840,6 +4845,21 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     }
 
     #[test]
+    fn state_composes_multiple_classes_in_source_order() {
+        let diagram = parse_state_diagram(
+            "stateDiagram-v2\nclassDef base fill:#dbeafe,stroke:#1d4ed8\nclassDef emphasized fill:#dcfce7,stroke-width:4px\nclass Ready,Waiting base emphasized\nReady --> Waiting\n",
+        )
+        .expect("multiple state classes");
+
+        for node in &diagram.nodes {
+            let style = node.style.as_ref().unwrap();
+            assert_eq!(style.fill.as_deref(), Some("#dcfce7"));
+            assert_eq!(style.stroke.as_deref(), Some("#1d4ed8"));
+            assert_eq!(style.stroke_width, Some(4.0));
+        }
+    }
+
+    #[test]
     fn sequence_parses_case_insensitive_keywords() {
         let diagram = parse_any_mermaid(
             "SeQuEnCeDiAgRaM\nPaRtIcIpAnT A As Alice\nA->>B: Hello\nAcTiVaTe B\nNoTe RiGhT Of B: WRAP: Ready\nDeAcTiVaTe B\n",
@@ -5610,7 +5630,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.68.0");
+        assert_eq!(crate::VERSION, "0.69.0");
     }
 
     #[test]
