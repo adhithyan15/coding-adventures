@@ -18,7 +18,7 @@ use diagram_ir::{
 };
 use std::collections::{BTreeSet, HashMap};
 
-pub const VERSION: &str = "0.8.0";
+pub const VERSION: &str = "0.9.0";
 
 // ── Constants ─────────────────────────────────────────────────────────────
 
@@ -56,7 +56,13 @@ fn layout_journey(title: &Option<String>, diagram: &JourneyDiagram, cw: f64) -> 
     let margin_x = diagram.config.diagram_margin_x.unwrap_or(16.0);
     let margin_y = diagram.config.diagram_margin_y.unwrap_or(0.0);
     let task_margin = diagram.config.task_margin.unwrap_or(6.0);
-    let task_width = diagram.config.task_width.unwrap_or(cw - margin_x * 2.0).max(1.0);
+    let task_x = diagram.config.left_margin.unwrap_or(margin_x).max(margin_x);
+    let task_width = diagram
+        .config
+        .task_width
+        .unwrap_or(cw - task_x - margin_x)
+        .max(1.0);
+    let actor_label_width = diagram.config.max_label_width.unwrap_or(360.0).max(1.0);
     let mut y = margin_y;
     if let Some(title) = title {
         let title_font_size = diagram.config.title_font_size.unwrap_or(18.0);
@@ -93,10 +99,17 @@ fn layout_journey(title: &Option<String>, diagram: &JourneyDiagram, cw: f64) -> 
             } else {
                 configured_actor_colors[index % configured_actor_colors.len()].clone()
             };
+            let label = wrap_journey_label(actor, actor_label_width, 14.0);
+            let height = (label.lines().count().max(1) as f64 * 18.0).max(20.0);
             items.push(LayoutedTemporalItem::JourneyActor {
-                x: 24.0, y: y + 10.0, color: color.clone(), label: actor.clone(),
+                x: margin_x + 8.0,
+                y: y + height / 2.0,
+                width: actor_label_width,
+                height,
+                color: color.clone(),
+                label,
             });
-            y += 24.0;
+            y += height + 4.0;
             (actor.clone(), color)
         })
         .collect::<HashMap<_, _>>();
@@ -124,7 +137,7 @@ fn layout_journey(title: &Option<String>, diagram: &JourneyDiagram, cw: f64) -> 
             let task_height = (16.0 + task.label.lines().count().max(1) as f64 * 16.0)
                 .max(diagram.config.task_height.unwrap_or(36.0));
             items.push(LayoutedTemporalItem::JourneyTask {
-                x: margin_x, y, width: task_width, height: task_height,
+                x: task_x, y, width: task_width, height: task_height,
                 score: task.score, label: task.label.clone(), people: task.people.clone(),
                 person_colors: task.people.iter().filter_map(|person| actor_colors.get(person).cloned()).collect(),
                 font_size: diagram.config.task_font_size,
@@ -142,6 +155,35 @@ fn layout_journey(title: &Option<String>, diagram: &JourneyDiagram, cw: f64) -> 
         accessibility_description: diagram.accessibility_description.clone(),
         items,
     }
+}
+
+fn wrap_journey_label(label: &str, max_width: f64, font_size: f64) -> String {
+    let max_chars = (max_width / (font_size * 0.65)).floor().max(1.0) as usize;
+    let mut lines = Vec::new();
+    let mut current = String::new();
+    for word in label.split_whitespace() {
+        if word.chars().count() > max_chars {
+            if !current.is_empty() {
+                lines.push(std::mem::take(&mut current));
+            }
+            let chars = word.chars().collect::<Vec<_>>();
+            for chunk in chars.chunks(max_chars) {
+                lines.push(chunk.iter().collect());
+            }
+        } else if current.is_empty() {
+            current.push_str(word);
+        } else if current.chars().count() + 1 + word.chars().count() <= max_chars {
+            current.push(' ');
+            current.push_str(word);
+        } else {
+            lines.push(std::mem::take(&mut current));
+            current.push_str(word);
+        }
+    }
+    if !current.is_empty() {
+        lines.push(current);
+    }
+    lines.join("\n")
 }
 
 // ── Date helpers ──────────────────────────────────────────────────────────
@@ -425,7 +467,18 @@ mod tests {
         }
     }
 
-    #[test] fn version_exists() { assert_eq!(crate::VERSION, "0.8.0"); }
+    #[test]
+    fn version_exists() {
+        assert_eq!(crate::VERSION, "0.9.0");
+    }
+
+    #[test]
+    fn journey_actor_labels_wrap_to_configured_width() {
+        assert_eq!(
+            wrap_journey_label("Alice Wonderland", 56.0, 14.0),
+            "Alice\nWonder\nland"
+        );
+    }
 
     #[test]
     fn gantt_has_task_bars() {
@@ -497,6 +550,8 @@ mod tests {
                     actor_colors: vec!["#010203".into()],
                     section_fills: vec!["#112233".into(), "#445566".into()],
                     section_colors: vec!["#fefefe".into()],
+                    left_margin: Some(120.0),
+                    max_label_width: Some(56.0),
                 },
                 sections: vec![JourneySection {
                     label: "Payment\nflow".into(),
@@ -517,7 +572,7 @@ mod tests {
         )));
         assert!(layout.items.iter().any(|item| matches!(item,
             LayoutedTemporalItem::JourneyTask { x, width, height, .. }
-                if *x == 24.0 && *width == 280.0 && *height >= 52.0
+                if *x == 120.0 && *width == 280.0 && *height >= 52.0
         )));
         assert!(layout.items.iter().any(|item| matches!(item,
             LayoutedTemporalItem::JourneyTask { font_size, font_family, .. }
@@ -531,6 +586,10 @@ mod tests {
         )));
         assert!(layout.items.iter().any(|item| matches!(item,
             LayoutedTemporalItem::JourneyActor { color, .. } if color == "#010203"
+        )));
+        assert!(layout.items.iter().any(|item| matches!(item,
+            LayoutedTemporalItem::JourneyActor { width, label, .. }
+                if *width == 56.0 && label == "Bob"
         )));
         assert!(layout.items.iter().any(|item| matches!(item,
             LayoutedTemporalItem::JourneySection { fill, text_color, .. }

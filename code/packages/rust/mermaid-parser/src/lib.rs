@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.95.0";
+pub const VERSION: &str = "0.96.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -734,6 +734,8 @@ pub fn parse_journey(source: &str) -> Result<(Option<String>, JourneyDiagram), P
         actor_colors: mermaid_directive_string_array(source, "actorColours"),
         section_fills: mermaid_directive_string_array(source, "sectionFills"),
         section_colors: mermaid_directive_string_array(source, "sectionColours"),
+        left_margin: number("leftMargin"),
+        max_label_width: number("maxLabelWidth"),
     };
     let preprocessed = preprocess_mermaid_source(source)?;
     let tokens =
@@ -6652,7 +6654,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.95.0");
+        assert_eq!(crate::VERSION, "0.96.0");
     }
 
     #[test]

@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.48.0";
+pub const VERSION: &str = "0.49.0";
 
 use std::collections::HashMap;
 
@@ -2651,8 +2651,14 @@ where
                     stroke_dash_offset: None,
                 }));
             }
-            LayoutedTemporalItem::JourneyActor { x, y, color, label } => {
-                let label_width = (label.chars().count() as f64 * ls * 0.65).max(24.0);
+            LayoutedTemporalItem::JourneyActor {
+                x,
+                y,
+                width,
+                height,
+                color,
+                label,
+            } => {
                 instructions.push(PaintInstruction::Ellipse(PaintEllipse {
                     base: PaintBase::default(),
                     cx: *x,
@@ -2668,9 +2674,9 @@ where
                 text_children.push(text_node(
                     label,
                     x + 12.0,
-                    y - ls / 2.0,
-                    label_width,
-                    ls * 1.2,
+                    y - height / 2.0,
+                    *width,
+                    *height,
                     lf.clone(),
                     Color {
                         r: 71,
@@ -3335,7 +3341,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.48.0");
+        assert_eq!(crate::VERSION, "0.49.0");
     }
 
     #[test]
@@ -3558,8 +3564,10 @@ mod tests {
                 LayoutedTemporalItem::JourneyActor {
                     x: 24.0,
                     y: 18.0,
+                    width: 56.0,
+                    height: 36.0,
                     color: "#8fbc8f".into(),
-                    label: "Alice".into(),
+                    label: "Alice\nWonderland".into(),
                 },
                 LayoutedTemporalItem::JourneySection {
                     x: 0.0,

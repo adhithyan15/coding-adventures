@@ -1,5 +1,9 @@
 # Changelog — diagram-to-paint
 
+## 0.49.0
+
+- Shape Journey actor labels inside layout-resolved bounds.
+
 ## 0.48.0
 
 - Paint Journey sections, tasks, actors, and text with resolved palette colors.

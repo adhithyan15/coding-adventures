@@ -55,6 +55,8 @@ Configured Journey title font size, family, and color follow the same resolved
 layout and Paint shaping path without changing other temporal families.
 Actor colors and cyclic section fill/text palettes also resolve before Paint,
 matching Mermaid's Journey-specific init configuration model.
+Configured `leftMargin` reserves the legend column before task rows, while
+`maxLabelWidth` deterministically wraps actor labels into resolved Paint bounds.
 
 The sequence subset includes participants and actors, aliases, standard solid
 and dotted message arrows, bidirectional/cross/point arrowheads, notes,
