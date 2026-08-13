@@ -1,0 +1,75 @@
+% ============================================================================
+% hurricane-category-home-damage — each Saffir-Simpson hurricane category
+% (1..5) → the SPECIFIC well-built-home damage effect the source describes
+% for it (adj-facts-stdlib, METEOROLOGY).
+% ============================================================================
+% A sibling to the already-shipped `hurricane-categories.adj`
+% (`damage_level(category, descriptor)`, ONE generic damage word per
+% category: some_damage, extensive_damage, devastating_damage,
+% catastrophic_damage): a new `hurricane_home_damage(category,
+% home_damage_effect)` table names the SPECIFIC structural effect the SAME
+% NHC page describes a well-built framed home suffering at each category,
+% decoded from spans already sitting unused inside `hurricane-categories.adj`'s
+% own provenance block — no new WebFetch. That table's `descriptor` column
+% has room for only ONE generic damage word per category; the SAME already-
+% quoted NHC sentences also carry a distinct, more concrete structural detail
+% for every category that never made it into a row:
+%
+%   category_1 → "damage to roof, shingles, vinyl siding and gutters"
+%   category_2 → "major roof and siding damage"
+%   category_3 → "major damage or removal of roof decking and gable ends"
+%   category_4 → "severe damage with loss of most of the roof structure
+%                  and/or some exterior walls"
+%   category_5 → "total roof failure and wall collapse"
+%
+% Recall is a binding query:
+%
+%     ? hurricane_home_damage(category_3, $HomeDamageEffect)
+%       % major_damage_or_removal_of_roof_decking_and_gable_ends
+%
+% This is a native `table` (ADJ-TABLES RS-5, a TWO-column table like
+% `hurricane-categories.adj`'s own `damage_level`): each `row` lowers to a
+% ground relation `hurricane_home_damage(category, home_damage_effect)`
+% carrying the citation, so the lookup above is the ordinary SLD binding
+% query — the engine returns the structural effect WITH its source, on the
+% CPU, with zero model calls, and abstains on anything that is not one of
+% the five Saffir-Simpson categories (it never invents a damage effect).
+%
+% Unlike the parent table's descriptor column (which honestly DUPLICATES
+% `catastrophic_damage` for both category_4 and category_5, since the source
+% opens both paragraphs with the identical sentence), this table's five
+% structural-effect values are all DISTINCT — the source's home-damage detail
+% differs category by category even where the summary word repeats. The
+% query also runs BACKWARD — bind an effect and recall which category it
+% names:
+%
+%     ? hurricane_home_damage($Category, total_roof_failure_and_wall_collapse)
+%       % category_5
+%
+% Provenance: reproduces, byte-for-byte, the SAME five spans already quoted
+% inside `hurricane-categories.adj`'s own provenance block, from the SAME
+% NOAA / National Hurricane Center "Saffir-Simpson Hurricane Wind Scale"
+% page that table already cites — no new WebFetch, only a different schema
+% decoding a part of each already-verified quote. An ADJ `table` carries ONE
+% provenance envelope (per `hurricane-categories.adj`'s own convention), so
+% `source`/`locator`/`trust` below hold the category-1 span; every other
+% row's own span is listed above for independent auditability. `trust
+% authoritative` — the same tier `hurricane-categories.adj` already carries
+% (NOAA / NHC, a primary U.S. government source).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table hurricane_home_damage {
+    columns category, home_damage_effect
+
+    row (category_1, damage_to_roof_shingles_vinyl_siding_and_gutters)
+    row (category_2, major_roof_and_siding_damage)
+    row (category_3, major_damage_or_removal_of_roof_decking_and_gable_ends)
+    row (category_4, severe_damage_with_loss_of_most_of_the_roof_structure_and_or_some_exterior_walls)
+    row (category_5, total_roof_failure_and_wall_collapse)
+
+    source "Very dangerous winds will produce some damage: Well-constructed frame homes could have damage to roof, shingles, vinyl siding and gutters."
+    locator "https://www.nhc.noaa.gov/aboutsshws.php"
+    trust authoritative
+}
