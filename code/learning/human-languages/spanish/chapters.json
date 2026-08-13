@@ -4112,6 +4112,57 @@
           "ES-GRAMMAR-IMPERFECT-SUBJUNCTIVE-STRONG"
         ]
       }
+    },
+    {
+      "chapter": 208,
+      "title": "Si Tuviera --- Supposing What Is Not So",
+      "label": "ch:si-tuviera",
+      "canDo": "I can say what would happen if something untrue were true.",
+      "spineNodes": [
+        "SPINE-ASK-LOCATION"
+      ],
+      "payoff": {
+        "lesson": "ES-C56-si-tuviera",
+        "kind": "task",
+        "summary": "I can say what would happen if something untrue were true.",
+        "assesses": [
+          "ES-GRAMMAR-SI-UNREAL-CONDITION"
+        ]
+      }
+    },
+    {
+      "chapter": 209,
+      "title": "Review --- the Two Conditions",
+      "label": "ch:repaso-condiciones",
+      "canDo": "I can choose between a real and an unreal condition and get both halves right.",
+      "spineNodes": [
+        "SPINE-ASK-LOCATION"
+      ],
+      "payoff": {
+        "lesson": "ES-C56-repaso-condiciones",
+        "kind": "task",
+        "summary": "I can choose between a real and an unreal condition and get both halves right.",
+        "assesses": [
+          "ES-GRAMMAR-SI-UNREAL-CONDITION"
+        ]
+      }
+    },
+    {
+      "chapter": 210,
+      "title": "Synthesis --- Supposing Out Loud",
+      "label": "ch:sintesis-condiciones",
+      "canDo": "I can speak about a world that does not exist.",
+      "spineNodes": [
+        "SPINE-ASK-LOCATION"
+      ],
+      "payoff": {
+        "lesson": "ES-C56-sintesis-condiciones",
+        "kind": "task",
+        "summary": "I can speak about a world that does not exist.",
+        "assesses": [
+          "ES-GRAMMAR-SI-UNREAL-CONDITION"
+        ]
+      }
     }
   ]
 }

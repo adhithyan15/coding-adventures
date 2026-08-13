@@ -3478,6 +3478,21 @@
       "output": "spanish/book/chapters/ch207-tuviera.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 208,
+      "output": "spanish/book/chapters/ch208-si-tuviera.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 209,
+      "output": "spanish/book/chapters/ch209-review-condiciones.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 210,
+      "output": "spanish/book/chapters/ch210-synthesis-condiciones.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "output": "tamil/book/chapters/ch06-dative-case.tex",

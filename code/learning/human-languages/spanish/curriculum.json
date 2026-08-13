@@ -2257,6 +2257,42 @@
         "ES-EXT-B1-TUVIERA"
       ],
       "after": []
+    },
+    {
+      "id": "ES-PATH-B1-SI-TUVIERA",
+      "spine_node": "SPINE-EXPRESS-CONDITION",
+      "lessons": [
+        "ES-C56-si-tuviera"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-B1-SI-TUVIERA"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-B1-REVIEW-COND",
+      "spine_node": "SPINE-EXPRESS-CONDITION",
+      "lessons": [
+        "ES-C56-repaso-condiciones"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-B1-REVIEW-COND"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-B1-SYNTH-COND",
+      "spine_node": "SPINE-EXPRESS-CONDITION",
+      "lessons": [
+        "ES-C56-sintesis-condiciones"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-B1-SYNTH-COND"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -2602,7 +2638,10 @@
         "ES-PATH-B1-SI-FUTURO",
         "ES-PATH-B1-SYNTH-CONDICION",
         "ES-PATH-B1-HABLARA",
-        "ES-PATH-B1-TUVIERA"
+        "ES-PATH-B1-TUVIERA",
+        "ES-PATH-B1-SI-TUVIERA",
+        "ES-PATH-B1-REVIEW-COND",
+        "ES-PATH-B1-SYNTH-COND"
       ],
       "omits": [
         "CONDITIONAL-REAL",
@@ -4990,6 +5029,39 @@
       "prerequisites": [],
       "lessons": [
         "ES-C56-tuviera"
+      ]
+    },
+    {
+      "id": "ES-EXT-B1-SI-TUVIERA",
+      "stage": "B1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C56-si-tuviera"
+      ]
+    },
+    {
+      "id": "ES-EXT-B1-REVIEW-COND",
+      "stage": "B1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C56-repaso-condiciones"
+      ]
+    },
+    {
+      "id": "ES-EXT-B1-SYNTH-COND",
+      "stage": "B1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C56-sintesis-condiciones"
       ]
     }
   ]

@@ -7,18 +7,18 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:1c1de3fac242d663",
+  "sourceHash": "fnv1a64:3534dd058f9ddbce",
   "summary": {
-    "totalLessons": 1953,
-    "voice": 1325,
+    "totalLessons": 1956,
+    "voice": 1328,
     "sight": 559,
     "pen": 69,
-    "drivableLessons": 1325,
+    "drivableLessons": 1328,
     "drivablePercent": 68,
     "trackCount": 22,
-    "chapterCount": 707,
-    "drivablePrefixTotal": 1125,
-    "fullyDrivableChapters": 478,
+    "chapterCount": 710,
+    "drivablePrefixTotal": 1128,
+    "fullyDrivableChapters": 481,
     "unstartableChapters": 171,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
@@ -7062,12 +7062,12 @@
     },
     {
       "language": "spanish",
-      "lessonCount": 353,
-      "voice": 313,
+      "lessonCount": 356,
+      "voice": 316,
       "sight": 33,
       "pen": 7,
       "drivablePercent": 89,
-      "drivablePrefixTotal": 300,
+      "drivablePrefixTotal": 303,
       "modalities": [
         "voice",
         "sight",
@@ -10462,6 +10462,54 @@
           "drivable": true,
           "drivableLessonIds": [
             "ES-C56-tuviera"
+          ]
+        },
+        {
+          "chapter": 208,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C56-si-tuviera"
+          ]
+        },
+        {
+          "chapter": 209,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C56-repaso-condiciones"
+          ]
+        },
+        {
+          "chapter": 210,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C56-sintesis-condiciones"
           ]
         }
       ]
@@ -43439,6 +43487,60 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:3e21b65637450380"
+    },
+    {
+      "id": "ES-C56-si-tuviera",
+      "language": "spanish",
+      "chapter": 208,
+      "sequence": 2275,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:6436a52971e60580"
+    },
+    {
+      "id": "ES-C56-repaso-condiciones",
+      "language": "spanish",
+      "chapter": 209,
+      "sequence": 2280,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:ae6a6ce25e5d214d"
+    },
+    {
+      "id": "ES-C56-sintesis-condiciones",
+      "language": "spanish",
+      "chapter": 210,
+      "sequence": 2285,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:a9df0087fddfbab7"
     },
     {
       "id": "TA-C01-vanakkam",

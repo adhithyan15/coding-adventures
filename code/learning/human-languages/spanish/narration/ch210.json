@@ -1,0 +1,221 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 210,
+  "title": "Synthesis --- Supposing Out Loud",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:c9a47b1a7916bfa3",
+  "lessons": [
+    {
+      "id": "ES-C56-sintesis-condiciones",
+      "sequence": 2285,
+      "title": "Synthesis — supposing out loud",
+      "headword": "supposing out loud",
+      "romanization": "supposing out loud",
+      "gloss": "the first thing in this book you can say about a world that does not exist",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a9df0087fddfbab7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Build the supposing form of ser. (Fuera.) Of hacer. (Hiciera.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now use one."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say these, and hear how much each one carries:"
+            },
+            {
+              "kind": "speech",
+              "text": "Si fuera profesor, hablaría español todos los días."
+            },
+            {
+              "kind": "speech",
+              "text": "Si tuviera tiempo, comería en casa."
+            },
+            {
+              "kind": "speech",
+              "text": "Each says what would happen and that it is not happening, in one breath and with no extra words. English needs but I'm not to be quite that clear; Spanish puts it in the verb endings."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "This is the first thing in this book you can say about a world that does not exist. Everything before it described what is, was, or will be."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: what the climb cost",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look back at what this one sentence needed."
+            },
+            {
+              "kind": "speech",
+              "text": "It needed si, which cost one chapter. It needed the -ría form, which you had already. And it needed the supposing form — which needed the preterite plural, a gap nobody would have named as the thing standing between you and hypothetical speech."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "That is worth remembering the next time something in this language looks arbitrary. The order things must be learned in is rarely the order they look important in."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Si fuera profesor, hablaría español todos los días",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Si fuera profesor, hablaría español todos los días*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an unreal condition of your own",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an unreal condition of your own]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C56-sintesis-condiciones-ser",
+              "prompt": "Say: if I were a teacher, I would speak Spanish.",
+              "assesses": [
+                "ES-GRAMMAR-IMPERFECT-SUBJUNCTIVE-STRONG"
+              ],
+              "responseSeconds": 16,
+              "acceptedResponses": [
+                "si fuera profesor hablaria espanol",
+                "si fuera profesora, hablaria espanol"
+              ],
+              "feedback": {
+                "correct": "Fuera, and the -ria form after the comma.",
+                "incorrect": "Si fuera profesor, hablaria espanol."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C56-sintesis-condiciones-own",
+              "prompt": "Say one true-for-you unreal condition about today.",
+              "assesses": [
+                "ES-GRAMMAR-SI-UNREAL-CONDITION"
+              ],
+              "responseSeconds": 18,
+              "acceptedResponses": [
+                "si tuviera tiempo comeria en casa",
+                "any si + -ra form followed by a -ria form"
+              ],
+              "feedback": {
+                "correct": "Both halves moved, and the meaning came with them.",
+                "incorrect": "Something like: si tuviera tiempo, comeria en casa."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C56-sintesis-condiciones-cost",
+              "prompt": "Which earlier gap had to be filled before this sentence was possible?",
+              "assesses": [
+                "ES-GRAMMAR-IMPERFECT-SUBJUNCTIVE-DERIVATION"
+              ],
+              "responseSeconds": 16,
+              "acceptedResponses": [
+                "the preterite plural",
+                "the they-past, which the supposing form is built from"
+              ],
+              "feedback": {
+                "correct": "The order of learning is rarely the order of importance.",
+                "incorrect": "The preterite plural — the supposing form is cut out of it."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What can you now say that you could not before? (Something about a world that is not the case.) And what had to be built first? (The preterite plural — and nobody would have guessed it.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
