@@ -339,6 +339,13 @@ Prioritized work items:
    ending, following row, and trailing text makes the recovery state
    observable. In-scope, unmatched, cell, foreign-content, and synthetic
    fragment endings remain on their existing paths.
+   List-item end tags now use the full list-item-scope boundary set instead of
+   only nested `ol` and `ul` elements. An authored HTML `li` blocked by a table,
+   marker element, or template reports and remains open, preserving following
+   table and list content; in-scope implied descendants, real cells, foreign
+   content, unmatched endings, and synthetic fragments retain their existing
+   recovery paths. The shared ordinary-scope helper remains namespace-aware for
+   MathML text integration points and SVG HTML integration points.
 3. **Diagnostic positions and error taxonomy.** Carry source positions into
    tree construction and map diagnostics to current WHATWG concepts. Legacy
    WPT/html5lib error labels are evidence hints, not a normative public API.
