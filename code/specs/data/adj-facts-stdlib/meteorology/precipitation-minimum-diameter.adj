@@ -1,0 +1,69 @@
+% ============================================================================
+% precipitation-minimum-diameter — for the precipitation types whose NWS
+% definition states one, the MINIMUM diameter in millimeters a particle must
+% exceed to count as that type (adj-facts-stdlib, METEOROLOGY).
+% ============================================================================
+% A sibling to the already-shipped `precipitation-types.adj`
+% (`precip_form(precip, form)`, ONE defining physical form per precipitation
+% type): a new `precipitation_min_diameter(precip, min_diameter_mm)` table
+% names the numeric diameter THRESHOLD the SAME NOAA National Weather
+% Service Glossary states for a type, decoded from spans already sitting
+% unused inside `precipitation-types.adj`'s own provenance block — no new
+% WebFetch. That table's `form` column has room for only ONE descriptive
+% word per type; two of the SAME already-quoted NWS Glossary sentences also
+% carry a minimum-size number that never made it into a row:
+%
+%   rain → 0.5
+%     "Precipitation that falls to earth in drops more than 0.5 mm in
+%      diameter."
+%   hail → 5
+%     "Showery precipitation in the form of irregular pellets or balls of
+%      ice more than 5 mm in diameter, falling from a cumulonimbus cloud."
+%
+% Recall is a binding query:
+%
+%     ? precipitation_min_diameter(hail, $MinDiameterMm)      % 5
+%
+% This is a native `table` (ADJ-TABLES RS-5, a TWO-column table like
+% `precipitation-types.adj`'s own `precip_form`): each `row` lowers to a
+% ground relation `precipitation_min_diameter(precip, min_diameter_mm)`
+% carrying the citation, so the lookup above is the ordinary SLD binding
+% query — the engine returns the threshold WITH its source, on the CPU,
+% with zero model calls, and abstains on any precipitation type the cited
+% NWS Glossary spans do not give a diameter figure for (`snow`, `sleet`,
+% and `freezing_rain`, whose own already-cited spans in
+% `precipitation-types.adj` describe HOW the water forms/freezes, not a
+% minimum particle size).
+%
+% Only TWO of `precipitation-types.adj`'s five precipitation types have a
+% diameter figure in the ALREADY-cited spans; this table is deliberately
+% narrow rather than inventing a threshold the source does not state. The
+% query also runs BACKWARD — bind a diameter and recall which type it
+% names:
+%
+%     ? precipitation_min_diameter($Precip, 0.5)   % rain
+%
+% Provenance: reproduces, byte-for-byte, the SAME rain span already quoted
+% inside `precipitation-types.adj`'s own table-level provenance envelope,
+% from the SAME NOAA National Weather Service Glossary that table already
+% cites — no new WebFetch, only a different schema decoding a part of each
+% already-verified quote. An ADJ `table` carries ONE provenance envelope
+% (per `precipitation-types.adj`'s own convention), so `source`/`locator`/
+% `trust` below hold the rain span; the hail row's own span is listed above
+% for independent auditability. `trust authoritative` — the same tier
+% `precipitation-types.adj` already carries (NOAA NWS, a primary U.S.
+% government source).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table precipitation_min_diameter {
+    columns precip, min_diameter_mm
+
+    row (rain, 0.5)
+    row (hail, 5)
+
+    source "Precipitation that falls to earth in drops more than 0.5 mm in diameter."
+    locator "https://forecast.weather.gov/glossary.php?word=RAIN"
+    trust authoritative
+}

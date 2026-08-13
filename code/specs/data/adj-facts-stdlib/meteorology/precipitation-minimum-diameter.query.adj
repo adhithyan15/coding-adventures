@@ -1,0 +1,25 @@
+% ============================================================================
+% precipitation-minimum-diameter.query.adj — a worked recall over the
+% meteorology precipitation-minimum-diameter library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "how big does a hail
+% pellet have to be?": it states no meteorology fact of its own — it only
+% `import`s the grounded table and asks binding queries. The engine resolves
+% each `?` against the `precipitation_min_diameter` rows and returns the
+% threshold + the table's source/locator/trust.
+%
+% The third query runs the relation BACKWARD (bind the diameter 0.5, recall
+% which precipitation type it names — rain). A precipitation type whose
+% cited span states no diameter figure (snow) abstains honestly — the
+% engine never invents a threshold.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli precipitation-minimum-diameter.query.adj
+% ============================================================================
+
+import "precipitation-minimum-diameter.adj"
+
+? precipitation_min_diameter(rain, $MinDiameterMm)  % expect 0.5
+? precipitation_min_diameter(hail, $MinDiameterMm)  % expect 5
+? precipitation_min_diameter($Precip, 0.5)          % reverse bind — expect rain
+? precipitation_min_diameter(snow, $MinDiameterMm)  % expect abstain — the cited span gives snow no diameter figure
