@@ -884,8 +884,11 @@ backend immediately) come before the enabler-dependent items.
   loop whose body avoids the controlled scalar also retains its checked first
   post-limit value. A direct finite static assignment to the controlled scalar
   is retained only when its post-increment value exits after exactly one pass.
-  Reals, overflow, zero steps, arrays, globals, by-name targets, tracking
-  barriers, dynamic writes, and target-referencing multi-iteration bodies remain
+  Finite static real loops whose bodies avoid the control also retain their
+  first post-limit value by simulating at most 4,096 emitted binary64 additions;
+  non-finite and rounded-away progress fails closed. Larger real loops, integer
+  overflow, zero steps, arrays, globals, by-name targets, tracking barriers,
+  dynamic writes, and target-referencing multi-iteration bodies remain
   conservative.
   A `while` element also retains body initialization when a bounded static
   numeric comparison, evaluated after abstractly assigning its initial

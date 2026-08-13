@@ -4986,21 +4986,40 @@ impl Compiler {
                 {
                     return (None, None);
                 }
-                let control = match self.for_body_static_target_snapshot(target, target_ty, body) {
-                    Some((Some(value), _)) => value.parse::<f64>().ok(),
-                    Some(_) => None,
-                    None if self.for_body_avoids_target(target, body) => Some(start),
-                    None => None,
-                };
-                let Some(exit) = control.map(|value| value + step).filter(|value| value.is_finite())
-                else {
-                    return (None, None);
-                };
-                if (step > 0.0 && exit > limit) || (step < 0.0 && exit < limit) {
-                    (Some(exit.to_string()), None)
-                } else {
-                    (None, None)
+                if let Some((Some(value), _)) =
+                    self.for_body_static_target_snapshot(target, target_ty, body)
+                {
+                    let Some(exit) = value
+                        .parse::<f64>()
+                        .ok()
+                        .map(|value| value + step)
+                        .filter(|value| value.is_finite())
+                    else {
+                        return (None, None);
+                    };
+                    return if (step > 0.0 && exit > limit)
+                        || (step < 0.0 && exit < limit)
+                    {
+                        (Some(exit.to_string()), None)
+                    } else {
+                        (None, None)
+                    };
                 }
+                if !self.for_body_avoids_target(target, body) {
+                    return (None, None);
+                }
+                let mut control = start;
+                for _ in 0..MAX_STATIC_REAL_FOR_ITERATIONS {
+                    let next = control + step;
+                    if !next.is_finite() || next == control {
+                        return (None, None);
+                    }
+                    if (step > 0.0 && next > limit) || (step < 0.0 && next < limit) {
+                        return (Some(next.to_string()), None);
+                    }
+                    control = next;
+                }
+                (None, None)
             }
             ScalarType::Boolean | ScalarType::String => (None, None),
         }
@@ -6974,6 +6993,11 @@ fn single_token_recursive(node: &GrammarASTNode) -> Option<&Token> {
 /// falls through to the `real ↑ real` `f64_pow` path (or a clean `Unsupported`
 /// for an integer base).  64 mirrors BASIC's BA-pow cap.
 const MAX_POW_UNROLL_EXPONENT: u32 = 64;
+
+/// Bound compile-time simulation of real `for` progress. Real addition is not
+/// algebraically invertible, so mirror the emitted additions while keeping
+/// adversarial source programs from consuming unbounded compiler time.
+const MAX_STATIC_REAL_FOR_ITERATIONS: usize = 4_096;
 
 /// Hard cap for the number of switch-list arms emitted while lowering one IIR
 /// function. Nested switch designators form a graph; without this cap an
@@ -9278,6 +9302,44 @@ mod tests {
             "test",
         )
         .expect("a descending finite integer step loop has a statically known exit value");
+    }
+
+    #[test]
+    fn al4_finite_real_step_loop_preserves_control_exit_snapshot() {
+        compile_source(
+            "begin real x; for x := 1.0 step 0.5 until 2.0 do print(''); print(x + 0.25) end",
+            "test",
+        )
+        .expect("a bounded real step loop has a statically simulated exit value");
+    }
+
+    #[test]
+    fn al4_descending_real_step_loop_preserves_control_exit_snapshot() {
+        compile_source(
+            "begin real x; for x := 2.0 step -0.5 until 1.0 do print(''); print(x + 0.75) end",
+            "test",
+        )
+        .expect("a descending bounded real loop has a statically simulated exit value");
+    }
+
+    #[test]
+    fn al4_nonprogressing_real_step_loop_remains_conservative() {
+        let err = compile_source(
+            "begin real x; for x := 9007199254740992.0 step 1.0 until 9007199254740994.0 do print(''); print(x) end",
+            "test",
+        )
+        .expect_err("a rounded-away real step does not establish a finite exit");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_long_real_step_loop_remains_conservative() {
+        let err = compile_source(
+            "begin real x; for x := 0.0 step 0.001 until 10.0 do print(''); print(x) end",
+            "test",
+        )
+        .expect_err("real-loop snapshot simulation is bounded");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
     #[test]
