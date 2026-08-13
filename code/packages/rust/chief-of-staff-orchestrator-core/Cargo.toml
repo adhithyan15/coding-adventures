@@ -10,6 +10,8 @@ chief-of-staff-channel-crypto = { path = "../chief-of-staff-channel-crypto" }
 chief-of-staff-channel-endpoints = { path = "../chief-of-staff-channel-endpoints" }
 chief-of-staff-host-runtime = { path = "../chief-of-staff-host-runtime" }
 chief-of-staff-host-data-plane = { path = "../chief-of-staff-host-data-plane" }
+chief-of-staff-host-control-protocol = { path = "../chief-of-staff-host-control-protocol" }
+chief-of-staff-pipeline-bindings = { path = "../chief-of-staff-pipeline-bindings" }
 chief-of-staff-process-supervisor = { path = "../chief-of-staff-process-supervisor" }
 chief-of-staff-service-reconciler = { path = "../chief-of-staff-service-reconciler" }
 chief-of-staff-service-registry = { path = "../chief-of-staff-service-registry" }
