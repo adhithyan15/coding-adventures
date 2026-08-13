@@ -104,7 +104,7 @@ describe("real curriculum", () => {
     // 40 (esperar, contestar, comprar). Two sessions authored a chapter 38 in parallel;
     // the collision surfaced as a merge conflict on chapters.json rather than silently,
     // because both sides must edit it.
-    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(245); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis // +3: HL-C88 slice 8 // +1: HL-C88 slice 9 (falsos amigos) // +3: HL-C113 (B1 si-condition rung) // +3: HL-C113 preterite plural // HL-C113: HL-C113 imperfect subjunctive
+    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(250); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis // +3: HL-C88 slice 8 // +1: HL-C88 slice 9 (falsos amigos) // +3: HL-C113 (B1 si-condition rung) // +3: HL-C113 preterite plural // HL-C113: HL-C113 imperfect subjunctive
     expect(
       books.books
         .find((book) => book.language === "persian")
@@ -960,6 +960,21 @@ describe("real curriculum", () => {
       "ES-C63-repaso-paradigmas-accent",
       "ES-C63-repaso-paradigmas-owed",
       "ES-C63-repaso-paradigmas-three",
+      "ES-C64-conmigo-ask",
+      "ES-C64-conmigo-third",
+      "ES-C64-conmigo-twice",
+      "ES-C64-maria-ven-mark",
+      "ES-C64-maria-ven-noa",
+      "ES-C64-maria-ven-say",
+      "ES-C64-para-mi-accent",
+      "ES-C64-para-mi-say",
+      "ES-C64-para-mi-third",
+      "ES-C64-que-grande-accent",
+      "ES-C64-que-grande-good",
+      "ES-C64-que-grande-say",
+      "ES-C64-repaso-tonicos-comma",
+      "ES-C64-repaso-tonicos-for",
+      "ES-C64-repaso-tonicos-with",
       "ES-W03-question-span-roberto-outside",
       "FA-C02-esm-e-man-sara",
       "FA-C03-chist-fusion",

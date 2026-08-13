@@ -7,18 +7,18 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:f282a92f7eae4a0d",
+  "sourceHash": "fnv1a64:7e53e267eb1d1bd6",
   "summary": {
-    "totalLessons": 2038,
-    "voice": 1356,
+    "totalLessons": 2043,
+    "voice": 1361,
     "sight": 566,
     "pen": 116,
-    "drivableLessons": 1356,
+    "drivableLessons": 1361,
     "drivablePercent": 67,
     "trackCount": 22,
-    "chapterCount": 745,
-    "drivablePrefixTotal": 1156,
-    "fullyDrivableChapters": 485,
+    "chapterCount": 750,
+    "drivablePrefixTotal": 1161,
+    "fullyDrivableChapters": 490,
     "unstartableChapters": 178,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
@@ -7114,12 +7114,12 @@
     },
     {
       "language": "spanish",
-      "lessonCount": 391,
-      "voice": 344,
+      "lessonCount": 396,
+      "voice": 349,
       "sight": 40,
       "pen": 7,
       "drivablePercent": 88,
-      "drivablePrefixTotal": 331,
+      "drivablePrefixTotal": 336,
       "modalities": [
         "voice",
         "sight",
@@ -11108,6 +11108,86 @@
           "drivable": true,
           "drivableLessonIds": [
             "ES-C63-repaso-paradigmas"
+          ]
+        },
+        {
+          "chapter": 246,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C64-para-mi"
+          ]
+        },
+        {
+          "chapter": 247,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C64-conmigo"
+          ]
+        },
+        {
+          "chapter": 248,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C64-que-grande"
+          ]
+        },
+        {
+          "chapter": 249,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C64-maria-ven"
+          ]
+        },
+        {
+          "chapter": 250,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C64-repaso-tonicos"
           ]
         }
       ]
@@ -45544,6 +45624,96 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:aaef7a550246dd47"
+    },
+    {
+      "id": "ES-C64-para-mi",
+      "language": "spanish",
+      "chapter": 246,
+      "sequence": 2465,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:fcc9674d860abab5"
+    },
+    {
+      "id": "ES-C64-conmigo",
+      "language": "spanish",
+      "chapter": 247,
+      "sequence": 2470,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:a623ef87b1774d46"
+    },
+    {
+      "id": "ES-C64-que-grande",
+      "language": "spanish",
+      "chapter": 248,
+      "sequence": 2475,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:9656b52009a60c90"
+    },
+    {
+      "id": "ES-C64-maria-ven",
+      "language": "spanish",
+      "chapter": 249,
+      "sequence": 2480,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:de9887469704e879"
+    },
+    {
+      "id": "ES-C64-repaso-tonicos",
+      "language": "spanish",
+      "chapter": 250,
+      "sequence": 2485,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:08d1637be328b071"
     },
     {
       "id": "TA-C01-vanakkam",

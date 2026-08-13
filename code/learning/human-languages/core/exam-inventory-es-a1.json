@@ -281,14 +281,18 @@
       "id": "A1-PRON-07",
       "category": "El pronombre",
       "label": "exclamative que with adjectives and adverbs",
-      "probe": null,
-      "note": "The inverted exclamation mark is taught at ch11; the construction is not."
+      "probe": [
+        "ES-GRAMMAR-EXCLAMATIVE-QUE"
+      ]
     },
     {
       "id": "A1-PRON-08",
       "category": "El pronombre",
       "label": "stressed pronouns after a preposition: mi, ti, el",
-      "probe": null
+      "probe": [
+        "ES-GRAMMAR-TONIC-PRONOUN-AFTER-PREPOSITION",
+        "ES-LEX-CONMIGO"
+      ]
     },
     {
       "id": "A1-ADV-01",
@@ -509,7 +513,9 @@
       "id": "A1-SN-04",
       "category": "El sintagma nominal",
       "label": "the vocative",
-      "probe": null
+      "probe": [
+        "ES-GRAMMAR-VOCATIVE-COMMA"
+      ]
     },
     {
       "id": "A1-SADJ-01",
