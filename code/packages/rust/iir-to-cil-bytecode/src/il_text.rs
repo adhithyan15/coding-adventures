@@ -1671,7 +1671,6 @@ mod tests {
 
     // ── E6d-6c — CIL name quoting + box-of-reference passthrough ─────────────
 
-    #[test]
     /// A function named after an ILAsm instruction must still assemble.
     ///
     /// ALGOL 60 lets a procedure be called `neg` or `add`, and both are CIL
