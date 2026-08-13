@@ -26,9 +26,32 @@
 %     cerebrum        conscious_activity                  conscious thought
 %     cerebellum      coordination_of_voluntary_movement  smooth, balanced movement
 %     brainstem       breathing                           automatic life support
+%     brainstem       temperature_regulation              also autonomic (added this cycle)
+%     brainstem       respiration                         also autonomic (added this cycle)
+%     brainstem       heart_rate                          also autonomic (added this cycle)
+%     brainstem       wake_sleep_cycles                   also autonomic (added this cycle)
+%     brainstem       coughing                            also autonomic (added this cycle)
+%     brainstem       sneezing                            also autonomic (added this cycle)
+%     brainstem       digestion                           also autonomic (added this cycle)
+%     brainstem       vomiting                            also autonomic (added this cycle)
+%     brainstem       swallowing                          also autonomic (added this cycle)
 %     hypothalamus    hunger                              drives (hunger/thirst/sleep)
 %     thalamus        relays                              sensory switchboard
 %     hippocampus     memory                              laying down memory
+%
+% EXTENDED this cycle from 6 to 15 rows: `brainstem`'s own cited source
+% sentence always listed TEN autonomic functions ("breathing, temperature
+% regulation, respiration, heart rate, wake-sleep cycles, coughing,
+% sneezing, digestion, vomiting, and swallowing"), but only the first,
+% `breathing`, had ever been turned into a row. This mirrors the
+% many-valued-per-key shape `kingdoms.adj`/`opposites.adj`/`synonyms.adj`
+% already established: each additional function is a NEW row sharing the
+% same `brainstem` key, so the original `row (brainstem, breathing)` is
+% untouched and every new row is a pure addition. WebFetch re-verified the
+% brainstem sentence live before writing -- byte-identical to what the
+% header already quoted. `respiration` is kept distinct from `breathing`
+% because the source lists them as two separate items in its own comma
+% list, not because this table asserts they mean something different.
 %
 % Each `function` value is a single lowercase token/phrase that appears VERBATIM
 % in the cited source sentence (see the provenance block), so the recall is a
@@ -103,6 +126,15 @@ table brain_part_function {
     row (cerebrum, conscious_activity)
     row (cerebellum, coordination_of_voluntary_movement)
     row (brainstem, breathing)
+    row (brainstem, temperature_regulation)
+    row (brainstem, respiration)
+    row (brainstem, heart_rate)
+    row (brainstem, wake_sleep_cycles)
+    row (brainstem, coughing)
+    row (brainstem, sneezing)
+    row (brainstem, digestion)
+    row (brainstem, vomiting)
+    row (brainstem, swallowing)
     row (hypothalamus, hunger)
     row (thalamus, relays)
     row (hippocampus, memory)

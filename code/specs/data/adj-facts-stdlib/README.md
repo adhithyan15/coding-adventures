@@ -158,7 +158,7 @@ per rotation, in parallel):
 | `physics/` | friction type → context it acts in (static → at_rest, sliding → sliding_motion, rolling → spherical_object, fluid → fluid_layers) | Testbook "Types of Friction" (consensus) |
 | `physics/` | light behavior → effect on light (reflection → bounces_off, refraction → changes_direction, scattering → variety_of_directions) | NASA Science (authoritative) |
 | `anatomy/` | lung → number of lobes (right 3, left 2) | NIH / NCI SEER Training |
-| `anatomy/` | brain part → primary function it controls | NIH / NCI SEER Training + StatPearls |
+| `anatomy/` | brain part → every function the source states it controls (`brain_part_function(brain_part, function)`, 15 rows — extended this cycle from 6 to 15: `brainstem`'s own cited sentence always named ten autonomic functions, but only `breathing` had ever been turned into a row; added temperature_regulation/respiration/heart_rate/wake_sleep_cycles/coughing/sneezing/digestion/vomiting/swallowing as new rows sharing the same brainstem key) | NIH / NCI SEER Training + StatPearls |
 | `anatomy/` | skeletal muscle → body region it is located in | Wikipedia (consensus) |
 | `anatomy/` | digestive organ → primary function it performs | NIH NIDDK / NCI SEER Training |
 | `anatomy/` | synovial joint type → representative example (hinge → elbow) | NIH / NLM StatPearls |
