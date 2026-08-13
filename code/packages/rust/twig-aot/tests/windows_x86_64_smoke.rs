@@ -278,7 +278,7 @@ fn build_heap_byte_io_module() -> interpreter_ir::module::IIRModule {
     use interpreter_ir::module::IIRModule;
 
     let mut ins = Vec::new();
-    let mut con = |slot: &str, n: i64| {
+    let con = |slot: &str, n: i64| {
         IIRInstr::new("const", Some(slot.to_string()),
                       vec![Operand::Int(n)], "i64")
     };

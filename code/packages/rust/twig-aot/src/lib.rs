@@ -831,6 +831,13 @@ pub fn link_macos_arm64_executable(
 ///
 /// `ld` sets up: `LC_LOAD_DYLINKER`, `LC_LOAD_DYLIB libSystem`,
 /// `LC_DYLD_CHAINED_FIXUPS`, ad-hoc code signature, etc.
+///
+/// Gated to `unix` to match its only caller, `link_macos_arm64_executable`,
+/// which is itself `#[cfg(unix)]` (non-Unix hosts get the stub that returns
+/// "native macOS compilation requires a Unix host").  Left ungated this
+/// function still *compiles* on Windows with nobody to call it, which is a
+/// `dead_code` warning — and `-D warnings` makes that a hard build error.
+#[cfg(unix)]
 fn invoke_ld(object_path: &Path, out_path: &Path) -> Result<(), AotError> {
     use std::io::Write as _;
 
@@ -911,6 +918,9 @@ fn invoke_ld(object_path: &Path, out_path: &Path) -> Result<(), AotError> {
 /// First tries `xcrun --sdk macosx --show-sdk-path`, which works on any
 /// machine with the Xcode Command Line Tools installed.  Falls back to
 /// `/usr/lib` for machines where `xcrun` is missing or fails.
+///
+/// `unix`-gated for the same reason as [`invoke_ld`], its only caller.
+#[cfg(unix)]
 fn sdk_lib_path() -> PathBuf {
     if let Ok(o) = std::process::Command::new("xcrun")
         .args(["--sdk", "macosx", "--show-sdk-path"])
