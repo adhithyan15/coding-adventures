@@ -416,7 +416,7 @@ mod apple {
         let diagram = parse_quadrant_chart(
             "QuAdRaNtChArT\n\
              title Native rendering portfolio\n\
-             X-AxIs \"Low reach 📉\" ---> \"`High reach Ω`\"\n\
+             X-AxIs \"Low reach 📉\" ---> \"`High reach Ω`\" %% axis comment\n\
              y-axis Low impact --> High impact\n\
              QuAdRaNt-1 \"`Invest 🚀`\"\n\
              quadrant-2 Explore\n\
@@ -424,7 +424,7 @@ mod apple {
              quadrant-4 Maintain\n\
              Metal:::native: [0.78, 0.82] color: #ff3300\n\
              Direct2D: [0.58, 0.67] radius: 9, stroke-color: #166534, stroke-width: 3px\n\
-             SVG: [0.34, 0.45]\n\
+             \"SVG [portable]\": [0.34, 0.45] %% point comment\n\
              ClAsSdEf native color: #109060, radius: 12, stroke-color: #310085, stroke-width: 4px\n",
         )
         .expect("quadrant chart should parse");
