@@ -667,3 +667,112 @@ describe("rawInflate output cap", () => {
     expect(rawInflate(bomb, run.length).length).toBe(run.length);
   }, 60_000);
 });
+
+// --- Regressions from security review ----------------------------------------
+
+describe("ZipReader does not trust the declared uncompressed size as a limit", () => {
+  it("clamps a lying central-directory size to the reader's own ceiling", () => {
+    // `entry.size` is four bytes the ARCHIVE chose. Passing it to the inflater
+    // as the memory ceiling -- which an earlier revision of this file did --
+    // replaces a fixed limit with an attacker-chosen one, and the CRC that
+    // would catch the lie only runs after the memory is already committed.
+    //
+    // This archive declares 4 GiB uncompressed while carrying 5,000 bytes. With
+    // the reader capped at 1 KB, the declared size must lose: the read has to
+    // fail on the LIMIT, not sail past it and fail later on the CRC.
+    const payload = new Uint8Array(deflateRawSync(new Uint8Array(5000).fill(0x41)));
+    const name = enc.encode("bomb");
+    const le16 = (v: number) => [v & 0xff, (v >>> 8) & 0xff];
+    const le32 = (v: number) => [
+      v & 0xff, (v >>> 8) & 0xff, (v >>> 16) & 0xff, (v >>> 24) & 0xff,
+    ];
+    const LIE = 0xffffffff;
+    const w: number[] = [];
+
+    w.push(0x50, 0x4b, 0x03, 0x04, ...le16(20), ...le16(0x0800), ...le16(8),
+           ...le16(0), ...le16(0x21), ...le32(0), ...le32(payload.length), ...le32(LIE),
+           ...le16(name.length), ...le16(0), ...Array.from(name), ...Array.from(payload));
+
+    const cdOffset = w.length;
+    w.push(0x50, 0x4b, 0x01, 0x02, ...le16(0x031e), ...le16(20), ...le16(0x0800),
+           ...le16(8), ...le16(0), ...le16(0x21), ...le32(0),
+           ...le32(payload.length), ...le32(LIE),
+           ...le16(name.length), ...le16(0), ...le16(0), ...le16(0), ...le16(0),
+           ...le32(0), ...le32(0), ...Array.from(name));
+
+    const cdSize = w.length - cdOffset;
+    w.push(0x50, 0x4b, 0x05, 0x06, ...le16(0), ...le16(0), ...le16(1), ...le16(1),
+           ...le32(cdSize), ...le32(cdOffset), ...le16(0));
+
+    const archive = new Uint8Array(w);
+    const capped = new ZipReader(archive, { maxOutput: 1024 });
+    const entry = capped.entries()[0]!;
+    expect(entry.size).toBe(LIE);
+    expect(() => capped.read(entry)).toThrow(/output size limit exceeded/);
+
+    // And with a ceiling above the real size it gets far enough to catch the
+    // lie the honest way, on the checksum -- proving the cap, not some other
+    // guard, is what stopped it above.
+    const generous = new ZipReader(archive, { maxOutput: 1 << 20 });
+    expect(() => generous.read(generous.entries()[0]!)).toThrow(/CRC-32 mismatch/);
+  });
+
+  it("still reads an honest entry, including a zero-length one", () => {
+    const archive = zipBytes([
+      ["empty.bin", new Uint8Array(0)],
+      ["real.txt", enc.encode("x".repeat(3000))],
+    ], true);
+    const out = unzip(archive);
+    expect(out.get("empty.bin")).toEqual(new Uint8Array(0));
+    expect(out.get("real.txt")!.length).toBe(3000);
+  });
+});
+
+describe("the distance-table exception is keyed on code LENGTH, not symbol count", () => {
+  it("rejects a lone distance code longer than one bit, as zlib does", () => {
+    // RFC 1951 s3.2.7 permits ONE incomplete case: if only one distance code is
+    // used "it is encoded using one bit, not zero bits; in this case there is a
+    // single code length of one." A lone TWO-bit code is therefore not the
+    // exception -- it leaves a hole, and zlib rejects it ("invalid distances
+    // set"). Reading a stream a scanner refused is the differential to avoid.
+    //
+    // Built by hand, because no encoder emits this. The literal/length alphabet
+    // is deliberately COMPLETE so the distance check is unambiguously what
+    // fires: symbol 0 and symbol 256 at one bit each, everything between at zero.
+    const order = [16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15];
+    const bits: number[] = [];
+    const push = (value: number, n: number) => {
+      for (let i = 0; i < n; i++) bits.push((value >> i) & 1);
+    };
+
+    // Code-length alphabet over {18, 1, 2}: 18 at one bit, 1 and 2 at two bits.
+    // Kraft: 1/2 + 1/4 + 1/4 = 1, so it is complete.
+    const cl = new Array(19).fill(0);
+    cl[18] = 1;
+    cl[1] = 2;
+    cl[2] = 2;
+
+    push(1, 1);   // BFINAL
+    push(2, 2);   // BTYPE = 10 (dynamic)
+    push(0, 5);   // HLIT  -> 257 literal/length codes
+    push(0, 5);   // HDIST -> 1 distance code
+    push(15, 4);  // HCLEN -> all 19, since symbol 1 sits last in the permutation
+    for (let i = 0; i < 19; i++) push(cl[order[i]!] ?? 0, 3);
+
+    // Canonical assignment: length 1 -> {18} = "0"; length 2 -> {1, 2} = "10", "11".
+    // Huffman codes are written most-significant bit first.
+    const CODES: Record<number, number[]> = { 18: [0], 1: [1, 0], 2: [1, 1] };
+    const emit = (sym: number) => bits.push(...CODES[sym]!);
+
+    emit(1);                 // LL symbol 0   -> code length 1
+    emit(18); push(127, 7);  // 11 + 127 = 138 zeros
+    emit(18); push(106, 7);  // 11 + 106 = 117 zeros   (138 + 117 = 255)
+    emit(1);                 // LL symbol 256 -> code length 1  (257 LL lengths)
+    emit(2);                 // the single distance code -> length 2, the bug
+
+    const bytes = new Uint8Array(Math.ceil(bits.length / 8));
+    bits.forEach((b, i) => { if (b) bytes[i >> 3]! |= 1 << (i & 7); });
+
+    expect(() => rawInflate(bytes)).toThrow(/incomplete distance Huffman table/);
+  });
+});

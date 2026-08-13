@@ -313,9 +313,12 @@ function huffDecode(br: BitReader, table: HuffTable): number {
     if (code - first < n) {
       // In bounds by construction: `code - first` is non-negative by induction
       // on the loop, and is less than `n`, so `index + (code - first)` stays
-      // below `index + n`, which is the running total of counts. The `??` is
-      // for the type checker, not for a case that can occur.
-      return table.symbols[index + (code - first)] ?? 0;
+      // below `index + n`, which is the running total of counts. The throw is
+      // for the type checker and for the day the proof stops holding -- this
+      // decoder never turns a broken invariant into a plausible byte.
+      const sym = table.symbols[index + (code - first)];
+      if (sym === undefined) throw new Error("deflate: internal table index out of range");
+      return sym;
     }
     index += n;
     first = (first + n) << 1;
@@ -401,13 +404,28 @@ function readDynamicTables(br: BitReader): { ll: HuffTable; dist: HuffTable } {
   }
 
   const ll = buildHuffTable(lengths.subarray(0, numLL));
+  // Deliberately stricter than zlib, which extends the single-one-bit-code
+  // exception below to this alphabet too. The only block that could use it is
+  // one whose entire literal/length alphabet is a lone end-of-block, which no
+  // encoder emits and which carries no data. Refusing it errs toward accepting
+  // LESS than the reference implementation, which is the safe direction: the
+  // danger is reading a stream a scanner rejected, never the reverse.
   if (!ll.complete) throw new Error("deflate: incomplete literal/length Huffman table");
 
   const dist = buildHuffTable(lengths.subarray(numLL));
-  // The one incompleteness RFC 1951 allows: a block that emits no
-  // back-reference at all still has to declare a distance alphabet, and
-  // declaring a single code (or none) is how it says "unused".
-  if (!dist.complete && dist.symbols.length > 1) {
+  // The one incompleteness RFC 1951 allows, quoted exactly because the
+  // near-miss reading is wrong: a block that emits no back-reference still has
+  // to declare a distance alphabet, and section 3.2.7 says that if only one
+  // distance code is used "it is encoded using one bit, not zero bits; in this
+  // case there is a single code length of one."
+  //
+  // So the exception is keyed on the code's LENGTH, not on the symbol count. A
+  // lone distance code of two or more bits leaves a hole and is rejected by
+  // zlib, which checks `max != 1` -- and accepting what zlib rejects is the
+  // parser differential this whole section exists to close.
+  const singleOneBitCode = dist.symbols.length === 1 && dist.count[1] === 1;
+  const emptyAlphabet = dist.symbols.length === 0;
+  if (!dist.complete && !singleOneBitCode && !emptyAlphabet) {
     throw new Error("deflate: incomplete distance Huffman table");
   }
 
@@ -895,10 +913,24 @@ export interface ZipEntry {
 }
 
 /** Reads entries from an in-memory ZIP archive. */
+/** Reader options. */
+export interface ZipReaderOptions {
+  /**
+   * Byte ceiling on any single entry's decompressed size. Defaults to 256 MB.
+   *
+   * The reader always takes the SMALLER of this and the size the archive
+   * declares, so lowering it is always safe and raising it is the only way to
+   * read an entry bigger than the default.
+   */
+  maxOutput?: number;
+}
+
 export class ZipReader {
   private readonly entries_: ZipEntry[] = [];
+  private readonly maxOutput: number;
 
-  constructor(private readonly data: Uint8Array) {
+  constructor(private readonly data: Uint8Array, options: ZipReaderOptions = {}) {
+    this.maxOutput = options.maxOutput ?? MAX_OUTPUT;
     const eocdOffset = this.findEOCD();
     if (eocdOffset === null) throw new Error("zip: no End of Central Directory record found");
 
@@ -954,9 +986,15 @@ export class ZipReader {
     } else if (entry.method === 8) {
       // The central directory already told us how big this entry decompresses
       // to, and the code below truncates to it anyway -- so inflating up to the
-      // global 256 MB ceiling first would be doing the work of a zip bomb on
-      // its behalf. Cap at the declared size and let a lying header fail here.
-      decompressed = deflateDecompress(compressed, entry.size);
+      // global ceiling first would be doing a zip bomb's work for it.
+      //
+      // But `entry.size` is four bytes the ARCHIVE chose, not a fact: it is read
+      // straight off the central directory and can say 4 GiB. Trusting it alone
+      // would replace a fixed ceiling with an attacker-chosen one, and the
+      // CRC-32 that finally catches the lie only runs after the memory has
+      // already been committed. So the declared size is an OPTIMISATION and the
+      // reader's own ceiling stays the LIMIT; whichever is smaller wins.
+      decompressed = deflateDecompress(compressed, Math.min(entry.size, this.maxOutput));
     } else {
       throw new Error(`zip: unsupported compression method ${entry.method} for '${entry.name}'`);
     }

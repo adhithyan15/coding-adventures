@@ -74,7 +74,7 @@ crc32(new TextEncoder().encode("hello world")); // 0x0D4A1185
 | `ZipWriter#addFile(name, data, compress?)` | Add a file entry. |
 | `ZipWriter#addDirectory(name)` | Add a directory entry (name must end with `/`). |
 | `ZipWriter#finish()` | Emit the complete archive as `Uint8Array`. |
-| `ZipReader` | Parses an in-memory ZIP archive. |
+| `ZipReader` | Parses an in-memory ZIP archive. Takes an optional `{ maxOutput }` ceiling. |
 | `ZipReader#entries()` | List all `ZipEntry` metadata objects. |
 | `ZipReader#read(entry)` | Decompress and return one entry's bytes. |
 | `ZipReader#readByName(name)` | Convenience wrapper for `read`. |
@@ -114,8 +114,14 @@ rawInflate(untrusted, 1 << 20); // refuse anything over 1 MB
 
 The cap matters because DEFLATE's expansion ratio reaches **1032:1** — a
 two-symbol pair copies up to 258 bytes — so a few hundred kilobytes of hostile
-input can demand hundreds of megabytes of output. `ZipReader.read` passes the
-entry's declared uncompressed size for exactly this reason.
+input can demand hundreds of megabytes of output.
+
+`ZipReader.read` uses the entry's declared uncompressed size as a cap too, but
+only as the *smaller* of it and the reader's own ceiling. The declared size is
+four bytes the archive chose: trusting it alone would swap a fixed limit for an
+attacker-chosen one, and the CRC-32 that catches the lie runs only after the
+memory is already committed. Lower the reader's ceiling with
+`new ZipReader(bytes, { maxOutput: 1 << 20 })`.
 
 ## Design notes
 

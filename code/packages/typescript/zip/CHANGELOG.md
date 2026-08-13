@@ -39,15 +39,24 @@
   can demand hundreds of megabytes.
 - **`rawInflate(data, maxOutput?)` takes a ceiling**, because a library reading
   bytes it did not write cannot know its embedder's budget. `ZipReader.read`
-  now passes the entry's declared uncompressed size, which it already truncates
-  to — previously it would inflate up to 256 MB and then discard the excess.
+  now passes the SMALLER of the entry's declared uncompressed size and the
+  reader's own ceiling. The declared size alone would be worse than the fixed
+  limit it replaced: it is four bytes the archive chose, can say 4 GiB, and the
+  CRC-32 that catches the lie only runs once the memory is already committed.
+- **`new ZipReader(bytes, { maxOutput })`** makes that ceiling configurable, for
+  the same reason `rawInflate`'s is.
 - **Huffman tables are checked against Kraft's inequality.** Over-subscribed
   tables (more codes claimed than exist at a length) are rejected outright, and
-  incomplete tables are rejected everywhere RFC 1951 forbids them — the one
-  exception being a distance alphabet with a single code, which is how a block
-  says it emits no back-references. Without this the decoder accepted streams
-  zlib refuses, which is the shape of a content-inspection bypass: one tool
-  rejects the file, another extracts real content from it.
+  incomplete tables are rejected everywhere RFC 1951 forbids them. Without this
+  the decoder accepted streams zlib refuses, which is the shape of a
+  content-inspection bypass: one tool rejects the file, another extracts real
+  content from it.
+- The one exception RFC 1951 §3.2.7 allows is keyed on the code's **length**,
+  not on the symbol count: a lone distance code "is encoded using one bit, not
+  zero bits". A single TWO-bit distance code still leaves a hole and is rejected,
+  matching zlib's `max != 1` test. The literal/length alphabet is held to the
+  stricter rule deliberately — accepting less than the reference implementation
+  is the safe direction to differ in.
 - `HLIT`/`HDIST` are range-checked at the header against RFC 1951's 286 and 30,
   rather than failing deep inside the block when an unassignable symbol turns up.
 
@@ -64,7 +73,9 @@
 - Cap behaviour: a caller-supplied ceiling, a stored block hitting it, a
   nonsensical ceiling rejected rather than ignored, and a 500:1 zlib-built bomb
   stopped at the stated byte count.
-- 51 tests; 98% line coverage.
+- 54 tests; 98% line coverage. The clamp regression is verified adversarially:
+  with the `Math.min` removed it fails, which is the only way to know a guard
+  test is testing the guard.
 
 ## [0.1.0] - 2026-04-23
 

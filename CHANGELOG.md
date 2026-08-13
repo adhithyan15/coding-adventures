@@ -44,7 +44,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   `number[]`, where V8 spends four to eight bytes each, so a 256 MB ceiling
   allowed one to two gigabytes of backing store and the process died before the
   limit was reached. `rawInflate` takes a caller-supplied ceiling, and
-  `ZipReader.read` passes the entry's declared uncompressed size.
+  `ZipReader.read` passes the SMALLER of the entry's declared uncompressed size
+  and the reader's own — the declared size is four bytes the archive chose, so
+  trusting it alone would swap a fixed limit for an attacker-chosen one.
 
 ### Added — Raw RFC 1951 DEFLATE, Exported
 - `zip` now exports `rawDeflate` / `rawInflate`: the DEFLATE codec with no ZIP
