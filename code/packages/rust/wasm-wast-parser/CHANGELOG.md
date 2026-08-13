@@ -79,6 +79,22 @@ case confirming the legitimate "type reference + matching literal
 params" pattern (`func.wast`'s own `"type-use-6"` shape) still parses
 and indexes correctly.
 
+**A third round of security review found round 3's own rejection check
+could itself be bypassed.** Its pre-scan stopped at the first field that
+wasn't `param`/`result`/`type` — but a `(local ...)` form placed BEFORE
+some of a func's trailing `(param ...)` forms (this parser doesn't
+enforce that params all precede locals; that's `wasm-validator`'s job
+too) made the pre-scan stop before ever counting those later params,
+silently skipping the mismatch check while the main assignment loop
+still processed them — reproducing round 2's exact out-of-bounds local
+index, just via reordering instead of an outright count mismatch. Fixed
+by giving the pre-scan the identical leading-region membership test
+(`is_leading_field`: `param`/`result`/`type`/`local` are ALL "still in
+the prefix," only a real instruction ends it) the main loop already
+uses, so the two passes can no longer silently disagree on where the
+leading region ends. 1 more regression test reproducing the reordered
+bypass directly.
+
 ## 0.1.1 — 2026-08-13 — 4 grammar bugs found running the real testsuite (W05 PR-4)
 
 `wasm-conformance` (W05 PR-4) is this crate's first real workout: running

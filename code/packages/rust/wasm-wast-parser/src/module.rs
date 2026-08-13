@@ -590,9 +590,29 @@ fn build_func(fields: &[SExpr], ctx: &mut ModuleCtx, func_idx: usize) -> Result<
     // synthesizes its type directly FROM these same literal params, so
     // `param_count` and `literal_param_count` are equal by construction
     // and this is always a no-op in that case.
+    //
+    // A round-2 security review found this pre-scan's original "stop"
+    // condition (break on the first field that isn't `param`/`result`/
+    // `type`) DIVERGED from the main assignment loop below, which also
+    // treats `local` as part of the same leading region (this text-level
+    // parser doesn't enforce that `(param ...)` forms all precede `(local
+    // ...)` forms -- that's `wasm-validator`'s job, same division of
+    // responsibility documented throughout this file). A `func` with a
+    // `(local ...)` BEFORE some of its trailing `(param ...)` forms made
+    // this scan stop early, undercounting `literal_param_count` (or never
+    // even setting `saw_literal_param`) and silently skipping the check
+    // below -- while the main loop still processed those later params,
+    // seeding `next_local` from a stale, too-small count. This is `is_leading_field`
+    // below, shared verbatim by both this pre-scan and (implicitly, by
+    // using the identical four-keyword test) the main loop's own
+    // `else if`/`else { break }` structure, so the two can no longer
+    // silently disagree on where the leading region ends.
+    fn is_leading_field(f: &SExpr) -> bool {
+        f.is_keyword_list("param") || f.is_keyword_list("result") || f.is_keyword_list("type") || f.is_keyword_list("local")
+    }
     let mut literal_param_count = 0u32;
     let mut saw_literal_param = false;
-    for f in fields {
+    for f in fields.iter().take_while(|f| is_leading_field(f)) {
         if f.is_keyword_list("param") {
             saw_literal_param = true;
             let items = f.as_list().unwrap();
@@ -604,10 +624,6 @@ fn build_func(fields: &[SExpr], ctx: &mut ModuleCtx, func_idx: usize) -> Result<
             } else {
                 literal_param_count += (items.len() - 1) as u32;
             }
-        } else if f.is_keyword_list("result") || f.is_keyword_list("type") {
-            continue;
-        } else {
-            break;
         }
     }
     if saw_literal_param && literal_param_count != param_count {
@@ -1599,6 +1615,39 @@ mod tests {
         .unwrap();
         // $x (from the matching literal param) is local 0, $y is local 1.
         assert_eq!(code_of(&m, 0), &[0x20, 0x00, 0x20, 0x01, 0x1A, 0x0B]);
+    }
+
+    /// A THIRD round of security review found round 3's own mismatch
+    /// check could itself be bypassed: its pre-scan originally stopped at
+    /// the first field that wasn't `param`/`result`/`type`, but this
+    /// text-level parser doesn't otherwise enforce that a func's `(local
+    /// ...)` forms all come after its `(param ...)` forms (that ordering
+    /// check is `wasm-validator`'s job too). A func with a `(local ...)`
+    /// BEFORE some of its trailing `(param ...)` forms made the pre-scan
+    /// stop before ever counting those later params -- silently skipping
+    /// the mismatch check entirely (`saw_literal_param` could even end up
+    /// `false`) while the main assignment loop still processed them,
+    /// reproducing the exact out-of-bounds local index round 2's finding
+    /// was about, just via reordering instead of an outright arity
+    /// mismatch. Fixed by giving the pre-scan the SAME leading-region
+    /// membership test (`is_leading_field`) the main loop already uses --
+    /// `param`/`result`/`type`/`local` are ALL "still in the prefix,"
+    /// only a true instruction ends it -- so the two can no longer
+    /// disagree on how far to scan.
+    #[test]
+    fn func_rejects_type_reference_disagreeing_even_with_a_local_field_reordered_before_the_extra_params() {
+        let result = parse_module(
+            "(module
+               (type $sig (func (param i32)))
+               (func (export \"f\") (type $sig)
+                 (local $a i32)
+                 (param $b i32) (param $c i32) (param $d i32)
+                 (local.get $d)))",
+        );
+        assert!(matches!(
+            result,
+            Err(WastParseError::TypeUseParamCountMismatch { declared: 3, referenced: 1, .. })
+        ));
     }
 
     #[test]
