@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.54.0
+
+- Tokenize Requirement definition fields by semantic role and enum domain.
+
 ## 0.53.0
 
 - Add portable Mermaid 11.16.1 requirement-diagram tokens.

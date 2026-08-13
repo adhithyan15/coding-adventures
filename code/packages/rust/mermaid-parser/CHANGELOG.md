@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.101.0
+
+- Parse Requirement fields with dedicated grammar tokens and typed semantic metadata.
+
 ## 0.100.0
 
 - Preserve Requirement layout direction in structural IR.

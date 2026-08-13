@@ -1,4 +1,7 @@
-use diagram_ir::{DiagramDirection, RelKind, StructuralKind, StructuralNodeKind};
+use diagram_ir::{
+    DiagramDirection, RelKind, RequirementRisk, RequirementVerifyMethod, StructuralKind,
+    StructuralNodeKind, StructuralNodeMetadata,
+};
 use mermaid_parser::{parse_any_mermaid, parse_requirement_diagram, MermaidDiagram};
 
 const SOURCE: &str = r#"requirementDiagram
@@ -23,9 +26,56 @@ fn requirement_core_lowers_to_structural_ir() {
     assert_eq!(diagram.nodes.len(), 2);
     assert_eq!(diagram.nodes[0].node_kind, StructuralNodeKind::Requirement);
     assert_eq!(diagram.nodes[1].node_kind, StructuralNodeKind::Element);
+    assert_eq!(
+        diagram.nodes[0].metadata,
+        Some(StructuralNodeMetadata::Requirement(
+            diagram_ir::RequirementMetadata {
+                external_id: Some("PAY-1".into()),
+                text: Some("Payment completes securely".into()),
+                risk: Some(RequirementRisk::High),
+                verify_method: Some(RequirementVerifyMethod::Test),
+            }
+        ))
+    );
+    assert_eq!(
+        diagram.nodes[1].metadata,
+        Some(StructuralNodeMetadata::RequirementElement(
+            diagram_ir::RequirementElementMetadata {
+                element_type: Some("service".into()),
+                document_reference: Some("docs/checkout".into()),
+            }
+        ))
+    );
     assert_eq!(diagram.relationships[0].from, "checkout_service");
     assert_eq!(diagram.relationships[0].to, "payment_req");
     assert_eq!(diagram.relationships[0].label.as_deref(), Some("satisfies"));
+}
+
+#[test]
+fn requirement_accepts_documented_enum_casing() {
+    let source = r#"requirementDiagram
+requirement test_req {
+id: 1
+text: Test
+risk: Medium
+verifyMethod: Inspection
+}"#;
+    let diagram = parse_requirement_diagram(source).expect("documented enum casing");
+    let Some(StructuralNodeMetadata::Requirement(metadata)) = &diagram.nodes[0].metadata else {
+        panic!("typed requirement metadata");
+    };
+    assert_eq!(metadata.risk, Some(RequirementRisk::Medium));
+    assert_eq!(metadata.verify_method, Some(RequirementVerifyMethod::Inspection));
+}
+
+#[test]
+fn requirement_rejects_fields_from_the_other_definition_family() {
+    let requirement_with_element_field =
+        "requirementDiagram\nrequirement req {\ntype: service\n}";
+    assert!(parse_requirement_diagram(requirement_with_element_field).is_err());
+
+    let element_with_requirement_field = "requirementDiagram\nelement system {\nrisk: high\n}";
+    assert!(parse_requirement_diagram(element_with_requirement_field).is_err());
 }
 
 #[test]

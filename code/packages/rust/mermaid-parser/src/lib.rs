@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.100.0";
+pub const VERSION: &str = "0.101.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -495,11 +495,13 @@ use diagram_ir::{
     Axis, AxisKind, ChartDiagram, ChartKind, ChartOrientation, ChartSeries, Compartment,
     CompartmentKind, GanttDiagram, GanttSection, GanttTask, GitBranch, GitCommitType, GitDiagram,
     GitEvent, JourneyConfig, JourneyDiagram, JourneySection, JourneyTask, PieSlice, QuadrantConfig, QuadrantPoint,
-    RelKind, SankeyFlow, SankeyNode, SequenceArrowhead, SequenceBlockKind,
+    RelKind, RequirementElementMetadata, RequirementMetadata, RequirementRisk,
+    RequirementVerifyMethod, SankeyFlow, SankeyNode, SequenceArrowhead, SequenceBlockKind,
     SequenceCentralConnection, SequenceDiagram, SequenceEvent, SequenceLineStyle, SequenceLink,
     SequenceNotePlacement, SequenceParticipant, SequenceParticipantGroup, SequenceParticipantKind,
     SequenceProperty, SequenceTextWrap, SeriesKind, StructuralDiagram, StructuralGroup,
-    StructuralKind, StructuralNode, StructuralNodeKind, StructuralRelationship, TaskStart,
+    StructuralKind, StructuralNode, StructuralNodeKind, StructuralNodeMetadata,
+    StructuralRelationship, TaskStart,
     TaskStatus, TemporalBody, TemporalDiagram, TemporalKind,
 };
 
@@ -764,22 +766,50 @@ pub fn parse_requirement_diagram(source: &str) -> Result<StructuralDiagram, Pars
                     _ => return Err(token_error(cursor.current(), "invalid requirement direction")),
                 });
             }
-            "DEFINITION_START" => {
+            "REQUIREMENT_START" | "ELEMENT_START" => {
+                let is_element = token_name(cursor.current()) == "ELEMENT_START";
                 let declaration = cursor.advance().value.trim_end_matches('{').trim().to_string();
                 let (kind, name) = declaration.split_once(char::is_whitespace).ok_or_else(|| {
                     token_error(cursor.current(), "invalid requirement definition")
                 })?;
                 let name = unquote_requirement_value(name);
                 let mut fields = Vec::new();
+                let mut requirement_metadata = RequirementMetadata::default();
+                let mut element_metadata = RequirementElementMetadata::default();
                 cursor.skip_terminators();
                 while token_name(cursor.current()) != "RBRACE" {
                     if cursor.at_eof() {
                         return Err(token_error(cursor.current(), "unterminated requirement definition"));
                     }
-                    if token_name(cursor.current()) == "FIELD" {
+                    if matches!(
+                        token_name(cursor.current()),
+                        "ID_FIELD"
+                            | "TEXT_FIELD"
+                            | "RISK_FIELD"
+                            | "VERIFY_FIELD"
+                            | "TYPE_FIELD"
+                            | "DOCREF_FIELD"
+                    ) {
                         let value = cursor.advance().value.clone();
                         if let Some((key, value)) = value.split_once(':') {
-                            fields.push(format!("{}: {}", key.trim(), unquote_requirement_value(value)));
+                            let field_value = unquote_requirement_value(value);
+                            match key.trim().to_ascii_lowercase().as_str() {
+                                "id" => requirement_metadata.external_id = Some(field_value.clone()),
+                                "text" => requirement_metadata.text = Some(field_value.clone()),
+                                "risk" => {
+                                    requirement_metadata.risk = Some(parse_requirement_risk(&field_value));
+                                }
+                                "verifymethod" => {
+                                    requirement_metadata.verify_method =
+                                        Some(parse_requirement_verify_method(&field_value));
+                                }
+                                "type" => element_metadata.element_type = Some(field_value.clone()),
+                                "docref" => {
+                                    element_metadata.document_reference = Some(field_value.clone());
+                                }
+                                _ => unreachable!("requirement grammar emitted an unknown field"),
+                            }
+                            fields.push(format!("{}: {}", key.trim(), field_value));
                         }
                     } else {
                         cursor.advance();
@@ -787,7 +817,6 @@ pub fn parse_requirement_diagram(source: &str) -> Result<StructuralDiagram, Pars
                     cursor.skip_terminators();
                 }
                 cursor.advance();
-                let is_element = kind.eq_ignore_ascii_case("element");
                 nodes.push(StructuralNode {
                     id: name.clone(),
                     label: name,
@@ -797,6 +826,11 @@ pub fn parse_requirement_diagram(source: &str) -> Result<StructuralDiagram, Pars
                     } else {
                         StructuralNodeKind::Requirement
                     },
+                    metadata: Some(if is_element {
+                        StructuralNodeMetadata::RequirementElement(element_metadata)
+                    } else {
+                        StructuralNodeMetadata::Requirement(requirement_metadata)
+                    }),
                     compartments: vec![Compartment {
                         kind: CompartmentKind::Values,
                         entries: fields,
@@ -826,6 +860,25 @@ pub fn parse_requirement_diagram(source: &str) -> Result<StructuralDiagram, Pars
 
 fn unquote_requirement_value(value: &str) -> String {
     value.trim().trim_matches('"').to_string()
+}
+
+fn parse_requirement_risk(value: &str) -> RequirementRisk {
+    match value.trim().to_ascii_lowercase().as_str() {
+        "low" => RequirementRisk::Low,
+        "medium" => RequirementRisk::Medium,
+        "high" => RequirementRisk::High,
+        _ => unreachable!("requirement grammar accepted an unknown risk"),
+    }
+}
+
+fn parse_requirement_verify_method(value: &str) -> RequirementVerifyMethod {
+    match value.trim().to_ascii_lowercase().as_str() {
+        "analysis" => RequirementVerifyMethod::Analysis,
+        "inspection" => RequirementVerifyMethod::Inspection,
+        "test" => RequirementVerifyMethod::Test,
+        "demonstration" => RequirementVerifyMethod::Demonstration,
+        _ => unreachable!("requirement grammar accepted an unknown verification method"),
+    }
 }
 
 fn parse_requirement_relationship(token: &Token) -> Result<StructuralRelationship, ParseError> {
@@ -1183,6 +1236,7 @@ pub fn parse_class_diagram(source: &str) -> Result<StructuralDiagram, ParseError
                     label: id,
                     stereotype: None,
                     node_kind: StructuralNodeKind::Class,
+                    metadata: None,
                     compartments,
                     parent_group: None,
                 });
@@ -1196,6 +1250,7 @@ pub fn parse_class_diagram(source: &str) -> Result<StructuralDiagram, ParseError
                         label: id.clone(),
                         stereotype: None,
                         node_kind: StructuralNodeKind::Class,
+                        metadata: None,
                         compartments: vec![],
                         parent_group: None,
                     });
@@ -4603,6 +4658,7 @@ fn upsert_er_node(
         label,
         stereotype: Some("entity".to_string()),
         node_kind: StructuralNodeKind::Entity,
+        metadata: None,
         compartments: Vec::new(),
         parent_group: None,
     });
@@ -4800,6 +4856,7 @@ fn upsert_c4_node(
         label,
         stereotype: Some(stereotype),
         node_kind: StructuralNodeKind::Class,
+        metadata: None,
         compartments: Vec::new(),
         parent_group,
     });
@@ -6799,7 +6856,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.100.0");
+        assert_eq!(crate::VERSION, "0.101.0");
     }
 
     #[test]
