@@ -1,0 +1,20 @@
+% ============================================================================
+% aqi-category-color.query.adj — a worked recall over the environment
+% aqi-category-color library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what color is a
+% hazardous air-quality day?": it states no environment fact of its own —
+% it only `import`s the grounded table and asks binding queries. The engine
+% resolves each `?` against the `aqi_category_color` rows and returns the
+% color + the table's source/locator/trust. Every category the parent
+% table names has a color in the cited spans, so this table never abstains.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli aqi-category-color.query.adj
+% ============================================================================
+
+import "aqi-category-color.adj"
+
+? aqi_category_color(hazardous, $Color)              % expect maroon
+? aqi_category_color($Category, orange)               % expect unhealthy_for_sensitive_groups
+? aqi_category_color(good, $Color)                     % expect green
