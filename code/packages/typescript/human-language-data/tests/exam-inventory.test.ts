@@ -286,8 +286,14 @@ describe("what the corpus actually covers", () => {
     // Chapters 230-235 then closed the contractions, `quien`, and both missing
     // coordinators -- which finished `Coordinacion` outright.
     //
-    // Still untaught and still counted against us: the ordinals, the gerund,
-    // the personal `a`, the vocative, and the stressed pronouns.
+    // Chapters 236-240 then taught the gerund and the personal `a`. A third
+    // point, A1-V-03, was DELIBERATELY left open: chapter 238 teaches the
+    // progressive and contrasts it with the plain present, which is adjacent to
+    // that point but is not it, and closing it with progressive atoms would be
+    // exactly the gaming this gate exists to catch.
+    //
+    // Still untaught: the ordinals, the vocative, the stressed pronouns after a
+    // preposition, the exclamative `que`, and the paradigm gaps HL-C127 owes.
     //
     // This number is allowed to move only two ways. Up, when a lesson teaches
     // something the inventory lists. Down, when one is retired. It must NOT
@@ -295,8 +301,8 @@ describe("what the corpus actually covers", () => {
     // fails alongside an edit to exam-inventory-es-a1.json, read that edit
     // before re-pinning.
     expect(coverage.enumerated).toBe(85);
-    expect(coverage.covered).toBe(64); // +3: chapters 221-225 teach the demonstratives // +4: chapters 226-229 teach muy, bastante and mal // +4: chapters 230-235 teach al/del, quien, o and ni
-    expect(coverage.percent).toBe(75); // 53/85 -> 56 -> 60 -> 64/85
+    expect(coverage.covered).toBe(66); // +3: ch221-225 demonstratives // +4: ch226-229 degree words // +4: ch230-235 joining words // +2: ch236-240 the gerund and the personal a // +3: chapters 221-225 teach the demonstratives // +4: chapters 226-229 teach muy, bastante and mal // +4: chapters 230-235 teach al/del, quien, o and ni
+    expect(coverage.percent).toBe(78); // 53/85 -> 56 -> 60 -> 64/85
 
     // Whole categories missing is a different failure from thin coverage, and
     // the report has to keep them distinguishable.
@@ -310,7 +316,7 @@ describe("what the corpus actually covers", () => {
     const report = formatExamCoverage(
       measureExamCoverage(loadExamInventory("spanish", "A1"), lessons),
     );
-    expect(report).toContain("spanish A1: 64/85 points covered (75%)");
+    expect(report).toContain("spanish A1: 66/85 points covered (78%)");
     // Worst category first: the line after the summary should be the emptiest
     // category, not the alphabetically first one. It USED to be
     // `El sintagma adjetival` at 0/1; chapters 226-229 closed that, and the

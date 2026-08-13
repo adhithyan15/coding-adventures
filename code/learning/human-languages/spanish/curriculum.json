@@ -2593,6 +2593,66 @@
         "ES-EXT-A1-REVIEW-JUNT"
       ],
       "after": []
+    },
+    {
+      "id": "ES-PATH-A1-HABLANDO",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C62-hablando"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-HABLANDO"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-A1-COMIENDO",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C62-comiendo"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-COMIENDO"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-A1-PROGRESIVO",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C62-estoy-hablando"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-PROGRESIVO"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-A1-PERSONAL-A",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C62-veo-a-maria"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-PERSONAL-A"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-A1-REVIEW-GER",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C62-repaso-gerundio"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-REVIEW-GER"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -2756,7 +2816,12 @@
         "ES-PATH-A1-QUIEN",
         "ES-PATH-A1-O",
         "ES-PATH-A1-NI",
-        "ES-PATH-A1-REVIEW-JUNT"
+        "ES-PATH-A1-REVIEW-JUNT",
+        "ES-PATH-A1-HABLANDO",
+        "ES-PATH-A1-COMIENDO",
+        "ES-PATH-A1-PROGRESIVO",
+        "ES-PATH-A1-PERSONAL-A",
+        "ES-PATH-A1-REVIEW-GER"
       ],
       "omits": [],
       "relocates": {}
@@ -5664,6 +5729,61 @@
       "prerequisites": [],
       "lessons": [
         "ES-C61-repaso-juntores"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-HABLANDO",
+      "stage": "A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C62-hablando"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-COMIENDO",
+      "stage": "A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C62-comiendo"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-PROGRESIVO",
+      "stage": "A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C62-estoy-hablando"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-PERSONAL-A",
+      "stage": "A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C62-veo-a-maria"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-REVIEW-GER",
+      "stage": "A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C62-repaso-gerundio"
       ]
     }
   ]

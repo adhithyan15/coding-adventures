@@ -4588,6 +4588,91 @@
           "ES-GRAMMAR-CONTRACTION-ONLY-TWO"
         ]
       }
+    },
+    {
+      "chapter": 236,
+      "title": "Hablando --- An Action Caught in the Middle",
+      "label": "ch:hablando",
+      "canDo": "I can form the -ando shape of an -ar verb.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C62-hablando",
+        "kind": "task",
+        "summary": "I can form the -ando shape of an -ar verb.",
+        "assesses": [
+          "ES-GRAMMAR-GERUND-AR"
+        ]
+      }
+    },
+    {
+      "chapter": 237,
+      "title": "Comiendo, Viviendo --- Two Families, One Ending",
+      "label": "ch:comiendo",
+      "canDo": "I can form the gerund of any regular verb.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C62-comiendo",
+        "kind": "task",
+        "summary": "I can form the gerund of any regular verb.",
+        "assesses": [
+          "ES-GRAMMAR-GERUND-ER-IR"
+        ]
+      }
+    },
+    {
+      "chapter": 238,
+      "title": "Estoy Hablando --- The Payoff",
+      "label": "ch:estoy-hablando",
+      "canDo": "I can say what I am doing right now.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C62-estoy-hablando",
+        "kind": "task",
+        "summary": "I can say what I am doing right now.",
+        "assesses": [
+          "ES-GRAMMAR-PROGRESSIVE-ESTAR-GERUND"
+        ]
+      }
+    },
+    {
+      "chapter": 239,
+      "title": "Veo a María --- The Little A That Guards People",
+      "label": "ch:veo-a-maria",
+      "canDo": "I can mark the person on the receiving end of a verb.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C62-veo-a-maria",
+        "kind": "task",
+        "summary": "I can mark the person on the receiving end of a verb.",
+        "assesses": [
+          "ES-GRAMMAR-PERSONAL-A"
+        ]
+      }
+    },
+    {
+      "chapter": 240,
+      "title": "Review --- Two Endings and One Little A",
+      "label": "ch:repaso-gerundio",
+      "canDo": "I can say what is happening now, and mark a person correctly.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C62-repaso-gerundio",
+        "kind": "task",
+        "summary": "I can say what is happening now, and mark a person correctly.",
+        "assesses": [
+          "ES-GRAMMAR-GERUND-TWO-ENDINGS"
+        ]
+      }
     }
   ]
 }
