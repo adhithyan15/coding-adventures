@@ -3048,6 +3048,44 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: cyrillicAlphabetSource("б"),
   },
+  // RussianIrina starts lowercase в at the baseline, climbs through its tall
+  // handwritten ascender loop, descends to the baseline, and continues around
+  // the lower bowl without lifting. Noto Sans Cyrillic prints two compact bowls
+  // on a straight stem, so the same one-run order is fitted through the upper
+  // bowl, down the stem, and counterclockwise around the lower bowl.
+  [ductusKey("cyrillic", "в")]: {
+    script: "cyrillic",
+    glyph: "в",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "climb through the upper loop and descend to the baseline",
+            path: [
+              { x: 130, y: 20 }, { x: 130, y: 100 }, { x: 130, y: 200 },
+              { x: 130, y: 300 }, { x: 130, y: 400 }, { x: 130, y: 500 },
+              { x: 220, y: 500 }, { x: 310, y: 500 }, { x: 380, y: 480 },
+              { x: 430, y: 445 }, { x: 455, y: 400 }, { x: 450, y: 355 },
+              { x: 420, y: 320 }, { x: 365, y: 300 }, { x: 295, y: 290 },
+              { x: 220, y: 290 }, { x: 150, y: 290 }, { x: 130, y: 260 },
+              { x: 130, y: 180 }, { x: 130, y: 100 }, { x: 130, y: 20 },
+            ],
+          },
+          {
+            label: "continue counterclockwise around the rounded lower bowl",
+            path: [
+              { x: 130, y: 20 }, { x: 220, y: 35 }, { x: 310, y: 35 },
+              { x: 385, y: 50 }, { x: 440, y: 80 }, { x: 470, y: 120 },
+              { x: 475, y: 165 }, { x: 455, y: 205 }, { x: 415, y: 235 },
+              { x: 360, y: 260 }, { x: 295, y: 270 }, { x: 220, y: 270 },
+              { x: 150, y: 270 }, { x: 130, y: 260 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: cyrillicAlphabetSource("в"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the
