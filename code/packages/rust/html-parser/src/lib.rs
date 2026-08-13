@@ -5111,10 +5111,13 @@ impl HtmlParser {
             && name == "frameset"
         {
             if !self.explicit_html_end_seen {
-                self.diagnostics.push(ParserDiagnostic::new(
-                    "unexpected-start-tag-after-frameset",
-                    "start tag `<frameset>` after a frameset was ignored",
-                ));
+                self.diagnostics.push(
+                    ParserDiagnostic::new(
+                        "unexpected-start-tag-after-frameset",
+                        "start tag `<frameset>` after a frameset was ignored",
+                    )
+                    .at_emission(self.current_token_emission_position),
+                );
             }
             return;
         }
@@ -5125,10 +5128,13 @@ impl HtmlParser {
             && name != "html"
             && name != "frameset"
         {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-start-tag-after-frameset",
-                format!("start tag `<{name}>` after a frameset was ignored"),
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-start-tag-after-frameset",
+                    format!("start tag `<{name}>` after a frameset was ignored"),
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             return;
         }
         if !in_foreign_content
@@ -5138,10 +5144,13 @@ impl HtmlParser {
             && name != "html"
             && name != "frameset"
         {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-start-tag-after-frameset",
-                format!("start tag `<{name}>` after a frameset was ignored"),
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-start-tag-after-frameset",
+                    format!("start tag `<{name}>` after a frameset was ignored"),
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             return;
         }
         if !in_foreign_content
@@ -35297,6 +35306,101 @@ mod tests {
         .unwrap();
         assert!(find_element_by_id(&fragment.nodes, "first").is_some());
         assert!(find_element_by_id(&fragment.nodes, "second").is_some());
+    }
+
+    #[test]
+    fn positions_after_frameset_start_tag_diagnostics_at_token_emission() {
+        for target in ["frameset", "frame", "main"] {
+            let source = format!(
+                "<!doctype html><frameset></frameset><!--é-->\r\n<{target}>"
+            );
+            let output = parse_html_with_diagnostics(&source).unwrap();
+            let diagnostics = output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-start-tag-after-frameset")
+                .collect::<Vec<_>>();
+            let final_delimiter = source.rfind('>').unwrap();
+
+            assert_eq!(diagnostics.len(), 1, "target {target:?}");
+            assert_eq!(
+                diagnostics[0].position,
+                Some(SourcePosition {
+                    byte_offset: final_delimiter,
+                    char_offset: source[..final_delimiter].chars().count(),
+                    line: 2,
+                    column: target.chars().count() + 2,
+                })
+            );
+            assert!(final_delimiter > source[..final_delimiter].chars().count());
+        }
+
+        for target in ["frameset", "frame", "main"] {
+            let mut parser = HtmlParser::new();
+            for token in [
+                Token::StartTag {
+                    name: "html".to_string(),
+                    attributes: Vec::new(),
+                    self_closing: false,
+                },
+                Token::StartTag {
+                    name: "frameset".to_string(),
+                    attributes: Vec::new(),
+                    self_closing: false,
+                },
+                Token::EndTag {
+                    name: "frameset".to_string(),
+                },
+                Token::StartTag {
+                    name: target.to_string(),
+                    attributes: Vec::new(),
+                    self_closing: false,
+                },
+                Token::Eof,
+            ] {
+                parser.process_token(token);
+            }
+
+            let diagnostics = parser
+                .diagnostics()
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-start-tag-after-frameset")
+                .collect::<Vec<_>>();
+            assert_eq!(diagnostics.len(), 1, "target {target:?}");
+            assert_eq!(diagnostics[0].position, None);
+        }
+
+        let in_frameset = parse_html_with_diagnostics(
+            "<!doctype html><frameset><!--é-->\r\n<main>",
+        )
+        .unwrap();
+        assert!(in_frameset.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic.code == "unexpected-start-tag-in-frameset"
+                && diagnostic.position.is_none()
+        }));
+        assert!(in_frameset.parser_diagnostics.iter().all(|diagnostic| {
+            diagnostic.code != "unexpected-start-tag-after-frameset"
+        }));
+
+        let after_after_frameset = parse_html_with_diagnostics(
+            "<!doctype html><frameset></frameset></html><frame>",
+        )
+        .unwrap();
+        assert!(after_after_frameset.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic.code == "unexpected-token-after-after-frameset"
+                && diagnostic.position.is_some()
+        }));
+        assert!(after_after_frameset.parser_diagnostics.iter().all(|diagnostic| {
+            diagnostic.code != "unexpected-start-tag-after-frameset"
+        }));
+
+        let allowed = parse_html_with_diagnostics(
+            "<!doctype html><frameset></frameset><html><noframes>x</noframes>",
+        )
+        .unwrap();
+        assert!(allowed.parser_diagnostics.iter().all(|diagnostic| {
+            diagnostic.code != "unexpected-start-tag-after-frameset"
+        }));
     }
 
     #[test]
