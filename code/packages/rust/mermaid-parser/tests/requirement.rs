@@ -1,4 +1,4 @@
-use diagram_ir::{StructuralKind, StructuralNodeKind};
+use diagram_ir::{RelKind, StructuralKind, StructuralNodeKind};
 use mermaid_parser::{parse_any_mermaid, parse_requirement_diagram, MermaidDiagram};
 
 const SOURCE: &str = r#"requirementDiagram
@@ -34,4 +34,62 @@ fn requirement_dispatches_through_structural_pipeline() {
         parse_any_mermaid(SOURCE).expect("requirement dispatch"),
         MermaidDiagram::Structural(_)
     ));
+}
+
+#[test]
+fn requirement_relationships_preserve_semantics_and_orientation() {
+    let source = r#"requirementDiagram
+requirement a {
+id: a
+}
+requirement b {
+id: b
+}
+a - contains -> b
+a - copies -> b
+a - derives -> b
+a - satisfies -> b
+a - verifies -> b
+a - refines -> b
+a - traces -> b
+a <- copies - b"#;
+    let diagram = parse_requirement_diagram(source).expect("relationship families");
+    let kinds = diagram
+        .relationships
+        .iter()
+        .map(|relationship| relationship.kind.clone())
+        .collect::<Vec<_>>();
+    assert_eq!(
+        kinds,
+        vec![
+            RelKind::Composition,
+            RelKind::Association,
+            RelKind::Dependency,
+            RelKind::Realization,
+            RelKind::Dependency,
+            RelKind::Inheritance,
+            RelKind::Link,
+            RelKind::Association,
+        ]
+    );
+    let labels = diagram
+        .relationships
+        .iter()
+        .map(|relationship| relationship.label.as_deref())
+        .collect::<Vec<_>>();
+    assert_eq!(
+        labels,
+        vec![
+            Some("contains"),
+            Some("copies"),
+            Some("derives"),
+            Some("satisfies"),
+            Some("verifies"),
+            Some("refines"),
+            Some("traces"),
+            Some("copies"),
+        ]
+    );
+    assert_eq!(diagram.relationships[7].from, "b");
+    assert_eq!(diagram.relationships[7].to, "a");
 }

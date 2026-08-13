@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.99.0
+
+- Preserve all seven Requirement relationship semantics and reverse-arrow orientation in structural IR.
+
 ## 0.98.0
 
 - Parse core Requirement definitions, elements, and typed relationships into structural IR.
