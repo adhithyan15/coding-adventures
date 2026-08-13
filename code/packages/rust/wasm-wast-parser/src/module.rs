@@ -552,7 +552,6 @@ fn build_func(fields: &[SExpr], ctx: &mut ModuleCtx, func_idx: usize) -> Result<
 
     let type_idx = resolve_func_signature_ref(fields, ctx)?;
     ctx.module.functions[func_idx] = type_idx;
-    let func_type = ctx.module.types[type_idx as usize].clone();
 
     // Local scope: params first (from the signature just resolved,
     // re-walking the param forms here only for their OPTIONAL names --
@@ -591,7 +590,6 @@ fn build_func(fields: &[SExpr], ctx: &mut ModuleCtx, func_idx: usize) -> Result<
             break;
         }
     }
-    let _ = func_type;
 
     let mut icx = InstrCtx { module: ctx, locals: local_names, labels: Vec::new() };
     let mut code = Vec::new();
@@ -1528,6 +1526,21 @@ mod tests {
     fn folded_call_indirect_with_bare_type_reference_errors_cleanly_not_panics() {
         let err = parse_module("(module (table 1 funcref) (func (call_indirect (type))))").unwrap_err();
         assert!(matches!(err, WastParseError::UnexpectedEof));
+    }
+
+    #[test]
+    fn func_with_out_of_range_numeric_type_reference_does_not_panic() {
+        // `(type 0)` with no `(type ...)` declared anywhere in the module
+        // used to index `ctx.module.types[0]` on an empty Vec while
+        // fetching a value (`func_type`) that was never actually used --
+        // dead code whose only effect was a panic. Bounds-checking a type
+        // index is `wasm-validator`'s job (structural "index bounds"
+        // validation), not this text-parser's -- so the fix is simply to
+        // stop indexing at parse time, not to duplicate that validation
+        // here. This module still parses to a (structurally invalid)
+        // `WasmModule`, which is the correct division of responsibility.
+        let result = parse_module("(module (func (type 0)))");
+        assert!(result.is_ok());
     }
 
     /// Folded `call` with arguments -- catches the exact bug found during

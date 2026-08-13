@@ -84,4 +84,14 @@ and the official spec testsuite's `.wast` script dialect — into
   descriptions, and both the flat and folded forms of `call_indirect`).
   All converted to `sexpr::expect_get`, each with its own regression
   test.
-- 78 unit tests across all five modules, ~95%+ line coverage.
+- **Hardening pass, round 3**: `build_func` indexed `ctx.module.types` by
+  an unvalidated numeric `(type N)` reference (`(module (func (type 0)))`
+  with no `(type ...)` declared anywhere panics indexing an empty `Vec`)
+  while fetching a value that was, on inspection, entirely dead code
+  (immediately discarded, never used) — fixed by deleting the dead fetch
+  rather than adding unused bounds-checking; bounds-checking a type index
+  is `wasm-validator`'s job (structural "index bounds" validation), not
+  this text-parser's, so this module now correctly parses to a
+  (structurally invalid) `WasmModule` instead of panicking or duplicating
+  validation this crate doesn't own.
+- 79 unit tests across all five modules, ~95%+ line coverage.
