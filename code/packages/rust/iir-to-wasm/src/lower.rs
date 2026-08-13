@@ -2378,6 +2378,13 @@ fn emit_instr(
             let rd = get_reg(dest)?;
             let r = get_src_reg(&instr.srcs, 0, reg_map, fn_name)?;
             code.extend(encode_local_get(r));
+            // Comparisons carry their operand-width hint, so an integer
+            // comparison result can live in an i64 local even though `mov :
+            // bool` targets WASM's i32 boolean representation. Narrow the
+            // canonical 0/1 value before storing it in the boolean local.
+            if ty == "bool" && slot_is_i64(r) && !slot_is_i64(rd) {
+                code.extend(encode_i32_wrap_i64());
+            }
             code.extend(encode_local_set(rd));
         }
 
@@ -5660,6 +5667,37 @@ mod tests {
         assert!(
             wm.code[0].code.contains(&I64_LE_S),
             "i64 operands with a bool comparison result must emit i64.le_s"
+        );
+    }
+
+    #[test]
+    fn bool_move_wraps_i64_comparison_result_for_i32_destination() {
+        let m = single_fn(
+            "f",
+            vec![],
+            "bool",
+            vec![
+                IIRInstr::new("const", Some("a".into()), vec![Operand::Int(1)], "i64"),
+                IIRInstr::new("const", Some("b".into()), vec![Operand::Int(2)], "i64"),
+                IIRInstr::new(
+                    "cmp_lt",
+                    Some("cmp".into()),
+                    vec![Operand::Var("a".into()), Operand::Var("b".into())],
+                    "i64",
+                ),
+                IIRInstr::new(
+                    "mov",
+                    Some("merged".into()),
+                    vec![Operand::Var("cmp".into())],
+                    "bool",
+                ),
+                IIRInstr::new("ret", None, vec![Operand::Var("merged".into())], "bool"),
+            ],
+        );
+        let wm = lower_iir_to_wasm(&m, &IIRWasmConfig::default()).unwrap();
+        assert!(
+            wm.code[0].code.contains(&0xA7),
+            "bool move must narrow an i64 comparison result"
         );
     }
 

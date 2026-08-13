@@ -1,5 +1,12 @@
 # Changelog — iir-to-wasm
 
+## [0.46.0] — 2026-08-12 (boolean conditional merge moves)
+
+`mov : bool` now wraps an i64 comparison-result local to WASM's i32 boolean
+representation before storing it. This fixes conditional boolean joins whose
+comparison hints describe i64 operands, including ALGOL conditional predicates
+inside `for ... while` loops.
+
 ## [0.45.0] — 2026-08-03 (linear memory growth — Twig GC completion, Part 3 stage 1)
 
 Fix a confirmed bug found by direct source reading (not assumed): every
