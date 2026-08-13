@@ -87,6 +87,16 @@ transaction recovery, and central completion to
 the session is pending. Clock or actor failure stops both listeners, and normal
 shutdown joins the worker before the controller and unsealed Vault are dropped.
 
+The six-field `onvif_pairing_*` tuple enables one supervised ONVIF credential
+worker for one exact installed bridge. It names the bridge, an owner-only
+32-byte Vault KEK, and owner-only username and password files with their exact
+byte lengths. Chief rejects partial tuples and containerized Vault custody,
+selects only an unexpired pending session for that bridge, and delegates native
+camera inspection plus recoverable sealed credential handoff to
+`smart-home-onvif-pairing-service`. The worker shares the controller used by
+HTTP and model tools and participates in the same coordinated failure and
+shutdown path.
+
 The shared HTTP adapter receives the same fallible Unix-millisecond clock as the
 model-tool dispatcher. It samples that source once for every matched request
 and reuses the result for grant activation/expiry, authorization audit,
