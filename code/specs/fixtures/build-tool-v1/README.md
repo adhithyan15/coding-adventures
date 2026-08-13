@@ -35,7 +35,7 @@ emerging OCaml lane. It records front-door and shared-engine state but contains
 no executable commands. Every adapter is currently marked missing, so a valid
 inventory is not reported as conformance success.
 
-The 58-case bootstrap corpus covers every process-free v1 domain:
+The 59-case bootstrap corpus covers every process-free v1 domain:
 
 - canonical package and program membership, language-registry classification
   with paired C#, F#, Haskell, Java, and Kotlin package/program identities, a
@@ -55,7 +55,8 @@ The 58-case bootstrap corpus covers every process-free v1 domain:
   nested source-map exclusion,
   duplicate collapse, and nested-comment or XML-markup examples;
 - deterministic diamond graph levels;
-- the build-plan distinction between `affected_packages: null` and `[]`; and
+- the build-plan distinction between `affected_packages: null` and `[]`, plus
+  atomic replacement of an existing destination by a second complete plan; and
 - fail-closed rejection of a future plan version;
 - conservative diff selection and prerequisite closure;
 - framed SHA-256 hashing plus hit, miss, and corrupt-cache recovery;
@@ -72,6 +73,15 @@ The outer envelope and build-plan payload use `schema.json`,
 The seven added decision domains additionally validate a closed
 `{domain,outcome,input,result}` projection against
 `pure-domains.schema.json`; generic JSON is never a fallback.
+
+The `plan/replace-existing` case is intentionally language neutral. Its
+`existing_plan` is first published to a runner-owned path, then `plan` is
+published to the same path. A conforming writer returns the second plan, leaves
+no writer-owned sibling temporary file, and uses the host's replace-if-present
+primitive so the same fixture succeeds on Windows as well as POSIX. The case
+requires `plan_v1_write`, and the validator applies the build-plan-v1 schema
+and semantic reference checks to both complete input plans before an adapter
+can run.
 
 Execution has a separate closed `{domain,outcome,input,result}` projection in
 `execution.schema.json`. `schema.json` and `result.schema.json` enforce the

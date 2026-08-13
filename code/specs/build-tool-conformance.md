@@ -531,6 +531,8 @@ that build execution does not need network resolution.
 - sorted packages and edges;
 - validation that every edge and affected name references a declared package;
 - rejection of paths outside the repository root; and
+- atomic replacement of an existing plan destination with no partial plan or
+  retained writer temporary file;
 - no execution of `build_commands` during plan parsing.
 
 Only Go, Python, Ruby, and Swift currently expose an end-to-end v1 plan

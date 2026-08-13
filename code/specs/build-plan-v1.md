@@ -235,6 +235,23 @@ the checked-in schema.
 The distinction between `null` and `[]` is critical. JSON serialization
 preserves this: `null` serializes as `null`, `[]` serializes as `[]`.
 
+## Plan-file replacement
+
+A writer MUST publish a complete plan with an atomic same-directory
+replacement operation. Writing a second plan to an existing regular-file
+destination MUST succeed on Linux, macOS, and Windows and leave only the second
+complete plan visible. A writer MUST NOT require callers to delete or rename
+the old destination first.
+
+The writer stages the complete JSON in an exclusively created, writer-owned
+sibling temporary file and then uses the platform's replace-if-present
+primitive. It MUST NOT reuse or follow a predictable pre-existing staging
+path. If staging or replacement fails, the pre-existing destination MUST remain
+intact and the writer MUST make a best-effort attempt to remove its temporary
+file before returning the error. This contract changes publication behavior
+only; it does not change the v1 JSON schema or grant permission to follow
+fixture-controlled paths.
+
 ## CLI Integration
 
 ### `--emit-plan <path>`

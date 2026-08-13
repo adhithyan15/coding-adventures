@@ -131,7 +131,7 @@ class CorpusTests(unittest.TestCase):
         summary = runner.validate_corpus(FIXTURE_ROOT)
 
         self.assertEqual(summary["schema_version"], 1)
-        self.assertEqual(summary["case_count"], 58)
+        self.assertEqual(summary["case_count"], 59)
         self.assertEqual(summary["implementation_count"], 16)
         self.assertEqual(summary["established_languages"], 15)
         self.assertEqual(summary["execution_case_count"], 0)
@@ -227,6 +227,39 @@ class CorpusTests(unittest.TestCase):
                 ),
             )
         self.assertEqual(raised.exception.code, "CASE_SCHEMA_INVALID")
+
+    def test_replace_existing_requires_write_capability(self) -> None:
+        case = load_case("plan-replace-existing.json")
+        case["capabilities"] = ["plan_v1_read"]
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner.validate_case_document(
+                case,
+                case_schema=runner.load_document(FIXTURE_ROOT / "schema.json"),
+                result_schema=runner.load_document(FIXTURE_ROOT / "result.schema.json"),
+                plan_schema=runner.load_document(
+                    runner.REPO_ROOT / "code/specs/schemas/build-plan-v1.schema.json"
+                ),
+            )
+        self.assertEqual(raised.exception.code, "CASE_CAPABILITY_MISSING")
+
+    def test_replace_existing_validates_both_input_plans(self) -> None:
+        schema_args = {
+            "case_schema": runner.load_document(FIXTURE_ROOT / "schema.json"),
+            "result_schema": runner.load_document(FIXTURE_ROOT / "result.schema.json"),
+            "plan_schema": runner.load_document(
+                runner.REPO_ROOT / "code/specs/schemas/build-plan-v1.schema.json"
+            ),
+        }
+        for key, code in (
+            ("existing_plan", "CASE_EXISTING_PLAN_SCHEMA_INVALID"),
+            ("plan", "CASE_PLAN_SCHEMA_INVALID"),
+        ):
+            with self.subTest(key=key):
+                case = load_case("plan-replace-existing.json")
+                case["input"]["options"][key] = {}
+                with self.assertRaises(runner.ConformanceError) as raised:
+                    runner.validate_case_document(case, **schema_args)
+                self.assertEqual(raised.exception.code, code)
 
 
 class ExecutionDenialTests(unittest.TestCase):
@@ -881,7 +914,7 @@ class CommandLineTests(unittest.TestCase):
 
         self.assertEqual(exit_code, 0)
         summary = json.loads(stdout.getvalue())
-        self.assertEqual(summary["case_count"], 58)
+        self.assertEqual(summary["case_count"], 59)
 
     def test_validate_result_reports_match_and_rejects_execution_override(self) -> None:
         case_path = CASES_ROOT / "graph-diamond.json"

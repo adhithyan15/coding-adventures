@@ -455,8 +455,16 @@
           "enum": [
             "read",
             "write",
-            "round_trip"
+            "round_trip",
+            "replace_existing"
           ]
+        },
+        "existing_plan": {
+          "type": "object",
+          "maxProperties": 1024,
+          "additionalProperties": {
+            "$ref": "#/$defs/json_value"
+          }
         },
         "plan": {
           "type": "object",
@@ -465,7 +473,23 @@
             "$ref": "#/$defs/json_value"
           }
         }
-      }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "mode": {
+                "const": "replace_existing"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "existing_plan"
+            ]
+          }
+        }
+      ]
     },
     "lock_name": {
       "type": "string",

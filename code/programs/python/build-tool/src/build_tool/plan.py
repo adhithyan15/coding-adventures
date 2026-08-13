@@ -75,6 +75,7 @@ from __future__ import annotations
 
 import contextlib
 import json
+import tempfile
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -152,8 +153,10 @@ def write_plan(bp: BuildPlan, path: str) -> None:
     regardless of what the caller set. This ensures we never accidentally
     write an old version number with new-format data.
 
-    Uses an atomic write strategy: write to a temporary file first, then
-    rename. This prevents partial writes if the process is killed mid-write.
+    Uses an atomic write strategy: write to a sibling temporary file first,
+    then replace the destination. Unlike a plain rename, replacement works
+    when the destination already exists on Windows. This prevents partial
+    writes if the process is killed mid-write.
 
     Parameters
     ----------
@@ -195,15 +198,30 @@ def write_plan(bp: BuildPlan, path: str) -> None:
 
     json_str = json.dumps(data, indent=2)
 
-    # Atomic write: write to temp file, then rename.
-    tmp_path = path + ".tmp"
+    # Atomic publication needs replace-if-present semantics.  ``Path.rename``
+    # happens to replace on POSIX, but Windows rejects an existing destination
+    # with WinError 183.  Create the staging file exclusively so a stale or
+    # attacker-planted ``<path>.tmp`` cannot be followed or overwritten, then
+    # use ``Path.replace`` while remaining on the destination filesystem.
+    destination = Path(path)
+    tmp_path: Path | None = None
     try:
-        Path(tmp_path).write_text(json_str, encoding="utf-8")
-        Path(tmp_path).rename(path)
+        with tempfile.NamedTemporaryFile(
+            mode="w",
+            encoding="utf-8",
+            dir=destination.parent,
+            prefix=f".{destination.name}.",
+            suffix=".tmp",
+            delete=False,
+        ) as tmp_file:
+            tmp_path = Path(tmp_file.name)
+            tmp_file.write(json_str)
+        tmp_path.replace(destination)
     except Exception:
         # Clean up temp file on failure.
-        with contextlib.suppress(OSError):
-            Path(tmp_path).unlink(missing_ok=True)
+        if tmp_path is not None:
+            with contextlib.suppress(OSError):
+                tmp_path.unlink(missing_ok=True)
         raise
 
 

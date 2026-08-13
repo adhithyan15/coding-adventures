@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.7] - 2026-08-13
+
+### Fixed
+
+- **Atomic repeated plan emission**: `write_plan` now publishes through the
+  platform replace-if-present primitive, so a second `--emit-plan` to the same
+  path succeeds on Windows instead of failing with `WinError 183`.
+- **Failure cleanup contract**: a failed replacement preserves the previously
+  published destination and removes the exclusively created writer-owned
+  sibling temporary file on a best-effort basis, including after a staging
+  write failure.
+- **Shared overwrite fixture**: Python consumes the language-neutral
+  `plan/replace-existing` case on Windows and POSIX.
+
 ## [0.3.6] - 2026-08-12
 
 ### Fixed
