@@ -307,6 +307,9 @@ impl Lowerer {
                     return match family {
                         "add" => self.lower_wide_add(instr, op, is_signed(ty)),
                         "sub" => self.lower_wide_sub(instr, op, is_signed(ty)),
+                        "and" | "or" | "xor" => {
+                            self.lower_wide_bitwise(instr, op, family, is_signed(ty))
+                        }
                         _ => Err(BackendError::UnsupportedType(ty.to_owned())),
                     };
                 }
@@ -333,6 +336,12 @@ impl Lowerer {
 
         for family in ["neg", "not"] {
             if let Some(ty) = op.strip_prefix(&format!("{family}_")) {
+                if matches!(ty, "i64" | "u64") {
+                    return match family {
+                        "not" => self.lower_wide_not(instr, op, is_signed(ty)),
+                        _ => Err(BackendError::UnsupportedType(ty.to_owned())),
+                    };
+                }
                 self.require_operation_type(ty)?;
                 let rd = self.dest(instr, op)?;
                 let src = self.var_src(instr, 0, op)?;
@@ -619,6 +628,48 @@ impl Lowerer {
         self.words
             .push(encode_sltu(SCRATCH_REGISTER, lhs_lo, rhs.low()));
         self.words.push(encode_sub(hi, hi, SCRATCH_REGISTER));
+        Ok(())
+    }
+
+    fn lower_wide_bitwise(
+        &mut self,
+        instr: &CIRInstr,
+        op: &str,
+        family: &str,
+        signed: bool,
+    ) -> Result<(), BackendError> {
+        let ValueLocation::Pair { lo, hi } = self.dest_pair(instr, op)? else {
+            unreachable!("dest_pair always returns a pair")
+        };
+        let lhs = self.var_location(instr, 0, op)?;
+        let rhs = self.var_location(instr, 1, op)?;
+        let encode = |rd, left, right| match family {
+            "and" => encode_and(rd, left, right),
+            "or" => encode_or(rd, left, right),
+            "xor" => encode_xor(rd, left, right),
+            _ => unreachable!("only bitwise families use this helper"),
+        };
+        self.words.push(encode(lo, lhs.low(), rhs.low()));
+        self.copy_or_extend_high(SCRATCH_REGISTER, lhs, signed);
+        self.copy_or_extend_high(SECOND_SCRATCH_REGISTER, rhs, signed);
+        self.words
+            .push(encode(hi, SCRATCH_REGISTER, SECOND_SCRATCH_REGISTER));
+        Ok(())
+    }
+
+    fn lower_wide_not(
+        &mut self,
+        instr: &CIRInstr,
+        op: &str,
+        signed: bool,
+    ) -> Result<(), BackendError> {
+        let ValueLocation::Pair { lo, hi } = self.dest_pair(instr, op)? else {
+            unreachable!("dest_pair always returns a pair")
+        };
+        let src = self.var_location(instr, 0, op)?;
+        self.words.push(encode_xori(lo, src.low(), -1));
+        self.copy_or_extend_high(SCRATCH_REGISTER, src, signed);
+        self.words.push(encode_xori(hi, SCRATCH_REGISTER, -1));
         Ok(())
     }
 

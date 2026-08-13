@@ -453,6 +453,67 @@ fn executes_pair_aware_signed_and_unsigned_64_bit_comparisons() {
 }
 
 #[test]
+fn executes_pair_aware_64_bit_bitwise_operations() {
+    for (op, expected_low, expected_high) in
+        [("and_u64", 15, 1), ("or_u64", 255, 1), ("xor_u64", 240, 0)]
+    {
+        let cir = vec![
+            ci(
+                "const_u64",
+                Some("left"),
+                vec![CIROperand::Int(4_294_967_551)],
+                "u64",
+            ),
+            ci(
+                "const_u64",
+                Some("right"),
+                vec![CIROperand::Int(4_294_967_311)],
+                "u64",
+            ),
+            ci(
+                op,
+                Some("result"),
+                vec![
+                    CIROperand::Var("left".into()),
+                    CIROperand::Var("right".into()),
+                ],
+                "u64",
+            ),
+            ci(
+                "ret_u64",
+                None,
+                vec![CIROperand::Var("result".into())],
+                "u64",
+            ),
+        ];
+        let bytes = compile(&ctx("wide_bitwise", &[], "u64"), &cir).expect("wide bitwise lowering");
+        let result = run_binary(&bytes, &[]).expect("wide bitwise execution");
+        assert_eq!(result.return_value as u32, expected_low, "{op} low word");
+        assert_eq!(result.return_value_high, expected_high, "{op} high word");
+    }
+
+    let complement = vec![
+        ci("const_u64", Some("zero"), vec![CIROperand::Int(0)], "u64"),
+        ci(
+            "not_u64",
+            Some("all_ones"),
+            vec![CIROperand::Var("zero".into())],
+            "u64",
+        ),
+        ci(
+            "ret_u64",
+            None,
+            vec![CIROperand::Var("all_ones".into())],
+            "u64",
+        ),
+    ];
+    let bytes = compile(&ctx("wide_not", &[], "u64"), &complement).expect("wide not lowering");
+    let result = run_binary(&bytes, &[]).expect("wide not execution");
+    assert_eq!(result.return_value as u32, u32::MAX);
+    assert_eq!(result.return_value_high, u32::MAX);
+}
+
+#[test]
 fn rejects_calls_until_the_linker_and_frame_abi_exist() {
     let cir = vec![ci(
         "call",
