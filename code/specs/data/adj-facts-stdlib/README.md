@@ -86,7 +86,7 @@ per rotation, in parallel):
 | `earth-science/` | soil particle-size separate → the diameter range that actually defines it (`soil_texture_class(class, description)`, clay/silt/sand → less_than_two_thousandths_of_a_millimeter_in_diameter/between_two_thousandths_and_five_hundredths_of_a_millimeter/larger_than_five_hundredths_of_a_millimeter_in_diameter) — picked via the mandatory full-tree-grep-before-scoping check, confirming zero prior coverage; distinct from the sibling `soil-horizons.adj`, which tables a completely different axis (vertical layers a soil pit exposes, not the particle-size classes making up any one layer); honest abstention on `loam` (a real, common soil-texture term, but a composite mix of sand/silt/clay rather than one of the three particle-size separates itself) | Wikipedia "Soil texture" (consensus; see `soil-texture-class.adj`'s header) |
 | `chemistry/` | element → atomic number | PubChem / NIH |
 | `chemistry/` | common substance → approximate pH | LibreTexts (consensus) |
-| `chemistry/` | element → periodic-table group family | Wikipedia (consensus) |
+| `chemistry/` | element → periodic-table group family (`element_group_family(element, family)`, 28 elements across alkali_metal/alkaline_earth_metal/halogen/noble_gas/transition_metal, extended from the original 14 by pulling the remaining members each family's own already-cited Wikipedia sentence had always named) | Wikipedia (consensus) |
 | `chemistry/` | common chemical → acid or base | LibreTexts (consensus) |
 | `chemistry/` | subatomic particle → electric charge (proton → positive) | DOE "Explains…Nuclei" (authoritative) |
 | `chemistry/` | chemical bond type → defining token (ionic → transfer) | LibreTexts (consensus) |
