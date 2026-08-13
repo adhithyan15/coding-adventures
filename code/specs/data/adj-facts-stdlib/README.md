@@ -90,6 +90,7 @@ per rotation, in parallel):
 | `chemistry/` | common chemical → acid or base | LibreTexts (consensus) |
 | `chemistry/` | subatomic particle → electric charge (proton → positive) | DOE "Explains…Nuclei" (authoritative) |
 | `chemistry/` | chemical bond type → defining token (ionic → transfer) | LibreTexts (consensus) |
+| `chemistry/` | chemical bond type → which family it belongs to (`bond_family(bond, family)`, ionic/covalent/metallic → primary, van_der_waals → secondary) — a sibling to the bond→token table above, discovered via a header-revisit of that table's own already-cited LibreTexts sentence | LibreTexts (consensus; see `chemical-bond-family.adj`'s header) |
 | `chemistry/` | mixture kind → the everyday example the source names (colloid → milk) | LibreTexts (consensus) |
 | `chemistry/` | lab equipment → its use (beaker → hold, bunsen_burner → heat) | LibreTexts (consensus) |
 | `chemistry/` | measuring tool → the quantity it measures (`measuring_tool(tool, quantity)`, ruler → length, graduated_cylinder → volume, balance → mass, thermometer → temperature) — the "observation and measurement" gap, distinct from the sibling tool→use table above | Chemistry LibreTexts "Introducing Measurements in the Laboratory" (consensus) |

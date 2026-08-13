@@ -1,0 +1,24 @@
+% ============================================================================
+% chemical-bond-family.query.adj — a worked recall over the chemistry
+% chemical-bond-family library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "is an ionic bond primary
+% or secondary bonding?": it states no chemistry fact — it only `import`s the
+% grounded table and asks binding queries. The engine resolves each `?`
+% against the `bond_family` rows and returns the family + the table's
+% source/locator/trust. The fourth query runs the relation BACKWARD (bind the
+% family `primary`, recall EVERY bond in it — a genuine one-to-many reverse
+% recall over ionic, covalent, and metallic). Hydrogen bonding is not in the
+% table — the source treats it separately from both families — so a recall
+% on it abstains honestly; the engine never invents a family.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli chemical-bond-family.query.adj
+% ============================================================================
+
+import "chemical-bond-family.adj"
+
+? bond_family(ionic, $Family)        % expect primary
+? bond_family(van_der_waals, $Family) % expect secondary
+? bond_family($Bond, primary)         % expect ionic ; covalent ; metallic — reverse recall
+? bond_family(hydrogen, $Family)      % expect abstain — not classified into either family by this source
