@@ -290,7 +290,12 @@ cmp_expr      = add_expr { ( LT | GT | LEQ | GEQ ) add_expr } ;
 #   PLUS/MINUS: use raw ADD/SUB, carry = overflow bit
 #   WRAP_ADD: mask result to type width (AND 0xF for u4)
 #   SAT_ADD: add, then conditional clamp if carry is set
-add_expr      = mul_expr { ( PLUS | MINUS | WRAP_ADD | SAT_ADD ) mul_expr } ;
+add_expr      = shift_expr { ( PLUS | MINUS | WRAP_ADD | SAT_ADD ) shift_expr } ;
+
+# Shift operators: << and >>. They bind tighter than addition and looser than
+# the existing multiplicative/bitwise layer: `1 + 2 << 3` is `1 + (2 << 3)`.
+# Both are left-associative: `x << 1 << 2` is `(x << 1) << 2`.
+shift_expr    = mul_expr { ( SHL | SHR ) mul_expr } ;
 
 # Multiplicative operators: *, /.
 # Bind tighter than additive (so `2 + 3 * 4` is `2 + (3 * 4)`) and looser than
