@@ -481,7 +481,7 @@ where
             continue;
         }
         let line_count = node.label.text.lines().count().max(1) as f64;
-        let text_height = line_count * label_size * 1.2;
+        let text_height = line_count * node.style.font_size * 1.2;
         text_children.push(text_node_no_wrap(
             &node.label.text,
             node.x,
