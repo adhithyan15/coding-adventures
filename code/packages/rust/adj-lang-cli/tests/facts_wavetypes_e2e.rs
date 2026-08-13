@@ -81,3 +81,36 @@ fn physics_wave_types_recall_binds_family_with_citation() {
     // A seismic wave is never sorted into a family by the source — honest abstention.
     assert!(out.contains("\"abstained\":true"), "seismic abstains: {out}");
 }
+
+#[test]
+fn physics_wave_types_extension_recalls_newly_added_electromagnetic_waves() {
+    let dir = scratch("wavetypes_ext");
+    let src = facts_stdlib().join("physics/wave-types.adj");
+    std::fs::copy(&src, dir.join("wave-types.adj")).expect("copy shipped wave-types.adj");
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"wave-types.adj\"\n\
+         ? wave_family(ultraviolet, $F)\n\
+         ? wave_family(infrared, $F)\n\
+         ? wave_family(microwave, $F)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // ultraviolet, infrared, and microwave were sitting in the header's own
+    // already-quoted electromagnetic sentence but never turned into rows
+    // until this cycle -- all three now bind to electromagnetic.
+    assert!(
+        out.contains("wave_family(ultraviolet, electromagnetic)"),
+        "ultraviolet → electromagnetic (added this cycle): {out}"
+    );
+    assert!(
+        out.contains("wave_family(infrared, electromagnetic)"),
+        "infrared → electromagnetic (added this cycle): {out}"
+    );
+    assert!(
+        out.contains("wave_family(microwave, electromagnetic)"),
+        "microwave → electromagnetic (added this cycle): {out}"
+    );
+}

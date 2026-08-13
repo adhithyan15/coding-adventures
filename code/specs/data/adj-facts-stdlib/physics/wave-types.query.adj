@@ -20,5 +20,7 @@ import "wave-types.adj"
 ? wave_family(water, $F)          % expect mechanical
 ? wave_family(radio, $F)          % expect electromagnetic
 ? wave_family(gamma, $F)          % expect electromagnetic
-? wave_family($W, electromagnetic) % expect radio (or another EM wave) — reverse recall
+? wave_family(ultraviolet, $F)    % expect electromagnetic (added this cycle)
+? wave_family(microwave, $F)      % expect electromagnetic (added this cycle)
+? wave_family($W, electromagnetic) % expect gamma ; xray ; ultraviolet ; visible_light ; infrared ; microwave ; radio — reverse recall
 ? wave_family(seismic, $F)        % expect abstain — the source never sorts a seismic wave
