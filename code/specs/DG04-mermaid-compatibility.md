@@ -133,6 +133,8 @@ assignments that precede their declaration. The `:::` shorthand applies named
 classes to standalone states and either endpoint of a transition, including
 start/end pseudostates. Inline and named styles can target composite groups and
 survive resolved layout style into backend-neutral Paint rectangles and labels.
+One `class` statement may compose multiple named classes on every target;
+later classes override properties from earlier classes in authored order.
 Single-line and `end note` multiline `note left of`/`note right of` statements
 lower to semantic note nodes and note-association edges. Quoted `note ... as`
 statements lower to standalone note nodes. Graph layout reserves line-aware note

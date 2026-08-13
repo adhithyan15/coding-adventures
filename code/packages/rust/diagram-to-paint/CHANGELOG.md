@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Validate composed state classes through resolved graph styles and native Metal PNG rendering.
 - Validate multiline labels from quoted state aliases with trailing descriptions through native Metal PNG rendering.
 - Validate state hash comments alongside semantic colors through native Metal PNG rendering.
 - Omit empty graph-state shapes and labels when the semantic directive requests it.
