@@ -7395,6 +7395,10 @@ impl HtmlParser {
                 return;
             }
             if name == "form" && self.has_table_context_above(index) {
+                self.diagnostics.push(ParserDiagnostic::new(
+                    "unexpected-form-end-tag-outside-scope",
+                    "end tag `</form>` targeted a form outside ordinary scope",
+                ));
                 self.form_element_pointer_set = false;
                 self.open_elements.remove(index);
                 return;
@@ -31844,6 +31848,63 @@ mod tests {
                 .count(),
             1
         );
+    }
+
+    #[test]
+    fn reports_form_end_tags_blocked_by_table_scope() {
+        for source in [
+            "<!doctype html><form><table></form><form></table></form>",
+            "<!doctype html><form><table><tbody></form></tbody></table>",
+            "<!doctype html><form><table><tr></form></tr></table>",
+            "<!doctype html><template><form><table></form></table></template>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .filter(|diagnostic| {
+                        diagnostic.code == "unexpected-form-end-tag-outside-scope"
+                    })
+                    .count(),
+                1,
+                "source {source:?}: {:?}",
+                output.parser_diagnostics
+            );
+        }
+
+        let output = parse_html_with_diagnostics(
+            "<!doctype html><form id=outer><table></form><form id=inner></table></form>",
+        )
+        .unwrap();
+        let outer = find_element_by_id(&output.document.children, "outer")
+            .expect("the out-of-scope form should remain in the DOM");
+        let table = find_first_element_in_nodes(&outer.children, "table")
+            .expect("the table should remain below the outer form");
+        assert!(find_element_by_id(&table.children, "inner").is_some());
+
+        for source in [
+            "<!doctype html><form></form>",
+            "<!doctype html><form><p></form>",
+            "<!doctype html><table><tr><td><form></form></td></tr></table>",
+            "<!doctype html></form>",
+            "<!doctype html><svg><form><table></form></table></svg>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(
+                output.parser_diagnostics.iter().all(|diagnostic| {
+                    diagnostic.code != "unexpected-form-end-tag-outside-scope"
+                }),
+                "source {source:?}: {:?}",
+                output.parser_diagnostics
+            );
+        }
+
+        let fragment =
+            parse_html_fragment_for_context_with_diagnostics("<table></form>", "form").unwrap();
+        assert!(fragment.parser_diagnostics.iter().all(|diagnostic| {
+            diagnostic.code != "unexpected-form-end-tag-outside-scope"
+        }));
     }
 
     #[test]
