@@ -1,0 +1,156 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://coding-adventures.dev/schemas/zip-raw-rfc1951-v1.json",
+  "title": "ZIP-owned raw RFC 1951 v1 conformance corpus",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "profile", "limits", "error_ids", "cases"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "profile": { "const": "zip-owned-raw-rfc1951-v1" },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["default_max_output", "hard_max_output"],
+      "properties": {
+        "default_max_output": { "const": 268435456 },
+        "hard_max_output": { "const": 268435456 }
+      }
+    },
+    "error_ids": {
+      "type": "array",
+      "minItems": 14,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/error_id" }
+    },
+    "cases": {
+      "type": "array",
+      "minItems": 30,
+      "items": {
+        "oneOf": [
+          { "$ref": "#/$defs/inflate_case" },
+          { "$ref": "#/$defs/inflate_error_case" },
+          { "$ref": "#/$defs/deflate_interoperability_case" },
+          { "$ref": "#/$defs/crc32_case" }
+        ]
+      }
+    }
+  },
+  "$defs": {
+    "case_id": {
+      "type": "string",
+      "pattern": "^zip-raw-v1-[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "error_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "hex": {
+      "type": "string",
+      "pattern": "^(?:[0-9a-f]{2})*$"
+    },
+    "output": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["hex"],
+          "properties": { "hex": { "$ref": "#/$defs/hex" } }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["repeat_hex", "count"],
+          "properties": {
+            "repeat_hex": { "type": "string", "pattern": "^[0-9a-f]{2}$" },
+            "count": { "type": "integer", "minimum": 0, "maximum": 268435456 }
+          }
+        }
+      ]
+    },
+    "max_output": {
+      "type": "integer",
+      "minimum": -1,
+      "maximum": 9007199254740991
+    },
+    "inflate_case": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "operation", "input_hex", "expected"],
+      "properties": {
+        "id": { "$ref": "#/$defs/case_id" },
+        "operation": { "const": "inflate" },
+        "input_hex": { "$ref": "#/$defs/hex" },
+        "max_output": { "$ref": "#/$defs/max_output" },
+        "oracle": {
+          "enum": ["python-zlib", "rfc1951-hdist-32-zero-slots"]
+        },
+        "expected": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["output", "bytes_consumed"],
+          "properties": {
+            "output": { "$ref": "#/$defs/output" },
+            "bytes_consumed": { "type": "integer", "minimum": 1 }
+          }
+        }
+      }
+    },
+    "inflate_error_case": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "operation", "input_hex", "expected"],
+      "properties": {
+        "id": { "$ref": "#/$defs/case_id" },
+        "operation": { "const": "inflate-error" },
+        "input_hex": { "$ref": "#/$defs/hex" },
+        "max_output": { "$ref": "#/$defs/max_output" },
+        "expected": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["error_id"],
+          "properties": { "error_id": { "$ref": "#/$defs/error_id" } }
+        }
+      }
+    },
+    "deflate_interoperability_case": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "operation", "input_hex", "expected"],
+      "properties": {
+        "id": { "$ref": "#/$defs/case_id" },
+        "operation": { "const": "deflate-interoperability" },
+        "input_hex": { "$ref": "#/$defs/hex" },
+        "expected": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["output"],
+          "properties": { "output": { "$ref": "#/$defs/output" } }
+        }
+      }
+    },
+    "crc32_case": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "operation", "chunks_hex", "expected"],
+      "properties": {
+        "id": { "$ref": "#/$defs/case_id" },
+        "operation": { "const": "crc32" },
+        "chunks_hex": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/hex" }
+        },
+        "initial_crc32_hex": { "type": "string", "pattern": "^[0-9a-f]{8}$" },
+        "expected": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["crc32_hex"],
+          "properties": {
+            "crc32_hex": { "type": "string", "pattern": "^[0-9a-f]{8}$" }
+          }
+        }
+      }
+    }
+  }
+}

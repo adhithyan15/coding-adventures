@@ -347,60 +347,89 @@ unzip(data: bytes) → {name: str → data: bytes}
 # or class-based ZipReader for large archives
 ```
 
-### Optional: the raw DEFLATE codec, exported
+### Required portable raw RFC 1951 profile
 
-A port MAY additionally export its inlined RFC 1951 codec under a name that says
-plainly it carries no framing:
+Every established ZIP port MUST expose its ZIP-owned RFC 1951 codec under names
+that say plainly that the byte stream has no ZIP, zlib, or gzip framing:
 
 ```
-raw_deflate(data: bytes) → bytes    # a raw RFC 1951 stream, no ZIP/zlib/gzip wrapper
-raw_inflate(data: bytes) → bytes
+raw_deflate(data: bytes) -> bytes
+raw_inflate(data: bytes, max_output: integer = 268435456) -> bytes
+raw_inflate_counted(data: bytes, max_output: integer = 268435456)
+    -> {output: bytes, bytes_consumed: integer}
+crc32(data: bytes, initial: u32 = 0) -> u32
 ```
 
-This is not a ZIP feature. It is there because the same bit-stream sits inside
-`zlib`, `gzip`, and PNG's `IDAT`, and those three differ from ZIP only in what
-they wrap around it — zlib a two-byte header and a trailing Adler-32, gzip a
-ten-byte header and a trailing CRC-32, ZIP nothing. A sibling package that needs
-one of those formats should wrap this rather than carry a second copy of the
-bit-packing, which would be a second place for the same class of bug to hide.
+The hard output ceiling is 256 MiB (268,435,456 bytes). `max_output` MUST be a
+non-negative integer no larger than that ceiling, MUST be validated before the
+output buffer is allocated, and MAY only lower the ceiling. A decoder MUST
+check the limit before every stored-byte append, literal append, and
+back-reference copy. Failure returns no partial output.
 
-**Decoders must read all three block types.** Stored (BTYPE=00), fixed Huffman
-(BTYPE=01), and dynamic Huffman (BTYPE=10). An encoder may legitimately emit
-fixed blocks only — the output is valid and every tool reads it — but a decoder
-that rejects BTYPE=10 fails on most archives the world actually produces, since
-zlib and Info-ZIP reach for dynamic tables on anything but the smallest input.
-The same asymmetry applies to length symbol **285**: RFC 1951 spells length 258
-either as symbol 284 with five extra bits or as symbol 285 with none, an encoder
-may pick either, and a decoder must accept both.
+This surface belongs to ZIP because each ZIP implementation already owns the
+exact codec. The same raw bit stream sits inside zlib, gzip, and PNG `IDAT`; a
+sibling package MUST wrap these primitives instead of carrying a second copy of
+DEFLATE or CRC-32.
 
-Conformance here is only meaningful against a **foreign** encoder. Round-tripping
-a port's own output through its own decoder proves the two agree with each other
-and nothing more; the TypeScript port tests against Node's `zlib`, the C and Rust
-ports against a Python `zipfile` fixture.
+**Decoder coverage is asymmetric by design.** A conforming decoder reads stored
+(BTYPE=00), fixed Huffman (BTYPE=01), and dynamic Huffman (BTYPE=10) blocks,
+including multi-block streams, overlapping copies, length symbol 285, and the
+full 32 KiB distance window. An encoder MAY emit only stored or fixed blocks,
+but its output MUST decode with an independent RFC 1951 implementation.
 
-**Decoders must also accept no MORE than the reference implementation.** A
-decompressor is a place where two programs read the same bytes, so accepting a
-stream zlib rejects is not generosity; it is a content-inspection bypass, where
-a scanner sees nothing and the application extracts real content. Two checks
-carry most of that weight:
+`raw_inflate_counted` reports the exact number of input bytes reached through
+the BFINAL end-of-stream, counting a partially read final byte and excluding
+whole trailing bytes. Container decoders compare that value with their framed
+payload boundary so ignored suffix bytes cannot become a covert cavity.
 
-- **Kraft's inequality on every Huffman table.** Reject over-subscribed tables
-  (more codes claimed at a length than exist), and reject incomplete tables
-  everywhere except the one case RFC 1951 section 3.2.7 permits — a distance
-  alphabet holding a single code, which is how a block declares that it emits no
-  back-references.
-- **Header ranges.** `HLIT` and `HDIST` are five-bit fields able to express 288
-  and 32, while the spec defines only 286 literal/length symbols and 30 distance
-  codes. Reject the surplus at the header rather than deep inside the block.
+**Dynamic header ranges follow RFC 1951 section 3.2.7 exactly.** `HLIT + 257`
+is 257 through 286. `HDIST + 1` is 1 through 32 because reserved distance
+symbols 30 and 31 still have code-length slots; those slots may be present with
+length zero. A decoder rejects literal/length symbols 286 and 287 or distance
+symbols 30 and 31 only if the compressed data actually decodes one. The common
+zlib default build rejects dynamic headers advertising more than 30 distance
+slots; that narrower interoperability behavior does not change the RFC field
+width and is recorded as an oracle exception in the neutral corpus.
 
-**Decompression bombs are in scope.** DEFLATE's expansion ratio reaches 1032:1,
-so a decoder MUST cap its output, MUST count that cap in bytes rather than in
-whatever container the implementation language happens to accumulate into, and
-SHOULD let the caller lower it — a library cannot know its embedder's budget.
-A ZIP reader already knows the answer: the central directory declares each
-entry's uncompressed size, so pass it.
+Every Huffman table MUST satisfy Kraft's inequality. Over-subscribed tables are
+rejected. This profile also rejects incomplete code-length and literal/length
+tables and rejects incomplete distance tables except for the RFC-permitted
+single one-bit distance code or an all-zero distance alphabet. The stricter
+literal/length rule is a hardened repository profile decision, not an RFC
+field-width claim.
 
-**Ports exporting this today:** TypeScript (`rawDeflate` / `rawInflate`, 0.2.0).
+Raw inflate failures expose one of these stable, payload-blind identifiers:
+
+```
+invalid-output-limit
+unexpected-eof
+reserved-block-type
+stored-length-mismatch
+huffman-oversubscribed
+incomplete-code-length-tree
+incomplete-literal-length-tree
+incomplete-distance-tree
+repeat-without-previous
+repeat-overrun
+invalid-literal-length-symbol
+reserved-distance-symbol
+invalid-back-reference
+output-limit-exceeded
+```
+
+Error messages MUST NOT interpolate input bytes, offsets, code counts, lengths,
+paths, or partial output. Conformance is defined by
+`code/specs/fixtures/zip-raw-rfc1951-v1/`: stored, fixed, dynamic, multi-block,
+foreign-stream, exact-consumption, incremental CRC-32, malformed header/tree,
+truncation, and output-cap cases. Encoder bytes are not canonical; tests compare
+foreign decoding with the original input rather than pinning one encoding.
+
+CRC-32 detects accidental corruption; it is not authentication and MUST NOT be
+described or used as a cryptographic integrity check.
+
+**Reference consumer today:** TypeScript (`rawDeflate`, `rawInflate`,
+`rawInflateCounted`, and `crc32`). Remaining lanes are tracked as separate
+dependency-shaped deliveries.
 
 ## Package Naming
 

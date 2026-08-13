@@ -67,6 +67,53 @@ export function crc32(data: Uint8Array, initial = 0): number {
   return (crc ^ 0xffffffff) >>> 0;
 }
 
+/** Stable, payload-blind failures from the portable raw inflate profile. */
+export type RawInflateErrorCode =
+  | "invalid-output-limit"
+  | "unexpected-eof"
+  | "reserved-block-type"
+  | "stored-length-mismatch"
+  | "huffman-oversubscribed"
+  | "incomplete-code-length-tree"
+  | "incomplete-literal-length-tree"
+  | "incomplete-distance-tree"
+  | "repeat-without-previous"
+  | "repeat-overrun"
+  | "invalid-literal-length-symbol"
+  | "reserved-distance-symbol"
+  | "invalid-back-reference"
+  | "output-limit-exceeded";
+
+const RAW_INFLATE_ERROR_MESSAGES: Record<RawInflateErrorCode, string> = {
+  "invalid-output-limit":
+    "raw inflate output limit must be a non-negative safe integer within the hard ceiling",
+  "unexpected-eof": "raw inflate input ended before the stream was complete",
+  "reserved-block-type": "raw inflate encountered a reserved block type",
+  "stored-length-mismatch": "raw inflate stored block length check failed",
+  "huffman-oversubscribed": "raw inflate Huffman tree is over-subscribed",
+  "incomplete-code-length-tree": "raw inflate code-length tree is incomplete",
+  "incomplete-literal-length-tree": "raw inflate literal-length tree is incomplete",
+  "incomplete-distance-tree": "raw inflate distance tree is incomplete",
+  "repeat-without-previous": "raw inflate repeat has no previous code length",
+  "repeat-overrun": "raw inflate code-length repeat overruns the declared alphabets",
+  "invalid-literal-length-symbol": "raw inflate literal-length symbol is invalid",
+  "reserved-distance-symbol": "raw inflate distance symbol is reserved",
+  "invalid-back-reference": "raw inflate back-reference is invalid",
+  "output-limit-exceeded": "raw inflate output size limit exceeded",
+};
+
+/** A stable raw-inflate failure whose message never includes attacker data. */
+export class RawInflateError extends Error {
+  constructor(readonly code: RawInflateErrorCode) {
+    super(RAW_INFLATE_ERROR_MESSAGES[code]);
+    this.name = "RawInflateError";
+  }
+}
+
+function inflateFail(code: RawInflateErrorCode): never {
+  throw new RawInflateError(code);
+}
+
 // =============================================================================
 // RFC 1951 DEFLATE — Bit I/O
 // =============================================================================
@@ -258,7 +305,7 @@ function buildHuffTable(lengths: ArrayLike<number>): HuffTable {
   const count = new Int32Array(MAX_CODE_BITS + 1);
   for (let i = 0; i < lengths.length; i++) {
     const len = lengths[i]!;
-    if (len < 0 || len > MAX_CODE_BITS) throw new Error(`deflate: code length ${len} out of range`);
+    if (len < 0 || len > MAX_CODE_BITS) inflateFail("invalid-literal-length-symbol");
     if (len > 0) count[len]!++;
   }
 
@@ -285,7 +332,7 @@ function buildHuffTable(lengths: ArrayLike<number>): HuffTable {
   let left = 1;
   for (let len = 1; len <= MAX_CODE_BITS; len++) {
     left = (left << 1) - count[len]!;
-    if (left < 0) throw new Error("deflate: over-subscribed Huffman table");
+    if (left < 0) inflateFail("huffman-oversubscribed");
   }
 
   // Offset of each length's first symbol inside `symbols`.
@@ -316,14 +363,18 @@ function buildHuffTable(lengths: ArrayLike<number>): HuffTable {
  * everything else LSB-first, which is why the bits are read singly and shifted
  * in from the bottom rather than pulled out in one `readLSB(n)`.
  */
-function huffDecode(br: BitReader, table: HuffTable): number {
+function huffDecode(
+  br: BitReader,
+  table: HuffTable,
+  invalidCode: RawInflateErrorCode,
+): number {
   let code = 0;   // the bits read so far, as a number
   let first = 0;  // the first canonical code of the current length
   let index = 0;  // where this length's symbols start in table.symbols
 
   for (let len = 1; len <= MAX_CODE_BITS; len++) {
     const bit = br.readLSB(1);
-    if (bit === null) throw new Error("deflate: EOF decoding Huffman symbol");
+    if (bit === null) inflateFail("unexpected-eof");
     code |= bit;
     const n = table.count[len]!;
     if (code - first < n) {
@@ -333,14 +384,14 @@ function huffDecode(br: BitReader, table: HuffTable): number {
       // for the type checker and for the day the proof stops holding -- this
       // decoder never turns a broken invariant into a plausible byte.
       const sym = table.symbols[index + (code - first)];
-      if (sym === undefined) throw new Error("deflate: internal table index out of range");
+      if (sym === undefined) inflateFail(invalidCode);
       return sym;
     }
     index += n;
     first = (first + n) << 1;
     code <<= 1;
   }
-  throw new Error("deflate: over-long Huffman code (no symbol within 15 bits)");
+  inflateFail(invalidCode);
 }
 
 // The order in which the code-length alphabet's own code lengths are written.
@@ -359,28 +410,26 @@ function readDynamicTables(br: BitReader): { ll: HuffTable; dist: HuffTable } {
   const hdist = br.readLSB(5);
   const hclen = br.readLSB(4);
   if (hlit === null || hdist === null || hclen === null) {
-    throw new Error("deflate: EOF reading dynamic block header");
+    inflateFail("unexpected-eof");
   }
   const numLL = hlit + 257;
   const numDist = hdist + 1;
   const numCodeLen = hclen + 4;
 
-  // The five-bit fields can express 288 and 32, but RFC 1951 defines only 286
-  // literal/length symbols and 30 distance codes. Refusing the surplus here
-  // means a malformed header fails at the header, rather than a hundred
-  // kilobytes later when an unassignable symbol finally turns up.
-  if (numLL > 286) throw new Error(`deflate: ${numLL} literal/length codes exceeds the 286 RFC 1951 defines`);
-  if (numDist > 30) throw new Error(`deflate: ${numDist} distance codes exceeds the 30 RFC 1951 defines`);
+  // RFC 1951 section 3.2.7 permits 257..286 literal/length slots and 1..32
+  // distance slots. Distance symbols 30 and 31 are reserved from USE, but
+  // their zero-length slots may still be advertised in a dynamic header.
+  if (numLL > 286) inflateFail("invalid-literal-length-symbol");
 
   // Stage 1: the code-length alphabet, three bits per entry, in permuted order.
   const clLengths = new Int32Array(19);
   for (let i = 0; i < numCodeLen; i++) {
     const v = br.readLSB(3);
-    if (v === null) throw new Error("deflate: EOF reading code-length code lengths");
+    if (v === null) inflateFail("unexpected-eof");
     clLengths[CODE_LENGTH_ORDER[i]!] = v;
   }
   const clTable = buildHuffTable(clLengths);
-  if (!clTable.complete) throw new Error("deflate: incomplete code-length Huffman table");
+  if (!clTable.complete) inflateFail("incomplete-code-length-tree");
 
   // Stage 2: use it to read the real alphabets' lengths, which are themselves
   // run-length coded -- symbol 16 repeats the previous length, 17 and 18 repeat
@@ -389,7 +438,7 @@ function readDynamicTables(br: BitReader): { ll: HuffTable; dist: HuffTable } {
   const lengths = new Int32Array(numLL + numDist);
   let i = 0;
   while (i < lengths.length) {
-    const sym = huffDecode(br, clTable);
+    const sym = huffDecode(br, clTable, "invalid-literal-length-symbol");
     if (sym < 16) {
       lengths[i++] = sym;
       continue;
@@ -397,25 +446,25 @@ function readDynamicTables(br: BitReader): { ll: HuffTable; dist: HuffTable } {
     let repeat: number;
     let value: number;
     if (sym === 16) {
-      if (i === 0) throw new Error("deflate: code-length repeat with no previous length");
+      if (i === 0) inflateFail("repeat-without-previous");
       value = lengths[i - 1]!;
       const extra = br.readLSB(2);
-      if (extra === null) throw new Error("deflate: EOF reading repeat count");
+      if (extra === null) inflateFail("unexpected-eof");
       repeat = 3 + extra;
     } else if (sym === 17) {
       value = 0;
       const extra = br.readLSB(3);
-      if (extra === null) throw new Error("deflate: EOF reading zero-repeat count");
+      if (extra === null) inflateFail("unexpected-eof");
       repeat = 3 + extra;
     } else if (sym === 18) {
       value = 0;
       const extra = br.readLSB(7);
-      if (extra === null) throw new Error("deflate: EOF reading long zero-repeat count");
+      if (extra === null) inflateFail("unexpected-eof");
       repeat = 11 + extra;
     } else {
-      throw new Error(`deflate: invalid code-length symbol ${sym}`);
+      inflateFail("invalid-literal-length-symbol");
     }
-    if (i + repeat > lengths.length) throw new Error("deflate: code-length repeat overruns alphabet");
+    if (i + repeat > lengths.length) inflateFail("repeat-overrun");
     for (let r = 0; r < repeat; r++) lengths[i++] = value;
   }
 
@@ -426,7 +475,7 @@ function readDynamicTables(br: BitReader): { ll: HuffTable; dist: HuffTable } {
   // encoder emits and which carries no data. Refusing it errs toward accepting
   // LESS than the reference implementation, which is the safe direction: the
   // danger is reading a stream a scanner rejected, never the reverse.
-  if (!ll.complete) throw new Error("deflate: incomplete literal/length Huffman table");
+  if (!ll.complete) inflateFail("incomplete-literal-length-tree");
 
   const dist = buildHuffTable(lengths.subarray(numLL));
   // The one incompleteness RFC 1951 allows, quoted exactly because the
@@ -442,7 +491,7 @@ function readDynamicTables(br: BitReader): { ll: HuffTable; dist: HuffTable } {
   const singleOneBitCode = dist.symbols.length === 1 && dist.count[1] === 1;
   const emptyAlphabet = dist.symbols.length === 0;
   if (!dist.complete && !singleOneBitCode && !emptyAlphabet) {
-    throw new Error("deflate: incomplete distance Huffman table");
+    inflateFail("incomplete-distance-tree");
   }
 
   return { ll, dist };
@@ -537,7 +586,7 @@ export function rawDeflate(data: Uint8Array): Uint8Array {
  *
  * **This reads bytes you did not write.** Malformed input always throws --
  * it never returns partial or wrong output -- so callers should be prepared to
- * catch. Output is capped at `maxOutput` bytes, 256 MB by default.
+ * catch. Output is capped at `maxOutput` bytes, 256 MiB by default.
  *
  * Pass a smaller `maxOutput` whenever you know the answer's size, because
  * DEFLATE's expansion ratio reaches 1032:1 and a few hundred kilobytes of
@@ -629,7 +678,15 @@ function deflateCompress(data: Uint8Array): Uint8Array {
 // RFC 1951 DEFLATE — Decompress
 // =============================================================================
 
-const MAX_OUTPUT = 256 * 1024 * 1024;
+/** The portable raw-inflate hard ceiling, in bytes (256 MiB). */
+export const RAW_INFLATE_MAX_OUTPUT = 256 * 1024 * 1024;
+
+function validateOutputLimit(value: number): number {
+  if (!Number.isSafeInteger(value) || value < 0 || value > RAW_INFLATE_MAX_OUTPUT) {
+    inflateFail("invalid-output-limit");
+  }
+  return value;
+}
 
 /**
  * The growing output of an inflate, held as real bytes.
@@ -662,7 +719,7 @@ class ByteSink {
 
   private reserve(extra: number): void {
     if (this.len + extra > this.limit) {
-      throw new Error("deflate: output size limit exceeded");
+      inflateFail("output-limit-exceeded");
     }
     if (this.len + extra <= this.buf.length) return;
     let next = this.buf.length;
@@ -737,54 +794,55 @@ function decodeHuffmanBlock(
       return;
     } else if (sym >= 257 && sym <= 285) {
       const entry = LENGTH_TABLE[sym - 257];
-      if (!entry) throw new Error(`deflate: invalid length sym ${sym}`);
+      if (!entry) inflateFail("invalid-literal-length-symbol");
       const [baseLen, extraLenBits] = entry;
       const extraLen = br.readLSB(extraLenBits);
-      if (extraLen === null) throw new Error("deflate: EOF reading length extra bits");
+      if (extraLen === null) inflateFail("unexpected-eof");
       const length = baseLen + extraLen;
 
       const distCode = readDistCode();
       const distEntry = DIST_TABLE[distCode];
-      if (!distEntry) throw new Error(`deflate: invalid dist code ${distCode}`);
+      if (!distEntry) inflateFail("reserved-distance-symbol");
       const [baseDist, extraDistBits] = distEntry;
       const extraDist = br.readLSB(extraDistBits);
-      if (extraDist === null) throw new Error("deflate: EOF reading distance extra bits");
+      if (extraDist === null) inflateFail("unexpected-eof");
       const offset = baseDist + extraDist;
 
       if (offset > out.length) {
-        throw new Error(`deflate: back-reference offset ${offset} > output len ${out.length}`);
+        inflateFail("invalid-back-reference");
       }
       out.copyBack(offset, length);
     } else {
-      throw new Error(`deflate: invalid LL symbol ${sym}`);
+      inflateFail("invalid-literal-length-symbol");
     }
   }
 }
 
-function deflateDecompress(data: Uint8Array, maxOutput: number = MAX_OUTPUT): InflateResult {
-  if (!Number.isFinite(maxOutput) || maxOutput < 0) {
-    throw new Error("deflate: maxOutput must be a non-negative finite number");
-  }
+function deflateDecompress(
+  data: Uint8Array,
+  maxOutput: number = RAW_INFLATE_MAX_OUTPUT,
+): InflateResult {
+  validateOutputLimit(maxOutput);
   const br = new BitReader(data);
   const out = new ByteSink(maxOutput);
 
   for (;;) {
     const bfinal = br.readLSB(1);
-    if (bfinal === null) throw new Error("deflate: unexpected EOF reading BFINAL");
+    if (bfinal === null) inflateFail("unexpected-eof");
     const btype = br.readLSB(2);
-    if (btype === null) throw new Error("deflate: unexpected EOF reading BTYPE");
+    if (btype === null) inflateFail("unexpected-eof");
 
     if (btype === 0) {
       // Stored block
       br.align();
       const lenVal = br.readLSB(16);
-      if (lenVal === null) throw new Error("deflate: EOF reading stored LEN");
+      if (lenVal === null) inflateFail("unexpected-eof");
       const nlen = br.readLSB(16);
-      if (nlen === null) throw new Error("deflate: EOF reading stored NLEN");
-      if ((nlen ^ 0xffff) !== lenVal) throw new Error(`deflate: LEN/NLEN mismatch: ${lenVal} vs ${nlen}`);
+      if (nlen === null) inflateFail("unexpected-eof");
+      if ((nlen ^ 0xffff) !== lenVal) inflateFail("stored-length-mismatch");
       for (let i = 0; i < lenVal; i++) {
         const b = br.readLSB(8);
-        if (b === null) throw new Error("deflate: EOF inside stored block data");
+        if (b === null) inflateFail("unexpected-eof");
         out.push(b);
       }
     } else if (btype === 1) {
@@ -795,21 +853,26 @@ function deflateDecompress(data: Uint8Array, maxOutput: number = MAX_OUTPUT): In
         out,
         () => {
           const sym = fixedLLDecode(br);
-          if (sym === null) throw new Error("deflate: EOF decoding fixed Huffman symbol");
+          if (sym === null) inflateFail("unexpected-eof");
           return sym;
         },
         () => {
           const distCode = br.readMSB(5);
-          if (distCode === null) throw new Error("deflate: EOF reading distance code");
+          if (distCode === null) inflateFail("unexpected-eof");
           return distCode;
         },
       );
     } else if (btype === 2) {
       // Dynamic Huffman block: both alphabets are described in the block header.
       const { ll, dist } = readDynamicTables(br);
-      decodeHuffmanBlock(br, out, () => huffDecode(br, ll), () => huffDecode(br, dist));
+      decodeHuffmanBlock(
+        br,
+        out,
+        () => huffDecode(br, ll, "invalid-literal-length-symbol"),
+        () => huffDecode(br, dist, "reserved-distance-symbol"),
+      );
     } else {
-      throw new Error("deflate: reserved BTYPE=11");
+      inflateFail("reserved-block-type");
     }
 
     if (bfinal === 1) break;
@@ -979,11 +1042,11 @@ export interface ZipEntry {
 export interface ZipReaderOptions {
   /**
    * Byte ceiling on any single DEFLATED entry's decompressed size. Defaults to
-   * 256 MB. Must be finite and non-negative.
+   * 256 MiB. Must be a non-negative safe integer no larger than that ceiling.
    *
    * The reader always takes the SMALLER of this and the size the archive
-   * declares, so lowering it is always safe and raising it is the only way to
-   * read an entry bigger than the default.
+   * declares, so lowering it is always safe. Values above the hard ceiling are
+   * rejected; larger workloads need a separately bounded streaming API.
    *
    * `Infinity` is rejected rather than read as "no limit". It would pass the
    * `Math.min` against the archive's declared size and leave the CEILING equal
@@ -1002,15 +1065,12 @@ export class ZipReader {
   private readonly maxOutput: number;
 
   constructor(private readonly data: Uint8Array, options: ZipReaderOptions = {}) {
-    const cap = options.maxOutput ?? MAX_OUTPUT;
+    const cap = options.maxOutput ?? RAW_INFLATE_MAX_OUTPUT;
     // Validated HERE rather than left to the inflater, so both entry points
     // treat the same value the same way. NaN and negatives would propagate
     // through `Math.min` and be caught downstream; Infinity would NOT -- it
     // would leave the archive's own declared size as the effective ceiling.
-    if (!Number.isFinite(cap) || cap < 0) {
-      throw new Error("zip: maxOutput must be a non-negative finite number");
-    }
-    this.maxOutput = cap;
+    this.maxOutput = validateOutputLimit(cap);
     const eocdOffset = this.findEOCD();
     if (eocdOffset === null) throw new Error("zip: no End of Central Directory record found");
 
@@ -1074,7 +1134,11 @@ export class ZipReader {
       // CRC-32 that finally catches the lie only runs after the memory has
       // already been committed. So the declared size is an OPTIMISATION and the
       // reader's own ceiling stays the LIMIT; whichever is smaller wins.
-      decompressed = deflateDecompress(compressed, Math.min(entry.size, this.maxOutput)).output;
+      const inflated = deflateDecompress(compressed, Math.min(entry.size, this.maxOutput));
+      if (inflated.bytesConsumed !== compressed.length) {
+        throw new Error("zip: DEFLATE stream does not consume its declared compressed payload");
+      }
+      decompressed = inflated.output;
     } else {
       throw new Error(`zip: unsupported compression method ${entry.method} for '${entry.name}'`);
     }

@@ -11,9 +11,9 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": 11162,
+  "active_pr": null,
   "last_inventory": {
-    "revision": "286c1549b11c516e4ccce83281ea675102849f68",
+    "revision": "5574bc77277b1b047d09d6e696f9427e2a8c4ba7",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1305,
@@ -1001,7 +1001,7 @@
     {
       "id": "build-tool-python-plan-atomic-overwrite-windows",
       "title": "Make Python build-plan replacement atomic on Windows",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-lua-rockspec-encoding"],
       "branch": "codex/python-plan-atomic-overwrite-windows",
       "pr_number": 11162,
@@ -1010,8 +1010,11 @@
       "selection_revision": "1887d6eed63778f4b2d15927db448c9b4d229783",
       "selection_notes": "Selected after PR #11111 merged externally and a collision-clean refresh classified the two new overlapping WebAssembly roots. This is the smallest ready correctness repair: one standard-library write boundary closes repeated plan emission on Windows without touching live PR #11146, while the newly decomposed ZIP raw-conformance chain is a broader multi-lane program and OCaml remains a longer promotion chain.",
       "implementation_revision": "7d3d8d97ba3b88de76589502a21c8f33df3d9795",
+      "final_revision": "e722f96ee5e7b4a305a34146171cbb35579ce8cd",
+      "merge_revision": "d6cfc5a758af417620b6b0ad48652794fef8b45d",
+      "merged_at": "2026-08-13T09:07:42Z",
       "validation_notes": "Both real Python BUILD front doors pass 409 tests on Windows with 89.82% total coverage and 100% coverage for plan.py. The focused atomic-publication suite covers repeated replacement, preservation of the old destination on replacement failure, cleanup after staging-write failure, and rejection of the legacy predictable staging path. Ruff, MyPy, Bandit, compile validation, strict JSON, dependency-graph, credential-pattern, and diff gates pass. The language-neutral corpus validates 59 cases across 253 files, and its runner/schema suite passes 44 tests plus 39 subtests, including fail-closed writer-capability and two-plan validation. Go passes all packages, vet, module verification, and a trimpath build. A real full-repository forced plan emission succeeds twice to the same Windows path with 4,871 packages, 8,288 edges, identical complete file sizes, and zero retained staging files. The collision-clean inventory at 286c1549b1 remains 1,305 identities, 4,461 slots, 855 singletons, 11,970 singleton gaps, 658 Rust singletons, zero collisions, and zero unknown buckets. The repository-wide Go build-file validator still reports pre-existing standalone dependency declaration debt in twelve Python BUILD_windows roots; the focused package front doors and overwrite behavior pass.",
-      "publication_notes": "Ready-for-review PR #11162 opened from 90cee84a1b on exact base 286c1549b1. GitHub reports it open, non-draft, and mergeable; CI, CodeQL, and neutral auxiliary checks are queued, so the loop is monitor-only until they finish.",
+      "publication_notes": "Ready-for-review PR #11162 opened from 90cee84a1b on exact base 286c1549b1 and merged externally as d6cfc5a758 after every required CI, CodeQL, and neutral auxiliary check reached terminal success or expected skip. The final reviewed head is e722f96ee5.",
       "notes": "Discovered during the post-rebase full-scan validation. Re-emitting to an existing plan path leaves the temporary file and fails with WinError 183 because write_plan renames instead of replacing atomically on Windows. Add a repeated-write fixture and use a portable atomic replacement primitive in a separate build-tool parity slice. A fresh unique output path succeeds with 4,764 packages and 7,093 dependency edges."
     },
     {
@@ -3117,10 +3120,12 @@
     {
       "id": "zip-raw-rfc1951-language-neutral-conformance",
       "title": "Define language-neutral ZIP raw RFC 1951 conformance",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": [],
-      "branch": null,
+      "branch": "codex/zip-raw-rfc1951-neutral",
       "pr_number": null,
+      "selection_revision": "5574bc77277b1b047d09d6e696f9427e2a8c4ba7",
+      "selection_notes": "Selected after PR #11162 merged externally and the collision-clean post-merge inventory remained exactly 1,305 identities, 4,461 slots, 855 singletons, 11,970 singleton gaps, 658 Rust singletons, zero collisions, and zero unknown buckets. This dependency-free neutral contract is the highest-leverage ready slice: it makes the reviewable ZIP raw-codec lane children eligible and ultimately unlocks the fourteen missing established PNG codec slots without overlapping external WebAssembly PR #11146 or widening into the still-unsplit remaining build-plan writers.",
       "notes": "Split from the broad ZIP completion owner during the post-#11111 leverage pass. Tighten CMP09 around a closed fallible raw_deflate, capped raw_inflate, exact raw_inflate_counted, and incremental CRC-32 profile; add neutral stored, fixed, dynamic, foreign-stream, malformed-tree/header, truncation, trailing-byte, output-cap, exact-consumption, and stable payload-free error fixtures. TypeScript remains the reference consumer; lane ports are separate dependency-shaped children under the completion umbrella."
     },
     {
