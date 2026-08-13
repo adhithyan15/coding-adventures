@@ -2887,6 +2887,42 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: devanagariAlphabetSource("श"),
   },
+  // JackPotte's animation joins the descending left stem, hook, and tail, then
+  // restarts for the crossbar, right stem, and headline. The Directorate
+  // deskbook confirms that order while staging the hook and tail separately.
+  [ductusKey("devanagari", "स")]: {
+    script: "devanagari",
+    glyph: "स",
+    strokes: [
+      { segments: [{ label: "descend through the hook and diagonal tail", path: [
+        { x: 250, y: 540 }, { x: 255, y: 505 }, { x: 265, y: 465 },
+        { x: 265, y: 425 }, { x: 255, y: 385 }, { x: 235, y: 350 },
+        { x: 205, y: 320 }, { x: 170, y: 305 }, { x: 135, y: 315 },
+        { x: 100, y: 340 }, { x: 70, y: 340 }, { x: 60, y: 315 },
+        { x: 75, y: 285 }, { x: 110, y: 260 }, { x: 135, y: 240 },
+        { x: 140, y: 210 }, { x: 155, y: 180 }, { x: 180, y: 145 },
+        { x: 210, y: 110 }, { x: 240, y: 75 }, { x: 265, y: 35 },
+        { x: 285, y: 0 },
+      ] }] },
+      { segments: [{ label: "lift, then draw the middle crossbar left-to-right", path: [
+        { x: 230, y: 300 }, { x: 280, y: 285 }, { x: 340, y: 280 },
+        { x: 400, y: 280 }, { x: 460, y: 285 }, { x: 520, y: 300 },
+        { x: 550, y: 310 },
+      ] }] },
+      { segments: [{ label: "lift, then descend the right stem", path: [
+        { x: 546, y: 550 }, { x: 546, y: 475 }, { x: 546, y: 395 },
+        { x: 546, y: 315 }, { x: 546, y: 235 }, { x: 546, y: 155 },
+        { x: 546, y: 75 }, { x: 546, y: 5 },
+      ] }] },
+      { segments: [{ label: "lift, then draw the shirorekha left-to-right", path: [
+        { x: 5, y: 585 }, { x: 75, y: 585 }, { x: 145, y: 585 },
+        { x: 215, y: 585 }, { x: 285, y: 585 }, { x: 355, y: 585 },
+        { x: 425, y: 585 }, { x: 495, y: 585 }, { x: 565, y: 585 },
+        { x: 635, y: 585 }, { x: 685, y: 585 },
+      ] }] },
+    ],
+    source: devanagariAlphabetSource("स"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the
