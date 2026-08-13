@@ -397,35 +397,93 @@ pub fn compile_file_to_llvm_ir(
     Ok(())
 }
 
-/// Concretise a **scalar** module's `any`/`polymorphic` values to `i64` for the
+
+/// Is a **parameter** of this type part of a tagged calling boundary?
+///
+/// Any reference type is, `ref<any>` included. This is a statement about the
+/// ABI, not about the heap: a caller boxes its argument to satisfy a `ref<any>`
+/// parameter, so narrowing that callee to a machine type breaks the contract on
+/// both sides. `((LAMBDA (X) X) 5)` narrowed its lambda to `i32` while `main`
+/// still boxed the 5, and the CLR died unboxing a value that was never a box —
+/// `System.AccessViolationException` inside `CastHelpers.Unbox`.
+fn is_tagged_boundary_param(t: &str) -> bool {
+    t == "symbol" || t.starts_with("ref<")
+}
+
+/// Is this **instruction** type hint evidence that a function runs on the
+/// heap/tagged model, and so must not be narrowed?
+///
+/// A concrete reference (`ref<LispyPair>`, `ref<Foo>`) or a `symbol` is. A bare
+/// `ref<any>` is **not**: as an instruction hint it says "this value is
+/// dynamic", which is a statement about how much the frontend knew, not about
+/// whether a heap object exists. A McCarthy program that is just `42` has a
+/// `ref<any>` result and touches no heap at all, and narrowing it is exactly
+/// what lets its entry return an `int` the process can exit with.
+///
+/// Real heap use is detected from the ops (`alloc`/`field_load`/… and the lisp
+/// builtins), which is evidence a type hint cannot fake.
+fn is_heap_evidence_hint(t: &str) -> bool {
+    t == "symbol" || (t.starts_with("ref<") && t != "ref<any>")
+}
+
+/// Is this a *dynamic* type hint that a provably-scalar function may narrow to a
+/// concrete machine type?
+///
+/// `ref<any>` (a tagged dynamic value) and bare `any` / `polymorphic` (a
+/// statically unresolved one) are different statements — see `is_heap_model_type`
+/// — but both are narrowable once the surrounding function is known to be
+/// scalar.
+fn is_narrowable_dynamic(t: &str) -> bool {
+    t == "any" || t == "polymorphic" || t == "ref<any>"
+}
+
+/// Concretise a **scalar** module's dynamic values to `i64` for the
 /// LLVM backend (LANG77 / McCarthy W12a). The LLVM backend is a typed SSA IR, so
 /// — like wasm/JVM/CLR/BEAM — a polymorphic scalar value must be given a concrete
 /// type before lowering; for a pure-integer McCarthy program that type is `i64`.
 /// Heap/reference functions (cons/symbols/lambda — the tagged-word value model
 /// routed through `dynval_runtime.c`, W12b+) are left alone.
 fn concretize_scalar_any_for_llvm(module: &mut IIRModule) {
-    const HEAP_OPS: &[&str] = &["alloc", "field_load", "field_store", "is_null"];
+    // `box`/`unbox` are heap-model evidence too. The old code caught them
+    // incidentally, because a `ref<any>` instruction hint counted as evidence;
+    // now that it does not, a module whose ONLY tagged-model signal is a
+    // box/unbox pair would be narrowed while those ops survive.
+    const HEAP_OPS: &[&str] =
+        &["alloc", "field_load", "field_store", "is_null", "box", "unbox"];
+    // Both spellings: the frontend's names, and the `dyn_*` names the earlier
+    // representation passes rename them to. Whichever form survives to this
+    // point is unfakeable evidence that the function is on the tagged value
+    // model — unlike a `ref<any>` type hint, which only says the value is
+    // dynamic. `(ATOM 7)` reaches here as `dyn_pair_p`/`dyn_not` and has no
+    // other evidence, so omitting these names silently narrowed a tagged
+    // program to machine ints.
     const LISP_BUILTINS: &[&str] = &[
         "cons", "car", "cdr", "pair?", "not", "equal?", "make_symbol", "make_nil", "null?",
+        "dyn_cons", "dyn_car", "dyn_cdr", "dyn_pair_p", "dyn_null_p", "dyn_not", "dyn_equal",
+        "dyn_box_int", "dyn_unbox_int", "dyn_truthy", "dyn_to_exit_code",
     ];
+    let module_uses_lisp = module.functions.iter().any(|func| {
+        func.params.iter().any(|(_, t)| is_tagged_boundary_param(t))
+            || func.instructions.iter().any(|i| {
+                HEAP_OPS.contains(&i.op.as_str())
+                    || (i.op == "call_builtin"
+                        && matches!(i.srcs.first(),
+                            Some(interpreter_ir::Operand::Var(n)) if LISP_BUILTINS.contains(&n.as_str())))
+                    || is_heap_evidence_hint(&i.type_hint)
+            })
+    });
     for func in &mut module.functions {
-        let uses_lisp = func.params.iter().any(|(_, t)| {
-            t == "any" || t == "symbol" || t.starts_with("ref<")
-        }) || func.instructions.iter().any(|i| {
-            HEAP_OPS.contains(&i.op.as_str())
-                || (i.op == "call_builtin"
-                    && matches!(i.srcs.first(),
-                        Some(interpreter_ir::Operand::Var(n)) if LISP_BUILTINS.contains(&n.as_str())))
-                || i.type_hint.starts_with("ref<")
-        });
+        // Whole-module, not per-function — a `call` couples caller and callee
+        // value models (see the CLR/JVM helpers for the failure this prevents).
+        let uses_lisp = module_uses_lisp;
         if uses_lisp {
             continue; // tagged-word C-runtime value model — W12b+.
         }
-        if func.return_type == "any" || func.return_type == "polymorphic" {
+        if is_narrowable_dynamic(&func.return_type) {
             func.return_type = "i64".to_string();
         }
         for instr in &mut func.instructions {
-            if instr.type_hint == "any" || instr.type_hint == "polymorphic" {
+            if is_narrowable_dynamic(&instr.type_hint) {
                 instr.type_hint = "i64".to_string();
             }
         }
@@ -506,35 +564,49 @@ pub fn compile_source_to_llvm_with_target(
 /// **not** touch functions that use the heap (cons cells, symbols) — those
 /// need the boxed-`anyref` value model, a follow-up slice (L3b-3a-3).
 fn concretize_scalar_any_for_wasm(module: &mut IIRModule) {
-    const HEAP_OPS: &[&str] = &["alloc", "field_load", "field_store", "is_null"];
+    // `box`/`unbox` are heap-model evidence too. The old code caught them
+    // incidentally, because a `ref<any>` instruction hint counted as evidence;
+    // now that it does not, a module whose ONLY tagged-model signal is a
+    // box/unbox pair would be narrowed while those ops survive.
+    const HEAP_OPS: &[&str] =
+        &["alloc", "field_load", "field_store", "is_null", "box", "unbox"];
+    // Both spellings: the frontend's names, and the `dyn_*` names the earlier
+    // representation passes rename them to. Whichever form survives to this
+    // point is unfakeable evidence that the function is on the tagged value
+    // model — unlike a `ref<any>` type hint, which only says the value is
+    // dynamic. `(ATOM 7)` reaches here as `dyn_pair_p`/`dyn_not` and has no
+    // other evidence, so omitting these names silently narrowed a tagged
+    // program to machine ints.
     const LISP_BUILTINS: &[&str] = &[
         "cons", "car", "cdr", "pair?", "not", "equal?", "make_symbol", "make_nil", "null?",
+        "dyn_cons", "dyn_car", "dyn_cdr", "dyn_pair_p", "dyn_null_p", "dyn_not", "dyn_equal",
+        "dyn_box_int", "dyn_unbox_int", "dyn_truthy", "dyn_to_exit_code",
     ];
 
+    // Whole-module, not per-function — a `call` couples caller and callee value
+    // models, so narrowing a caller whose callee keeps a tagged boundary emits a
+    // caller that stores a reference into a machine-typed local.
+    let module_uses_lisp = module.functions.iter().any(|func| {
+        func.params.iter().any(|(_, t)| is_tagged_boundary_param(t))
+            || func.instructions.iter().any(|i| {
+                HEAP_OPS.contains(&i.op.as_str())
+                    || (i.op == "call_builtin"
+                        && matches!(i.srcs.first(),
+                            Some(interpreter_ir::Operand::Var(n)) if LISP_BUILTINS.contains(&n.as_str())))
+                    || is_heap_evidence_hint(&i.type_hint)
+            })
+    });
     for func in &mut module.functions {
-        // Does this function touch the lisp heap / reference model? A function
-        // with **lisp parameters** (a `LAMBDA`/`LABEL` — params typed `any` /
-        // `symbol` / `ref<…>`) participates in the uniform-anyref boundary and is
-        // owned by `lower_dyn_repr_structural`, so skip it here too (it has
-        // already retyped them to `ref<…>` by the time this runs).
-        let uses_lisp = func.params.iter().any(|(_, t)| {
-            t == "any" || t == "symbol" || t.starts_with("ref<")
-        }) || func.instructions.iter().any(|i| {
-            HEAP_OPS.contains(&i.op.as_str())
-                || (i.op == "call_builtin"
-                    && matches!(i.srcs.first(),
-                        Some(interpreter_ir::Operand::Var(n)) if LISP_BUILTINS.contains(&n.as_str())))
-                || i.type_hint.starts_with("ref<")
-        });
+        let uses_lisp = module_uses_lisp;
         if uses_lisp {
             continue; // boxed-anyref value model — out of scope for the scalar slice.
         }
         // Pure scalar function: every `any`/`polymorphic` value is an i64.
-        if func.return_type == "any" || func.return_type == "polymorphic" {
+        if is_narrowable_dynamic(&func.return_type) {
             func.return_type = "i64".to_string();
         }
         for instr in &mut func.instructions {
-            if instr.type_hint == "any" || instr.type_hint == "polymorphic" {
+            if is_narrowable_dynamic(&instr.type_hint) {
                 instr.type_hint = "i64".to_string();
             }
         }
@@ -620,9 +692,23 @@ pub fn compile_source_to_wasm(
 /// heap/reference functions alone (cons/symbols/lambda are W3b+, where the
 /// uniform-`Object` value model lands).
 fn concretize_scalar_any_for_jvm(module: &mut IIRModule) {
-    const HEAP_OPS: &[&str] = &["alloc", "field_load", "field_store", "is_null"];
+    // `box`/`unbox` are heap-model evidence too. The old code caught them
+    // incidentally, because a `ref<any>` instruction hint counted as evidence;
+    // now that it does not, a module whose ONLY tagged-model signal is a
+    // box/unbox pair would be narrowed while those ops survive.
+    const HEAP_OPS: &[&str] =
+        &["alloc", "field_load", "field_store", "is_null", "box", "unbox"];
+    // Both spellings: the frontend's names, and the `dyn_*` names the earlier
+    // representation passes rename them to. Whichever form survives to this
+    // point is unfakeable evidence that the function is on the tagged value
+    // model — unlike a `ref<any>` type hint, which only says the value is
+    // dynamic. `(ATOM 7)` reaches here as `dyn_pair_p`/`dyn_not` and has no
+    // other evidence, so omitting these names silently narrowed a tagged
+    // program to machine ints.
     const LISP_BUILTINS: &[&str] = &[
         "cons", "car", "cdr", "pair?", "not", "equal?", "make_symbol", "make_nil", "null?",
+        "dyn_cons", "dyn_car", "dyn_cdr", "dyn_pair_p", "dyn_null_p", "dyn_not", "dyn_equal",
+        "dyn_box_int", "dyn_unbox_int", "dyn_truthy", "dyn_to_exit_code",
     ];
     // Concretization is a **whole-module** decision, not a per-function one,
     // because a `call` couples a caller and callee's value models: the caller
@@ -655,16 +741,24 @@ fn concretize_scalar_any_for_jvm(module: &mut IIRModule) {
                     Some(interpreter_ir::Operand::Var(n)) if WIDE_I64_BUILTINS.contains(&n.as_str()))
         })
     });
-    for func in &mut module.functions {
-        let uses_lisp = func.params.iter().any(|(_, t)| t == "any" || t == "symbol")
+    // Whole-module, not per-function: a `call` couples a caller's and callee's
+    // value models. Narrowing `main` while its callee `lambda_0` keeps a tagged
+    // `object` boundary produced a caller that stores the call's `object` result
+    // into an `int32` local — `System.InvalidProgramException` on the CLR, and a
+    // verifier rejection on the JVM. If ANY function is on the tagged model, no
+    // function in the module is narrowed.
+    let module_uses_lisp = module.functions.iter().any(|func| {
+        func.params.iter().any(|(_, t)| is_tagged_boundary_param(t))
             || func.instructions.iter().any(|i| {
                 HEAP_OPS.contains(&i.op.as_str())
                     || (i.op == "call_builtin"
                         && matches!(i.srcs.first(),
                             Some(interpreter_ir::Operand::Var(n)) if LISP_BUILTINS.contains(&n.as_str())))
-                    || i.type_hint.starts_with("ref<")
-            });
-        if uses_lisp {
+                    || is_heap_evidence_hint(&i.type_hint)
+            })
+    });
+    for func in &mut module.functions {
+        if module_uses_lisp {
             continue; // uniform-Object value model — JVM W3b+.
         }
         // A function that prints (Dartmouth BASIC's `PRINT`) or reads input
@@ -690,7 +784,7 @@ fn concretize_scalar_any_for_jvm(module: &mut IIRModule) {
             // call-signature-consistent with its callers/callees.
             continue;
         }
-        let to_i32 = |t: &str| t == "any" || t == "polymorphic" || t == "i64";
+        let to_i32 = |t: &str| is_narrowable_dynamic(t) || t == "i64";
         if to_i32(&func.return_type) {
             func.return_type = "i32".to_string();
         }
@@ -801,23 +895,45 @@ pub fn compile_source_to_jvm_class(
 /// `int32`, so a scalar program's result is an `int`. Heap/reference functions
 /// (cons/symbols/lambda — W6b+) are left for the uniform-`object` value model.
 fn concretize_scalar_any_for_cil(module: &mut IIRModule) {
-    const HEAP_OPS: &[&str] = &["alloc", "field_load", "field_store", "is_null"];
+    // `box`/`unbox` are heap-model evidence too. The old code caught them
+    // incidentally, because a `ref<any>` instruction hint counted as evidence;
+    // now that it does not, a module whose ONLY tagged-model signal is a
+    // box/unbox pair would be narrowed while those ops survive.
+    const HEAP_OPS: &[&str] =
+        &["alloc", "field_load", "field_store", "is_null", "box", "unbox"];
+    // Both spellings: the frontend's names, and the `dyn_*` names the earlier
+    // representation passes rename them to. Whichever form survives to this
+    // point is unfakeable evidence that the function is on the tagged value
+    // model — unlike a `ref<any>` type hint, which only says the value is
+    // dynamic. `(ATOM 7)` reaches here as `dyn_pair_p`/`dyn_not` and has no
+    // other evidence, so omitting these names silently narrowed a tagged
+    // program to machine ints.
     const LISP_BUILTINS: &[&str] = &[
         "cons", "car", "cdr", "pair?", "not", "equal?", "make_symbol", "make_nil", "null?",
+        "dyn_cons", "dyn_car", "dyn_cdr", "dyn_pair_p", "dyn_null_p", "dyn_not", "dyn_equal",
+        "dyn_box_int", "dyn_unbox_int", "dyn_truthy", "dyn_to_exit_code",
     ];
-    for func in &mut module.functions {
-        let uses_lisp = func.params.iter().any(|(_, t)| t == "any" || t == "symbol")
+    // Whole-module, not per-function: a `call` couples a caller's and callee's
+    // value models. Narrowing `main` while its callee `lambda_0` keeps a tagged
+    // `object` boundary produced a caller that stores the call's `object` result
+    // into an `int32` local — `System.InvalidProgramException` on the CLR, and a
+    // verifier rejection on the JVM. If ANY function is on the tagged model, no
+    // function in the module is narrowed.
+    let module_uses_lisp = module.functions.iter().any(|func| {
+        func.params.iter().any(|(_, t)| is_tagged_boundary_param(t))
             || func.instructions.iter().any(|i| {
                 HEAP_OPS.contains(&i.op.as_str())
                     || (i.op == "call_builtin"
                         && matches!(i.srcs.first(),
                             Some(interpreter_ir::Operand::Var(n)) if LISP_BUILTINS.contains(&n.as_str())))
-                    || i.type_hint.starts_with("ref<")
-            });
-        if uses_lisp {
+                    || is_heap_evidence_hint(&i.type_hint)
+            })
+    });
+    for func in &mut module.functions {
+        if module_uses_lisp {
             continue; // uniform-object value model — CLR W6b+.
         }
-        let to_i32 = |t: &str| t == "any" || t == "polymorphic" || t == "i64";
+        let to_i32 = |t: &str| is_narrowable_dynamic(t) || t == "i64";
         if to_i32(&func.return_type) {
             func.return_type = "i32".to_string();
         }
@@ -943,7 +1059,7 @@ fn concretize_scalar_any_for_beam(module: &mut IIRModule) {
     // lowering. We never rewrite a `ref<…>` type: those ARE the native list cells.
     // (`get_hd` returning a sub-list is still sound — the `i64` hint is a lowering
     // placeholder, never an unboxing op; BEAM resolves the real term at runtime.)
-    let to_i64 = |t: &str| t == "any" || t == "polymorphic";
+    let to_i64 = |t: &str| is_narrowable_dynamic(t);
     for func in &mut module.functions {
         if to_i64(&func.return_type) {
             func.return_type = "i64".to_string();

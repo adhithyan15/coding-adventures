@@ -191,7 +191,7 @@ pub fn compile_forms(forms: &[LispExpr], module_name: &str) -> Result<IIRModule,
     let mut main = IIRFunction::new(
         "main",
         Vec::new(),       // no parameters
-        "any",            // a Lisp value of any shape
+        "ref<any>",            // a Lisp value of any shape
         std::mem::take(&mut c.instrs),
     );
     main.register_count = c.tmp;
@@ -305,7 +305,7 @@ impl Compiler {
             Some(v) => v,
             None => self.emit_nil(),
         };
-        self.emit(IIRInstr::new("ret", None, vec![Operand::Var(result)], "any"));
+        self.emit(IIRInstr::new("ret", None, vec![Operand::Var(result)], "ref<any>"));
         Ok(())
     }
 
@@ -419,12 +419,12 @@ impl Compiler {
                     "CAR" => {
                         let a = expect_arity(name, args, 1)?;
                         let vx = self.lower_expr(a[0])?;
-                        Ok(self.emit_builtin("car", &[vx], "any"))
+                        Ok(self.emit_builtin("car", &[vx], "ref<any>"))
                     }
                     "CDR" => {
                         let a = expect_arity(name, args, 1)?;
                         let vx = self.lower_expr(a[0])?;
-                        Ok(self.emit_builtin("cdr", &[vx], "any"))
+                        Ok(self.emit_builtin("cdr", &[vx], "ref<any>"))
                     }
                     "ATOM" => {
                         // (ATOM x) ≡ (not (pair? x))
@@ -570,7 +570,7 @@ impl Compiler {
         let saved_instrs = std::mem::take(&mut self.instrs);
         let saved_params = std::mem::replace(&mut self.params, scope);
         let body_reg = self.lower_expr(body)?;
-        self.emit(IIRInstr::new("ret", None, vec![Operand::Var(body_reg)], "any"));
+        self.emit(IIRInstr::new("ret", None, vec![Operand::Var(body_reg)], "ref<any>"));
         let body_instrs = std::mem::replace(&mut self.instrs, saved_instrs);
         self.params = saved_params;
 
@@ -579,12 +579,12 @@ impl Compiler {
         let mut param_pairs: Vec<(String, String)> =
             Vec::with_capacity(captured.len() + params.len());
         for c in &captured {
-            param_pairs.push((c.clone(), "any".to_string()));
+            param_pairs.push((c.clone(), "ref<any>".to_string()));
         }
         for p in params {
-            param_pairs.push((p.to_string(), "any".to_string()));
+            param_pairs.push((p.to_string(), "ref<any>".to_string()));
         }
-        let mut f = IIRFunction::new(fn_name.clone(), param_pairs, "any", body_instrs);
+        let mut f = IIRFunction::new(fn_name.clone(), param_pairs, "ref<any>", body_instrs);
         f.register_count = self.tmp;
         self.functions.push(f);
         Ok((fn_name, captured))
@@ -609,7 +609,7 @@ impl Compiler {
         srcs.push(Operand::Var(fn_name.to_string()));
         srcs.extend(captured.iter().map(|c| Operand::Var(c.clone())));
         srcs.extend(arg_regs.into_iter().map(Operand::Var));
-        self.emit(IIRInstr::new("call", Some(dest.clone()), srcs, "any"));
+        self.emit(IIRInstr::new("call", Some(dest.clone()), srcs, "ref<any>"));
         Ok(dest)
     }
 
@@ -670,7 +670,7 @@ impl Compiler {
         let mut srcs = Vec::with_capacity(arg_regs.len() + 1);
         srcs.push(Operand::Var(fn_reg));
         srcs.extend(arg_regs.into_iter().map(Operand::Var));
-        self.emit(IIRInstr::new("apply", Some(dest.clone()), srcs, "any"));
+        self.emit(IIRInstr::new("apply", Some(dest.clone()), srcs, "ref<any>"));
         Ok(dest)
     }
 
@@ -736,7 +736,7 @@ impl Compiler {
         );
 
         let body_reg = self.lower_expr(body)?;
-        self.emit(IIRInstr::new("ret", None, vec![Operand::Var(body_reg)], "any"));
+        self.emit(IIRInstr::new("ret", None, vec![Operand::Var(body_reg)], "ref<any>"));
 
         let body_instrs = std::mem::replace(&mut self.instrs, saved_instrs);
         self.params = saved_params;
@@ -753,12 +753,12 @@ impl Compiler {
         let mut param_pairs: Vec<(String, String)> =
             Vec::with_capacity(captured.len() + params.len());
         for c in &captured {
-            param_pairs.push((c.clone(), "any".to_string()));
+            param_pairs.push((c.clone(), "ref<any>".to_string()));
         }
         for p in params {
-            param_pairs.push((p.to_string(), "any".to_string()));
+            param_pairs.push((p.to_string(), "ref<any>".to_string()));
         }
-        let mut f = IIRFunction::new(fn_name.clone(), param_pairs, "any", body_instrs);
+        let mut f = IIRFunction::new(fn_name.clone(), param_pairs, "ref<any>", body_instrs);
         f.register_count = self.tmp;
         self.functions.push(f);
         Ok((fn_name, captured))
@@ -965,7 +965,7 @@ impl Compiler {
             "mov",
             Some(dest.to_string()),
             vec![Operand::Var(src.to_string())],
-            "any",
+            "ref<any>",
         ));
     }
 

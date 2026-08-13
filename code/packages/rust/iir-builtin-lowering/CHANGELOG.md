@@ -1,5 +1,56 @@
 # Changelog — iir-builtin-lowering
 
+## 0.37.0 - 2026-08-13 - the passes no longer ask which language wrote the module
+
+`dyn_repr::is_lisp_language` — literally `language == "mccarthy-lisp"` — is
+deleted, along with all three of its decision sites. No pass in this crate reads
+`module.language` any more.
+
+It existed to disambiguate bare `any`, which McCarthy used for "a tagged
+LispyValue" and Twig/Nib used for "statically unresolved, passed raw". The gate's
+own comment stated the problem: *"Twig also types untyped params `any` and
+shares this pass, so the `any`-param heuristic alone would mis-flag a Twig
+`(define (fib n) …)` as lisp and corrupt it."*
+
+The frontends now say which they mean. McCarthy stamps `ref<any>` — already the
+unambiguous "boxed dynamic value" in every language — and bare `any` means raw
+everywhere. `is_boxed(hint)` is `hint == "ref<any>"`, and `closure_heap` reads
+each lambda body's own declared parameter types instead of a module-wide flag.
+
+### The gate was load-bearing for a wrong rule
+
+Removing it exposed that `lisp_functions` seeded the "callers must box for this
+callee" set partly from **heap ops in the body**. A body that allocates tells you
+the function uses the heap; it tells you nothing about the ABI its callers must
+satisfy. A Twig union constructor `(union Opt (Some (v : int)) …)` allocates a
+cons cell internally while taking its argument raw, so `call Some(42)` boxed the
+42 and the `match` that extracted it returned the tagged word — the program
+exited `(42 << 3) & 0xFF = 80` instead of 42.
+
+The language gate had hidden this by forcing the set empty for every non-lisp
+module. New `tagged_boundary_functions` seeds from declared parameter types AND
+return types; `lisp_functions` keeps the heap-body clause for the structural work
+that wants it.
+
+### Three more found in security review, each exposed by fixing the last
+
+The reviewer built both revisions, emitted all 294 matrix-corpus programs from
+each, and ran them — finding a silent wrong answer the corpus does not contain.
+
+* **Nullary tagged functions were missed.** Seeding only from parameters leaves
+  `((LAMBDA () (ATOM 7)))` outside the set, so the entry coerced its result with
+  the static `dyn_unbox_int` (`>> 3`) instead of the runtime tag switch. `#t` is
+  the whole word `0b101`, and `5 >> 3 = 0`: the program reported FALSE for a
+  true predicate, on native-AOT and LLVM, with no diagnostic. A boundary has two
+  sides; the declared return type is the other one.
+* **A tagged function never boxed a raw scalar return** (pre-existing). The
+  managed pass has always done this; the tagged pass never grew the counterpart.
+  `((LAMBDA () 5))` exited 1 — `5` is `0b101`, read as the `#t` tag. It stayed
+  hidden because the old coercion was also wrong, just differently.
+* **…which then double-boxed a returned parameter.** A tagged *parameter* is
+  already a `LispyValue`, and `boxed_regs` is built from instructions so never
+  contains one. `((LAMBDA (X) X) 5)` exited `5 << 3 = 40`.
+
 ## 0.36.0 - 2026-08-13 - drop the name-carrying `const` once its consumer is lowered
 
 `const %n1 = Operand::Var("g")` is not a real instruction: it is how the

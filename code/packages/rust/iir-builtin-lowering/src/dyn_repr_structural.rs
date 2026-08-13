@@ -187,7 +187,7 @@ fn lisp_value_src_indices(instr: &IIRInstr) -> Vec<usize> {
 /// function participates in the uniform-anyref **function boundary** even if its
 /// body touches no heap op (e.g. `(LAMBDA (X) X)`).
 fn has_lisp_param(func: &IIRFunction) -> bool {
-    func.params.iter().any(|(_, t)| t == "any" || t == "symbol" || t.starts_with("ref<"))
+    func.params.iter().any(|(_, t)| t == "symbol" || t.starts_with("ref<"))
 }
 
 /// Compute the set of **lisp functions** in a module — those that use the
@@ -197,10 +197,42 @@ fn has_lisp_param(func: &IIRFunction) -> bool {
 /// the args and treat the result as a reference). For a McCarthy module every
 /// function ends up lisp; a Twig module's pure-scalar functions never enter.
 pub(crate) fn lisp_functions(module: &IIRModule) -> HashSet<String> {
+    seeded_lisp_functions(module, true)
+}
+
+/// The functions whose **calling boundary** is tagged — i.e. whose callers must
+/// box their arguments.
+///
+/// Seeded from declared parameter types ONLY. A body that allocates tells you
+/// the function uses the heap; it tells you nothing about the ABI its callers
+/// must satisfy. A Twig union constructor allocates a cons cell internally while
+/// taking its argument raw, and boxing at its call sites corrupts the value.
+pub(crate) fn tagged_boundary_functions(module: &IIRModule) -> HashSet<String> {
+    seeded_lisp_functions(module, false)
+}
+
+fn seeded_lisp_functions(module: &IIRModule, include_heap_bodies: bool) -> HashSet<String> {
     let mut lisp: HashSet<String> = module
         .functions
         .iter()
-        .filter(|f| function_uses_heap(f) || has_lisp_param(f))
+        // A boundary has two sides. Seeding only from parameters misses a
+        // **nullary** tagged function — `((LAMBDA () (ATOM 7)))` has no params
+        // to inspect, so its caller's `call` was not recognised as tagged and
+        // the entry coerced the result with the static `dyn_unbox_int` (`>> 3`)
+        // instead of the runtime tag switch `dyn_to_exit_code`. `#t` is the
+        // whole word `0b101`, so `5 >> 3 = 0`: the program reported FALSE for a
+        // true predicate, with no diagnostic. The declared return type is the
+        // other half of the signature and says so.
+        //
+        // This does not reinstate the Twig union-constructor bug: Twig's
+        // `Some`/`None` declare `-> any` (raw), McCarthy's lambdas declare
+        // `-> ref<any>`, so the two stay separated by type, which is the point.
+        .filter(|f| {
+            (include_heap_bodies && function_uses_heap(f))
+                || has_lisp_param(f)
+                || f.return_type == "symbol"
+                || f.return_type.starts_with("ref<")
+        })
         .map(|f| f.name.clone())
         .collect();
     // Fixpoint: a caller of a lisp function is lisp.
@@ -566,6 +598,11 @@ fn lower_structural_function(
 /// machine type. In the entry function a returned **reference** is unboxed to
 /// `i32` (the process exit code); a returned scalar keeps its width. A non-entry
 /// function that returns a reference keeps it as `ref<any>` for its caller.
+/// A dynamic type hint that a concrete machine type may replace.
+fn is_narrowable_dynamic_hint(t: &str) -> bool {
+    t == "any" || t == "polymorphic" || t == REF_ANY
+}
+
 fn set_return_representation(func: &mut IIRFunction, is_entry: bool, ref_regs: &HashSet<String>) {
     // Find the (single) returned register, if any.
     let ret_pos = func.instructions.iter().position(|i| i.op == "ret");
@@ -574,7 +611,7 @@ fn set_return_representation(func: &mut IIRFunction, is_entry: bool, ref_regs: &
         Some(Operand::Var(r)) => r.clone(),
         _ => {
             // `ret` of an immediate / nothing — just concretise the return type.
-            if func.return_type == "any" || func.return_type == "polymorphic" {
+            if is_narrowable_dynamic_hint(&func.return_type) {
                 func.return_type = "i64".to_string();
             }
             return;
@@ -627,9 +664,8 @@ fn set_return_representation(func: &mut IIRFunction, is_entry: bool, ref_regs: &
         ret.srcs = vec![Operand::Var(boxed_ret)];
         ret.type_hint = REF_ANY.to_string();
         func.return_type = REF_ANY.to_string();
-    } else if func.return_type == "any"
-        || func.return_type == "polymorphic"
-        || func.instructions[ret_pos].type_hint == "any"
+    } else if is_narrowable_dynamic_hint(&func.return_type)
+        || is_narrowable_dynamic_hint(&func.instructions[ret_pos].type_hint)
     {
         // The **entry** function returning a non-reference scalar (e.g. a bare
         // `(EQ 5 5)` program). Concretise the return type to the value's width: a
@@ -866,9 +902,12 @@ mod tests {
         // call arg (5) boxed, the lambda return ref<any>, and main unboxes.
         let lam = IIRFunction::new(
             "lam",
-            vec![("X".to_string(), "any".to_string())],
-            "any",
-            vec![IIRInstr::new("ret", None, vec![Operand::Var("X".into())], "any")],
+            // What the McCarthy frontend now emits directly: a tagged value is
+            // `ref<any>`, said in the IIR rather than inferred from the module's
+            // language.
+            vec![("X".to_string(), "ref<any>".to_string())],
+            "ref<any>",
+            vec![IIRInstr::new("ret", None, vec![Operand::Var("X".into())], "ref<any>")],
         );
         let main = IIRFunction::new(
             "main",

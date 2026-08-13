@@ -140,11 +140,11 @@ pub fn lower_closures_to_heap(module: &mut IIRModule) {
     //
     //   * A lisp language (McCarthy) types its parameters `any` and genuinely
     //     passes tagged words. Boxed in, boxed out — the chain round-trips.
-    //   * Twig/Nib also stamp `any` on a statically-unresolved parameter, but
-    //     pass it as a **raw** machine `i64`. `dynamic_arith` documents exactly
-    //     this ambiguity and resolves it the same way (`is_lisp_language`): for
-    //     a non-lisp module a bare-`any` operand is raw, so `(+ x 1)` in a lambda
-    //     body lowers to a plain `add x, 1`.
+    //   * Twig/Nib stamp a bare `any` on a statically-unresolved parameter and
+    //     pass it as a **raw** machine `i64`, so `(+ x 1)` in a lambda body
+    //     lowers to a plain `add x, 1`. `ref<any>` and bare `any` are two
+    //     different types saying two different things, which is what lets this
+    //     be decided from the signature alone.
     //
     // Handing a raw-model body the boxed word is silent corruption, not a crash:
     // `((lambda (x) (+ x 1)) 41)` computed `328 + 1 = 329`, re-boxed it, and the
@@ -157,7 +157,16 @@ pub fn lower_closures_to_heap(module: &mut IIRModule) {
     // So the dispatcher unboxes what it pulls out of the chain exactly when the
     // body expects raw. Boxing on the way in and unboxing on the way out are one
     // decision, and they belong to the same language gate.
-    let params_are_boxed = crate::dyn_repr::is_lisp_language(&module.language);
+    // Read the answer off the bodies themselves rather than off the module's
+    // source language. A lambda body whose parameters are declared `ref<any>`
+    // takes tagged values; one whose parameters are a raw machine type takes raw
+    // ones. That is a property of the function's own signature, which is exactly
+    // where a language-agnostic IR should carry it.
+    let params_are_boxed = dispatch.iter().any(|d| {
+        module
+            .get_function(&d.fn_name)
+            .is_some_and(|f| f.params.iter().any(|(_, t)| t == REF_ANY))
+    });
 
     for f in &mut module.functions {
         rewrite_closure_ops(f, &index_of, params_are_boxed);
@@ -637,9 +646,11 @@ mod tests {
     fn lisp_model_passes_tagged_values_through_untouched() {
         let l0 = IIRFunction::new(
             "__lambda_0",
-            vec![("x".into(), "any".into())],
-            "any",
-            vec![IIRInstr::new("ret", None, vec![Operand::Var("x".into())], "any")],
+            // `ref<any>` — a body that genuinely takes a tagged value. The
+            // module's language string is irrelevant to the decision now.
+            vec![("x".into(), "ref<any>".into())],
+            "ref<any>",
+            vec![IIRInstr::new("ret", None, vec![Operand::Var("x".into())], "ref<any>")],
         );
         let main = IIRFunction::new(
             "main",
