@@ -48,9 +48,31 @@ instructions — an earlier position would miss the operands its successors
 introduce. A no-op for a module whose frontend already materialized everything,
 which is every language that was already green.
 
-Ten unit tests cover both operand positions, two-literal instructions, the
+### Four issues found in security review, fixed before merge
+
+* **Silent numeric truncation.** The sibling-width rule adopted a narrower type
+  with no representability check, and every backend's `const` lowering narrows
+  with a lossy `as` cast rather than a checked conversion — so `add x:i32,
+  5_000_000_000` would have compiled quietly to `705032704`. Newly reachable
+  *because* of this pass: before it, that shape was rejected outright, which was
+  at least loud. A candidate type is now adopted only if the literal fits it.
+* **Unary ops got the wrong width.** `mov`/`neg`/`not` have no sibling, so they
+  fell back to `i64` — putting a two-slot `long` local under an `i32`-model
+  function's `INEG`, which the JVM verifier rejects. The "never use
+  `type_hint`" rule exists only because a comparison's hint is its `bool`
+  *result*; for the unary families the hint IS the operand type, so it is used.
+* **Generated names could shadow existing ones.** The monotonic counter kept the
+  temporaries distinct from each other but consulted nothing already in the
+  function; a frontend variable named `__imm1_add` would have been silently
+  overwritten. Names in use are now collected and avoided.
+* **`source_map` lockstep.** `IIRFunction::source_map` is documented as indexed
+  in lockstep with `instructions`; inserting instructions without extending it
+  shifted every later entry. The map is now rebuilt alongside, with each
+  materialized `const` attributed to the statement whose operand it is.
+
+Sixteen unit tests cover both operand positions, two-literal instructions, the
 comparison typing rule, sibling-width inference, float/bool literals, the
-addressing-immediate exclusions, and the no-op case.
+addressing-immediate exclusions, the no-op case, and one per security finding.
 
 ## 0.34.0 - 2026-08-12 - closure calling convention + chained dynamic arithmetic
 

@@ -76,22 +76,32 @@
 //!
 //! ## The type the temporary gets
 //!
-//! Not the instruction's `type_hint`: for a comparison that is `bool`, the
-//! *result* type, while the operands are the values being compared. Emitting
-//! `const 1 : bool` for `cmp_eq x, 1` would hand the backend a boolean where it
-//! expects an integer — the same operand-width-versus-result-width confusion
-//! that made BASIC's comparisons lower to `icmp i1` on LLVM.
+//! For a **binary** op, not the instruction's `type_hint`: a comparison's hint
+//! is `bool`, the *result* type, while the operands are the values being
+//! compared. Emitting `const 1 : bool` for `cmp_eq x, 1` hands the backend a
+//! boolean where it expects an integer — the same operand-width-versus-result-
+//! width confusion that made BASIC's comparisons lower to `icmp i1` on LLVM. The
+//! sibling operand's producer type is used instead, since it carries the width
+//! the surrounding code agreed on.
 //!
-//! The operand's own kind is the reliable answer, since an `Operand::Int` *is*
-//! an integer: `Int → i64`, `Float → f64`, `Bool → bool`. Where the sibling
-//! operand is a variable with a known producer type, that is preferred — it
-//! carries the actual width (`i32` vs `i64`) the surrounding code agreed on.
+//! For a **unary** op (`mov`, `neg`, `not`) there is no sibling, and there the
+//! `type_hint` *is* the operand type, so it is used. Defaulting to `i64` instead
+//! would put a two-slot `long` local under an `i32`-model function's `INEG`, and
+//! the JVM verifier rejects the class.
+//!
+//! Either way the candidate is adopted **only if the literal is representable in
+//! it**. Every backend's `const` lowering narrows with a lossy `as` cast rather
+//! than a checked conversion, so claiming `i32` for `5_000_000_000` would not
+//! fail — it would quietly emit `705032704`. Introducing this pass must not
+//! trade a loud refusal for a wrong answer, so an unrepresentable literal falls
+//! back to its own kind (`Int → i64`, `Float → f64`, `Bool → bool`).
 
 use interpreter_ir::function::IIRFunction;
 use interpreter_ir::instr::{IIRInstr, Operand};
 use interpreter_ir::opcodes::{is_arithmetic, is_bitwise, is_cmp};
+use interpreter_ir::source_loc::SourceLoc;
 use interpreter_ir::IIRModule;
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 /// Which source indices of `op` name a runtime value (see the table above).
 /// `None` for an opcode this pass does not touch.
@@ -105,31 +115,75 @@ fn value_operand_indices(op: &str) -> Option<&'static [usize]> {
     }
 }
 
-/// The type hint a materialized literal should carry.
+/// Can `lit` be represented exactly in the machine type `ty`?
 ///
-/// Prefers the sibling operand's producer type (it carries the width the
-/// surrounding code agreed on); falls back to the literal's own kind. Never the
-/// instruction's `type_hint` — for a comparison that describes the result, not
-/// the operands.
-fn literal_type(lit: &Operand, sibling: Option<&Operand>, types: &HashMap<String, String>) -> String {
-    let sibling_ty = sibling.and_then(|s| match s {
-        Operand::Var(name) => types.get(name.as_str()),
-        _ => None,
-    });
-    if let Some(ty) = sibling_ty {
-        // Only adopt a concrete machine type. A sibling typed `any`/`ref<…>`
-        // says nothing useful about how wide this literal should be.
-        if matches!(ty.as_str(), "i8" | "i16" | "i32" | "i64" | "f32" | "f64" | "bool") {
-            return ty.clone();
-        }
+/// Adopting a narrower type than the literal needs is not a rounding detail —
+/// every backend's `const` lowering narrows with a lossy `as` cast rather than a
+/// checked conversion (`*v as i32` on the JVM, WASM and binary-CIL paths). So
+/// claiming `i32` for `5_000_000_000` does not fail, it silently emits
+/// `705032704` and the program computes a different answer than its source says.
+/// Before this pass existed, that instruction shape was rejected outright, which
+/// at least was loud; introducing the pass must not trade a loud refusal for a
+/// quiet wrong answer.
+fn fits(lit: &Operand, ty: &str) -> bool {
+    match (lit, ty) {
+        (Operand::Int(v), "i8") => i8::try_from(*v).is_ok(),
+        (Operand::Int(v), "i16") => i16::try_from(*v).is_ok(),
+        (Operand::Int(v), "i32") => i32::try_from(*v).is_ok(),
+        (Operand::Int(_), "i64") => true,
+        // An `f32` round-trip is exact only when the value survives the narrowing.
+        (Operand::Float(v), "f32") => *v as f32 as f64 == *v,
+        (Operand::Float(_), "f64") => true,
+        (Operand::Bool(_), "bool") => true,
+        // Anything else — an integer claiming a float type, a bool claiming a
+        // width, a literal against `any`/`ref<…>` — is not a representable match.
+        _ => false,
     }
+}
+
+/// The literal's own kind, which is always a faithful home for it.
+fn own_type(lit: &Operand) -> &'static str {
     match lit {
-        Operand::Int(_) => "i64",
         Operand::Float(_) => "f64",
         Operand::Bool(_) => "bool",
         _ => "i64",
     }
-    .to_string()
+}
+
+/// The type hint a materialized literal should carry.
+///
+/// The rule differs by arity, because the two cases have different reliable
+/// sources:
+///
+/// * **Binary** (`add`, `cmp_eq`, …) — prefer the *sibling operand's* producer
+///   type, which carries the width the surrounding code agreed on. Never the
+///   instruction's `type_hint`: a comparison's hint is `bool`, describing its
+///   result while the operands are what is being compared, so `const 1 : bool`
+///   for `cmp_eq x, 1` hands the backend a boolean where it wants an integer.
+/// * **Unary** (`mov`, `neg`, `not`) — there is no sibling, and here the
+///   instruction's `type_hint` *is* the operand type, so use it. Falling back to
+///   `i64` instead would put a two-slot `long` under an `i32`-model function's
+///   `INEG`, and the JVM verifier rejects the class.
+///
+/// Either way the candidate is adopted only if the literal is representable in
+/// it (see `fits`); otherwise the literal's own kind wins.
+fn literal_type(
+    lit: &Operand,
+    candidate: Option<&str>,
+    types: &HashMap<String, String>,
+    sibling: Option<&Operand>,
+) -> String {
+    // A sibling variable's producer type, when there is one.
+    let from_sibling = sibling.and_then(|s| match s {
+        Operand::Var(name) => types.get(name.as_str()).map(String::as_str),
+        _ => None,
+    });
+    for ty in [from_sibling, candidate].into_iter().flatten() {
+        if fits(lit, ty) {
+            return ty.to_string();
+        }
+    }
+    own_type(lit).to_string()
 }
 
 /// Is this operand an immediate literal (rather than a variable or a name)?
@@ -151,18 +205,56 @@ fn producer_types(f: &IIRFunction) -> HashMap<String, String> {
     m
 }
 
+/// Every name already in use in `f` — parameters, destinations, and operands.
+/// A generated temporary must avoid all of them, not merely avoid its siblings.
+fn names_in_use(f: &IIRFunction) -> HashSet<String> {
+    let mut seen: HashSet<String> = HashSet::new();
+    for (name, _) in &f.params {
+        seen.insert(name.clone());
+    }
+    for instr in &f.instructions {
+        if let Some(d) = &instr.dest {
+            seen.insert(d.clone());
+        }
+        for s in &instr.srcs {
+            if let Operand::Var(v) = s {
+                seen.insert(v.clone());
+            }
+        }
+    }
+    seen
+}
+
 /// Rewrite one function's immediate value operands into `const` temporaries.
 pub fn materialize_immediate_operands_function(f: &mut IIRFunction) {
     let types = producer_types(f);
+    // A monotonic counter keeps the generated names distinct from each other; the
+    // in-use set keeps them distinct from names that were already here. The
+    // counter alone is not enough — nothing stops a frontend from emitting a
+    // variable called `__imm1_add`, and silently overwriting it would make every
+    // later read of that variable return this literal, with no diagnostic
+    // anywhere.
+    let taken = names_in_use(f);
+    // `source_map` is documented as indexed in lockstep with `instructions`.
+    // Inserting instructions without extending it shifts every later entry, so
+    // rebuild it alongside when the function carries one.
+    let had_source_map = !f.source_map.is_empty();
+    let old_map = std::mem::take(&mut f.source_map);
     let old = std::mem::take(&mut f.instructions);
     let mut out: Vec<IIRInstr> = Vec::with_capacity(old.len());
-    // A monotonic suffix so the temporaries this pass introduces never collide
-    // with each other or with a frontend name.
+    let mut new_map = Vec::with_capacity(old_map.len());
     let mut counter = 0usize;
 
-    for mut instr in old {
+    for (idx, mut instr) in old.into_iter().enumerate() {
+        // The source location of the instruction being rewritten, reused for the
+        // `const`s materialized for it — they are that statement's operands, so
+        // attributing them to it is the honest answer.
+        let loc = old_map.get(idx).cloned();
         let Some(indices) = value_operand_indices(&instr.op) else {
             out.push(instr);
+            if had_source_map {
+                new_map.push(loc.unwrap_or(SourceLoc::SYNTHETIC));
+            }
             continue;
         };
         for &i in indices {
@@ -171,22 +263,35 @@ pub fn materialize_immediate_operands_function(f: &mut IIRFunction) {
                 continue;
             }
             let literal = operand.clone();
-            // The *other* value operand, for width inference.
+            // Binary ops infer width from the other operand; unary ops have no
+            // sibling and take the instruction's own hint (see `literal_type`).
             let sibling = indices
                 .iter()
                 .find(|&&j| j != i)
                 .and_then(|&j| instr.srcs.get(j))
                 .cloned();
-            let ty = literal_type(&literal, sibling.as_ref(), &types);
-            counter += 1;
-            let tmp = format!("__imm{counter}_{}", instr.op);
+            let ty = literal_type(&literal, Some(instr.type_hint.as_str()), &types, sibling.as_ref());
+            let tmp = loop {
+                counter += 1;
+                let candidate = format!("__imm{counter}_{}", instr.op);
+                if !taken.contains(&candidate) {
+                    break candidate;
+                }
+            };
             out.push(IIRInstr::new("const", Some(tmp.clone()), vec![literal], &ty));
+            if had_source_map {
+                new_map.push(loc.unwrap_or(SourceLoc::SYNTHETIC));
+            }
             instr.srcs[i] = Operand::Var(tmp);
         }
         out.push(instr);
+        if had_source_map {
+            new_map.push(loc.unwrap_or(SourceLoc::SYNTHETIC));
+        }
     }
 
     f.instructions = out;
+    f.source_map = new_map;
 }
 
 /// Module-level entry point: materialize immediate value operands in every
@@ -322,6 +427,128 @@ mod tests {
         let consts: Vec<&IIRInstr> = f.instructions.iter().filter(|i| i.op == "const").collect();
         assert_eq!(consts[0].type_hint, "f64");
         assert_eq!(consts[1].type_hint, "bool");
+    }
+
+    /// A literal that does NOT fit the sibling's width must keep its own type.
+    ///
+    /// Every backend's `const` lowering narrows with a lossy `as` cast, not a
+    /// checked conversion, so adopting `i32` for `5_000_000_000` would not fail —
+    /// it would quietly emit `705032704`. Before this pass existed the shape was
+    /// rejected outright; introducing it must not trade a loud refusal for a
+    /// wrong answer. (Found in security review.)
+    #[test]
+    fn a_literal_too_wide_for_the_sibling_keeps_its_own_type() {
+        let mut f = func(vec![
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(5)], "i32"),
+            IIRInstr::new(
+                "add",
+                Some("d".into()),
+                vec![Operand::Var("n".into()), Operand::Int(5_000_000_000)],
+                "i32",
+            ),
+        ]);
+        materialize_immediate_operands_function(&mut f);
+        assert_eq!(
+            f.instructions[1].type_hint, "i64",
+            "5e9 does not fit i32 — narrowing it would silently emit 705032704"
+        );
+    }
+
+    /// An `f32` sibling is only adopted when the value survives the round trip.
+    #[test]
+    fn a_float_that_does_not_round_trip_to_f32_keeps_f64() {
+        let mut f = func(vec![
+            IIRInstr::new("const", Some("x".into()), vec![Operand::Float(1.0)], "f32"),
+            IIRInstr::new(
+                "add",
+                Some("d".into()),
+                // Needs more mantissa than f32 has.
+                vec![Operand::Var("x".into()), Operand::Float(0.123456789012345)],
+                "f32",
+            ),
+        ]);
+        materialize_immediate_operands_function(&mut f);
+        assert_eq!(f.instructions[1].type_hint, "f64");
+    }
+
+    /// A unary op has no sibling, so it takes the instruction's own `type_hint`
+    /// — which for `mov`/`neg`/`not` IS the operand type.
+    ///
+    /// Defaulting to `i64` instead put a two-slot `long` local under an
+    /// `i32`-model function's `INEG`, and the JVM verifier rejects that class.
+    /// (Found in security review.)
+    #[test]
+    fn unary_op_takes_its_own_type_hint_not_a_default_i64() {
+        let mut f = func(vec![IIRInstr::new(
+            "neg",
+            Some("d".into()),
+            vec![Operand::Int(5)],
+            "i32",
+        )]);
+        materialize_immediate_operands_function(&mut f);
+        assert_eq!(f.instructions[0].type_hint, "i32");
+    }
+
+    /// A generated name must not collide with one already in the function. The
+    /// counter alone only keeps the temporaries distinct from each other.
+    /// (Found in security review.)
+    #[test]
+    fn a_generated_temp_never_shadows_an_existing_name() {
+        // A frontend variable that happens to match this pass's naming scheme.
+        let mut f = func(vec![
+            IIRInstr::new("const", Some("__imm1_add".into()), vec![Operand::Int(99)], "i64"),
+            IIRInstr::new(
+                "add",
+                Some("d".into()),
+                vec![Operand::Var("__imm1_add".into()), Operand::Int(7)],
+                "i64",
+            ),
+        ]);
+        materialize_immediate_operands_function(&mut f);
+        let generated = f.instructions[1].dest.clone().expect("a const was inserted");
+        assert_ne!(generated, "__imm1_add", "must not clobber the frontend's variable");
+        // …and the original variable still feeds the add.
+        assert_eq!(f.instructions[2].srcs[0], Operand::Var("__imm1_add".into()));
+    }
+
+    /// `source_map` is documented as indexed in lockstep with `instructions`, so
+    /// inserting instructions has to extend it. (Found in security review.)
+    #[test]
+    fn source_map_stays_in_lockstep_with_instructions() {
+        use interpreter_ir::source_loc::SourceLoc;
+        let mut f = func(vec![
+            IIRInstr::new("const", Some("a".into()), vec![Operand::Int(1)], "i64"),
+            IIRInstr::new(
+                "add",
+                Some("d".into()),
+                vec![Operand::Var("a".into()), Operand::Int(7)],
+                "i64",
+            ),
+        ]);
+        f.source_map = vec![SourceLoc { line: 10, column: 1 }, SourceLoc { line: 11, column: 1 }];
+        materialize_immediate_operands_function(&mut f);
+        assert_eq!(
+            f.source_map.len(),
+            f.instructions.len(),
+            "one location per instruction, including the materialized const"
+        );
+        // The materialized const is attributed to the statement it came from.
+        let add_idx = f.instructions.iter().position(|i| i.op == "add").unwrap();
+        assert_eq!(f.source_map[add_idx].line, 11);
+        assert_eq!(f.source_map[add_idx - 1].line, 11, "the const belongs to the same statement");
+    }
+
+    /// A function with no `source_map` must not grow one.
+    #[test]
+    fn absent_source_map_is_left_absent() {
+        let mut f = func(vec![IIRInstr::new(
+            "add",
+            Some("d".into()),
+            vec![Operand::Var("x".into()), Operand::Int(7)],
+            "i64",
+        )]);
+        materialize_immediate_operands_function(&mut f);
+        assert!(f.source_map.is_empty());
     }
 
     /// Addressing immediates are NOT values and must stay inline: a
