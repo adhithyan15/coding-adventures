@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.135.0 — 2026-08-13 — static boolean snapshots
+
+Local boolean scalars now retain path-independent compile-time values across
+straight-line assignments, copies, and equal statement branches. Calls,
+labels, jumps, loops, globals, and dynamic assignments still invalidate them.
+
 ## 0.134.0 — 2026-08-13 — path-independent conditional predicates
 
 An initial `while` conditional with an unknown selector now has a static result
