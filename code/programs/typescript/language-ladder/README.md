@@ -677,6 +677,12 @@ and shirorekhā. Its Noto Sans Devanagari fit preserves the two lifts shared by
 Opiaterein's animation and the Central Hindi Directorate's three-part learner
 buildup; JackPotte's alternate seven-frame animation documents a joined
 loop-and-tail body with one lift.
+The four-frame Devanagari **ल** filmstrip curves up and clockwise around the open
+left loop before separately drawing the up-right diagonal arm, right stem, and
+shirorekhā. Its Noto Sans Devanagari fit preserves the three lifts shared by
+Opiaterein's loop-first animation and the Central Hindi Directorate's four-part
+learner buildup; JackPotte's alternate 12-frame animation documents a stem-first
+part order.
 The runtime resolves each cited path back to the owning script and lazily loads that
 script's font, while Tamil continues to use Noto Sans Tamil. Unverified letters
 still fall back to the numbered prose list, unchanged. Extending the coverage is HL-C09,

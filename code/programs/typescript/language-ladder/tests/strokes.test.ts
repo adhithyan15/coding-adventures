@@ -71,6 +71,7 @@ const DEVANAGARI_BHA = DUCTUS[ductusKey("devanagari", "भ")];
 const DEVANAGARI_MA = DUCTUS[ductusKey("devanagari", "म")];
 const DEVANAGARI_YA = DUCTUS[ductusKey("devanagari", "य")];
 const DEVANAGARI_RA = DUCTUS[ductusKey("devanagari", "र")];
+const DEVANAGARI_LA = DUCTUS[ductusKey("devanagari", "ल")];
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
@@ -1068,6 +1069,26 @@ describe("handwriting ductus", () => {
     expect(tail[0].x).toBeLessThan(tail.at(-1)!.x);
     expect(tail[0].y).toBeGreaterThan(tail.at(-1)!.y);
     const headline = penPath(DEVANAGARI_RA.strokes[2]);
+    expect(headline[0].x).toBeLessThan(headline.at(-1)!.x);
+  });
+
+  it("Devanagari ल draws its clockwise open loop before the diagonal arm", () => {
+    expect(DEVANAGARI_LA.script).toBe("devanagari");
+    expect(penLifts(DEVANAGARI_LA)).toBe(3);
+    expect(DEVANAGARI_LA.strokes).toHaveLength(4);
+    expect(DEVANAGARI_LA.strokes.map((stroke) => stroke.segments.length)).toEqual([
+      1, 1, 1, 1,
+    ]);
+    const loop = penPath(DEVANAGARI_LA.strokes[0]);
+    expect(Math.min(...loop.map((point) => point.x))).toBeLessThan(loop[0].x);
+    expect(Math.max(...loop.map((point) => point.y))).toBeGreaterThan(loop[0].y);
+    expect(loop.at(-1)!.x).toBeGreaterThan(Math.min(...loop.map((point) => point.x)));
+    const arm = penPath(DEVANAGARI_LA.strokes[1]);
+    expect(arm[0].x).toBeLessThan(arm.at(-1)!.x);
+    expect(arm[0].y).toBeLessThan(arm.at(-1)!.y);
+    const stem = penPath(DEVANAGARI_LA.strokes[2]);
+    expect(stem[0].y).toBeGreaterThan(stem.at(-1)!.y);
+    const headline = penPath(DEVANAGARI_LA.strokes[3]);
     expect(headline[0].x).toBeLessThan(headline.at(-1)!.x);
   });
 
@@ -2789,6 +2810,19 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /17-frame animation.*three ordered pen-down runs.*gray guide.*frames 2–9.*right stem's headline junction.*descend top-to-bottom.*curl left and clockwise around the lower loop.*tail junction.*frames 10–12.*restart at that junction.*diagonal tail down-right.*frames 13–16.*headline's left edge.*shirorekhā left-to-right.*two intervening lifts.*240 ms hold.*frame 9.*250 ms hold.*frame 12.*one-second completed frame 16.*Central Hindi Directorate.*2019 Deskbook on Orthography of Devanagari Script.*Lesson 2.*Unit VIII.*p\. 42.*looped stem.*diagonal tail.*headline buildup.*JackPotte.*seven-frame.*Devanagari r र\.gif.*29 March 2009.*joins the descending stem.*clockwise lower loop.*diagonal tail.*one continuous body.*separate left-to-right headline.*three-run form.*Noto Sans Devanagari.*two-run join.*simplify the lower loop/i,
+    );
+  });
+
+  it("Devanagari ल traces the corroborated loop-first form and records the stem-first variation", () => {
+    const src = DEVANAGARI_LA.source;
+    expect(src.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Deva-%E0%A4%B2-order.gif",
+    );
+    expect(src.citation).toMatch(
+      /Opiaterein.*Deva-ल-order\.gif.*strokes 1–4.*Wikimedia Commons.*11 May 2009/i,
+    );
+    expect(src.variation).toMatch(
+      /23-frame animation.*four ordered pen-down runs.*gray guide.*frames 2–9.*open lower-left tip.*curve up and clockwise around the left loop.*inner junction.*frames 10–12.*restart at that junction.*diagonal arm up-right.*right stem.*frames 13–17.*right stem's headline junction.*descend top-to-bottom.*frames 18–21.*headline's left edge.*shirorekhā left-to-right.*three intervening lifts.*250 ms holds.*frames 9, 12, and 17.*one-second completed frame 22.*Central Hindi Directorate.*2019 Deskbook on Orthography of Devanagari Script.*Lesson 2.*Unit VIII.*p\. 43.*left loop.*diagonal arm.*right stem.*headline buildup.*JackPotte.*12-frame.*Devanagari l ल\.gif.*29 March 2009.*right stem first.*frames 0–2.*diagonal arm.*frames 3–5.*left loop.*frames 6–8.*headline.*frames 9–10.*all frames last 100 ms.*loop-first four-run form.*Noto Sans Devanagari.*stem-first order.*simplify the loop/i,
     );
   });
 
