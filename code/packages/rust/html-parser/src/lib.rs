@@ -7963,15 +7963,23 @@ impl HtmlParser {
     }
 
     fn open_list_item_in_scope_index(&self) -> Option<usize> {
-        let index = self.open_elements.iter().rposition(|path| {
-            element_at_path(&self.document, path).is_some_and(|name| name == "li")
-        })?;
-        if self.open_elements.iter().skip(index + 1).any(|path| {
-            element_at_path(&self.document, path).is_some_and(is_list_item_scope_boundary)
-        }) {
-            return None;
+        for (index, path) in self.open_elements.iter().enumerate().rev() {
+            let Some(element) = element_ref_at_path(&self.document, path) else {
+                continue;
+            };
+            if element.namespace.is_none()
+                && element.name == "li"
+                && !has_fragment_context_marker(element)
+            {
+                return Some(index);
+            }
+            if is_ordinary_scope_boundary(element)
+                || (element.namespace.is_none() && matches!(element.name.as_str(), "ol" | "ul"))
+            {
+                return None;
+            }
         }
-        Some(index)
+        None
     }
 
     fn close_open_list_item_if_in_scope(&mut self) -> bool {
@@ -9286,33 +9294,7 @@ impl HtmlParser {
             {
                 return Some(index);
             }
-            if element.namespace.is_none()
-                && matches!(
-                    element.name.as_str(),
-                    "applet"
-                        | "caption"
-                        | "html"
-                        | "table"
-                        | "td"
-                        | "th"
-                        | "marquee"
-                        | "object"
-                        | "template"
-                )
-            {
-                return None;
-            }
-            if element.namespace.as_deref() == Some("math")
-                && matches!(
-                    element.name.as_str(),
-                    "mi" | "mo" | "mn" | "ms" | "mtext" | "annotation-xml"
-                )
-            {
-                return None;
-            }
-            if element.namespace.as_deref() == Some("svg")
-                && matches!(element.name.as_str(), "foreignObject" | "desc" | "title")
-            {
+            if is_ordinary_scope_boundary(element) {
                 return None;
             }
         }
@@ -11744,8 +11726,27 @@ fn is_heading_element(name: &str) -> bool {
     matches!(name, "h1" | "h2" | "h3" | "h4" | "h5" | "h6")
 }
 
-fn is_list_item_scope_boundary(name: &str) -> bool {
-    matches!(name, "ol" | "ul")
+fn is_ordinary_scope_boundary(element: &Element) -> bool {
+    (element.namespace.is_none()
+        && matches!(
+            element.name.as_str(),
+            "applet"
+                | "caption"
+                | "html"
+                | "table"
+                | "td"
+                | "th"
+                | "marquee"
+                | "object"
+                | "template"
+        ))
+        || (element.namespace.as_deref() == Some("math")
+            && matches!(
+                element.name.as_str(),
+                "mi" | "mo" | "mn" | "ms" | "mtext" | "annotation-xml"
+            ))
+        || (element.namespace.as_deref() == Some("svg")
+            && matches!(element.name.as_str(), "foreignObject" | "desc" | "title"))
 }
 
 fn is_paragraph_boundary_element(name: &str) -> bool {
@@ -32167,6 +32168,80 @@ mod tests {
         let inner_item = element(&inner_list.children[0]);
         assert_eq!(inner_item.name, "li");
         assert_eq!(inner_item.children, vec![Node::text("a")]);
+    }
+
+    #[test]
+    fn list_item_end_tags_respect_full_list_item_scope() {
+        let table = parse_html_with_diagnostics(
+            "<!doctype html><ul><li id=l><table id=t></li><tr><td>X</table>Y",
+        )
+        .unwrap();
+        assert_eq!(
+            table
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-li-end-tag")
+                .count(),
+            1
+        );
+        let item = find_element_by_id(&table.document.children, "l")
+            .expect("the blocked end tag should leave the list item open");
+        let table_element = find_element_by_id(&item.children, "t")
+            .expect("the original table should receive the following row");
+        let cell = find_first_element_in_nodes(&table_element.children, "td")
+            .expect("the row should remain in the original table");
+        assert_eq!(cell.children, vec![Node::text("X")]);
+        assert_eq!(item.children.last(), Some(&Node::text("Y")));
+
+        for source in [
+            "<!doctype html><ul><li><ul></li></ul></li></ul>",
+            "<!doctype html><ul><li><object></li>X</object>Y</ul>",
+            "<!doctype html><ul><li><marquee></li>X</marquee>Y</ul>",
+            "<!doctype html><ul><li><template></li>X</template>Y</ul>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .filter(|diagnostic| diagnostic.code == "unexpected-li-end-tag")
+                    .count(),
+                1,
+                "source {source:?}: {:?}",
+                output.parser_diagnostics
+            );
+        }
+
+        for source in [
+            "<!doctype html><ul><li></li></ul>",
+            "<!doctype html><ul><li><p></li>Y</ul>",
+            "<!doctype html><table><tr><td><ul><li></li></ul></td></tr></table>",
+            "<!doctype html><ul><li><svg><object></li>Y</object></svg></ul>",
+            "<!doctype html><ul><li><math><mi></li>X</mi></math>Y</ul>",
+            "<!doctype html><ul><li><svg><desc></li>X</desc></svg>Y</ul>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .all(|diagnostic| diagnostic.code != "unexpected-li-end-tag"),
+                "source {source:?}: {:?}",
+                output.parser_diagnostics
+            );
+        }
+
+        let unmatched = parse_html_with_diagnostics("<!doctype html></li>").unwrap();
+        assert!(unmatched
+            .parser_diagnostics
+            .iter()
+            .any(|diagnostic| diagnostic.code == "unexpected-li-end-tag"));
+
+        let fragment = parse_html_fragment_for_context_with_diagnostics("</li>X", "li").unwrap();
+        assert!(fragment
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "unexpected-li-end-tag"));
     }
 
     #[test]
