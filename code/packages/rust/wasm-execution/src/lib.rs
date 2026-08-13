@@ -1265,19 +1265,50 @@ pub struct WasmExecutionContext {
 /// uncatchable process abort, not a WASM-level trap a caller could ever
 /// observe or recover from.
 ///
-/// `call_function`'s own per-call frame is heavy (it clones the callee's
-/// function body and decodes/re-encodes its full instruction list on
-/// every single call, including recursive self-calls), so this is
-/// deliberately conservative rather than tuned to squeeze out maximum
-/// legal recursion depth — chosen well below where this crate's own
-/// `wasm-wast-parser` sibling empirically found a *lighter*-weight
-/// recursive encoder overflow a small worker thread's stack (~165-500),
-/// with a wide safety margin for a heavier frame on a smaller or
-/// differently-configured host stack. Still far above any real,
-/// intentionally-bounded recursive WASM program (a factorial/Fibonacci-
-/// style test computes at most a few dozen to a couple hundred levels
-/// deep, never anywhere near this).
-const MAX_CALL_DEPTH: usize = 200;
+/// A security review of the first version of this constant (200) found
+/// its justification was wrong: it reasoned from a *different* crate's
+/// (`wasm-wast-parser`'s) measured overflow floor on a *different*,
+/// lighter-weight recursive path, rather than measuring THIS crate's own
+/// (heavier — `call_function` clones and re-decodes the callee's full
+/// instruction list on every call) recursion directly. 200 reliably
+/// overflowed the real host stack in a **debug build** (the profile
+/// `cargo test` uses by default) on any thread stack at or below ~1 MiB —
+/// not a contrived scenario for a WASM interpreter specifically, which is
+/// commonly embedded in worker-thread-pool contexts with a reduced stack.
+///
+/// Corrected the same way this repo's other recursive-descent crates
+/// (e.g. `mccarthy-lisp-parser`) document their own limits: measured this
+/// crate's OWN actual debug-build crash floor directly, via a real
+/// recursive WASM module built through `wasm-wast-parser` and run on a
+/// thread with an explicit, deliberately-small stack size
+/// (`std::thread::Builder::stack_size`/`RUST_MIN_STACK`, bisected) —
+/// **512 KiB** was chosen as the assumed minimum caller-provided stack
+/// (well under Rust's own 2 MiB default spawned-thread stack, so any
+/// caller using ordinary defaults has headroom to spare; a caller running
+/// on a materially smaller stack than this is out of scope). At 512 KiB,
+/// unbounded recursion overflows the real stack at depth 130 and is still
+/// safe at 120 — `MAX_CALL_DEPTH` is **80**, a real ~33% margin below that
+/// measured floor (this repo's other crates document a 25-45% convention
+/// for the same kind of guard). Confirmed safe at 512 KiB, 768 KiB, and
+/// 1 MiB stacks in a debug build.
+///
+/// **Known, deliberate trade-off**: this is NOT "far above any real
+/// intentionally-bounded recursion" — the official testsuite's own
+/// `call.wast` has two genuinely bounded (terminating) mutual-recursion
+/// cases, `even(100)`/`odd(200)`, that need more than 80 levels and now
+/// correctly-but-unfortunately trap "call stack exhausted" instead of
+/// completing (before this fix, they only "passed" by relying on an
+/// unguarded, unsafe recursion depth). A materially higher ceiling isn't
+/// safe without also controlling the ACTUAL stack size WASM execution
+/// runs on — see the tracked follow-up (WASM10 in this session's backlog)
+/// for running `call_function` on a dedicated thread with a guaranteed
+/// larger stack, which would let this constant rise well past 200 safely.
+/// Shipping the conservative, safe value now and taking the small,
+/// honestly-documented regression in those 2 cases was judged better than
+/// leaving the unguarded host-crash risk in place while that larger,
+/// separate architectural change (blocked on this crate's `*mut
+/// LinearMemory`/`*mut Table` raw pointers not being `Send`) is pending.
+const MAX_CALL_DEPTH: usize = 80;
 
 /// One decoded WasmGC instruction's immediates — see [`DecodedOperand::Gc`].
 #[derive(Debug, Clone, Copy, PartialEq)]

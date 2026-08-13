@@ -13,6 +13,16 @@ and a matching `_fails_if_the_action_returns_normally` case. Baseline
 regenerated: `assert_exhaustion 2/2 (100%)`, up from `0/2
 (NotYetSupported)`.
 
+A security review of `wasm-execution`'s guard found its first chosen
+depth (200) wasn't actually safe on small thread stacks in a debug
+build; the corrected, safe value (80) is deliberately conservative
+enough that 2 previously-"passing" `assert_return` cases in `call.wast`
+(`even(100)`/`odd(200)`, genuinely bounded mutual recursion needing more
+than 80 levels) now correctly trap instead — see `wasm-execution`'s own
+`0.6.2` changelog entry for the full trade-off reasoning and the tracked
+follow-up. `assert_return` moved from 12032/12238 to 12030/12238 as a
+direct, understood consequence, not a new bug.
+
 ## 0.1.0 — 2026-08-13 — initial release (W05 PR-4)
 
 New crate. Runs the official WebAssembly spec testsuite's `.wast` scripts

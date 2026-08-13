@@ -115,3 +115,34 @@ fn sibling_calls_after_a_trapped_recursive_call_are_unaffected() {
     let result = engine.call_function(ok_idx, &[]).expect("unrelated call should still succeed");
     assert_eq!(result, vec![WasmValue::I32(42)]);
 }
+
+/// A security review of `MAX_CALL_DEPTH`'s first value (200) found it
+/// reliably overflowed the real host stack in a **debug build** — the
+/// profile `cargo test` uses by default — on any thread stack at or below
+/// ~1 MiB, because its justification compared against a *different*
+/// crate's measured floor on a *different*, lighter recursive path
+/// instead of measuring `wasm-execution`'s own (heavier) recursion
+/// directly. This test is that direct measurement, committed as a
+/// permanent regression guard: run the exact unbounded-recursion shape on
+/// a thread with the documented minimum stack size (see
+/// `MAX_CALL_DEPTH`'s own doc comment for the full methodology and
+/// margin), with **no** `RUST_MIN_STACK` env var trick — a real
+/// `Builder::stack_size`, so this is testing the actual condition, not a
+/// simulation of one. A clean `Err` (not a `join()` failure from a
+/// crashed thread) proves the guard trips before the native overflow
+/// point at the stack size this crate assumes callers provide.
+#[test]
+fn depth_guard_trips_before_overflow_on_the_documented_minimum_stack() {
+    let handle = std::thread::Builder::new()
+        .stack_size(512 * 1024)
+        .spawn(|| {
+            let (mut engine, module) = engine_from_wat(
+                "(module (func $loop (export \"loop\") (result i32) call $loop))",
+            );
+            let idx = export_index(&module, "loop");
+            let result = engine.call_function(idx, &[]);
+            assert!(result.is_err(), "unbounded recursion should trap, not return a value");
+        })
+        .expect("failed to spawn worker thread");
+    handle.join().expect("MAX_CALL_DEPTH must keep the worker thread from crashing on a 512 KiB stack");
+}
