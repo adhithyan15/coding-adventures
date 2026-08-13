@@ -1,0 +1,23 @@
+% ============================================================================
+% syllable-blending.query.adj — a worked recall over the literacy
+% syllable-blending library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what word do the
+% syllables 'lap' and 'top' blend into?": it states no linguistics fact — it
+% only `import`s the grounded table and asks binding queries. The engine
+% resolves each `?` against the `syllable_blending` row and returns the
+% blended word + the table's source/locator/trust. The second query runs the
+% relation BACKWARD (bind the word `laptop`, recall the two syllables that
+% blend into it). A syllable pair this source does not demonstrate blending
+% is not in the table, so a recall on it abstains honestly — the engine
+% never invents a blend.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli syllable-blending.query.adj
+% ============================================================================
+
+import "syllable-blending.adj"
+
+? syllable_blending(lap, top, $Word)        % expect laptop
+? syllable_blending($S1, $S2, laptop)       % expect lap, top — reverse recall
+? syllable_blending(pea, nut, $Word)        % expect abstain — not the pair this source demonstrates

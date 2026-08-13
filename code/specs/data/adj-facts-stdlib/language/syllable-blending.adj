@@ -1,0 +1,66 @@
+% ============================================================================
+% syllable-blending — combining separate syllables to say a word, a
+% THIRTEENTH literacy sub-skill in the ADJ stdlib (adj-facts-stdlib,
+% LANGUAGE).
+% ============================================================================
+% The exact OPPOSITE direction from the already-shipped
+% `syllable-segmentation.adj` (which decomposes a word into its two
+% syllables): a new `syllable_blending(syllable_one, syllable_two, word)`
+% table names the word formed by BLENDING two separate syllables together —
+% the same "opposite direction, separate table" shape already proven by
+% `phoneme-blending.adj` versus `phoneme-segmentation.adj`. Recall is a
+% binding query:
+%
+%     ? syllable_blending(lap, top, $Word)   % laptop
+%
+% A native `table` (ADJ-TABLES RS-5, a THREE-column table like
+% `phoneme-blending.adj`): the one `row` lowers to a ground relation
+% `syllable_blending(syllable_one, syllable_two, word)` carrying the
+% Reading Rockets citation, so the lookup above is the ordinary SLD binding
+% query — the engine returns the blended word WITH its source, on the CPU,
+% with zero model calls, and abstains on any syllable pair not the one the
+% cited page walks through. The query also runs BACKWARD — bind the word and
+% recall the two syllables that blend into it:
+%
+%     ? syllable_blending($S1, $S2, laptop)   % lap, top
+%
+% Provenance: quoted verbatim from Reading Rockets' "Phonological and
+% Phonemic Awareness: In Practice" module — the SAME already-vetted page
+% `syllable-count.adj`/`syllable-segmentation.adj`/`phoneme-blending.adj`/
+% `phoneme-segmentation.adj` all already cite, a DIFFERENT section of it
+% (its "Blending syllables" demonstration, distinct from the "Segmenting
+% syllables" section `syllable-segmentation.adj` cites) — WebFetch-verified
+% THREE separate times for consistency before writing, all byte-identical.
+% The exact span (naming both syllables and the word they blend into):
+%
+%   "I can say each syllable in a word and then I can blend the syllables to
+%    say the word. As I say each syllable, I will lay down a card. I will
+%    lay the cards left to right. Watch me. I say each syllable and put down
+%    a card: 'lap' [place a card] 'top' [place a card so it appears
+%    left-to-right for students]. Now I sweep my finger below the cards and
+%    say the whole word: 'laptop' [sweep finger below the cards
+%    left-to-right]."
+%
+% `trust consensus` — the same tier this page's sibling sections already
+% earned. Deliberately scoped to ONLY this ONE blend the cited page walks
+% through step by step — honestly narrow (mirroring `phoneme-blending.adj`'s
+% precedent of one clean row) rather than inventing a blend the source does
+% not demonstrate. This same page also has an "Adding syllables" section
+% (also "lap" + "top" -> "laptop") that appears to name the SAME syllable
+% pair under a different heading, not a distinct arity like the
+% phoneme-blending/phoneme-addition split — deliberately NOT shipped as a
+% second table to avoid a near-duplicate; if a future WebFetch turns up a
+% genuinely distinct "Adding syllables" example, it can be revisited then.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table syllable_blending {
+    columns syllable_one, syllable_two, word
+
+    row (lap, top, laptop)
+
+    source "I can say each syllable in a word and then I can blend the syllables to say the word. As I say each syllable, I will lay down a card. I will lay the cards left to right. Watch me. I say each syllable and put down a card: 'lap' [place a card] 'top' [place a card so it appears left-to-right for students]. Now I sweep my finger below the cards and say the whole word: 'laptop' [sweep finger below the cards left-to-right]."
+    locator "https://www.readingrockets.org/reading-101/reading-101-learning-modules/course-modules/phonological-and-phonemic-awareness/practice"
+    trust consensus
+}
