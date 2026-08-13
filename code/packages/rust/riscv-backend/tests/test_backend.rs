@@ -164,6 +164,29 @@ fn executes_integer_arithmetic_and_bitwise_ops() {
 }
 
 #[test]
+fn executes_scalar_division_and_modulo() {
+    let evaluate = |op: &str, ty: &str, left: i64, right: i64| {
+        let cir = vec![
+            ci(&format!("const_{ty}"), Some("left"), vec![CIROperand::Int(left)], ty),
+            ci(&format!("const_{ty}"), Some("right"), vec![CIROperand::Int(right)], ty),
+            ci(
+                &format!("{op}_{ty}"),
+                Some("result"),
+                vec![CIROperand::Var("left".into()), CIROperand::Var("right".into())],
+                ty,
+            ),
+            ci(&format!("ret_{ty}"), None, vec![CIROperand::Var("result".into())], ty),
+        ];
+        compile_and_run(&cir)
+    };
+
+    assert_eq!(evaluate("div", "i32", -20, 6), -3);
+    assert_eq!(evaluate("mod", "i32", -20, 6), -2);
+    assert_eq!(evaluate("div", "u32", 20, 6), 3);
+    assert_eq!(evaluate("mod", "u32", 20, 6), 2);
+}
+
+#[test]
 fn executes_signed_and_unsigned_comparisons() {
     let signed = vec![
         ci("const_i32", Some("a"), vec![CIROperand::Int(-3)], "i32"),
@@ -364,6 +387,60 @@ fn executes_pair_aware_64_bit_multiplication() {
     let result = run_binary(&bytes, &[]).expect("wide signed multiplication execution");
     assert_eq!(result.return_value, -4);
     assert_eq!(result.return_value_high, u32::MAX);
+}
+
+#[test]
+fn executes_pair_aware_unsigned_64_bit_division_and_modulo() {
+    let evaluate = |op: &str, dividend: i64, divisor: i64| {
+        let cir = vec![
+            ci("const_u64", Some("dividend"), vec![CIROperand::Int(dividend)], "u64"),
+            ci("const_u64", Some("divisor"), vec![CIROperand::Int(divisor)], "u64"),
+            ci(
+                op,
+                Some("result"),
+                vec![
+                    CIROperand::Var("dividend".into()),
+                    CIROperand::Var("divisor".into()),
+                ],
+                "u64",
+            ),
+            ci("ret_u64", None, vec![CIROperand::Var("result".into())], "u64"),
+        ];
+        let bytes = compile(&ctx("wide_unsigned_divmod", &[], "u64"), &cir)
+            .expect("wide unsigned div/mod lowering");
+        run_binary(&bytes, &[]).expect("wide unsigned div/mod execution")
+    };
+
+    let quotient = evaluate("div_u64", 1_099_511_627_776, 3);
+    assert_eq!(quotient.return_value as u32, 0x5555_5555);
+    assert_eq!(quotient.return_value_high, 0x55);
+
+    let cross_word_quotient = evaluate("div_u64", 1_311_768_467_463_790_320, 4_294_967_297);
+    assert_eq!(cross_word_quotient.return_value as u32, 0x1234_5678);
+    assert_eq!(cross_word_quotient.return_value_high, 0);
+
+    for (dividend, divisor) in [(17, 5), (i64::MAX, 4_294_967_297), (-1, 7)] {
+        let quotient = evaluate("div_u64", dividend, divisor);
+        let remainder = evaluate("mod_u64", dividend, divisor);
+        let quotient_bits = (u64::from(quotient.return_value_high) << 32)
+            | u64::from(quotient.return_value as u32);
+        let remainder_bits = (u64::from(remainder.return_value_high) << 32)
+            | u64::from(remainder.return_value as u32);
+        assert_eq!(quotient_bits, (dividend as u64) / (divisor as u64));
+        assert_eq!(remainder_bits, (dividend as u64) % (divisor as u64));
+    }
+
+    let remainder = evaluate("mod_u64", 1_311_768_467_463_790_320, 4_294_967_297);
+    assert_eq!(remainder.return_value as u32, 0x8888_8878);
+    assert_eq!(remainder.return_value_high, 0);
+
+    let zero_divisor_quotient = evaluate("div_u64", 1_099_511_627_776, 0);
+    assert_eq!(zero_divisor_quotient.return_value as u32, u32::MAX);
+    assert_eq!(zero_divisor_quotient.return_value_high, u32::MAX);
+
+    let zero_divisor_remainder = evaluate("mod_u64", 1_099_511_627_776, 0);
+    assert_eq!(zero_divisor_remainder.return_value, 0);
+    assert_eq!(zero_divisor_remainder.return_value_high, 0x100);
 }
 
 #[test]

@@ -23,15 +23,15 @@ tests passing byte-for-byte.
 | CIR family | Status |
 |------------|--------|
 | `const_*` | ✓ RV32 scalars and full-width `i64`/`u64` register pairs |
-| Integer scalar ops | ✓ `add`, `sub`, `mul`, `and`, `or`, `xor`, `shl`, `shr`, `neg`, `not` |
-| Wide integer ops | ✓ `add_i64`, `sub_i64`, `mul_i64`, `add_u64`, `sub_u64`, `mul_u64` |
+| Integer scalar ops | ✓ `add`, `sub`, `mul`, `div`, `mod`, `and`, `or`, `xor`, `shl`, `shr`, `neg`, `not` |
+| Wide integer ops | ✓ `add_i64`, `sub_i64`, `mul_i64`, `add_u64`, `sub_u64`, `mul_u64`, `div_u64`, `mod_u64` |
 | Wide bitwise ops | ✓ `and_i64`, `or_i64`, `xor_i64`, `not_i64` and unsigned forms |
 | Wide shifts | ✓ left, logical-right, and arithmetic-right shifts for counts `0..63` |
 | Wide multiplication | ✓ signed and unsigned full-width products via RV32M `mul` / `mulhu` |
 | Comparisons | ✓ signed/unsigned `eq ne lt le gt ge`, including `i64`/`u64` pairs |
 | Control flow | ✓ `label`, `jmp`, `jmp_if_true`, `jmp_if_false` |
 | `ret_*`, `ret_void` | ✓ scalar result in `a0`; wide result in `a0:a1` |
-| Wide divide/modulo, calls, memory, I/O | not yet supported |
+| Wide signed divide/modulo, calls, memory, I/O | not yet supported |
 | Floating point (`f32`/`f64`) | ✗ **refused by design** — see below |
 
 ### Floating point is refused, not "unimplemented"
@@ -79,7 +79,9 @@ and `add` / `sub` values use a low/high register pair. Pair comparisons use
 signed or unsigned high-word ordering, then unsigned low-word ordering when
 the high words are equal. Pair bitwise operations apply independently to the
 low and high words. Pair shifts distinguish zero, sub-word, cross-word, and
-out-of-range counts before using the RV32 shift instructions.
+out-of-range counts before using the RV32 shift instructions. Unsigned pair
+division and modulo use a 64-step restoring loop, including RV32M-compatible
+zero-divisor results; signed pair division remains a separate lowering step.
 
 ## Why this is the FINAL lane
 
