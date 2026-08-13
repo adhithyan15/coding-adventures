@@ -5318,25 +5318,28 @@ impl Compiler {
                     .iter()
                     .any(|token| token.effective_type_name() == "NAME")
             });
-            let stable_boolean_condition = condition.is_some_and(|condition| {
-                let selectors: HashSet<String> = recursive_tokens(condition)
+            let stable_scalar_condition = condition.is_some_and(|condition| {
+                let dependencies: HashSet<String> = recursive_tokens(condition)
                     .into_iter()
                     .filter(|token| token.effective_type_name() == "NAME")
                     .map(|token| token.value.clone())
                     .collect();
-                !selectors.is_empty()
-                    && selectors.iter().all(|selector| {
-                        selector != target_name
-                            && self.require_var(selector).is_ok_and(|binding| {
-                                binding.ty == ScalarType::Boolean
+                !dependencies.is_empty()
+                    && dependencies.iter().all(|dependency| {
+                        dependency != target_name
+                            && self.require_var(dependency).is_ok_and(|binding| {
+                                matches!(
+                                    binding.ty,
+                                    ScalarType::Boolean | ScalarType::Integer | ScalarType::Real
+                                )
                                     && !binding.is_global
                                     && binding.array.is_none()
-                                    && self.active_by_name_binding(selector).is_none()
+                                    && self.active_by_name_binding(dependency).is_none()
                             })
-                            && !for_body_assigns_name(effect_root, selector)
+                            && !for_body_assigns_name(effect_root, dependency)
                     })
             });
-            if condition_is_variable_free || stable_boolean_condition {
+            if condition_is_variable_free || stable_scalar_condition {
                 let branches: Vec<&GrammarASTNode> = children
                     .into_iter()
                     .filter(|child| {
@@ -9388,6 +9391,15 @@ mod tests {
     }
 
     #[test]
+    fn al4_static_while_selects_stable_scalar_body_predicate() {
+        compile_source(
+            "begin integer i, n, guard; n := 3; guard := 1; i := 0; for i := i + 1 while i < n do if guard = 0 then n := n + 1; print(i + 0.25) end",
+            "test",
+        )
+        .expect("an unwritten known scalar local may control a body predicate");
+    }
+
+    #[test]
     fn al4_static_while_preserves_standard_function_dependency() {
         compile_source(
             "begin integer i, n; n := -3; i := 0; for i := i + 1 while i < abs(n) do print(''); print(i + 0.25) end",
@@ -9453,6 +9465,16 @@ mod tests {
             "test",
         )
         .expect_err("every selector in a composed condition must remain stable");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_written_scalar_predicate_dependency_remains_conservative() {
+        let err = compile_source(
+            "begin integer i, n, guard; n := 3; guard := 1; i := 0; for i := i + 1 while i < n do begin if guard = 0 then n := n + 1; guard := 0 end; print(i + 0.25) end",
+            "test",
+        )
+        .expect_err("a scalar predicate dependency written by the body may change its branch");
         assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
