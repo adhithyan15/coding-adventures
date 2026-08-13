@@ -11,6 +11,7 @@ import {
   type ModalityManifestLesson,
 } from "./modality-manifest.js";
 import { buildDataset, parseLesson, type ParsedLesson } from "./parse.js";
+import type { LetterLedger } from "./letter-ledger.js";
 import type {
   BookChapter,
   BookCorpus,
@@ -297,6 +298,9 @@ export function modalityManifestById(
   return index;
 }
 
+/** Suffix marking a letter ledger, which lives beside the script inventories. */
+const LEDGER_SUFFIX = "-ledger.json";
+
 /** Read data/scripts/*.json (may be empty while scripts are still being authored). */
 export function loadScripts(root = defaultCurriculumRoot()): Record<string, ScriptData> {
   const dir = join(root, "data", "scripts");
@@ -304,8 +308,34 @@ export function loadScripts(root = defaultCurriculumRoot()): Record<string, Scri
   if (!existsSync(dir)) return out;
   for (const file of readdirSync(dir).sort()) {
     if (!file.endsWith(".json")) continue;
+    // A letter ledger sits in this directory and carries the SAME `script` key
+    // as the inventory it orders, so reading both into one map would have one
+    // silently overwrite the other. Which one won would depend on filename
+    // sort order, which is not a thing to depend on.
+    if (file.endsWith(LEDGER_SUFFIX)) continue;
     const sd = JSON.parse(readFileSync(join(dir, file), "utf8")) as ScriptData;
     out[sd.script] = sd;
+  }
+  return out;
+}
+
+/**
+ * Read data/scripts/*-ledger.json — the order a reader meets each script's
+ * letters (HL11 section 4).
+ *
+ * Scripts without a ledger are SKIPPED, not defaulted to an empty one, for the
+ * same reason `loadTrackChapters` skips tracks without a capability ledger:
+ * "not yet authored" and "authored and empty" are different kinds of debt, and
+ * collapsing the first into the second erases what the gap report exists to
+ * measure.
+ */
+export function loadLetterLedgers(root = defaultCurriculumRoot()): LetterLedger[] {
+  const dir = join(root, "data", "scripts");
+  if (!existsSync(dir)) return [];
+  const out: LetterLedger[] = [];
+  for (const file of readdirSync(dir).sort()) {
+    if (!file.endsWith(LEDGER_SUFFIX)) continue;
+    out.push(JSON.parse(readFileSync(join(dir, file), "utf8")) as LetterLedger);
   }
   return out;
 }
@@ -319,6 +349,7 @@ export function loadEverything(root = defaultCurriculumRoot()): {
   books: BookCorpus;
   lessons: ParsedLesson[];
   scripts: Record<string, ScriptData>;
+  letterLedgers: LetterLedger[];
   dataset: Dataset;
 } {
   const taxonomy = loadTaxonomy(root);
@@ -328,6 +359,7 @@ export function loadEverything(root = defaultCurriculumRoot()): {
   const books = loadBookCorpus(root);
   const lessons = loadLessons(root);
   const scripts = loadScripts(root);
+  const letterLedgers = loadLetterLedgers(root);
   return {
     taxonomy,
     registry,
@@ -336,6 +368,7 @@ export function loadEverything(root = defaultCurriculumRoot()): {
     books,
     lessons,
     scripts,
+    letterLedgers,
     dataset: buildDataset(taxonomy, lessons),
   };
 }

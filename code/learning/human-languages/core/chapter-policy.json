@@ -7,6 +7,9 @@
   "maxLinearisableTableColumns": 3,
   "maxNewGlyphsPerLesson": 3,
   "maxNewScriptSystemsPerLesson": 1,
+  "maxNewLettersPerScriptSegment": 1,
+  "minLessonsBetweenScriptSegments": 2,
+  "letterLedgerUnspentWindow": 6,
   "maxNewGrammarCellsPerLesson": 1,
   "maxNewIdiomsPerLesson": 1,
   "maxNewSensesPerLesson": 1,
@@ -67,5 +70,45 @@
     "status": "report-only",
     "rationale": "HL09 showed one ramp can be gentle while another is brutal: Spanish looked gentle on vocabulary (178 words, every lesson within budget) while being unusable, because nothing measured what the learner could BUILD. These seven numbers give the remaining strands their own ceilings so no lesson can be gentle on atoms and steep on everything else. maxNewGrammarCellsPerLesson is the consequential one: a CELL is one filled slot in one paradigm (hablo), not the six-form table, and Spanish holds roughly 630 verb cells. At one per lesson the verb system alone is ~630 lessons, which is the honest size of the thing rather than a number to optimise away. maxRuleStatementsPerLesson is the info-dump gate: a lesson may state ONE rule, where a rule statement is 'X is used for...', 'X always/never...', 'there are N kinds of X', or a table introducing more than one new row. minDownstreamReach makes 'each lesson leads to future lessons' falsifiable -- an introduced atom that no later lesson requires or practises is a dead end. rootLedgerMinReuse stops etymology being decoration: a root must be cashed in by at least three later lessons or it is cut or moved to where its payoff lives. All seven ship report-only, per the HL05 precedent, because the corpus predates them and a gate that fails on recorded debt teaches authors to route around it.",
     "measuredAgainstCorpus": "1694 lessons, 514 chapters, 22 tracks, at HL10 authoring time"
+  },
+  "scriptDrizzleProvenance": {
+    "specifiedAt": "2026-08-12",
+    "spec": "HL11 sections 2.2 and 4",
+    "status": "report-only",
+    "rationale": "maxNewGlyphsPerLesson (3) bounds how fast glyphs may arrive. It says nothing about whether the reader was ever TAUGHT them, and nothing about pace: a track can satisfy it while teaching no letters at all, which is what four of the six Indic tracks do. These three numbers are the drizzle itself. maxNewLettersPerScriptSegment is 1 because a script segment exists to teach ONE shape, and the measurement that makes that affordable is in the letter ledgers: ordering letters by the words they complete, Tamil reaches nanri at the tenth glyph and vanakkam at the eleventh, and Hindi reaches namaste at the twelfth. minLessonsBetweenScriptSegments is 2 so the script never becomes the course -- the book has to be useful from page one and the letters ride behind it. At one letter every two or three lessons, sixteen glyphs land around lesson forty, which is where a third of each track's opening vocabulary becomes writable. letterLedgerUnspentWindow is the Root Ledger's rule applied to glyphs: a letter that unlocks no word within six positions of being taught is a step the reader climbed for nothing, and is reported so it can be cut or moved.",
+    "measuredAgainstCorpus": "the six Indic tracks' opening 40 lessons: 30 distinct Tamil words, 39 Telugu, 39 Kannada, 38 Malayalam, 73 Devanagari across Hindi and Sanskrit",
+    "writableAfter": {
+      "note": "distinct opening words fully writable after N ledger positions",
+      "tamil": {
+        "8": 2,
+        "16": 11,
+        "24": 18,
+        "of": 30
+      },
+      "telugu": {
+        "8": 3,
+        "16": 10,
+        "24": 18,
+        "of": 39
+      },
+      "kannada": {
+        "8": 3,
+        "16": 10,
+        "24": 17,
+        "of": 39
+      },
+      "malayalam": {
+        "8": 3,
+        "16": 11,
+        "24": 17,
+        "of": 38
+      },
+      "devanagari": {
+        "8": 5,
+        "16": 18,
+        "24": 29,
+        "of": 73
+      }
+    }
   }
 }

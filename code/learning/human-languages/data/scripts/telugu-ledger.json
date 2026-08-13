@@ -1,0 +1,335 @@
+{
+  "script": "telugu",
+  "version": 1,
+  "note": "Letter ledger (HL11 section 4). AUTHORED INTENT: proposed by propose_letter_ledger.py, then reviewed and committed by hand. A validator may check this file and may never rewrite it. Letters are ordered by the words they make writable, not by recitation order, because this curriculum's reader cannot yet speak the language and a letter is worth exactly what it unlocks.",
+  "tracks": [
+    "telugu"
+  ],
+  "openingLessons": 40,
+  "openingWords": 39,
+  "letters": [
+    {
+      "position": 1,
+      "glyph": "త",
+      "unicodeName": "TELUGU LETTER TA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": []
+    },
+    {
+      "position": 2,
+      "glyph": "ు",
+      "unicodeName": "TELUGU VOWEL SIGN U",
+      "kind": "vowel-sign",
+      "family": null,
+      "familySource": null,
+      "unlocks": []
+    },
+    {
+      "position": 3,
+      "glyph": "క",
+      "unicodeName": "TELUGU LETTER KA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "-కు",
+          "romanization": "-ku",
+          "lesson": "TE-C06-dative-ku"
+        }
+      ]
+    },
+    {
+      "position": 4,
+      "glyph": "ం",
+      "unicodeName": "TELUGU SIGN ANUSVARA",
+      "kind": "vowel-sign",
+      "family": null,
+      "familySource": null,
+      "unlocks": []
+    },
+    {
+      "position": 5,
+      "glyph": "్",
+      "unicodeName": "TELUGU SIGN VIRAMA",
+      "kind": "vowel-sign",
+      "family": null,
+      "familySource": null,
+      "unlocks": []
+    },
+    {
+      "position": 6,
+      "glyph": "ర",
+      "unicodeName": "TELUGU LETTER RA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": []
+    },
+    {
+      "position": 7,
+      "glyph": "ా",
+      "unicodeName": "TELUGU VOWEL SIGN AA",
+      "kind": "vowel-sign",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "రా",
+          "romanization": "rā",
+          "lesson": "TE-C32-raa"
+        }
+      ]
+    },
+    {
+      "position": 8,
+      "glyph": "ి",
+      "unicodeName": "TELUGU VOWEL SIGN I",
+      "kind": "vowel-sign",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "రాత్రి",
+          "romanization": "night\" — the same Sanskrit tatsama...",
+          "lesson": "TE-C24-ratri"
+        }
+      ]
+    },
+    {
+      "position": 9,
+      "glyph": "న",
+      "unicodeName": "TELUGU LETTER NA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "తిను",
+          "romanization": "tinu",
+          "lesson": "TE-C32-tinu"
+        }
+      ]
+    },
+    {
+      "position": 10,
+      "glyph": "య",
+      "unicodeName": "TELUGU LETTER YA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "రాయు",
+          "romanization": "rāyu",
+          "lesson": "TE-C33-raayu"
+        }
+      ]
+    },
+    {
+      "position": 11,
+      "glyph": "స",
+      "unicodeName": "TELUGU LETTER SA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "సాయంత్రం",
+          "romanization": "evening\"",
+          "lesson": "TE-C27-sayantram"
+        }
+      ]
+    },
+    {
+      "position": 12,
+      "glyph": "చ",
+      "unicodeName": "TELUGU LETTER CA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": []
+    },
+    {
+      "position": 13,
+      "glyph": "ప",
+      "unicodeName": "TELUGU LETTER PA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "పచ్చ, పసుపు",
+          "romanization": "green and yellow — a genuine Telugu...",
+          "lesson": "TE-C22-pacha-pasupu"
+        }
+      ]
+    },
+    {
+      "position": 14,
+      "glyph": "ల",
+      "unicodeName": "TELUGU LETTER LA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "కుక్క, పిల్లి",
+          "romanization": "dog and cat — kukka genuinely...",
+          "lesson": "TE-C21-kukka-pilli"
+        }
+      ]
+    },
+    {
+      "position": 15,
+      "glyph": "ె",
+      "unicodeName": "TELUGU VOWEL SIGN E",
+      "kind": "vowel-sign",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "తల చెయ్యి",
+          "romanization": "head",
+          "lesson": "TE-C13-sharira-bhagalu"
+        },
+        {
+          "word": "తెలుసు",
+          "romanization": "telusu",
+          "lesson": "TE-C32-telusu"
+        }
+      ]
+    },
+    {
+      "position": 16,
+      "glyph": "ద",
+      "unicodeName": "TELUGU LETTER DA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": []
+    },
+    {
+      "position": 17,
+      "glyph": "వ",
+      "unicodeName": "TELUGU LETTER VA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "చదువు",
+          "romanization": "caduvu",
+          "lesson": "TE-C33-caduvu"
+        }
+      ]
+    },
+    {
+      "position": 18,
+      "glyph": "గ",
+      "unicodeName": "TELUGU LETTER GA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "నాకు తెలుగు వచ్చు",
+          "romanization": "nāku telugu vaccu",
+          "lesson": "TE-C06-dative-subject"
+        }
+      ]
+    },
+    {
+      "position": 19,
+      "glyph": "ీ",
+      "unicodeName": "TELUGU VOWEL SIGN II",
+      "kind": "vowel-sign",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "నీ వయసెంత?",
+          "romanization": "how old are you? — literally \"your...",
+          "lesson": "TE-C19-vayasu"
+        }
+      ]
+    },
+    {
+      "position": 20,
+      "glyph": "ే",
+      "unicodeName": "TELUGU VOWEL SIGN EE",
+      "kind": "vowel-sign",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "దయచేసి",
+          "romanization": "please",
+          "lesson": "TE-C08-dayachesi"
+        }
+      ]
+    },
+    {
+      "position": 21,
+      "glyph": "ళ",
+      "unicodeName": "TELUGU LETTER LLA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "వెళ్ళు",
+          "romanization": "veḷḷu",
+          "lesson": "TE-C32-vellu"
+        }
+      ]
+    },
+    {
+      "position": 22,
+      "glyph": "ఉ",
+      "unicodeName": "TELUGU LETTER U",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "ఉదయం",
+          "romanization": "morning\"",
+          "lesson": "TE-C26-udayam"
+        }
+      ]
+    },
+    {
+      "position": 23,
+      "glyph": "డ",
+      "unicodeName": "TELUGU LETTER DDA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "ఉండు",
+          "romanization": "uṇḍu",
+          "lesson": "TE-C32-undu"
+        }
+      ]
+    },
+    {
+      "position": 24,
+      "glyph": "ఎ",
+      "unicodeName": "TELUGU LETTER E",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "నలుపు తెలుపు ఎరుపు నీలం",
+          "romanization": "black, white, red, blue — Telugu's...",
+          "lesson": "TE-C11-rangulu"
+        }
+      ]
+    }
+  ]
+}

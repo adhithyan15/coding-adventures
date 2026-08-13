@@ -1,5 +1,23 @@
 # Changelog
 
+## Unreleased
+
+### Added — Letter ledgers (HL11 section 4)
+
+- `loadLetterLedgers()` reads `data/scripts/<script>-ledger.json`: the order a
+  reader meets each script's letters, ordered by the words they make writable
+  rather than by the traditional recitation order.
+- `validateLetterLedger()` checks a ledger against the corpus that justifies it —
+  contiguous positions, glyphs belonging to the named script, no vowel sign
+  before a base letter, families kept together, every claimed unlock naming a
+  lesson that exists, and unspent letters. Report-only.
+- `summarizeLetterLedger()` publishes `firstWritableWord` and the writable-word
+  curve. A word, not a letter count: twenty taught letters is not something a
+  reader can feel, and writing *thank you* is.
+- `loadScripts()` now skips `*-ledger.json`. Both files sit in `data/scripts` and
+  carry the same `script` key, so reading both into one map would have had one
+  silently overwrite the other — decided by filename sort order.
+
 All notable changes to `@coding-adventures/human-language-data` are documented here.
 
 ## [Unreleased]

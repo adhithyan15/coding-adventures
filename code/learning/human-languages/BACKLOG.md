@@ -447,10 +447,60 @@ orders letters by payoff and records the order as a per-script letter ledger.
 | HL-C114 | Not started | Extract `script-ductus` from the app. `language-ladder/src/{strokes,ductusview,truetype}.ts` hold `DUCTUS`, the font-outline reader, and the filmstrip builder; nothing under `code/packages/` may depend on something under `code/programs/`, so the book generator cannot reach them today. `ductusview.ts`'s own header already anticipates the move. | The three modules live in a package, `language-ladder` imports it with no behaviour change, and the font-verification tests (`fractionOnInk`, segment-meeting, whole-ink coverage) move across intact and still pass. |
 | HL-C115 | Not started | Add the `letter-ductus` figure kind beside `etymology-route` — the only kind that exists today. One letter renders *n* panels, panel *k* showing strokes 1…*k*, the font's own outline behind in grey, the travelled path in ink, a dot at the pen, one caption per panel from the segment labels. | Declared in `core/figure-generation.json`, rasterised through HL-C113, byte-gated in `core/generated-figure-hashes.json`; proved on Tamil's eleven already-verified letters before any new research lands. |
 | HL-C116 | Not started | Measure the script ramp's missing half in `ramp.ts`, report-only: load-bearing versus exposure target-script text, closure violations, `firstWritableWord`, the writable-word curve, letters per script segment, and unspent letters. | Every number appears in the gap report; the corpus's real closure debt is published per track; nothing throws, per the HL05/HL08 precedent. |
-| HL-C117 | Not started | Add the `SCRIPT` strand and its pre-A1 nodes to `core/spine.json`, a drizzle budget to `core/chapter-policy.json` beside `maxNewGlyphsPerLesson`, and the per-script **letter ledger** — ordered by word payoff, authored intent, never rewritten by a validator. | Each of the five scripts has a ledger; every ledger entry names the words its letter completes; a letter that completes nothing for a long stretch is reported as unspent (the Root Ledger rule, applied to glyphs). |
+| HL-C117 | **Done** (letter ledgers, drizzle budget); spine nodes deferred to HL-C120 so they land with lessons that realize them | Add the `SCRIPT` strand and its pre-A1 nodes to `core/spine.json`, a drizzle budget to `core/chapter-policy.json` beside `maxNewGlyphsPerLesson`, and the per-script **letter ledger** — ordered by word payoff, authored intent, never rewritten by a validator. | Each of the five scripts has a ledger; every ledger entry names the words its letter completes; a letter that completes nothing for a long stretch is reported as unspent (the Root Ledger rule, applied to glyphs). |
 | HL-C118 | Not started | Research and author cited ductus for the five scripts in letter-ledger order — Tamil outward from its eleven, and Telugu, Kannada, Malayalam and Devanagari from zero. Base letters and vowel signs only; composed syllables derive from theirs. | Every authored pen path is font-verified and carries a `strokeOrderSource` with `citation`, `url` and `variation`. **No citation → no pen path → no figure**, and the gap is reported rather than filled. Telugu has a plausible academic candidate (Vemuri, *The Shapes of Telugu*, UC Davis); Kannada, Malayalam and Devanagari are unproven and may land partly prose-only. |
 | HL-C119 | Not started | Redistribute the script strands that already exist. Tamil's twenty `TA-W*` lessons are good material clustered at `sequence: 270`; Hindi's eleven include `HI-W01-shirorekha-na-ma`, the steepest lesson in the corpus at twelve glyphs. Both are re-cut into one-letter segments across the early sequences. | The prose survives the re-cut; each segment teaches exactly one letter; `drivablePercent` **does not fall** when the detachable writing segments land, which is the design's own falsification test. |
 | HL-C120 | Not started | Author the missing script strand for Telugu, Kannada, Malayalam and Sanskrit, which have none, and migrate the six tracks' 233 schema-v1 lessons so they enter the gates at all. Fix the 30–34 lessons per track that carry no `sequence` — until that is done, no claim in HL11 is verifiable, because every one of them is a claim about order. | Closure violations reach zero per track; `firstWritableWord` lands near sequence 50; every book still builds and every `check:*` still passes. |
+
+## Findings from HL-C117
+
+- The ledgers exist for all five scripts and the validator runs clean against the
+  real corpus: 24 positions each, **0 issues**. Measured payoff, ordering letters
+  by the words they complete:
+
+| script | words in opening | after 8 | after 16 | after 24 | first writable |
+|---|---:|---:|---:|---:|---|
+| tamil | 30 | 2 | 11 | 18 | position 2 |
+| telugu | 39 | 3 | 10 | 18 | position 3 |
+| kannada | 39 | 3 | 10 | 17 | position 5 |
+| malayalam | 38 | 3 | 11 | 17 | position 3 |
+| devanagari (hindi+sanskrit) | 73 | 5 | 18 | 29 | position 1 |
+
+  Tamil reaches *thank you* at the tenth glyph and its greeting at the eleventh;
+  Devanagari reaches नमस्ते at the twelfth. The same walk in traditional
+  recitation order completes **zero** words after twelve glyphs, which is the
+  whole justification for HL11 section 4.
+
+- **A vowel sign cannot come first**, and the payoff walk wanted to put one there
+  in four of the five scripts. These are abugidas: a mark modifies a base letter,
+  so a ledger opening on one describes a lesson that cannot be written down. The
+  constraint costs one or two positions and is now enforced in both the proposal
+  generator and the validator.
+
+- **Families and payoff wanted the same thing**, which was not guaranteed. Tamil's
+  ண/ன/ந/ற share a flat top bar and `tamil.json` already said they are best learned
+  together; teaching them as a block at positions 7-10 is exactly what unlocks
+  நன்றி. Devanagari's families are extractable mechanically, because its
+  `components` already say things like "ध: like द with an extra inner loop" —
+  eight derivational pairs, none of them asserted by hand.
+
+- **`loadScripts` would have eaten the ledgers.** It globs every `*.json` in
+  `data/scripts`, and a ledger carries the same `script` key as the inventory it
+  orders, so one would have silently overwritten the other with the winner decided
+  by filename sort order. Found before landing; the loader now skips the suffix.
+
+- **The four Dravidian and Sanskrit tracks are too thin to drizzle into.** Tamil
+  has 50 lessons in its first 50 sequence slots and Hindi 41, but Telugu, Kannada
+  and Malayalam have ~20 each and Sanskrit 17. At one letter per two or three
+  lessons, those four need roughly 30 more opening lessons authored before 16
+  letters can land inside the first 50. That is HL-C120's real size.
+
+- Telugu's and Malayalam's earliest "writable words" are grammatical suffixes
+  (`-కు`, `-ിക്ക്`) rather than free words, because those tracks teach case endings
+  as headwords in the opening. Reported rather than filtered: a suffix genuinely
+  is something the reader writes, but a ledger milestone that is a bound morpheme
+  is weaker payoff than one that is a greeting, and the authoring in HL-C120
+  should improve it rather than the measurement hiding it.
 
 ## P0 — Step-by-Step capability program (HL05–HL08)
 

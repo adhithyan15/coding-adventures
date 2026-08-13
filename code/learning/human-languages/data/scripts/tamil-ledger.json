@@ -1,0 +1,333 @@
+{
+  "script": "tamil",
+  "version": 1,
+  "note": "Letter ledger (HL11 section 4). AUTHORED INTENT: proposed by propose_letter_ledger.py, then reviewed and committed by hand. A validator may check this file and may never rewrite it. Letters are ordered by the words they make writable, not by recitation order, because this curriculum's reader cannot yet speak the language and a letter is worth exactly what it unlocks.",
+  "tracks": [
+    "tamil"
+  ],
+  "openingLessons": 40,
+  "openingWords": 30,
+  "letters": [
+    {
+      "position": 1,
+      "glyph": "ப",
+      "unicodeName": "TAMIL LETTER PA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": []
+    },
+    {
+      "position": 2,
+      "glyph": "ோ",
+      "unicodeName": "TAMIL VOWEL SIGN OO",
+      "kind": "vowel-sign",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "போ",
+          "romanization": "to go",
+          "lesson": "TA-C04-po"
+        }
+      ]
+    },
+    {
+      "position": 3,
+      "glyph": "்",
+      "unicodeName": "TAMIL SIGN VIRAMA",
+      "kind": "vowel-sign",
+      "family": null,
+      "familySource": null,
+      "unlocks": []
+    },
+    {
+      "position": 4,
+      "glyph": "க",
+      "unicodeName": "TAMIL LETTER KA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": []
+    },
+    {
+      "position": 5,
+      "glyph": "வ",
+      "unicodeName": "TAMIL LETTER VA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "வ, க",
+          "romanization": "va, ka",
+          "lesson": "TA-W01-abugida-va-ka"
+        }
+      ]
+    },
+    {
+      "position": 6,
+      "glyph": "ி",
+      "unicodeName": "TAMIL VOWEL SIGN I",
+      "kind": "vowel-sign",
+      "family": null,
+      "familySource": null,
+      "unlocks": []
+    },
+    {
+      "position": 7,
+      "glyph": "ண",
+      "unicodeName": "TAMIL LETTER NNA",
+      "kind": "letter",
+      "family": "ணனநற",
+      "familySource": "tamil.json notes: \"several letters share a straight top bar and are best learned as a family\"",
+      "unlocks": []
+    },
+    {
+      "position": 8,
+      "glyph": "ன",
+      "unicodeName": "TAMIL LETTER NNNA",
+      "kind": "letter",
+      "family": "ணனநற",
+      "familySource": "tamil.json notes: \"several letters share a straight top bar and are best learned as a family\"",
+      "unlocks": []
+    },
+    {
+      "position": 9,
+      "glyph": "ந",
+      "unicodeName": "TAMIL LETTER NA",
+      "kind": "letter",
+      "family": "ணனநற",
+      "familySource": "tamil.json notes: \"several letters share a straight top bar and are best learned as a family\"",
+      "unlocks": []
+    },
+    {
+      "position": 10,
+      "glyph": "ற",
+      "unicodeName": "TAMIL LETTER RRA",
+      "kind": "letter",
+      "family": "ணனநற",
+      "familySource": "tamil.json notes: \"several letters share a straight top bar and are best learned as a family\"",
+      "unlocks": [
+        {
+          "word": "நன்றி",
+          "romanization": "thank you",
+          "lesson": "TA-C01-nandri"
+        }
+      ]
+    },
+    {
+      "position": 11,
+      "glyph": "ம",
+      "unicodeName": "TAMIL LETTER MA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "வணக்கம்",
+          "romanization": "hello / greetings",
+          "lesson": "TA-C01-vanakkam"
+        },
+        {
+          "word": "ம, ண",
+          "romanization": "ma, ṇa",
+          "lesson": "TA-W02-ma-retroflex-na"
+        }
+      ]
+    },
+    {
+      "position": 12,
+      "glyph": "எ",
+      "unicodeName": "TAMIL LETTER E",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "என்",
+          "romanization": "my",
+          "lesson": "TA-C02-en"
+        },
+        {
+          "word": "என்ன",
+          "romanization": "what",
+          "lesson": "TA-C02-enna"
+        }
+      ]
+    },
+    {
+      "position": 13,
+      "glyph": "ல",
+      "unicodeName": "TAMIL LETTER LA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "நலம்",
+          "romanization": "well, wellness, good — and the...",
+          "lesson": "TA-C03-nalam"
+        }
+      ]
+    },
+    {
+      "position": 14,
+      "glyph": "ா",
+      "unicodeName": "TAMIL VOWEL SIGN AA",
+      "kind": "vowel-sign",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "நான்",
+          "romanization": "I",
+          "lesson": "TA-C03-naan"
+        }
+      ]
+    },
+    {
+      "position": 15,
+      "glyph": "ழ",
+      "unicodeName": "TAMIL LETTER LLLA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "வாழ்",
+          "romanization": "to live, to flourish",
+          "lesson": "TA-C05-vaazh"
+        }
+      ]
+    },
+    {
+      "position": 16,
+      "glyph": "ச",
+      "unicodeName": "TAMIL LETTER CA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "மகிழ்ச்சி",
+          "romanization": "joy / pleased to meet you",
+          "lesson": "TA-C02-magizhcci"
+        }
+      ]
+    },
+    {
+      "position": 17,
+      "glyph": "ர",
+      "unicodeName": "TAMIL LETTER RA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "சரி",
+          "romanization": "okay / alright / correct",
+          "lesson": "TA-C01-sari"
+        }
+      ]
+    },
+    {
+      "position": 18,
+      "glyph": "ட",
+      "unicodeName": "TAMIL LETTER TTA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "எப்படி",
+          "romanization": "how",
+          "lesson": "TA-C03-eppadi"
+        }
+      ]
+    },
+    {
+      "position": 19,
+      "glyph": "அ",
+      "unicodeName": "TAMIL LETTER A",
+      "kind": "letter",
+      "family": "அஆ",
+      "familySource": "tamil.json: components of TAMIL LETTER AA name TAMIL LETTER A",
+      "unlocks": []
+    },
+    {
+      "position": 20,
+      "glyph": "ஆ",
+      "unicodeName": "TAMIL LETTER AA",
+      "kind": "letter",
+      "family": "அஆ",
+      "familySource": "tamil.json: components of TAMIL LETTER AA name TAMIL LETTER A",
+      "unlocks": [
+        {
+          "word": "ஆம்",
+          "romanization": "yes",
+          "lesson": "TA-C01-aam"
+        }
+      ]
+    },
+    {
+      "position": 21,
+      "glyph": "ு",
+      "unicodeName": "TAMIL VOWEL SIGN U",
+      "kind": "vowel-sign",
+      "family": null,
+      "familySource": null,
+      "unlocks": []
+    },
+    {
+      "position": 22,
+      "glyph": "த",
+      "unicodeName": "TAMIL LETTER TA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "தமிழ் எழுத்து",
+          "romanization": "tamiḻ eḻuttu",
+          "lesson": "TA-W01-curves-va-ka"
+        }
+      ]
+    },
+    {
+      "position": 23,
+      "glyph": "ே",
+      "unicodeName": "TAMIL VOWEL SIGN EE",
+      "kind": "vowel-sign",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "பேசு",
+          "romanization": "to speak",
+          "lesson": "TA-C05-pesu"
+        },
+        {
+          "word": "நான் தமிழ் பேசுகிறேன்",
+          "romanization": "I speak Tamil",
+          "lesson": "TA-C05-naan-tamizh-pesugiren"
+        }
+      ]
+    },
+    {
+      "position": 24,
+      "glyph": "ய",
+      "unicodeName": "TAMIL LETTER YA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "போய் வருகிறேன்",
+          "romanization": "goodbye",
+          "lesson": "TA-C04-poy-varugiren"
+        }
+      ]
+    }
+  ]
+}
