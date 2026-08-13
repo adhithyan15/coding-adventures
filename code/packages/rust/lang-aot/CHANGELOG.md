@@ -1,5 +1,10 @@
 # Changelog — `lang-aot`
 
+## 0.222.1 - 2026-08-12 (ALGOL nonempty step-loop initialization — seven backends)
+
+The LANG matrix now proves that a statically nonempty ascending `step`/`until`
+loop establishes scalar-string initialization on all seven standard backends.
+
 ## 0.220.99 - 2026-08-11 (ALGOL controlled-variable snapshots — seven backends)
 
 The single-value loop snapshot regression now explicitly depends on successive
