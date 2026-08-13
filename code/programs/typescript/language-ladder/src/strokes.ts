@@ -1878,6 +1878,49 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: chineseCharacterSource("么"),
   },
+  // 早 completes 日 before writing 十 below it. The top and right sides of 日
+  // stay joined: six strokes, five lifts, and seven learner movements.
+  [ductusKey("chinese", "早")]: {
+    script: "chinese",
+    glyph: "早",
+    strokes: [
+      { segments: [{ label: "descend 日's left side from the upper left", path: [
+        { x: 189, y: 759 }, { x: 189, y: 690 }, { x: 189, y: 620 },
+        { x: 189, y: 550 }, { x: 189, y: 480 }, { x: 189, y: 412 },
+      ] }] },
+      { segments: [
+        { label: "lift, then draw 日's top horizontal left-to-right", path: [
+          { x: 189, y: 759 }, { x: 290, y: 759 }, { x: 395, y: 759 },
+          { x: 500, y: 759 }, { x: 605, y: 759 }, { x: 710, y: 759 },
+          { x: 806, y: 759 },
+        ] },
+        { label: "turn without lifting and descend 日's right side", path: [
+          { x: 806, y: 759 }, { x: 806, y: 690 }, { x: 806, y: 620 },
+          { x: 806, y: 550 }, { x: 806, y: 480 }, { x: 806, y: 412 },
+        ] },
+      ] },
+      { segments: [{ label: "lift, then draw 日's middle horizontal left-to-right", path: [
+        { x: 189, y: 587 }, { x: 290, y: 587 }, { x: 395, y: 587 },
+        { x: 500, y: 587 }, { x: 605, y: 587 }, { x: 710, y: 587 },
+        { x: 806, y: 587 },
+      ] }] },
+      { segments: [{ label: "lift, then close 日 with its bottom horizontal left-to-right", path: [
+        { x: 189, y: 412 }, { x: 290, y: 412 }, { x: 395, y: 412 },
+        { x: 500, y: 412 }, { x: 605, y: 412 }, { x: 710, y: 412 },
+        { x: 806, y: 412 },
+      ] }] },
+      { segments: [{ label: "lift, then draw 十's horizontal left-to-right", path: [
+        { x: 60, y: 193 }, { x: 190, y: 193 }, { x: 345, y: 193 },
+        { x: 500, y: 193 }, { x: 655, y: 193 }, { x: 810, y: 193 },
+        { x: 944, y: 193 },
+      ] }] },
+      { segments: [{ label: "lift, then descend 十's vertical through the horizontal", path: [
+        { x: 496, y: 389 }, { x: 496, y: 310 }, { x: 496, y: 230 },
+        { x: 496, y: 150 }, { x: 496, y: 70 }, { x: 496, y: -65 },
+      ] }] },
+    ],
+    source: chineseCharacterSource("早"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the
