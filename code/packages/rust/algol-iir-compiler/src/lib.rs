@@ -5255,7 +5255,6 @@ impl Compiler {
             })
             .map(|token| token.value.clone())
             .collect();
-        let body_tokens = recursive_tokens(body);
         for dependency in &dependencies {
             let Ok(binding) = self.require_var(dependency) else {
                 return (None, None);
@@ -5263,9 +5262,7 @@ impl Compiler {
             if binding.is_global
                 || binding.array.is_some()
                 || self.active_by_name_binding(dependency).is_some()
-                || body_tokens.iter().any(|token| {
-                    token.effective_type_name() == "NAME" && token.value == *dependency
-                })
+                || self.for_body_writes_name(body, dependency)
             {
                 return (None, None);
             }
@@ -5306,6 +5303,29 @@ impl Compiler {
         self.static_integer_slots = saved_integers;
         self.static_boolean_slots = saved_booleans;
         exit
+    }
+
+    fn for_body_writes_name(&self, node: &GrammarASTNode, name: &str) -> bool {
+        if node.rule_name == "assign_stmt"
+            && direct_nodes(node)
+                .into_iter()
+                .filter(|child| child.rule_name == "left_part")
+                .filter_map(|left| first_direct_node(left, "variable"))
+                .any(|variable| self.simple_variable_name(variable).ok().as_deref() == Some(name))
+        {
+            return true;
+        }
+        if node.rule_name == "for_stmt"
+            && first_direct_node(node, "variable")
+                .is_some_and(|variable| {
+                    self.simple_variable_name(variable).ok().as_deref() == Some(name)
+                })
+        {
+            return true;
+        }
+        direct_nodes(node)
+            .into_iter()
+            .any(|child| self.for_body_writes_name(child, name))
     }
 
     fn static_boolean_value(&self, node: &GrammarASTNode) -> Option<bool> {
@@ -9201,12 +9221,31 @@ mod tests {
     }
 
     #[test]
+    fn al4_static_while_preserves_read_only_local_dependency() {
+        compile_source(
+            "begin integer i, n; n := 3; i := 0; for i := i + 1 while i < n do if n = 3 then print(''); print(i + 0.25) end",
+            "test",
+        )
+        .expect("reading a stable local dependency does not mutate it");
+    }
+
+    #[test]
     fn al4_body_mutated_while_dependency_remains_conservative() {
         let err = compile_source(
             "begin integer i, n; n := 3; i := 0; for i := i + 1 while i < n do n := n + 1; print(i + 0.25) end",
             "test",
         )
         .expect_err("a dependency referenced by the body may change each iteration");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_nested_control_while_dependency_remains_conservative() {
+        let err = compile_source(
+            "begin integer i, n; n := 3; i := 0; for i := i + 1 while i < n do for n := 1 do print(''); print(i + 0.25) end",
+            "test",
+        )
+        .expect_err("a nested controlled variable assignment mutates the dependency");
         assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
