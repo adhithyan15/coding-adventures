@@ -452,8 +452,12 @@ Prioritized work items:
    retain their after-html transition. Comments and processing instructions
    seen after unexpected content has restored in-body mode now stay in the
    reopened body; direct after-body nodes remain under `html`, while direct
-   after-after-body nodes remain under `Document`. Continue with the remaining
-   after-body and after-after-body token classes and trailing-token recovery.
+   after-after-body nodes remain under `Document`. Repeated `body` and `html`
+   endings after an authored `html` end now restore after-body and
+   after-after-body placement, respectively, instead of letting the earlier
+   explicit `html` ending override the current insertion mode. Continue with
+   the remaining after-body and after-after-body token classes and
+   trailing-token recovery.
 3. **Diagnostic positions and error taxonomy.** Carry source positions into
    tree construction and map diagnostics to current WHATWG concepts. Legacy
    WPT/html5lib error labels are evidence hints, not a normative public API.
