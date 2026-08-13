@@ -182,11 +182,20 @@ std::fs::write("output.png", png).unwrap();
 | IC01 | `image-codec-bmp` | BMP | Lossless | 54-byte header, BGRA swap |
 | IC02 | `image-codec-ppm` | PPM P6 | Lossless | Simplest possible format |
 | IC03 | `image-codec-qoi` | QOI | Lossless | Hash table + delta coding |
-| IC04 | `image-codec-png` | PNG | Lossless | Deflate-compressed |
-| IC05 | `image-codec-gif` | GIF | Lossless | LZW, palette, animation |
-| IC06 | `image-codec-jpeg` | JPEG | Lossy | YCbCr, DCT, Huffman |
-| IC07 | `image-codec-webp` | WebP | Both | VP8 (lossy) + VP8L (lossless) |
-| IC08 | `image-codec-avif` | AVIF | Both | AV1-based, HDR, wide colour |
+| IC04 | `image-codec-jpeg` | JPEG | Lossy | YCbCr, DCT, Huffman |
+| IC05 | `image-codec-webp` | WebP | Both | VP8 (lossy) + VP8L (lossless) |
+| IC06 | `image-codec-jpeg-xl` | JPEG XL | Both | Modular + VarDCT |
+| IC07 | `image-codec-gif` | GIF | Lossless | LZW, palette, animation |
+| IC08 | `image-codec-ico` | ICO | Container | BMP or PNG frames |
+| IC09–IC16 | `image-codec-tiff`, raw formats | TIFF, DNG, CR2, … | Lossless | Camera raw family |
+| IC17 | `image-convert` | — | — | Format-to-format conversion |
+| IC18 | `image-codec-png` | PNG | Lossless | Chunks + zlib + scanline filters |
+
+> **Corrected.** This table originally assigned IC04 to PNG and numbered
+> everything after it one lower than the specs that were actually written. PNG
+> then fell out of the series altogether, while remaining a stated dependency of
+> IC08 (`image-codec-ico`, whose 256x256 frames are whole PNG files). The rows
+> above now match the spec files that exist, and PNG has the next free number.
 
 Each spec is self-contained. A codec only needs `pixel-container` — no shared
 codec framework, no codec-to-codec dependencies.

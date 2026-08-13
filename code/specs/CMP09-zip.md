@@ -347,6 +347,61 @@ unzip(data: bytes) → {name: str → data: bytes}
 # or class-based ZipReader for large archives
 ```
 
+### Optional: the raw DEFLATE codec, exported
+
+A port MAY additionally export its inlined RFC 1951 codec under a name that says
+plainly it carries no framing:
+
+```
+raw_deflate(data: bytes) → bytes    # a raw RFC 1951 stream, no ZIP/zlib/gzip wrapper
+raw_inflate(data: bytes) → bytes
+```
+
+This is not a ZIP feature. It is there because the same bit-stream sits inside
+`zlib`, `gzip`, and PNG's `IDAT`, and those three differ from ZIP only in what
+they wrap around it — zlib a two-byte header and a trailing Adler-32, gzip a
+ten-byte header and a trailing CRC-32, ZIP nothing. A sibling package that needs
+one of those formats should wrap this rather than carry a second copy of the
+bit-packing, which would be a second place for the same class of bug to hide.
+
+**Decoders must read all three block types.** Stored (BTYPE=00), fixed Huffman
+(BTYPE=01), and dynamic Huffman (BTYPE=10). An encoder may legitimately emit
+fixed blocks only — the output is valid and every tool reads it — but a decoder
+that rejects BTYPE=10 fails on most archives the world actually produces, since
+zlib and Info-ZIP reach for dynamic tables on anything but the smallest input.
+The same asymmetry applies to length symbol **285**: RFC 1951 spells length 258
+either as symbol 284 with five extra bits or as symbol 285 with none, an encoder
+may pick either, and a decoder must accept both.
+
+Conformance here is only meaningful against a **foreign** encoder. Round-tripping
+a port's own output through its own decoder proves the two agree with each other
+and nothing more; the TypeScript port tests against Node's `zlib`, the C and Rust
+ports against a Python `zipfile` fixture.
+
+**Decoders must also accept no MORE than the reference implementation.** A
+decompressor is a place where two programs read the same bytes, so accepting a
+stream zlib rejects is not generosity; it is a content-inspection bypass, where
+a scanner sees nothing and the application extracts real content. Two checks
+carry most of that weight:
+
+- **Kraft's inequality on every Huffman table.** Reject over-subscribed tables
+  (more codes claimed at a length than exist), and reject incomplete tables
+  everywhere except the one case RFC 1951 section 3.2.7 permits — a distance
+  alphabet holding a single code, which is how a block declares that it emits no
+  back-references.
+- **Header ranges.** `HLIT` and `HDIST` are five-bit fields able to express 288
+  and 32, while the spec defines only 286 literal/length symbols and 30 distance
+  codes. Reject the surplus at the header rather than deep inside the block.
+
+**Decompression bombs are in scope.** DEFLATE's expansion ratio reaches 1032:1,
+so a decoder MUST cap its output, MUST count that cap in bytes rather than in
+whatever container the implementation language happens to accumulate into, and
+SHOULD let the caller lower it — a library cannot know its embedder's budget.
+A ZIP reader already knows the answer: the central directory declares each
+entry's uncompressed size, so pass it.
+
+**Ports exporting this today:** TypeScript (`rawDeflate` / `rawInflate`, 0.2.0).
+
 ## Package Naming
 
 | Language   | Package name                 | Module / namespace             |

@@ -1,7 +1,7 @@
 {
-  "name": "@coding-adventures/zip",
-  "version": "0.2.0",
-  "description": "ZIP archive format (PKZIP 1989) from scratch — CMP09",
+  "name": "@coding-adventures/image-codec-png",
+  "version": "0.1.0",
+  "description": "IC18: PNG image encoder and decoder using PixelContainer",
   "type": "module",
   "main": "src/index.ts",
   "scripts": {
@@ -9,20 +9,11 @@
     "test": "vitest run",
     "test:coverage": "vitest run --coverage"
   },
-  "keywords": [
-    "zip",
-    "deflate",
-    "lzss",
-    "compression",
-    "archive",
-    "cmp09",
-    "computer-science",
-    "education"
-  ],
   "author": "Adhithya Rajasekaran",
   "license": "MIT",
   "dependencies": {
-    "@coding-adventures/lzss": "file:../lzss"
+    "@coding-adventures/pixel-container": "file:../pixel-container",
+    "@coding-adventures/zip": "file:../zip"
   },
   "devDependencies": {
     "typescript": "^5.0.0",

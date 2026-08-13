@@ -22,6 +22,76 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   verified against the shipped font, its order must be cited, and no citation means
   no pen path and no figure, with the gap reported as debt rather than invented.
 
+### Fixed — TypeScript ZIP Reads Real-World DEFLATE
+- `zip`'s inflater rejected dynamic Huffman blocks (BTYPE=10) outright, which is
+  what zlib and Info-ZIP emit for anything but the smallest input — so the reader
+  failed on most archives the world actually produces. It now decodes all three
+  RFC 1951 block types via a canonical Huffman table builder, the code-length
+  alphabet with its run-length escapes, and the permuted code-length order.
+- Length symbol 285 was missing from the length table. RFC 1951 spells length 258
+  either as symbol 284 with five extra bits or as symbol 285 with none, and a run
+  of identical bytes reliably produces the cheaper form, which was rejected as an
+  invalid symbol.
+- Decoder conformance is now checked against Node's `zlib` as an oracle, because
+  round-tripping our own encoder through our own decoder only proves the two
+  agree with each other.
+- Huffman tables are now checked against Kraft's inequality. Over-subscribed
+  tables are rejected outright and incomplete tables everywhere RFC 1951 forbids
+  them, so the decoder no longer accepts streams zlib refuses -- a difference
+  between two readers of the same bytes is the shape of a content-inspection
+  bypass.
+- The inflate output cap now counts bytes. It previously counted elements of a
+  `number[]`, where V8 spends four to eight bytes each, so a 256 MB ceiling
+  allowed one to two gigabytes of backing store and the process died before the
+  limit was reached. `rawInflate` takes a caller-supplied ceiling, and
+  `ZipReader.read` passes the SMALLER of the entry's declared uncompressed size
+  and the reader's own — the declared size is four bytes the archive chose, so
+  trusting it alone would swap a fixed limit for an attacker-chosen one.
+
+### Added — IC18: PNG Encoder and Decoder
+- `image-codec-png` turns a `PixelContainer` into a real `.png` and back:
+  chunk framing with CRC-32, the RFC 1950 zlib wrapper with Adler-32, and all
+  five RFC 2083 scanline filters with per-row selection by the PNG spec's own
+  minimum-sum-of-signed-bytes heuristic.
+- The hard layer is not in the package. RFC 1951 DEFLATE and PNG's CRC-32 both
+  come from `zip`, because the bit stream inside `IDAT` is the one inside a ZIP
+  entry and the polynomial is the same. A second copy would be a second place
+  for the same class of bug to hide.
+- Encodes 8-bit truecolour with alpha, which is exactly what a `PixelContainer`
+  holds, so the round trip is lossless by construction. Decodes 8-bit colour
+  types 0, 2, 4 and 6, any number of `IDAT` chunks, skipping unknown ancillary
+  chunks and refusing unknown critical ones as the spec requires. Palette
+  images, 16-bit depths and Adam7 interlacing are refused by name.
+- Conformance is tested against foreign implementations, not just against
+  itself: Node's zlib inflates our `IDAT`, and the decoder reads PNGs assembled
+  by hand from RFC 2083. The output was confirmed readable by `file`, macOS
+  `sips` and Python's `zlib`.
+- Refuses four shapes of file that decode to exactly the right image while
+  carrying bytes the image does not need: a payload inside `IEND`, anything
+  after `IEND`, a chunk wedged between two `IDAT`s, and the `IDAT` cavity —
+  the dead space between where the DEFLATE stream announces its own end and
+  where the Adler-32 begins. The picture is identical either way, which is
+  exactly why tolerating them makes a valid-looking PNG into free carriage.
+- Caps the total pixel count, not just each edge: 16384 x 16384 passes an edge
+  cap and is 268 million pixels, roughly 3 GiB of peak allocation for about a
+  megabyte of input. BMP survives on an edge cap because its pixels have to be
+  in the file; PNG amplifies, and that is the whole difference.
+- `zip` gains `rawInflateCounted`, which reports how many input bytes a stream
+  actually used. Without it the `IDAT` cavity is undetectable.
+- Adds `IC18-image-codec-png.md`. PNG had fallen out of the IC series
+  entirely: IC00's roadmap reserved IC04 for it, that number went to JPEG, and
+  the table was never corrected — while IC08 (ICO) still names PNG as a
+  dependency for its 256x256 frames. IC00's roadmap now matches the specs that
+  exist.
+
+### Added — Raw RFC 1951 DEFLATE, Exported
+- `zip` now exports `rawDeflate` / `rawInflate`: the DEFLATE codec with no ZIP
+  framing. The same bit stream sits inside `zlib`, `gzip`, and PNG's `IDAT`, so
+  exporting it keeps those formats from each carrying a second copy of the same
+  bit-packing code. The encoder is unchanged and byte-stable; only the reader grew.
+- CMP09 records the export as optional-per-port, and states the asymmetry as a
+  rule: an encoder may emit fixed blocks only, but a decoder must read all three.
+
 ### Added — Chief Host Authenticated Data Plane
 - The existing per-spawn secure host session now carries bounded, serialized
   channel receive/publish/acknowledge and provider-neutral text completion

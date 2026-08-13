@@ -400,12 +400,12 @@ console.log(prose, nested);
     def test_repository_contract_is_portable(self) -> None:
         summary = portability.validate_repository(REPO_ROOT)
 
-        self.assertEqual(summary.total_projects, 458)
+        self.assertEqual(summary.total_projects, 459)
         self.assertEqual(summary.shared_projects, 287)
         self.assertEqual(summary.inherited_root_dir, 129)
         self.assertEqual(summary.inherited_out_dir, 132)
-        self.assertEqual(summary.standalone_emit_projects, 143)
-        self.assertEqual(summary.isolated_standalone_projects, 143)
+        self.assertEqual(summary.standalone_emit_projects, 144)
+        self.assertEqual(summary.isolated_standalone_projects, 144)
         self.assertEqual(summary.unbounded_root_projects, 0)
         self.assertEqual(summary.outside_root_inputs, 0)
         self.assertEqual(summary.node_api_projects, 93)
@@ -413,7 +413,7 @@ console.log(prose, nested);
         self.assertEqual(summary.missing_node_provider_projects, 0)
         self.assertEqual(summary.stale_node_provider_locks, 0)
         self.assertEqual(summary.node_lock_exemptions, 1)
-        self.assertEqual(summary.locked_compilers, 449)
+        self.assertEqual(summary.locked_compilers, 450)
 
 
 if __name__ == "__main__":
