@@ -1845,6 +1845,39 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: chineseCharacterSource("什"),
   },
+  // 么 places its upper falling stroke, joins the second fall to its rightward
+  // base sweep, then adds the final dot: three strokes, two lifts, four movements.
+  [ductusKey("chinese", "么")]: {
+    script: "chinese",
+    glyph: "么",
+    strokes: [
+      { segments: [{ label: "draw the upper left-falling stroke down-left", path: [
+        { x: 475, y: 805 }, { x: 455, y: 755 }, { x: 420, y: 700 },
+        { x: 375, y: 640 }, { x: 325, y: 580 }, { x: 270, y: 520 },
+        { x: 215, y: 470 }, { x: 165, y: 430 }, { x: 120, y: 400 },
+        { x: 75, y: 410 },
+      ] }] },
+      { segments: [
+        { label: "lift, then draw the second left-falling stroke down-left", path: [
+          { x: 650, y: 580 }, { x: 620, y: 520 }, { x: 575, y: 450 },
+          { x: 520, y: 375 }, { x: 455, y: 300 }, { x: 390, y: 225 },
+          { x: 325, y: 155 }, { x: 260, y: 95 }, { x: 205, y: 50 },
+          { x: 175, y: 30 },
+        ] },
+        { label: "turn and sweep right along the base without lifting", path: [
+          { x: 175, y: 30 }, { x: 270, y: 35 }, { x: 380, y: 45 },
+          { x: 490, y: 55 }, { x: 600, y: 70 }, { x: 705, y: 85 },
+          { x: 805, y: 105 },
+        ] },
+      ] },
+      { segments: [{ label: "lift, then place the final dot down-right", path: [
+        { x: 670, y: 295 }, { x: 715, y: 245 }, { x: 760, y: 185 },
+        { x: 805, y: 125 }, { x: 845, y: 65 }, { x: 885, y: 5 },
+        { x: 905, y: -30 },
+      ] }] },
+    ],
+    source: chineseCharacterSource("么"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the

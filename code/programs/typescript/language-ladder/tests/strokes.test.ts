@@ -45,6 +45,7 @@ const CHINESE_PLEASE = DUCTUS[ductusKey("chinese", "请")];
 const CHINESE_AGAIN = DUCTUS[ductusKey("chinese", "再")];
 const CHINESE_SEE = DUCTUS[ductusKey("chinese", "见")];
 const CHINESE_WHAT = DUCTUS[ductusKey("chinese", "什")];
+const CHINESE_PARTICLE_ME = DUCTUS[ductusKey("chinese", "么")];
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
@@ -597,6 +598,16 @@ describe("handwriting ductus", () => {
     const rightStrokes = CHINESE_WHAT.strokes.slice(2).flatMap(penPath);
     expect(Math.max(...leftStrokes.map((point) => point.x))).toBeLessThan(
       Math.min(...rightStrokes.map((point) => point.x)),
+    );
+  });
+
+  it("Chinese 么 keeps the second fall joined to its rightward base sweep", () => {
+    expect(CHINESE_PARTICLE_ME.script).toBe("chinese");
+    expect(penLifts(CHINESE_PARTICLE_ME)).toBe(2);
+    expect(CHINESE_PARTICLE_ME.strokes).toHaveLength(3);
+    expect(CHINESE_PARTICLE_ME.strokes.map((stroke) => stroke.segments.length)).toEqual([1, 2, 1]);
+    expect(CHINESE_PARTICLE_ME.strokes[1].segments[0].path.at(-1)).toEqual(
+      CHINESE_PARTICLE_ME.strokes[1].segments[1].path[0],
     );
   });
 
@@ -1556,6 +1567,9 @@ describe("handwriting ductus", () => {
     expect(verifiedLetterFont("再", CHINESE_AGAIN.source.url)).toBe("_fonts/NotoSansSC-Subset.ttf");
     expect(verifiedLetterFont("见", CHINESE_SEE.source.url)).toBe("_fonts/NotoSansSC-Subset.ttf");
     expect(verifiedLetterFont("什", CHINESE_WHAT.source.url)).toBe("_fonts/NotoSansSC-Subset.ttf");
+    expect(verifiedLetterFont("么", CHINESE_PARTICLE_ME.source.url)).toBe(
+      "_fonts/NotoSansSC-Subset.ttf",
+    );
     expect(verifiedLetterFont("א", HEBREW_ALEF.source.url)).toBe(
       "_fonts/NotoSansHebrew-Static.ttf",
     );
@@ -1911,6 +1925,17 @@ describe("handwriting ductus", () => {
     expect(src.citation).toMatch(/Hanzi Writer Data 什\.json.*medians 1–4.*snapshot 68d10a4/i);
     expect(src.variation).toMatch(
       /four ordered strokes.*Medians 1–2.*亻 first.*left-falling stroke.*separately started vertical.*Median 3.*十's horizontal left-to-right.*median 4.*descends 十's vertical.*People's Republic of China stroke order.*Noto Sans SC.*亻-before-十.*three intervening lifts/i,
+    );
+  });
+
+  it("Chinese 么 traces its joined lower sweep to the pinned PRC-order dataset", () => {
+    const src = CHINESE_PARTICLE_ME.source;
+    expect(src.url).toBe(
+      "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E4%B9%88.json",
+    );
+    expect(src.citation).toMatch(/Hanzi Writer Data 么\.json.*medians 1–3.*snapshot 68d10a4/i);
+    expect(src.variation).toMatch(
+      /three ordered strokes.*Median 1.*upper left-falling stroke.*Median 2.*upper right.*falls down-left.*turns without lifting.*sweeps right along the base.*Median 3.*final down-right dot.*People's Republic of China stroke order.*Noto Sans SC.*second stroke's joined turn.*two intervening lifts/i,
     );
   });
 
