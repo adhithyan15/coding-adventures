@@ -140,6 +140,11 @@ STAR        = "*"
 # shared IIR `div` op (LANG-FULL N1).
 SLASH       = "/"
 
+# Remainder. PERCENT pairs with division at multiplicative precedence and
+# lowers to the shared IIR `mod` op. Like division, a 4004 backend would need
+# to synthesise this from a shift-subtract loop.
+PERCENT     = "%"
+
 # ---------------------------------------------------------------------------
 # Single-character bitwise operators
 # ---------------------------------------------------------------------------

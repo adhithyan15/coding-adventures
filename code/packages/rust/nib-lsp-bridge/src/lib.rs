@@ -33,7 +33,7 @@ const NIB_GRAMMAR_SOURCE: &str =
 /// | `INT_LIT`  | `Number`          |
 /// | `HEX_LIT`  | `Number`          |
 /// | `NAME`     | `Variable`        |
-/// | `PLUS`/`MINUS`/`STAR`/`SLASH`/`SHL`/`SHR`/`EQ`/`EQ_EQ`/`NEQ`/`LEQ`/`GEQ`/`LT`/`GT`/`LAND`/`LOR`/`AMP`/`PIPE`/`CARET`/`TILDE`/`BANG` | `Operator` |
+/// | `PLUS`/`MINUS`/`STAR`/`SLASH`/`PERCENT`/`SHL`/`SHR`/`EQ`/`EQ_EQ`/`NEQ`/`LEQ`/`GEQ`/`LT`/`GT`/`LAND`/`LOR`/`AMP`/`PIPE`/`CARET`/`TILDE`/`BANG` | `Operator` |
 static NIB_TOKEN_KIND_MAP: &[(&str, LspSemanticTokenType)] = &[
     ("KEYWORD",   LspSemanticTokenType::Keyword),
     ("INT_LIT",   LspSemanticTokenType::Number),
@@ -54,6 +54,7 @@ static NIB_TOKEN_KIND_MAP: &[(&str, LspSemanticTokenType)] = &[
     ("MINUS",     LspSemanticTokenType::Operator),
     ("STAR",      LspSemanticTokenType::Operator),
     ("SLASH",     LspSemanticTokenType::Operator),
+    ("PERCENT",   LspSemanticTokenType::Operator),
     ("AMP",       LspSemanticTokenType::Operator),
     ("PIPE",      LspSemanticTokenType::Operator),
     ("CARET",     LspSemanticTokenType::Operator),
@@ -199,5 +200,13 @@ mod tests {
         assert!(types.contains(&"KEYWORD"));
         assert!(types.contains(&"NAME"));
         assert!(types.contains(&"INT_LIT"));
+    }
+
+    #[test]
+    fn remainder_is_an_operator_token() {
+        assert!(nib_language_spec()
+            .token_kind_map
+            .iter()
+            .any(|(name, kind)| *name == "PERCENT" && *kind == LspSemanticTokenType::Operator));
     }
 }

@@ -137,8 +137,8 @@ implemented.
    pair loop, including `i64::MIN / -1` behavior.
 12. [x] **Nib division frontend:** Nib `/` already lowers to typed `div`; add a
    source-to-RISC-V-simulator fixture to keep that end-to-end path covered.
-13. [ ] **Nib modulo frontend:** add `%` grammar, typed `mod` IIR lowering, and
-   a source-to-simulator fixture. Nib currently has `/` but no `%` token.
+13. [x] **Nib modulo frontend:** `%` lowers to typed `mod`, with a
+   source-to-RISC-V-simulator fixture.
 14. [ ] **Register allocation:** spill live values to stack slots and emit a proper
    frame, removing the six-temporary limit.
 15. [ ] **Calls and modules:** lower direct calls, add relocations/linking for flat

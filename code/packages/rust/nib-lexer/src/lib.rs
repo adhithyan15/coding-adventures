@@ -58,4 +58,12 @@ mod tests {
         assert!(kinds.contains(&"SHL"));
         assert!(kinds.contains(&"SHR"));
     }
+
+    #[test]
+    fn tokenizes_remainder_operator() {
+        let tokens = tokenize_nib("fn main() { let x: u8 = 86 % 7; }");
+        assert!(tokens
+            .iter()
+            .any(|token| token.type_name.as_deref() == Some("PERCENT")));
+    }
 }
