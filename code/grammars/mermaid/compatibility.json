@@ -51,7 +51,7 @@
     {
       "id": "journey",
       "headers": ["journey"],
-      "status": "detected",
+      "status": "partial",
       "ir": "journey",
       "smoke_source": "journey\ntitle My day\nsection Work\nTask: 5: Me"
     },

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.50.0
+
+- Add portable Mermaid 11.16.1 user-journey tokens and fallible tokenization.
+
 ## 0.49.0
 
 - Add a fallible quadrant tokenization API so malformed pinned-corpus inputs return errors instead of panicking.

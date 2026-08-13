@@ -9,7 +9,10 @@
 
 #[cfg(target_vendor = "apple")]
 mod apple {
-    use diagram_ir::{EdgeKind, SequenceBlockKind, SequenceEvent, SequenceLink, SequenceProperty};
+    use diagram_ir::{
+        EdgeKind, SequenceBlockKind, SequenceEvent, SequenceLink, SequenceProperty, TemporalBody,
+        TemporalDiagram, TemporalKind,
+    };
     use diagram_layout_chart::layout_chart_diagram;
     use diagram_layout_graph::layout_graph_diagram;
     use diagram_layout_sequence::layout_sequence_diagram;
@@ -22,8 +25,8 @@ mod apple {
     use dot_parser::parse_to_diagram;
     use layout_ir::font_spec;
     use mermaid_parser::{
-        parse_c4_diagram, parse_er_diagram, parse_gitgraph, parse_pie, parse_quadrant_chart,
-        parse_sankey, parse_sequence_diagram, parse_state_diagram,
+        parse_c4_diagram, parse_er_diagram, parse_gitgraph, parse_journey, parse_pie,
+        parse_quadrant_chart, parse_sankey, parse_sequence_diagram, parse_state_diagram,
         parse_to_diagram as parse_mermaid_to_diagram,
     };
     use paint_codec_png::write_png;
@@ -597,6 +600,56 @@ mod apple {
         assert!(pixels.width > 0);
         assert!(pixels.height > 0);
         assert!(!scene.instructions.is_empty());
+    }
+
+    #[test]
+    fn render_mermaid_journey_to_png() {
+        let (title, journey) = parse_journey(
+            "journey\ntitle Checkout experience\nsection Discovery\nFind product: 5: Alice, Bob\nsection Payment\nPay: 2: Bob",
+        )
+        .expect("journey parse failed");
+        let layout = layout_temporal_diagram(
+            &TemporalDiagram {
+                kind: TemporalKind::Journey,
+                title,
+                body: TemporalBody::Journey(journey),
+            },
+            720.0,
+        );
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint_temporal(
+            &layout,
+            &DiagramToPaintOptions {
+                background: layout_ir::Color {
+                    r: 255,
+                    g: 255,
+                    b: 255,
+                    a: 255,
+                },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 13.0),
+                title_font: font_spec("Helvetica", 17.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            },
+        );
+        assert_eq!(
+            scene
+                .instructions
+                .iter()
+                .filter(|instruction| matches!(
+                    instruction,
+                    PaintInstruction::Rect(rect) if rect.corner_radius == Some(6.0)
+                ))
+                .count(),
+            2
+        );
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_journey_e2e.png").expect("PNG write failed");
+        assert!(pixels.width > 0 && pixels.height > 0);
     }
 
     #[test]

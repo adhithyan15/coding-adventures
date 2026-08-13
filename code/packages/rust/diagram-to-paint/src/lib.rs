@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.41.0";
+pub const VERSION: &str = "0.43.0";
 
 use std::collections::HashMap;
 
@@ -2587,6 +2587,52 @@ where
                     stroke_dash_offset: None,
                 }));
             }
+            LayoutedTemporalItem::JourneyTask {
+                x,
+                y,
+                width,
+                height,
+                score,
+                label,
+                people,
+            } => {
+                let clamped = (*score).min(5);
+                let red = 239_u8.saturating_sub(clamped * 28);
+                let green = 68_u8.saturating_add(clamped * 31);
+                let fill = format!("rgb({red},{green},120)");
+                instructions.push(PaintInstruction::Rect(PaintRect {
+                    base: PaintBase::default(),
+                    x: *x,
+                    y: *y,
+                    width: *width,
+                    height: *height,
+                    fill: Some(fill),
+                    stroke: Some("#475569".into()),
+                    stroke_width: Some(1.0),
+                    corner_radius: Some(6.0),
+                    stroke_dash: None,
+                    stroke_dash_offset: None,
+                }));
+                let actors = if people.is_empty() {
+                    String::new()
+                } else {
+                    format!(" · {}", people.join(", "))
+                };
+                text_children.push(text_node(
+                    &format!("{label}  {score}/5{actors}"),
+                    x + 10.0,
+                    y + (height - ls) / 2.0,
+                    width - 20.0,
+                    ls * 1.2,
+                    lf.clone(),
+                    Color {
+                        r: 15,
+                        g: 23,
+                        b: 42,
+                        a: 255,
+                    },
+                ));
+            }
         }
     }
 
@@ -3114,7 +3160,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.41.0");
+        assert_eq!(crate::VERSION, "0.43.0");
     }
 
     #[test]

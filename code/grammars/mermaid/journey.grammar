@@ -1,0 +1,6 @@
+# @version 5
+# Mermaid 11.16.1 user-journey core parser grammar.
+
+document = { terminator } HEADER { terminator | statement } EOF ;
+terminator = NEWLINE | SEMICOLON ;
+statement = TITLE_STATEMENT | SECTION_STATEMENT | TASK_STATEMENT ;
