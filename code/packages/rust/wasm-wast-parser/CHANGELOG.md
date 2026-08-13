@@ -55,4 +55,21 @@ and the official spec testsuite's `.wast` script dialect — into
   every legitimate fixture into a hard error aborting the whole script.
   Also supports the `(module binary "...")`/`(module quote "...")` module
   variants, concatenating their string-literal bytes for the caller.
-- 56 unit tests across all five modules, ~95%+ line coverage.
+- **Hardening pass** (pre-merge security review): this crate will eventually
+  process the official testsuite's `assert_malformed`/`assert_invalid`
+  fixtures, which are deliberately adversarial — so every reachable panic
+  on malformed-but-syntactically-parseable input was replaced with a clean
+  `Result::Err`. Fixed: `parse_i32` overflow on an extreme-magnitude
+  negative literal (unary negation panicking in debug builds — switched to
+  `wrapping_neg`); `parse_limits` panicking via `.unwrap()` on a
+  non-numeric or out-of-`u32`-range limit; folded `br_table` underflowing
+  `labels.len() - 1` on an empty label list; multiple `script.rs` directive
+  parsers and `module.rs`'s `build()`/`build_elem`/`build_data` indexing
+  past the end of a too-short field list (`(register)`, `(export "e")`,
+  an empty `elem`/`data` segment, etc.) — all now go through a shared
+  `sexpr::expect_get` helper instead of `items[N]`; and unbounded `(...)`
+  nesting recursion, now capped by `sexpr::MAX_NESTING_DEPTH` (512) with a
+  new `WastParseError::TooDeeplyNested` variant instead of a stack
+  overflow. Each fix has a dedicated regression test proving the old code
+  path would have panicked.
+- 70 unit tests across all five modules, ~95%+ line coverage.

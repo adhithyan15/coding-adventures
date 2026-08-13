@@ -48,26 +48,51 @@ impl SExpr {
     }
 }
 
+/// `items.get(idx)`, turned into a [`WastParseError`] instead of a caller
+/// having to index-panic or `.unwrap()`. Shared by `module.rs` and
+/// `script.rs` — both walk positional S-expression lists (`(export "e"
+/// (func $x))`, `(assert_trap (invoke "f") "msg")`) where a required
+/// trailing field can simply be *missing* in malformed-but-syntactically-
+/// parseable input (`(module (export "e"))`, `(register)`), and that must
+/// produce a clean parse error, not a crash — exactly the shape of input
+/// the real testsuite's own `assert_malformed` fixtures are designed to
+/// throw at a parser.
+pub fn expect_get(items: &[SExpr], idx: usize) -> Result<&SExpr, WastParseError> {
+    items.get(idx).ok_or(WastParseError::UnexpectedEof)
+}
+
 pub fn parse_source(src: &str) -> Result<Vec<SExpr>, WastParseError> {
     let tokens = tokenize(src)?;
     parse_sexprs(&tokens)
 }
 
+/// Nesting depth ceiling for `(...)` forms. Chosen well above anything a
+/// real, hand-written `.wat`/`.wast` file plausibly needs (a few dozen
+/// levels at most, even for a deeply nested `if`/`block` tower), but far
+/// below what would exhaust a normal thread's call stack -- an
+/// adversarially deep input (`((((((...))))))`, thousands of parens) hits
+/// [`WastParseError::TooDeeplyNested`] instead of a hard, uncatchable stack
+/// overflow.
+pub const MAX_NESTING_DEPTH: usize = 512;
+
 pub fn parse_sexprs(tokens: &[SpannedToken]) -> Result<Vec<SExpr>, WastParseError> {
     let mut out = Vec::new();
     let mut i = 0;
     while i < tokens.len() {
-        let (expr, next) = parse_one(tokens, i)?;
+        let (expr, next) = parse_one(tokens, i, 0)?;
         out.push(expr);
         i = next;
     }
     Ok(out)
 }
 
-fn parse_one(tokens: &[SpannedToken], i: usize) -> Result<(SExpr, usize), WastParseError> {
+fn parse_one(tokens: &[SpannedToken], i: usize, depth: usize) -> Result<(SExpr, usize), WastParseError> {
     let tok = tokens.get(i).ok_or(WastParseError::UnexpectedEof)?;
     match &tok.token {
         Token::LParen => {
+            if depth >= MAX_NESTING_DEPTH {
+                return Err(WastParseError::TooDeeplyNested { pos: tok.pos });
+            }
             let pos = tok.pos;
             let mut items = Vec::new();
             let mut j = i + 1;
@@ -79,7 +104,7 @@ fn parse_one(tokens: &[SpannedToken], i: usize) -> Result<(SExpr, usize), WastPa
                         break;
                     }
                     _ => {
-                        let (child, next) = parse_one(tokens, j)?;
+                        let (child, next) = parse_one(tokens, j, depth + 1)?;
                         items.push(child);
                         j = next;
                     }

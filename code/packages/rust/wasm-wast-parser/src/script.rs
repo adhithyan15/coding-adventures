@@ -27,7 +27,7 @@
 
 use crate::module::parse_module_expr;
 use crate::numeric::{parse_f32_bits, parse_f64_bits, parse_i32, parse_i64};
-use crate::sexpr::{parse_source, SExpr};
+use crate::sexpr::{expect_get, parse_source, SExpr};
 use crate::WastParseError;
 use wasm_types::WasmModule;
 
@@ -112,14 +112,14 @@ fn parse_directive(e: &SExpr) -> Result<Directive, WastParseError> {
     match head {
         "module" => Ok(Directive::Module(parse_module_expr(e)?)),
         "register" => {
-            let name = expect_str(&items[1])?;
+            let name = expect_str(expect_get(items, 1)?)?;
             let module_name = items.get(2).and_then(|m| m.as_atom()).map(|s| s.to_string());
             Ok(Directive::Register { name, module_name })
         }
         "invoke" | "get" => Ok(Directive::Action(parse_action(e)?)),
         "assert_return" => {
-            let action = parse_action(&items[1])?;
-            let expected = items[2..].iter().map(parse_expected).collect::<Result<_, _>>()?;
+            let action = parse_action(expect_get(items, 1)?)?;
+            let expected = items.get(2..).unwrap_or(&[]).iter().map(parse_expected).collect::<Result<_, _>>()?;
             Ok(Directive::AssertReturn { action, expected })
         }
         "assert_trap" => {
@@ -130,23 +130,23 @@ fn parse_directive(e: &SExpr) -> Result<Directive, WastParseError> {
             }
         }
         "assert_exhaustion" => {
-            let action = parse_action(&items[1])?;
-            let message = expect_str(&items[2])?;
+            let action = parse_action(expect_get(items, 1)?)?;
+            let message = expect_str(expect_get(items, 2)?)?;
             Ok(Directive::AssertExhaustion { action, message })
         }
         "assert_invalid" => {
-            let module = parse_module_source(&items[1])?;
-            let message = expect_str(&items[2])?;
+            let module = parse_module_source(expect_get(items, 1)?)?;
+            let message = expect_str(expect_get(items, 2)?)?;
             Ok(Directive::AssertInvalid { module, message })
         }
         "assert_malformed" => {
-            let module = parse_module_source(&items[1])?;
-            let message = expect_str(&items[2])?;
+            let module = parse_module_source(expect_get(items, 1)?)?;
+            let message = expect_str(expect_get(items, 2)?)?;
             Ok(Directive::AssertMalformed { module, message })
         }
         "assert_unlinkable" => {
-            let module = parse_module_source(&items[1])?;
-            let message = expect_str(&items[2])?;
+            let module = parse_module_source(expect_get(items, 1)?)?;
+            let message = expect_str(expect_get(items, 2)?)?;
             Ok(Directive::AssertUnlinkable { module, message })
         }
         other => Err(WastParseError::UnexpectedToken { pos: e.pos(), found: other.to_string(), expected: "a known directive" }),
@@ -165,8 +165,8 @@ enum ActionOrModule {
 /// message)` structure, so this one helper serves `assert_trap` and
 /// `assert_unlinkable` alike.
 fn parse_assert_with_message(items: &[SExpr]) -> Result<(ActionOrModule, String), WastParseError> {
-    let message = expect_str(&items[2])?;
-    let thing = &items[1];
+    let thing = expect_get(items, 1)?;
+    let message = expect_str(expect_get(items, 2)?)?;
     if thing.is_keyword_list("invoke") || thing.is_keyword_list("get") {
         Ok((ActionOrModule::Action(parse_action(thing)?), message))
     } else {
@@ -176,7 +176,7 @@ fn parse_assert_with_message(items: &[SExpr]) -> Result<(ActionOrModule, String)
 
 fn parse_action(e: &SExpr) -> Result<Action, WastParseError> {
     let items = e.as_list().ok_or(WastParseError::UnexpectedToken { pos: e.pos(), found: "".into(), expected: "an action" })?;
-    match items[0].as_atom() {
+    match items.first().and_then(|i| i.as_atom()) {
         Some("invoke") => {
             // `(invoke $module? "name" arg-expr*)` -- the optional module
             // reference, if present, is a bare `$name` atom right after
@@ -189,9 +189,9 @@ fn parse_action(e: &SExpr) -> Result<Action, WastParseError> {
             } else {
                 None
             };
-            let name = expect_str(&items[i])?;
+            let name = expect_str(expect_get(items, i)?)?;
             i += 1;
-            let args = items[i..].iter().map(parse_const_value).collect::<Result<_, _>>()?;
+            let args = items.get(i..).unwrap_or(&[]).iter().map(parse_const_value).collect::<Result<_, _>>()?;
             Ok(Action::Invoke { module, name, args })
         }
         Some("get") => {
@@ -203,7 +203,7 @@ fn parse_action(e: &SExpr) -> Result<Action, WastParseError> {
             } else {
                 None
             };
-            let name = expect_str(&items[i])?;
+            let name = expect_str(expect_get(items, i)?)?;
             Ok(Action::Get { module, name })
         }
         other => Err(WastParseError::UnexpectedToken {
@@ -220,7 +220,8 @@ fn parse_action(e: &SExpr) -> Result<Action, WastParseError> {
 /// the NaN-class result forms only `assert_return` allows).
 fn parse_const_value(e: &SExpr) -> Result<ConstValue, WastParseError> {
     let items = e.as_list().ok_or(WastParseError::UnexpectedToken { pos: e.pos(), found: "".into(), expected: "a const expression" })?;
-    let (kind, pos) = (items[0].as_atom().unwrap_or(""), items[0].pos());
+    let head = expect_get(items, 0)?;
+    let (kind, pos) = (head.as_atom().unwrap_or(""), head.pos());
     let lit = items.get(1).and_then(|a| a.as_atom()).ok_or(WastParseError::UnexpectedEof)?;
     match kind {
         "i32.const" => Ok(ConstValue::I32(parse_i32(lit, pos)?)),
@@ -233,7 +234,7 @@ fn parse_const_value(e: &SExpr) -> Result<ConstValue, WastParseError> {
 
 fn parse_expected(e: &SExpr) -> Result<Expected, WastParseError> {
     let items = e.as_list().ok_or(WastParseError::UnexpectedToken { pos: e.pos(), found: "".into(), expected: "an expected result" })?;
-    let kind = items[0].as_atom().unwrap_or("");
+    let kind = expect_get(items, 0)?.as_atom().unwrap_or("");
     let lit = items.get(1).and_then(|a| a.as_atom());
     match (kind, lit) {
         ("f32.const", Some("nan:canonical")) => Ok(Expected::NanCanonicalF32),
@@ -384,5 +385,54 @@ mod tests {
         assert_eq!(dirs.len(), 2);
         assert!(matches!(dirs[0], Directive::Module(_)));
         assert!(matches!(&dirs[1], Directive::AssertReturn { action: Action::Invoke { module: Some(_), .. }, .. }));
+    }
+
+    // ── Security-review regressions: a directive missing a required
+    // trailing field must produce a clean Err, never index-panic. Every
+    // directive kind that indexes a positional field is covered. ─────────
+
+    #[test]
+    fn register_missing_name_errors_cleanly_not_panics() {
+        assert!(matches!(parse_script("(register)"), Err(WastParseError::UnexpectedEof)));
+    }
+
+    #[test]
+    fn assert_return_missing_action_errors_cleanly_not_panics() {
+        assert!(matches!(parse_script("(assert_return)"), Err(WastParseError::UnexpectedEof)));
+    }
+
+    #[test]
+    fn assert_exhaustion_missing_message_errors_cleanly_not_panics() {
+        let err = parse_script(r#"(assert_exhaustion (invoke "f"))"#).unwrap_err();
+        assert!(matches!(err, WastParseError::UnexpectedEof));
+    }
+
+    #[test]
+    fn assert_trap_missing_message_errors_cleanly_not_panics() {
+        let err = parse_script(r#"(assert_trap (invoke "f" (i32.const 1)))"#).unwrap_err();
+        assert!(matches!(err, WastParseError::UnexpectedEof));
+    }
+
+    #[test]
+    fn assert_malformed_missing_message_errors_cleanly_not_panics() {
+        let err = parse_script(r#"(assert_malformed (module binary "\00"))"#).unwrap_err();
+        assert!(matches!(err, WastParseError::UnexpectedEof));
+    }
+
+    #[test]
+    fn invoke_with_empty_list_argument_errors_cleanly_not_panics() {
+        // `()` as an arg where a const expression is expected -- empty
+        // list, so `items[0]` in the old code would index-panic.
+        let err = parse_script(r#"(assert_return (invoke "f" ()) (i32.const 1))"#).unwrap_err();
+        assert!(matches!(err, WastParseError::UnexpectedEof));
+    }
+
+    #[test]
+    fn action_with_no_kind_errors_cleanly_not_panics() {
+        let err = parse_script(r#"(assert_return () (i32.const 1))"#).unwrap_err();
+        assert!(matches!(
+            err,
+            WastParseError::UnexpectedToken { .. } | WastParseError::UnexpectedEof
+        ));
     }
 }

@@ -51,7 +51,13 @@ fn parse_int_magnitude(text: &str, pos: usize) -> Result<(bool, u128), WastParse
 /// unsigned spellings of every 32-bit pattern.
 pub fn parse_i32(text: &str, pos: usize) -> Result<i32, WastParseError> {
     let (neg, mag) = parse_int_magnitude(text, pos)?;
-    let signed = if neg { -(mag as i128) } else { mag as i128 };
+    // `.wrapping_neg()`, not unary `-` -- a magnitude near `u128::MAX` (a
+    // syntactically valid, if absurd, literal like a 32-hex-digit `0x...`)
+    // would overflow plain negation in a debug build (`overflow-checks`),
+    // panicking before the range check below gets a chance to reject it
+    // cleanly. Wrapping is safe here precisely because the result is
+    // immediately range-checked against i32's real bounds regardless.
+    let signed = if neg { (mag as i128).wrapping_neg() } else { mag as i128 };
     if !(-(1i128 << 31)..(1i128 << 32)).contains(&signed) {
         return Err(WastParseError::InvalidNumericLiteralForType {
             pos,
@@ -212,6 +218,16 @@ mod tests {
     fn i32_out_of_range_is_rejected() {
         assert!(parse_i32("4294967296", 0).is_err()); // 2^32
         assert!(parse_i32("-2147483649", 0).is_err()); // -2^31 - 1
+    }
+
+    /// Security-review regression: a magnitude near `u128::MAX` (still a
+    /// syntactically valid hex literal) used to overflow-panic on the
+    /// unary `-` before the range check ever ran. Must return a clean
+    /// `Err`, not panic, on a debug build (`overflow-checks = true`).
+    #[test]
+    fn i32_extreme_magnitude_negative_literal_errors_cleanly_not_panics() {
+        let err = parse_i32("-0x80000000000000000000000000000000", 0).unwrap_err();
+        assert!(matches!(err, WastParseError::InvalidNumericLiteralForType { .. }));
     }
 
     #[test]

@@ -63,6 +63,11 @@ pub enum WastParseError {
     DuplicateIdentifier { pos: usize, name: String, space: &'static str },
     InvalidNumericLiteral { pos: usize, text: String },
     InvalidNumericLiteralForType { pos: usize, text: String, ty: &'static str },
+    /// Nested `(...)` forms deeper than [`sexpr::MAX_NESTING_DEPTH`] — a
+    /// clean, catchable error instead of a hard stack overflow (an abort,
+    /// not a `panic!`, and NOT catchable by any Rust code) on adversarially
+    /// deep input like `((((((...))))))`.
+    TooDeeplyNested { pos: usize },
 }
 
 impl std::fmt::Display for WastParseError {
@@ -97,6 +102,9 @@ impl std::fmt::Display for WastParseError {
             }
             WastParseError::InvalidNumericLiteralForType { pos, text, ty } => {
                 write!(f, "at byte {pos}: {text:?} is not a valid {ty} literal")
+            }
+            WastParseError::TooDeeplyNested { pos } => {
+                write!(f, "at byte {pos}: nesting depth exceeds the parser's limit")
             }
         }
     }

@@ -27,7 +27,7 @@
 //! instruction encoder walks nested folded or flat instruction lists).
 
 use crate::numeric::{parse_f32_bits, parse_f64_bits, parse_i32, parse_i64};
-use crate::sexpr::{parse_source, SExpr};
+use crate::sexpr::{expect_get, parse_source, SExpr};
 use crate::WastParseError;
 use std::collections::HashMap;
 use wasm_types::{
@@ -343,11 +343,27 @@ fn build_import_shell(items: &[SExpr], desc: &[SExpr], kind: &str) -> Result<Imp
 }
 
 fn parse_limits(fields: &[SExpr]) -> Result<Limits, WastParseError> {
-    let nums: Vec<u32> = fields
+    let digit_atoms: Vec<&SExpr> = fields
         .iter()
         .take_while(|e| e.as_atom().is_some_and(|s| s.chars().all(|c| c.is_ascii_digit())))
-        .map(|e| e.as_atom().unwrap().parse::<u32>().unwrap())
         .collect();
+    // A digit-only string doesn't guarantee it fits u32 -- a syntactically
+    // fine but numerically out-of-range literal (e.g. 2^32) must produce a
+    // clean error here, not an `.unwrap()` panic on `parse`'s `Err`.
+    let nums: Vec<u32> = digit_atoms
+        .iter()
+        .map(|e| {
+            let (s, pos) = match e {
+                SExpr::Atom(s, pos) => (s.as_str(), *pos),
+                _ => unreachable!("take_while already filtered to atoms"),
+            };
+            s.parse::<u32>().map_err(|_| WastParseError::InvalidNumericLiteralForType {
+                pos,
+                text: s.to_string(),
+                ty: "u32 limit",
+            })
+        })
+        .collect::<Result<_, _>>()?;
     match nums.as_slice() {
         [min] => Ok(Limits { min: *min, max: None }),
         [min, max] => Ok(Limits { min: *min, max: Some(*max) }),
@@ -410,19 +426,25 @@ fn build(fields: &[&SExpr], ctx: &mut ModuleCtx) -> Result<(), WastParseError> {
                 func_i += 1;
             }
             "export" => {
-                let name = match &items[1] {
+                let name = match expect_get(items, 1)? {
                     SExpr::Str(b, _) => String::from_utf8_lossy(b).to_string(),
                     other => return Err(WastParseError::UnexpectedToken { pos: other.pos(), found: "".into(), expected: "an export name string" }),
                 };
-                let refd = items[2].as_list().unwrap();
-                let (kind, map) = match refd[0].as_atom().unwrap() {
+                let refd_expr = expect_get(items, 2)?;
+                let refd = refd_expr.as_list().ok_or(WastParseError::UnexpectedToken {
+                    pos: refd_expr.pos(),
+                    found: "".into(),
+                    expected: "an export target (func/table/memory/global $x)",
+                })?;
+                let refd_head = expect_get(refd, 0)?;
+                let (kind, map) = match refd_head.as_atom().unwrap_or("") {
                     "func" => (ExternalKind::Function, &ctx.func_names),
                     "table" => (ExternalKind::Table, &ctx.table_names),
                     "memory" => (ExternalKind::Memory, &ctx.memory_names),
                     "global" => (ExternalKind::Global, &ctx.global_names),
-                    other => return Err(WastParseError::UnexpectedToken { pos: refd[0].pos(), found: other.to_string(), expected: "func/table/memory/global" }),
+                    other => return Err(WastParseError::UnexpectedToken { pos: refd_head.pos(), found: other.to_string(), expected: "func/table/memory/global" }),
                 };
-                let index = resolve_idx(map, &refd[1], "export target")?;
+                let index = resolve_idx(map, expect_get(refd, 1)?, "export target")?;
                 ctx.module.exports.push(Export { name, kind, index });
             }
             "memory" => {
@@ -446,8 +468,8 @@ fn build(fields: &[&SExpr], ctx: &mut ModuleCtx) -> Result<(), WastParseError> {
                 let rest = &items[name_skip..];
                 let idx = num_import_globals + global_i;
                 let (type_start, _) = handle_inline_export(rest, "global", idx, ctx)?;
-                let gt = parse_global_type(&rest[type_start])?;
-                let init_instrs = &rest[type_start + 1..];
+                let gt = parse_global_type(expect_get(rest, type_start)?)?;
+                let init_instrs = rest.get(type_start + 1..).unwrap_or(&[]);
                 let mut code = Vec::new();
                 encode_instr_list(init_instrs, &mut InstrCtx::empty(ctx), &mut code)?;
                 code.push(0x0B);
@@ -566,14 +588,16 @@ fn build_func(fields: &[SExpr], ctx: &mut ModuleCtx, func_idx: usize) -> Result<
 fn build_elem(fields: &[SExpr], ctx: &mut ModuleCtx) -> Result<(), WastParseError> {
     let mut i = 0;
     let table_index = if fields.first().is_some_and(|e| e.is_keyword_list("table")) {
-        let idx = resolve_idx(&ctx.table_names, &fields[0].as_list().unwrap()[1], "table")?;
+        let table_form = fields[0].as_list().unwrap();
+        let idx = resolve_idx(&ctx.table_names, expect_get(table_form, 1)?, "table")?;
         i += 1;
         idx
     } else {
         0
     };
-    let offset_expr = if fields[i].is_keyword_list("offset") {
-        let items = fields[i].as_list().unwrap();
+    let offset_expr_form = expect_get(fields, i)?;
+    let offset_expr = if offset_expr_form.is_keyword_list("offset") {
+        let items = offset_expr_form.as_list().unwrap();
         let mut code = Vec::new();
         encode_instr_list(&items[1..], &mut InstrCtx::empty(ctx), &mut code)?;
         code.push(0x0B);
@@ -582,13 +606,13 @@ fn build_elem(fields: &[SExpr], ctx: &mut ModuleCtx) -> Result<(), WastParseErro
     } else {
         // Shorthand: a single folded instruction with no `(offset ...)` wrapper.
         let mut code = Vec::new();
-        encode_instr_list(std::slice::from_ref(&fields[i]), &mut InstrCtx::empty(ctx), &mut code)?;
+        encode_instr_list(std::slice::from_ref(offset_expr_form), &mut InstrCtx::empty(ctx), &mut code)?;
         code.push(0x0B);
         i += 1;
         code
     };
     let mut function_indices = Vec::new();
-    for f in &fields[i..] {
+    for f in fields.get(i..).unwrap_or(&[]) {
         function_indices.push(resolve_idx(&ctx.func_names, f, "func")?);
     }
     ctx.module.elements.push(Element { table_index, offset_expr, function_indices });
@@ -598,14 +622,16 @@ fn build_elem(fields: &[SExpr], ctx: &mut ModuleCtx) -> Result<(), WastParseErro
 fn build_data(fields: &[SExpr], ctx: &mut ModuleCtx) -> Result<(), WastParseError> {
     let mut i = 0;
     let memory_index = if fields.first().is_some_and(|e| e.is_keyword_list("memory")) {
-        let idx = resolve_idx(&ctx.memory_names, &fields[0].as_list().unwrap()[1], "memory")?;
+        let memory_form = fields[0].as_list().unwrap();
+        let idx = resolve_idx(&ctx.memory_names, expect_get(memory_form, 1)?, "memory")?;
         i += 1;
         idx
     } else {
         0
     };
-    let offset_expr = if fields[i].is_keyword_list("offset") {
-        let items = fields[i].as_list().unwrap();
+    let offset_expr_form = expect_get(fields, i)?;
+    let offset_expr = if offset_expr_form.is_keyword_list("offset") {
+        let items = offset_expr_form.as_list().unwrap();
         let mut code = Vec::new();
         encode_instr_list(&items[1..], &mut InstrCtx::empty(ctx), &mut code)?;
         code.push(0x0B);
@@ -613,13 +639,13 @@ fn build_data(fields: &[SExpr], ctx: &mut ModuleCtx) -> Result<(), WastParseErro
         code
     } else {
         let mut code = Vec::new();
-        encode_instr_list(std::slice::from_ref(&fields[i]), &mut InstrCtx::empty(ctx), &mut code)?;
+        encode_instr_list(std::slice::from_ref(offset_expr_form), &mut InstrCtx::empty(ctx), &mut code)?;
         code.push(0x0B);
         i += 1;
         code
     };
     let mut data = Vec::new();
-    for f in &fields[i..] {
+    for f in fields.get(i..).unwrap_or(&[]) {
         if let SExpr::Str(b, _) = f {
             data.extend_from_slice(b);
         }
@@ -1023,9 +1049,15 @@ fn encode_flat_instr(
             // All trailing atoms are labels (>=1); everything before that,
             // if any, is the folded index operand.
             let label_start = args.iter().rposition(|a| !is_label_atom(a)).map(|i| i + 1).unwrap_or(0);
+            let labels = &args[label_start..];
+            // br_table takes >=1 label per spec -- `(br_table)` or
+            // `(br_table (i32.const 0))` (zero trailing label atoms) must
+            // error cleanly, not underflow `labels.len() - 1` below.
+            if labels.is_empty() {
+                return Err(WastParseError::UnexpectedEof);
+            }
             encode_instr_list(&args[..label_start], icx, out)?;
             out.push(info.opcode);
-            let labels = &args[label_start..];
             out.extend(wasm_leb128::encode_unsigned((labels.len() - 1) as u64));
             for l in labels {
                 let depth = icx.resolve_label(l)?;
@@ -1381,6 +1413,52 @@ mod tests {
     fn unknown_local_identifier_is_a_clear_error() {
         let err = parse_module("(module (func (result i32) local.get $nope))").unwrap_err();
         assert!(matches!(err, WastParseError::UnknownIdentifier { .. }));
+    }
+
+    // ── Security-review regressions: malformed-but-syntactically-parseable
+    // input must produce a clean Err, never panic. ────────────────────────
+
+    #[test]
+    fn memory_limit_number_out_of_u32_range_errors_cleanly_not_panics() {
+        // 2^32 -- an all-digit atom (passes the take_while filter) that
+        // doesn't fit u32 (used to unwrap-panic inside parse_limits).
+        let err = parse_module("(module (memory 4294967296))").unwrap_err();
+        assert!(matches!(err, WastParseError::InvalidNumericLiteralForType { .. }));
+    }
+
+    #[test]
+    fn folded_br_table_with_no_labels_errors_cleanly_not_panics() {
+        // Used to underflow `labels.len() - 1` (0 - 1 on usize).
+        let err = parse_module("(module (func (br_table)))").unwrap_err();
+        assert!(matches!(err, WastParseError::UnexpectedEof));
+    }
+
+    #[test]
+    fn export_missing_target_errors_cleanly_not_panics() {
+        let err = parse_module(r#"(module (export "e"))"#).unwrap_err();
+        assert!(matches!(err, WastParseError::UnexpectedEof));
+    }
+
+    #[test]
+    fn global_with_only_inline_export_and_no_type_errors_cleanly_not_panics() {
+        let err = parse_module(r#"(module (global (export "g")))"#).unwrap_err();
+        assert!(matches!(err, WastParseError::UnexpectedEof));
+    }
+
+    #[test]
+    fn empty_elem_and_data_segments_error_cleanly_not_panic() {
+        assert!(matches!(parse_module("(module (elem))"), Err(WastParseError::UnexpectedEof)));
+        assert!(matches!(parse_module("(module (data))"), Err(WastParseError::UnexpectedEof)));
+    }
+
+    #[test]
+    fn deeply_nested_parens_error_cleanly_not_stack_overflow() {
+        // MAX_NESTING_DEPTH levels' worth of opens, deliberately unclosed
+        // (doesn't matter -- depth is checked as each '(' is consumed,
+        // before the parser would ever look for a matching close).
+        let src = "(".repeat(crate::sexpr::MAX_NESTING_DEPTH + 1);
+        let err = parse_module(&src).unwrap_err();
+        assert!(matches!(err, WastParseError::TooDeeplyNested { .. }));
     }
 
     /// Folded `call` with arguments -- catches the exact bug found during
