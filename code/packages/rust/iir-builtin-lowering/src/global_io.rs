@@ -53,6 +53,7 @@ use std::collections::HashMap;
 
 use interpreter_ir::instr::{IIRInstr, Operand};
 use interpreter_ir::function::IIRFunction;
+use interpreter_ir::source_loc::SourceLoc;
 
 // ---------------------------------------------------------------------------
 // Public entry point
@@ -233,7 +234,90 @@ pub fn lower_global_io_function(fn_: &mut IIRFunction) {
         }
     }
 
-    fn_.instructions = new_instrs;
+    // ------------------------------------------------------------------
+    // Pass 3 — drop the name-carrying `const`s whose consumer we just
+    // rewrote away.
+    //
+    // `const %n1 = Operand::Var("g")` is not a real instruction: it is how the
+    // twig-ir-compiler smuggles a *string literal* to the `call_builtin` that
+    // follows. Once that `call_builtin` becomes a `global_load Str("g")`, the
+    // name lives inside the new instruction and the `const` has no consumer —
+    // but pass 2 pushes it through untouched, because it filters on
+    // `op != "call_builtin"`.
+    //
+    // Native, LLVM, the VM and the JIT tolerate the leftover; the JVM, CLR and
+    // WASM backends read it literally, see a `const` whose source names a
+    // variable, and refuse the module:
+    //
+    //     JVM   "const instruction has a Var source — use load_reg instead"
+    //     CLR   "const expects an integer literal, got Some(Var(\"g\"))"
+    //
+    // So *every* Twig program that reads a module-level global failed on those
+    // three backends. (The matrix names its case a "forward-referenced global",
+    // which is a red herring — declaration order is irrelevant, both orderings
+    // produce identical IIR and both failed.)
+    //
+    // Only unreferenced ones are dropped. A name register that some instruction
+    // still mentions is still doing work — a dynamic global this pass could not
+    // resolve, or a symbol literal a later pass will consume — and removing it
+    // would turn a compile error into a dangling reference.
+    // The name carriers are excluded from the scan that decides their own
+    // liveness. Each one's payload is a *literal* — the global's name, e.g.
+    // `"g"` — and counting it would put that string into a set consulted as if
+    // it held register names; a name colliding with some register would then
+    // read as "still live" and the carrier would survive, reviving the very
+    // backend rejection this removes. `closure.rs` excludes its own const
+    // definitions from its use count for the same reason.
+    //
+    // Both `Var` and `Str` count as uses, also matching `closure.rs`: nothing
+    // today re-encodes a live register as `Str`, but if something ever does,
+    // the failure mode is a dangling reference, and over-retention is the safe
+    // direction to be wrong in.
+    let referenced: std::collections::HashSet<String> = new_instrs
+        .iter()
+        .filter(|i| !(i.op == "const" && matches!(i.srcs.first(), Some(Operand::Var(_)))))
+        .flat_map(|i| i.srcs.iter())
+        .filter_map(|s| match s {
+            Operand::Var(name) | Operand::Str(name) => Some(name.clone()),
+            _ => None,
+        })
+        .collect();
+
+    // `source_map` is documented as indexed in lockstep with `instructions`.
+    // Passes 1 and 2 are strictly 1-to-1, so `new_instrs[i]` still corresponds
+    // to `source_map[i]` here — which is what makes an indexed filter valid.
+    // Dropping an instruction without dropping its entry shifts every later
+    // line attribution by one, and the drift accumulates per global access.
+    //
+    // Nothing would have caught it, either: the two consumers bounds-check
+    // (`aot-debug` walks `min(len, len)`, `iir-coverage` checks `ip` against
+    // the *instructions*), so both silently misattribute rather than panic —
+    // and on the managed path `materialize_immediate_operands` later rebuilds
+    // the map at the correct *length*, laundering the wrong content past any
+    // length assertion. This is the same lockstep bug that pass fixed; a bug
+    // class fixed in one pass is not fixed in the next one.
+    let had_source_map = !fn_.source_map.is_empty();
+    let old_map = std::mem::take(&mut fn_.source_map);
+    let mut kept: Vec<IIRInstr> = Vec::with_capacity(new_instrs.len());
+    let mut new_map = Vec::with_capacity(old_map.len());
+    for (idx, instr) in new_instrs.into_iter().enumerate() {
+        let is_name_carrier = instr.op == "const"
+            && matches!(instr.srcs.first(), Some(Operand::Var(_)))
+            && instr.dest.as_deref().is_some_and(|d| const_str_map.contains_key(d));
+        let dead =
+            is_name_carrier && !instr.dest.as_deref().is_some_and(|d| referenced.contains(d));
+        // (owned keys: the set must outlive the move of `new_instrs` below)
+        if dead {
+            continue;
+        }
+        if had_source_map {
+            new_map.push(old_map.get(idx).copied().unwrap_or(SourceLoc::SYNTHETIC));
+        }
+        kept.push(instr);
+    }
+
+    fn_.instructions = kept;
+    fn_.source_map = new_map;
 }
 
 // ---------------------------------------------------------------------------
@@ -382,6 +466,90 @@ mod tests {
         lower_global_io(&mut m);
         let load = m.functions[0].instructions.iter().find(|i| i.op == "global_load").unwrap();
         assert_eq!(load.dest.as_deref(), Some("%result"));
+    }
+
+    /// Once the name lives inside `global_load Str("…")`, the `const` that
+    /// carried it has no consumer and must not survive.
+    ///
+    /// It is not a real instruction — `const %n1 = Var("g")` is how the
+    /// twig-ir-compiler smuggles a string literal to the `call_builtin` that
+    /// follows. Native, LLVM, the VM and the JIT tolerated the leftover; the
+    /// JVM, CLR and WASM backends read it literally and refused the module
+    /// (`"const instruction has a Var source"` / `"const expects an integer
+    /// literal"`), so every Twig program that read a module-level global failed
+    /// on those three.
+    #[test]
+    fn the_name_carrying_const_is_removed_once_its_consumer_is_lowered() {
+        let mut m = make_module(global_get_sequence("%n1", "g", "%r"));
+        lower_global_io(&mut m);
+        let instrs = &m.functions[0].instructions;
+        assert!(
+            !instrs
+                .iter()
+                .any(|i| i.op == "const" && matches!(i.srcs.first(), Some(Operand::Var(_)))),
+            "the name-carrying const must be gone: {:?}",
+            instrs.iter().map(|i| (&i.op, &i.srcs)).collect::<Vec<_>>()
+        );
+        assert!(instrs.iter().any(|i| i.op == "global_load"));
+    }
+
+    /// Removing an instruction must remove its `source_map` entry.
+    ///
+    /// The map is documented as indexed in lockstep with `instructions`; passes
+    /// 1 and 2 are strictly 1-to-1, so pass 3 is the first thing here that can
+    /// break it. Nothing downstream would have caught the drift — `aot-debug`
+    /// walks `min(len, len)` and `iir-coverage` bounds-checks against the
+    /// *instructions*, so both silently misattribute lines rather than panic,
+    /// and on the managed path `materialize_immediate_operands` later rebuilds
+    /// the map at the correct length, laundering wrong content past any length
+    /// assertion. (Found in security review — the same lockstep bug that pass
+    /// had already fixed for itself.)
+    #[test]
+    fn source_map_stays_in_lockstep_when_a_const_is_dropped() {
+        use interpreter_ir::source_loc::SourceLoc;
+        let mut m = make_module(global_get_sequence("%n1", "g", "%r"));
+        let n = m.functions[0].instructions.len();
+        m.functions[0].source_map =
+            (0..n).map(|i| SourceLoc { line: (i + 1) as u32, column: 1 }).collect();
+        lower_global_io(&mut m);
+        let f = &m.functions[0];
+        assert_eq!(
+            f.source_map.len(),
+            f.instructions.len(),
+            "one location per instruction after the dead const is dropped"
+        );
+    }
+
+    /// A function with no `source_map` must not grow one.
+    #[test]
+    fn absent_source_map_is_left_absent_by_global_io() {
+        let mut m = make_module(global_get_sequence("%n1", "g", "%r"));
+        lower_global_io(&mut m);
+        assert!(m.functions[0].source_map.is_empty());
+    }
+
+    /// …but only when nothing still references it. A name register that some
+    /// instruction still mentions is doing work — a dynamic global this pass
+    /// could not resolve, or a symbol a later pass will consume — and removing
+    /// it would turn a compile error into a dangling reference.
+    #[test]
+    fn a_still_referenced_name_const_is_kept() {
+        // `%n1` names a global that IS lowered, and is ALSO passed to an
+        // unrelated builtin that this pass leaves alone.
+        let mut instrs = global_get_sequence("%n1", "g", "%r");
+        instrs.push(IIRInstr::new(
+            "call_builtin",
+            Some("%other".into()),
+            vec![Operand::Var("some_other_builtin".into()), Operand::Var("%n1".into())],
+            "any",
+        ));
+        let mut m = make_module(instrs);
+        lower_global_io(&mut m);
+        let kept = m.functions[0]
+            .instructions
+            .iter()
+            .any(|i| i.op == "const" && i.dest.as_deref() == Some("%n1"));
+        assert!(kept, "a const still referenced elsewhere must survive");
     }
 
     #[test]

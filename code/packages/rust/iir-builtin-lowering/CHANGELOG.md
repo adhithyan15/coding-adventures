@@ -1,5 +1,55 @@
 # Changelog — iir-builtin-lowering
 
+## 0.36.0 - 2026-08-13 - drop the name-carrying `const` once its consumer is lowered
+
+`const %n1 = Operand::Var("g")` is not a real instruction: it is how the
+twig-ir-compiler smuggles a *string literal* to the `call_builtin` that follows.
+`lower_global_io` reads it, folds the name into `global_load Str("g")` — and
+then pushed the now-consumerless `const` through untouched, because pass 2
+filters on `op != "call_builtin"`.
+
+Native, LLVM, the VM and the JIT tolerated the leftover. The JVM, CLR and WASM
+backends read it literally, saw a `const` whose source names a variable, and
+refused the whole module:
+
+    JVM   "const instruction has a Var source — use load_reg instead"
+    CLR   "const expects an integer literal, got Some(Var(\"g\"))"
+
+So **every Twig program that reads a module-level global** failed on those three
+backends. The matrix names its case a "forward-referenced global", which is a
+red herring — declaration order is irrelevant; `(define g 42) (define (f) g) (f)`
+and `(define (f) g) (define g 42) (f)` produce identical IIR and both failed.
+
+Only *unreferenced* name carriers are dropped. One that some instruction still
+mentions is still doing work — a dynamic global this pass could not resolve, or
+a symbol a later pass will consume — and removing it would turn a compile error
+into a dangling reference.
+
+### Three issues found in security review, fixed before merge
+
+* **`source_map` lockstep.** Passes 1 and 2 are strictly 1-to-1, so pass 3 is
+  the first thing here that changes the instruction count — and it did not
+  touch the map, shifting every later line attribution by one and accumulating
+  per global access. Nothing downstream would have caught it: `aot-debug` walks
+  `min(len, len)` and `iir-coverage` bounds-checks against the *instructions*,
+  so both silently misattribute rather than panic, and on the managed path
+  `materialize_immediate_operands` later rebuilds the map at the correct
+  *length*, laundering the wrong content past any length assertion. This is the
+  same lockstep bug that pass had already fixed for itself; a bug class fixed in
+  one pass is not fixed in the next one.
+* **Liveness ignored `Operand::Str`.** `closure.rs` deliberately counts both
+  `Var` and `Str` when deciding whether a const-string register is dead. Nothing
+  today re-encodes a live register as `Str`, but the failure mode if something
+  ever does is a dangling reference, and over-retention is the safe direction.
+* **The carriers polluted their own liveness set.** Each contributed its literal
+  payload — the global's *name* — to a set consulted as if it held register
+  names, so a name colliding with a register would read as live and revive the
+  backend rejection. They are now excluded from the scan that judges them.
+
+Verified by running: matrix cell #20 now passes on LLVM, JVM and CLR, and the
+three-program probe agrees with the VM oracle (42, 42, 8) on every backend.
+
+
 ## 0.35.0 - 2026-08-13 - materialize immediate value operands for the stack backends
 
 New pass `immediates::materialize_immediate_operands`, wired into the JVM, CLR
