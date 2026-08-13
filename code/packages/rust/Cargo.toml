@@ -457,6 +457,7 @@ members = [
     "wasm-opcodes",
     "wasm-types",
     "wasm-wast-parser",
+    "wasm-conformance",
     "document-ast",
     "commonmark-parser",
     "gfm-parser",

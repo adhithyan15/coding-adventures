@@ -2,6 +2,45 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.6.1] — 2026-08-13 (W05 PR-4 — three float NaN/sign correctness bugs)
+
+Found running the official WebAssembly spec testsuite against this crate
+for the first time, via the new `wasm-conformance` harness — these are
+exactly the kind of gap that harness exists to surface. All three follow
+the same shape: `f32`/`f64` opcode handlers used a Rust `std` float method
+directly, whose semantics turned out not to match what the WASM spec
+actually requires for that opcode.
+
+- **`f32.min`/`f32.max`/`f64.min`/`f64.max` didn't propagate NaN.** WASM's
+  `min`/`max` MUST return NaN if EITHER operand is NaN. Rust's native
+  `f32::min`/`max` follow IEEE 754-2008 minNum/maxNum semantics instead:
+  "if one of the arguments is NaN, then the OTHER argument is returned."
+  `min(NaN, -0.0)` was silently returning `-0.0`. This was, by a wide
+  margin, the single largest source of `assert_return` failures in the
+  vendored corpus — fixing it alone moved the aggregate `assert_return`
+  pass rate from 94.1% to 98.3%. Fixed with explicit NaN and signed-zero
+  handling (`min(+0.0, -0.0)` must be `-0.0`; `max` the reverse).
+- **`f32.nearest`/`f64.nearest` (round-ties-to-even) didn't preserve the
+  sign of a result that rounds to zero.** `nearest(-0.25)` must be `-0.0`,
+  not `0.0`, per IEEE 754's own roundTiesToEven rule. Fixed with an
+  explicit `copysign` fixup when the rounded result is exactly zero.
+- **`f32.ceil`/`floor`/`trunc`/`f64.ceil`/`floor`/`trunc` didn't
+  reliably quiet a signaling NaN input.** WASM's spec requires any NaN
+  propagated through these to have its quiet bit set, unconditionally.
+  The platform libm's own behavior for a signaling-NaN input to
+  `ceil`/`floor`/`trunc` turned out to genuinely differ between macOS and
+  Linux — confirmed empirically by running the exact same conformance
+  suite against both (via a Linux container) and diffing the results bit
+  for bit. Fixed by explicitly checking `is_nan()` and returning the
+  canonical `f32::NAN`/`f64::NAN` instead of relying on the platform's
+  native rounding-function NaN handling at all.
+
+9 new regression tests (2 min/max NaN-propagation, 2 min/max signed-zero,
+2 nearest sign-of-zero, 2 ceil/floor/trunc signaling-NaN-quieting, plus
+an f64 min/max pair the crate didn't have coverage for at all). 168 tests
+passing (up from 159), clippy clean, verified against both macOS and a
+Linux container (the platform that originally surfaced bug #3).
+
 ## [0.6.0] — 2026-08-03 (W04 — real garbage collection for `gc_heap`)
 
 The WasmGC struct heap (`gc_heap`) was, until now, an append-only arena with

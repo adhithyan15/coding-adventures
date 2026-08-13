@@ -1,0 +1,19 @@
+[package]
+name = "wasm-conformance"
+version = "0.1.0"
+edition = "2021"
+description = "Runs the official WebAssembly spec testsuite's .wast scripts against wasm-execution and reports a real, git-pinned conformance baseline"
+
+[dependencies]
+wasm-wast-parser = { path = "../wasm-wast-parser" }
+wasm-module-parser = { path = "../wasm-module-parser" }
+wasm-runtime = { path = "../wasm-runtime" }
+wasm-execution = { path = "../wasm-execution" }
+wasm-validator = { path = "../wasm-validator" }
+wasm-types = { path = "../wasm-types" }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+[[bin]]
+name = "wasm_conformance_report"
+path = "src/bin/wasm_conformance_report.rs"

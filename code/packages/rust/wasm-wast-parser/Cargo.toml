@@ -1,6 +1,6 @@
 [package]
 name = "wasm-wast-parser"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 description = "Parses the WebAssembly text format (.wat/.wast), including the official spec testsuite's script-directive dialect, into wasm-types::WasmModule and a sequence of test directives"
 

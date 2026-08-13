@@ -1,5 +1,61 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.1 — 2026-08-13 — 4 grammar bugs found running the real testsuite (W05 PR-4)
+
+`wasm-conformance` (W05 PR-4) is this crate's first real workout: running
+every vendored file from the official `WebAssembly/testsuite` corpus, not
+just this crate's own hand-written unit tests. That surfaced four genuine
+parsing bugs, each fixed with its own regression test:
+
+- **Folded `br_table`'s label/operand split was backwards.** WAT's grammar
+  lists all label targets FIRST, then an OPTIONAL folded index operand
+  LAST — `(br_table $a $b (i32.const 0))` — the opposite of every other
+  instruction's own "immediates trail operands" convention. The original
+  code searched from the END of the argument list for the first non-atom
+  element (assuming trailing atoms were the labels), found the folded
+  operand's own position instead, and silently produced a zero-label
+  `br_table` while dropping the real label references. Affected any file
+  using a folded `br_table` with more than one label — a majority of the
+  corpus's control-flow files.
+- **`(table reftype (elem e*))` — a table with its size implied by an
+  inline element list instead of explicit numeric limits — was completely
+  unhandled.** `funcref` isn't a digit atom, so `parse_limits` always hit
+  its "expected 1 or 2 limit numbers" error path. Now recognized as its
+  own form: `min`/`max` are set to the element count, and the elem
+  segment referenced by those functions is synthesized directly (`i32.const
+  0` offset), matching the shorthand's defined meaning.
+- **A bare hex integer (no `.` fraction, no `p`/`P` exponent) wasn't a
+  valid float literal.** `f32.const 0xf32` means the plain number
+  `3890.0`, not a bit reinterpretation and not a hex *float* (which
+  requires an exponent) — but the parser required a `p`/`P` exponent
+  unconditionally for anything hex-prefixed.
+- **A hex float's `p`/`P` exponent is optional even WITH a fractional
+  part**, not just on a bare integer — `0xa0_ff.f141_a59a` (no exponent
+  at all) defaults to exponent 0. The mantissa parsing was previously
+  reachable only via the exponent-bearing branch.
+
+A security review of this same PR found one more, related bug in the
+`(table reftype (elem e*))` fix above: `(table funcref ())` — a
+syntactically valid but EMPTY inline list, with no `"elem"` head atom at
+all — indexed `elem_form[1..]` without first confirming the list was
+both non-empty and actually headed by `"elem"`, panicking with a
+slice-range-out-of-bounds. Fixed by validating the head atom before
+slicing, with its own regression tests (`(table funcref ())` and
+`(table funcref (notelem)))`, both now clean `Err`s). None of the 48
+currently-vendored files trigger this — every real table-elem shorthand
+names at least one function — but it's exactly the shape of input a
+future `assert_malformed`/`assert_invalid` fixture (or wider corpus
+vendoring) could hit.
+
+Net effect on the vendored corpus: file-level parse failures dropped from
+33/48 to 16/48. The remaining 16 are legitimate, out-of-scope gaps
+(multi-value block signatures, reference-types `externref` and the
+generalized `elem` syntax, post-MVP saturating-truncation/sign-extension
+opcodes, and the `func`/`global` inline-import shorthand — the last is
+linking-adjacent and shares this phase's already-documented `spectest`
+deferral) — see `code/specs/W05-wasm-conformance-harness.md` section 6 and
+`wasm-conformance`'s own report output for the exact breakdown.
+
 ## 0.1.0 — 2026-08-12 — initial release (W05 PR-2)
 
 New crate. Parses the WebAssembly text format — both plain `.wat` modules

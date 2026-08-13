@@ -1311,6 +1311,74 @@ impl WasmRuntime {
             })
             .collect();
 
+        let results = self.call_engine(instance, func_index, &wasm_args)?;
+
+        // Convert back to i64.
+        Ok(results
+            .iter()
+            .map(|r| match r {
+                WasmValue::I32(v) => *v as i64,
+                WasmValue::I64(v) => *v,
+                WasmValue::F32(v) => *v as i64,
+                WasmValue::F64(v) => *v as i64,
+                // A WasmGC reference result (LANG77 L3b-3a-3b).  In the lisp
+                // value model the return boundary unboxes integer results to
+                // i64, so a *reference* reaching here is a structural result
+                // (a cons or nil).  This i64 path can't represent one yet:
+                // surface a deterministic, non-panicking placeholder — null
+                // (nil) as 0, a heap reference as its raw handle.  Proper
+                // reference-return handling lands with the cons e2e (L3b-3a-3c).
+                WasmValue::Ref(None) => 0,
+                WasmValue::Ref(Some(h)) => *h as i64,
+            })
+            .collect())
+    }
+
+    /// Call an exported function by name with fully typed, bit-exact
+    /// arguments and results.
+    ///
+    /// `call()` round-trips every value through `i64`, which is lossy for
+    /// floats — its result conversion does `WasmValue::F32(v) => *v as i64`,
+    /// a numeric *truncation*, not a bit reinterpretation. A caller that
+    /// needs the exact IEEE-754 bit pattern back (for example, a
+    /// conformance harness grading `assert_return` against a testsuite's
+    /// `nan:0x<payload>` literal) cannot use `call()` for that. This method
+    /// is purely additive: it shares `call()`'s export-lookup and
+    /// engine-execution plumbing but skips the i64 round trip entirely.
+    pub fn call_typed(
+        &self,
+        instance: &mut WasmInstance,
+        name: &str,
+        args: &[WasmValue],
+    ) -> Result<Vec<WasmValue>, TrapError> {
+        let (_, kind, index) = instance
+            .exports
+            .iter()
+            .find(|(n, _, _)| n == name)
+            .ok_or_else(|| TrapError::new(format!("export \"{}\" not found", name)))?;
+
+        if *kind != ExternalKind::Function {
+            return Err(TrapError::new(format!(
+                "export \"{}\" is not a function",
+                name
+            )));
+        }
+
+        let func_index = *index as usize;
+        self.call_engine(instance, func_index, args)
+    }
+
+    /// Shared by `call()` and `call_typed()`: build a `WasmExecutionEngine`
+    /// from `instance`'s state, run `func_index`, and write the engine's
+    /// post-call state back into `instance`. Neither caller-facing method
+    /// duplicates this plumbing (memory/tables/host-functions ownership
+    /// transfer, WasmGC struct field count wiring).
+    fn call_engine(
+        &self,
+        instance: &mut WasmInstance,
+        func_index: usize,
+        wasm_args: &[WasmValue],
+    ) -> Result<Vec<WasmValue>, TrapError> {
         // Build engine config, transferring ownership temporarily.
         let memory = instance.memory.take();
         let tables = std::mem::take(&mut instance.tables);
@@ -1369,32 +1437,14 @@ impl WasmRuntime {
             engine.set_struct_field_counts(struct_field_counts);
         }
 
-        let results = engine.call_function(func_index, &wasm_args)?;
+        let results = engine.call_function(func_index, wasm_args)?;
         let state = engine.into_state();
         instance.memory = state.memory;
         instance.tables = state.tables;
         instance.globals = state.globals;
         instance.host_functions = state.host_functions;
 
-        // Convert back to i64.
-        Ok(results
-            .iter()
-            .map(|r| match r {
-                WasmValue::I32(v) => *v as i64,
-                WasmValue::I64(v) => *v,
-                WasmValue::F32(v) => *v as i64,
-                WasmValue::F64(v) => *v as i64,
-                // A WasmGC reference result (LANG77 L3b-3a-3b).  In the lisp
-                // value model the return boundary unboxes integer results to
-                // i64, so a *reference* reaching here is a structural result
-                // (a cons or nil).  This i64 path can't represent one yet:
-                // surface a deterministic, non-panicking placeholder — null
-                // (nil) as 0, a heap reference as its raw handle.  Proper
-                // reference-return handling lands with the cons e2e (L3b-3a-3c).
-                WasmValue::Ref(None) => 0,
-                WasmValue::Ref(Some(h)) => *h as i64,
-            })
-            .collect())
+        Ok(results)
     }
 
     /// Parse, validate, instantiate, and call in one step.
