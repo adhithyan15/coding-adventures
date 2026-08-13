@@ -1,0 +1,77 @@
+% ============================================================================
+% amino-acid-three-letter-code — each standard amino acid and its THREE-letter
+% code (adj-facts-stdlib, BIOLOGY).
+% ============================================================================
+% A sibling to the already-shipped `amino-acids.adj` (`amino_acid_code(amino_acid,
+% code)`, the ONE-letter code): a new `amino_acid_three_letter_code(amino_acid,
+% code)` table names the OTHER code column the same already-cited DDBJ page
+% tables, which the existing table's schema has no room for. `amino-acids.adj`'s
+% own header already explains the source page has THREE columns —
+% `Abbreviation` (3-letter), `1 letter abbreviation`, `Amino acid name` — and
+% quotes the verbatim triple for glycine ("Gly"/"G"/"Glycine"), but the shipped
+% table only ever pairs the name with the ONE-letter code, leaving the
+% 3-letter column entirely un-queryable for all twenty amino acids. Recall is
+% a binding query in either direction:
+%
+%     ? amino_acid_three_letter_code(glycine, $C)   % gly   (name -> code)
+%     ? amino_acid_three_letter_code($A, ala)        % alanine (code -> name)
+%
+% This is a native `table` (ADJ-TABLES RS-5, a TWO-column table like
+% `amino-acids.adj`'s own `amino_acid_code`): each `row` lowers to a ground
+% relation `amino_acid_three_letter_code(amino_acid, code)` carrying the
+% citation, so both lookups above are ordinary SLD binding queries — the
+% engine returns the answer WITH its source, on the CPU, with zero model
+% calls, and abstains on anything not in the table. Keys AND code values are
+% lowercase ADJ atoms, matching `amino-acids.adj`'s own convention; the
+% two acidic residues keep the source's own names, `aspartic_acid` (Asp) and
+% `glutamic_acid` (Glu), spelled as single atoms, again matching that table.
+%
+% Only the SAME 20 STANDARD (proteinogenic) amino acids `amino-acids.adj`
+% ships are covered here — not the same table's already-explained exclusions
+% (Sec/Pyl, the 21st/22nd amino acids) and not the DDBJ page's additional
+% ambiguity codes (Asx/Glx/Xaa/Xle), which name UNCERTAIN or COMBINED
+% residues rather than a single standard amino acid and would misrepresent
+% "the standard twenty" if folded in here.
+%
+% Provenance: every amino-acid name and its three-letter code below is copied
+% from the SAME DNA Data Bank of Japan (DDBJ) "Codes" reference page
+% `amino-acids.adj` already cites — no new source, only a different column of
+% the same already-verified artifact. WebFetch-verified TWICE this cycle for
+% consistency, both byte-identical: the full name/3-letter/1-letter triple for
+% all twenty standard amino acids reads directly off the page's table (Ala/A,
+% Arg/R, Asn/N, Asp/D, Cys/C, Gln/Q, Glu/E, Gly/G, His/H, Ile/I, Leu/L, Lys/K,
+% Met/M, Phe/F, Pro/P, Ser/S, Thr/T, Trp/W, Tyr/Y, Val/V). `trust
+% authoritative` — the same tier `amino-acids.adj` already carries. Nothing
+% here is asserted from memory; every pair below was confirmed against the
+% fetched page. (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
+% ============================================================================
+
+table amino_acid_three_letter_code {
+    columns amino_acid, code
+
+    row (alanine, ala)
+    row (arginine, arg)
+    row (asparagine, asn)
+    row (aspartic_acid, asp)
+    row (cysteine, cys)
+    row (glutamine, gln)
+    row (glutamic_acid, glu)
+    row (glycine, gly)
+    row (histidine, his)
+    row (isoleucine, ile)
+    row (leucine, leu)
+    row (lysine, lys)
+    row (methionine, met)
+    row (phenylalanine, phe)
+    row (proline, pro)
+    row (serine, ser)
+    row (threonine, thr)
+    row (tryptophan, trp)
+    row (tyrosine, tyr)
+    row (valine, val)
+
+    source "Gly\nG\nGlycine"
+    locator "https://www.ddbj.nig.ac.jp/ddbj/code-e.html"
+    trust authoritative
+}

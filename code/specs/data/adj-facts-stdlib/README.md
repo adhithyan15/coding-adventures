@@ -117,6 +117,7 @@ per rotation, in parallel):
 | `biology/` | blood-vessel type → defining function (artery → away from heart) | NCI SEER Training |
 | `biology/` | hormone → endocrine gland that secretes it | NCI SEER Training / NIH MedlinePlus |
 | `biology/` | vitamin → deficiency disease it prevents | NIH Office of Dietary Supplements |
+| `biology/` | amino acid → its three-letter code (`amino_acid_three_letter_code(amino_acid, code)`, glycine → gly) — a sibling to `amino-acids.adj`, decoding the other column of the same already-cited DDBJ page | DDBJ "Codes" (authoritative; see `amino-acid-three-letter-code.adj`'s header) |
 | `biology/` | mRNA codon → whether it can initiate translation (`start_codon(codon, role)`, ttg/ctg/atg → start) — a sibling to `genetic-code.adj`, decoding the same already-quoted NCBI `Starts` line that table's own schema had no room for | NCBI "Genetic Codes" (authoritative; see `start-codon.adj`'s header) |
 | `biology/` | leaf part → defining token / function (blade → flattened, stomata → gas_exchange) | Colorado State University Extension (authoritative) |
 | `biology/` | diet category → food it eats (herbivore → plants, carnivore → animals, omnivore → anything) | U.S. National Park Service (authoritative) |
