@@ -3143,7 +3143,7 @@ External review merged ready-for-review PR #11111 as
 `91a6026f3e18d3320be96fa6b533059441395e39` at
 2026-08-13T06:50:57Z after every required CI and CodeQL check reached terminal
 success or an expected skip. The collision-checked refresh, recertified after
-rebasing at `d154b1e80041ed10c4ccb87a31021cb8f4ae4166`, covers 15 established lanes,
+rebasing at `286c1549b11c516e4ccce83281ea675102849f68`, covers 15 established lanes,
 1,305 normalized implementation identities, and 4,461 established slots. It
 reports 173 high-consensus identities with 269 missing slots, 855 singletons
 with 11,970 missing singleton slots, 658 Rust singletons, zero canonical
