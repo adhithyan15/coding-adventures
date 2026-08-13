@@ -273,6 +273,7 @@ mod tests {
             globals: Vec::new(),
             global_types: Vec::new(),
             func_types: Vec::new(),
+            types: Vec::new(),
             func_bodies: Vec::new(),
             host_functions: Vec::new(),
             typed_locals: Vec::new(),

@@ -2,6 +2,99 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.6.3] — 2026-08-13 (WASM07 — two real assert_return correctness bugs + a security-review fix)
+
+Investigating why `wasm-conformance`'s `assert_return` pass rate sat at
+98.3% (208 real failures, not opcode-coverage gaps) surfaced two genuine
+bugs in this crate, found by running the official spec testsuite, not by
+inspection.
+
+- **A WASM function body is itself an implicit outer `block`, whose label
+  is the function's own end — this crate never modeled that.** `br`/
+  `br_if`/`br_table` at a depth that walks out of every *explicit* block
+  (including a completely ordinary, spec-legal bare top-level `(br 0)`,
+  meaning "return" — `func.wast`'s own `break-empty`/`break-i32`/etc.
+  cases are exactly this) had no label on `ctx.label_stack` to resolve
+  against, and traps with a spurious "branch target N out of range"
+  instead of returning. Fixed by pushing an implicit label at call entry
+  (`arity` = the function's own result count, `target_pc` one past the
+  last instruction) — in **both** independent call-entry code paths this
+  crate has (`call_function_inner`, used for nested `call`/
+  `call_indirect`, and the separate, duplicated dispatch loop inside the
+  public `WasmExecutionEngine::call_function`, the one true top-level
+  entry point) since neither reuses the other's instruction-decode-and-
+  dispatch logic.
+- **`call_indirect $type`'s immediate indexes the module's TYPE SECTION —
+  a completely different index space from `ctx.func_types`, which is
+  indexed by FUNCTION index** (one entry per function, resolved to
+  whichever type that function happens to declare; two functions can
+  easily share a type, or a type can go unused by any function at all).
+  The type check compared the callee's real type against
+  `func_types[type_idx]` — an arbitrary, usually-unrelated function's
+  type, not the type the call site actually declared — so legitimate
+  `call_indirect` calls across dozens of real testsuite cases
+  (`load.wast`/`local_tee.wast`/`nop.wast`/`call.wast`'s many
+  `as-call_indirect-*` cases, `func.wast`'s `signature-*-duplicate`
+  cases) spuriously trapped "indirect call type mismatch" even though the
+  callee's real type matched exactly. Fixed the same way
+  `struct_field_counts` already solves an analogous "the parser doesn't
+  yet surface this to the engine" gap: a new engine-level
+  `type_section: Vec<FuncType>` field (empty by default — deliberately
+  **not** added to `WasmEngineConfig`, which would have forced every one
+  of this crate's ~40 hand-built single/few-function unit-test modules to
+  supply it) with a `set_type_section` setter, threaded into
+  `WasmExecutionContext.types`. Left unset, the check is skipped
+  (permissive — "no type info available" is not the same claim as "the
+  type section is empty"); `wasm-runtime`'s real embedding path always
+  sets it now (see that crate's own changelog).
+- **A security review of this PR's `wasm-runtime` fix (a trapped call must
+  not permanently lose an instance's memory/tables — see that crate's own
+  changelog) found the identical bug pattern one layer further in.**
+  `WasmExecutionEngine::call_function` (the public, top-level entry point)
+  also `mem::take`s `self.host_functions` before running, and its own
+  restore line (`self.host_functions = ctx.host_functions;`) used to sit
+  AFTER `execute_with_context(...)?` — skipped on any trap, exactly the
+  same bug the `wasm-runtime` fix addressed one call frame further out.
+  Since `wasm-runtime::instantiate()` wires real WASI imports (`fd_write`,
+  `random_get`, `clock_time_get`, `environ_get`, `proc_exit`, ...)
+  through this exact field, ANY instance that trapped even once would
+  silently and permanently lose every WASI import for the rest of its
+  life — the `wasm-runtime` fix alone only restored `instance.memory`/
+  `instance.tables` (pointer-aliased into the engine, never moved, so
+  they survived a trap fine even with the old code) but not
+  `host_functions` (genuinely moved via `mem::take`, one layer further
+  in). Fixed the same way: capture the `Result` from
+  `execute_with_context` first, restore `self.globals`/
+  `self.host_functions`/`self.last_gc_state` unconditionally, THEN
+  propagate the trap.
+- 5 new regression tests (`tests/wasm07_regression.rs`): a bare top-level
+  `br 0` returning correctly through both call-entry paths, a
+  `call_indirect` case specifically shaped so the old bug (grabbing an
+  unrelated function's type) is unmissable, verified both unset
+  (permissive) and set (the real check) against the module's own actual
+  parsed type section, a case confirming a genuine type mismatch still
+  traps once the real type section is wired in, and a host-imported
+  function confirmed to survive an unrelated trapped call and remain
+  callable afterward.
+
+Together with the matching `wasm-runtime` 0.5.1 fix (a trapped call
+losing an instance's memory/tables forever after — see that crate's own
+changelog), these three bugs closed 139 of the 208 real `assert_return`
+failures the pre-fix baseline had: 12030/12238 (98.3%) → 12169/12238
+(99.4%). The remaining 69 are tracked in the session backlog, not blindly
+chased further in this PR: a distinct StackUnderflow bug in named-label
+depth resolution through 3+ levels of nested blocks (`switch.wast`,
+`labels.wast`'s `if`/`if2`, `func.wast`'s `break-br_table-nested-*`),
+`comments.wast`'s CR/CRLF line-comment-terminator handling in the `quote`
+re-parse path, a handful of NaN-payload-preservation gaps beyond the
+0.6.1 fixes, `call.wast`'s `even`/`odd` (the already-documented, accepted
+WASM01 trade-off), and `br.wast`'s one remaining case (a genuine
+multi-value block signature, already tracked as WASM04) — each is its
+own investigation, not a continuation of these three.
+
+178 tests passing (up from 173: 5 new `wasm07_regression.rs` cases),
+clippy clean.
+
 ## [0.6.2] — 2026-08-13 (WASM01 — a real call-depth guard)
 
 `call_function` had NO limit on WASM call nesting: `call`/`call_indirect`
