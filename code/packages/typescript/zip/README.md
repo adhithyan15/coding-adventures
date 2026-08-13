@@ -82,7 +82,7 @@ crc32(new TextEncoder().encode("hello world")); // 0x0D4A1185
 | `unzip(data)` | One-shot decompress → `Map<string, Uint8Array>`. |
 | `crc32(data, initial?)` | CRC-32 (polynomial 0xEDB88320). |
 | `rawDeflate(data)` | Compress to a raw RFC 1951 stream — no ZIP, zlib, or gzip framing. |
-| `rawInflate(data)` | Decompress a raw RFC 1951 stream. Reads all three block types. |
+| `rawInflate(data, maxOutput?)` | Decompress a raw RFC 1951 stream. Reads all three block types. |
 | `dosDatetime(...)` | Encode MS-DOS timestamp. |
 | `DOS_EPOCH` | Constant `0x00210000` — 1980-01-01 00:00:00. |
 
@@ -102,6 +102,20 @@ rawInflate(raw); // the original bytes
 
 A second copy of this in another package would be a second place for a
 bit-packing bug to hide, which is why it is exported rather than duplicated.
+
+**`rawInflate` reads bytes you did not write.** Malformed input always throws —
+it never returns partial or wrong output — so be ready to catch. Output is
+capped at 256 MB by default, and you should lower it whenever you know the
+answer's size:
+
+```typescript
+rawInflate(untrusted, 1 << 20); // refuse anything over 1 MB
+```
+
+The cap matters because DEFLATE's expansion ratio reaches **1032:1** — a
+two-symbol pair copies up to 258 bytes — so a few hundred kilobytes of hostile
+input can demand hundreds of megabytes of output. `ZipReader.read` passes the
+entry's declared uncompressed size for exactly this reason.
 
 ## Design notes
 

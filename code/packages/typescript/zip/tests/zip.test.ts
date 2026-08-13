@@ -524,30 +524,146 @@ describe("rawDeflate / rawInflate", () => {
   });
 });
 
-describe("rawInflate guards", () => {
-  it("gives up after 15 bits rather than looping on an incomplete table", () => {
-    // RFC 1951 caps every Huffman code at 15 bits. A malformed block can
-    // describe a table where some bit patterns match no symbol at all; without
-    // the cap the decoder would read forever. Build exactly that: a code-length
-    // alphabet in which only symbol 0 has a code, then feed it all ones.
+// --- Malformed-stream guards -------------------------------------------------
+//
+// A decompressor that accepts MORE than the reference implementation is not
+// being generous; it is a place where two programs read the same bytes
+// differently, which is the shape of a content-inspection bypass. These check
+// that the tables a stream describes are actually valid Huffman codes.
+
+/** Assemble a bit list (LSB-first, as RFC 1951 packs) into bytes. */
+function bitsToBytes(bits: number[]): Uint8Array {
+  const bytes = new Uint8Array(Math.ceil(bits.length / 8));
+  bits.forEach((b, i) => { if (b) bytes[i >> 3]! |= 1 << (i & 7); });
+  return bytes;
+}
+
+/**
+ * Build a dynamic-block header by hand. `clLengths` gives the code length of
+ * each of the 19 code-length symbols, indexed by symbol number.
+ */
+function dynamicHeader(clLengths: number[], numCodeLen = 19): number[] {
+  const order = [16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15];
+  const bits: number[] = [];
+  const push = (value: number, n: number) => {
+    for (let i = 0; i < n; i++) bits.push((value >> i) & 1);
+  };
+  push(1, 1);                 // BFINAL
+  push(2, 2);                 // BTYPE = 10 (dynamic)
+  push(0, 5);                 // HLIT  -> 257 literal/length codes
+  push(0, 5);                 // HDIST -> 1 distance code
+  push(numCodeLen - 4, 4);    // HCLEN
+  for (let i = 0; i < numCodeLen; i++) push(clLengths[order[i]!] ?? 0, 3);
+  return bits;
+}
+
+describe("rawInflate malformed-stream guards", () => {
+  it("rejects an INCOMPLETE code-length table", () => {
+    // Only symbol 0 has a code, and it is 2 bits long -- so three of the four
+    // two-bit patterns decode to nothing. zlib refuses this outright and so
+    // must we, rather than succeeding on whichever streams happen to dodge the
+    // holes.
+    const cl = new Array(19).fill(0);
+    cl[0] = 2;
+    const bits = dynamicHeader(cl);
+    for (let i = 0; i < 64; i++) bits.push(1);
+    expect(() => rawInflate(bitsToBytes(bits))).toThrow(/incomplete code-length/);
+  });
+
+  it("rejects an OVER-SUBSCRIBED code-length table", () => {
+    // Five symbols all claiming a 2-bit code, when only four 2-bit codes exist.
+    // The surplus symbols would simply be unreachable, so decoding would appear
+    // to work while disagreeing with every other inflater about the meaning.
+    const cl = new Array(19).fill(0);
+    for (const sym of [0, 1, 2, 3, 4]) cl[sym] = 2;
+    const bits = dynamicHeader(cl);
+    for (let i = 0; i < 64; i++) bits.push(1);
+    expect(() => rawInflate(bitsToBytes(bits))).toThrow(/over-subscribed/);
+  });
+
+  it("rejects an incomplete literal/length table", () => {
+    // A valid code-length alphabet (symbols 0 and 18, one bit each), used to
+    // declare every literal/length code absent. An empty LL alphabet cannot
+    // even encode end-of-block, so the stream is unreadable by construction.
+    const cl = new Array(19).fill(0);
+    cl[0] = 1;
+    cl[18] = 1;
+    const bits = dynamicHeader(cl);
+    // Canonical assignment over {0, 18} at length 1: symbol 0 -> "0", 18 -> "1".
+    // Symbol 18 repeats zero 11 + extra times, so 138 then 120 zeroes exactly
+    // fills the 257 + 1 declared lengths without overrunning them.
+    for (const extra of [127, 109]) {
+      bits.push(1);
+      for (let i = 0; i < 7; i++) bits.push((extra >> i) & 1);
+    }
+    expect(() => rawInflate(bitsToBytes(bits))).toThrow(/incomplete literal\/length/);
+  });
+
+  it("rejects HDIST claiming more distance codes than RFC 1951 defines", () => {
+    // HDIST is five bits, so it can say 32; the spec defines 30.
     const bits: number[] = [];
     const push = (value: number, n: number) => {
       for (let i = 0; i < n; i++) bits.push((value >> i) & 1);
     };
-    push(1, 1); // BFINAL
-    push(2, 2); // BTYPE = 10 (dynamic)
-    push(0, 5); // HLIT  -> 257
-    push(0, 5); // HDIST -> 1
-    push(0, 4); // HCLEN -> 4, i.e. lengths for symbols 16, 17, 18, 0
-    push(0, 3); // 16 -> absent
-    push(0, 3); // 17 -> absent
-    push(0, 3); // 18 -> absent
-    push(2, 3); //  0 -> 2 bits, so only the code "00" resolves
-    for (let i = 0; i < 64; i++) bits.push(1);
-
-    const bytes = new Uint8Array(Math.ceil(bits.length / 8));
-    bits.forEach((b, i) => { if (b) bytes[i >> 3]! |= 1 << (i & 7); });
-
-    expect(() => rawInflate(bytes)).toThrow(/over-long Huffman code/);
+    push(1, 1);  // BFINAL
+    push(2, 2);  // BTYPE = 10
+    push(0, 5);  // HLIT  -> 257
+    push(31, 5); // HDIST -> 32, two more than exist
+    push(0, 4);
+    expect(() => rawInflate(bitsToBytes(bits))).toThrow(/distance codes exceeds/);
   });
+
+  it("rejects HLIT claiming more literal/length codes than RFC 1951 defines", () => {
+    const bits: number[] = [];
+    const push = (value: number, n: number) => {
+      for (let i = 0; i < n; i++) bits.push((value >> i) & 1);
+    };
+    push(1, 1);  // BFINAL
+    push(2, 2);  // BTYPE = 10
+    push(31, 5); // HLIT -> 288, two more than exist
+    push(0, 5);
+    push(0, 4);
+    expect(() => rawInflate(bitsToBytes(bits))).toThrow(/literal\/length codes exceeds/);
+  });
+});
+
+// --- The output cap ----------------------------------------------------------
+
+describe("rawInflate output cap", () => {
+  it("honours a caller-supplied byte ceiling", { timeout: 30_000 }, () => {
+    const data = new Uint8Array(5_000).fill(0x5a);
+    const compressed = rawDeflate(data);
+    // Well under the default cap, so only the explicit one can stop it.
+    expect(() => rawInflate(compressed, 1024)).toThrow(/output size limit exceeded/);
+    expect(rawInflate(compressed, 5_000)).toEqual(data);
+  });
+
+  it("caps a stored block too, not just compressed ones", () => {
+    // Stored blocks grow the output without going through a Huffman decoder,
+    // so they need the same check.
+    const data = new Uint8Array(300);
+    for (let i = 0; i < data.length; i++) data[i] = (i * 7) & 0xff;
+    const compressed = new Uint8Array(deflateRawSync(data, { level: 0 }));
+    expect(() => rawInflate(compressed, 100)).toThrow(/output size limit exceeded/);
+  });
+
+  it("rejects a nonsensical ceiling rather than silently ignoring it", () => {
+    const compressed = rawDeflate(enc.encode("x"));
+    expect(() => rawInflate(compressed, -1)).toThrow(/non-negative/);
+    expect(() => rawInflate(compressed, Number.NaN)).toThrow(/non-negative/);
+  });
+
+  it("counts the cap in BYTES, so a real bomb is stopped at the stated size", () => {
+    // Built with zlib rather than our own encoder, because zlib gets far closer
+    // to DEFLATE's 1032:1 ceiling and this test is about what a hostile input
+    // can actually do. The cap used to count entries of a number[], where each
+    // byte cost four to eight, so "256 MB" meant one to two gigabytes of
+    // backing store and the process died before the limit was ever reached.
+    const run = new Uint8Array(4_000_000).fill(0x00);
+    const bomb = new Uint8Array(deflateRawSync(run, { level: 9 }));
+    expect(bomb.length).toBeLessThan(run.length / 500); // genuinely a bomb
+
+    expect(() => rawInflate(bomb, 1_000_000)).toThrow(/output size limit exceeded/);
+    expect(rawInflate(bomb, run.length).length).toBe(run.length);
+  }, 60_000);
 });

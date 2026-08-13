@@ -218,6 +218,15 @@ interface HuffTable {
   count: Int32Array;
   /** Symbols ordered by (length, symbol) -- the canonical assignment order. */
   symbols: Int32Array;
+  /**
+   * True when the code uses up the whole code space exactly (Kraft sum == 1).
+   *
+   * An INCOMPLETE code leaves bit patterns that decode to no symbol at all. RFC
+   * 1951 permits exactly one such case -- a distance alphabet with a single code,
+   * used by a block that never emits a back-reference -- and forbids it
+   * everywhere else, so the caller decides rather than this builder.
+   */
+  complete: boolean;
 }
 
 /** The longest code RFC 1951 allows in either alphabet. */
@@ -237,6 +246,32 @@ function buildHuffTable(lengths: ArrayLike<number>): HuffTable {
     if (len > 0) count[len]!++;
   }
 
+  // Kraft's inequality, walked one length at a time.
+  //
+  // Think of the code space as a single unit that doubles in resolution with
+  // each extra bit: there are 2 one-bit codes, 4 two-bit codes, and so on, and
+  // every code handed out at length L removes two potential codes at L+1.
+  // `left` tracks how much of that space is still unclaimed.
+  //
+  //   left < 0 at any length  ->  OVER-SUBSCRIBED: more codes were demanded
+  //                               than exist. The surplus symbols are simply
+  //                               unreachable, so decoding would appear to work
+  //                               while quietly disagreeing with every other
+  //                               inflater about what the stream means.
+  //   left > 0 at the end     ->  INCOMPLETE: some bit patterns decode to
+  //                               nothing.
+  //
+  // Rejecting the first outright and reporting the second is what keeps this
+  // decoder from accepting streams zlib refuses. A decompressor that accepts
+  // MORE than the reference implementation is not being liberal; it is a place
+  // where two programs read the same bytes differently, which is exactly the
+  // shape of a content-inspection bypass.
+  let left = 1;
+  for (let len = 1; len <= MAX_CODE_BITS; len++) {
+    left = (left << 1) - count[len]!;
+    if (left < 0) throw new Error("deflate: over-subscribed Huffman table");
+  }
+
   // Offset of each length's first symbol inside `symbols`.
   const offsets = new Int32Array(MAX_CODE_BITS + 2);
   for (let len = 1; len <= MAX_CODE_BITS; len++) {
@@ -249,7 +284,7 @@ function buildHuffTable(lengths: ArrayLike<number>): HuffTable {
     if (len > 0) symbols[offsets[len]!++] = sym;
   }
 
-  return { count, symbols };
+  return { count, symbols, complete: left === 0 };
 }
 
 /**
@@ -276,9 +311,11 @@ function huffDecode(br: BitReader, table: HuffTable): number {
     code |= bit;
     const n = table.count[len]!;
     if (code - first < n) {
-      const sym = table.symbols[index + (code - first)];
-      if (sym === undefined) throw new Error("deflate: incomplete Huffman table");
-      return sym;
+      // In bounds by construction: `code - first` is non-negative by induction
+      // on the loop, and is less than `n`, so `index + (code - first)` stays
+      // below `index + n`, which is the running total of counts. The `??` is
+      // for the type checker, not for a case that can occur.
+      return table.symbols[index + (code - first)] ?? 0;
     }
     index += n;
     first = (first + n) << 1;
@@ -309,6 +346,13 @@ function readDynamicTables(br: BitReader): { ll: HuffTable; dist: HuffTable } {
   const numDist = hdist + 1;
   const numCodeLen = hclen + 4;
 
+  // The five-bit fields can express 288 and 32, but RFC 1951 defines only 286
+  // literal/length symbols and 30 distance codes. Refusing the surplus here
+  // means a malformed header fails at the header, rather than a hundred
+  // kilobytes later when an unassignable symbol finally turns up.
+  if (numLL > 286) throw new Error(`deflate: ${numLL} literal/length codes exceeds the 286 RFC 1951 defines`);
+  if (numDist > 30) throw new Error(`deflate: ${numDist} distance codes exceeds the 30 RFC 1951 defines`);
+
   // Stage 1: the code-length alphabet, three bits per entry, in permuted order.
   const clLengths = new Int32Array(19);
   for (let i = 0; i < numCodeLen; i++) {
@@ -317,6 +361,7 @@ function readDynamicTables(br: BitReader): { ll: HuffTable; dist: HuffTable } {
     clLengths[CODE_LENGTH_ORDER[i]!] = v;
   }
   const clTable = buildHuffTable(clLengths);
+  if (!clTable.complete) throw new Error("deflate: incomplete code-length Huffman table");
 
   // Stage 2: use it to read the real alphabets' lengths, which are themselves
   // run-length coded -- symbol 16 repeats the previous length, 17 and 18 repeat
@@ -355,10 +400,18 @@ function readDynamicTables(br: BitReader): { ll: HuffTable; dist: HuffTable } {
     for (let r = 0; r < repeat; r++) lengths[i++] = value;
   }
 
-  return {
-    ll: buildHuffTable(lengths.subarray(0, numLL)),
-    dist: buildHuffTable(lengths.subarray(numLL)),
-  };
+  const ll = buildHuffTable(lengths.subarray(0, numLL));
+  if (!ll.complete) throw new Error("deflate: incomplete literal/length Huffman table");
+
+  const dist = buildHuffTable(lengths.subarray(numLL));
+  // The one incompleteness RFC 1951 allows: a block that emits no
+  // back-reference at all still has to declare a distance alphabet, and
+  // declaring a single code (or none) is how it says "unused".
+  if (!dist.complete && dist.symbols.length > 1) {
+    throw new Error("deflate: incomplete distance Huffman table");
+  }
+
+  return { ll, dist };
 }
 
 // =============================================================================
@@ -448,11 +501,24 @@ export function rawDeflate(data: Uint8Array): Uint8Array {
  * and dynamic Huffman (BTYPE=10), which is what general-purpose encoders such
  * as zlib emit for anything but the smallest inputs.
  *
+ * **This reads bytes you did not write.** Malformed input always throws --
+ * it never returns partial or wrong output -- so callers should be prepared to
+ * catch. Output is capped at `maxOutput` bytes, 256 MB by default.
+ *
+ * Pass a smaller `maxOutput` whenever you know the answer's size, because
+ * DEFLATE's expansion ratio reaches 1032:1 and a few hundred kilobytes of
+ * hostile input can otherwise demand hundreds of megabytes. `ZipReader` passes
+ * the entry's declared uncompressed size for exactly this reason.
+ *
+ * @param data - a raw DEFLATE stream, with no zlib, gzip, or ZIP framing.
+ * @param maxOutput - byte ceiling on the decompressed result.
+ *
  * @example
- * rawInflate(rawDeflate(bytes)); // round-trips
+ * rawInflate(rawDeflate(bytes));            // round-trips
+ * rawInflate(untrusted, 1 << 20);           // refuse anything over 1 MB
  */
-export function rawInflate(data: Uint8Array): Uint8Array {
-  return deflateDecompress(data);
+export function rawInflate(data: Uint8Array, maxOutput?: number): Uint8Array {
+  return deflateDecompress(data, maxOutput);
 }
 
 function deflateCompress(data: Uint8Array): Uint8Array {
@@ -501,6 +567,74 @@ function deflateCompress(data: Uint8Array): Uint8Array {
 const MAX_OUTPUT = 256 * 1024 * 1024;
 
 /**
+ * The growing output of an inflate, held as real bytes.
+ *
+ * This used to be a plain `number[]`, and the difference is not cosmetic. A
+ * JavaScript array of small integers costs four to eight bytes per element in
+ * V8, so a cap of "256 million entries" was really a cap of one to two
+ * GIGABYTES of backing store -- plus a transient second copy each time the
+ * array doubled. On a container with a normal heap limit the process died
+ * before the limit it was supposedly enforcing was ever reached, which turns a
+ * catchable error into a crash.
+ *
+ * That matters here because DEFLATE is a compression format and compression
+ * formats have bombs. The theoretical ceiling is 1032:1 -- a two-bit symbol
+ * pair can copy 258 bytes -- so a few hundred kilobytes of hostile input can
+ * demand hundreds of megabytes of output. Counting the cap in bytes makes the
+ * limit mean what it says.
+ */
+class ByteSink {
+  private buf: Uint8Array;
+  private len = 0;
+
+  constructor(private readonly limit: number) {
+    this.buf = new Uint8Array(Math.min(1024, Math.max(limit, 1)));
+  }
+
+  get length(): number {
+    return this.len;
+  }
+
+  private reserve(extra: number): void {
+    if (this.len + extra > this.limit) {
+      throw new Error("deflate: output size limit exceeded");
+    }
+    if (this.len + extra <= this.buf.length) return;
+    let next = this.buf.length;
+    while (next < this.len + extra) next *= 2;
+    if (next > this.limit) next = this.limit;
+    const grown = new Uint8Array(next);
+    grown.set(this.buf.subarray(0, this.len));
+    this.buf = grown;
+  }
+
+  push(byte: number): void {
+    this.reserve(1);
+    this.buf[this.len++] = byte;
+  }
+
+  /**
+   * Copy `length` bytes from `offset` back in the output.
+   *
+   * Deliberately byte-at-a-time: an overlapping copy, where `offset` is smaller
+   * than `length`, is legal DEFLATE and is exactly how it expresses a run. A
+   * bulk `set()` of a pre-sliced source would read the region as it was before
+   * the copy started and silently produce different bytes.
+   */
+  copyBack(offset: number, length: number): void {
+    this.reserve(length);
+    for (let i = 0; i < length; i++) {
+      this.buf[this.len] = this.buf[this.len - offset]!;
+      this.len++;
+    }
+  }
+
+  finish(): Uint8Array {
+    return this.buf.slice(0, this.len);
+  }
+}
+
+/**
  * Decode the body of one compressed block, given whatever pair of decoders the
  * block type supplies.
  *
@@ -511,14 +645,13 @@ const MAX_OUTPUT = 256 * 1024 * 1024;
  */
 function decodeHuffmanBlock(
   br: BitReader,
-  out: number[],
+  out: ByteSink,
   readSymbol: () => number,
   readDistCode: () => number,
 ): void {
   for (;;) {
     const sym = readSymbol();
     if (sym < 256) {
-      if (out.length >= MAX_OUTPUT) throw new Error("deflate: output size limit exceeded");
       out.push(sym);
     } else if (sym === 256) {
       return;
@@ -541,19 +674,19 @@ function decodeHuffmanBlock(
       if (offset > out.length) {
         throw new Error(`deflate: back-reference offset ${offset} > output len ${out.length}`);
       }
-      if (out.length + length > MAX_OUTPUT) throw new Error("deflate: output size limit exceeded");
-      // Copied one byte at a time on purpose: an overlapping copy (offset less
-      // than length) is legal and is how DEFLATE expresses a run.
-      for (let i = 0; i < length; i++) out.push(out[out.length - offset]!);
+      out.copyBack(offset, length);
     } else {
       throw new Error(`deflate: invalid LL symbol ${sym}`);
     }
   }
 }
 
-function deflateDecompress(data: Uint8Array): Uint8Array {
+function deflateDecompress(data: Uint8Array, maxOutput: number = MAX_OUTPUT): Uint8Array {
+  if (!Number.isFinite(maxOutput) || maxOutput < 0) {
+    throw new Error("deflate: maxOutput must be a non-negative finite number");
+  }
   const br = new BitReader(data);
-  const out: number[] = [];
+  const out = new ByteSink(maxOutput);
 
   for (;;) {
     const bfinal = br.readLSB(1);
@@ -569,7 +702,6 @@ function deflateDecompress(data: Uint8Array): Uint8Array {
       const nlen = br.readLSB(16);
       if (nlen === null) throw new Error("deflate: EOF reading stored NLEN");
       if ((nlen ^ 0xffff) !== lenVal) throw new Error(`deflate: LEN/NLEN mismatch: ${lenVal} vs ${nlen}`);
-      if (out.length + lenVal > MAX_OUTPUT) throw new Error("deflate: output size limit exceeded");
       for (let i = 0; i < lenVal; i++) {
         const b = br.readLSB(8);
         if (b === null) throw new Error("deflate: EOF inside stored block data");
@@ -602,7 +734,7 @@ function deflateDecompress(data: Uint8Array): Uint8Array {
 
     if (bfinal === 1) break;
   }
-  return new Uint8Array(out);
+  return out.finish();
 }
 
 // =============================================================================
@@ -820,7 +952,11 @@ export class ZipReader {
     if (entry.method === 0) {
       decompressed = compressed;
     } else if (entry.method === 8) {
-      decompressed = deflateDecompress(compressed);
+      // The central directory already told us how big this entry decompresses
+      // to, and the code below truncates to it anyway -- so inflating up to the
+      // global 256 MB ceiling first would be doing the work of a zip bomb on
+      // its behalf. Cap at the declared size and let a lying header fail here.
+      decompressed = deflateDecompress(compressed, entry.size);
     } else {
       throw new Error(`zip: unsupported compression method ${entry.method} for '${entry.name}'`);
     }

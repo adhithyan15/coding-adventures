@@ -27,6 +27,30 @@
   one fixed-Huffman block and still spells length 258 as symbol 284. Only the
   reader grew.
 
+### Security
+
+- **The output cap now counts bytes.** Inflate accumulated into a plain
+  `number[]`, where V8 spends four to eight bytes per element, so the 256 MB
+  ceiling really allowed one to two gigabytes of backing store plus a transient
+  copy on each growth — enough to kill the process before the limit it was
+  supposedly enforcing was reached. Output now accumulates in a growable
+  `Uint8Array`. Dynamic blocks made this urgent rather than theoretical: they
+  reach DEFLATE's 1032:1 ceiling, so a few hundred kilobytes of hostile input
+  can demand hundreds of megabytes.
+- **`rawInflate(data, maxOutput?)` takes a ceiling**, because a library reading
+  bytes it did not write cannot know its embedder's budget. `ZipReader.read`
+  now passes the entry's declared uncompressed size, which it already truncates
+  to — previously it would inflate up to 256 MB and then discard the excess.
+- **Huffman tables are checked against Kraft's inequality.** Over-subscribed
+  tables (more codes claimed than exist at a length) are rejected outright, and
+  incomplete tables are rejected everywhere RFC 1951 forbids them — the one
+  exception being a distance alphabet with a single code, which is how a block
+  says it emits no back-references. Without this the decoder accepted streams
+  zlib refuses, which is the shape of a content-inspection bypass: one tool
+  rejects the file, another extracts real content from it.
+- `HLIT`/`HDIST` are range-checked at the header against RFC 1951's 286 and 30,
+  rather than failing deep inside the block when an unassignable symbol turns up.
+
 ### Tests
 
 - Decoder conformance is now checked against Node's `zlib` as an **oracle** —
@@ -34,9 +58,13 @@
   each other. Covers every compression level, incompressible input, a 4 KB run
   that forces symbol 285, and an assertion that the oracle really did emit a
   dynamic block.
-- Malformed-stream guards: a code-length repeat that overruns the alphabet, and
-  a table where no symbol resolves within RFC 1951's 15-bit cap.
-- 43 tests; 98% line coverage.
+- Malformed-stream guards: a code-length repeat that overruns the alphabet,
+  incomplete and over-subscribed code-length tables, an incomplete
+  literal/length table, and out-of-range `HLIT`/`HDIST`.
+- Cap behaviour: a caller-supplied ceiling, a stored block hitting it, a
+  nonsensical ceiling rejected rather than ignored, and a 500:1 zlib-built bomb
+  stopped at the stated byte count.
+- 51 tests; 98% line coverage.
 
 ## [0.1.0] - 2026-04-23
 

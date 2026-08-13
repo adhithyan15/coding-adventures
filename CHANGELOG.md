@@ -35,6 +35,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Decoder conformance is now checked against Node's `zlib` as an oracle, because
   round-tripping our own encoder through our own decoder only proves the two
   agree with each other.
+- Huffman tables are now checked against Kraft's inequality. Over-subscribed
+  tables are rejected outright and incomplete tables everywhere RFC 1951 forbids
+  them, so the decoder no longer accepts streams zlib refuses -- a difference
+  between two readers of the same bytes is the shape of a content-inspection
+  bypass.
+- The inflate output cap now counts bytes. It previously counted elements of a
+  `number[]`, where V8 spends four to eight bytes each, so a 256 MB ceiling
+  allowed one to two gigabytes of backing store and the process died before the
+  limit was reached. `rawInflate` takes a caller-supplied ceiling, and
+  `ZipReader.read` passes the entry's declared uncompressed size.
 
 ### Added — Raw RFC 1951 DEFLATE, Exported
 - `zip` now exports `rawDeflate` / `rawInflate`: the DEFLATE codec with no ZIP
