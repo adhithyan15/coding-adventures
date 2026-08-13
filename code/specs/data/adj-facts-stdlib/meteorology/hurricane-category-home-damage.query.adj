@@ -1,0 +1,28 @@
+% ============================================================================
+% hurricane-category-home-damage.query.adj — a worked recall over the
+% meteorology hurricane-category-home-damage library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what does a category 3
+% hurricane actually do to a well-built home?": it states no meteorology fact
+% of its own — it only `import`s the grounded table and asks binding
+% queries. The engine resolves each `?` against the `hurricane_home_damage`
+% rows and returns the structural effect + the table's source/locator/trust.
+%
+% The last query runs the relation BACKWARD (bind the effect
+% `total_roof_failure_and_wall_collapse`, recall which category it names —
+% category_5). Unlike the parent `damage_level` table's summary word (which
+% honestly duplicates `catastrophic_damage` for categories 4 and 5), this
+% table's five structural effects are all distinct. A key that is not one of
+% the five Saffir-Simpson categories abstains honestly — the engine never
+% invents a damage effect.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli hurricane-category-home-damage.query.adj
+% ============================================================================
+
+import "hurricane-category-home-damage.adj"
+
+? hurricane_home_damage(category_1, $HomeDamageEffect)  % expect damage_to_roof_shingles_vinyl_siding_and_gutters
+? hurricane_home_damage(category_5, $HomeDamageEffect)  % expect total_roof_failure_and_wall_collapse
+? hurricane_home_damage($Category, total_roof_failure_and_wall_collapse)  % reverse bind — expect category_5
+? hurricane_home_damage(category_6, $HomeDamageEffect)  % expect abstain — there is no category 6 on the scale
