@@ -4,8 +4,11 @@
 % The shape a learner (or an LLM) produces to ANSWER "what is a synonym of
 % happy?": it states no fact of its own — it only `import`s the grounded table
 % and asks binding queries. The engine resolves each `?` against the `synonym`
-% rows and returns the synonym + the table's source/locator/trust. A word the
-% table does not carry abstains honestly — the engine never invents a synonym.
+% rows and returns EVERY synonym + the table's source/locator/trust (as of
+% this cycle's extension, a bound word recalls MULTIPLE synonyms — `happy`
+% now recalls cheerful ; content ; delighted ; ... ; merry, not just one). A
+% word the table does not carry abstains honestly — the engine never invents
+% a synonym.
 %
 % Run (from this directory so the relative import resolves):
 %     ../../../../packages/rust/target/debug/adj-lang-cli synonyms.query.adj
@@ -13,6 +16,7 @@
 
 import "synonyms.adj"
 
-? synonym(happy, $Word)        % expect cheerful
-? synonym(quick, $Word)        % expect fast
+? synonym(happy, $Word)        % expect cheerful ; content ; delighted ; elated ; exultant ; glad ; joyful ; jubilant ; merry
+? synonym(quick, $Word)        % expect fast ; speedy ; rapid ; swift
+? synonym(smart, $Word)        % expect bright ; capable ; sophisticated ; witty (added this cycle)
 ? synonym(purple, $Word)       % expect abstain — no synonym is shipped for purple
