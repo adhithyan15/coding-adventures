@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.86.0";
+pub const VERSION: &str = "0.88.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -19,8 +19,8 @@ use grammar_tools::parser_grammar::parse_parser_grammar;
 use lexer::token::{Token, TokenType};
 use mermaid_lexer::{
     tokenize_mermaid, tokenize_mermaid_c4, tokenize_mermaid_er, tokenize_mermaid_gitgraph,
-    tokenize_mermaid_pie, tokenize_mermaid_quadrant, tokenize_mermaid_sankey,
-    tokenize_mermaid_sequence, tokenize_mermaid_state,
+    tokenize_mermaid_pie, tokenize_mermaid_sankey, tokenize_mermaid_sequence,
+    tokenize_mermaid_state, try_tokenize_mermaid_quadrant,
 };
 use parser::grammar_parser::{GrammarASTNode, GrammarParser, DEFAULT_MAX_RULE_DEPTH};
 
@@ -281,7 +281,11 @@ pub fn parse_mermaid_state_ast(source: &str) -> Result<GrammarASTNode, ParseErro
 }
 
 pub fn parse_mermaid_quadrant_ast(source: &str) -> Result<GrammarASTNode, ParseError> {
-    let tokens = tokenize_mermaid_quadrant(source);
+    let tokens = try_tokenize_mermaid_quadrant(source).map_err(|message| ParseError {
+        message,
+        line: 1,
+        col: 1,
+    })?;
     let grammar = parse_parser_grammar(QUADRANT_PARSER_GRAMMAR_SOURCE)
         .unwrap_or_else(|e| panic!("Failed to parse quadrant.grammar: {e}"));
     let mut parser = GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH);
@@ -1083,21 +1087,38 @@ fn parse_quadrant_point_style(raw: &str, token: &Token) -> Result<QuadrantPointS
         })?;
         let property = property.trim();
         let value = value.trim();
-        let number = |raw: &str| raw.trim_end_matches("px").trim().parse::<f64>();
+        let digits = |raw: &str| !raw.is_empty() && raw.bytes().all(|byte| byte.is_ascii_digit());
+        let hex_color = |raw: &str| {
+            let digits = raw.strip_prefix('#').unwrap_or(raw);
+            matches!(digits.len(), 3 | 6) && digits.bytes().all(|byte| byte.is_ascii_hexdigit())
+        };
         match property {
             "radius" => {
-                style.radius = Some(
-                    number(value)
-                        .map_err(|_| token_error(token, "invalid quadrant point radius"))?,
-                )
+                if !digits(value) {
+                    return Err(token_error(token, "invalid quadrant point radius"));
+                }
+                style.radius = Some(value.parse().expect("validated decimal radius"));
             }
-            "color" => style.color = Some(value.to_string()),
-            "stroke-color" => style.stroke_color = Some(value.to_string()),
+            "color" => {
+                if !hex_color(value) {
+                    return Err(token_error(token, "invalid quadrant point color"));
+                }
+                style.color = Some(value.to_string());
+            }
+            "stroke-color" => {
+                if !hex_color(value) {
+                    return Err(token_error(token, "invalid quadrant point stroke color"));
+                }
+                style.stroke_color = Some(value.to_string());
+            }
             "stroke-width" => {
-                style.stroke_width = Some(
-                    number(value)
-                        .map_err(|_| token_error(token, "invalid quadrant point stroke width"))?,
-                )
+                let Some(pixels) = value.strip_suffix("px") else {
+                    return Err(token_error(token, "invalid quadrant point stroke width"));
+                };
+                if !digits(pixels) {
+                    return Err(token_error(token, "invalid quadrant point stroke width"));
+                }
+                style.stroke_width = Some(pixels.parse().expect("validated pixel width"));
             }
             _ => {
                 return Err(token_error(
@@ -1116,7 +1137,12 @@ pub fn parse_quadrant_chart(source: &str) -> Result<ChartDiagram, ParseError> {
     let source = preprocessed.source.as_str();
     parse_mermaid_quadrant_ast(source)?;
 
-    let mut cursor = TokenCursor::new(tokenize_mermaid_quadrant(source));
+    let tokens = try_tokenize_mermaid_quadrant(source).map_err(|message| ParseError {
+        message,
+        line: 1,
+        col: 1,
+    })?;
+    let mut cursor = TokenCursor::new(tokens);
     cursor.skip_terminators();
     cursor
         .consume_if("HEADER")
@@ -6434,7 +6460,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.86.0");
+        assert_eq!(crate::VERSION, "0.88.0");
     }
 
     #[test]

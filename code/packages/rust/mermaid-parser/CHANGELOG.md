@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.88.0
+
+- Gate quadrant compatibility on the pinned upstream parser and style-validation corpus.
+- Match upstream point-style validation and reject malformed input without lexer panics.
+
 ## 0.87.0
 
 - Parse all 15 pinned quadrant theme variables for native rendering.

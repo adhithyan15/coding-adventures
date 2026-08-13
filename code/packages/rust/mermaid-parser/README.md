@@ -40,8 +40,8 @@ and stroke styles, accessibility metadata, case-insensitive keywords, comments,
 one-sided axes, extended axis arrows, Unicode labels, markdown strings, and init-configured
 dimensions, axis positions, point radius, padding, independent border widths,
 and title, axis, region, and point-label typography, plus all 15 quadrant theme
-variables. The family remains `partial` until the complete pinned upstream syntax
-corpus and native render fixtures pass.
+variables. The pinned upstream parser/style corpus and native Metal render
+fixture pass, so `quadrantChart` is tracked at `full` compatibility.
 
 The sequence subset includes participants and actors, aliases, standard solid
 and dotted message arrows, bidirectional/cross/point arrowheads, notes,

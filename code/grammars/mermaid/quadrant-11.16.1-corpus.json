@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "sources": [
+    "packages/mermaid/src/diagrams/quadrant-chart/parser/quadrant.jison.spec.ts",
+    "packages/mermaid/src/diagrams/quadrant-chart/quadrantDb.spec.ts"
+  ],
+  "valid": [
+    { "id": "header-only", "source": "quadrantChart" },
+    { "id": "case-insensitive-axis", "source": "QuadRantChart\n  x-AxIs Urgent --> Not Urgent\n  Y-AxIs Low --> High" },
+    { "id": "quoted-axis-symbols", "source": "quadrantChart\nx-axis \"Urgent(* +=[❤\" --> \"Not Urgent (* +=[❤\"" },
+    { "id": "one-sided-axis", "source": "quadrantChart\nx-axis \"Urgent(* +=[❤\"" },
+    { "id": "dangling-axis-arrow", "source": "quadrantChart\ny-axis \"Urgent(* +=[❤\" -->" },
+    { "id": "all-quadrants", "source": "quadrantChart\nquadrant-1 Plan\nquadrant-2 Do\nquadrant-3 Delegate\nquadrant-4 Delete" },
+    { "id": "title", "source": "quadrantChart\ntitle Analytics and Business Intelligence Platforms" },
+    { "id": "point", "source": "quadrantChart\npoint1: [0.1, 0.4]" },
+    { "id": "quoted-point", "source": "quadrantChart\n\"Point1 : (* +=[❤\": [1, 0]" },
+    { "id": "styled-points", "source": "quadrantChart\nA: [0.75, 0.75] radius: 10\nB: [0.55, 0.60] radius: 10, color: #ff0000\nC: [0.51, 0.40] radius: 10, color: ff0, stroke-color: #ff00ff\nD: [0.20, 0.30] stroke-width: 10px" },
+    { "id": "random-style-order", "source": "quadrantChart\nA: [0.75, 0.75] stroke-color: #ff00ff, stroke-width: 10px, color: #ff0000, radius: 10" },
+    { "id": "class-constructor", "source": "quadrantChart\nclassDef constructor color:#ff0000\nMicrosoft:::constructor: [0.75, 0.75]" },
+    { "id": "complete-chart", "source": "quadrantChart\ntitle Analytics and Business Intelligence Platforms\nx-axis \"Completeness of Vision ❤\" --> \"x-axis-2\"\ny-axis Ability to Execute --> \"y-axis-2\"\nquadrant-1 Leaders\nquadrant-2 Challengers\nquadrant-3 Niche\nquadrant-4 Visionaries\nMicrosoft: [0.75, 0.75]\nSalesforce: [0.55, 0.60]\nIBM: [0.51, 0.40]\nIncorta: [0.20, 0.30]" },
+    { "id": "chinese", "source": "quadrantChart\ntitle 分析象限图\nx-axis 低覆盖率 --> 高覆盖率\ny-axis 低参与度 --> 高参与度\nquadrant-1 需要扩展\n产品A: [0.3, 0.6]" },
+    { "id": "japanese", "source": "quadrantChart\nquadrant-1 拡張が必要\nx-axis 低い --> 高い" },
+    { "id": "korean", "source": "quadrantChart\nx-axis 낮음 --> 높음" },
+    { "id": "emoji", "source": "quadrantChart\nquadrant-2 🚀Growth" },
+    { "id": "latin-accents", "source": "quadrantChart\nx-axis Café --> Größe\nquadrant-1 categoría\nquadrant-2 naïve" }
+  ],
+  "invalid": [
+    { "id": "missing-header", "source": "quadrant-1 do" },
+    { "id": "coordinate-out-of-range", "source": "quadrantChart\nPoint1: [1.2, 0.4]" },
+    { "id": "unsupported-style", "source": "quadrantChart\nA: [0.1, 0.2] test_name: value" },
+    { "id": "non-numeric-radius", "source": "quadrantChart\nA: [0.1, 0.2] radius: f" },
+    { "id": "malformed-color", "source": "quadrantChart\nA: [0.1, 0.2] color: ffaa" },
+    { "id": "malformed-stroke-color", "source": "quadrantChart\nA: [0.1, 0.2] stroke-color: #f677779" },
+    { "id": "unitless-stroke-width", "source": "quadrantChart\nA: [0.1, 0.2] stroke-width: 30" }
+  ]
+}

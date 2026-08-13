@@ -1,10 +1,40 @@
-use mermaid_parser::{detect_mermaid_type, parse_any_mermaid, MERMAID_COMPATIBILITY_BASELINE};
+use mermaid_parser::{
+    detect_mermaid_type, parse_any_mermaid, parse_quadrant_chart, MERMAID_COMPATIBILITY_BASELINE,
+};
 use serde_json::Value;
 
 const COMPATIBILITY_MANIFEST: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/compatibility.json"
 ));
+const QUADRANT_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/quadrant-11.16.1-corpus.json"
+));
+
+#[test]
+fn pinned_quadrant_corpus_matches_upstream_acceptance() {
+    let corpus: Value =
+        serde_json::from_str(QUADRANT_CORPUS).expect("quadrant corpus must be JSON");
+    assert_eq!(
+        corpus["upstream_commit"].as_str(),
+        Some("7ecca0cd7f1658ef74f4e7e91f925724ef403bbf")
+    );
+    for fixture in corpus["valid"].as_array().expect("valid corpus array") {
+        let id = fixture["id"].as_str().expect("fixture id");
+        let source = fixture["source"].as_str().expect("fixture source");
+        parse_quadrant_chart(source)
+            .unwrap_or_else(|error| panic!("valid upstream fixture {id} failed: {error}"));
+    }
+    for fixture in corpus["invalid"].as_array().expect("invalid corpus array") {
+        let id = fixture["id"].as_str().expect("fixture id");
+        let source = fixture["source"].as_str().expect("fixture source");
+        assert!(
+            parse_quadrant_chart(source).is_err(),
+            "invalid upstream fixture {id} unexpectedly parsed"
+        );
+    }
+}
 
 #[test]
 fn compatibility_manifest_matches_detector_and_dispatch() {
@@ -32,9 +62,9 @@ fn compatibility_manifest_matches_detector_and_dispatch() {
             .unwrap_or_else(|error| panic!("failed to detect {id}: {error}"));
         assert_eq!(detected.canonical_id(), id);
 
-        if family["status"].as_str() == Some("partial") {
+        if matches!(family["status"].as_str(), Some("partial" | "full")) {
             parse_any_mermaid(smoke_source)
-                .unwrap_or_else(|error| panic!("partial family {id} must parse: {error}"));
+                .unwrap_or_else(|error| panic!("native family {id} must parse: {error}"));
             assert!(detected.has_native_pipeline());
         }
     }

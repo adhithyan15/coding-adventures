@@ -1,6 +1,6 @@
 //! Grammar-driven lexers for Mermaid diagram families.
 
-pub const VERSION: &str = "0.48.0";
+pub const VERSION: &str = "0.49.0";
 
 use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
@@ -240,10 +240,13 @@ pub fn tokenize_mermaid_state(source: &str) -> Vec<Token> {
 }
 
 pub fn tokenize_mermaid_quadrant(source: &str) -> Vec<Token> {
-    let mut lexer = create_mermaid_quadrant_lexer(source);
-    lexer
-        .tokenize()
+    try_tokenize_mermaid_quadrant(source)
         .unwrap_or_else(|e| panic!("Mermaid quadrant tokenization failed: {e}"))
+}
+
+pub fn try_tokenize_mermaid_quadrant(source: &str) -> Result<Vec<Token>, String> {
+    let mut lexer = create_mermaid_quadrant_lexer(source);
+    lexer.tokenize().map_err(|error| error.to_string())
 }
 
 #[cfg(test)]
@@ -257,7 +260,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.48.0");
+        assert_eq!(VERSION, "0.49.0");
     }
 
     #[test]

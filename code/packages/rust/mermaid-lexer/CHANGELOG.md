@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.49.0
+
+- Add a fallible quadrant tokenization API so malformed pinned-corpus inputs return errors instead of panicking.
+
 ## 0.48.0
 
 - Terminate quadrant statements at leading or inline `%%` comments.
