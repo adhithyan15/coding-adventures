@@ -18,7 +18,9 @@ use riscv_encoder::{
     encode_xori, encode_sw, A0, RET_WORD,
     X0_ZERO, X1_RA,
 };
-use riscv_simulator::RiscVSimulator;
+use riscv_simulator::{
+    HostEvent, RiscVSimulator, HOST_ECALL_SERVICE_REGISTER, HOST_ECALL_WRITE_I64,
+};
 use vm_core::value::Value;
 
 const DEFAULT_MEMORY_SIZE: usize = 64 * 1024;
@@ -65,12 +67,16 @@ impl Riscv32Backend {
 }
 
 /// Result of running a compiled RV32I function in the in-tree simulator.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct RunResult {
     pub return_value: i32,
     pub return_value_high: u32,
     pub halted: bool,
     pub steps: usize,
+    /// Signed integer values written through the simulator host ABI.
+    pub output: Vec<i64>,
+    /// Guest status supplied to the host exit service, if one was used.
+    pub exit_code: Option<i32>,
 }
 
 /// Errors reported by the RISC-V scalar lowering and execution surface.
@@ -291,6 +297,12 @@ pub fn run_binary(binary: &[u8], args: &[Value]) -> Result<RunResult, BackendErr
 
     let mut program = binary.to_vec();
     let return_trampoline = program.len();
+    // A program may have used a host service immediately before returning.
+    // Clear a7 so the runner's terminal ecall keeps its historical halt-only
+    // meaning rather than replaying that last service.
+    program.extend_from_slice(
+        &encode_addi(HOST_ECALL_SERVICE_REGISTER as u32, X0_ZERO, 0).to_le_bytes(),
+    );
     program.extend_from_slice(&encode_ecall().to_le_bytes());
 
     let mut simulator = RiscVSimulator::new(DEFAULT_MEMORY_SIZE);
@@ -316,6 +328,15 @@ pub fn run_binary(binary: &[u8], args: &[Value]) -> Result<RunResult, BackendErr
         return_value_high: simulator.regs.read(A1 as usize),
         halted: result.halted,
         steps: result.steps,
+        output: simulator
+            .host_events
+            .iter()
+            .filter_map(|event| match event {
+                HostEvent::WriteI64(value) => Some(*value),
+                HostEvent::Exit(_) => None,
+            })
+            .collect(),
+        exit_code: simulator.exit_code,
     })
 }
 
@@ -575,6 +596,10 @@ impl Lowerer {
             return self.lower_direct_call(instr);
         }
 
+        if op == "call_builtin" {
+            return self.lower_host_builtin(instr);
+        }
+
         if let Some(ty) = op.strip_prefix("mov_") {
             self.require_scalar_type(ty, op)?;
             return self.lower_move(instr, ty, op);
@@ -831,6 +856,35 @@ impl Lowerer {
                 "non-void call requires a destination".to_owned(),
             )),
         }
+    }
+
+    fn lower_host_builtin(&mut self, instr: &CIRInstr) -> Result<(), BackendError> {
+        let Some(CIROperand::Var(name)) = instr.srcs.first() else {
+            return Err(BackendError::InvalidOperand(
+                "call_builtin srcs[0] must be Var(builtin_name)".to_owned(),
+            ));
+        };
+        if name != "print_i64" {
+            return Err(BackendError::UnsupportedOp(format!("call_builtin {name}")));
+        }
+        if instr.dest.is_some() || instr.ty != "void" {
+            return Err(BackendError::InvalidOperand(
+                "call_builtin print_i64 returns void and must not have a destination".to_owned(),
+            ));
+        }
+        if instr.srcs.len() != 2 {
+            return Err(BackendError::InvalidOperand(format!(
+                "call_builtin print_i64 requires exactly one argument, got {}",
+                instr.srcs.len().saturating_sub(1)
+            )));
+        }
+
+        let value = self.wide_var_location(instr, 1, "call_builtin print_i64")?;
+        self.words.push(encode_addi(A0, value.low(), 0));
+        self.copy_or_extend_high(A1, value, true);
+        self.load_constant(HOST_ECALL_SERVICE_REGISTER as u32, HOST_ECALL_WRITE_I64);
+        self.words.push(encode_ecall());
+        Ok(())
     }
 
     fn lower_move(&mut self, instr: &CIRInstr, ty: &str, op: &str) -> Result<(), BackendError> {
@@ -2267,7 +2321,7 @@ fn value_source_occurrences(instr: &CIRInstr, name: &str) -> usize {
 fn is_value_source(instr: &CIRInstr, index: usize) -> bool {
     match instr.op.as_str() {
         "label" | "jmp" => false,
-        "call" => index != 0,
+        "call" | "call_builtin" => index != 0,
         "jmp_if_false" | "br_false_bool" | "jmp_if_true" | "br_true_bool" => index == 0,
         _ => true,
     }

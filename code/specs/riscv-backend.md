@@ -110,6 +110,26 @@ the simulator runner exposes the pair through `a0` and `a1`. Other wide
 operations remain intentionally rejected until their pair-aware sequences are
 implemented.
 
+## Simulator host ABI
+
+Programs running under the in-tree simulator can request host services with
+`ecall` while `mtvec` is zero. `a7` selects the service and arguments use the
+standard `a0` / `a1` registers:
+
+| Service | `a7` | Arguments | Effect |
+|---------|------|-----------|--------|
+| Exit | `1` | `a0`: signed status | Halts the guest and records `Exit(status)` |
+| Write signed integer | `2` | `a1:a0`: signed `i64` | Records `WriteI64(value)` and continues |
+
+Installing an M-mode trap vector leaves architectural `ecall` trap behavior
+unchanged. `riscv_backend::run_binary` exposes `WriteI64` values through
+`RunResult::output` and clears `a7` before its private return trampoline, so
+a program's last host service cannot be replayed as the terminal halt.
+
+`call_builtin "print_i64", value` lowers to the write service. This gives Nib
+programs a source-to-RV32I-to-simulator printing path without requiring an
+external runtime image.
+
 ## Prioritized backlog
 
 1. [x] **Control flow:** label binding and branch backpatching for CIR conditional
@@ -154,8 +174,9 @@ implemented.
    through `a7`, and save register-resident scalar or pair values live across a
    call. Nib argument and live-value calls execute from the selected entry
    function in the simulator.
-18. [ ] **Host runtime ABI:** define simulator `ecall` services for exit and integer
-   output, then lower language print primitives through that ABI.
+18. [x] **Host runtime ABI:** simulator `ecall` services expose exit and signed
+   64-bit integer output; `print_i64` lowers through that ABI and Nib output is
+   captured by the source-to-simulator fixture.
 19. [ ] **Memory and data:** globals, addresses, loads/stores, and a data-image
    loader for programs needing strings or arrays.
 20. [ ] **BASIC real values:** Dartmouth BASIC currently lowers numeric values

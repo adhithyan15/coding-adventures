@@ -74,6 +74,34 @@ fn canonical_twig_42_bytes_are_preserved_and_execute() {
 }
 
 #[test]
+fn print_i64_builtin_writes_signed_pair_values_through_the_host_abi() {
+    let cir = vec![
+        ci(
+            "const_i64",
+            Some("value"),
+            vec![CIROperand::Int(-42)],
+            "i64",
+        ),
+        ci(
+            "call_builtin",
+            None,
+            vec![
+                CIROperand::Var("print_i64".into()),
+                CIROperand::Var("value".into()),
+            ],
+            "void",
+        ),
+        ci("ret_void", None, vec![], "void"),
+    ];
+
+    let binary = compile(&ctx("prints", &[], "void"), &cir).expect("print_i64 lowering");
+    let run = run_binary(&binary, &[]).expect("simulator execution");
+    assert!(run.halted);
+    assert_eq!(run.output, vec![-42]);
+    assert_eq!(run.exit_code, None);
+}
+
+#[test]
 fn executes_large_32_bit_constants() {
     let cir = vec![
         ci(

@@ -6,6 +6,28 @@ use crate::decode;
 use crate::execute;
 use crate::encoding::assemble;
 
+/// Register carrying the host service number for the simulator ABI.
+pub const HOST_ECALL_SERVICE_REGISTER: usize = 17; // a7
+/// Low 32-bit argument / return register for the simulator ABI.
+pub const HOST_ECALL_ARGUMENT_LOW_REGISTER: usize = 10; // a0
+/// High 32-bit argument register for the simulator ABI.
+pub const HOST_ECALL_ARGUMENT_HIGH_REGISTER: usize = 11; // a1
+
+/// Halt the guest and expose `a0` as its signed exit status.
+pub const HOST_ECALL_EXIT: u32 = 1;
+/// Append the signed 64-bit value in `a1:a0` to the host output stream.
+pub const HOST_ECALL_WRITE_I64: u32 = 2;
+
+/// Observable services performed by a guest through the simulator host ABI.
+///
+/// These services are available only while `mtvec` is zero. A guest that
+/// installs a trap vector retains the architectural M-mode `ecall` behavior.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum HostEvent {
+    WriteI64(i64),
+    Exit(i32),
+}
+
 /// Complete RISC-V simulator with registers, memory, CSR file, and PC.
 pub struct RiscVSimulator {
     pub regs: RegisterFile,
@@ -13,6 +35,8 @@ pub struct RiscVSimulator {
     pub csr: CSRFile,
     pub pc: i32,
     pub halted: bool,
+    pub host_events: Vec<HostEvent>,
+    pub exit_code: Option<i32>,
 }
 
 /// Observable outcome of a bounded simulator run.
@@ -36,6 +60,8 @@ impl RiscVSimulator {
             csr: CSRFile::new(),
             pc: 0,
             halted: false,
+            host_events: Vec::new(),
+            exit_code: None,
         }
     }
 
@@ -84,6 +110,27 @@ impl RiscVSimulator {
         // Decode
         let decoded = decode::decode(raw, self.pc);
         let mnemonic = decoded.mnemonic.clone();
+
+        if mnemonic == "ecall" && self.csr.read(crate::csr::CSR_MTVEC) == 0 {
+            match self.regs.read(HOST_ECALL_SERVICE_REGISTER) {
+                HOST_ECALL_EXIT => {
+                    let code = self.regs.read(HOST_ECALL_ARGUMENT_LOW_REGISTER) as i32;
+                    self.host_events.push(HostEvent::Exit(code));
+                    self.exit_code = Some(code);
+                    self.halted = true;
+                    return mnemonic;
+                }
+                HOST_ECALL_WRITE_I64 => {
+                    let low = self.regs.read(HOST_ECALL_ARGUMENT_LOW_REGISTER) as u64;
+                    let high = self.regs.read(HOST_ECALL_ARGUMENT_HIGH_REGISTER) as u64;
+                    self.host_events
+                        .push(HostEvent::WriteI64(((high << 32) | low) as i64));
+                    self.pc += 4;
+                    return mnemonic;
+                }
+                _ => {}
+            }
+        }
 
         // Execute
         let result = execute::execute(&decoded, &mut self.regs, &mut self.mem, &mut self.csr, self.pc);
@@ -231,6 +278,36 @@ mod tests {
 
     // ecall trap
     #[test] fn test_ecall_halt() { let sim = run_program(&[encode_addi(1,0,42), encode_ecall()]); assert!(sim.halted); assert_eq!(sim.regs.read(1), 42); }
+
+    #[test]
+    fn host_ecall_records_integer_output_and_then_continues() {
+        let sim = run_program(&[
+            encode_addi(HOST_ECALL_ARGUMENT_LOW_REGISTER as u32, 0, -42),
+            encode_addi(HOST_ECALL_ARGUMENT_HIGH_REGISTER as u32, 0, -1),
+            encode_addi(HOST_ECALL_SERVICE_REGISTER as u32, 0, HOST_ECALL_WRITE_I64 as i32),
+            encode_ecall(),
+            encode_addi(3, 0, 7),
+            encode_addi(HOST_ECALL_SERVICE_REGISTER as u32, 0, 0),
+            encode_ecall(),
+        ]);
+        assert_eq!(sim.host_events, vec![HostEvent::WriteI64(-42)]);
+        assert_eq!(sim.regs.read(3), 7);
+        assert_eq!(sim.exit_code, None);
+    }
+
+    #[test]
+    fn host_ecall_exit_halts_with_the_guest_status() {
+        let sim = run_program(&[
+            encode_addi(HOST_ECALL_ARGUMENT_LOW_REGISTER as u32, 0, 42),
+            encode_addi(HOST_ECALL_SERVICE_REGISTER as u32, 0, HOST_ECALL_EXIT as i32),
+            encode_ecall(),
+            encode_addi(3, 0, 7),
+        ]);
+        assert!(sim.halted);
+        assert_eq!(sim.exit_code, Some(42));
+        assert_eq!(sim.host_events, vec![HostEvent::Exit(42)]);
+        assert_eq!(sim.regs.read(3), 0);
+    }
 
     #[test] fn test_ecall_trap_handler() {
         let mut sim = RiscVSimulator::new(65536);
