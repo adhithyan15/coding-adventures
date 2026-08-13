@@ -4,6 +4,8 @@
 
 - Type-check `shift_expr` with the same numeric operand and result rules as
   additive and multiplicative expressions.
+- Record the type of parenthesized nested expressions, preserving their narrow
+  arithmetic hints through chains such as `(1 << 6) >> 1`.
 
 ## 0.6.0 — 2026-06-27 — const/static initializer expressions are typed (LANG-FULL N10)
 
