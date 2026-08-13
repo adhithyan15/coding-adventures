@@ -47,6 +47,7 @@ const CHINESE_SEE = DUCTUS[ductusKey("chinese", "见")];
 const CHINESE_WHAT = DUCTUS[ductusKey("chinese", "什")];
 const CHINESE_PARTICLE_ME = DUCTUS[ductusKey("chinese", "么")];
 const CHINESE_EARLY = DUCTUS[ductusKey("chinese", "早")];
+const CHINESE_UP = DUCTUS[ductusKey("chinese", "上")];
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
@@ -624,6 +625,22 @@ describe("handwriting ductus", () => {
     );
     expect(Math.max(...penPath(CHINESE_EARLY.strokes[4]).map((point) => point.y))).toBeLessThan(
       Math.min(...penPath(CHINESE_EARLY.strokes[3]).map((point) => point.y)),
+    );
+  });
+
+  it("Chinese 上 writes the vertical before its short and long horizontals", () => {
+    expect(CHINESE_UP.script).toBe("chinese");
+    expect(penLifts(CHINESE_UP)).toBe(2);
+    expect(CHINESE_UP.strokes).toHaveLength(3);
+    expect(CHINESE_UP.strokes.map((stroke) => stroke.segments.length)).toEqual([1, 1, 1]);
+    const vertical = penPath(CHINESE_UP.strokes[0]);
+    const shortHorizontal = penPath(CHINESE_UP.strokes[1]);
+    const base = penPath(CHINESE_UP.strokes[2]);
+    expect(vertical[0].y).toBeGreaterThan(vertical.at(-1)!.y);
+    expect(shortHorizontal[0].x).toBeLessThan(shortHorizontal.at(-1)!.x);
+    expect(base[0].x).toBeLessThan(base.at(-1)!.x);
+    expect(base.at(-1)!.x - base[0].x).toBeGreaterThan(
+      shortHorizontal.at(-1)!.x - shortHorizontal[0].x,
     );
   });
 
@@ -1589,6 +1606,9 @@ describe("handwriting ductus", () => {
     expect(verifiedLetterFont("早", CHINESE_EARLY.source.url)).toBe(
       "_fonts/NotoSansSC-Subset.ttf",
     );
+    expect(verifiedLetterFont("上", CHINESE_UP.source.url)).toBe(
+      "_fonts/NotoSansSC-Subset.ttf",
+    );
     expect(verifiedLetterFont("א", HEBREW_ALEF.source.url)).toBe(
       "_fonts/NotoSansHebrew-Static.ttf",
     );
@@ -1966,6 +1986,17 @@ describe("handwriting ductus", () => {
     expect(src.citation).toMatch(/Hanzi Writer Data 早\.json.*medians 1–6.*snapshot 68d10a4/i);
     expect(src.variation).toMatch(
       /six ordered strokes.*Medians 1–4.*complete 日 first.*left side.*top horizontal.*turns down the right side.*middle horizontal.*closing bottom horizontal.*Median 5.*十's horizontal left-to-right.*median 6.*descends its vertical.*People's Republic of China stroke order.*Noto Sans SC.*日-before-十.*joined top-right turn.*five intervening lifts/i,
+    );
+  });
+
+  it("Chinese 上 traces its vertical-and-horizontals order to the pinned PRC dataset", () => {
+    const src = CHINESE_UP.source;
+    expect(src.url).toBe(
+      "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E4%B8%8A.json",
+    );
+    expect(src.citation).toMatch(/Hanzi Writer Data 上\.json.*medians 1–3.*snapshot 68d10a4/i);
+    expect(src.variation).toMatch(
+      /three ordered strokes.*Median 1.*central vertical.*top toward the base.*Median 2.*starts at the vertical.*short middle horizontal left-to-right.*Median 3.*long base horizontal left-to-right.*People's Republic of China stroke order.*Noto Sans SC.*both intervening lifts.*short-before-long horizontal contrast/i,
     );
   });
 

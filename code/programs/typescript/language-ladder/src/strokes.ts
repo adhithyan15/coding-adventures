@@ -1921,6 +1921,29 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: chineseCharacterSource("早"),
   },
+  // 上 descends its vertical first, then places the short middle horizontal
+  // before the long base: three separate strokes, two lifts, three movements.
+  [ductusKey("chinese", "上")]: {
+    script: "chinese",
+    glyph: "上",
+    strokes: [
+      { segments: [{ label: "descend the central vertical from top to bottom", path: [
+        { x: 466, y: 810 }, { x: 466, y: 680 }, { x: 466, y: 550 },
+        { x: 466, y: 420 }, { x: 466, y: 290 }, { x: 466, y: 160 },
+        { x: 466, y: 20 },
+      ] }] },
+      { segments: [{ label: "lift, then draw the short middle horizontal left-to-right", path: [
+        { x: 470, y: 478 }, { x: 550, y: 478 }, { x: 630, y: 478 },
+        { x: 710, y: 478 }, { x: 790, y: 478 }, { x: 868, y: 478 },
+      ] }] },
+      { segments: [{ label: "lift, then draw the long base horizontal left-to-right", path: [
+        { x: 65, y: 5 }, { x: 210, y: 5 }, { x: 355, y: 5 },
+        { x: 500, y: 5 }, { x: 645, y: 5 }, { x: 790, y: 5 },
+        { x: 936, y: 5 },
+      ] }] },
+    ],
+    source: chineseCharacterSource("上"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the
