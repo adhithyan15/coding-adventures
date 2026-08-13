@@ -14,7 +14,7 @@ use chief_of_staff_daemon_authority_provisioning::{
 use chief_of_staff_daemon_config::{
     parse_config, AxisPairingConfig, ChiefConfig, ConfigError, OnvifPairingConfig,
     ReolinkPairingConfig, SmartHomeListenerConfig, SmartHomeToolGrantConfig,
-    SmartHomeToolGrantStatus, ZoneMinderPairingConfig,
+    SmartHomeToolGrantStatus, SynologyPairingConfig, ZoneMinderPairingConfig,
 };
 use chief_of_staff_daemon_credential::{load_or_create_credential, CredentialFileError};
 use chief_of_staff_daemon_keyring::{load_package_keyring, KeyringLoadError};
@@ -90,6 +90,11 @@ use smart_home_runtime::{
     MdnsDiscoveryRunAdapter, PairingSessionStatus, RuntimePairingSessionQuery,
     ScheduledDiscoveryWorker,
 };
+use smart_home_synology_pairing_service::{
+    install_synology_pairing_service_actor, NativeSynologyPairingVerifier,
+    OwnerOnlySynologyCredentialInput, SynologyPairingConnectionTarget, SynologyPairingRequest,
+    SynologyPairingServiceActorState, SynologyPairingServiceError,
+};
 use smart_home_zoneminder_pairing_service::{
     install_zoneminder_pairing_service_actor, NativeZoneMinderPairingVerifier,
     OwnerOnlyZoneMinderCredentialInput, ZoneMinderPairingRequest,
@@ -146,6 +151,10 @@ const REOLINK_PAIRING_ACTOR_ID: &str = "chief-reolink-pairing";
 const REOLINK_PAIRING_SENDER_ID: &str = "chief-of-staff-daemon";
 const REOLINK_PAIRING_TICK_INTERVAL_MS: u64 = 1_000;
 const REOLINK_INTEGRATION_ID: &str = "reolink";
+const SYNOLOGY_PAIRING_ACTOR_ID: &str = "chief-synology-pairing";
+const SYNOLOGY_PAIRING_SENDER_ID: &str = "chief-of-staff-daemon";
+const SYNOLOGY_PAIRING_TICK_INTERVAL_MS: u64 = 1_000;
+const SYNOLOGY_INTEGRATION_ID: &str = "synology-surveillance";
 
 /// Stable payload-blind startup, serving, and teardown failure.
 #[derive(Debug)]
@@ -260,6 +269,20 @@ pub enum ChiefDaemonError {
     SmartHomeReolinkPairingWorkerUnavailable,
     /// The Reolink pairing worker thread panicked.
     SmartHomeReolinkPairingWorkerPanicked,
+    /// The configured Synology pairing KEK file could not be loaded safely.
+    SmartHomeSynologyPairingSecret(SecretFileError),
+    /// The configured Synology pairing Vault could not initialize or unseal.
+    SmartHomeSynologyPairingVault(SealedStoreError),
+    /// The Synology pairing service could not recover or execute its transaction state.
+    SmartHomeSynologyPairing(SynologyPairingServiceError),
+    /// The Synology pairing actor could not be installed or driven.
+    SmartHomeSynologyPairingActor(ActorError),
+    /// The production wall clock was unavailable to the Synology pairing worker.
+    SmartHomeSynologyPairingClock,
+    /// The operating system could not create the Synology pairing worker thread.
+    SmartHomeSynologyPairingWorkerUnavailable,
+    /// The Synology pairing worker thread panicked.
+    SmartHomeSynologyPairingWorkerPanicked,
     /// The local operator credential could not be loaded or created safely.
     Credential(CredentialFileError),
     /// Local bearer policy construction failed.
@@ -383,6 +406,21 @@ impl Display for ChiefDaemonError {
             }
             Self::SmartHomeReolinkPairingWorkerPanicked => {
                 "chief daemon: Reolink pairing worker panicked"
+            }
+            Self::SmartHomeSynologyPairingSecret(_) => {
+                "chief daemon: Synology pairing secret file failed"
+            }
+            Self::SmartHomeSynologyPairingVault(_) => "chief daemon: Synology pairing vault failed",
+            Self::SmartHomeSynologyPairing(_) => "chief daemon: Synology pairing failed",
+            Self::SmartHomeSynologyPairingActor(_) => "chief daemon: Synology pairing actor failed",
+            Self::SmartHomeSynologyPairingClock => {
+                "chief daemon: Synology pairing clock unavailable"
+            }
+            Self::SmartHomeSynologyPairingWorkerUnavailable => {
+                "chief daemon: Synology pairing worker unavailable"
+            }
+            Self::SmartHomeSynologyPairingWorkerPanicked => {
+                "chief daemon: Synology pairing worker panicked"
             }
             Self::Credential(_) => "chief daemon: operator credential failed",
             Self::Authentication(_) => "chief daemon: local authentication policy failed",
@@ -642,6 +680,21 @@ pub fn run(config: ChiefConfig, home: &Path) -> Result<(), ChiefDaemonError> {
                     .resolve(home)
                     .map_err(ChiefDaemonError::Config)?;
                 service.reolink_pairing = Some(configure_reolink_pairing_service(
+                    controller.clone(),
+                    &state_dir,
+                    &vault_dir,
+                    pairing,
+                    home,
+                    Arc::clone(&unix_clock),
+                )?);
+            }
+            if let Some(pairing) = listener.synology_pairing() {
+                let vault_dir = config
+                    .vault()
+                    .storage_path()
+                    .resolve(home)
+                    .map_err(ChiefDaemonError::Config)?;
+                service.synology_pairing = Some(configure_synology_pairing_service(
                     controller,
                     &state_dir,
                     &vault_dir,
@@ -846,6 +899,7 @@ struct SmartHomeHttpService {
     axis_pairing: Option<ChiefAxisPairingService>,
     zoneminder_pairing: Option<ChiefZoneMinderPairingService>,
     reolink_pairing: Option<ChiefReolinkPairingService>,
+    synology_pairing: Option<ChiefSynologyPairingService>,
 }
 
 type ChiefHueDiscoveryState = DiscoveryServiceActorState<
@@ -926,6 +980,20 @@ struct ChiefReolinkPairingService {
     bridge_id: smart_home_core::BridgeId,
 }
 
+type ChiefSynologyPairingState = SynologyPairingServiceActorState<
+    OwnerOnlySynologyCredentialInput,
+    NativeSynologyPairingVerifier,
+    FsStorageBackend,
+    FsStorageBackend,
+>;
+
+struct ChiefSynologyPairingService {
+    state: ChiefSynologyPairingState,
+    controller: SmartHomeControllerRuntime<FsStorageBackend>,
+    clock: Arc<dyn UnixTimeClock>,
+    bridge_id: smart_home_core::BridgeId,
+}
+
 #[derive(Debug, Default)]
 struct ChiefHueMdnsRunAdapter;
 
@@ -970,6 +1038,7 @@ fn compose_smart_home_http_service(
         axis_pairing: None,
         zoneminder_pairing: None,
         reolink_pairing: None,
+        synology_pairing: None,
     })
 }
 
@@ -1300,6 +1369,82 @@ fn configure_reolink_pairing_service(
     )
     .map_err(ChiefDaemonError::SmartHomeReolinkPairing)?;
     Ok(ChiefReolinkPairingService {
+        state,
+        controller,
+        clock,
+        bridge_id,
+    })
+}
+
+fn configure_synology_pairing_service(
+    controller: SmartHomeControllerRuntime<FsStorageBackend>,
+    state_dir: &Path,
+    vault_dir: &Path,
+    config: &SynologyPairingConfig,
+    home: &Path,
+    clock: Arc<dyn UnixTimeClock>,
+) -> Result<ChiefSynologyPairingService, ChiefDaemonError> {
+    let vault_backend: Arc<dyn StorageBackend> =
+        Arc::new(FsStorageBackend::new(vault_dir.to_path_buf()));
+    vault_backend
+        .initialize()
+        .map_err(ChiefDaemonError::Storage)?;
+    let vault = Arc::new(SealedStore::new(vault_backend));
+    let kek_path = config
+        .kek_path()
+        .resolve(home)
+        .map_err(ChiefDaemonError::Config)?;
+    let kek = read_owner_only_secret(&kek_path, SMART_HOME_PAIRING_KEK_BYTES)
+        .map_err(ChiefDaemonError::SmartHomeSynologyPairingSecret)?;
+    let kek: &[u8; SMART_HOME_PAIRING_KEK_BYTES] = kek.as_slice().try_into().map_err(|_| {
+        ChiefDaemonError::SmartHomeSynologyPairingSecret(SecretFileError::InvalidLength)
+    })?;
+    if vault
+        .status()
+        .map_err(ChiefDaemonError::SmartHomeSynologyPairingVault)?
+        .initialized
+    {
+        vault
+            .unseal_with_kek(kek)
+            .map_err(ChiefDaemonError::SmartHomeSynologyPairingVault)?;
+    } else {
+        vault
+            .init_with_kek(kek)
+            .map_err(ChiefDaemonError::SmartHomeSynologyPairingVault)?;
+    }
+    let bridge_id = smart_home_core::BridgeId::new(config.bridge_id()).map_err(|error| {
+        ChiefDaemonError::SmartHomeSynologyPairing(SynologyPairingServiceError::InvalidRequest(
+            error.to_string(),
+        ))
+    })?;
+    let credential_input = OwnerOnlySynologyCredentialInput::new(
+        bridge_id.clone(),
+        config
+            .username_path()
+            .resolve(home)
+            .map_err(ChiefDaemonError::Config)?,
+        config.username_length(),
+        config
+            .password_path()
+            .resolve(home)
+            .map_err(ChiefDaemonError::Config)?,
+        config.password_length(),
+    );
+    let target = SynologyPairingConnectionTarget::new(
+        bridge_id.clone(),
+        config.canonical_host(),
+        config.pinned_address(),
+    )
+    .map_err(ChiefDaemonError::SmartHomeSynologyPairing)?;
+    let state = SynologyPairingServiceActorState::restore(
+        FsStorageBackend::new(state_dir),
+        vault,
+        controller.clone(),
+        credential_input,
+        NativeSynologyPairingVerifier::new(target),
+    )
+    .map_err(ChiefDaemonError::SmartHomeSynologyPairing)?;
+    Ok(ChiefSynologyPairingService {
         state,
         controller,
         clock,
@@ -2214,6 +2359,151 @@ fn drive_reolink_pairing_tick(
     Ok(())
 }
 
+struct OwnedSynologyPairingWorker {
+    stop: Arc<AtomicBool>,
+    thread: Option<JoinHandle<Result<(), ChiefDaemonError>>>,
+}
+
+impl OwnedSynologyPairingWorker {
+    fn start(
+        service: ChiefSynologyPairingService,
+        on_failure: Arc<dyn Fn() + Send + Sync>,
+    ) -> Result<Self, ChiefDaemonError> {
+        Self::start_with_interval(
+            service,
+            on_failure,
+            Duration::from_millis(SYNOLOGY_PAIRING_TICK_INTERVAL_MS),
+        )
+    }
+
+    fn start_with_interval(
+        service: ChiefSynologyPairingService,
+        on_failure: Arc<dyn Fn() + Send + Sync>,
+        tick_interval: Duration,
+    ) -> Result<Self, ChiefDaemonError> {
+        let stop = Arc::new(AtomicBool::new(false));
+        let worker_stop = Arc::clone(&stop);
+        let (startup_sender, startup_receiver) = std::sync::mpsc::sync_channel(0);
+        let thread = thread::Builder::new()
+            .name("chief-synology-pairing".to_string())
+            .spawn(move || {
+                let ChiefSynologyPairingService {
+                    state,
+                    controller,
+                    clock,
+                    bridge_id,
+                } = service;
+                let mut system = ActorSystem::new();
+                if let Err(error) = install_synology_pairing_service_actor(
+                    &mut system,
+                    SYNOLOGY_PAIRING_ACTOR_ID,
+                    state,
+                ) {
+                    let _ = startup_sender.send(Err(error));
+                    return Ok(());
+                }
+                if startup_sender.send(Ok(())).is_err() {
+                    return Ok(());
+                }
+                while !worker_stop.load(Ordering::Acquire) {
+                    thread::park_timeout(tick_interval);
+                    if worker_stop.load(Ordering::Acquire) {
+                        break;
+                    }
+                    if let Err(error) = drive_synology_pairing_tick(
+                        &mut system,
+                        &controller,
+                        clock.as_ref(),
+                        &bridge_id,
+                    ) {
+                        on_failure();
+                        return Err(error);
+                    }
+                }
+                Ok(())
+            })
+            .map_err(|_| ChiefDaemonError::SmartHomeSynologyPairingWorkerUnavailable)?;
+        match startup_receiver.recv() {
+            Ok(Ok(())) => {}
+            Ok(Err(error)) => {
+                let _ = thread.join();
+                return Err(ChiefDaemonError::SmartHomeSynologyPairingActor(error));
+            }
+            Err(_) => {
+                let _ = thread.join();
+                return Err(ChiefDaemonError::SmartHomeSynologyPairingWorkerUnavailable);
+            }
+        }
+        Ok(Self {
+            stop,
+            thread: Some(thread),
+        })
+    }
+
+    fn stop_and_join(&mut self) -> Result<(), ChiefDaemonError> {
+        self.stop.store(true, Ordering::Release);
+        let Some(thread) = self.thread.take() else {
+            return Ok(());
+        };
+        thread.thread().unpark();
+        thread
+            .join()
+            .map_err(|_| ChiefDaemonError::SmartHomeSynologyPairingWorkerPanicked)?
+    }
+}
+
+impl Drop for OwnedSynologyPairingWorker {
+    fn drop(&mut self) {
+        let _ = self.stop_and_join();
+    }
+}
+
+fn drive_synology_pairing_tick(
+    system: &mut ActorSystem,
+    controller: &SmartHomeControllerRuntime<FsStorageBackend>,
+    clock: &dyn UnixTimeClock,
+    bridge_id: &smart_home_core::BridgeId,
+) -> Result<(), ChiefDaemonError> {
+    let now_ms = clock
+        .now_ms()
+        .ok_or(ChiefDaemonError::SmartHomeSynologyPairingClock)?;
+    let restored = controller
+        .durable_snapshot()
+        .map_err(SynologyPairingServiceError::from)
+        .map_err(ChiefDaemonError::SmartHomeSynologyPairing)?
+        .ok_or(ChiefDaemonError::SmartHomeSynologyPairing(
+            SynologyPairingServiceError::MissingDurableRuntime,
+        ))?;
+    let query = RuntimePairingSessionQuery::new()
+        .for_integration(smart_home_core::IntegrationId::trusted(
+            SYNOLOGY_INTEGRATION_ID,
+        ))
+        .with_status(PairingSessionStatus::PendingUserPresence);
+    let Some(session) = restored
+        .runtime
+        .query_pairing_sessions(&query)
+        .into_iter()
+        .find(|session| session.bridge_id == *bridge_id && !session.is_expired_at(now_ms))
+    else {
+        return Ok(());
+    };
+    let message = SynologyPairingRequest::new(
+        session.session_id.clone(),
+        session.requested_by.clone(),
+        restored.revision,
+        now_ms,
+    )
+    .into_message(SYNOLOGY_PAIRING_SENDER_ID)
+    .map_err(ChiefDaemonError::SmartHomeSynologyPairing)?;
+    system
+        .send(SYNOLOGY_PAIRING_ACTOR_ID, message)
+        .map_err(ChiefDaemonError::SmartHomeSynologyPairingActor)?;
+    system
+        .process_next(SYNOLOGY_PAIRING_ACTOR_ID)
+        .map_err(ChiefDaemonError::SmartHomeSynologyPairingActor)?;
+    Ok(())
+}
+
 fn compose_smart_home_http_runtime<B: StorageBackend + 'static>(
     config: &SmartHomeListenerConfig,
     controller: SmartHomeControllerRuntime<B>,
@@ -2506,6 +2796,7 @@ where
         axis_pairing,
         zoneminder_pairing,
         reolink_pairing,
+        synology_pairing,
     ) = match smart_home {
         Some((platform, service)) => {
             let SmartHomeHttpService {
@@ -2517,6 +2808,7 @@ where
                 axis_pairing,
                 zoneminder_pairing,
                 reolink_pairing,
+                synology_pairing,
             } = service;
             let server = WebServer::bind(
                 platform,
@@ -2533,9 +2825,10 @@ where
                 axis_pairing,
                 zoneminder_pairing,
                 reolink_pairing,
+                synology_pairing,
             )
         }
-        None => (None, None, None, None, None, None, None),
+        None => (None, None, None, None, None, None, None, None),
     };
     let daemon_stop = runtime.stop_handle();
     let smart_home_stop = smart_home_server.as_ref().map(WebServer::stop_handle);
@@ -2617,6 +2910,19 @@ where
             OwnedReolinkPairingWorker::start(service, on_failure)
         })
         .transpose()?;
+    let mut synology_pairing_worker = synology_pairing
+        .map(|service| {
+            let failure_daemon_stop = daemon_stop.clone();
+            let failure_smart_home_stop = smart_home_stop.clone();
+            let on_failure: Arc<dyn Fn() + Send + Sync> = Arc::new(move || {
+                failure_daemon_stop.stop();
+                if let Some(stop) = failure_smart_home_stop.as_ref() {
+                    stop.stop();
+                }
+            });
+            OwnedSynologyPairingWorker::start(service, on_failure)
+        })
+        .transpose()?;
     let listener_daemon_stop = daemon_stop.clone();
     let listener_smart_home_stop = smart_home_stop.clone();
     let listener = match ShutdownListener::install(move |_| {
@@ -2647,6 +2953,9 @@ where
                 let _ = worker.stop_and_join();
             }
             if let Some(worker) = reolink_pairing_worker.as_mut() {
+                let _ = worker.stop_and_join();
+            }
+            if let Some(worker) = synology_pairing_worker.as_mut() {
                 let _ = worker.stop_and_join();
             }
             return Err(ChiefDaemonError::Shutdown(error));
@@ -2693,6 +3002,10 @@ where
         .as_mut()
         .map(OwnedReolinkPairingWorker::stop_and_join)
         .transpose();
+    let synology_pairing_result = synology_pairing_worker
+        .as_mut()
+        .map(OwnedSynologyPairingWorker::stop_and_join)
+        .transpose();
     let smart_home_result = smart_home_thread
         .map(|thread| {
             thread
@@ -2716,6 +3029,7 @@ where
     axis_pairing_result?;
     zoneminder_pairing_result?;
     reolink_pairing_result?;
+    synology_pairing_result?;
     smart_home_result?;
     shutdown_result.map_err(ChiefDaemonError::Shutdown)?;
     recovery_result
@@ -2885,6 +3199,10 @@ mod tests {
         ReolinkPairingVerifier, VerifiedReolinkCamera,
     };
     use smart_home_runtime::{RuntimePairingSession, RuntimePairingSessionId};
+    use smart_home_synology_pairing_service::{
+        SynologyCredentialInput, SynologyCredentialSecret, SynologyPairingVerifier,
+        VerifiedSynologyNvr,
+    };
     use smart_home_zoneminder_pairing_service::{
         VerifiedZoneMinderNvr, ZoneMinderCredentialInput, ZoneMinderCredentialSecret,
         ZoneMinderPairingVerifier,
@@ -4388,6 +4706,214 @@ hardware_key_timeout = 60
         assert!(matches!(
             worker.stop_and_join(),
             Err(ChiefDaemonError::SmartHomeReolinkPairingClock)
+        ));
+        assert!(failure_seen.load(Ordering::Acquire));
+    }
+
+    struct TestSynologyCredentialInput;
+
+    impl SynologyCredentialInput for TestSynologyCredentialInput {
+        fn take_for_bridge(
+            &mut self,
+            bridge: &Bridge,
+        ) -> Result<SynologyCredentialSecret, SynologyPairingServiceError> {
+            assert_eq!(bridge.bridge_id.as_str(), "synology-nvr-front");
+            SynologyCredentialSecret::new("chief-synology-user", "chief-synology-password")
+        }
+    }
+
+    struct TestSynologyVerifier;
+
+    impl SynologyPairingVerifier for TestSynologyVerifier {
+        fn preflight(&self, bridge: &Bridge) -> Result<String, SynologyPairingServiceError> {
+            bridge.address.clone().ok_or_else(|| {
+                SynologyPairingServiceError::MissingBridgeAddress(bridge.bridge_id.clone())
+            })
+        }
+
+        fn verify(
+            &mut self,
+            bridge: &Bridge,
+            _credentials: &SynologyCredentialSecret,
+            expected_camera_ids: &std::collections::BTreeSet<u64>,
+        ) -> Result<VerifiedSynologyNvr, SynologyPairingServiceError> {
+            assert_eq!(
+                bridge.address.as_deref(),
+                Some("https://synology-nvr-front.local")
+            );
+            assert!(expected_camera_ids.is_empty());
+            Ok(VerifiedSynologyNvr {
+                camera_count: 1,
+                version: "9.2.0".to_string(),
+            })
+        }
+    }
+
+    #[test]
+    fn chief_synology_pairing_tick_commits_only_the_bound_bridge_through_shared_controller() {
+        let directory = TestDir::new();
+        let state_dir = directory.0.join("smart-home-synology-pairing-state");
+        let controller =
+            SmartHomeControllerRuntime::restore(FsStorageBackend::new(&state_dir)).unwrap();
+        controller
+            .transaction(1_500, |runtime, _| {
+                let principal = AgentId::trusted("operator:synology-pairing");
+                for (bridge_id, session_id) in [
+                    ("synology-nvr-other", "pairing-chief-synology-other"),
+                    ("synology-nvr-front", "pairing-chief-synology-front"),
+                ] {
+                    let mut bridge = Bridge::new(
+                        BridgeId::trusted(bridge_id),
+                        IntegrationId::trusted(SYNOLOGY_INTEGRATION_ID),
+                        BridgeTransport::LanHttp,
+                    );
+                    bridge.address = Some(format!("https://{bridge_id}.local"));
+                    bridge.health = Health::Unpaired;
+                    runtime.upsert_bridge(bridge.clone()).unwrap();
+                    runtime
+                        .start_pairing_session(RuntimePairingSession::pending(
+                            RuntimePairingSessionId::trusted(session_id),
+                            &bridge,
+                            principal.clone(),
+                            1_500,
+                            30_000,
+                            vec![SmartHomeMetadata::new(
+                                "pairing.mode",
+                                "explicit_credentials",
+                            )],
+                        ))
+                        .unwrap();
+                }
+                runtime
+                    .registry_mut()
+                    .upsert_capability_grant(CapabilityGrant::for_capability(
+                        CapabilityGrantId::trusted("grant-chief-synology-pairing"),
+                        principal,
+                        CapabilityId::trusted("smart_home.pair"),
+                        PrivilegeTier::HumanApproval,
+                        "operator:test",
+                        1_500,
+                    ));
+                Ok::<(), Infallible>(())
+            })
+            .unwrap();
+        let vault_backend: Arc<dyn StorageBackend> = Arc::new(FsStorageBackend::new(
+            directory.0.join("smart-home-synology-vault"),
+        ));
+        vault_backend.initialize().unwrap();
+        let vault = Arc::new(SealedStore::new(vault_backend));
+        vault
+            .init_with_kek(&[0xA8; SMART_HOME_PAIRING_KEK_BYTES])
+            .unwrap();
+        let state = SynologyPairingServiceActorState::restore(
+            FsStorageBackend::new(&state_dir),
+            vault,
+            controller.clone(),
+            TestSynologyCredentialInput,
+            TestSynologyVerifier,
+        )
+        .unwrap();
+        let mut system = ActorSystem::new();
+        install_synology_pairing_service_actor(&mut system, SYNOLOGY_PAIRING_ACTOR_ID, state)
+            .unwrap();
+
+        drive_synology_pairing_tick(
+            &mut system,
+            &controller,
+            &TestUnixTimeClock::new(2_000),
+            &BridgeId::trusted("synology-nvr-front"),
+        )
+        .unwrap();
+
+        let restored = controller.durable_snapshot().unwrap().unwrap();
+        let completed = restored
+            .runtime
+            .pairing_session(&RuntimePairingSessionId::trusted(
+                "pairing-chief-synology-front",
+            ))
+            .unwrap();
+        assert_eq!(completed.status, PairingSessionStatus::Completed);
+        assert!(completed
+            .vault_ref
+            .as_ref()
+            .unwrap()
+            .as_str()
+            .starts_with("vault://smart-home/synology-surveillance/"));
+        assert_eq!(
+            restored
+                .runtime
+                .pairing_session(&RuntimePairingSessionId::trusted(
+                    "pairing-chief-synology-other",
+                ))
+                .unwrap()
+                .status,
+            PairingSessionStatus::PendingUserPresence
+        );
+        let durable_text = format!("{restored:?}");
+        assert!(!durable_text.contains("chief-synology-user"));
+        assert!(!durable_text.contains("chief-synology-password"));
+    }
+
+    #[test]
+    fn chief_synology_pairing_worker_stops_and_propagates_clock_failure() {
+        let directory = TestDir::new();
+        let state_dir = directory.0.join("smart-home-synology-worker-state");
+        let controller =
+            SmartHomeControllerRuntime::restore(FsStorageBackend::new(&state_dir)).unwrap();
+        controller
+            .transaction(1_500, |_, _| Ok::<(), Infallible>(()))
+            .unwrap();
+        let vault_backend: Arc<dyn StorageBackend> = Arc::new(FsStorageBackend::new(
+            directory.0.join("smart-home-synology-worker-vault"),
+        ));
+        vault_backend.initialize().unwrap();
+        let vault = Arc::new(SealedStore::new(vault_backend));
+        vault
+            .init_with_kek(&[0xB8; SMART_HOME_PAIRING_KEK_BYTES])
+            .unwrap();
+        let bridge_id = BridgeId::trusted("synology-nvr-front");
+        let state = SynologyPairingServiceActorState::restore(
+            FsStorageBackend::new(&state_dir),
+            vault,
+            controller.clone(),
+            OwnerOnlySynologyCredentialInput::new(
+                bridge_id.clone(),
+                directory.0.join("unused-user"),
+                1,
+                directory.0.join("unused-password"),
+                1,
+            ),
+            NativeSynologyPairingVerifier::new(
+                SynologyPairingConnectionTarget::new(
+                    bridge_id.clone(),
+                    "127.0.0.1",
+                    "127.0.0.1:443".parse().unwrap(),
+                )
+                .unwrap(),
+            ),
+        )
+        .unwrap();
+        let service = ChiefSynologyPairingService {
+            state,
+            controller,
+            clock: Arc::new(UnavailableUnixTimeClock),
+            bridge_id,
+        };
+        let failure_seen = Arc::new(AtomicBool::new(false));
+        let failure_probe = Arc::clone(&failure_seen);
+        let on_failure: Arc<dyn Fn() + Send + Sync> = Arc::new(move || {
+            failure_probe.store(true, Ordering::Release);
+        });
+        let mut worker = OwnedSynologyPairingWorker::start_with_interval(
+            service,
+            on_failure,
+            Duration::from_millis(1),
+        )
+        .unwrap();
+        thread::sleep(Duration::from_millis(20));
+        assert!(matches!(
+            worker.stop_and_join(),
+            Err(ChiefDaemonError::SmartHomeSynologyPairingClock)
         ));
         assert!(failure_seen.load(Ordering::Acquire));
     }
