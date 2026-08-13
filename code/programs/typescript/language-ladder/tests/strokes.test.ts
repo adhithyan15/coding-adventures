@@ -59,6 +59,7 @@ const DEVANAGARI_AI = DUCTUS[ductusKey("devanagari", "ऐ")];
 const DEVANAGARI_O = DUCTUS[ductusKey("devanagari", "ओ")];
 const DEVANAGARI_AU = DUCTUS[ductusKey("devanagari", "औ")];
 const DEVANAGARI_KA = DUCTUS[ductusKey("devanagari", "क")];
+const DEVANAGARI_GA = DUCTUS[ductusKey("devanagari", "ग")];
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
@@ -836,6 +837,23 @@ describe("handwriting ductus", () => {
     expect(Math.max(...arch.map((point) => point.x))).toBeGreaterThan(arch[0].x);
     expect(arch[0].y).toBeGreaterThan(arch.at(-1)!.y);
     const headline = penPath(DEVANAGARI_KA.strokes[3]);
+    expect(headline[0].x).toBeLessThan(headline.at(-1)!.x);
+  });
+
+  it("Devanagari ग joins its loop to the ascending stem before the right stem and headline", () => {
+    expect(DEVANAGARI_GA.script).toBe("devanagari");
+    expect(penLifts(DEVANAGARI_GA)).toBe(2);
+    expect(DEVANAGARI_GA.strokes).toHaveLength(3);
+    expect(DEVANAGARI_GA.strokes.map((stroke) => stroke.segments.length)).toEqual([
+      1, 1, 1,
+    ]);
+    const body = penPath(DEVANAGARI_GA.strokes[0]);
+    expect(Math.min(...body.map((point) => point.x))).toBeLessThan(body[0].x);
+    expect(Math.min(...body.map((point) => point.y))).toBeLessThan(body[0].y);
+    expect(body.at(-1)!.y).toBeGreaterThan(body[0].y);
+    const stem = penPath(DEVANAGARI_GA.strokes[1]);
+    expect(stem[0].y).toBeGreaterThan(stem.at(-1)!.y);
+    const headline = penPath(DEVANAGARI_GA.strokes[2]);
     expect(headline[0].x).toBeLessThan(headline.at(-1)!.x);
   });
 
@@ -1837,6 +1855,9 @@ describe("handwriting ductus", () => {
     expect(verifiedLetterFont("क", DEVANAGARI_KA.source.url)).toBe(
       "_fonts/NotoSansDevanagari-Static.ttf",
     );
+    expect(verifiedLetterFont("ग", DEVANAGARI_GA.source.url)).toBe(
+      "_fonts/NotoSansDevanagari-Static.ttf",
+    );
     expect(verifiedLetterFont("א", HEBREW_ALEF.source.url)).toBe(
       "_fonts/NotoSansHebrew-Static.ttf",
     );
@@ -2368,6 +2389,19 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /27-frame animation.*four ordered pen-down runs.*frames 2–11.*upper-right junction.*left over the top.*down the left side.*around the bottom.*lower-right junction.*frames 12–15.*central stem top-to-bottom.*frames 16–19.*upper junction.*right-hand arch clockwise.*open tip.*frames 20–27.*shirorekhā left-to-right.*three intervening lifts.*Central Hindi Directorate.*2019 Deskbook on Orthography of Devanagari Script.*Lesson 2.*Unit III.*p\. 12.*same four-part buildup.*Noto Sans Devanagari.*everyday handwriting.*join or simplify/i,
+    );
+  });
+
+  it("Devanagari ग traces the animated three-run loop, right stem, and headline order", () => {
+    const src = DEVANAGARI_GA.source;
+    expect(src.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Deva-%E0%A4%97-order.gif",
+    );
+    expect(src.citation).toMatch(
+      /Opiaterein.*Deva-ग-order\.gif.*strokes 1–3.*Wikimedia Commons.*9 May 2009/i,
+    );
+    expect(src.variation).toMatch(
+      /18-frame animation.*three ordered pen-down runs.*frames 2–9.*upper-right junction.*left over the top.*counterclockwise loop.*continue up the joined stem.*headline.*frames 10–13.*right stem's headline junction.*top-to-bottom.*frames 14–18.*headline's left edge.*shirorekhā left-to-right.*two intervening lifts.*Central Hindi Directorate.*2019 Deskbook on Orthography of Devanagari Script.*Lesson 2.*Unit III.*p\. 14.*same three-part buildup.*Noto Sans Devanagari.*everyday handwriting.*join or simplify/i,
     );
   });
 

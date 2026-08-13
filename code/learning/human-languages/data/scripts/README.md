@@ -597,11 +597,16 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   lifted runs descend the central stem, sweep the right-hand arch clockwise,
   and finish the shirorekhā left-to-right. Its four-frame Noto Sans Devanagari
   path follows the cited four-run animation with three lifts, corroborated by
-  the Central Hindi Directorate's four-part learner buildup. The remaining
-  **120** prose part
+  the Central Hindi Directorate's four-part learner buildup. **ग** starts at
+  the loop's upper-right junction, circles counterclockwise, and carries that
+  first run up the joined stem before two lifted runs descend the right stem
+  and finish the shirorekhā left-to-right. Its three-frame Noto Sans
+  Devanagari path follows the cited three-run animation with two lifts,
+  corroborated by the Central Hindi Directorate's three-part learner buildup.
+  The remaining **119** prose part
   orders across five scripts
   (`arabic` 3,
-  `cyrillic` 33, `devanagari` 17,
+  `cyrillic` 33, `devanagari` 16,
   `gujarati` 33, `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a
   citation without a count), and Language Ladder's ductus test proves every

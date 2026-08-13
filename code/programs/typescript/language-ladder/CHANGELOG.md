@@ -2,6 +2,12 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Devanagari ग ductus (HL-C09DI)
+
+- Render **ग** in three source-aligned movements across three strokes.
+- Carry the counterclockwise left loop directly up its joined stem before the top-to-bottom right stem and final left-to-right shirorekhā.
+- Preserve the source's two lifts, fit the path to Noto Sans Devanagari, and reduce measured HL-C09 debt to 119 entries.
+
 ### Added — cited Devanagari क ductus (HL-C09DH)
 
 - Render **क** in four source-aligned movements across four strokes.
