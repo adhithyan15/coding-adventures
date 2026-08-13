@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.47.0
+
+- Match quadrant-chart tokens case-insensitively, following the pinned upstream lexer.
+
 ## 0.46.0
 
 - Tokenize single-line and multiline quadrant accessibility metadata.

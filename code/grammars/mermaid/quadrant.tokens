@@ -1,9 +1,12 @@
-# @version 3
+# @version 4
+# @case_insensitive true
 #
 # Mermaid 11.16.1 quadrant-chart token grammar.
 #
 # Upstream grammar:
 # https://github.com/mermaid-js/mermaid/blob/mermaid%4011.16.1/packages/mermaid/src/diagrams/quadrant-chart/parser/quadrant.jison
+
+case_sensitive: false
 
 skip:
   WHITESPACE       = /[ \t]+/

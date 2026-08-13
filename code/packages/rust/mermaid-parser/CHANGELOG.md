@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.82.0
+
+- Parse case-insensitive quadrant keywords, extended axis arrows, Unicode labels, and Mermaid markdown strings.
+
 ## 0.81.0
 
 - Parse quadrant accessibility titles and single-line or multiline descriptions into chart IR.

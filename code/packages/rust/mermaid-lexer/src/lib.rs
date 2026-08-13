@@ -1,6 +1,6 @@
 //! Grammar-driven lexers for Mermaid diagram families.
 
-pub const VERSION: &str = "0.46.0";
+pub const VERSION: &str = "0.47.0";
 
 use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
@@ -257,7 +257,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.46.0");
+        assert_eq!(VERSION, "0.47.0");
     }
 
     #[test]
@@ -291,6 +291,23 @@ mod tests {
         let names: Vec<_> = tokens.iter().filter_map(custom_name).collect();
         assert!(names.contains(&"ACC_TITLE_STATEMENT"));
         assert!(names.contains(&"ACC_DESCR_BLOCK"));
+    }
+
+    #[test]
+    fn quadrant_tokenizes_keywords_case_insensitively() {
+        let tokens = tokenize_mermaid_quadrant(
+            "QuAdRaNtChArT\nTiTlE Native portfolio\nX-AxIs Low ---> High\nQuAdRaNt-1 Invest\nClAsSdEf native radius: 10\n",
+        );
+        let names: Vec<_> = tokens.iter().filter_map(custom_name).collect();
+        for expected in [
+            "HEADER",
+            "TITLE_STATEMENT",
+            "AXIS_STATEMENT",
+            "QUADRANT_STATEMENT",
+            "CLASSDEF_STATEMENT",
+        ] {
+            assert!(names.contains(&expected), "missing {expected}");
+        }
     }
 
     #[test]

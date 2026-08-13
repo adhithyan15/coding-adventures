@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.81.0";
+pub const VERSION: &str = "0.82.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -607,6 +607,9 @@ pub fn detect_mermaid_type(source: &str) -> Result<MermaidDiagramType, ParseErro
     if first.eq_ignore_ascii_case("sequenceDiagram") {
         return Ok(MermaidDiagramType::Sequence);
     }
+    if first.eq_ignore_ascii_case("quadrantChart") {
+        return Ok(MermaidDiagramType::Quadrant);
+    }
     let diagram_type = match first.as_str() {
         "flowchart" | "graph" | "flowchart-elk" => MermaidDiagramType::Flowchart,
         "classDiagram" | "classDiagram-v2" => MermaidDiagramType::Class,
@@ -1161,8 +1164,8 @@ pub fn parse_quadrant_chart(source: &str) -> Result<ChartDiagram, ParseError> {
             "AXIS_STATEMENT" => {
                 let is_x = token.value[..6].eq_ignore_ascii_case("x-axis");
                 let value = token.value[6..].trim();
-                let mut labels = value
-                    .splitn(2, "-->")
+                let mut labels = split_quadrant_axis_labels(value)
+                    .into_iter()
                     .map(|part| unquote_mermaid_string(part.trim()))
                     .collect::<Vec<_>>();
                 labels.retain(|label| !label.is_empty());
@@ -3567,10 +3570,14 @@ pub fn parse_pie(source: &str) -> Result<ChartDiagram, ParseError> {
 }
 
 fn unquote_mermaid_string(raw: &str) -> String {
-    let inner = raw
+    let quoted_inner = raw
         .strip_prefix('"')
         .and_then(|value| value.strip_suffix('"'))
         .unwrap_or(raw);
+    let inner = quoted_inner
+        .strip_prefix('`')
+        .and_then(|value| value.strip_suffix('`'))
+        .unwrap_or(quoted_inner);
     let mut result = String::with_capacity(inner.len());
     let mut chars = inner.chars();
 
@@ -3592,6 +3599,23 @@ fn unquote_mermaid_string(raw: &str) -> String {
     }
 
     result
+}
+
+fn split_quadrant_axis_labels(value: &str) -> Vec<&str> {
+    let bytes = value.as_bytes();
+    for start in 0..bytes.len() {
+        if bytes[start] != b'-' {
+            continue;
+        }
+        let mut end = start;
+        while end < bytes.len() && bytes[end] == b'-' {
+            end += 1;
+        }
+        if end - start >= 2 && bytes.get(end) == Some(&b'>') {
+            return vec![&value[..start], &value[end + 1..]];
+        }
+    }
+    vec![value]
 }
 
 // ── Sankey parser ─────────────────────────────────────────────────────────
@@ -4611,6 +4635,26 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
             diagram.accessibility_description.as_deref(),
             Some("Native renderer priorities\nacross backends")
         );
+    }
+
+    #[test]
+    fn quadrant_parses_case_insensitive_keywords_unicode_and_markdown_text() {
+        let source = "QuAdRaNtChArT\n\
+            TiTlE Native portfolio\n\
+            X-AxIs \"Low reach 📉\" ---> \"`High reach Ω`\"\n\
+            QuAdRaNt-1 \"`Invest 🚀`\"\n\
+            \"`Métal 渲染`\": [0.75, 0.80]\n";
+        let diagram_type = detect_mermaid_type(source).unwrap();
+        assert_eq!(diagram_type, MermaidDiagramType::Quadrant);
+
+        let diagram = parse_quadrant_chart(source).unwrap();
+        assert_eq!(diagram.title.as_deref(), Some("Native portfolio"));
+        assert_eq!(
+            diagram.x_axis.unwrap().categories,
+            ["Low reach 📉", "High reach Ω"]
+        );
+        assert_eq!(diagram.quadrant_labels[0].as_deref(), Some("Invest 🚀"));
+        assert_eq!(diagram.quadrant_points[0].label, "Métal 渲染");
     }
 
     #[test]
@@ -6215,7 +6259,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.81.0");
+        assert_eq!(crate::VERSION, "0.82.0");
     }
 
     #[test]
