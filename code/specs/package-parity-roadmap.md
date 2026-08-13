@@ -3287,6 +3287,61 @@ entry points, all 34 neutral fixtures, and explicit empty capability metadata
 without duplicating the codec. No live PR overlaps the Rust ZIP or DEFLATE
 packages, shared fixture, state, or roadmap.
 
+## Post-#11334 Refresh and Go ZIP Raw-Conformance Selection
+
+External review merged ready-for-review PR #11334 as
+`d4da597ab710e300598bb213e1a475c69eb01d71` at
+2026-08-13T19:06:30Z after every CI, CodeQL, and auxiliary check reached
+terminal success or an expected skip. The final reviewed head is
+`b8c519514d4ed05ceae10955481d455104d5ff6f`. A fresh collision-checked report
+at the merge revision covers 15 established lanes, 1,307 normalized
+implementation identities, and 4,463 established slots. It reports 173
+high-consensus identities with 269 missing slots, 857 singletons with 11,998
+missing singleton slots, 658 Rust singletons, zero canonical collisions, and
+zero unknown buckets.
+
+The Rust merge itself is topology-neutral, but external PR #11224 merged
+between the prior inventory and #11334 and added two TypeScript singleton
+roots: `path-raster` and `script-ductus`. That accounts exactly for the two new
+identities, two new slots, two new singletons, and 28 new singleton gaps. Both
+are portable pure in-memory engines rather than native-authority exceptions.
+The refreshed backlog therefore adds neutral-contract and blocked
+established-lane completion owners for each. Path rasterization will close
+P2D08 geometry, coverage, determinism, hostile-input, and work-bound fixtures
+before fourteen lane ports reuse the all-lane pixel container. Script ductus
+will close bounded TrueType parsing, authored-stroke provenance, glyph
+verification, filmstrip, and XML-safety fixtures; every port must consume one
+shared authored curriculum corpus instead of copying cultural claims. Both
+completion umbrellas must be decomposed before selection.
+
+The Rust ZIP child is now merged, leaving ten pending children: .NET, Elixir,
+Go, Haskell, JVM, Lua, Perl, Python, Ruby, and Swift. The portable ZIP umbrella
+and direct PNG parity remain blocked on those children. No live PR owns ZIP,
+DEFLATE, the neutral fixture, state, or roadmap paths.
+
+The dependency/leverage pass selected `zip-raw-rfc1951-go-lane-parity`. Go is
+the cleanest single-toolchain child with no live or historical branch overlap;
+the stale cross-lane ZIP residue touches only .NET, Haskell, and JVM paths.
+Go's existing ZIP-owned codec already emits fixed blocks and decodes stored and
+fixed blocks, so this coherent tranche adds dynamic Huffman decoding, exact
+counted consumption, caller caps, typed payload-blind errors, strict malformed
+stream validation, all 34 neutral fixtures, compressed-payload cavity
+rejection, and explicit empty capability metadata without duplicating DEFLATE.
+
+Before publication, the tranche rebased cleanly over eleven unrelated mainline
+commits through `0d608f5054c9723e9df05f1c59941bee2ba5c3bf`. The refreshed
+collision gate reports 1,308 identities, 4,464 slots, 858 singletons, 12,012
+singleton gaps, 659 Rust singletons, zero collisions, and zero unknown buckets.
+The sole topology addition is Rust `chief-of-staff-trust-checker` from PR
+#11341. It is a zero-authority policy evaluator over an injected trusted
+approval provider, so a new portable-conformance owner now covers bounded
+resources, maximum-tier reduction, canonical tier/timeout behavior, assurance,
+redacted failures, receipts, explicit empty capability metadata, and eventual
+established-lane ports after the existing Chief tool-API contract. Native
+notification, biometric, hardware-key, clock, and platform adapters remain
+outside that portable core. This dependency-shaped discovery does not displace
+the already in-progress Go ZIP child.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

@@ -11,18 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": 11334,
+  "active_pr": null,
   "last_inventory": {
-    "revision": "d9857363b1bfd5c99ffaecb01d1007e4eeb307af",
+    "revision": "0d608f5054c9723e9df05f1c59941bee2ba5c3bf",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1305,
-    "implementation_package_slots": 4461,
+    "implementation_identities": 1308,
+    "implementation_package_slots": 4464,
     "high_consensus_packages": 173,
     "high_consensus_missing_slots": 269,
-    "singleton_packages": 855,
-    "singleton_missing_slots": 11970,
-    "rust_singletons": 658,
+    "singleton_packages": 858,
+    "singleton_missing_slots": 12012,
+    "rust_singletons": 659,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
   },
@@ -3118,6 +3118,53 @@
       "notes": "Discovered by the post-#10521 cross-language security audit. C#, F#, Go, Haskell, Java, Kotlin, Perl, Python, and TypeScript data-store engines, plus affected facades, read ambient wall time while their capability profiles are empty, legacy, or absent; Rust alone truthfully declares time authority. Consume the shared deterministic clock fixture and move portable implementations to caller-injected clocks rather than autonomously adding signed time authority. Preserve the separately truthful Rust boundary and close provenance gaps in installed-runtime recipes before cross-lane parity claims."
     },
     {
+      "id": "chief-trust-checker-portable-conformance",
+      "title": "Fixture and port the injected Chief trust-checker policy core",
+      "status": "pending",
+      "depends_on": ["chief-tool-api-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered after the Go ZIP tranche rebased onto collision-clean 0d608f5054, where PR #11341 added the Rust-only chief-of-staff-trust-checker singleton. The package is a zero-authority, transport-independent policy evaluator over an injected approval provider, not a native approval-device implementation. Define language-neutral fixtures for bounded exact resources, maximum-tier reduction, canonical Tier 0 through Tier 3 requirements and timeouts, Tier 1 timeout approval, fail-closed Tier 2/3 behavior, minimum assurance, typed redacted provider failures, and deterministic authorization receipts. Add explicit empty capability metadata and port the pure policy contract across established lanes; notification, biometrics, hardware keys, clocks, and platform interaction remain injected native boundaries."
+    },
+    {
+      "id": "path-raster-language-neutral-conformance",
+      "title": "Define language-neutral deterministic path-raster conformance",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-clean post-#11334 inventory after external PR #11224 added the TypeScript path-raster singleton. Define closed P2D08 fixtures for move, line, quadratic, and cubic flattening; nonzero and even-odd fills; coverage quantization; byte-identical determinism; stroke joins and caps; hostile/non-finite input; edge/work bounds; and exact pixel output. Add explicit empty capability metadata to the TypeScript oracle before lane ports begin."
+    },
+    {
+      "id": "path-raster-established-lane-parity",
+      "title": "Port deterministic path rasterization across established implementation lanes",
+      "status": "pending",
+      "depends_on": ["path-raster-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Portable completion umbrella for the fourteen missing established path-raster slots discovered after PR #11224. Reuse the all-lane pixel-container contract, preserve pure in-memory deterministic behavior, and decompose this umbrella into reviewable toolchain-shaped children before selection."
+    },
+    {
+      "id": "script-ductus-language-neutral-conformance",
+      "title": "Define language-neutral script-ductus conformance and shared authored data",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-clean post-#11334 inventory after external PR #11224 added the TypeScript script-ductus singleton. Extract the HL11/package contract and closed fixtures for bounded TrueType cmap/glyf parsing, the authored stroke schema and provenance, fraction-on-ink/meeting/coverage invariants, the filmstrip tree, stable hostile-font errors, and XML name/escaping safety. Add explicit empty capability metadata. Treat the canonical curriculum JSON and citations as one shared data authority; lane ports must consume it rather than duplicating or ad-libbing culturally authored claims."
+    },
+    {
+      "id": "script-ductus-established-lane-parity",
+      "title": "Port the script-ductus engine across established implementation lanes",
+      "status": "pending",
+      "depends_on": ["script-ductus-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Portable completion umbrella for the fourteen missing established script-ductus slots discovered after PR #11224. Decompose this umbrella into reviewable toolchain-shaped children after the neutral contract merges. Ports consume one neutral authored-data corpus rather than copying the TypeScript catalog; if review keeps the culturally authored catalog as a shared artifact, record that reviewed data-authority exception while preserving portability of the parser, verification, and rendering engine."
+    },
+    {
       "id": "zip-raw-rfc1951-language-neutral-conformance",
       "title": "Define language-neutral ZIP raw RFC 1951 conformance",
       "status": "merged",
@@ -3175,10 +3222,12 @@
     {
       "id": "zip-raw-rfc1951-go-lane-parity",
       "title": "Expose ZIP raw RFC 1951 conformance in Go",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["zip-raw-rfc1951-language-neutral-conformance"],
-      "branch": null,
+      "branch": "codex/go-zip-raw-rfc1951",
       "pr_number": null,
+      "selection_revision": "d4da597ab710e300598bb213e1a475c69eb01d71",
+      "selection_notes": "Selected after PR #11334 merged externally and the live collision-clean inventory discovered and classified the two new TypeScript path-raster and script-ductus singleton roots before reprioritization. Go is the safest next dependency-ready ZIP child: it is one isolated package/toolchain with no live or stale branch overlap, while the historical cross-lane ZIP residue touches only .NET, Haskell, and JVM paths. The existing Go ZIP codec already owns stored/fixed encode and decode, so this coherent tranche adds dynamic Huffman decoding, counted consumption, caller caps, typed payload-blind errors, strict malformed-stream behavior, all 34 neutral fixtures, ZIP suffix-cavity rejection, and empty capability metadata without creating a second codec.",
       "notes": "Portable Go child of the ZIP raw-codec completion umbrella. Consume CMP09 and every closed zip-raw-rfc1951-v1 case, expose the ZIP-owned raw primitives without duplicating DEFLATE, preserve pure in-memory operation, and add explicit empty capability metadata."
     },
     {
@@ -3238,7 +3287,7 @@
     {
       "id": "zip-raw-rfc1951-rust-lane-parity",
       "title": "Expose ZIP raw RFC 1951 conformance in Rust",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["zip-raw-rfc1951-language-neutral-conformance"],
       "branch": "codex/rust-zip-raw-rfc1951",
       "pr_number": 11334,
@@ -3247,8 +3296,11 @@
       "selection_revision": "53fa0bf8108efbfd831bb1b1526b3d9aaf38b6e9",
       "selection_notes": "Selected after PR #11218 merged externally and a collision-clean live-main refresh remained exactly 1,305 identities, 4,461 slots, 855 singletons, 11,970 singleton gaps, 658 Rust singletons, zero collisions, and zero unknown buckets. Rust is the only remaining ZIP child whose established decoder already supports stored, fixed, dynamic, multi-block, and full-window streams, so this tranche can harden counted consumption, caller bounds, typed payload-blind errors, strict Huffman validation, all 34 neutral fixtures, and empty capability metadata without constructing a second codec. No live PR overlaps ZIP, DEFLATE, PNG, the shared fixture, state, or roadmap.",
       "implementation_revision": "d84d2fec6852a2d76f9107aebb2234a54393a717",
+      "final_review_revision": "b8c519514d4ed05ceae10955481d455104d5ff6f",
+      "merged_at": "2026-08-13T19:06:30Z",
+      "merge_revision": "d4da597ab710e300598bb213e1a475c69eb01d71",
       "validation_notes": "The real Rust deflate and ZIP BUILD front doors pass 30 deflate unit tests, 24 ZIP unit tests, both portable integration tests, five ZIP doctests, Clippy with warnings denied, and rustdoc; all 34 closed neutral raw RFC 1951 cases are consumed. Release tests and builds pass, as do downstream png (15 tests) and paint-codec-png (12 tests). LLVM coverage records 1,039 of 1,070 deflate lines (97.10%) and 488 of 535 ZIP lines (91.21%). The independent neutral fixture suite passes 9 tests; the capability taxonomy passes 7 tests; the Rust-only build-file validator covers all 1,004 Rust packages; the collision gate, strict state graph, JSON, diff, credential scan, and production-authority scan pass. Runtime dependencies remain only the in-repository lzss and deflate crates; the ZIP fixture parser is dev-only, and production imports no filesystem, network, process, environment, clock, entropy, console, or credential authority.",
-      "publication_notes": "Ready-for-review PR #11334 opened from d84d2fec68 after a clean rebase and full recertification against origin/main d9857363b1. GitHub reports it open, non-draft, and mergeable; required CI, CodeQL, and auxiliary checks are queued, so the loop is monitor-only while they are pending.",
+      "publication_notes": "Ready-for-review PR #11334 opened from d84d2fec68 after a clean rebase and full recertification against origin/main d9857363b1. External review merged final head b8c519514d as d4da597ab7 after every CI, CodeQL, and auxiliary check reached terminal success or an expected skip.",
       "notes": "Portable Rust child of the ZIP raw-codec completion umbrella. Consume CMP09 and every closed zip-raw-rfc1951-v1 case, expose the ZIP-owned raw primitives without duplicating DEFLATE, preserve pure in-memory operation, and add explicit empty capability metadata."
     },
     {
