@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.69.0";
+pub const VERSION: &str = "0.70.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -1766,6 +1766,8 @@ fn take_state_text(cursor: &mut TokenCursor) -> String {
         };
         if token_name(token) == "COMMA" {
             text.push(',');
+        } else if token_name(token) == "COLON" {
+            text.push(':');
         } else {
             if !text.is_empty() && !text.ends_with(',') {
                 text.push(' ');
@@ -4860,6 +4862,20 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     }
 
     #[test]
+    fn state_preserves_colons_inside_descriptions_and_transition_labels() {
+        let diagram = parse_state_diagram(
+            "stateDiagram-v2\nReady: Status: awaiting work\nReady --> Running: Trigger: native event\n",
+        )
+        .expect("colon-bearing state text");
+
+        assert_eq!(diagram.nodes[0].label.text, "Status: awaiting work");
+        assert_eq!(
+            diagram.edges[0].label.as_ref().unwrap().text,
+            "Trigger: native event"
+        );
+    }
+
+    #[test]
     fn sequence_parses_case_insensitive_keywords() {
         let diagram = parse_any_mermaid(
             "SeQuEnCeDiAgRaM\nPaRtIcIpAnT A As Alice\nA->>B: Hello\nAcTiVaTe B\nNoTe RiGhT Of B: WRAP: Ready\nDeAcTiVaTe B\n",
@@ -5630,7 +5646,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.69.0");
+        assert_eq!(crate::VERSION, "0.70.0");
     }
 
     #[test]
