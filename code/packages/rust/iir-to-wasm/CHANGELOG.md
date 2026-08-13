@@ -54,6 +54,28 @@ carries a compile-time literal entry**, so every reader uses the runtime path
   longer counts them as "folding" destinations (which had made the
   string-operation grouping skip promoting their literal comparison partners).
 
+Security review of the first version of this fix caught that making
+runtime-valued variables *always* read their length back at run time raises the
+stakes on every write into one — a raw, header-less data offset left in such a
+local is no longer a bounded wrong answer but a length read out of the string
+bytes themselves (`"HELL"` → 1280066888), which `print_str`/`memory.copy`/
+`$__ensure_capacity` would then use as a byte count. Two holes were closed:
+
+- **`mov`**: a str-producing op now groups its **destination** with its operands
+  for promotion, not just its operands with each other. `mov d = a` with `d`
+  runtime-valued and `a` a folded literal previously copied `a`'s raw offset;
+  `a` is now promoted to a real block first. (This also removes a scan-order
+  dependence in the newly-non-foldable `str_concat` operand promotion: a
+  `str_const` appearing later in the instruction list than the concat that uses
+  it was silently skipped.)
+- **`ret`**: a `str` handed back to the caller is now a promotion site, exactly
+  like a call argument. The caller's call-result local is a runtime handle by
+  definition, so a callee whose result variable is assigned in a *single* basic
+  block — ALGOL's unconditional `string procedure pick; pick := 'HI';` — used to
+  return the literal's raw offset and the caller read its first four bytes as a
+  length. This one is a pre-existing bug, not a regression from this change, but
+  it is the same invariant and the same ALGOL shape, so it is fixed here.
+
 Regressions in `tests/str_runtime_reassignment.rs` run the exact IIR shape on
 `wasm-runtime` and assert `str_eq`/`str_cmp`/`str_len` against the live value
 (the `str_eq` and `str_len` cases fail on the pre-fix backend with `0`), plus a

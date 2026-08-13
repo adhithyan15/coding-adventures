@@ -148,6 +148,104 @@ fn str_len_of_reassigned_runtime_string_sees_the_live_value() {
     assert_eq!(run_reader(reader), 2, "s := pick(1) must be 2 bytes long");
 }
 
+/// A `mov` of a folded literal into a variable that is runtime-valued *elsewhere*
+/// must copy a real `[i32 len][bytes]` handle, not the raw data offset.
+///
+/// Making runtime-valued variables read their length back at run time means the
+/// value in their local had better be a handle at every point, including the ones
+/// written by an op that has no runtime lowering of its own. `mov d = a` just
+/// copies a local, so `a` (a folded literal) must itself be promoted to a block —
+/// otherwise the reader loads the literal's first four bytes as a little-endian
+/// length (`"HELL"` → 1280066888) and hands that to `memory.copy`/`print_str` as a
+/// byte count. Caught by security review of the first version of this fix.
+#[test]
+fn mov_of_a_literal_into_a_runtime_valued_variable_copies_a_real_handle() {
+    let g = IIRFunction::new(
+        "g",
+        vec![],
+        "str",
+        vec![
+            IIRInstr::new("str_const", Some("r".into()), vec![Operand::Str("Z".into())], "str"),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "str"),
+        ],
+    );
+    let main = IIRFunction::new(
+        "main",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new("str_const", Some("a".into()), vec![Operand::Str("HELLO".into())], "str"),
+            IIRInstr::new("mov", Some("d".into()), vec![Operand::Var("a".into())], "str"),
+            IIRInstr::new("str_len", Some("_out".into()), vec![Operand::Var("d".into())], "i64"),
+            // This later write is what makes `d` runtime-valued, and so makes the
+            // reader above take the runtime path.
+            IIRInstr::new("call", Some("_t".into()), vec![Operand::Var("g".into())], "str"),
+            IIRInstr::new("mov", Some("d".into()), vec![Operand::Var("_t".into())], "str"),
+            IIRInstr::new("ret", None, vec![Operand::Var("_out".into())], "i64"),
+        ],
+    );
+    let module = IIRModule {
+        name: "mov_runtime_valued".into(),
+        functions: vec![g, main],
+        entry_point: Some("main".into()),
+        language: "test".into(),
+        exports: vec![],
+        imports: vec![],
+    };
+    let wasm = lower_iir_to_wasm(&module, &IIRWasmConfig::default()).expect("lowering failed");
+    let bytes = encode_module(&wasm).expect("encoding failed");
+    let result = WasmRuntime::new()
+        .load_and_run(&bytes, "main", &[])
+        .expect("wasm run failed");
+    assert_eq!(result, vec![5], "`HELLO` moved into a runtime-valued local is 5 bytes");
+}
+
+/// A `str` returned from a function must be a real handle even when the callee's
+/// result variable is written in a **single** basic block.
+///
+/// The caller's call-result local is a runtime handle by definition — there is no
+/// compile-time entry for it — so every reader `i32.load`s a length out of it. A
+/// callee like ALGOL's unconditional `string procedure pick; pick := 'HI';` assigns
+/// its result once, so the branch-selection rule never promoted it and it returned
+/// the literal's raw data offset; the caller then read `"HELLO"`'s first four bytes
+/// as the length. `ret` now promotes its operand exactly like a call argument.
+#[test]
+fn str_returned_from_a_single_block_callee_is_a_real_handle() {
+    let g = IIRFunction::new(
+        "g",
+        vec![],
+        "str",
+        vec![
+            IIRInstr::new("str_const", Some("r".into()), vec![Operand::Str("HELLO".into())], "str"),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "str"),
+        ],
+    );
+    let main = IIRFunction::new(
+        "main",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new("call", Some("_t".into()), vec![Operand::Var("g".into())], "str"),
+            IIRInstr::new("str_len", Some("_out".into()), vec![Operand::Var("_t".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("_out".into())], "i64"),
+        ],
+    );
+    let module = IIRModule {
+        name: "ret_single_block".into(),
+        functions: vec![g, main],
+        entry_point: Some("main".into()),
+        language: "test".into(),
+        exports: vec![],
+        imports: vec![],
+    };
+    let wasm = lower_iir_to_wasm(&module, &IIRWasmConfig::default()).expect("lowering failed");
+    let bytes = encode_module(&wasm).expect("encoding failed");
+    let result = WasmRuntime::new()
+        .load_and_run(&bytes, "main", &[])
+        .expect("wasm run failed");
+    assert_eq!(result, vec![5], "a returned literal must carry its length header");
+}
+
 /// A literal-only program must keep taking the compile-time fold path — the fix
 /// narrows *only* variables that genuinely hold a runtime string, so pure literal
 /// algebra keeps its compact data-segment representation and its folded answers.

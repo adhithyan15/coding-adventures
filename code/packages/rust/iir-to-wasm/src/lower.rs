@@ -378,6 +378,9 @@ fn collect_runtime_str_vars(
     // a call argument. The later global load has no per-function literal table,
     // so the stored value must be a length-prefixed runtime handle.
     let mut global_store_val_vars: HashSet<&str> = HashSet::new();
+    // Str vars handed back to the CALLER by a `ret` — see the promotion note at the
+    // `ret` arm below.
+    let mut ret_val_vars: HashSet<&str> = HashSet::new();
     // A literal operand used with a runtime string must also have a runtime
     // header. Keep each operation's operands together so fully folded literal
     // algebra preserves its compact literal-data representation.
@@ -430,14 +433,43 @@ fn collect_runtime_str_vars(
                 global_store_val_vars.insert(v.as_str());
             }
         }
-        if matches!(op, "str_concat" | "str_eq" | "str_cmp") {
+        // A str-**producing** op groups its DESTINATION with its operands, not just
+        // the operands with each other.  When the destination is runtime-valued it is
+        // (by the rule above) not a folding dest, which forces every folding operand
+        // onto the runtime-block representation — and it must, because the runtime
+        // lowering of these ops reads a `[i32 len][bytes]` header out of each
+        // operand's local.  Without the destination in the group, `mov d = a` (with
+        // `d` runtime-valued and `a` a folded literal) left the RAW data offset in
+        // `d`, and the next reader loaded `"HELL"` as a little-endian length.
+        // `str_eq`/`str_cmp` destinations are i64/bool and so are never folding
+        // dests; including them would promote both operands of every fully literal
+        // comparison for no benefit, so only the two producers contribute a dest.
+        let produces_str = op == "str_concat" || (op == "mov" && instr.type_hint == "str");
+        if produces_str || matches!(op, "str_eq" | "str_cmp") {
             let mut vars = Vec::new();
             for src in &instr.srcs {
                 if let Operand::Var(v) = src {
                     vars.push(v.as_str());
                 }
             }
+            if produces_str {
+                if let Some(dest) = &instr.dest {
+                    vars.push(dest.as_str());
+                }
+            }
             string_operation_var_groups.push(vars);
+        }
+        // A `str` RETURNED from a function crosses a function boundary exactly like a
+        // call argument: the caller's call-result local is a runtime handle by
+        // definition, so every reader there `i32.load`s a length from it.  A callee
+        // whose result variable is assigned in a single basic block would otherwise
+        // `ret` the raw (header-less) data offset of a folded literal — e.g. ALGOL's
+        // unconditional `string procedure pick; pick := 'HI';` — and the caller would
+        // read the first bytes of the literal as its length.
+        if op == "ret" && instr.type_hint == "str" {
+            if let Some(Operand::Var(v)) = instr.srcs.first() {
+                ret_val_vars.insert(v.as_str());
+            }
         }
         if matches!(op, "jmp" | "jmp_if_false" | "jmp_if_true" | "ret" | "ret_void") {
             block += 1;
@@ -462,6 +494,12 @@ fn collect_runtime_str_vars(
         }
     }
     for v in &global_store_val_vars {
+        if folding_str_dests.contains(v) {
+            promoted.insert(v.to_string());
+        }
+    }
+    // Likewise for a folded literal handed back to the caller by `ret`.
+    for v in &ret_val_vars {
         if folding_str_dests.contains(v) {
             promoted.insert(v.to_string());
         }
