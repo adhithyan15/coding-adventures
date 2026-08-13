@@ -1988,6 +1988,31 @@ smart-home authority:
 - D23 remains the source of truth for authorization, state, commands, pairing,
   supervision, durable revisions, and audit evidence.
 
+## Current Chief Trust Checker Core Slice
+
+This slice begins the remaining central-orchestrator authority path after the
+smart-home ownership composition completed:
+
+- `chief-of-staff-trust-checker` validates an exact bounded non-secret resource
+  set and computes the pipeline effective tier as the maximum resource tier.
+- Tier 0 bypasses the approval provider. Tier 1 requests a five-second
+  notification and preserves D18's timeout auto-approval rule while explicit
+  denial fails closed.
+- Tier 2 requires biometric assurance within thirty seconds, and Tier 3
+  requires hardware-key assurance within sixty seconds. Both timeout paths and
+  any provider failure fail closed.
+- The checker rejects approval evidence weaker than the effective tier and
+  returns a typed non-secret authorization receipt for the exact request.
+- Notification, biometric, hardware-key, clock, and platform interaction stay
+  behind an injected provider; the primitive performs no filesystem, network,
+  terminal, environment, or device access.
+
+Production still composes `DenyChannelWiring` until a reviewed provider and
+exact channel/pipeline request adapter are connected. The next bounded slices
+are orchestrator-core composition followed by authenticated daemon API and CLI
+wire/unwire operations; this primitive does not weaken the current fail-closed
+production default.
+
 ## Current Chief HTTP Request Clock Slice
 
 This slice closes the remaining request-time ambiguity in the shared
