@@ -1216,6 +1216,11 @@ pub struct WasmExecutionContext {
     pub globals: Vec<WasmValue>,
     pub global_types: Vec<GlobalType>,
     pub func_types: Vec<FuncType>,
+    /// The module's raw type section, indexed by type index — see
+    /// [`WasmExecutionEngine::set_type_section`]'s doc comment. Empty
+    /// unless the embedder set it; `call_indirect` treats empty as
+    /// "no type info available", not "the type section is empty".
+    pub types: Vec<FuncType>,
     pub func_bodies: Vec<Option<FunctionBody>>,
     pub host_functions: Vec<Option<Box<dyn HostFunction>>>,
     pub typed_locals: Vec<WasmValue>,
@@ -3011,11 +3016,22 @@ fn register_control(vm: &mut GenericVM) {
             .map_err(VMError::from)?
             .ok_or_else(|| VMError::GenericError("uninitialized table element".into()))?;
 
-        // Type check
-        let expected = &ctx.func_types[type_idx];
-        let actual = &ctx.func_types[func_index as usize];
-        if expected.params != actual.params || expected.results != actual.results {
-            return Err(VMError::GenericError("indirect call type mismatch".into()));
+        // Type check: `type_idx` indexes the module's TYPE SECTION (what the
+        // call site declared), which is a different index space from
+        // `func_types` (indexed by FUNCTION index — one entry per function,
+        // resolved to whichever type that function happens to declare).
+        // Comparing against `func_types[type_idx]` would check the callee
+        // against an unrelated function's type instead of the declared one,
+        // so this needs `ctx.types` (the real type section) specifically —
+        // see `WasmExecutionEngine::set_type_section`'s doc comment. If the
+        // embedder never set it, there's nothing to check against; skip
+        // rather than fail closed on missing type info the caller never
+        // promised to provide.
+        if let Some(expected) = ctx.types.get(type_idx) {
+            let actual = &ctx.func_types[func_index as usize];
+            if expected.params != actual.params || expected.results != actual.results {
+                return Err(VMError::GenericError("indirect call type mismatch".into()));
+            }
         }
 
         call_function(vm, ctx, func_index as usize)?;
@@ -3137,6 +3153,27 @@ fn call_function_inner(
     ctx.br_table_targets = callee_br_table_targets;
     ctx.gc_ops = callee_gc_ops;
 
+    // A WASM function body is itself an implicit outer `block` whose label is
+    // the function's own end (spec: "execution of an instruction sequence
+    // behaves as if it was wrapped in a block"). Without this, `br N`/`br_if
+    // N`/`br_table` at a depth that walks all the way out of every *explicit*
+    // block has nothing left on `label_stack` to resolve against and
+    // `execute_branch` reports a spurious "branch target out of range" —
+    // even though a bare `(br 0)` at function-top-level (no enclosing block
+    // at all) is completely ordinary, spec-legal WASM, equivalent to
+    // `return`. Pushing this label first, with `target_pc` one past the
+    // callee's last instruction, makes that walk-all-the-way-out branch land
+    // exactly where the function naturally ends: `execute_branch` pops the
+    // function's own result arity, truncates the stack to the height it had
+    // on entry, and jumps past the last instruction, so the `while` loop
+    // below exits the same way it would on an ordinary fall-through return.
+    ctx.label_stack.push(Label {
+        arity: func_type.results.len(),
+        target_pc: vm_instructions.len(),
+        stack_height: vm.typed_stack.len(),
+        is_loop: false,
+    });
+
     // Set up callee code and jump to start.
     // We need to use a recursive execution approach. Execute the callee inline.
     vm.halted = false;
@@ -3247,6 +3284,15 @@ pub struct WasmExecutionEngine {
     /// set with [`WasmExecutionEngine::set_struct_field_counts`].  Flows into the
     /// execution context so `struct.new N` knows how many fields to pop.
     struct_field_counts: Vec<u32>,
+    /// The module's raw type section, indexed by **type index** — distinct
+    /// from `func_types`, which is indexed by *function* index (one entry
+    /// per function, resolved to whichever type that function declares).
+    /// `call_indirect $type`'s immediate is a type-section index, so
+    /// checking it against `func_types` would compare against an unrelated
+    /// function's type. Empty by default (permissive: see
+    /// `call_indirect`'s handler); set with
+    /// [`WasmExecutionEngine::set_type_section`].
+    type_section: Vec<FuncType>,
     /// GC bookkeeping from the most recently completed [`Self::call_function`]
     /// (W04). `gc_heap` itself isn't persisted here — it's rebuilt fresh every
     /// call, same as `struct_field_counts` isn't — but the *counters* (live
@@ -3274,6 +3320,7 @@ impl WasmExecutionEngine {
             func_bodies: config.func_bodies,
             host_functions: config.host_functions,
             struct_field_counts: Vec::new(),
+            type_section: Vec::new(),
             last_gc_state: gc::GcState::default(),
         }
     }
@@ -3286,6 +3333,22 @@ impl WasmExecutionEngine {
     /// module once that lands, L3b-3a-3c).  Returns `&mut self` for chaining.
     pub fn set_struct_field_counts(&mut self, counts: Vec<u32>) -> &mut Self {
         self.struct_field_counts = counts;
+        self
+    }
+
+    /// Register the module's raw type section (`module.types`), indexed by
+    /// type index — needed for `call_indirect $type` to check the callee's
+    /// *actual* type against the type the call site *declared*, which are
+    /// two different index spaces (see `type_section`'s own doc comment).
+    /// `WasmEngineConfig` doesn't carry this (it would otherwise force
+    /// every existing construction site — the many hand-built single/few
+    /// function modules in this crate's own unit tests among them — to
+    /// supply it), so it's set the same way `struct_field_counts` is: an
+    /// optional embedder call between `new` and `call_function`. Left
+    /// unset, `call_indirect`'s type check is permissive rather than wrong
+    /// (see its handler). Returns `&mut self` for chaining.
+    pub fn set_type_section(&mut self, types: Vec<FuncType>) -> &mut Self {
+        self.type_section = types;
         self
     }
 
@@ -3399,16 +3462,32 @@ impl WasmExecutionEngine {
             .collect();
         let host_functions = std::mem::take(&mut self.host_functions);
 
+        // See `call_function_inner`'s matching comment: a WASM function body
+        // is itself an implicit outer `block` whose label is the function's
+        // own end, so `br`/`br_if`/`br_table` at a depth that walks out of
+        // every *explicit* block (including a bare top-level `(br 0)`, which
+        // is ordinary, spec-legal WASM meaning "return") needs a label on
+        // `label_stack` to resolve against. This top-level entry point has
+        // its own separate instruction-decode-and-dispatch path (it doesn't
+        // go through `call_function_inner`), so it needs this pushed too.
+        let implicit_function_label = Label {
+            arity: result_count,
+            target_pc: vm_instructions.len(),
+            stack_height: 0,
+            is_loop: false,
+        };
+
         let mut ctx = WasmExecutionContext {
             memory: memory_ptr,
             tables: table_ptrs,
             globals: self.globals.clone(),
             global_types: self.global_types.clone(),
             func_types: self.func_types.clone(),
+            types: self.type_section.clone(),
             func_bodies: self.func_bodies.clone(),
             host_functions,
             typed_locals,
-            label_stack: Vec::new(),
+            label_stack: vec![implicit_function_label],
             control_flow_map,
             saved_frames: Vec::new(),
             returned: false,
