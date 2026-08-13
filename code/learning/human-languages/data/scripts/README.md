@@ -653,9 +653,16 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   three-run form with two lifts. The Directorate's deskbook confirms component
   order but stages the left stem before the lower loop and crossbar, so it
   corroborates order rather than the animation's continuous join. The remaining
-  **110** prose part orders across five scripts
+  **य** then curves clockwise around its inner curl before three lifted runs
+  curve down and right around the lower bowl, descend the right stem, and finish
+  the shirorekhā. Its four-frame Noto Sans Devanagari path follows Opiaterein's
+  animated four-run form with three lifts, independently corroborated by the
+  Directorate's matching four-part buildup and directions. JackPotte's separate
+  11-frame animation joins the inner curl and lower bowl, so that documented
+  three-run alternative remains explicit. The remaining **109** prose part
+  orders across five scripts
   (`arabic` 3,
-  `cyrillic` 33, `devanagari` 7,
+  `cyrillic` 33, `devanagari` 6,
   `gujarati` 33, `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a
   citation without a count), and Language Ladder's ductus test proves every

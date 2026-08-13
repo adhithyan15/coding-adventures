@@ -665,6 +665,12 @@ separately drawing the right stem and shirorekhā. Its Noto Sans Devanagari fit
 preserves the animated source's three strokes and two lifts; the Central Hindi
 Directorate's learner deskbook corroborates component order while staging the
 left stem and loop-crossbar as separate buildup steps.
+The four-frame Devanagari **य** filmstrip curves clockwise around the inner curl
+before separately drawing the lower bowl, right stem, and shirorekhā. Its Noto
+Sans Devanagari fit preserves the three lifts shared by Opiaterein's animation
+and the Central Hindi Directorate's four-part learner buildup; JackPotte's
+alternate 11-frame animation documents a joined inner-curl-and-bowl form with
+two lifts.
 The runtime resolves each cited path back to the owning script and lazily loads that
 script's font, while Tamil continues to use Noto Sans Tamil. Unverified letters
 still fall back to the numbered prose list, unchanged. Extending the coverage is HL-C09,
