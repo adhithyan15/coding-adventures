@@ -3137,6 +3137,53 @@ real `--language dart` filter without widening the independently owned Windows
 plan-overwrite path. The new ZIP primitive owner is broader fifteen-lane work,
 and direct PNG parity remains blocked on that prerequisite.
 
+## Post-#11111 Refresh and Windows Atomic Plan Selection
+
+External review merged ready-for-review PR #11111 as
+`91a6026f3e18d3320be96fa6b533059441395e39` at
+2026-08-13T06:50:57Z after every required CI and CodeQL check reached terminal
+success or an expected skip. The collision-checked refresh, recertified after
+rebasing at `286c1549b11c516e4ccce83281ea675102849f68`, covers 15 established lanes,
+1,305 normalized implementation identities, and 4,461 established slots. It
+reports 173 high-consensus identities with 269 missing slots, 855 singletons
+with 11,970 missing singleton slots, 658 Rust singletons, zero canonical
+collisions, and zero unknown buckets.
+
+The two new identities are Rust `wasm-wast-parser` and the currently
+fixture-only Rust `wasm-conformance` root. Their deterministic parser and
+directive/report behavior are portable candidates, while corpus fetching,
+filesystem traversal, and baseline persistence are native authority. New
+pending owners therefore separate the language-neutral WAT/WAST corpus, its
+established-lane ports, the portable conformance directive/report core, and a
+blocked host-authority review. External PR #11146 edits both Rust roots, so all
+four owners remain selection-blocked until that PR is terminal and a fresh
+inventory removes the overlap.
+
+The leverage pass also decomposed the broad ZIP raw-RFC1951 item. A new neutral
+foundation owns the fallible raw encode, capped decode, exact counted decode,
+incremental CRC-32, malformed-stream, interoperability, and stable-error
+corpus. The completion umbrella now depends on that foundation and remains
+blocked until it is split into reviewable toolchain-shaped lane children.
+TypeScript stays the reference consumer, and direct PNG parity remains blocked
+on completion of the all-lane ZIP umbrella.
+
+The selected independent item is
+`build-tool-python-plan-atomic-overwrite-windows`. Python already writes a
+temporary sibling but uses a rename operation that cannot replace an existing
+destination on Windows, so a second `--emit-plan` to the same path fails with
+`WinError 183` and cleans up the newly written temporary plan. A bounded
+standard-library tranche adds a language-neutral repeated-write fixture,
+proves exact replacement and temporary cleanup, switches Python to the
+portable replace primitive, and leaves the broader ZIP, OCaml, WebAssembly,
+and lane-port programs untouched.
+
+The neutral overwrite fixture also exposes a residual multi-writer gap. Go and
+several other build-tool implementations still rename over an existing path or
+truncate the destination directly. A new pending completion owner depends on
+the Python slice, inventories every `plan_v1_write` front door, and will be
+decomposed by shared engine or toolchain before selection. This PR deliberately
+does not change those independent implementations.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

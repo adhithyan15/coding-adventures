@@ -11,18 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": 11111,
+  "active_pr": 11162,
   "last_inventory": {
-    "revision": "3786127cf65f09be93a374dfcb8c9b3f3d7c0dda",
+    "revision": "286c1549b11c516e4ccce83281ea675102849f68",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1303,
-    "implementation_package_slots": 4459,
+    "implementation_identities": 1305,
+    "implementation_package_slots": 4461,
     "high_consensus_packages": 173,
     "high_consensus_missing_slots": 269,
-    "singleton_packages": 853,
-    "singleton_missing_slots": 11942,
-    "rust_singletons": 656,
+    "singleton_packages": 855,
+    "singleton_missing_slots": 11970,
+    "rust_singletons": 658,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
   },
@@ -982,7 +982,7 @@
     {
       "id": "build-tool-python-dart-field-aware-resolution-and-filter",
       "title": "Add field-aware Dart support to the Python build tool",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-python-haskell-language-filter"],
       "branch": "codex/python-dart-field-aware-filter",
       "pr_number": 11111,
@@ -991,18 +991,37 @@
       "selection_revision": "86f47eb4c343e4b9b29039fc62282919d42e1bf8",
       "selection_notes": "Selected after PR #10936 merged externally, the collision-clean refresh added the newly owned ZIP raw-RFC1951 and PNG codec chain, and a live overlap plus dependency/leverage audit compared every ready unowned item. This bounded standard-library tranche closes Python build-tool discovery, field-aware resolution, and filtering for all 83 Dart roots while consuming an already closed pubspec grammar and proving exact equality with the Go oracle. The Windows atomic plan overwrite remains a separate write-path owner; ZIP raw RFC 1951 is a broader fifteen-lane prerequisite; and direct PNG work remains dependency-blocked.",
       "implementation_revision": "15b2e1337268c450e223aa11d0f27a0ac1709964",
+      "final_revision": "8352e218705e710520e720e35ee221bcddb6b256",
+      "merged_at": "2026-08-13T06:50:57Z",
+      "merge_revision": "91a6026f3e18d3320be96fa6b533059441395e39",
       "validation_notes": "Both Python BUILD front doors pass 405 tests with 89.58% total coverage, 91% resolver coverage, and 96% discovery coverage under Python 3.13.14; the post-rebase focused discovery, resolver, CLI, and toolchain suite passes 175 tests. The 58-case language-neutral corpus validates 253 files, and its schema/runner suites pass 17 plus 42 tests. Go passes all packages, vet, module verification, a trimpath build, and the strengthened ambiguous-Dart-alias fixture. Unique Windows plan paths avoid the separately owned atomic-overwrite debt while exact Python-versus-Go equality holds for 83 Dart nodes, 68 edges, and 3 program identities with zero one-sided nodes or edges. The real Dart filter BUILD validation and forced dry run pass with all 83 roots. Native Dart pub get, fatal-info analysis, coverage tests pass for algol-parser downstream with 10 tests and state-machine downstream with 11 tests. Focused MyPy, added-line Ruff, Bandit security review, strict JSON, state graph, credential-pattern, diff, and collision gates pass; full-package Ruff still exposes pre-existing formatting/import debt outside this tranche. The collision-clean report remains 1,303 identities, 4,459 slots, 853 singletons, 11,942 singleton gaps, 656 Rust singletons, zero collisions, and zero unknown buckets.",
-      "publication_notes": "Ready-for-review PR #11111 opened from 15b2e13372 on exact base 3786127cf6. GitHub reports it open, non-draft, and mergeable; CI, CodeQL, and neutral auxiliary checks are queued, so the loop is monitor-only until they finish.",
+      "publication_notes": "Ready-for-review PR #11111 opened from 15b2e13372 on exact base 3786127cf6 and merged externally as 91a6026f3e after all required CI, CodeQL, and neutral auxiliary checks reached terminal success or expected skip states.",
       "notes": "Discovered by the post-#10751 filter audit. Python currently classifies established Dart package roots as unknown, has no pubspec resolver branch, and omits the Dart filter even though the shared field-aware Dart fixture defines the closed dependency grammar. Consume that fixture, preserve package/program identities, prove complete graph equality with Go, and expose Dart in its own manifest-shaped tranche."
     },
     {
       "id": "build-tool-python-plan-atomic-overwrite-windows",
       "title": "Make Python build-plan replacement atomic on Windows",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["build-tool-lua-rockspec-encoding"],
+      "branch": "codex/python-plan-atomic-overwrite-windows",
+      "pr_number": 11162,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/11162",
+      "opened_at": "2026-08-13T07:35:13Z",
+      "selection_revision": "1887d6eed63778f4b2d15927db448c9b4d229783",
+      "selection_notes": "Selected after PR #11111 merged externally and a collision-clean refresh classified the two new overlapping WebAssembly roots. This is the smallest ready correctness repair: one standard-library write boundary closes repeated plan emission on Windows without touching live PR #11146, while the newly decomposed ZIP raw-conformance chain is a broader multi-lane program and OCaml remains a longer promotion chain.",
+      "implementation_revision": "7d3d8d97ba3b88de76589502a21c8f33df3d9795",
+      "validation_notes": "Both real Python BUILD front doors pass 409 tests on Windows with 89.82% total coverage and 100% coverage for plan.py. The focused atomic-publication suite covers repeated replacement, preservation of the old destination on replacement failure, cleanup after staging-write failure, and rejection of the legacy predictable staging path. Ruff, MyPy, Bandit, compile validation, strict JSON, dependency-graph, credential-pattern, and diff gates pass. The language-neutral corpus validates 59 cases across 253 files, and its runner/schema suite passes 44 tests plus 39 subtests, including fail-closed writer-capability and two-plan validation. Go passes all packages, vet, module verification, and a trimpath build. A real full-repository forced plan emission succeeds twice to the same Windows path with 4,871 packages, 8,288 edges, identical complete file sizes, and zero retained staging files. The collision-clean inventory at 286c1549b1 remains 1,305 identities, 4,461 slots, 855 singletons, 11,970 singleton gaps, 658 Rust singletons, zero collisions, and zero unknown buckets. The repository-wide Go build-file validator still reports pre-existing standalone dependency declaration debt in twelve Python BUILD_windows roots; the focused package front doors and overwrite behavior pass.",
+      "publication_notes": "Ready-for-review PR #11162 opened from 90cee84a1b on exact base 286c1549b1. GitHub reports it open, non-draft, and mergeable; CI, CodeQL, and neutral auxiliary checks are queued, so the loop is monitor-only until they finish.",
+      "notes": "Discovered during the post-rebase full-scan validation. Re-emitting to an existing plan path leaves the temporary file and fails with WinError 183 because write_plan renames instead of replacing atomically on Windows. Add a repeated-write fixture and use a portable atomic replacement primitive in a separate build-tool parity slice. A fresh unique output path succeeds with 4,764 packages and 7,093 dependency edges."
+    },
+    {
+      "id": "build-tool-plan-atomic-overwrite-remaining-writers",
+      "title": "Consume atomic repeated plan replacement in the remaining build-tool writers",
+      "status": "pending",
+      "depends_on": ["build-tool-python-plan-atomic-overwrite-windows"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered during the post-rebase full-scan validation. Re-emitting to an existing plan path leaves the temporary file and fails with WinError 183 because write_plan renames instead of replacing atomically on Windows. Add a repeated-write fixture and use a portable atomic replacement primitive in a separate build-tool parity slice. A fresh unique output path succeeds with 4,764 packages and 7,093 dependency edges."
+      "notes": "Discovered while closing the Python WinError 183 owner. The language-neutral plan/replace-existing fixture applies to every plan_v1_write implementation: Go and several other writers still use rename or direct truncating writes and do not yet consume the repeated-destination case. Audit all present front doors, decompose by shared engine or toolchain, and require replace-if-present publication, preservation of the old destination on failure, and temporary cleanup without widening the Python-only tranche."
     },
     {
       "id": "build-tool-go-oracle",
@@ -3096,13 +3115,23 @@
       "notes": "Discovered by the post-#10521 cross-language security audit. C#, F#, Go, Haskell, Java, Kotlin, Perl, Python, and TypeScript data-store engines, plus affected facades, read ambient wall time while their capability profiles are empty, legacy, or absent; Rust alone truthfully declares time authority. Consume the shared deterministic clock fixture and move portable implementations to caller-injected clocks rather than autonomously adding signed time authority. Preserve the separately truthful Rust boundary and close provenance gaps in installed-runtime recipes before cross-lane parity claims."
     },
     {
-      "id": "zip-raw-rfc1951-portable-conformance",
-      "title": "Fixture and expose ZIP-owned raw RFC 1951 primitives across established lanes",
+      "id": "zip-raw-rfc1951-language-neutral-conformance",
+      "title": "Define language-neutral ZIP raw RFC 1951 conformance",
       "status": "pending",
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered in the collision-clean 86f47eb4c3 inventory after merged PR #11088 added the TypeScript image-codec-png singleton. IC18 requires ZIP-owned raw DEFLATE primitives, while CMP09 shows only TypeScript currently exports them. Define a closed language-neutral corpus for stored, fixed, and dynamic blocks, symbol 285, malformed Kraft and header ranges, foreign encoders, stable payload-free rejection, caller output caps, exact raw_inflate_counted byte consumption, and incremental CRC-32. Expose the existing ZIP-owned RFC 1951 codec in every established lane without duplicating DEFLATE."
+      "notes": "Split from the broad ZIP completion owner during the post-#11111 leverage pass. Tighten CMP09 around a closed fallible raw_deflate, capped raw_inflate, exact raw_inflate_counted, and incremental CRC-32 profile; add neutral stored, fixed, dynamic, foreign-stream, malformed-tree/header, truncation, trailing-byte, output-cap, exact-consumption, and stable payload-free error fixtures. TypeScript remains the reference consumer; lane ports are separate dependency-shaped children under the completion umbrella."
+    },
+    {
+      "id": "zip-raw-rfc1951-portable-conformance",
+      "title": "Fixture and expose ZIP-owned raw RFC 1951 primitives across established lanes",
+      "status": "pending",
+      "depends_on": ["zip-raw-rfc1951-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Completion umbrella discovered in the collision-clean 86f47eb4c3 inventory after merged PR #11088 added the TypeScript image-codec-png singleton. After the neutral profile merges, decompose the twelve remaining toolchain-shaped deliveries (.NET pair, Dart, Elixir, Go, Haskell, JVM pair, Lua, Perl, Python, Ruby, Rust, and Swift) before selection. Expose each lane's existing ZIP-owned codec without duplicating DEFLATE; direct PNG work remains blocked on completion of this umbrella."
     },
     {
       "id": "image-codec-png-established-lane-parity",
@@ -3112,6 +3141,46 @@
       "branch": null,
       "pr_number": null,
       "notes": "Discovered in the collision-clean 86f47eb4c3 inventory after merged PR #11088 added TypeScript image-codec-png. Use the TypeScript oracle and a closed language-neutral PNG corpus to cover exact chunks, CRC, zlib Adler-32 framing, all five filters, foreign interoperability, structural and covert-cavity rejection, dimension, pixel, and inflation bounds, stable errors, and explicit empty capability metadata. Reuse the all-lane pixel-container and ZIP owners, never duplicate DEFLATE or CRC, and close the fourteen missing established slots."
+    },
+    {
+      "id": "wasm-wast-parser-language-neutral-conformance",
+      "title": "Define language-neutral WAT/WAST parser conformance",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Discovered in the collision-clean 1887d6eed6 inventory after merged PR #11128 added Rust wasm-wast-parser. Define pinned W05 plus bounded positive and adversarial fixtures for tokenization, nested comments, byte strings and UTF-8, S-expressions, decimal, hexadecimal and NaN numerics, symbolic index spaces, folded and flat instructions, module forms and directives, stable error classes and offsets, recursion, tokens, aggregate input, and module output. Require explicit empty capability metadata. The block is temporary while external PR #11146 modifies the Rust oracle; clear it only after that PR is terminal and inventory is refreshed."
+    },
+    {
+      "id": "wasm-wast-parser-established-lane-parity",
+      "title": "Port the WAT/WAST parser across established lanes",
+      "status": "pending",
+      "depends_on": ["wasm-wast-parser-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Fourteen-lane completion umbrella for the portable WAT/WAST parser after its neutral corpus is closed. wasm-types, wasm-opcodes, and wasm-leb128 already exist in all fifteen established lanes. Decompose this umbrella into dependency-shaped lane or toolchain children before delivery, and do not overlap external PR #11146."
+    },
+    {
+      "id": "wasm-conformance-portable-core-conformance",
+      "title": "Fixture and port the WebAssembly conformance directive and report core",
+      "status": "pending",
+      "depends_on": ["wasm-wast-parser-established-lane-parity"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Discovered in the collision-clean 1887d6eed6 inventory after merged PR #11132 added the fixture-only Rust wasm-conformance root. Define a language-neutral pinned corpus manifest, in-order directive execution, module registry behavior, bit-exact and NaN comparison, stable outcome and report schemas, drift accounting, and execution/resource bounds across established runtime lanes. wasm-execution, wasm-validator, and wasm-runtime already exist in all fifteen lanes, so W05's current single-target statement is not a permanent parity exception. The block is temporary while external PR #11146 owns the Rust oracle."
+    },
+    {
+      "id": "wasm-conformance-host-authority-review",
+      "title": "Review the WebAssembly conformance corpus and baseline host",
+      "status": "pending",
+      "depends_on": ["wasm-conformance-portable-core-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Review the Rust CLI's corpus filesystem enumeration and reads, --write-baseline writes, Python fetch network and write authority, exact pinned provenance and license, path containment, deterministic sorting, payload redaction, and truthful capability metadata. Keep directive and report semantics in the portable owner and do not manufacture native fetch or baseline-writing hosts in every lane."
     }
   ]
 }

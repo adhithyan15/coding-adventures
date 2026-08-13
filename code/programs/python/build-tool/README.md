@@ -45,6 +45,10 @@ build-tool --language fsharp --dry-run
 
 # Safely plan the field-aware Dart lane
 build-tool --language dart --dry-run
+
+# Re-emitting to the same path atomically replaces the prior complete plan
+build-tool --emit-plan build-plan.json
+build-tool --emit-plan build-plan.json
 ```
 
 ## How it fits in the stack
@@ -104,6 +108,14 @@ inside the Dart scope. A declared name that collides with another
 same-priority Dart package makes that alias ambiguous and therefore inert.
 Other root fields, comments, lockfiles, unknown names, and self references are
 ignored, and referenced paths are never opened or followed.
+
+Plan emission writes a complete JSON document to an exclusively created,
+writer-owned sibling temporary file and publishes it with the platform's
+replace-if-present primitive. Reusing an existing `--emit-plan` destination is
+therefore supported on Windows, macOS, and Linux without following a
+predictable staging path. If staging or replacement fails, the previously
+published plan remains intact and the writer makes a best-effort cleanup of its
+temporary file.
 
 ## Installation
 

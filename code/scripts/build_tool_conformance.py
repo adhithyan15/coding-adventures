@@ -728,6 +728,12 @@ def _validate_case_identity(case: dict[str, Any]) -> None:
     capabilities = set(case["capabilities"])
     required = DOMAIN_CAPABILITIES[domain]
     if domain == "plan":
+        mode = case["input"]["options"]["mode"]
+        if mode == "replace_existing" and "plan_v1_write" not in capabilities:
+            raise ConformanceError(
+                "CASE_CAPABILITY_MISSING",
+                "replace_existing plan case requires plan_v1_write",
+            )
         if not required.intersection(capabilities):
             raise ConformanceError(
                 "CASE_CAPABILITY_MISSING",
@@ -740,26 +746,30 @@ def _validate_case_identity(case: dict[str, Any]) -> None:
         )
 
 
-def _validate_plan_semantics(plan: dict[str, Any]) -> None:
+def _validate_plan_semantics(
+    plan: dict[str, Any],
+    *,
+    prefix: str = "RESULT",
+) -> None:
     packages = plan.get("packages", [])
     package_names: set[str] = set()
     for package in packages:
         name = package["name"]
         if name in package_names:
             raise ConformanceError(
-                "RESULT_PLAN_PACKAGE_DUPLICATE",
+                f"{prefix}_PLAN_PACKAGE_DUPLICATE",
                 f"duplicate plan package: {name}",
             )
         package_names.add(name)
         if error := portable_path_error(package["rel_path"]):
             raise ConformanceError(
-                "RESULT_PLAN_PATH_UNSAFE",
+                f"{prefix}_PLAN_PATH_UNSAFE",
                 f"unsafe plan rel_path for {name}: {error}",
             )
     for edge in plan.get("dependency_edges", []):
         if edge[0] not in package_names or edge[1] not in package_names:
             raise ConformanceError(
-                "RESULT_PLAN_EDGE_UNKNOWN",
+                f"{prefix}_PLAN_EDGE_UNKNOWN",
                 f"plan edge references an unknown package: {edge}",
             )
     affected = plan.get("affected_packages")
@@ -767,9 +777,25 @@ def _validate_plan_semantics(plan: dict[str, Any]) -> None:
         for name in affected:
             if name not in package_names:
                 raise ConformanceError(
-                    "RESULT_PLAN_AFFECTED_UNKNOWN",
+                    f"{prefix}_PLAN_AFFECTED_UNKNOWN",
                     f"affected package is not declared: {name}",
                 )
+
+
+def _validate_case_plan_inputs(
+    case: dict[str, Any],
+    plan_schema: dict[str, Any],
+) -> None:
+    """Validate both complete plans required by repeated replacement."""
+    if case["domain"] != "plan":
+        return
+    options = case["input"]["options"]
+    if options["mode"] != "replace_existing":
+        return
+    for key, prefix in (("existing_plan", "CASE_EXISTING"), ("plan", "CASE")):
+        plan = options[key]
+        _validate_schema(plan, plan_schema, f"{prefix}_PLAN_SCHEMA_INVALID")
+        _validate_plan_semantics(plan, prefix=prefix)
 
 
 def _pure_record(
@@ -1833,6 +1859,7 @@ def validate_case_document(
     _validate_schema(case, case_schema, "CASE_SCHEMA_INVALID")
     reject_unmodeled_domain(case)
     _validate_case_identity(case)
+    _validate_case_plan_inputs(case, plan_schema)
     _validate_input_paths(case)
     staged_files = preflight_workspace(case)
     pure_domain_schema = pure_domain_schema or load_document(

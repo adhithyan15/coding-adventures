@@ -20,6 +20,8 @@ Test organization
 from __future__ import annotations
 
 import json
+from pathlib import Path
+from unittest.mock import patch
 
 import pytest
 
@@ -29,6 +31,10 @@ from build_tool.plan import (
     PackageEntry,
     read_plan,
     write_plan,
+)
+
+FIXTURE_CASES = (
+    Path(__file__).parents[4] / "specs" / "fixtures" / "build-tool-v1" / "cases"
 )
 
 # =========================================================================
@@ -52,6 +58,30 @@ def _make_plan(
         packages=packages or [],
         dependency_edges=edges or [],
         languages_needed=languages or {},
+    )
+
+
+def _plan_from_fixture(data: dict) -> BuildPlan:
+    """Build the Python plan model from one neutral plan-v1 fixture value."""
+    return BuildPlan(
+        schema_version=data["schema_version"],
+        diff_base=data["diff_base"],
+        force=data["force"],
+        affected_packages=data["affected_packages"],
+        packages=[
+            PackageEntry(
+                name=package["name"],
+                rel_path=package["rel_path"],
+                language=package["language"],
+                build_commands=package["build_commands"],
+                is_starlark=package.get("is_starlark", False),
+                declared_srcs=package.get("declared_srcs", []),
+                declared_deps=package.get("declared_deps", []),
+            )
+            for package in data["packages"]
+        ],
+        dependency_edges=[tuple(edge) for edge in data["dependency_edges"]],
+        languages_needed=data["languages_needed"],
     )
 
 
@@ -137,6 +167,85 @@ class TestRoundTrip:
         write_plan(bp, path)
         result = read_plan(path)
         assert result.packages[0].build_commands == cmds
+
+
+class TestAtomicPublication:
+    """A complete staged plan replaces the prior destination as one unit."""
+
+    def test_neutral_repeated_write_fixture(self, tmp_path):
+        """The second write replaces the first on Windows and POSIX."""
+        fixture = json.loads(
+            (FIXTURE_CASES / "plan-replace-existing.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        options = fixture["input"]["options"]
+        path = tmp_path / "build-plan.json"
+
+        write_plan(_plan_from_fixture(options["existing_plan"]), str(path))
+        write_plan(_plan_from_fixture(options["plan"]), str(path))
+
+        expected = _plan_from_fixture(fixture["expected"]["result"]["plan"])
+        assert read_plan(str(path)) == expected
+        assert not list(tmp_path.glob(".build-plan.json.*.tmp"))
+
+    def test_staging_does_not_reuse_predictable_sibling(self, tmp_path):
+        """A stale or hostile legacy staging path is not opened by the writer."""
+        path = tmp_path / "build-plan.json"
+        legacy_staging = Path(f"{path}.tmp")
+        legacy_staging.write_text("unowned sentinel", encoding="utf-8")
+
+        write_plan(_make_plan(affected=[]), str(path))
+
+        assert legacy_staging.read_text(encoding="utf-8") == "unowned sentinel"
+        assert not list(tmp_path.glob(".build-plan.json.*.tmp"))
+
+    def test_failed_staging_write_cleans_exclusively_created_temp(self, tmp_path):
+        """An I/O failure after staging creation does not leak the temp file."""
+        path = tmp_path / "build-plan.json"
+
+        class FailingStagingFile:
+            def __init__(self, name):
+                self.name = str(name)
+
+            def __enter__(self):
+                Path(self.name).touch()
+                return self
+
+            def __exit__(self, *_args):
+                return False
+
+            def write(self, _data):
+                raise OSError("full")
+
+        with (
+            patch(
+                "build_tool.plan.tempfile.NamedTemporaryFile",
+                return_value=FailingStagingFile(
+                    tmp_path / ".build-plan.json.staging.tmp"
+                ),
+            ),
+            pytest.raises(OSError, match="full"),
+        ):
+            write_plan(_make_plan(affected=[]), str(path))
+
+        assert not path.exists()
+        assert not list(tmp_path.glob(".build-plan.json.*.tmp"))
+
+    def test_failed_replacement_preserves_destination_and_cleans_temp(self, tmp_path):
+        """A replacement error leaves the published plan and removes staging."""
+        path = tmp_path / "build-plan.json"
+        write_plan(_make_plan(affected=[]), str(path))
+        original = path.read_bytes()
+
+        with (
+            patch.object(Path, "replace", side_effect=OSError("replace failed")),
+            pytest.raises(OSError, match="replace failed"),
+        ):
+            write_plan(_make_plan(affected=None, force=True), str(path))
+
+        assert path.read_bytes() == original
+        assert not list(tmp_path.glob(".build-plan.json.*.tmp"))
 
 
 # =========================================================================

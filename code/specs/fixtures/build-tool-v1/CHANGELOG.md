@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-08-13
+
+- Added a language-neutral repeated plan-write case that requires atomic
+  replacement of an existing destination and cleanup of the writer temporary
+  file on Windows and POSIX. The runner requires write capability and validates
+  both the existing and replacement plans before adapter execution.
+
 ## 2026-08-12
 
 - Expanded the canonical discovery registry with a Dart program identity and
