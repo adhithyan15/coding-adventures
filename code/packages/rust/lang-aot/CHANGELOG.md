@@ -1,5 +1,11 @@
 # Changelog — `lang-aot`
 
+## 0.222.3 - 2026-08-12 (ALGOL initial while conditions — seven backends)
+
+The LANG matrix now proves that an initially true static numeric comparison in
+a `while` for-list element establishes scalar-string initialization on all
+seven standard backends.
+
 ## 0.222.2 - 2026-08-12 (ALGOL tracked step bounds — seven backends)
 
 The LANG matrix now proves that straight-line integer snapshots in a
