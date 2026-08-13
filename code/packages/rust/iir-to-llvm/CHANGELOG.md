@@ -1,5 +1,34 @@
 # Changelog — iir-to-llvm
 
+## 0.56.0 - 2026-08-13 - a reassigned string loses its compile-time length
+
+`str_lens` / `str_values` are *literal* facts — "this variable holds this exact
+string, of this length" — and every consumer keys off them to choose between two
+incompatible representations:
+
+* a literal is a `ptr` to a global (`@__twig_str_0`);
+* a runtime string is an `i64` handle needing `inttoptr`.
+
+The runtime `str_concat` path did not *insert* those facts for its result, and
+its comment claimed the result therefore carries none. That is only true when the
+destination never held a literal. ALGOL's `s := pick(1)` lowers to
+`str_const "" -> s` (declaring `string s`) followed by
+`str_concat(call_result, "") -> s`, so `s` was registered as a zero-length
+literal and then reassigned a handle. `print_str s` took the literal fast path
+and emitted a payload GEP on an `i64`:
+
+    %__scc3 = call i64 @__twig_str_concat(...)
+    %__str7 = getelementptr inbounds i8, ptr %__scc3, i64 8
+
+    error: '%__scc3' defined with type 'i64' but expected 'ptr'
+
+New `FnState::forget_literal_string` clears both maps when a runtime string is
+stored, making the runtime paths' stated invariant actually hold.
+
+Verified by running: matrix cells #116 and #117 (ALGOL string procedure and
+string array) now pass on LLVM; the regression test fails without the fix.
+
+
 ## 0.55.0 - 2026-08-13 - boolean literal merge slots
 
 - Boolean constants now seed the LLVM `i1` sidecar used by promoted merge

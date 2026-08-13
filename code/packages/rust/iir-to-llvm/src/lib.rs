@@ -1446,6 +1446,36 @@ struct FnState<'a> {
 }
 
 impl FnState<'_> {
+    /// Forget everything known at compile time about `dest`'s string value.
+    ///
+    /// `str_lens` / `str_values` are *literal* facts: "this variable holds this
+    /// exact string, of this length". They are only true while the variable has
+    /// been assigned nothing but literals. The moment a **runtime** string is
+    /// stored into it — a concat of a call result, an `INPUT`, a
+    /// branch-selected handle — those facts stop being true, and every consumer
+    /// keys off them to choose between two incompatible representations:
+    ///
+    /// * a literal is a `ptr` to a global (`@__twig_str_0`);
+    /// * a runtime string is an `i64` handle needing `inttoptr`.
+    ///
+    /// Merely *not inserting* a new entry is not enough, because a stale one may
+    /// already be there. ALGOL's `s := pick(1)` lowers to `str_const "" → s`
+    /// followed by `str_concat(call_result, "") → s`, so `s` was registered as a
+    /// zero-length literal and then reassigned a handle. `print_str s` then took
+    /// the literal fast path and emitted `getelementptr … ptr %__scc3` on an
+    /// `i64`, which clang rejects outright:
+    ///
+    /// ```text
+    /// error: '%__scc3' defined with type 'i64' but expected 'ptr'
+    /// ```
+    ///
+    /// The runtime paths' own comments already claim the result carries "no
+    /// `str_lens`/`str_values` entry" — this is what makes that true.
+    fn forget_literal_string(&mut self, dest: &str) {
+        self.str_lens.remove(dest);
+        self.str_values.remove(dest);
+    }
+
     fn fresh(&mut self, hint: &str) -> String {
         self.counter += 1;
         format!("%__{}{}", hint, self.counter)
@@ -2244,6 +2274,11 @@ fn lower_str_concat(
     out.push_str(&format!(
         "  {res} = call i64 @__twig_str_concat(i64 {left_handle}, i64 {right_handle})\n"
     ));
+    // `dest` now holds a runtime i64 handle. If it previously held a literal —
+    // ALGOL's `s := pick(1)` is `str_const "" → s` then `str_concat(…) → s` —
+    // its stale `str_lens`/`str_values` entries would send every later consumer
+    // down the literal `ptr` path with an `i64` in hand.
+    state.forget_literal_string(&dest);
     state.env.insert(dest, res);
     Ok(())
 }

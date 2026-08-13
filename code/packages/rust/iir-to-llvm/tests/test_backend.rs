@@ -3159,3 +3159,58 @@ fn special_char_function_names_are_quoted_at_define_and_call() {
     // case must not regress to noisy output).
     assert!(!ll.contains(r#"@"main""#), "plain name should stay unquoted:\n{ll}");
 }
+
+/// A variable that held a string LITERAL and is then reassigned a RUNTIME string
+/// must lose its compile-time facts.
+///
+/// `str_lens` / `str_values` mean "this variable holds this exact literal", and
+/// every consumer keys off them to pick between two incompatible
+/// representations: a literal is a `ptr` to a global, a runtime string is an
+/// `i64` handle needing `inttoptr`. Not *inserting* a new entry on the runtime
+/// path is not enough when a stale one is already there.
+///
+/// This is exactly ALGOL's `s := pick(1)` — declaring `string s` emits
+/// `str_const "" → s`, and the assignment lowers to `str_concat(call_result, "")
+/// → s`. The stale zero-length entry sent `print_str s` down the literal path
+/// with an i64 in hand, and clang rejected the module outright:
+///
+/// ```text
+/// error: '%__scc3' defined with type 'i64' but expected 'ptr'
+/// ```
+#[test]
+fn a_literal_reassigned_from_a_runtime_string_loses_its_compile_time_length() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "i64",
+        vec![
+            // `string s;` — s starts life as a literal.
+            IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str(String::new())], "str"),
+            // A runtime string from a call.
+            IIRInstr::new("call_builtin", Some("r".into()), vec![Operand::Var("input_str".into())], "str"),
+            // `s := r` — lowered as a concat with the empty literal.
+            IIRInstr::new("str_const", Some("e".into()), vec![Operand::Str(String::new())], "str"),
+            IIRInstr::new(
+                "str_concat",
+                Some("s".into()),
+                vec![Operand::Var("r".into()), Operand::Var("e".into())],
+                "str",
+            ),
+            // The consumer that picked the wrong representation.
+            IIRInstr::new("print_str", None, vec![Operand::Var("s".into())], "void"),
+            IIRInstr::new("const", Some("z".into()), vec![Operand::Int(0)], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("z".into())], "i64"),
+        ],
+    );
+    let ll = lower(&module_with(f));
+    // The runtime handle must be converted before it is used as a pointer.
+    assert!(
+        ll.contains("inttoptr i64 %__scc"),
+        "the reassigned handle must be inttoptr'd before the payload GEP; got:\n{ll}"
+    );
+    // …and must never be fed to a GEP directly, which is what clang rejected.
+    assert!(
+        !ll.contains("getelementptr inbounds i8, ptr %__scc"),
+        "a runtime handle must not be used as a ptr operand; got:\n{ll}"
+    );
+}
