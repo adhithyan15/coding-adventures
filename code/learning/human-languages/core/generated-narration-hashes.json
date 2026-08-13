@@ -9564,6 +9564,62 @@
       "jsonHash": "fnv1a64:c530b9e414de41b3"
     },
     {
+      "language": "spanish",
+      "chapter": 202,
+      "sourceHash": "fnv1a64:8a59ec1855ed2387",
+      "lessonIds": [
+        "ES-C55-tuvieron"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch202.txt",
+      "json": "spanish/narration/ch202.json",
+      "textHash": "fnv1a64:a2dd1ea3f32cca44",
+      "jsonHash": "fnv1a64:95a59d4a0f090b4b"
+    },
+    {
+      "language": "spanish",
+      "chapter": 203,
+      "sourceHash": "fnv1a64:34ab31004b7c3255",
+      "lessonIds": [
+        "ES-C55-fueron"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch203.txt",
+      "json": "spanish/narration/ch203.json",
+      "textHash": "fnv1a64:9b6a1748daca0f80",
+      "jsonHash": "fnv1a64:3e3b312ef9620ff6"
+    },
+    {
+      "language": "spanish",
+      "chapter": 204,
+      "sourceHash": "fnv1a64:453deab0debd63aa",
+      "lessonIds": [
+        "ES-C55-repaso-preterito"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch204.txt",
+      "json": "spanish/narration/ch204.json",
+      "textHash": "fnv1a64:11325eb6339a55cc",
+      "jsonHash": "fnv1a64:e2ebc7e0fa5c4870"
+    },
+    {
+      "language": "spanish",
+      "chapter": 205,
+      "sourceHash": "fnv1a64:e59369eb0ffbf542",
+      "lessonIds": [
+        "ES-C55-sintesis-preterito-completo"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch205.txt",
+      "json": "spanish/narration/ch205.json",
+      "textHash": "fnv1a64:7966f49586e6eeac",
+      "jsonHash": "fnv1a64:babdf6059f33f316"
+    },
+    {
       "language": "tamil",
       "chapter": 1,
       "sourceHash": "fnv1a64:4ba983e1f562762e",

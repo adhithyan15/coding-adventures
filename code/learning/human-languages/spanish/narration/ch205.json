@@ -1,0 +1,228 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 205,
+  "title": "Synthesis --- Telling What Happened",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:e59369eb0ffbf542",
+  "lessons": [
+    {
+      "id": "ES-C55-sintesis-preterito-completo",
+      "sequence": 2260,
+      "title": "Synthesis — telling what happened",
+      "headword": "telling what happened",
+      "romanization": "telling what happened",
+      "gloss": "a past you can tell about other people — and the form the next chapter is built from",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:91bea38868b83f00",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Hablaron. Fueron. Two plurals, two different bargains — one regular, one refusing every ending in the language."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three chapters ago your past tense could still only talk about one person at a time. Now it can talk about a group:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "Hablaron español., They spoke Spanish.",
+                "Comimos en casa., We ate at home.",
+                "Tuvieron tiempo., They had time.",
+                "Fueron profesores., They were teachers."
+              ]
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "That is the difference between keeping a diary and telling a story. A story needs other people in it, and other people need a plural."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the form that pays twice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One of the five forms you just learned is about to do a second job."
+            },
+            {
+              "kind": "speech",
+              "text": "hablaron, comieron, tuvieron, fueron."
+            },
+            {
+              "kind": "speech",
+              "text": "Swap the -ron for -ra and something appears that Spanish uses for supposing: hablara, comiera, tuviera, fuera. That is the form the next chapters need — the one that lets you say if I had time rather than if I have time."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You are not learning it yet. You are being told that you already own the raw material, which is why the plural had to come first."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Hablaron español y tuvieron tiempo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Hablaron español y tuvieron tiempo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Fueron profesores",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Fueron profesores*]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C55-sintesis-preterito-completo-story",
+              "prompt": "Say: they spoke Spanish and they had time.",
+              "assesses": [
+                "ES-GRAMMAR-AR-PRETERITE-3PL"
+              ],
+              "responseSeconds": 16,
+              "acceptedResponses": [
+                "hablaron espanol y tuvieron tiempo",
+                "hablaron espanol, tuvieron tiempo"
+              ],
+              "feedback": {
+                "correct": "Two families, one sentence.",
+                "incorrect": "Hablaron espanol y tuvieron tiempo."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C55-sintesis-preterito-completo-we",
+              "prompt": "Say: we ate at home.",
+              "assesses": [
+                "ES-GRAMMAR-AR-PRETERITE-1PL-SYNCRETISM"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "comimos en casa",
+                "nosotros comimos en casa"
+              ],
+              "feedback": {
+                "correct": "And comimos is past only, unlike hablamos.",
+                "incorrect": "Comimos en casa."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C55-sintesis-preterito-completo-raw",
+              "prompt": "Swap the -ron on tuvieron for -ra. What do you get?",
+              "assesses": [
+                "ES-GRAMMAR-STRONG-PRETERITE-PLURAL"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "tuviera",
+                "it becomes tuviera"
+              ],
+              "feedback": {
+                "correct": "That is the raw material for supposing.",
+                "incorrect": "Tuviera — the form the next chapters need."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What can this tense do now that it could not before? (Talk about other people — tell a story rather than keep a diary.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And which form is about to be used twice? (The they form.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
