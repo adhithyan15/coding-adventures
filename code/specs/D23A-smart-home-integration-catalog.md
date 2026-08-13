@@ -599,6 +599,7 @@ These should be implemented before most vendor-specific adapters:
 | `smart-home-local-http` | Hue, Shelly, WLED, ESPHome, cameras, energy gateways |
 | `smart-home-event-streams` | Hue SSE, WebSocket workers, subscription health |
 | `smart-home-usb-serial` | Zigbee, Z-Wave, Thread, Modbus RTU |
+| `modbus-protocol` and `smart-home-modbus-tcp-integration` | bounded read-only Modbus TCP register telemetry and D23 sensor projection |
 | `smart-home-camera-media` | ONVIF, RTSP, snapshots, privacy-sensitive state |
 | `smart-home-cloud-account` | OAuth/API-key cloud integrations and webhook registration |
 | `smart-home-data-governance` | purpose-bound consent, coarse-location configuration, and exact-destination telemetry egress |

@@ -44918,6 +44918,7 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
             &[AuthMode::MqttCredentials],
             "mqtt",
         ),
+        modbus_tcp_entry(),
         protocol_entry(
             "matter",
             "Matter",
@@ -49064,6 +49065,35 @@ fn hue_entry() -> IntegrationCatalogEntry {
         PrimitiveFamily::VaultLease,
         PrimitiveFamily::Supervision,
         PrimitiveFamily::TestSimulator,
+    ])
+}
+
+fn modbus_tcp_entry() -> IntegrationCatalogEntry {
+    base_entry(
+        "modbus_tcp",
+        "Modbus TCP",
+        "Read-only local register telemetry for explicitly configured HVAC, energy, and industrial equipment.",
+        IntegrationCategory::ProtocolStandard,
+        ConnectivityClass::LocalPolling,
+        ImplementationStatus::FirstPartyRuntime,
+        1,
+        "modbus",
+    )
+    .with_protocols(vec![ProtocolFamily::Vendor("modbus_tcp".to_string())])
+    .with_capabilities(&["smart_home.read"])
+    .with_entities(&[EntityKind::Sensor])
+    .with_discovery(&[DiscoveryMechanism::Manual, DiscoveryMechanism::FileConfig])
+    .with_auth(&[AuthMode::None])
+    .with_primitives(&[
+        PrimitiveFamily::Tcp,
+        PrimitiveFamily::NormalizedModel,
+        PrimitiveFamily::CapabilityPolicy,
+        PrimitiveFamily::Supervision,
+        PrimitiveFamily::TestSimulator,
+    ])
+    .with_notes(&[
+        "The first-party runtime supports only read holding-register and read input-register functions.",
+        "Register writes remain unavailable because classic Modbus TCP provides no peer authentication.",
     ])
 }
 
@@ -81681,6 +81711,39 @@ mod tests {
         ] {
             assert!(homewizard.required_primitives.contains(&primitive));
         }
+    }
+
+    #[test]
+    fn modbus_entry_exposes_bounded_read_only_tcp_telemetry() {
+        let catalog = first_party_catalog();
+        let modbus = find_entry(&catalog, &IntegrationId::trusted("modbus_tcp")).unwrap();
+        assert_eq!(
+            modbus.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(modbus.connectivity, ConnectivityClass::LocalPolling);
+        assert_eq!(modbus.auth_modes, vec![AuthMode::None]);
+        assert_eq!(
+            modbus.supported_protocols,
+            vec![ProtocolFamily::Vendor("modbus_tcp".to_string())]
+        );
+        assert_eq!(
+            modbus.required_capabilities,
+            vec![CapabilityId::trusted("smart_home.read")]
+        );
+        assert_eq!(modbus.target_entity_kinds, vec![EntityKind::Sensor]);
+        for primitive in [
+            PrimitiveFamily::Tcp,
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::Supervision,
+            PrimitiveFamily::TestSimulator,
+        ] {
+            assert!(modbus.required_primitives.contains(&primitive));
+        }
+        assert!(!modbus
+            .required_primitives
+            .contains(&PrimitiveFamily::LocalHttp));
     }
 
     #[test]
