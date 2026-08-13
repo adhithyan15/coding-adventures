@@ -18,6 +18,23 @@ const JOURNEY_CORPUS: &str = include_str!(concat!(
 ));
 
 #[test]
+fn journey_full_status_is_backed_by_the_pinned_corpus() {
+    let manifest: Value =
+        serde_json::from_str(COMPATIBILITY_MANIFEST).expect("compatibility manifest must be JSON");
+    let journey = manifest["families"]
+        .as_array()
+        .expect("families array")
+        .iter()
+        .find(|family| family["id"] == "journey")
+        .expect("journey family");
+    assert_eq!(journey["status"].as_str(), Some("full"));
+
+    let corpus: Value = serde_json::from_str(JOURNEY_CORPUS).expect("journey corpus must be JSON");
+    assert!(!corpus["valid"].as_array().expect("valid corpus").is_empty());
+    assert!(!corpus["invalid"].as_array().expect("invalid corpus").is_empty());
+}
+
+#[test]
 fn pinned_journey_corpus_matches_upstream_acceptance() {
     let corpus: Value = serde_json::from_str(JOURNEY_CORPUS).expect("journey corpus must be JSON");
     assert_eq!(

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.97.0
+
+- Graduate Journey to full Mermaid 11.16.1 compatibility after pinned corpus and native render coverage.
+
 ## 0.96.0
 
 - Parse Journey `leftMargin` and `maxLabelWidth` init options.
