@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.0] - 2026-08-13
+
+### Fixed — `indexGenerator` rejected the bare-number argument the emitter actually sends
+
+Found via `apl-to-semantic-ir/tests/e2e_typescript.rs` (a new Rust test
+that runs `semantic-ir-to-typescript`'s array codegen through a real
+`tsc --strict`/`tsx` toolchain against this package for the first time):
+a compiled `⍳6` emits `__SirArray.indexGenerator(6)` — the SIR `count`
+operand is a plain `Expr` the emitter renders as-is, so a literal count
+arrives as a bare number, not a pre-wrapped scalar `NDArray`.
+`indexGenerator`'s signature required `NDArray`, so this failed `tsc`'s
+static check (`TS2345`) and would have thrown at runtime otherwise
+(`isScalar` reading `.data.length` off a plain number).
+
+`elementwise.ts` already solves the identical "the emitter can hand me an
+unwrapped scalar" problem for `.* ./ .\`/`* /` via a
+`toArrayValue(v: number | NDArray): NDArray` normaliser — exported (it was
+previously `elementwise`-private) and reused in `iota.ts`, rather than
+re-solved. `indexGenerator` now accepts `number | NDArray`.
+
 ## [0.3.0] - 2026-07-19
 
 ### Added

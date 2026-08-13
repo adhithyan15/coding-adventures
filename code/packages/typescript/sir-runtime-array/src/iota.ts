@@ -13,6 +13,7 @@
  * layout.
  */
 import { ndarray, checkedShapeSize, isScalar, type NDArray } from "./ndarray.js";
+import { toArrayValue } from "./elementwise.js";
 
 /**
  * Monadic `⍳` (index generator / iota) — `⍳n` is the **1-based** vector
@@ -34,8 +35,15 @@ import { ndarray, checkedShapeSize, isScalar, type NDArray } from "./ndarray.js"
  * integer AND caps it at `MAX_ELEMENTS` before allocating — `n` is a
  * runtime value a compiled program computes, not a fixed constant, so `⍳`
  * of an absurd size must fail cleanly.
+ *
+ * Accepts `number | NDArray` (not `NDArray` alone): the emitter renders the
+ * SIR `count` operand as-is, and a literal `⍳6` lowers to a *bare* numeric
+ * `Expr`, so it arrives here as the plain number `6`, not a pre-wrapped
+ * scalar `NDArray` — the same bare-scalar-operand shape `elementwise.ts`'s
+ * `toArrayValue` already normalizes for `.* ./ .\`/`* /`, reused here.
  */
-export function indexGenerator(a: NDArray): NDArray {
+export function indexGenerator(count: number | NDArray): NDArray {
+  const a = toArrayValue(count);
   if (!isScalar(a)) {
     throw new Error("indexGenerator: monadic argument must be a scalar");
   }

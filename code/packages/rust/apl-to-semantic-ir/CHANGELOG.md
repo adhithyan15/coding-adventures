@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.2.1] - 2026-08-13
+
+### Added — real TypeScript-toolchain execution proof
+
+New `tests/e2e_typescript.rs`: compiles a pilot slice of this crate's array
+programs (reduce/scan/outer-product/reshape/ravel/index-generator, plus a
+negative scalar and a directly-printed 2D matrix) through
+`semantic-ir-to-typescript`, then type-checks the result with real
+`tsc --strict` and executes it with `tsx` against the REAL
+`@coding-adventures/sir-runtime-core`/`sir-runtime-array` npm packages —
+not a hand-stubbed shim. This is the first execution proof anywhere in the
+repo for the TypeScript backend's array/matrix codegen, and it found two
+real, previously-unexercised bugs (both fixed in this same PR — see
+`sir-runtime-core`'s and `sir-runtime-array`'s own changelogs, and
+`semantic-ir-to-typescript`'s): `toDisplay` never recognised an NDArray
+value, and `indexGenerator` required a pre-wrapped `NDArray` where the
+emitter hands it a bare number. `npm` is optional (skips gracefully when
+unavailable, matching every `node_available()`-guarded test elsewhere).
+
 ## [0.2.0] - 2026-08-11
 
 ### Changed — SIR28 Slice 6: auto-print lowers to `__sys_write__`
