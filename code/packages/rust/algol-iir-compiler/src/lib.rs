@@ -4885,10 +4885,14 @@ impl Compiler {
             if branches.len() != 3 {
                 return None;
             }
-            return if self.static_boolean_value(branches[0])? {
-                self.static_boolean_value(branches[1])
-            } else {
-                self.static_boolean_value(branches[2])
+            return match self.static_boolean_value(branches[0]) {
+                Some(true) => self.static_boolean_value(branches[1]),
+                Some(false) => self.static_boolean_value(branches[2]),
+                None => {
+                    let then_value = self.static_boolean_value(branches[1]);
+                    let else_value = self.static_boolean_value(branches[2]);
+                    (then_value == else_value).then_some(then_value).flatten()
+                }
             };
         }
         if tokens.iter().any(|token| token.value == "not") {
@@ -8759,6 +8763,22 @@ mod tests {
             "test",
         )
         .expect("a known selector evaluates only the selected static predicate");
+    }
+
+    #[test]
+    fn al4_equal_conditional_while_predicate_branches_initialize_string() {
+        compile_source(
+            "begin integer i, n; string s; for i := 1 while if i < n then true else true do s := 'OK'; print(s) end",
+            "test",
+        )
+        .expect("equal true branches prove the predicate despite an unknown selector");
+
+        let err = compile_source(
+            "begin integer i, n; string s; for i := 1 while if i < n then false else false do s := 'OK'; print(s) end",
+            "test",
+        )
+        .expect_err("equal false branches prove that the loop body does not execute");
+        assert!(format!("{err:?}").contains("requires initialized string variable"));
     }
 
     #[test]

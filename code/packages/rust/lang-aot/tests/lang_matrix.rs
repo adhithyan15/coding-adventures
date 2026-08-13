@@ -2172,12 +2172,12 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
-    // ALGOL 60 — `dynamic or true` is unconditionally true, so the first body
-    // execution establishes definite string initialization.
+    // ALGOL 60 — equal true branches make a conditional predicate
+    // unconditionally true despite its dynamic selector.
     Prog {
         lang: Language::Algol60,
         ext: "alg",
-        src: "begin integer i, n, result; string s; for i := 1 while i < n or true do begin s := 'OK'; goto done end; done: if s = 'OK' then result := 42 else result := 0 end",
+        src: "begin integer i, n, result; string s; for i := 1 while if i < n then true else true do begin s := 'OK'; goto done end; done: if s = 'OK' then result := 42 else result := 0 end",
         expect: Expect::Exit(42),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
@@ -8898,7 +8898,7 @@ fn algol_static_initial_while_condition_runs_on_every_available_standard_backend
             program.lang == Language::Algol60
                 && program
                     .src
-                    .contains("for i := 1 while i < n or true")
+                    .contains("for i := 1 while if i < n then true else true")
                 && program.src.contains("string s")
         })
         .expect("the ALGOL initial while-condition program must remain in the matrix");
