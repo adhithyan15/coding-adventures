@@ -38,12 +38,21 @@ const DIVISION_DIVISOR_NONZERO_REGISTER: u32 = 25;
 const VALUE_REGISTERS: [u32; 6] = [5, 6, 7, 28, 29, 30];
 const VALUE_REGISTER_PAIRS: [(u32, u32); 3] = [(5, 6), (7, 28), (29, 30)];
 /// Reserved for scalar results when every temporary pair is live. No current
-/// lowering sequence uses `x9`, and direct calls are still unsupported.
+/// lowering sequence uses `x9`.
 const MIXED_WIDTH_REGISTER: u32 = 9;
 const COMPARISON_HIGH_REGISTER: u32 = 20;
 const STACK_POINTER: u32 = 2;
 const SPILLED_LHS_REGISTER: u32 = 26;
 const SPILLED_RHS_REGISTER: u32 = 27;
+
+/// A typed CIR function participating in one flat RV32I module image.
+///
+/// `compile_module` places the selected entry point first, then resolves its
+/// direct calls to the remaining function bodies with PC-relative `jal` words.
+pub struct ModuleFunction<'a> {
+    pub context: FunctionContext<'a>,
+    pub cir: &'a [CIRInstr],
+}
 
 /// The RV32I backend.  Stateless — every compilation gets fresh allocation.
 #[derive(Debug, Default, Clone, Copy)]
@@ -67,6 +76,10 @@ pub struct RunResult {
 /// Errors reported by the RISC-V scalar lowering and execution surface.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum BackendError {
+    InFunction {
+        function: String,
+        error: Box<BackendError>,
+    },
     UnsupportedOp(String),
     UnsupportedType(String),
     /// A value the module needs to hold in a register is a floating-point
@@ -84,12 +97,16 @@ pub enum BackendError {
     OutOfRegisters,
     TooManyArguments(usize),
     BranchOutOfRange { label: String, offset: i64 },
+    CallOutOfRange { function: String, offset: i64 },
     ExecutionDidNotHalt { steps: usize },
 }
 
 impl fmt::Display for BackendError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
+            Self::InFunction { function, error } => {
+                write!(f, "riscv-backend: function {function:?}: {error}")
+            }
             Self::UnsupportedOp(op) => write!(f, "riscv-backend: unsupported op {op:?}"),
             Self::UnsupportedType(ty) => {
                 write!(f, "riscv-backend: unsupported RV32I scalar type {ty:?}")
@@ -124,6 +141,10 @@ impl fmt::Display for BackendError {
                 f,
                 "riscv-backend: branch to label {label:?} has out-of-range offset {offset}"
             ),
+            Self::CallOutOfRange { function, offset } => write!(
+                f,
+                "riscv-backend: call to function {function:?} has out-of-range offset {offset}"
+            ),
             Self::ExecutionDidNotHalt { steps } => write!(
                 f,
                 "riscv-backend: simulator did not halt within {steps} steps"
@@ -136,7 +157,7 @@ impl std::error::Error for BackendError {}
 
 /// Lower a single typed CIR function to a flat little-endian RV32I binary.
 pub fn compile(ctx: &FunctionContext<'_>, cir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
-    let mut lowerer = Lowerer::new(ctx, cir)?;
+    let mut lowerer = Lowerer::new(ctx, cir, false, None, false)?;
     for instr in cir {
         lowerer.lower(instr)?;
         lowerer.consume_value_sources(instr);
@@ -146,6 +167,107 @@ pub fn compile(ctx: &FunctionContext<'_>, cir: &[CIRInstr]) -> Result<Vec<u8>, B
         lowerer.words.push(RET_WORD);
     }
     Ok(assemble(&lowerer.words))
+}
+
+/// Lower and link a module of CIR functions into one executable RV32I image.
+///
+/// The entry function begins at address zero so [`run_binary`] can execute the
+/// image directly. The initial call slice supports direct, zero-argument calls
+/// returning an RV32-width value (or `void`); argument marshaling and values live
+/// across a call remain deliberately refused until their ABI lowering lands.
+pub fn compile_module(
+    functions: &[ModuleFunction<'_>],
+    entry_point: Option<&str>,
+) -> Result<Vec<u8>, BackendError> {
+    if functions.is_empty() {
+        return Ok(RET_WORD.to_le_bytes().to_vec());
+    }
+    let mut ordered: Vec<&ModuleFunction<'_>> = functions.iter().collect();
+    if let Some(entry_point) = entry_point {
+        let entry_index = ordered
+            .iter()
+            .position(|function| function.context.name == entry_point)
+            .ok_or_else(|| BackendError::UndefinedLabel(entry_point.to_owned()))?;
+        ordered.swap(0, entry_index);
+    }
+
+    let mut function_return_types = HashMap::with_capacity(ordered.len());
+    for function in &ordered {
+        if function_return_types
+            .insert(
+                function.context.name.to_owned(),
+                function.context.return_type.to_owned(),
+            )
+            .is_some()
+        {
+            return Err(BackendError::InvalidOperand(format!(
+                "duplicate module function {:?}",
+                function.context.name
+            )));
+        }
+    }
+
+    let direct_call_targets: HashSet<String> = ordered
+        .iter()
+        .flat_map(|function| function.cir)
+        .filter(|instr| instr.op == "call")
+        .filter_map(|instr| match instr.srcs.first() {
+            Some(CIROperand::Var(function)) => Some(function.clone()),
+            _ => None,
+        })
+        .collect();
+
+    let mut lowerers = Vec::with_capacity(ordered.len());
+    for function in &ordered {
+        let mut lowerer = Lowerer::new(
+            &function.context,
+            function.cir,
+            true,
+            Some(&function_return_types),
+            direct_call_targets.contains(function.context.name),
+        )?;
+        for instr in function.cir {
+            lowerer.lower(instr).map_err(|error| BackendError::InFunction {
+                function: function.context.name.to_owned(),
+                error: Box::new(error),
+            })?;
+            lowerer.consume_value_sources(instr);
+        }
+        lowerer
+            .resolve_branches()
+            .map_err(|error| BackendError::InFunction {
+                function: function.context.name.to_owned(),
+                error: Box::new(error),
+            })?;
+        if lowerer.words.is_empty() {
+            lowerer.words.push(RET_WORD);
+        }
+        lowerers.push(lowerer);
+    }
+
+    let mut function_offsets = HashMap::with_capacity(ordered.len());
+    let mut offset = 0usize;
+    for (function, lowerer) in ordered.iter().zip(&lowerers) {
+        function_offsets.insert(function.context.name.to_owned(), offset);
+        offset += lowerer.words.len() * 4;
+    }
+
+    let mut bytes = Vec::with_capacity(offset);
+    let mut function_offset = 0usize;
+    for (function, lowerer) in ordered.iter().zip(&mut lowerers) {
+        lowerer
+            .resolve_calls(function_offset, &function_offsets)
+            .map_err(|error| BackendError::InFunction {
+                function: function.context.name.to_owned(),
+                error: Box::new(error),
+            })?;
+        bytes.extend_from_slice(&assemble(&lowerer.words));
+        function_offset += lowerer.words.len() * 4;
+    }
+    if bytes.is_empty() {
+        bytes.extend_from_slice(&RET_WORD.to_le_bytes());
+    }
+    Ok(bytes)
 }
 
 /// Run a function binary under the starter RV32I ABI.
@@ -196,11 +318,16 @@ struct Lowerer {
     word_sized_values: HashSet<String>,
     labels: HashMap<String, usize>,
     branches: Vec<PendingBranch>,
+    calls: Vec<PendingCall>,
     /// Value uses still to be lowered. The allocator uses this to reclaim dead
     /// scalar values and register pairs before it spills live values.
     remaining_uses: HashMap<String, usize>,
+    allow_direct_calls: bool,
+    call_return_types: HashMap<String, String>,
+    canonicalize_wide_return: bool,
     next_internal_label: usize,
     frame_size: i32,
+    return_address_offset: Option<i32>,
     next_spill_slot: usize,
 }
 
@@ -237,8 +364,20 @@ struct PendingBranch {
     kind: BranchKind,
 }
 
+#[derive(Debug, Clone)]
+struct PendingCall {
+    word_index: usize,
+    function: String,
+}
+
 impl Lowerer {
-    fn new(ctx: &FunctionContext<'_>, cir: &[CIRInstr]) -> Result<Self, BackendError> {
+    fn new(
+        ctx: &FunctionContext<'_>,
+        cir: &[CIRInstr],
+        allow_direct_calls: bool,
+        call_return_types: Option<&HashMap<String, String>>,
+        canonicalize_wide_return: bool,
+    ) -> Result<Self, BackendError> {
         if ctx.params.len() > ARG_REGISTERS.len() {
             return Err(BackendError::TooManyArguments(ctx.params.len()));
         }
@@ -272,15 +411,17 @@ impl Lowerer {
             .iter()
             .filter(|instr| instr.dest.is_some())
             .map(|instr| {
-                if instr.op.ends_with("_i64") || instr.op.ends_with("_u64") {
+                if matches!(instr.ty.as_str(), "i64" | "u64") {
                     2
                 } else {
                     1
                 }
             })
             .sum();
-        let frame_size = if value_word_count > VALUE_REGISTERS.len() {
-            ((value_word_count as i32) * 4 + 15) & !15
+        let needs_return_address_slot = allow_direct_calls && cir.iter().any(|instr| instr.op == "call");
+        let frame_words = value_word_count + usize::from(needs_return_address_slot);
+        let frame_size = if frame_words > VALUE_REGISTERS.len() || needs_return_address_slot {
+            ((frame_words as i32) * 4 + 15) & !15
         } else {
             0
         };
@@ -291,15 +432,24 @@ impl Lowerer {
         if frame_size != 0 {
             words.push(encode_addi(STACK_POINTER, STACK_POINTER, -frame_size));
         }
+        let return_address_offset = needs_return_address_slot.then_some(frame_size - 4);
+        if let Some(offset) = return_address_offset {
+            words.push(encode_sw(X1_RA, STACK_POINTER, offset));
+        }
         Ok(Self {
             words,
             env,
             word_sized_values: HashSet::new(),
             labels: HashMap::new(),
             branches: Vec::new(),
+            calls: Vec::new(),
             remaining_uses: count_value_uses(cir),
+            allow_direct_calls,
+            call_return_types: call_return_types.cloned().unwrap_or_default(),
+            canonicalize_wide_return,
             next_internal_label: 0,
             frame_size,
+            return_address_offset,
             next_spill_slot: 0,
         })
     }
@@ -314,7 +464,16 @@ impl Lowerer {
         if let Some(ty) = op.strip_prefix("ret_") {
             self.require_scalar_type(ty, op)?;
             match self.var_location(instr, 0, op)? {
-                ValueLocation::Word(src) => self.words.push(encode_addi(A0, src, 0)),
+                ValueLocation::Word(src) => {
+                    self.words.push(encode_addi(A0, src, 0));
+                    if self.canonicalize_wide_return && matches!(ty, "i64" | "u64") {
+                        self.words.push(if is_signed(ty) {
+                            encode_srai(A1, src, 31)
+                        } else {
+                            encode_addi(A1, X0_ZERO, 0)
+                        });
+                    }
+                }
                 ValueLocation::Pair { lo, hi } => {
                     self.words.push(encode_addi(A0, lo, 0));
                     self.words.push(encode_addi(A1, hi, 0));
@@ -381,6 +540,10 @@ impl Lowerer {
             let condition = self.var_src(instr, 0, op)?;
             self.record_branch(instr, 1, BranchKind::NeZero { rs1: condition }, op)?;
             return Ok(());
+        }
+
+        if op == "call" {
+            return self.lower_direct_call(instr);
         }
 
         for family in ["add", "sub", "mul", "div", "mod", "and", "or", "xor", "shl", "shr"] {
@@ -527,6 +690,92 @@ impl Lowerer {
             self.words[branch.word_index] = word;
         }
         Ok(())
+    }
+
+    fn resolve_calls(
+        &mut self,
+        function_offset: usize,
+        function_offsets: &HashMap<String, usize>,
+    ) -> Result<(), BackendError> {
+        for call in &self.calls {
+            let target = function_offsets
+                .get(&call.function)
+                .copied()
+                .ok_or_else(|| BackendError::UndefinedLabel(call.function.clone()))?;
+            let call_site = function_offset + call.word_index * 4;
+            let offset = target as i64 - call_site as i64;
+            if offset < -(1 << 20) || offset >= (1 << 20) {
+                return Err(BackendError::CallOutOfRange {
+                    function: call.function.clone(),
+                    offset,
+                });
+            }
+            self.words[call.word_index] = encode_jal(X1_RA, offset as i32);
+        }
+        Ok(())
+    }
+
+    fn lower_direct_call(&mut self, instr: &CIRInstr) -> Result<(), BackendError> {
+        if !self.allow_direct_calls {
+            return Err(BackendError::UnsupportedOp(
+                "call (module linking required)".to_owned(),
+            ));
+        }
+        let Some(CIROperand::Var(function)) = instr.srcs.first() else {
+            return Err(BackendError::InvalidOperand(
+                "call srcs[0] must be Var(function_name)".to_owned(),
+            ));
+        };
+        if instr.srcs.len() != 1 {
+            return Err(BackendError::UnsupportedOp(
+                "call arguments (RV32 call ABI argument marshaling is pending)".to_owned(),
+            ));
+        }
+        if let Some((name, _)) = self.env.iter().find(|(name, _)| {
+            self.remaining_uses.get(name).copied().unwrap_or_default() != 0
+        }) {
+            return Err(BackendError::UnsupportedOp(format!(
+                "call with value {name:?} live across it (caller-save spilling is pending)"
+            )));
+        }
+
+        self.calls.push(PendingCall {
+            word_index: self.words.len(),
+            function: function.clone(),
+        });
+        self.words.push(0);
+
+        let return_type = if instr.ty == "any" {
+            self.call_return_types
+                .get(function)
+                .cloned()
+                .ok_or_else(|| BackendError::UndefinedLabel(function.clone()))?
+        } else {
+            instr.ty.clone()
+        };
+        match (instr.dest.as_deref(), return_type.as_str()) {
+            (None, "void") => Ok(()),
+            (Some(_), "void") => Err(BackendError::InvalidOperand(
+                "void call must not have a destination".to_owned(),
+            )),
+            (Some(_), "i64" | "u64") => {
+                let ValueLocation::Pair { lo, hi } = self.dest_pair(instr, "call")? else {
+                    unreachable!("dest_pair always returns a pair")
+                };
+                self.words.push(encode_addi(lo, A0, 0));
+                self.words.push(encode_addi(hi, A1, 0));
+                Ok(())
+            }
+            (Some(_), ty) => {
+                self.require_operation_type(ty, "call")?;
+                let destination = self.dest(instr, "call")?;
+                self.words.push(encode_addi(destination, A0, 0));
+                Ok(())
+            }
+            (None, _) => Err(BackendError::InvalidOperand(
+                "non-void call requires a destination".to_owned(),
+            )),
+        }
     }
 
     fn check_branch_offset(label: &str, offset: i64, max: i64) -> Result<(), BackendError> {
@@ -903,6 +1152,9 @@ impl Lowerer {
     }
 
     fn restore_stack_frame(&mut self) {
+        if let Some(offset) = self.return_address_offset {
+            self.words.push(encode_lw(X1_RA, STACK_POINTER, offset));
+        }
         if self.frame_size != 0 {
             self.words
                 .push(encode_addi(STACK_POINTER, STACK_POINTER, self.frame_size));
@@ -1693,6 +1945,7 @@ fn value_source_occurrences(instr: &CIRInstr, name: &str) -> usize {
 fn is_value_source(instr: &CIRInstr, index: usize) -> bool {
     match instr.op.as_str() {
         "label" | "jmp" => false,
+        "call" => index != 0,
         "jmp_if_false" | "br_false_bool" | "jmp_if_true" | "br_true_bool" => index == 0,
         _ => true,
     }

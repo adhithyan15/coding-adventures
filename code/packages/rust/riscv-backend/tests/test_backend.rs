@@ -2,7 +2,7 @@
 
 use jit_core::backend::{Backend, FunctionContext};
 use jit_core::cir::{CIRInstr, CIROperand};
-use riscv_backend::{compile, run_binary, BackendError, Riscv32Backend};
+use riscv_backend::{compile, compile_module, run_binary, BackendError, ModuleFunction, Riscv32Backend};
 use vm_core::value::Value;
 
 fn ctx<'a>(name: &'a str, params: &'a [(String, String)], ret_ty: &'a str) -> FunctionContext<'a> {
@@ -824,7 +824,7 @@ fn executes_chained_wide_shifts_without_exhausting_registers() {
 }
 
 #[test]
-fn rejects_calls_until_the_linker_and_frame_abi_exist() {
+fn single_function_compile_refuses_calls_without_module_linking() {
     let cir = vec![ci(
         "call",
         Some("result"),
@@ -832,7 +832,34 @@ fn rejects_calls_until_the_linker_and_frame_abi_exist() {
         "i32",
     )];
     let err = compile(&ctx("main", &[], "i32"), &cir).expect_err("calls are a later backend slice");
-    assert!(matches!(err, BackendError::UnsupportedOp(op) if op == "call"));
+    assert!(matches!(err, BackendError::UnsupportedOp(op) if op.contains("call")));
+}
+
+#[test]
+fn linked_module_executes_a_zero_argument_direct_call() {
+    let helper = vec![
+        ci("const_i32", Some("answer"), vec![CIROperand::Int(42)], "i32"),
+        ci("ret_i32", None, vec![CIROperand::Var("answer".into())], "i32"),
+    ];
+    let main = vec![
+        ci("call", Some("answer"), vec![CIROperand::Var("helper".into())], "i32"),
+        ci("ret_i32", None, vec![CIROperand::Var("answer".into())], "i32"),
+    ];
+    let functions = [
+        ModuleFunction {
+            context: ctx("helper", &[], "i32"),
+            cir: &helper,
+        },
+        ModuleFunction {
+            context: ctx("main", &[], "i32"),
+            cir: &main,
+        },
+    ];
+
+    let binary = compile_module(&functions, Some("main")).expect("module linking");
+    let result = run_binary(&binary, &[]).expect("linked module execution");
+    assert!(result.halted);
+    assert_eq!(result.return_value, 42);
 }
 
 // ---------------------------------------------------------------------------
