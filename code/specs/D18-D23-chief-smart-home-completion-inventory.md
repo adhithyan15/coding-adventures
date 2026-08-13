@@ -2133,13 +2133,36 @@ pairing worker against the same live central controller:
 - Tests prove exact-bridge selection, central commit visibility, secret-free
   durable state, cooperative stop, and failure propagation.
 
+## Current Chief Synology Pairing Worker Slice
+
+The optional Chief smart-home composition now owns one exact Synology
+Surveillance Station credential pairing worker against the same live central
+controller:
+
+- A complete `synology_pairing_*` tuple binds the worker to one installed NVR,
+  its canonical host and pinned socket address, an owner-only 32-byte KEK, and
+  owner-only username/password files with exact bounded byte lengths; partial
+  configuration and containerized Vault custody fail closed.
+- Startup initializes or unseals the configured Vault and resolves pending
+  pairing transaction journals before installing the existing Synology pairing
+  actor against the shared controller.
+- Each tick selects only an unexpired pending Synology session for the configured
+  bridge, preserves its principal and exact durable revision, and delegates
+  pinned HTTPS validation, exact installed-camera identity checks,
+  authenticated native inspection, and sealed credential handoff to the
+  existing service. Session identifiers remain process-local and are discarded
+  after inspection; OTP and remembered-device authentication remain blocked.
+- Successful completion publishes only the opaque Synology `VaultRef` to HTTP,
+  model tools, and every other shared consumer. Clock or actor failure stops
+  both listeners, and normal shutdown joins the worker before controller and
+  Vault teardown.
+- Tests prove exact-bridge selection, central commit visibility, secret-free
+  durable state, cooperative stop, and failure propagation.
+
 The remaining central-composition backlog still takes priority over adding
 another isolated integration or Chief read model:
 
-1. Move the remaining Synology supervised pairing worker into the Chief-owned
-   controller process with explicit owner-only credential-input and
-   Vault-custody boundaries.
-2. Move automation schedule workers into the same process and prove restart-safe
+1. Move automation schedule workers into the same process and prove restart-safe
    tick recovery and HTTP/model-tool visibility under coordinated shutdown.
 
 The protocol- and vendor-specific backlog below remains valid after those

@@ -1,0 +1,49 @@
+% ============================================================================
+% animal-baby-sex — a baby animal's SEX-SPECIFIC name, where the source names
+% one (adj-facts-stdlib, BIOLOGY).
+% ============================================================================
+% A sibling to the already-shipped `animal-babies.adj` (`animal_baby(animal,
+% baby)`, ONE generic baby name per animal): a new `animal_baby_sex(animal,
+% sex, baby)` table names the SEX-SPECIFIC baby term the source distinguishes,
+% which the existing table's schema has no room for. `animal-babies.adj`'s
+% own header explains its `horse` row deliberately picked the GENERIC term
+% "foal" over the sex-specific "colt"/"filly" (mirroring how every other row
+% in that table also picks one generic term over a rarer variant) — and the
+% table's own `source` field already quotes the exact span that draws this
+% distinction, unused for anything but justifying the "foal" choice:
+% `"colt (male), filly (female), foal, weanling, yearling"`. Of the 24 animals
+% `animal-babies.adj` ships, `horse` is the ONLY one whose Wikipedia "Young"
+% cell draws a clean male/female split (the others' cells list synonyms or
+% life-stage terms, not a sex distinction) — so this table is honestly
+% narrow: ONE animal, its two sex-specific names. Recall is a binding query:
+%
+%     ? animal_baby_sex(horse, male, $Baby)     % colt
+%     ? animal_baby_sex(horse, female, $Baby)   % filly
+%
+% This is a native `table` (ADJ-TABLES RS-5, a THREE-column table): each
+% `row` lowers to a ground relation `animal_baby_sex(animal, sex, baby)`
+% carrying the citation, so the lookups above are ordinary SLD binding
+% queries — the engine returns the sex-specific name WITH its source, on the
+% CPU, with zero model calls, and abstains on any animal/sex pair the source
+% does not distinguish (e.g. `dog`, which has no sex-specific baby name in
+% the cited "Young" cell).
+%
+% Provenance: reproduces, byte-for-byte, the SAME span already quoted inside
+% `animal-babies.adj`'s own `source` field, from the SAME Wikipedia "List of
+% animal names" page that table already cites — no new WebFetch, only a
+% different schema decoding a part of the same already-verified quote.
+% `trust consensus` — the same tier `animal-babies.adj` already carries
+% (Wikipedia is a secondary encyclopedic reference). (See ../README.md;
+% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table animal_baby_sex {
+    columns animal, sex, baby
+
+    row (horse, male, colt)
+    row (horse, female, filly)
+
+    source "colt (male), filly (female), foal, weanling, yearling"
+    locator "https://en.wikipedia.org/wiki/List_of_animal_names"
+    trust consensus
+}

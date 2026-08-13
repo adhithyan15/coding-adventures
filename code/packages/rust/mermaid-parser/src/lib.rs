@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.82.0";
+pub const VERSION: &str = "0.83.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -1164,11 +1164,17 @@ pub fn parse_quadrant_chart(source: &str) -> Result<ChartDiagram, ParseError> {
             "AXIS_STATEMENT" => {
                 let is_x = token.value[..6].eq_ignore_ascii_case("x-axis");
                 let value = token.value[6..].trim();
+                let has_dangling_arrow = quadrant_axis_has_dangling_arrow(value);
                 let mut labels = split_quadrant_axis_labels(value)
                     .into_iter()
                     .map(|part| unquote_mermaid_string(part.trim()))
                     .collect::<Vec<_>>();
                 labels.retain(|label| !label.is_empty());
+                if has_dangling_arrow {
+                    if let Some(label) = labels.first_mut() {
+                        label.push_str(" ⟶ ");
+                    }
+                }
                 if is_x {
                     x_labels = labels;
                 } else {
@@ -1192,7 +1198,7 @@ pub fn parse_quadrant_chart(source: &str) -> Result<ChartDiagram, ParseError> {
                 );
             }
             "POINT_STATEMENT" => {
-                let open = token.value.find('[').ok_or_else(|| {
+                let open = token.value.rfind('[').ok_or_else(|| {
                     token_error(&token, "expected '[' before quadrant point coordinates")
                 })?;
                 let close = token.value.rfind(']').ok_or_else(|| {
@@ -3618,6 +3624,20 @@ fn split_quadrant_axis_labels(value: &str) -> Vec<&str> {
     vec![value]
 }
 
+fn quadrant_axis_has_dangling_arrow(value: &str) -> bool {
+    let trimmed = value.trim_end();
+    let Some(arrow) = trimmed.strip_suffix('>') else {
+        return false;
+    };
+    arrow
+        .as_bytes()
+        .iter()
+        .rev()
+        .take_while(|byte| **byte == b'-')
+        .count()
+        >= 2
+}
+
 // ── Sankey parser ─────────────────────────────────────────────────────────
 
 /// Parse Mermaid's three-column Sankey CSV dialect into the shared chart IR.
@@ -4655,6 +4675,26 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         );
         assert_eq!(diagram.quadrant_labels[0].as_deref(), Some("Invest 🚀"));
         assert_eq!(diagram.quadrant_points[0].label, "Métal 渲染");
+    }
+
+    #[test]
+    fn quadrant_parses_comments_empty_charts_and_one_sided_axes() {
+        let empty = parse_quadrant_chart("%% comment\nquadrantChart").unwrap();
+        assert!(empty.quadrant_points.is_empty());
+
+        let diagram = parse_quadrant_chart(
+            "quadrantChart\n\
+             x-axis \"Urgent(* +=[❤\" --> %% preserve arrow\n\
+             y-axis Engagement %% one label\n\
+             quadrant-1 Plan %% label comment\n\
+             \"Point1 : (* +=[❤\": [1, 0] %% point comment\n",
+        )
+        .unwrap();
+
+        assert_eq!(diagram.x_axis.unwrap().categories, ["Urgent(* +=[❤ ⟶ "]);
+        assert_eq!(diagram.y_axis.unwrap().categories, ["Engagement"]);
+        assert_eq!(diagram.quadrant_labels[0].as_deref(), Some("Plan"));
+        assert_eq!(diagram.quadrant_points[0].label, "Point1 : (* +=[❤");
     }
 
     #[test]
@@ -6259,7 +6299,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.82.0");
+        assert_eq!(crate::VERSION, "0.83.0");
     }
 
     #[test]

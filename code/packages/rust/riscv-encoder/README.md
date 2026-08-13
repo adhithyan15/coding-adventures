@@ -1,6 +1,6 @@
 # riscv-encoder
 
-Pure-Rust RV32I instruction encoder.  Mirror of
+Pure-Rust RV32I instruction encoder with the `mul` / `mulhu` RV32M subset. Mirror of
 `ge225-encoder` / `intel4004-encoder` / `armv7-encoder` /
 `intel8008-encoder`.
 
@@ -9,7 +9,7 @@ Phase 7 (the FINAL lane) of the historical-arch backend migration
 
 ## What's inside
 
-* Re-exports of `encode_addi`, `encode_jalr`, `encode_add`,
+* Re-exports of `encode_addi`, `encode_jalr`, `encode_add`, `encode_mul`,
   `encode_sub`, … from `riscv-simulator::encoding` (the in-tree
   source of truth for RV32I bit layout).
 * Register-index constants for the registers `riscv-backend` uses:

@@ -2540,6 +2540,69 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: devanagariAlphabetSource("द"),
   },
+  // Opiaterein's animation writes the upper spiral and shoulder, lower bowl,
+  // right stem, and headline as four separate runs. The Central Hindi
+  // Directorate deskbook independently shows the same buildup: three lifts.
+  [ductusKey("devanagari", "ध")]: {
+    script: "devanagari",
+    glyph: "ध",
+    strokes: [
+      { segments: [{ label: "curl around the upper spiral and sweep right through the shoulder", path: [
+        { x: 285, y: 450 }, { x: 300, y: 475 }, { x: 305, y: 505 },
+        { x: 300, y: 535 }, { x: 285, y: 560 }, { x: 260, y: 585 },
+        { x: 225, y: 600 }, { x: 185, y: 605 }, { x: 145, y: 590 },
+        { x: 110, y: 565 }, { x: 85, y: 530 }, { x: 75, y: 490 },
+        { x: 80, y: 450 }, { x: 95, y: 420 }, { x: 115, y: 395 },
+        { x: 145, y: 375 }, { x: 175, y: 355 }, { x: 210, y: 340 },
+        { x: 250, y: 335 }, { x: 290, y: 340 }, { x: 325, y: 350 },
+      ] }] },
+      { segments: [{ label: "lift, then sweep down and around the lower bowl", path: [
+        { x: 170, y: 330 }, { x: 140, y: 320 }, { x: 125, y: 295 },
+        { x: 125, y: 265 }, { x: 130, y: 230 }, { x: 140, y: 195 },
+        { x: 155, y: 165 }, { x: 160, y: 140 }, { x: 205, y: 120 },
+        { x: 250, y: 112 }, { x: 300, y: 112 }, { x: 350, y: 122 },
+        { x: 395, y: 145 }, { x: 435, y: 180 },
+      ] }] },
+      { segments: [{ label: "lift, then descend the right stem", path: [
+        { x: 485, y: 551 }, { x: 485, y: 475 }, { x: 485, y: 395 },
+        { x: 485, y: 315 }, { x: 485, y: 235 }, { x: 485, y: 155 },
+        { x: 485, y: 75 }, { x: 485, y: 5 },
+      ] }] },
+      { segments: [{ label: "lift, then draw the shirorekha left-to-right", path: [
+        { x: 388, y: 585 }, { x: 430, y: 585 }, { x: 475, y: 585 },
+        { x: 520, y: 585 }, { x: 570, y: 585 }, { x: 625, y: 585 },
+      ] }] },
+    ],
+    source: devanagariAlphabetSource("ध"),
+  },
+  // Opiaterein's animation writes the clockwise loop and rightward shoulder,
+  // right stem, and headline as three separate runs. The Central Hindi
+  // Directorate deskbook independently shows the same buildup: two lifts.
+  [ductusKey("devanagari", "न")]: {
+    script: "devanagari",
+    glyph: "न",
+    strokes: [
+      { segments: [{ label: "circle clockwise around the left loop and sweep right", path: [
+        { x: 185, y: 255 }, { x: 178, y: 225 }, { x: 158, y: 205 },
+        { x: 130, y: 202 }, { x: 100, y: 215 }, { x: 72, y: 242 },
+        { x: 52, y: 275 }, { x: 48, y: 310 }, { x: 58, y: 338 },
+        { x: 82, y: 350 }, { x: 115, y: 350 }, { x: 155, y: 335 },
+        { x: 205, y: 335 }, { x: 260, y: 335 }, { x: 320, y: 335 },
+        { x: 380, y: 335 },
+      ] }] },
+      { segments: [{ label: "lift, then descend the right stem", path: [
+        { x: 425, y: 551 }, { x: 425, y: 475 }, { x: 425, y: 395 },
+        { x: 425, y: 315 }, { x: 425, y: 235 }, { x: 425, y: 155 },
+        { x: 425, y: 75 }, { x: 425, y: 5 },
+      ] }] },
+      { segments: [{ label: "lift, then draw the shirorekha left-to-right", path: [
+        { x: 5, y: 585 }, { x: 80, y: 585 }, { x: 155, y: 585 },
+        { x: 230, y: 585 }, { x: 305, y: 585 }, { x: 380, y: 585 },
+        { x: 455, y: 585 }, { x: 565, y: 585 },
+      ] }] },
+    ],
+    source: devanagariAlphabetSource("न"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the
