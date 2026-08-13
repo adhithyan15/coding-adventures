@@ -1,0 +1,60 @@
+% ============================================================================
+% quadrilateral-alt-name — for the quadrilateral where the SAME source
+% names an alternate word, the alternate name (adj-facts-stdlib, GEOMETRY).
+% ============================================================================
+% A sibling to the already-shipped `quadrilateral-types.adj`
+% (`quadrilateral_property(shape, property)`, ONE defining property per
+% quadrilateral: square, rectangle, rhombus, parallelogram, trapezoid).
+% That table's `property` column has room for only the defining PROPERTY;
+% the SAME already-quoted MathWorld rhombus sentence also states an
+% ALTERNATE NAME for it that never made it into a row:
+%
+%   rhombus → equilateral_parallelogram
+%     "A rhombus is a quadrilateral with both pairs of opposite sides
+%      parallel and all sides the same length, i.e., an equilateral
+%      parallelogram."
+%
+% Recall is a binding query:
+%
+%     ? quadrilateral_alt_name(rhombus, $AltName)      % equilateral_parallelogram
+%
+% This is a native `table` (ADJ-TABLES RS-5, a TWO-column table like
+% `quadrilateral-types.adj`'s own `quadrilateral_property`): each `row`
+% lowers to a ground relation `quadrilateral_alt_name(shape, alt_name)`
+% carrying the citation, so the lookup above is the ordinary SLD binding
+% query — the engine returns the alternate name WITH its source, on the
+% CPU, with zero model calls, and abstains on square, rectangle,
+% parallelogram, and trapezoid, whose own already-cited spans in
+% `quadrilateral-types.adj` state no alternate name to decode here.
+%
+% Only ONE of `quadrilateral-types.adj`'s five quadrilaterals has a
+% genuinely distinct alternate name in the ALREADY-cited spans; this table
+% is deliberately narrow rather than inventing a name the source does not
+% state. The query also runs BACKWARD — bind an alternate name and recall
+% which quadrilateral it names:
+%
+%     ? quadrilateral_alt_name($Shape, equilateral_parallelogram)   % rhombus
+%
+% Provenance: reproduces, byte-for-byte, the SAME rhombus sentence already
+% quoted inside `quadrilateral-types.adj`'s own provenance block, from the
+% SAME MathWorld "Rhombus" page that table already cites — no new
+% WebFetch, only a different schema decoding a clause of an
+% already-verified quote. An ADJ `table` carries ONE provenance envelope
+% (per `quadrilateral-types.adj`'s own convention), so `source`/`locator`/
+% `trust` below hold that full sentence — the single span that fixes this
+% table's only row. `trust authoritative` — the same tier
+% `quadrilateral-types.adj` already carries (Wolfram MathWorld, a primary
+% mathematics reference).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table quadrilateral_alt_name {
+    columns shape, alt_name
+
+    row (rhombus, equilateral_parallelogram)
+
+    source "A rhombus is a quadrilateral with both pairs of opposite sides parallel and all sides the same length, i.e., an equilateral parallelogram."
+    locator "https://mathworld.wolfram.com/Rhombus.html"
+    trust authoritative
+}

@@ -1,0 +1,21 @@
+% ============================================================================
+% quadrilateral-alt-name.query.adj — a worked recall over the geometry
+% quadrilateral-alt-name library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what's another word
+% for a rhombus?": it states no geometry fact of its own — it only
+% `import`s the grounded table and asks binding queries. The engine
+% resolves each `?` against the `quadrilateral_alt_name` rows and returns
+% the alternate name + the table's source/locator/trust. A shape the cited
+% spans give no alternate name for abstains honestly — the engine never
+% invents one.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli quadrilateral-alt-name.query.adj
+% ============================================================================
+
+import "quadrilateral-alt-name.adj"
+
+? quadrilateral_alt_name(rhombus, $AltName)                           % expect equilateral_parallelogram
+? quadrilateral_alt_name($Shape, equilateral_parallelogram)           % reverse bind — expect rhombus
+? quadrilateral_alt_name(square, $AltName)                            % expect abstain — square's own cited span names no alternate word
