@@ -44,6 +44,7 @@ const CHINESE_THANK = DUCTUS[ductusKey("chinese", "谢")];
 const CHINESE_PLEASE = DUCTUS[ductusKey("chinese", "请")];
 const CHINESE_AGAIN = DUCTUS[ductusKey("chinese", "再")];
 const CHINESE_SEE = DUCTUS[ductusKey("chinese", "见")];
+const CHINESE_WHAT = DUCTUS[ductusKey("chinese", "什")];
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
@@ -585,6 +586,18 @@ describe("handwriting ductus", () => {
         );
       }
     }
+  });
+
+  it("Chinese 什 completes 亻 before writing 十 in four separate strokes", () => {
+    expect(CHINESE_WHAT.script).toBe("chinese");
+    expect(penLifts(CHINESE_WHAT)).toBe(3);
+    expect(CHINESE_WHAT.strokes).toHaveLength(4);
+    expect(CHINESE_WHAT.strokes.map((stroke) => stroke.segments.length)).toEqual([1, 1, 1, 1]);
+    const leftStrokes = CHINESE_WHAT.strokes.slice(0, 2).flatMap(penPath);
+    const rightStrokes = CHINESE_WHAT.strokes.slice(2).flatMap(penPath);
+    expect(Math.max(...leftStrokes.map((point) => point.x))).toBeLessThan(
+      Math.min(...rightStrokes.map((point) => point.x)),
+    );
   });
 
   it("Hebrew א uses two crossed pen-down runs with one lift", () => {
@@ -1542,6 +1555,7 @@ describe("handwriting ductus", () => {
     expect(verifiedLetterFont("请", CHINESE_PLEASE.source.url)).toBe("_fonts/NotoSansSC-Subset.ttf");
     expect(verifiedLetterFont("再", CHINESE_AGAIN.source.url)).toBe("_fonts/NotoSansSC-Subset.ttf");
     expect(verifiedLetterFont("见", CHINESE_SEE.source.url)).toBe("_fonts/NotoSansSC-Subset.ttf");
+    expect(verifiedLetterFont("什", CHINESE_WHAT.source.url)).toBe("_fonts/NotoSansSC-Subset.ttf");
     expect(verifiedLetterFont("א", HEBREW_ALEF.source.url)).toBe(
       "_fonts/NotoSansHebrew-Static.ttf",
     );
@@ -1886,6 +1900,17 @@ describe("handwriting ductus", () => {
     expect(src.citation).toMatch(/Hanzi Writer Data 见\.json.*medians 1–4.*snapshot 68d10a4/i);
     expect(src.variation).toMatch(
       /four ordered strokes.*left side.*Median 2.*top horizontal.*right side.*left-falling leg.*Median 4.*second leg.*bends right.*upward hook.*People's Republic of China stroke order.*Noto Sans SC.*frame-before-legs.*three joined turns.*three intervening lifts/i,
+    );
+  });
+
+  it("Chinese 什 traces its 亻-before-十 order to the pinned PRC-order dataset", () => {
+    const src = CHINESE_WHAT.source;
+    expect(src.url).toBe(
+      "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E4%BB%80.json",
+    );
+    expect(src.citation).toMatch(/Hanzi Writer Data 什\.json.*medians 1–4.*snapshot 68d10a4/i);
+    expect(src.variation).toMatch(
+      /four ordered strokes.*Medians 1–2.*亻 first.*left-falling stroke.*separately started vertical.*Median 3.*十's horizontal left-to-right.*median 4.*descends 十's vertical.*People's Republic of China stroke order.*Noto Sans SC.*亻-before-十.*three intervening lifts/i,
     );
   });
 
