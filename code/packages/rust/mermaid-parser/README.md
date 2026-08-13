@@ -44,7 +44,7 @@ and title, axis, region, and point-label typography, plus all 15 quadrant theme
 variables. The pinned upstream parser/style corpus and native Metal render
 fixture pass, so `quadrantChart` is tracked at `full` compatibility.
 
-The initial `journey` subset covers titles, sections, task scores in Mermaid's
+The `journey` pipeline covers titles, sections, task scores in Mermaid's
 documented one-to-five domain, comma-separated actors, accessibility metadata,
 and multiline break-tag labels. Resolved layout assigns deterministic actor
 colors, and Paint renders actor legends, task markers, and score faces.
@@ -59,6 +59,8 @@ Configured `leftMargin` reserves the legend column before task rows, while
 `maxLabelWidth` deterministically wraps actor labels into resolved Paint bounds.
 Journey sections and tasks resolve as horizontal columns with score-ranked faces,
 an activity spine, and dashed descenders before backend-neutral Paint lowering.
+The pinned upstream parser corpus and native Metal render fixture pass, so
+`journey` is tracked at `full` compatibility.
 
 The sequence subset includes participants and actors, aliases, standard solid
 and dotted message arrows, bidirectional/cross/point arrowheads, notes,
