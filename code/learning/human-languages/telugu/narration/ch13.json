@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Head and Hand",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:da0b496fb8e5f919",
+  "sourceHash": "fnv1a64:abd72661fb5ee2f7",
   "lessons": [
     {
       "id": "TE-C13-sharira-bhagalu",
@@ -132,7 +132,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f81f5050896cfd7d",
+      "sourceHash": "fnv1a64:76fc1e19411a5cb9",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -196,15 +196,15 @@
             },
             {
               "kind": "speech",
-              "text": "మీ పేరు ఏమిటి? — what's your name?"
-            },
-            {
-              "kind": "speech",
               "text": "వెళ్ళి వస్తాను veḷḷi vastānu — goodbye (lit. \"I'll go and come back\")."
             },
             {
               "kind": "speech",
               "text": "పని చేయు pani cēyu — to work (lit. \"work-do\")."
+            },
+            {
+              "kind": "speech",
+              "text": "ఒకటి రెండు మూడు నాలుగు ఐదు okaṭi reṇḍu mūḍu nālugu aidu — one to five."
             }
           ]
         },
@@ -245,7 +245,7 @@
             },
             {
               "kind": "speech",
-              "text": "ఏమిటి, మీ పేరు ఏమిటి?, నమస్కారం."
+              "text": "ఏమిటి, వెళ్ళి వస్తాను, నమస్కారం."
             },
             {
               "kind": "prompt",

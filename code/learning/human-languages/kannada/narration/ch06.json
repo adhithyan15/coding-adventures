@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Case Endings and Dative Subjects",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:2ad17e232b5966c4",
+  "sourceHash": "fnv1a64:266b9d774b6a3470",
   "lessons": [
     {
       "id": "KA-C06-dative-ge",
@@ -527,7 +527,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:aaf07f13053f8628",
+      "sourceHash": "fnv1a64:d67a503abb84fdee",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -599,7 +599,7 @@
             },
             {
               "kind": "speech",
-              "text": "ನನ್ನ ಹೆಸರು … — my name is… (with no \"is\")."
+              "text": "ನೀನು / ನೀವು nīnu / nīvu — you (familiar / respectful)."
             }
           ]
         },

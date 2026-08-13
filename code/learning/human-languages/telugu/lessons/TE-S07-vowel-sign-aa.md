@@ -49,8 +49,8 @@ You already say these, and every one of them has ◌ా somewhere inside it:
 
 - **నమస్కారం** *namaskāram* — hello / greetings (namaskāram — "a making of a bow")
 - **ధన్యవాదములు** *dhanyavādamulu* — thank you (dhanyavādamulu — "utterances of 'worthy'")
-- **నా** *nā* — my
-- **నా పేరు …** — my name is… (with no "is")
+- **బాగా** *bāgā* — well, fine — and the reply "నేను బాగున్నాను
+- **పరవాలేదు** *paravālēdu* — it's okay / no problem / you're welcome
 
 ## Writing: ◌ా — copy what you see
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-07] -->

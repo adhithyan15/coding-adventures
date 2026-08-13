@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "Family",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:aa985fc0cf8aa5d7",
+  "sourceHash": "fnv1a64:b8d18a4f6fe30072",
   "lessons": [
     {
       "id": "KA-C12-kutumba",
@@ -155,7 +155,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:fd01f1b2be482deb",
+      "sourceHash": "fnv1a64:f87d92f51b706e3b",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -227,7 +227,7 @@
             },
             {
               "kind": "speech",
-              "text": "ನನ್ನ ಹೆಸರು … — my name is… (with no \"is\")."
+              "text": "ನೀವು ಹೇಗಿದ್ದೀರಾ? nīvu hēgiddīrā — how are you? (respectful)."
             }
           ]
         },

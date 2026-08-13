@@ -7,18 +7,18 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:7c96f62385ba08ed",
+  "sourceHash": "fnv1a64:a100587e1d46f3b0",
   "summary": {
-    "totalLessons": 2005,
+    "totalLessons": 2013,
     "voice": 1336,
     "sight": 561,
-    "pen": 108,
+    "pen": 116,
     "drivableLessons": 1336,
-    "drivablePercent": 67,
+    "drivablePercent": 66,
     "trackCount": 22,
     "chapterCount": 720,
     "drivablePrefixTotal": 1136,
-    "fullyDrivableChapters": 472,
+    "fullyDrivableChapters": 465,
     "unstartableChapters": 173,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
@@ -2215,11 +2215,11 @@
     },
     {
       "language": "hindi",
-      "lessonCount": 109,
+      "lessonCount": 117,
       "voice": 59,
       "sight": 39,
-      "pen": 11,
-      "drivablePercent": 54,
+      "pen": 19,
+      "drivablePercent": 50,
       "drivablePrefixTotal": 42,
       "modalities": [
         "voice",
@@ -2306,16 +2306,18 @@
         },
         {
           "chapter": 6,
-          "lessonCount": 3,
+          "lessonCount": 4,
           "voice": 3,
           "sight": 0,
-          "pen": 0,
+          "pen": 1,
           "modalities": [
-            "voice"
+            "voice",
+            "sight",
+            "pen"
           ],
           "drivablePrefix": 3,
-          "firstNonVoiceLesson": null,
-          "drivable": true,
+          "firstNonVoiceLesson": "HI-S01-letter-ma",
+          "drivable": false,
           "drivableLessonIds": [
             "HI-C06-numbers-1-5",
             "HI-C06-tin-char-history",
@@ -2324,16 +2326,18 @@
         },
         {
           "chapter": 7,
-          "lessonCount": 2,
+          "lessonCount": 3,
           "voice": 2,
           "sight": 0,
-          "pen": 0,
+          "pen": 1,
           "modalities": [
-            "voice"
+            "voice",
+            "sight",
+            "pen"
           ],
           "drivablePrefix": 2,
-          "firstNonVoiceLesson": null,
-          "drivable": true,
+          "firstNonVoiceLesson": "HI-S02-letter-na",
+          "drivable": false,
           "drivableLessonIds": [
             "HI-C07-haan",
             "HI-C07-nahin"
@@ -2341,45 +2345,50 @@
         },
         {
           "chapter": 8,
-          "lessonCount": 1,
+          "lessonCount": 2,
           "voice": 1,
           "sight": 0,
-          "pen": 0,
+          "pen": 1,
           "modalities": [
-            "voice"
+            "voice",
+            "sight",
+            "pen"
           ],
           "drivablePrefix": 1,
-          "firstNonVoiceLesson": null,
-          "drivable": true,
+          "firstNonVoiceLesson": "HI-S03-letter-a",
+          "drivable": false,
           "drivableLessonIds": [
             "HI-C08-kripaya"
           ]
         },
         {
           "chapter": 9,
-          "lessonCount": 1,
+          "lessonCount": 2,
           "voice": 1,
           "sight": 0,
-          "pen": 0,
+          "pen": 1,
           "modalities": [
-            "voice"
+            "voice",
+            "sight",
+            "pen"
           ],
           "drivablePrefix": 1,
-          "firstNonVoiceLesson": null,
-          "drivable": true,
+          "firstNonVoiceLesson": "HI-S04-letter-aa",
+          "drivable": false,
           "drivableLessonIds": [
             "HI-C09-maaf-kijiye"
           ]
         },
         {
           "chapter": 10,
-          "lessonCount": 2,
+          "lessonCount": 3,
           "voice": 1,
           "sight": 1,
-          "pen": 0,
+          "pen": 1,
           "modalities": [
             "voice",
-            "sight"
+            "sight",
+            "pen"
           ],
           "drivablePrefix": 0,
           "firstNonVoiceLesson": "HI-C10-somavaar-shukravaar",
@@ -2388,16 +2397,18 @@
         },
         {
           "chapter": 11,
-          "lessonCount": 2,
+          "lessonCount": 3,
           "voice": 2,
           "sight": 0,
-          "pen": 0,
+          "pen": 1,
           "modalities": [
-            "voice"
+            "voice",
+            "sight",
+            "pen"
           ],
           "drivablePrefix": 2,
-          "firstNonVoiceLesson": null,
-          "drivable": true,
+          "firstNonVoiceLesson": "HI-S06-vowel-sign-aa",
+          "drivable": false,
           "drivableLessonIds": [
             "HI-C11-kaalaa-safed",
             "HI-C11-laal-niila"
@@ -2405,16 +2416,18 @@
         },
         {
           "chapter": 12,
-          "lessonCount": 2,
+          "lessonCount": 3,
           "voice": 2,
           "sight": 0,
-          "pen": 0,
+          "pen": 1,
           "modalities": [
-            "voice"
+            "voice",
+            "sight",
+            "pen"
           ],
           "drivablePrefix": 2,
-          "firstNonVoiceLesson": null,
-          "drivable": true,
+          "firstNonVoiceLesson": "HI-S07-letter-ta",
+          "drivable": false,
           "drivableLessonIds": [
             "HI-C12-pitaa-maataa",
             "HI-C12-bhaai-bahin"
@@ -2422,16 +2435,18 @@
         },
         {
           "chapter": 13,
-          "lessonCount": 2,
+          "lessonCount": 3,
           "voice": 2,
           "sight": 0,
-          "pen": 0,
+          "pen": 1,
           "modalities": [
-            "voice"
+            "voice",
+            "sight",
+            "pen"
           ],
           "drivablePrefix": 2,
-          "firstNonVoiceLesson": null,
-          "drivable": true,
+          "firstNonVoiceLesson": "HI-S08-letter-sa",
+          "drivable": false,
           "drivableLessonIds": [
             "HI-C13-sir",
             "HI-C13-haath"
@@ -20970,7 +20985,8 @@
         "sight-cue"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:4469df131111f6aa"
+      "sourceHash": "fnv1a64:8ae058c673870bf5",
+      "delivery": "script"
     },
     {
       "id": "HI-W01-na-ma",
@@ -20988,7 +21004,8 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:6192e9ac65625a86"
+      "sourceHash": "fnv1a64:4b729464aac5330f",
+      "delivery": "script"
     },
     {
       "id": "HI-W02-abugida-ka-ta",
@@ -21006,7 +21023,8 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:bae859caa091f9e5"
+      "sourceHash": "fnv1a64:287f1a4c2a402674",
+      "delivery": "script"
     },
     {
       "id": "HI-W02-ka-ta-mouth-order",
@@ -21024,7 +21042,8 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:4e43d2bb5e827c2a"
+      "sourceHash": "fnv1a64:e1be6db0eb11c96d",
+      "delivery": "script"
     },
     {
       "id": "HI-C01-practice",
@@ -21219,7 +21238,8 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:35d09535842a5035"
+      "sourceHash": "fnv1a64:a3a4f992c53ceb0e",
+      "delivery": "script"
     },
     {
       "id": "HI-W03-preposed-i",
@@ -21237,7 +21257,8 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:37c7371c5105faf2"
+      "sourceHash": "fnv1a64:c2ae6bb3cfba4b4f",
+      "delivery": "script"
     },
     {
       "id": "HI-W04-ra-sa-mera-naam",
@@ -21255,7 +21276,8 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:10859363e1081ed0"
+      "sourceHash": "fnv1a64:0ee94523cc6876d9",
+      "delivery": "script"
     },
     {
       "id": "HI-W04-write-mera-naam",
@@ -21273,7 +21295,8 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:816454c956f38323"
+      "sourceHash": "fnv1a64:fb8f9b5730381090",
+      "delivery": "script"
     },
     {
       "id": "HI-W05-virama-namaste",
@@ -21291,7 +21314,8 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:2ed3a73cd278b3bd"
+      "sourceHash": "fnv1a64:ba56a8aa108b98f2",
+      "delivery": "script"
     },
     {
       "id": "HI-W05-conjuncts",
@@ -21311,7 +21335,8 @@
         "sight-cue"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:83d77302c28e7619"
+      "sourceHash": "fnv1a64:8fb1652ba09974ca",
+      "delivery": "script"
     },
     {
       "id": "HI-W05-write-namaste",
@@ -21329,7 +21354,8 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:02b63111d99095c1"
+      "sourceHash": "fnv1a64:982531436c9f0ff0",
+      "delivery": "script"
     },
     {
       "id": "HI-C02-practice",
@@ -21789,6 +21815,31 @@
       "sourceHash": "fnv1a64:425565e199a1eef8"
     },
     {
+      "id": "HI-S01-letter-ma",
+      "language": "hindi",
+      "chapter": 6,
+      "sequence": 485,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:9fc086a7acb2e3df",
+      "detachableSegments": [
+        "Script you'll notice: म",
+        "Writing: म — copy what you see"
+      ],
+      "delivery": "script"
+    },
+    {
       "id": "HI-C07-haan",
       "language": "hindi",
       "chapter": 7,
@@ -21825,6 +21876,31 @@
       "sourceHash": "fnv1a64:8c687f982fec7e2d"
     },
     {
+      "id": "HI-S02-letter-na",
+      "language": "hindi",
+      "chapter": 7,
+      "sequence": 505,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:4da242895d1996c8",
+      "detachableSegments": [
+        "Script you'll notice: न",
+        "Writing: न — copy what you see"
+      ],
+      "delivery": "script"
+    },
+    {
       "id": "HI-C08-kripaya",
       "language": "hindi",
       "chapter": 8,
@@ -21843,6 +21919,31 @@
       "sourceHash": "fnv1a64:21bf316288fa186f"
     },
     {
+      "id": "HI-S03-letter-a",
+      "language": "hindi",
+      "chapter": 8,
+      "sequence": 515,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:86f90b720c42e955",
+      "detachableSegments": [
+        "Script you'll notice: अ",
+        "Writing: अ"
+      ],
+      "delivery": "script"
+    },
+    {
       "id": "HI-C09-maaf-kijiye",
       "language": "hindi",
       "chapter": 9,
@@ -21859,6 +21960,31 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:75a32a4c24a81888"
+    },
+    {
+      "id": "HI-S04-letter-aa",
+      "language": "hindi",
+      "chapter": 9,
+      "sequence": 525,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:2bfb9c9a4b342e0d",
+      "detachableSegments": [
+        "Script you'll notice: आ",
+        "Writing: आ"
+      ],
+      "delivery": "script"
     },
     {
       "id": "HI-C10-somavaar-shukravaar",
@@ -21897,6 +22023,31 @@
       "sourceHash": "fnv1a64:25352c40eebfb01e"
     },
     {
+      "id": "HI-S05-sign-virama",
+      "language": "hindi",
+      "chapter": 10,
+      "sequence": 545,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:736b801e698f9537",
+      "detachableSegments": [
+        "Script you'll notice: ◌्",
+        "Writing: ◌् — copy what you see"
+      ],
+      "delivery": "script"
+    },
+    {
       "id": "HI-C11-kaalaa-safed",
       "language": "hindi",
       "chapter": 11,
@@ -21931,6 +22082,31 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:5eb9a51874c94ac6"
+    },
+    {
+      "id": "HI-S06-vowel-sign-aa",
+      "language": "hindi",
+      "chapter": 11,
+      "sequence": 565,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:bbaa53b54d9d0e0d",
+      "detachableSegments": [
+        "Script you'll notice: ◌ा",
+        "Writing: ◌ा — copy what you see"
+      ],
+      "delivery": "script"
     },
     {
       "id": "HI-C12-pitaa-maataa",
@@ -21969,6 +22145,31 @@
       "sourceHash": "fnv1a64:7062d33ca437dbb6"
     },
     {
+      "id": "HI-S07-letter-ta",
+      "language": "hindi",
+      "chapter": 12,
+      "sequence": 585,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:fc04ed07ed08b8e7",
+      "detachableSegments": [
+        "Script you'll notice: त",
+        "Writing: त — copy what you see"
+      ],
+      "delivery": "script"
+    },
+    {
       "id": "HI-C13-sir",
       "language": "hindi",
       "chapter": 13,
@@ -22003,6 +22204,31 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:842f60a59c8cdfbf"
+    },
+    {
+      "id": "HI-S08-letter-sa",
+      "language": "hindi",
+      "chapter": 13,
+      "sequence": 605,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:836a50bb3049edbc",
+      "detachableSegments": [
+        "Script you'll notice: स",
+        "Writing: स — copy what you see"
+      ],
+      "delivery": "script"
     },
     {
       "id": "HI-C14-ritu",
@@ -25358,7 +25584,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:aaf07f13053f8628",
+      "sourceHash": "fnv1a64:d67a503abb84fdee",
       "detachableSegments": [
         "Script you'll notice: ನ",
         "Writing: ನ — copy what you see"
@@ -25419,7 +25645,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:80e6a83febbba217",
+      "sourceHash": "fnv1a64:3bb45505dab994c7",
       "detachableSegments": [
         "Script you'll notice: ◌ು",
         "Writing: ◌ು — copy what you see"
@@ -25505,7 +25731,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:440673f7f5730079",
+      "sourceHash": "fnv1a64:143d5ccba6d8ebc7",
       "detachableSegments": [
         "Script you'll notice: ◌ಿ",
         "Writing: ◌ಿ — copy what you see"
@@ -25634,7 +25860,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:fd01f1b2be482deb",
+      "sourceHash": "fnv1a64:f87d92f51b706e3b",
       "detachableSegments": [
         "Script you'll notice: ರ",
         "Writing: ರ — copy what you see"
@@ -28806,7 +29032,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:623958a5a4b34003",
+      "sourceHash": "fnv1a64:3bc0b99bfa35c9a5",
       "detachableSegments": [
         "Script you'll notice: ക",
         "Writing: ക — copy what you see"
@@ -28867,7 +29093,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:1ddf6755ba2d2964",
+      "sourceHash": "fnv1a64:a62861def2b487dc",
       "detachableSegments": [
         "Script you'll notice: ◌്",
         "Writing: ◌് — copy what you see"
@@ -28910,7 +29136,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:c6bfd1902b24b6d1",
+      "sourceHash": "fnv1a64:fe8de4647a60eff9",
       "detachableSegments": [
         "Script you'll notice: ◌ി",
         "Writing: ◌ി — copy what you see"
@@ -28953,7 +29179,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:6cc371fcfa4be349",
+      "sourceHash": "fnv1a64:ca7bd872d637f851",
       "detachableSegments": [
         "Script you'll notice: ◌ാ",
         "Writing: ◌ാ — copy what you see"
@@ -28996,7 +29222,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:4e657e9ad6739def",
+      "sourceHash": "fnv1a64:20953f8f6911f5ad",
       "detachableSegments": [
         "Script you'll notice: ന",
         "Writing: ന — copy what you see"
@@ -29082,7 +29308,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:0f5a27f5ff191965",
+      "sourceHash": "fnv1a64:7ec56467aa49eef5",
       "detachableSegments": [
         "Script you'll notice: ◌ു",
         "Writing: ◌ു — copy what you see"
@@ -29125,7 +29351,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:b4103eff4b5069b1",
+      "sourceHash": "fnv1a64:891e6a4f03ca67a7",
       "detachableSegments": [
         "Script you'll notice: ത",
         "Writing: ത — copy what you see"
@@ -37409,7 +37635,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:63a52b8e7a9b66c0",
+      "sourceHash": "fnv1a64:a3a031f78de6c184",
       "detachableSegments": [
         "Script you'll notice: म",
         "Writing: म — copy what you see"
@@ -37506,7 +37732,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:c2332331db082e86",
+      "sourceHash": "fnv1a64:1988525ae1e6f1f6",
       "detachableSegments": [
         "Script you'll notice: न",
         "Writing: न — copy what you see"
@@ -37594,10 +37820,10 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:28108f7365b86029",
+      "sourceHash": "fnv1a64:f77ce3e778901bc7",
       "detachableSegments": [
         "Script you'll notice: अ",
-        "Writing: अ — copy what you see"
+        "Writing: अ"
       ],
       "delivery": "script"
     },
@@ -37703,10 +37929,10 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:849000193bead802",
+      "sourceHash": "fnv1a64:abbb7355612130a6",
       "detachableSegments": [
         "Script you'll notice: आ",
-        "Writing: आ — copy what you see"
+        "Writing: आ"
       ],
       "delivery": "script"
     },
@@ -37791,7 +38017,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:156bdff7ccbcea43",
+      "sourceHash": "fnv1a64:85d661b3a2000aa6",
       "detachableSegments": [
         "Script you'll notice: ◌्",
         "Writing: ◌् — copy what you see"
@@ -37858,7 +38084,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:720215319350fae8",
+      "sourceHash": "fnv1a64:c22f0d95290784ea",
       "detachableSegments": [
         "Script you'll notice: ◌ा",
         "Writing: ◌ा — copy what you see"
@@ -48087,7 +48313,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:fa98d6d6d8541739",
+      "sourceHash": "fnv1a64:f75cb0f93614c863",
       "detachableSegments": [
         "Script you'll notice: క",
         "Writing: క — copy what you see"
@@ -48130,7 +48356,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:c1e0b10bd6aa56d1",
+      "sourceHash": "fnv1a64:59654230abc83d43",
       "detachableSegments": [
         "Script you'll notice: ◌ం",
         "Writing: ◌ం — copy what you see"
@@ -48173,7 +48399,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:0d3f701a193fa239",
+      "sourceHash": "fnv1a64:14380cb777114169",
       "detachableSegments": [
         "Script you'll notice: ◌్",
         "Writing: ◌్ — copy what you see"
@@ -48216,7 +48442,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:60ac4f920c1cdbbf",
+      "sourceHash": "fnv1a64:91548121f1154ab7",
       "detachableSegments": [
         "Script you'll notice: ర",
         "Writing: ర — copy what you see"
@@ -48259,7 +48485,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:d583d9ea4c2700e4",
+      "sourceHash": "fnv1a64:be89faed7378f0b4",
       "detachableSegments": [
         "Script you'll notice: ◌ా",
         "Writing: ◌ా — copy what you see"
@@ -48302,7 +48528,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:f81f5050896cfd7d",
+      "sourceHash": "fnv1a64:76fc1e19411a5cb9",
       "detachableSegments": [
         "Script you'll notice: ◌ి",
         "Writing: ◌ి — copy what you see"

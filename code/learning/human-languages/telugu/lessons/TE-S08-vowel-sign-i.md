@@ -48,9 +48,9 @@ It is a **vowel sign**. It is not a letter and never stands alone: it attaches t
 You already say these, and every one of them has ◌ి somewhere inside it:
 
 - **ఏమిటి** *ēmiṭi* — what
-- **మీ పేరు ఏమిటి?** — what's your name?
 - **వెళ్ళి వస్తాను** *veḷḷi vastānu* — goodbye (lit. "I'll go and come back")
 - **పని చేయు** *pani cēyu* — to work (lit. "work-do")
+- **ఒకటి రెండు మూడు నాలుగు ఐదు** *okaṭi reṇḍu mūḍu nālugu aidu* — one to five
 
 ## Writing: ◌ి — copy what you see
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-08] -->
@@ -70,7 +70,7 @@ and larger than it is printed.
 [PAUSE 1s]
 - [YOU LOOK: at these words, and find ◌ి in the ones that have it]
 
-> ఏమిటి  ·  మీ పేరు ఏమిటి?  ·  నమస్కారం
+> ఏమిటి  ·  వెళ్ళి వస్తాను  ·  నమస్కారం
 
 - [YOU TRACE: ◌ి three times, saying *i* as you finish each one]
 - [YOU LOOK: back at any page of this chapter and find ◌ి once more]

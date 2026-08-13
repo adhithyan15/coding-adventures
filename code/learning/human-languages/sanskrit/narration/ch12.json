@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "The Face, Part One",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:c298f2452d64462e",
+  "sourceHash": "fnv1a64:6a0a57a8d46c7199",
   "lessons": [
     {
       "id": "SA-C12-akshi",
@@ -465,9 +465,9 @@
     {
       "id": "SA-S05-sign-virama",
       "sequence": 575,
-      "title": "◌् (virama) — one character, met inside words you already say",
+      "title": "◌् ((vowel killer)) — one character, met inside words you already say",
       "headword": "्",
-      "romanization": "virama",
+      "romanization": "(vowel killer)",
       "gloss": "the single character ् — recognised inside words you already say",
       "script": "devanagari",
       "modality": "pen",
@@ -477,7 +477,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:156bdff7ccbcea43",
+      "sourceHash": "fnv1a64:85d661b3a2000aa6",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -525,7 +525,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "◌् (virama) — no sound of its own — it takes one away."
+              "text": "◌् ((vowel killer)) — no sound of its own — it takes one away."
             },
             {
               "kind": "speech",
@@ -533,7 +533,15 @@
             },
             {
               "kind": "speech",
-              "text": "You already say these, and every one of them has ◌् (virama) somewhere inside it:"
+              "text": "Where it sits: a stroke below that removes the inherent 'a' and forms a conjunct with the next consonant."
+            },
+            {
+              "kind": "speech",
+              "text": "Worked through: क + ◌् ((vowel killer)) = क् — k."
+            },
+            {
+              "kind": "speech",
+              "text": "You already say these, and every one of them has ◌् ((vowel killer)) somewhere inside it:"
             },
             {
               "kind": "speech",
@@ -545,11 +553,11 @@
             },
             {
               "kind": "speech",
-              "text": "धन्यवादः — thank you (dhanyavādaḥ)."
+              "text": "स्वागतम् svāgatam — welcome (lit. \"well come\") (svāgatam)."
             },
             {
               "kind": "speech",
-              "text": "स्वागतम् svāgatam — welcome (lit. \"well come\") (svāgatam)."
+              "text": "आम् / न ām / na — yes / no (ām / na)."
             }
           ]
         },
@@ -560,7 +568,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ◌् (virama) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Put your pen on ◌् ((vowel killer)) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
@@ -582,7 +590,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at these words, and find ◌् (virama) in the ones that have it",
+              "instruction": "at these words, and find ◌् ((vowel killer)) in the ones that have it",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
@@ -590,12 +598,12 @@
             },
             {
               "kind": "speech",
-              "text": "नमस्ते, नमस्कारः, —."
+              "text": "नमस्ते, नमस्कारः, नाम."
             },
             {
               "kind": "prompt",
               "action": "TRACE",
-              "instruction": "◌् (virama) three times, and each time say what it does: it kills the built-in a",
+              "instruction": "◌् ((vowel killer)) three times, and each time say what it does: it kills the built-in a",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -604,7 +612,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "back at any page of this chapter and find ◌् (virama) once more",
+              "instruction": "back at any page of this chapter and find ◌् ((vowel killer)) once more",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
@@ -625,7 +633,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which character is this — ◌् (virama)? What does it do to the consonant it sits on? (Takes away the built-in a.) Name one word you already say that contains it."
+              "text": "Which character is this — ◌् ((vowel killer))? What does it do to the consonant it sits on? (Takes away the built-in a.) Name one word you already say that contains it."
             }
           ]
         }

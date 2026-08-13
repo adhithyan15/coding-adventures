@@ -50,7 +50,7 @@ You already say these, and every one of them has ◌్ somewhere inside it:
 - **నమస్కారం** *namaskāram* — hello / greetings (namaskāram — "a making of a bow")
 - **ధన్యవాదములు** *dhanyavādamulu* — thank you (dhanyavādamulu — "utterances of 'worthy'")
 - **నువ్వు / మీరు** *nuvvu / mīru* — you (familiar / respectful)
-- **మీరు ఎలా ఉన్నారు?** — how are you? (respectful)
+- **వెళ్ళు** *veḷḷu* — to go (and వచ్చు, to come)
 
 ## Writing: ◌్ — copy what you see
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-05] -->

@@ -45,12 +45,18 @@ for pages without knowing which mark on the page it was.
 
 It is a **consonant**, and in this script a consonant is never bare: it comes with an *a* already in it. So it is not *n*, it is **na**.
 
+What it is made of:
+
+- a left bowl
+- right spine
+- top bar
+
 You already say these, and every one of them has न somewhere inside it:
 
 - **नमस्ते** *namaste* — hello (lit. "a bow to you") (namaste)
 - **नमस्कारः** *namaskāraḥ* — hello (lit. "the making of a bow") (namaskāraḥ)
-- **धन्यवादः** — thank you (dhanyavādaḥ)
 - **आम् / न** *ām / na* — yes / no (ām / na)
+- **नाम** *nāma* — name
 
 ## Writing: न — copy what you see
 <!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-02] -->

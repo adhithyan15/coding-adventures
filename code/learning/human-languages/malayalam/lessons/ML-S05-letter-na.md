@@ -50,7 +50,7 @@ You already say these, and every one of them has ന somewhere inside it:
 - **നമസ്കാരം** *namaskāram* — hello / greetings (namaskāram — "a making of a bow")
 - **നന്ദി** *nandi* — thank you
 - **എന്റെ** *enṟe* — my
-- **എന്റെ പേര് … ആണ്** — my name is…
+- **സന്തോഷം** *santōṣam* — joy / pleased to meet you
 
 ## Writing: ന — copy what you see
 <!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-05] -->
@@ -70,7 +70,7 @@ and larger than it is printed.
 [PAUSE 1s]
 - [YOU LOOK: at these words, and find ന in the ones that have it]
 
-> നമസ്കാരം  ·  നന്ദി  ·  അതെ
+> നമസ്കാരം  ·  നന്ദി  ·  ഇല്ല
 
 - [YOU TRACE: ന three times, saying *na* as you finish each one]
 - [YOU LOOK: back at any page of this chapter and find ന once more]

@@ -8,7 +8,7 @@ chapter: 12
 type: writing
 headword: "्"
 gloss: the single character ् — recognised inside words you already say
-romanization: "virama"
+romanization: "(vowel killer)"
 prerequisites: [SA-S04-letter-aa]
 sounds: []
 roots: []
@@ -45,12 +45,16 @@ for pages without knowing which mark on the page it was.
 
 It is a **vowel-killer**. Every consonant in this script arrives with an *a* already inside it — that is what an abugida is. This mark takes the *a* back, leaving the bare consonant. It is how the script writes two consonants in a row.
 
+Where it sits: a stroke below that removes the inherent 'a' and forms a conjunct with the next consonant.
+
+Worked through: **क** + **◌्** = **क्** — *k*.
+
 You already say these, and every one of them has ◌् somewhere inside it:
 
 - **नमस्ते** *namaste* — hello (lit. "a bow to you") (namaste)
 - **नमस्कारः** *namaskāraḥ* — hello (lit. "the making of a bow") (namaskāraḥ)
-- **धन्यवादः** — thank you (dhanyavādaḥ)
 - **स्वागतम्** *svāgatam* — welcome (lit. "well come") (svāgatam)
+- **आम् / न** *ām / na* — yes / no (ām / na)
 
 ## Writing: ◌् — copy what you see
 <!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-05] -->
@@ -70,7 +74,7 @@ and larger than it is printed.
 [PAUSE 1s]
 - [YOU LOOK: at these words, and find ◌् in the ones that have it]
 
-> नमस्ते  ·  नमस्कारः  ·  —
+> नमस्ते  ·  नमस्कारः  ·  नाम
 
 - [YOU TRACE: ◌् three times, and each time say what it does: **it kills the built-in *a***]
 - [YOU LOOK: back at any page of this chapter and find ◌् once more]

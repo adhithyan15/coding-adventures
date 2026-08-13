@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "Family",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:8c9271004fa507db",
+  "sourceHash": "fnv1a64:b495063311fbd22b",
   "lessons": [
     {
       "id": "ML-C12-kudumbam",
@@ -154,7 +154,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0f5a27f5ff191965",
+      "sourceHash": "fnv1a64:7ec56467aa49eef5",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -222,11 +222,11 @@
             },
             {
               "kind": "speech",
-              "text": "പോകുക — to go (and വരിക, to come)."
+              "text": "താമസിക്കുക tāmasikkuka — to live, to stay."
             },
             {
               "kind": "speech",
-              "text": "വീണ്ടും കാണാം — we'll meet again."
+              "text": "ജോലി ചെയ്യുക jōli ceyyuka — to work (lit. \"work-do\")."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "What You'd Ask For",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:a4c02c2e5a2a18ad",
+  "sourceHash": "fnv1a64:1b04bd86cfeafdce",
   "lessons": [
     {
       "id": "SA-C10-paniyam",
@@ -496,7 +496,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:28108f7365b86029",
+      "sourceHash": "fnv1a64:f77ce3e778901bc7",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -552,6 +552,26 @@
             },
             {
               "kind": "speech",
+              "text": "What it is made of:"
+            },
+            {
+              "kind": "speech",
+              "text": "a joined upper-and-lower left body."
+            },
+            {
+              "kind": "speech",
+              "text": "a middle shoulder."
+            },
+            {
+              "kind": "speech",
+              "text": "a right vertical stem."
+            },
+            {
+              "kind": "speech",
+              "text": "the top shirorekhā."
+            },
+            {
+              "kind": "speech",
               "text": "You already say these, and every one of them has अ somewhere inside it:"
             },
             {
@@ -560,30 +580,50 @@
             },
             {
               "kind": "speech",
-              "text": "मम नाम … अस्ति — my name is…"
-            },
-            {
-              "kind": "speech",
-              "text": "भवान् कथम् अस्ति? — how are you? (respectful)."
-            },
-            {
-              "kind": "speech",
               "text": "अहम् aham — I."
+            },
+            {
+              "kind": "speech",
+              "text": "अहं संस्कृतं वदामि ahaṁ saṁskṛtaṁ vadāmi — I speak Sanskrit."
+            },
+            {
+              "kind": "speech",
+              "text": "अस्ति, भवति asti, bhavati — is, and becomes."
             }
           ]
         },
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: अ — copy what you see",
+          "title": "Writing: अ",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on अ and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "1. curve around the upper bowl, then continue down and around the lower bowl without lifting."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "2. lift and sweep the middle shoulder right."
+            },
+            {
+              "kind": "speech",
+              "text": "3. lift and draw the right stem top-to-bottom."
+            },
+            {
+              "kind": "speech",
+              "text": "4. lift and draw the top shirorekhā left-to-right."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 3. The pen comes up 3 times and no more."
+            },
+            {
+              "kind": "speech",
+              "text": "Verified modern printed teaching form; other Devanagari traditions split the body into more strokes."
+            },
+            {
+              "kind": "speech",
+              "text": "This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Saurmandal, ‘Devanagari अ stroke order.svg’, frames 1–4, Wikimedia Commons, 5 August 2023."
             }
           ]
         },
@@ -609,7 +649,7 @@
             },
             {
               "kind": "speech",
-              "text": "अस्ति, मम नाम … अस्ति, नमस्ते."
+              "text": "अस्ति, अहम्, नमस्ते."
             },
             {
               "kind": "prompt",

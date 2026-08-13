@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "Please",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:3c20eb659236e4d7",
+  "sourceHash": "fnv1a64:8c3c0fa3d4df9a20",
   "lessons": [
     {
       "id": "TE-C08-dayachesi",
@@ -198,7 +198,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:fa98d6d6d8541739",
+      "sourceHash": "fnv1a64:f75cb0f93614c863",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -270,7 +270,7 @@
             },
             {
               "kind": "speech",
-              "text": "-కు -ku — the dative suffix -ku, 'to / for' — and the idea of stacking."
+              "text": "నాకు తెలుగు వచ్చు nāku telugu vaccu — 'I know Telugu'."
             }
           ]
         },

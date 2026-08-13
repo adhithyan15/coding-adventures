@@ -100,6 +100,7 @@ meaning, because every word in it is one the reader has already met.
 import json
 import os
 import re
+import unicodedata
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 HL = os.path.normpath(os.path.join(HERE, "..", ".."))
@@ -112,6 +113,7 @@ TRACKS = [
     dict(track="kannada", prefix="KA", script="kannada", ledger="kannada"),
     dict(track="malayalam", prefix="ML", script="malayalam", ledger="malayalam"),
     dict(track="sanskrit", prefix="SA", script="devanagari", ledger="devanagari"),
+    dict(track="hindi", prefix="HI", script="devanagari", ledger="devanagari"),
 ]
 
 CHAPTERS = [6, 7, 8, 9, 10, 11, 12, 13]
@@ -279,11 +281,20 @@ def build(cfg):
     L = json.load(open(os.path.join(HL, f"data/scripts/{cfg['ledger']}-ledger.json"), encoding="utf-8"))
     lessons = load_lessons(cfg["track"])
 
-    sounds = {}
+    # Each script file records a different amount, and a segment shows whatever
+    # its script actually has rather than the least common denominator. Devanagari
+    # carries components, cited stroke orders for nine letters, and a worked
+    # base+sign example for every mark; the three Dravidian files carry a sound
+    # and nothing else. Both are read the same way here and the renderer prints
+    # what it finds.
+    data = {}
     for l in S["letters"]:
-        sounds.setdefault(l["glyph"], l.get("sound", ""))
+        data.setdefault(l["glyph"], l)
     for l in S.get("independentVowels", []):
-        sounds.setdefault(l["glyph"], l.get("sound", ""))
+        data.setdefault(l["glyph"], l)
+    for m in S.get("marks", []):
+        data.setdefault(m["mark"], dict(m, glyph=m["mark"]))
+    sounds = {g: d.get("sound", "") for g, d in data.items()}
 
     # A slot per chapter: opener's sequence + 5, and the opener's spine node, so
     # the segment sits inside the chapter it belongs to rather than dangling.
@@ -358,12 +369,118 @@ def build(cfg):
             if "VIRAMA" in e["unicodeName"].upper() or "ANUSVARA" in e["unicodeName"].upper() \
                or "CHANDRABINDU" in e["unicodeName"].upper() or "CHANDRAKKALA" in e["unicodeName"].upper():
                 sound = ""
-        known = [r for r in lessons if r["seq"] < slot["seq"] and g in r["headword"]][:4]
-        others = [r for r in lessons if r["seq"] < slot["seq"] and g not in r["headword"] and r["headword"]]
+        # Words the reader has already met that contain this character -- and
+        # ones they can SAY, preferred. A headword with no `romanization` is
+        # printed in a script the reader is only now learning to decode, so it
+        # cannot be read aloud and makes a poor example to recognise a character
+        # in. Malayalam's first page of segments showed the cost: two of four
+        # bullets were script the reader had no way to pronounce. Ones that carry
+        # a romanization come first; ones that do not still fill the list rather
+        # than leaving it short, because a word they can see is better than a gap.
+        seen = [r for r in lessons
+                if r["seq"] < slot["seq"] and g in r["headword"] and is_a_word(r["headword"], g)]
+        known = ([r for r in seen if r["roman"]] + [r for r in seen if not r["roman"]])[:4]
+        known.sort(key=lambda r: r["seq"])
+        others = [r for r in lessons
+                  if r["seq"] < slot["seq"] and g not in r["headword"] and r["roman"]
+                  and is_a_word(r["headword"], g)]
         out.append(dict(n=n, entry=e, glyph=g, sound=sound, slug=slug_of(e, S["name"]),
+                        record=data.get(g, {}),
                         known=known, distractor=others[0] if others else None, **slot))
     return dict(cfg=cfg, script=S, ledger=L, segments=out)
 
+
+def is_a_word(headword, glyph):
+    """Is this headword a WORD the reader can be shown a character inside?
+
+    Two things in these corpora are headwords and are not words, and both landed
+    on the page before this check existed. A lesson may teach the character
+    itself -- Hindi's inherent-vowel lesson has the headword अ -- and listing अ as
+    a word containing अ is circular. And a lesson may teach a SET of marks, with a
+    headword like "ा, े", which is a list rather than something anyone says.
+
+    So: at least two Unicode LETTERS, counting neither combining marks nor
+    punctuation, and not the character being taught. A vowel sign is category Mn
+    or Mc and a comma is Po, so both non-words fall out and every real word stays.
+    """
+    if headword.strip() == glyph:
+        return False
+    return sum(1 for c in headword if unicodedata.category(c).startswith("L")) >= 2
+
+def shape_and_example(seg, show):
+    """What the script file records about this character beyond its sound.
+
+    Devanagari lists a component breakdown for every letter and, for every mark,
+    both where it attaches and a worked base+sign+result example. The three
+    Dravidian files list neither -- their `components` entry is the syllable
+    restating itself -- so this returns nothing for them and the segment is
+    shorter rather than padded with something that was not recorded.
+
+    A worked example is the best thing a vowel-sign lesson can show, because a
+    sign has no independent existence: seeing न + ा = ना is the whole idea, and
+    the base, the combination and the resulting sound are all in the file.
+    """
+    rec = seg["record"]
+    out = []
+    parts = [c for c in rec.get("components", []) if c.strip() and seg["glyph"] not in c]
+    if parts:
+        out.append("What it is made of:\n\n" + "\n".join(f"- {c}" for c in parts))
+    where = rec.get("attachesAs", "").strip()
+    if where:
+        out.append(f"Where it sits: {where}.")
+    ex = rec.get("example") or {}
+    if ex.get("base") and ex.get("combined"):
+        out.append(f"Worked through: **{ex['base']}** + **{show}** = **{ex['combined']}**"
+                   + (f" — *{ex['sound']}*." if ex.get("sound") else "."))
+    return ("\n\n".join(out) + "\n\n") if out else ""
+
+def writing_block(seg, show):
+    """The section that asks for the pen, in one of its two honest forms.
+
+    A CITED stroke order gets the real thing: the numbered path, the pen-lift
+    count, and the citation, exactly as Tamil's drizzle prints them. Everything
+    in it is read from the script file and nothing is inferred, because a stroke
+    order is the one claim in this book that a learner cannot check and will
+    drill for years if it is wrong.
+
+    No citation gets tracing, which needs no source: the reader copies the shape
+    in front of them. The book says so rather than staying quiet about it, so a
+    reader who later learns the proper order is not unlearning something this
+    book told them.
+
+    Nine of Devanagari's twenty-eight letters are cited, which is why Hindi and
+    Sanskrit print both forms in the same chapter run and the three Dravidian
+    tracks print only the second.
+    """
+    rec = seg["record"]
+    steps = rec.get("strokeOrder") or []
+    src = rec.get("strokeOrderSource")
+    if not (steps and src):
+        return f"## Writing: {show} — copy what you see", f"""Put your pen on {show} and follow its line. Copy the shape you can see — slowly,
+and larger than it is printed.
+
+> This book does not yet tell you **where to start the character or which way to
+> travel**. That is a real thing, taught with real variation from school to
+> school, and it is not written down here until it can be written down with a
+> source. Copying what is in front of you needs no such source, and it is how the
+> shape gets into your hand in the meantime."""
+
+    lifts = rec.get("penLifts", 0)
+    # Bulleted with a bold number rather than a Markdown ordered list: the book
+    # renderer has no `enumerate` conversion, so "1. ... 2. ..." collapses into a
+    # single run-on paragraph -- and for a stroke order the steps ARE the
+    # instruction, which a reader cannot follow written as prose.
+    body = "\n".join(f"- **{i}.** {t}" for i, t in enumerate(steps, 1))
+    lift_line = ("The pen never leaves the paper." if lifts == 0 else
+                 f"The pen comes up {lifts} time" + ("" if lifts == 1 else "s") + " and no more.")
+    note = rec.get("strokeOrderNote", "").strip()
+    caveat = f"\n> {note[0].upper() + note[1:]}.\n" if note else "\n"
+    return f"## Writing: {show}", f"""{body}
+
+**Pen lifts: {lifts}.** {lift_line}
+{caveat}
+> This is one attested teaching order and not a national standard — handwriting
+> here is taught with school-to-school variation. Source: {src['citation']}."""
 
 def render(cfg, script, seg, prev):
     g, n = seg["glyph"], seg["n"]
@@ -378,6 +495,8 @@ def render(cfg, script, seg, prev):
     v = voicing(seg["entry"], seg["sound"])
     show = shown(seg["entry"], g)
     note = kind_note(seg["entry"], seg["sound"], script["name"])
+    writing_heading, writing_body = writing_block(seg, show)
+    shape = shape_and_example(seg, show)
     # A soundless mark has no romanization to give, so the field carries the
     # mark's NAME instead -- which is what the narration export reads aloud, and
     # "virama" is the right thing to hear where a sound would be silence.
@@ -446,21 +565,14 @@ for pages without knowing which mark on the page it was.
 
 It is {note}
 
-You already say these, and every one of them has {show} somewhere inside it:
+{shape}You already say these, and every one of them has {show} somewhere inside it:
 
 {known_lines}
 
-## Writing: {show} — copy what you see
+{writing_heading}
 <!-- hl-knowledge: introduces=[]; assesses=[{atom}] -->
 
-Put your pen on {show} and follow its line. Copy the shape you can see — slowly,
-and larger than it is printed.
-
-> This book does not yet tell you **where to start the character or which way to
-> travel**. That is a real thing, taught with real variation from school to
-> school, and it is not written down here until it can be written down with a
-> source. Copying what is in front of you needs no such source, and it is how the
-> shape gets into your hand in the meantime.
+{writing_body}
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[{atom}] -->

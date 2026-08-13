@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "Days of the Week",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:e61e0073683cfc7d",
+  "sourceHash": "fnv1a64:ad6a1df3760d0717",
   "lessons": [
     {
       "id": "TE-C10-vaaram",
@@ -150,7 +150,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0d3f701a193fa239",
+      "sourceHash": "fnv1a64:14380cb777114169",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -222,7 +222,7 @@
             },
             {
               "kind": "speech",
-              "text": "మీరు ఎలా ఉన్నారు? — how are you? (respectful)."
+              "text": "వెళ్ళు veḷḷu — to go (and వచ్చు, to come)."
             }
           ]
         },

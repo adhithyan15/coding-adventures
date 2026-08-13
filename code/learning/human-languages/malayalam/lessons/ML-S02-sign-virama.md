@@ -70,7 +70,7 @@ and larger than it is printed.
 [PAUSE 1s]
 - [YOU LOOK: at these words, and find ◌് in the ones that have it]
 
-> നമസ്കാരം  ·  നന്ദി  ·  അതെ
+> നമസ്കാരം  ·  നന്ദി  ·  ശരി
 
 - [YOU TRACE: ◌് three times, and each time say what it does: **it kills the built-in *a***]
 - [YOU LOOK: back at any page of this chapter and find ◌് once more]

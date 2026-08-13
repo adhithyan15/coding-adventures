@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "Taking, Asking, Helping, Loving",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:d3987c6eee47ed6f",
+  "sourceHash": "fnv1a64:044c1f02a1f489e1",
   "lessons": [
     {
       "id": "SA-C09-grhnati",
@@ -650,7 +650,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c2332331db082e86",
+      "sourceHash": "fnv1a64:1988525ae1e6f1f6",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -706,6 +706,22 @@
             },
             {
               "kind": "speech",
+              "text": "What it is made of:"
+            },
+            {
+              "kind": "speech",
+              "text": "a left bowl."
+            },
+            {
+              "kind": "speech",
+              "text": "right spine."
+            },
+            {
+              "kind": "speech",
+              "text": "top bar."
+            },
+            {
+              "kind": "speech",
               "text": "You already say these, and every one of them has न (na) somewhere inside it:"
             },
             {
@@ -718,11 +734,11 @@
             },
             {
               "kind": "speech",
-              "text": "धन्यवादः — thank you (dhanyavādaḥ)."
+              "text": "आम् / न ām / na — yes / no (ām / na)."
             },
             {
               "kind": "speech",
-              "text": "आम् / न ām / na — yes / no (ām / na)."
+              "text": "नाम nāma — name."
             }
           ]
         },

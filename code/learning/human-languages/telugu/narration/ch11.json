@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "Four Core Colours",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:a3bc77bd3db96b64",
+  "sourceHash": "fnv1a64:ff6f8f61cdda867e",
   "lessons": [
     {
       "id": "TE-C11-rangulu",
@@ -143,7 +143,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:60ac4f920c1cdbbf",
+      "sourceHash": "fnv1a64:91548121f1154ab7",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -215,7 +215,7 @@
             },
             {
               "kind": "speech",
-              "text": "నా పేరు … — my name is… (with no \"is\")."
+              "text": "నువ్వు / మీరు nuvvu / mīru — you (familiar / respectful)."
             }
           ]
         },

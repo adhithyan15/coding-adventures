@@ -49,8 +49,8 @@ You already say these, and every one of them has ◌ು somewhere inside it:
 
 - **ಹೌದು** *haudu* — yes (haudu)
 - **ಹೆಸರು** *hesaru* — name
-- **ನನ್ನ ಹೆಸರು …** — my name is… (with no "is")
 - **ನೀನು / ನೀವು** *nīnu / nīvu* — you (familiar / respectful)
+- **ಏನು** *ēnu* — what
 
 ## Writing: ◌ು — copy what you see
 <!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-02] -->

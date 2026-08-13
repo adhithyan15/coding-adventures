@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "Sorry",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:a7d05d63d06faa95",
+  "sourceHash": "fnv1a64:43ac10d8ecd54283",
   "lessons": [
     {
       "id": "TE-C09-kshaminchandi",
@@ -170,7 +170,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c1e0b10bd6aa56d1",
+      "sourceHash": "fnv1a64:59654230abc83d43",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -234,15 +234,15 @@
             },
             {
               "kind": "speech",
-              "text": "సంతోషం — joy / pleased to meet you."
-            },
-            {
-              "kind": "speech",
               "text": "రేపు కలుద్దాం rēpu kaluddām — see you tomorrow."
             },
             {
               "kind": "speech",
               "text": "మళ్ళీ కలుద్దాం maḷḷī kaluddām — we'll meet again."
+            },
+            {
+              "kind": "speech",
+              "text": "ఉండు uṇḍu — to be, to stay, to live."
             }
           ]
         },
@@ -283,7 +283,7 @@
             },
             {
               "kind": "speech",
-              "text": "నమస్కారం, సంతోషం, ధన్యవాదములు."
+              "text": "నమస్కారం, రేపు కలుద్దాం, ధన్యవాదములు."
             },
             {
               "kind": "prompt",

@@ -3,6 +3,7 @@ schema_version: 2
 id: HI-W02-ka-ta-mouth-order
 spine_node: SPINE-MEET-GREET
 sequence: 90
+delivery: script
 chapter: 1
 type: writing
 headword: "क, त"

@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "Family",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f49f7a8c65a2a182",
+  "sourceHash": "fnv1a64:1f129fea54e33f0b",
   "lessons": [
     {
       "id": "TE-C12-kutumbam",
@@ -155,7 +155,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d583d9ea4c2700e4",
+      "sourceHash": "fnv1a64:be89faed7378f0b4",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -223,11 +223,11 @@
             },
             {
               "kind": "speech",
-              "text": "నా nā — my."
+              "text": "బాగా bāgā — well, fine — and the reply \"నేను బాగున్నాను."
             },
             {
               "kind": "speech",
-              "text": "నా పేరు … — my name is… (with no \"is\")."
+              "text": "పరవాలేదు paravālēdu — it's okay / no problem / you're welcome."
             }
           ]
         },

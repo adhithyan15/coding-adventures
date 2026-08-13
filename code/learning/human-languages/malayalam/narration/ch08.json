@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "Please",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:4853daf73733ca86",
+  "sourceHash": "fnv1a64:bb447960d213ee52",
   "lessons": [
     {
       "id": "ML-C08-dayavayi",
@@ -189,7 +189,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c6bfd1902b24b6d1",
+      "sourceHash": "fnv1a64:fe8de4647a60eff9",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -257,11 +257,11 @@
             },
             {
               "kind": "speech",
-              "text": "നീ / നിങ്ങൾ — you (familiar / respectful)."
+              "text": "സാരമില്ല sāramilla — it doesn't matter / no problem / you're welcome."
             },
             {
               "kind": "speech",
-              "text": "നിന്റെ പേര് എന്താണ്? — what's your name?"
+              "text": "പോയി വരാം pōyi varāṁ — goodbye (lit. \"I'll go and come back\")."
             }
           ]
         },

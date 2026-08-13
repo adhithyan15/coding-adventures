@@ -45,24 +45,34 @@ for pages without knowing which mark on the page it was.
 
 It is an **independent vowel** — the shape the vowel *a* takes when a word begins with it, rather than the sign it becomes inside a word.
 
+What it is made of:
+
+- a joined upper-and-lower left body
+- a middle shoulder
+- a right vertical stem
+- the top shirorekhā
+
 You already say these, and every one of them has अ somewhere inside it:
 
 - **अस्ति** *asti* — is
-- **मम नाम … अस्ति** — my name is…
-- **भवान् कथम् अस्ति?** — how are you? (respectful)
 - **अहम्** *aham* — I
+- **अहं संस्कृतं वदामि** *ahaṁ saṁskṛtaṁ vadāmi* — I speak Sanskrit
+- **अस्ति · भवति** *asti · bhavati* — is, and becomes
 
-## Writing: अ — copy what you see
+## Writing: अ
 <!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-03] -->
 
-Put your pen on अ and follow its line. Copy the shape you can see — slowly,
-and larger than it is printed.
+- **1.** curve around the upper bowl, then continue down and around the lower bowl without lifting
+- **2.** lift and sweep the middle shoulder right
+- **3.** lift and draw the right stem top-to-bottom
+- **4.** lift and draw the top shirorekhā left-to-right
 
-> This book does not yet tell you **where to start the character or which way to
-> travel**. That is a real thing, taught with real variation from school to
-> school, and it is not written down here until it can be written down with a
-> source. Copying what is in front of you needs no such source, and it is how the
-> shape gets into your hand in the meantime.
+**Pen lifts: 3.** The pen comes up 3 times and no more.
+
+> Verified modern printed teaching form; other Devanagari traditions split the body into more strokes.
+
+> This is one attested teaching order and not a national standard — handwriting
+> here is taught with school-to-school variation. Source: Saurmandal, ‘Devanagari अ stroke order.svg’, frames 1–4, Wikimedia Commons, 5 August 2023.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-03] -->
@@ -70,7 +80,7 @@ and larger than it is printed.
 [PAUSE 1s]
 - [YOU LOOK: at these words, and find अ in the ones that have it]
 
-> अस्ति  ·  मम नाम … अस्ति  ·  नमस्ते
+> अस्ति  ·  अहम्  ·  नमस्ते
 
 - [YOU TRACE: अ three times, saying *a* as you finish each one]
 - [YOU LOOK: back at any page of this chapter and find अ once more]
