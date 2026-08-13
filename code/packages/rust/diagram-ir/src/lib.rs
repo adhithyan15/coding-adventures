@@ -1,6 +1,6 @@
 //! diagram-ir v0.42.0 - DG00/DG04 semantic IR
 
-pub const VERSION: &str = "0.55.0";
+pub const VERSION: &str = "0.56.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramDirection {
@@ -762,6 +762,17 @@ pub enum RequirementRisk {
     High,
 }
 
+#[derive(Clone, Debug, PartialEq, Default)]
+pub enum RequirementKind {
+    #[default]
+    Requirement,
+    Functional,
+    Interface,
+    Performance,
+    Physical,
+    DesignConstraint,
+}
+
 #[derive(Clone, Debug, PartialEq)]
 pub enum RequirementVerifyMethod {
     Analysis,
@@ -772,6 +783,7 @@ pub enum RequirementVerifyMethod {
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub struct RequirementMetadata {
+    pub kind: RequirementKind,
     pub external_id: Option<String>,
     pub text: Option<String>,
     pub risk: Option<RequirementRisk>,
@@ -1237,7 +1249,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.55.0");
+        assert_eq!(VERSION, "0.56.0");
     }
     #[test]
     fn default_direction_is_tb() {

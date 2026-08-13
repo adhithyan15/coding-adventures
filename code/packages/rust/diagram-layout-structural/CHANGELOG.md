@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.0
+
+- Carry typed Requirement definition kinds through structural layout inputs.
+
 ## 0.4.0
 
 - Accept typed structural node metadata without changing resolved geometry.

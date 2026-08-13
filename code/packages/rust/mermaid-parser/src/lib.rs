@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.101.0";
+pub const VERSION: &str = "0.102.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -495,7 +495,7 @@ use diagram_ir::{
     Axis, AxisKind, ChartDiagram, ChartKind, ChartOrientation, ChartSeries, Compartment,
     CompartmentKind, GanttDiagram, GanttSection, GanttTask, GitBranch, GitCommitType, GitDiagram,
     GitEvent, JourneyConfig, JourneyDiagram, JourneySection, JourneyTask, PieSlice, QuadrantConfig, QuadrantPoint,
-    RelKind, RequirementElementMetadata, RequirementMetadata, RequirementRisk,
+    RelKind, RequirementElementMetadata, RequirementKind, RequirementMetadata, RequirementRisk,
     RequirementVerifyMethod, SankeyFlow, SankeyNode, SequenceArrowhead, SequenceBlockKind,
     SequenceCentralConnection, SequenceDiagram, SequenceEvent, SequenceLineStyle, SequenceLink,
     SequenceNotePlacement, SequenceParticipant, SequenceParticipantGroup, SequenceParticipantKind,
@@ -775,6 +775,9 @@ pub fn parse_requirement_diagram(source: &str) -> Result<StructuralDiagram, Pars
                 let name = unquote_requirement_value(name);
                 let mut fields = Vec::new();
                 let mut requirement_metadata = RequirementMetadata::default();
+                if !is_element {
+                    requirement_metadata.kind = parse_requirement_kind(kind);
+                }
                 let mut element_metadata = RequirementElementMetadata::default();
                 cursor.skip_terminators();
                 while token_name(cursor.current()) != "RBRACE" {
@@ -868,6 +871,18 @@ fn parse_requirement_risk(value: &str) -> RequirementRisk {
         "medium" => RequirementRisk::Medium,
         "high" => RequirementRisk::High,
         _ => unreachable!("requirement grammar accepted an unknown risk"),
+    }
+}
+
+fn parse_requirement_kind(value: &str) -> RequirementKind {
+    match value {
+        "requirement" => RequirementKind::Requirement,
+        "functionalRequirement" => RequirementKind::Functional,
+        "interfaceRequirement" => RequirementKind::Interface,
+        "performanceRequirement" => RequirementKind::Performance,
+        "physicalRequirement" => RequirementKind::Physical,
+        "designConstraint" => RequirementKind::DesignConstraint,
+        _ => unreachable!("requirement grammar accepted an unknown definition kind"),
     }
 }
 
@@ -6856,7 +6871,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.101.0");
+        assert_eq!(crate::VERSION, "0.102.0");
     }
 
     #[test]
