@@ -1,5 +1,42 @@
 # Changelog — iir-builtin-lowering
 
+## 0.38.0 - 2026-08-13 - unbox a tagged parameter before doing arithmetic on it
+
+The function boundary declares every lisp parameter `ref<any>` and callers box
+for it — but a body that then reads the parameter directly in an `add`/`cmp_*`/
+bitwise op was operating on the TAG:
+
+```
+fn __lambda_0(x: ref<any>)
+    add _r2.raw1 = x + 1   i64      <- x is boxed; this adds 1 to (41 << 3)
+```
+
+`((lambda (x) (+ x 1)) 41)` returned 329 instead of 42 on every managed backend.
+That is why the JVM and CIL pipelines refused `alloc_closure` outright rather
+than lower it: the refusal was hiding a wrong answer.
+
+`unbox_machine_uses_of_tagged_params` now inserts `unbox %x.rawparam = %x : i64`
+at entry and rewrites only the machine-op operands to use it. Two properties
+make this safe:
+
+* **The signature does not change**, so every caller keeps boxing exactly as
+  before and no call site is touched. An earlier attempt retyped the PARAMETER
+  to a raw `i64` instead; security review showed that is unsound, because this
+  pass can insert a `box` (step 1 boxes any non-reference flowing into a
+  lisp-value position) but has no way to insert an `unbox` at a call site. A
+  forwarding wrapper `f(y) = g(y)`, or `(g (car p))`, would hand `g` a reference
+  with no conversion anywhere. Repairing the body cannot have that failure mode.
+* **The machine-op list is a positive list**, so an operation missing from it
+  keeps reading the tagged parameter — the pre-existing behaviour for that
+  shape, not a new miscompile. Reference uses (`field_load` bases, cons values,
+  `pair?` arguments) are never rewritten.
+
+Also collapses a **double box**: `lower_closures_to_heap` runs while the
+parameter is still bare `any` and boxes a capture it believes is a raw word.
+Once the parameter is `ref<any>` that is a second box over an already-tagged
+value, and the JVM rejected the capturing closure with `Register 0 contains
+wrong type`. Boxing a tagged value is never right, so it becomes a copy.
+
 ## 0.37.0 - 2026-08-13 - the passes no longer ask which language wrote the module
 
 `dyn_repr::is_lisp_language` — literally `language == "mccarthy-lisp"` — is
