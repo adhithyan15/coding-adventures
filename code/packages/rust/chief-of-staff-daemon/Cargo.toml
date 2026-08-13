@@ -51,6 +51,7 @@ smart-home-hue-pairing-service = { path = "../smart-home-hue-pairing-service" }
 smart-home-onvif-pairing-service = { path = "../smart-home-onvif-pairing-service" }
 smart-home-platform-http = { path = "../smart-home-platform-http" }
 smart-home-runtime = { path = "../smart-home-runtime" }
+smart-home-zoneminder-pairing-service = { path = "../smart-home-zoneminder-pairing-service" }
 transport-platform = { path = "../transport-platform" }
 coding_adventures_vault_sealed_store = { path = "../vault-sealed-store" }
 web-core = { path = "../web-core" }

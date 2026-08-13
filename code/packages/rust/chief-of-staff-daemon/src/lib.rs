@@ -14,6 +14,7 @@ use chief_of_staff_daemon_authority_provisioning::{
 use chief_of_staff_daemon_config::{
     parse_config, AxisPairingConfig, ChiefConfig, ConfigError, OnvifPairingConfig,
     SmartHomeListenerConfig, SmartHomeToolGrantConfig, SmartHomeToolGrantStatus,
+    ZoneMinderPairingConfig,
 };
 use chief_of_staff_daemon_credential::{load_or_create_credential, CredentialFileError};
 use chief_of_staff_daemon_keyring::{load_package_keyring, KeyringLoadError};
@@ -84,6 +85,11 @@ use smart_home_runtime::{
     MdnsDiscoveryRunAdapter, PairingSessionStatus, RuntimePairingSessionQuery,
     ScheduledDiscoveryWorker,
 };
+use smart_home_zoneminder_pairing_service::{
+    install_zoneminder_pairing_service_actor, NativeZoneMinderPairingVerifier,
+    OwnerOnlyZoneMinderCredentialInput, ZoneMinderPairingRequest,
+    ZoneMinderPairingServiceActorState, ZoneMinderPairingServiceError,
+};
 use std::convert::Infallible;
 use std::env;
 use std::ffi::OsString;
@@ -127,6 +133,10 @@ const AXIS_PAIRING_ACTOR_ID: &str = "chief-axis-pairing";
 const AXIS_PAIRING_SENDER_ID: &str = "chief-of-staff-daemon";
 const AXIS_PAIRING_TICK_INTERVAL_MS: u64 = 1_000;
 const AXIS_INTEGRATION_ID: &str = "axis_vapix";
+const ZONEMINDER_PAIRING_ACTOR_ID: &str = "chief-zoneminder-pairing";
+const ZONEMINDER_PAIRING_SENDER_ID: &str = "chief-of-staff-daemon";
+const ZONEMINDER_PAIRING_TICK_INTERVAL_MS: u64 = 1_000;
+const ZONEMINDER_INTEGRATION_ID: &str = "zoneminder";
 
 /// Stable payload-blind startup, serving, and teardown failure.
 #[derive(Debug)]
@@ -213,6 +223,20 @@ pub enum ChiefDaemonError {
     SmartHomeAxisPairingWorkerUnavailable,
     /// The Axis pairing worker thread panicked.
     SmartHomeAxisPairingWorkerPanicked,
+    /// The configured ZoneMinder pairing KEK file could not be loaded safely.
+    SmartHomeZoneMinderPairingSecret(SecretFileError),
+    /// The configured ZoneMinder pairing Vault could not initialize or unseal.
+    SmartHomeZoneMinderPairingVault(SealedStoreError),
+    /// The ZoneMinder pairing service could not recover or execute its transaction state.
+    SmartHomeZoneMinderPairing(ZoneMinderPairingServiceError),
+    /// The ZoneMinder pairing actor could not be installed or driven.
+    SmartHomeZoneMinderPairingActor(ActorError),
+    /// The production wall clock was unavailable to the ZoneMinder pairing worker.
+    SmartHomeZoneMinderPairingClock,
+    /// The operating system could not create the ZoneMinder pairing worker thread.
+    SmartHomeZoneMinderPairingWorkerUnavailable,
+    /// The ZoneMinder pairing worker thread panicked.
+    SmartHomeZoneMinderPairingWorkerPanicked,
     /// The local operator credential could not be loaded or created safely.
     Credential(CredentialFileError),
     /// Local bearer policy construction failed.
@@ -304,6 +328,25 @@ impl Display for ChiefDaemonError {
             }
             Self::SmartHomeAxisPairingWorkerPanicked => {
                 "chief daemon: Axis pairing worker panicked"
+            }
+            Self::SmartHomeZoneMinderPairingSecret(_) => {
+                "chief daemon: ZoneMinder pairing secret file failed"
+            }
+            Self::SmartHomeZoneMinderPairingVault(_) => {
+                "chief daemon: ZoneMinder pairing vault failed"
+            }
+            Self::SmartHomeZoneMinderPairing(_) => "chief daemon: ZoneMinder pairing failed",
+            Self::SmartHomeZoneMinderPairingActor(_) => {
+                "chief daemon: ZoneMinder pairing actor failed"
+            }
+            Self::SmartHomeZoneMinderPairingClock => {
+                "chief daemon: ZoneMinder pairing clock unavailable"
+            }
+            Self::SmartHomeZoneMinderPairingWorkerUnavailable => {
+                "chief daemon: ZoneMinder pairing worker unavailable"
+            }
+            Self::SmartHomeZoneMinderPairingWorkerPanicked => {
+                "chief daemon: ZoneMinder pairing worker panicked"
             }
             Self::Credential(_) => "chief daemon: operator credential failed",
             Self::Authentication(_) => "chief daemon: local authentication policy failed",
@@ -533,6 +576,21 @@ pub fn run(config: ChiefConfig, home: &Path) -> Result<(), ChiefDaemonError> {
                     .resolve(home)
                     .map_err(ChiefDaemonError::Config)?;
                 service.axis_pairing = Some(configure_axis_pairing_service(
+                    controller.clone(),
+                    &state_dir,
+                    &vault_dir,
+                    pairing,
+                    home,
+                    Arc::clone(&unix_clock),
+                )?);
+            }
+            if let Some(pairing) = listener.zoneminder_pairing() {
+                let vault_dir = config
+                    .vault()
+                    .storage_path()
+                    .resolve(home)
+                    .map_err(ChiefDaemonError::Config)?;
+                service.zoneminder_pairing = Some(configure_zoneminder_pairing_service(
                     controller,
                     &state_dir,
                     &vault_dir,
@@ -735,6 +793,7 @@ struct SmartHomeHttpService {
     hue_pairing: Option<ChiefHuePairingService>,
     onvif_pairing: Option<ChiefOnvifPairingService>,
     axis_pairing: Option<ChiefAxisPairingService>,
+    zoneminder_pairing: Option<ChiefZoneMinderPairingService>,
 }
 
 type ChiefHueDiscoveryState = DiscoveryServiceActorState<
@@ -787,6 +846,20 @@ struct ChiefAxisPairingService {
     bridge_id: smart_home_core::BridgeId,
 }
 
+type ChiefZoneMinderPairingState = ZoneMinderPairingServiceActorState<
+    OwnerOnlyZoneMinderCredentialInput,
+    NativeZoneMinderPairingVerifier,
+    FsStorageBackend,
+    FsStorageBackend,
+>;
+
+struct ChiefZoneMinderPairingService {
+    state: ChiefZoneMinderPairingState,
+    controller: SmartHomeControllerRuntime<FsStorageBackend>,
+    clock: Arc<dyn UnixTimeClock>,
+    bridge_id: smart_home_core::BridgeId,
+}
+
 #[derive(Debug, Default)]
 struct ChiefHueMdnsRunAdapter;
 
@@ -829,6 +902,7 @@ fn compose_smart_home_http_service(
         hue_pairing: None,
         onvif_pairing: None,
         axis_pairing: None,
+        zoneminder_pairing: None,
     })
 }
 
@@ -1013,6 +1087,76 @@ fn configure_axis_pairing_service(
     )
     .map_err(ChiefDaemonError::SmartHomeAxisPairing)?;
     Ok(ChiefAxisPairingService {
+        state,
+        controller,
+        clock,
+        bridge_id,
+    })
+}
+
+fn configure_zoneminder_pairing_service(
+    controller: SmartHomeControllerRuntime<FsStorageBackend>,
+    state_dir: &Path,
+    vault_dir: &Path,
+    config: &ZoneMinderPairingConfig,
+    home: &Path,
+    clock: Arc<dyn UnixTimeClock>,
+) -> Result<ChiefZoneMinderPairingService, ChiefDaemonError> {
+    let vault_backend: Arc<dyn StorageBackend> =
+        Arc::new(FsStorageBackend::new(vault_dir.to_path_buf()));
+    vault_backend
+        .initialize()
+        .map_err(ChiefDaemonError::Storage)?;
+    let vault = Arc::new(SealedStore::new(vault_backend));
+    let kek_path = config
+        .kek_path()
+        .resolve(home)
+        .map_err(ChiefDaemonError::Config)?;
+    let kek = read_owner_only_secret(&kek_path, SMART_HOME_PAIRING_KEK_BYTES)
+        .map_err(ChiefDaemonError::SmartHomeZoneMinderPairingSecret)?;
+    let kek: &[u8; SMART_HOME_PAIRING_KEK_BYTES] = kek.as_slice().try_into().map_err(|_| {
+        ChiefDaemonError::SmartHomeZoneMinderPairingSecret(SecretFileError::InvalidLength)
+    })?;
+    if vault
+        .status()
+        .map_err(ChiefDaemonError::SmartHomeZoneMinderPairingVault)?
+        .initialized
+    {
+        vault
+            .unseal_with_kek(kek)
+            .map_err(ChiefDaemonError::SmartHomeZoneMinderPairingVault)?;
+    } else {
+        vault
+            .init_with_kek(kek)
+            .map_err(ChiefDaemonError::SmartHomeZoneMinderPairingVault)?;
+    }
+    let bridge_id = smart_home_core::BridgeId::new(config.bridge_id()).map_err(|error| {
+        ChiefDaemonError::SmartHomeZoneMinderPairing(ZoneMinderPairingServiceError::InvalidRequest(
+            error.to_string(),
+        ))
+    })?;
+    let credential_input = OwnerOnlyZoneMinderCredentialInput::new(
+        bridge_id.clone(),
+        config
+            .username_path()
+            .resolve(home)
+            .map_err(ChiefDaemonError::Config)?,
+        config.username_length(),
+        config
+            .password_path()
+            .resolve(home)
+            .map_err(ChiefDaemonError::Config)?,
+        config.password_length(),
+    );
+    let state = ZoneMinderPairingServiceActorState::restore(
+        FsStorageBackend::new(state_dir),
+        vault,
+        controller.clone(),
+        credential_input,
+        NativeZoneMinderPairingVerifier,
+    )
+    .map_err(ChiefDaemonError::SmartHomeZoneMinderPairing)?;
+    Ok(ChiefZoneMinderPairingService {
         state,
         controller,
         clock,
@@ -1636,6 +1780,152 @@ fn drive_axis_pairing_tick(
     Ok(())
 }
 
+struct OwnedZoneMinderPairingWorker {
+    stop: Arc<AtomicBool>,
+    thread: Option<JoinHandle<Result<(), ChiefDaemonError>>>,
+}
+
+impl OwnedZoneMinderPairingWorker {
+    fn start(
+        service: ChiefZoneMinderPairingService,
+        on_failure: Arc<dyn Fn() + Send + Sync>,
+    ) -> Result<Self, ChiefDaemonError> {
+        Self::start_with_interval(
+            service,
+            on_failure,
+            Duration::from_millis(ZONEMINDER_PAIRING_TICK_INTERVAL_MS),
+        )
+    }
+
+    fn start_with_interval(
+        service: ChiefZoneMinderPairingService,
+        on_failure: Arc<dyn Fn() + Send + Sync>,
+        tick_interval: Duration,
+    ) -> Result<Self, ChiefDaemonError> {
+        let stop = Arc::new(AtomicBool::new(false));
+        let worker_stop = Arc::clone(&stop);
+        let (startup_sender, startup_receiver) = std::sync::mpsc::sync_channel(0);
+        let thread = thread::Builder::new()
+            .name("chief-zoneminder-pairing".to_string())
+            .spawn(move || {
+                let ChiefZoneMinderPairingService {
+                    state,
+                    controller,
+                    clock,
+                    bridge_id,
+                } = service;
+                let mut system = ActorSystem::new();
+                if let Err(error) = install_zoneminder_pairing_service_actor(
+                    &mut system,
+                    ZONEMINDER_PAIRING_ACTOR_ID,
+                    state,
+                ) {
+                    let _ = startup_sender.send(Err(error));
+                    return Ok(());
+                }
+                if startup_sender.send(Ok(())).is_err() {
+                    return Ok(());
+                }
+                while !worker_stop.load(Ordering::Acquire) {
+                    thread::park_timeout(tick_interval);
+                    if worker_stop.load(Ordering::Acquire) {
+                        break;
+                    }
+                    if let Err(error) = drive_zoneminder_pairing_tick(
+                        &mut system,
+                        &controller,
+                        clock.as_ref(),
+                        &bridge_id,
+                    ) {
+                        on_failure();
+                        return Err(error);
+                    }
+                }
+                Ok(())
+            })
+            .map_err(|_| ChiefDaemonError::SmartHomeZoneMinderPairingWorkerUnavailable)?;
+        match startup_receiver.recv() {
+            Ok(Ok(())) => {}
+            Ok(Err(error)) => {
+                let _ = thread.join();
+                return Err(ChiefDaemonError::SmartHomeZoneMinderPairingActor(error));
+            }
+            Err(_) => {
+                let _ = thread.join();
+                return Err(ChiefDaemonError::SmartHomeZoneMinderPairingWorkerUnavailable);
+            }
+        }
+        Ok(Self {
+            stop,
+            thread: Some(thread),
+        })
+    }
+
+    fn stop_and_join(&mut self) -> Result<(), ChiefDaemonError> {
+        self.stop.store(true, Ordering::Release);
+        let Some(thread) = self.thread.take() else {
+            return Ok(());
+        };
+        thread.thread().unpark();
+        thread
+            .join()
+            .map_err(|_| ChiefDaemonError::SmartHomeZoneMinderPairingWorkerPanicked)?
+    }
+}
+
+impl Drop for OwnedZoneMinderPairingWorker {
+    fn drop(&mut self) {
+        let _ = self.stop_and_join();
+    }
+}
+
+fn drive_zoneminder_pairing_tick(
+    system: &mut ActorSystem,
+    controller: &SmartHomeControllerRuntime<FsStorageBackend>,
+    clock: &dyn UnixTimeClock,
+    bridge_id: &smart_home_core::BridgeId,
+) -> Result<(), ChiefDaemonError> {
+    let now_ms = clock
+        .now_ms()
+        .ok_or(ChiefDaemonError::SmartHomeZoneMinderPairingClock)?;
+    let restored = controller
+        .durable_snapshot()
+        .map_err(ZoneMinderPairingServiceError::from)
+        .map_err(ChiefDaemonError::SmartHomeZoneMinderPairing)?
+        .ok_or(ChiefDaemonError::SmartHomeZoneMinderPairing(
+            ZoneMinderPairingServiceError::MissingDurableRuntime,
+        ))?;
+    let query = RuntimePairingSessionQuery::new()
+        .for_integration(smart_home_core::IntegrationId::trusted(
+            ZONEMINDER_INTEGRATION_ID,
+        ))
+        .with_status(PairingSessionStatus::PendingUserPresence);
+    let Some(session) = restored
+        .runtime
+        .query_pairing_sessions(&query)
+        .into_iter()
+        .find(|session| session.bridge_id == *bridge_id && !session.is_expired_at(now_ms))
+    else {
+        return Ok(());
+    };
+    let request = ZoneMinderPairingRequest::new(
+        session.session_id.clone(),
+        session.requested_by.clone(),
+        restored.revision,
+        now_ms,
+    );
+    let message = request
+        .into_message(ZONEMINDER_PAIRING_SENDER_ID)
+        .map_err(ChiefDaemonError::SmartHomeZoneMinderPairing)?;
+    system
+        .send(ZONEMINDER_PAIRING_ACTOR_ID, message)
+        .map_err(ChiefDaemonError::SmartHomeZoneMinderPairingActor)?;
+    system
+        .process_next(ZONEMINDER_PAIRING_ACTOR_ID)
+        .map_err(ChiefDaemonError::SmartHomeZoneMinderPairingActor)?;
+    Ok(())
+}
+
 fn compose_smart_home_http_runtime<B: StorageBackend + 'static>(
     config: &SmartHomeListenerConfig,
     controller: SmartHomeControllerRuntime<B>,
@@ -1920,34 +2210,42 @@ where
         schedule,
     )
     .map_err(ChiefDaemonError::Runtime)?;
-    let (mut smart_home_server, hue_discovery, hue_pairing, onvif_pairing, axis_pairing) =
-        match smart_home {
-            Some((platform, service)) => {
-                let SmartHomeHttpService {
-                    address,
-                    app,
-                    hue_discovery,
-                    hue_pairing,
-                    onvif_pairing,
-                    axis_pairing,
-                } = service;
-                let server = WebServer::bind(
-                    platform,
-                    BindAddress::Ip(address),
-                    HttpServerOptions::default(),
-                    app,
-                )
-                .map_err(ChiefDaemonError::SmartHomeHttp)?;
-                (
-                    Some(server),
-                    hue_discovery,
-                    hue_pairing,
-                    onvif_pairing,
-                    axis_pairing,
-                )
-            }
-            None => (None, None, None, None, None),
-        };
+    let (
+        mut smart_home_server,
+        hue_discovery,
+        hue_pairing,
+        onvif_pairing,
+        axis_pairing,
+        zoneminder_pairing,
+    ) = match smart_home {
+        Some((platform, service)) => {
+            let SmartHomeHttpService {
+                address,
+                app,
+                hue_discovery,
+                hue_pairing,
+                onvif_pairing,
+                axis_pairing,
+                zoneminder_pairing,
+            } = service;
+            let server = WebServer::bind(
+                platform,
+                BindAddress::Ip(address),
+                HttpServerOptions::default(),
+                app,
+            )
+            .map_err(ChiefDaemonError::SmartHomeHttp)?;
+            (
+                Some(server),
+                hue_discovery,
+                hue_pairing,
+                onvif_pairing,
+                axis_pairing,
+                zoneminder_pairing,
+            )
+        }
+        None => (None, None, None, None, None, None),
+    };
     let daemon_stop = runtime.stop_handle();
     let smart_home_stop = smart_home_server.as_ref().map(WebServer::stop_handle);
     let mut discovery_worker = hue_discovery
@@ -2002,6 +2300,19 @@ where
             OwnedAxisPairingWorker::start(service, on_failure)
         })
         .transpose()?;
+    let mut zoneminder_pairing_worker = zoneminder_pairing
+        .map(|service| {
+            let failure_daemon_stop = daemon_stop.clone();
+            let failure_smart_home_stop = smart_home_stop.clone();
+            let on_failure: Arc<dyn Fn() + Send + Sync> = Arc::new(move || {
+                failure_daemon_stop.stop();
+                if let Some(stop) = failure_smart_home_stop.as_ref() {
+                    stop.stop();
+                }
+            });
+            OwnedZoneMinderPairingWorker::start(service, on_failure)
+        })
+        .transpose()?;
     let listener_daemon_stop = daemon_stop.clone();
     let listener_smart_home_stop = smart_home_stop.clone();
     let listener = match ShutdownListener::install(move |_| {
@@ -2026,6 +2337,9 @@ where
                 let _ = worker.stop_and_join();
             }
             if let Some(worker) = axis_pairing_worker.as_mut() {
+                let _ = worker.stop_and_join();
+            }
+            if let Some(worker) = zoneminder_pairing_worker.as_mut() {
                 let _ = worker.stop_and_join();
             }
             return Err(ChiefDaemonError::Shutdown(error));
@@ -2064,6 +2378,10 @@ where
         .as_mut()
         .map(OwnedAxisPairingWorker::stop_and_join)
         .transpose();
+    let zoneminder_pairing_result = zoneminder_pairing_worker
+        .as_mut()
+        .map(OwnedZoneMinderPairingWorker::stop_and_join)
+        .transpose();
     let smart_home_result = smart_home_thread
         .map(|thread| {
             thread
@@ -2085,6 +2403,7 @@ where
     pairing_result?;
     onvif_pairing_result?;
     axis_pairing_result?;
+    zoneminder_pairing_result?;
     smart_home_result?;
     shutdown_result.map_err(ChiefDaemonError::Shutdown)?;
     recovery_result
@@ -2250,6 +2569,10 @@ mod tests {
         OnvifCredentialInput, OnvifCredentialSecret, OnvifPairingVerifier, VerifiedOnvifCamera,
     };
     use smart_home_runtime::{RuntimePairingSession, RuntimePairingSessionId};
+    use smart_home_zoneminder_pairing_service::{
+        VerifiedZoneMinderNvr, ZoneMinderCredentialInput, ZoneMinderCredentialSecret,
+        ZoneMinderPairingVerifier,
+    };
     use std::convert::Infallible;
     use std::io::Write as _;
     use std::net::TcpListener;
@@ -3339,6 +3662,207 @@ hardware_key_timeout = 60
         assert!(matches!(
             worker.stop_and_join(),
             Err(ChiefDaemonError::SmartHomeAxisPairingClock)
+        ));
+        assert!(failure_seen.load(Ordering::Acquire));
+    }
+
+    struct TestZoneMinderCredentialInput;
+
+    impl ZoneMinderCredentialInput for TestZoneMinderCredentialInput {
+        fn take_for_bridge(
+            &mut self,
+            bridge: &Bridge,
+        ) -> Result<ZoneMinderCredentialSecret, ZoneMinderPairingServiceError> {
+            assert_eq!(bridge.bridge_id.as_str(), "zoneminder-nvr");
+            ZoneMinderCredentialSecret::new("chief-zoneminder-user", "chief-zoneminder-password")
+        }
+    }
+
+    struct TestZoneMinderVerifier;
+
+    impl ZoneMinderPairingVerifier for TestZoneMinderVerifier {
+        fn verify(
+            &mut self,
+            bridge: &Bridge,
+            _credentials: &ZoneMinderCredentialSecret,
+            expected_monitor_ids: &std::collections::BTreeSet<u64>,
+        ) -> Result<VerifiedZoneMinderNvr, ZoneMinderPairingServiceError> {
+            assert_eq!(
+                bridge.address.as_deref(),
+                Some("https://zoneminder-nvr.local")
+            );
+            assert!(expected_monitor_ids.is_empty());
+            Ok(VerifiedZoneMinderNvr { monitor_count: 1 })
+        }
+    }
+
+    #[test]
+    fn chief_zoneminder_pairing_tick_commits_only_the_bound_bridge_through_shared_controller() {
+        let directory = TestDir::new();
+        let state_dir = directory.0.join("smart-home-zoneminder-pairing-state");
+        let controller =
+            SmartHomeControllerRuntime::restore(FsStorageBackend::new(&state_dir)).unwrap();
+        controller
+            .transaction(1_500, |runtime, _| {
+                let principal = AgentId::trusted("operator:zoneminder-pairing");
+                for (bridge_id, session_id) in [
+                    ("zoneminder-other", "pairing-chief-zoneminder-other"),
+                    ("zoneminder-nvr", "pairing-chief-zoneminder-nvr"),
+                ] {
+                    let mut bridge = Bridge::new(
+                        BridgeId::trusted(bridge_id),
+                        IntegrationId::trusted(ZONEMINDER_INTEGRATION_ID),
+                        BridgeTransport::LanHttp,
+                    );
+                    let endpoint = format!("https://{bridge_id}.local");
+                    bridge.address = Some(endpoint.clone());
+                    bridge.health = Health::Unpaired;
+                    bridge.identifiers.push(
+                        ProtocolIdentifier::new(
+                            ProtocolFamily::Vendor("zoneminder_http_api".to_string()),
+                            "https_endpoint",
+                            endpoint,
+                        )
+                        .unwrap(),
+                    );
+                    runtime.upsert_bridge(bridge.clone()).unwrap();
+                    runtime
+                        .start_pairing_session(RuntimePairingSession::pending(
+                            RuntimePairingSessionId::trusted(session_id),
+                            &bridge,
+                            principal.clone(),
+                            1_500,
+                            30_000,
+                            vec![SmartHomeMetadata::new(
+                                "pairing.mode",
+                                "explicit_credentials",
+                            )],
+                        ))
+                        .unwrap();
+                }
+                runtime
+                    .registry_mut()
+                    .upsert_capability_grant(CapabilityGrant::for_capability(
+                        CapabilityGrantId::trusted("grant-chief-zoneminder-pairing"),
+                        principal,
+                        CapabilityId::trusted("smart_home.pair"),
+                        PrivilegeTier::HumanApproval,
+                        "operator:test",
+                        1_500,
+                    ));
+                Ok::<(), Infallible>(())
+            })
+            .unwrap();
+        let vault_backend: Arc<dyn StorageBackend> = Arc::new(FsStorageBackend::new(
+            directory.0.join("smart-home-zoneminder-vault"),
+        ));
+        vault_backend.initialize().unwrap();
+        let vault = Arc::new(SealedStore::new(vault_backend));
+        vault
+            .init_with_kek(&[0x68; SMART_HOME_PAIRING_KEK_BYTES])
+            .unwrap();
+        let state = ZoneMinderPairingServiceActorState::restore(
+            FsStorageBackend::new(&state_dir),
+            vault,
+            controller.clone(),
+            TestZoneMinderCredentialInput,
+            TestZoneMinderVerifier,
+        )
+        .unwrap();
+        let mut system = ActorSystem::new();
+        install_zoneminder_pairing_service_actor(&mut system, ZONEMINDER_PAIRING_ACTOR_ID, state)
+            .unwrap();
+
+        drive_zoneminder_pairing_tick(
+            &mut system,
+            &controller,
+            &TestUnixTimeClock::new(2_000),
+            &BridgeId::trusted("zoneminder-nvr"),
+        )
+        .unwrap();
+
+        let restored = controller.durable_snapshot().unwrap().unwrap();
+        let completed = restored
+            .runtime
+            .pairing_session(&RuntimePairingSessionId::trusted(
+                "pairing-chief-zoneminder-nvr",
+            ))
+            .unwrap();
+        assert_eq!(completed.status, PairingSessionStatus::Completed);
+        assert!(completed
+            .vault_ref
+            .as_ref()
+            .unwrap()
+            .as_str()
+            .starts_with("vault://smart-home/zoneminder/"));
+        assert_eq!(
+            restored
+                .runtime
+                .pairing_session(&RuntimePairingSessionId::trusted(
+                    "pairing-chief-zoneminder-other",
+                ))
+                .unwrap()
+                .status,
+            PairingSessionStatus::PendingUserPresence
+        );
+        let durable_text = format!("{restored:?}");
+        assert!(!durable_text.contains("chief-zoneminder-user"));
+        assert!(!durable_text.contains("chief-zoneminder-password"));
+    }
+
+    #[test]
+    fn chief_zoneminder_pairing_worker_stops_and_propagates_clock_failure() {
+        let directory = TestDir::new();
+        let state_dir = directory.0.join("smart-home-zoneminder-worker-state");
+        let controller =
+            SmartHomeControllerRuntime::restore(FsStorageBackend::new(&state_dir)).unwrap();
+        controller
+            .transaction(1_500, |_, _| Ok::<(), Infallible>(()))
+            .unwrap();
+        let vault_backend: Arc<dyn StorageBackend> = Arc::new(FsStorageBackend::new(
+            directory.0.join("smart-home-zoneminder-worker-vault"),
+        ));
+        vault_backend.initialize().unwrap();
+        let vault = Arc::new(SealedStore::new(vault_backend));
+        vault
+            .init_with_kek(&[0x78; SMART_HOME_PAIRING_KEK_BYTES])
+            .unwrap();
+        let bridge_id = BridgeId::trusted("zoneminder-nvr");
+        let state = ZoneMinderPairingServiceActorState::restore(
+            FsStorageBackend::new(&state_dir),
+            vault,
+            controller.clone(),
+            OwnerOnlyZoneMinderCredentialInput::new(
+                bridge_id.clone(),
+                directory.0.join("unused-user"),
+                1,
+                directory.0.join("unused-password"),
+                1,
+            ),
+            NativeZoneMinderPairingVerifier,
+        )
+        .unwrap();
+        let service = ChiefZoneMinderPairingService {
+            state,
+            controller,
+            clock: Arc::new(UnavailableUnixTimeClock),
+            bridge_id,
+        };
+        let failure_seen = Arc::new(AtomicBool::new(false));
+        let failure_probe = Arc::clone(&failure_seen);
+        let on_failure: Arc<dyn Fn() + Send + Sync> = Arc::new(move || {
+            failure_probe.store(true, Ordering::Release);
+        });
+        let mut worker = OwnedZoneMinderPairingWorker::start_with_interval(
+            service,
+            on_failure,
+            Duration::from_millis(1),
+        )
+        .unwrap();
+        thread::sleep(Duration::from_millis(20));
+        assert!(matches!(
+            worker.stop_and_join(),
+            Err(ChiefDaemonError::SmartHomeZoneMinderPairingClock)
         ));
         assert!(failure_seen.load(Ordering::Acquire));
     }

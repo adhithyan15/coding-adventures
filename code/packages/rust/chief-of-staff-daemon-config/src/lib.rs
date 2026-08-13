@@ -187,6 +187,50 @@ pub struct SmartHomeListenerConfig {
     hue_pairing_kek_path: Option<ConfigPath>,
     onvif_pairing: Option<OnvifPairingConfig>,
     axis_pairing: Option<AxisPairingConfig>,
+    zoneminder_pairing: Option<ZoneMinderPairingConfig>,
+}
+
+/// Exact owner-provisioned inputs for one supervised ZoneMinder pairing worker.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct ZoneMinderPairingConfig {
+    bridge_id: String,
+    kek_path: ConfigPath,
+    username_path: ConfigPath,
+    username_length: usize,
+    password_path: ConfigPath,
+    password_length: usize,
+}
+
+impl ZoneMinderPairingConfig {
+    /// Return the exact D23 bridge whose credentials may be consumed.
+    pub fn bridge_id(&self) -> &str {
+        &self.bridge_id
+    }
+
+    /// Return the owner-only KEK file used to initialize or unseal the Vault.
+    pub fn kek_path(&self) -> &ConfigPath {
+        &self.kek_path
+    }
+
+    /// Return the owner-only username file.
+    pub fn username_path(&self) -> &ConfigPath {
+        &self.username_path
+    }
+
+    /// Return the exact username byte length expected from the file.
+    pub fn username_length(&self) -> usize {
+        self.username_length
+    }
+
+    /// Return the owner-only password file.
+    pub fn password_path(&self) -> &ConfigPath {
+        &self.password_path
+    }
+
+    /// Return the exact password byte length expected from the file.
+    pub fn password_length(&self) -> usize {
+        self.password_length
+    }
 }
 
 /// Exact owner-provisioned inputs for one supervised Axis pairing worker.
@@ -309,6 +353,11 @@ impl SmartHomeListenerConfig {
     /// Return the exact owner-provisioned Axis pairing worker configuration.
     pub fn axis_pairing(&self) -> Option<&AxisPairingConfig> {
         self.axis_pairing.as_ref()
+    }
+
+    /// Return the exact owner-provisioned ZoneMinder pairing worker configuration.
+    pub fn zoneminder_pairing(&self) -> Option<&ZoneMinderPairingConfig> {
+        self.zoneminder_pairing.as_ref()
     }
 }
 
@@ -846,6 +895,64 @@ pub fn parse_config(source: &str) -> Result<ChiefConfig, ConfigError> {
             }),
             _ => return Err(ConfigError::InvalidValue),
         };
+        let zoneminder_bridge_id = document
+            .take_optional(SMART_HOME, "zoneminder_pairing_bridge_id")
+            .map(expect_string)
+            .transpose()?
+            .map(|value| bounded_identity(value, MAX_AGENT_ID_BYTES))
+            .transpose()?;
+        let zoneminder_kek_path = document
+            .take_optional(SMART_HOME, "zoneminder_pairing_kek_path")
+            .map(expect_string)
+            .transpose()?
+            .map(ConfigPath::parse)
+            .transpose()?;
+        let zoneminder_username_path = document
+            .take_optional(SMART_HOME, "zoneminder_pairing_username_path")
+            .map(expect_string)
+            .transpose()?
+            .map(ConfigPath::parse)
+            .transpose()?;
+        let zoneminder_username_length = document
+            .take_optional(SMART_HOME, "zoneminder_pairing_username_length")
+            .map(bounded_pairing_secret_length)
+            .transpose()?;
+        let zoneminder_password_path = document
+            .take_optional(SMART_HOME, "zoneminder_pairing_password_path")
+            .map(expect_string)
+            .transpose()?
+            .map(ConfigPath::parse)
+            .transpose()?;
+        let zoneminder_password_length = document
+            .take_optional(SMART_HOME, "zoneminder_pairing_password_length")
+            .map(bounded_pairing_secret_length)
+            .transpose()?;
+        let zoneminder_pairing = match (
+            zoneminder_bridge_id,
+            zoneminder_kek_path,
+            zoneminder_username_path,
+            zoneminder_username_length,
+            zoneminder_password_path,
+            zoneminder_password_length,
+        ) {
+            (None, None, None, None, None, None) => None,
+            (
+                Some(bridge_id),
+                Some(kek_path),
+                Some(username_path),
+                Some(username_length),
+                Some(password_path),
+                Some(password_length),
+            ) => Some(ZoneMinderPairingConfig {
+                bridge_id,
+                kek_path,
+                username_path,
+                username_length,
+                password_path,
+                password_length,
+            }),
+            _ => return Err(ConfigError::InvalidValue),
+        };
         Some(SmartHomeListenerConfig {
             bind,
             port,
@@ -854,6 +961,7 @@ pub fn parse_config(source: &str) -> Result<ChiefConfig, ConfigError> {
             hue_pairing_kek_path,
             onvif_pairing,
             axis_pairing,
+            zoneminder_pairing,
         })
     } else {
         None
@@ -868,6 +976,7 @@ pub fn parse_config(source: &str) -> Result<ChiefConfig, ConfigError> {
             listener.hue_pairing_kek_path.is_some()
                 || listener.onvif_pairing.is_some()
                 || listener.axis_pairing.is_some()
+                || listener.zoneminder_pairing.is_some()
         })
     {
         return Err(ConfigError::InvalidValue);
@@ -1569,6 +1678,7 @@ hardware_key_timeout = 60
         assert!(listener.hue_pairing_kek_path().is_none());
         assert!(listener.onvif_pairing().is_none());
         assert!(listener.axis_pairing().is_none());
+        assert!(listener.zoneminder_pairing().is_none());
 
         assert_eq!(
             parse_config(&source.replace("port = 8123", "port = 7463")),
@@ -1697,6 +1807,45 @@ hardware_key_timeout = 60
             parse_config(&source.replace(
                 "axis_pairing_password_length = 20",
                 "axis_pairing_password_length = 4097"
+            )),
+            Err(ConfigError::InvalidValue)
+        );
+    }
+
+    #[test]
+    fn zoneminder_pairing_requires_complete_owner_only_inputs_and_vault_custody() {
+        let source = format!(
+            "{VALID}\n[smart_home]\nbind = \"127.0.0.1\"\nport = 8123\ninstance_name = \"Codex Home\"\nzoneminder_pairing_bridge_id = \"zoneminder-nvr\"\nzoneminder_pairing_kek_path = \"~/.chief-of-staff/keys/smart-home-vault.kek\"\nzoneminder_pairing_username_path = \"~/.chief-of-staff/keys/zoneminder-user\"\nzoneminder_pairing_username_length = 15\nzoneminder_pairing_password_path = \"~/.chief-of-staff/keys/zoneminder-password\"\nzoneminder_pairing_password_length = 24\n"
+        );
+        assert_eq!(parse_config(&source), Err(ConfigError::InvalidValue));
+
+        let source = source.replace("container = true", "container = false");
+        let config = parse_config(&source).unwrap();
+        let pairing = config.smart_home().unwrap().zoneminder_pairing().unwrap();
+        assert_eq!(pairing.bridge_id(), "zoneminder-nvr");
+        assert_eq!(
+            pairing.kek_path().as_str(),
+            "~/.chief-of-staff/keys/smart-home-vault.kek"
+        );
+        assert_eq!(
+            pairing.username_path().as_str(),
+            "~/.chief-of-staff/keys/zoneminder-user"
+        );
+        assert_eq!(pairing.username_length(), 15);
+        assert_eq!(
+            pairing.password_path().as_str(),
+            "~/.chief-of-staff/keys/zoneminder-password"
+        );
+        assert_eq!(pairing.password_length(), 24);
+
+        assert_eq!(
+            parse_config(&source.replace("zoneminder_pairing_password_length = 24\n", "")),
+            Err(ConfigError::InvalidValue)
+        );
+        assert_eq!(
+            parse_config(&source.replace(
+                "zoneminder_pairing_password_length = 24",
+                "zoneminder_pairing_password_length = 4097"
             )),
             Err(ConfigError::InvalidValue)
         );
