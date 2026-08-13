@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.86.0
+
+- Parse all pinned quadrant font-size and label-padding controls from Mermaid init directives.
+
 ## 0.85.0
 
 - Parse quadrant padding and internal/external border widths from Mermaid init directives.

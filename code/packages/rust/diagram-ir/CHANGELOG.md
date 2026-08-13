@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.42.0
+
+- Preserve quadrant title, axis, region, and point-label typography and spacing through semantic and layout IR.
+
 ## 0.41.0
 
 - Preserve quadrant padding and distinct internal/external border widths through semantic and layout IR.

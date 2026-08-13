@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.85.0";
+pub const VERSION: &str = "0.86.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -1302,6 +1302,16 @@ fn parse_quadrant_config(source: &str) -> QuadrantConfig {
         quadrant_padding: number("quadrantPadding"),
         internal_border_width: number("quadrantInternalBorderStrokeWidth"),
         external_border_width: number("quadrantExternalBorderStrokeWidth"),
+        title_font_size: number("titleFontSize"),
+        title_padding: number("titlePadding"),
+        x_axis_label_font_size: number("xAxisLabelFontSize"),
+        x_axis_label_padding: number("xAxisLabelPadding"),
+        y_axis_label_font_size: number("yAxisLabelFontSize"),
+        y_axis_label_padding: number("yAxisLabelPadding"),
+        quadrant_label_font_size: number("quadrantLabelFontSize"),
+        quadrant_text_top_padding: number("quadrantTextTopPadding"),
+        point_label_font_size: number("pointLabelFontSize"),
+        point_text_padding: number("pointTextPadding"),
     }
 }
 
@@ -4742,7 +4752,7 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     #[test]
     fn quadrant_parses_layout_init_config() {
         let diagram = parse_quadrant_chart(
-            "%%{init: {\"quadrantChart\": {\"chartWidth\": 720, \"chartHeight\": 540, \"xAxisPosition\": \"top\", \"yAxisPosition\": \"right\", \"pointRadius\": 11, \"quadrantPadding\": 18, \"quadrantInternalBorderStrokeWidth\": 3, \"quadrantExternalBorderStrokeWidth\": 5}}}%%\nquadrantChart\nMetal: [0.75, 0.8]\n",
+            "%%{init: {\"quadrantChart\": {\"chartWidth\": 720, \"chartHeight\": 540, \"xAxisPosition\": \"top\", \"yAxisPosition\": \"right\", \"pointRadius\": 11, \"quadrantPadding\": 18, \"quadrantInternalBorderStrokeWidth\": 3, \"quadrantExternalBorderStrokeWidth\": 5, \"titleFontSize\": 22, \"titlePadding\": 12, \"xAxisLabelFontSize\": 15, \"xAxisLabelPadding\": 21, \"yAxisLabelFontSize\": 16, \"yAxisLabelPadding\": 23, \"quadrantLabelFontSize\": 17, \"quadrantTextTopPadding\": 19, \"pointLabelFontSize\": 14, \"pointTextPadding\": 9}}}%%\nquadrantChart\nMetal: [0.75, 0.8]\n",
         )
         .unwrap();
 
@@ -4760,6 +4770,19 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         assert_eq!(diagram.quadrant_config.quadrant_padding, Some(18.0));
         assert_eq!(diagram.quadrant_config.internal_border_width, Some(3.0));
         assert_eq!(diagram.quadrant_config.external_border_width, Some(5.0));
+        assert_eq!(diagram.quadrant_config.title_font_size, Some(22.0));
+        assert_eq!(diagram.quadrant_config.title_padding, Some(12.0));
+        assert_eq!(diagram.quadrant_config.x_axis_label_font_size, Some(15.0));
+        assert_eq!(diagram.quadrant_config.x_axis_label_padding, Some(21.0));
+        assert_eq!(diagram.quadrant_config.y_axis_label_font_size, Some(16.0));
+        assert_eq!(diagram.quadrant_config.y_axis_label_padding, Some(23.0));
+        assert_eq!(diagram.quadrant_config.quadrant_label_font_size, Some(17.0));
+        assert_eq!(
+            diagram.quadrant_config.quadrant_text_top_padding,
+            Some(19.0)
+        );
+        assert_eq!(diagram.quadrant_config.point_label_font_size, Some(14.0));
+        assert_eq!(diagram.quadrant_config.point_text_padding, Some(9.0));
     }
 
     #[test]
@@ -6364,7 +6387,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.85.0");
+        assert_eq!(crate::VERSION, "0.86.0");
     }
 
     #[test]

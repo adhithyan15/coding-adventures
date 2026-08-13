@@ -414,7 +414,7 @@ mod apple {
     #[test]
     fn render_mermaid_quadrant_to_png() {
         let diagram = parse_quadrant_chart(
-            "%%{init: {\"quadrantChart\": {\"chartWidth\": 680, \"chartHeight\": 560, \"xAxisPosition\": \"top\", \"yAxisPosition\": \"right\", \"pointRadius\": 7, \"quadrantPadding\": 18, \"quadrantInternalBorderStrokeWidth\": 3, \"quadrantExternalBorderStrokeWidth\": 5}}}%%\n\
+            "%%{init: {\"quadrantChart\": {\"chartWidth\": 680, \"chartHeight\": 560, \"xAxisPosition\": \"top\", \"yAxisPosition\": \"right\", \"pointRadius\": 7, \"quadrantPadding\": 18, \"quadrantInternalBorderStrokeWidth\": 3, \"quadrantExternalBorderStrokeWidth\": 5, \"titleFontSize\": 22, \"titlePadding\": 12, \"xAxisLabelFontSize\": 15, \"xAxisLabelPadding\": 21, \"yAxisLabelFontSize\": 16, \"yAxisLabelPadding\": 23, \"quadrantLabelFontSize\": 17, \"quadrantTextTopPadding\": 19, \"pointLabelFontSize\": 14, \"pointTextPadding\": 9}}}%%\n\
              QuAdRaNtChArT\n\
              title Native rendering portfolio\n\
              X-AxIs \"Low reach 📉\" ---> \"`High reach Ω`\" %% axis comment\n\

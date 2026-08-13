@@ -38,8 +38,8 @@ The `quadrantChart` subset covers titles, x/y endpoint labels, all four
 quadrant labels, normalized points, point classes, inline point radius, fill,
 and stroke styles, accessibility metadata, case-insensitive keywords, comments,
 one-sided axes, extended axis arrows, Unicode labels, markdown strings, and init-configured
-dimensions, axis positions, point radius, padding, and independent border widths.
-Remaining typography and theme-variable rendering controls keep the family at
+dimensions, axis positions, point radius, padding, independent border widths,
+and title, axis, region, and point-label typography. Theme-variable colors keep the family at
 `partial` rather than `full`.
 
 The sequence subset includes participants and actors, aliases, standard solid

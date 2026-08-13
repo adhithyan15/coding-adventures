@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.40.0";
+pub const VERSION: &str = "0.41.0";
 
 use std::collections::HashMap;
 
@@ -591,6 +591,14 @@ where
 // Chart family (DG04)
 // ============================================================================
 
+fn font_with_size(base: &FontSpec, size: Option<f64>) -> FontSpec {
+    let mut font = base.clone();
+    if let Some(size) = size {
+        font.size = size;
+    }
+    font
+}
+
 /// Lower a [`LayoutedChartDiagram`] into a [`PaintScene`].
 pub fn diagram_to_paint_chart<S, M, R>(
     diagram: &LayoutedChartDiagram,
@@ -745,6 +753,8 @@ where
                 height,
                 color,
                 label,
+                label_font_size,
+                label_top_padding,
             } => {
                 instructions.push(PaintInstruction::Rect(PaintRect {
                     base: PaintBase::default(),
@@ -763,10 +773,10 @@ where
                     text_children.push(text_node(
                         label,
                         x + width / 2.0 - 60.0,
-                        y + 8.0,
+                        y + label_top_padding,
                         120.0,
-                        ls * 1.2,
-                        lf.clone(),
+                        label_font_size.unwrap_or(ls) * 1.2,
+                        font_with_size(&lf, *label_font_size),
                         Color {
                             r: 51,
                             g: 65,
@@ -831,6 +841,8 @@ where
                 stroke_color,
                 stroke_width,
                 label,
+                label_font_size,
+                label_padding,
             } => {
                 instructions.push(PaintInstruction::Ellipse(PaintEllipse {
                     base: PaintBase::default(),
@@ -847,10 +859,10 @@ where
                 text_children.push(text_node(
                     label,
                     x - 50.0,
-                    y + radius + 4.0,
+                    y + radius + label_padding,
                     100.0,
-                    ls * 1.2,
-                    lf.clone(),
+                    label_font_size.unwrap_or(ls) * 1.2,
+                    font_with_size(&lf, *label_font_size),
                     Color {
                         r: 30,
                         g: 41,
@@ -859,7 +871,12 @@ where
                     },
                 ));
             }
-            LayoutedChartItem::DataLabel { x, y, text } => {
+            LayoutedChartItem::DataLabel {
+                x,
+                y,
+                text,
+                font_size,
+            } => {
                 let width = diagram.width.min(240.0);
                 let label_x = (x - width / 2.0).clamp(0.0, diagram.width - width);
                 text_children.push(text_node(
@@ -867,8 +884,8 @@ where
                     label_x,
                     y - ls / 2.0,
                     width,
-                    ls * 1.2,
-                    lf.clone(),
+                    font_size.unwrap_or(ls) * 1.2,
+                    font_with_size(&lf, *font_size),
                     Color {
                         r: 55,
                         g: 65,
@@ -3103,7 +3120,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.40.0");
+        assert_eq!(crate::VERSION, "0.41.0");
     }
 
     #[test]
