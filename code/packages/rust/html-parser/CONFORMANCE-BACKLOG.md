@@ -446,8 +446,11 @@ Prioritized work items:
    separate disallowed-open-elements check, preserving ignored-token DOM and
    tail state. In-scope disallowed stacks, valid and repeated shell endings,
    foreign shell-named starts, framesets, and seeded fragments retain their
-   existing recovery. Continue with after-body reprocessing and trailing-token
-   recovery.
+   existing recovery. A seeded HTML fragment now diagnoses and ignores an
+   `html` end tag without entering after-html mode, so subsequent unexpected
+   content is reprocessed from after body as required; ordinary documents
+   retain their after-html transition. Continue with the remaining after-body
+   and after-after-body token classes and trailing-token recovery.
 3. **Diagnostic positions and error taxonomy.** Carry source positions into
    tree construction and map diagnostics to current WHATWG concepts. Legacy
    WPT/html5lib error labels are evidence hints, not a normative public API.

@@ -4759,6 +4759,7 @@ impl HtmlParser {
 
         if matches!(self.document_tail_mode, DocumentTailMode::AfterBody)
             && matches!(token, Token::EndTag { name } if name == "html")
+            && !self.is_fragment
         {
             self.document_tail_mode = DocumentTailMode::AfterHtml;
         } else if !allowed {
@@ -39656,6 +39657,42 @@ mod tests {
                 "unexpected token was reprocessed from the after body insertion mode"
             )]
         );
+    }
+
+    #[test]
+    fn keeps_seeded_html_fragments_in_after_body_after_an_html_end_tag() {
+        let output = parse_html_fragment_for_context_with_diagnostics(
+            "<body>X</body></html>Y",
+            "html",
+        )
+        .unwrap();
+
+        assert_eq!(output.nodes.len(), 2);
+        assert_eq!(element(&output.nodes[0]).name, "head");
+        assert_eq!(element(&output.nodes[1]).name, "body");
+        assert_eq!(element_text(element(&output.nodes[1])), "XY");
+        assert_eq!(
+            output.parser_diagnostics,
+            vec![
+                ParserDiagnostic::new(
+                    "unexpected-fragment-context-end-tag",
+                    "end tag `</html>` targeted a seeded fragment context element"
+                ),
+                ParserDiagnostic::new(
+                    "unexpected-token-after-body",
+                    "unexpected token was reprocessed from the after body insertion mode"
+                ),
+            ]
+        );
+
+        let document =
+            parse_html_with_diagnostics("<!doctype html><body>X</body></html>Y").unwrap();
+        assert!(document.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic.code == "unexpected-token-after-html"
+        }));
+        assert!(document.parser_diagnostics.iter().all(|diagnostic| {
+            diagnostic.code != "unexpected-fragment-context-end-tag"
+        }));
     }
 
     #[test]
