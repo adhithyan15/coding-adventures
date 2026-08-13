@@ -273,11 +273,14 @@ describe("what the corpus actually covers", () => {
     const { lessons } = loadEverything();
     const coverage = measureExamCoverage(loadExamInventory("spanish", "A1"), lessons);
 
-    // 220 chapters, a curriculum that had climbed to a B2 node, and 62% of the
-    // A1 grammar an examiner may ask for. The gaps are not exotic: the
-    // demonstratives are absent ENTIRELY (este/ese/aquel, all three points),
-    // `muy` is untaught, `al`/`del` are untaught, the gerund is untaught, and
-    // the personal `a` is untaught.
+    // First measured at 53/85 over 220 chapters — a curriculum that had climbed
+    // to a B2 node while missing 62% of... no: while holding only 62% of the A1
+    // grammar an examiner may ask for. Chapters 221-225 then taught the
+    // demonstratives, which had been absent ENTIRELY (este/ese/aquel and the
+    // neuters, 3 of 3 points), taking it to 56/85.
+    //
+    // Still untaught and still counted against us: `muy`, the `al`/`del`
+    // contractions, the gerund, `quien`, and the personal `a`.
     //
     // This number is allowed to move only two ways. Up, when a lesson teaches
     // something the inventory lists. Down, when one is retired. It must NOT
@@ -285,12 +288,12 @@ describe("what the corpus actually covers", () => {
     // fails alongside an edit to exam-inventory-es-a1.json, read that edit
     // before re-pinning.
     expect(coverage.enumerated).toBe(85);
-    expect(coverage.covered).toBe(53);
-    expect(coverage.percent).toBe(62);
+    expect(coverage.covered).toBe(56);
+    expect(coverage.percent).toBe(66);
 
     // Whole categories missing is a different failure from thin coverage, and
     // the report has to keep them distinguishable.
-    expect(coverage.byCategory["Los demostrativos"]).toEqual({ enumerated: 3, covered: 0 });
+    expect(coverage.byCategory["Los demostrativos"]).toEqual({ enumerated: 3, covered: 3 }); // closed by chapters 221-225
     expect(coverage.byCategory["El sintagma adjetival"]).toEqual({ enumerated: 1, covered: 0 });
     expect(coverage.byCategory["La oracion simple"]).toEqual({ enumerated: 6, covered: 6 });
   });
@@ -300,7 +303,7 @@ describe("what the corpus actually covers", () => {
     const report = formatExamCoverage(
       measureExamCoverage(loadExamInventory("spanish", "A1"), lessons),
     );
-    expect(report).toContain("spanish A1: 53/85 points covered (62%)");
+    expect(report).toContain("spanish A1: 56/85 points covered (66%)");
     // Worst category first: the line after the summary should be the emptiest
     // category, not the alphabetically first one.
     expect(report.split("\n")[2]).toContain("0/1  El sintagma adjetival");

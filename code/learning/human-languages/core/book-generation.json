@@ -3543,6 +3543,31 @@
       "output": "spanish/book/chapters/ch220-tampoco.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 221,
+      "output": "spanish/book/chapters/ch221-este.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 222,
+      "output": "spanish/book/chapters/ch222-ese.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 223,
+      "output": "spanish/book/chapters/ch223-aquel.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 224,
+      "output": "spanish/book/chapters/ch224-esto-eso-aquello.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 225,
+      "output": "spanish/book/chapters/ch225-review-demostrativos.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "output": "tamil/book/chapters/ch06-dative-case.tex",

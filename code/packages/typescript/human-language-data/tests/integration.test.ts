@@ -104,7 +104,7 @@ describe("real curriculum", () => {
     // 40 (esperar, contestar, comprar). Two sessions authored a chapter 38 in parallel;
     // the collision surfaced as a merge conflict on chapters.json rather than silently,
     // because both sides must edit it.
-    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(220); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis // +3: HL-C88 slice 8 // +1: HL-C88 slice 9 (falsos amigos) // +3: HL-C113 (B1 si-condition rung) // +3: HL-C113 preterite plural // HL-C113: HL-C113 imperfect subjunctive
+    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(225); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis // +3: HL-C88 slice 8 // +1: HL-C88 slice 9 (falsos amigos) // +3: HL-C113 (B1 si-condition rung) // +3: HL-C113 preterite plural // HL-C113: HL-C113 imperfect subjunctive
     expect(
       books.books
         .find((book) => book.language === "persian")
@@ -886,6 +886,20 @@ describe("real curriculum", () => {
       "ES-C58-tampoco-agree",
       "ES-C58-tampoco-choose",
       "ES-C58-tampoco-parts",
+      "ES-C59-aquel-ille",
+      "ES-C59-aquel-say",
+      "ES-C59-aquel-three",
+      "ES-C59-ese-contrast",
+      "ES-C59-ese-origin",
+      "ES-C59-ese-say",
+      "ES-C59-este-agree",
+      "ES-C59-este-article",
+      "ES-C59-este-say",
+      "ES-C59-esto-eso-aquello-ask",
+      "ES-C59-esto-eso-aquello-gender",
+      "ES-C59-repaso-demostrativos-article",
+      "ES-C59-repaso-demostrativos-noun",
+      "ES-C59-repaso-demostrativos-side",
       "ES-W03-question-span-roberto-outside",
       "FA-C02-esm-e-man-sara",
       "FA-C03-chist-fusion",
