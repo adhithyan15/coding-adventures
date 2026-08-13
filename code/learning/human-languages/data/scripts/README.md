@@ -693,10 +693,17 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   Devanagari path follows JackPotte's 13-frame animation with three lifts. The
   Directorate's deskbook confirms component order but stages the left curve and
   diagonal tail separately, so it corroborates order rather than the animation's
-  continuous join. The remaining **104** prose part
-  orders across five scripts
+  continuous join. **ह** then descends its right stem, sweeps left through the
+  shoulder, and curves clockwise around the hooked body before two lifted runs
+  sweep down-left and then down-right through the outer tail and finish the
+  shirorekhā. Its three-frame Noto Sans Devanagari path follows Opiaterein's
+  22-frame animation with two lifts. The Directorate's deskbook confirms the
+  same component order but stages the joined first body across more buildup
+  steps, so the animation supplies the three-run lift evidence. Devanagari's
+  starter inventory is now source-verified. The remaining **103** prose part
+  orders across four scripts
   (`arabic` 3,
-  `cyrillic` 33, `devanagari` 1,
+  `cyrillic` 33,
   `gujarati` 33, `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a
   citation without a count), and Language Ladder's ductus test proves every

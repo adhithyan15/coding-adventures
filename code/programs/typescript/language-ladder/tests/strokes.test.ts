@@ -75,6 +75,7 @@ const DEVANAGARI_LA = DUCTUS[ductusKey("devanagari", "ल")];
 const DEVANAGARI_VA = DUCTUS[ductusKey("devanagari", "व")];
 const DEVANAGARI_SHA = DUCTUS[ductusKey("devanagari", "श")];
 const DEVANAGARI_SA = DUCTUS[ductusKey("devanagari", "स")];
+const DEVANAGARI_HA = DUCTUS[ductusKey("devanagari", "ह")];
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
@@ -1146,6 +1147,25 @@ describe("handwriting ductus", () => {
     const stem = penPath(DEVANAGARI_SA.strokes[2]);
     expect(stem[0].y).toBeGreaterThan(stem.at(-1)!.y);
     const headline = penPath(DEVANAGARI_SA.strokes[3]);
+    expect(headline[0].x).toBeLessThan(headline.at(-1)!.x);
+  });
+
+  it("Devanagari ह joins the stem, shoulder, and hooked body before the outer tail", () => {
+    expect(DEVANAGARI_HA.script).toBe("devanagari");
+    expect(penLifts(DEVANAGARI_HA)).toBe(2);
+    expect(DEVANAGARI_HA.strokes).toHaveLength(3);
+    expect(DEVANAGARI_HA.strokes.map((stroke) => stroke.segments.length)).toEqual([
+      1, 1, 1,
+    ]);
+    const body = penPath(DEVANAGARI_HA.strokes[0]);
+    expect(body[0].y).toBeGreaterThan(body.at(-1)!.y);
+    expect(Math.min(...body.map((point) => point.x))).toBeLessThan(body[0].x);
+    expect(body.at(-1)!.x).toBeGreaterThan(Math.min(...body.map((point) => point.x)));
+    const tail = penPath(DEVANAGARI_HA.strokes[1]);
+    expect(tail[0].y).toBeGreaterThan(tail.at(-1)!.y);
+    expect(Math.min(...tail.map((point) => point.x))).toBeLessThan(tail[0].x);
+    expect(tail.at(-1)!.x).toBeGreaterThan(Math.min(...tail.map((point) => point.x)));
+    const headline = penPath(DEVANAGARI_HA.strokes[2]);
     expect(headline[0].x).toBeLessThan(headline.at(-1)!.x);
   });
 
@@ -2919,6 +2939,19 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /13-frame animation.*four ordered pen-down runs.*frames 0–4.*just below the headline.*descend the left stem.*curve left around the central hook.*continue diagonally down-right through the tail.*without lifting.*frames 5–6.*central junction.*middle crossbar left-to-right.*frames 7–9.*right stem's headline junction.*descend top-to-bottom.*frames 10–12.*headline's left edge.*shirorekhā left-to-right.*three intervening lifts.*spatial restarts.*frames 5, 7, and 10.*all frames last 100 ms.*no long inter-stroke holds.*Central Hindi Directorate.*2019 Deskbook on Orthography of Devanagari Script.*Lesson 2.*Unit IX.*p\. 47.*left curve.*diagonal tail.*middle crossbar.*right stem.*headline order.*stages the left curve and tail separately.*rather than proving their join.*four-run lift count.*animation.*Noto Sans Devanagari.*divide or simplify the joined body/i,
+    );
+  });
+
+  it("Devanagari ह traces its three-run animation and staged corroboration", () => {
+    const src = DEVANAGARI_HA.source;
+    expect(src.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Deva-%E0%A4%B9-order.gif",
+    );
+    expect(src.citation).toMatch(
+      /Opiaterein.*Deva-ह-order\.gif.*strokes 1–3.*Wikimedia Commons.*9 May 2009/i,
+    );
+    expect(src.variation).toMatch(
+      /22-frame animation.*three ordered pen-down runs.*gray guide.*frames 2–12.*right stem's headline junction.*descend top-to-bottom.*sweep left through the shoulder.*curve clockwise around the hooked body.*lower-right tip.*without lifting.*frames 13–16.*body's left junction.*sweep down-left around the outer curve.*continue diagonally down-right through the tail.*frames 17–21.*headline's left edge.*shirorekhā left-to-right.*two intervening lifts.*230 ms hold.*frame 12.*250 ms hold.*frame 16.*one-second completed frame 21.*Central Hindi Directorate.*2019 Deskbook on Orthography of Devanagari Script.*Lesson 2.*Unit IX.*p\. 48.*right stem.*leftward shoulder.*hooked body.*outer curve and tail.*headline buildup.*stages the joined first body.*more component steps.*three-run lift count.*animation.*Noto Sans Devanagari.*divide or simplify the body/i,
     );
   });
 
