@@ -1,0 +1,248 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 243,
+  "title": "Hablábamos --- The Imperfect Gets Its Plural",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:dee87df459e79d98",
+  "lessons": [
+    {
+      "id": "ES-C63-hablabamos",
+      "sequence": 2450,
+      "title": "hablábamos — the imperfect gets its plural",
+      "headword": "hablábamos",
+      "romanization": "hablábamos",
+      "gloss": "we used to speak — the imperfect finally gets its plural, and one of its forms carries the only written accent in the whole -ar set",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:4599ba13a93cf342",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Hablaba — I used to speak, or I was speaking. The tense for what was going on."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Until now you have had only its singular."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the three that were missing",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say them: nosotros hablábamos. Vosotros hablabais. Ellos hablaban."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The -aba- runs all the way through. The endings on top of it are the ordinary plural ones you have used since the present tense: -mos, -is, -n."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Now look at the accent on hablábamos, because it is the only one in the set and it is doing real work."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word ends in -s, so Spanish's default would put the stress on the next-to-last syllable: habla-BA-mos. But the stress actually falls a syllable earlier, on the -BA-... which is not where the default lands, so the accent has to say so."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Without it you would read hablabamos with the wrong beat. The mark is not decoration; it is the difference between the word being a past tense and being nothing at all."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "None of the other five needs one, because in each of those the default already lands where the stress is."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hablábamos, hablabais, hablaban",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hablábamos*, *hablabais*, *hablaban*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all six, straight through",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all six, straight through]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C63-hablabamos-we",
+              "prompt": "We used to speak.",
+              "assesses": [
+                "ES-GRAMMAR-AR-IMPERFECT-PLURAL"
+              ],
+              "responseSeconds": 11,
+              "acceptedResponses": [
+                "hablabamos",
+                "nosotros hablabamos"
+              ],
+              "feedback": {
+                "correct": "And it carries an accent.",
+                "incorrect": "Hablabamos."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C63-hablabamos-they",
+              "prompt": "They used to work.",
+              "assesses": [
+                "ES-GRAMMAR-AR-IMPERFECT-PLURAL"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "trabajaban",
+                "ellos trabajaban"
+              ],
+              "feedback": {
+                "correct": "-aba- plus the plain -n.",
+                "incorrect": "Trabajaban."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C63-hablabamos-accent",
+              "prompt": "Why does only hablabamos need a written accent?",
+              "assesses": [
+                "ES-ORTHOGRAPHY-IMPERFECT-ACCENT"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "the stress is not where the default puts it",
+                "because the default stress would land a syllable later"
+              ],
+              "feedback": {
+                "correct": "The mark corrects the beat.",
+                "incorrect": "Because the default stress would fall in the wrong place."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of the six carries a written accent? (Only hablábamos.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And what would go wrong without it? (The stress would land in the wrong place.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

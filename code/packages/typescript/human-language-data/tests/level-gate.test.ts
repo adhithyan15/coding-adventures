@@ -145,7 +145,7 @@ describe("etymology is a hook, not a skill", () => {
     // checkpoint, so the pre-A1 shortfall falls from 49 to 48. Chapter 10 revisits
     // another older atom and lowers the shortfall again. Its etymon atoms sit above
     // pre-A1, so this level-specific waiver count correctly stays unchanged.
-    expect(reinforcement.shortfall).toBe(27); // -1: HL-C98 closes a reinforcement gap // -1: HL-C113 -- ES-C55-si revisits ES-LEX-SI-01 and ES-GRAMMAR-DIACRITIC-ACCENT from pre-A1
+    expect(reinforcement.shortfall).toBe(26); // -1: HL-C98 closes a reinforcement gap // -1: HL-C113 -- ES-C55-si revisits ES-LEX-SI-01 and ES-GRAMMAR-DIACRITIC-ACCENT from pre-A1
     expect(reinforcement.detail).toContain("atom(s) at or below pre-A1 are rev"); // +2: the repair kit's two etymons // -1: HL-C98
   });
 

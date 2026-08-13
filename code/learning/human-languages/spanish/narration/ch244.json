@@ -1,0 +1,235 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 244,
+  "title": "Comíamos, Éramos, Íbamos --- Every One With an Accent",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:e24f264b4bb8356c",
+  "lessons": [
+    {
+      "id": "ES-C63-comiamos",
+      "sequence": 2455,
+      "title": "comíamos, éramos, íbamos — every one with an accent",
+      "headword": "comíamos · éramos · íbamos",
+      "romanization": "comíamos · éramos · íbamos",
+      "gloss": "we used to eat, we were, we used to go — the other imperfect ending, where every single form carries an accent, and the three irregulars finish with it",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:21a9d71d525e99f4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The -ar imperfect is whole. Now comía, which has had only its singular until now."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the -ía plural",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say them: nosotros comíamos. Vosotros comíais. Ellos comían."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And here the accent is on every form, not just one. The -ía puts an i and an a next to each other, and Spanish would ordinarily run two such vowels together into a single beat. The accent keeps them apart, so comía stays three syllables rather than collapsing into two."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "So the two imperfect sets are mirror images: in -aba only one form needs a mark, and in -ía they all do."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: and the three irregulars",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Spanish has exactly three irregular imperfects, and you have had their singulars for a long time. Their plurals:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "ser, éramos, erais, eran.",
+                "ir, íbamos, ibais, iban.",
+                "ver, veíamos, veíais, veían."
+              ]
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "That is the whole irregular list for this tense — three verbs, and now every form of all three. The imperfect is complete."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "comíamos, comíais, comían",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *comíamos*, *comíais*, *comían*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "éramos, íbamos, veíamos",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *éramos*, *íbamos*, *veíamos*]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C63-comiamos-we",
+              "prompt": "We used to eat.",
+              "assesses": [
+                "ES-GRAMMAR-ER-IR-IMPERFECT-PLURAL"
+              ],
+              "responseSeconds": 11,
+              "acceptedResponses": [
+                "comiamos",
+                "nosotros comiamos"
+              ],
+              "feedback": {
+                "correct": "Accent on every form of this set.",
+                "incorrect": "Comiamos."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C63-comiamos-ser",
+              "prompt": "We were. (ser)",
+              "assesses": [
+                "ES-GRAMMAR-IMPERFECT-IRREGULAR-PLURAL"
+              ],
+              "responseSeconds": 11,
+              "acceptedResponses": [
+                "eramos",
+                "nosotros eramos"
+              ],
+              "feedback": {
+                "correct": "One of only three irregulars.",
+                "incorrect": "Eramos."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C63-comiamos-count",
+              "prompt": "How many irregular verbs does the imperfect have?",
+              "assesses": [
+                "ES-GRAMMAR-IMPERFECT-COMPLETE"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "three",
+                "three: ser, ir, ver"
+              ],
+              "feedback": {
+                "correct": "And you now hold all of them.",
+                "incorrect": "Three -- ser, ir and ver."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many -ía forms carry an accent? (All of them.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And how many irregular imperfects are there in the language? (Three — and you have them all.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

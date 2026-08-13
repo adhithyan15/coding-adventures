@@ -4673,6 +4673,91 @@
           "ES-GRAMMAR-GERUND-TWO-ENDINGS"
         ]
       }
+    },
+    {
+      "chapter": 241,
+      "title": "Hablasteis --- The Form You Were Promised",
+      "label": "ch:hablasteis",
+      "canDo": "I can use every person of the -ar preterite.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C63-hablasteis",
+        "kind": "task",
+        "summary": "I can use every person of the -ar preterite.",
+        "assesses": [
+          "ES-GRAMMAR-AR-PRETERITE-2PL"
+        ]
+      }
+    },
+    {
+      "chapter": 242,
+      "title": "Comisteis, Tuvisteis --- The Last Gap Closes",
+      "label": "ch:comisteis",
+      "canDo": "I can use the whole preterite, regular and strong.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C63-comisteis",
+        "kind": "task",
+        "summary": "I can use the whole preterite, regular and strong.",
+        "assesses": [
+          "ES-GRAMMAR-PRETERITE-COMPLETE"
+        ]
+      }
+    },
+    {
+      "chapter": 243,
+      "title": "Hablábamos --- The Imperfect Gets Its Plural",
+      "label": "ch:hablabamos",
+      "canDo": "I can use every person of the -aba imperfect.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C63-hablabamos",
+        "kind": "task",
+        "summary": "I can use every person of the -aba imperfect.",
+        "assesses": [
+          "ES-GRAMMAR-AR-IMPERFECT-PLURAL"
+        ]
+      }
+    },
+    {
+      "chapter": 244,
+      "title": "Comíamos, Éramos, Íbamos --- Every One With an Accent",
+      "label": "ch:comiamos",
+      "canDo": "I can use the whole imperfect, including all three irregulars.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C63-comiamos",
+        "kind": "task",
+        "summary": "I can use the whole imperfect, including all three irregulars.",
+        "assesses": [
+          "ES-GRAMMAR-IMPERFECT-COMPLETE"
+        ]
+      }
+    },
+    {
+      "chapter": 245,
+      "title": "Review --- Two Tenses Finished",
+      "label": "ch:repaso-paradigmas",
+      "canDo": "I can say both past tenses straight through, with no gaps.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C63-repaso-paradigmas",
+        "kind": "task",
+        "summary": "I can say both past tenses straight through, with no gaps.",
+        "assesses": [
+          "ES-GRAMMAR-PRETERITE-COMPLETE"
+        ]
+      }
     }
   ]
 }

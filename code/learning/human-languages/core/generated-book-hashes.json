@@ -5793,6 +5793,51 @@
       "tex": "spanish/book/chapters/ch240-review-gerundio.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 241,
+      "sourceHash": "fnv1a64:e9eb584c6c24dfe1",
+      "lessonIds": [
+        "ES-C63-hablasteis"
+      ],
+      "tex": "spanish/book/chapters/ch241-hablasteis.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 242,
+      "sourceHash": "fnv1a64:45568d23e6b5a821",
+      "lessonIds": [
+        "ES-C63-comisteis"
+      ],
+      "tex": "spanish/book/chapters/ch242-comisteis.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 243,
+      "sourceHash": "fnv1a64:9206396b545f0dbd",
+      "lessonIds": [
+        "ES-C63-hablabamos"
+      ],
+      "tex": "spanish/book/chapters/ch243-hablabamos.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 244,
+      "sourceHash": "fnv1a64:e13c89415632edf3",
+      "lessonIds": [
+        "ES-C63-comiamos"
+      ],
+      "tex": "spanish/book/chapters/ch244-comiamos.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 245,
+      "sourceHash": "fnv1a64:b5f01521d3461f71",
+      "lessonIds": [
+        "ES-C63-repaso-paradigmas"
+      ],
+      "tex": "spanish/book/chapters/ch245-review-paradigmas.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "sourceHash": "fnv1a64:5f56402811418e13",

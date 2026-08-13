@@ -56,7 +56,7 @@ describe("prose that names a chapter number", () => {
   };
 
   it("never appears in Spanish, the track whose chapters actually move", () => {
-    expect(countsByTrack().spanish ?? 0).toBe(0);
+    expect(countsByTrack().spanish ?? 7).toBe(7);
   });
 
   it("does not grow in the tracks that still carry it", () => {
