@@ -3347,6 +3347,45 @@ Ready-for-review PR #11354 publishes the validated Go tranche from
 non-draft, and mergeable; CI, CodeQL, and auxiliary checks are queued, so the
 loop returns to monitor-only behavior until those checks reach a terminal state.
 
+## Post-#11354 Refresh and Ruby ZIP Raw-Conformance Selection
+
+External review merged ready-for-review PR #11354 as
+`08ae46bfee81a4df0c05e0422ed0657ba1bcad4d` at
+2026-08-13T20:59:19Z after every required CI, CodeQL, and auxiliary check
+reached terminal success or an expected skip/neutral conclusion. The final
+reviewed head is `6d0e5ec4f91f0de4c0619acdb40ed1bba174ae66`.
+A fresh collision-checked report at live main
+`264347eee15b09d17174a6774923415683aea04e` covers 15 established lanes,
+1,310 normalized identities, and 4,466 slots. It reports 173 high-consensus
+identities with 269 gaps, 860 singletons with 12,040 singleton gaps, 661 Rust
+singletons, zero collisions, and zero unknown buckets.
+
+The Go merge itself is topology-neutral. External PR #11362 added the two new
+Rust roots `modbus-protocol` and `smart-home-modbus-tcp-integration`, accounting
+exactly for two identities, two slots, two singletons, and 28 singleton gaps.
+The pure bounded Modbus read codec now has a portable conformance/port owner.
+The mixed smart-home integration is split between an injected-transport core
+owner for validation, register decoding, deterministic projection, and
+authorization ordering, and a blocked native-authority review for DNS/TCP,
+timeouts, plaintext origin policy, CLI I/O, capability truthfulness, and
+partial-mutation risk. No Modbus write authority will be manufactured. Later
+human-language and ADJ merges through the live revision add no package roots;
+the late pre-publication refresh includes HL12 correction #11378, Spanish
+curriculum step #11377, the existing-root ALGOL change #11380, and the ADJ loop
+state update #11382 without changing the parity topology.
+
+The Go ZIP child is now merged, leaving nine pending children: .NET, Elixir,
+Haskell, JVM, Lua, Perl, Python, Ruby, and Swift. No live PR owns parity state,
+the roadmap, ZIP, or the neutral fixture. The only stale parity-adjacent branch
+still touches .NET, Haskell, and JVM ZIP paths, so it remains unowned residue.
+
+The dependency/leverage pass selected `zip-raw-rfc1951-ruby-lane-parity`.
+Ruby is the smallest clean standalone package/toolchain without live or stale
+overlap. Its ZIP-owned decoder still rejects dynamic Huffman streams, making
+this a genuine codec-contract port: strict dynamic trees, counted consumption,
+caller output caps, stable payload-blind errors, all 34 neutral fixtures, ZIP
+suffix-cavity rejection, and explicit empty capability metadata.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
