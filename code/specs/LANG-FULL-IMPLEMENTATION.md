@@ -874,6 +874,10 @@ backend immediately) come before the enabler-dependent items.
   repeating elements still invalidate them. The controlled scalar is updated
   to the element's static initial value, matching the runtime preheader
   assignment that occurs even when the first bound check rejects the body.
+  A `while` element whose initial predicate is statically false likewise
+  preserves entry scalar snapshots and records the controlled scalar's static
+  initial value; unknown and potentially repeating `while` elements remain
+  conservative.
   Statically proven single-iteration `step`/`until` elements analyze a body
   that does not reference the controlled variable from empty scalar metadata
   and retain constants established by that one pass. Multi-iteration loops,
