@@ -33,7 +33,7 @@ const NIB_GRAMMAR_SOURCE: &str =
 /// | `INT_LIT`  | `Number`          |
 /// | `HEX_LIT`  | `Number`          |
 /// | `NAME`     | `Variable`        |
-/// | `PLUS`/`MINUS`/`STAR`/`SLASH`/`EQ`/`EQ_EQ`/`NEQ`/`LEQ`/`GEQ`/`LT`/`GT`/`LAND`/`LOR`/`AMP`/`PIPE`/`CARET`/`TILDE`/`BANG` | `Operator` |
+/// | `PLUS`/`MINUS`/`STAR`/`SLASH`/`SHL`/`SHR`/`EQ`/`EQ_EQ`/`NEQ`/`LEQ`/`GEQ`/`LT`/`GT`/`LAND`/`LOR`/`AMP`/`PIPE`/`CARET`/`TILDE`/`BANG` | `Operator` |
 static NIB_TOKEN_KIND_MAP: &[(&str, LspSemanticTokenType)] = &[
     ("KEYWORD",   LspSemanticTokenType::Keyword),
     ("INT_LIT",   LspSemanticTokenType::Number),
@@ -47,6 +47,8 @@ static NIB_TOKEN_KIND_MAP: &[(&str, LspSemanticTokenType)] = &[
     ("GT",        LspSemanticTokenType::Operator),
     ("LAND",      LspSemanticTokenType::Operator),
     ("LOR",       LspSemanticTokenType::Operator),
+    ("SHL",       LspSemanticTokenType::Operator),
+    ("SHR",       LspSemanticTokenType::Operator),
     ("EQ",        LspSemanticTokenType::Operator),
     ("PLUS",      LspSemanticTokenType::Operator),
     ("MINUS",     LspSemanticTokenType::Operator),

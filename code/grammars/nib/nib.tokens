@@ -38,6 +38,8 @@
 #   >=  must come before  >   (GEQ before GT)
 #   &&  must come before  &   (LAND before AMP)
 #   ||  must come before  |   (LOR before PIPE)
+#   <<  must come before  <   (SHL before LT)
+#   >>  must come before  >   (SHR before GT)
 #   HEX_LIT must come before INT_LIT (0xA must match as hex, not "0" then "xA")
 
 # ---------------------------------------------------------------------------
@@ -111,6 +113,11 @@ LAND        = "&&"
 # On the 4004 there is no logical OR instruction — it must be compiled as a
 # branch on the first operand. Must come before PIPE.
 LOR         = "||"
+
+# Logical shifts. These must appear before LT/GT so the lexer keeps each
+# two-character operator intact rather than splitting it into comparisons.
+SHL         = "<<"
+SHR         = ">>"
 
 # ---------------------------------------------------------------------------
 # Single-character arithmetic operators

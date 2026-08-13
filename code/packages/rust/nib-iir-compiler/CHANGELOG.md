@@ -1,5 +1,10 @@
 # Changelog — `nib-iir-compiler`
 
+## Unreleased
+
+- Lower Nib `<<` and `>>` expressions to typed IIR `shl` and `shr` operations,
+  including constant folding for shift expressions.
+
 ## 0.19.0 — 2026-06-27 — const/static expressions fold at compile time (LANG-FULL N10)
 
 Top-level `const` and `static` initializers now accept deterministic

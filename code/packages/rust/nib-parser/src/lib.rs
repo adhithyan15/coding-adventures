@@ -40,8 +40,10 @@ mod _grammar;
 /// and `r-parser`/`s-parser`'s ~33%/~46%), coincidentally the same value
 /// several sibling grammars converged on independently. Measured real-input
 /// headroom at 200 (using the *capped* parser, so no crash risk at all): a
-/// parenthesised nesting parses cleanly up to 18 levels (19 trips the cap)
-/// — comfortably past anything a hand-written nib expression needs, and
+/// parenthesised nesting parses cleanly up to 16 levels (17 trips the cap).
+/// The `shift_expr` precedence layer adds one parser frame per nested level;
+/// the unchanged cap remains comfortably past anything a hand-written nib
+/// expression needs, and is
 /// independently confirmed not to crash a default-stack thread even
 /// thousands of levels past the cap (see this crate's tests).
 const MAX_RULE_DEPTH: usize = 200;
@@ -63,7 +65,11 @@ pub fn parse_nib(source: &str) -> Result<GrammarASTNode, GrammarParseError> {
 
 #[cfg(test)]
 fn nested_paren_source(n: usize) -> String {
-    format!("fn main() {{ let x: u4 = {}1{}; }}", "(".repeat(n), ")".repeat(n))
+    format!(
+        "fn main() {{ let x: u4 = {}1{}; }}",
+        "(".repeat(n),
+        ")".repeat(n)
+    )
 }
 
 /// Deeply-nested input must produce a recoverable error, not overflow the
@@ -90,14 +96,17 @@ fn test_deeply_nested_input_returns_error_not_overflow() {
 
 /// Input that nests *exactly up to* `MAX_RULE_DEPTH` still parses cleanly,
 /// and one layer deeper cleanly trips the guard. These exact boundary counts
-/// (18 legitimate levels) were found empirically by binary-searching against
+/// (16 legitimate levels) were found empirically by binary-searching against
 /// increasing nesting counts at the production cap — see `MAX_RULE_DEPTH`'s
 /// doc comment.
 #[test]
 fn test_nesting_up_to_cap_still_parses() {
-    assert!(parse_nib(&nested_paren_source(18)).is_ok(), "18 levels must stay under the cap");
     assert!(
-        parse_nib(&nested_paren_source(19)).is_err(),
+        parse_nib(&nested_paren_source(16)).is_ok(),
+        "16 levels must stay under the cap"
+    );
+    assert!(
+        parse_nib(&nested_paren_source(17)).is_err(),
         "one nesting level past the cap's measured limit must fail"
     );
 }
@@ -149,5 +158,11 @@ mod tests {
     fn parses_binary_expression() {
         let ast = parse_nib("fn main() { let x: u4 = 1 +% 2; }").unwrap();
         assert!(has_rule(&ast, "expr"));
+    }
+
+    #[test]
+    fn parses_shift_expression() {
+        let ast = parse_nib("fn main() { let x: u8 = 1 << 2 >> 1; }").unwrap();
+        assert!(has_rule(&ast, "shift_expr"));
     }
 }

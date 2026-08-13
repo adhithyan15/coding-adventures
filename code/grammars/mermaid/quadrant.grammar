@@ -1,10 +1,11 @@
-# @version 3
+# @version 5
 #
 # Mermaid 11.16.1 quadrant-chart parser grammar.
 #
 # This first native slice covers titles, axis endpoint labels, quadrant labels,
 # normalized points, point classes, inline point styles, and accessibility
-# metadata.
+# metadata. Token matching follows the upstream case-insensitive lexer, and
+# inline comments terminate the preceding statement in the token grammar.
 
 document = { terminator } HEADER { terminator | statement } EOF ;
 terminator = NEWLINE | SEMICOLON ;

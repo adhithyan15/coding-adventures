@@ -414,20 +414,25 @@ mod apple {
     #[test]
     fn render_mermaid_quadrant_to_png() {
         let diagram = parse_quadrant_chart(
-            "quadrantChart\n\
+            "QuAdRaNtChArT\n\
              title Native rendering portfolio\n\
-             x-axis Low reach --> High reach\n\
+             X-AxIs \"Low reach 📉\" ---> \"`High reach Ω`\" %% axis comment\n\
              y-axis Low impact --> High impact\n\
-             quadrant-1 Invest\n\
+             QuAdRaNt-1 \"`Invest 🚀`\"\n\
              quadrant-2 Explore\n\
              quadrant-3 Retire\n\
              quadrant-4 Maintain\n\
              Metal:::native: [0.78, 0.82] color: #ff3300\n\
              Direct2D: [0.58, 0.67] radius: 9, stroke-color: #166534, stroke-width: 3px\n\
-             SVG: [0.34, 0.45]\n\
-             classDef native color: #109060, radius: 12, stroke-color: #310085, stroke-width: 4px\n",
+             \"SVG [portable]\": [0.34, 0.45] %% point comment\n\
+             ClAsSdEf native color: #109060, radius: 12, stroke-color: #310085, stroke-width: 4px\n",
         )
         .expect("quadrant chart should parse");
+        assert_eq!(
+            diagram.x_axis.as_ref().expect("x axis").categories,
+            ["Low reach 📉", "High reach Ω"]
+        );
+        assert_eq!(diagram.quadrant_labels[0].as_deref(), Some("Invest 🚀"));
         let layout = layout_chart_diagram(&diagram, 640.0, 520.0);
         let shaper = CoreTextShaper;
         let metrics = CoreTextMetrics;

@@ -90,10 +90,27 @@ fn var_src<'a>(
 ///   be hostile input. This preserves the original injection guarantee; the binary
 ///   emitter is immune by construction (numeric offsets / tokens).
 fn checked_cil_ident(ctx: &str, name: &str) -> Result<String, IIRClrError> {
-    if !name.is_empty()
-        && name.chars().all(|c| c.is_ascii_alphanumeric() || c == '_' || c == '$')
-    {
-        return Ok(name.to_string());
+    // Quote ALWAYS. A single-quoted identifier is legal everywhere ILAsm expects
+    // one, so quoting can never be wrong — while leaving a name bare is wrong
+    // whenever it collides with an ILAsm keyword, and there are hundreds of those
+    // (every instruction mnemonic, every type name, every directive).
+    //
+    // The old rule left any purely-alphanumeric name bare, which is most of them.
+    // ALGOL 60 lets a procedure be called `neg` or `add`, and `neg`/`add` are CIL
+    // instructions, so `call int32 MainProgram::neg(int32)` is a syntax error and
+    // ilasm rejected the whole assembly:
+    //
+    //     Main.il(14) : error : syntax error at token 'neg' in:
+    //         call int32 MainProgram::neg(int32)
+    //
+    // Enumerating the keywords instead would be a denylist against a frontend's
+    // entire identifier space — it only has to miss one. Quoting unconditionally
+    // has no such failure mode.
+    if name.is_empty() {
+        return Err(IIRClrError::InvalidOperand {
+            function: ctx.to_string(),
+            detail: "CIL identifier is empty".to_string(),
+        });
     }
     if name.is_empty() || !name.chars().all(|c| c.is_ascii_graphic()) {
         return Err(IIRClrError::InvalidOperand {
@@ -1654,11 +1671,65 @@ mod tests {
 
     // ── E6d-6c — CIL name quoting + box-of-reference passthrough ─────────────
 
+    /// A function named after an ILAsm instruction must still assemble.
+    ///
+    /// ALGOL 60 lets a procedure be called `neg` or `add`, and both are CIL
+    /// instruction mnemonics. Emitted bare, `call int32 MainProgram::neg(int32)`
+    /// is a syntax error and `ilasm` rejects the ENTIRE assembly:
+    ///
+    /// ```text
+    /// Main.il(14) : error : syntax error at token 'neg' in:
+    ///     call int32 MainProgram::neg(int32)
+    /// ```
+    ///
+    /// Enumerating the keywords instead would be a denylist against a frontend's
+    /// whole identifier space — it only has to miss one. Quoting always has no
+    /// such failure mode.
     #[test]
-    fn checked_cil_ident_bares_the_safe_subset() {
-        assert_eq!(checked_cil_ident("ctx", "main").unwrap(), "main");
-        assert_eq!(checked_cil_ident("ctx", "L_cond_next_3").unwrap(), "L_cond_next_3");
-        assert_eq!(checked_cil_ident("ctx", "lambda_0$x").unwrap(), "lambda_0$x");
+    fn a_function_named_after_a_cil_instruction_is_quoted() {
+        for name in ["neg", "add", "ret", "call", "box", "not", "or", "and", "switch"] {
+            let f = IIRFunction::new(
+                name,
+                vec![],
+                "i32",
+                vec![
+                    IIRInstr::new("const", Some("v".into()), vec![Operand::Int(1)], "i32"),
+                    IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "i32"),
+                ],
+            );
+            let mut m = IIRModule::new("Main", "algol60");
+            m.functions.push(f);
+            m.functions.push(IIRFunction::new(
+                "main",
+                vec![],
+                "i32",
+                vec![
+                    IIRInstr::new("call", Some("r".into()), vec![Operand::Var(name.into())], "i32"),
+                    IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i32"),
+                ],
+            ));
+            m.entry_point = Some("main".into());
+            let il = emit_il(&m, &IIRClrConfig::new("Main")).expect("emits");
+            assert!(
+                il.contains(&format!("'{name}'")),
+                "`{name}` collides with a CIL mnemonic and must be quoted; got:\n{il}"
+            );
+            assert!(
+                !il.contains(&format!("MainProgram::{name}(")),
+                "`{name}` must never appear bare at a call site; got:\n{il}"
+            );
+        }
+    }
+
+    #[test]
+    fn checked_cil_ident_always_quotes() {
+        // Quoting is legal wherever ILAsm expects an identifier, and leaving a
+        // name bare is wrong whenever it collides with an ILAsm keyword — of
+        // which there are hundreds. So every identifier is quoted; there is no
+        // "safe bare subset" to get wrong.
+        assert_eq!(checked_cil_ident("ctx", "main").unwrap(), "'main'");
+        assert_eq!(checked_cil_ident("ctx", "L_cond_next_3").unwrap(), "'L_cond_next_3'");
+        assert_eq!(checked_cil_ident("ctx", "lambda_0$x").unwrap(), "'lambda_0$x'");
     }
 
     #[test]
@@ -1874,13 +1945,13 @@ mod tests {
         m.functions.push(main);
         m.entry_point = Some("main".into());
         let il = emit_il(&m, &IIRClrConfig::new("Main")).unwrap();
-        assert!(il.contains("public static void bump()"),
+        assert!(il.contains("public static void 'bump'()"),
             "void function must have a `void` CIL signature; got:\n{il}");
-        assert!(il.contains("Program::bump()"),
+        assert!(il.contains("Program::'bump'()"),
             "the call must name bump; got:\n{il}");
         // The call line is `call void …Program::bump()` with no trailing store.
         assert!(il.lines().any(|l| l.trim_start().starts_with("call void")
-            && l.contains("Program::bump()")),
+            && l.contains("Program::'bump'()")),
             "void call must be `call void …bump()`; got:\n{il}");
     }
 
@@ -2512,10 +2583,10 @@ mod tests {
         m.entry_point = Some("main".into());
 
         let il = emit_il(&m, &IIRClrConfig::new("Main")).unwrap();
-        assert!(il.contains("brfalse L_next"), "jmp_if_false → brfalse; got:\n{il}");
-        assert!(il.contains("br L_end"), "jmp → br");
-        assert!(il.contains("L_next:"), "label → named anchor");
-        assert!(il.contains("L_end:"), "label → named anchor");
+        assert!(il.contains("brfalse 'L_next'"), "jmp_if_false → brfalse; got:\n{il}");
+        assert!(il.contains("br 'L_end'"), "jmp → br");
+        assert!(il.contains("'L_next':"), "label → named anchor");
+        assert!(il.contains("'L_end':"), "label → named anchor");
         assert!(il.contains("ldnull"), "const-of-ref-type nil → ldnull; got:\n{il}");
         assert!(il.contains("object[] V_"), "nil local is object[]");
         assert!(!il.contains("ldc.i4 0\n    stloc"), "nil must not be ldc.i4 0");
@@ -2572,7 +2643,7 @@ mod tests {
         let il = emit_il(&m, &IIRClrConfig::new("Main")).unwrap();
         // A distinct lambda method with one object parameter.
         assert!(
-            il.contains("object lambda_0(object A_0)"),
+            il.contains("object 'lambda_0'(object A_0)"),
             "lambda emitted as its own method; got:\n{il}"
         );
         // The parameter is read with ldarg, not ldloc.
@@ -2581,7 +2652,7 @@ mod tests {
         assert!(il.contains("castclass object[]"), "object param cast before CAR; got:\n{il}");
         // main calls lambda_0 by name with the right signature.
         assert!(
-            il.contains("call object MainProgram::lambda_0(object)"),
+            il.contains("call object MainProgram::'lambda_0'(object)"),
             "by-name call; got:\n{il}"
         );
     }
@@ -2626,7 +2697,7 @@ mod tests {
 
         let il = emit_il(&m, &IIRClrConfig::new("Main")).unwrap();
         assert!(
-            il.contains("call object MainProgram::label_0(object)"),
+            il.contains("call object MainProgram::'label_0'(object)"),
             "self-recursive call by name; got:\n{il}"
         );
     }
@@ -2664,7 +2735,7 @@ mod tests {
         let mut m = IIRModule::new("Main", "mccarthy-lisp");
         m.functions.push(IIRFunction::new("main", vec![], "i32", instrs));
         m.entry_point = Some("main".into());
-        assert!(emit_il(&m, &IIRClrConfig::new("Main")).unwrap().contains("L_cond_next_1:"));
+        assert!(emit_il(&m, &IIRClrConfig::new("Main")).unwrap().contains("'L_cond_next_1':"));
     }
 
     #[test]
@@ -2958,9 +3029,9 @@ mod tests {
         module.functions.extend([pick, main]);
         module.entry_point = Some("main".into());
         let il = emit_il(&module, &IIRClrConfig::new("StringProcedure")).unwrap();
-        assert!(il.contains("string pick(int32 A_0)"), "missing string procedure signature:\n{il}");
+        assert!(il.contains("string 'pick'(int32 A_0)"), "missing string procedure signature:\n{il}");
         assert!(
-            il.contains("call string StringProcedureProgram::pick(int32)"),
+            il.contains("call string StringProcedureProgram::'pick'(int32)"),
             "missing string call signature:\n{il}"
         );
         assert!(

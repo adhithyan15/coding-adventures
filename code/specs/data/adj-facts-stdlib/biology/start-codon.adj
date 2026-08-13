@@ -1,0 +1,78 @@
+% ============================================================================
+% start-codon — which mRNA codons NCBI's Standard Genetic Code table marks as
+% capable of initiating translation (adj-facts-stdlib, BIOLOGY).
+% ============================================================================
+% A sibling to the already-shipped `genetic-code.adj` (which recalls
+% `codon_amino_acid(codon, amino_acid)` for all 64 codons): a new
+% `start_codon(codon, role)` table names WHICH codons the source's own
+% "Starts" annotation line flags, information the existing table's schema has
+% no room for. `genetic-code.adj`'s own `source` field already quotes, in
+% full, NCBI's five-line translation-table block VERBATIM — including a
+% `Starts` line the shipped table only ever surfaces as a single inline `%`
+% comment on the `atg` row ("the START codon"), leaving the fact
+% un-queryable and leaving the OTHER two codons the same line flags entirely
+% unrecorded. Recall is a binding query:
+%
+%     ? start_codon(atg, $Role)   % start
+%     ? start_codon(gcc, $Role)   % abstain — not flagged by the source
+%
+% A native `table` (ADJ-TABLES RS-5, a TWO-column table like
+% `genetic-code.adj`'s own `codon_amino_acid`): each `row` lowers to a ground
+% relation `start_codon(codon, role)` carrying the citation, so the lookup
+% above is the ordinary SLD binding query — the engine returns the role WITH
+% its source, on the CPU, with zero model calls, and abstains on any codon
+% the source's `Starts` line does not mark.
+%
+% DECODING THE SOURCE (no new WebFetch — the artifact is already quoted
+% verbatim inside `genetic-code.adj`'s own `source` field, reproduced again
+% here unchanged)
+% ------------------------------------------------------------------------
+% NCBI's canonical 5-line block aligns four lines column-by-column; column i
+% names one codon (`Base1[i] Base2[i] Base3[i]`) and, when the `Starts` line
+% carries an `M` at that column, flags that codon as a start site:
+%
+%   AAs    = FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG
+%   Starts = ---M------**--*----M---------------M----------------------------
+%   Base1  = TTTTTTTTTTTTTTTTCCCCCCCCCCCCCCCCAAAAAAAAAAAAAAAAGGGGGGGGGGGGGGGG
+%   Base2  = TTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGG
+%   Base3  = TCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAG
+%
+% The `Starts` line carries exactly three `M`s, at columns 4, 20, and 36.
+% Reading Base1/Base2/Base3 at those same three columns gives the three
+% flagged codons:
+%
+%     column   Base1  Base2  Base3   codon   Starts mark
+%     ------   -----  -----  -----   -----   -----------
+%     4        T      T      G       ttg     M
+%     20       C      T      G       ctg     M
+%     36       A      T      G       atg     M
+%
+% This table deliberately does NOT pair these codons with an amino acid —
+% translation always initiates with the same initiator methionine regardless
+% of which start codon recruited it, so a `(codon, amino_acid)` pairing for
+% `ttg`/`ctg` would misstate biology by implying those codons install
+% leucine at the start position. `role` instead names only what the source
+% itself asserts: that NCBI's own annotation marks this codon as capable of
+% initiating translation, nothing more.
+%
+% Provenance: reproduces, byte-for-byte, the SAME NCBI "Genetic Codes" page
+% (translation table 1, "The Standard Code" / SGC0) already cited by
+% `genetic-code.adj` — no new source, only a different schema decoding a
+% line of the SAME already-quoted artifact. `trust authoritative` —
+% ncbi.nlm.nih.gov is NIH/NLM, a primary source, the same tier
+% `genetic-code.adj` already carries. (See ../README.md;
+% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts,
+% feedback_no_byte_arithmetic_for_llm.)
+% ============================================================================
+
+table start_codon {
+    columns codon, role
+
+    row (ttg, start)
+    row (ctg, start)
+    row (atg, start)
+
+    source "AAs  = FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG\nStarts = ---M------**--*----M---------------M----------------------------\nBase1  = TTTTTTTTTTTTTTTTCCCCCCCCCCCCCCCCAAAAAAAAAAAAAAAAGGGGGGGGGGGGGGGG\nBase2  = TTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGG\nBase3  = TCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAG"
+    locator "https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi"
+    trust authoritative
+}

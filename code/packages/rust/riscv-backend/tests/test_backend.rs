@@ -330,6 +330,43 @@ fn executes_unsigned_64_bit_wraparound() {
 }
 
 #[test]
+fn executes_pair_aware_64_bit_multiplication() {
+    let unsigned = vec![
+        ci("const_u64", Some("left"), vec![CIROperand::Int(4_294_967_297)], "u64"),
+        ci("const_u64", Some("right"), vec![CIROperand::Int(4_294_967_297)], "u64"),
+        ci(
+            "mul_u64",
+            Some("product"),
+            vec![CIROperand::Var("left".into()), CIROperand::Var("right".into())],
+            "u64",
+        ),
+        ci("ret_u64", None, vec![CIROperand::Var("product".into())], "u64"),
+    ];
+    let bytes = compile(&ctx("wide_unsigned_mul", &[], "u64"), &unsigned)
+        .expect("wide unsigned multiplication lowering");
+    let result = run_binary(&bytes, &[]).expect("wide unsigned multiplication execution");
+    assert_eq!(result.return_value as u32, 1);
+    assert_eq!(result.return_value_high, 2);
+
+    let signed = vec![
+        ci("const_i64", Some("left"), vec![CIROperand::Int(-2)], "i64"),
+        ci("const_i64", Some("right"), vec![CIROperand::Int(2)], "i64"),
+        ci(
+            "mul_i64",
+            Some("product"),
+            vec![CIROperand::Var("left".into()), CIROperand::Var("right".into())],
+            "i64",
+        ),
+        ci("ret_i64", None, vec![CIROperand::Var("product".into())], "i64"),
+    ];
+    let bytes = compile(&ctx("wide_signed_mul", &[], "i64"), &signed)
+        .expect("wide signed multiplication lowering");
+    let result = run_binary(&bytes, &[]).expect("wide signed multiplication execution");
+    assert_eq!(result.return_value, -4);
+    assert_eq!(result.return_value_high, u32::MAX);
+}
+
+#[test]
 fn executes_pair_aware_signed_and_unsigned_64_bit_comparisons() {
     let signed = vec![
         ci(

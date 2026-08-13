@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Add the left-associative `shift_expr` precedence level for `<<` and `>>`,
+  between addition and the existing multiplicative/bitwise layer.
+
 ## 0.4.0 — 2026-07-13
 
 ### Fixed — recursion-depth guard against native stack overflow (DoS)

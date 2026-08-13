@@ -1,5 +1,11 @@
 # Changelog — `lang-aot`
 
+## 0.224.1 - 2026-08-13 (ALGOL zero-trip while-loop snapshots)
+
+The ALGOL matrix now proves across all seven standard backends that a
+statically false `while` element preserves an entry real snapshot while still
+assigning its controlled scalar's initial value.
+
 ## 0.224.0 - 2026-08-13 - BASIC on RV32I is a refusal, and the test now says so
 
 `end_to_end_smoke.rs`'s `end_to_end_basic_print_emits_riscv32_bin_via_lang_aot`

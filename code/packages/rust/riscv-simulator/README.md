@@ -1,10 +1,12 @@
 # RISC-V Simulator (Rust)
 
-Full RV32I base integer instruction set with M-mode privileged extensions.
+Full RV32I base integer instruction set, the `mul` / `mulhu` RV32M subset,
+and M-mode privileged extensions.
 
 ## Supported Instructions
 
 - **Arithmetic**: add, sub, addi, slt, sltu, slti, sltiu, and, or, xor, andi, ori, xori
+- **Multiply**: mul, mulhu (RV32M subset)
 - **Shifts**: sll, srl, sra, slli, srli, srai
 - **Loads**: lb, lh, lw, lbu, lhu
 - **Stores**: sb, sh, sw

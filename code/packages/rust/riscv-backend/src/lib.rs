@@ -2,7 +2,8 @@
 //!
 //! This backend deliberately consumes `CIRInstr`, never dynamic IIR.  It is a
 //! small but executable scalar lane: supported functions lower to real RV32I
-//! bytes and `run_binary` executes those bytes in the in-tree simulator.
+//! bytes, with RV32M `mul` / `mulhu` used for wide multiplication, and
+//! `run_binary` executes those bytes in the in-tree simulator.
 
 use std::collections::{HashMap, HashSet};
 use std::fmt;
@@ -11,8 +12,9 @@ use jit_core::backend::{Backend, FunctionContext};
 use jit_core::cir::{CIRInstr, CIROperand};
 use riscv_encoder::{
     assemble, encode_add, encode_addi, encode_and, encode_andi, encode_beq, encode_bne,
-    encode_ecall, encode_jal, encode_lui, encode_or, encode_sll, encode_slt, encode_sltu,
-    encode_sra, encode_srai, encode_srl, encode_sub, encode_xor, encode_xori, A0, RET_WORD,
+    encode_ecall, encode_jal, encode_lui, encode_mul, encode_mulhu, encode_or, encode_sll,
+    encode_slt, encode_sltu, encode_sra, encode_srai, encode_srl, encode_sub, encode_xor,
+    encode_xori, A0, RET_WORD,
     X0_ZERO, X1_RA,
 };
 use riscv_simulator::RiscVSimulator;
@@ -317,12 +319,13 @@ impl Lowerer {
             return Ok(());
         }
 
-        for family in ["add", "sub", "and", "or", "xor", "shl", "shr"] {
+        for family in ["add", "sub", "mul", "and", "or", "xor", "shl", "shr"] {
             if let Some(ty) = op.strip_prefix(&format!("{family}_")) {
                 if matches!(ty, "i64" | "u64") {
                     return match family {
                         "add" => self.lower_wide_add(instr, op, is_signed(ty)),
                         "sub" => self.lower_wide_sub(instr, op, is_signed(ty)),
+                        "mul" => self.lower_wide_mul(instr, op, is_signed(ty)),
                         "and" | "or" | "xor" => {
                             self.lower_wide_bitwise(instr, op, family, is_signed(ty))
                         }
@@ -338,6 +341,7 @@ impl Lowerer {
                 let word = match family {
                     "add" => encode_add(rd, lhs, rhs),
                     "sub" => encode_sub(rd, lhs, rhs),
+                    "mul" => encode_mul(rd, lhs, rhs),
                     "and" => encode_and(rd, lhs, rhs),
                     "or" => encode_or(rd, lhs, rhs),
                     "xor" => encode_xor(rd, lhs, rhs),
@@ -646,6 +650,31 @@ impl Lowerer {
         self.words
             .push(encode_sltu(SCRATCH_REGISTER, lhs_lo, rhs.low()));
         self.words.push(encode_sub(hi, hi, SCRATCH_REGISTER));
+        Ok(())
+    }
+
+    fn lower_wide_mul(
+        &mut self,
+        instr: &CIRInstr,
+        op: &str,
+        signed: bool,
+    ) -> Result<(), BackendError> {
+        let ValueLocation::Pair { lo, hi } = self.dest_pair(instr, op)? else {
+            unreachable!("dest_pair always returns a pair")
+        };
+        let lhs = self.var_location(instr, 0, op)?;
+        let rhs = self.var_location(instr, 1, op)?;
+
+        // (a_hi * 2^32 + a_lo) * (b_hi * 2^32 + b_lo), modulo 2^64.
+        // Only the low word of each cross product contributes to the result.
+        self.copy_or_extend_high(SECOND_SCRATCH_REGISTER, lhs, signed);
+        self.copy_or_extend_high(SCRATCH_REGISTER, rhs, signed);
+        self.words.push(encode_mul(lo, lhs.low(), rhs.low()));
+        self.words.push(encode_mulhu(hi, lhs.low(), rhs.low()));
+        self.words.push(encode_mul(SCRATCH_REGISTER, lhs.low(), SCRATCH_REGISTER));
+        self.words.push(encode_add(hi, hi, SCRATCH_REGISTER));
+        self.words.push(encode_mul(SCRATCH_REGISTER, SECOND_SCRATCH_REGISTER, rhs.low()));
+        self.words.push(encode_add(hi, hi, SCRATCH_REGISTER));
         Ok(())
     }
 

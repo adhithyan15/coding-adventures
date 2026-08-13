@@ -1095,6 +1095,60 @@ fn end_to_end_nib_integer_arithmetic_executes_in_the_riscv_simulator() {
 }
 
 #[test]
+fn end_to_end_nib_multiplication_executes_in_the_riscv_simulator() {
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("multiplication.nib");
+    let bin = dir.path().join("multiplication.bin");
+    std::fs::write(&src, b"fn main() -> u8 { return 6 * 7; }\n").unwrap();
+
+    lang_aot::compile_file_to_riscv32_bin(&src, &bin, lang_aot::Language::Nib)
+        .expect("Nib multiplication must compile through the RV32M pair core");
+
+    let bytes = std::fs::read(&bin).expect("read .bin");
+    let run = riscv_backend::run_binary(&bytes, &[])
+        .expect("the Nib RV32M multiplication binary must execute in the simulator");
+    assert!(run.halted, "the simulator return trampoline must halt");
+    assert_eq!(run.return_value, 42);
+    assert_eq!(run.return_value_high, 0);
+}
+
+#[test]
+fn end_to_end_nib_shift_executes_in_the_riscv_simulator() {
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("shift.nib");
+    let bin = dir.path().join("shift.bin");
+    std::fs::write(&src, b"fn main() -> u8 { return 1 << 5; }\n").unwrap();
+
+    lang_aot::compile_file_to_riscv32_bin(&src, &bin, lang_aot::Language::Nib)
+        .expect("Nib shift must compile through the RV32I pair-shift core");
+
+    let bytes = std::fs::read(&bin).expect("read .bin");
+    let run = riscv_backend::run_binary(&bytes, &[])
+        .expect("the Nib RV32I shift binary must execute in the simulator");
+    assert!(run.halted, "the simulator return trampoline must halt");
+    assert_eq!(run.return_value, 32);
+    assert_eq!(run.return_value_high, 0);
+}
+
+#[test]
+fn end_to_end_nib_right_shift_executes_in_the_riscv_simulator() {
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("right_shift.nib");
+    let bin = dir.path().join("right_shift.bin");
+    std::fs::write(&src, b"fn main() -> u8 { return 64 >> 1; }\n").unwrap();
+
+    lang_aot::compile_file_to_riscv32_bin(&src, &bin, lang_aot::Language::Nib)
+        .expect("Nib right shift must compile through the RV32I pair-shift core");
+
+    let bytes = std::fs::read(&bin).expect("read .bin");
+    let run = riscv_backend::run_binary(&bytes, &[])
+        .expect("the Nib RV32I right-shift binary must execute in the simulator");
+    assert!(run.halted, "the simulator return trampoline must halt");
+    assert_eq!(run.return_value, 32);
+    assert_eq!(run.return_value_high, 0);
+}
+
+#[test]
 fn end_to_end_nib_bitwise_arithmetic_executes_in_the_riscv_simulator() {
     let dir = tempfile::tempdir().expect("tempdir");
     let src = dir.path().join("bitwise.nib");
