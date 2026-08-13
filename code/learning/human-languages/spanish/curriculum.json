@@ -2185,6 +2185,54 @@
         "ES-EXT-B1-COMIERON"
       ],
       "after": []
+    },
+    {
+      "id": "ES-PATH-B1-TUVIERON",
+      "spine_node": "SPINE-TALK-ABOUT-PAST",
+      "lessons": [
+        "ES-C55-tuvieron"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-B1-TUVIERON"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-B1-FUERON",
+      "spine_node": "SPINE-TALK-ABOUT-PAST",
+      "lessons": [
+        "ES-C55-fueron"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-B1-FUERON"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-B1-REVIEW-PRET",
+      "spine_node": "SPINE-TALK-ABOUT-PAST",
+      "lessons": [
+        "ES-C55-repaso-preterito"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-B1-REVIEW-PRET"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-B1-SYNTH-PRET",
+      "spine_node": "SPINE-TALK-ABOUT-PAST",
+      "lessons": [
+        "ES-C55-sintesis-preterito-completo"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-B1-SYNTH-PRET"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -2453,7 +2501,11 @@
         "ES-PATH-040-SYNTH-PERF",
         "ES-PATH-B1-HABLARON",
         "ES-PATH-B1-HABLAMOS-DOS",
-        "ES-PATH-B1-COMIERON"
+        "ES-PATH-B1-COMIERON",
+        "ES-PATH-B1-TUVIERON",
+        "ES-PATH-B1-FUERON",
+        "ES-PATH-B1-REVIEW-PRET",
+        "ES-PATH-B1-SYNTH-PRET"
       ],
       "omits": [
         "VERB-PAST"
@@ -4846,6 +4898,50 @@
       "prerequisites": [],
       "lessons": [
         "ES-C55-comieron"
+      ]
+    },
+    {
+      "id": "ES-EXT-B1-TUVIERON",
+      "stage": "A2",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C55-tuvieron"
+      ]
+    },
+    {
+      "id": "ES-EXT-B1-FUERON",
+      "stage": "A2",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C55-fueron"
+      ]
+    },
+    {
+      "id": "ES-EXT-B1-REVIEW-PRET",
+      "stage": "A2",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C55-repaso-preterito"
+      ]
+    },
+    {
+      "id": "ES-EXT-B1-SYNTH-PRET",
+      "stage": "A2",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C55-sintesis-preterito-completo"
       ]
     }
   ]

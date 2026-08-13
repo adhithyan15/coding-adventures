@@ -190,8 +190,8 @@ describe("the committed corpus", () => {
   it("pins the first ledger, and it is the reason the rule exists", () => {
     const l = buildRootLedger(lessons, minReuse);
     expect(l.summary.roots).toBe(2962); // +5: vos-latin slug and ES-ETYMON-VOS-03 // +78: vocabulary wave 5 // +6: HL-C88 slices 5-6 // +2: HL-C88 slice 8 // +111: vocabulary wave 6 // +2: HL-C113 (B1 si-condition rung)
-    expect(l.summary.underspent).toBe(2850); // +3: a payoff lesson re-spends a root // +1: the vos-latin slug is unspent; ES-ETYMON-VOS-03 is spent three times, so it is NOT latin-vos, spent once so far // -1: HL-C98 spends fabulari-latin a third time // +76: vocabulary wave 5 // +6: HL-C88 slices 5-6 // +2: HL-C88 slice 8 // +108: vocabulary wave 6 // +1: HL-C113 (B1 si-condition rung)
-    expect(l.summary.neverSpent).toBe(1956); // -6: HL-C94 payoff lessons re-spend roots latin-vos, introduced and not yet re-spent // +1: HL-C98 // +51: vocabulary wave 5 // +6: HL-C88 slices 5-6 // +2: HL-C88 slice 8 // +72: vocabulary wave 6 // +2: HL-C113 (B1 si-condition rung)
+    expect(l.summary.underspent).toBe(2849); // +3: a payoff lesson re-spends a root // +1: the vos-latin slug is unspent; ES-ETYMON-VOS-03 is spent three times, so it is NOT latin-vos, spent once so far // -1: HL-C98 spends fabulari-latin a third time // +76: vocabulary wave 5 // +6: HL-C88 slices 5-6 // +2: HL-C88 slice 8 // +108: vocabulary wave 6 // +1: HL-C113 (B1 si-condition rung)
+    expect(l.summary.neverSpent).toBe(1956); // -6: HL-C94 payoff lessons re-spend roots latin-vos, introduced and not yet re-spent // +1: HL-C98 // +51: vocabulary wave 5 // +6: HL-C88 slices 5-6 // +2: HL-C88 slice 8 // +72: vocabulary wave 6 // +2: HL-C113 (B1 si-condition rung) // HL-C113 preterite close
     expect(l.summary.underspentPercent).toBe(96); // -1: HL-C98
 
     // Both namespaces contribute. If the etymon-atom count ever returns to
@@ -212,7 +212,7 @@ describe("the committed corpus", () => {
     );
     expect(l.summary).toMatchObject({
       roots: 359, // +3: HL-C88 slice 4 adds profiteri-latin, istes-greek and ES-ETYMON-PROFITERI // +6: HL-C88 slices 5-6 // +2: HL-C88 slice 8 adds arius-latin and ES-ETYMON-ARIUS // +2: HL-C88 slice 9 adds exitus-latin and ES-ETYMON-EXITUS // +2: B1 si-condition adds si-latin and ES-ETYMON-SI-LATIN
-      underspent: 332, // +2: HL-C88 slice 4 // +6: HL-C88 slices 5-6 // +2: HL-C88 slice 8 adds arius-latin and ES-ETYMON-ARIUS // +2: HL-C88 slice 9 adds exitus-latin and ES-ETYMON-EXITUS // +2: B1 si-condition adds si-latin and ES-ETYMON-SI-LATIN
+      underspent: 331, // +2: HL-C88 slice 4 // +6: HL-C88 slices 5-6 // +2: HL-C88 slice 8 adds arius-latin and ES-ETYMON-ARIUS // +2: HL-C88 slice 9 adds exitus-latin and ES-ETYMON-EXITUS // +2: B1 si-condition adds si-latin and ES-ETYMON-SI-LATIN
       neverSpent: 216, // +3: HL-C88 slice 4 introduces three roots not yet re-spent // +6: HL-C88 slices 5-6 // +2: HL-C88 slice 8 adds arius-latin and ES-ETYMON-ARIUS // +2: HL-C88 slice 9 adds exitus-latin and ES-ETYMON-EXITUS // +2: B1 si-condition adds si-latin and ES-ETYMON-SI-LATIN
       underspentPercent: 92,
     });

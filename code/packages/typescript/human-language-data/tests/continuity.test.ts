@@ -422,7 +422,7 @@ describe("the real corpus", () => {
     // not number the family; ch19's ஆகிறது is described the same way), so it practises
     // TA-GRAMMAR-DATIVE-SUBJECT-02 at a distance of 90 lessons (index 38 -> 128)
     // rather than re-teaching it.
-    expect(report.summary.atomsTaught).toBe(3003); // +4: ES-LEX-VOS-01, ES-CULTURE-VOSEO-02 (ES-C03-vos) // +3: HL-C98 splits AR-PRESENT-SINGULAR into 1SG/2SG/3SG // +83: vocabulary wave 5 (persian ch9-11, telugu ch35-40, malayalam ch35-40) // +7: HL-C88 slices 5-6 (Spanish) // +2: HL-C88 slice 8 // +103: vocabulary wave 6, round 2 (russian/persian/urdu/bengali) // +3: HL-C113 (B1 si-condition rung) // +3: HL-C113 preterite plural
+    expect(report.summary.atomsTaught).toBe(3005); // +4: ES-LEX-VOS-01, ES-CULTURE-VOSEO-02 (ES-C03-vos) // +3: HL-C98 splits AR-PRESENT-SINGULAR into 1SG/2SG/3SG // +83: vocabulary wave 5 (persian ch9-11, telugu ch35-40, malayalam ch35-40) // +7: HL-C88 slices 5-6 (Spanish) // +2: HL-C88 slice 8 // +103: vocabulary wave 6, round 2 (russian/persian/urdu/bengali) // +3: HL-C113 (B1 si-condition rung) // +3: HL-C113 preterite plural
     // +2, and it goes UP, which is worth stating plainly. Three of the five new atoms
     // are TA-W09's and nothing follows TA-W09, so they are orphans by construction:
     // PA-YA-01, E-SIGN-02, READ-PEYAR-03. TA-W08's two are revisited by TA-W09.
@@ -485,7 +485,7 @@ describe("the real corpus", () => {
     // would put the prerequisite AFTER its dependent and fail the ordering rule). The
     // tie is carried by `reviews_of` instead, which does not count as a revisit.
     // Chapters 40 and 41 are planned to close this.
-    expect(report.summary.atomsNeverRevisited).toBe(480); // -17: payoff lessons plus si/no moving early // +2: HL-C98's per-cell atoms are revisited later than the R-windows reach // -8: vocabulary wave 5 rescues net orphan atoms via reach-back payoffs // +4: HL-C88 slices 5-6 // +3: vocabulary wave 6 (russian/persian/urdu/bengali reinforcement pushed most orphans to zero, but extending each track exposed a few new tail atoms) // +1: HL-C113 (B1 si-condition rung) // +2: HL-C113 preterite plural
+    expect(report.summary.atomsNeverRevisited).toBe(478); // -17: payoff lessons plus si/no moving early // +2: HL-C98's per-cell atoms are revisited later than the R-windows reach // -8: vocabulary wave 5 rescues net orphan atoms via reach-back payoffs // +4: HL-C88 slices 5-6 // +3: vocabulary wave 6 (russian/persian/urdu/bengali reinforcement pushed most orphans to zero, but extending each track exposed a few new tail atoms) // +1: HL-C113 (B1 si-condition rung) // +2: HL-C113 preterite plural
     expect(report.summary.neverRevisitedPercent).toBe(16);
 
     // 509 -> 517, and the eight split into TWO DIFFERENT PHENOMENA this number conflates.
@@ -742,7 +742,7 @@ describe("the real corpus", () => {
     // GRAMMAR-DATIVE-SUBJECT-02 2 -> 3, LEX-DATIVE-SUBJECT-01 3 -> 4 and
     // LEX-NUMBERS-1-5-01 2 -> 3 out of R4. Chapter 6's dative and chapter 7's numbers
     // are reached at R4 distance for the first time.
-    expect(report.summary.missedByWindow.R2).toBe(2105); // +1: ES-C02-concordancia (HL-C85). buenos dias/buenas tardes stop REQUIRING the agreement rule; it becomes a payoff lesson after the learner has used all three greetings. // +84: vocabulary wave 5, new pre-A1 nouns landing late in already-long chapters // +4: HL-C88 slices 5-6 // +1: HL-C112, same cause as R1 above // +1: HL-C88 slice 8 // +87: vocabulary wave 6 // +4: HL-C113 (B1 si-condition rung) // +2: HL-C113 preterite plural
+    expect(report.summary.missedByWindow.R2).toBe(2106); // +1: ES-C02-concordancia (HL-C85). buenos dias/buenas tardes stop REQUIRING the agreement rule; it becomes a payoff lesson after the learner has used all three greetings. // +84: vocabulary wave 5, new pre-A1 nouns landing late in already-long chapters // +4: HL-C88 slices 5-6 // +1: HL-C112, same cause as R1 above // +1: HL-C88 slice 8 // +87: vocabulary wave 6 // +4: HL-C113 (B1 si-condition rung) // +2: HL-C113 preterite plural // HL-C113 preterite close
   });
 
   it("shows what a declared reading order was worth", () => {
@@ -771,7 +771,7 @@ describe("the real corpus", () => {
       // Chapter 16 replaces three legacy lessons with eight bounded steps;
       // Chapter 17 replaces four legacy lessons with eight bounded steps.
       // Chapter 18 replaces ten legacy lessons with nine bounded steps.
-      lessonCount: 347, // +4: HL-C98 // +3: HL-C97 adds the repair kit (no entiendo, mas despacio) at chapter 14 // +8 payoff lessons // +1 ES-C03-vos, +1 ES-C02-concordancia // +4: HL-C88 slices 5-6 // +1: HL-C88 slice 7 (ES-C09-ncia) // +3: HL-C88 slice 8 (-ario, review, synthesis) // +1: HL-C88 slice 9 (falsos amigos) // +3: B1 si-condition rung // +3: HL-C113 preterite plural
+      lessonCount: 351, // +4: HL-C98 // +3: HL-C97 adds the repair kit (no entiendo, mas despacio) at chapter 14 // +8 payoff lessons // +1 ES-C03-vos, +1 ES-C02-concordancia // +4: HL-C88 slices 5-6 // +1: HL-C88 slice 7 (ES-C09-ncia) // +3: HL-C88 slice 8 (-ario, review, synthesis) // +1: HL-C88 slice 9 (falsos amigos) // +3: B1 si-condition rung // +3: HL-C113 preterite plural // +4: HL-C113 preterite close (strong plurals, review, synthesis)
       lessonsWithoutSequence: 0,
       forwardPrerequisites: 0,
       // Chapters 9, 10, and 13 each add nine atoms, Chapter 11 adds eleven, and
@@ -781,8 +781,8 @@ describe("the real corpus", () => {
       // Chapter 16 adds twelve atoms without adding an unrevisited orphan.
       // Chapter 17 does the same across its future and conditional ramp.
       // Chapter 18 does the same across its singular subjunctive ramp.
-      atomsTaught: 541, // +3: HL-C98's per-cell atoms // +7: HL-C88 slices 5-6 // +2: HL-C88 slice 7 (ES-C09-ncia) // +2: HL-C88 slice 8 (-ario, review, synthesis) // +2: HL-C88 slice 9 (falsos amigos) // +3: B1 si-condition rung // +3: HL-C113 preterite plural
-      atomsNeverRevisited: 76, // slice 8 nets zero: -1 ES-FRIEND-NCIA-NCE (the new review and synthesis revisit it), +1 ES-ETYMON-ARIUS (introduced, never re-practised) // +2: HL-C98 // +4: HL-C88 slices 5-6 // +1: HL-C88 slice 7 (ES-C09-ncia) // +1: HL-C88 slice 9 (falsos amigos) // +1: B1 si-condition rung // +2: HL-C113 preterite plural
+      atomsTaught: 543, // +3: HL-C98's per-cell atoms // +7: HL-C88 slices 5-6 // +2: HL-C88 slice 7 (ES-C09-ncia) // +2: HL-C88 slice 8 (-ario, review, synthesis) // +2: HL-C88 slice 9 (falsos amigos) // +3: B1 si-condition rung // +3: HL-C113 preterite plural // +2: HL-C113 preterite close (strong plurals, review, synthesis)
+      atomsNeverRevisited: 74, // slice 8 nets zero: -1 ES-FRIEND-NCIA-NCE (the new review and synthesis revisit it), +1 ES-ETYMON-ARIUS (introduced, never re-practised) // +2: HL-C98 // +4: HL-C88 slices 5-6 // +1: HL-C88 slice 7 (ES-C09-ncia) // +1: HL-C88 slice 9 (falsos amigos) // +1: B1 si-condition rung // +2: HL-C113 preterite plural // -2 (the review and synthesis revisit two orphaned atoms): HL-C113 preterite close (strong plurals, review, synthesis)
     });
   });
 

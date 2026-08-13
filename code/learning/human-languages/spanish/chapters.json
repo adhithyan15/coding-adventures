@@ -4010,6 +4010,74 @@
           "ES-GRAMMAR-ER-IR-PRETERITE-PLURAL"
         ]
       }
+    },
+    {
+      "chapter": 202,
+      "title": "Tuvieron --- the Strong Stems, Made Plural",
+      "label": "ch:tuvieron",
+      "canDo": "I can put the strong preterite stems into the plural.",
+      "spineNodes": [
+        "SPINE-ASK-LOCATION"
+      ],
+      "payoff": {
+        "lesson": "ES-C55-tuvieron",
+        "kind": "task",
+        "summary": "I can put the strong preterite stems into the plural.",
+        "assesses": [
+          "ES-GRAMMAR-STRONG-PRETERITE-PLURAL"
+        ]
+      }
+    },
+    {
+      "chapter": 203,
+      "title": "Fueron --- They Were, and They Went",
+      "label": "ch:fueron",
+      "canDo": "I can use the one plural past that serves both ser and ir.",
+      "spineNodes": [
+        "SPINE-ASK-LOCATION"
+      ],
+      "payoff": {
+        "lesson": "ES-C55-fueron",
+        "kind": "task",
+        "summary": "I can use the one plural past that serves both ser and ir.",
+        "assesses": [
+          "ES-GRAMMAR-SER-IR-PRETERITE-PLURAL"
+        ]
+      }
+    },
+    {
+      "chapter": 204,
+      "title": "Review --- the Whole Preterite",
+      "label": "ch:repaso-preterito",
+      "canDo": "I can give the whole preterite, six people and three families.",
+      "spineNodes": [
+        "SPINE-ASK-LOCATION"
+      ],
+      "payoff": {
+        "lesson": "ES-C55-repaso-preterito",
+        "kind": "task",
+        "summary": "I can give the whole preterite, six people and three families.",
+        "assesses": [
+          "ES-GRAMMAR-AR-PRETERITE-3PL"
+        ]
+      }
+    },
+    {
+      "chapter": 205,
+      "title": "Synthesis --- Telling What Happened",
+      "label": "ch:sintesis-preterito-completo",
+      "canDo": "I can tell a short past story about other people.",
+      "spineNodes": [
+        "SPINE-ASK-LOCATION"
+      ],
+      "payoff": {
+        "lesson": "ES-C55-sintesis-preterito-completo",
+        "kind": "task",
+        "summary": "I can tell a short past story about other people.",
+        "assesses": [
+          "ES-GRAMMAR-AR-PRETERITE-3PL"
+        ]
+      }
     }
   ]
 }

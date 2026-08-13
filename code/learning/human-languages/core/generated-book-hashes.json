@@ -5412,6 +5412,42 @@
       "tex": "spanish/book/chapters/ch201-comieron.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 202,
+      "sourceHash": "fnv1a64:1f30e14a3af9dba0",
+      "lessonIds": [
+        "ES-C55-tuvieron"
+      ],
+      "tex": "spanish/book/chapters/ch202-tuvieron.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 203,
+      "sourceHash": "fnv1a64:1505afccbcf56c0d",
+      "lessonIds": [
+        "ES-C55-fueron"
+      ],
+      "tex": "spanish/book/chapters/ch203-fueron.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 204,
+      "sourceHash": "fnv1a64:46345e3d7a26baf7",
+      "lessonIds": [
+        "ES-C55-repaso-preterito"
+      ],
+      "tex": "spanish/book/chapters/ch204-review-preterito.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 205,
+      "sourceHash": "fnv1a64:2a4a9b04bdf7f8be",
+      "lessonIds": [
+        "ES-C55-sintesis-preterito-completo"
+      ],
+      "tex": "spanish/book/chapters/ch205-synthesis-preterito.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "sourceHash": "fnv1a64:c0940889d5248bc5",

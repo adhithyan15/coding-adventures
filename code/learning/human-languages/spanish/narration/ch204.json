@@ -1,0 +1,204 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 204,
+  "title": "Review --- the Whole Preterite",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:453deab0debd63aa",
+  "lessons": [
+    {
+      "id": "ES-C55-repaso-preterito",
+      "sequence": 2255,
+      "title": "Review — the whole preterite",
+      "headword": "the whole preterite",
+      "romanization": "the whole preterite",
+      "gloss": "five of the six persons, three families, and an honest account of what is still owed",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5cdc36f29071cdca",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The past they ending for -ar? (-aron.) For -er and -ir? (-ieron.) That is the whole plural, in two syllables each."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say each family's own line, one at a time. There is no table here on purpose — a paradigm is easier to hold as three short chants than as a grid."
+            },
+            {
+              "kind": "speech",
+              "text": "-ar: hablé, hablaste, habló, hablamos, hablaron."
+            },
+            {
+              "kind": "speech",
+              "text": "-er: comí, comiste, comió, comimos, comieron."
+            },
+            {
+              "kind": "speech",
+              "text": "-ir: viví, viviste, vivió, vivimos, vivieron."
+            },
+            {
+              "kind": "speech",
+              "text": "Two ending sets, not three. -er and -ir have shared this tense from the first chapter of it, and go on sharing it here."
+            },
+            {
+              "kind": "speech",
+              "text": "And one person is still missing. The vosotros form — hablasteis, comisteis — has not been taught, so this is five of the six the present tense gave you. The strong verbs are shorter still: you have tuve and tuvieron, but not tuvimos. Both are owed, and it is better to know that than to think the tense is finished."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the two quiet overlaps",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Worth holding, because neither is a mistake:"
+            },
+            {
+              "kind": "speech",
+              "text": "1. hablamos and vivimos are each two tenses. Present and past, identical. Only comer keeps them apart — comemos against comimos — and only because its past borrowed -imos from the -ir family."
+            },
+            {
+              "kind": "speech",
+              "text": "2. The strong stems are four words, not a rule. Tuv-, hic-, estuv-, and fue-. Everything else about them is ordinary: they take -ieron like any -er verb, except fueron, which takes nothing at all and just adds -ron."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "So the only memorising this tense ever asked of you was four stems."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the ellos form of hablar, comer, vivir, tener, ser",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the *ellos* form of *hablar*, *comer*, *vivir*, *tener*, *ser*]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C55-repaso-preterito-both",
+              "prompt": "Which two we-forms are present AND past?",
+              "assesses": [
+                "ES-GRAMMAR-AR-PRETERITE-1PL-SYNCRETISM"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "hablamos and vivimos",
+                "the -ar one and the -ir one"
+              ],
+              "feedback": {
+                "correct": "Only comimos stands apart.",
+                "incorrect": "Hablamos and vivimos."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C55-repaso-preterito-strong",
+              "prompt": "Name the four stems that had to be memorised.",
+              "assesses": [
+                "ES-GRAMMAR-STRONG-PRETERITE-PLURAL"
+              ],
+              "responseSeconds": 16,
+              "acceptedResponses": [
+                "tuv hic estuv fue",
+                "tuve hice estuve fui"
+              ],
+              "feedback": {
+                "correct": "Four words, and the rest is regular.",
+                "incorrect": "Tuv-, hic-, estuv- and fue-."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ES-C55-repaso-preterito-odd",
+              "prompt": "Which plural refuses both -aron and -ieron?",
+              "assesses": [
+                "ES-GRAMMAR-SER-IR-PRETERITE-PLURAL"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "fueron",
+                "fueron, from ser and ir"
+              ],
+              "feedback": {
+                "correct": "It adds -ron and nothing else.",
+                "incorrect": "Fueron."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many ending sets does the plural need? (Two.) How many stems had to be learned by heart? (Four.) And is the tense finished? (Not quite — vosotros is still owed, and so are the strong nosotros forms.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

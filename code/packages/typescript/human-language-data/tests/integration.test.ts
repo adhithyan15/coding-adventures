@@ -104,7 +104,7 @@ describe("real curriculum", () => {
     // 40 (esperar, contestar, comprar). Two sessions authored a chapter 38 in parallel;
     // the collision surfaced as a merge conflict on chapters.json rather than silently,
     // because both sides must edit it.
-    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(201); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis // +3: HL-C88 slice 8 // +1: HL-C88 slice 9 (falsos amigos) // +3: HL-C113 (B1 si-condition rung) // +3: HL-C113 preterite plural
+    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(205); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis // +3: HL-C88 slice 8 // +1: HL-C88 slice 9 (falsos amigos) // +3: HL-C113 (B1 si-condition rung) // +3: HL-C113 preterite plural
     expect(
       books.books
         .find((book) => book.language === "persian")
@@ -783,6 +783,9 @@ describe("real curriculum", () => {
       "ES-C55-comieron-contrast",
       "ES-C55-comieron-say",
       "ES-C55-comieron-vivir",
+      "ES-C55-fueron-say",
+      "ES-C55-fueron-two",
+      "ES-C55-fueron-why",
       "ES-C55-hablamos-dos-pair",
       "ES-C55-hablamos-dos-say",
       "ES-C55-hablamos-dos-which",
@@ -792,6 +795,9 @@ describe("real curriculum", () => {
       "ES-C55-la-bebo-drink",
       "ES-C55-la-bebo-test",
       "ES-C55-la-bebo-why",
+      "ES-C55-repaso-preterito-both",
+      "ES-C55-repaso-preterito-odd",
+      "ES-C55-repaso-preterito-strong",
       "ES-C55-si-accent",
       "ES-C55-si-etymon",
       "ES-C55-si-futuro-say",
@@ -801,6 +807,12 @@ describe("real curriculum", () => {
       "ES-C55-sintesis-condicion-habit",
       "ES-C55-sintesis-condicion-plan",
       "ES-C55-sintesis-condicion-two",
+      "ES-C55-sintesis-preterito-completo-raw",
+      "ES-C55-sintesis-preterito-completo-story",
+      "ES-C55-sintesis-preterito-completo-we",
+      "ES-C55-tuvieron-build",
+      "ES-C55-tuvieron-say",
+      "ES-C55-tuvieron-stress",
       "ES-C56-cion-gender",
       "ES-C56-cion-make",
       "ES-C56-cion-why",

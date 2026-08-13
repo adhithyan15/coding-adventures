@@ -613,7 +613,7 @@ describe("the whole corpus", () => {
     // 659 -> 674: vocabulary wave 5 (persian/telugu/malayalam), 15 new chapters.
     // 674 -> 678: HL-C88 slices 5-6 (Spanish).
     // 682 -> 694: vocabulary wave 6, round 2 (russian/persian/urdu/bengali), 12 new chapters.
-    expect(chapters).toHaveLength(701); // +3: HL-C113 (B1 si-condition rung) // +3: HL-C113 preterite plural
+    expect(chapters).toHaveLength(705); // +3: HL-C113 (B1 si-condition rung) // +3: HL-C113 preterite plural
   });
 
   it("leaves no Markdown typography in the spoken script", () => {
@@ -656,6 +656,6 @@ describe("the whole corpus", () => {
     // singular comparisons. Publishing Chapters 7-18 from the canonical AST
     // also replaces the Chapter-15 and Chapter-16 terminal recap tables with
     // speakable person rows. Chapter 18 removes its remaining refused wide table.
-    expect(refusals).toBe(64);
+    expect(refusals).toBe(64); // HL-C113: unchanged -- ch204 has no table for the narrator to refuse
   });
 });
