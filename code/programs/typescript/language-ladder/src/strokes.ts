@@ -1995,6 +1995,53 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: devanagariAlphabetSource("अ"),
   },
+  // The five Commons buildup frames preserve the joined left body of अ, then
+  // add the shoulder, inner stem, trailing stem, and headline as four lifted
+  // runs: five strokes and four lifts in all.
+  [ductusKey("devanagari", "आ")]: {
+    script: "devanagari",
+    glyph: "आ",
+    strokes: [
+      {
+        segments: [
+          { label: "curve right around the upper bowl", path: [
+            { x: 165, y: 545 }, { x: 205, y: 575 }, { x: 250, y: 595 },
+            { x: 300, y: 596 }, { x: 350, y: 580 }, { x: 395, y: 550 },
+            { x: 420, y: 510 }, { x: 420, y: 470 }, { x: 400, y: 430 },
+            { x: 360, y: 400 }, { x: 315, y: 375 }, { x: 275, y: 355 },
+          ] },
+          { label: "continue down and around the lower bowl without lifting", path: [
+            { x: 275, y: 355 }, { x: 335, y: 330 }, { x: 395, y: 295 },
+            { x: 430, y: 250 }, { x: 435, y: 205 }, { x: 415, y: 160 },
+            { x: 375, y: 125 }, { x: 325, y: 105 }, { x: 275, y: 100 },
+            { x: 225, y: 115 }, { x: 180, y: 145 }, { x: 140, y: 190 },
+            { x: 105, y: 245 }, { x: 80, y: 305 },
+          ] },
+        ],
+      },
+      { segments: [{ label: "lift, then sweep the middle shoulder right", path: [
+        { x: 290, y: 350 }, { x: 350, y: 340 }, { x: 410, y: 325 },
+        { x: 470, y: 317 }, { x: 530, y: 320 }, { x: 585, y: 330 },
+        { x: 625, y: 342 },
+      ] }] },
+      { segments: [{ label: "lift, then descend the inner stem", path: [
+        { x: 635, y: 590 }, { x: 635, y: 500 }, { x: 635, y: 410 },
+        { x: 635, y: 320 }, { x: 635, y: 230 }, { x: 635, y: 140 },
+        { x: 635, y: 50 }, { x: 635, y: 5 },
+      ] }] },
+      { segments: [{ label: "lift, then descend the trailing stem", path: [
+        { x: 893, y: 590 }, { x: 893, y: 500 }, { x: 893, y: 410 },
+        { x: 893, y: 320 }, { x: 893, y: 230 }, { x: 893, y: 140 },
+        { x: 893, y: 50 }, { x: 893, y: 5 },
+      ] }] },
+      { segments: [{ label: "lift, then draw the shirorekha left-to-right", path: [
+        { x: 525, y: 585 }, { x: 610, y: 585 }, { x: 695, y: 585 },
+        { x: 780, y: 585 }, { x: 865, y: 585 }, { x: 950, y: 585 },
+        { x: 1030, y: 585 },
+      ] }] },
+    ],
+    source: devanagariAlphabetSource("आ"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the
