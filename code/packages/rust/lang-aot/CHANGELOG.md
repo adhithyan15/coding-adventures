@@ -1,5 +1,10 @@
 # Changelog — `lang-aot`
 
+## 0.222.13 - 2026-08-13 (ALGOL static conditional real output selection)
+
+The ALGOL matrix now proves that a statically unreachable runtime-real branch
+does not block formatter-free output on all seven standard backends.
+
 ## 0.222.12 - 2026-08-13 (ALGOL static conditional expression selection)
 
 The ALGOL matrix now proves that a statically selected numeric conditional

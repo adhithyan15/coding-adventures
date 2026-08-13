@@ -888,7 +888,9 @@ backend immediately) come before the enabler-dependent items.
   boundaries clear it. Unknown statement conditions still intersect both
   exits. Numeric conditional assignments likewise retain the selected branch's
   snapshot when their selector is statically known; unknown selectors still
-  require equal branch values. The conditional predicate proof runs on native/LLVM/WASM/JVM/CLR/VM/JIT. LLVM preserves the
+  require equal branch values. Formatter-free conditional real output also
+  lowers only the selected branch for a statically known selector, while a
+  dynamic selector still requires both branches to be static. The conditional predicate proof runs on native/LLVM/WASM/JVM/CLR/VM/JIT. LLVM preserves the
   comparison's `i1` sidecar when moving into a boolean merge slot, and WASM
   narrows an operand-width `i64` comparison local before an `i32` boolean move.
   Local string slots use an empty verifier seed on typed backends without
