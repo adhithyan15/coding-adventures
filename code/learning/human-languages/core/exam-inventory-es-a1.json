@@ -97,8 +97,10 @@
       "id": "A1-ADJ-06",
       "category": "El adjetivo",
       "label": "degree: absolute superlative with muy",
-      "probe": null,
-      "note": "muy is not taught anywhere in the track."
+      "probe": [
+        "ES-LEX-MUY",
+        "ES-GRAMMAR-DEGREE-MUY"
+      ]
     },
     {
       "id": "A1-ART-01",
@@ -300,15 +302,20 @@
       "id": "A1-ADV-03",
       "category": "El adverbio",
       "label": "quantity adverbs: poco, mucho, bastante",
-      "probe": null,
-      "note": "bastante is not taught."
+      "probe": [
+        "ES-LEX-POCO",
+        "ES-LEX-MUCHO",
+        "ES-LEX-BASTANTE"
+      ]
     },
     {
       "id": "A1-ADV-04",
       "category": "El adverbio",
       "label": "manner adverbs: bien, mal",
-      "probe": null,
-      "note": "bien is taught at ch1; mal is not."
+      "probe": [
+        "ES-LEX-BIEN",
+        "ES-LEX-MAL"
+      ]
     },
     {
       "id": "A1-ADV-05",
@@ -493,8 +500,11 @@
       "id": "A1-SADJ-01",
       "category": "El sintagma adjetival",
       "label": "degree modifiers: muy, poco, bastante",
-      "probe": null,
-      "note": "None of the three is taught as a degree modifier."
+      "probe": [
+        "ES-LEX-MUY",
+        "ES-LEX-POCO",
+        "ES-LEX-BASTANTE"
+      ]
     },
     {
       "id": "A1-SV-01",

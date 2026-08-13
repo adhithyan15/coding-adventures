@@ -7,19 +7,19 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:97098930bf66b3e2",
+  "sourceHash": "fnv1a64:290083cfd040c599",
   "summary": {
-    "totalLessons": 2018,
-    "voice": 1340,
-    "sight": 562,
+    "totalLessons": 2022,
+    "voice": 1343,
+    "sight": 563,
     "pen": 116,
-    "drivableLessons": 1340,
+    "drivableLessons": 1343,
     "drivablePercent": 66,
     "trackCount": 22,
-    "chapterCount": 725,
-    "drivablePrefixTotal": 1140,
-    "fullyDrivableChapters": 469,
-    "unstartableChapters": 174,
+    "chapterCount": 729,
+    "drivablePrefixTotal": 1143,
+    "fullyDrivableChapters": 472,
+    "unstartableChapters": 175,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
   },
@@ -7114,12 +7114,12 @@
     },
     {
       "language": "spanish",
-      "lessonCount": 371,
-      "voice": 328,
-      "sight": 36,
+      "lessonCount": 375,
+      "voice": 331,
+      "sight": 37,
       "pen": 7,
       "drivablePercent": 88,
-      "drivablePrefixTotal": 315,
+      "drivablePrefixTotal": 318,
       "modalities": [
         "voice",
         "sight",
@@ -10796,6 +10796,68 @@
           "drivable": true,
           "drivableLessonIds": [
             "ES-C59-repaso-demostrativos"
+          ]
+        },
+        {
+          "chapter": 226,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C60-muy"
+          ]
+        },
+        {
+          "chapter": 227,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C60-bastante"
+          ]
+        },
+        {
+          "chapter": 228,
+          "lessonCount": 1,
+          "voice": 0,
+          "sight": 1,
+          "pen": 0,
+          "modalities": [
+            "sight"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "ES-C60-mal",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 229,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C60-repaso-grado"
           ]
         }
       ]
@@ -44872,6 +44934,78 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:689798517b4fb580"
+    },
+    {
+      "id": "ES-C60-muy",
+      "language": "spanish",
+      "chapter": 226,
+      "sequence": 2365,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:4406da1bfffb8251"
+    },
+    {
+      "id": "ES-C60-bastante",
+      "language": "spanish",
+      "chapter": 227,
+      "sequence": 2370,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:4b097097667c06bc"
+    },
+    {
+      "id": "ES-C60-mal",
+      "language": "spanish",
+      "chapter": 228,
+      "sequence": 2375,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "sight-cue"
+      ],
+      "coreModality": "sight",
+      "coreReasons": [
+        "sight-cue"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:279bdbe0772adc09"
+    },
+    {
+      "id": "ES-C60-repaso-grado",
+      "language": "spanish",
+      "chapter": 229,
+      "sequence": 2380,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:747a01361ca8c27c"
     },
     {
       "id": "TA-C01-vanakkam",

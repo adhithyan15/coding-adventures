@@ -3568,6 +3568,26 @@
       "output": "spanish/book/chapters/ch225-review-demostrativos.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 226,
+      "output": "spanish/book/chapters/ch226-muy.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 227,
+      "output": "spanish/book/chapters/ch227-bastante.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 228,
+      "output": "spanish/book/chapters/ch228-mal.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 229,
+      "output": "spanish/book/chapters/ch229-review-grado.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "output": "tamil/book/chapters/ch06-dative-case.tex",
