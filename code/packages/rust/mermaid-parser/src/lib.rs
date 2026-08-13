@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.84.0";
+pub const VERSION: &str = "0.85.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -1299,6 +1299,9 @@ fn parse_quadrant_config(source: &str) -> QuadrantConfig {
         x_axis_position: quadrant_directive_value(source, "xAxisPosition"),
         y_axis_position: quadrant_directive_value(source, "yAxisPosition"),
         point_radius: number("pointRadius"),
+        quadrant_padding: number("quadrantPadding"),
+        internal_border_width: number("quadrantInternalBorderStrokeWidth"),
+        external_border_width: number("quadrantExternalBorderStrokeWidth"),
     }
 }
 
@@ -4739,7 +4742,7 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     #[test]
     fn quadrant_parses_layout_init_config() {
         let diagram = parse_quadrant_chart(
-            "%%{init: {\"quadrantChart\": {\"chartWidth\": 720, \"chartHeight\": 540, \"xAxisPosition\": \"top\", \"yAxisPosition\": \"right\", \"pointRadius\": 11}}}%%\nquadrantChart\nMetal: [0.75, 0.8]\n",
+            "%%{init: {\"quadrantChart\": {\"chartWidth\": 720, \"chartHeight\": 540, \"xAxisPosition\": \"top\", \"yAxisPosition\": \"right\", \"pointRadius\": 11, \"quadrantPadding\": 18, \"quadrantInternalBorderStrokeWidth\": 3, \"quadrantExternalBorderStrokeWidth\": 5}}}%%\nquadrantChart\nMetal: [0.75, 0.8]\n",
         )
         .unwrap();
 
@@ -4754,6 +4757,9 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
             Some("right")
         );
         assert_eq!(diagram.quadrant_config.point_radius, Some(11.0));
+        assert_eq!(diagram.quadrant_config.quadrant_padding, Some(18.0));
+        assert_eq!(diagram.quadrant_config.internal_border_width, Some(3.0));
+        assert_eq!(diagram.quadrant_config.external_border_width, Some(5.0));
     }
 
     #[test]
@@ -6358,7 +6364,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.84.0");
+        assert_eq!(crate::VERSION, "0.85.0");
     }
 
     #[test]

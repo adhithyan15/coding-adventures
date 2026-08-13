@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.41.0
+
+- Preserve quadrant padding and distinct internal/external border widths through semantic and layout IR.
+
 ## 0.40.0
 
 - Preserve authored quadrant dimensions, axis positions, and default point radius in typed chart configuration.
