@@ -126,9 +126,9 @@ implemented.
    with a Nib source-to-RV32I-simulator fixture covering both operations.
 7. [x] **Wide multiplication:** RV32M `mul` / `mulhu` lowering for full-width
    signed and unsigned values, including a Nib source-to-simulator fixture.
-8. [ ] **Chained wide operations:** reuse or spill register-pair results so a
-   wide operation can feed another one; `(1 << 6) >> 1` currently exceeds the
-   six-temporary RV32I allocator despite each shift working independently.
+8. [x] **Chained wide shifts:** reuse a dead left-hand register pair for a
+   following wide right shift, with direct CIR and Nib source-to-simulator
+   fixtures for `(1 << 6) >> 1`. General spilling remains the allocator item.
 9. [ ] **Wide division and modulo:** pair-aware restoring division or a larger
    RV32M lowering pass for full-width values. Nib still needs these for all of
    its ordinary numeric expressions.

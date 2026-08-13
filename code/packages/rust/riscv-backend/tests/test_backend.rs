@@ -667,6 +667,50 @@ fn executes_pair_aware_64_bit_shifts_across_word_boundaries() {
 }
 
 #[test]
+fn executes_chained_wide_shifts_without_exhausting_registers() {
+    let cir = vec![
+        ci("const_u64", Some("one"), vec![CIROperand::Int(1)], "u64"),
+        ci("const_u64", Some("left_count"), vec![CIROperand::Int(6)], "u64"),
+        ci(
+            "shl_u64",
+            Some("shifted"),
+            vec![
+                CIROperand::Var("one".into()),
+                CIROperand::Var("left_count".into()),
+            ],
+            "u64",
+        ),
+        ci(
+            "const_u64",
+            Some("right_count"),
+            vec![CIROperand::Int(1)],
+            "u64",
+        ),
+        ci(
+            "shr_u64",
+            Some("result"),
+            vec![
+                CIROperand::Var("shifted".into()),
+                CIROperand::Var("right_count".into()),
+            ],
+            "u64",
+        ),
+        ci(
+            "ret_u64",
+            None,
+            vec![CIROperand::Var("result".into())],
+            "u64",
+        ),
+    ];
+
+    let bytes = compile(&ctx("chained_wide_shifts", &[], "u64"), &cir)
+        .expect("a dead wide shift result should be reusable by the next shift");
+    let result = run_binary(&bytes, &[]).expect("wide shift execution");
+    assert_eq!(result.return_value, 32);
+    assert_eq!(result.return_value_high, 0);
+}
+
+#[test]
 fn rejects_calls_until_the_linker_and_frame_abi_exist() {
     let cir = vec![ci(
         "call",

@@ -1,5 +1,12 @@
 # Changelog — riscv-backend
 
+## Unreleased
+
+- Track remaining CIR value uses and let a wide right shift overwrite a dead
+  left-hand register pair. This enables chained pair shifts within the
+  six-register starter allocator; general spilling remains a later allocator
+  milestone.
+
 ## v0.2.0 — 2026-08-13 — executable scalar core, plus a float refusal that says why
 
 ### Floating point now refuses with a reason instead of a shrug
