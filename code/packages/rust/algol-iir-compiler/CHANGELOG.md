@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.139.0 — 2026-08-13 — zero-trip loop snapshot preservation
+
+Statically proven empty `step`/`until` elements now preserve their entry
+integer, real, and boolean snapshots. Unknown, `while`, and potentially
+repeating elements remain conservative.
+
 ## 0.138.0 — 2026-08-13 — static conditional real output selection
 
 Formatter-free real output now evaluates only the selected branch when a
