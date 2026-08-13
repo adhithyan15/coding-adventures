@@ -7324,6 +7324,7 @@ impl HtmlParser {
                     ));
                 }
             }
+            name @ ("dd" | "dt") => self.close_open_description_item(name),
             "html" => {
                 if self.has_open_element("html") {
                     self.pop_current_if(|current| current == "body");
@@ -7988,6 +7989,34 @@ impl HtmlParser {
         };
         self.open_elements.truncate(index);
         true
+    }
+
+    fn close_open_description_item(&mut self, name: &str) {
+        if self.is_fragment
+            && self.open_fragment_context_name() == Some(name)
+            && !self.has_authored_open_html_element(name)
+        {
+            return;
+        }
+        let Some(index) = self.open_html_element_in_scope_index(name) else {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-description-item-end-tag",
+                format!("end tag `</{name}>` did not match a description item in scope"),
+            ));
+            return;
+        };
+
+        self.generate_implied_end_tags_above(index);
+        if !self.current_element_is(name) {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-non-current-description-item-end-tag",
+                format!(
+                    "end tag `</{name}>` closed a description item while a non-matching node remained current"
+                ),
+            ));
+        }
+        self.capture_formatting_above(index);
+        self.open_elements.truncate(index);
     }
 
     fn close_open_anchor_for_reconstruction_boundary(&mut self) -> bool {
@@ -32242,6 +32271,101 @@ mod tests {
             .parser_diagnostics
             .iter()
             .all(|diagnostic| diagnostic.code != "unexpected-li-end-tag"));
+    }
+
+    #[test]
+    fn description_item_end_tags_respect_full_ordinary_scope() {
+        for (source, boundary_name) in [
+            (
+                "<!doctype html><dl><dd id=item><object id=boundary></dd>X</object>Y</dl>",
+                "object",
+            ),
+            (
+                "<!doctype html><dl><dt id=item><marquee id=boundary></dt>X</marquee>Y</dl>",
+                "marquee",
+            ),
+            (
+                "<!doctype html><dl><dd id=item><template id=boundary></dd>X</template>Y</dl>",
+                "template",
+            ),
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .filter(|diagnostic| {
+                        diagnostic.code == "unexpected-description-item-end-tag"
+                    })
+                    .count(),
+                1,
+                "source {source:?}: {:?}",
+                output.parser_diagnostics
+            );
+            let item = find_element_by_id(&output.document.children, "item")
+                .expect("the blocked end tag should leave the description item open");
+            let boundary = find_element_by_id(&item.children, "boundary")
+                .expect("the scope boundary should remain inside the description item");
+            assert_eq!(boundary.name, boundary_name);
+            assert_eq!(boundary.children, vec![Node::text("X")]);
+            assert_eq!(item.children.last(), Some(&Node::text("Y")));
+        }
+
+        for source in [
+            "<!doctype html><dl><dd></dd><dt></dt></dl>",
+            "<!doctype html><dl><dd><p></dd>Y</dl>",
+            "<!doctype html><table><tr><td><dl><dd></dd><dt></dt></dl></td></tr></table>",
+            "<!doctype html><dl><dd><svg><object></dd>Y</object></svg></dl>",
+            "<!doctype html><dl><dt><math><mi></dt>X</mi></math>Y</dl>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(
+                output.parser_diagnostics.iter().all(|diagnostic| {
+                    diagnostic.code != "unexpected-description-item-end-tag"
+                }),
+                "source {source:?}: {:?}",
+                output.parser_diagnostics
+            );
+        }
+
+        let blocked_table = parse_html_with_diagnostics(
+            "<!doctype html><dl><dd id=item><table id=boundary></dd><tr><td>X</table>Y</dl>",
+        )
+        .unwrap();
+        assert!(blocked_table.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic.code == "unexpected-description-item-end-tag"
+        }));
+        let item = find_element_by_id(&blocked_table.document.children, "item").unwrap();
+        assert!(find_element_by_id(&item.children, "boundary").is_some());
+        assert_eq!(item.children.last(), Some(&Node::text("Y")));
+
+        let non_current =
+            parse_html_with_diagnostics("<!doctype html><dl><dd><span></dd>Y</dl>").unwrap();
+        assert!(non_current.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic.code == "unexpected-non-current-description-item-end-tag"
+        }));
+
+        let cross_name =
+            parse_html_with_diagnostics("<!doctype html><dl><dd id=item></dt>X</dd></dl>")
+                .unwrap();
+        assert!(cross_name.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic.code == "unexpected-description-item-end-tag"
+        }));
+        let item = find_element_by_id(&cross_name.document.children, "item").unwrap();
+        assert_eq!(item.children, vec![Node::text("X")]);
+
+        let fragment =
+            parse_html_fragment_for_context_with_diagnostics("</dd>X</dt>Y", "dd").unwrap();
+        assert_eq!(
+            fragment
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| {
+                    diagnostic.code == "unexpected-description-item-end-tag"
+                })
+                .count(),
+            1
+        );
     }
 
     #[test]

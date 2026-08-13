@@ -67,7 +67,12 @@ element before the HTML boundary, re-enter adoption-agency recovery for a
 matching HTML ancestor, and report the ordinary unmatched ending when neither
 exists. Description-list item start tags now report when implied-end-tag
 recovery closes a non-current `dt` or `dd`, without flagging adjacent
-description-list items.
+description-list items. Description-list item end tags now use the full
+namespace-aware ordinary-scope boundary before generating implied end tags, so
+`dd` and `dt` endings blocked by `object`, `marquee`, `template`, or table scope
+remain ignored instead of closing across the boundary. Matching current and
+implied-descendant items, cross-name endings, real cells, foreign named
+elements, and synthetic fragment contexts retain their existing recovery.
 
 There are no residual malformed tree-construction cases without a lexer or
 parser diagnostic. HTML `p` and `br` start tags recovered from seeded foreign
