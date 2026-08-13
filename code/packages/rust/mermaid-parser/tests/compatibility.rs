@@ -1,5 +1,6 @@
 use mermaid_parser::{
-    detect_mermaid_type, parse_any_mermaid, parse_quadrant_chart, MERMAID_COMPATIBILITY_BASELINE,
+    detect_mermaid_type, parse_any_mermaid, parse_journey, parse_quadrant_chart,
+    MERMAID_COMPATIBILITY_BASELINE,
 };
 use serde_json::Value;
 
@@ -11,6 +12,33 @@ const QUADRANT_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/quadrant-11.16.1-corpus.json"
 ));
+const JOURNEY_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/journey-11.16.1-corpus.json"
+));
+
+#[test]
+fn pinned_journey_corpus_matches_upstream_acceptance() {
+    let corpus: Value = serde_json::from_str(JOURNEY_CORPUS).expect("journey corpus must be JSON");
+    assert_eq!(
+        corpus["upstream_commit"].as_str(),
+        Some("7ecca0cd7f1658ef74f4e7e91f925724ef403bbf")
+    );
+    for fixture in corpus["valid"].as_array().expect("valid corpus array") {
+        let id = fixture["id"].as_str().expect("fixture id");
+        let source = fixture["source"].as_str().expect("fixture source");
+        parse_journey(source)
+            .unwrap_or_else(|error| panic!("valid upstream fixture {id} failed: {error}"));
+    }
+    for fixture in corpus["invalid"].as_array().expect("invalid corpus array") {
+        let id = fixture["id"].as_str().expect("fixture id");
+        let source = fixture["source"].as_str().expect("fixture source");
+        assert!(
+            parse_journey(source).is_err(),
+            "invalid upstream fixture {id} unexpectedly parsed"
+        );
+    }
+}
 
 #[test]
 fn pinned_quadrant_corpus_matches_upstream_acceptance() {

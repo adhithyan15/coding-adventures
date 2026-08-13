@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.0
+
+- Resolve sorted Journey actor legends and deterministic actor colors.
+
 ## 0.3.0
 
 - Reserve dynamic Journey row heights for normalized multiline labels.

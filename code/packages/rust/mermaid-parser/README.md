@@ -44,9 +44,10 @@ and title, axis, region, and point-label typography, plus all 15 quadrant theme
 variables. The pinned upstream parser/style corpus and native Metal render
 fixture pass, so `quadrantChart` is tracked at `full` compatibility.
 
-The initial `journey` subset covers titles, sections, integer task scores, and
-comma-separated actors, accessibility metadata, and multiline break-tag labels
-through typed Journey IR, temporal layout, and Paint.
+The initial `journey` subset covers titles, sections, task scores in Mermaid's
+documented one-to-five domain, comma-separated actors, accessibility metadata,
+and multiline break-tag labels. Resolved layout assigns deterministic actor
+colors, and Paint renders actor legends, task markers, and score faces.
 
 The sequence subset includes participants and actors, aliases, standard solid
 and dotted message arrows, bidirectional/cross/point arrowheads, notes,

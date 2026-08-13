@@ -16,9 +16,9 @@ use diagram_ir::{
     LayoutedTemporalDiagram, LayoutedTemporalItem, TaskStart, TaskStatus,
     TemporalBody, TemporalDiagram,
 };
-use std::collections::HashMap;
+use std::collections::{BTreeSet, HashMap};
 
-pub const VERSION: &str = "0.3.0";
+pub const VERSION: &str = "0.4.0";
 
 // ── Constants ─────────────────────────────────────────────────────────────
 
@@ -33,6 +33,9 @@ const COMMIT_SPACING: f64 = 80.0;
 
 const BRANCH_COLORS: &[&str] = &[
     "#3b82f6", "#ef4444", "#22c55e", "#f59e0b", "#a855f7", "#14b8a6",
+];
+const JOURNEY_ACTOR_COLORS: &[&str] = &[
+    "#8fbc8f", "#7cfc00", "#00ffff", "#20b2aa", "#b0e0e6", "#ffffe0",
 ];
 
 /// Lay out a `TemporalDiagram` on a canvas of `cw` pixels wide.
@@ -53,6 +56,29 @@ fn layout_journey(title: &Option<String>, diagram: &JourneyDiagram, cw: f64) -> 
         });
         y += 36.0;
     }
+    let actors = diagram
+        .sections
+        .iter()
+        .flat_map(|section| &section.tasks)
+        .flat_map(|task| &task.people)
+        .filter(|person| !person.is_empty())
+        .cloned()
+        .collect::<BTreeSet<_>>();
+    let actor_colors = actors
+        .iter()
+        .enumerate()
+        .map(|(index, actor)| {
+            let color = JOURNEY_ACTOR_COLORS[index % JOURNEY_ACTOR_COLORS.len()].to_string();
+            items.push(LayoutedTemporalItem::JourneyActor {
+                x: 24.0, y: y + 10.0, color: color.clone(), label: actor.clone(),
+            });
+            y += 24.0;
+            (actor.clone(), color)
+        })
+        .collect::<HashMap<_, _>>();
+    if !actor_colors.is_empty() {
+        y += 4.0;
+    }
     for section in &diagram.sections {
         let section_height = 12.0 + section.label.lines().count().max(1) as f64 * 16.0;
         items.push(LayoutedTemporalItem::SectionHeader {
@@ -64,6 +90,7 @@ fn layout_journey(title: &Option<String>, diagram: &JourneyDiagram, cw: f64) -> 
             items.push(LayoutedTemporalItem::JourneyTask {
                 x: 16.0, y, width: (cw - 32.0).max(120.0), height: task_height,
                 score: task.score, label: task.label.clone(), people: task.people.clone(),
+                person_colors: task.people.iter().filter_map(|person| actor_colors.get(person).cloned()).collect(),
             });
             y += task_height + 6.0;
         }
@@ -358,7 +385,7 @@ mod tests {
         }
     }
 
-    #[test] fn version_exists() { assert_eq!(crate::VERSION, "0.3.0"); }
+    #[test] fn version_exists() { assert_eq!(crate::VERSION, "0.4.0"); }
 
     #[test]
     fn gantt_has_task_bars() {
@@ -430,6 +457,9 @@ mod tests {
                 if label == "Pay\nsecurely" && people == &["Bob"]
         )));
         assert_eq!(layout.accessibility_title.as_deref(), Some("Checkout journey"));
+        assert!(layout.items.iter().any(|item| matches!(item,
+            LayoutedTemporalItem::JourneyActor { label, .. } if label == "Bob"
+        )));
         assert!(layout.items.iter().any(|item| matches!(item,
             LayoutedTemporalItem::JourneyTask { height, .. } if *height > 36.0
         )));

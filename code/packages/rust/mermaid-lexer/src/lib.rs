@@ -1,6 +1,6 @@
 //! Grammar-driven lexers for Mermaid diagram families.
 
-pub const VERSION: &str = "0.51.0";
+pub const VERSION: &str = "0.52.0";
 
 use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
@@ -271,7 +271,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.51.0");
+        assert_eq!(VERSION, "0.52.0");
     }
 
     #[test]
@@ -295,6 +295,17 @@ mod tests {
         assert!(tokens
             .iter()
             .any(|token| token.type_name.as_deref() == Some("ACC_DESCR_BLOCK")));
+    }
+
+    #[test]
+    fn journey_rejects_scores_outside_the_documented_range() {
+        for score in ["0", "6", "15"] {
+            let source = format!("journey\nsection Work\nTask: {score}: Me");
+            assert!(
+                try_tokenize_mermaid_journey(&source).is_err(),
+                "score {score}"
+            );
+        }
     }
 
     #[test]

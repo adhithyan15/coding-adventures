@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.46.0
+
+- Carry resolved Journey actor colors through temporal layout items.
+
 ## 0.45.0
 
 - Preserve Journey accessibility metadata through semantic and resolved temporal IR.

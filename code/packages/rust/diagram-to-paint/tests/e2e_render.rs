@@ -649,6 +649,28 @@ mod apple {
         );
         assert_eq!(
             scene
+                .instructions
+                .iter()
+                .filter(|instruction| matches!(
+                    instruction,
+                    PaintInstruction::Ellipse(ellipse) if ellipse.rx == 7.0 && ellipse.ry == 7.0
+                ))
+                .count(),
+            2
+        );
+        assert_eq!(
+            scene
+                .instructions
+                .iter()
+                .filter(|instruction| matches!(
+                    instruction,
+                    PaintInstruction::Ellipse(ellipse) if ellipse.rx == 12.0 && ellipse.ry == 12.0
+                ))
+                .count(),
+            2
+        );
+        assert_eq!(
+            scene
                 .metadata
                 .as_ref()
                 .and_then(|metadata| metadata.get("accessibility.title"))

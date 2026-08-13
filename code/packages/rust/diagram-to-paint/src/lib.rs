@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.44.0";
+pub const VERSION: &str = "0.45.0";
 
 use std::collections::HashMap;
 
@@ -2587,6 +2587,35 @@ where
                     stroke_dash_offset: None,
                 }));
             }
+            LayoutedTemporalItem::JourneyActor { x, y, color, label } => {
+                let label_width = (label.chars().count() as f64 * ls * 0.65).max(24.0);
+                instructions.push(PaintInstruction::Ellipse(PaintEllipse {
+                    base: PaintBase::default(),
+                    cx: *x,
+                    cy: *y,
+                    rx: 7.0,
+                    ry: 7.0,
+                    fill: Some(color.clone()),
+                    stroke: Some("#000000".into()),
+                    stroke_width: Some(1.0),
+                    stroke_dash: None,
+                    stroke_dash_offset: None,
+                }));
+                text_children.push(text_node(
+                    label,
+                    x + 12.0,
+                    y - ls / 2.0,
+                    label_width,
+                    ls * 1.2,
+                    lf.clone(),
+                    Color {
+                        r: 71,
+                        g: 85,
+                        b: 105,
+                        a: 255,
+                    },
+                ));
+            }
             LayoutedTemporalItem::JourneyTask {
                 x,
                 y,
@@ -2595,6 +2624,7 @@ where
                 score,
                 label,
                 people,
+                person_colors,
             } => {
                 let clamped = (*score).min(5);
                 let red = 239_u8.saturating_sub(clamped * 28);
@@ -2613,6 +2643,78 @@ where
                     stroke_dash: None,
                     stroke_dash_offset: None,
                 }));
+                for (index, color) in person_colors.iter().enumerate() {
+                    instructions.push(PaintInstruction::Ellipse(PaintEllipse {
+                        base: PaintBase::default(),
+                        cx: x + 12.0 + index as f64 * 12.0,
+                        cy: y + height - 7.0,
+                        rx: 4.0,
+                        ry: 4.0,
+                        fill: Some(color.clone()),
+                        stroke: Some("#000000".into()),
+                        stroke_width: Some(0.75),
+                        stroke_dash: None,
+                        stroke_dash_offset: None,
+                    }));
+                }
+                let face_x = x + width - 22.0;
+                let face_y = y + height / 2.0;
+                instructions.push(PaintInstruction::Ellipse(PaintEllipse {
+                    base: PaintBase::default(),
+                    cx: face_x,
+                    cy: face_y,
+                    rx: 12.0,
+                    ry: 12.0,
+                    fill: Some("#ffffff".into()),
+                    stroke: Some("#334155".into()),
+                    stroke_width: Some(1.5),
+                    stroke_dash: None,
+                    stroke_dash_offset: None,
+                }));
+                for eye_x in [face_x - 4.0, face_x + 4.0] {
+                    instructions.push(PaintInstruction::Ellipse(PaintEllipse {
+                        base: PaintBase::default(),
+                        cx: eye_x,
+                        cy: face_y - 3.0,
+                        rx: 1.25,
+                        ry: 1.25,
+                        fill: Some("#334155".into()),
+                        stroke: None,
+                        stroke_width: None,
+                        stroke_dash: None,
+                        stroke_dash_offset: None,
+                    }));
+                }
+                let (mouth_start_y, mouth_control_y) = if *score > 3 {
+                    (face_y + 2.0, face_y + 8.0)
+                } else if *score < 3 {
+                    (face_y + 7.0, face_y + 1.0)
+                } else {
+                    (face_y + 5.0, face_y + 5.0)
+                };
+                instructions.push(PaintInstruction::Path(PaintPath {
+                    base: PaintBase::default(),
+                    commands: vec![
+                        PathCommand::MoveTo {
+                            x: face_x - 5.0,
+                            y: mouth_start_y,
+                        },
+                        PathCommand::QuadTo {
+                            cx: face_x,
+                            cy: mouth_control_y,
+                            x: face_x + 5.0,
+                            y: mouth_start_y,
+                        },
+                    ],
+                    fill: Some("none".into()),
+                    fill_rule: None,
+                    stroke: Some("#334155".into()),
+                    stroke_width: Some(1.25),
+                    stroke_cap: Some(StrokeCap::Round),
+                    stroke_join: Some(StrokeJoin::Round),
+                    stroke_dash: None,
+                    stroke_dash_offset: None,
+                }));
                 let actors = if people.is_empty() {
                     String::new()
                 } else {
@@ -2622,7 +2724,7 @@ where
                     &format!("{label}  {score}/5{actors}"),
                     x + 10.0,
                     y + 6.0,
-                    width - 20.0,
+                    width - 52.0,
                     height - 12.0,
                     lf.clone(),
                     Color {
@@ -3167,7 +3269,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.44.0");
+        assert_eq!(crate::VERSION, "0.45.0");
     }
 
     #[test]
@@ -3363,6 +3465,52 @@ mod tests {
         let opts = make_opts(&shaper, &metrics, &resolver);
         let scene = diagram_to_paint(&simple_layout(), &opts);
         assert!(!scene.instructions.is_empty());
+    }
+
+    #[test]
+    fn journey_actors_and_scores_emit_backend_neutral_geometry() {
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let opts = make_opts(&shaper, &metrics, &resolver);
+        let layout = LayoutedTemporalDiagram {
+            width: 320.0,
+            height: 96.0,
+            accessibility_title: None,
+            accessibility_description: None,
+            items: vec![
+                LayoutedTemporalItem::JourneyActor {
+                    x: 24.0,
+                    y: 18.0,
+                    color: "#8fbc8f".into(),
+                    label: "Alice".into(),
+                },
+                LayoutedTemporalItem::JourneyTask {
+                    x: 16.0,
+                    y: 40.0,
+                    width: 288.0,
+                    height: 40.0,
+                    score: 5,
+                    label: "Find product".into(),
+                    people: vec!["Alice".into()],
+                    person_colors: vec!["#8fbc8f".into()],
+                },
+            ],
+        };
+        let scene = diagram_to_paint_temporal(&layout, &opts);
+
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::Ellipse(ellipse) if ellipse.rx == 7.0
+        )));
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::Ellipse(ellipse) if ellipse.rx == 12.0
+        )));
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::Path(path) if path.commands.iter().any(|command| matches!(command, PathCommand::QuadTo { .. }))
+        )));
     }
 
     #[test]

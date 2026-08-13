@@ -1,6 +1,6 @@
 //! diagram-ir v0.42.0 - DG00/DG04 semantic IR
 
-pub const VERSION: &str = "0.45.0";
+pub const VERSION: &str = "0.46.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramDirection {
@@ -1042,6 +1042,13 @@ pub enum LayoutedTemporalItem {
         score: u8,
         label: String,
         people: Vec<String>,
+        person_colors: Vec<String>,
+    },
+    JourneyActor {
+        x: f64,
+        y: f64,
+        color: String,
+        label: String,
     },
 }
 
@@ -1134,7 +1141,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.45.0");
+        assert_eq!(VERSION, "0.46.0");
     }
     #[test]
     fn default_direction_is_tb() {
