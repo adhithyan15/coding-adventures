@@ -4740,13 +4740,6 @@ impl Compiler {
         if elems.is_empty() {
             return Err(CompileError::Malformed("for_list has no elements".into()));
         }
-        if elems.iter().any(|elem| {
-            direct_tokens(elem)
-                .iter()
-                .any(|token| token.value == "while" || token.value == "step")
-        }) {
-            self.disable_static_real_tracking();
-        }
         let body = direct_nodes(node)
             .into_iter()
             .find(|n| n.rule_name == "statement")
@@ -4755,6 +4748,12 @@ impl Compiler {
         for elem in elems {
             let entry_initialized_string_slots = self.initialized_string_slots.clone();
             let executes_at_least_once = self.for_element_executes_at_least_once(var_ty, elem);
+            if direct_tokens(elem)
+                .iter()
+                .any(|token| token.value == "while" || token.value == "step")
+            {
+                self.disable_static_real_tracking();
+            }
             self.emit_for_element(target, var_ty, elem, body)?;
             if !executes_at_least_once {
                 self.initialized_string_slots = entry_initialized_string_slots;
@@ -8463,6 +8462,25 @@ mod tests {
             "test",
         )
         .expect("a statically nonempty descending step loop executes its body");
+    }
+
+    #[test]
+    fn al4_tracked_step_bounds_definitely_initialize_string() {
+        compile_source(
+            "begin integer i, first, stride, last; string s; first := 1; stride := 1; last := 2; for i := first step stride until last do s := 'OK'; print(s) end",
+            "test",
+        )
+        .expect("tracked straight-line bounds prove a nonempty step loop");
+    }
+
+    #[test]
+    fn al4_tracked_zero_trip_step_loop_does_not_initialize_string() {
+        let err = compile_source(
+            "begin integer i, first, last; string s; first := 2; last := 1; for i := first step 1 until last do s := 'OK'; print(s) end",
+            "test",
+        )
+        .expect_err("tracked bounds that prove zero trips cannot initialize a string");
+        assert!(format!("{err:?}").contains("requires initialized string variable"));
     }
 
     #[test]

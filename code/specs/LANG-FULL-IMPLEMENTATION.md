@@ -866,7 +866,9 @@ backend immediately) come before the enabler-dependent items.
   single-value elements retain body initialization because they execute once.
   A `step`/`until` element also retains body initialization when finite static
   start, step, and limit values prove at least one ascending or descending
-  iteration; zero-trip, dynamic, and `while` elements preserve their entry set.
+  iteration. Those values may come from straight-line tracked numeric locals;
+  the proof runs before loop lowering invalidates snapshots. Zero-trip,
+  dynamic, and `while` elements preserve their entry set.
   Local string slots use an empty verifier seed on typed backends without
   changing source semantics; reads still require membership in the separate
   definite-initialization set.
