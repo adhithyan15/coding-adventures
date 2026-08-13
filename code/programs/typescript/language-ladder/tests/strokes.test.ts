@@ -66,6 +66,7 @@ const DEVANAGARI_DA = DUCTUS[ductusKey("devanagari", "द")];
 const DEVANAGARI_DHA = DUCTUS[ductusKey("devanagari", "ध")];
 const DEVANAGARI_NA = DUCTUS[ductusKey("devanagari", "न")];
 const DEVANAGARI_PA = DUCTUS[ductusKey("devanagari", "प")];
+const DEVANAGARI_BA = DUCTUS[ductusKey("devanagari", "ब")];
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
@@ -967,6 +968,27 @@ describe("handwriting ductus", () => {
     const stem = penPath(DEVANAGARI_PA.strokes[1]);
     expect(stem[0].y).toBeGreaterThan(stem.at(-1)!.y);
     const headline = penPath(DEVANAGARI_PA.strokes[2]);
+    expect(headline[0].x).toBeLessThan(headline.at(-1)!.x);
+  });
+
+  it("Devanagari ब separates its counterclockwise oval, right stem, inner diagonal, and headline", () => {
+    expect(DEVANAGARI_BA.script).toBe("devanagari");
+    expect(penLifts(DEVANAGARI_BA)).toBe(3);
+    expect(DEVANAGARI_BA.strokes).toHaveLength(4);
+    expect(DEVANAGARI_BA.strokes.map((stroke) => stroke.segments.length)).toEqual([
+      1, 1, 1, 1,
+    ]);
+    const body = penPath(DEVANAGARI_BA.strokes[0]);
+    expect(Math.max(...body.map((point) => point.y))).toBeGreaterThan(body[0].y);
+    expect(Math.min(...body.map((point) => point.x))).toBeLessThan(body[0].x);
+    expect(Math.min(...body.map((point) => point.y))).toBeLessThan(body[0].y);
+    expect(body.at(-1)!.x).toBeGreaterThan(Math.min(...body.map((point) => point.x)));
+    const stem = penPath(DEVANAGARI_BA.strokes[1]);
+    expect(stem[0].y).toBeGreaterThan(stem.at(-1)!.y);
+    const diagonal = penPath(DEVANAGARI_BA.strokes[2]);
+    expect(diagonal[0].x).toBeLessThan(diagonal.at(-1)!.x);
+    expect(diagonal[0].y).toBeGreaterThan(diagonal.at(-1)!.y);
+    const headline = penPath(DEVANAGARI_BA.strokes[3]);
     expect(headline[0].x).toBeLessThan(headline.at(-1)!.x);
   });
 
@@ -1989,6 +2011,9 @@ describe("handwriting ductus", () => {
     expect(verifiedLetterFont("प", DEVANAGARI_PA.source.url)).toBe(
       "_fonts/NotoSansDevanagari-Static.ttf",
     );
+    expect(verifiedLetterFont("ब", DEVANAGARI_BA.source.url)).toBe(
+      "_fonts/NotoSansDevanagari-Static.ttf",
+    );
     expect(verifiedLetterFont("א", HEBREW_ALEF.source.url)).toBe(
       "_fonts/NotoSansHebrew-Static.ttf",
     );
@@ -2611,6 +2636,19 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /19-frame animation.*three ordered pen-down runs.*frames 2–10.*descend the left stem.*curve right around the lower bowl.*rise to its upper-right junction.*without lifting.*frames 11–13.*right stem's headline junction.*top-to-bottom.*frames 14–17.*headline's left edge.*shirorekhā left-to-right.*two intervening lifts.*250 ms holds.*frames 10 and 13.*one-second completed frame.*Central Hindi Directorate.*2019 Deskbook on Orthography of Devanagari Script.*Lesson 2.*Unit VII.*p\. 35.*same left stem-and-bowl.*right stem.*headline buildup and directions.*Noto Sans Devanagari.*everyday handwriting.*join or simplify/i,
+    );
+  });
+
+  it("Devanagari ब traces the animated four-run oval, right stem, inner diagonal, and headline order", () => {
+    const src = DEVANAGARI_BA.source;
+    expect(src.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Devanagari_b_%E0%A4%AC.gif",
+    );
+    expect(src.citation).toMatch(
+      /JackPotte.*Devanagari b ब\.gif.*strokes 1–4.*Wikimedia Commons.*29 March 2009/i,
+    );
+    expect(src.variation).toMatch(
+      /13-frame animation.*four ordered pen-down runs.*frames 0–6.*upper-right junction.*counterclockwise around the oval.*lower-right junction.*frames 7–8.*right stem's headline junction.*top-to-bottom.*frame 9.*upper-left interior.*inner diagonal down-right.*frames 10–12.*headline's left edge.*shirorekhā left-to-right.*three intervening lifts.*spatial restarts.*frames 7, 9, and 10.*all frames last 100 ms.*no long inter-stroke holds.*Central Hindi Directorate.*2019 Deskbook on Orthography of Devanagari Script.*Lesson 2.*Unit VII.*p\. 37.*same oval body.*right stem.*inner diagonal.*headline buildup and directions.*Noto Sans Devanagari.*everyday handwriting.*join or simplify/i,
     );
   });
 

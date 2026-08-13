@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.85.0
+
+- Parse quadrant padding and internal/external border widths from Mermaid init directives.
+
 ## 0.84.0
 
 - Parse quadrant chart dimensions, axis positions, and default point radius from Mermaid init directives.

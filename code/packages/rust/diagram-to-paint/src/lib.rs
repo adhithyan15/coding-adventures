@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.39.0";
+pub const VERSION: &str = "0.40.0";
 
 use std::collections::HashMap;
 
@@ -753,8 +753,8 @@ where
                     width: *width,
                     height: *height,
                     fill: Some(color.clone()),
-                    stroke: Some("#64748b".into()),
-                    stroke_width: Some(1.0),
+                    stroke: None,
+                    stroke_width: None,
                     corner_radius: None,
                     stroke_dash: None,
                     stroke_dash_offset: None,
@@ -775,6 +775,53 @@ where
                         },
                     ));
                 }
+            }
+            LayoutedChartItem::QuadrantBorder {
+                x,
+                y,
+                width,
+                height,
+                color,
+                internal_width,
+                external_width,
+            } => {
+                instructions.push(PaintInstruction::Rect(PaintRect {
+                    base: PaintBase::default(),
+                    x: *x,
+                    y: *y,
+                    width: *width,
+                    height: *height,
+                    fill: Some("none".into()),
+                    stroke: Some(color.clone()),
+                    stroke_width: Some(*external_width),
+                    corner_radius: None,
+                    stroke_dash: None,
+                    stroke_dash_offset: None,
+                }));
+                let center_x = x + width / 2.0;
+                let center_y = y + height / 2.0;
+                instructions.push(PaintInstruction::Path(line_path(
+                    &[
+                        Point { x: center_x, y: *y },
+                        Point {
+                            x: center_x,
+                            y: y + height,
+                        },
+                    ],
+                    color,
+                    *internal_width,
+                )));
+                instructions.push(PaintInstruction::Path(line_path(
+                    &[
+                        Point { x: *x, y: center_y },
+                        Point {
+                            x: x + width,
+                            y: center_y,
+                        },
+                    ],
+                    color,
+                    *internal_width,
+                )));
             }
             LayoutedChartItem::ScatterPoint {
                 x,
@@ -3056,7 +3103,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.39.0");
+        assert_eq!(crate::VERSION, "0.40.0");
     }
 
     #[test]
@@ -3632,6 +3679,44 @@ mod tests {
             metadata["accessibility.description"],
             "Native renderer priorities"
         );
+    }
+
+    #[test]
+    fn quadrant_border_lowers_to_frame_and_divider_paths() {
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let opts = make_opts(&shaper, &metrics, &resolver);
+        let layout = LayoutedChartDiagram {
+            width: 400.0,
+            height: 300.0,
+            accessibility_title: None,
+            accessibility_description: None,
+            title_box: None,
+            items: vec![LayoutedChartItem::QuadrantBorder {
+                x: 20.0,
+                y: 30.0,
+                width: 300.0,
+                height: 200.0,
+                color: "#123456".into(),
+                internal_width: 3.0,
+                external_width: 5.0,
+            }],
+        };
+
+        let scene = diagram_to_paint_chart(&layout, &opts);
+        let frame = scene
+            .instructions
+            .iter()
+            .find_map(|instruction| match instruction {
+                PaintInstruction::Rect(rect) => Some(rect),
+                _ => None,
+            })
+            .expect("quadrant frame");
+        assert_eq!(frame.stroke_width, Some(5.0));
+        assert_eq!(scene.instructions.iter().filter(|instruction| {
+            matches!(instruction, PaintInstruction::Path(path) if path.stroke_width == Some(3.0))
+        }).count(), 2);
     }
 
     #[test]

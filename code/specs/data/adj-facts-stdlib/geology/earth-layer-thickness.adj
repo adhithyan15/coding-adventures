@@ -1,0 +1,68 @@
+% ============================================================================
+% earth-layer-thickness — how thick each of Earth's internal layers is, where
+% the source states a number (adj-facts-stdlib, GEOLOGY).
+% ============================================================================
+% A sibling to the already-shipped `earth-layers.adj` (`has_state(layer,
+% state)`, ONE physical-state fact per layer): a new
+% `earth_layer_thickness(layer, thickness_km)` table names the THICKNESS in
+% kilometers the SAME already-cited USGS page states for a layer, decoded
+% from spans already sitting unused inside `earth-layers.adj`'s own header
+% and provenance block — no new WebFetch. That table's `state` column has
+% room for only ONE fact per layer (rigid/semi_solid/liquid/solid); the
+% thickness figures the very same USGS sentences also carry were left
+% un-tabled:
+%
+%   mantle → 2900
+%     "Below the crust is the mantle, a dense, hot layer of semi-solid rock
+%      approximately 2,900 km thick."
+%   outer_core → 2200
+%   inner_core → 1250
+%     "Unlike the yolk of an egg, however, the Earth's core is actually made
+%      up of two distinct parts: a 2,200 km-thick liquid outer core and a
+%      1,250 km-thick solid inner core."
+%
+% Recall is a binding query:
+%
+%     ? earth_layer_thickness(mantle, $ThicknessKm)      % 2900
+%
+% This is a native `table` (ADJ-TABLES RS-5, a TWO-column table like
+% `earth-layers.adj`'s own `has_state`): each `row` lowers to a ground
+% relation `earth_layer_thickness(layer, thickness_km)` carrying the
+% citation, so the lookup above is the ordinary SLD binding query — the
+% engine returns the thickness WITH its source, on the CPU, with zero model
+% calls, and abstains on any layer the cited spans do not give a number for
+% (`crust`, whose own span in `earth-layers.adj` says only "very thin
+% compared with the other two," with no figure to decode).
+%
+% Only THREE of `earth-layers.adj`'s four layers have a thickness figure in
+% the ALREADY-cited spans; this table is deliberately narrow rather than
+% inventing a number the source does not state. The query also runs
+% BACKWARD — bind a thickness and recall which layer it names:
+%
+%     ? earth_layer_thickness($Layer, 1250)   % inner_core
+%
+% Provenance: reproduces, byte-for-byte, the SAME two spans already quoted
+% inside `earth-layers.adj`'s own provenance block, from the SAME USGS "This
+% Dynamic Earth" page that table already cites — no new WebFetch, only a
+% different schema decoding a part of each already-verified quote. An ADJ
+% `table` carries ONE provenance envelope (per `earth-layers.adj`'s own
+% convention), so `source`/`locator`/`trust` below hold the core span
+% (which fixes BOTH outer_core and inner_core at once); the mantle row's own
+% span is listed above for independent auditability. `trust authoritative`
+% — the same tier `earth-layers.adj` already carries (USGS, a primary U.S.
+% government source).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table earth_layer_thickness {
+    columns layer, thickness_km
+
+    row (mantle, 2900)          % "approximately 2,900 km thick"
+    row (outer_core, 2200)      % "a 2,200 km-thick liquid outer core"
+    row (inner_core, 1250)      % "a 1,250 km-thick solid inner core"
+
+    source "Unlike the yolk of an egg, however, the Earth's core is actually made up of two distinct parts: a 2,200 km-thick liquid outer core and a 1,250 km-thick solid inner core."
+    locator "https://pubs.usgs.gov/gip/dynamic/inside.html"
+    trust authoritative
+}

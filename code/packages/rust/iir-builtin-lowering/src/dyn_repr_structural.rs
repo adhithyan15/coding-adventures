@@ -321,6 +321,91 @@ fn reference_registers(func: &IIRFunction) -> HashSet<String> {
     refs
 }
 
+/// Unbox a tagged parameter before the body does machine arithmetic on it.
+///
+/// The boundary above declares every lisp parameter `ref<any>`, so callers box.
+/// A body that then reads the parameter directly in an `add`/`cmp_*`/bitwise op
+/// is operating on the TAG, not the value:
+///
+/// ```text
+/// fn __lambda_0(x: ref<any>)
+///     add _r2.raw1 = x + 1   i64      <- x is boxed; this adds 1 to (41 << 3)
+/// ```
+///
+/// `((lambda (x) (+ x 1)) 41)` returned 329 instead of 42 on every managed
+/// backend, which is why the JVM and CIL pipelines refused `alloc_closure`
+/// outright rather than lower it — the refusal was hiding a wrong answer.
+///
+/// The repair is deliberately **one-sided and local**: insert
+/// `unbox %x.raw = %x : i64` at entry and rewrite only the machine-op operands
+/// to `%x.raw`. The signature does not change, so every caller keeps boxing
+/// exactly as before and no call site is touched.
+///
+/// That one-sidedness is the safety property. This pass can insert a `box`
+/// (step 1 below boxes any non-reference flowing into a lisp-value position)
+/// but has no way to insert an `unbox` at a call site — so retyping the
+/// PARAMETER to a raw `i64` instead, which was the first attempt here, is only
+/// sound if every caller happens to hold a raw word, and nothing checks that. A
+/// forwarding wrapper `f(y) = g(y)`, or `(g (car p))`, hands `g` a reference
+/// with no conversion anywhere. Fixing the body instead cannot have that
+/// failure mode.
+///
+/// `MACHINE_OPS` is a positive list, so an operation missing from it simply
+/// keeps reading the tagged parameter — the pre-existing behaviour for that
+/// shape, not a new miscompile. Reference uses (`field_load` bases, cons
+/// values, `pair?` arguments) are never rewritten: they want the reference.
+fn unbox_machine_uses_of_tagged_params(func: &mut IIRFunction) {
+    /// Operations that consume a raw machine word in every operand position.
+    const MACHINE_OPS: &[&str] = &[
+        "add", "sub", "mul", "div", "mod", "neg", "and", "or", "xor", "shl", "shr",
+    ];
+    let is_machine_op =
+        |op: &str| MACHINE_OPS.contains(&op) || op.starts_with("cmp_");
+
+    let tagged: Vec<String> = func
+        .params
+        .iter()
+        .filter(|(_, ty)| ty.starts_with("ref<"))
+        .map(|(name, _)| name.clone())
+        .collect();
+
+    for param in tagged {
+        let raw = format!("{param}.rawparam");
+        let mut used_raw = false;
+        for instr in &mut func.instructions {
+            if !is_machine_op(&instr.op) {
+                continue;
+            }
+            for src in &mut instr.srcs {
+                if matches!(src, Operand::Var(v) if *v == param) {
+                    *src = Operand::Var(raw.clone());
+                    used_raw = true;
+                }
+            }
+        }
+        // `lower_closures_to_heap` runs earlier, while the parameter is still
+        // bare `any`, and boxes a capture it believes is a raw word. Once the
+        // boundary above declares the parameter `ref<any>` that `box` is a
+        // SECOND box over an already-tagged value, and the JVM rejects the
+        // capturing closure with `Register 0 contains wrong type`. Boxing a
+        // tagged value is never right, so collapse it to a copy.
+        for instr in &mut func.instructions {
+            if instr.op == "box" && matches!(instr.srcs.first(), Some(Operand::Var(v)) if *v == param)
+            {
+                instr.op = "mov".to_string();
+                instr.type_hint = REF_ANY.to_string();
+            }
+        }
+
+        if used_raw {
+            func.instructions.insert(
+                0,
+                IIRInstr::new("unbox", Some(raw), vec![Operand::Var(param)], "i64"),
+            );
+        }
+    }
+}
+
 fn lower_structural_function(
     func: &mut IIRFunction,
     is_entry: bool,
@@ -334,6 +419,7 @@ fn lower_structural_function(
             *ty = REF_ANY.to_string();
         }
     }
+    unbox_machine_uses_of_tagged_params(func);
     let mut ref_regs = reference_registers(func);
     for (name, ty) in &func.params {
         if ty.starts_with("ref<") {
@@ -1076,5 +1162,120 @@ mod tests {
         // No nil-truthiness wrapping was inserted for this condition.
         assert!(!f.instructions.iter().any(|i| i.op == "is_null"),
             "no is_null truthiness wrap for a boxed-bool condition");
+    }
+
+    /// Helper: a heap-using function so this pass (not the scalar concretizer)
+    /// owns the module.
+    fn lambda_module(body: Vec<IIRInstr>) -> IIRModule {
+        let lambda = IIRFunction::new("__lambda_0", vec![("x".into(), "any".into())], "any", body);
+        let main = IIRFunction::new(
+            "main",
+            vec![],
+            "any",
+            vec![
+                IIRInstr::new("alloc", Some("_c".into()), vec![], REF_PAIR),
+                IIRInstr::new("ret", None, vec![Operand::Var("_c".into())], "any"),
+            ],
+        );
+        let mut m = IIRModule::new("m", "twig");
+        m.entry_point = Some("main".to_string());
+        m.functions = vec![lambda, main];
+        m
+    }
+
+    /// A tagged parameter must be UNBOXED before machine arithmetic reads it.
+    ///
+    /// The boundary declares every lisp parameter `ref<any>` and callers box for
+    /// it, so a body that adds to the parameter directly is adding to the tag:
+    /// `((lambda (x) (+ x 1)) 41)` returned `(41 << 3) + 1 = 329` instead of 42
+    /// on every managed backend.
+    #[test]
+    fn a_tagged_parameter_is_unboxed_before_machine_arithmetic() {
+        let mut m = lambda_module(vec![
+            IIRInstr::new("const", Some("_n1".into()), vec![Operand::Int(1)], "i64"),
+            IIRInstr::new(
+                "add",
+                Some("_r2.raw1".into()),
+                vec![Operand::Var("x".into()), Operand::Var("_n1".into())],
+                "i64",
+            ),
+            // lower_dynamic_arith boxes the result upstream; that is also what
+            // marks this function as using the heap value model.
+            IIRInstr::new("box", Some("_r2".into()), vec![Operand::Var("_r2.raw1".into())], REF_ANY),
+            IIRInstr::new("ret", None, vec![Operand::Var("_r2".into())], "any"),
+        ]);
+        lower_dyn_repr_structural(&mut m);
+        let f = m.functions.iter().find(|f| f.name == "__lambda_0").unwrap();
+
+        // The SIGNATURE is unchanged — callers keep boxing, no call site moves.
+        assert_eq!(f.params[0].1, REF_ANY, "the parameter must stay tagged");
+
+        // An unbox was inserted, and the add reads the unboxed register.
+        let unbox = f
+            .instructions
+            .iter()
+            .find(|i| i.op == "unbox" && matches!(i.srcs.first(), Some(Operand::Var(v)) if v == "x"))
+            .expect("no unbox inserted for the tagged parameter");
+        let raw = unbox.dest.clone().unwrap();
+        let add = f.instructions.iter().find(|i| i.op == "add").unwrap();
+        assert!(
+            matches!(&add.srcs[0], Operand::Var(v) if *v == raw),
+            "add still reads the tagged parameter: {:?}",
+            add.srcs
+        );
+    }
+
+    /// Boxing an already-tagged parameter is never right. `lower_closures_to_heap`
+    /// runs while the parameter is bare `any` and boxes a capture it believes is
+    /// raw; once the parameter is `ref<any>` that is a second box, and the JVM
+    /// rejects the capturing closure with `Register 0 contains wrong type`.
+    #[test]
+    fn boxing_an_already_tagged_parameter_collapses_to_a_copy() {
+        let mut m = lambda_module(vec![
+            IIRInstr::new("box", Some("_cap".into()), vec![Operand::Var("x".into())], REF_ANY),
+            IIRInstr::new("alloc", Some("_cell".into()), vec![], REF_PAIR),
+            IIRInstr::new(
+                "field_store",
+                None,
+                vec![Operand::Var("_cell".into()), Operand::Int(0), Operand::Var("_cap".into())],
+                "void",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("_cell".into())], "any"),
+        ]);
+        lower_dyn_repr_structural(&mut m);
+        let f = m.functions.iter().find(|f| f.name == "__lambda_0").unwrap();
+        assert!(
+            !f.instructions.iter().any(
+                |i| i.op == "box" && matches!(i.srcs.first(), Some(Operand::Var(v)) if v == "x")
+            ),
+            "a tagged parameter is still being boxed a second time"
+        );
+    }
+
+    /// The repair is one-sided: a parameter used only as a REFERENCE keeps the
+    /// reference. Nothing is unboxed and no operand is rewritten, so record
+    /// accessors and cons walkers are untouched.
+    #[test]
+    fn a_dereferenced_parameter_is_left_alone() {
+        let mut m = lambda_module(vec![
+            IIRInstr::new(
+                "field_load",
+                Some("_fv1".into()),
+                vec![Operand::Var("x".into()), Operand::Int(0)],
+                REF_ANY,
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("_fv1".into())], "any"),
+        ]);
+        lower_dyn_repr_structural(&mut m);
+        let f = m.functions.iter().find(|f| f.name == "__lambda_0").unwrap();
+        assert_eq!(f.params[0].1, REF_ANY);
+        assert!(
+            !f.instructions.iter().any(
+                |i| i.op == "unbox" && matches!(i.srcs.first(), Some(Operand::Var(v)) if v == "x")
+            ),
+            "a reference-only parameter must not be unboxed"
+        );
+        let load = f.instructions.iter().find(|i| i.op == "field_load").unwrap();
+        assert!(matches!(&load.srcs[0], Operand::Var(v) if v == "x"));
     }
 }

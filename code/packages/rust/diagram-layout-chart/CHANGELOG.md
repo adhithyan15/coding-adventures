@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.6.0 — 2026-08-13
+
+### Added
+- Apply quadrant padding and emit one frame plus independent internal dividers
+
 ## 0.5.0 — 2026-08-13
 
 ### Added
