@@ -428,10 +428,17 @@ Prioritized work items:
    DOM, and clears only the form pointer so a later form start is accepted. A
    blocked template-owned form preserves an outer form pointer, a nearer
    matching foreign `form` closes in foreign mode, and no-pointer and seeded
-   fragment paths retain their distinct diagnostics. Continue the form audit
-   with ordinary `object`/`marquee` and table-cell scope boundaries, where
-   ignored-token stack state must remain observable after the pointer clears,
-   and with HTML `select`, where in-select recovery must not clear the pointer.
+   fragment paths retain their distinct diagnostics. Pointer-owned form
+   endings blocked by ordinary `object`, `marquee`, `select`, or table-cell
+   scope now clear the form pointer before the scope check and ignore the token
+   without removing the older form from the open stack, so following text and
+   a later accepted form retain the current-Standard DOM. The current Standard
+   no longer has a separate in-select insertion mode; an HTML `select` is an
+   ordinary-scope boundary for this branch, while a foreign `select` name is
+   not. Dedicated form end-tag scope and integration recovery is complete.
+   Continue the in-body audit with `body` and `html` end tags, including their
+   required scope and unclosed-special-element diagnostics, before moving to a
+   new algorithm family.
 3. **Diagnostic positions and error taxonomy.** Carry source positions into
    tree construction and map diagnostics to current WHATWG concepts. Legacy
    WPT/html5lib error labels are evidence hints, not a normative public API.

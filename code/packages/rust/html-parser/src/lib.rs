@@ -7555,6 +7555,9 @@ impl HtmlParser {
                     self.close_element(name);
                 }
             }
+            "form" if !self.has_open_html_template_element() => {
+                self.close_pointer_owned_form_end_tag();
+            }
             "table" => {
                 self.report_non_current_caption_recovery("end tag `</table>`");
                 self.close_open_table_context_element_if(|name| name == "caption");
@@ -7614,6 +7617,36 @@ impl HtmlParser {
             }
             _ => self.close_element(name),
         }
+    }
+
+    fn close_pointer_owned_form_end_tag(&mut self) {
+        let pointer_was_set = self.form_element_pointer_set;
+        self.form_element_pointer_set = false;
+
+        if !pointer_was_set {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-end-tag",
+                "end tag `</form>` did not match the form element pointer",
+            ));
+            return;
+        }
+
+        let Some(index) = self.open_html_element_in_scope_index("form") else {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-form-end-tag-outside-scope",
+                "end tag `</form>` targeted a form outside ordinary scope",
+            ));
+            return;
+        };
+
+        self.generate_implied_end_tags_above(index);
+        if !self.current_element_is("form") {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-non-current-form-end-tag",
+                "end tag `</form>` removed a form while a non-form node remained current after implied-end-tag generation",
+            ));
+        }
+        self.open_elements.remove(index);
     }
 
     fn close_element(&mut self, name: &str) {
@@ -33209,6 +33242,67 @@ mod tests {
         assert!(fragment.parser_diagnostics.iter().all(|diagnostic| {
             diagnostic.code != "unexpected-form-end-tag-outside-scope"
         }));
+    }
+
+    #[test]
+    fn pointer_owned_form_end_tags_respect_ordinary_scope_boundaries() {
+        for boundary in ["object", "marquee"] {
+            let source = format!(
+                "<!doctype html><form id=outer><{boundary} id=boundary></form>X</{boundary}><form id=later>Y</form>"
+            );
+            let output = parse_html_with_diagnostics(&source).unwrap();
+            let outer = find_element_by_id(&output.document.children, "outer")
+                .expect("the blocked form should remain in the DOM");
+            let boundary_element = find_element_by_id(&outer.children, "boundary")
+                .expect("the scope boundary should remain inside the outer form");
+            assert_eq!(boundary_element.children, vec![Node::text("X")]);
+            assert!(find_element_by_id(&outer.children, "later").is_some());
+            assert_eq!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .filter(|diagnostic| {
+                        diagnostic.code == "unexpected-form-end-tag-outside-scope"
+                    })
+                    .count(),
+                1,
+                "source {source:?}: {:?}",
+                output.parser_diagnostics
+            );
+        }
+
+        let table_cell = parse_html_with_diagnostics(
+            "<!doctype html><form id=outer><table><tbody><tr><td id=boundary></form>X</td></tr></tbody></table><form id=later>Y</form>",
+        )
+        .unwrap();
+        let outer = find_element_by_id(&table_cell.document.children, "outer")
+            .expect("the blocked form should remain in the DOM");
+        let cell = find_element_by_id(&outer.children, "boundary")
+            .expect("the cell should remain inside the outer form");
+        assert_eq!(cell.children, vec![Node::text("X")]);
+        assert!(find_element_by_id(&outer.children, "later").is_some());
+        assert_eq!(
+            table_cell
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| {
+                    diagnostic.code == "unexpected-form-end-tag-outside-scope"
+                })
+                .count(),
+            1
+        );
+
+        let select = parse_html_with_diagnostics(
+            "<!doctype html><form id=outer><select></form></select><form id=later>Y</form>",
+        )
+        .unwrap();
+        let outer = find_element_by_id(&select.document.children, "outer")
+            .expect("the select-blocked form should remain in the DOM");
+        assert!(find_element_by_id(&outer.children, "later").is_some());
+        assert!(select
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "nested-form-start-tag"));
     }
 
     #[test]
