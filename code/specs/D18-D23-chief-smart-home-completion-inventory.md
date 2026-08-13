@@ -2254,6 +2254,27 @@ This broadens local HVAC, energy, and industrial telemetry coverage while the
 independent camera, cloud, radio, and credential prerequisites below remain
 honestly blocked.
 
+## Current BACnet/IP Breadth Slice
+
+The next breadth slice adds vendor-neutral building-automation discovery while
+keeping unauthenticated BACnet control outside the runtime boundary:
+
+- `bacnet-protocol` owns bounded BACnet/IP BVLC/NPDU framing for Who-Is and
+  strict I-Am decoding, including forwarded-NPDU origin correlation.
+- `smart-home-bacnet-ip-integration` sends one probe to an explicit IPv4
+  destination, collects at most 64 replies within a bounded timeout, and
+  projects verified device instances into the shared D23 discovery catalog.
+- Discovery authorization runs before UDP socket creation. Malformed replies
+  are isolated as partial failures, and conflicting endpoints claiming one
+  device instance are reported without replacing the deterministic first
+  observation.
+- The runtime exposes no property reads, writes, controls, BBMD management,
+  foreign-device registration, or BACnet/SC session ownership. Those require
+  separate authenticated ownership and operation-specific policy.
+
+This expands local HVAC, lighting, access, and energy discovery without
+weakening the independent credential, camera-resource, or radio-host blocks.
+
 The protocol- and vendor-specific backlog below remains valid after those
 central ownership steps:
 

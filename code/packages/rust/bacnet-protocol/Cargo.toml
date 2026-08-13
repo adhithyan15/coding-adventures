@@ -1,0 +1,8 @@
+[package]
+name = "bacnet-protocol"
+version = "0.1.0"
+edition = "2021"
+description = "Bounded BACnet/IP Who-Is and I-Am protocol framing"
+license = "MIT"
+
+[dependencies]
