@@ -190,6 +190,23 @@ impl Executor {
             // unbounded recursion these cases exist to trigger would
             // overflow the real host stack (an uncatchable process abort),
             // not produce a gradeable trap.
+            //
+            // IMPORTANT for whoever vendors more testsuite files or widens
+            // `wasm-wast-parser`'s grammar coverage: this guard is keyed on
+            // the DIRECTIVE'S SPELLING (`assert_exhaustion` in the source),
+            // not on anything semantic. A runaway-recursive function
+            // invoked through a plain `Directive::Action`/`AssertReturn`/
+            // `AssertTrap` -- not itself spelled `assert_exhaustion` --
+            // gets NO protection here and reaches `wasm-execution` directly.
+            // Today this is safe only because the two vendored files with
+            // such functions (`call_indirect.wast`'s "runaway"/
+            // "mutual-runaway", `fac.wast`'s "fac-rec") both currently fail
+            // to parse for unrelated grammar reasons -- an accident of
+            // corpus coverage, not a structural guarantee. The real fix is
+            // a call-depth guard in `wasm-execution` itself; until that
+            // exists, treat any newly-parseable file with unbounded
+            // recursion as a real risk, not something this harness already
+            // handles.
             Directive::AssertExhaustion { .. } => DirectiveOutcome::NotYetSupported(
                 "wasm-execution has no call-depth guard; running this would overflow the host stack instead of trapping".to_string(),
             ),

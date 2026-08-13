@@ -38,6 +38,16 @@ reports a real, git-pinned conformance baseline. Phase A of the
     trigger would overflow the real host stack (an uncatchable process
     abort, not a gradeable trap). Always `NotYetSupported` without running
     the action at all — a safety requirement, not just an honesty one.
+    A security review flagged that this guard is keyed on the
+    directive's own spelling in the source, not anything semantic — a
+    runaway-recursive function invoked through a plain `Action`/
+    `AssertReturn`/`AssertTrap` gets no protection. Currently safe only
+    because the two vendored files with such functions both fail to
+    parse for unrelated reasons (an accident of corpus coverage, not a
+    guarantee) — documented with a loud in-code warning for whoever
+    widens `wasm-wast-parser`'s grammar coverage or vendors more files
+    next, since the real fix is a call-depth guard in `wasm-execution`
+    itself, out of scope here.
 - **`bin/wasm_conformance_report`**: the day-to-day deliverable — walks
   the vendored corpus, prints a per-file/aggregate table, and (with
   `--write-baseline`) regenerates the golden manifest.
@@ -66,15 +76,18 @@ parse: `assert_return` 11518/12238 (94.1%), `assert_trap` 325/325
 `tests/fixtures/testsuite-status.json` for the exact, current, per-file
 numbers this changelog entry is a snapshot of.
 
-### Building this required 4 real `wasm-wast-parser` bug fixes
+### Building this required real `wasm-wast-parser` bug fixes
 
 Running the actual corpus (not just `wasm-wast-parser`'s own hand-written
-unit tests) surfaced 4 genuine grammar bugs in that crate, fixed as part
-of landing this baseline (folded `br_table`'s label/operand order was
-backwards, `(table reftype (elem e*))`'s implied-size form was
-unhandled, and two hex-float-literal gaps) — see
-`code/packages/rust/wasm-wast-parser/CHANGELOG.md`'s `0.1.1` entry for
-the full detail. File-level parse failures dropped from 33/48 to 16/48
+unit tests) surfaced 4 genuine grammar bugs in that crate, plus one more
+found by security review of the fix for one of them (an empty-list
+`(table funcref ())` panic), fixed as part of landing this baseline
+(folded `br_table`'s label/operand order was backwards, `(table reftype
+(elem e*))`'s implied-size form was unhandled and its own fix had a
+reachable panic on an empty inline list, and two hex-float-literal
+gaps) — see `code/packages/rust/wasm-wast-parser/CHANGELOG.md`'s `0.1.1`
+entry for the full detail. File-level parse failures dropped from 33/48
+to 16/48
 as a direct result.
 
 ### `wasm-runtime::call_typed`

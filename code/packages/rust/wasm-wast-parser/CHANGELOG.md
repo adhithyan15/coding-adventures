@@ -34,6 +34,19 @@ parsing bugs, each fixed with its own regression test:
   at all) defaults to exponent 0. The mantissa parsing was previously
   reachable only via the exponent-bearing branch.
 
+A security review of this same PR found one more, related bug in the
+`(table reftype (elem e*))` fix above: `(table funcref ())` — a
+syntactically valid but EMPTY inline list, with no `"elem"` head atom at
+all — indexed `elem_form[1..]` without first confirming the list was
+both non-empty and actually headed by `"elem"`, panicking with a
+slice-range-out-of-bounds. Fixed by validating the head atom before
+slicing, with its own regression tests (`(table funcref ())` and
+`(table funcref (notelem)))`, both now clean `Err`s). None of the 48
+currently-vendored files trigger this — every real table-elem shorthand
+names at least one function — but it's exactly the shape of input a
+future `assert_malformed`/`assert_invalid` fixture (or wider corpus
+vendoring) could hit.
+
 Net effect on the vendored corpus: file-level parse failures dropped from
 33/48 to 16/48. The remaining 16 are legitimate, out-of-scope gaps
 (multi-value block signatures, reference-types `externref` and the

@@ -619,11 +619,21 @@ fn build_table_limits_and_elements(rest: &[SExpr], table_idx: u32, ctx: &mut Mod
 
     // `[reftype, (elem e*)]` -- skip the reftype keyword (this crate only
     // tracks FUNCREF tables, matching every MVP-era table declaration),
-    // then resolve the elem list's own function references.
-    let elem_form = expect_get(rest, 1)?
+    // then resolve the elem list's own function references. `(table
+    // funcref ())` -- a syntactically valid but EMPTY inner list -- has no
+    // "elem" head atom at all, so this must confirm one is actually
+    // present before slicing `[1..]`, not just that the list is non-empty.
+    let elem_items = expect_get(rest, 1)?
         .as_list()
         .ok_or(WastParseError::UnexpectedEof)?;
-    let function_indices: Vec<u32> = elem_form[1..]
+    if expect_get(elem_items, 0)?.as_atom() != Some("elem") {
+        return Err(WastParseError::UnexpectedToken {
+            pos: elem_items[0].pos(),
+            found: "list".to_string(),
+            expected: "an (elem ...) form",
+        });
+    }
+    let function_indices: Vec<u32> = elem_items[1..]
         .iter()
         .map(|f| resolve_idx(&ctx.func_names, f, "func"))
         .collect::<Result<_, _>>()?;
@@ -1601,6 +1611,24 @@ mod tests {
         assert_eq!(m.elements[0].table_index, 0);
         assert_eq!(m.elements[0].function_indices, vec![0, 1]);
         assert_eq!(m.elements[0].offset_expr, vec![0x41, 0x00, 0x0B]);
+    }
+
+    /// Found via security review of the round-4 `wasm-conformance` PR,
+    /// empirically confirmed with a real panic before this fix:
+    /// `(table funcref ())` has a syntactically valid but EMPTY inner
+    /// list -- no "elem" head atom at all -- so indexing `elem_form[1..]`
+    /// without first confirming the list is non-empty AND actually headed
+    /// by "elem" panicked with a slice-range-out-of-bounds.
+    #[test]
+    fn table_with_empty_inline_list_errors_cleanly_not_panics() {
+        let err = parse_module("(module (table funcref ()))").unwrap_err();
+        assert!(matches!(err, WastParseError::UnexpectedEof));
+    }
+
+    #[test]
+    fn table_with_wrong_keyword_in_inline_list_errors_cleanly_not_panics() {
+        let err = parse_module("(module (table funcref (notelem)))").unwrap_err();
+        assert!(matches!(err, WastParseError::UnexpectedToken { .. }));
     }
 
     #[test]
