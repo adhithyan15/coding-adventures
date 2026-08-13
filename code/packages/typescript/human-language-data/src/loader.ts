@@ -443,7 +443,13 @@ export function loadExamInventory(
   if (!SAFE_INVENTORY_SEGMENT.test(language) || !SAFE_INVENTORY_SEGMENT.test(level)) {
     throw new Error(`exam inventory: refusing unsafe language/level '${language}'/'${level}'`);
   }
-  const code = language === "spanish" ? "es" : language;
+  // Lower-cased before the comparison as well as after: `language` is matched
+  // against a literal, so `"SPANISH"` would otherwise build
+  // `exam-inventory-SPANISH-a1.json` — which resolves on a case-insensitive
+  // filesystem and ENOENTs on case-sensitive CI. A gate that depends on the
+  // developer's filesystem is not a gate.
+  const normalized = language.toLowerCase();
+  const code = normalized === "spanish" ? "es" : normalized;
   const directory = resolve(root, "core");
   const file = resolve(directory, `exam-inventory-${code}-${level.toLowerCase()}.json`);
   // Belt and braces: the allowlist above already excludes separators, so this

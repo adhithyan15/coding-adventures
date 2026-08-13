@@ -149,20 +149,31 @@ export function measureExamCoverage(
     };
   });
 
-  // `Object.create(null)`, not `{}`. `byCategory[point.category] ??= ...` on a
-  // normal object literal is a prototype-pollution sink: with
+  // Accumulated in a Map, not an object literal. `byCategory[point.category]
+  // ??= ...` on a literal is a prototype-pollution sink: with
   // `category: "__proto__"` the lookup returns `Object.prototype`, which is
   // truthy, so `??=` never assigns and `bucket.enumerated += 1` writes onto
-  // `Object.prototype` — every object built afterwards in the process inherits
-  // `enumerated: NaN`. It also corrupts this very report, because the polluting
-  // category vanishes from the own keys while still counting toward the totals,
-  // so the per-category lines and the summary would disagree.
-  const byCategory: Record<string, { enumerated: number; covered: number }> = Object.create(null);
+  // `Object.prototype` — after which every object built in the process
+  // inherits `enumerated: NaN`. It also corrupted this very report, because
+  // the polluting category vanished from the own keys while still counting
+  // toward the totals, so the per-category lines and the summary disagreed.
+  //
+  // `Object.create(null)` also closes that, and was the first fix here, but it
+  // leaks an awkwardness into a PUBLIC return type: a consumer calling
+  // `coverage.byCategory.hasOwnProperty(x)` or interpolating the object into a
+  // string gets a TypeError, because there is no prototype to supply either.
+  // A Map finished with `Object.fromEntries` is safe for the same reason —
+  // `fromEntries` uses CreateDataProperty, so `__proto__` lands as an ordinary
+  // own property and no setter fires — while handing back a normal object.
+  const tally = new Map<string, { enumerated: number; covered: number }>();
   for (const point of points) {
-    const bucket = (byCategory[point.category] ??= { enumerated: 0, covered: 0 });
+    let bucket = tally.get(point.category);
+    if (bucket === undefined) tally.set(point.category, (bucket = { enumerated: 0, covered: 0 }));
     bucket.enumerated += 1;
     if (point.covered) bucket.covered += 1;
   }
+  const byCategory: Record<string, { enumerated: number; covered: number }> =
+    Object.fromEntries(tally);
 
   const covered = points.filter((point) => point.covered).length;
   return {

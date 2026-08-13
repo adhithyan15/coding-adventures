@@ -19,6 +19,9 @@ import {
   type ExamInventory,
 } from "../src/exam-inventory.js";
 import { parseLesson } from "../src/parse.js";
+import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 
 function lesson(id: string, introduces: string[]) {
   return parseLesson(
@@ -199,10 +202,69 @@ describe("a hostile inventory cannot corrupt the process", () => {
     expect(summed).toBe(coverage.enumerated);
   });
 
+  it("hands back a NORMAL object, so a consumer can still call hasOwnProperty", () => {
+    // The first fix here was `Object.create(null)`, which closes the sink but
+    // leaks into a public return type: `byCategory.hasOwnProperty(x)` and
+    // `String(byCategory)` both throw on a null-prototype object. The Map plus
+    // `Object.fromEntries` is safe for the same reason and normal to hold.
+    const coverage = measureExamCoverage(hostile("__proto__"), []);
+    expect(Object.getPrototypeOf(coverage.byCategory)).toBe(Object.prototype);
+    expect(Object.prototype.hasOwnProperty.call(coverage.byCategory, "__proto__")).toBe(true);
+    expect(() => JSON.stringify(coverage.byCategory)).not.toThrow();
+    // And the safety survives the change: still an own key, still no pollution.
+    expect(({} as Record<string, unknown>).enumerated).toBeUndefined();
+  });
+
   it("reports 0% rather than NaN% for an inventory with no points", () => {
     const coverage = measureExamCoverage({ ...hostile("Uno"), points: [] }, []);
     expect(coverage.percent).toBe(0);
     expect(Number.isNaN(coverage.percent)).toBe(false);
+  });
+});
+
+describe("the loader refuses a malformed file rather than crashing downstream", () => {
+  // These exercise the SECONDARY defenses, which the primary tests above do not
+  // reach: a caller cannot hand `loadExamInventory` a bad object, only a bad
+  // file, so testing them needs a file.
+  function withTempInventory<T>(body: (root: string) => T): T {
+    const root = mkdtempSync(join(tmpdir(), "exam-inventory-"));
+    mkdirSync(join(root, "core"));
+    try {
+      return body(root);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  }
+  const write = (root: string, value: unknown) =>
+    writeFileSync(join(root, "core", "exam-inventory-es-a1.json"), JSON.stringify(value));
+
+  it("names the file when `points` is missing or empty", () => {
+    withTempInventory((root) => {
+      write(root, { version: 1, language: "spanish", level: "A1" });
+      expect(() => loadExamInventory("spanish", "A1", root)).toThrow(/no non-empty 'points' array/);
+      write(root, { version: 1, points: [] });
+      expect(() => loadExamInventory("spanish", "A1", root)).toThrow(/no non-empty 'points' array/);
+    });
+  });
+
+  it("refuses a reserved category name before it reaches the accumulator", () => {
+    withTempInventory((root) => {
+      write(root, { version: 1, points: [{ id: "X", category: "__proto__", label: "l", probe: null }] });
+      expect(() => loadExamInventory("spanish", "A1", root)).toThrow(/reserved category name/);
+    });
+  });
+
+  it("refuses a duplicate point id, which would double-count a category", () => {
+    withTempInventory((root) => {
+      write(root, {
+        version: 1,
+        points: [
+          { id: "X", category: "Uno", label: "l", probe: null },
+          { id: "X", category: "Uno", label: "l", probe: null },
+        ],
+      });
+      expect(() => loadExamInventory("spanish", "A1", root)).toThrow(/duplicate point id/);
+    });
   });
 });
 
