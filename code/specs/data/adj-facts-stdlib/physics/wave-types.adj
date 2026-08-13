@@ -27,7 +27,10 @@
 %     gamma           electromagnetic   "…all forms of electromagnetic radiation:
 %                                        gamma rays…"
 %     xray            electromagnetic   "…X-rays…"
+%     ultraviolet     electromagnetic   "…ultraviolet light…"
 %     visible_light   electromagnetic   "…visible light…"
+%     infrared        electromagnetic   "…infrared light…"
+%     microwave       electromagnetic   "…microwaves…"
 %     radio           electromagnetic   "…radio waves."
 %
 % This is the concrete rung a physics learner reasons UP from: before reasoning
@@ -45,8 +48,9 @@
 % uses to name the two families — `mechanical` and `electromagnetic` — copied
 % verbatim from the sentence that classifies each wave; never a family the source
 % does not assign. Each `wave` key is a faithful short snake_case paraphrase of a
-% wave the source explicitly names (gamma rays → gamma, X-rays → xray, radio
-% waves → radio, visible light → visible_light).
+% wave the source explicitly names (gamma rays → gamma, X-rays → xray, ultraviolet
+% light → ultraviolet, visible light → visible_light, infrared light → infrared,
+% microwaves → microwave, radio waves → radio).
 %
 % ---------------------------------------------------------------------------
 % Provenance (nothing here is asserted from memory — every wave→family pair was
@@ -62,8 +66,8 @@
 %   "Water waves, sound waves, and waves on a rope are all examples of
 %    mechanical waves."
 %
-% The electromagnetic family (gamma, xray, visible_light, radio) is fixed by
-% ONE sentence —
+% The electromagnetic family (gamma, xray, ultraviolet, visible_light, infrared,
+% microwave, radio) is fixed by ONE sentence —
 %
 %   "Light waves include all forms of electromagnetic radiation: gamma rays,
 %    X-rays, ultraviolet light, visible light, infrared light, microwaves, and
@@ -72,6 +76,15 @@
 % (and the same page names light itself as electromagnetic: "Light waves, also
 % called electromagnetic waves, involve oscillations of electric and magnetic
 % fields rather than oscillations of matter.")
+%
+% EXTENDED this cycle from 7 to 10 rows: the SAME already-quoted electromagnetic
+% sentence above always named SEVEN electromagnetic waves (gamma rays, X-rays,
+% ultraviolet light, visible light, infrared light, microwaves, and radio
+% waves), but only four had ever been turned into a row -- ultraviolet,
+% infrared, and microwave were sitting in this table's own header the whole
+% time. Zero new WebFetch needed to discover them, mirroring `synonyms.adj`'s
+% and `opposites.adj`'s header-only extension pattern; this cycle it applies to
+% adding new KEYS (more waves) rather than more values per key.
 %
 % An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
 % `trust` below hold the single strongest span: the NASA sentence that fixes the
@@ -90,7 +103,10 @@ table wave_family {
     row (rope, mechanical)
     row (gamma, electromagnetic)
     row (xray, electromagnetic)
+    row (ultraviolet, electromagnetic)
     row (visible_light, electromagnetic)
+    row (infrared, electromagnetic)
+    row (microwave, electromagnetic)
     row (radio, electromagnetic)
 
     source "Water waves, sound waves, and waves on a rope are all examples of mechanical waves."
