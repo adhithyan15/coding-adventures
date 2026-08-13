@@ -3206,6 +3206,14 @@ dependency-ready but must be decomposed by shared writer engine before
 selection. The four WebAssembly parser and conformance owners remain blocked
 while external PR #11146 overlaps their Rust oracle and host surfaces.
 
+After selection, PR #11146 merged externally as `93a27bfec2`. A late
+collision-checked refresh at `e57bec074440fd7b3b4198597b42d3c059f659c4`
+remains exactly 1,305 identities and 4,461 slots with zero collisions and zero
+unknown buckets. The temporary overlap flags are therefore cleared from the
+WAST neutral contract and portable conformance core. Their dependency chain,
+the established-lane umbrella decomposition requirement, and the separate host
+authority review still prevent overlapping or over-broad selection.
+
 The dependency/leverage pass selected
 `zip-raw-rfc1951-language-neutral-conformance`. This dependency-free foundation
 closes the fallible raw encode, capped decode, exact counted decode,

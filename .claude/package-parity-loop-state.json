@@ -13,7 +13,7 @@
   },
   "active_pr": null,
   "last_inventory": {
-    "revision": "5574bc77277b1b047d09d6e696f9427e2a8c4ba7",
+    "revision": "e57bec074440fd7b3b4198597b42d3c059f659c4",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1305,
@@ -3126,6 +3126,8 @@
       "pr_number": null,
       "selection_revision": "5574bc77277b1b047d09d6e696f9427e2a8c4ba7",
       "selection_notes": "Selected after PR #11162 merged externally and the collision-clean post-merge inventory remained exactly 1,305 identities, 4,461 slots, 855 singletons, 11,970 singleton gaps, 658 Rust singletons, zero collisions, and zero unknown buckets. This dependency-free neutral contract is the highest-leverage ready slice: it makes the reviewable ZIP raw-codec lane children eligible and ultimately unlocks the fourteen missing established PNG codec slots without overlapping external WebAssembly PR #11146 or widening into the still-unsplit remaining build-plan writers.",
+      "implementation_revision": "9b079f060d72ea94203edbaa0d24db5aa30e61fe",
+      "validation_notes": "The closed 34-case RFC 1951 corpus and independent Python zlib/binascii validator pass 9 focused tests; the capability taxonomy passes 7 tests and 678 subtests. The real TypeScript ZIP BUILD front door passes 98 tests with 98.63% line, 94.11% statement, 84.41% branch, and 100% function coverage. The real image-codec-png downstream BUILD passes 58 tests with 100% line, 97.44% statement, 94.70% branch, and 100% function coverage. The suite covers stored, fixed, dynamic, multi-block, symbol 285, exact counted consumption, HDIST=32 with unused reserved slots, decoded dynamic distance symbols 30 and 31, stable payload-blind failures, hard and caller output caps, foreign decoding, incremental CRC-32, and ZIP compressed-payload cavity rejection. Ruff, Ruff format, MyPy, Bandit, TypeScript builds, Go build-tool tests, vet, module verification, trimpath build, strict JSON, dependency-graph, credential-pattern, diff, and runtime dependency audit gates pass. Both ZIP and PNG runtime audits report zero vulnerabilities. The collision-clean inventory at e57bec0744 remains 1,305 identities, 4,461 slots, 855 singletons, 11,970 singleton gaps, 658 Rust singletons, zero collisions, and zero unknown buckets. External WebAssembly PR #11146 merged during the rebase, so its temporary neutral/core overlap blocks were cleared after the unchanged inventory refresh; the broader WAST umbrella and host authority review remain blocked as designed.",
       "notes": "Split from the broad ZIP completion owner during the post-#11111 leverage pass. Tighten CMP09 around a closed fallible raw_deflate, capped raw_inflate, exact raw_inflate_counted, and incremental CRC-32 profile; add neutral stored, fixed, dynamic, foreign-stream, malformed-tree/header, truncation, trailing-byte, output-cap, exact-consumption, and stable payload-free error fixtures. TypeScript remains the reference consumer; lane ports are separate dependency-shaped children under the completion umbrella."
     },
     {
@@ -3154,8 +3156,7 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "selection_blocked": true,
-      "notes": "Discovered in the collision-clean 1887d6eed6 inventory after merged PR #11128 added Rust wasm-wast-parser. Define pinned W05 plus bounded positive and adversarial fixtures for tokenization, nested comments, byte strings and UTF-8, S-expressions, decimal, hexadecimal and NaN numerics, symbolic index spaces, folded and flat instructions, module forms and directives, stable error classes and offsets, recursion, tokens, aggregate input, and module output. Require explicit empty capability metadata. The block is temporary while external PR #11146 modifies the Rust oracle; clear it only after that PR is terminal and inventory is refreshed."
+      "notes": "Discovered in the collision-clean 1887d6eed6 inventory after merged PR #11128 added Rust wasm-wast-parser. Define pinned W05 plus bounded positive and adversarial fixtures for tokenization, nested comments, byte strings and UTF-8, S-expressions, decimal, hexadecimal and NaN numerics, symbolic index spaces, folded and flat instructions, module forms and directives, stable error classes and offsets, recursion, tokens, aggregate input, and module output. Require explicit empty capability metadata. External PR #11146 merged as 93a27bfec2 and the collision-clean e57bec0744 refresh confirmed no topology change, so the temporary overlap block is cleared."
     },
     {
       "id": "wasm-wast-parser-established-lane-parity",
@@ -3174,8 +3175,7 @@
       "depends_on": ["wasm-wast-parser-established-lane-parity"],
       "branch": null,
       "pr_number": null,
-      "selection_blocked": true,
-      "notes": "Discovered in the collision-clean 1887d6eed6 inventory after merged PR #11132 added the fixture-only Rust wasm-conformance root. Define a language-neutral pinned corpus manifest, in-order directive execution, module registry behavior, bit-exact and NaN comparison, stable outcome and report schemas, drift accounting, and execution/resource bounds across established runtime lanes. wasm-execution, wasm-validator, and wasm-runtime already exist in all fifteen lanes, so W05's current single-target statement is not a permanent parity exception. The block is temporary while external PR #11146 owns the Rust oracle."
+      "notes": "Discovered in the collision-clean 1887d6eed6 inventory after merged PR #11132 added the fixture-only Rust wasm-conformance root. Define a language-neutral pinned corpus manifest, in-order directive execution, module registry behavior, bit-exact and NaN comparison, stable outcome and report schemas, drift accounting, and execution/resource bounds across established runtime lanes. wasm-execution, wasm-validator, and wasm-runtime already exist in all fifteen lanes, so W05's current single-target statement is not a permanent parity exception. External PR #11146 merged as 93a27bfec2 and the collision-clean e57bec0744 refresh cleared the temporary overlap block; the dependency chain still prevents premature selection."
     },
     {
       "id": "wasm-conformance-host-authority-review",
