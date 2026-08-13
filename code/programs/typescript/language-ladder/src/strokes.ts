@@ -2923,6 +2923,38 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: devanagariAlphabetSource("स"),
   },
+  // Opiaterein's animation joins the descending right stem, leftward shoulder,
+  // and clockwise hooked body, then restarts for the down-right outer tail and
+  // the headline. The Directorate deskbook confirms that component order while
+  // staging the joined first body across more buildup steps.
+  [ductusKey("devanagari", "ह")]: {
+    script: "devanagari",
+    glyph: "ह",
+    strokes: [
+      { segments: [{ label: "descend, sweep left, and curve around the hooked body", path: [
+        { x: 402, y: 550 }, { x: 402, y: 510 }, { x: 402, y: 470 },
+        { x: 402, y: 430 }, { x: 360, y: 430 }, { x: 315, y: 430 },
+        { x: 270, y: 430 }, { x: 225, y: 430 }, { x: 180, y: 420 },
+        { x: 140, y: 400 }, { x: 110, y: 370 }, { x: 105, y: 340 },
+        { x: 110, y: 310 }, { x: 135, y: 285 }, { x: 175, y: 265 },
+        { x: 225, y: 258 }, { x: 280, y: 260 }, { x: 335, y: 245 },
+        { x: 385, y: 220 }, { x: 425, y: 185 }, { x: 445, y: 145 },
+        { x: 445, y: 110 }, { x: 425, y: 70 }, { x: 390, y: 40 },
+      ] }] },
+      { segments: [{ label: "lift, then sweep down-left and through the diagonal tail", path: [
+        { x: 150, y: 245 }, { x: 125, y: 220 }, { x: 100, y: 185 },
+        { x: 88, y: 145 }, { x: 90, y: 105 }, { x: 110, y: 65 },
+        { x: 145, y: 25 }, { x: 190, y: -10 }, { x: 240, y: -40 },
+        { x: 295, y: -70 }, { x: 350, y: -100 },
+      ] }] },
+      { segments: [{ label: "lift, then draw the shirorekha left-to-right", path: [
+        { x: 5, y: 585 }, { x: 70, y: 585 }, { x: 135, y: 585 },
+        { x: 200, y: 585 }, { x: 265, y: 585 }, { x: 330, y: 585 },
+        { x: 395, y: 585 }, { x: 460, y: 585 }, { x: 540, y: 585 },
+      ] }] },
+    ],
+    source: devanagariAlphabetSource("ह"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the
