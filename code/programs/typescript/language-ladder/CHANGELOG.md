@@ -2,6 +2,12 @@
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Devanagari ई ductus (HL-C09DA)
+
+- Render **ई** in six source-aligned movements across three strokes.
+- Reuse इ's continuous upright, bowls, and tail before the separate upper curl and final left-to-right shirorekhā.
+- Preserve the source's two lifts in Noto Sans Devanagari while identifying the modern printed sequence as one teaching form.
+
 ### Added — cited Devanagari इ ductus (HL-C09CZ)
 
 - Render **इ** in five source-aligned movements across two strokes.

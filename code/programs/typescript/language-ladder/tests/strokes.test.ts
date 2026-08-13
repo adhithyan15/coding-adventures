@@ -51,6 +51,7 @@ const CHINESE_UP = DUCTUS[ductusKey("chinese", "上")];
 const DEVANAGARI_A = DUCTUS[ductusKey("devanagari", "अ")];
 const DEVANAGARI_AA = DUCTUS[ductusKey("devanagari", "आ")];
 const DEVANAGARI_I = DUCTUS[ductusKey("devanagari", "इ")];
+const DEVANAGARI_II = DUCTUS[ductusKey("devanagari", "ई")];
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
@@ -697,6 +698,20 @@ describe("handwriting ductus", () => {
     expect(tail.at(-1)!.x).toBeGreaterThan(tail[0].x);
     expect(tail.at(-1)!.y).toBeLessThan(tail[0].y);
     const headline = penPath(DEVANAGARI_I.strokes[1]);
+    expect(headline[0].x).toBeLessThan(headline.at(-1)!.x);
+  });
+
+  it("Devanagari ई reuses the continuous इ body before its upper curl and headline", () => {
+    expect(DEVANAGARI_II.script).toBe("devanagari");
+    expect(penLifts(DEVANAGARI_II)).toBe(2);
+    expect(DEVANAGARI_II.strokes).toHaveLength(3);
+    expect(DEVANAGARI_II.strokes.map((stroke) => stroke.segments.length)).toEqual([4, 1, 1]);
+    expect(penPath(DEVANAGARI_II.strokes[0])).toEqual(penPath(DEVANAGARI_I.strokes[0]));
+    const curl = penPath(DEVANAGARI_II.strokes[1]);
+    expect(Math.max(...curl.map((point) => point.y))).toBeGreaterThan(curl[0].y);
+    expect(Math.min(...curl.map((point) => point.x))).toBeLessThan(curl[0].x);
+    expect(curl.at(-1)!.x).toBeGreaterThan(curl[0].x);
+    const headline = penPath(DEVANAGARI_II.strokes[2]);
     expect(headline[0].x).toBeLessThan(headline.at(-1)!.x);
   });
 
@@ -1674,6 +1689,9 @@ describe("handwriting ductus", () => {
     expect(verifiedLetterFont("इ", DEVANAGARI_I.source.url)).toBe(
       "_fonts/NotoSansDevanagari-Static.ttf",
     );
+    expect(verifiedLetterFont("ई", DEVANAGARI_II.source.url)).toBe(
+      "_fonts/NotoSansDevanagari-Static.ttf",
+    );
     expect(verifiedLetterFont("א", HEBREW_ALEF.source.url)).toBe(
       "_fonts/NotoSansHebrew-Static.ttf",
     );
@@ -2101,6 +2119,19 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /two-panel diagram.*body.*one continuous pen-down run.*panel 1.*green start.*top of the upright.*descend the upright.*turn left.*upper bowl.*sweep right.*waist.*lower bowl.*finish down-right.*tail.*without lifting.*panel 2.*headline's left edge.*shirorekhā left-to-right.*one intervening lift.*modern printed teaching form.*Noto Sans Devanagari.*rather than.*universal standard/i,
+    );
+  });
+
+  it("Devanagari ई traces the shared body, upper curl, and final headline", () => {
+    const src = DEVANAGARI_II.source;
+    expect(src.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Devanagari_%E0%A4%88_stroke_order.svg",
+    );
+    expect(src.citation).toMatch(
+      /Saurmandal.*Devanagari ई stroke order\.svg.*panels 1–3.*Wikimedia Commons.*5 August 2023/i,
+    );
+    expect(src.variation).toMatch(
+      /three-panel diagram.*three ordered pen-down runs.*panel 1.*same continuous upright.*upper bowl.*lower bowl.*down-right tail.*इ.*panel 2.*headline junction.*upper curl upward.*left.*around.*open right tip.*panel 3.*headline's left edge.*shirorekhā left-to-right.*two intervening lifts.*modern printed teaching form.*Noto Sans Devanagari.*rather than.*universal standard/i,
     );
   });
 
