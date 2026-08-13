@@ -1,4 +1,4 @@
-# @version 1
+# @version 2
 #
 # Mermaid 11.16.1 quadrant-chart token grammar.
 #
@@ -15,4 +15,5 @@ HEADER             = /quadrantChart/
 TITLE_STATEMENT    = /title[ \t]+[^\r\n;]+/
 AXIS_STATEMENT     = /[xy]-axis[ \t]+[^\r\n;]+/
 QUADRANT_STATEMENT = /quadrant-[1-4][ \t]+[^\r\n;]+/
-POINT_STATEMENT    = /[^\r\n;]+:[ \t]*\[[ \t]*(?:1(?:\.0+)?|0(?:\.[0-9]+)?)[ \t]*,[ \t]*(?:1(?:\.0+)?|0(?:\.[0-9]+)?)[ \t]*\]/
+CLASSDEF_STATEMENT = /classDef[ \t]+[^\r\n;]+/
+POINT_STATEMENT    = /[^\r\n;]+:[ \t]*\[[ \t]*(?:1(?:\.0+)?|0(?:\.[0-9]+)?)[ \t]*,[ \t]*(?:1(?:\.0+)?|0(?:\.[0-9]+)?)[ \t]*\][^\r\n;]*/

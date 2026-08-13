@@ -15,7 +15,7 @@ use diagram_ir::{
     LayoutedChartDiagram, LayoutedChartItem, Orientation, Point, SeriesKind,
 };
 
-pub const VERSION: &str = "0.2.0";
+pub const VERSION: &str = "0.3.0";
 
 const MARGIN: f64 = 24.0;
 const TITLE_H: f64 = 32.0;
@@ -299,8 +299,10 @@ fn layout_quadrant(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDia
         items.push(LayoutedChartItem::ScatterPoint {
             x: left + point.x * width,
             y: bottom - point.y * height,
-            radius: 6.0,
-            color: "#2563eb".to_string(),
+            radius: point.radius.unwrap_or(6.0),
+            color: point.color.clone().unwrap_or_else(|| "#2563eb".to_string()),
+            stroke_color: point.stroke_color.clone().unwrap_or_else(|| "#1e3a8a".to_string()),
+            stroke_width: point.stroke_width.unwrap_or(1.5),
             label: point.label.clone(),
         });
     }
@@ -339,7 +341,7 @@ mod tests {
         }
     }
 
-    #[test] fn version_exists() { assert_eq!(crate::VERSION, "0.2.0"); }
+    #[test] fn version_exists() { assert_eq!(crate::VERSION, "0.3.0"); }
 
     #[test]
     fn xy_layout_produces_items() {
@@ -418,6 +420,10 @@ mod tests {
                 label: "Metal".into(),
                 x: 0.75,
                 y: 0.8,
+                radius: Some(10.0),
+                color: Some("#ff0000".into()),
+                stroke_color: Some("#00ff00".into()),
+                stroke_width: Some(3.0),
             }],
             orientation: ChartOrientation::Vertical,
         };
@@ -431,5 +437,12 @@ mod tests {
             layout.items.iter().filter(|item| matches!(item, LayoutedChartItem::ScatterPoint { .. })).count(),
             1
         );
+        let point = layout.items.iter().find_map(|item| match item {
+            LayoutedChartItem::ScatterPoint { radius, color, stroke_width, .. } => {
+                Some((*radius, color.as_str(), *stroke_width))
+            }
+            _ => None,
+        }).unwrap();
+        assert_eq!(point, (10.0, "#ff0000", 3.0));
     }
 }
