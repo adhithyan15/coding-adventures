@@ -90,6 +90,12 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
 
 ## [Unreleased]
 
+### Added - source-verified Devanagari भ (HL-C09DQ)
+
+- Verify भ as three ordered strokes with two lifts against a 15-frame animated source; the Central Hindi Directorate independently corroborates component order while staging the joined body as two buildup steps.
+- Sweep clockwise through the upper loop, descending trunk, lower bowl, and rightward crossbar before the top-to-bottom right stem and left-to-right shirorekhā in a Noto Sans Devanagari fit.
+- Reduce measured HL-C09 debt to 111 entries and queue Devanagari म next.
+
 ### Added - source-verified Devanagari ब (HL-C09DP)
 
 - Verify ब as four ordered strokes with three lifts against a 13-frame animated source, independently corroborated by the Central Hindi Directorate's four-part learner buildup.

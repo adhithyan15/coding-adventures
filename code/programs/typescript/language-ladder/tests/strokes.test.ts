@@ -67,6 +67,7 @@ const DEVANAGARI_DHA = DUCTUS[ductusKey("devanagari", "ध")];
 const DEVANAGARI_NA = DUCTUS[ductusKey("devanagari", "न")];
 const DEVANAGARI_PA = DUCTUS[ductusKey("devanagari", "प")];
 const DEVANAGARI_BA = DUCTUS[ductusKey("devanagari", "ब")];
+const DEVANAGARI_BHA = DUCTUS[ductusKey("devanagari", "भ")];
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
@@ -989,6 +990,25 @@ describe("handwriting ductus", () => {
     expect(diagonal[0].x).toBeLessThan(diagonal.at(-1)!.x);
     expect(diagonal[0].y).toBeGreaterThan(diagonal.at(-1)!.y);
     const headline = penPath(DEVANAGARI_BA.strokes[3]);
+    expect(headline[0].x).toBeLessThan(headline.at(-1)!.x);
+  });
+
+  it("Devanagari भ joins both clockwise loops and the crossbar before the lifted right stem", () => {
+    expect(DEVANAGARI_BHA.script).toBe("devanagari");
+    expect(penLifts(DEVANAGARI_BHA)).toBe(2);
+    expect(DEVANAGARI_BHA.strokes).toHaveLength(3);
+    expect(DEVANAGARI_BHA.strokes.map((stroke) => stroke.segments.length)).toEqual([
+      1, 1, 1,
+    ]);
+    const body = penPath(DEVANAGARI_BHA.strokes[0]);
+    expect(Math.min(...body.slice(0, 14).map((point) => point.x))).toBeLessThan(body[0].x);
+    expect(Math.max(...body.slice(0, 14).map((point) => point.y))).toBeGreaterThan(body[0].y);
+    expect(Math.max(...body.slice(0, 14).map((point) => point.x))).toBeGreaterThan(body[0].x);
+    expect(body[17].y).toBeLessThan(body[14].y);
+    expect(body.at(-1)!.x).toBeGreaterThan(body[17].x);
+    const stem = penPath(DEVANAGARI_BHA.strokes[1]);
+    expect(stem[0].y).toBeGreaterThan(stem.at(-1)!.y);
+    const headline = penPath(DEVANAGARI_BHA.strokes[2]);
     expect(headline[0].x).toBeLessThan(headline.at(-1)!.x);
   });
 
@@ -2014,6 +2034,9 @@ describe("handwriting ductus", () => {
     expect(verifiedLetterFont("ब", DEVANAGARI_BA.source.url)).toBe(
       "_fonts/NotoSansDevanagari-Static.ttf",
     );
+    expect(verifiedLetterFont("भ", DEVANAGARI_BHA.source.url)).toBe(
+      "_fonts/NotoSansDevanagari-Static.ttf",
+    );
     expect(verifiedLetterFont("א", HEBREW_ALEF.source.url)).toBe(
       "_fonts/NotoSansHebrew-Static.ttf",
     );
@@ -2649,6 +2672,19 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /13-frame animation.*four ordered pen-down runs.*frames 0–6.*upper-right junction.*counterclockwise around the oval.*lower-right junction.*frames 7–8.*right stem's headline junction.*top-to-bottom.*frame 9.*upper-left interior.*inner diagonal down-right.*frames 10–12.*headline's left edge.*shirorekhā left-to-right.*three intervening lifts.*spatial restarts.*frames 7, 9, and 10.*all frames last 100 ms.*no long inter-stroke holds.*Central Hindi Directorate.*2019 Deskbook on Orthography of Devanagari Script.*Lesson 2.*Unit VII.*p\. 37.*same oval body.*right stem.*inner diagonal.*headline buildup and directions.*Noto Sans Devanagari.*everyday handwriting.*join or simplify/i,
+    );
+  });
+
+  it("Devanagari भ traces the animated joined-body, right-stem, and headline order", () => {
+    const src = DEVANAGARI_BHA.source;
+    expect(src.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Devanagari_b%CA%B0_%E0%A4%AD.gif",
+    );
+    expect(src.citation).toMatch(
+      /JackPotte.*Devanagari bʰ भ\.gif.*strokes 1–3.*Wikimedia Commons.*29 March 2009/i,
+    );
+    expect(src.variation).toMatch(
+      /15-frame animation.*three ordered pen-down runs.*frames 0–9.*upper loop's lower inner tip.*sweep left and clockwise around the upper loop.*descend the joined trunk.*clockwise around the lower bowl.*continue right through the crossbar.*without lifting.*frames 10–12.*right stem's headline junction.*top-to-bottom.*frames 13–14.*headline's left edge.*shirorekhā left-to-right.*two intervening lifts.*spatial restarts.*frames 10 and 13.*all frames last 100 ms.*no long inter-stroke holds.*Central Hindi Directorate.*2019 Deskbook on Orthography of Devanagari Script.*Lesson 2.*Unit VII.*p\. 38.*upper loop and trunk.*lower bowl and crossbar.*right stem.*headline order.*staging the upper and lower body parts separately.*rather than proving their join.*three-run lift count from the animation.*Noto Sans Devanagari.*everyday handwriting.*divide or simplify/i,
     );
   });
 
