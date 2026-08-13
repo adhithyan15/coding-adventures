@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.40.0
+
+- Preserve authored quadrant dimensions, axis positions, and default point radius in typed chart configuration.
+
 ## 0.39.0
 
 - Preserve chart accessibility title and description through semantic and layout IR.

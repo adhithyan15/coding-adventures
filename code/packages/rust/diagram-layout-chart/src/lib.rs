@@ -15,7 +15,7 @@ use diagram_ir::{
     Point, SeriesKind,
 };
 
-pub const VERSION: &str = "0.4.0";
+pub const VERSION: &str = "0.5.0";
 
 const MARGIN: f64 = 24.0;
 const TITLE_H: f64 = 32.0;
@@ -307,13 +307,17 @@ fn layout_sankey(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagr
 // ── Quadrant layout ──────────────────────────────────────────────────────
 
 fn layout_quadrant(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagram {
+    let cw = diagram.quadrant_config.chart_width.unwrap_or(cw);
+    let ch = diagram.quadrant_config.chart_height.unwrap_or(ch);
     let title_height = if diagram.title.is_some() {
         TITLE_H
     } else {
         0.0
     };
-    let left = MARGIN + 56.0;
-    let right = cw - MARGIN;
+    let y_axis_right = diagram.quadrant_config.y_axis_position.as_deref() == Some("right");
+    let x_axis_top = diagram.quadrant_config.x_axis_position.as_deref() == Some("top");
+    let left = MARGIN + if y_axis_right { 0.0 } else { 56.0 };
+    let right = cw - MARGIN - if y_axis_right { 56.0 } else { 0.0 };
     let top = MARGIN + title_height;
     let bottom = ch - MARGIN - 36.0;
     let width = (right - left).max(1.0);
@@ -352,14 +356,22 @@ fn layout_quadrant(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDia
         if let Some(label) = axis.categories.first() {
             items.push(LayoutedChartItem::DataLabel {
                 x: left,
-                y: bottom + 20.0,
+                y: if x_axis_top {
+                    top - 16.0
+                } else {
+                    bottom + 20.0
+                },
                 text: label.clone(),
             });
         }
         if let Some(label) = axis.categories.get(1) {
             items.push(LayoutedChartItem::DataLabel {
                 x: right,
-                y: bottom + 20.0,
+                y: if x_axis_top {
+                    top - 16.0
+                } else {
+                    bottom + 20.0
+                },
                 text: label.clone(),
             });
         }
@@ -367,14 +379,14 @@ fn layout_quadrant(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDia
     if let Some(axis) = &diagram.y_axis {
         if let Some(label) = axis.categories.first() {
             items.push(LayoutedChartItem::DataLabel {
-                x: MARGIN,
+                x: if y_axis_right { cw - MARGIN } else { MARGIN },
                 y: bottom,
                 text: label.clone(),
             });
         }
         if let Some(label) = axis.categories.get(1) {
             items.push(LayoutedChartItem::DataLabel {
-                x: MARGIN,
+                x: if y_axis_right { cw - MARGIN } else { MARGIN },
                 y: top,
                 text: label.clone(),
             });
@@ -385,7 +397,10 @@ fn layout_quadrant(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDia
         items.push(LayoutedChartItem::ScatterPoint {
             x: left + point.x * width,
             y: bottom - point.y * height,
-            radius: point.radius.unwrap_or(6.0),
+            radius: point
+                .radius
+                .or(diagram.quadrant_config.point_radius)
+                .unwrap_or(6.0),
             color: point.color.clone().unwrap_or_else(|| "#2563eb".to_string()),
             stroke_color: point
                 .stroke_color
@@ -450,13 +465,14 @@ mod tests {
             flows: vec![],
             quadrant_labels: [None, None, None, None],
             quadrant_points: vec![],
+            quadrant_config: QuadrantConfig::default(),
             orientation: ChartOrientation::Vertical,
         }
     }
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.4.0");
+        assert_eq!(crate::VERSION, "0.5.0");
     }
 
     #[test]
@@ -502,6 +518,7 @@ mod tests {
             flows: vec![],
             quadrant_labels: [None, None, None, None],
             quadrant_points: vec![],
+            quadrant_config: QuadrantConfig::default(),
             orientation: ChartOrientation::Vertical,
         };
         let d = layout_chart_diagram(&diagram, 400.0, 400.0);
@@ -548,6 +565,7 @@ mod tests {
             ],
             quadrant_labels: [None, None, None, None],
             quadrant_points: vec![],
+            quadrant_config: QuadrantConfig::default(),
             orientation: ChartOrientation::Horizontal,
         };
         let d = layout_chart_diagram(&diagram, 600.0, 400.0);
@@ -588,6 +606,7 @@ mod tests {
                 stroke_color: Some("#00ff00".into()),
                 stroke_width: Some(3.0),
             }],
+            quadrant_config: QuadrantConfig::default(),
             orientation: ChartOrientation::Vertical,
         };
         let layout = layout_chart_diagram(&diagram, 500.0, 500.0);
@@ -626,5 +645,59 @@ mod tests {
             })
             .unwrap();
         assert_eq!(point, (10.0, "#ff0000", 3.0));
+    }
+
+    #[test]
+    fn quadrant_layout_applies_authored_config() {
+        let mut diagram = xy_diagram();
+        diagram.kind = ChartKind::Quadrant;
+        diagram.series.clear();
+        diagram.x_axis.as_mut().unwrap().categories = vec!["Low".into(), "High".into()];
+        diagram.y_axis.as_mut().unwrap().categories = vec!["Bottom".into(), "Top".into()];
+        diagram.quadrant_points.push(QuadrantPoint {
+            label: "Metal".into(),
+            x: 0.5,
+            y: 0.5,
+            radius: None,
+            color: None,
+            stroke_color: None,
+            stroke_width: None,
+        });
+        diagram.quadrant_config = QuadrantConfig {
+            chart_width: Some(720.0),
+            chart_height: Some(540.0),
+            x_axis_position: Some("top".into()),
+            y_axis_position: Some("right".into()),
+            point_radius: Some(11.0),
+        };
+
+        let layout = layout_chart_diagram(&diagram, 400.0, 300.0);
+        assert_eq!((layout.width, layout.height), (720.0, 540.0));
+        let point_radius = layout.items.iter().find_map(|item| match item {
+            LayoutedChartItem::ScatterPoint { radius, .. } => Some(*radius),
+            _ => None,
+        });
+        assert_eq!(point_radius, Some(11.0));
+        let low = layout
+            .items
+            .iter()
+            .find_map(|item| match item {
+                LayoutedChartItem::DataLabel { x, y, text } if text == "Low" => Some((*x, *y)),
+                _ => None,
+            })
+            .unwrap();
+        let bottom = layout
+            .items
+            .iter()
+            .find_map(|item| match item {
+                LayoutedChartItem::DataLabel { x, y, text } if text == "Bottom" => Some((*x, *y)),
+                _ => None,
+            })
+            .unwrap();
+        assert!(low.1 < 100.0, "top x-axis label should be above the plot");
+        assert!(
+            bottom.0 > 650.0,
+            "right y-axis label should be right of the plot"
+        );
     }
 }

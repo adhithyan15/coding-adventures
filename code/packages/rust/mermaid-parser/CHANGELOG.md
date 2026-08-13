@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.84.0
+
+- Parse quadrant chart dimensions, axis positions, and default point radius from Mermaid init directives.
+
 ## 0.83.0
 
 - Parse inline quadrant comments, empty charts, one-sided axes, dangling arrows, and quoted point labels containing brackets.
