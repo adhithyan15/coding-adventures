@@ -42,6 +42,9 @@ build-tool --language kotlin --dry-run
 # Safely plan the field-aware .NET lanes
 build-tool --language csharp --dry-run
 build-tool --language fsharp --dry-run
+
+# Safely plan the field-aware Dart lane
+build-tool --language dart --dry-run
 ```
 
 ## How it fits in the stack
@@ -55,9 +58,9 @@ Discovery infers a language only from an exact `packages/<language>` or
 `programs/<language>` bucket. Package identities use `<language>/<name>`;
 program identities preserve their role as `<language>/programs/<name>`, so a
 package and program with the same basename never collide. Haskell, Java,
-Kotlin, C#, and F# are available as explicit filters because their manifest
-resolvers are field-aware. C# and F# both request the shared `dotnet` CI
-toolchain.
+Kotlin, C#, F#, and Dart are available as explicit filters because their
+manifest resolvers are field-aware. C# and F# both request the shared `dotnet`
+CI toolchain; Dart requests the `dart` toolchain.
 
 Lua rockspec metadata is decoded as strict UTF-8. Invalid text fails closed with
 the stable `METADATA_INVALID_UTF8` diagnostic rather than using a host locale or
@@ -90,6 +93,17 @@ lexically, and matches exact project files already discovered in the shared
 C#/F#/dotnet scope. It does not evaluate XML entities, MSBuild properties,
 conditions, wildcards, package references, or nested test projects, and it
 never opens or follows a referenced target.
+
+Dart resolution reads only the root `pubspec.yaml` in each discovered package
+or program. It accepts direct mapping keys under the root `dependencies` and
+`dev_dependencies` sections, including dependencies whose scalar value is a
+nested source map, but never treats nested `path`, `git`, `url`, `ref`, or
+`sdk` keys as dependencies. Directory snake-case names, the legacy
+`coding_adventures_` prefix, and an exact unquoted root `name` field are aliases
+inside the Dart scope. A declared name that collides with another
+same-priority Dart package makes that alias ambiguous and therefore inert.
+Other root fields, comments, lockfiles, unknown names, and self references are
+ignored, and referenced paths are never opened or followed.
 
 ## Installation
 

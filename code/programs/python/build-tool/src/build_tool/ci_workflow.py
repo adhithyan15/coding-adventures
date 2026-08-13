@@ -51,6 +51,14 @@ _TOOLCHAIN_MARKERS: dict[str, tuple[str, ...]] = {
     "perl": (
         "needs_perl", "cpanm", "perl --version", "install cpanm",
     ),
+    "dart": (
+        "needs_dart",
+        "setup-dart",
+        "dart-lang/setup-dart",
+        "dart --version",
+        "set up dart",
+        "verify dart",
+    ),
     "haskell": (
         "needs_haskell", "haskell-actions/setup", "ghc-version", "cabal-version",
         "ghc --version", "cabal --version", "set up haskell",

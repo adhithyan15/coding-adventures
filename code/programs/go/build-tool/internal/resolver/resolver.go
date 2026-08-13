@@ -1692,15 +1692,20 @@ func buildKnownDotnetProjectPaths(packages []discovery.Package) map[string]strin
 func buildKnownNamesForLanguage(packages []discovery.Package, language string) map[string]string {
 	known := make(map[string]string)
 	knownLanguage := make(map[string]string)
+	ambiguous := make(map[string]bool)
 	scope := dependencyScope(language)
 
-	// setKnown inserts key→value, letting library packages overwrite programs
-	// but never letting programs overwrite library packages. Within shared
+	// setKnown inserts key→value, letting library packages overwrite programs,
+	// rejecting same-priority Dart ambiguity, and never letting programs
+	// overwrite library packages. Within shared
 	// toolchain families, collisions are resolved deterministically so wrapper
 	// ecosystems do not shadow the canonical implementation names:
 	//   - WASM scope prefers Rust crate names for bare crate identifiers.
 	//   - .NET scope prefers the caller's exact language (C#, F#, or dotnet).
 	setKnown := func(key, value, pkgPath, pkgLanguage string) {
+		if ambiguous[key] {
+			return
+		}
 		existing, exists := known[key]
 		if !exists {
 			known[key] = value
@@ -1718,6 +1723,12 @@ func buildKnownNamesForLanguage(packages []discovery.Package, language string) m
 			knownLanguage[key] = pkgLanguage
 			return
 		case !existingIsProgram && currentIsProgram:
+			return
+		}
+		if scope == "dart" && existing != value {
+			delete(known, key)
+			delete(knownLanguage, key)
+			ambiguous[key] = true
 			return
 		}
 

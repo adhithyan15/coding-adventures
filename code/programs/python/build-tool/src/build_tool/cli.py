@@ -97,6 +97,7 @@ ALL_TOOLCHAINS = [
     "lua",
     "perl",
     "swift",
+    "dart",
     "java",
     "kotlin",
     "haskell",

@@ -333,6 +333,8 @@ dependencies. Resolvers ignore package descriptions, environment constraints,
 `dependency_overrides`, Flutter and tool configuration, comments, inline prose,
 lockfiles, and every other root field. A local `path:` value identifies source
 metadata only; resolvers do not follow or read the referenced path.
+If a root `name:` collides with another same-priority Dart package's directory
+or declared alias, that alias is ambiguous and contributes no dependency edge.
 
 For TypeScript `package.json` manifests, dependency candidates come only from
 the direct property names of the root `dependencies` and `devDependencies`

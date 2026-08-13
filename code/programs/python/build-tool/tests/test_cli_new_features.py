@@ -87,6 +87,7 @@ class TestOutputLanguageFlags:
         assert "needs_go=" in out
         assert "needs_ruby=" in out
         assert "needs_typescript=" in out
+        assert "needs_dart=" in out
 
     def test_missing_language_defaults_false(self, capsys):
         _output_language_flags({"python": True})

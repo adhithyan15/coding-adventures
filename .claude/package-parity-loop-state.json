@@ -11,17 +11,17 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": 10936,
+  "active_pr": 11111,
   "last_inventory": {
-    "revision": "7bb2b558c85133d0724b1fac3c115ba76f1c4a12",
+    "revision": "3786127cf65f09be93a374dfcb8c9b3f3d7c0dda",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1302,
-    "implementation_package_slots": 4458,
+    "implementation_identities": 1303,
+    "implementation_package_slots": 4459,
     "high_consensus_packages": 173,
     "high_consensus_missing_slots": 269,
-    "singleton_packages": 852,
-    "singleton_missing_slots": 11928,
+    "singleton_packages": 853,
+    "singleton_missing_slots": 11942,
     "rust_singletons": 656,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
@@ -963,7 +963,7 @@
     {
       "id": "build-tool-python-dotnet-field-aware-resolution-and-filter",
       "title": "Add field-aware C# and F# support to the Python build tool",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-python-haskell-language-filter"],
       "branch": "codex/python-dotnet-field-aware-filter",
       "pr_number": 10936,
@@ -972,17 +972,27 @@
       "selection_revision": "399a87fff348db21258b14a6410fef6612d4ed41",
       "selection_notes": "Selected after PR #10828 merged externally, the collision-clean refresh classified task-mosaic-app, and a dependency/leverage pass compared all newly ready work. The shared .NET project-reference grammar closes 198 C# roots with 238 edges and 197 F# roots with 239 edges in one bounded standard-library tranche. Dart remains a separate 83-root manifest family; the Windows plan-overwrite fix remains a separate atomic-write owner; and no individual canonical-CBOR lane child unlocks its twelve-child completion umbrella.",
       "implementation_revision": "6e4889def9e35ba60cd83aabcc61fff1c268ace1",
+      "final_revision": "523e4419682df468ae0a20cc9422174733320f8d",
+      "merged_at": "2026-08-12T06:15:13Z",
+      "merge_revision": "ec9182513348ad5850a94bb28cb6ffd503dbd224",
       "validation_notes": "Both Python BUILD front doors pass 394 tests with 89.31% total coverage, 91% resolver coverage, and 96% discovery coverage under Python 3.13.14; focused discovery, resolver, CLI, and toolchain tests pass 141 tests. The 58-case language-neutral corpus validates 247 files, and its schema/runner suite passes 59 tests plus 52 subtests. Go passes all packages, vet, module verification, a trimpath build, and the expanded discovery fixture. Unique Windows plan paths avoid the separately owned atomic-overwrite debt while exact Python-versus-Go equality holds for 198 C# nodes/238 edges/1 program and 197 F# nodes/239 edges/1 program. Native .NET 9 tests pass C# logic-gates (5 tests, 100% line coverage) and arithmetic downstream (20 tests, 99%), plus F# logic-gates (5 tests, 91.17%) and arithmetic downstream (18 tests, 92.42%). Both real filter dry runs and BUILD-file validation pass. Scoped Ruff safety and unused-import checks, MyPy, Bandit, strict JSON, state-graph, credential-pattern, diff, and collision gates pass. The collision-clean report remains 1,302 identities, 4,458 slots, 852 singletons, 11,928 singleton gaps, 656 Rust singletons, zero collisions, and zero unknown buckets.",
-      "publication_notes": "Ready-for-review PR #10936 opened from 6e4889def9. GitHub reports it open, non-draft, and mergeable; CI, CodeQL, and neutral auxiliary checks are queued, so the loop is monitor-only until they finish.",
+      "publication_notes": "Ready-for-review PR #10936 opened from 6e4889def9, recorded its final state at 523e441968, and merged externally as ec918251334 after all 20 checks reached terminal success, neutral, or expected skip states with no failures.",
       "notes": "Discovered by the post-#10751 filter audit. Python currently classifies established C# and F# package roots as unknown, has no project-file resolver branch, and omits both filters even though the shared C#, F#, and cross-language .NET fixtures define authoritative project references. Consume those fixtures, preserve package/program identities and the reviewed shared dotnet toolchain mapping, compare complete graphs with Go, then expose both lanes without widening the Haskell/JVM tranche."
     },
     {
       "id": "build-tool-python-dart-field-aware-resolution-and-filter",
       "title": "Add field-aware Dart support to the Python build tool",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["build-tool-python-haskell-language-filter"],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/python-dart-field-aware-filter",
+      "pr_number": 11111,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/11111",
+      "pr_opened_at": "2026-08-13T04:04:31Z",
+      "selection_revision": "86f47eb4c343e4b9b29039fc62282919d42e1bf8",
+      "selection_notes": "Selected after PR #10936 merged externally, the collision-clean refresh added the newly owned ZIP raw-RFC1951 and PNG codec chain, and a live overlap plus dependency/leverage audit compared every ready unowned item. This bounded standard-library tranche closes Python build-tool discovery, field-aware resolution, and filtering for all 83 Dart roots while consuming an already closed pubspec grammar and proving exact equality with the Go oracle. The Windows atomic plan overwrite remains a separate write-path owner; ZIP raw RFC 1951 is a broader fifteen-lane prerequisite; and direct PNG work remains dependency-blocked.",
+      "implementation_revision": "15b2e1337268c450e223aa11d0f27a0ac1709964",
+      "validation_notes": "Both Python BUILD front doors pass 405 tests with 89.58% total coverage, 91% resolver coverage, and 96% discovery coverage under Python 3.13.14; the post-rebase focused discovery, resolver, CLI, and toolchain suite passes 175 tests. The 58-case language-neutral corpus validates 253 files, and its schema/runner suites pass 17 plus 42 tests. Go passes all packages, vet, module verification, a trimpath build, and the strengthened ambiguous-Dart-alias fixture. Unique Windows plan paths avoid the separately owned atomic-overwrite debt while exact Python-versus-Go equality holds for 83 Dart nodes, 68 edges, and 3 program identities with zero one-sided nodes or edges. The real Dart filter BUILD validation and forced dry run pass with all 83 roots. Native Dart pub get, fatal-info analysis, coverage tests pass for algol-parser downstream with 10 tests and state-machine downstream with 11 tests. Focused MyPy, added-line Ruff, Bandit security review, strict JSON, state graph, credential-pattern, diff, and collision gates pass; full-package Ruff still exposes pre-existing formatting/import debt outside this tranche. The collision-clean report remains 1,303 identities, 4,459 slots, 853 singletons, 11,942 singleton gaps, 656 Rust singletons, zero collisions, and zero unknown buckets.",
+      "publication_notes": "Ready-for-review PR #11111 opened from 15b2e13372 on exact base 3786127cf6. GitHub reports it open, non-draft, and mergeable; CI, CodeQL, and neutral auxiliary checks are queued, so the loop is monitor-only until they finish.",
       "notes": "Discovered by the post-#10751 filter audit. Python currently classifies established Dart package roots as unknown, has no pubspec resolver branch, and omits the Dart filter even though the shared field-aware Dart fixture defines the closed dependency grammar. Consume that fixture, preserve package/program identities, prove complete graph equality with Go, and expose Dart in its own manifest-shaped tranche."
     },
     {
@@ -3084,6 +3094,24 @@
       "branch": null,
       "pr_number": null,
       "notes": "Discovered by the post-#10521 cross-language security audit. C#, F#, Go, Haskell, Java, Kotlin, Perl, Python, and TypeScript data-store engines, plus affected facades, read ambient wall time while their capability profiles are empty, legacy, or absent; Rust alone truthfully declares time authority. Consume the shared deterministic clock fixture and move portable implementations to caller-injected clocks rather than autonomously adding signed time authority. Preserve the separately truthful Rust boundary and close provenance gaps in installed-runtime recipes before cross-lane parity claims."
+    },
+    {
+      "id": "zip-raw-rfc1951-portable-conformance",
+      "title": "Fixture and expose ZIP-owned raw RFC 1951 primitives across established lanes",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-clean 86f47eb4c3 inventory after merged PR #11088 added the TypeScript image-codec-png singleton. IC18 requires ZIP-owned raw DEFLATE primitives, while CMP09 shows only TypeScript currently exports them. Define a closed language-neutral corpus for stored, fixed, and dynamic blocks, symbol 285, malformed Kraft and header ranges, foreign encoders, stable payload-free rejection, caller output caps, exact raw_inflate_counted byte consumption, and incremental CRC-32. Expose the existing ZIP-owned RFC 1951 codec in every established lane without duplicating DEFLATE."
+    },
+    {
+      "id": "image-codec-png-established-lane-parity",
+      "title": "Port the IC18 PNG codec across established implementation lanes",
+      "status": "pending",
+      "depends_on": ["zip-raw-rfc1951-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-clean 86f47eb4c3 inventory after merged PR #11088 added TypeScript image-codec-png. Use the TypeScript oracle and a closed language-neutral PNG corpus to cover exact chunks, CRC, zlib Adler-32 framing, all five filters, foreign interoperability, structural and covert-cavity rejection, dimension, pixel, and inflation bounds, stable errors, and explicit empty capability metadata. Reuse the all-lane pixel-container and ZIP owners, never duplicate DEFLATE or CRC, and close the fourteen missing established slots."
     }
   ]
 }

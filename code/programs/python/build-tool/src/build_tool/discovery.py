@@ -56,6 +56,7 @@ SKIP_DIRS: frozenset[str] = frozenset({
     ".claude",
     "Pods",
     ".gradle",
+    ".dart_tool",
     "gradle-build",
 })
 
@@ -77,6 +78,7 @@ DISCOVERABLE_LANGUAGES: tuple[str, ...] = (
     "kotlin",
     "csharp",
     "fsharp",
+    "dart",
 )
 
 

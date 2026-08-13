@@ -19,7 +19,15 @@
       },
       {
         "path": "code/packages/dart/alpha/pubspec.yaml",
-        "content_utf8": "name: alpha\ndescription: \"coding_adventures_gamma: any is prose\"\nenvironment:\n  sdk: ^3.0.0\ndependencies:\n  coding_adventures_beta_helper:\n    path: ../beta-helper\n  external_git:\n    git:\n      url: https://example.invalid/delta.git\n      coding_adventures_gamma: any\ndev_dependencies:\n  delta_name: any\ndependency_overrides:\n  gamma:\n    path: ../gamma\nflutter:\n  assets:\n    - coding_adventures_gamma:\n# coding_adventures_gamma: any\n"
+        "content_utf8": "name: alpha\ndescription: \"coding_adventures_gamma: any is prose\"\nenvironment:\n  sdk: ^3.0.0\ndependencies:\n  coding_adventures_beta_helper:\n    path: ../beta-helper\n  external_git:\n    git:\n      url: https://example.invalid/delta.git\n      coding_adventures_gamma: any\n  shadowed_name: any\ndev_dependencies:\n  delta_name: any\ndependency_overrides:\n  gamma:\n    path: ../gamma\nflutter:\n  assets:\n    - coding_adventures_gamma:\n# coding_adventures_gamma: any\n"
+      },
+      {
+        "path": "code/packages/dart/attacker/BUILD",
+        "content_utf8": "echo build attacker\n"
+      },
+      {
+        "path": "code/packages/dart/attacker/pubspec.yaml",
+        "content_utf8": "name: shadowed_name\nenvironment:\n  sdk: ^3.0.0\n"
       },
       {
         "path": "code/packages/dart/beta-helper/BUILD",
@@ -44,6 +52,14 @@
       {
         "path": "code/packages/dart/gamma/pubspec.yaml",
         "content_utf8": "name: gamma\nenvironment:\n  sdk: ^3.0.0\n"
+      },
+      {
+        "path": "code/packages/dart/shadowed_name/BUILD",
+        "content_utf8": "echo build shadowed name\n"
+      },
+      {
+        "path": "code/packages/dart/shadowed_name/pubspec.yaml",
+        "content_utf8": "name: shadowed_name\nenvironment:\n  sdk: ^3.0.0\n"
       }
     ]
   },

@@ -31,7 +31,9 @@ SHARED_LANGUAGE_REGISTRY = (
     / "cases"
     / "discovery-language-registry.json"
 )
-FILTER_LANGUAGES = frozenset({"csharp", "fsharp", "haskell", "java", "kotlin"})
+FILTER_LANGUAGES = frozenset(
+    {"csharp", "dart", "fsharp", "haskell", "java", "kotlin"}
+)
 
 
 class TestReadLines:
@@ -338,7 +340,7 @@ class TestDiscoverRecursive:
                 destination.parent.mkdir(parents=True, exist_ok=True)
                 destination.write_text(file_record["content_utf8"], encoding="utf-8")
 
-        assert len(selected_files) == 11
+        assert len(selected_files) == 14
         packages = discover_packages(tmp_path / "code")
         actual = [
             (
