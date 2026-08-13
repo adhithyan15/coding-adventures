@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.87.0
+
+- Parse all 15 pinned quadrant theme variables for native rendering.
+
 ## 0.86.0
 
 - Parse all pinned quadrant font-size and label-padding controls from Mermaid init directives.

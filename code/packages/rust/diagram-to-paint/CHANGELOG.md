@@ -1,5 +1,9 @@
 # Changelog — diagram-to-paint
 
+## 0.42.0
+
+- Lower resolved quadrant theme colors into backend-neutral Paint instructions and shaped glyphs.
+
 ## Unreleased
 
 - Shape chart labels with resolved authored font sizes and spacing.

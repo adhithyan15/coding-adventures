@@ -755,6 +755,7 @@ where
                 label,
                 label_font_size,
                 label_top_padding,
+                label_color,
             } => {
                 instructions.push(PaintInstruction::Rect(PaintRect {
                     base: PaintBase::default(),
@@ -777,12 +778,7 @@ where
                         120.0,
                         label_font_size.unwrap_or(ls) * 1.2,
                         font_with_size(&lf, *label_font_size),
-                        Color {
-                            r: 51,
-                            g: 65,
-                            b: 85,
-                            a: 255,
-                        },
+                        css_to_color(label_color),
                     ));
                 }
             }
@@ -791,7 +787,8 @@ where
                 y,
                 width,
                 height,
-                color,
+                internal_color,
+                external_color,
                 internal_width,
                 external_width,
             } => {
@@ -802,7 +799,7 @@ where
                     width: *width,
                     height: *height,
                     fill: Some("none".into()),
-                    stroke: Some(color.clone()),
+                    stroke: Some(external_color.clone()),
                     stroke_width: Some(*external_width),
                     corner_radius: None,
                     stroke_dash: None,
@@ -818,7 +815,7 @@ where
                             y: y + height,
                         },
                     ],
-                    color,
+                    internal_color,
                     *internal_width,
                 )));
                 instructions.push(PaintInstruction::Path(line_path(
@@ -829,7 +826,7 @@ where
                             y: center_y,
                         },
                     ],
-                    color,
+                    internal_color,
                     *internal_width,
                 )));
             }
@@ -843,6 +840,7 @@ where
                 label,
                 label_font_size,
                 label_padding,
+                label_color,
             } => {
                 instructions.push(PaintInstruction::Ellipse(PaintEllipse {
                     base: PaintBase::default(),
@@ -863,12 +861,7 @@ where
                     100.0,
                     label_font_size.unwrap_or(ls) * 1.2,
                     font_with_size(&lf, *label_font_size),
-                    Color {
-                        r: 30,
-                        g: 41,
-                        b: 59,
-                        a: 255,
-                    },
+                    css_to_color(label_color),
                 ));
             }
             LayoutedChartItem::DataLabel {
@@ -876,6 +869,7 @@ where
                 y,
                 text,
                 font_size,
+                color,
             } => {
                 let width = diagram.width.min(240.0);
                 let label_x = (x - width / 2.0).clamp(0.0, diagram.width - width);
@@ -886,12 +880,12 @@ where
                     width,
                     font_size.unwrap_or(ls) * 1.2,
                     font_with_size(&lf, *font_size),
-                    Color {
+                    color.as_deref().map(css_to_color).unwrap_or(Color {
                         r: 55,
                         g: 65,
                         b: 81,
                         a: 255,
-                    },
+                    }),
                 ));
             }
             LayoutedChartItem::AxisTick {
@@ -3715,7 +3709,8 @@ mod tests {
                 y: 30.0,
                 width: 300.0,
                 height: 200.0,
-                color: "#123456".into(),
+                internal_color: "#123456".into(),
+                external_color: "#654321".into(),
                 internal_width: 3.0,
                 external_width: 5.0,
             }],
@@ -3731,9 +3726,18 @@ mod tests {
             })
             .expect("quadrant frame");
         assert_eq!(frame.stroke_width, Some(5.0));
-        assert_eq!(scene.instructions.iter().filter(|instruction| {
-            matches!(instruction, PaintInstruction::Path(path) if path.stroke_width == Some(3.0))
-        }).count(), 2);
+        assert_eq!(frame.stroke.as_deref(), Some("#654321"));
+        assert_eq!(
+            scene
+                .instructions
+                .iter()
+                .filter(|instruction| {
+                    matches!(instruction, PaintInstruction::Path(path)
+                if path.stroke_width == Some(3.0) && path.stroke.as_deref() == Some("#123456"))
+                })
+                .count(),
+            2
+        );
     }
 
     #[test]

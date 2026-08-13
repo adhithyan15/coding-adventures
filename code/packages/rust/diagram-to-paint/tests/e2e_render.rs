@@ -414,7 +414,7 @@ mod apple {
     #[test]
     fn render_mermaid_quadrant_to_png() {
         let diagram = parse_quadrant_chart(
-            "%%{init: {\"quadrantChart\": {\"chartWidth\": 680, \"chartHeight\": 560, \"xAxisPosition\": \"top\", \"yAxisPosition\": \"right\", \"pointRadius\": 7, \"quadrantPadding\": 18, \"quadrantInternalBorderStrokeWidth\": 3, \"quadrantExternalBorderStrokeWidth\": 5, \"titleFontSize\": 22, \"titlePadding\": 12, \"xAxisLabelFontSize\": 15, \"xAxisLabelPadding\": 21, \"yAxisLabelFontSize\": 16, \"yAxisLabelPadding\": 23, \"quadrantLabelFontSize\": 17, \"quadrantTextTopPadding\": 19, \"pointLabelFontSize\": 14, \"pointTextPadding\": 9}}}%%\n\
+            "%%{init: {\"quadrantChart\": {\"chartWidth\": 680, \"chartHeight\": 560, \"xAxisPosition\": \"top\", \"yAxisPosition\": \"right\", \"pointRadius\": 7, \"quadrantPadding\": 18, \"quadrantInternalBorderStrokeWidth\": 3, \"quadrantExternalBorderStrokeWidth\": 5, \"titleFontSize\": 22, \"titlePadding\": 12, \"xAxisLabelFontSize\": 15, \"xAxisLabelPadding\": 21, \"yAxisLabelFontSize\": 16, \"yAxisLabelPadding\": 23, \"quadrantLabelFontSize\": 17, \"quadrantTextTopPadding\": 19, \"pointLabelFontSize\": 14, \"pointTextPadding\": 9}, \"themeVariables\": {\"quadrant1Fill\": \"#b4dcff\", \"quadrant2Fill\": \"#fef0ff\", \"quadrant3Fill\": \"#fffaf0\", \"quadrant4Fill\": \"#f0fff2\", \"quadrantPointFill\": \"#0149ff\", \"quadrantPointTextFill\": \"#dc00ff\", \"quadrantInternalBorderStrokeFill\": \"#3636f2\", \"quadrantExternalBorderStrokeFill\": \"#ff1010\"}}}%%\n\
              QuAdRaNtChArT\n\
              title Native rendering portfolio\n\
              X-AxIs \"Low reach 📉\" ---> \"`High reach Ω`\" %% axis comment\n\
@@ -484,6 +484,7 @@ mod apple {
         assert_eq!(ellipses[0].stroke.as_deref(), Some("#310085"));
         assert_eq!(ellipses[0].stroke_width, Some(4.0));
         assert_eq!(ellipses[1].rx, 9.0);
+        assert_eq!(ellipses[1].fill.as_deref(), Some("#0149ff"));
         assert_eq!(ellipses[1].stroke_width, Some(3.0));
         assert_eq!(ellipses[2].rx, 7.0);
         assert_eq!((scene.width, scene.height), (680.0, 560.0));
@@ -496,9 +497,24 @@ mod apple {
             })
             .expect("external quadrant border");
         assert_eq!(border.stroke_width, Some(5.0));
-        assert!(scene.instructions.iter().filter(|instruction| {
-            matches!(instruction, PaintInstruction::Path(path) if path.stroke_width == Some(3.0))
-        }).count() >= 2);
+        assert_eq!(border.stroke.as_deref(), Some("#ff1010"));
+        assert!(
+            scene
+                .instructions
+                .iter()
+                .filter(|instruction| {
+                    matches!(instruction, PaintInstruction::Path(path)
+                if path.stroke_width == Some(3.0) && path.stroke.as_deref() == Some("#3636f2"))
+                })
+                .count()
+                >= 2
+        );
+        assert!(scene
+            .instructions
+            .iter()
+            .any(|instruction| matches!(instruction,
+                PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#b4dcff")
+            )));
 
         let pixels = render(&scene);
         write_png(&pixels, "/tmp/mermaid_quadrant_e2e.png").expect("PNG write failed");
