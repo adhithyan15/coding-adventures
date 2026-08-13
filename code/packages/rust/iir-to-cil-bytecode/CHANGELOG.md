@@ -1,5 +1,31 @@
 # Changelog — iir-to-cil-bytecode
 
+## 0.43.0 - 2026-08-13 - quote every CIL identifier
+
+`checked_cil_ident` left any purely-alphanumeric name bare, which is most of
+them. ALGOL 60 lets a procedure be called `neg` or `add`, and both are CIL
+instruction mnemonics, so the emitted call was a syntax error and `ilasm`
+rejected the ENTIRE assembly:
+
+    Main.il(14) : error : syntax error at token 'neg' in:
+        call int32 MainProgram::neg(int32)
+
+Quoting is legal wherever ILAsm expects an identifier, so it can never be wrong;
+leaving a name bare is wrong whenever it collides with one of the hundreds of
+ILAsm keywords. Enumerating those keywords instead would be a denylist against a
+frontend's entire identifier space — it only has to miss one entry, and any
+frontend may name a function anything. Quoting unconditionally has no such
+failure mode.
+
+The injection guard is unchanged and still fails closed: a name containing a
+newline, a space, or any non-graphic character is rejected outright rather than
+quoted, so `checked_label` cannot be used to smuggle directives into the `.il`.
+
+Fixes matrix cells #139, #175 and #176 (ALGOL 60 procedures on CLR). Tests that
+pinned bare identifiers in the emitted text were updated — they were asserting
+formatting, not behaviour.
+
+
 ## 0.42.0 - 2026-07-30 - ALGOL captured-array globals
 
 The textual CIL emitter now gives module globals their concrete storage type.
