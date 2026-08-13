@@ -1,0 +1,104 @@
+% ============================================================================
+% energy-form-family — each named form of energy and which of the source's
+% two families it belongs to: POTENTIAL or KINETIC (adj-facts-stdlib,
+% PHYSICS).
+% ============================================================================
+% A sibling to the already-shipped `energy-forms.adj` (`energy_form_token(form,
+% token)`, ONE defining token per energy form: chemical → bonds, thermal →
+% heat, etc.). This table recalls a DIFFERENT axis the same EIA source states
+% about the same eight forms: which of the two named FAMILIES each one
+% belongs to. `energy-forms.adj`'s own header already notes "EIA groups these
+% forms into two families — POTENTIAL energy (chemical, mechanical, nuclear,
+% gravitational) and KINETIC energy (radiant, thermal, motion, electrical) —
+% but the family split is not part of this table" — a deliberate single-axis
+% scope decision, not a missing citation. Recall is a binding query:
+%
+%     ? energy_form_family(chemical, $Family)   % potential
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `energy_form_family(form, family)` carrying the table's citation,
+% so the lookup above is the ordinary SLD binding query — the engine returns
+% the family WITH its source, on the CPU, with zero model calls, and abstains
+% on a form this source does not classify.
+%
+% Discovered via a header-revisit, the same "sibling table, different schema"
+% shape already used for `chemistry/chemical-bond-family.adj` (bond →
+% family, sibling to `chemical-bonds.adj`) and `comet-part.adj`/
+% `comet-tail-type.adj`. WebFetch re-verified the classification live this
+% cycle: the SAME EIA "Forms of energy" page (already cited by
+% `energy-forms.adj`) opens with "Many forms of energy exist, but energy is
+% either potential energy or kinetic energy," then lists Chemical,
+% Mechanical, Nuclear, and Gravitational energy under its "Potential energy"
+% heading, and Radiant, Thermal, Motion, Sound, and Electrical energy under
+% its "Kinetic energy" heading — byte-identical to what `energy-forms.adj`'s
+% own header already claimed. (`Sound` energy also appears under Kinetic on
+% the source page, but is not one of `energy-forms.adj`'s eight tabled
+% forms, so it is out of scope here — same honest-narrowness discipline as
+% that table.)
+%
+% The eight forms and their family, as a little truth table:
+%
+%     form            family      the page's own grouping
+%     -------------   ---------   -------------------------------------
+%     chemical        potential   listed under "Potential energy"
+%     mechanical      potential   listed under "Potential energy"
+%     nuclear         potential   listed under "Potential energy"
+%     gravitational   potential   listed under "Potential energy"
+%     radiant         kinetic     listed under "Kinetic energy"
+%     thermal         kinetic     listed under "Kinetic energy"
+%     motion          kinetic     listed under "Kinetic energy"
+%     electrical      kinetic     listed under "Kinetic energy"
+%
+% The query also runs BACKWARD — bind a family and recall EVERY form in it (a
+% genuine one-to-many reverse recall, four forms per family):
+%
+%     ? energy_form_family($Form, kinetic)   % radiant ; thermal ; motion ; electrical
+%
+% A form not one of these eight — sound energy, which the same page also
+% names under Kinetic but which `energy-forms.adj` itself never tabled — has
+% no row here either, so a recall on it ABSTAINS rather than inventing a
+% family. That honest-abstention property is what makes the table safe to
+% reason from.
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — the classification was
+% read out of the SAME fetched EIA page `energy-forms.adj` already cites, and
+% re-verified live this cycle; any form whose family could not be confirmed
+% there would have been dropped). All eight rows come from ONE opening
+% sentence plus the page's own two-heading structure, EIA "Energy Explained
+% — Forms of energy" (eia.gov/energyexplained/what-is-energy/forms-of-energy.php),
+% quoted here character-for-character:
+%
+%   "Many forms of energy exist, but energy is either potential energy or
+%    kinetic energy."
+%
+% — followed by the page's own "Potential energy" list (Chemical energy,
+% Mechanical energy, Nuclear energy, Gravitational energy) and "Kinetic
+% energy" list (Radiant energy, Thermal energy, Motion energy, Sound,
+% Electrical energy).
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold that single classification sentence — the span that
+% fixes the two-family split every row draws from. The source is a primary
+% U.S. government EIA education page (eia.gov), the same tier
+% `energy-forms.adj` already uses, so `trust authoritative`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
+% ============================================================================
+
+table energy_form_family {
+    columns form, family
+
+    row (chemical, potential)
+    row (mechanical, potential)
+    row (nuclear, potential)
+    row (gravitational, potential)
+    row (radiant, kinetic)
+    row (thermal, kinetic)
+    row (motion, kinetic)
+    row (electrical, kinetic)
+
+    source "Many forms of energy exist, but energy is either potential energy or kinetic energy."
+    locator "https://www.eia.gov/energyexplained/what-is-energy/forms-of-energy.php"
+    trust authoritative
+}
