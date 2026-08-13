@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.0
+
+- Honor explicit TB, BT, LR, and RL structural diagram directions.
+
 ## 0.1.0 — 2026-04-24
 
 ### Added

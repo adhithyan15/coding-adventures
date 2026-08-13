@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.99.0";
+pub const VERSION: &str = "0.100.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -741,6 +741,7 @@ pub fn parse_requirement_diagram(source: &str) -> Result<StructuralDiagram, Pars
     })?;
 
     let mut title = None;
+    let mut direction = None;
     let mut nodes = Vec::new();
     let mut relationships = Vec::new();
     let mut cursor = TokenCursor::new(tokens);
@@ -754,7 +755,14 @@ pub fn parse_requirement_diagram(source: &str) -> Result<StructuralDiagram, Pars
                 title = Some(value.trim_start_matches("title").trim().to_string());
             }
             "DIRECTION" => {
-                cursor.advance();
+                let value = cursor.advance().value.clone();
+                direction = Some(match value.split_whitespace().nth(1) {
+                    Some("TB") => DiagramDirection::Tb,
+                    Some("BT") => DiagramDirection::Bt,
+                    Some("LR") => DiagramDirection::Lr,
+                    Some("RL") => DiagramDirection::Rl,
+                    _ => return Err(token_error(cursor.current(), "invalid requirement direction")),
+                });
             }
             "DEFINITION_START" => {
                 let declaration = cursor.advance().value.trim_end_matches('{').trim().to_string();
@@ -809,6 +817,7 @@ pub fn parse_requirement_diagram(source: &str) -> Result<StructuralDiagram, Pars
     Ok(StructuralDiagram {
         kind: StructuralKind::Requirement,
         title,
+        direction,
         nodes,
         groups: Vec::new(),
         relationships,
@@ -1199,6 +1208,7 @@ pub fn parse_class_diagram(source: &str) -> Result<StructuralDiagram, ParseError
     Ok(StructuralDiagram {
         kind: StructuralKind::Class,
         title,
+        direction: None,
         nodes,
         groups: vec![],
         relationships,
@@ -4516,6 +4526,7 @@ pub fn parse_er_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
     Ok(StructuralDiagram {
         kind: StructuralKind::Er,
         title,
+        direction: None,
         nodes,
         groups: vec![],
         relationships,
@@ -4717,6 +4728,7 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
     Ok(StructuralDiagram {
         kind: StructuralKind::C4,
         title,
+        direction: None,
         nodes,
         groups,
         relationships,
@@ -6787,7 +6799,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.99.0");
+        assert_eq!(crate::VERSION, "0.100.0");
     }
 
     #[test]

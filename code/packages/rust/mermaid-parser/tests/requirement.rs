@@ -1,4 +1,4 @@
-use diagram_ir::{RelKind, StructuralKind, StructuralNodeKind};
+use diagram_ir::{DiagramDirection, RelKind, StructuralKind, StructuralNodeKind};
 use mermaid_parser::{parse_any_mermaid, parse_requirement_diagram, MermaidDiagram};
 
 const SOURCE: &str = r#"requirementDiagram
@@ -34,6 +34,22 @@ fn requirement_dispatches_through_structural_pipeline() {
         parse_any_mermaid(SOURCE).expect("requirement dispatch"),
         MermaidDiagram::Structural(_)
     ));
+}
+
+#[test]
+fn requirement_preserves_layout_direction() {
+    for (keyword, expected) in [
+        ("TB", DiagramDirection::Tb),
+        ("BT", DiagramDirection::Bt),
+        ("LR", DiagramDirection::Lr),
+        ("RL", DiagramDirection::Rl),
+    ] {
+        let source = format!(
+            "requirementDiagram\ndirection {keyword}\nrequirement a {{\nid: a\n}}"
+        );
+        let diagram = parse_requirement_diagram(&source).expect("requirement direction");
+        assert_eq!(diagram.direction, Some(expected));
+    }
 }
 
 #[test]
