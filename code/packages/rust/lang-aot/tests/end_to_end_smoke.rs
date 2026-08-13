@@ -1035,6 +1035,24 @@ fn end_to_end_nib_if_else_executes_in_the_riscv_simulator() {
     assert_eq!(run.return_value, 42);
 }
 
+#[test]
+fn end_to_end_nib_integer_arithmetic_executes_in_the_riscv_simulator() {
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("arithmetic.nib");
+    let bin = dir.path().join("arithmetic.bin");
+    std::fs::write(&src, b"fn main() -> u8 { return 30 + 12; }\n").unwrap();
+
+    lang_aot::compile_file_to_riscv32_bin(&src, &bin, lang_aot::Language::Nib)
+        .expect("Nib arithmetic must compile through the RV32I register-pair core");
+
+    let bytes = std::fs::read(&bin).expect("read .bin");
+    let run = riscv_backend::run_binary(&bytes, &[])
+        .expect("the Nib RV32I arithmetic binary must execute in the simulator");
+    assert!(run.halted, "the simulator return trampoline must halt");
+    assert_eq!(run.return_value, 42);
+    assert_eq!(run.return_value_high, 0);
+}
+
 // ===========================================================================
 // A2+++ — source -> IIR -> Intel 8008 machine code (.bin) via lang-aot
 // ===========================================================================

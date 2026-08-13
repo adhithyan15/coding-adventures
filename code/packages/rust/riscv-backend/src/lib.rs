@@ -12,7 +12,8 @@ use jit_core::cir::{CIRInstr, CIROperand};
 use riscv_encoder::{
     assemble, encode_add, encode_addi, encode_and, encode_andi, encode_beq, encode_bne,
     encode_ecall, encode_jal, encode_lui, encode_or, encode_sll, encode_slt, encode_sltu,
-    encode_sra, encode_srl, encode_sub, encode_xor, encode_xori, A0, RET_WORD, X0_ZERO, X1_RA,
+    encode_sra, encode_srai, encode_srl, encode_sub, encode_xor, encode_xori, A0, RET_WORD,
+    X0_ZERO, X1_RA,
 };
 use riscv_simulator::RiscVSimulator;
 use vm_core::value::Value;
@@ -20,6 +21,7 @@ use vm_core::value::Value;
 const DEFAULT_MEMORY_SIZE: usize = 64 * 1024;
 const DEFAULT_STEP_LIMIT: usize = 100_000;
 const ARG_REGISTERS: [u32; 8] = [10, 11, 12, 13, 14, 15, 16, 17];
+const A1: u32 = 11;
 const SCRATCH_REGISTER: u32 = 31;
 const VALUE_REGISTERS: [u32; 6] = [5, 6, 7, 28, 29, 30];
 
@@ -37,6 +39,7 @@ impl Riscv32Backend {
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct RunResult {
     pub return_value: i32,
+    pub return_value_high: u32,
     pub halted: bool,
     pub steps: usize,
 }
@@ -143,6 +146,7 @@ pub fn run_binary(binary: &[u8], args: &[Value]) -> Result<RunResult, BackendErr
     }
     Ok(RunResult {
         return_value: simulator.regs.read(A0 as usize) as i32,
+        return_value_high: simulator.regs.read(A1 as usize),
         halted: result.halted,
         steps: result.steps,
     })
@@ -150,11 +154,26 @@ pub fn run_binary(binary: &[u8], args: &[Value]) -> Result<RunResult, BackendErr
 
 struct Lowerer {
     words: Vec<u32>,
-    env: Vec<(String, u32)>,
+    env: Vec<(String, ValueLocation)>,
     /// Values known to fit in one RV32 register despite an `i64`/`u64` CIR type.
     word_sized_values: HashSet<String>,
     labels: HashMap<String, usize>,
     branches: Vec<PendingBranch>,
+    next_value_register: usize,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum ValueLocation {
+    Word(u32),
+    Pair { lo: u32, hi: u32 },
+}
+
+impl ValueLocation {
+    fn low(self) -> u32 {
+        match self {
+            Self::Word(register) | Self::Pair { lo: register, .. } => register,
+        }
+    }
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -177,11 +196,30 @@ impl Lowerer {
             return Err(BackendError::TooManyArguments(ctx.params.len()));
         }
         let mut env = Vec::with_capacity(ctx.params.len());
-        for (index, (name, ty)) in ctx.params.iter().enumerate() {
-            if !is_rv32_operation_type(ty) {
+        let mut next_argument = 0;
+        for (name, ty) in ctx.params {
+            if !is_rv32_value_type(ty) {
                 return Err(BackendError::UnsupportedType(ty.clone()));
             }
-            env.push((name.clone(), ARG_REGISTERS[index]));
+            let location = if matches!(ty.as_str(), "i64" | "u64") {
+                if next_argument + 1 >= ARG_REGISTERS.len() {
+                    return Err(BackendError::TooManyArguments(ctx.params.len()));
+                }
+                let pair = ValueLocation::Pair {
+                    lo: ARG_REGISTERS[next_argument],
+                    hi: ARG_REGISTERS[next_argument + 1],
+                };
+                next_argument += 2;
+                pair
+            } else {
+                if next_argument >= ARG_REGISTERS.len() {
+                    return Err(BackendError::TooManyArguments(ctx.params.len()));
+                }
+                let word = ValueLocation::Word(ARG_REGISTERS[next_argument]);
+                next_argument += 1;
+                word
+            };
+            env.push((name.clone(), location));
         }
         Ok(Self {
             words: Vec::new(),
@@ -189,6 +227,7 @@ impl Lowerer {
             word_sized_values: HashSet::new(),
             labels: HashMap::new(),
             branches: Vec::new(),
+            next_value_register: 0,
         })
     }
 
@@ -200,17 +239,31 @@ impl Lowerer {
         }
         if let Some(ty) = op.strip_prefix("ret_") {
             self.require_scalar_type(ty)?;
-            let src = self.var_src(instr, 0, op)?;
-            self.words.push(encode_addi(A0, src, 0));
+            match self.var_location(instr, 0, op)? {
+                ValueLocation::Word(src) => self.words.push(encode_addi(A0, src, 0)),
+                ValueLocation::Pair { lo, hi } => {
+                    self.words.push(encode_addi(A0, lo, 0));
+                    self.words.push(encode_addi(A1, hi, 0));
+                }
+            }
             self.words.push(RET_WORD);
             return Ok(());
         }
         if let Some(ty) = op.strip_prefix("const_") {
             self.require_scalar_type(ty)?;
-            let rd = self.dest(instr, op)?;
-            self.load_constant(rd, literal_word(instr.srcs.first(), ty)?);
-            self.mask_unsigned(rd, ty);
-            if matches!(ty, "i64" | "u64") {
+            if matches!(ty, "i64" | "u64") && !wide_literal_fits_word(instr.srcs.first(), ty)? {
+                let ValueLocation::Pair { lo, hi } = self.dest_pair(instr, op)? else {
+                    unreachable!("dest_pair always returns a pair")
+                };
+                let (low, high) = wide_literal_words(instr.srcs.first())?;
+                self.load_constant(lo, low);
+                self.load_constant(hi, high);
+            } else {
+                let rd = self.dest(instr, op)?;
+                self.load_constant(rd, literal_word(instr.srcs.first(), ty)?);
+                self.mask_unsigned(rd, ty);
+            }
+            if matches!(ty, "i64" | "u64") && wide_literal_fits_word(instr.srcs.first(), ty)? {
                 self.word_sized_values.insert(
                     instr
                         .dest
@@ -247,6 +300,13 @@ impl Lowerer {
 
         for family in ["add", "sub", "and", "or", "xor", "shl", "shr"] {
             if let Some(ty) = op.strip_prefix(&format!("{family}_")) {
+                if matches!(ty, "i64" | "u64") {
+                    return match family {
+                        "add" => self.lower_wide_add(instr, op, is_signed(ty)),
+                        "sub" => self.lower_wide_sub(instr, op, is_signed(ty)),
+                        _ => Err(BackendError::UnsupportedType(ty.to_owned())),
+                    };
+                }
                 self.require_operation_type(ty)?;
                 let rd = self.dest(instr, op)?;
                 let lhs = self.var_src(instr, 0, op)?;
@@ -395,6 +455,14 @@ impl Lowerer {
         self.allocate(name)
     }
 
+    fn dest_pair(&mut self, instr: &CIRInstr, op: &str) -> Result<ValueLocation, BackendError> {
+        let name = instr
+            .dest
+            .as_deref()
+            .ok_or_else(|| BackendError::InvalidOperand(format!("{op} requires a dest")))?;
+        self.allocate_pair(name)
+    }
+
     fn var_src(&self, instr: &CIRInstr, index: usize, op: &str) -> Result<u32, BackendError> {
         let name = match instr.srcs.get(index) {
             Some(CIROperand::Var(name)) => name,
@@ -407,6 +475,23 @@ impl Lowerer {
         self.lookup(name)
     }
 
+    fn var_location(
+        &self,
+        instr: &CIRInstr,
+        index: usize,
+        op: &str,
+    ) -> Result<ValueLocation, BackendError> {
+        let name = match instr.srcs.get(index) {
+            Some(CIROperand::Var(name)) => name,
+            _ => {
+                return Err(BackendError::InvalidOperand(format!(
+                    "{op} srcs[{index}] must be Var"
+                )))
+            }
+        };
+        self.lookup_location(name)
+    }
+
     fn label_src(&self, instr: &CIRInstr, index: usize, op: &str) -> Result<String, BackendError> {
         match instr.srcs.get(index) {
             Some(CIROperand::Var(name)) => Ok(name.clone()),
@@ -417,22 +502,129 @@ impl Lowerer {
     }
 
     fn allocate(&mut self, name: &str) -> Result<u32, BackendError> {
-        if let Some((_, reg)) = self.env.iter().find(|(existing, _)| existing == name) {
-            return Ok(*reg);
+        if let Some((_, location)) = self.env.iter().find(|(existing, _)| existing == name) {
+            return match location {
+                ValueLocation::Word(reg) => Ok(*reg),
+                ValueLocation::Pair { .. } => Err(BackendError::InvalidOperand(format!(
+                    "{name:?} is already bound as a 64-bit value"
+                ))),
+            };
         }
-        if self.env.len() >= VALUE_REGISTERS.len() {
+        if self.next_value_register >= VALUE_REGISTERS.len() {
             return Err(BackendError::OutOfRegisters);
         }
-        let reg = VALUE_REGISTERS[self.env.len()];
-        self.env.push((name.to_owned(), reg));
+        let reg = VALUE_REGISTERS[self.next_value_register];
+        self.next_value_register += 1;
+        self.env.push((name.to_owned(), ValueLocation::Word(reg)));
         Ok(reg)
     }
 
+    fn allocate_pair(&mut self, name: &str) -> Result<ValueLocation, BackendError> {
+        if let Some((_, location)) = self.env.iter().find(|(existing, _)| existing == name) {
+            return match location {
+                ValueLocation::Pair { lo, hi } => Ok(ValueLocation::Pair { lo: *lo, hi: *hi }),
+                ValueLocation::Word(_) => Err(BackendError::InvalidOperand(format!(
+                    "{name:?} is already bound as a 32-bit value"
+                ))),
+            };
+        }
+        if self.next_value_register + 1 >= VALUE_REGISTERS.len() {
+            return Err(BackendError::OutOfRegisters);
+        }
+        let location = ValueLocation::Pair {
+            lo: VALUE_REGISTERS[self.next_value_register],
+            hi: VALUE_REGISTERS[self.next_value_register + 1],
+        };
+        self.next_value_register += 2;
+        self.env.push((name.to_owned(), location));
+        Ok(location)
+    }
+
     fn lookup(&self, name: &str) -> Result<u32, BackendError> {
+        match self.lookup_location(name)? {
+            ValueLocation::Word(reg) => Ok(reg),
+            ValueLocation::Pair { .. } => Err(BackendError::InvalidOperand(format!(
+                "{name:?} is a 64-bit value where a 32-bit value is required"
+            ))),
+        }
+    }
+
+    fn lookup_location(&self, name: &str) -> Result<ValueLocation, BackendError> {
         self.env
             .iter()
-            .find_map(|(existing, reg)| (existing == name).then_some(*reg))
+            .find_map(|(existing, location)| (existing == name).then_some(*location))
             .ok_or_else(|| BackendError::UndefinedVariable(name.to_owned()))
+    }
+
+    fn lower_wide_add(
+        &mut self,
+        instr: &CIRInstr,
+        op: &str,
+        signed: bool,
+    ) -> Result<(), BackendError> {
+        let ValueLocation::Pair { lo, hi } = self.dest_pair(instr, op)? else {
+            unreachable!("dest_pair always returns a pair")
+        };
+        let lhs = self.var_location(instr, 0, op)?;
+        let rhs = self.var_location(instr, 1, op)?;
+        let lhs_lo = lhs.low();
+        self.words.push(encode_add(lo, lhs_lo, rhs.low()));
+        self.words.push(encode_sltu(SCRATCH_REGISTER, lo, lhs_lo));
+        self.copy_or_extend_high(hi, lhs, signed);
+        self.words.push(encode_add(hi, hi, SCRATCH_REGISTER));
+        self.add_or_extend_high(hi, rhs, signed);
+        Ok(())
+    }
+
+    fn lower_wide_sub(
+        &mut self,
+        instr: &CIRInstr,
+        op: &str,
+        signed: bool,
+    ) -> Result<(), BackendError> {
+        let ValueLocation::Pair { lo, hi } = self.dest_pair(instr, op)? else {
+            unreachable!("dest_pair always returns a pair")
+        };
+        let lhs = self.var_location(instr, 0, op)?;
+        let rhs = self.var_location(instr, 1, op)?;
+        let lhs_lo = lhs.low();
+        self.words.push(encode_sub(lo, lhs_lo, rhs.low()));
+        self.copy_or_extend_high(hi, lhs, signed);
+        self.sub_or_extend_high(hi, rhs, signed);
+        self.words
+            .push(encode_sltu(SCRATCH_REGISTER, lhs_lo, rhs.low()));
+        self.words.push(encode_sub(hi, hi, SCRATCH_REGISTER));
+        Ok(())
+    }
+
+    fn copy_or_extend_high(&mut self, dest: u32, location: ValueLocation, signed: bool) {
+        match location {
+            ValueLocation::Pair { hi, .. } => self.words.push(encode_addi(dest, hi, 0)),
+            ValueLocation::Word(lo) if signed => self.words.push(encode_srai(dest, lo, 31)),
+            ValueLocation::Word(_) => self.words.push(encode_addi(dest, X0_ZERO, 0)),
+        }
+    }
+
+    fn add_or_extend_high(&mut self, dest: u32, location: ValueLocation, signed: bool) {
+        match location {
+            ValueLocation::Pair { hi, .. } => self.words.push(encode_add(dest, dest, hi)),
+            ValueLocation::Word(lo) if signed => {
+                self.words.push(encode_srai(SCRATCH_REGISTER, lo, 31));
+                self.words.push(encode_add(dest, dest, SCRATCH_REGISTER));
+            }
+            ValueLocation::Word(_) => {}
+        }
+    }
+
+    fn sub_or_extend_high(&mut self, dest: u32, location: ValueLocation, signed: bool) {
+        match location {
+            ValueLocation::Pair { hi, .. } => self.words.push(encode_sub(dest, dest, hi)),
+            ValueLocation::Word(lo) if signed => {
+                self.words.push(encode_srai(SCRATCH_REGISTER, lo, 31));
+                self.words.push(encode_sub(dest, dest, SCRATCH_REGISTER));
+            }
+            ValueLocation::Word(_) => {}
+        }
     }
 
     fn load_constant(&mut self, rd: u32, value: u32) {
@@ -559,6 +751,34 @@ fn literal_word(operand: Option<&CIROperand>, ty: &str) -> Result<u32, BackendEr
             "const_* srcs[0] must be Int or Bool".to_owned(),
         )),
     }
+}
+
+fn wide_literal_fits_word(operand: Option<&CIROperand>, ty: &str) -> Result<bool, BackendError> {
+    let value = match operand {
+        Some(CIROperand::Int(value)) => *value,
+        _ => {
+            return Err(BackendError::InvalidOperand(
+                "const_* srcs[0] must be Int".to_owned(),
+            ))
+        }
+    };
+    Ok(match ty {
+        "i64" => i32::try_from(value).is_ok(),
+        "u64" => u32::try_from(value).is_ok(),
+        _ => false,
+    })
+}
+
+fn wide_literal_words(operand: Option<&CIROperand>) -> Result<(u32, u32), BackendError> {
+    let value = match operand {
+        Some(CIROperand::Int(value)) => *value as u64,
+        _ => {
+            return Err(BackendError::InvalidOperand(
+                "const_i64/const_u64 srcs[0] must be Int".to_owned(),
+            ))
+        }
+    };
+    Ok((value as u32, (value >> 32) as u32))
 }
 
 fn value_to_rv32(value: &Value) -> Result<u32, BackendError> {

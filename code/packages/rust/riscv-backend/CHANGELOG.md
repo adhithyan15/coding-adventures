@@ -13,6 +13,9 @@
   source-to-simulator fixture.
 - Permit `i64`/`u64` comparisons only for constant values proven to fit in one
   RV32 register, keeping arbitrary wide values unsupported.
+- Added low/high register-pair lowering for full-width `i64`/`u64` constants,
+  addition, subtraction, and returns; `RunResult` now exposes the returned
+  `a1` high word for simulator assertions.
 
 ## v0.1.0 — 2026-06-03 — Phase 7 (FINAL lane) of historical-arch backend migration
 
