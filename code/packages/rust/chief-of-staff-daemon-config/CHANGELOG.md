@@ -29,3 +29,6 @@
 - Accept an all-or-none ZoneMinder pairing tuple for one exact NVR bridge,
   owner-only KEK, and exact-length owner-only username/password files only with
   explicit in-process Vault custody.
+- Accept an all-or-none Reolink pairing tuple for one exact bridge and pinned
+  canonical network target, owner-only KEK, and exact-length owner-only
+  username/password files only with explicit in-process Vault custody.

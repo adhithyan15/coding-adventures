@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add optional Chief-owned Reolink pairing over the shared durable controller.
+  One complete owner-only configuration tuple binds credentials and a pinned
+  network target to an exact bridge, while worker failure joins coordinated
+  shutdown and only an opaque Vault reference enters durable state.
 - Add optional Chief-owned ZoneMinder pairing over the shared durable
   controller. One complete owner-only configuration tuple binds credential
   input to an exact NVR, startup restores transaction state, and worker failure

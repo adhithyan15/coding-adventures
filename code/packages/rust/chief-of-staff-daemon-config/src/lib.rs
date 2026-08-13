@@ -7,7 +7,7 @@ use coding_adventures_toml_parser::{try_parse_toml, TomlParseError};
 use core::fmt::{self, Display, Formatter};
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 use std::collections::{BTreeMap, BTreeSet};
-use std::net::IpAddr;
+use std::net::{IpAddr, SocketAddr};
 use std::path::{Component, Path, PathBuf};
 use std::time::Duration;
 
@@ -188,6 +188,55 @@ pub struct SmartHomeListenerConfig {
     onvif_pairing: Option<OnvifPairingConfig>,
     axis_pairing: Option<AxisPairingConfig>,
     zoneminder_pairing: Option<ZoneMinderPairingConfig>,
+    reolink_pairing: Option<ReolinkPairingConfig>,
+}
+
+/// Exact owner-provisioned inputs for one supervised Reolink pairing worker.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct ReolinkPairingConfig {
+    bridge_id: String,
+    canonical_host: String,
+    pinned_address: SocketAddr,
+    kek_path: ConfigPath,
+    username_path: ConfigPath,
+    username_length: usize,
+    password_path: ConfigPath,
+    password_length: usize,
+}
+
+impl ReolinkPairingConfig {
+    /// Return the exact D23 bridge whose credentials may be consumed.
+    pub fn bridge_id(&self) -> &str {
+        &self.bridge_id
+    }
+    /// Return the exact host name expected in the installed bridge endpoint.
+    pub fn canonical_host(&self) -> &str {
+        &self.canonical_host
+    }
+    /// Return the socket address used without a second DNS lookup.
+    pub fn pinned_address(&self) -> SocketAddr {
+        self.pinned_address
+    }
+    /// Return the owner-only KEK file used to initialize or unseal the Vault.
+    pub fn kek_path(&self) -> &ConfigPath {
+        &self.kek_path
+    }
+    /// Return the owner-only username file.
+    pub fn username_path(&self) -> &ConfigPath {
+        &self.username_path
+    }
+    /// Return the exact username byte length expected from the file.
+    pub fn username_length(&self) -> usize {
+        self.username_length
+    }
+    /// Return the owner-only password file.
+    pub fn password_path(&self) -> &ConfigPath {
+        &self.password_path
+    }
+    /// Return the exact password byte length expected from the file.
+    pub fn password_length(&self) -> usize {
+        self.password_length
+    }
 }
 
 /// Exact owner-provisioned inputs for one supervised ZoneMinder pairing worker.
@@ -358,6 +407,11 @@ impl SmartHomeListenerConfig {
     /// Return the exact owner-provisioned ZoneMinder pairing worker configuration.
     pub fn zoneminder_pairing(&self) -> Option<&ZoneMinderPairingConfig> {
         self.zoneminder_pairing.as_ref()
+    }
+
+    /// Return the exact owner-provisioned Reolink pairing worker configuration.
+    pub fn reolink_pairing(&self) -> Option<&ReolinkPairingConfig> {
+        self.reolink_pairing.as_ref()
     }
 }
 
@@ -953,6 +1007,82 @@ pub fn parse_config(source: &str) -> Result<ChiefConfig, ConfigError> {
             }),
             _ => return Err(ConfigError::InvalidValue),
         };
+        let reolink_bridge_id = document
+            .take_optional(SMART_HOME, "reolink_pairing_bridge_id")
+            .map(expect_string)
+            .transpose()?
+            .map(|value| bounded_identity(value, MAX_AGENT_ID_BYTES))
+            .transpose()?;
+        let reolink_canonical_host = document
+            .take_optional(SMART_HOME, "reolink_pairing_canonical_host")
+            .map(expect_string)
+            .transpose()?
+            .map(|value| bounded_identity(value, MAX_ENDPOINT_BYTES))
+            .transpose()?;
+        let reolink_pinned_address = document
+            .take_optional(SMART_HOME, "reolink_pairing_pinned_address")
+            .map(expect_string)
+            .transpose()?
+            .map(|value| value.parse().map_err(|_| ConfigError::InvalidValue))
+            .transpose()?;
+        let reolink_kek_path = document
+            .take_optional(SMART_HOME, "reolink_pairing_kek_path")
+            .map(expect_string)
+            .transpose()?
+            .map(ConfigPath::parse)
+            .transpose()?;
+        let reolink_username_path = document
+            .take_optional(SMART_HOME, "reolink_pairing_username_path")
+            .map(expect_string)
+            .transpose()?
+            .map(ConfigPath::parse)
+            .transpose()?;
+        let reolink_username_length = document
+            .take_optional(SMART_HOME, "reolink_pairing_username_length")
+            .map(bounded_pairing_secret_length)
+            .transpose()?;
+        let reolink_password_path = document
+            .take_optional(SMART_HOME, "reolink_pairing_password_path")
+            .map(expect_string)
+            .transpose()?
+            .map(ConfigPath::parse)
+            .transpose()?;
+        let reolink_password_length = document
+            .take_optional(SMART_HOME, "reolink_pairing_password_length")
+            .map(bounded_pairing_secret_length)
+            .transpose()?;
+        let reolink_pairing = match (
+            reolink_bridge_id,
+            reolink_canonical_host,
+            reolink_pinned_address,
+            reolink_kek_path,
+            reolink_username_path,
+            reolink_username_length,
+            reolink_password_path,
+            reolink_password_length,
+        ) {
+            (None, None, None, None, None, None, None, None) => None,
+            (
+                Some(bridge_id),
+                Some(canonical_host),
+                Some(pinned_address),
+                Some(kek_path),
+                Some(username_path),
+                Some(username_length),
+                Some(password_path),
+                Some(password_length),
+            ) => Some(ReolinkPairingConfig {
+                bridge_id,
+                canonical_host,
+                pinned_address,
+                kek_path,
+                username_path,
+                username_length,
+                password_path,
+                password_length,
+            }),
+            _ => return Err(ConfigError::InvalidValue),
+        };
         Some(SmartHomeListenerConfig {
             bind,
             port,
@@ -962,6 +1092,7 @@ pub fn parse_config(source: &str) -> Result<ChiefConfig, ConfigError> {
             onvif_pairing,
             axis_pairing,
             zoneminder_pairing,
+            reolink_pairing,
         })
     } else {
         None
@@ -977,6 +1108,7 @@ pub fn parse_config(source: &str) -> Result<ChiefConfig, ConfigError> {
                 || listener.onvif_pairing.is_some()
                 || listener.axis_pairing.is_some()
                 || listener.zoneminder_pairing.is_some()
+                || listener.reolink_pairing.is_some()
         })
     {
         return Err(ConfigError::InvalidValue);
@@ -1679,6 +1811,7 @@ hardware_key_timeout = 60
         assert!(listener.onvif_pairing().is_none());
         assert!(listener.axis_pairing().is_none());
         assert!(listener.zoneminder_pairing().is_none());
+        assert!(listener.reolink_pairing().is_none());
 
         assert_eq!(
             parse_config(&source.replace("port = 8123", "port = 7463")),
@@ -1846,6 +1979,34 @@ hardware_key_timeout = 60
             parse_config(&source.replace(
                 "zoneminder_pairing_password_length = 24",
                 "zoneminder_pairing_password_length = 4097"
+            )),
+            Err(ConfigError::InvalidValue)
+        );
+    }
+
+    #[test]
+    fn reolink_pairing_requires_complete_owner_only_inputs_and_vault_custody() {
+        let source = format!(
+            "{VALID}\n[smart_home]\nbind = \"127.0.0.1\"\nport = 8123\ninstance_name = \"Codex Home\"\nreolink_pairing_bridge_id = \"reolink-camera\"\nreolink_pairing_canonical_host = \"camera.home.arpa\"\nreolink_pairing_pinned_address = \"192.0.2.10:443\"\nreolink_pairing_kek_path = \"~/.chief-of-staff/keys/smart-home-vault.kek\"\nreolink_pairing_username_path = \"~/.chief-of-staff/keys/reolink-user\"\nreolink_pairing_username_length = 12\nreolink_pairing_password_path = \"~/.chief-of-staff/keys/reolink-password\"\nreolink_pairing_password_length = 21\n"
+        );
+        assert_eq!(parse_config(&source), Err(ConfigError::InvalidValue));
+
+        let source = source.replace("container = true", "container = false");
+        let config = parse_config(&source).unwrap();
+        let pairing = config.smart_home().unwrap().reolink_pairing().unwrap();
+        assert_eq!(pairing.bridge_id(), "reolink-camera");
+        assert_eq!(pairing.canonical_host(), "camera.home.arpa");
+        assert_eq!(pairing.pinned_address(), "192.0.2.10:443".parse().unwrap());
+        assert_eq!(pairing.username_length(), 12);
+        assert_eq!(pairing.password_length(), 21);
+        assert_eq!(
+            parse_config(&source.replace("reolink_pairing_password_length = 21\n", "")),
+            Err(ConfigError::InvalidValue)
+        );
+        assert_eq!(
+            parse_config(&source.replace(
+                "reolink_pairing_password_length = 21",
+                "reolink_pairing_password_length = 4097"
             )),
             Err(ConfigError::InvalidValue)
         );
