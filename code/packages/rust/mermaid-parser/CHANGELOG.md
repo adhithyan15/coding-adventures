@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.100.0
+
+- Preserve Requirement layout direction in structural IR.
+
 ## 0.99.0
 
 - Preserve all seven Requirement relationship semantics and reverse-arrow orientation in structural IR.

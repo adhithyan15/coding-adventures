@@ -1,18 +1,18 @@
 //! # diagram-layout-structural
 //!
-//! Layout engine for structural diagrams (DG04): class, ER, and C4.
+//! Layout engine for structural diagrams (DG04): class, ER, C4, and Requirement.
 //!
 //! Takes a `StructuralDiagram` (semantic IR) and produces a
 //! `LayoutedStructuralDiagram` with bounding boxes for all nodes and
 //! polyline paths for all relationships.
 
 use diagram_ir::{
-    LayoutedCompartment, LayoutedStructuralDiagram, LayoutedStructuralGroup,
+    DiagramDirection, LayoutedCompartment, LayoutedStructuralDiagram, LayoutedStructuralGroup,
     LayoutedStructuralNode, LayoutedStructuralRelationship, Point, StructuralDiagram, StructuralNode,
 };
 use std::collections::{HashMap, HashSet};
 
-pub const VERSION: &str = "0.2.0";
+pub const VERSION: &str = "0.3.0";
 
 const MIN_NODE_W: f64 = 160.0;
 const HEADER_H:   f64 = 40.0;
@@ -24,9 +24,12 @@ const COLS:       usize = 3;
 const GROUP_PAD:  f64 = 24.0;
 const GROUP_HEADER_H: f64 = 32.0;
 
-/// Lay out a `StructuralDiagram` using a simple grid arrangement.
+/// Lay out a `StructuralDiagram` using an explicit axis or the legacy grid.
 pub fn layout_structural_diagram(diagram: &StructuralDiagram) -> LayoutedStructuralDiagram {
-    let nodes = layout_nodes(&diagram.nodes, &diagram.groups);
+    let nodes = match diagram.direction.as_ref() {
+        Some(direction) => layout_directional_nodes(&diagram.nodes, &diagram.groups, direction),
+        None => layout_nodes(&diagram.nodes, &diagram.groups),
+    };
     let groups = layout_groups(diagram, &nodes);
     let canvas_w = canvas_width(&nodes, &groups);
     let canvas_h = canvas_height(&nodes, &groups);
@@ -105,6 +108,69 @@ fn layout_nodes(
         });
     }
     out
+}
+
+fn layout_directional_nodes(
+    nodes: &[StructuralNode],
+    groups: &[diagram_ir::StructuralGroup],
+    direction: &DiagramDirection,
+) -> Vec<LayoutedStructuralNode> {
+    let reverse = matches!(direction, DiagramDirection::Bt | DiagramDirection::Rl);
+    let vertical = matches!(direction, DiagramDirection::Tb | DiagramDirection::Bt);
+    let mut indices = (0..nodes.len()).collect::<Vec<_>>();
+    if reverse {
+        indices.reverse();
+    }
+
+    let mut cursor = COMP_PAD;
+    let mut positioned = Vec::with_capacity(nodes.len());
+    for index in indices {
+        let node = &nodes[index];
+        let width = node_width(node);
+        let height = node_height(node);
+        let group_offset = group_depth(node.parent_group.as_deref(), groups) as f64 * GROUP_HEADER_H;
+        let (x, y) = if vertical {
+            let position = (COMP_PAD, cursor + group_offset);
+            cursor = position.1 + height + ROW_GAP;
+            position
+        } else {
+            let position = (cursor, COMP_PAD + group_offset);
+            cursor = position.0 + width + COL_GAP;
+            position
+        };
+
+        let mut y_offset = HEADER_H;
+        let compartments = node
+            .compartments
+            .iter()
+            .map(|compartment| {
+                let compartment_height =
+                    COMP_PAD + compartment.entries.len() as f64 * ROW_H + COMP_PAD;
+                let layouted = LayoutedCompartment {
+                    y_offset,
+                    height: compartment_height,
+                    rows: compartment.entries.clone(),
+                };
+                y_offset += compartment_height;
+                layouted
+            })
+            .collect();
+        positioned.push((
+            index,
+            LayoutedStructuralNode {
+                id: node.id.clone(),
+                x,
+                y,
+                width,
+                height,
+                header: node.label.clone(),
+                stereotype: node.stereotype.clone(),
+                compartments,
+            },
+        ));
+    }
+    positioned.sort_by_key(|(index, _)| *index);
+    positioned.into_iter().map(|(_, node)| node).collect()
 }
 
 fn group_depth(
@@ -304,6 +370,7 @@ mod tests {
         StructuralDiagram {
             kind: StructuralKind::Class,
             title: Some("Domain".into()),
+            direction: None,
             nodes: vec![
                 StructuralNode {
                     id: "Animal".into(), label: "Animal".into(),
@@ -335,7 +402,7 @@ mod tests {
         }
     }
 
-    #[test] fn version_exists() { assert_eq!(crate::VERSION, "0.2.0"); }
+    #[test] fn version_exists() { assert_eq!(crate::VERSION, "0.3.0"); }
 
     #[test]
     fn two_nodes_laid_out() {
@@ -364,6 +431,27 @@ mod tests {
         let r = layout_structural_diagram(&two_class_diagram());
         assert!(r.width > 0.0);
         assert!(r.height > 0.0);
+    }
+
+    #[test]
+    fn explicit_direction_controls_primary_axis_and_order() {
+        let mut diagram = two_class_diagram();
+
+        diagram.direction = Some(DiagramDirection::Tb);
+        let layout = layout_structural_diagram(&diagram);
+        assert!(layout.nodes[1].y > layout.nodes[0].y);
+
+        diagram.direction = Some(DiagramDirection::Bt);
+        let layout = layout_structural_diagram(&diagram);
+        assert!(layout.nodes[0].y > layout.nodes[1].y);
+
+        diagram.direction = Some(DiagramDirection::Lr);
+        let layout = layout_structural_diagram(&diagram);
+        assert!(layout.nodes[1].x > layout.nodes[0].x);
+
+        diagram.direction = Some(DiagramDirection::Rl);
+        let layout = layout_structural_diagram(&diagram);
+        assert!(layout.nodes[0].x > layout.nodes[1].x);
     }
 
     #[test]

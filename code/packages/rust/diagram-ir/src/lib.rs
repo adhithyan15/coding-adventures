@@ -1,6 +1,6 @@
 //! diagram-ir v0.42.0 - DG00/DG04 semantic IR
 
-pub const VERSION: &str = "0.53.0";
+pub const VERSION: &str = "0.54.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramDirection {
@@ -798,6 +798,7 @@ pub struct StructuralRelationship {
 pub struct StructuralDiagram {
     pub kind: StructuralKind,
     pub title: Option<String>,
+    pub direction: Option<DiagramDirection>,
     pub nodes: Vec<StructuralNode>,
     pub groups: Vec<StructuralGroup>,
     pub relationships: Vec<StructuralRelationship>,
@@ -1200,7 +1201,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.53.0");
+        assert_eq!(VERSION, "0.54.0");
     }
     #[test]
     fn default_direction_is_tb() {
@@ -1314,6 +1315,7 @@ mod tests {
         let d = StructuralDiagram {
             kind: StructuralKind::Class,
             title: None,
+            direction: None,
             nodes: vec![node],
             groups: vec![],
             relationships: vec![],
