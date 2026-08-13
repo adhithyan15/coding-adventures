@@ -6258,6 +6258,96 @@ fn assert_cell(backend: Backend, p: &Prog, result: RunResult) {
     }
 }
 
+/// The env var that puts this binary in **single-cell mode**: run exactly one
+/// `(program index, backend)` and nothing else.
+///
+/// This exists so the `LANG_MATRIX_REPORT_ALL` sweep can re-verify what it found
+/// in a *fresh process* — see `reverify_in_fresh_process`.
+const ONLY_CELL: &str = "LANG_MATRIX_ONLY_CELL";
+
+/// Parse `LANG_MATRIX_ONLY_CELL` as `"<program index>:<backend name>"`.
+fn only_cell_request() -> Option<(usize, Backend)> {
+    let raw = std::env::var(ONLY_CELL).ok()?;
+    let (idx, backend) = raw.split_once(':')?;
+    let idx: usize = idx.parse().ok()?;
+    let backend = match backend {
+        "NativeAot" => NativeAot,
+        "Llvm" => Llvm,
+        "Wasm" => Wasm,
+        "Jvm" => Jvm,
+        "Clr" => Clr,
+        "Vm" => Vm,
+        "Jit" => Jit,
+        _ => return None,
+    };
+    Some((idx, backend))
+}
+
+/// Re-run one failing cell in a **fresh process** and report whether it still
+/// fails there.
+///
+/// The sweep collects failures by catching the unwind out of `cell_failed` and
+/// carrying on. That is what makes it useful — you see every cluster at once
+/// instead of one cell per six-minute run — and it is also why its list cannot be
+/// trusted on its own: `run_vm` / `run_jit` / `run_wasm` and the lowering passes
+/// are in-process and hold state that outlives a cell, so everything after the
+/// first in-process failure may be a *consequence* rather than an independent
+/// bug.
+///
+/// That is not a hypothetical. The sweep reported a Twig-on-JVM cluster and an
+/// ALGOL-on-LLVM cluster together; the ALGOL programs turned out to compile and
+/// run correctly in isolation, and a diagnosis cycle went into chasing them. A
+/// triage list that invents failures is worse than no list, because you believe
+/// it.
+///
+/// So each collected failure is replayed in a child process that runs *only*
+/// that cell, and only the ones that fail again are reported. Same shape as
+/// verifying a finding adversarially before acting on it: the cheap, noisy pass
+/// proposes, the clean-room pass confirms.
+/// Note that `None` means "re-ran cleanly and passed" — and ONLY that. Every
+/// other outcome, including being unable to run the child at all, returns
+/// `Some` and is reported. Discarding a failure because the *verifier* broke
+/// would be the same mistake as a runner that skips when its toolchain is
+/// present: a check that can quietly answer "fine" when it did not actually
+/// check is not a check.
+fn reverify_in_fresh_process(idx: usize, backend: Backend) -> Option<String> {
+    let exe = match std::env::current_exe() {
+        Ok(e) => e,
+        Err(e) => {
+            return Some(format!(
+                "could not locate the test binary to re-verify this cell ({e}); \
+                 reporting the sweep's hit unconfirmed rather than discarding it"
+            ))
+        }
+    };
+    let out = Command::new(exe)
+        .arg("matrix_every_proven_cell_agrees")
+        .arg("--exact")
+        .arg("--nocapture")
+        .env(ONLY_CELL, format!("{idx}:{backend:?}"))
+        // The child must not recurse into sweep mode.
+        .env_remove("LANG_MATRIX_REPORT_ALL")
+        .output();
+    let out = match out {
+        Ok(o) => o,
+        Err(e) => {
+            return Some(format!(
+                "could not spawn the re-verification child ({e}); reporting the sweep's \
+                 hit unconfirmed rather than discarding it"
+            ))
+        }
+    };
+    if out.status.success() {
+        return None; // Passed on its own — the sweep's report was contamination.
+    }
+    let text = format!(
+        "{}{}",
+        String::from_utf8_lossy(&out.stdout),
+        String::from_utf8_lossy(&out.stderr)
+    );
+    Some(text)
+}
+
 /// The capstone: every `(program, backend)` cell the campaign has **proven** runs
 /// and agrees with the known result. A cell whose toolchain is absent skips
 /// gracefully; a cell whose toolchain is present but disagrees fails loudly.
@@ -6291,9 +6381,28 @@ fn matrix_every_proven_cell_agrees() {
         std::panic::set_hook(Box::new(|_| {}));
         hook
     });
+    // Single-cell mode: a child spawned by `reverify_in_fresh_process`. Run only
+    // the requested cell, in a process with no other cell's state in it, and let
+    // any failure panic normally.
+    if let Some((want_idx, want_backend)) = only_cell_request() {
+        let p = PROGRAMS.get(want_idx).unwrap_or_else(|| {
+            panic!("{ONLY_CELL} names program #{want_idx}, but there are {}", PROGRAMS.len())
+        });
+        assert!(
+            p.backends.contains(&want_backend),
+            "{ONLY_CELL} names {want_backend:?} for program #{want_idx}, which is not a proven \
+             backend for it ({:?})",
+            p.backends
+        );
+        if let Some(result) = run(want_backend, p) {
+            assert_cell(want_backend, p, result);
+        }
+        return;
+    }
+
     let mut ran = 0usize;
     let mut skipped = 0usize;
-    let mut failures: Vec<String> = Vec::new();
+    let mut failures: Vec<(usize, Backend, String)> = Vec::new();
     for (i, p) in PROGRAMS.iter().enumerate() {
         for &backend in p.backends {
             let cell = if report_all {
@@ -6312,7 +6421,7 @@ fn matrix_every_proven_cell_agrees() {
                             .cloned()
                             .or_else(|| e.downcast_ref::<&str>().map(|s| (*s).to_string()))
                             .unwrap_or_else(|| "<non-string panic>".to_string());
-                        failures.push(format!("── cell #{i} {backend:?} {:?}\n{msg}", p.lang));
+                        failures.push((i, backend, msg));
                         ran += 1;
                         continue;
                     }
@@ -6331,11 +6440,60 @@ fn matrix_every_proven_cell_agrees() {
         std::panic::set_hook(hook);
     }
     eprintln!("lang-matrix: {ran} proven cells exercised, {skipped} skipped");
+
     if !failures.is_empty() {
-        for f in &failures {
-            eprintln!("{f}");
+        // Confirm every candidate in a fresh process before reporting it. The
+        // sweep is the cheap noisy pass; this is the clean-room one.
+        eprintln!(
+            "lang-matrix: {} candidate failures — re-verifying each in a fresh process…",
+            failures.len()
+        );
+        let mut confirmed: Vec<String> = Vec::new();
+        let mut contaminated: Vec<String> = Vec::new();
+        for (idx, backend, sweep_msg) in &failures {
+            let label = format!("cell #{idx} {backend:?} {:?}", PROGRAMS[*idx].lang);
+            match reverify_in_fresh_process(*idx, *backend) {
+                // Report the CHILD's message: it came from a process with no
+                // other cell's state in it, so it is the trustworthy one. The
+                // sweep's own message is kept only when the child said nothing.
+                Some(child_output) if !child_output.trim().is_empty() => {
+                    confirmed.push(format!("── {label}\n{}", child_output.trim_end()));
+                }
+                Some(_) => confirmed.push(format!("── {label}\n{}", sweep_msg.trim_end())),
+                None => contaminated.push(format!("── {label} — passes in isolation")),
+            }
         }
-        panic!("{} matrix cells failed (LANG_MATRIX_REPORT_ALL sweep)", failures.len());
+
+        if !contaminated.is_empty() {
+            eprintln!(
+                "\nlang-matrix: {} sweep hit(s) did NOT reproduce in a fresh process. These are \
+                 state contamination from an earlier in-process failure, not bugs:",
+                contaminated.len()
+            );
+            for c in &contaminated {
+                eprintln!("{c}");
+            }
+        }
+        if !confirmed.is_empty() {
+            eprintln!("\nlang-matrix: {} CONFIRMED failure(s):", confirmed.len());
+            for c in &confirmed {
+                eprintln!("{c}");
+            }
+            panic!(
+                "{} matrix cells failed and reproduced in isolation ({} sweep hit(s) discarded \
+                 as contamination)",
+                confirmed.len(),
+                contaminated.len()
+            );
+        }
+        // Every hit was contamination — the run is green, but say so loudly,
+        // because "the sweep found things and none were real" is itself a
+        // finding about the sweep.
+        eprintln!(
+            "\nlang-matrix: no failure reproduced in isolation; all {} sweep hit(s) were \
+             contamination.",
+            contaminated.len()
+        );
     }
 
     // The skip invariant. After `cell_failed`, a runner returns `None` for exactly
