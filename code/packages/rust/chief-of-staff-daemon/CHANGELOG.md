@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add optional Chief-owned ZoneMinder pairing over the shared durable
+  controller. One complete owner-only configuration tuple binds credential
+  input to an exact NVR, startup restores transaction state, and worker failure
+  joins coordinated shutdown while API session tokens remain process-local.
 - Add optional Chief-owned Axis VAPIX pairing over the shared durable
   controller. One complete owner-only configuration tuple binds credential
   input to an exact bridge, startup restores transaction state, and worker

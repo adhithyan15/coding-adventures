@@ -107,6 +107,19 @@ recoverable sealed credential handoff to `smart-home-axis-pairing-service`.
 The worker shares the controller used by HTTP and model tools and participates
 in the same coordinated failure and shutdown path.
 
+The six-field `zoneminder_pairing_*` tuple enables one supervised ZoneMinder
+credential worker for one exact installed NVR bridge. It names the bridge, an
+owner-only 32-byte Vault KEK, and owner-only username and password files with
+their exact byte lengths. Chief rejects partial tuples and containerized Vault
+custody, selects only an unexpired pending session for that bridge, and
+delegates exact HTTPS endpoint and installed-monitor validation, authenticated
+API 2.0 inspection, and recoverable sealed credential handoff to
+`smart-home-zoneminder-pairing-service`. Login tokens remain process-local and
+are discarded after inspection; token refresh ownership and event or mutation
+hosts remain outside this composition. The worker shares the controller used
+by HTTP and model tools and participates in the same coordinated failure and
+shutdown path.
+
 The shared HTTP adapter receives the same fallible Unix-millisecond clock as the
 model-tool dispatcher. It samples that source once for every matched request
 and reuses the result for grant activation/expiry, authorization audit,
