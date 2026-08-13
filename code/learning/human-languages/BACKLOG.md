@@ -448,6 +448,9 @@ orders letters by payoff and records the order as a per-script letter ledger.
 | HL-C115 | Not started | Add the `letter-ductus` figure kind beside `etymology-route` — the only kind that exists today. One letter renders *n* panels, panel *k* showing strokes 1…*k*, the font's own outline behind in grey, the travelled path in ink, a dot at the pen, one caption per panel from the segment labels. | Declared in `core/figure-generation.json`, rasterised through HL-C113, byte-gated in `core/generated-figure-hashes.json`; proved on Tamil's eleven already-verified letters before any new research lands. |
 | HL-C116 | Not started | Measure the script ramp's missing half in `ramp.ts`, report-only: load-bearing versus exposure target-script text, closure violations, `firstWritableWord`, the writable-word curve, letters per script segment, and unspent letters. | Every number appears in the gap report; the corpus's real closure debt is published per track; nothing throws, per the HL05/HL08 precedent. |
 | HL-C117 | **Done** (letter ledgers, drizzle budget); spine nodes deferred to HL-C120 so they land with lessons that realize them | Add the `SCRIPT` strand and its pre-A1 nodes to `core/spine.json`, a drizzle budget to `core/chapter-policy.json` beside `maxNewGlyphsPerLesson`, and the per-script **letter ledger** — ordered by word payoff, authored intent, never rewritten by a validator. | Each of the five scripts has a ledger; every ledger entry names the words its letter completes; a letter that completes nothing for a long stretch is reported as unspent (the Root Ledger rule, applied to glyphs). |
+
+| HL-C116 | **Done** — first measurement published; the number is 931 | Measure the script ramp's missing half in `ramp.ts`, report-only: load-bearing versus exposure target-script text, closure violations, `firstWritableWord`, the writable-word curve, letters per script segment, and unspent letters. | Every number appears in the gap report; the corpus's real closure debt is published per track; nothing throws, per the HL05/HL08 precedent. |
+| HL-C117 | Not started | Add the `SCRIPT` strand and its pre-A1 nodes to `core/spine.json`, a drizzle budget to `core/chapter-policy.json` beside `maxNewGlyphsPerLesson`, and the per-script **letter ledger** — ordered by word payoff, authored intent, never rewritten by a validator. | Each of the five scripts has a ledger; every ledger entry names the words its letter completes; a letter that completes nothing for a long stretch is reported as unspent (the Root Ledger rule, applied to glyphs). |
 | HL-C118 | Not started | Research and author cited ductus for the five scripts in letter-ledger order — Tamil outward from its eleven, and Telugu, Kannada, Malayalam and Devanagari from zero. Base letters and vowel signs only; composed syllables derive from theirs. | Every authored pen path is font-verified and carries a `strokeOrderSource` with `citation`, `url` and `variation`. **No citation → no pen path → no figure**, and the gap is reported rather than filled. Telugu has a plausible academic candidate (Vemuri, *The Shapes of Telugu*, UC Davis); Kannada, Malayalam and Devanagari are unproven and may land partly prose-only. |
 | HL-C119 | Not started | Redistribute the script strands that already exist. Tamil's twenty `TA-W*` lessons are good material clustered at `sequence: 270`; Hindi's eleven include `HI-W01-shirorekha-na-ma`, the steepest lesson in the corpus at twelve glyphs. Both are re-cut into one-letter segments across the early sequences. | The prose survives the re-cut; each segment teaches exactly one letter; `drivablePercent` **does not fall** when the detachable writing segments land, which is the design's own falsification test. |
 | HL-C120 | Not started | Author the missing script strand for Telugu, Kannada, Malayalam and Sanskrit, which have none, and migrate the six tracks' 233 schema-v1 lessons so they enter the gates at all. Fix the 30–34 lessons per track that carry no `sequence` — until that is done, no claim in HL11 is verifiable, because every one of them is a claim about order. | Closure violations reach zero per track; `firstWritableWord` lands near sequence 50; every book still builds and every `check:*` still passes. |
@@ -501,6 +504,83 @@ orders letters by payoff and records the order as a per-script letter ledger.
   is something the reader writes, but a ledger milestone that is a bound morpheme
   is weaker payoff than one that is a greeting, and the authoring in HL-C120
   should improve it rather than the measurement hiding it.
+
+## Open from HL-C116 — the OTHER way a track disappears
+
+`measureScriptClosure` now names a track whose declared script it does not
+recognise, instead of silently dropping it. That closes the mistyped-`track.json`
+path. It does **not** close the path the historical Gujarati bug actually took.
+
+`parse.ts` resolves an unregistered language to `"latin"` when `LANGUAGE_SCRIPT`
+has no entry and the track ships no `track.json`. A `thai/` directory added
+tomorrow would therefore resolve to Latin, be skipped as "reader already knows
+this alphabet", and appear in neither `tracks` nor `unknownScriptTracks` — zero
+violations, zero trace. `constants.ts` already carries a comment recording that
+exact failure shipping once.
+
+Not fixed here deliberately: the fallback lives upstream of this module and every
+consumer of `ParsedLesson.script` inherits it, so changing it is its own change
+with its own blast radius — not a line to slip into a measurement PR. The shape
+of the fix is to resolve to a sentinel (`"unknown"`) rather than to `"latin"`
+when a language is unregistered AND has no `track.json`, or to carry a
+`scriptWasDefaulted` flag that closure routes into `unknownScriptTracks`.
+
+Harmless today: all 15 non-Latin tracks are registered, `unknownScriptTracks` is
+empty, and the module is report-only. It is written down because "no track can
+vanish from this report" is currently true by luck rather than by construction.
+
+## Findings from HL-C116
+
+- **932 lessons across 16 non-Latin tracks ask the reader to decode a glyph
+  nobody taught them.** HL08's glyph budget flags 61. That gap is the whole
+  argument for the measurement: the budget caps how FAST glyphs arrive, and a
+  track satisfies it perfectly while teaching no letters at all.
+
+- **12 of the 16 non-Latin tracks teach zero letters.** Not late, not few: none.
+
+| track | lessons | script lessons | glyphs shown | never taught | closure violations | headwords with no romanization |
+|---|---:|---:|---:|---:|---:|---:|
+| malayalam | 93 | **0** | 66 | 66 | 90 | 57 |
+| hindi | 109 | 11 | 56 | 28 | 86 | 88 |
+| kannada | 88 | **0** | 66 | 66 | 85 | 52 |
+| telugu | 87 | **0** | 62 | 62 | 83 | 53 |
+| arabic | 100 | 16 | 45 | 16 | 71 | 40 |
+| tamil | 132 | 24 | 51 | 11 | 67 | 68 |
+| bengali | 70 | **0** | 48 | 48 | 65 | 25 |
+| marathi | 62 | **0** | 46 | 46 | 62 | 28 |
+| russian | 64 | 5 | 55 | 37 | 59 | 0 |
+| sanskrit | 59 | **0** | 48 | 48 | 53 | 26 |
+
+- **The defect is not confined to the six Indic tracks HL11 was written for.**
+  Arabic, Bengali, Marathi, Russian, Punjabi, Gujarati, Persian, Urdu, Japanese
+  and Chinese all show it. HL11's rule generalises to the whole non-Latin corpus,
+  which makes the six a pilot rather than a special case.
+
+- **489 native-script headwords carry no romanization**, which is what makes them
+  load-bearing rather than exposure. This is the cheapest remediation in the
+  program: each one becomes exempt the moment somebody writes down how to say the
+  word, and the reader genuinely gains from it. Hindi alone has 88, Tamil 68.
+
+- **The exposure rule is doing far more work than a lesson count shows.** Only 49
+  lessons corpus-wide are clean *because of* it — but it removed **1,997 glyphs**
+  from load-bearing sets, most of them from lessons that violate anyway. A lesson
+  reporting five untaught glyphs while fifteen more were exempted is not a lesson
+  with five problems, and the per-lesson counter cannot see that. Both numbers are
+  now published; the glyph count is the one that would move if an author started
+  laundering script through the headword once 932 becomes a burn-down target.
+  Malayalam (168), Bengali (179), Telugu (158) and Kannada (144) lean on it
+  hardest; Hindi (7) and Tamil (10) barely at all, because those two mostly lack
+  the romanizations that would trigger it.
+
+- The steepest single lessons are Telugu `TE-C16-nelalu` (30 untaught glyphs),
+  Kannada `KA-C16-tingalugalu` (29) and Malayalam `ML-C16-kollavarsham-maasangal`
+  (24) — month-name lessons, which put a whole calendar's worth of unseen letters
+  on one page.
+
+- Tamil is measurably the least indebted of the six (11 glyphs never taught,
+  against 62-66 for the three with no writing lessons), which is the difference
+  its 24 script lessons buy. The measurement reflects that rather than flattening
+  it, which is the check that it measures what it claims to.
 
 ## P0 — Step-by-Step capability program (HL05–HL08)
 
