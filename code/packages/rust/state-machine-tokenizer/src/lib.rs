@@ -54,6 +54,16 @@ pub enum Token {
     Eof,
 }
 
+/// A token paired with the source position where the tokenizer emitted it.
+///
+/// This is an emission point, not a guessed source span. Buffered text and
+/// reconsumed input can make the token's lexical start unavailable.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct PositionedToken {
+    pub token: Token,
+    pub position: SourcePosition,
+}
+
 /// Seed data for resuming tokenizer states with an in-progress DOCTYPE token.
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 pub struct DoctypeSeed {
@@ -286,7 +296,7 @@ pub struct Tokenizer {
     current_attribute: Option<Attribute>,
     return_state: Option<String>,
     last_start_tag: Option<String>,
-    tokens: VecDeque<Token>,
+    tokens: VecDeque<PositionedToken>,
     diagnostics: Vec<Diagnostic>,
     trace: Vec<TokenizerTraceEntry>,
     position: SourcePosition,
@@ -535,11 +545,21 @@ impl Tokenizer {
 
     /// Drain all currently queued tokens.
     pub fn drain_tokens(&mut self) -> Vec<Token> {
+        self.tokens.drain(..).map(|token| token.token).collect()
+    }
+
+    /// Drain queued tokens with their proven tokenizer emission positions.
+    pub fn drain_positioned_tokens(&mut self) -> Vec<PositionedToken> {
         self.tokens.drain(..).collect()
     }
 
     /// Pop the next queued token.
     pub fn next_token(&mut self) -> Option<Token> {
+        self.tokens.pop_front().map(|token| token.token)
+    }
+
+    /// Pop the next token with its tokenizer emission position.
+    pub fn next_positioned_token(&mut self) -> Option<PositionedToken> {
         self.tokens.pop_front()
     }
 
@@ -655,13 +675,13 @@ impl Tokenizer {
                 "append_attribute_value_replacement" => {
                     self.attribute_mut(action)?.value.push('\u{FFFD}');
                 }
-                "flush_text" => self.flush_text(),
+                "flush_text" => self.flush_text(position),
                 "emit_current_as_text" => {
                     let ch = current.ok_or_else(|| TokenizerError::MissingCurrentCodePoint {
                         action: action.clone(),
                     })?;
                     self.text_buffer.push(ch);
-                    self.flush_text();
+                    self.flush_text(position);
                 }
                 "create_start_tag" => {
                     self.current_token = Some(CurrentToken::StartTag {
@@ -1001,8 +1021,10 @@ impl Tokenizer {
                         .set_current_state(target.to_string())
                         .map_err(TokenizerError::Machine)?;
                 }
-                "emit_current_token" => self.emit_current_token(action)?,
-                "emit_rcdata_end_tag_or_text" => self.emit_rcdata_end_tag_or_text(action, state)?,
+                "emit_current_token" => self.emit_current_token(action, position)?,
+                "emit_rcdata_end_tag_or_text" => {
+                    self.emit_rcdata_end_tag_or_text(action, position, state)?
+                }
                 "emit_rcdata_end_tag_with_trailing_solidus_or_text" => {
                     self.emit_rcdata_end_tag_with_trailing_solidus_or_text(action, position, state)?
                 }
@@ -1012,7 +1034,10 @@ impl Tokenizer {
                 "emit_rcdata_end_tag_with_attributes_or_text" => {
                     self.emit_rcdata_end_tag_with_attributes_or_text(action, position, state)?
                 }
-                "emit(EOF)" => self.tokens.push_back(Token::Eof),
+                "emit(EOF)" => self.tokens.push_back(PositionedToken {
+                    token: Token::Eof,
+                    position,
+                }),
                 _ if action.starts_with("set_return_state(") && action.ends_with(')') => {
                     let state = action
                         .trim_start_matches("set_return_state(")
@@ -1125,10 +1150,12 @@ impl Tokenizer {
         Ok(())
     }
 
-    fn flush_text(&mut self) {
+    fn flush_text(&mut self, position: SourcePosition) {
         if !self.text_buffer.is_empty() {
-            self.tokens
-                .push_back(Token::Text(std::mem::take(&mut self.text_buffer)));
+            self.tokens.push_back(PositionedToken {
+                token: Token::Text(std::mem::take(&mut self.text_buffer)),
+                position,
+            });
         }
     }
 
@@ -1337,7 +1364,7 @@ impl Tokenizer {
             }));
     }
 
-    fn emit_current_token(&mut self, action: &str) -> Result<()> {
+    fn emit_current_token(&mut self, action: &str, position: SourcePosition) -> Result<()> {
         if matches!(self.current_token, Some(CurrentToken::StartTag { .. }))
             && self.current_attribute.is_some()
         {
@@ -1356,33 +1383,53 @@ impl Tokenizer {
                 self_closing,
             } => {
                 self.last_start_tag = Some(name.clone());
-                self.tokens.push_back(Token::StartTag {
-                    name,
-                    attributes,
-                    self_closing,
+                self.tokens.push_back(PositionedToken {
+                    token: Token::StartTag {
+                        name,
+                        attributes,
+                        self_closing,
+                    },
+                    position,
                 });
             }
-            CurrentToken::EndTag { name } => self.tokens.push_back(Token::EndTag { name }),
-            CurrentToken::Comment { data } => self.tokens.push_back(Token::Comment(data)),
-            CurrentToken::ProcessingInstruction { target, data } => self
-                .tokens
-                .push_back(Token::ProcessingInstruction { target, data }),
+            CurrentToken::EndTag { name } => self.tokens.push_back(PositionedToken {
+                token: Token::EndTag { name },
+                position,
+            }),
+            CurrentToken::Comment { data } => self.tokens.push_back(PositionedToken {
+                token: Token::Comment(data),
+                position,
+            }),
+            CurrentToken::ProcessingInstruction { target, data } => {
+                self.tokens.push_back(PositionedToken {
+                    token: Token::ProcessingInstruction { target, data },
+                    position,
+                })
+            }
             CurrentToken::Doctype {
                 name,
                 public_identifier,
                 system_identifier,
                 force_quirks,
-            } => self.tokens.push_back(Token::Doctype {
-                name,
-                public_identifier,
-                system_identifier,
-                force_quirks,
+            } => self.tokens.push_back(PositionedToken {
+                token: Token::Doctype {
+                    name,
+                    public_identifier,
+                    system_identifier,
+                    force_quirks,
+                },
+                position,
             }),
         }
         Ok(())
     }
 
-    fn emit_rcdata_end_tag_or_text(&mut self, action: &str, state: &str) -> Result<()> {
+    fn emit_rcdata_end_tag_or_text(
+        &mut self,
+        action: &str,
+        position: SourcePosition,
+        state: &str,
+    ) -> Result<()> {
         let candidate = match self.current_token.as_ref() {
             Some(CurrentToken::EndTag { name }) => name.clone(),
             Some(other) => {
@@ -1400,8 +1447,8 @@ impl Tokenizer {
         };
 
         if self.last_start_tag.as_deref() == Some(candidate.as_str()) {
-            self.flush_text();
-            self.emit_current_token("emit_current_token")?;
+            self.flush_text(position);
+            self.emit_current_token("emit_current_token", position)?;
             self.switch_to_data_state_after_matching_end_tag()?;
         } else {
             self.current_token = None;
@@ -1443,8 +1490,8 @@ impl Tokenizer {
                 position,
                 state: state.to_string(),
             });
-            self.flush_text();
-            self.emit_current_token("emit_current_token")?;
+            self.flush_text(position);
+            self.emit_current_token("emit_current_token", position)?;
             self.switch_to_data_state_after_matching_end_tag()?;
         } else {
             self.current_token = None;
@@ -1486,8 +1533,8 @@ impl Tokenizer {
                 position,
                 state: state.to_string(),
             });
-            self.flush_text();
-            self.emit_current_token("emit_current_token")?;
+            self.flush_text(position);
+            self.emit_current_token("emit_current_token", position)?;
             self.switch_to_data_state_after_matching_end_tag()?;
         } else {
             self.current_token = None;
@@ -1529,8 +1576,8 @@ impl Tokenizer {
                 position,
                 state: state.to_string(),
             });
-            self.flush_text();
-            self.emit_current_token("emit_current_token")?;
+            self.flush_text(position);
+            self.emit_current_token("emit_current_token", position)?;
             self.switch_to_data_state_after_matching_end_tag()?;
         } else {
             self.current_token = None;

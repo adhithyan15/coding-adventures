@@ -16,6 +16,7 @@ use coding_adventures_html_lexer::{
     Diagnostic, DoctypeSeed, HtmlLexContext, HtmlLexer, HtmlScriptingMode, HtmlTokenizerState,
     Token, TokenizerError,
 };
+pub use coding_adventures_html_lexer::{PositionedToken, SourcePosition};
 use dom_core::{Attribute, Document, DocumentType, Element, Node};
 use std::fmt;
 
@@ -589,6 +590,8 @@ pub struct FragmentOutput {
 pub struct ParserDiagnostic {
     pub code: String,
     pub message: String,
+    /// Proven tokenizer emission point for the triggering token, when known.
+    pub position: Option<SourcePosition>,
 }
 
 impl ParserDiagnostic {
@@ -596,7 +599,13 @@ impl ParserDiagnostic {
         Self {
             code: code.into(),
             message: message.into(),
+            position: None,
         }
+    }
+
+    fn at_emission(mut self, position: Option<SourcePosition>) -> Self {
+        self.position = position;
+        self
     }
 }
 
@@ -764,7 +773,10 @@ pub fn parse_html_with_diagnostics_and_options(
 
     lexer.finish()?;
     drain_parser_tokens(&mut lexer, &mut parser, true)?;
-    parser.process_token(Token::Eof);
+    parser.process_positioned_token(PositionedToken {
+        token: Token::Eof,
+        position: lexer.position(),
+    });
 
     let lexer_diagnostics = lexer.diagnostics().to_vec();
     let document = parser.finish_document();
@@ -793,7 +805,10 @@ pub fn parse_html_fragment_with_diagnostics_and_options(
 
     lexer.finish()?;
     drain_parser_tokens(&mut lexer, &mut parser, true)?;
-    parser.process_token(Token::Eof);
+    parser.process_positioned_token(PositionedToken {
+        token: Token::Eof,
+        position: lexer.position(),
+    });
 
     let lexer_diagnostics = lexer.diagnostics().to_vec();
     let document = parser.finish_document();
@@ -825,7 +840,10 @@ pub fn parse_html_fragment_for_context_with_diagnostics_and_options(
 
     lexer.finish()?;
     drain_parser_tokens(&mut lexer, &mut parser, true)?;
-    parser.process_token(Token::Eof);
+    parser.process_positioned_token(PositionedToken {
+        token: Token::Eof,
+        position: lexer.position(),
+    });
 
     let lexer_diagnostics = lexer.diagnostics().to_vec();
     let document = parser.finish_document();
@@ -4401,6 +4419,7 @@ pub struct HtmlParser {
     strip_next_leading_noscript_literal: bool,
     form_element_pointer_set: bool,
     foreign_cdata_text: Option<String>,
+    current_token_emission_position: Option<SourcePosition>,
 }
 
 impl Default for HtmlParser {
@@ -4428,6 +4447,7 @@ impl Default for HtmlParser {
             strip_next_leading_noscript_literal: false,
             form_element_pointer_set: false,
             foreign_cdata_text: None,
+            current_token_emission_position: None,
         }
     }
 }
@@ -4485,6 +4505,7 @@ impl HtmlParser {
             strip_next_leading_noscript_literal: false,
             form_element_pointer_set: false,
             foreign_cdata_text: None,
+            current_token_emission_position: None,
         }
     }
 
@@ -4517,12 +4538,24 @@ impl HtmlParser {
             strip_next_leading_noscript_literal: false,
             form_element_pointer_set: matches!(context_element, "form"),
             foreign_cdata_text: None,
+            current_token_emission_position: None,
         }
     }
 
     pub fn parse_tokens(&mut self, tokens: impl IntoIterator<Item = Token>) -> Document {
         for token in tokens {
             self.process_token(token);
+        }
+        self.finish_document()
+    }
+
+    /// Parse tokens that retain their tokenizer emission positions.
+    pub fn parse_positioned_tokens(
+        &mut self,
+        tokens: impl IntoIterator<Item = PositionedToken>,
+    ) -> Document {
+        for token in tokens {
+            self.process_positioned_token(token);
         }
         self.finish_document()
     }
@@ -4739,6 +4772,12 @@ impl HtmlParser {
         }
     }
 
+    fn process_positioned_token(&mut self, token: PositionedToken) {
+        self.current_token_emission_position = Some(token.position);
+        self.process_token(token.token);
+        self.current_token_emission_position = None;
+    }
+
     fn process_document_tail_mode(&mut self, token: &Token) -> bool {
         if self.is_fragment && self.open_fragment_context_name() != Some("html") {
             return false;
@@ -4818,10 +4857,13 @@ impl HtmlParser {
             );
 
         if !allowed {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-token-after-after-frameset",
-                "unexpected token was ignored in the after after frameset insertion mode",
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-token-after-after-frameset",
+                    "unexpected token was ignored in the after after frameset insertion mode",
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             return true;
         }
         false
@@ -4864,9 +4906,12 @@ impl HtmlParser {
         }
     }
 
-    fn process_lexer_token(&mut self, token: Token, final_drain: bool) {
+    fn process_lexer_token(&mut self, token: PositionedToken, final_drain: bool) {
+        self.current_token_emission_position = Some(token.position);
+        let token = token.token;
         if self.foreign_cdata_text.is_some() {
             self.consume_foreign_cdata_token(token);
+            self.current_token_emission_position = None;
             return;
         }
 
@@ -4880,6 +4925,7 @@ impl HtmlParser {
             }
             token => self.process_token(token),
         }
+        self.current_token_emission_position = None;
     }
 
     fn start_foreign_cdata_text(&mut self, cdata: &str, final_drain: bool) {
@@ -10128,16 +10174,17 @@ fn drain_parser_tokens(
     parser: &mut HtmlParser,
     final_drain: bool,
 ) -> Result<(), ParseError> {
-    for token in lexer.drain_tokens() {
-        if matches!(token, Token::Eof) {
+    for positioned_token in lexer.drain_positioned_tokens() {
+        if matches!(positioned_token.token, Token::Eof) {
             continue;
         }
+        let token = &positioned_token.token;
         let resets_to_data = matches!(token, Token::EndTag { .. });
-        let start_tag_name = match &token {
+        let start_tag_name = match token {
             Token::StartTag { name, .. } if !is_void_element(name) => Some(name.clone()),
             _ => None,
         };
-        parser.process_lexer_token(token, final_drain);
+        parser.process_lexer_token(positioned_token, final_drain);
 
         let next_context = if let Some(name) = start_tag_name {
             (parser.current_namespace().is_none() && parser.current_element_is(&name))
@@ -40077,6 +40124,65 @@ mod tests {
         assert!(fragment.parser_diagnostics.iter().all(|diagnostic| {
             diagnostic.code != "unexpected-token-after-after-frameset"
         }));
+    }
+
+    #[test]
+    fn positions_after_after_frameset_diagnostics_at_token_emission() {
+        let source = "<!doctype html>\r\n<frameset></frameset></html><!--é-->\n<frame>";
+        let output = parse_html_with_diagnostics(source).unwrap();
+        let diagnostic = output
+            .parser_diagnostics
+            .iter()
+            .find(|diagnostic| diagnostic.code == "unexpected-token-after-after-frameset")
+            .unwrap();
+        let final_delimiter = source.rfind('>').unwrap();
+
+        assert_eq!(
+            diagnostic.position,
+            Some(SourcePosition {
+                byte_offset: final_delimiter,
+                char_offset: source[..final_delimiter].chars().count(),
+                line: 3,
+                column: 7,
+            })
+        );
+
+        let mut unpositioned = HtmlParser::new();
+        for token in [
+            Token::StartTag {
+                name: "html".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "frameset".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::EndTag {
+                name: "frameset".to_string(),
+            },
+            Token::EndTag {
+                name: "html".to_string(),
+            },
+            Token::StartTag {
+                name: "frame".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Eof,
+        ] {
+            unpositioned.process_token(token);
+        }
+        assert_eq!(
+            unpositioned
+                .diagnostics()
+                .iter()
+                .find(|diagnostic| diagnostic.code == "unexpected-token-after-after-frameset")
+                .unwrap()
+                .position,
+            None
+        );
     }
 
     #[test]

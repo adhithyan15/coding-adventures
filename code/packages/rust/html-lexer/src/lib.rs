@@ -7,8 +7,8 @@
 use state_machine::{EffectfulStateMachine, StateMachineDefinition};
 
 pub use state_machine_tokenizer::{
-    Attribute, Diagnostic, DoctypeSeed, Result, SourcePosition, StartTagSeed, Token,
-    Tokenizer as HtmlLexer, TokenizerError, TokenizerTraceEntry,
+    Attribute, Diagnostic, DoctypeSeed, PositionedToken, Result, SourcePosition, StartTagSeed,
+    Token, Tokenizer as HtmlLexer, TokenizerError, TokenizerTraceEntry,
 };
 
 mod generated_html1;
