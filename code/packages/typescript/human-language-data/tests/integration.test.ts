@@ -104,7 +104,7 @@ describe("real curriculum", () => {
     // 40 (esperar, contestar, comprar). Two sessions authored a chapter 38 in parallel;
     // the collision surfaced as a merge conflict on chapters.json rather than silently,
     // because both sides must edit it.
-    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(240); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis // +3: HL-C88 slice 8 // +1: HL-C88 slice 9 (falsos amigos) // +3: HL-C113 (B1 si-condition rung) // +3: HL-C113 preterite plural // HL-C113: HL-C113 imperfect subjunctive
+    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(245); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis // +3: HL-C88 slice 8 // +1: HL-C88 slice 9 (falsos amigos) // +3: HL-C113 (B1 si-condition rung) // +3: HL-C113 preterite plural // HL-C113: HL-C113 imperfect subjunctive
     expect(
       books.books
         .find((book) => book.language === "persian")
@@ -945,6 +945,21 @@ describe("real curriculum", () => {
       "ES-C62-veo-a-maria-person",
       "ES-C62-veo-a-maria-thing",
       "ES-C62-veo-a-maria-why",
+      "ES-C63-comiamos-count",
+      "ES-C63-comiamos-ser",
+      "ES-C63-comiamos-we",
+      "ES-C63-comisteis-done",
+      "ES-C63-comisteis-er",
+      "ES-C63-comisteis-strong",
+      "ES-C63-hablabamos-accent",
+      "ES-C63-hablabamos-they",
+      "ES-C63-hablabamos-we",
+      "ES-C63-hablasteis-make",
+      "ES-C63-hablasteis-parts",
+      "ES-C63-hablasteis-whole",
+      "ES-C63-repaso-paradigmas-accent",
+      "ES-C63-repaso-paradigmas-owed",
+      "ES-C63-repaso-paradigmas-three",
       "ES-W03-question-span-roberto-outside",
       "FA-C02-esm-e-man-sara",
       "FA-C03-chist-fusion",

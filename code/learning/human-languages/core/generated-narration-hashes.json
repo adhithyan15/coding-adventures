@@ -10140,6 +10140,76 @@
       "jsonHash": "fnv1a64:d880c42c4f6f83fb"
     },
     {
+      "language": "spanish",
+      "chapter": 241,
+      "sourceHash": "fnv1a64:80b20521595b5b7f",
+      "lessonIds": [
+        "ES-C63-hablasteis"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "spanish/narration/ch241.txt",
+      "json": "spanish/narration/ch241.json",
+      "textHash": "fnv1a64:36aa20885e3fd29f",
+      "jsonHash": "fnv1a64:326d16093498cd9b"
+    },
+    {
+      "language": "spanish",
+      "chapter": 242,
+      "sourceHash": "fnv1a64:39e81f483da71d6e",
+      "lessonIds": [
+        "ES-C63-comisteis"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch242.txt",
+      "json": "spanish/narration/ch242.json",
+      "textHash": "fnv1a64:22d98b9cbe596d18",
+      "jsonHash": "fnv1a64:19dc2f8cfb6e0816"
+    },
+    {
+      "language": "spanish",
+      "chapter": 243,
+      "sourceHash": "fnv1a64:dee87df459e79d98",
+      "lessonIds": [
+        "ES-C63-hablabamos"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "spanish/narration/ch243.txt",
+      "json": "spanish/narration/ch243.json",
+      "textHash": "fnv1a64:2d0790c51d295d20",
+      "jsonHash": "fnv1a64:c212be298944cf0b"
+    },
+    {
+      "language": "spanish",
+      "chapter": 244,
+      "sourceHash": "fnv1a64:e24f264b4bb8356c",
+      "lessonIds": [
+        "ES-C63-comiamos"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch244.txt",
+      "json": "spanish/narration/ch244.json",
+      "textHash": "fnv1a64:8f7d4b866b76a49c",
+      "jsonHash": "fnv1a64:359dff0ace3cc30c"
+    },
+    {
+      "language": "spanish",
+      "chapter": 245,
+      "sourceHash": "fnv1a64:243419ed2b1bec22",
+      "lessonIds": [
+        "ES-C63-repaso-paradigmas"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch245.txt",
+      "json": "spanish/narration/ch245.json",
+      "textHash": "fnv1a64:1211a57a1d5fa89d",
+      "jsonHash": "fnv1a64:01038f476a6d84bd"
+    },
+    {
       "language": "tamil",
       "chapter": 1,
       "sourceHash": "fnv1a64:3c0d5e6c060b7723",
