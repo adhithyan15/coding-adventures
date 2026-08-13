@@ -32,18 +32,38 @@
 % Examples" article's "Common simile examples" table, which pairs each
 % simile with its meaning directly:
 %
-%     simile (this table's atom label)   meaning                 simile phrase (verbatim)
-%     ----------------------------------  ----------------------  ---------------------------
-%     as_brave_as_a_lion                  extremely_courageous    "As brave as a lion"
-%     like_a_needle_in_a_haystack         very_difficult_to_find  "Like a needle in a haystack"
-%     as_free_as_a_bird                   free_or_unrestricted    "As free as a bird"
+%     simile (this table's atom label)   meaning                              simile phrase (verbatim)
+%     ----------------------------------  -----------------------------------  ---------------------------------
+%     as_brave_as_a_lion                  extremely_courageous                 "As brave as a lion"
+%     like_a_needle_in_a_haystack         very_difficult_to_find               "Like a needle in a haystack"
+%     as_free_as_a_bird                   free_or_unrestricted                 "As free as a bird"
+%     like_a_fish_out_of_water            uncomfortable_or_out_of_place        "Like a fish out of water"
+%     as_fast_as_a_cheetah                moves_with_exceptional_speed         "As fast as a cheetah"
+%     like_a_deer_in_headlights           frozen_in_fear_or_confusion          "Like a deer in headlights"
+%     as_cool_as_a_cucumber               calm_and_relaxed_under_pressure      "As cool as a cucumber"
+%     like_a_kid_in_a_candy_store         displays_excitement_and_eagerness    "Like a kid in a candy store"
+%     as_strong_as_an_ox                  very_strong                          "As strong as an ox"
+%     like_watching_paint_dry             extremely_boring_or_slow             "Like watching paint dry"
+%     as_cute_as_a_button                 adorable_and_charming                "As cute as a button"
+%     like_two_peas_in_a_pod              very_similar_or_closely_connected    "Like two peas in a pod"
+%     as_flat_as_a_pancake                very_flat                            "As flat as a pancake"
+%     like_birds_of_a_feather             similar_in_character_or_behavior     "Like birds of a feather"
+%     as_hungry_as_a_horse                extremely_eager_to_eat               "As hungry as a horse"
+%
+% EXTENDED this cycle from 3 to 15 rows: the SAME already-cited Grammarly
+% "Common simile examples" table names twelve MORE similes beyond the
+% original three, each paired with its own clean meaning in the SAME table
+% row shape as the original three — zero new source page needed,
+% WebFetch-verified (including a targeted second pass re-fetching five of
+% the new rows' raw table-row text directly, confirming the extraction is
+% accurate and not paraphrased) before writing.
 %
 % WebFetch-verified before writing. `trust consensus` — Grammarly is a
 % reputable, widely-cited grammar-content company, the same tier this
 % stdlib already reserves for other non-.gov language sources and the same
 % source family already cited by `sentence-type.adj`/`part-of-speech.adj`/
 % `contraction.adj`/`possessive-noun.adj`. A simile not one of these
-% three — e.g. `as_busy_as_a_bee`, a real, well-known simile, but not one
+% fifteen — e.g. `as_busy_as_a_bee`, a real, well-known simile, but not one
 % of this source's own cited table rows — is deliberately NOT a row, so a
 % recall ABSTAINS on it rather than inventing a meaning. (See
 % ../README.md; feedback_nothing_human_authored,
@@ -56,6 +76,18 @@ table simile_meaning {
     row (as_brave_as_a_lion, extremely_courageous)
     row (like_a_needle_in_a_haystack, very_difficult_to_find)
     row (as_free_as_a_bird, free_or_unrestricted)
+    row (like_a_fish_out_of_water, uncomfortable_or_out_of_place)
+    row (as_fast_as_a_cheetah, moves_with_exceptional_speed)
+    row (like_a_deer_in_headlights, frozen_in_fear_or_confusion)
+    row (as_cool_as_a_cucumber, calm_and_relaxed_under_pressure)
+    row (like_a_kid_in_a_candy_store, displays_excitement_and_eagerness)
+    row (as_strong_as_an_ox, very_strong)
+    row (like_watching_paint_dry, extremely_boring_or_slow)
+    row (as_cute_as_a_button, adorable_and_charming)
+    row (like_two_peas_in_a_pod, very_similar_or_closely_connected)
+    row (as_flat_as_a_pancake, very_flat)
+    row (like_birds_of_a_feather, similar_in_character_or_behavior)
+    row (as_hungry_as_a_horse, extremely_eager_to_eat)
 
     source "As brave as a lion"
     locator "https://www.grammarly.com/blog/rhetorical-devices/simile/"

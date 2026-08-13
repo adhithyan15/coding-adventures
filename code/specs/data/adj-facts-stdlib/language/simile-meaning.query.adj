@@ -11,4 +11,6 @@ import "simile-meaning.adj"
 
 ? simile_meaning(as_brave_as_a_lion, $M)          % expect extremely_courageous (direct)
 ? simile_meaning($S, free_or_unrestricted)        % expect as_free_as_a_bird (reverse)
-? simile_meaning(as_busy_as_a_bee, $M)            % expect abstain -- a real simile, but not one of the three tabled examples
+? simile_meaning(like_a_fish_out_of_water, $M)    % expect uncomfortable_or_out_of_place (added this cycle)
+? simile_meaning($S, very_strong)                 % expect as_strong_as_an_ox (added this cycle, reverse)
+? simile_meaning(as_busy_as_a_bee, $M)            % expect abstain -- a real simile, but not one of the tabled examples
