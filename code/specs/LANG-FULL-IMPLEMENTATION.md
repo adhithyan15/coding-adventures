@@ -897,15 +897,17 @@ backend immediately) come before the enabler-dependent items.
   controlled value, proves the first condition true. Such an element also
   retains path-independent integer, real, and boolean constants established by
   a body that avoids the control. Capped abstract execution also retains the
-  first control value whose predicate is false when its value and predicate
-  reference only the control and statically known ordinary local scalars that
+  first integer or finite binary64 control value whose predicate is false when
+  its value and predicate reference only the control and statically known
+  ordinary local scalars that
   the body does not write. Read-only body uses are permitted; assignment targets
   and nested controlled variables count as writes. The proof is limited to
   4,096 iterations; globals, arrays, by-name values, written dependencies,
-  unknown expressions, and nonterminating or longer loops leave the final
-  controlled value unknown. Exact supported standard-function calls may wrap
-  these dependencies in the value or predicate; user declarations still shadow
-  the built-ins and make that call dynamic.
+  unknown expressions, rounded-away real progress, and nonterminating or
+  longer loops leave the final controlled value unknown. Exact supported
+  standard-function calls may wrap these dependencies in the value or
+  predicate; user declarations still shadow the built-ins and make that call
+  dynamic.
   Known comparison leaves
   compose through `not`, `and`, `or`, `impl`, and `eqv`; bare literals,
   including direct `true` and `false`, compose through those operators;

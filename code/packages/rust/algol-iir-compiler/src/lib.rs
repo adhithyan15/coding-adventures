@@ -9227,6 +9227,15 @@ mod tests {
     }
 
     #[test]
+    fn al4_static_while_preserves_real_control_exit_snapshot() {
+        compile_source(
+            "begin real x; x := 0.0; for x := x + 0.5 while x < 2.0 do print(''); print(x + 0.25) end",
+            "test",
+        )
+        .expect("bounded binary64 while progress has a static exit value");
+    }
+
+    #[test]
     fn al4_static_while_preserves_stable_local_dependency() {
         compile_source(
             "begin integer i, n; n := 3; i := 0; for i := i + 1 while i < n do print(''); print(i + 0.25) end",
@@ -9290,6 +9299,16 @@ mod tests {
             "test",
         )
         .expect_err("bounded analysis must reject a nonprogressing while control");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_rounded_away_static_while_progress_remains_conservative() {
+        let err = compile_source(
+            "begin real x; x := 9007199254740992.0; for x := x + 1.0 while x < 9007199254740994.0 do print(''); print(x + 0.25) end",
+            "test",
+        )
+        .expect_err("rounded-away binary64 progress must exhaust the analysis cap");
         assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
