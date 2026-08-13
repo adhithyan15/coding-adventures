@@ -173,6 +173,8 @@ const DEVANAGARI_NA = ductusFor("न", "devanagari")!;
 const devanagariNaOutline = devanagariOutline("न");
 const DEVANAGARI_PA = ductusFor("प", "devanagari")!;
 const devanagariPaOutline = devanagariOutline("प");
+const DEVANAGARI_BA = ductusFor("ब", "devanagari")!;
+const devanagariBaOutline = devanagariOutline("ब");
 const HEBREW_ALEF = ductusFor("א", "hebrew")!;
 const hebrewAlefOutline = hebrewOutline("א");
 const HEBREW_BET = ductusFor("ב", "hebrew")!;
@@ -2048,6 +2050,37 @@ describe("Devanagari प — descending left stem curves through the bowl before
     );
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(DEVANAGARI_PA.strokes[2], 1),
+    );
+  });
+});
+
+describe("Devanagari ब — counterclockwise oval before the lifted stem and inner diagonal", () => {
+  const steps = ductusSteps(DEVANAGARI_BA);
+  const strip = ductusFilmstrip(DEVANAGARI_BA, devanagariBaOutline);
+
+  it("shows four movements across four sourced strokes", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "circle counterclockwise around the oval body",
+      "lift, then descend the right stem",
+      "lift, then cross the body down and right",
+      "lift, then draw the shirorekha left-to-right",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([
+      false, true, true, true,
+    ]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 1, 2, 3]);
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(3);
+    expect(strip.summary).toBe("4 strokes · 3 pen lifts · 4 movements");
+  });
+
+  it("draws the exact Noto Sans Devanagari character behind the headline", () => {
+    const paths = byTag(strip.frames[3], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      devanagariBaOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(DEVANAGARI_BA.strokes[3], 1),
     );
   });
 });
