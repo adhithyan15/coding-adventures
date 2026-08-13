@@ -3386,6 +3386,13 @@ this a genuine codec-contract port: strict dynamic trees, counted consumption,
 caller output caps, stable payload-blind errors, all 34 neutral fixtures, ZIP
 suffix-cavity rejection, and explicit empty capability metadata.
 
+Ready-for-review PR #11386 publishes the validated Ruby tranche from
+`89964cc523610b44367ae5db0ff79b36fa6f39e1`. GitHub reports it open,
+non-draft, and mergeable. CI, CodeQL, and auxiliary checks are queued, so the
+loop returns to monitor-only behavior until those checks reach a terminal
+state. Eight ZIP raw-profile children remain pending under the blocked
+completion umbrella: .NET, Elixir, Haskell, JVM, Lua, Perl, Python, and Swift.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

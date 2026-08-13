@@ -11,7 +11,7 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": 11386,
   "last_inventory": {
     "revision": "264347eee15b09d17174a6774923415683aea04e",
     "schema_version": 3,
@@ -3312,12 +3312,17 @@
     {
       "id": "zip-raw-rfc1951-ruby-lane-parity",
       "title": "Expose ZIP raw RFC 1951 conformance in Ruby",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["zip-raw-rfc1951-language-neutral-conformance"],
       "branch": "codex/ruby-zip-raw-rfc1951",
-      "pr_number": null,
+      "pr_number": 11386,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/11386",
+      "opened_at": "2026-08-13T21:25:56Z",
       "selection_revision": "8b5426c2359141e39992f87f0c1b3db16ec7b53a",
       "selection_notes": "Selected after PR #11354 merged externally, the collision-clean live inventory classified both new PR #11362 Modbus roots before reprioritization, and the latest Human Languages/ADJ changes remained topology-neutral. Ruby is the smallest clean standalone ZIP child with no live or stale branch overlap. Its current ZIP-owned decoder rejects dynamic Huffman blocks, so this coherent tranche adds the shared counted, capped, stable-error raw RFC 1951 contract and all 34 neutral fixtures without duplicating a codec or touching the stale cross-lane .NET/Haskell/JVM residue.",
+      "implementation_revision": "89964cc523610b44367ae5db0ff79b36fa6f39e1",
+      "validation_notes": "The Ruby ZIP BUILD front door passes StandardRB over production and tests plus 72 tests and 147 assertions. All 34 neutral raw RFC 1951 cases are consumed; independent Ruby zlib decoding, dynamic ZIP read, suffix-cavity and size-mismatch rejection, full 32 KiB window, compatibility wrappers, caller caps, and incremental CRC-32 pass. SimpleCov records 98.87% line and 81.01% branch coverage. Ruby syntax, gem build 0.2.0, runtime dependency audit, 26 repository fixture/parity tests, 678 capability subtests, all 301 Ruby build-tool packages, strict state DAG/JSON, diff, credential, and pure-production authority scans pass. The collision gate remains 1,310 identities, 4,466 slots, 860 singletons, 12,040 singleton gaps, 661 Rust singletons, zero collisions, and zero unknown buckets. No other Ruby package imports Ruby ZIP, so ZipReader is the direct hardened integration boundary.",
+      "publication_notes": "Ready-for-review PR #11386 opened from implementation commit 89964cc523 after clean rebases and recertification against identity-neutral main advances through 264347eee1. GitHub reports it open, non-draft, and mergeable; CI, CodeQL, and auxiliary checks are queued, so the loop is monitor-only until they reach a terminal state.",
       "notes": "Portable Ruby child of the ZIP raw-codec completion umbrella. Consume CMP09 and every closed zip-raw-rfc1951-v1 case, expose the ZIP-owned raw primitives without duplicating DEFLATE, preserve pure in-memory operation, and add explicit empty capability metadata."
     },
     {
