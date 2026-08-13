@@ -4869,6 +4869,20 @@ impl Compiler {
     }
 
     fn static_boolean_value(&self, node: &GrammarASTNode) -> Option<bool> {
+        if direct_tokens(node).iter().any(|token| token.value == "if") {
+            let branches: Vec<&GrammarASTNode> = direct_nodes(node)
+                .into_iter()
+                .filter(|child| child.rule_name == "bool_expr")
+                .collect();
+            if branches.len() != 3 {
+                return None;
+            }
+            return if self.static_boolean_value(branches[0])? {
+                self.static_boolean_value(branches[1])
+            } else {
+                self.static_boolean_value(branches[2])
+            };
+        }
         if direct_tokens(node).iter().any(|token| token.value == "not") {
             let children = direct_nodes(node);
             if children.len() != 1 {
@@ -8668,6 +8682,25 @@ mod tests {
             "test",
         )
         .expect_err("a composed condition with an unknown leaf must fail closed");
+        assert!(format!("{err:?}").contains("requires initialized string variable"));
+    }
+
+    #[test]
+    fn al4_static_conditional_initial_while_predicate_initializes_string() {
+        compile_source(
+            "begin integer i; string s; i := 0; for i := i + 1 while if i = 1 then i < 2 else i < 0 do s := 'OK'; print(s) end",
+            "test",
+        )
+        .expect("a known selector evaluates only the selected static predicate");
+    }
+
+    #[test]
+    fn al4_dynamic_conditional_initial_while_predicate_remains_conservative() {
+        let err = compile_source(
+            "begin integer i, n; string s; i := 0; for i := i + 1 while if i = n then i < 2 else i < 0 do s := 'OK'; print(s) end",
+            "test",
+        )
+        .expect_err("an unknown conditional selector must fail closed");
         assert!(format!("{err:?}").contains("requires initialized string variable"));
     }
 
