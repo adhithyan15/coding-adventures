@@ -899,10 +899,11 @@ backend immediately) come before the enabler-dependent items.
   a body that avoids the control. Capped abstract execution also retains the
   first control value whose predicate is false when its value and predicate
   reference only the control and statically known ordinary local scalars that
-  the body does not reference. The proof is limited to 4,096 iterations;
-  globals, arrays, by-name values, body-referenced dependencies, unknown
-  expressions, and nonterminating or longer loops leave the final controlled
-  value unknown.
+  the body does not write. Read-only body uses are permitted; assignment targets
+  and nested controlled variables count as writes. The proof is limited to
+  4,096 iterations; globals, arrays, by-name values, written dependencies,
+  unknown expressions, and nonterminating or longer loops leave the final
+  controlled value unknown.
   Known comparison leaves
   compose through `not`, `and`, `or`, `impl`, and `eqv`; bare literals,
   including direct `true` and `false`, compose through those operators;
