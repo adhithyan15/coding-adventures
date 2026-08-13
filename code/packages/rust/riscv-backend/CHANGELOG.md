@@ -18,6 +18,8 @@
   `a1` high word for simulator assertions.
 - Added pair-aware signed and unsigned `eq`, `ne`, `lt`, `le`, `gt`, and `ge`
   comparisons, including a numeric Nib conditional simulator fixture.
+- Added pair-aware `and`, `or`, `xor`, and `not` lowering for `i64`/`u64`,
+  including a Nib bitwise source-to-simulator fixture.
 
 ## v0.1.0 — 2026-06-03 — Phase 7 (FINAL lane) of historical-arch backend migration
 

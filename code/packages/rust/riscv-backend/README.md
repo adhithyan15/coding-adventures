@@ -24,10 +24,11 @@ tests passing byte-for-byte.
 | `const_*` | ✓ RV32 scalars and full-width `i64`/`u64` register pairs |
 | Integer scalar ops | ✓ `add`, `sub`, `and`, `or`, `xor`, `shl`, `shr`, `neg`, `not` |
 | Wide integer ops | ✓ `add_i64`, `sub_i64`, `add_u64`, `sub_u64` |
+| Wide bitwise ops | ✓ `and_i64`, `or_i64`, `xor_i64`, `not_i64` and unsigned forms |
 | Comparisons | ✓ signed/unsigned `eq ne lt le gt ge`, including `i64`/`u64` pairs |
 | Control flow | ✓ `label`, `jmp`, `jmp_if_true`, `jmp_if_false` |
 | `ret_*`, `ret_void` | ✓ scalar result in `a0`; wide result in `a0:a1` |
-| Wide multiply/divide/bitwise/shifts, floats, calls, memory, I/O | not yet supported |
+| Wide multiply/divide/shifts, floats, calls, memory, I/O | not yet supported |
 
 `run_binary` executes a produced function binary in `riscv-simulator` and
 reports the `a0` low return word, `a1` high return word, halt state, and
@@ -54,7 +55,8 @@ For compatibility with existing scalar source smoke tests, a word-sized
 `const_i64` / `ret_i64` retains the original canonical bytes. Wider constants
 and `add` / `sub` values use a low/high register pair. Pair comparisons use
 signed or unsigned high-word ordering, then unsigned low-word ordering when
-the high words are equal.
+the high words are equal. Pair bitwise operations apply independently to the
+low and high words.
 
 ## Why this is the FINAL lane
 
