@@ -491,7 +491,9 @@ Prioritized work items:
    EOF point that flushes the tokenizer's coalesced text. Direct after-frameset
    non-whitespace character tokens now follow the same positioned contract,
    while after-after-frameset text remains on its already-positioned generic
-   tail diagnostic and end-tag diagnostics remain separate contracts.
+   tail diagnostic. Open-frameset EOF diagnostics now carry the proven EOF
+   emission point for source parsing while plain token streams remain
+   unpositioned; end-tag diagnostics remain separate contracts.
    Continue migrating one evidence-backed diagnostic family at a time;
    synthetic or directly supplied tokens must remain explicitly unpositioned.
 4. **Input boundary review.** Document the Unicode-code-point parser boundary
