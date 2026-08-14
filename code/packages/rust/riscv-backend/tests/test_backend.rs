@@ -1180,6 +1180,80 @@ fn linked_module_shares_a_wide_global_across_function_calls() {
 }
 
 #[test]
+fn linked_module_executes_static_byte_buffer_loads_and_stores() {
+    let main = vec![
+        ci("const_i64", Some("size"), vec![CIROperand::Int(4)], "i64"),
+        ci(
+            "alloc_bytes",
+            Some("buffer"),
+            vec![CIROperand::Var("size".into())],
+            "i64",
+        ),
+        ci("const_i64", Some("zero"), vec![CIROperand::Int(0)], "i64"),
+        ci(
+            "load_byte",
+            Some("initial"),
+            vec![
+                CIROperand::Var("buffer".into()),
+                CIROperand::Var("zero".into()),
+            ],
+            "i64",
+        ),
+        ci("const_i64", Some("one"), vec![CIROperand::Int(1)], "i64"),
+        ci(
+            "const_i64",
+            Some("value"),
+            vec![CIROperand::Int(0x142)],
+            "i64",
+        ),
+        ci(
+            "store_byte",
+            None,
+            vec![
+                CIROperand::Var("buffer".into()),
+                CIROperand::Var("one".into()),
+                CIROperand::Var("value".into()),
+            ],
+            "void",
+        ),
+        ci(
+            "load_byte",
+            Some("stored"),
+            vec![
+                CIROperand::Var("buffer".into()),
+                CIROperand::Var("one".into()),
+            ],
+            "i64",
+        ),
+        ci(
+            "add_i64",
+            Some("result"),
+            vec![
+                CIROperand::Var("initial".into()),
+                CIROperand::Var("stored".into()),
+            ],
+            "i64",
+        ),
+        ci(
+            "ret_i64",
+            None,
+            vec![CIROperand::Var("result".into())],
+            "i64",
+        ),
+    ];
+    let functions = [ModuleFunction {
+        context: ctx("main", &[], "i64"),
+        cir: &main,
+    }];
+
+    let binary = compile_module(&functions, Some("main")).expect("module linking");
+    let result = run_binary(&binary, &[]).expect("static byte-buffer execution");
+    assert!(result.halted);
+    assert_eq!(result.return_value, 0x42, "store_byte truncates to one byte");
+    assert_eq!(result.return_value_high, 0, "load_byte zero-extends to i64");
+}
+
+#[test]
 fn moves_scalar_and_wide_values() {
     let scalar = vec![
         ci("const_i32", Some("source"), vec![CIROperand::Int(42)], "i32"),
