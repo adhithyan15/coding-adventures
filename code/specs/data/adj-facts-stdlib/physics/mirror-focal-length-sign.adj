@@ -1,0 +1,70 @@
+% ============================================================================
+% mirror-focal-length-sign — for the two mirror types, the SIGN convention
+% the SAME already-cited OpenStax sentence states for its focal length
+% (adj-facts-stdlib, PHYSICS).
+% ============================================================================
+% A sibling to the already-shipped `lens-types.adj`
+% (`optic_action(optic, action)`, whether each of four basic optical
+% elements converges or diverges parallel light — convex_lens →
+% converges_light, concave_lens → diverges_light, concave_mirror →
+% converges_light, convex_mirror → diverges_light). That table's own
+% header already quotes, verbatim, an OpenStax sentence for EACH of the
+% two mirror rows that states the SIGN of the mirror's focal length — a
+% fact the action-only schema had no room for:
+%
+%   concave_mirror → positive
+%     "The focal length f of a concave mirror is positive, since it is a
+%      converging mirror"
+%
+%   convex_mirror → negative
+%     "The focal length and power of a convex mirror are negative, since
+%      it is a diverging mirror."
+%
+% Recall is a binding query:
+%
+%     ? mirror_focal_length_sign(concave_mirror, $Sign)   % positive
+%
+% This is a native `table` (ADJ-TABLES RS-5, a TWO-column table): each
+% `row` lowers to a ground relation `mirror_focal_length_sign(mirror,
+% sign)` carrying the citation, so the lookup above is the ordinary SLD
+% binding query — the engine returns the sign WITH its source, on the
+% CPU, with zero model calls, and abstains on anything that is not one of
+% the two mirror types. `convex_lens` and `concave_lens` are deliberately
+% NOT rows here: their own already-quoted OpenStax sentences describe how
+% the rays behave (intersect / diverge) but never state a sign convention
+% for the lens's focal length, so this sibling is HONESTLY NARROWER than
+% its parent — it grounds exactly the two mirror types and abstains on
+% the two lens types, or any other word, rather than inventing a sign
+% neither lens quote states. The query also runs BACKWARD — bind a sign
+% and recall which mirror has it:
+%
+%     ? mirror_focal_length_sign($Mirror, negative)   % convex_mirror
+%
+% Provenance: reproduces, byte-for-byte, the SAME two OpenStax sentences
+% already quoted inside `lens-types.adj`'s own header (its
+% `concave_mirror`/`convex_mirror` rows), from the SAME OpenStax College
+% Physics chapter, via Physics LibreTexts, that table already cites — no
+% new WebFetch, only a different schema decoding the sign-convention half
+% of each already-verified quote. An ADJ `table` carries ONE provenance
+% envelope (per `lens-types.adj`'s own convention), so `source`/`locator`/
+% `trust` below hold the concave_mirror span; the other row's own span is
+% listed above for independent auditability. `trust consensus` — the same
+% tier `lens-types.adj` already carries (OpenStax via Physics LibreTexts,
+% a widely used teaching resource, not a primary government/standards
+% body).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table mirror_focal_length_sign {
+    columns mirror, sign
+
+    row (concave_mirror, positive)   % OpenStax: "The focal length f of a concave mirror is positive, since it is a converging mirror"
+    row (convex_mirror, negative)    % OpenStax: "The focal length and power of a convex mirror are negative, since it is a diverging mirror."
+
+    source "The focal length f of a concave mirror is positive, since it is a converging mirror"
+    locator "https://phys.libretexts.org/Bookshelves/College_Physics/College_Physics_1e_(OpenStax)/25:_Geometric_Optics/25.07:_Image_Formation_by_Mirrors"
+    trust consensus
+
+    cites "The focal length and power of a convex mirror are negative, since it is a diverging mirror." locator "https://phys.libretexts.org/Bookshelves/College_Physics/College_Physics_1e_(OpenStax)/25:_Geometric_Optics/25.07:_Image_Formation_by_Mirrors"
+}
