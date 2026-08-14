@@ -1,9 +1,10 @@
-# @version 1
+# @version 2
 #
 # Mermaid 11.16.1 pie-chart parser grammar.
 #
-# This first compatibility slice covers the semantic syntax needed by the
-# shared ChartDiagram IR: the pie header, showData, and labelled numeric slices.
+# Covers the semantic syntax needed by the shared ChartDiagram IR: metadata,
+# the pie header, showData, and labelled numeric slices.
 
-document = { NEWLINE } "pie" [ "showData" ] { NEWLINE | section } EOF ;
+document = { NEWLINE } "pie" [ "showData" ] { NEWLINE | metadata | section } EOF ;
+metadata = TITLE | ACC_TITLE | ACC_DESCR | ACC_DESCR_BLOCK ;
 section = STRING COLON NUMBER ;

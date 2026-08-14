@@ -378,7 +378,9 @@ mod apple {
     #[test]
     fn render_mermaid_pie_to_png() {
         let diagram = parse_pie(
-            r#"pie showData
+            r#"pie showData title Native chart pipeline
+                accTitle: Native pie chart
+                accDescr: Pie rendered through Metal
                 "Graph" : 50
                 "Chart" : 30
                 "Temporal" : 20"#,
@@ -412,6 +414,12 @@ mod apple {
         assert!(pixels.width > 0);
         assert!(pixels.height > 0);
         assert!(!scene.instructions.is_empty());
+        let metadata = scene.metadata.as_ref().expect("accessibility metadata");
+        assert_eq!(metadata["accessibility.title"], "Native pie chart");
+        assert_eq!(
+            metadata["accessibility.description"],
+            "Pie rendered through Metal"
+        );
     }
 
     #[test]

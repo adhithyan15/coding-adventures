@@ -4409,8 +4409,7 @@ fn upsert_sequence_participant(
 
 /// Parse the grammar-backed Mermaid `pie` family into a `ChartDiagram`.
 ///
-/// The first compatibility slice supports `showData` and quoted numeric
-/// sections, which are the semantic inputs needed by `diagram-layout-chart`.
+/// Supports metadata, `showData`, and quoted non-negative numeric sections.
 pub fn parse_pie(source: &str) -> Result<ChartDiagram, ParseError> {
     parse_mermaid_pie_ast(source)?;
 
@@ -4423,8 +4422,60 @@ pub fn parse_pie(source: &str) -> Result<ChartDiagram, ParseError> {
     }
     cursor.skip_terminators();
 
+    let mut title = None;
+    let mut accessibility_title = None;
+    let mut accessibility_description = None;
     let mut slices = Vec::new();
     while !cursor.at_eof() {
+        match token_name(cursor.current()) {
+            "TITLE" => {
+                title = Some(
+                    cursor
+                        .advance()
+                        .value
+                        .strip_prefix("title")
+                        .expect("Pie grammar emitted a title token")
+                        .trim()
+                        .to_string(),
+                );
+                cursor.skip_terminators();
+                continue;
+            }
+            "ACC_TITLE" => {
+                accessibility_title = cursor
+                    .advance()
+                    .value
+                    .split_once(':')
+                    .map(|(_, value)| value.trim().to_string());
+                cursor.skip_terminators();
+                continue;
+            }
+            "ACC_DESCR" => {
+                accessibility_description = cursor
+                    .advance()
+                    .value
+                    .split_once(':')
+                    .map(|(_, value)| value.trim().to_string());
+                cursor.skip_terminators();
+                continue;
+            }
+            "ACC_DESCR_BLOCK" => {
+                let value = cursor.advance().value.clone();
+                let open = value.find('{').expect("accessibility block requires '{'");
+                let close = value.rfind('}').expect("accessibility block requires '}'");
+                accessibility_description = Some(
+                    value[open + 1..close]
+                        .lines()
+                        .map(str::trim)
+                        .filter(|line| !line.is_empty())
+                        .collect::<Vec<_>>()
+                        .join("\n"),
+                );
+                cursor.skip_terminators();
+                continue;
+            }
+            _ => {}
+        }
         let label_token = cursor
             .consume_if("STRING")
             .ok_or_else(|| token_error(cursor.current(), "expected quoted pie slice label"))?;
@@ -4440,6 +4491,15 @@ pub fn parse_pie(source: &str) -> Result<ChartDiagram, ParseError> {
                 format!("invalid pie slice value {:?}", value_token.value),
             )
         })?;
+        if value < 0.0 {
+            return Err(token_error(
+                &value_token,
+                format!(
+                    "pie slice {:?} has negative value {value}; values must be non-negative",
+                    unquote_mermaid_string(&label_token.value)
+                ),
+            ));
+        }
 
         slices.push(PieSlice {
             label: unquote_mermaid_string(&label_token.value),
@@ -4449,9 +4509,9 @@ pub fn parse_pie(source: &str) -> Result<ChartDiagram, ParseError> {
     }
 
     Ok(ChartDiagram {
-        title: None,
-        accessibility_title: None,
-        accessibility_description: None,
+        title,
+        accessibility_title,
+        accessibility_description,
         kind: ChartKind::Pie,
         x_axis: None,
         y_axis: None,
@@ -5874,6 +5934,27 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         assert_eq!(d.slices.len(), 2);
         assert_eq!(d.slices[0].label, "Dogs");
         assert_eq!(d.slices[0].value, 60.0);
+    }
+
+    #[test]
+    fn pie_parses_title_accessibility_and_non_negative_values() {
+        let d = parse_pie(
+            "pie title Adoption\naccTitle: Adoption breakdown\naccDescr {\nDogs and cats\nby share\n}\n\"Dogs\": 0\n\"Cats\": 40.12",
+        )
+        .unwrap();
+        assert_eq!(d.title.as_deref(), Some("Adoption"));
+        assert_eq!(d.accessibility_title.as_deref(), Some("Adoption breakdown"));
+        assert_eq!(
+            d.accessibility_description.as_deref(),
+            Some("Dogs and cats\nby share")
+        );
+        assert_eq!(d.slices[0].value, 0.0);
+    }
+
+    #[test]
+    fn pie_rejects_negative_values() {
+        let error = parse_pie("pie\n\"Dogs\": -60.67").unwrap_err();
+        assert!(error.message.contains("values must be non-negative"));
     }
 
     #[test]
