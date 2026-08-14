@@ -2186,6 +2186,13 @@ on a different operating system.
 `install-daemon` action resolves the sibling daemon and default configuration,
 then invokes that installer; authenticated lifecycle commands load the local
 credential outside argv and connect only to the configured loopback API.
+The same authenticated client exposes `wire` and `unwire`. `wire` validates a
+complete exact host registration, canonical UUID-v7 pipeline, bounded agent
+identity, repeatable named channel directions/UUIDs, and optional all-or-none
+Level 1 model settings before sending one typed binding. `unwire` validates the
+host identity. Neither command accepts requester context, credentials, or
+endpoints through argv; the daemon derives requester and request identity and
+routes both mutations through Trust Checker.
 
 **Configuration file** (`~/.chief-of-staff/config.toml`):
 

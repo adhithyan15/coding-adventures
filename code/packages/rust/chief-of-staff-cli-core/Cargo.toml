@@ -6,8 +6,12 @@ description = "Declarative operator command core for the D18 Chief daemon"
 license = "MIT"
 
 [dependencies]
+chief-of-staff-channel-endpoints = { path = "../chief-of-staff-channel-endpoints" }
 chief-of-staff-daemon-api = { path = "../chief-of-staff-daemon-api" }
+chief-of-staff-host-control-protocol = { path = "../chief-of-staff-host-control-protocol" }
+chief-of-staff-pipeline-bindings = { path = "../chief-of-staff-pipeline-bindings" }
 chief-of-staff-service-registry = { path = "../chief-of-staff-service-registry" }
 cli-builder = { path = "../cli-builder" }
+coding_adventures_uuid = { path = "../uuid" }
 coding-adventures-json-serializer = { path = "../json-serializer" }
 coding-adventures-json-value = { path = "../json-value" }
