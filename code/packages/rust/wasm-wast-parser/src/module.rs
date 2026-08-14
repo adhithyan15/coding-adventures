@@ -35,13 +35,42 @@ use wasm_types::{
     Import, ImportTypeInfo, Limits, MemoryType, TableType, ValueType, WasmModule, FUNCREF,
 };
 
-/// Parse a single `(module ...)` text form (the plain-`.wat` entry point).
+/// Parse a whole WAT source text: the plain-`.wat` entry point, and also
+/// what a `.wast` script's `(module quote "...")` directive re-parses its
+/// concatenated string content as (see `script.rs`'s own doc comment on
+/// eager vs. lazy module building).
+///
+/// The WAT text format allows a source to be written two ways, and this
+/// accepts both:
+/// - **Explicit**: a single top-level `(module ...)` form (what every other
+///   caller in this crate already produces).
+/// - **Abbreviated**: the enclosing `module` keyword omitted entirely, with
+///   the module's fields written directly at the top level. This is the
+///   form the official spec testsuite's `comments.wast`/`block.wast`/etc.
+///   use for their `(module quote "(func ...)" "(func ...)" ...)`
+///   directives — the concatenated text is `(func ...)(func ...)`, not
+///   `(module (func ...)(func ...))`. Other files (`align.wast`,
+///   `global.wast`) instead quote the explicit form. Both are real,
+///   independently-valid WAT — treating the concatenated text as "exactly
+///   one `(module ...)` form" (the old behavior) silently discarded every
+///   abbreviated-form field as an unrecognized top-level item, producing an
+///   empty module that trivially "passed" validation while every export it
+///   was supposed to have was simply missing.
 pub fn parse_module(src: &str) -> Result<WasmModule, WastParseError> {
     let exprs = parse_source(src)?;
-    let module_expr = exprs
-        .first()
-        .ok_or(WastParseError::UnexpectedEof)?;
-    parse_module_expr(module_expr)
+    if let [single] = exprs.as_slice() {
+        if single.as_list().and_then(|items| items.first()).and_then(|i| i.as_atom()) == Some("module") {
+            return parse_module_expr(single);
+        }
+    }
+    if exprs.is_empty() {
+        return Err(WastParseError::UnexpectedEof);
+    }
+    let fields: Vec<&SExpr> = exprs.iter().collect();
+    let mut ctx = ModuleCtx::default();
+    collect_symbols(&fields, &mut ctx)?;
+    build(&fields, &mut ctx)?;
+    Ok(ctx.module)
 }
 
 /// As [`parse_module`], but starting from an already-parsed
@@ -1547,6 +1576,28 @@ mod tests {
     fn empty_module_parses() {
         let m = parse_module("(module)").unwrap();
         assert_eq!(m, WasmModule::default());
+    }
+
+    #[test]
+    fn abbreviated_module_form_with_no_wrapper_parses_its_bare_fields() {
+        // The WAT text format allows the enclosing `(module ...)` to be
+        // omitted entirely when the fields are the ONLY top-level content --
+        // exactly how the official spec testsuite's comments.wast/block.wast
+        // write their `(module quote "...")` directive's concatenated text
+        // (this is what `parse_module` is re-parsing that content as).
+        let m = parse_module(r#"(func (export "f") (result i32) (i32.const 42))"#).unwrap();
+        assert_eq!(m.functions.len(), 1);
+        assert_eq!(m.exports[0].name, "f");
+    }
+
+    #[test]
+    fn abbreviated_module_form_with_multiple_top_level_funcs() {
+        let m = parse_module(
+            r#"(func (export "a") (result i32) (i32.const 1))(func (export "b") (result i32) (i32.const 2))"#,
+        )
+        .unwrap();
+        assert_eq!(m.functions.len(), 2);
+        assert_eq!(m.exports.iter().map(|e| e.name.as_str()).collect::<Vec<_>>(), vec!["a", "b"]);
     }
 
     #[test]

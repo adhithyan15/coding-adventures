@@ -1,5 +1,73 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.3 — 2026-08-13 — `(module quote/binary ...)` DIRECTIVES silently built an empty module (WASM12)
+
+Started as the small fix the task description named: the tokenizer's `;;`
+line comment only terminated at `\n`, not a bare `\r` or `\r\n` — the
+official testsuite's `comments.wast` has three functions whose bodies
+differ only in which line terminator follows a `;; comment`, so this alone
+would only have fixed 2 of its 3 `assert_return` cases. Fixed by also
+stopping the comment scan at `\r` (a following `\n` is then consumed as
+ordinary whitespace on the next iteration, so CRLF "just works" too).
+
+Investigating why `comments.wast`'s **third** case (the plain `\n`
+terminator, unaffected by the above) *also* failed found the real, much
+bigger bug: `parse_directive`'s `"module"` arm called `parse_module_expr`
+directly on the raw `(module quote "..." ...)` or `(module binary
+"...")` s-expression — a function that only understands the plain-text
+form. For `quote`/`binary`, the `quote`/`binary` atom and the string
+tokens aren't recognized module fields, so they were silently skipped,
+producing a trivially-valid **empty** module. Any `assert_return` invoking
+an export from it then failed with "no such export" — not a comment bug at
+all for 2 of the 3 cases; the module was never actually being parsed as
+WAT, ever, for this directive kind. This affected every already-vendored
+file with a real (non-`assert_malformed`) `(module quote/binary ...)`
+directive, not just `comments.wast` — `float_literals.wast` has a
+`(module binary ...)` decoding a real f64 constant, `func.wast` and
+`int_literals.wast` use `quote` inside several `assert_malformed` cases
+that happened to accidentally "pass" for the wrong reason (see below).
+
+Fixed with two changes:
+- `script.rs`'s `"module"` directive now routes through the actual source
+  kind: `quote` text re-parses via this crate's own `parse_module` (see
+  next point), `binary` bytes decode via the new `wasm-module-parser`
+  dependency (`WasmModuleParser::parse`), erroring for real
+  (`EmbeddedBinaryModuleError`) if either fails, rather than silently
+  discarding.
+- `module::parse_module` now accepts the WAT text format's **abbreviated
+  module** form — a source with no enclosing `(module ...)` at all, its
+  fields written directly at the top level — not just the explicit
+  `(module ...)` form it required before. Both are real, independently
+  valid WAT; the official testsuite's `(module quote ...)` directives use
+  BOTH conventions depending on the file (`comments.wast`/`block.wast`
+  quote bare fields; `align.wast`/`global.wast` quote the explicit
+  `(module ...)` form) — the old code silently mishandled the bare-field
+  convention as "one big unrecognized field," not a parse error.
+
+**A real, understood side effect on `assert_malformed`'s baseline**: many
+vendored `(module quote ...)` cases inside `assert_malformed` were
+previously graded `Pass` because the quote text failed to even parse (the
+missing-wrapper bug) — coincidentally the right VERDICT, for the wrong
+REASON (the harness never actually got to check whether the case's real,
+intended malformation was caught). Now that quote text parses correctly,
+many of these build into a perfectly valid module — this repo has no
+instruction-level type-checker (`W02` Phase 2, unimplemented) to catch the
+specific defect the case was designed to probe, so they correctly
+reclassify from an accidental `Pass` to an honest `NotYetSupported`
+(`assert_malformed` 145/147 → 33/35 graded, 46 → 158 `NotYetSupported`;
+zero new `Fail`s — confirmed by diffing every changed file's tally
+against the previous baseline). This matches this crate's own documented
+grading philosophy (see `wasm-conformance`'s module doc comment): a lucky
+`Pass` from the wrong layer is worse than an honest "we don't know."
+
+Net baseline effect: `assert_return` 12215/12238 → 12219/12238 (+4: 3 from
+`comments.wast`, 1 from `float_literals.wast`'s binary-module case);
+`assert_malformed` reclassified as above, no regressions. New tests:
+2 tokenizer tests (bare-CR and CRLF line-comment termination), 2
+`module.rs` tests (abbreviated-form parsing, single and multi-field), 2
+`script.rs` tests (`module quote`/`module binary` directives building a
+real, invokable module).
+
 ## 0.1.2 — 2026-08-13 — a local-index bug found investigating real assert_return failures (WASM14)
 
 `build_func` assigned local indices by re-walking a function's own literal

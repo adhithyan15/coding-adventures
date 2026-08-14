@@ -306,8 +306,8 @@
         "not_yet_supported": 0
       },
       "assert_return": {
-        "pass": 0,
-        "fail": 3,
+        "pass": 3,
+        "fail": 0,
         "trap": 0,
         "not_yet_supported": 0
       },
@@ -748,14 +748,14 @@
         "not_yet_supported": 0
       },
       "assert_malformed": {
-        "pass": 78,
+        "pass": 2,
         "fail": 0,
         "trap": 0,
-        "not_yet_supported": 0
+        "not_yet_supported": 76
       },
       "assert_return": {
-        "pass": 94,
-        "fail": 5,
+        "pass": 95,
+        "fail": 4,
         "trap": 0,
         "not_yet_supported": 0
       },
@@ -916,10 +916,10 @@
         "not_yet_supported": 48
       },
       "assert_malformed": {
-        "pass": 23,
+        "pass": 7,
         "fail": 0,
         "trap": 0,
-        "not_yet_supported": 0
+        "not_yet_supported": 16
       },
       "assert_return": {
         "pass": 93,
@@ -1028,10 +1028,10 @@
         "not_yet_supported": 0
       },
       "assert_malformed": {
-        "pass": 20,
+        "pass": 0,
         "fail": 0,
         "trap": 0,
-        "not_yet_supported": 0
+        "not_yet_supported": 20
       },
       "assert_return": {
         "pass": 30,
@@ -1813,14 +1813,14 @@
       "not_yet_supported": 412
     },
     "assert_malformed": {
-      "pass": 145,
+      "pass": 33,
       "fail": 2,
       "trap": 0,
-      "not_yet_supported": 46
+      "not_yet_supported": 158
     },
     "assert_return": {
-      "pass": 12215,
-      "fail": 23,
+      "pass": 12219,
+      "fail": 19,
       "trap": 0,
       "not_yet_supported": 0
     },

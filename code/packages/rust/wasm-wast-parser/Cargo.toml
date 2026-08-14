@@ -1,10 +1,11 @@
 [package]
 name = "wasm-wast-parser"
-version = "0.1.2"
+version = "0.1.3"
 edition = "2021"
-description = "Parses the WebAssembly text format (.wat/.wast), including the official spec testsuite's script-directive dialect, into wasm-types::WasmModule and a sequence of test directives"
+description = "Parses the WebAssembly text format (.wat/.wast), including the official spec testsuite's script-directive dialect, into wasm-types::WasmModule and a sequence of test directives. v0.1.3: (module quote/binary ...) DIRECTIVES (a real, executed module, not assert_malformed's deliberately-broken source) now actually decode instead of silently building an empty module -- quote text is re-parsed via this crate's own text path (now also accepting the WAT \"abbreviated module\" form, a bare field list with no (module ...) wrapper, which is exactly how the official testsuite's comments.wast/block.wast/etc. write their quoted content), binary bytes decode via wasm-module-parser; also fixes the tokenizer's `;;` line comment to terminate at a bare CR or CRLF, not just LF."
 
 [dependencies]
 wasm-types = { path = "../wasm-types" }
 wasm-opcodes = { path = "../wasm-opcodes" }
 wasm-leb128 = { path = "../wasm-leb128" }
+wasm-module-parser = { path = "../wasm-module-parser" }
