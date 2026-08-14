@@ -252,6 +252,8 @@ const CYRILLIC_SHA = ductusFor("ш", "cyrillic")!;
 const cyrillicShaOutline = cyrillicOutline("ш");
 const CYRILLIC_SHCHA = ductusFor("щ", "cyrillic")!;
 const cyrillicShchaOutline = cyrillicOutline("щ");
+const CYRILLIC_HARD_SIGN = ductusFor("ъ", "cyrillic")!;
+const cyrillicHardSignOutline = cyrillicOutline("ъ");
 const HEBREW_ALEF = ductusFor("א", "hebrew")!;
 const hebrewAlefOutline = hebrewOutline("א");
 const HEBREW_BET = ductusFor("ב", "hebrew")!;
@@ -3211,6 +3213,42 @@ describe("Cyrillic щ — one joined three-stem-to-tail run", () => {
     );
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(CYRILLIC_SHCHA.strokes[0], 1),
+    );
+  });
+});
+
+describe("Cyrillic ъ — one joined flag-to-stem-to-bowl run", () => {
+  const steps = ductusSteps(CYRILLIC_HARD_SIGN);
+  const strip = ductusFilmstrip(CYRILLIC_HARD_SIGN, cyrillicHardSignOutline);
+
+  it("keeps the top flag, descending stem, and lower bowl in source order", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "sweep right along the broad top flag",
+      "descend the main stem to the baseline",
+      "sweep right along the lower bowl",
+      "curve upward around the bowl's right side",
+      "return left through the upper bowl to close against the stem",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([
+      false,
+      false,
+      false,
+      false,
+      false,
+    ]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 0, 0]);
+    expect(strip.frames).toHaveLength(5);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 5 movements");
+  });
+
+  it("draws the exact Noto Sans Cyrillic character behind the joined path", () => {
+    const paths = byTag(strip.frames[4], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      cyrillicHardSignOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(CYRILLIC_HARD_SIGN.strokes[0], 1),
     );
   });
 });

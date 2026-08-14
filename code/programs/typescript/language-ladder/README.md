@@ -889,6 +889,15 @@ rounded left-to-middle-to-right-to-looped-tail order at 10:17–10:25; the Noto
 Sans Cyrillic fit preserves that zero-lift evidence while tracing the printed
 three straight stems, horizontal baseline bars, and short right descender and
 records the source's diagonal rounded joins and looped exit.
+The five-frame Cyrillic **ъ** filmstrip sweeps right along the broad top flag,
+descends the main stem, sweeps right along the lower bowl, curves upward around
+its right side, then returns left through the upper bowl to close against the
+stem without lifting. The native-teacher lesson demonstrates its narrow looped
+entry, rounded shoulder, descending stem, and counterclockwise lower bowl at
+10:34–10:38; the Noto Sans Cyrillic fit preserves that zero-lift
+flag-to-stem-to-bowl order while tracing the printed broad top flag, straight
+stem, and closed lower bowl and records the source's entry loop and rounded
+shoulder.
 The canonical script-data group is capped at 250 kB per cacheable batch, so
 these growing source notes stay within the app's enforced 500 kB eager-chunk
 budget without removing learner-facing evidence.
