@@ -1,0 +1,19 @@
+% ============================================================================
+% vitamin-deficiency-symptom.query — worked recall queries against
+% vitamin-deficiency-symptom.adj (adj-facts-stdlib, BIOLOGY).
+% ============================================================================
+% Three queries: forward recall with citation, backward recall (bind a
+% symptom, find the vitamin), and honest abstention on vitamin_c (whose
+% already-cited span names the disease but no symptom).
+% ============================================================================
+
+import "vitamin-deficiency-symptom.adj"
+
+% Forward: what symptom does vitamin D deficiency's cited span describe?
+? vitamin_deficiency_symptom(vitamin_d, $Symptom)
+
+% Backward: which vitamin's deficiency is described as making people tired and weak?
+? vitamin_deficiency_symptom($V, tired_and_weak)
+
+% Honest abstention: vitamin_c's cited span names scurvy but no symptom.
+? vitamin_deficiency_symptom(vitamin_c, $SymptomC)

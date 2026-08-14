@@ -1,0 +1,85 @@
+% ============================================================================
+% vitamin-deficiency-symptom — for five of the seven vitamins already tabled
+% in vitamins.adj, the SYMPTOM described in the same already-quoted NIH span
+% that names the deficiency disease (adj-facts-stdlib, BIOLOGY).
+% ============================================================================
+% A sibling to the already-shipped `vitamins.adj`
+% (`deficiency_disease(vitamin, disease)`, the classic deficiency DISEASE
+% each vitamin's lack causes — vitamin_c → scurvy, vitamin_d → rickets,
+% etc.). That table's own header already quotes, verbatim, the NIH ODS
+% sentence that states each disease, and for five of the seven vitamins the
+% SAME sentence also states the disease's defining SYMPTOM — a fact the
+% disease-name-only schema had no room for:
+%
+%   vitamin_a → inability_to_see_in_low_light
+%     "Xerophthalmia is the inability to see in low light, and it can lead
+%      to blindness if it isn't treated."
+%
+%   vitamin_d → soft_weak_deformed_painful_bones
+%     "vitamin D deficiency causes rickets, a disease in which the bones
+%      become soft, weak, deformed, and painful."
+%
+%   vitamin_b1 → tingling_and_numbness_in_feet_and_hands
+%     "beriberi with the added symptoms of tingling and numbness in the
+%      feet and hands, loss of muscle, and poor reflexes."
+%
+%   vitamin_b9 → weakness_and_fatigue
+%     "megaloblastic anemia, a blood disorder that causes weakness,
+%      fatigue, trouble concentrating, irritability, headache, heart
+%      palpitations, and shortness of breath."
+%
+%   vitamin_b12 → tired_and_weak
+%     "megaloblastic anemia, a blood condition that makes people tired and
+%      weak."
+%
+% Recall is a binding query:
+%
+%     ? vitamin_deficiency_symptom(vitamin_d, $Symptom)   % soft_weak_deformed_painful_bones
+%
+% This is a native `table` (ADJ-TABLES RS-5, an ordinary two-column EXACT
+% lookup): each `row` lowers to a ground relation
+% `vitamin_deficiency_symptom(vitamin, symptom)` carrying the citation, so
+% the lookup above is the ordinary SLD binding query — the engine returns
+% the symptom WITH its source, on the CPU, with zero model calls. Two of
+% the parent table's seven vitamins have NO symptom clause in their already-
+% quoted span — `vitamin_c`'s cited sentence only states the mg threshold
+% and the disease name ("...can get scurvy"), and `vitamin_b3`'s cited
+% sentence only names the disease ("...leads to a disease called
+% pellagra") — so this sibling is HONESTLY NARROWER than its parent: it
+% grounds exactly the five vitamins whose cited span states a symptom, and
+% abstains on `vitamin_c`, `vitamin_b3`, or any other word, rather than
+% inventing a symptom neither cited sentence contains. The query also runs
+% BACKWARD — bind a symptom and recall which vitamin's deficiency causes
+% it:
+%
+%     ? vitamin_deficiency_symptom($V, tired_and_weak)
+%       % vitamin_b12
+%
+% Provenance: reproduces, byte-for-byte, five of the seven NIH Office of
+% Dietary Supplements spans already quoted inside `vitamins.adj`'s own
+% header — no new WebFetch, only a different schema decoding the symptom
+% half of each already-verified quote. `trust authoritative` — the same
+% tier `vitamins.adj` already carries (NIH ODS, a primary U.S. government
+% consumer fact sheet).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table vitamin_deficiency_symptom {
+    columns vitamin, symptom
+
+    row (vitamin_a, inability_to_see_in_low_light)              % NIH: "Xerophthalmia is the inability to see in low light, and it can lead to blindness if it isn't treated."
+    row (vitamin_d, soft_weak_deformed_painful_bones)            % NIH: "vitamin D deficiency causes rickets, a disease in which the bones become soft, weak, deformed, and painful."
+    row (vitamin_b1, tingling_and_numbness_in_feet_and_hands)    % NIH: "beriberi with the added symptoms of tingling and numbness in the feet and hands, loss of muscle, and poor reflexes."
+    row (vitamin_b9, weakness_and_fatigue)                       % NIH: "megaloblastic anemia, a blood disorder that causes weakness, fatigue, trouble concentrating, irritability, headache, heart palpitations, and shortness of breath."
+    row (vitamin_b12, tired_and_weak)                            % NIH: "megaloblastic anemia, a blood condition that makes people tired and weak."
+
+    source "Xerophthalmia is the inability to see in low light, and it can lead to blindness if it isn't treated."
+    locator "https://ods.od.nih.gov/factsheets/VitaminA-Consumer/"
+    trust authoritative
+
+    cites "In children, vitamin D deficiency causes rickets, a disease in which the bones become soft, weak, deformed, and painful." locator "https://ods.od.nih.gov/factsheets/VitaminD-Consumer/"
+    cites "Severe thiamin deficiency leads to a disease called beriberi with the added symptoms of tingling and numbness in the feet and hands, loss of muscle, and poor reflexes." locator "https://ods.od.nih.gov/factsheets/Thiamin-Consumer/"
+    cites "Getting too little folate can result in megaloblastic anemia, a blood disorder that causes weakness, fatigue, trouble concentrating, irritability, headache, heart palpitations, and shortness of breath." locator "https://ods.od.nih.gov/factsheets/Folate-Consumer/"
+    cites "Vitamin B12 also helps prevent megaloblastic anemia, a blood condition that makes people tired and weak." locator "https://ods.od.nih.gov/factsheets/VitaminB12-Consumer/"
+}
