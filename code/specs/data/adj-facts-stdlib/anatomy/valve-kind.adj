@@ -1,0 +1,75 @@
+% ============================================================================
+% valve-kind — the physiological CLASS each heart valve belongs to
+% (atrioventricular vs. semilunar), decoded from adjectives already sitting
+% unused inside `heart-valves.adj`'s own already-quoted NCI SEER sentences
+% (adj-facts-stdlib, ANATOMY).
+% ============================================================================
+% A sibling to the already-shipped `heart-valves.adj`
+% (`valve_separates(valve, boundary)`, tricuspid/mitral/pulmonary/aortic →
+% their own two-chamber-or-vessel boundary): that table's own header already
+% quotes, verbatim, the SEER sentences that name each valve AND classify it
+% as one of two kinds -- "atrioventricular" (the two valves between an atrium
+% and its ventricle) or "semilunar" (the two valves at the base of a great
+% vessel leaving a ventricle) -- a fact the valve/boundary schema had no room
+% for:
+%
+%   tricuspid → atrioventricular
+%     "The right atrioventricular valve is the tricuspid valve."
+%
+%   mitral → atrioventricular
+%     "The left atrioventricular valve is the bicuspid, or mitral, valve."
+%
+%   pulmonary → semilunar
+%     "The valve between the right ventricle and pulmonary trunk is the
+%      pulmonary semilunar valve."
+%
+%   aortic → semilunar
+%     "The valve between the left ventricle and the aorta is the aortic
+%      semilunar valve."
+%
+% New `valve_kind(valve, kind)` table decodes that classifying adjective as
+% each valve's own row. "Kind" (the valve's physiological CLASS) is
+% categorically distinct from the parent table's "boundary" (the specific
+% two chambers/vessels a valve sits between) -- the tricuspid's boundary is
+% right_atrium_and_right_ventricle, but its kind is atrioventricular, a fact
+% shared with the mitral valve even though their boundaries differ entirely.
+% Recall is a binding query:
+%
+%     ? valve_kind(tricuspid, $Kind)  % atrioventricular
+%
+% This is a native `table` (ADJ-TABLES RS-5, a TWO-column table like the
+% parent's own): each `row` lowers to a ground relation `valve_kind(valve,
+% kind)` carrying the citation, so the lookup above is the ordinary SLD
+% binding query -- the engine returns the kind WITH its source, on the CPU,
+% with zero model calls, and abstains on anything that is not one of the
+% four valves (it never invents a kind). The query also runs BACKWARD --
+% bind a kind and recall every valve of that kind:
+%
+%     ? valve_kind($V, semilunar)  % pulmonary, aortic
+%
+% A recall on `eustachian` -- a real cardiac valve name, but not one of the
+% four valves this table (or its parent) covers -- correctly abstains rather
+% than inventing a kind for it.
+%
+% Provenance: reproduces, byte-for-byte, the SAME four spans already quoted
+% inside `heart-valves.adj`'s own header, from the SAME NCI SEER Training
+% Modules "Structure of the Heart" page that table already cites -- no new
+% WebFetch, only a different schema decoding the classifying adjective of
+% each already-verified quote. `trust authoritative` -- the same tier the
+% parent table already carries (NCI is a primary U.S. government reference).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
+% ============================================================================
+
+table valve_kind {
+    columns valve, kind
+
+    row (tricuspid, atrioventricular)
+    row (mitral, atrioventricular)
+    row (pulmonary, semilunar)
+    row (aortic, semilunar)
+
+    source "The right atrioventricular valve is the tricuspid valve."
+    locator "https://training.seer.cancer.gov/anatomy/cardiovascular/heart/structure.html"
+    trust authoritative
+}
