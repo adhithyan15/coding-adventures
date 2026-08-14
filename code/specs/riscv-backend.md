@@ -62,7 +62,7 @@ the RISC-V spec. Per-function byte streams can be concatenated directly;
 | Twig `42` | `const_i64 v=42; ret_i64 v` | `[0x93, 0x02, 0xA0, 0x02, 0x13, 0x85, 0x02, 0x00, 0x67, 0x80, 0x00, 0x00]` |
 | `ret_void` only | `ret_void` | `[0x67, 0x80, 0x00, 0x00]` |
 | Empty CIR | (none) | `[0x67, 0x80, 0x00, 0x00]` |
-| BASIC `PRINT 42` | `const_f64 42.0; call __basic_print_real; ...` | (refused — Dartmouth BASIC's only numeric type is REAL, and RV32I has no floating-point registers) |
+| BASIC `PRINT 42` | target-only `const_i64 42; call __basic_print_int; ...` | host byte output `42\\n` |
 
 ## Backend trait surface
 
@@ -216,16 +216,26 @@ the selected entry function can seed language-level static initializers.
     giving string and array runtimes addressable initialized program data.
 25. [x] **Host character I/O:** byte-oriented input/output services back
     `getchar` / `putchar`; Brainfuck `.` now emits observable simulator output.
-26. [ ] **BASIC real values:** Dartmouth BASIC currently lowers numeric values
-   such as `PRINT 42` through `f64`; direct RISC-V execution needs either a
-   floating-point ABI or an integer-only lowering path before those programs
-   can run on the simulator.
+26. [x] **BASIC integral literal output:** target-only lowering rewrites a
+   finite whole-number literal passed directly to `PRINT` from the frontend's
+   `f64` representation to the integer print ABI, allowing it to execute in
+   the simulator without pretending fractional REAL values are supported.
 27. [x] **Call argument ABI:** marshal scalar and pair-value arguments into
    `a0` through `a7`, including word-sized wide values, and preserve the narrow
    CIR view of ABI-normalized wide parameters.
 28. [x] **Typed CIR moves:** lower scalar and wide `mov_*` copies, including
    copies with a live wide source. Nib `let` bindings can now flow into direct
    calls and execute in the simulator.
+29. [x] **Incoming parameter call preservation:** save values live across a
+   direct call before argument marshalling overwrites incoming `a0` through
+   `a7` ABI registers. Recursive integer formatting keeps its caller state.
+30. [ ] **BASIC integral expressions:** give BASIC a target-specific checked
+   integer representation for variables, arithmetic, control flow, and `LET`,
+   so non-literal whole-number programs do not depend on the `f64` frontend
+   representation.
+31. [ ] **BASIC fractional REAL ABI:** choose and implement either soft-float
+   or an RV32 floating-point target and preserve Dartmouth BASIC's fractional
+   arithmetic and formatting semantics end to end.
 
 Each item should land as a focused PR with an end-to-end fixture from the
 highest-level language it enables. New constraints discovered while carrying

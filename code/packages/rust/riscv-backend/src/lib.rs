@@ -1133,6 +1133,11 @@ impl Lowerer {
         if argument_words > ARG_REGISTERS.len() {
             return Err(BackendError::TooManyArguments(argument_words));
         }
+        // Save live caller values before marshalling outgoing arguments. An
+        // incoming parameter may already occupy a0/a1, which argument loading
+        // is about to overwrite.
+        let saved_values = self.save_live_values_across_call(instr);
+
         let mut argument_word = 0;
         for (index, ty) in signature.params.iter().enumerate() {
             self.stage_call_argument(instr, index + 1, ty, argument_word)?;
@@ -1150,21 +1155,17 @@ impl Lowerer {
                 (argument_word * 4) as i32,
             ));
         }
-        let saved_values = self.save_live_values_across_call(instr);
-
         self.calls.push(PendingCall {
             word_index: self.words.len(),
             function: function.clone(),
         });
         self.words.push(0);
-        self.restore_live_values_after_call(&saved_values);
-
         let return_type = if instr.ty == "any" {
             signature.return_type
         } else {
             instr.ty.clone()
         };
-        match (instr.dest.as_deref(), return_type.as_str()) {
+        let result = match (instr.dest.as_deref(), return_type.as_str()) {
             (None, "void") => Ok(()),
             (Some(_), "void") => Err(BackendError::InvalidOperand(
                 "void call must not have a destination".to_owned(),
@@ -1186,7 +1187,11 @@ impl Lowerer {
             (None, _) => Err(BackendError::InvalidOperand(
                 "non-void call requires a destination".to_owned(),
             )),
-        }
+        };
+        // Capture a callee result from a0/a1 before restoring any live caller
+        // parameter that originally occupied those ABI registers.
+        self.restore_live_values_after_call(&saved_values);
+        result
     }
 
     fn lower_host_builtin(&mut self, instr: &CIRInstr) -> Result<(), BackendError> {

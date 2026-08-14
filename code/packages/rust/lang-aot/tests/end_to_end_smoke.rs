@@ -938,79 +938,42 @@ fn end_to_end_basic_print_emits_llvm_ir_with_print_extern() {
 // arch backend migration — the FINAL lane).  Produces a flat
 // little-endian .bin of 32-bit RV32I instruction words.
 
-/// Dartmouth BASIC on RV32I: a *precise refusal*, not a binary.
-///
-/// # Why this program cannot become RV32I bytes
-///
-/// Dartmouth BASIC has exactly one numeric type, and it is REAL.  `10 PRINT
-/// 42` therefore does NOT carry the integer 42 — the BA7 floating-point
-/// conversion (`code/specs/lang-full-ba7-floating-point.md`) makes the literal
-/// the double `42.0`, so `main` opens with `const_f64 _t0 = 42.0` and hands it
-/// to `__basic_print_real(x : f64)`.  That is the language being honest, not
-/// an over-widened integer: the sibling LLVM test above pins the very same
-/// shape (`call i64 @__basic_print_real(double ...)`).
-///
-/// RV32I is the RISC-V **base integer** ISA.  Its architectural state is 32
-/// integer registers; there is no `f0`..`f31` bank and no `fadd.d`.  Floating
-/// point is a separate optional extension — `F` (RV32F, single) and `D`
-/// (RV32D, double).  So an `f64` on RV32I is not a lowering we simply have
-/// not written yet; it is a value the target cannot hold.  The only honest
-/// outcomes are a loud refusal (this test), retargeting to a float-capable
-/// backend (LLVM/JVM/CLR/wasm — all covered elsewhere in this file), or a
-/// future soft-float pass that decomposes the double into integer sequences.
-/// Emitting *some* bytes by quietly truncating 42.0 to an integer would be a
-/// silent wrong answer, which is strictly worse than no binary at all.
-///
-/// This test therefore pins the refusal itself: which target refused, which
-/// function it was in, which op carried the float, which type, and that the
-/// message explains RV32I has no floating-point registers.  If a soft-float
-/// pass ever lands, this test fails loudly and gets rewritten into the
-/// byte-pinning test it used to pretend to be.
 #[test]
-fn basic_print_refuses_riscv32_because_basic_numbers_are_f64() {
+fn basic_integral_literal_print_executes_in_the_riscv_simulator() {
     let dir = tempfile::tempdir().expect("tempdir");
     let src = dir.path().join("smoke.bas");
     let bin = dir.path().join("smoke.bin");
     std::fs::write(&src, b"10 PRINT 42\n20 END\n").unwrap();
 
-    let err = lang_aot::compile_file_to_riscv32_bin(
-        &src,
-        &bin,
-        lang_aot::Language::DartmouthBasic,
-    )
-    .expect_err(
-        "BASIC's numeric type is f64 and RV32I has no floating-point registers, \
-         so this must refuse rather than emit bytes",
-    );
+    lang_aot::compile_file_to_riscv32_bin(&src, &bin, lang_aot::Language::DartmouthBasic)
+        .expect("an integral BASIC PRINT literal must lower to RV32I");
+
+    let bytes = std::fs::read(&bin).expect("read .bin");
+    let run = riscv_backend::run_binary(&bytes, &[])
+        .expect("the BASIC RV32I binary must execute in the simulator");
+    assert!(run.halted);
+    assert_eq!(run.byte_output, b"42\n");
+}
+
+#[test]
+fn basic_fractional_literal_remains_rejected_on_riscv32() {
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("fraction.bas");
+    let bin = dir.path().join("fraction.bin");
+    std::fs::write(&src, b"10 PRINT 1.5\n20 END\n").unwrap();
+
+    let err = lang_aot::compile_file_to_riscv32_bin(&src, &bin, lang_aot::Language::DartmouthBasic)
+        .expect_err("fractional BASIC REAL values need a future RISC-V numeric ABI");
     let msg = format!("{err}");
 
     assert!(
         msg.starts_with("riscv32:"),
-        "the refusal must name the target that refused; got: {msg}"
+        "the target must name its refusal; got: {msg}"
     );
     assert!(
-        msg.contains("function \"main\""),
-        "the refusal must name the offending function (a BASIC module also \
-         carries the whole __basic_print_* runtime); got: {msg}"
+        msg.contains("finite integral literals"),
+        "the refusal must describe the supported BASIC RV32I subset; got: {msg}"
     );
-    assert!(
-        msg.contains("op \"const_f64\""),
-        "the refusal must name the CIR op that carried the float; got: {msg}"
-    );
-    assert!(
-        msg.contains("\"f64\""),
-        "the refusal must name the offending type; got: {msg}"
-    );
-    assert!(
-        msg.contains("no floating-point registers"),
-        "the refusal must explain WHY RV32I cannot carry an f64, so the reader \
-         does not go looking for a missing lowering; got: {msg}"
-    );
-    assert!(
-        msg.contains("RV32F/RV32D"),
-        "the refusal must name the extensions that WOULD carry it; got: {msg}"
-    );
-
     assert!(
         !bin.exists(),
         "a refused compilation must not leave a partial/garbage .bin behind"
