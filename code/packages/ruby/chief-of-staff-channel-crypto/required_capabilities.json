@@ -1,0 +1,6 @@
+{
+  "version": 1,
+  "package": "ruby/chief-of-staff-channel-crypto",
+  "capabilities": [],
+  "justification": "Pure deterministic message framing, hashing, signing, and authenticated encryption over caller-supplied bytes and injected identifiers, clocks, and keys."
+}
