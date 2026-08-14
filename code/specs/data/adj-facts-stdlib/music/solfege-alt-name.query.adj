@@ -1,0 +1,21 @@
+% ============================================================================
+% solfege-alt-name.query.adj — a worked recall over the music
+% solfege-alt-name library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what's another way to
+% spell 'do'?": it states no music fact of its own — it only `import`s the
+% grounded table and asks binding queries. The engine resolves each `?`
+% against the `solfege_alt_name` rows and returns the alternate + the
+% table's source/locator/trust. A syllable the cited span gives no
+% alternate for (e.g. "mi") abstains honestly — the engine never invents
+% one.
+%
+% Run (from this directory so the relative import resolves):
+%     ../../../../packages/rust/target/debug/adj-lang-cli solfege-alt-name.query.adj
+% ============================================================================
+
+import "solfege-alt-name.adj"
+
+? solfege_alt_name(do, $Alt)          % expect doh
+? solfege_alt_name($Syllable, si)      % expect ti
+? solfege_alt_name(mi, $Alt)           % expect abstain — mi's own cited span states no alternate
