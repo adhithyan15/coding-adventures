@@ -1,8 +1,8 @@
 Tamil, chapter 18: Telling Time.
-4 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
+5 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 4.
+Lesson 1 of 5.
 மணி (maṇi) — Tamil's native "bell," and a real homophone trap.
 
 Warm-up.
@@ -22,7 +22,7 @@ Wrap-up Recall.
 Is Tamil's மணி (maṇi) ("hour") from the same Sanskrit root as Kannada/Telugu/Hindi's hour-words? (Most likely no — it's treated as a native Dravidian "bell" word that independently reached "hour" the same way, though even DEDR flags this as not fully settled.) What semantic path links the meanings? (A bell announces the hour.) Next: writing இல்லை (illai) — a second independent vowel, ல, and the ai sign.
 
 
-Lesson 2 of 4.
+Lesson 2 of 5.
 ் (puḷḷi) — the dot that takes the vowel away.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: ் and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -54,7 +54,7 @@ Wrap-up Recall.
 What does the puḷḷi do? (Removes the built-in vowel.) What is வ with a puḷḷi? (v, not va.) What does Tamil NOT do that Devanagari does? (Fuse the letters into a new shape.)
 
 
-Lesson 3 of 4.
+Lesson 3 of 5.
 இல்லை (illai) — a vowel in front, a vowel sign behind.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: இ and ல, Script you'll notice: build the word and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -98,7 +98,7 @@ Wrap-up Recall.
 Write இல்லை (illai). Why does it open with இ rather than a sign? (The word starts on a vowel.) Which side of its consonant does ை sit on? (The left — written first, spoken second.) Next: the gem-word homophone, and telling clock time.
 
 
-Lesson 4 of 4.
+Lesson 4 of 5.
 மணி (maṇi) — hour or jewel? Context decides.
 
 Warm-up.
@@ -125,3 +125,41 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 What is the homophone trap? (A likely separate Sanskrit-borrowed மணி means gem.) Does Malayalam analyze the same forms identically? (No.) How do you say two o'clock? (இரண்டு மணி, iraṇṭu maṇi.)
+
+
+Lesson 5 of 5.
+த (ta) — one character, met inside words you already say.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: த and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 1 second]
+Before the new one: ◌ு — what does it do?
+[pause 2 seconds]
+One character this time. Just one — and you have been saying it for pages without knowing which mark on the page it was.
+
+Script you'll notice: த.
+த — ta.
+It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not t, it is ta.
+You already say these, and every one of them has த (ta) somewhere inside it:
+மீண்டும் சந்திப்போம் mīṇḍum sandippōm — we'll meet again.
+தமிழ் எழுத்து tamiḻ eḻuttu — why Tamil writing is so round.
+நான் தமிழ் பேசுகிறேன் nāṉ tamiḻ pēsugiṟēṉ — I speak Tamil.
+எனக்குத் தமிழ் தெரியும் enakkut tamiḻ teriyum — 'I know Tamil'.
+
+Writing: த — copy what you see.
+Put your pen on த (ta) and follow its line. Copy the shape you can see — slowly, and larger than it is printed.
+This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime.
+
+Guided Practice.
+[pause 1 second]
+[your turn — look: at these words, and find த (ta) in the ones that have it]
+[pause 8 seconds for the answer]
+மீண்டும் சந்திப்போம், தமிழ் எழுத்து, வணக்கம்.
+[once you have stopped driving — trace: த three times, saying ta as you finish each one]
+[your turn — look: back at any page of this chapter and find த (ta) once more]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which character is this — த? What sound does it carry? (ta.) Name one word you already say that contains it.

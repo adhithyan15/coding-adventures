@@ -10780,7 +10780,7 @@
     {
       "language": "tamil",
       "chapter": 6,
-      "sourceHash": "fnv1a64:f164f73f94999a01",
+      "sourceHash": "fnv1a64:a14ccd77b2b53851",
       "lessonIds": [
         "TA-C06-dative-ukku",
         "TA-S01-va",
@@ -10789,233 +10789,248 @@
         "TA-C06-dative-subject",
         "TA-C06-dative-subject-family",
         "TA-S02-nna",
-        "TA-W02-three-ns"
+        "TA-W02-three-ns",
+        "TA-S101-letter-pa"
       ],
       "voiceLessons": 4,
       "drivablePrefix": 1,
       "text": "tamil/narration/ch06.txt",
       "json": "tamil/narration/ch06.json",
-      "textHash": "fnv1a64:85e3695f551c0cd2",
-      "jsonHash": "fnv1a64:f131ca9bcb0136f3"
+      "textHash": "fnv1a64:f299ad0284d58f52",
+      "jsonHash": "fnv1a64:7d7a522241073f57"
     },
     {
       "language": "tamil",
       "chapter": 7,
-      "sourceHash": "fnv1a64:8c44fc5fe04677dc",
+      "sourceHash": "fnv1a64:19de878be6a70fa6",
       "lessonIds": [
         "TA-C07-numbers-1-5",
         "TA-C07-numbers-1-5-family",
         "TA-C07-numbers-6-10",
         "TA-S03-nnna",
         "TA-W03-pulli-vanakkam",
-        "TA-C07-numbers-6-10-family"
+        "TA-C07-numbers-6-10-family",
+        "TA-S102-vowel-sign-oo"
       ],
       "voiceLessons": 1,
       "drivablePrefix": 0,
       "text": "tamil/narration/ch07.txt",
       "json": "tamil/narration/ch07.json",
-      "textHash": "fnv1a64:0911ee90065a2671",
-      "jsonHash": "fnv1a64:0986e806e36426c5"
+      "textHash": "fnv1a64:aba89e031ead648e",
+      "jsonHash": "fnv1a64:80b41a75b56aaa52"
     },
     {
       "language": "tamil",
       "chapter": 8,
-      "sourceHash": "fnv1a64:5f3bb0120cf9103b",
+      "sourceHash": "fnv1a64:b1c4e18c5f519cb0",
       "lessonIds": [
         "TA-C08-tayavuseytu",
         "TA-C08-please-register",
         "TA-S04-na",
-        "TA-W03-write-vanakkam"
+        "TA-W03-write-vanakkam",
+        "TA-S112-letter-e"
       ],
       "voiceLessons": 1,
       "drivablePrefix": 1,
       "text": "tamil/narration/ch08.txt",
       "json": "tamil/narration/ch08.json",
-      "textHash": "fnv1a64:965724d7d9173804",
-      "jsonHash": "fnv1a64:cc257fd829de285c"
+      "textHash": "fnv1a64:46d1f6f2744d5324",
+      "jsonHash": "fnv1a64:7b02578a9c46e003"
     },
     {
       "language": "tamil",
       "chapter": 9,
-      "sourceHash": "fnv1a64:4434a74f3cf69abd",
+      "sourceHash": "fnv1a64:476c6f564b36c91a",
       "lessonIds": [
         "TA-C09-mannikkavum",
-        "TA-C09-sorry-register"
+        "TA-C09-sorry-register",
+        "TA-S113-letter-la"
       ],
       "voiceLessons": 1,
       "drivablePrefix": 1,
       "text": "tamil/narration/ch09.txt",
       "json": "tamil/narration/ch09.json",
-      "textHash": "fnv1a64:b55fd3eb089a952f",
-      "jsonHash": "fnv1a64:1b3ce1d584d6b322"
+      "textHash": "fnv1a64:80b24fdcbeab98b7",
+      "jsonHash": "fnv1a64:478485c0ecbfa266"
     },
     {
       "language": "tamil",
       "chapter": 10,
-      "sourceHash": "fnv1a64:a15a793b96033663",
+      "sourceHash": "fnv1a64:3a0c9f573dca7c95",
       "lessonIds": [
         "TA-C10-vaara-kizhamai",
         "TA-S05-rra",
-        "TA-W04-vowel-signs-nandri"
+        "TA-W04-vowel-signs-nandri",
+        "TA-S114-vowel-sign-aa"
       ],
       "voiceLessons": 1,
       "drivablePrefix": 1,
       "text": "tamil/narration/ch10.txt",
       "json": "tamil/narration/ch10.json",
-      "textHash": "fnv1a64:547288884af2873e",
-      "jsonHash": "fnv1a64:decc3cb41306880a"
+      "textHash": "fnv1a64:e10f13faa076bcb5",
+      "jsonHash": "fnv1a64:99a3cdea9af4c52f"
     },
     {
       "language": "tamil",
       "chapter": 11,
-      "sourceHash": "fnv1a64:479e39edeecc0c29",
+      "sourceHash": "fnv1a64:72839b0698328770",
       "lessonIds": [
-        "TA-C11-nirangal"
+        "TA-C11-nirangal",
+        "TA-S115-letter-llla"
       ],
       "voiceLessons": 0,
       "drivablePrefix": 0,
       "text": "tamil/narration/ch11.txt",
       "json": "tamil/narration/ch11.json",
-      "textHash": "fnv1a64:4ed8ecddf6838cae",
-      "jsonHash": "fnv1a64:a26ac478785212b2"
+      "textHash": "fnv1a64:a7f0ea15c169dd7d",
+      "jsonHash": "fnv1a64:5f6f8bc60ec2a674"
     },
     {
       "language": "tamil",
       "chapter": 12,
-      "sourceHash": "fnv1a64:643afe30d635fb6e",
+      "sourceHash": "fnv1a64:66f451293dc628c7",
       "lessonIds": [
-        "TA-C12-kudumbam"
+        "TA-C12-kudumbam",
+        "TA-S116-letter-ca"
       ],
       "voiceLessons": 1,
       "drivablePrefix": 1,
       "text": "tamil/narration/ch12.txt",
       "json": "tamil/narration/ch12.json",
-      "textHash": "fnv1a64:0296fadea74dd331",
-      "jsonHash": "fnv1a64:9448b5641865926a"
+      "textHash": "fnv1a64:b152b3f0968f7076",
+      "jsonHash": "fnv1a64:590fe6bc172d273b"
     },
     {
       "language": "tamil",
       "chapter": 13,
-      "sourceHash": "fnv1a64:b4f3b5320f546f17",
+      "sourceHash": "fnv1a64:a7675ff01c4fe314",
       "lessonIds": [
         "TA-C13-udal-uruppugal",
         "TA-S06-ka",
-        "TA-W04-i-sign-write-nandri"
+        "TA-W04-i-sign-write-nandri",
+        "TA-S117-letter-ra"
       ],
       "voiceLessons": 1,
       "drivablePrefix": 1,
       "text": "tamil/narration/ch13.txt",
       "json": "tamil/narration/ch13.json",
-      "textHash": "fnv1a64:1e39764a47b7b136",
-      "jsonHash": "fnv1a64:7c72d7002e7c8418"
+      "textHash": "fnv1a64:a5a8f572f1f6b98e",
+      "jsonHash": "fnv1a64:ab0781fe7dbbc8f2"
     },
     {
       "language": "tamil",
       "chapter": 14,
-      "sourceHash": "fnv1a64:88494c15360167e5",
+      "sourceHash": "fnv1a64:25b14ee3e427af27",
       "lessonIds": [
-        "TA-C14-kaalangal"
+        "TA-C14-kaalangal",
+        "TA-S118-letter-tta"
       ],
       "voiceLessons": 1,
       "drivablePrefix": 1,
       "text": "tamil/narration/ch14.txt",
       "json": "tamil/narration/ch14.json",
-      "textHash": "fnv1a64:a5d77cff80c3b50c",
-      "jsonHash": "fnv1a64:e97966f4d05a3d36"
+      "textHash": "fnv1a64:e8e4bed203f018e9",
+      "jsonHash": "fnv1a64:ef6b91668c7cc4e2"
     },
     {
       "language": "tamil",
       "chapter": 15,
-      "sourceHash": "fnv1a64:bbff81bbd706c3c6",
+      "sourceHash": "fnv1a64:131e7f285dbba896",
       "lessonIds": [
-        "TA-C15-thanneer-arisi"
+        "TA-C15-thanneer-arisi",
+        "TA-S119-letter-a"
       ],
       "voiceLessons": 1,
       "drivablePrefix": 1,
       "text": "tamil/narration/ch15.txt",
       "json": "tamil/narration/ch15.json",
-      "textHash": "fnv1a64:4db6b99411b1b54c",
-      "jsonHash": "fnv1a64:1462b7c53e561294"
+      "textHash": "fnv1a64:2a6848fd20b48b11",
+      "jsonHash": "fnv1a64:7e678a593bed5eb7"
     },
     {
       "language": "tamil",
       "chapter": 16,
-      "sourceHash": "fnv1a64:d69456a2a09e1144",
+      "sourceHash": "fnv1a64:f34966320310a9e5",
       "lessonIds": [
         "TA-C16-thamizh-maadangal",
         "TA-S07-ma",
-        "TA-W05-write-aam"
+        "TA-W05-write-aam",
+        "TA-S120-letter-aa"
       ],
       "voiceLessons": 1,
       "drivablePrefix": 1,
       "text": "tamil/narration/ch16.txt",
       "json": "tamil/narration/ch16.json",
-      "textHash": "fnv1a64:28f7c3ec56605988",
-      "jsonHash": "fnv1a64:1c181156f8152710"
+      "textHash": "fnv1a64:b61a8401a660513d",
+      "jsonHash": "fnv1a64:6c844f1559e3ee9b"
     },
     {
       "language": "tamil",
       "chapter": 17,
-      "sourceHash": "fnv1a64:6ffa0438a52caeaa",
+      "sourceHash": "fnv1a64:c6b2de5004a76cac",
       "lessonIds": [
         "TA-C17-nanpakal-nalliravu",
-        "TA-C17-transparent-middle-synonyms"
+        "TA-C17-transparent-middle-synonyms",
+        "TA-S121-vowel-sign-u"
       ],
       "voiceLessons": 2,
       "drivablePrefix": 2,
       "text": "tamil/narration/ch17.txt",
       "json": "tamil/narration/ch17.json",
-      "textHash": "fnv1a64:f6a024984996821d",
-      "jsonHash": "fnv1a64:910a8fbc88140428"
+      "textHash": "fnv1a64:feed24b6e8d28589",
+      "jsonHash": "fnv1a64:40544c14fcfdfbf0"
     },
     {
       "language": "tamil",
       "chapter": 18,
-      "sourceHash": "fnv1a64:66ccf25b8ee7c3ca",
+      "sourceHash": "fnv1a64:1b02d98a4dad0f7a",
       "lessonIds": [
         "TA-C18-mani",
         "TA-S08-pulli",
         "TA-W06-write-illai",
-        "TA-C18-mani-homophone-time"
+        "TA-C18-mani-homophone-time",
+        "TA-S122-letter-ta"
       ],
       "voiceLessons": 2,
       "drivablePrefix": 1,
       "text": "tamil/narration/ch18.txt",
       "json": "tamil/narration/ch18.json",
-      "textHash": "fnv1a64:5be6f151e86da8ed",
-      "jsonHash": "fnv1a64:f0b45f96640e784c"
+      "textHash": "fnv1a64:3be6064041f3fce9",
+      "jsonHash": "fnv1a64:bb781fe00c6a8a8b"
     },
     {
       "language": "tamil",
       "chapter": 19,
-      "sourceHash": "fnv1a64:a6880d1d6ef5248d",
+      "sourceHash": "fnv1a64:762b8d3e94f27a64",
       "lessonIds": [
         "TA-C19-vayathu",
         "TA-C19-age-register-grammar",
         "TA-S09-i-sign",
-        "TA-W07-write-sari"
+        "TA-W07-write-sari",
+        "TA-S123-vowel-sign-ee"
       ],
       "voiceLessons": 2,
       "drivablePrefix": 2,
       "text": "tamil/narration/ch19.txt",
       "json": "tamil/narration/ch19.json",
-      "textHash": "fnv1a64:987ee38c4301afa2",
-      "jsonHash": "fnv1a64:b9cafd0211196b05"
+      "textHash": "fnv1a64:b87ca151c56f59e7",
+      "jsonHash": "fnv1a64:04dfbd12aec3d708"
     },
     {
       "language": "tamil",
       "chapter": 20,
-      "sourceHash": "fnv1a64:748f22c43b1f90eb",
+      "sourceHash": "fnv1a64:bde359601d0aaab3",
       "lessonIds": [
         "TA-C20-pathinondru-irupathu",
-        "TA-C20-vaanilai"
+        "TA-C20-vaanilai",
+        "TA-S124-letter-ya"
       ],
       "voiceLessons": 2,
       "drivablePrefix": 2,
       "text": "tamil/narration/ch20.txt",
       "json": "tamil/narration/ch20.json",
-      "textHash": "fnv1a64:82d16f24ea5e6818",
-      "jsonHash": "fnv1a64:473c58b9ab96fe5b"
+      "textHash": "fnv1a64:2a4f8e3610bd76b7",
+      "jsonHash": "fnv1a64:e634866c0935ed36"
     },
     {
       "language": "tamil",

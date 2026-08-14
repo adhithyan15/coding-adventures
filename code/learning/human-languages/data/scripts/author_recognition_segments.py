@@ -100,6 +100,7 @@ meaning, because every word in it is one the reader has already met.
 import json
 import os
 import re
+import sys
 import unicodedata
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -114,9 +115,17 @@ TRACKS = [
     dict(track="malayalam", prefix="ML", script="malayalam", ledger="malayalam"),
     dict(track="sanskrit", prefix="SA", script="devanagari", ledger="devanagari"),
     dict(track="hindi", prefix="HI", script="devanagari", ledger="devanagari"),
+    # Tamil is HL13's reference track for the script addendum. Eleven of its
+    # letters carry a CITED stroke order, so `writing_block` emits a real
+    # numbered pen path for those and asks for tracing on the rest -- both halves
+    # of the addendum in one track, which is why it is built here first.
+    dict(track="tamil", prefix="TA", script="tamil", ledger="tamil"),
 ]
 
-CHAPTERS = [6, 7, 8, 9, 10, 11, 12, 13]
+# Chapters 6 onward, as many as a track has. A ledger holds 24 positions and the
+# drizzle is one per chapter, so the range has to reach far enough for all of
+# them; slots a track does not have are skipped.
+CHAPTERS = list(range(6, 45))
 
 # The spine node the script strand hangs from in all four local paths, and the
 # one Tamil's drizzle already uses. See the comment in `build()`.
@@ -345,8 +354,22 @@ def build(cfg):
     #
     # Skipping is selection FROM the ledger, never a rewrite of it: the order is
     # authored intent and the file is not touched here.
+    import re as _re
+    taught_alone = set()
+    for _f in os.listdir(os.path.join(HL, cfg["track"], "lessons")):
+        if not _f.endswith(".md"):
+            continue
+        _b = open(os.path.join(HL, cfg["track"], "lessons", _f), encoding="utf-8").read()
+        if not _re.search(r"^delivery: script", _b, _re.M):
+            continue
+        _h = _re.search(r"^headword: (.*)$", _b, _re.M)
+        if _h:
+            _hw = _h.group(1).strip().strip('"').replace("\u25cc", "")
+            if len([c for c in _hw if not c.isspace()]) == 1:
+                taught_alone.add(_hw)
+
     out = []
-    pending = list(L["letters"])
+    pending = [e for e in L["letters"] if e["glyph"] not in taught_alone]
     for slot in slots:
         e = None
         while pending:
@@ -356,7 +379,7 @@ def build(cfg):
                 break
         if e is None:
             break
-        n = len(out) + 1
+        n = 100 + e["position"]
         g = e["glyph"]
         sound = sounds.get(g, "")
         if not sound:
@@ -486,7 +509,10 @@ def render(cfg, script, seg, prev):
     g, n = seg["glyph"], seg["n"]
     pfx = cfg["prefix"]
     atom = f"{pfx}-SCRIPT-RECOG-{n:02d}"
-    prev_atom = f"{pfx}-SCRIPT-RECOG-{n-1:02d}" if prev else None
+    # Chain to the PREVIOUS SEGMENT IN THIS RUN. `n` is a ledger position now, so
+    # n-1 names an atom that need not exist -- the positions a pass emits are not
+    # consecutive once some letters are already taught.
+    prev_atom = f"{pfx}-SCRIPT-RECOG-{prev['n']:02d}" if prev else None
     prev_id = f"{pfx}-S{prev['n']:02d}-{prev['slug']}" if prev else None
     requires = [prev_atom] if prev_atom else []
     prereqs = [prev_id] if prev_id else []
@@ -610,11 +636,23 @@ def register(cfg, script, segs):
     path_id = f"{cfg['prefix']}-PATH-100"
     ext_id = f"{cfg['prefix']}-EXT-100-SCRIPT-RECOGNITION"
 
+    # MERGE. Replacing the node outright orphans an earlier pass's lessons --
+    # Tamil arrives with nine drizzle segments already in TA-PATH-100, and
+    # dropping them would leave nine lessons declaring a spine node their path no
+    # longer visits.
+    prior = next((n["lessons"] for n in doc["path"] if n["id"] == path_id), [])
+    prior_inline = next((n.get("inline", []) for n in doc["path"] if n["id"] == path_id), [])
+    merged = list(prior) + [i for i in ids if i not in prior]
     doc["path"] = [n for n in doc["path"] if n["id"] != path_id]
     doc["extensions"] = [e for e in doc.get("extensions", []) if e["id"] != ext_id]
 
-    node = dict(id=path_id, spine_node=SCRIPT_SPINE_NODE, lessons=ids,
-                before=[], inline=[ext_id], after=[])
+    node = dict(id=path_id, spine_node=SCRIPT_SPINE_NODE, lessons=merged,
+                before=[],
+                # Keep what the node already inlines. Tamil's
+                # TA-EXT-100-SCRIPT-DRIZZLE is attached here, and dropping it
+                # detaches the nine drizzle lessons' extension node.
+                inline=sorted({*prior_inline, ext_id}),
+                after=[])
     # Placed after the path's own opening stretch rather than at the front: the
     # segments themselves live in chapters 6-13, and a route that visited them
     # first would describe a book nobody reads in that order.
@@ -625,6 +663,9 @@ def register(cfg, script, segs):
         id=ext_id, stage="pre-A1", kind="required", category="script",
         canDo=(f"I can pick out each of these {script['name']} characters inside the words "
                f"I already say, and copy its shape by tracing."),
+        # The PATH node holds every segment the track has; this EXTENSION holds
+        # only the ones it is responsible for. Giving it the merged list put the
+        # drizzle lessons into two extension nodes at once.
         prerequisites=[], lessons=ids))
 
     # The spine map keeps its own ordered list of the path segments that realize
@@ -643,7 +684,10 @@ def register(cfg, script, segs):
 
 if __name__ == "__main__":
     total = 0
+    only = [a for a in sys.argv[1:] if not a.startswith("--")]
     for cfg in TRACKS:
+        if only and cfg["track"] not in only:
+            continue
         b = build(cfg)
         segs = b["segments"]
         out = os.path.join(HL, cfg["track"], "lessons")

@@ -507,7 +507,7 @@ makes them easier to hold, not optional.
 |---|---|---|---|
 | HL-C152 | **NEXT (Spanish side)** | **Realize the thirteen unrealized spine nodes in Spanish**, lowest stage first: A2's one (`SPINE-NEGATE-AND-ASK`), B1's two, B2's two, then **C1's four and C2's four — which have ZERO realizations in the corpus's most advanced track.** Each needs the six parts HL13 §3 lists: entry lessons, vocabulary floor, grammar points, text shape, task shapes, payoff. | All 33 spine nodes realized in Spanish; the gates read clean per rung. |
 | HL-C153 | Not started | **Deepen each Spanish rung to the density the lower ones have** — roughly twenty lessons per node, against 33 nodes. This is where the page count goes, and where *"do not worry about the number of pages"* is doing real work. | Every rung carries comparable weight; no rung is a single lesson standing in for a level. |
-| HL-C154 | Not started | **Complete Tamil's script addendum end to end** — the letter ledger's 24 positions, conjuncts, running text, and the named lesson where decoding closes. Tamil is the reference because it is the only track with a cited stroke order. | The addendum is whole in one track and ready to replicate. |
+| HL-C154 | **Ledger complete (24/24); conjuncts, running text and the closing lesson remain** | **Complete Tamil's script addendum end to end** — the letter ledger's 24 positions, conjuncts, running text, and the named lesson where decoding closes. Tamil is the reference because it is the only track with a cited stroke order. | The addendum is whole in one track and ready to replicate. |
 | HL-C155 | Not started | **Replicate the spine layout to the other 21 tracks**, one stage at a time, as a generator plus per-track review. | Every track has the same rung anatomy at every stage it has reached. |
 | HL-C156 | Not started | **Replicate the script addendum to every non-Latin track**, recognition-first where the ductus is uncited. **No citation → no pen path → no figure** travels with it. | Every non-Latin track teaches its script; uncited pen paths are reported as debt, never invented. |
 
@@ -779,6 +779,30 @@ the family* is `etymology`, *Build the sentences* is `guided-production`.
 Order for the next session: classify the headings in `parse.ts` first, with a
 test per heading; then run the migrator per track; then HL-C134's flip; then the
 chapters 1-5 placement that everything else has been waiting on.
+
+**Tamil's letter ledger is complete: 24 of 24 positions taught as their own
+one-character lesson.** Fifteen segments were added to the nine the drizzle
+already had. Three of the fifteen (ல, அ, ஆ) carry a **cited** stroke order and
+print a real numbered pen path — ல is four joined movements with no pen lift,
+cited to Radhakrishnan Frame 9. The other twelve teach recognition and ask for
+tracing, and say on the page why the order is not given.
+
+That is the reference addendum's first half, in the reference track, exactly as
+HL13 §5 orders it. Conjuncts, running text and the named lesson where decoding
+closes are still ahead.
+
+**Three generator defects were found and fixed getting there**, all of them
+caught by gates and reverted before anything reached the corpus:
+
+- numbering segments by counting files on disk is not idempotent — a second run
+  counted the first run's output and numbered from S17, orphaning 38 files.
+  Numbering is now by **ledger position**, which is stable across re-runs;
+- merging registration too hard put the nine drizzle lessons into **two**
+  extension nodes at once. The PATH node holds every segment a track has; an
+  EXTENSION holds only the ones it is responsible for;
+- chaining each segment's prerequisite to `n-1` assumed consecutive numbering,
+  which ledger positions are not once some letters are already taught. Each
+  segment now chains to the previous segment **in its own run**.
 
 ### The loop this order is executed by
 
