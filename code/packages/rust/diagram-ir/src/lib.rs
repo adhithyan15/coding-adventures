@@ -664,6 +664,14 @@ pub enum LayoutedChartItem {
         width: f64,
         color: String,
     },
+    SankeyNode {
+        x: f64,
+        y: f64,
+        width: f64,
+        height: f64,
+        color: String,
+        label: String,
+    },
     QuadrantRegion {
         x: f64,
         y: f64,
