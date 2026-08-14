@@ -1,0 +1,10 @@
+# frozen_string_literal: true
+
+source "https://rubygems.org"
+
+gemspec
+
+gem "coding_adventures_chacha20_poly1305", path: "../chacha20-poly1305"
+gem "coding_adventures_ed25519", path: "../ed25519"
+gem "coding_adventures_sha256", path: "../sha256"
+gem "coding_adventures_sha512", path: "../sha512"

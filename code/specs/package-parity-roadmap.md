@@ -180,10 +180,10 @@ owners; neither is treated as an unclassified blind all-language port.
 
 The D18F shared fixture lock now fixes that channel-crypto contract across
 implementations. Rust is the production baseline, while TypeScript, Python,
-and Go are portable consumers: all four reproduce the exact authenticated
+Go, and Ruby are portable consumers: all five reproduce the exact authenticated
 header, `D18M` v1 bytes, canonical JSON, rich payload ciphertext, verification
-order, and stable errors. The remaining Ruby and Elixir ports continue against
-the same corpus rather than inventing language-specific envelopes.
+order, and stable errors. The remaining Elixir port continues against the same
+corpus rather than inventing a language-specific envelope.
 
 The `9bb12864` refresh also added `chief-of-staff-channel-store`. It is an
 authority-free orchestration layer over injected storage and cryptography:
