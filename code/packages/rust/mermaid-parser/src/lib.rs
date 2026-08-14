@@ -5789,6 +5789,7 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         let d = parse_gitgraph(GITGRAPH_SRC).unwrap();
         assert_eq!(d.direction, DiagramDirection::Lr);
         assert_eq!(d.branches.len(), 2);
+        assert_eq!(d.branches[1].order, Some(1));
         assert_eq!(d.events.len(), 5);
         assert!(matches!(
             &d.events[1],

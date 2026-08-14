@@ -18,7 +18,7 @@ use diagram_ir::{
 };
 use std::collections::{BTreeSet, HashMap};
 
-pub const VERSION: &str = "0.12.0";
+pub const VERSION: &str = "0.13.0";
 
 // ── Constants ─────────────────────────────────────────────────────────────
 
@@ -360,20 +360,28 @@ fn layout_git(diagram: &GitDiagram, cw: f64) -> LayoutedTemporalDiagram {
     let mut x_cursor = 60.0_f64;
     let mut current_branch = "main".to_string();
 
-    // Pre-assign lanes in declaration order; default "main" to lane 0.
-    if !diagram.branches.is_empty() {
-        for (i, b) in diagram.branches.iter().enumerate() {
-            branch_lanes.insert(b.name.clone(), i);
-        }
-    } else {
+    // Mermaid gives unordered branches stable fractional keys (0.0, 0.1, ...)
+    // before sorting them together with explicit integer orders.
+    let mut ordered_branches = diagram.branches.iter().enumerate().collect::<Vec<_>>();
+    ordered_branches.sort_by(|(left_index, left), (right_index, right)| {
+        mermaid_branch_order(left.order, *left_index)
+            .total_cmp(&mermaid_branch_order(right.order, *right_index))
+    });
+    if ordered_branches.is_empty() {
         branch_lanes.insert("main".into(), 0);
+    } else {
+        for (lane, (_, branch)) in ordered_branches.iter().enumerate() {
+            branch_lanes.insert(branch.name.clone(), lane);
+        }
     }
-    let mut next_lane = diagram.branches.len().max(1);
+    let mut next_lane = ordered_branches.len().max(1);
 
     let lane_y = |lane: usize| -> f64 { title_offset + 30.0 + lane as f64 * LANE_H };
 
-    // Emit branch lane labels.
-    for (name, &lane) in &branch_lanes {
+    // Emit labels in lane order so PaintScene instruction order is deterministic.
+    let mut labeled_lanes = branch_lanes.iter().collect::<Vec<_>>();
+    labeled_lanes.sort_by_key(|(_, lane)| **lane);
+    for (name, &lane) in labeled_lanes {
         let color = BRANCH_COLORS[lane % BRANCH_COLORS.len()].to_string();
         items.push(LayoutedTemporalItem::BranchLane {
             y: lane_y(lane), color, label: name.clone(),
@@ -453,6 +461,14 @@ fn layout_git(diagram: &GitDiagram, cw: f64) -> LayoutedTemporalDiagram {
     }
 }
 
+fn mermaid_branch_order(explicit_order: Option<i64>, declaration_index: usize) -> f64 {
+    explicit_order.map(|order| order as f64).unwrap_or_else(|| {
+        format!("0.{declaration_index}")
+            .parse()
+            .expect("fractional Mermaid branch order is valid")
+    })
+}
+
 // ── Tests ─────────────────────────────────────────────────────────────────
 
 #[cfg(test)]
@@ -515,7 +531,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.12.0");
+        assert_eq!(crate::VERSION, "0.13.0");
     }
 
     #[test]
@@ -576,6 +592,54 @@ mod tests {
             LayoutedTemporalItem::CommitNode { tags, .. }
                 if tags == &["v1", "stable"]
         )));
+    }
+
+    #[test]
+    fn git_layout_applies_explicit_branch_order() {
+        let mut diagram = simple_git();
+        let TemporalBody::Git(git) = &mut diagram.body else {
+            unreachable!();
+        };
+        git.branches = vec![
+            GitBranch { name: "main".into(), order: None },
+            GitBranch { name: "test1".into(), order: Some(3) },
+            GitBranch { name: "test2".into(), order: Some(2) },
+            GitBranch { name: "test3".into(), order: Some(1) },
+        ];
+
+        let layout = layout_temporal_diagram(&diagram, 800.0);
+        let labels = layout.items.iter().filter_map(|item| {
+            if let LayoutedTemporalItem::BranchLane { label, .. } = item {
+                Some(label.as_str())
+            } else {
+                None
+            }
+        }).collect::<Vec<_>>();
+        assert_eq!(labels, ["main", "test3", "test2", "test1"]);
+    }
+
+    #[test]
+    fn git_layout_keeps_unordered_branches_before_positive_orders() {
+        let mut diagram = simple_git();
+        let TemporalBody::Git(git) = &mut diagram.body else {
+            unreachable!();
+        };
+        git.branches = vec![
+            GitBranch { name: "main".into(), order: None },
+            GitBranch { name: "test1".into(), order: Some(1) },
+            GitBranch { name: "test2".into(), order: None },
+            GitBranch { name: "test3".into(), order: None },
+        ];
+
+        let layout = layout_temporal_diagram(&diagram, 800.0);
+        let labels = layout.items.iter().filter_map(|item| {
+            if let LayoutedTemporalItem::BranchLane { label, .. } = item {
+                Some(label.as_str())
+            } else {
+                None
+            }
+        }).collect::<Vec<_>>();
+        assert_eq!(labels, ["main", "test2", "test3", "test1"]);
     }
 
     #[test]
