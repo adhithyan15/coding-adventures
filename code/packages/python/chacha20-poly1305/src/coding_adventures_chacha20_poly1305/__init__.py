@@ -1,6 +1,6 @@
 """
-ChaCha20-Poly1305: Authenticated Encryption with Associated Data (RFC 8439)
-============================================================================
+ChaCha20-Poly1305 and XChaCha20-Poly1305 authenticated encryption
+=================================================================
 
 This module implements the ChaCha20-Poly1305 AEAD cipher suite from scratch,
 using only basic arithmetic operations. It combines two primitives:
@@ -15,6 +15,10 @@ Together, they provide *authenticated encryption*: the ciphertext is both
 confidential (only someone with the key can read it) and authentic (any
 tampering is detected).
 
+The module also implements SE04's XChaCha20-Poly1305 profile. XChaCha20 uses
+HChaCha20 to derive a message subkey from the first 16 bytes of a 24-byte
+nonce, then reuses the RFC 8439 construction with the remaining nonce bytes.
+
 Why ChaCha20 instead of AES?
 -----------------------------
 AES relies on lookup tables (S-boxes) and Galois field arithmetic that are
@@ -23,7 +27,10 @@ in software. ChaCha20 uses only additions, rotations, and XORs -- operations
 that run in constant time on all CPUs, making it naturally resistant to
 timing attacks without any special effort.
 
-Reference: RFC 8439 (https://www.rfc-editor.org/rfc/rfc8439)
+References:
+- RFC 8439 (https://www.rfc-editor.org/rfc/rfc8439)
+- draft-irtf-cfrg-xchacha-03
+  (https://datatracker.ietf.org/doc/html/draft-irtf-cfrg-xchacha-03)
 """
 
 from __future__ import annotations
@@ -545,6 +552,104 @@ def _constant_time_compare(a: bytes, b: bytes) -> bool:
 
 
 # ---------------------------------------------------------------------------
+# HChaCha20 and XChaCha20 (SE04)
+# ---------------------------------------------------------------------------
+
+def hchacha20_subkey(key: bytes, nonce: bytes) -> bytes:
+    """Derive a 32-byte HChaCha20 subkey from a key and 16-byte nonce.
+
+    HChaCha20 uses the same 20-round permutation as ChaCha20, but replaces
+    ChaCha20's counter-and-nonce row with the complete 16-byte input nonce.
+    It deliberately omits the ChaCha20 feed-forward addition and serializes
+    post-round words 0..3 and 12..15 as the subkey.
+    """
+    if len(key) != 32:
+        raise ValueError(f"Key must be 32 bytes, got {len(key)}")
+    if len(nonce) != 16:
+        raise ValueError(f"HChaCha20 nonce must be 16 bytes, got {len(nonce)}")
+
+    key_words = struct.unpack("<8I", key)
+    nonce_words = struct.unpack("<4I", nonce)
+    state = [*CHACHA20_CONSTANTS, *key_words, *nonce_words]
+
+    for _round in range(10):
+        _quarter_round(state, 0, 4, 8, 12)
+        _quarter_round(state, 1, 5, 9, 13)
+        _quarter_round(state, 2, 6, 10, 14)
+        _quarter_round(state, 3, 7, 11, 15)
+        _quarter_round(state, 0, 5, 10, 15)
+        _quarter_round(state, 1, 6, 11, 12)
+        _quarter_round(state, 2, 7, 8, 13)
+        _quarter_round(state, 3, 4, 9, 14)
+
+    output_words = state[:4] + state[12:]
+    return struct.pack("<8I", *output_words)
+
+
+def _xchacha20_material(key: bytes, nonce: bytes) -> tuple[bytes, bytes]:
+    """Validate SE04 inputs and derive its RFC 8439 key and nonce."""
+    if len(key) != 32:
+        raise ValueError(f"Key must be 32 bytes, got {len(key)}")
+    if len(nonce) != 24:
+        raise ValueError(f"Nonce must be 24 bytes, got {len(nonce)}")
+
+    subkey = hchacha20_subkey(key, nonce[:16])
+    derived_nonce = b"\x00" * 4 + nonce[16:]
+    return subkey, derived_nonce
+
+
+def xchacha20_encrypt(
+    plaintext: bytes,
+    key: bytes,
+    nonce: bytes,
+    counter: int = 0,
+) -> bytes:
+    """Encrypt or decrypt with raw XChaCha20.
+
+    This unauthenticated stream-cipher API exists for conformance and for
+    protocols that separately own a correct authentication composition.
+    Prefer :func:`xchacha20_poly1305_aead_encrypt` for application data.
+    """
+    subkey, derived_nonce = _xchacha20_material(key, nonce)
+    return chacha20_encrypt(plaintext, subkey, derived_nonce, counter)
+
+
+def xchacha20_poly1305_aead_encrypt(
+    plaintext: bytes,
+    key: bytes,
+    nonce: bytes,
+    aad: bytes = b"",
+) -> tuple[bytes, bytes]:
+    """Encrypt with SE04 XChaCha20-Poly1305 and a 24-byte nonce.
+
+    Complete nonces must remain unique for each key. Their larger size makes
+    random collisions negligible at realistic volumes; it does not make the
+    construction nonce-misuse resistant.
+    """
+    subkey, derived_nonce = _xchacha20_material(key, nonce)
+    return aead_encrypt(plaintext, subkey, derived_nonce, aad)
+
+
+def xchacha20_poly1305_aead_decrypt(
+    ciphertext: bytes,
+    key: bytes,
+    nonce: bytes,
+    aad: bytes,
+    tag: bytes,
+) -> bytes:
+    """Authenticate and decrypt SE04 XChaCha20-Poly1305 ciphertext.
+
+    No plaintext is returned unless the delegated RFC 8439 tag comparison
+    succeeds. Authentication failures use the same public error as the base
+    AEAD and do not reveal which input was wrong.
+    """
+    if len(tag) != 16:
+        raise ValueError(f"Tag must be 16 bytes, got {len(tag)}")
+    subkey, derived_nonce = _xchacha20_material(key, nonce)
+    return aead_decrypt(ciphertext, subkey, derived_nonce, aad, tag)
+
+
+# ---------------------------------------------------------------------------
 # Public API
 # ---------------------------------------------------------------------------
 
@@ -553,4 +658,8 @@ __all__ = [
     "poly1305_mac",
     "aead_encrypt",
     "aead_decrypt",
+    "hchacha20_subkey",
+    "xchacha20_encrypt",
+    "xchacha20_poly1305_aead_encrypt",
+    "xchacha20_poly1305_aead_decrypt",
 ]
