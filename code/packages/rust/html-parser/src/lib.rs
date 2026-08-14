@@ -4773,10 +4773,13 @@ impl HtmlParser {
                                     .at_emission(self.current_token_emission_position),
                                 );
                             } else {
-                                self.diagnostics.push(ParserDiagnostic::new(
-                                    "eof-with-unclosed-elements",
-                                    "end of file was reached with disallowed open elements",
-                                ));
+                                self.diagnostics.push(
+                                    ParserDiagnostic::new(
+                                        "eof-with-unclosed-elements",
+                                        "end of file was reached with disallowed open elements",
+                                    )
+                                    .at_emission(self.current_token_emission_position),
+                                );
                             }
                         }
                         self.populate_selectedcontent_for_open_selects();
@@ -26795,6 +26798,25 @@ mod tests {
         element(&html(document).children[1])
     }
 
+    fn eof_position(source: &str) -> SourcePosition {
+        SourcePosition {
+            byte_offset: source.len(),
+            char_offset: source.chars().count(),
+            line: source.lines().count(),
+            column: source
+                .rsplit_once('\n')
+                .map_or_else(|| source.chars().count() + 1, |(_, line)| line.chars().count() + 1),
+        }
+    }
+
+    fn eof_with_unclosed_elements(source: &str) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "eof-with-unclosed-elements",
+            "end of file was reached with disallowed open elements",
+        )
+        .at_emission(Some(eof_position(source)))
+    }
+
     #[test]
     fn parser_preserves_processing_instruction_target_and_data() {
         let mut parser = HtmlParser::with_options(HtmlParseOptions::default());
@@ -33296,10 +33318,9 @@ mod tests {
 
     #[test]
     fn ignores_nested_form_start_tags() {
-        let output = parse_html_with_diagnostics(
-            "<!doctype html><form id=outer><div>One<form id=inner><input name=x></form><p>After",
-        )
-        .unwrap();
+        let source =
+            "<!doctype html><form id=outer><div>One<form id=inner><input name=x></form><p>After";
+        let output = parse_html_with_diagnostics(source).unwrap();
 
         assert_eq!(
             output.parser_diagnostics,
@@ -33312,10 +33333,7 @@ mod tests {
                     "unexpected-non-current-form-end-tag",
                     "end tag `</form>` removed a form while a non-form node remained current after implied-end-tag generation"
                 ),
-                ParserDiagnostic::new(
-                    "eof-with-unclosed-elements",
-                    "end of file was reached with disallowed open elements"
-                )
+                eof_with_unclosed_elements(source)
             ]
         );
 
@@ -35144,10 +35162,8 @@ mod tests {
 
     #[test]
     fn self_closing_plaintext_still_consumes_until_eof() {
-        let output = parse_html_with_diagnostics(
-            "<!doctype html><p>before</p><plaintext/><b>&amp;</b></plaintext>",
-        )
-        .unwrap();
+        let source = "<!doctype html><p>before</p><plaintext/><b>&amp;</b></plaintext>";
+        let output = parse_html_with_diagnostics(source).unwrap();
 
         let body = body(&output.document);
         let paragraph = element(&body.children[0]);
@@ -35165,10 +35181,7 @@ mod tests {
                     "non-void-html-element-self-closing",
                     "self-closing flag on non-void HTML element `<plaintext>` was ignored"
                 ),
-                ParserDiagnostic::new(
-                    "eof-with-unclosed-elements",
-                    "end of file was reached with disallowed open elements"
-                )
+                eof_with_unclosed_elements(source)
             ]
         );
     }
@@ -37632,10 +37645,8 @@ mod tests {
             );
         }
 
-        let table = parse_html_with_diagnostics(
-            "<!doctype html><table><tbody><tr><td></body>",
-        )
-        .unwrap();
+        let table_source = "<!doctype html><table><tbody><tr><td></body>";
+        let table = parse_html_with_diagnostics(table_source).unwrap();
         assert_eq!(
             table.parser_diagnostics,
             vec![
@@ -37643,10 +37654,7 @@ mod tests {
                     "unexpected-shell-end-tag-outside-scope",
                     "end tag `</body>` targeted a body element outside ordinary scope"
                 ),
-                ParserDiagnostic::new(
-                    "eof-with-unclosed-elements",
-                    "end of file was reached with disallowed open elements"
-                )
+                eof_with_unclosed_elements(table_source)
             ]
         );
 
@@ -37852,10 +37860,7 @@ mod tests {
             let output = parse_html_with_diagnostics(source).unwrap();
             assert_eq!(
                 output.parser_diagnostics,
-                vec![ParserDiagnostic::new(
-                    "eof-with-unclosed-elements",
-                    "end of file was reached with disallowed open elements"
-                )],
+                vec![eof_with_unclosed_elements(source)],
                 "source {source:?}"
             );
         }
@@ -38567,10 +38572,8 @@ mod tests {
             diagnostic.code == "unexpected-formatting-end-tag-without-open-element"
         }));
 
-        let output = parse_html_with_diagnostics(
-            "<!doctype html><b id=a><p><b id=b></p></b>TEST",
-        )
-        .unwrap();
+        let source = "<!doctype html><b id=a><p><b id=b></p></b>TEST";
+        let output = parse_html_with_diagnostics(source).unwrap();
         assert_eq!(
             output.parser_diagnostics,
             vec![
@@ -38582,10 +38585,7 @@ mod tests {
                     "unexpected-formatting-end-tag-without-open-element",
                     "end tag `</b>` triggered adoption-agency recovery after its formatting element left the open stack",
                 ),
-                ParserDiagnostic::new(
-                    "eof-with-unclosed-elements",
-                    "end of file was reached with disallowed open elements",
-                ),
+                eof_with_unclosed_elements(source),
             ]
         );
 
@@ -38619,10 +38619,8 @@ mod tests {
 
     #[test]
     fn reports_repeated_anchor_start_tag_recovery() {
-        let output = parse_html_with_diagnostics(
-            "<!doctype html><a><div><style></style><address><a>",
-        )
-        .unwrap();
+        let source = "<!doctype html><a><div><style></style><address><a>";
+        let output = parse_html_with_diagnostics(source).unwrap();
         assert_eq!(
             output.parser_diagnostics,
             vec![
@@ -38630,10 +38628,7 @@ mod tests {
                     "nested-anchor-start-tag",
                     "start tag `<a>` triggered adoption-agency recovery for an active anchor"
                 ),
-                ParserDiagnostic::new(
-                    "eof-with-unclosed-elements",
-                    "end of file was reached with disallowed open elements"
-                ),
+                eof_with_unclosed_elements(source),
             ]
         );
 
@@ -40473,7 +40468,11 @@ mod tests {
                 .iter()
                 .find(|diagnostic| diagnostic.code == "eof-with-unclosed-elements")
                 .unwrap();
-            assert_eq!(diagnostic.position, None, "source {source:?}");
+            assert_eq!(
+                diagnostic.position,
+                Some(eof_position(source)),
+                "source {source:?}"
+            );
         }
 
         let foreign =
@@ -40487,7 +40486,7 @@ mod tests {
             .iter()
             .find(|diagnostic| diagnostic.code == "eof-with-unclosed-elements")
             .unwrap();
-        assert_eq!(diagnostic.position, None);
+        assert_eq!(diagnostic.position, Some(eof_position("<g>")));
 
         let closed_fragment = parse_html_fragment_for_context_with_diagnostics(
             "<tr><td>x</td></tr>",
@@ -40724,10 +40723,8 @@ mod tests {
             .iter()
             .all(|diagnostic| diagnostic.code != "eof-with-unclosed-elements"));
 
-        let cell = parse_html_with_diagnostics(
-            "<!doctype html><table><tr><td><template><div>",
-        )
-        .unwrap();
+        let cell_source = "<!doctype html><table><tr><td><template><div>";
+        let cell = parse_html_with_diagnostics(cell_source).unwrap();
         assert_eq!(
             cell.parser_diagnostics
                 .iter()
@@ -40744,7 +40741,10 @@ mod tests {
             .iter()
             .find(|diagnostic| diagnostic.code == "eof-with-unclosed-elements")
             .unwrap();
-        assert_eq!(unclosed_diagnostic.position, None);
+        assert_eq!(
+            unclosed_diagnostic.position,
+            Some(eof_position(cell_source))
+        );
 
         for source in [
             "<!doctype html><template></template>",
@@ -40924,16 +40924,114 @@ mod tests {
                     "HTML start tag `<nobr>` forced recovery from foreign content",
                 ));
             }
-            expected.push(ParserDiagnostic::new(
-                "eof-with-unclosed-elements",
-                "end of file was reached with disallowed open elements",
-            ));
+            expected.push(eof_with_unclosed_elements(source));
             assert_eq!(
                 output.parser_diagnostics,
                 expected,
                 "context {context:?}, source {source:?}"
             );
         }
+    }
+
+    #[test]
+    fn positions_eof_with_unclosed_elements_at_token_emission() {
+        for source in [
+            "<!doctype html><div>",
+            "<!doctype html><table><tr><td>x",
+            "<!doctype html><table><caption>x",
+            "<!doctype html><svg><g>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            let diagnostics = output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "eof-with-unclosed-elements")
+                .collect::<Vec<_>>();
+            assert_eq!(diagnostics.len(), 1, "source {source:?}");
+            assert_eq!(
+                diagnostics[0].position,
+                Some(SourcePosition {
+                    byte_offset: source.len(),
+                    char_offset: source.chars().count(),
+                    line: 1,
+                    column: source.chars().count() + 1,
+                }),
+                "source {source:?}"
+            );
+        }
+
+        let unicode_source = "<!doctype html><!--é-->\r\n<div>te";
+        let unicode = parse_html_with_diagnostics(unicode_source).unwrap();
+        let diagnostic = unicode
+            .parser_diagnostics
+            .iter()
+            .find(|diagnostic| diagnostic.code == "eof-with-unclosed-elements")
+            .unwrap();
+        assert_eq!(
+            diagnostic.position,
+            Some(SourcePosition {
+                byte_offset: unicode_source.len(),
+                char_offset: unicode_source.chars().count(),
+                line: 2,
+                column: "<div>te".chars().count() + 1,
+            })
+        );
+        assert!(unicode_source.len() > unicode_source.chars().count());
+
+        for (source, context) in [
+            ("<div>", "body"),
+            ("<span>", "html"),
+            ("<nobr>X", "svg path"),
+            ("<g>", "svg table"),
+        ] {
+            let output = parse_html_fragment_for_context_with_diagnostics(source, context).unwrap();
+            let diagnostic = output
+                .parser_diagnostics
+                .iter()
+                .find(|diagnostic| diagnostic.code == "eof-with-unclosed-elements")
+                .unwrap();
+            assert_eq!(
+                diagnostic.position,
+                Some(SourcePosition {
+                    byte_offset: source.len(),
+                    char_offset: source.chars().count(),
+                    line: 1,
+                    column: source.chars().count() + 1,
+                }),
+                "source {source:?} in {context:?}"
+            );
+        }
+
+        for source in [
+            "<!doctype html><p>",
+            "<!doctype html><table>",
+            "<!doctype html><template><div>",
+            "<!doctype html><title>x",
+            "<!doctype html><frameset>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != "eof-with-unclosed-elements"));
+        }
+
+        let mut unpositioned = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        unpositioned.process_token(Token::StartTag {
+            name: "div".to_string(),
+            attributes: Vec::new(),
+            self_closing: false,
+        });
+        unpositioned.process_token(Token::Eof);
+        assert_eq!(
+            unpositioned
+                .diagnostics()
+                .iter()
+                .find(|diagnostic| diagnostic.code == "eof-with-unclosed-elements")
+                .unwrap()
+                .position,
+            None
+        );
     }
 
     #[test]
