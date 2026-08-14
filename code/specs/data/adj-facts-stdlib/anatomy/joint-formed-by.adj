@@ -1,0 +1,80 @@
+% ============================================================================
+% joint-formed-by — the actual BONES that meet to form three synovial-joint
+% types, decoded from spans already sitting unused inside `joint-types.adj`'s
+% own already-quoted NIH/NLM StatPearls sentences (adj-facts-stdlib, ANATOMY).
+% ============================================================================
+% A sibling to the already-shipped `joint-types.adj`
+% (`joint_example(joint_type, example)`, hinge/pivot/condyloid/saddle/planar/
+% ball_and_socket → a representative joint the source names for each shape,
+% e.g. pivot → atlantoaxial): that table's own header already quotes,
+% verbatim, three StatPearls sentences that name a joint type's representative
+% EXAMPLE joint AND, in the same sentence, the specific BONES that meet to
+% FORM that joint -- a fact the joint_type/example schema had no room for:
+%
+%   pivot → atlas, axis
+%     "The atlantoaxial joint, formed by the 1st (atlas) and 2nd (axis)
+%      cervical vertebrae, is a pivot joint."
+%
+%   condyloid → distal_metacarpals, proximal_phalanges
+%     "Examples of condyloid joints are the knuckles, formed by the distal
+%      metacarpals and proximal phalanges of the medial 4 fingers."
+%
+%   saddle → trapezium, first_metacarpal
+%     "the joint formed by the trapezium and 1st metacarpal bone" (the
+%      saddle joint at the base of the thumb, already quoted inside
+%      `joint-types.adj`'s own header as the parenthetical gloss on its
+%      saddle → thumb row)
+%
+% New `joint_formed_by(joint_type, bone)` table decodes those named bones as
+% each joint type's own rows (6 total, across the three joint types whose
+% source sentence explicitly names the forming bones -- hinge, planar, and
+% ball_and_socket are deliberately NOT rowed here, since their own quoted
+% spans in `joint-types.adj` name only an example joint, never the specific
+% bones that form it). "Bone" (what physically meets to form the joint) is
+% categorically distinct from the parent table's "example" (the name of the
+% whole joint itself, e.g. "atlantoaxial" or "knuckles") -- a joint's example
+% name and its forming bones are two different facts about the same joint,
+% and neither collapses into the other. Recall is a binding query:
+%
+%     ? joint_formed_by(pivot, $Bone)  % atlas, then axis
+%
+% This is a native `table` (ADJ-TABLES RS-5, a TWO-column table like the
+% parent's own): each `row` lowers to a ground relation `joint_formed_by
+% (joint_type, bone)` carrying the citation, so the lookup above is the
+% ordinary SLD binding query -- the engine returns the bone WITH its source,
+% on the CPU, with zero model calls, and abstains on anything that is not one
+% of these three joint types (it never invents a forming bone). The query
+% also runs BACKWARD -- bind a bone and recall the joint type it helps form:
+%
+%     ? joint_formed_by($T, trapezium)  % saddle
+%
+% A recall on `hinge` -- a real, already-tabled joint type in
+% `joint-types.adj`, but whose own quoted span ("Examples include the elbow,
+% knee, ankle, and interphalangeal joints.") names only example joints, never
+% the specific bones that form any of them -- correctly abstains rather than
+% inventing a bone for it.
+%
+% Provenance: reproduces, byte-for-byte, the SAME three spans already quoted
+% inside `joint-types.adj`'s own header, from the SAME NIH/NLM StatPearls
+% "Anatomy, Joints" page that table already cites -- no new WebFetch, only a
+% different schema decoding the forming-bone clause of each already-verified
+% quote. `trust authoritative` -- the same tier the parent table already
+% carries (StatPearls is a primary U.S. government NIH/NLM reference).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
+% ============================================================================
+
+table joint_formed_by {
+    columns joint_type, bone
+
+    row (pivot, atlas)
+    row (pivot, axis)
+    row (condyloid, distal_metacarpals)
+    row (condyloid, proximal_phalanges)
+    row (saddle, trapezium)
+    row (saddle, first_metacarpal)
+
+    source "The atlantoaxial joint, formed by the 1st (atlas) and 2nd (axis) cervical vertebrae, is a pivot joint."
+    locator "https://www.ncbi.nlm.nih.gov/books/NBK507893/"
+    trust authoritative
+}
