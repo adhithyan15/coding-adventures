@@ -1,5 +1,11 @@
 # Changelog — `lang-aot`
 
+## 0.226.18 - 2026-08-14 (ALGOL two-level selector dependencies)
+
+The seven-backend ALGOL matrix now proves two bounded nested predicates can
+select preserving conditional-assignment leaves through a selector dependency
+chain.
+
 ## 0.226.17 - 2026-08-14 (ALGOL stable nested selector dependencies)
 
 The seven-backend ALGOL matrix now proves that an unchanged known scalar may

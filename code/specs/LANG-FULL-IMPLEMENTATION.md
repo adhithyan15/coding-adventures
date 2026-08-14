@@ -917,7 +917,8 @@ backend immediately) come before the enabler-dependent items.
   dependency unstable, nor does a conditional assignment whose leaves are all
   that same bare dependency. One additional bounded dependency level permits
   an unchanged known scalar predicate to select the preserving leaf of such a
-  dependency assignment; cyclic and deeper proofs fail closed. Computed
+  dependency assignment. A second bounded level may follow another stable
+  known selector in the same way; cyclic and deeper proofs fail closed. Computed
   selector assignments, differing,
   computed, or otherwise
   unsupported selector-dependency writes, dynamically selected differing selector leaves,

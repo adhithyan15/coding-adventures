@@ -7748,7 +7748,7 @@ const MAX_STATIC_REAL_FOR_ITERATIONS: usize = 4_096;
 const MAX_STATIC_WHILE_ITERATIONS: usize = 4_096;
 
 /// Bound nested selector-dependency proofs so cyclic assignments fail closed.
-const MAX_STATIC_SELECTOR_DEPENDENCY_DEPTH: usize = 1;
+const MAX_STATIC_SELECTOR_DEPENDENCY_DEPTH: usize = 2;
 
 /// Hard cap for the number of switch-list arms emitted while lowering one IIR
 /// function. Nested switch designators form a graph; without this cap an
@@ -10171,12 +10171,21 @@ mod tests {
     }
 
     #[test]
-    fn al4_deeper_nested_selector_dependency_remains_conservative() {
-        let err = compile_source(
+    fn al4_second_nested_selector_dependency_stays_stable() {
+        compile_source(
             "begin integer i, n, limit, choose; boolean other, flag, gate; n := 3; limit := 3; choose := 1; other := true; flag := true; gate := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := if flag then other else false; flag := if gate then flag else false; gate := gate end; print(i + 0.25) end",
             "test",
         )
-        .expect_err("selector dependency proofs beyond the fixed depth must fail closed");
+        .expect("the second bounded selector dependency may choose its preserving leaf");
+    }
+
+    #[test]
+    fn al4_third_nested_selector_dependency_remains_conservative() {
+        let err = compile_source(
+            "begin integer i, n, limit, choose; boolean other, flag, gate, key; n := 3; limit := 3; choose := 1; other := true; flag := true; gate := true; key := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := if flag then other else false; flag := if gate then flag else false; gate := if key then gate else false; key := key end; print(i + 0.25) end",
+            "test",
+        )
+        .expect_err("selector dependency proofs beyond the two-level cap must fail closed");
         assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
