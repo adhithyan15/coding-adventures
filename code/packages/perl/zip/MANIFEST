@@ -8,3 +8,5 @@ BUILD_windows
 lib/CodingAdventures/Zip.pm
 t/00-load.t
 t/01-zip.t
+t/02-portable-conformance.t
+required_capabilities.json

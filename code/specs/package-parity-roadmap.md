@@ -3427,6 +3427,52 @@ codec-contract port: strict dynamic trees, counted consumption, caller output
 caps, stable payload-blind errors, all 34 neutral fixtures, ZIP suffix-cavity
 and declared-size rejection, and explicit empty capability metadata.
 
+## Post-#11405 Refresh and Perl ZIP Raw-Conformance Selection
+
+External review merged ready-for-review PR #11405 as
+`2fb32016e437d5edb847ba70b023381dd04c8c0b` at
+2026-08-13T23:28:13Z from final reviewed head
+`8394e9eb31649b6998493cd213685dfb44281f23`. All 19 reported checks reached
+terminal success or an expected skip, the remote branch was deleted, and this
+loop did not exercise merge authority.
+
+A fresh collision-checked report, refreshed through identity-neutral live main
+`60fb1384864579944a70229e7ac71fd917e35cee`, covers 15 established
+lanes, 1,312 normalized identities, and 4,468 slots. It reports 173
+high-consensus identities with 269 gaps, 862 singletons with 12,068 singleton
+gaps, 663 Rust singletons, zero canonical collisions, and zero unknown buckets.
+The Elixir merge and the thirteen later commits through that live revision are
+topology-neutral. External PR #11394 added exactly two
+Rust singleton roots, `bacnet-protocol` and
+`smart-home-bacnet-ip-integration`, accounting for the two new identities,
+two new slots, two new singletons, and 28 new singleton gaps.
+
+The backlog now owns the pure bounded Who-Is/I-Am BVLC/NPDU/APDU codec through
+`bacnet-protocol-portable-conformance`. The mixed integration is split between
+an injected-transport portable core for deterministic planning, reply
+isolation, deduplication, discovery projection, authorization ordering, and
+bounded failure behavior, and a blocked native-authority review for UDP bind,
+broadcast, peer and forwarded-origin policy, timeouts, CLI I/O, capability
+truthfulness, and partial-mutation risk. No BACnet property access, control,
+write, BBMD, foreign-device registration, BACnet/SC, or all-language socket
+authority will be manufactured.
+
+The Elixir ZIP child is now merged, leaving seven pending children: .NET,
+Haskell, JVM, Lua, Perl, Python, and Swift. No live PR or remote parity branch
+owns ZIP, the neutral fixture, state, or this roadmap. The stale historical
+catch-up branch still touches only .NET, Haskell, and JVM ZIP paths and remains
+unowned residue that must not be reused or cherry-picked.
+
+The dependency/leverage pass selected `zip-raw-rfc1951-perl-lane-parity`.
+Perl is the smallest clean standalone remaining package/toolchain without live
+or historical overlap. Its ZIP-owned codec already has exact bit positions,
+the complete length/distance tables, and overlapping back-references, but it
+still rejects dynamic Huffman streams and trims declared-size mismatches. This
+coherent tranche adds strict dynamic trees, exact counted consumption, caller
+output caps, stable payload-blind errors, all 34 neutral fixtures, compressed
+suffix-cavity and declared-size rejection, and explicit empty capability
+metadata without duplicating DEFLATE.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

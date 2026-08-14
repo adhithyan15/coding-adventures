@@ -3,16 +3,33 @@ package CodingAdventures::Zip;
 use strict;
 use warnings;
 
-our $VERSION = '0.1.0';
+our $VERSION = '0.2.0';
 use Exporter 'import';
 our @EXPORT_OK = qw(
     crc32 dos_epoch dos_datetime
+    raw_deflate raw_inflate raw_inflate_counted
+    RAW_INFLATE_MAX_OUTPUT raw_inflate_error_codes
     new_writer add_file add_directory finish
     new_reader reader_entries reader_read read_by_name
     zip unzip
 );
 
 use CodingAdventures::LZSS qw(encode);
+use Scalar::Util qw(looks_like_number);
+
+{
+    package CodingAdventures::Zip::RawInflateError;
+    use overload '""' => sub { $_[0]->{code} }, fallback => 1;
+    sub new  { bless { code => $_[1] }, $_[0] }
+    sub code { $_[0]->{code} }
+}
+
+{
+    package CodingAdventures::Zip::RawInflateResult;
+    sub new            { bless { output => $_[1], bytes_consumed => $_[2] }, $_[0] }
+    sub output         { $_[0]->{output} }
+    sub bytes_consumed { $_[0]->{bytes_consumed} }
+}
 
 =head1 NAME
 
@@ -55,9 +72,10 @@ The dual-header design enables two workflows:
 
 =head2 DEFLATE inside ZIP
 
-ZIP method 8 stores raw RFC 1951 DEFLATE — no zlib wrapper. This implementation
-uses fixed Huffman blocks (BTYPE=01) with the LZSS module for LZ77 match-finding
-(32 KB window, max match 255, min match 3).
+ZIP method 8 stores raw RFC 1951 DEFLATE — no zlib wrapper. The encoder uses
+stored or fixed-Huffman blocks with the LZSS module for LZ77 match-finding. The
+strict decoder accepts stored, fixed-Huffman, dynamic-Huffman, and multi-block
+streams, enforces caller output bounds, and reports exact byte consumption.
 
 =head2 Series
 
@@ -234,18 +252,6 @@ sub _br_read_lsb {
     return $val;
 }
 
-sub _br_read_msb {
-    my ($br, $nbits) = @_;
-    my $v = _br_read_lsb($br, $nbits);
-    return undef unless defined $v;
-    my $rev = 0;
-    for (1 .. $nbits) {
-        $rev = ($rev << 1) | ($v & 1);
-        $v >>= 1;
-    }
-    return $rev;
-}
-
 sub _br_align {
     my ($br) = @_;
     my $discard = $br->{bits} % 8;
@@ -276,33 +282,6 @@ sub _fixed_ll_encode {
     elsif ($sym <= 255) { return (0x190 + ($sym - 144), 9) }
     elsif ($sym <= 279) { return ($sym - 256,            7) }
     else                { return (0xC0 + ($sym - 280),  8) }
-}
-
-# _fixed_ll_decode reads one LL symbol from the BitReader using fixed Huffman.
-# Returns undef on truncated input.
-sub _fixed_ll_decode {
-    my ($br) = @_;
-    my $v7 = _br_read_msb($br, 7);
-    return undef unless defined $v7;
-    if ($v7 <= 23) {
-        return $v7 + 256;  # 7-bit codes: symbols 256-279
-    }
-    my $b1 = _br_read_lsb($br, 1);
-    return undef unless defined $b1;
-    my $v8 = ($v7 << 1) | $b1;
-    if ($v8 >= 48 && $v8 <= 191) {
-        return $v8 - 48;         # literals 0-143
-    } elsif ($v8 >= 192 && $v8 <= 199) {
-        return $v8 + 88;         # symbols 280-287
-    } else {
-        my $b2 = _br_read_lsb($br, 1);
-        return undef unless defined $b2;
-        my $v9 = ($v8 << 1) | $b2;
-        if ($v9 >= 400 && $v9 <= 511) {
-            return $v9 - 256;    # literals 144-255
-        }
-        return undef;
-    }
 }
 
 # ============================================================================
@@ -362,7 +341,31 @@ sub _encode_dist {
 # RFC 1951 DEFLATE — Compress (fixed Huffman, BTYPE=01)
 # ============================================================================
 
-use constant MAX_OUTPUT => 256 * 1024 * 1024;  # 256 MiB zip-bomb guard
+use constant RAW_INFLATE_MAX_OUTPUT => 256 * 1024 * 1024;
+use constant MAX_OUTPUT => RAW_INFLATE_MAX_OUTPUT;
+
+my @RAW_INFLATE_ERROR_CODES = qw(
+    invalid-output-limit
+    unexpected-eof
+    reserved-block-type
+    stored-length-mismatch
+    huffman-oversubscribed
+    incomplete-code-length-tree
+    incomplete-literal-length-tree
+    incomplete-distance-tree
+    repeat-without-previous
+    repeat-overrun
+    invalid-literal-length-symbol
+    reserved-distance-symbol
+    invalid-back-reference
+    output-limit-exceeded
+);
+
+sub raw_inflate_error_codes { return [@RAW_INFLATE_ERROR_CODES] }
+
+sub _inflate_error {
+    return CodingAdventures::Zip::RawInflateError->new($_[0]);
+}
 
 sub _deflate_compress {
     my ($data) = @_;
@@ -417,96 +420,225 @@ sub _deflate_compress {
 # RFC 1951 DEFLATE — Decompress
 # ============================================================================
 #
-# Handles BTYPE=00 (stored) and BTYPE=01 (fixed Huffman).
+my @CODE_LENGTH_ORDER = (16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15);
 
-# _deflate_decompress decompresses raw RFC 1951 DEFLATE data.
-# Returns (data, undef) on success, or (undef, $errmsg) on failure.
-sub _deflate_decompress {
-    my ($data) = @_;
-    my $br  = _br_new($data);
-    my @out;  # byte array for O(1) back-reference indexing
-
-    while (1) {
-        my $bfinal = _br_read_lsb($br, 1);
-        return (undef, "deflate: unexpected EOF reading BFINAL") unless defined $bfinal;
-        my $btype = _br_read_lsb($br, 2);
-        return (undef, "deflate: unexpected EOF reading BTYPE") unless defined $btype;
-
-        if ($btype == 0) {
-            # Stored block
-            _br_align($br);
-            my $len16  = _br_read_lsb($br, 16);
-            my $nlen16 = _br_read_lsb($br, 16);
-            return (undef, "deflate: EOF reading stored LEN/NLEN")
-                unless defined $len16 && defined $nlen16;
-            return (undef, "deflate: stored block LEN/NLEN mismatch")
-                if ($nlen16 ^ 0xFFFF) != $len16;
-            return (undef, "deflate: output size limit exceeded")
-                if scalar(@out) + $len16 > MAX_OUTPUT;
-            for (1 .. $len16) {
-                my $b = _br_read_lsb($br, 8);
-                return (undef, "deflate: EOF inside stored block") unless defined $b;
-                push @out, $b;
-            }
-
-        } elsif ($btype == 1) {
-            # Fixed Huffman block
-            while (1) {
-                my $sym = _fixed_ll_decode($br);
-                return (undef, "deflate: EOF decoding symbol") unless defined $sym;
-
-                if ($sym < 256) {
-                    return (undef, "deflate: output size limit exceeded")
-                        if scalar(@out) >= MAX_OUTPUT;
-                    push @out, $sym;
-                } elsif ($sym == 256) {
-                    last;  # end-of-block
-                } elsif ($sym >= 257 && $sym <= 285) {
-                    my $idx = $sym - 257;
-                    return (undef, "deflate: invalid length sym $sym")
-                        if $idx > $#LENGTH_TABLE;
-                    my ($base_len, $extra_len_bits) = @{$LENGTH_TABLE[$idx]};
-                    my $extra_len = _br_read_lsb($br, $extra_len_bits);
-                    return (undef, "deflate: EOF reading length extra bits")
-                        unless defined $extra_len;
-                    my $length = $base_len + $extra_len;
-
-                    my $dist_code = _br_read_msb($br, 5);
-                    return (undef, "deflate: EOF reading distance code")
-                        unless defined $dist_code;
-                    return (undef, "deflate: invalid distance code $dist_code")
-                        if $dist_code >= scalar(@DIST_TABLE);
-                    my ($base_dist, $extra_dist_bits) = @{$DIST_TABLE[$dist_code]};
-                    my $extra_dist = _br_read_lsb($br, $extra_dist_bits);
-                    return (undef, "deflate: EOF reading distance extra bits")
-                        unless defined $extra_dist;
-                    my $offset = $base_dist + $extra_dist;
-
-                    my $n = scalar(@out);
-                    return (undef, "deflate: output size limit exceeded")
-                        if $n + $length >= MAX_OUTPUT;
-                    return (undef, "deflate: back-reference offset $offset > output len $n")
-                        if $offset > $n;
-                    # Copy byte-by-byte using integer array for O(1) indexing.
-                    for (1 .. $length) {
-                        push @out, $out[$n - $offset];
-                        $n++;
-                    }
-                } else {
-                    return (undef, "deflate: invalid LL symbol $sym");
-                }
-            }
-
-        } elsif ($btype == 2) {
-            return (undef, "deflate: dynamic Huffman blocks (BTYPE=10) not supported");
-        } else {
-            return (undef, "deflate: reserved BTYPE=11");
-        }
-
-        last if $bfinal;
+sub _build_huffman_decoder {
+    my ($lengths) = @_;
+    my @counts = (0) x 16;
+    for my $length (@$lengths) {
+        die _inflate_error('invalid-literal-length-symbol') if $length > 15;
+        $counts[$length]++ if $length > 0;
     }
 
-    return (pack('C*', @out), undef);
+    my $left = 1;
+    for my $length (1 .. 15) {
+        $left = $left * 2 - $counts[$length];
+        die _inflate_error('huffman-oversubscribed') if $left < 0;
+    }
+
+    my @next_code = (0) x 16;
+    my $code = 0;
+    for my $length (1 .. 15) {
+        $code = ($code + $counts[$length - 1]) << 1;
+        $next_code[$length] = $code;
+    }
+
+    my %table;
+    my $symbol_count = 0;
+    for my $symbol (0 .. $#$lengths) {
+        my $length = $lengths->[$symbol];
+        next if $length == 0;
+        $table{"$length:$next_code[$length]"} = $symbol;
+        $next_code[$length]++;
+        $symbol_count++;
+    }
+    return {
+        table          => \%table,
+        complete       => ($left == 0 ? 1 : 0),
+        symbol_count   => $symbol_count,
+        one_bit_count  => $counts[1],
+    };
+}
+
+sub _decode_symbol {
+    my ($decoder, $br, $invalid_code) = @_;
+    my $code = 0;
+    for my $length (1 .. 15) {
+        my $bit = _br_read_lsb($br, 1);
+        die _inflate_error('unexpected-eof') unless defined $bit;
+        $code = ($code << 1) | $bit;
+        my $key = "$length:$code";
+        return $decoder->{table}{$key} if exists $decoder->{table}{$key};
+    }
+    die _inflate_error($invalid_code);
+}
+
+sub _fixed_ll_lengths {
+    return [map { $_ <= 143 ? 8 : $_ <= 255 ? 9 : $_ <= 279 ? 7 : 8 } 0 .. 287];
+}
+
+sub _fixed_dist_lengths { return [(5) x 32] }
+
+sub _copy_back_reference {
+    my ($out, $distance, $length, $max_output) = @_;
+    die _inflate_error('invalid-back-reference')
+        if $distance == 0 || $distance > scalar(@$out);
+    die _inflate_error('output-limit-exceeded')
+        if $length > $max_output - scalar(@$out);
+    my $start = scalar(@$out) - $distance;
+    for my $index (0 .. $length - 1) {
+        push @$out, $out->[$start + $index];
+    }
+}
+
+sub _decode_code_lengths {
+    my ($decoder, $br, $total) = @_;
+    my @lengths;
+    while (@lengths < $total) {
+        my $symbol = _decode_symbol($decoder, $br, 'invalid-literal-length-symbol');
+        if ($symbol <= 15) {
+            push @lengths, $symbol;
+        } elsif ($symbol == 16) {
+            die _inflate_error('repeat-without-previous') unless @lengths;
+            my $extra = _br_read_lsb($br, 2);
+            die _inflate_error('unexpected-eof') unless defined $extra;
+            my $repeat = $extra + 3;
+            die _inflate_error('repeat-overrun') if $repeat > $total - @lengths;
+            push @lengths, ($lengths[-1]) x $repeat;
+        } elsif ($symbol == 17 || $symbol == 18) {
+            my ($bits, $base) = $symbol == 17 ? (3, 3) : (7, 11);
+            my $extra = _br_read_lsb($br, $bits);
+            die _inflate_error('unexpected-eof') unless defined $extra;
+            my $repeat = $extra + $base;
+            die _inflate_error('repeat-overrun') if $repeat > $total - @lengths;
+            push @lengths, (0) x $repeat;
+        } else {
+            die _inflate_error('invalid-literal-length-symbol');
+        }
+    }
+    return \@lengths;
+}
+
+sub _decode_compressed_block {
+    my ($ll_decoder, $distance_decoder, $br, $out, $max_output) = @_;
+    while (1) {
+        my $symbol = _decode_symbol($ll_decoder, $br, 'invalid-literal-length-symbol');
+        if ($symbol <= 255) {
+            die _inflate_error('output-limit-exceeded') if @$out >= $max_output;
+            push @$out, $symbol;
+        } elsif ($symbol == 256) {
+            return;
+        } elsif ($symbol <= 285) {
+            my ($base_length, $extra_length_bits) = @{$LENGTH_TABLE[$symbol - 257]};
+            my $extra_length = _br_read_lsb($br, $extra_length_bits);
+            die _inflate_error('unexpected-eof') unless defined $extra_length;
+            my $distance_symbol = _decode_symbol($distance_decoder, $br, 'reserved-distance-symbol');
+            die _inflate_error('reserved-distance-symbol') if $distance_symbol >= @DIST_TABLE;
+            my ($base_distance, $extra_distance_bits) = @{$DIST_TABLE[$distance_symbol]};
+            my $extra_distance = _br_read_lsb($br, $extra_distance_bits);
+            die _inflate_error('unexpected-eof') unless defined $extra_distance;
+            _copy_back_reference(
+                $out,
+                $base_distance + $extra_distance,
+                $base_length + $extra_length,
+                $max_output,
+            );
+        } else {
+            die _inflate_error('invalid-literal-length-symbol');
+        }
+    }
+}
+
+sub raw_deflate { return _deflate_compress($_[0]) }
+
+sub raw_inflate_counted {
+    my ($data, $max_output) = @_;
+    $max_output = RAW_INFLATE_MAX_OUTPUT unless defined $max_output;
+    die _inflate_error('invalid-output-limit')
+        if ref($max_output)
+        || !looks_like_number($max_output)
+        || int($max_output) != $max_output
+        || $max_output < 0
+        || $max_output > RAW_INFLATE_MAX_OUTPUT;
+
+    my $br = _br_new($data);
+    my @out;
+    while (1) {
+        my $final = _br_read_lsb($br, 1);
+        die _inflate_error('unexpected-eof') unless defined $final;
+        my $block_type = _br_read_lsb($br, 2);
+        die _inflate_error('unexpected-eof') unless defined $block_type;
+
+        if ($block_type == 0) {
+            _br_align($br);
+            my $length = _br_read_lsb($br, 16);
+            die _inflate_error('unexpected-eof') unless defined $length;
+            my $complement = _br_read_lsb($br, 16);
+            die _inflate_error('unexpected-eof') unless defined $complement;
+            die _inflate_error('stored-length-mismatch')
+                unless ($complement ^ 0xFFFF) == $length;
+            die _inflate_error('output-limit-exceeded')
+                if $length > $max_output - @out;
+            for (1 .. $length) {
+                my $value = _br_read_lsb($br, 8);
+                die _inflate_error('unexpected-eof') unless defined $value;
+                push @out, $value;
+            }
+        } elsif ($block_type == 1) {
+            _decode_compressed_block(
+                _build_huffman_decoder(_fixed_ll_lengths()),
+                _build_huffman_decoder(_fixed_dist_lengths()),
+                $br, \@out, $max_output,
+            );
+        } elsif ($block_type == 2) {
+            my $hlit_value = _br_read_lsb($br, 5);
+            my $hdist_value = _br_read_lsb($br, 5);
+            my $hclen_value = _br_read_lsb($br, 4);
+            die _inflate_error('unexpected-eof')
+                unless defined $hlit_value && defined $hdist_value && defined $hclen_value;
+            my $hlit = $hlit_value + 257;
+            my $hdist = $hdist_value + 1;
+            my $hclen = $hclen_value + 4;
+            die _inflate_error('invalid-literal-length-symbol') if $hlit > 286;
+
+            my @code_length_lengths = (0) x 19;
+            for my $index (0 .. $hclen - 1) {
+                my $value = _br_read_lsb($br, 3);
+                die _inflate_error('unexpected-eof') unless defined $value;
+                $code_length_lengths[$CODE_LENGTH_ORDER[$index]] = $value;
+            }
+            my $code_length_decoder = _build_huffman_decoder(\@code_length_lengths);
+            die _inflate_error('incomplete-code-length-tree')
+                unless $code_length_decoder->{complete};
+
+            my $lengths = _decode_code_lengths($code_length_decoder, $br, $hlit + $hdist);
+            my $ll_decoder = _build_huffman_decoder([@$lengths[0 .. $hlit - 1]]);
+            die _inflate_error('incomplete-literal-length-tree')
+                unless $ll_decoder->{complete};
+            my $distance_decoder = _build_huffman_decoder([@$lengths[$hlit .. $hlit + $hdist - 1]]);
+            my $permitted_distance = $distance_decoder->{complete}
+                || ($distance_decoder->{symbol_count} == 1 && $distance_decoder->{one_bit_count} == 1)
+                || $distance_decoder->{symbol_count} == 0;
+            die _inflate_error('incomplete-distance-tree') unless $permitted_distance;
+            _decode_compressed_block($ll_decoder, $distance_decoder, $br, \@out, $max_output);
+        } else {
+            die _inflate_error('reserved-block-type');
+        }
+        last if $final == 1;
+    }
+
+    return CodingAdventures::Zip::RawInflateResult->new(pack('C*', @out), $br->{pos});
+}
+
+sub raw_inflate {
+    return raw_inflate_counted(@_)->output;
+}
+
+sub _deflate_decompress {
+    my ($data) = @_;
+    my $result = eval { raw_inflate($data) };
+    return ($result, undef) unless $@;
+    return (undef, "$@");
 }
 
 # ============================================================================
@@ -861,17 +993,16 @@ sub reader_read {
     if ($entry->{method} == 0) {
         $decompressed = $compressed;
     } elsif ($entry->{method} == 8) {
-        my ($result, $err) = _deflate_decompress($compressed);
-        die "zip: entry '$entry->{name}': $err\n" unless defined $result;
-        $decompressed = $result;
+        my $result = raw_inflate_counted($compressed, $entry->{size});
+        die "zip: compressed payload contains trailing bytes\n"
+            if $result->bytes_consumed != length($compressed);
+        $decompressed = $result->output;
     } else {
         die "zip: unsupported compression method $entry->{method} for '$entry->{name}'\n";
     }
 
-    # Trim to declared uncompressed size.
-    if (length($decompressed) > $entry->{size}) {
-        $decompressed = substr($decompressed, 0, $entry->{size});
-    }
+    die "zip: uncompressed size does not match the directory\n"
+        if length($decompressed) != $entry->{size};
 
     # Verify CRC-32.
     my $actual_crc = crc32($decompressed);

@@ -14,6 +14,8 @@ WriteMakefile(
     },
     TEST_REQUIRES    => {
         'Test2::V0' => 0,
+        'JSON::PP' => 0,
+        'Compress::Raw::Zlib' => 0,
     },
     META_MERGE       => {
         'meta-spec' => { version => 2 },
