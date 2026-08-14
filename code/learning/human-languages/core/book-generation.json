@@ -3828,6 +3828,11 @@
       "output": "spanish/book/chapters/ch267-negate-and-ask.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 268,
+      "output": "spanish/book/chapters/ch268-viajar.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "output": "tamil/book/chapters/ch06-dative-case.tex",

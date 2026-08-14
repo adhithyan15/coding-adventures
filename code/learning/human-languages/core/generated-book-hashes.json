@@ -6212,6 +6212,18 @@
       "tex": "spanish/book/chapters/ch267-negate-and-ask.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 268,
+      "sourceHash": "fnv1a64:85e24f9287dcf7a9",
+      "lessonIds": [
+        "ES-C268-donde-esta",
+        "ES-C268-billete",
+        "ES-C268-habitacion",
+        "ES-C268-problema"
+      ],
+      "tex": "spanish/book/chapters/ch268-viajar.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "sourceHash": "fnv1a64:2dfc8f46bd0b295e",

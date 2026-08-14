@@ -3001,6 +3001,46 @@
         "ES-EXT-267-NEGATE-ASK"
       ],
       "after": []
+    },
+    {
+      "id": "ES-PATH-268-DIRECTION",
+      "spine_node": "SPINE-HANDLE-TRAVEL",
+      "lessons": [
+        "ES-C268-donde-esta"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-268-TICKET",
+      "spine_node": "SPINE-HANDLE-TRAVEL",
+      "lessons": [
+        "ES-C268-billete"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-268-ROOM",
+      "spine_node": "SPINE-HANDLE-TRAVEL",
+      "lessons": [
+        "ES-C268-habitacion"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-268-PROBLEM",
+      "spine_node": "SPINE-HANDLE-TRAVEL",
+      "lessons": [
+        "ES-C268-problema"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
     }
   ],
   "spine": {
@@ -3364,13 +3404,13 @@
       "relocates": {}
     },
     "SPINE-HANDLE-TRAVEL": {
-      "segments": [],
-      "omits": [
-        "DIRECTION-ASK",
-        "TRANSPORT-TICKET",
-        "LODGING-ROOM",
-        "PROBLEM-REPORT"
+      "segments": [
+        "ES-PATH-268-DIRECTION",
+        "ES-PATH-268-TICKET",
+        "ES-PATH-268-ROOM",
+        "ES-PATH-268-PROBLEM"
       ],
+      "omits": [],
       "relocates": {}
     },
     "SPINE-DESCRIBE-EXPERIENCE": {

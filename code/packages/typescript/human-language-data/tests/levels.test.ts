@@ -246,7 +246,7 @@ describe("corpus snapshot", () => {
     // touched", stopped being true the moment chapters 196-198 landed.
     // B2 opened with HL-C113 step 6: three lessons on SPINE-REPORT-WHAT-OTHERS-SAID.
     // C1 and C2 remain authored-but-unrealized, in every track.
-    expect(summary.byLevel.B1).toBe(31); // +3: HL-C113 realizes SPINE-EXPRESS-CONDITION, the third B1 node // +2: HL-C113 imperfect subjunctive (2 lessons)
+    expect(summary.byLevel.B1).toBe(35); // +3: HL-C113 realizes SPINE-EXPRESS-CONDITION, the third B1 node // +2: HL-C113 imperfect subjunctive (2 lessons) // HL-C158: +4 -- the B1 travel rung (chapter 268)
     expect(summary.byLevel.B2).toBe(10); // +3: HL-C113 step 6 opens B2 with reported speech // +4: step 7 adds the reported questions, the review and the synthesis, closing the node
     expect(summary.byLevel.C1).toBe(0);
     expect(summary.byLevel.C2).toBe(0);

@@ -7,18 +7,18 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:96da6e07c2e81385",
+  "sourceHash": "fnv1a64:18362d2bb90964f5",
   "summary": {
-    "totalLessons": 2229,
-    "voice": 1459,
+    "totalLessons": 2233,
+    "voice": 1463,
     "sight": 569,
     "pen": 201,
-    "drivableLessons": 1459,
-    "drivablePercent": 65,
+    "drivableLessons": 1463,
+    "drivablePercent": 66,
     "trackCount": 22,
-    "chapterCount": 779,
-    "drivablePrefixTotal": 1257,
-    "fullyDrivableChapters": 479,
+    "chapterCount": 780,
+    "drivablePrefixTotal": 1261,
+    "fullyDrivableChapters": 480,
     "unstartableChapters": 180,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
@@ -7334,12 +7334,12 @@
     },
     {
       "language": "spanish",
-      "lessonCount": 419,
-      "voice": 369,
+      "lessonCount": 423,
+      "voice": 373,
       "sight": 43,
       "pen": 7,
       "drivablePercent": 88,
-      "drivablePrefixTotal": 354,
+      "drivablePrefixTotal": 358,
       "modalities": [
         "voice",
         "sight",
@@ -11680,6 +11680,25 @@
             "ES-C267-pregunta-si-no",
             "ES-C267-verdad-no",
             "ES-C267-negar-preguntar"
+          ]
+        },
+        {
+          "chapter": 268,
+          "lessonCount": 4,
+          "voice": 4,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 4,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C268-donde-esta",
+            "ES-C268-billete",
+            "ES-C268-habitacion",
+            "ES-C268-problema"
           ]
         }
       ]
@@ -49022,6 +49041,78 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:b5dd3ba98729544f"
+    },
+    {
+      "id": "ES-C268-donde-esta",
+      "language": "spanish",
+      "chapter": 268,
+      "sequence": 2620,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:68b702aca65aadb1"
+    },
+    {
+      "id": "ES-C268-billete",
+      "language": "spanish",
+      "chapter": 268,
+      "sequence": 2630,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:2d941ba8d1b54ab5"
+    },
+    {
+      "id": "ES-C268-habitacion",
+      "language": "spanish",
+      "chapter": 268,
+      "sequence": 2640,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:40e9e80eab92001b"
+    },
+    {
+      "id": "ES-C268-problema",
+      "language": "spanish",
+      "chapter": 268,
+      "sequence": 2650,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:29533e953cbc0bad"
     },
     {
       "id": "TA-C01-vanakkam",
