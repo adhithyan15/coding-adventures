@@ -98,6 +98,7 @@ const CYRILLIC_ES = DUCTUS[ductusKey("cyrillic", "с")];
 const CYRILLIC_TE = DUCTUS[ductusKey("cyrillic", "т")];
 const CYRILLIC_U = DUCTUS[ductusKey("cyrillic", "у")];
 const CYRILLIC_EF = DUCTUS[ductusKey("cyrillic", "ф")];
+const CYRILLIC_HA = DUCTUS[ductusKey("cyrillic", "х")];
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
@@ -1538,6 +1539,24 @@ describe("handwriting ductus", () => {
     expect(rightBottom.at(-1)).toEqual(rightTop[0]);
     expect(Math.min(...leftTop.map((point) => point.x))).toBeLessThan(stem[0].x);
     expect(Math.max(...rightTop.map((point) => point.x))).toBeGreaterThan(stem[0].x);
+  });
+
+  it("Cyrillic х draws the left curved run before the crossing right run", () => {
+    expect(CYRILLIC_HA.script).toBe("cyrillic");
+    expect(penLifts(CYRILLIC_HA)).toBe(1);
+    expect(CYRILLIC_HA.strokes).toHaveLength(2);
+    expect(CYRILLIC_HA.strokes.map((stroke) => stroke.segments.length)).toEqual([2, 2]);
+    const [leftTop, leftBottom] = CYRILLIC_HA.strokes[0].segments.map(
+      (segment) => segment.path,
+    );
+    const [rightTop, rightBottom] = CYRILLIC_HA.strokes[1].segments.map(
+      (segment) => segment.path,
+    );
+    expect(leftTop.at(-1)).toEqual(leftBottom[0]);
+    expect(rightTop.at(-1)).toEqual(rightBottom[0]);
+    expect(leftTop.at(-1)).toEqual(rightTop.at(-1));
+    expect(leftTop[0].x).toBeLessThan(rightTop[0].x);
+    expect(leftBottom.at(-1)!.x).toBeLessThan(rightBottom.at(-1)!.x);
   });
 
   it("Hebrew א uses two crossed pen-down runs with one lift", () => {
@@ -3598,6 +3617,17 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /all 33 Russian letters.*classic handwritten form taught at school.*08:16–08:26.*first descends the long central stem.*upper line.*below the baseline.*lifts once.*upper central junction.*narrow left loop.*crosses the stem.*narrow right loop.*small rising exit.*two pen-down runs.*one intervening lift.*stem first.*linked left-to-right looped body.*bundled Noto Sans Cyrillic.*printed phi-like form.*straight central ascender-descender.*two wider upright bowls.*without an exit join.*stem-before-left-loop-before-right-loop order.*one-lift evidence.*descend the central stem.*lift.*trace the left bowl.*central junction.*trace the right bowl.*connected cursive restores/i,
+    );
+  });
+
+  it("Cyrillic х traces its two facing curves to the all-letter native lesson", () => {
+    const src = CYRILLIC_HA.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=tqDLDfYoO2o");
+    expect(src.citation).toMatch(
+      /RussianIrina.*Learning Russian - Alphabet letters, handwriting.*lowercase х.*08:42–08:49.*5 February 2013/i,
+    );
+    expect(src.variation).toMatch(
+      /all 33 Russian letters.*classic handwritten form taught at school.*08:42–08:49.*upper left.*curves right.*middle crossing.*sweeps left.*lower terminal.*lifts once.*second run.*upper right.*curves left.*same crossing.*sweeps right.*small rising exit.*two facing curved runs.*one intervening lift.*right-bulging left stroke.*left-bulging right stroke.*bundled Noto Sans Cyrillic.*printed X-like form.*four straight diagonal arms.*centre.*no entry or exit joins.*upper-left-run-before-upper-right-run order.*top-to-bottom directions.*crossing.*one-lift evidence.*two straight left arms.*lift.*two straight right arms.*connected cursive restores/i,
     );
   });
 
