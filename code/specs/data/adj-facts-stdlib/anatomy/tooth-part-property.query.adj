@@ -1,0 +1,16 @@
+% ============================================================================
+% tooth-part-property.query.adj — worked recall over the tooth-part-property
+% library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what property does
+% dentin have?" (direct) or "which part is calcified material?" (reverse) —
+% it states no fact of its own — it only `import`s the grounded table and
+% asks binding queries. A part not tabled here abstains honestly — the
+% engine never invents a property.
+% ============================================================================
+
+import "tooth-part-property.adj"
+
+? tooth_part_property(dentin, $Property)         % expect harder_than_bone
+? tooth_part_property($Part, calcified_material)  % reverse bind — expect cementum
+? tooth_part_property(enamel, $Property)           % expect abstain -- a real, already-tabled tooth part whose own quote states only its location, never a descriptive property
