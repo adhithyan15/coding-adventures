@@ -41,6 +41,8 @@ pub const HOST_ECALL_I64_TO_F64: u32 = 10;
 pub const HOST_ECALL_F64_TO_I64_TRUNC: u32 = 11;
 /// Floor f64 bits in `a1:a0`, returning f64 bits in `a1:a0`.
 pub const HOST_ECALL_F64_FLOOR: u32 = 12;
+/// Render an f64 bit pair in `a1:a0` as UTF-8 bytes through the host output.
+pub const HOST_ECALL_WRITE_F64: u32 = 13;
 /// Exit status reported when a checked f64-to-i64 host conversion cannot
 /// produce a valid signed integer.
 pub const HOST_ECALL_FLOAT_CONVERSION_FAULT_EXIT_CODE: i32 = 3;
@@ -259,6 +261,16 @@ impl RiscVSimulator {
                         HOST_ECALL_ARGUMENT_HIGH_REGISTER,
                     );
                     self.set_host_f64_result(value.floor());
+                    self.pc += 4;
+                    return mnemonic;
+                }
+                HOST_ECALL_WRITE_F64 => {
+                    let value = self.host_f64_argument(
+                        HOST_ECALL_ARGUMENT_LOW_REGISTER,
+                        HOST_ECALL_ARGUMENT_HIGH_REGISTER,
+                    );
+                    self.host_events
+                        .extend(value.to_string().bytes().map(HostEvent::WriteByte));
                     self.pc += 4;
                     return mnemonic;
                 }
@@ -528,6 +540,18 @@ mod tests {
         sim.regs.write(HOST_ECALL_SERVICE_REGISTER, HOST_ECALL_F64_FLOOR);
         assert_eq!(sim.step(), "ecall");
         assert_eq!(f64::from_bits(read_pair(&sim)), -3.0);
+
+        sim.pc = 0;
+        set_pair(&mut sim, HOST_ECALL_ARGUMENT_LOW_REGISTER, HOST_ECALL_ARGUMENT_HIGH_REGISTER,
+            1.75f64.to_bits());
+        sim.regs.write(HOST_ECALL_SERVICE_REGISTER, HOST_ECALL_WRITE_F64);
+        assert_eq!(sim.step(), "ecall");
+        assert!(sim.host_events.ends_with(&[
+            HostEvent::WriteByte(b'1'),
+            HostEvent::WriteByte(b'.'),
+            HostEvent::WriteByte(b'7'),
+            HostEvent::WriteByte(b'5'),
+        ]));
     }
 
     #[test]

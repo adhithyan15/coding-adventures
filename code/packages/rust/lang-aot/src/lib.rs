@@ -1202,7 +1202,8 @@ pub fn compile_file_to_riscv32_bin(
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
     let mut module = compile_source_to_iir(language, &source, stem)?;
     if language == Language::DartmouthBasic {
-        lower_basic_integral_expressions_for_riscv(&mut module)?;
+        lower_basic_real_print_for_riscv(&mut module)?;
+        validate_basic_division_for_riscv(&module)?;
     }
 
     // Route through aot_core::infer + aot_core::specialise, then let the
@@ -1235,31 +1236,16 @@ pub fn compile_file_to_riscv32_bin(
     Ok(())
 }
 
-/// Lower the Dartmouth BASIC integer-only expression slice supported by RV32I.
-///
-/// Dartmouth BASIC represents every numeric source expression as `f64`, even
-/// a literal such as `PRINT 42`. RV32I has no floating-point register file,
-/// but a finite whole-number program using integer-preserving expressions has
-/// an exact integer rendering. This target-only pass switches those operations
-/// to the existing integer ABI and removes the now-unreachable real-format
-/// helpers before IIR becomes CIR.
-///
-/// It intentionally refuses fractional literals, division, and float-only
-/// operations. Those require an exact-division representation or a floating-
-/// point ABI, rather than an implicit and potentially lossy conversion here.
-fn lower_basic_integral_expressions_for_riscv(
-    module: &mut IIRModule,
-) -> Result<(), LangAotError> {
+/// Route Dartmouth BASIC's final REAL rendering to the RISC-V simulator's
+/// host ABI. Arithmetic remains guest f64 bit-pair code; the existing guest
+/// formatter has mutable REAL values across branch joins that require a
+/// separate allocator increment.
+fn lower_basic_real_print_for_riscv(module: &mut IIRModule) -> Result<(), LangAotError> {
     const REAL_HELPERS: &[&str] = &[
         "__basic_print_fixed_mag",
         "__basic_print_real_e",
         "__basic_print_real",
     ];
-    const INTEGER_REAL_OPS: &[&str] = &[
-        "const", "mov", "add", "sub", "mul", "neg", "cmp_eq", "cmp_ne", "cmp_lt",
-        "cmp_le", "cmp_gt", "cmp_ge",
-    ];
-
     let module_name = module.name.clone();
     let Some(main) = module.get_function_mut("main") else {
         return Err(LangAotError::RiscvBackendError(format!(
@@ -1268,93 +1254,41 @@ fn lower_basic_integral_expressions_for_riscv(
         )));
     };
 
-    let mut integer_values = std::collections::HashSet::new();
     for instr in &mut main.instructions {
-        if instr.type_hint != "f64" {
-            continue;
-        }
-        if instr.op == "div" {
-            return Err(LangAotError::RiscvBackendError(format!(
-                "module {:?}: Dartmouth BASIC RV32I integral expressions do not yet support \
-                 division, because it can produce a fractional REAL value",
-                module_name
-            )));
-        }
-        if !INTEGER_REAL_OPS.contains(&instr.op.as_str()) {
-            return Err(LangAotError::RiscvBackendError(format!(
-                "module {:?}: Dartmouth BASIC RV32I integral expressions do not support REAL \
-                 operation {:?}",
-                module_name, instr.op
-            )));
-        }
-        for operand in &mut instr.srcs {
-            let Operand::Float(value) = operand else {
-                continue;
-            };
-            if !value.is_finite()
-                || value.fract() != 0.0
-                || *value < i64::MIN as f64
-                || *value > i64::MAX as f64
-            {
-                return Err(LangAotError::RiscvBackendError(format!(
-                    "module {:?}: Dartmouth BASIC RV32I integral expressions require finite \
-                     whole-number literals",
-                    module_name
-                )));
-            }
-            *operand = Operand::Int(*value as i64);
-        }
-        instr.type_hint = "i64".to_string();
-        if let Some(dest) = &instr.dest {
-            integer_values.insert(dest.clone());
+        if instr.op == "call"
+            && instr.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")
+        {
+            instr.op = "call_builtin".to_string();
+            instr.dest = None;
+            instr.srcs[0] = Operand::Var("print_f64".to_string());
+            instr.type_hint = "void".to_string();
         }
     }
-
-    for instr in &mut main.instructions {
-        if instr.op != "call" || instr.srcs.len() != 2 {
-            continue;
-        }
-        let Some("__basic_print_real") = instr.srcs.first().and_then(Operand::as_var) else {
-            continue;
-        };
-        let Some(argument) = instr.srcs.get(1).and_then(Operand::as_var) else {
-            continue;
-        };
-        if integer_values.contains(argument) {
-            instr.srcs[0] = Operand::Var("__basic_print_int".to_string());
-        }
-    }
-
-    let remaining_real = main.instructions.iter().find(|instr| {
-        instr.type_hint == "f64"
-            || instr.srcs.iter().any(|operand| matches!(operand, Operand::Float(_)))
-            || (instr.op == "call"
-                && instr.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real"))
-    });
-    if let Some(instr) = remaining_real {
-        return Err(LangAotError::RiscvBackendError(format!(
-            "module {:?}: Dartmouth BASIC RV32I integral expressions leave unsupported REAL \
-             function \"main\" still uses REAL operation {:?}",
-            module_name, instr.op
-        )));
-    }
-
     module
         .functions
         .retain(|function| !REAL_HELPERS.contains(&function.name.as_str()));
-    if let Some(function) = module.functions.iter().find(|function| {
-        function.params.iter().any(|(_, ty)| ty == "f64")
-            || function.return_type == "f64"
-            || function.instructions.iter().any(|instr| {
-                instr.type_hint == "f64"
-                    || instr.srcs.iter().any(|operand| matches!(operand, Operand::Float(_)))
-            })
-    }) {
+    Ok(())
+}
+
+/// BASIC REAL values now use the RISC-V backend's f64 bit-pair ABI and its
+/// soft-float host services. `/` remains a separately tracked language-level
+/// item until its exact Dartmouth BASIC semantics are covered end to end.
+fn validate_basic_division_for_riscv(module: &IIRModule) -> Result<(), LangAotError> {
+    let module_name = module.name.clone();
+    let Some(main) = module.get_function("main") else {
         return Err(LangAotError::RiscvBackendError(format!(
-            "module {:?}: Dartmouth BASIC RV32I integral expressions do not support REAL \
-             function {:?}",
-            module_name, function.name
+            "module {:?}: Dartmouth BASIC entry function \"main\" is missing",
+            module_name
         )));
+    };
+
+    for instr in &main.instructions {
+        if instr.op == "div" && instr.type_hint == "f64" {
+            return Err(LangAotError::RiscvBackendError(format!(
+                "module {:?}: Dartmouth BASIC RV32I exact division is not yet implemented",
+                module_name
+            )));
+        }
     }
     Ok(())
 }
