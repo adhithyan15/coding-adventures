@@ -21,9 +21,9 @@ use riscv_encoder::{
 };
 use riscv_simulator::{
     HostEvent, RiscVSimulator, HOST_ECALL_EXIT, HOST_ECALL_F64_ADD, HOST_ECALL_F64_CMP,
-    HOST_ECALL_F64_DIV, HOST_ECALL_F64_MUL, HOST_ECALL_F64_SUB, HOST_ECALL_F64_TO_I64_TRUNC,
-    HOST_ECALL_I64_TO_F64, HOST_ECALL_READ_BYTE, HOST_ECALL_SERVICE_REGISTER,
-    HOST_ECALL_WRITE_BYTE, HOST_ECALL_WRITE_I64,
+    HOST_ECALL_F64_DIV, HOST_ECALL_F64_FLOOR, HOST_ECALL_F64_MUL, HOST_ECALL_F64_SUB,
+    HOST_ECALL_F64_TO_I64_TRUNC, HOST_ECALL_I64_TO_F64, HOST_ECALL_READ_BYTE,
+    HOST_ECALL_SERVICE_REGISTER, HOST_ECALL_WRITE_BYTE, HOST_ECALL_WRITE_I64,
 };
 use vm_core::value::Value;
 
@@ -1084,6 +1084,10 @@ impl Lowerer {
             return self.lower_f64_to_i64_trunc(instr);
         }
 
+        if op == "real_to_int_floor" {
+            return self.lower_f64_to_i64_floor(instr);
+        }
+
         Err(BackendError::UnsupportedOp(op.to_string()))
     }
 
@@ -1399,6 +1403,42 @@ impl Lowerer {
             Ok(())
         })();
         self.restore_live_values_after_call(&saved_values);
+        result
+    }
+
+    fn lower_f64_to_i64_floor(&mut self, instr: &CIRInstr) -> Result<(), BackendError> {
+        if instr.ty != "i64" || instr.srcs.len() != 1 {
+            return Err(BackendError::InvalidOperand(
+                "real_to_int_floor requires one f64 source and an i64 destination".to_owned(),
+            ));
+        }
+
+        let floor_saved_values = self.save_live_values_across_call(instr);
+        self.stage_f64_argument(instr, 0, "real_to_int_floor", 0)?;
+        self.load_host_argument_pair(A0, A1, 0);
+        self.load_constant(HOST_ECALL_SERVICE_REGISTER as u32, HOST_ECALL_F64_FLOOR);
+        self.words.push(encode_ecall());
+        self.words.push(encode_sw(A0, STACK_POINTER, 0));
+        self.words.push(encode_sw(A1, STACK_POINTER, 4));
+        self.restore_live_values_after_call(&floor_saved_values);
+
+        let conversion_saved_values = self.save_live_values_across_call(instr);
+        self.load_host_argument_pair(A0, A1, 0);
+        self.load_constant(
+            HOST_ECALL_SERVICE_REGISTER as u32,
+            HOST_ECALL_F64_TO_I64_TRUNC,
+        );
+        self.words.push(encode_ecall());
+        let result = (|| {
+            let ValueLocation::Pair { lo, hi } = self.dest_pair(instr, "real_to_int_floor")?
+            else {
+                unreachable!("i64 results always use a pair")
+            };
+            self.words.push(encode_addi(lo, A0, 0));
+            self.words.push(encode_addi(hi, A1, 0));
+            Ok(())
+        })();
+        self.restore_live_values_after_call(&conversion_saved_values);
         result
     }
 
@@ -3187,7 +3227,7 @@ fn max_call_argument_words(
 fn max_host_argument_words(cir: &[CIRInstr]) -> usize {
     cir.iter()
         .filter_map(|instr| match instr.op.as_str() {
-            "int_to_real" | "real_to_int_trunc" => Some(2),
+            "int_to_real" | "real_to_int_trunc" | "real_to_int_floor" => Some(2),
             op if op.ends_with("_f64")
                 && (op.starts_with("add_")
                     || op.starts_with("sub_")

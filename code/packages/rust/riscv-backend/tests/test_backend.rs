@@ -3,6 +3,7 @@
 use jit_core::backend::{Backend, FunctionContext};
 use jit_core::cir::{CIRInstr, CIROperand};
 use riscv_backend::{compile, compile_module, run_binary, run_binary_with_input, BackendError, ModuleFunction, Riscv32Backend};
+use riscv_simulator::HOST_ECALL_FLOAT_CONVERSION_FAULT_EXIT_CODE;
 use vm_core::value::Value;
 
 fn ctx<'a>(name: &'a str, params: &'a [(String, String)], ret_ty: &'a str) -> FunctionContext<'a> {
@@ -386,6 +387,68 @@ fn f64_integer_conversions_use_the_simulator_softfloat_abi() {
     let run = run_binary(&binary, &[]).expect("f64 execution");
     assert_eq!(run.return_value, -42);
     assert_eq!(run.return_value_high, u32::MAX);
+}
+
+#[test]
+fn f64_floor_conversion_rounds_negative_values_toward_negative_infinity() {
+    let cir = vec![
+        ci(
+            "const_f64",
+            Some("value"),
+            vec![CIROperand::Float(-2.7)],
+            "f64",
+        ),
+        ci(
+            "real_to_int_floor",
+            Some("answer"),
+            vec![CIROperand::Var("value".into())],
+            "i64",
+        ),
+        ci(
+            "ret_i64",
+            None,
+            vec![CIROperand::Var("answer".into())],
+            "i64",
+        ),
+    ];
+    let binary = compile(&ctx("f64_floor", &[], "i64"), &cir).expect("f64 lowering");
+    let run = run_binary(&binary, &[]).expect("f64 execution");
+    assert_eq!(run.return_value, -3);
+    assert_eq!(run.return_value_high, u32::MAX);
+}
+
+#[test]
+fn f64_to_i64_conversion_halts_on_invalid_values() {
+    for value in [f64::NAN, f64::INFINITY, 9_223_372_036_854_775_808.0] {
+        let cir = vec![
+            ci(
+                "const_f64",
+                Some("value"),
+                vec![CIROperand::Float(value)],
+                "f64",
+            ),
+            ci(
+                "real_to_int_trunc",
+                Some("answer"),
+                vec![CIROperand::Var("value".into())],
+                "i64",
+            ),
+            ci(
+                "ret_i64",
+                None,
+                vec![CIROperand::Var("answer".into())],
+                "i64",
+            ),
+        ];
+        let binary = compile(&ctx("f64_conversion_fault", &[], "i64"), &cir)
+            .expect("f64 lowering");
+        let run = run_binary(&binary, &[]).expect("simulator execution");
+        assert_eq!(
+            run.exit_code,
+            Some(HOST_ECALL_FLOAT_CONVERSION_FAULT_EXIT_CODE),
+            "{value:?} must fail closed"
+        );
+    }
 }
 
 #[test]
@@ -2070,18 +2133,18 @@ fn rejects_unimplemented_float_operations_and_f32_transport() {
         BackendError::UnsupportedOp("mod_f64".to_owned())
     );
 
-    // `real_to_int_floor` needs a distinct host floor service; truncation is
-    // deliberately not substituted because negative values would be wrong.
-    let floor = vec![ci(
-        "real_to_int_floor",
-        Some("integer"),
-        vec![CIROperand::Var("real".into())],
-        "i64",
+    // `f64_sqrt` needs its own host service; it must not be approximated by
+    // unrelated integer instructions over the raw f64 bits.
+    let sqrt = vec![ci(
+        "f64_sqrt",
+        Some("root"),
+        vec![CIROperand::Var("value".into())],
+        "f64",
     )];
     assert_eq!(
-        compile(&ctx("main", &[], "i64"), &floor)
-            .expect_err("floor needs a dedicated host service"),
-        BackendError::UnsupportedOp("real_to_int_floor".to_owned())
+        compile(&ctx("main", &[], "f64"), &sqrt)
+            .expect_err("sqrt needs a dedicated host service"),
+        BackendError::UnsupportedOp("f64_sqrt".to_owned())
     );
 
     // Return: an f64 cannot ride home in `a0`.
