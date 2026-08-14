@@ -1,0 +1,15 @@
+% ============================================================================
+% valve-kind.query.adj — worked recall over the valve-kind library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what kind of valve is
+% the tricuspid?" (direct) or "which valves are semilunar?" (reverse) — it
+% states no fact of its own — it only `import`s the grounded table and asks
+% binding queries. A valve not tabled here abstains honestly — the engine
+% never invents a kind.
+% ============================================================================
+
+import "valve-kind.adj"
+
+? valve_kind(tricuspid, $Kind)          % expect atrioventricular
+? valve_kind($Valve, semilunar)          % reverse bind — expect pulmonary, aortic
+? valve_kind(eustachian, $Kind)           % expect abstain -- a real cardiac valve name, but not one of the four valves this table covers
