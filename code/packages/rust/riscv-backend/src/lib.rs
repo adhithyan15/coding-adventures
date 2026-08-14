@@ -374,6 +374,9 @@ struct Lowerer {
     allocation_layout: Option<ByteAllocationLayout>,
     function_name: String,
     pending_globals: Vec<PendingGlobal>,
+    /// The old location of a non-SSA destination while its defining
+    /// instruction is still reading it as a source.
+    pending_reassignment: Option<PendingReassignment>,
     /// Value uses still to be lowered. The allocator uses this to reclaim dead
     /// scalar values and register pairs before it spills live values.
     remaining_uses: HashMap<String, usize>,
@@ -400,6 +403,12 @@ enum ValueLocation {
     Pair { lo: u32, hi: u32 },
     Spill { offset: i32 },
     PairSpill { lo_offset: i32, hi_offset: i32 },
+}
+
+#[derive(Debug, Clone)]
+struct PendingReassignment {
+    name: String,
+    old_location: ValueLocation,
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -710,6 +719,7 @@ impl Lowerer {
             allocation_layout: allocation_layout.cloned(),
             function_name: ctx.name.to_owned(),
             pending_globals: Vec::new(),
+            pending_reassignment: None,
             remaining_uses: count_value_uses(cir),
             allow_direct_calls,
             call_signatures: call_signatures.cloned().unwrap_or_default(),
@@ -1588,7 +1598,7 @@ impl Lowerer {
                 )))
             }
         };
-        match self.lookup_location(name)? {
+        match self.source_location(name)? {
             ValueLocation::Word(register) => Ok(register),
             // Source frontends such as Nib normalize function signatures to
             // i64, while CIR retains narrow body operations (`add_u8`, etc.).
@@ -1629,7 +1639,7 @@ impl Lowerer {
                 )))
             }
         };
-        self.lookup_location(name)
+        self.source_location(name)
     }
 
     fn label_src(&self, instr: &CIRInstr, index: usize, op: &str) -> Result<String, BackendError> {
@@ -1642,15 +1652,21 @@ impl Lowerer {
     }
 
     fn allocate(&mut self, name: &str) -> Result<u32, BackendError> {
-        if let Some((_, location)) = self.env.iter().find(|(existing, _)| existing == name) {
+        if let Some(location) = self
+            .env
+            .iter()
+            .find_map(|(existing, location)| (existing == name).then_some(*location))
+        {
             return match location {
-                ValueLocation::Word(reg) => Ok(*reg),
+                ValueLocation::Word(reg) => Ok(reg),
                 ValueLocation::Pair { .. } => Err(BackendError::InvalidOperand(format!(
                     "{name:?} is already bound as a 64-bit value"
                 ))),
-                ValueLocation::Spill { .. } => Err(BackendError::InvalidOperand(format!(
-                    "{name:?} is already bound in a stack slot"
-                ))),
+                ValueLocation::Spill { .. } => {
+                    let register = self.allocate_value_register()?;
+                    self.reassign(name, location, ValueLocation::Word(register));
+                    Ok(register)
+                }
                 ValueLocation::PairSpill { .. } => Err(BackendError::InvalidOperand(format!(
                     "{name:?} is already bound in a wide stack slot"
                 ))),
@@ -1662,23 +1678,36 @@ impl Lowerer {
     }
 
     fn allocate_pair(&mut self, name: &str) -> Result<ValueLocation, BackendError> {
-        if let Some((_, location)) = self.env.iter().find(|(existing, _)| existing == name) {
+        if let Some(location) = self
+            .env
+            .iter()
+            .find_map(|(existing, location)| (existing == name).then_some(*location))
+        {
             return match location {
-                ValueLocation::Pair { lo, hi } => Ok(ValueLocation::Pair { lo: *lo, hi: *hi }),
-                ValueLocation::Word(_) => Err(BackendError::InvalidOperand(format!(
-                    "{name:?} is already bound as a 32-bit value"
-                ))),
-                ValueLocation::Spill { .. } => Err(BackendError::InvalidOperand(format!(
-                    "{name:?} is already bound in a scalar stack slot"
-                ))),
-                ValueLocation::PairSpill { .. } => Err(BackendError::InvalidOperand(format!(
-                    "{name:?} is already bound in a wide stack slot"
-                ))),
+                ValueLocation::Pair { lo, hi } => Ok(ValueLocation::Pair { lo, hi }),
+                ValueLocation::Word(_) | ValueLocation::Spill { .. } | ValueLocation::PairSpill { .. } => {
+                    let destination = self.allocate_pair_registers()?;
+                    self.reassign(name, location, destination);
+                    Ok(destination)
+                }
             };
         }
         let location = self.allocate_pair_registers()?;
         self.env.push((name.to_owned(), location));
         Ok(location)
+    }
+
+    fn reassign(&mut self, name: &str, old_location: ValueLocation, new_location: ValueLocation) {
+        debug_assert!(self.pending_reassignment.is_none());
+        for (existing, location) in &mut self.env {
+            if existing == name {
+                *location = new_location;
+            }
+        }
+        self.pending_reassignment = Some(PendingReassignment {
+            name: name.to_owned(),
+            old_location,
+        });
     }
 
     fn allocate_value_register(&mut self) -> Result<u32, BackendError> {
@@ -1821,6 +1850,15 @@ impl Lowerer {
         op: &str,
     ) -> Result<ValueLocation, BackendError> {
         match self.var_location(instr, index, op)? {
+            ValueLocation::Spill { offset } => {
+                let register = if index == 0 {
+                    SPILLED_LHS_REGISTER
+                } else {
+                    SPILLED_RHS_REGISTER
+                };
+                self.words.push(encode_lw(register, STACK_POINTER, offset));
+                Ok(ValueLocation::Word(register))
+            }
             ValueLocation::PairSpill {
                 lo_offset,
                 hi_offset,
@@ -1834,9 +1872,6 @@ impl Lowerer {
                 self.words.push(encode_lw(hi, STACK_POINTER, hi_offset));
                 Ok(ValueLocation::Pair { lo, hi })
             }
-            ValueLocation::Spill { .. } => Err(BackendError::InvalidOperand(format!(
-                "{op} requires a wide value at srcs[{index}]"
-            ))),
             location => Ok(location),
         }
     }
@@ -1848,6 +1883,15 @@ impl Lowerer {
         op: &str,
     ) -> Result<ValueLocation, BackendError> {
         match self.var_location(instr, index, op)? {
+            ValueLocation::Spill { offset } => {
+                let register = if index == 0 {
+                    SPILLED_LHS_REGISTER
+                } else {
+                    SPILLED_RHS_REGISTER
+                };
+                self.words.push(encode_lw(register, STACK_POINTER, offset));
+                Ok(ValueLocation::Word(register))
+            }
             ValueLocation::PairSpill {
                 lo_offset,
                 hi_offset,
@@ -1861,9 +1905,6 @@ impl Lowerer {
                 self.words.push(encode_lw(hi, STACK_POINTER, hi_offset));
                 Ok(ValueLocation::Pair { lo, hi })
             }
-            ValueLocation::Spill { .. } => Err(BackendError::InvalidOperand(format!(
-                "{op} requires a wide value at srcs[{index}]"
-            ))),
             location => Ok(location),
         }
     }
@@ -1885,6 +1926,15 @@ impl Lowerer {
             .ok_or_else(|| BackendError::UndefinedVariable(name.to_owned()))
     }
 
+    fn source_location(&self, name: &str) -> Result<ValueLocation, BackendError> {
+        if let Some(reassignment) = &self.pending_reassignment {
+            if reassignment.name == name {
+                return Ok(reassignment.old_location);
+            }
+        }
+        self.lookup_location(name)
+    }
+
     fn consume_value_sources(&mut self, instr: &CIRInstr) {
         for (index, operand) in instr.srcs.iter().enumerate() {
             if !is_value_source(instr, index) {
@@ -1897,6 +1947,7 @@ impl Lowerer {
                 *remaining = remaining.saturating_sub(1);
             }
         }
+        self.pending_reassignment = None;
     }
 
     fn lower_wide_add(

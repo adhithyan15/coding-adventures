@@ -199,10 +199,9 @@ the selected entry function can seed language-level static initializers.
     `alloc_bytes` requests use a zero-filled bump heap under the in-tree
     simulator. Byte accesses retain their allocation length and halt through
     host exit status `2` when the offset is out of range.
-22. [ ] **Wide reassignment:** allow a word-sized `i64`/`u64` value to widen or
+22. [x] **Wide reassignment:** allow a word-sized `i64`/`u64` value to widen or
     spill when an in-place wide operation reuses its destination; Brainfuck
-    pointer motion currently reaches this allocator gap before byte bounds can
-    be observed from source.
+    pointer motion now reaches the byte bounds guard from source.
 23. [ ] **Escaped byte-buffer ABI:** carry allocation length with byte-buffer
     pointers across moves, calls, returns, and globals so checked byte access
     is not limited to the allocating function.
