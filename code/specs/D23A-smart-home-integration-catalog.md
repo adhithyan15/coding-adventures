@@ -603,6 +603,7 @@ These should be implemented before most vendor-specific adapters:
 | `bacnet-protocol` and `smart-home-bacnet-ip-integration` | bounded BACnet/IP Who-Is/I-Am discovery and D23 bridge-candidate projection |
 | `knxnet-ip-protocol` and `smart-home-knxnet-ip-integration` | bounded KNXnet/IP Search Request/Search Response discovery and D23 interface projection |
 | `smart-home-esphome-discovery-integration` | bounded `_esphomelib._tcp` mDNS identity and security-capability discovery with D23 candidate projection |
+| `smart-home-google-cast-discovery-integration` | bounded `_googlecast._tcp` mDNS receiver identity, version, status, and capability discovery with D23 candidate projection |
 | `smart-home-camera-media` | ONVIF, RTSP, snapshots, privacy-sensitive state |
 | `smart-home-cloud-account` | OAuth/API-key cloud integrations and webhook registration |
 | `smart-home-data-governance` | purpose-bound consent, coarse-location configuration, and exact-destination telemetry egress |

@@ -2349,6 +2349,31 @@ claiming ownership of an encrypted protobuf session:
 This broadens the DIY/local-device ecosystem using production discovery
 primitives while preserving the native session and secret boundaries.
 
+## Current Google Cast mDNS Breadth Slice
+
+The next breadth slice adds concrete Google Cast receiver discovery without
+claiming ownership of a CastV2 TLS channel or media session:
+
+- `smart-home-google-cast-discovery-integration` targets the official
+  `_googlecast._tcp.local` service through the shared mDNS scanner and requires
+  the Open Screen receiver UUID, protocol version, capability bitfield, status,
+  friendly name, endpoint, and optional model contract.
+- Receiver UUIDs normalize to one exact 128-bit identity. Protocol versions are
+  bounded to the documented 2 through 99 range, status is limited to idle or
+  busy, and known audio, video, and developer-mode capability bits are
+  projected without rejecting future unknown bits.
+- D23 discovery authorization runs before socket I/O. One scan accepts at most
+  64 replies, uses a bounded timeout and record TTL, and isolates malformed or
+  conflicting advertisements as partial failures without replacing the
+  deterministic first identity observation.
+- The runtime opens no Cast TCP connection and performs no TLS handshake,
+  receiver authentication, application launch, session or queue management, or
+  media command. Those require a separately supervised Cast channel owner and
+  operation-specific policy.
+
+This broadens local TV, display, and speaker discovery while preserving the
+authenticated session and control boundary.
+
 The protocol- and vendor-specific backlog below remains valid after these
 breadth steps:
 
