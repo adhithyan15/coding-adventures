@@ -114,7 +114,7 @@
     {
       "id": "sankey",
       "headers": ["sankey", "sankey-beta"],
-      "status": "partial",
+      "status": "full",
       "ir": "chart",
       "smoke_source": "sankey\nA,B,10"
     },
