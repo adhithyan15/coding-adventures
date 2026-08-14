@@ -5,6 +5,30 @@ landed and why, not a semver-tracked API.
 
 ## Unreleased
 
+- `anatomy/tooth-part-property.adj` (new) — a sibling to the already-shipped `tooth-parts.adj`
+  (`tooth_part_role(part, role)`, dentin → beneath_enamel, cementum → covers_roots). That table's
+  own already-quoted MedlinePlus/StatPearls spans also state a descriptive property for two
+  parts -- a fact the part/role schema had no room for: "...dentin, a substance harder than
+  bone." and "...cementum (calcified material covering the roots of teeth)". New
+  `tooth_part_property(part, property)` table decodes those spans as their own rows:
+  dentin → harder_than_bone, cementum → calcified_material. No new WebFetch -- reuses the same
+  already-cited sentences. Honest abstention on `enamel`, `crown`, `pulp`, `root`, whose own
+  quotes never supply a second, descriptive property beyond the role itself. New e2e test file
+  `facts_toothpartproperty_e2e.rs` (3 tests: forward recall with citation, backward recall,
+  honest abstention). No manifest objective, matching `tooth-parts.adj`'s own precedent. LAST of
+  the 3 MODERATE anatomy/ fallback candidates -- closes out the anatomy/ domain sweep entirely
+  (both STRONG and MODERATE tiers now fully addressed). 108th content slice overall.
+- `anatomy/valve-alternate-name.adj` (new) — a sibling to the already-shipped `heart-valves.adj`
+  (`valve_separates`) and `valve-kind.adj` (`valve_kind`). Both of those tables' own already-quoted
+  NCI SEER span also names an everyday alternate name for the mitral valve -- a fact neither the
+  boundary nor the kind schema had room for: "The left atrioventricular valve is the bicuspid, or
+  mitral, valve." New `valve_alternate_name(valve, alt_name)` table decodes that span as its own
+  row: mitral → bicuspid. No new WebFetch -- reuses the same already-cited NCI SEER sentence.
+  Honest abstention on `tricuspid`, `pulmonary`, and `aortic`, whose own quotes never supply a
+  second name. New e2e test file `facts_valvealternatename_e2e.rs` (3 tests: forward recall with
+  citation, backward recall, honest abstention). No manifest objective, matching sibling tables'
+  own precedent. Second of the 3 MODERATE anatomy/ fallback candidates. 107th content slice
+  overall.
 - `anatomy/skin-layer-alt-name.adj` (new) — a sibling to the already-shipped `skin-layers.adj`
   (`skin_layer_property(layer, property)`) and `skin-layer-function.adj`
   (`skin_layer_function(layer, function)`). One of those tables' own already-quoted NCI SEER spans

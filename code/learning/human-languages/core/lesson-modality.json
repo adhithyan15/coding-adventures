@@ -7,18 +7,18 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:e0119218fc13d820",
+  "sourceHash": "fnv1a64:909863f080d187e4",
   "summary": {
-    "totalLessons": 2238,
-    "voice": 1468,
+    "totalLessons": 2255,
+    "voice": 1485,
     "sight": 569,
     "pen": 201,
-    "drivableLessons": 1468,
+    "drivableLessons": 1485,
     "drivablePercent": 66,
     "trackCount": 22,
-    "chapterCount": 781,
-    "drivablePrefixTotal": 1266,
-    "fullyDrivableChapters": 481,
+    "chapterCount": 784,
+    "drivablePrefixTotal": 1283,
+    "fullyDrivableChapters": 484,
     "unstartableChapters": 180,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
@@ -7058,12 +7058,12 @@
     },
     {
       "language": "sanskrit",
-      "lessonCount": 86,
-      "voice": 36,
+      "lessonCount": 103,
+      "voice": 53,
       "sight": 36,
       "pen": 14,
-      "drivablePercent": 42,
-      "drivablePrefixTotal": 27,
+      "drivablePercent": 51,
+      "drivablePrefixTotal": 44,
       "modalities": [
         "voice",
         "sight",
@@ -7328,6 +7328,68 @@
             "SA-C15-new",
             "SA-C15-old",
             "SA-C15-adjective-system"
+          ]
+        },
+        {
+          "chapter": 16,
+          "lessonCount": 6,
+          "voice": 6,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 6,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "SA-C16-house",
+            "SA-C16-village",
+            "SA-C16-road",
+            "SA-C16-forest",
+            "SA-C16-city",
+            "SA-C16-noun-families"
+          ]
+        },
+        {
+          "chapter": 17,
+          "lessonCount": 6,
+          "voice": 6,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 6,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "SA-C17-day",
+            "SA-C17-night",
+            "SA-C17-today",
+            "SA-C17-yesterday",
+            "SA-C17-always",
+            "SA-C17-time-words"
+          ]
+        },
+        {
+          "chapter": 18,
+          "lessonCount": 5,
+          "voice": 5,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "SA-C18-when",
+            "SA-C18-why",
+            "SA-C18-how-many",
+            "SA-C18-from-where",
+            "SA-C18-k-words"
           ]
         }
       ]
@@ -41491,6 +41553,312 @@
         "Writing: ह"
       ],
       "delivery": "script"
+    },
+    {
+      "id": "SA-C16-house",
+      "language": "sanskrit",
+      "chapter": 16,
+      "sequence": 730,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:7cbe2b5a481b7191"
+    },
+    {
+      "id": "SA-C16-village",
+      "language": "sanskrit",
+      "chapter": 16,
+      "sequence": 740,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:595ba6de16d65739"
+    },
+    {
+      "id": "SA-C16-road",
+      "language": "sanskrit",
+      "chapter": 16,
+      "sequence": 750,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:b272a25822f37155"
+    },
+    {
+      "id": "SA-C16-forest",
+      "language": "sanskrit",
+      "chapter": 16,
+      "sequence": 760,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:29ed10c64bc942ff"
+    },
+    {
+      "id": "SA-C16-city",
+      "language": "sanskrit",
+      "chapter": 16,
+      "sequence": 770,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:c28a3b106fb8cfe9"
+    },
+    {
+      "id": "SA-C16-noun-families",
+      "language": "sanskrit",
+      "chapter": 16,
+      "sequence": 780,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:3b3230182ef2a420"
+    },
+    {
+      "id": "SA-C17-day",
+      "language": "sanskrit",
+      "chapter": 17,
+      "sequence": 790,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:5dc3430b8590e010"
+    },
+    {
+      "id": "SA-C17-night",
+      "language": "sanskrit",
+      "chapter": 17,
+      "sequence": 800,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:f01f96357fc94d60"
+    },
+    {
+      "id": "SA-C17-today",
+      "language": "sanskrit",
+      "chapter": 17,
+      "sequence": 810,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:a45b810d2b31f1f2"
+    },
+    {
+      "id": "SA-C17-yesterday",
+      "language": "sanskrit",
+      "chapter": 17,
+      "sequence": 820,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:e97411fd6acc5160"
+    },
+    {
+      "id": "SA-C17-always",
+      "language": "sanskrit",
+      "chapter": 17,
+      "sequence": 830,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:368d36b9c76b4dd8"
+    },
+    {
+      "id": "SA-C17-time-words",
+      "language": "sanskrit",
+      "chapter": 17,
+      "sequence": 840,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:bc6d54d1783c0038"
+    },
+    {
+      "id": "SA-C18-when",
+      "language": "sanskrit",
+      "chapter": 18,
+      "sequence": 850,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:112cf6f37e8910e3"
+    },
+    {
+      "id": "SA-C18-why",
+      "language": "sanskrit",
+      "chapter": 18,
+      "sequence": 860,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:74b05ff64afc500b"
+    },
+    {
+      "id": "SA-C18-how-many",
+      "language": "sanskrit",
+      "chapter": 18,
+      "sequence": 870,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:32274ebf1f6dc3bf"
+    },
+    {
+      "id": "SA-C18-from-where",
+      "language": "sanskrit",
+      "chapter": 18,
+      "sequence": 880,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:55c16ee16eb9e092"
+    },
+    {
+      "id": "SA-C18-k-words",
+      "language": "sanskrit",
+      "chapter": 18,
+      "sequence": 890,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:5c6b991fa7be6267"
     },
     {
       "id": "ES-C01-hola",
