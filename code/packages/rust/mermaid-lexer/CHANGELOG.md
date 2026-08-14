@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.58.0
+
+- Tokenize Requirement typography style declarations.
+
 ## 0.57.0
 
 - Tokenize Requirement class definitions, assignments, and inline shorthand.

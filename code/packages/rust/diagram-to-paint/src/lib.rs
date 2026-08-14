@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.52.0";
+pub const VERSION: &str = "0.53.0";
 
 use std::collections::HashMap;
 
@@ -1051,7 +1051,6 @@ where
     }
     let lf = options.label_font.clone();
     let ls = lf.size;
-    const HEADER_H: f64 = 40.0;
 
     // Groups are backend-neutral containers. Draw outer groups first so nested
     // groups, relationships, and nodes naturally layer above them.
@@ -1165,6 +1164,16 @@ where
 
     // ── Node boxes ───────────────────────────────────────────────────────────
     for node in &diagram.nodes {
+        let header_height = node
+            .compartments
+            .first()
+            .map(|compartment| compartment.y_offset)
+            .unwrap_or(node.height);
+        let mut node_font = lf.clone();
+        node_font.size = node.style.font_size;
+        node_font.weight = node.style.font_weight;
+        node_font.italic = node.style.font_italic;
+        node_font.family.clone_from(&node.style.font_family);
         // Outer rect
         instructions.push(PaintInstruction::Rect(PaintRect {
             base: PaintBase::default(),
@@ -1184,11 +1193,11 @@ where
             &[
                 Point {
                     x: node.x,
-                    y: node.y + HEADER_H,
+                    y: node.y + header_height,
                 },
                 Point {
                     x: node.x + node.width,
-                    y: node.y + HEADER_H,
+                    y: node.y + header_height,
                 },
             ],
             "#d1d5db",
@@ -1205,8 +1214,8 @@ where
             node.x,
             node.y + 8.0,
             node.width,
-            HEADER_H - 8.0,
-            options.title_font.clone(),
+            header_height - 8.0,
+            node_font.clone(),
             css_to_color(&node.style.text_color),
         ));
         // Compartments
@@ -1232,10 +1241,10 @@ where
                 text_children.push(text_node(
                     row,
                     node.x + 8.0,
-                    comp_y + 8.0 + i as f64 * (ls + 4.0),
+                    comp_y + 8.0 + i as f64 * (node.style.font_size * 1.4),
                     node.width - 16.0,
-                    ls * 1.2,
-                    lf.clone(),
+                    node.style.font_size * 1.2,
+                    node_font.clone(),
                     css_to_color(&node.style.text_color),
                 ));
             }
@@ -3368,7 +3377,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.52.0");
+        assert_eq!(crate::VERSION, "0.53.0");
     }
 
     #[test]
