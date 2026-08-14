@@ -1,5 +1,9 @@
 # Changelog — diagram-to-paint
 
+## 0.51.0
+
+- Lower structural accessibility metadata into backend-neutral PaintScene metadata.
+
 ## 0.50.0
 
 - Paint horizontal Journey activity spines, dashed task descenders, and layout-resolved score faces.

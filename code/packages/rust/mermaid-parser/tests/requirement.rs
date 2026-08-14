@@ -6,6 +6,11 @@ use mermaid_parser::{parse_any_mermaid, parse_requirement_diagram, MermaidDiagra
 
 const SOURCE: &str = r#"requirementDiagram
 title Checkout requirements
+accTitle: Checkout requirement graph
+accDescr {
+Payment requirements
+and their implementation
+}
 functionalRequirement payment_req {
 id: PAY-1
 text: "Payment completes securely"
@@ -23,6 +28,14 @@ fn requirement_core_lowers_to_structural_ir() {
     let diagram = parse_requirement_diagram(SOURCE).expect("requirement diagram");
     assert_eq!(diagram.kind, StructuralKind::Requirement);
     assert_eq!(diagram.title.as_deref(), Some("Checkout requirements"));
+    assert_eq!(
+        diagram.accessibility_title.as_deref(),
+        Some("Checkout requirement graph")
+    );
+    assert_eq!(
+        diagram.accessibility_description.as_deref(),
+        Some("Payment requirements\nand their implementation")
+    );
     assert_eq!(diagram.nodes.len(), 2);
     assert_eq!(diagram.nodes[0].node_kind, StructuralNodeKind::Requirement);
     assert_eq!(diagram.nodes[1].node_kind, StructuralNodeKind::Element);
@@ -50,6 +63,18 @@ fn requirement_core_lowers_to_structural_ir() {
     assert_eq!(diagram.relationships[0].from, "checkout_service");
     assert_eq!(diagram.relationships[0].to, "payment_req");
     assert_eq!(diagram.relationships[0].label.as_deref(), Some("satisfies"));
+}
+
+#[test]
+fn requirement_parses_single_line_accessibility_description() {
+    let diagram = parse_requirement_diagram(
+        "requirementDiagram\naccDescr: A concise requirement graph\nrequirement req {}",
+    )
+    .expect("single-line accessibility description");
+    assert_eq!(
+        diagram.accessibility_description.as_deref(),
+        Some("A concise requirement graph")
+    );
 }
 
 #[test]

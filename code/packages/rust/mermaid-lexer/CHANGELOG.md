@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.55.0
+
+- Tokenize Requirement accessibility title and description statements.
+
 ## 0.54.0
 
 - Tokenize Requirement definition fields by semantic role and enum domain.
