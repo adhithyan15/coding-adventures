@@ -538,6 +538,10 @@ Prioritized work items:
    integration boundaries; scope and unmatched companion diagnostics remain
    independently unpositioned, and incomplete EOF syntax still emits no end-tag
    token.
+   Dedicated form end tags now follow the same position contract at foreign
+   integration boundaries; pointer and template ownership recovery remains
+   unchanged, companion diagnostics stay independently unpositioned, and
+   incomplete EOF syntax still emits no end-tag token.
    Continue migrating one evidence-backed diagnostic family at a time;
    synthetic or directly supplied tokens must remain explicitly unpositioned.
 4. **Input boundary review.** Document the Unicode-code-point parser boundary
