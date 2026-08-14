@@ -1430,9 +1430,9 @@ mod tests {
     #[test]
     fn element_section_func_count_does_not_preallocate_beyond_max_prealloc() {
         // A crafted func_count of u32::MAX, with no actual func indices
-        // following (a truncated/adversarial stream) -- if this allocated
-        // `Vec::with_capacity(func_count.min(MAX_PREALLOC))` directly (the old behavior),
-        // that's a ~16 GiB up-front allocation from four attacker-controlled
+        // following (a truncated/adversarial stream) -- the old behavior,
+        // `Vec::with_capacity(func_count)` with no cap, would have requested
+        // a ~16 GiB up-front allocation from four attacker-controlled
         // bytes, before the loop ever reaches the first (failing) read. The
         // fix caps pre-allocation at MAX_PREALLOC, so this must error
         // cleanly (a missing byte on the first func-index read) rather than
