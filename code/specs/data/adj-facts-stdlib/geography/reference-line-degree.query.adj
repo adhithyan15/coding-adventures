@@ -1,0 +1,16 @@
+% ============================================================================
+% reference-line-degree.query.adj — worked recall over the
+% reference-line-degree library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "at what latitude is the
+% Tropic of Cancer?" (direct) or "which tropic sits at -23.5 degrees?"
+% (reverse) — it states no fact of its own — it only `import`s the grounded
+% table and asks binding queries. A line not tabled here abstains honestly —
+% the engine never invents a degree value.
+% ============================================================================
+
+import "reference-line-degree.adj"
+
+? reference_line_degree(tropic_of_cancer, $Degrees)   % expect 23.5
+? reference_line_degree($Line, -23.5)                  % reverse bind — expect tropic_of_capricorn
+? reference_line_degree(equator, $Degrees)              % expect abstain -- a real, already-tabled reference line, but its 0-degree fact is already fully captured by its own marks atom (zero_degrees_latitude), not decoded here
