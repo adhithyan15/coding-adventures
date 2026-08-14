@@ -3833,6 +3833,11 @@
       "output": "spanish/book/chapters/ch268-viajar.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 269,
+      "output": "spanish/book/chapters/ch269-experiencia.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "output": "tamil/book/chapters/ch06-dative-case.tex",

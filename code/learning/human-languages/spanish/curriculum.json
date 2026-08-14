@@ -3041,6 +3041,46 @@
       "before": [],
       "inline": [],
       "after": []
+    },
+    {
+      "id": "ES-PATH-269-FEELING",
+      "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+      "lessons": [
+        "ES-C269-feliz"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-269-AMBITION",
+      "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+      "lessons": [
+        "ES-C269-espero"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-269-COMPARISON",
+      "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+      "lessons": [
+        "ES-C269-mas-que"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-269-DURATION",
+      "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+      "lessons": [
+        "ES-C269-durante"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
     }
   ],
   "spine": {
@@ -3414,13 +3454,13 @@
       "relocates": {}
     },
     "SPINE-DESCRIBE-EXPERIENCE": {
-      "segments": [],
-      "omits": [
-        "ADJECTIVE-FEELING",
-        "AMBITION-EXPRESS",
-        "COMPARISON-BASIC",
-        "TIME-DURATION"
+      "segments": [
+        "ES-PATH-269-FEELING",
+        "ES-PATH-269-AMBITION",
+        "ES-PATH-269-COMPARISON",
+        "ES-PATH-269-DURATION"
       ],
+      "omits": [],
       "relocates": {}
     },
     "SPINE-EXPRESS-CONDITION": {
