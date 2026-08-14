@@ -1,0 +1,21 @@
+% ============================================================================
+% simple-machine-function.query — worked recall queries against
+% simple-machine-function.adj (adj-facts-stdlib, PHYSICS).
+% ============================================================================
+% Three queries: forward recall with citation, backward recall (bind a
+% function, find the machine), and honest abstention on a non-simple-machine
+% word (this table, unlike its sibling simple-machine-alt-example.adj,
+% covers the full six-machine domain with no abstention among the six --
+% but still abstains on anything outside that set, e.g. a gear).
+% ============================================================================
+
+import "simple-machine-function.adj"
+
+% Forward: what does a lever do, per the cited NASA span?
+? simple_machine_function(lever, $Function)
+
+% Backward: which machine's function is to fasten two objects together?
+? simple_machine_function($M, fastens_objects_together)
+
+% Honest abstention: a gear is not one of the six classical simple machines.
+? simple_machine_function(gear, $FunctionGear)
