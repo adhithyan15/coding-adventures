@@ -79,7 +79,7 @@
     {
       "id": "requirement",
       "headers": ["requirement", "requirementDiagram"],
-      "status": "partial",
+      "status": "full",
       "ir": "structural",
       "smoke_source": "requirementDiagram\nrequirement test_req {\nid: 1\ntext: Test\nrisk: low\nverifymethod: test\n}"
     },
