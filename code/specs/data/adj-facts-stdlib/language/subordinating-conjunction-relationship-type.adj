@@ -1,0 +1,86 @@
+% ============================================================================
+% subordinating-conjunction-relationship-type — each named kind of
+% relationship a subordinating conjunction can signal between its clauses,
+% decoded from a span already sitting unused inside `conjunction-type.adj`'s
+% own already-quoted source sentence (adj-facts-stdlib, LANGUAGE).
+% ============================================================================
+% A sibling to the already-shipped `conjunction-type.adj`
+% (`conjunction_type(type, description)`, coordinating_conjunction/
+% correlative_conjunction/subordinating_conjunction → their own defining
+% sentences): that table's own header already reproduces, verbatim, the
+% Grammarly sentence for the subordinating conjunction in full --
+%
+%     "Subordinating conjunctions join dependent clauses to the
+%      independent clauses of sentences, signaling cause and effect,
+%      comparison, contrast, time, or some other kind of relationship
+%      between the clauses."
+%
+% -- but the table's `type, description` schema only had room for WHAT a
+% subordinating conjunction does structurally (joining clauses), not the
+% FOUR named relationship kinds the same sentence lists it can signal. New
+% `subordinating_conjunction_relationship_type(relationship_type,
+% conjunction_type)` table decodes those four named kinds as their own
+% rows:
+%
+%   cause_and_effect → subordinating_conjunction
+%   comparison        → subordinating_conjunction
+%   contrast          → subordinating_conjunction
+%   time              → subordinating_conjunction
+%
+% The sentence's own trailing "or some other kind of relationship between
+% the clauses" is deliberately excluded -- it names no additional
+% relationship, only gestures at an open-ended remainder, so tabling it
+% would invent a category the source never actually names.
+%
+% Recall is a binding query:
+%
+%     ? subordinating_conjunction_relationship_type(cause_and_effect, $C)
+%       % subordinating_conjunction
+%
+% This is a native `table` (ADJ-TABLES RS-5, a TWO-column table like the
+% parent's own): each `row` lowers to a ground relation
+% `subordinating_conjunction_relationship_type(relationship_type,
+% conjunction_type)` carrying the citation, so the lookup above is the
+% ordinary SLD binding query -- the engine returns the conjunction type
+% WITH its source, on the CPU, with zero model calls, and abstains on any
+% relationship type that is not one of these four (it never invents a
+% row). The query also runs BACKWARD -- bind a conjunction type and recall
+% every relationship type it signals:
+%
+%     ? subordinating_conjunction_relationship_type($R, subordinating_conjunction)
+%       % cause_and_effect, comparison, contrast, time
+%
+% A recall on a relationship type this exact sentence does NOT name --
+% `concession` (a real relationship subordinating conjunctions like
+% "although" can express in general grammar, but not one of the four this
+% specific already-quoted sentence lists) -- correctly abstains rather
+% than inventing a row for it. A recall on a DIFFERENT, real conjunction
+% category this stdlib already tables -- `coordinating_conjunction` (the
+% already-shipped sibling row in `conjunction-type.adj` itself) -- also
+% correctly abstains, since this table's only conjunction_type value is
+% subordinating_conjunction.
+%
+% Provenance: reproduces, byte-for-byte, the SAME span already quoted
+% inside `conjunction-type.adj`'s own header (its truth table, "quote
+% (verbatim)" column, subordinating_conjunction row), from the SAME
+% Grammarly "Conjunctions" article that table already cites -- no new
+% WebFetch, only a different schema decoding a part of that
+% already-verified quote. `trust consensus` -- the same tier the parent
+% table already carries (Grammarly is a reputable secondary reference,
+% not a primary standards body).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table subordinating_conjunction_relationship_type {
+    columns relationship_type, conjunction_type
+
+    row (cause_and_effect, subordinating_conjunction)
+    row (comparison, subordinating_conjunction)
+    row (contrast, subordinating_conjunction)
+    row (time, subordinating_conjunction)
+
+    source "Subordinating conjunctions join dependent clauses to the independent clauses of sentences, signaling cause and effect, comparison, contrast, time, or some other kind of relationship between the clauses."
+    locator "https://www.grammarly.com/blog/parts-of-speech/conjunctions/"
+    trust consensus
+}
