@@ -1,0 +1,68 @@
+% ============================================================================
+% ocean-instrument-secondary-quantity — sonar → the SECOND quantity it
+% determines, decoded from a span already sitting unused inside the SAME
+% NOAA source `ocean-observing-instruments.adj` already cites
+% (adj-facts-stdlib, OCEANOGRAPHY).
+% ============================================================================
+% A sibling to the already-shipped `ocean-observing-instruments.adj`
+% (`ocean_instrument(instrument, quantity)`, ONE quantity per instrument —
+% sonar → distance_to_object): a new `ocean_instrument_secondary_quantity
+% (instrument, secondary_quantity)` table names a SECOND quantity the SAME
+% already-cited NOAA "Sonar" page states sonar determines, decoded from a
+% clause already sitting unused inside that table's own header truth
+% table -- no new WebFetch. That table's schema has room for only ONE
+% quantity per instrument; the already-quoted sonar sentence also carries
+% a second, distinct quantity that never made it into a row:
+%
+%   sonar → orientation_of_object
+%     determines "the range and orientation of the object" by measuring
+%     the time between an emitted sound pulse and its echo
+%
+% ("range" is the already-tabled `distance_to_object`; "orientation" is
+% the leftover fact this sibling captures.)
+%
+% Recall is a binding query:
+%
+%     ? ocean_instrument_secondary_quantity(sonar, $SecondaryQuantity)  % orientation_of_object
+%
+% This is a native `table` (ADJ-TABLES RS-5, a TWO-column table like the
+% parent's own): the single `row` lowers to a ground relation
+% `ocean_instrument_secondary_quantity(instrument, secondary_quantity)`
+% carrying the citation, so the lookup above is the ordinary SLD binding
+% query -- the engine returns the quantity WITH its source, on the CPU,
+% with zero model calls, and abstains on any instrument that is not the
+% one tabled here (it never invents a second quantity). The query also
+% runs BACKWARD -- bind a quantity and recall which instrument determines
+% it:
+%
+%     ? ocean_instrument_secondary_quantity($Instrument, orientation_of_object)  % sonar
+%
+% This is honestly a ONE-ROW table, not a forced three-row one: neither
+% the tide_gauge nor the hydrophone quote already sitting inside the
+% parent table's own header names a SECOND quantity for that instrument
+% -- tide_gauge's cited span states only sea level relative to a datum,
+% and hydrophone's cited span ("detects and records ocean sounds from all
+% directions") names a direction-independence characteristic, not a
+% distinct second MEASURED quantity -- so this table correctly abstains
+% on both rather than inventing one.
+%
+% Provenance: reproduces, byte-for-byte, the SAME sonar span already
+% quoted inside `ocean-observing-instruments.adj`'s own header/provenance
+% section, from the SAME National Oceanic and Atmospheric Administration
+% (NOAA) "Sonar" page that table already cites -- no new WebFetch, only a
+% different schema decoding a part of that already-verified quote. `trust
+% authoritative` -- the same tier the parent table already carries for
+% this row (a primary U.S. government .gov source).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table ocean_instrument_secondary_quantity {
+    columns instrument, secondary_quantity
+
+    row (sonar, orientation_of_object)
+
+    source "the range and orientation of the object"
+    locator "https://oceanservice.noaa.gov/facts/sonar.html"
+    trust authoritative
+}
