@@ -5937,6 +5937,51 @@
       "tex": "spanish/book/chapters/ch256-review-parejas.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 257,
+      "sourceHash": "fnv1a64:1145aa38b8c051f7",
+      "lessonIds": [
+        "ES-C66-hablo-dos-lecturas"
+      ],
+      "tex": "spanish/book/chapters/ch257-hablo-dos.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 258,
+      "sourceHash": "fnv1a64:1e7c8ca4bceb4170",
+      "lessonIds": [
+        "ES-C66-la-terminacion-dice-quien"
+      ],
+      "tex": "spanish/book/chapters/ch258-terminacion.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 259,
+      "sourceHash": "fnv1a64:3f2cff0d73dca866",
+      "lessonIds": [
+        "ES-C66-mucha-agua"
+      ],
+      "tex": "spanish/book/chapters/ch259-mucha-agua.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 260,
+      "sourceHash": "fnv1a64:27be1cf0b1818b1a",
+      "lessonIds": [
+        "ES-C66-nombres-propios"
+      ],
+      "tex": "spanish/book/chapters/ch260-nombres-propios.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 261,
+      "sourceHash": "fnv1a64:53c68c0a6fdc0834",
+      "lessonIds": [
+        "ES-C66-repaso-lo-implicito"
+      ],
+      "tex": "spanish/book/chapters/ch261-review-implicito.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "sourceHash": "fnv1a64:5f56402811418e13",

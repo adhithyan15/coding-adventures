@@ -104,7 +104,7 @@ describe("real curriculum", () => {
     // 40 (esperar, contestar, comprar). Two sessions authored a chapter 38 in parallel;
     // the collision surfaced as a merge conflict on chapters.json rather than silently,
     // because both sides must edit it.
-    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(256); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis // +3: HL-C88 slice 8 // +1: HL-C88 slice 9 (falsos amigos) // +3: HL-C113 (B1 si-condition rung) // +3: HL-C113 preterite plural // HL-C113: HL-C113 imperfect subjunctive
+    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(261); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis // +3: HL-C88 slice 8 // +1: HL-C88 slice 9 (falsos amigos) // +3: HL-C113 (B1 si-condition rung) // +3: HL-C113 preterite plural // HL-C113: HL-C113 imperfect subjunctive
     expect(
       books.books
         .find((book) => book.language === "persian")
@@ -993,6 +993,21 @@ describe("real curriculum", () => {
       "ES-C65-vuestro-count",
       "ES-C65-vuestro-say",
       "ES-C65-vuestro-which",
+      "ES-C66-hablo-dos-lecturas-both",
+      "ES-C66-hablo-dos-lecturas-normal",
+      "ES-C66-hablo-dos-lecturas-when",
+      "ES-C66-la-terminacion-dice-quien-back",
+      "ES-C66-la-terminacion-dice-quien-drop",
+      "ES-C66-la-terminacion-dice-quien-rule",
+      "ES-C66-mucha-agua-noun",
+      "ES-C66-mucha-agua-test",
+      "ES-C66-mucha-agua-verb",
+      "ES-C66-nombres-propios-name",
+      "ES-C66-nombres-propios-title",
+      "ES-C66-nombres-propios-why",
+      "ES-C66-repaso-lo-implicito-drop",
+      "ES-C66-repaso-lo-implicito-prog",
+      "ES-C66-repaso-lo-implicito-quant",
       "ES-W03-question-span-roberto-outside",
       "FA-C02-esm-e-man-sara",
       "FA-C03-chist-fusion",
