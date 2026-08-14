@@ -196,11 +196,13 @@ filesystem durability, key custody, entropy, and actor routing remain injected
 or native. D18P now specifies the exact portable record, key, atomicity,
 recovery, paging, acknowledgement, and error behavior. Its shared fixture/Rust
 compatibility lock consumes the production D18C/D18S/D18H/D18A codecs and
-transition paths byte-for-byte. The TypeScript and Python ports reproduce those
-records, keys, reserve/recover/abandon/paging/ack transitions, structural
-endpoint roles, and the closed error roster over injected atomic backends.
-Go, Ruby, and Elixir ports, followed by the closed six-language gate, are the
-remaining D18P work.
+transition paths byte-for-byte. TypeScript, Python, Go, Ruby, and Elixir now
+reproduce those records, keys, reserve/recover/abandon/paging/ack transitions,
+structural endpoint roles, and the closed error roster over injected atomic
+backends. The central D18P gate requires exactly those six consumers, runs
+every package-native build, verifies generator provenance, and regenerates the
+manifest byte-for-byte. Portable sealed-key generation and rotation remain in
+#141 rather than the D18P persistence layer.
 
 The `b3a6616a` refresh added `chief-of-staff-channel-endpoints`, another
 zero-capability deterministic layer. Bounded identities, durable membership,
@@ -208,9 +210,9 @@ role/key authorization, lifecycle, injected message metadata, delivery-session
 receipts, and publish/grant/read/acknowledge orchestration are portable fixture
 candidates. Storage I/O, durability, clocks, randomness, key custody, and actor
 routing stay injected or native. D18P fixes the structural role and lifecycle
-contract while leaving sealed-key generation and rotation to #141. The endpoint
-ports follow the D18P store fixture lock rather than inventing parallel storage
-semantics.
+contract while leaving sealed-key generation and rotation to #141. All six
+endpoint implementations follow the D18P store fixture lock rather than
+inventing parallel storage semantics.
 
 The `bce05ed6` refresh added `chief-of-staff-service-registry`, a zero-
 capability deterministic registry over an injected `StorageBackend`. Its

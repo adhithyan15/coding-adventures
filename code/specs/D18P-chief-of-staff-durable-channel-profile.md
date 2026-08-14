@@ -630,17 +630,19 @@ production defaults.
 
 Issue #131 is complete only after this sequence:
 
-1. Merge this normative D18P profile.
+1. **Complete:** merge this normative D18P profile (#11685).
 2. **Complete:** the shared fixture manifest and Rust adapter prove the profile
-   is byte- and behavior-compatible with the shipped production implementation.
-3. Implement the deterministic definition/store/role kernel in TypeScript,
-   Python, Go, Ruby, and Elixir, using idiomatic immutable values and injected
-   atomic storage/crypto sources.
-4. Add one central repository check that requires exactly those six consumers,
-   runs every package-native build, verifies fixture-generator provenance, and
-   regenerates the manifest byte-for-byte.
-5. Close #131 only after that exact-head gate and required Ubuntu, macOS, and
-   Windows builds pass.
+   is byte- and behavior-compatible with the shipped production implementation
+   (#11691).
+3. **Complete:** the deterministic definition/store/role kernel is implemented
+   in TypeScript (#11700), Python (#11705), Go (#11709), Ruby (#11712), and
+   Elixir (#11716), using idiomatic immutable values and injected atomic
+   storage/crypto sources.
+4. **Complete:** the central repository check requires exactly those six
+   consumers, runs every package-native build, verifies fixture-generator
+   provenance, and regenerates the manifest byte-for-byte (#11721).
+5. **Complete:** the exact-head gate and required Ubuntu, macOS, and Windows
+   builds passed on #11721, satisfying the close condition for #131.
 
 Issue #141 may then reuse D18P's immutable grant slots and endpoint boundary for
 portable sealed-key generation, opening, rotation, and revocation. Issue #133
