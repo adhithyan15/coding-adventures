@@ -2063,6 +2063,26 @@ fn widens_a_word_sized_i64_when_a_wide_operation_reassigns_it() {
 }
 
 #[test]
+fn loop_join_preserves_a_word_sized_i64_before_it_widens() {
+    let cir = vec![
+        ci("const_i64", Some("one"), vec![CIROperand::Int(1)], "i64"),
+        ci("const_i64", Some("value"), vec![CIROperand::Int(0)], "i64"),
+        ci("const_bool", Some("skip"), vec![CIROperand::Int(0)], "bool"),
+        ci("label", None, vec![CIROperand::Var("high".into())], "void"),
+        ci("jmp_if_false", None, vec![CIROperand::Var("skip".into()), CIROperand::Var("low".into())], "void"),
+        ci("add_i64", Some("value"), vec![CIROperand::Var("value".into()), CIROperand::Var("one".into())], "i64"),
+        ci("jmp", None, vec![CIROperand::Var("high".into())], "void"),
+        ci("label", None, vec![CIROperand::Var("low".into())], "void"),
+        ci("sub_i64", Some("value"), vec![CIROperand::Var("value".into()), CIROperand::Var("one".into())], "i64"),
+        ci("ret_i64", None, vec![CIROperand::Var("value".into())], "i64"),
+    ];
+    let binary = compile(&ctx("wide_loop_join", &[], "i64"), &cir).expect("wide loop join");
+    let result = run_binary(&binary, &[]).expect("simulator execution");
+    assert_eq!(result.return_value, -1);
+    assert_eq!(result.return_value_high, u32::MAX);
+}
+
+#[test]
 fn moves_scalar_and_wide_values() {
     let scalar = vec![
         ci("const_i32", Some("source"), vec![CIROperand::Int(42)], "i32"),

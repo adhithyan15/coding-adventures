@@ -45,7 +45,6 @@
 use std::fmt;
 use std::path::Path;
 
-use interpreter_ir::instr::Operand;
 use interpreter_ir::module::IIRModule;
 
 /// McCarthy Lisp on the universal JIT backend (W15).
@@ -1200,9 +1199,8 @@ pub fn compile_file_to_riscv32_bin(
 ) -> Result<(), LangAotError> {
     let source = std::fs::read_to_string(src)?;
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
-    let mut module = compile_source_to_iir(language, &source, stem)?;
+    let module = compile_source_to_iir(language, &source, stem)?;
     if language == Language::DartmouthBasic {
-        lower_basic_real_print_for_riscv(&mut module)?;
         validate_basic_division_for_riscv(&module)?;
     }
 
@@ -1233,40 +1231,6 @@ pub fn compile_file_to_riscv32_bin(
     )?;
 
     std::fs::write(out, &bytes)?;
-    Ok(())
-}
-
-/// Route Dartmouth BASIC's final REAL rendering to the RISC-V simulator's
-/// host ABI. Arithmetic remains guest f64 bit-pair code; the existing guest
-/// formatter has mutable REAL values across branch joins that require a
-/// separate allocator increment.
-fn lower_basic_real_print_for_riscv(module: &mut IIRModule) -> Result<(), LangAotError> {
-    const REAL_HELPERS: &[&str] = &[
-        "__basic_print_fixed_mag",
-        "__basic_print_real_e",
-        "__basic_print_real",
-    ];
-    let module_name = module.name.clone();
-    let Some(main) = module.get_function_mut("main") else {
-        return Err(LangAotError::RiscvBackendError(format!(
-            "module {:?}: Dartmouth BASIC entry function \"main\" is missing",
-            module_name
-        )));
-    };
-
-    for instr in &mut main.instructions {
-        if instr.op == "call"
-            && instr.srcs.first().and_then(Operand::as_var) == Some("__basic_print_real")
-        {
-            instr.op = "call_builtin".to_string();
-            instr.dest = None;
-            instr.srcs[0] = Operand::Var("print_f64".to_string());
-            instr.type_hint = "void".to_string();
-        }
-    }
-    module
-        .functions
-        .retain(|function| !REAL_HELPERS.contains(&function.name.as_str()));
     Ok(())
 }
 
