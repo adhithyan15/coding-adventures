@@ -191,19 +191,25 @@ the selected entry function can seed language-level static initializers.
    across a linked module, append zero-initialized 64-bit slots after code, and
    lower scalar and pair accesses. Nib `static` values survive linked calls in
    the source-to-simulator fixture.
-20. [ ] **Linear memory:** lower explicit byte/word addresses and loads/stores,
-   including bounds behavior in the simulator, for tape-like and array payload
-   users.
-21. [ ] **Data images:** load initialized byte data alongside code so string and
-   array runtimes can address immutable program data.
-22. [ ] **BASIC real values:** Dartmouth BASIC currently lowers numeric values
+20. [x] **Static byte buffers:** lower compile-time `alloc_bytes` requests plus
+    zero-extending `load_byte` and truncating `store_byte` operations into an
+    appended, zero-filled module-data region for tape-like payloads. Brainfuck
+    mutation now compiles through `lang-aot` and executes in the simulator.
+21. [ ] **Dynamic byte allocation and bounds:** define allocation metadata and
+    out-of-bounds behavior for non-constant buffers before general array users
+    can rely on linear memory.
+22. [ ] **Data images:** load initialized byte data alongside code so string and
+    array runtimes can address immutable program data.
+23. [ ] **Host character I/O:** add byte-oriented input/output services and
+    lower `getchar` / `putchar`, enabling observable Brainfuck execution.
+24. [ ] **BASIC real values:** Dartmouth BASIC currently lowers numeric values
    such as `PRINT 42` through `f64`; direct RISC-V execution needs either a
    floating-point ABI or an integer-only lowering path before those programs
    can run on the simulator.
-23. [x] **Call argument ABI:** marshal scalar and pair-value arguments into
+25. [x] **Call argument ABI:** marshal scalar and pair-value arguments into
    `a0` through `a7`, including word-sized wide values, and preserve the narrow
    CIR view of ABI-normalized wide parameters.
-24. [x] **Typed CIR moves:** lower scalar and wide `mov_*` copies, including
+26. [x] **Typed CIR moves:** lower scalar and wide `mov_*` copies, including
    copies with a live wide source. Nib `let` bindings can now flow into direct
    calls and execute in the simulator.
 

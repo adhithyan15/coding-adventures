@@ -69,6 +69,7 @@ use lang_aot::{
     compile_file_to_intel4004_bin, compile_file_to_intel8008_bin, compile_file_to_riscv32_bin,
     LangAotError, Language,
 };
+use riscv_backend::run_binary;
 
 /// One compile function per historical-arch backend.  Each writes a
 /// flat `.bin` of machine code bytes for the given source file —
@@ -190,4 +191,23 @@ fn mccarthy_byte_identical_to_twig_on_every_historical_arch() {
     for (name, len) in &byte_lens {
         eprintln!("  {name}: {len} bytes");
     }
+}
+
+#[test]
+fn brainfuck_mutation_compiles_to_rv32i_and_runs_in_the_simulator() {
+    let dir = tempfile::tempdir().expect("tempdir");
+    let source = dir.path().join("mutate.bf");
+    let binary = dir.path().join("mutate.bin");
+    // This touches the zero-filled tape, increments its first cell, and exits
+    // normally. Observable character output is covered by the next host-ABI
+    // increment; this test pins the language-to-memory execution path itself.
+    std::fs::write(&source, "+").expect("write Brainfuck source");
+
+    compile_file_to_riscv32_bin(&source, &binary, Language::Brainfuck)
+        .expect("compile Brainfuck to RV32I");
+    let result = run_binary(&std::fs::read(binary).expect("read RV32I binary"), &[])
+        .expect("run Brainfuck RV32I binary");
+    assert!(result.halted);
+    assert_eq!(result.return_value, 0);
+    assert_eq!(result.return_value_high, 0);
 }

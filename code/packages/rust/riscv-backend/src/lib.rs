@@ -13,7 +13,8 @@ use jit_core::cir::{CIRInstr, CIROperand};
 use riscv_encoder::{
     assemble, encode_add, encode_addi, encode_and, encode_andi, encode_beq, encode_bne,
     encode_div, encode_divu, encode_ecall, encode_jal, encode_lui, encode_mul, encode_mulhu,
-    encode_lw, encode_or, encode_ori, encode_rem, encode_remu, encode_sll, encode_slli, encode_slt,
+    encode_lbu, encode_lw, encode_or, encode_ori, encode_rem, encode_remu, encode_sb, encode_sll,
+    encode_slli, encode_slt,
     encode_sltu, encode_sra, encode_srai, encode_srl, encode_srli, encode_sub, encode_xor,
     encode_xori, encode_sw, A0, RET_WORD,
     X0_ZERO, X1_RA,
@@ -163,7 +164,7 @@ impl std::error::Error for BackendError {}
 
 /// Lower a single typed CIR function to a flat little-endian RV32I binary.
 pub fn compile(ctx: &FunctionContext<'_>, cir: &[CIRInstr]) -> Result<Vec<u8>, BackendError> {
-    let mut lowerer = Lowerer::new(ctx, cir, false, None, None, false)?;
+    let mut lowerer = Lowerer::new(ctx, cir, false, None, None, None, false)?;
     for instr in cir {
         lowerer.lower(instr)?;
         lowerer.consume_value_sources(instr);
@@ -231,6 +232,7 @@ pub fn compile_module(
         })
         .collect();
     let global_layout = GlobalLayout::collect(&ordered)?;
+    let allocation_layout = ByteAllocationLayout::collect(&ordered, global_layout.byte_len)?;
 
     let mut lowerers = Vec::with_capacity(ordered.len());
     for function in &ordered {
@@ -240,6 +242,7 @@ pub fn compile_module(
             true,
             Some(&function_signatures),
             Some(&global_layout),
+            Some(&allocation_layout),
             direct_call_targets.contains(function.context.name),
         )?;
         for instr in function.cir {
@@ -278,7 +281,7 @@ pub fn compile_module(
                 error: Box::new(error),
             })?;
         lowerer
-            .resolve_globals(offset)
+            .resolve_data_addresses(offset)
             .map_err(|error| BackendError::InFunction {
                 function: function.context.name.to_owned(),
                 error: Box::new(error),
@@ -286,7 +289,7 @@ pub fn compile_module(
         bytes.extend_from_slice(&assemble(&lowerer.words));
         function_offset += lowerer.words.len() * 4;
     }
-    bytes.resize(bytes.len() + global_layout.byte_len, 0);
+    bytes.resize(bytes.len() + allocation_layout.byte_len, 0);
     if bytes.is_empty() {
         bytes.extend_from_slice(&RET_WORD.to_le_bytes());
     }
@@ -358,6 +361,8 @@ struct Lowerer {
     branches: Vec<PendingBranch>,
     calls: Vec<PendingCall>,
     global_layout: Option<GlobalLayout>,
+    allocation_layout: Option<ByteAllocationLayout>,
+    function_name: String,
     pending_globals: Vec<PendingGlobal>,
     /// Value uses still to be lowered. The allocator uses this to reclaim dead
     /// scalar values and register pairs before it spills live values.
@@ -442,6 +447,97 @@ struct GlobalLayout {
     byte_len: usize,
 }
 
+#[derive(Debug, Clone)]
+struct ByteAllocation {
+    offset: usize,
+}
+
+/// Static, zero-filled byte buffers appended after module globals.
+///
+/// The first supported allocation form is deliberately compile-time only: it
+/// gives tape-style language runtimes real addressable storage without making
+/// a guest heap or a bounds ABI part of the binary contract yet.
+#[derive(Debug, Clone, Default)]
+struct ByteAllocationLayout {
+    slots: HashMap<(String, String), ByteAllocation>,
+    byte_len: usize,
+}
+
+impl ByteAllocationLayout {
+    fn collect(
+        functions: &[&ModuleFunction<'_>],
+        initial_offset: usize,
+    ) -> Result<Self, BackendError> {
+        let mut layout = Self {
+            slots: HashMap::new(),
+            byte_len: initial_offset,
+        };
+        for function in functions {
+            let mut constants = HashMap::new();
+            for instr in function.cir {
+                if let (Some(destination), Some(CIROperand::Int(value))) =
+                    (instr.dest.as_ref(), instr.srcs.first())
+                {
+                    if instr.op.starts_with("const_") {
+                        constants.insert(destination.clone(), *value);
+                    }
+                }
+                if instr.op != "alloc_bytes" {
+                    continue;
+                }
+                let destination = instr.dest.as_ref().ok_or_else(|| BackendError::InFunction {
+                    function: function.context.name.to_owned(),
+                    error: Box::new(BackendError::InvalidOperand(
+                        "alloc_bytes requires a dest".to_owned(),
+                    )),
+                })?;
+                if !matches!(instr.ty.as_str(), "i64" | "u64") {
+                    return Err(BackendError::InFunction {
+                        function: function.context.name.to_owned(),
+                        error: Box::new(BackendError::UnsupportedType(instr.ty.clone())),
+                    });
+                }
+                let Some(CIROperand::Var(size_name)) = instr.srcs.first() else {
+                    return Err(BackendError::InFunction {
+                        function: function.context.name.to_owned(),
+                        error: Box::new(BackendError::InvalidOperand(
+                            "alloc_bytes srcs[0] must be a prior integer const Var".to_owned(),
+                        )),
+                    });
+                };
+                let size = constants.get(size_name).copied().ok_or_else(|| BackendError::InFunction {
+                    function: function.context.name.to_owned(),
+                    error: Box::new(BackendError::InvalidOperand(format!(
+                        "alloc_bytes size {size_name:?} must be a prior integer const"
+                    ))),
+                })?;
+                let size = usize::try_from(size).map_err(|_| BackendError::InFunction {
+                    function: function.context.name.to_owned(),
+                    error: Box::new(BackendError::InvalidOperand(
+                        "alloc_bytes size must be non-negative".to_owned(),
+                    )),
+                })?;
+                let key = (function.context.name.to_owned(), destination.clone());
+                if layout.slots.contains_key(&key) {
+                    return Err(BackendError::InFunction {
+                        function: function.context.name.to_owned(),
+                        error: Box::new(BackendError::InvalidOperand(format!(
+                            "alloc_bytes destination {destination:?} is declared more than once"
+                        ))),
+                    });
+                }
+                let offset = layout.byte_len;
+                layout.byte_len = layout
+                    .byte_len
+                    .checked_add(size)
+                    .ok_or(BackendError::ImmediateOutOfRange(i64::MAX))?;
+                layout.slots.insert(key, ByteAllocation { offset });
+            }
+        }
+        Ok(layout)
+    }
+}
+
 impl GlobalLayout {
     fn collect(functions: &[&ModuleFunction<'_>]) -> Result<Self, BackendError> {
         let mut layout = Self::default();
@@ -505,6 +601,7 @@ impl Lowerer {
         allow_direct_calls: bool,
         call_signatures: Option<&HashMap<String, FunctionSignature>>,
         global_layout: Option<&GlobalLayout>,
+        allocation_layout: Option<&ByteAllocationLayout>,
         canonicalize_wide_return: bool,
     ) -> Result<Self, BackendError> {
         let mut env = Vec::with_capacity(ctx.params.len());
@@ -578,6 +675,8 @@ impl Lowerer {
             branches: Vec::new(),
             calls: Vec::new(),
             global_layout: global_layout.cloned(),
+            allocation_layout: allocation_layout.cloned(),
+            function_name: ctx.name.to_owned(),
             pending_globals: Vec::new(),
             remaining_uses: count_value_uses(cir),
             allow_direct_calls,
@@ -694,6 +793,18 @@ impl Lowerer {
 
         if op == "global_store" {
             return self.lower_global_store(instr);
+        }
+
+        if op == "alloc_bytes" {
+            return self.lower_alloc_bytes(instr);
+        }
+
+        if op == "load_byte" {
+            return self.lower_load_byte(instr);
+        }
+
+        if op == "store_byte" {
+            return self.lower_store_byte(instr);
         }
 
         if let Some(ty) = op.strip_prefix("mov_") {
@@ -870,7 +981,7 @@ impl Lowerer {
         Ok(())
     }
 
-    fn resolve_globals(&mut self, data_offset: usize) -> Result<(), BackendError> {
+    fn resolve_data_addresses(&mut self, data_offset: usize) -> Result<(), BackendError> {
         for global in self.pending_globals.clone() {
             let address = data_offset
                 .checked_add(global.slot_offset)
@@ -1044,6 +1155,68 @@ impl Lowerer {
             self.reserve_global_address(slot.offset);
             self.words.push(encode_sw(source, SCRATCH_REGISTER, 0));
         }
+        Ok(())
+    }
+
+    fn lower_alloc_bytes(&mut self, instr: &CIRInstr) -> Result<(), BackendError> {
+        if instr.srcs.len() != 1 {
+            return Err(BackendError::InvalidOperand(format!(
+                "alloc_bytes requires one size operand, got {}",
+                instr.srcs.len()
+            )));
+        }
+        let slot = self.byte_allocation(instr, "alloc_bytes")?;
+        let ValueLocation::Pair { lo, hi } = self.dest_pair(instr, "alloc_bytes")? else {
+            unreachable!("alloc_bytes requires an i64/u64 destination")
+        };
+        self.reserve_global_address(slot.offset);
+        self.words.push(encode_addi(lo, SCRATCH_REGISTER, 0));
+        self.words.push(encode_addi(hi, X0_ZERO, 0));
+        Ok(())
+    }
+
+    fn lower_load_byte(&mut self, instr: &CIRInstr) -> Result<(), BackendError> {
+        if instr.srcs.len() != 2 {
+            return Err(BackendError::InvalidOperand(format!(
+                "load_byte requires base and offset operands, got {}",
+                instr.srcs.len()
+            )));
+        }
+        self.require_scalar_type(&instr.ty, "load_byte")?;
+        let base = self.var_src(instr, 0, "load_byte")?;
+        let offset = self.var_src(instr, 1, "load_byte")?;
+        self.words.push(encode_add(SCRATCH_REGISTER, base, offset));
+        if matches!(instr.ty.as_str(), "i64" | "u64") {
+            let ValueLocation::Pair { lo, hi } = self.dest_pair(instr, "load_byte")? else {
+                unreachable!("load_byte wide destination uses a register pair")
+            };
+            self.words.push(encode_lbu(lo, SCRATCH_REGISTER, 0));
+            self.words.push(encode_addi(hi, X0_ZERO, 0));
+        } else {
+            let destination = self.dest(instr, "load_byte")?;
+            self.words.push(encode_lbu(destination, SCRATCH_REGISTER, 0));
+            self.mask_unsigned(destination, &instr.ty);
+        }
+        Ok(())
+    }
+
+    fn lower_store_byte(&mut self, instr: &CIRInstr) -> Result<(), BackendError> {
+        if instr.dest.is_some() {
+            return Err(BackendError::InvalidOperand(
+                "store_byte must not have a destination".to_owned(),
+            ));
+        }
+        if instr.srcs.len() != 3 {
+            return Err(BackendError::InvalidOperand(format!(
+                "store_byte requires base, offset, and value operands, got {}",
+                instr.srcs.len()
+            )));
+        }
+        let base = self.var_src(instr, 0, "store_byte")?;
+        let offset = self.var_src(instr, 1, "store_byte")?;
+        let value = self.var_src(instr, 2, "store_byte")?;
+        self.words.push(encode_add(SCRATCH_REGISTER, base, offset));
+        self.words.push(encode_sb(value, SCRATCH_REGISTER, 0));
         Ok(())
     }
 
@@ -2292,6 +2465,30 @@ impl Lowerer {
         Ok(slot)
     }
 
+    fn byte_allocation(
+        &self,
+        instr: &CIRInstr,
+        op: &str,
+    ) -> Result<ByteAllocation, BackendError> {
+        let Some(layout) = &self.allocation_layout else {
+            return Err(BackendError::UnsupportedOp(format!(
+                "{op} (module linking required)"
+            )));
+        };
+        let destination = instr.dest.as_ref().ok_or_else(|| {
+            BackendError::InvalidOperand(format!("{op} requires a dest"))
+        })?;
+        layout
+            .slots
+            .get(&(self.function_name.clone(), destination.clone()))
+            .cloned()
+            .ok_or_else(|| {
+                BackendError::InvalidOperand(format!(
+                    "{op}: destination {destination:?} has no static allocation"
+                ))
+            })
+    }
+
     fn reserve_global_address(&mut self, slot_offset: usize) {
         let word_index = self.words.len();
         // Keep this pair fixed-width so global-data placement can be resolved
@@ -2529,6 +2726,9 @@ fn is_value_source(instr: &CIRInstr, index: usize) -> bool {
         "call" | "call_builtin" => index != 0,
         "global_load" => false,
         "global_store" => index == 1,
+        "alloc_bytes" => index == 0,
+        "load_byte" => index < 2,
+        "store_byte" => index < 3,
         "jmp_if_false" | "br_false_bool" | "jmp_if_true" | "br_true_bool" => index == 0,
         _ => true,
     }
