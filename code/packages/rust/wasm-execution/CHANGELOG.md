@@ -2,6 +2,78 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.6.5] — 2026-08-13 (WASM03 — sign-extension, trunc_sat, and a real trapping-trunc boundary bug)
+
+### Added
+
+- The 5 sign-extension opcodes (0xC0-0xC4): each pops an int, sign-extends
+  its low 8/16/32 bits to the full width via Rust's own `as i8 as i32`-style
+  truncate-then-sign-extend cast (exactly matching the spec's `signed_N`
+  definition), pushes the result.
+- The 8 `trunc_sat` sub-opcodes (`0xFC 0x00`-`0x07`, decoding already
+  existed for the `0xFC` prefix from bulk-memory's `memory.copy`/
+  `memory.fill` — only the sub-opcode dispatch needed extending): the
+  non-trapping float-to-int conversions. Implemented as a straight `as`
+  cast with no bounds checking at all, because Rust's own float→int `as`
+  cast has used SATURATING semantics (NaN → 0, out-of-range → the nearest
+  bound) since Rust 1.45 — a direct, built-in match for the spec's
+  definition, needing no hand-rolled boundary logic.
+
+### Fixed — the TRAPPING `trunc_f32/f64_s/u` handlers (0xA8-0xB1) had real, pre-existing boundary bugs
+
+Investigating why `conversions.wast` (only parseable for the first time
+after this release's own opcode additions) still had `assert_trap`/
+`assert_return` failures after the two additions above found these
+**already-existing**, entirely unrelated bugs, invisible until now because
+`conversions.wast` was the only vendored file exercising these boundary
+cases and it could never parse before:
+
+- `i32.trunc_f32_u`/`i32.trunc_f64_u` (0xA9/0xAB) used an inclusive `0.0..`
+  lower bound, so any negative input — even a tiny one that truncates
+  toward zero to a perfectly valid `0` — incorrectly trapped.
+- `i32.trunc_f64_s` (0xAA) used an inclusive lower bound (`-2147483649.0..`)
+  where the spec requires a STRICT exclusion — `-2147483649.0` itself (one
+  past the valid range) was wrongly accepted instead of trapping.
+- All four i64-destination handlers — `i64.trunc_f32_s`/`i64.trunc_f32_u`/
+  `i64.trunc_f64_s`/`i64.trunc_f64_u` (0xAE/0xAF/0xB0/0xB1) — had **no
+  overflow check at all**, only a NaN check — `a as i64`/`a as u64 as i64`
+  alone is that same Rust-1.45+ SATURATING cast the new `trunc_sat`
+  handlers correctly rely on above, so these TRAPPING opcodes were silently
+  behaving like their non-trapping `trunc_sat` counterparts instead of
+  trapping on overflow, the opposite of their contract.
+
+Fixed with 4 new shared boundary-check functions (`trunc_s_i32_in_range`,
+`trunc_u_i32_in_range`, `trunc_s_i64_in_range`, `trunc_u_i64_in_range`),
+each doc-commented with the exact spec inequality and why the chosen f64
+literal constants are exact (not approximations) for that specific
+boundary — see their own doc comments for the precision reasoning, which
+differs between the i32 case (plain strict inequalities against
+exactly-representable `f64` constants) and the i64 case (the true boundary
+constant itself isn't exactly representable in `f64`, but no representable
+`f64` value exists in the gap where it would matter, so a carefully chosen
+inclusive/exclusive form is still exact). `f32` sources are widened to
+`f64` first (lossless) before applying the same checks, avoiding a second,
+separate set of `f32`-precision boundary constants.
+
+Baseline: `i32.wast`/`i64.wast` go from full parse failures to 100% passing
+every directive kind they have; `conversions.wast` goes from a full parse
+failure to `assert_trap` 67/67 (100%) and `assert_return` 522/526 (99.2%,
++1253 across the three newly-parseable files against the pre-WASM03
+baseline). The 4 remaining `conversions.wast` `assert_return` fails are
+`f32.reinterpret_i32`/`i32.reinterpret_f32` NaN-bit-pattern cases —
+unrelated to this release, corroborating evidence for the already-tracked
+WASM13 (NaN payload preservation) backlog item, not fixed here. Verified
+via a full per-file diff against the previous baseline that these 3 newly-
+parseable files are the ONLY files whose tally changed anywhere in the
+corpus.
+
+New tests: 5 sign-extension round-trips, 8 `trunc_sat` cases (ordinary
+value, NaN-saturates-not-traps, overflow/underflow saturation for both
+signed and unsigned, both `i32` and `i64` destinations), and 7 regression
+tests for the trapping-trunc boundary fix (the exact tiny-negative,
+exact-lower-boundary, and previously-never-trapping-on-overflow cases the
+old code got wrong, plus the i64::MIN exact-boundary acceptance case).
+
 ## [0.6.4] — 2026-08-13 (WASM11 — a real branch double-pop bug)
 
 `execute_branch` (the shared handler behind `br`/`br_if`/`br_table`) used

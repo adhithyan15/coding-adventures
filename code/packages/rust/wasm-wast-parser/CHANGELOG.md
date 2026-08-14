@@ -1,5 +1,39 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.5 — 2026-08-13 — sign-extension + saturating-truncation opcodes (WASM03)
+
+`i32.wast`/`i64.wast` used `i32.extend8_s`/`i32.extend16_s`/
+`i64.extend8_s`/`i64.extend16_s`/`i64.extend32_s` (the "sign-extension
+operators" proposal); `conversions.wast` used `i32.trunc_sat_f32_s` and its
+7 siblings (the "non-trapping float-to-int conversions" proposal). Neither
+family parsed — all failed with "unknown instruction" (extend8_s/etc.) or
+were entirely unreachable in a working module (conversions.wast never
+parsed for an unrelated pre-existing reason, `nan:0x7f_ffff` in `const.wast`
+is a separate remaining gap this doesn't touch).
+
+- **Sign-extension** (5 opcodes, single-byte 0xC0-0xC4): added to
+  `wasm-opcodes` 0.2.1's table, so this crate's existing generic
+  no-immediate-instruction encoding path (`encode_stream_instr`/
+  `encode_flat_instr`'s default `_` arm) handles them automatically —
+  zero special-casing needed here beyond the opcode table entry existing.
+- **`trunc_sat`** (8 opcodes, two-byte `0xFC <sub-opcode>`): intercepted
+  directly in both `encode_stream_instr` and `encode_flat_instr`, before
+  the `wasm_opcodes::get_opcode_by_name` lookup that would otherwise reject
+  them as unknown — `wasm-opcodes` deliberately doesn't model 0xFC-prefixed
+  opcodes (see that crate's own changelog). New `trunc_sat_sub_opcode`
+  helper maps each of the 8 names to its spec-assigned sub-opcode byte.
+
+Once `i32.wast`/`i64.wast`/`conversions.wast` could parse, running them
+against `wasm-execution` surfaced 2 more, entirely pre-existing bugs in
+that crate (a NaN/overflow-boundary bug in the trapping `trunc_*` handlers,
+and 4 unrelated `reinterpret` NaN-payload cases now tracked as WASM13) —
+see `wasm-execution`'s own `0.6.5` changelog entry.
+
+New tests: opcode-table-driven encoding for both flat and folded syntax
+(sign-extension, going through the ordinary no-special-case path; `trunc_sat`,
+going through the new `0xFC` interception) and a direct name→sub-opcode
+mapping test for all 8 `trunc_sat` names.
+
 ## 0.1.4 — 2026-08-13 — func/table/memory/global inline-import shorthand (WASM02)
 
 `(func $f (import "m" "n") (type $t))` and its `table`/`memory`/`global`
