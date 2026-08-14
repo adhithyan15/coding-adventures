@@ -153,6 +153,242 @@ fn linked_module_passes_and_returns_f64_bit_pairs() {
 }
 
 #[test]
+fn f64_arithmetic_uses_the_simulator_softfloat_abi() {
+    let cir = vec![
+        ci(
+            "const_f64",
+            Some("left"),
+            vec![CIROperand::Float(6.5)],
+            "f64",
+        ),
+        ci(
+            "const_f64",
+            Some("right"),
+            vec![CIROperand::Float(2.0)],
+            "f64",
+        ),
+        ci(
+            "mul_f64",
+            Some("product"),
+            vec![
+                CIROperand::Var("left".into()),
+                CIROperand::Var("right".into()),
+            ],
+            "f64",
+        ),
+        ci(
+            "sub_f64",
+            Some("difference"),
+            vec![
+                CIROperand::Var("product".into()),
+                CIROperand::Var("left".into()),
+            ],
+            "f64",
+        ),
+        ci(
+            "div_f64",
+            Some("quotient"),
+            vec![
+                CIROperand::Var("difference".into()),
+                CIROperand::Var("right".into()),
+            ],
+            "f64",
+        ),
+        ci(
+            "add_f64",
+            Some("answer"),
+            vec![
+                CIROperand::Var("quotient".into()),
+                CIROperand::Var("right".into()),
+            ],
+            "f64",
+        ),
+        ci(
+            "ret_f64",
+            None,
+            vec![CIROperand::Var("answer".into())],
+            "f64",
+        ),
+    ];
+    let binary = compile(&ctx("f64_arithmetic", &[], "f64"), &cir).expect("f64 lowering");
+    let run = run_binary(&binary, &[]).expect("f64 execution");
+    let bits = ((run.return_value_high as u64) << 32) | (run.return_value as u32 as u64);
+    assert_eq!(bits, 5.25_f64.to_bits());
+}
+
+#[test]
+fn f64_comparisons_use_signed_host_compare_results() {
+    for (relation, expected) in [
+        ("eq", 0),
+        ("ne", 1),
+        ("lt", 1),
+        ("le", 1),
+        ("gt", 0),
+        ("ge", 0),
+    ] {
+        let cir = vec![
+            ci(
+                "const_f64",
+                Some("left"),
+                vec![CIROperand::Float(1.5)],
+                "f64",
+            ),
+            ci(
+                "const_f64",
+                Some("right"),
+                vec![CIROperand::Float(2.5)],
+                "f64",
+            ),
+            ci(
+                &format!("cmp_{relation}_f64"),
+                Some("answer"),
+                vec![
+                    CIROperand::Var("left".into()),
+                    CIROperand::Var("right".into()),
+                ],
+                "bool",
+            ),
+            ci(
+                "ret_bool",
+                None,
+                vec![CIROperand::Var("answer".into())],
+                "bool",
+            ),
+        ];
+        let binary = compile(&ctx("f64_compare", &[], "bool"), &cir).expect("f64 lowering");
+        let run = run_binary(&binary, &[]).expect("f64 execution");
+        assert_eq!(run.return_value, expected, "cmp_{relation}_f64");
+    }
+}
+
+#[test]
+fn f64_host_calls_stage_swapped_parameters_and_preserve_live_pairs() {
+    let worker = vec![
+        ci(
+            "sub_f64",
+            Some("difference"),
+            vec![
+                CIROperand::Var("right".into()),
+                CIROperand::Var("left".into()),
+            ],
+            "f64",
+        ),
+        ci(
+            "add_f64",
+            Some("answer"),
+            vec![
+                CIROperand::Var("difference".into()),
+                CIROperand::Var("left".into()),
+            ],
+            "f64",
+        ),
+        ci(
+            "ret_f64",
+            None,
+            vec![CIROperand::Var("answer".into())],
+            "f64",
+        ),
+    ];
+    let main = vec![
+        ci(
+            "const_f64",
+            Some("left"),
+            vec![CIROperand::Float(3.0)],
+            "f64",
+        ),
+        ci(
+            "const_f64",
+            Some("right"),
+            vec![CIROperand::Float(9.25)],
+            "f64",
+        ),
+        ci(
+            "call",
+            Some("answer"),
+            vec![
+                CIROperand::Var("worker".into()),
+                CIROperand::Var("left".into()),
+                CIROperand::Var("right".into()),
+            ],
+            "f64",
+        ),
+        ci(
+            "ret_f64",
+            None,
+            vec![CIROperand::Var("answer".into())],
+            "f64",
+        ),
+    ];
+    let params = [
+        ("left".to_string(), "f64".to_string()),
+        ("right".to_string(), "f64".to_string()),
+    ];
+    let functions = [
+        ModuleFunction {
+            context: ctx("worker", &params, "f64"),
+            cir: &worker,
+        },
+        ModuleFunction {
+            context: ctx("main", &[], "f64"),
+            cir: &main,
+        },
+    ];
+    let binary = compile_module(&functions, Some("main")).expect("f64 module linking");
+    let run = run_binary(&binary, &[]).expect("f64 module execution");
+    let bits = ((run.return_value_high as u64) << 32) | (run.return_value as u32 as u64);
+    assert_eq!(bits, 9.25_f64.to_bits());
+}
+
+#[test]
+fn f64_integer_conversions_use_the_simulator_softfloat_abi() {
+    let cir = vec![
+        ci(
+            "const_i64",
+            Some("integer"),
+            vec![CIROperand::Int(-42)],
+            "i64",
+        ),
+        ci(
+            "int_to_real",
+            Some("real"),
+            vec![CIROperand::Var("integer".into())],
+            "f64",
+        ),
+        ci(
+            "const_f64",
+            Some("fraction"),
+            vec![CIROperand::Float(0.75)],
+            "f64",
+        ),
+        ci(
+            "sub_f64",
+            Some("adjusted"),
+            vec![
+                CIROperand::Var("real".into()),
+                CIROperand::Var("fraction".into()),
+            ],
+            "f64",
+        ),
+        ci(
+            "real_to_int_trunc",
+            Some("answer"),
+            vec![CIROperand::Var("adjusted".into())],
+            "i64",
+        ),
+        ci(
+            "ret_i64",
+            None,
+            vec![CIROperand::Var("answer".into())],
+            "i64",
+        ),
+    ];
+    let binary = compile(&ctx("f64_conversions", &[], "i64"), &cir).expect("f64 lowering");
+    let run = run_binary(&binary, &[]).expect("f64 execution");
+    assert_eq!(run.return_value, -42);
+    assert_eq!(run.return_value_high, u32::MAX);
+}
+
+#[test]
 fn character_builtins_round_trip_host_bytes_and_preserve_eof() {
     let echo = vec![
         ci(
@@ -1819,35 +2055,33 @@ fn rejects_an_f32_constant_with_a_reason_not_bytes() {
 }
 
 #[test]
-fn rejects_float_arithmetic_comparison_return_and_parameters() {
-    // Arithmetic: `add_f64` never reaches an `add` encoding.
+fn rejects_unimplemented_float_operations_and_f32_transport() {
+    // `mod_f64` has no soft-float host service and must not turn into integer
+    // remainder over the raw f64 bits.
     let arithmetic = vec![ci(
-        "add_f64",
-        Some("sum"),
+        "mod_f64",
+        Some("remainder"),
         vec![CIROperand::Var("a".into()), CIROperand::Var("b".into())],
         "f64",
     )];
     assert_eq!(
-        compile(&ctx("main", &[], "i32"), &arithmetic).expect_err("no f registers"),
-        BackendError::UnsupportedFloat {
-            site: "op \"add_f64\"".to_owned(),
-            ty: "f64".to_owned(),
-        }
+        compile(&ctx("main", &[], "i32"), &arithmetic)
+            .expect_err("mod_f64 has no host service"),
+        BackendError::UnsupportedOp("mod_f64".to_owned())
     );
 
-    // Comparison: `cmp_lt_f64` is not an integer `slt` in disguise.
-    let comparison = vec![ci(
-        "cmp_lt_f64",
-        Some("less"),
-        vec![CIROperand::Var("a".into()), CIROperand::Var("b".into())],
-        "bool",
+    // `real_to_int_floor` needs a distinct host floor service; truncation is
+    // deliberately not substituted because negative values would be wrong.
+    let floor = vec![ci(
+        "real_to_int_floor",
+        Some("integer"),
+        vec![CIROperand::Var("real".into())],
+        "i64",
     )];
     assert_eq!(
-        compile(&ctx("main", &[], "bool"), &comparison).expect_err("no f registers"),
-        BackendError::UnsupportedFloat {
-            site: "op \"cmp_lt_f64\"".to_owned(),
-            ty: "f64".to_owned(),
-        }
+        compile(&ctx("main", &[], "i64"), &floor)
+            .expect_err("floor needs a dedicated host service"),
+        BackendError::UnsupportedOp("real_to_int_floor".to_owned())
     );
 
     // Return: an f64 cannot ride home in `a0`.

@@ -20,8 +20,10 @@ use riscv_encoder::{
     X0_ZERO, X1_RA,
 };
 use riscv_simulator::{
-    HostEvent, RiscVSimulator, HOST_ECALL_EXIT, HOST_ECALL_SERVICE_REGISTER, HOST_ECALL_WRITE_I64,
-    HOST_ECALL_READ_BYTE, HOST_ECALL_WRITE_BYTE,
+    HostEvent, RiscVSimulator, HOST_ECALL_EXIT, HOST_ECALL_F64_ADD, HOST_ECALL_F64_CMP,
+    HOST_ECALL_F64_DIV, HOST_ECALL_F64_MUL, HOST_ECALL_F64_SUB, HOST_ECALL_F64_TO_I64_TRUNC,
+    HOST_ECALL_I64_TO_F64, HOST_ECALL_READ_BYTE, HOST_ECALL_SERVICE_REGISTER,
+    HOST_ECALL_WRITE_BYTE, HOST_ECALL_WRITE_I64,
 };
 use vm_core::value::Value;
 
@@ -30,6 +32,8 @@ const DEFAULT_STEP_LIMIT: usize = 100_000;
 const MEMORY_BOUNDS_EXIT_CODE: i32 = 2;
 const ARG_REGISTERS: [u32; 8] = [10, 11, 12, 13, 14, 15, 16, 17];
 const A1: u32 = 11;
+const A2: u32 = 12;
+const A3: u32 = 13;
 const SCRATCH_REGISTER: u32 = 31;
 const SECOND_SCRATCH_REGISTER: u32 = 27;
 const DIVISION_TEMP_REGISTER: u32 = 18;
@@ -96,8 +100,9 @@ pub enum BackendError {
     /// A floating-point form is not supported by the RV32I lowering.
     ///
     /// `f64` transport values are the exception: they use an opaque low/high
-    /// integer pair. Arithmetic still needs a host soft-float lowering, and
-    /// `f32` has no transport representation yet. See
+    /// integer pair, and supported arithmetic, comparisons, and signed i64
+    /// conversions use simulator host services. `f32` has no transport
+    /// representation yet. See
     /// [`is_floating_point_type`] for the target-level reasoning.
     ///
     /// `site` names where the float showed up (`op "add_f64"`, or
@@ -127,11 +132,11 @@ impl fmt::Display for BackendError {
             }
             Self::UnsupportedFloat { site, ty } => write!(
                 f,
-                "riscv-backend: {site} carries floating-point type {ty:?}, and RV32I is the \
-                 base *integer* ISA — it has no floating-point registers (f32 needs the F \
-                 extension, f64 needs D, i.e. RV32F/RV32D).  Retarget this module to a \
-                 float-capable backend (LLVM, JVM, CLR, wasm), or lower the float to \
-                 soft-float integer sequences before the RV32I backend sees it."
+                "riscv-backend: {site} carries unsupported floating-point type {ty:?}, and \
+                 RV32I is the base *integer* ISA — it has no floating-point registers (f32 \
+                 needs the F extension, f64 needs D, i.e. RV32F/RV32D). Supported f64 values \
+                 use a simulator soft-float integer-pair ABI; add the missing lowering or \
+                 retarget this module to a float-capable backend (LLVM, JVM, CLR, wasm)."
             ),
             Self::InvalidOperand(detail) => write!(f, "riscv-backend: invalid operand: {detail}"),
             Self::UndefinedVariable(name) => {
@@ -751,10 +756,11 @@ impl Lowerer {
                 }
             })
             .sum();
-        let call_argument_words = match (allow_direct_calls, call_signatures) {
+        let direct_call_argument_words = match (allow_direct_calls, call_signatures) {
             (true, Some(signatures)) => max_call_argument_words(cir, signatures)?,
             _ => 0,
         };
+        let call_argument_words = direct_call_argument_words.max(max_host_argument_words(cir));
         let call_save_words = max_call_save_words(ctx, cir);
         let needs_return_address_slot = allow_direct_calls && cir.iter().any(|instr| instr.op == "call");
         let frame_words = value_word_count
@@ -943,6 +949,16 @@ impl Lowerer {
 
         for family in ["add", "sub", "mul", "div", "mod", "and", "or", "xor", "shl", "shr"] {
             if let Some(ty) = op.strip_prefix(&format!("{family}_")) {
+                if ty == "f64" {
+                    let service = match family {
+                        "add" => HOST_ECALL_F64_ADD,
+                        "sub" => HOST_ECALL_F64_SUB,
+                        "mul" => HOST_ECALL_F64_MUL,
+                        "div" => HOST_ECALL_F64_DIV,
+                        _ => return Err(BackendError::UnsupportedOp(op.to_owned())),
+                    };
+                    return self.lower_f64_binary(instr, op, service);
+                }
                 if matches!(ty, "i64" | "u64") {
                     return match family {
                         "add" => self.lower_wide_add(instr, op, is_signed(ty)),
@@ -1008,6 +1024,9 @@ impl Lowerer {
         }
 
         if let Some((relation, ty)) = comparison_parts(op) {
+            if ty == "f64" {
+                return self.lower_f64_comparison(instr, op, relation);
+            }
             if matches!(ty, "i64" | "u64") {
                 return self.lower_wide_comparison(instr, op, relation, is_signed(ty));
             }
@@ -1055,6 +1074,14 @@ impl Lowerer {
                 _ => return Err(BackendError::UnsupportedOp(op.to_string())),
             }
             return Ok(());
+        }
+
+        if op == "int_to_real" {
+            return self.lower_i64_to_f64(instr);
+        }
+
+        if op == "real_to_int_trunc" {
+            return self.lower_f64_to_i64_trunc(instr);
         }
 
         Err(BackendError::UnsupportedOp(op.to_string()))
@@ -1258,6 +1285,151 @@ impl Lowerer {
         }
         self.words.push(encode_ecall());
         Ok(())
+    }
+
+    fn lower_f64_binary(
+        &mut self,
+        instr: &CIRInstr,
+        op: &str,
+        service: u32,
+    ) -> Result<(), BackendError> {
+        let saved_values = self.save_live_values_across_call(instr);
+        self.stage_f64_argument(instr, 0, op, 0)?;
+        self.stage_f64_argument(instr, 1, op, 2)?;
+        self.load_host_argument_pair(A0, A1, 0);
+        self.load_host_argument_pair(A2, A3, 2);
+        self.load_constant(HOST_ECALL_SERVICE_REGISTER as u32, service);
+        self.words.push(encode_ecall());
+        let result = (|| {
+            let ValueLocation::Pair { lo, hi } = self.dest_pair(instr, op)? else {
+                unreachable!("f64 results always use a pair")
+            };
+            self.words.push(encode_addi(lo, A0, 0));
+            self.words.push(encode_addi(hi, A1, 0));
+            Ok(())
+        })();
+        self.restore_live_values_after_call(&saved_values);
+        result
+    }
+
+    fn lower_f64_comparison(
+        &mut self,
+        instr: &CIRInstr,
+        op: &str,
+        relation: &str,
+    ) -> Result<(), BackendError> {
+        let saved_values = self.save_live_values_across_call(instr);
+        self.stage_f64_argument(instr, 0, op, 0)?;
+        self.stage_f64_argument(instr, 1, op, 2)?;
+        self.load_host_argument_pair(A0, A1, 0);
+        self.load_host_argument_pair(A2, A3, 2);
+        self.load_constant(HOST_ECALL_SERVICE_REGISTER as u32, HOST_ECALL_F64_CMP);
+        self.words.push(encode_ecall());
+        let result = (|| {
+            let destination = self.dest(instr, op)?;
+            match relation {
+                "eq" => self.words.push(riscv_encoder::encode_sltiu(destination, A0, 1)),
+                "ne" => self.words.push(encode_sltu(destination, X0_ZERO, A0)),
+                "lt" => self.words.push(encode_slt(destination, A0, X0_ZERO)),
+                "gt" => self.words.push(encode_slt(destination, X0_ZERO, A0)),
+                "le" => {
+                    self.words.push(encode_slt(destination, X0_ZERO, A0));
+                    self.words.push(encode_xori(destination, destination, 1));
+                }
+                "ge" => {
+                    self.words.push(encode_slt(destination, A0, X0_ZERO));
+                    self.words.push(encode_xori(destination, destination, 1));
+                }
+                _ => return Err(BackendError::UnsupportedOp(op.to_owned())),
+            }
+            Ok(())
+        })();
+        self.restore_live_values_after_call(&saved_values);
+        result
+    }
+
+    fn lower_i64_to_f64(&mut self, instr: &CIRInstr) -> Result<(), BackendError> {
+        if instr.ty != "f64" || instr.srcs.len() != 1 {
+            return Err(BackendError::InvalidOperand(
+                "int_to_real requires one i64 source and an f64 destination".to_owned(),
+            ));
+        }
+        let saved_values = self.save_live_values_across_call(instr);
+        let value = self.wide_var_location(instr, 0, "int_to_real")?;
+        self.words.push(encode_sw(value.low(), STACK_POINTER, 0));
+        self.copy_or_extend_high(SECOND_SCRATCH_REGISTER, value, true);
+        self.words
+            .push(encode_sw(SECOND_SCRATCH_REGISTER, STACK_POINTER, 4));
+        self.load_host_argument_pair(A0, A1, 0);
+        self.load_constant(HOST_ECALL_SERVICE_REGISTER as u32, HOST_ECALL_I64_TO_F64);
+        self.words.push(encode_ecall());
+        let result = (|| {
+            let ValueLocation::Pair { lo, hi } = self.dest_pair(instr, "int_to_real")? else {
+                unreachable!("f64 results always use a pair")
+            };
+            self.words.push(encode_addi(lo, A0, 0));
+            self.words.push(encode_addi(hi, A1, 0));
+            Ok(())
+        })();
+        self.restore_live_values_after_call(&saved_values);
+        result
+    }
+
+    fn lower_f64_to_i64_trunc(&mut self, instr: &CIRInstr) -> Result<(), BackendError> {
+        if instr.ty != "i64" || instr.srcs.len() != 1 {
+            return Err(BackendError::InvalidOperand(
+                "real_to_int_trunc requires one f64 source and an i64 destination".to_owned(),
+            ));
+        }
+        let saved_values = self.save_live_values_across_call(instr);
+        self.stage_f64_argument(instr, 0, "real_to_int_trunc", 0)?;
+        self.load_host_argument_pair(A0, A1, 0);
+        self.load_constant(
+            HOST_ECALL_SERVICE_REGISTER as u32,
+            HOST_ECALL_F64_TO_I64_TRUNC,
+        );
+        self.words.push(encode_ecall());
+        let result = (|| {
+            let ValueLocation::Pair { lo, hi } = self.dest_pair(instr, "real_to_int_trunc")?
+            else {
+                unreachable!("i64 results always use a pair")
+            };
+            self.words.push(encode_addi(lo, A0, 0));
+            self.words.push(encode_addi(hi, A1, 0));
+            Ok(())
+        })();
+        self.restore_live_values_after_call(&saved_values);
+        result
+    }
+
+    fn stage_f64_argument(
+        &mut self,
+        instr: &CIRInstr,
+        index: usize,
+        op: &str,
+        word_index: usize,
+    ) -> Result<(), BackendError> {
+        let ValueLocation::Pair { lo, hi } = self.wide_var_location(instr, index, op)? else {
+            return Err(BackendError::InvalidOperand(format!(
+                "{op} srcs[{index}] must be an f64 pair"
+            )));
+        };
+        let offset = (word_index * 4) as i32;
+        self.words.push(encode_sw(lo, STACK_POINTER, offset));
+        self.words.push(encode_sw(hi, STACK_POINTER, offset + 4));
+        Ok(())
+    }
+
+    fn load_host_argument_pair(
+        &mut self,
+        low_register: u32,
+        high_register: u32,
+        word_index: usize,
+    ) {
+        let offset = (word_index * 4) as i32;
+        self.words.push(encode_lw(low_register, STACK_POINTER, offset));
+        self.words
+            .push(encode_lw(high_register, STACK_POINTER, offset + 4));
     }
 
     fn lower_global_load(&mut self, instr: &CIRInstr) -> Result<(), BackendError> {
@@ -3012,6 +3184,22 @@ fn max_call_argument_words(
     Ok(maximum)
 }
 
+fn max_host_argument_words(cir: &[CIRInstr]) -> usize {
+    cir.iter()
+        .filter_map(|instr| match instr.op.as_str() {
+            "int_to_real" | "real_to_int_trunc" => Some(2),
+            op if op.ends_with("_f64")
+                && (op.starts_with("add_")
+                    || op.starts_with("sub_")
+                    || op.starts_with("mul_")
+                    || op.starts_with("div_")
+                    || op.starts_with("cmp_")) => Some(4),
+            _ => None,
+        })
+        .max()
+        .unwrap_or_default()
+}
+
 fn max_call_save_words(ctx: &FunctionContext<'_>, cir: &[CIRInstr]) -> usize {
     let mut value_types: HashMap<&str, &str> = ctx
         .params
@@ -3026,7 +3214,7 @@ fn max_call_save_words(ctx: &FunctionContext<'_>, cir: &[CIRInstr]) -> usize {
 
     let mut maximum = 0;
     for (call_index, call) in cir.iter().enumerate() {
-        if call.op != "call" {
+        if call.op != "call" && max_host_argument_words(std::slice::from_ref(call)) == 0 {
             continue;
         }
         let mut live_values = HashSet::new();
@@ -3121,11 +3309,10 @@ fn is_signed(ty: &str) -> bool {
 /// is 32 general-purpose *integer* registers — there is no `f0`..`f31` bank,
 /// no `fadd.d`, no way to even name a double.  Floating point is a separate,
 /// optional standard extension: `F` (single precision, adds RV32F) and `D`
-/// (double precision, adds RV32D).  So an `f64` on RV32I is not "an op we
-/// have not written yet" — it is a value the target cannot represent at all
-/// until either the module is retargeted or the float is decomposed into
-/// integer soft-float sequences.  Saying that plainly beats a generic
-/// "unsupported type", because the two have completely different fixes.
+/// (double precision, adds RV32D). `f64` is therefore represented as an
+/// integer pair and only the host-backed operations explicitly lowered here
+/// can execute on RV32I; other float forms still need more soft-float work or
+/// a different target. Saying that plainly beats a generic "unsupported type".
 fn is_floating_point_type(ty: &str) -> bool {
     matches!(ty, "f16" | "f32" | "f64" | "f128")
 }
@@ -3133,7 +3320,7 @@ fn is_floating_point_type(ty: &str) -> bool {
 /// Build the right "this type does not fit RV32I" error for `ty`.
 ///
 /// Floats get the specific [`BackendError::UnsupportedFloat`] refusal (the
-/// fix is retarget-or-soft-float); everything else stays the generic
+/// fix is retarget-or-add-soft-float support); everything else stays the generic
 /// [`BackendError::UnsupportedType`] (the fix is "implement the lowering").
 fn unsupported_type_error(ty: &str, site: &str) -> BackendError {
     if is_floating_point_type(ty) {
@@ -3155,8 +3342,8 @@ fn is_rv32_value_type(ty: &str) -> bool {
 
 /// Values represented in RV32I integer registers as low/high 32-bit pairs.
 ///
-/// `f64` joins the existing wide integer and string ABI here, but it remains
-/// opaque until soft-float operation lowering calls the simulator host ABI.
+/// `f64` joins the existing wide integer and string ABI here. Its raw bits stay
+/// opaque except at simulator host soft-float service boundaries.
 fn is_pair_type(ty: &str) -> bool {
     matches!(ty, "i64" | "u64" | "str" | "f64")
 }

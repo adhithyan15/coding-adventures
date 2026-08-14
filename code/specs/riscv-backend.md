@@ -79,7 +79,7 @@ the RISC-V spec. Per-function byte streams can be concatenated directly;
 |------------------------|---------|
 | `UnsupportedOp(String)` | CIR operation outside the scalar core |
 | `UnsupportedType(String)` | Type needing a representation beyond one RV32 register |
-| `UnsupportedFloat { site, ty }` | An unsupported floating-point form reached the backend: `f32`, or an f64 operation before its host soft-float lowering. Raw f64 constants, moves, parameters, calls, and returns use an opaque low/high integer pair. RV32I has no floating-point register bank; floats otherwise need the `F`/`D` extensions (RV32F/RV32D). `site` names the CIR op or parameter that carried it. |
+| `UnsupportedFloat { site, ty }` | An unsupported floating-point form reached the backend, such as `f32`. Raw f64 constants, moves, parameters, calls, and returns use an opaque low/high integer pair, and add/sub/mul/div, comparisons, and signed i64 conversions use simulator host services. RV32I has no floating-point register bank; floats otherwise need the `F`/`D` extensions (RV32F/RV32D). `site` names the CIR op or parameter that carried it. |
 | `InvalidOperand(String)` | Malformed CIR operands or destinations |
 | `UndefinedVariable(String)` | A variable has no allocated source register |
 | `ImmediateOutOfRange(i64)` | A compatibility `i64` literal cannot fit in RV32 |
@@ -249,13 +249,19 @@ the selected entry function can seed language-level static initializers.
 32. [x] **f64 bit-pair ABI foundation:** represent f64 CIR values as opaque
    low/high 32-bit pairs for constants, moves, parameters, direct calls, and
    returns. This deliberately excludes globals and arithmetic lowering.
-33. [ ] **RISC-V soft-float operation lowering:** lower f64 arithmetic,
-   comparisons, and integer conversions through the simulator host ABI while
-   preserving live caller values across each host call.
-34. [ ] **BASIC fractional REAL execution:** route the Dartmouth BASIC real
+33. [x] **RISC-V soft-float operation lowering:** lower f64 add/sub/mul/div,
+   comparisons, and finite in-range signed i64 truncating conversions through
+   the simulator host ABI while preserving live caller values across each host
+   call.
+34. [ ] **Soft-float floor and conversion-fault ABI:** add an IEEE-754 f64
+   floor service plus fail-closed NaN/infinity/out-of-range signaling for
+   real-to-integer conversion. This must replace the host language's
+   saturating cast and lower `real_to_int_floor` without substituting
+   truncation for negative values.
+35. [ ] **BASIC fractional REAL execution:** route the Dartmouth BASIC real
    formatter and fractional arithmetic through the RISC-V soft-float lowering
    and add a source-to-simulator fixture.
-35. [ ] **BASIC exact division:** prove or preserve a whole-number result for
+36. [ ] **BASIC exact division:** prove or preserve a whole-number result for
    `/` in the integer subset without silently changing Dartmouth BASIC's REAL
    division semantics when a quotient is fractional.
 
