@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Consume the versioned SE04 cross-language fixture for byte-identical
+  HChaCha20, raw XChaCha20, AEAD, and authentication-failure conformance.
+- Add `serde_json` as a test-only dependency; runtime dependencies remain zero.
+
 ## 0.2.0 — 2026-04-20
 
 - Added HChaCha20 subkey derivation (draft-irtf-cfrg-xchacha §2.2).

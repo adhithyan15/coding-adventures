@@ -71,3 +71,12 @@ Part of the coding-adventures cryptography stack. Self-contained -- no runtime d
 - HChaCha20 deliberately omits the final state feed-forward; the subkey
   is drawn from rows 0 and 3 of the post-round state
 - All RFC 8439 and draft-irtf-cfrg-xchacha test vectors pass exactly
+
+## Portable Conformance
+
+The test suite consumes the versioned
+[`se04-xchacha20-poly1305-v1`](../../../specs/fixtures/se04-xchacha20-poly1305-v1/README.md)
+fixture shared by all six D18 implementations. It proves byte-identical
+HChaCha20, raw XChaCha20, and AEAD outputs plus the common authentication
+failure contract. `serde_json` is a dev dependency only; the library retains
+zero runtime dependencies.

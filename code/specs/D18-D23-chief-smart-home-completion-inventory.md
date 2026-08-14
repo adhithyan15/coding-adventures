@@ -409,7 +409,7 @@ bounded model loop and executable central smart-home path.
 
 | Tracker | Status | Evidence or residual acceptance |
 | --- | --- | --- |
-| #129 D18 crypto profile | Open | The underlying SHA-256, ChaCha20-Poly1305, Ed25519, X25519, HKDF, and Argon2id specs and six-language packages exist. SE04 now pins the missing XChaCha20-Poly1305 construction and vectors; all six language ports are complete (Python #11591, Go #11593, TypeScript #11594, Ruby #11595, Elixir #11596), while cross-language conformance remains. D19 is the Actor spec, not a second crypto identifier. |
+| #129 D18 crypto profile | Complete | The underlying SHA-256, ChaCha20-Poly1305, Ed25519, X25519, HKDF, and Argon2id specs and six-language packages exist. SE04 pins the missing XChaCha20-Poly1305 construction and vectors; all six language ports are complete (Python #11591, Go #11593, TypeScript #11594, Ruby #11595, Elixir #11596), and #11623 supplies the versioned fixture consumed by all six. D19 is the Actor spec, not a second crypto identifier. |
 | #130 Message abstraction | Open | The repository has message primitives, but the issue's all-six-language rich-message conformance has not been accepted as a whole. |
 | #131 Channel abstraction | Open | Durable encrypted channels exist, but the issue's all-six-language persistent one-way channel contract still needs a complete conformance audit. |
 | #132 Capability Cage | Open | The production Deno deny-all path is executable; the issue also requires replaceable Docker and native cages whose acceptance is not yet proven. |

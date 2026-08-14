@@ -17,6 +17,6 @@ defmodule CodingAdventures.ChaCha20Poly1305.MixProject do
   end
 
   defp deps do
-    []
+    [{:jason, "~> 1.4", only: :test}]
   end
 end

@@ -1,5 +1,13 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+- Consume the versioned SE04 cross-language fixture for byte-identical
+  HChaCha20, raw XChaCha20, AEAD, and authentication-failure conformance.
+- Add `Jason` as a test-only dependency; runtime dependencies remain zero.
+
 ## [0.2.0] - 2026-08-13
 
 ### Added
