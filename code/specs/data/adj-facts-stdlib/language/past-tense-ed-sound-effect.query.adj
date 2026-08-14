@@ -1,0 +1,17 @@
+% ============================================================================
+% past-tense-ed-sound-effect.query.adj — worked recall over the
+% past-tense-ed-sound-effect library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what pronunciation
+% effect does the /id/ past-tense -ed sound have?" (direct) or "which -ed
+% sound adds a whole syllable to a word?" (reverse) — it states no fact of
+% its own — it only `import`s the grounded table and asks binding queries.
+% A -ed sound that is not the one tabled here abstains honestly — the
+% engine never invents an effect.
+% ============================================================================
+
+import "past-tense-ed-sound-effect.adj"
+
+? past_tense_ed_sound_effect(id_sound, $Effect)                    % expect adds_a_whole_syllable
+? past_tense_ed_sound_effect($Sound, adds_a_whole_syllable)        % reverse bind — expect id_sound
+? past_tense_ed_sound_effect(t_sound, $Effect)                     % expect abstain -- a real, already-tabled -ed sound, but its own rule states no effect

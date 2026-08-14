@@ -1,0 +1,59 @@
+% ============================================================================
+% precipitation-source-cloud — for hail, the ORIGINATING CLOUD TYPE an
+% already-cited NWS Glossary sentence names, decoded as its own row
+% (adj-facts-stdlib, METEOROLOGY).
+% ============================================================================
+% A sibling to the already-shipped `precipitation-types.adj`
+% (`precip_form(precip, form)`, ONE defining physical form per precipitation
+% type — hail → balls_of_ice), `precipitation-minimum-diameter.adj`
+% (decoding the same hail sentence's numeric threshold), and
+% `precipitation-alternate-form.adj` (decoding the same hail sentence's
+% second listed descriptive term). That SAME already-quoted NWS Glossary
+% sentence also names the cloud type hail falls from -- a fact none of
+% those three siblings had a column for:
+%
+%   hail:
+%     "Showery precipitation in the form of irregular pellets or balls of
+%      ice more than 5 mm in diameter, falling from a cumulonimbus cloud."
+%
+% Recall is a binding query:
+%
+%     ? precipitation_source_cloud(hail, $Cloud)   % cumulonimbus
+%
+% This is a native `table` (ADJ-TABLES RS-5, a TWO-column table): each `row`
+% lowers to a ground relation `precipitation_source_cloud(precip, cloud)`
+% carrying the citation, so the lookup above is the ordinary SLD binding
+% query -- the engine returns the source cloud WITH its source, on the CPU,
+% with zero model calls, and abstains on any precipitation type whose own
+% cited span names no originating cloud. `rain`, `snow`, `sleet`, and
+% `freezing_rain` are deliberately NOT rows here: none of their own
+% already-quoted spans (in `precipitation-types.adj`'s header) names a
+% cloud type -- so this sibling is HONESTLY NARROWER than any of its three
+% parents, grounding exactly the one precipitation type whose cited span
+% names a source cloud and abstaining on any other, rather than inventing
+% one. The query also runs BACKWARD -- bind a cloud and recall which
+% precipitation type it produces:
+%
+%     ? precipitation_source_cloud($Precip, cumulonimbus)
+%       % hail
+%
+% Provenance: reproduces, byte-for-byte, the SAME NWS Glossary sentence
+% `precipitation-types.adj`'s own header, `precipitation-minimum-diameter.adj`'s
+% own header, and `precipitation-alternate-form.adj`'s own header already
+% quote in full for hail -- no new WebFetch, only a different schema
+% decoding the sentence's cloud-source clause as its own row. `trust
+% authoritative` -- the same tier all three sibling tables already carry
+% (NOAA NWS Glossary, a primary U.S. government source).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table precipitation_source_cloud {
+    columns precip, cloud
+
+    row (hail, cumulonimbus)
+
+    source "Showery precipitation in the form of irregular pellets or balls of ice more than 5 mm in diameter, falling from a cumulonimbus cloud."
+    locator "https://forecast.weather.gov/glossary.php?word=HAIL"
+    trust authoritative
+}

@@ -14,8 +14,9 @@ use diagram_ir::{
     ChartDiagram, ChartKind, LayoutedChartDiagram, LayoutedChartItem, LegendEntry, Orientation,
     Point, SeriesKind,
 };
+use std::collections::{HashMap, VecDeque};
 
-pub const VERSION: &str = "0.7.0";
+pub const VERSION: &str = "0.10.0";
 
 const MARGIN: f64 = 24.0;
 const TITLE_H: f64 = 32.0;
@@ -230,7 +231,7 @@ const PIE_COLORS: &[&str] = &[
 fn layout_pie(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagram {
     let cx = cw / 2.0;
     let cy = ch / 2.0;
-    let r = (cw.min(ch) / 2.0 - MARGIN * 2.0).max(10.0);
+    let r = (cw.min(ch - LEGEND_H) / 2.0 - MARGIN * 2.0).max(10.0);
     let total: f64 = diagram.slices.iter().map(|s| s.value).sum();
     let total = if total == 0.0 { 1.0 } else { total };
     let mut angle = -std::f64::consts::FRAC_PI_2; // start at 12 o'clock
@@ -257,10 +258,29 @@ fn layout_pie(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagram 
             start_angle: angle,
             end_angle: end,
             color,
-            label: slice.label.clone(),
+            label: format!("{:.0}%", slice.value / total * 100.0),
         });
         angle = end;
     }
+
+    let legend_entries = diagram
+        .slices
+        .iter()
+        .enumerate()
+        .map(|(i, slice)| LegendEntry {
+            color: PIE_COLORS[i % PIE_COLORS.len()].to_string(),
+            label: if diagram.show_data {
+                format!("{} [{}]", slice.label, slice.value)
+            } else {
+                slice.label.clone()
+            },
+        })
+        .collect();
+    items.push(LayoutedChartItem::Legend {
+        x: MARGIN,
+        y: ch - MARGIN,
+        entries: legend_entries,
+    });
 
     LayoutedChartDiagram {
         width: cw,
@@ -275,30 +295,108 @@ fn layout_pie(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagram 
 // ── Sankey layout ─────────────────────────────────────────────────────────
 
 fn layout_sankey(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagram {
-    let total: f64 = diagram.flows.iter().map(|f| f.weight).sum();
-    let total = if total == 0.0 { 1.0 } else { total };
+    const NODE_W: f64 = 14.0;
+    const NODE_GAP: f64 = 16.0;
+
+    let mut incoming = HashMap::<String, f64>::new();
+    let mut outgoing = HashMap::<String, f64>::new();
+    let mut indegree = HashMap::<String, usize>::new();
+    let mut rank = HashMap::<String, usize>::new();
+    for node in &diagram.sankey_nodes {
+        incoming.insert(node.id.clone(), 0.0);
+        outgoing.insert(node.id.clone(), 0.0);
+        indegree.insert(node.id.clone(), 0);
+        rank.insert(node.id.clone(), 0);
+    }
+    for flow in &diagram.flows {
+        *outgoing.entry(flow.source.clone()).or_default() += flow.weight;
+        *incoming.entry(flow.target.clone()).or_default() += flow.weight;
+        *indegree.entry(flow.target.clone()).or_default() += 1;
+    }
+
+    let mut queue = indegree
+        .iter()
+        .filter_map(|(id, degree)| (*degree == 0).then_some(id.clone()))
+        .collect::<VecDeque<_>>();
+    while let Some(source) = queue.pop_front() {
+        let source_rank = rank[&source];
+        for flow in diagram.flows.iter().filter(|flow| flow.source == source) {
+            let target_rank = rank.entry(flow.target.clone()).or_default();
+            *target_rank = (*target_rank).max(source_rank + 1);
+            let degree = indegree.entry(flow.target.clone()).or_default();
+            *degree -= 1;
+            if *degree == 0 {
+                queue.push_back(flow.target.clone());
+            }
+        }
+    }
+
+    let max_rank = rank.values().copied().max().unwrap_or(0).max(1);
+    let mut columns = vec![Vec::<String>::new(); max_rank + 1];
+    for node in &diagram.sankey_nodes {
+        columns[rank[&node.id].min(max_rank)].push(node.id.clone());
+    }
     let plot_h = ch - MARGIN * 2.0;
+    let scale = columns
+        .iter()
+        .filter(|column| !column.is_empty())
+        .map(|column| {
+            let values = column
+                .iter()
+                .map(|id| incoming[id].max(outgoing[id]).max(1.0))
+                .sum::<f64>();
+            (plot_h - NODE_GAP * (column.len().saturating_sub(1) as f64)) / values
+        })
+        .fold(f64::INFINITY, f64::min)
+        .max(0.1);
+
+    let mut geometry = HashMap::<String, (f64, f64, f64)>::new();
+    for (column_index, column) in columns.iter().enumerate() {
+        let x = MARGIN
+            + column_index as f64 / max_rank as f64 * (cw - MARGIN * 2.0 - NODE_W);
+        let column_height = column
+            .iter()
+            .map(|id| incoming[id].max(outgoing[id]).max(1.0) * scale)
+            .sum::<f64>()
+            + NODE_GAP * column.len().saturating_sub(1) as f64;
+        let mut y = MARGIN + (plot_h - column_height) / 2.0;
+        for id in column {
+            let height = incoming[id].max(outgoing[id]).max(1.0) * scale;
+            geometry.insert(id.clone(), (x, y, height));
+            y += height + NODE_GAP;
+        }
+    }
+
+    let mut source_offsets = HashMap::<String, f64>::new();
+    let mut target_offsets = HashMap::<String, f64>::new();
     let mut items: Vec<LayoutedChartItem> = Vec::new();
-    let mut y_off = MARGIN;
     for (i, flow) in diagram.flows.iter().enumerate() {
-        let band_h = (flow.weight / total * plot_h).max(2.0);
-        let color = SERIES_COLORS[i % SERIES_COLORS.len()].to_string();
+        let (source_x, source_y, _) = geometry[&flow.source];
+        let (target_x, target_y, _) = geometry[&flow.target];
+        let width = (flow.weight * scale).max(1.0);
+        let source_offset = source_offsets.entry(flow.source.clone()).or_default();
+        let target_offset = target_offsets.entry(flow.target.clone()).or_default();
         items.push(LayoutedChartItem::SankeyBand {
-            from_x: MARGIN,
-            from_y: y_off,
-            to_x: cw - MARGIN,
-            to_y: y_off,
-            width: band_h,
-            color,
+            from_x: source_x + NODE_W,
+            from_y: source_y + *source_offset,
+            to_x: target_x,
+            to_y: target_y + *target_offset,
+            width,
+            color: SERIES_COLORS[i % SERIES_COLORS.len()].to_string(),
         });
-        items.push(LayoutedChartItem::DataLabel {
-            x: MARGIN + 4.0,
-            y: y_off + band_h / 2.0,
-            text: format!("{} → {} ({})", flow.source, flow.target, flow.weight),
-            font_size: None,
-            color: None,
+        *source_offset += width;
+        *target_offset += width;
+    }
+    for (i, node) in diagram.sankey_nodes.iter().enumerate() {
+        let (x, y, height) = geometry[&node.id];
+        items.push(LayoutedChartItem::SankeyNode {
+            x,
+            y,
+            width: NODE_W,
+            height,
+            color: SERIES_COLORS[i % SERIES_COLORS.len()].to_string(),
+            label: node.label.clone().unwrap_or_else(|| node.id.clone()),
         });
-        y_off += band_h + 4.0;
     }
     LayoutedChartDiagram {
         width: cw,
@@ -501,6 +599,7 @@ mod tests {
             accessibility_title: None,
             accessibility_description: None,
             kind: ChartKind::Xy,
+            show_data: false,
             x_axis: Some(Axis {
                 kind: AxisKind::Categorical,
                 title: None,
@@ -539,7 +638,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.7.0");
+        assert_eq!(crate::VERSION, "0.10.0");
     }
 
     #[test]
@@ -568,6 +667,7 @@ mod tests {
             accessibility_title: None,
             accessibility_description: None,
             kind: ChartKind::Pie,
+            show_data: true,
             x_axis: None,
             y_axis: None,
             series: vec![],
@@ -595,6 +695,15 @@ mod tests {
             .filter(|it| matches!(it, LayoutedChartItem::PieArc { .. }))
             .collect();
         assert_eq!(arcs.len(), 2);
+        assert!(d.items.iter().any(|item| matches!(
+            item,
+            LayoutedChartItem::PieArc { label, .. } if label == "60%"
+        )));
+        assert!(d.items.iter().any(|item| matches!(
+            item,
+            LayoutedChartItem::Legend { entries, .. }
+                if entries[0].label == "A [60]" && entries[1].label == "B [40]"
+        )));
     }
 
     #[test]
@@ -604,6 +713,7 @@ mod tests {
             accessibility_title: None,
             accessibility_description: None,
             kind: ChartKind::Sankey,
+            show_data: false,
             x_axis: None,
             y_axis: None,
             series: vec![],
@@ -615,6 +725,10 @@ mod tests {
                 },
                 SankeyNode {
                     id: "b".into(),
+                    label: None,
+                },
+                SankeyNode {
+                    id: "c".into(),
                     label: None,
                 },
             ],
@@ -642,6 +756,16 @@ mod tests {
             .filter(|it| matches!(it, LayoutedChartItem::SankeyBand { .. }))
             .collect();
         assert_eq!(bands.len(), 2);
+        let nodes: Vec<_> = d
+            .items
+            .iter()
+            .filter(|it| matches!(it, LayoutedChartItem::SankeyNode { .. }))
+            .collect();
+        assert_eq!(nodes.len(), 3);
+        assert!(d.items.iter().any(|item| matches!(
+            item,
+            LayoutedChartItem::SankeyBand { from_x, to_x, .. } if to_x > from_x
+        )));
     }
 
     #[test]
@@ -651,6 +775,7 @@ mod tests {
             accessibility_title: Some("Portfolio matrix".into()),
             accessibility_description: Some("Native renderer priorities".into()),
             kind: ChartKind::Quadrant,
+            show_data: false,
             x_axis: Some(Axis {
                 kind: AxisKind::Numeric,
                 title: None,

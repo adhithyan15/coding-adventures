@@ -8,6 +8,8 @@
 #![forbid(unsafe_code)]
 #![deny(missing_docs)]
 
+/// Portable D18F validation, JSON, verification, and UUID-v7 helpers.
+pub mod profile;
 /// Versioned binary codecs and stable storage-record key derivation.
 pub mod wire;
 
@@ -425,44 +427,164 @@ impl ReceiverEpochKeys {
 }
 
 /// Immutable message fields supplied before hashing and encryption.
+///
+/// The fields are deliberately private. Callers can construct an envelope and
+/// borrow or copy its values, but cannot mutate authenticated state in place.
+///
+/// ```compile_fail
+/// use chief_of_staff_channel_crypto::{MessageFields, Sequence};
+///
+/// fn rewrite_sequence(fields: &mut MessageFields) {
+///     fields.sequence = Sequence(7);
+/// }
+/// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct MessageFields {
     /// Canonical 16-byte UUID v7 representation.
-    pub message_id: [u8; 16],
+    message_id: [u8; 16],
     /// Monotonic nanosecond timestamp, encoded big-endian for authentication.
-    pub timestamp_ns: u64,
+    timestamp_ns: u64,
     /// Entity that authored and signed this message.
-    pub originator_id: Vec<u8>,
+    originator_id: Vec<u8>,
     /// Channel whose CMK protects this message.
-    pub channel_id: ChannelId,
+    channel_id: ChannelId,
     /// Globally monotonic channel sequence.
-    pub sequence: Sequence,
+    sequence: Sequence,
     /// CMK epoch used for this payload.
-    pub key_epoch: KeyEpoch,
+    key_epoch: KeyEpoch,
     /// MIME content type authenticated with the message.
-    pub content_type: String,
+    content_type: String,
+}
+
+impl MessageFields {
+    /// Construct the immutable fields for one channel message.
+    #[allow(clippy::too_many_arguments)]
+    pub fn new(
+        message_id: [u8; 16],
+        timestamp_ns: u64,
+        originator_id: Vec<u8>,
+        channel_id: ChannelId,
+        sequence: Sequence,
+        key_epoch: KeyEpoch,
+        content_type: String,
+    ) -> Self {
+        Self {
+            message_id,
+            timestamp_ns,
+            originator_id,
+            channel_id,
+            sequence,
+            key_epoch,
+            content_type,
+        }
+    }
+
+    /// Return the canonical 16-byte UUID v7 representation.
+    pub fn message_id(&self) -> [u8; 16] {
+        self.message_id
+    }
+
+    /// Return the authenticated monotonic nanosecond timestamp.
+    pub fn timestamp_ns(&self) -> u64 {
+        self.timestamp_ns
+    }
+
+    /// Borrow the authenticated originator identity.
+    pub fn originator_id(&self) -> &[u8] {
+        &self.originator_id
+    }
+
+    /// Return the authenticated channel identity.
+    pub fn channel_id(&self) -> ChannelId {
+        self.channel_id
+    }
+
+    /// Return the authenticated channel sequence.
+    pub fn sequence(&self) -> Sequence {
+        self.sequence
+    }
+
+    /// Return the authenticated channel-key epoch.
+    pub fn key_epoch(&self) -> KeyEpoch {
+        self.key_epoch
+    }
+
+    /// Borrow the authenticated MIME content type.
+    pub fn content_type(&self) -> &str {
+        &self.content_type
+    }
 }
 
 /// Authenticated outer header stored with a channel-log payload.
+///
+/// ```compile_fail
+/// use chief_of_staff_channel_crypto::MessageHeader;
+///
+/// fn rewrite_hash(header: &mut MessageHeader) {
+///     header.plaintext_hash = [0; 32];
+/// }
+/// ```
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct MessageHeader {
     /// Immutable fields supplied by the originator.
-    pub fields: MessageFields,
+    fields: MessageFields,
     /// SHA-256 digest of plaintext bytes computed before encryption.
-    pub plaintext_hash: [u8; 32],
+    plaintext_hash: [u8; 32],
+}
+
+impl MessageHeader {
+    /// Borrow the authenticated message fields.
+    pub fn fields(&self) -> &MessageFields {
+        &self.fields
+    }
+
+    /// Return the declared SHA-256 digest of the plaintext.
+    pub fn plaintext_hash(&self) -> [u8; 32] {
+        self.plaintext_hash
+    }
 }
 
 /// Ciphertext and authenticity data for one channel-log message.
+///
+/// ```compile_fail
+/// use chief_of_staff_channel_crypto::EncryptedMessage;
+///
+/// fn rewrite_ciphertext(message: &mut EncryptedMessage) {
+///     message.ciphertext.clear();
+/// }
+/// ```
 #[derive(Clone, PartialEq, Eq)]
 pub struct EncryptedMessage {
     /// Outer metadata used verbatim as AEAD additional data.
-    pub header: MessageHeader,
+    header: MessageHeader,
     /// XChaCha20-encrypted payload bytes.
-    pub ciphertext: Vec<u8>,
+    ciphertext: Vec<u8>,
     /// Poly1305 authentication tag.
-    pub authentication_tag: [u8; 16],
+    authentication_tag: [u8; 16],
     /// Ed25519 signature over the canonical outer header.
-    pub originator_signature: [u8; 64],
+    originator_signature: [u8; 64],
+}
+
+impl EncryptedMessage {
+    /// Borrow the immutable authenticated header.
+    pub fn header(&self) -> &MessageHeader {
+        &self.header
+    }
+
+    /// Borrow the encrypted payload bytes.
+    pub fn ciphertext(&self) -> &[u8] {
+        &self.ciphertext
+    }
+
+    /// Return the Poly1305 authentication tag.
+    pub fn authentication_tag(&self) -> [u8; 16] {
+        self.authentication_tag
+    }
+
+    /// Return the Ed25519 originator signature.
+    pub fn originator_signature(&self) -> [u8; 64] {
+        self.originator_signature
+    }
 }
 
 /// Build the deterministic 24-byte message nonce.
@@ -672,7 +794,12 @@ fn grant_signature_input(
     ])
 }
 
-fn canonical_message_header(header: &MessageHeader) -> Vec<u8> {
+/// Return the canonical D18F authenticated-header bytes.
+///
+/// These bytes are the Ed25519 signature input and XChaCha20-Poly1305
+/// additional authenticated data. They are exposed for conformance fixtures;
+/// applications normally call [`encrypt_message`] or [`decrypt_message`].
+pub fn authenticated_message_header(header: &MessageHeader) -> Vec<u8> {
     let timestamp = header.fields.timestamp_ns.to_be_bytes();
     let sequence = header.fields.sequence.0.to_be_bytes();
     let epoch = header.fields.key_epoch.0.to_be_bytes();
@@ -687,6 +814,10 @@ fn canonical_message_header(header: &MessageHeader) -> Vec<u8> {
         header.fields.content_type.as_bytes(),
         &header.plaintext_hash,
     ])
+}
+
+fn canonical_message_header(header: &MessageHeader) -> Vec<u8> {
+    authenticated_message_header(header)
 }
 
 fn frame(fields: &[&[u8]]) -> Vec<u8> {
@@ -719,15 +850,40 @@ mod tests {
     }
 
     fn message_fields(sequence: u64, epoch: u64) -> MessageFields {
-        MessageFields {
-            message_id: [sequence as u8; 16],
-            timestamp_ns: 1_725_000_000_000_000_000 + sequence,
-            originator_id: b"originator".to_vec(),
-            channel_id: channel_id(),
-            sequence: Sequence(sequence),
-            key_epoch: KeyEpoch(epoch),
-            content_type: "text/plain".to_owned(),
-        }
+        MessageFields::new(
+            [sequence as u8; 16],
+            1_725_000_000_000_000_000 + sequence,
+            b"originator".to_vec(),
+            channel_id(),
+            Sequence(sequence),
+            KeyEpoch(epoch),
+            "text/plain".to_owned(),
+        )
+    }
+
+    #[test]
+    fn message_envelope_exposes_read_only_views() {
+        let fields = message_fields(3, 2);
+        assert_eq!(fields.message_id(), [3; 16]);
+        assert_eq!(fields.timestamp_ns(), 1_725_000_000_000_000_003);
+        assert_eq!(fields.originator_id(), b"originator");
+        assert_eq!(fields.channel_id(), channel_id());
+        assert_eq!(fields.sequence(), Sequence(3));
+        assert_eq!(fields.key_epoch(), KeyEpoch(2));
+        assert_eq!(fields.content_type(), "text/plain");
+
+        let originator = signing_key(7);
+        let message = encrypt_message(
+            fields,
+            b"payload",
+            &ChannelMasterKey::from_bytes([0xa5; 32]),
+            &originator,
+        );
+        assert_eq!(message.header().fields().sequence(), Sequence(3));
+        assert_eq!(message.header().plaintext_hash(), sha256(b"payload"));
+        assert_ne!(message.ciphertext(), b"payload");
+        assert_eq!(message.authentication_tag().len(), 16);
+        assert_eq!(message.originator_signature().len(), 64);
     }
 
     #[test]

@@ -1828,6 +1828,7 @@ pub fn parse_xychart(source: &str) -> Result<ChartDiagram, ParseError> {
         accessibility_title: None,
         accessibility_description: None,
         kind: ChartKind::Xy,
+        show_data: false,
         x_axis,
         y_axis,
         series,
@@ -2099,6 +2100,7 @@ pub fn parse_quadrant_chart(source: &str) -> Result<ChartDiagram, ParseError> {
         accessibility_title,
         accessibility_description,
         kind: ChartKind::Quadrant,
+        show_data: false,
         x_axis: axis(x_labels),
         y_axis: axis(y_labels),
         series: vec![],
@@ -4409,8 +4411,7 @@ fn upsert_sequence_participant(
 
 /// Parse the grammar-backed Mermaid `pie` family into a `ChartDiagram`.
 ///
-/// The first compatibility slice supports `showData` and quoted numeric
-/// sections, which are the semantic inputs needed by `diagram-layout-chart`.
+/// Supports metadata, `showData`, and quoted non-negative numeric sections.
 pub fn parse_pie(source: &str) -> Result<ChartDiagram, ParseError> {
     parse_mermaid_pie_ast(source)?;
 
@@ -4418,13 +4419,67 @@ pub fn parse_pie(source: &str) -> Result<ChartDiagram, ParseError> {
     cursor.skip_terminators();
     cursor.expect_keyword("pie")?;
 
-    if cursor.current().type_ == TokenType::Keyword && cursor.current().value == "showData" {
+    let show_data =
+        cursor.current().type_ == TokenType::Keyword && cursor.current().value == "showData";
+    if show_data {
         cursor.advance();
     }
     cursor.skip_terminators();
 
+    let mut title = None;
+    let mut accessibility_title = None;
+    let mut accessibility_description = None;
     let mut slices = Vec::new();
     while !cursor.at_eof() {
+        match token_name(cursor.current()) {
+            "TITLE" => {
+                title = Some(
+                    cursor
+                        .advance()
+                        .value
+                        .strip_prefix("title")
+                        .expect("Pie grammar emitted a title token")
+                        .trim()
+                        .to_string(),
+                );
+                cursor.skip_terminators();
+                continue;
+            }
+            "ACC_TITLE" => {
+                accessibility_title = cursor
+                    .advance()
+                    .value
+                    .split_once(':')
+                    .map(|(_, value)| value.trim().to_string());
+                cursor.skip_terminators();
+                continue;
+            }
+            "ACC_DESCR" => {
+                accessibility_description = cursor
+                    .advance()
+                    .value
+                    .split_once(':')
+                    .map(|(_, value)| value.trim().to_string());
+                cursor.skip_terminators();
+                continue;
+            }
+            "ACC_DESCR_BLOCK" => {
+                let value = cursor.advance().value.clone();
+                let open = value.find('{').expect("accessibility block requires '{'");
+                let close = value.rfind('}').expect("accessibility block requires '}'");
+                accessibility_description = Some(
+                    value[open + 1..close]
+                        .lines()
+                        .map(str::trim)
+                        .filter(|line| !line.is_empty())
+                        .collect::<Vec<_>>()
+                        .join("\n"),
+                );
+                cursor.skip_terminators();
+                continue;
+            }
+            _ => {}
+        }
         let label_token = cursor
             .consume_if("STRING")
             .ok_or_else(|| token_error(cursor.current(), "expected quoted pie slice label"))?;
@@ -4440,6 +4495,15 @@ pub fn parse_pie(source: &str) -> Result<ChartDiagram, ParseError> {
                 format!("invalid pie slice value {:?}", value_token.value),
             )
         })?;
+        if value < 0.0 {
+            return Err(token_error(
+                &value_token,
+                format!(
+                    "pie slice {:?} has negative value {value}; values must be non-negative",
+                    unquote_mermaid_string(&label_token.value)
+                ),
+            ));
+        }
 
         slices.push(PieSlice {
             label: unquote_mermaid_string(&label_token.value),
@@ -4449,10 +4513,11 @@ pub fn parse_pie(source: &str) -> Result<ChartDiagram, ParseError> {
     }
 
     Ok(ChartDiagram {
-        title: None,
-        accessibility_title: None,
-        accessibility_description: None,
+        title,
+        accessibility_title,
+        accessibility_description,
         kind: ChartKind::Pie,
+        show_data,
         x_axis: None,
         y_axis: None,
         series: vec![],
@@ -4546,21 +4611,20 @@ pub fn parse_sankey(source: &str) -> Result<ChartDiagram, ParseError> {
     let mut flows: Vec<SankeyFlow> = Vec::new();
 
     while !cursor.at_eof() {
-        let source_id = parse_sankey_field(&mut cursor)?;
+        let source_id = parse_sankey_node_field(&mut cursor)?;
         cursor
             .consume_if("COMMA")
             .ok_or_else(|| token_error(cursor.current(), "expected ',' after Sankey source"))?;
-        let target_id = parse_sankey_field(&mut cursor)?;
+        let target_id = parse_sankey_node_field(&mut cursor)?;
         cursor
             .consume_if("COMMA")
             .ok_or_else(|| token_error(cursor.current(), "expected ',' after Sankey target"))?;
-        let weight_token = cursor
-            .consume_if("NUMBER")
-            .ok_or_else(|| token_error(cursor.current(), "expected Sankey flow weight"))?;
-        let weight = weight_token.value.parse::<f64>().map_err(|_| {
+        let weight_token = cursor.current().clone();
+        let weight_value = parse_sankey_field(&mut cursor)?;
+        let weight = weight_value.parse::<f64>().map_err(|_| {
             token_error(
                 &weight_token,
-                format!("invalid Sankey flow weight {:?}", weight_token.value),
+                format!("invalid Sankey flow weight {weight_value:?}"),
             )
         })?;
 
@@ -4585,6 +4649,7 @@ pub fn parse_sankey(source: &str) -> Result<ChartDiagram, ParseError> {
         accessibility_title: None,
         accessibility_description: None,
         kind: ChartKind::Sankey,
+        show_data: false,
         x_axis: None,
         y_axis: None,
         series: vec![],
@@ -4604,11 +4669,15 @@ fn parse_sankey_field(cursor: &mut TokenCursor) -> Result<String, ParseError> {
         return Err(token_error(&token, "expected Sankey CSV field"));
     }
 
-    let value = cursor.advance().value.trim().replace("\"\"", "\"");
-    if value.is_empty() {
-        return Err(token_error(&token, "Sankey CSV fields cannot be empty"));
+    Ok(cursor.advance().value.trim().replace("\"\"", "\""))
+}
+
+fn parse_sankey_node_field(cursor: &mut TokenCursor) -> Result<String, ParseError> {
+    if token_name(cursor.current()) == "COMMA" {
+        Ok(String::new())
+    } else {
+        parse_sankey_field(cursor)
     }
-    Ok(value)
 }
 
 // ── GitGraph parser ───────────────────────────────────────────────────────
@@ -5871,9 +5940,32 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     fn pie_parses_slices() {
         let d = parse_pie(PIE_SRC).unwrap();
         assert_eq!(d.kind, ChartKind::Pie);
+        assert!(d.show_data);
         assert_eq!(d.slices.len(), 2);
         assert_eq!(d.slices[0].label, "Dogs");
         assert_eq!(d.slices[0].value, 60.0);
+    }
+
+    #[test]
+    fn pie_parses_title_accessibility_and_non_negative_values() {
+        let d = parse_pie(
+            "pie title Adoption\naccTitle: Adoption breakdown\naccDescr {\nDogs and cats\nby share\n}\n\"Dogs\": 0\n\"Cats\": 40.12",
+        )
+        .unwrap();
+        assert_eq!(d.title.as_deref(), Some("Adoption"));
+        assert_eq!(d.accessibility_title.as_deref(), Some("Adoption breakdown"));
+        assert_eq!(
+            d.accessibility_description.as_deref(),
+            Some("Dogs and cats\nby share")
+        );
+        assert_eq!(d.slices[0].value, 0.0);
+        assert!(!d.show_data);
+    }
+
+    #[test]
+    fn pie_rejects_negative_values() {
+        let error = parse_pie("pie\n\"Dogs\": -60.67").unwrap_err();
+        assert!(error.message.contains("values must be non-negative"));
     }
 
     #[test]
@@ -5884,6 +5976,28 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         assert_eq!(d.sankey_nodes.len(), 3);
         assert_eq!(d.flows[0].target, "Heating, homes");
         assert_eq!(d.flows[0].weight, 113.726);
+    }
+
+    #[test]
+    fn sankey_parses_case_insensitive_headers_and_quoted_weights() {
+        let d = parse_sankey("SANKEY-BETA\nGrid,\"Heating, homes\",\"113.726\"").unwrap();
+        assert_eq!(d.flows[0].source, "Grid");
+        assert_eq!(d.flows[0].target, "Heating, homes");
+        assert_eq!(d.flows[0].weight, 113.726);
+    }
+
+    #[test]
+    fn sankey_requires_csv_rows_and_header_newline() {
+        assert!(parse_sankey("sankey").is_err());
+        assert!(parse_sankey("sankey A,B,1").is_err());
+    }
+
+    #[test]
+    fn sankey_preserves_empty_rfc_csv_node_ids() {
+        let d = parse_sankey("sankey\n,A,1\nA,,2\n\"\",B,3").unwrap();
+        assert_eq!(d.flows[0].source, "");
+        assert_eq!(d.flows[1].target, "");
+        assert_eq!(d.flows[2].source, "");
     }
 
     #[test]

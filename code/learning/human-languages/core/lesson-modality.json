@@ -7,18 +7,18 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:87b79d08d5af39e3",
+  "sourceHash": "fnv1a64:96da6e07c2e81385",
   "summary": {
-    "totalLessons": 2227,
-    "voice": 1458,
-    "sight": 568,
+    "totalLessons": 2229,
+    "voice": 1459,
+    "sight": 569,
     "pen": 201,
-    "drivableLessons": 1458,
+    "drivableLessons": 1459,
     "drivablePercent": 65,
     "trackCount": 22,
     "chapterCount": 779,
-    "drivablePrefixTotal": 1258,
-    "fullyDrivableChapters": 480,
+    "drivablePrefixTotal": 1257,
+    "fullyDrivableChapters": 479,
     "unstartableChapters": 180,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
@@ -7334,12 +7334,12 @@
     },
     {
       "language": "spanish",
-      "lessonCount": 417,
-      "voice": 368,
-      "sight": 42,
+      "lessonCount": 419,
+      "voice": 369,
+      "sight": 43,
       "pen": 7,
       "drivablePercent": 88,
-      "drivablePrefixTotal": 355,
+      "drivablePrefixTotal": 354,
       "modalities": [
         "voice",
         "sight",
@@ -8167,21 +8167,20 @@
         },
         {
           "chapter": 49,
-          "lessonCount": 4,
+          "lessonCount": 5,
           "voice": 4,
-          "sight": 0,
+          "sight": 1,
           "pen": 0,
           "modalities": [
-            "voice"
+            "voice",
+            "sight"
           ],
-          "drivablePrefix": 4,
-          "firstNonVoiceLesson": null,
-          "drivable": true,
+          "drivablePrefix": 2,
+          "firstNonVoiceLesson": "ES-C10-futuro-simple",
+          "drivable": false,
           "drivableLessonIds": [
             "ES-C10-ir",
-            "ES-C10-ir-a-futuro",
-            "ES-C10-mi-tu-su",
-            "ES-C10-practice"
+            "ES-C10-ir-a-futuro"
           ]
         },
         {
@@ -9031,17 +9030,18 @@
         },
         {
           "chapter": 103,
-          "lessonCount": 3,
-          "voice": 3,
+          "lessonCount": 4,
+          "voice": 4,
           "sight": 0,
           "pen": 0,
           "modalities": [
             "voice"
           ],
-          "drivablePrefix": 3,
+          "drivablePrefix": 4,
           "firstNonVoiceLesson": null,
           "drivable": true,
           "drivableLessonIds": [
+            "ES-C14-ayer",
             "ES-C14-ser-ir-preterite",
             "ES-C14-hablar-preterite",
             "ES-C14-practice"
@@ -43676,6 +43676,26 @@
       "sourceHash": "fnv1a64:9c517ddaa404263f"
     },
     {
+      "id": "ES-C10-futuro-simple",
+      "language": "spanish",
+      "chapter": 49,
+      "sequence": 935,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "sight-cue",
+        "wide-table"
+      ],
+      "coreModality": "sight",
+      "coreReasons": [
+        "sight-cue",
+        "wide-table"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:21a6f33e14a65343"
+    },
+    {
       "id": "ES-C10-mi-tu-su",
       "language": "spanish",
       "chapter": 49,
@@ -45006,6 +45026,24 @@
       ],
       "coreDrivable": false,
       "sourceHash": "fnv1a64:91b548b5a636c6db"
+    },
+    {
+      "id": "ES-C14-ayer",
+      "language": "spanish",
+      "chapter": 103,
+      "sequence": 1287,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:5e06ab9b1ac948ba"
     },
     {
       "id": "ES-C14-ser-ir-preterite",

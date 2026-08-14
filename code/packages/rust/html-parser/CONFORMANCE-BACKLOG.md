@@ -534,6 +534,23 @@ Prioritized work items:
    incomplete end tags at EOF remain outside it because no end-tag token is
    emitted, and adoption-agency companion diagnostics remain independently
    unpositioned.
+   Dedicated button end tags now follow the same position contract at foreign
+   integration boundaries; scope and unmatched companion diagnostics remain
+   independently unpositioned, and incomplete EOF syntax still emits no end-tag
+   token.
+   Dedicated form end tags now follow the same position contract at foreign
+   integration boundaries; pointer and template ownership recovery remains
+   unchanged, companion diagnostics stay independently unpositioned, and
+   incomplete EOF syntax still emits no end-tag token.
+   Dedicated body and reprocessed html end tags now follow the same position
+   contract at foreign integration boundaries; shell-scope companion
+   diagnostics remain independently unpositioned, nearer foreign shell-named
+   elements retain foreign recovery, and incomplete EOF syntax emits no end-tag
+   token.
+   Grouped scoped-block end tags now follow the same position contract at
+   foreign integration boundaries; ordinary-scope companion diagnostics remain
+   independently unpositioned, foreign same-name recovery stays distinct, and
+   incomplete EOF syntax emits no end-tag token.
    Continue migrating one evidence-backed diagnostic family at a time;
    synthetic or directly supplied tokens must remain explicitly unpositioned.
 4. **Input boundary review.** Document the Unicode-code-point parser boundary

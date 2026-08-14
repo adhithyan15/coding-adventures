@@ -5,6 +5,317 @@ landed and why, not a semver-tracked API.
 
 ## Unreleased
 
+- `anatomy/lung-size-comparison.adj` (new) — a sibling to the already-shipped `lung-lobes.adj`
+  (`lung_lobe_count(lung, count)`, right_lung → 3, left_lung → 2). That table's own header already
+  quotes, verbatim, the NCI SEER sentence that fixes the right lung's lobe count AND, in the same
+  breath, names three comparative descriptors for the right lung relative to the left — a fact the
+  lung/count schema had no room for: "The right lung is shorter, broader, and has a greater volume
+  than the left lung." New `lung_size_comparison(lung, comparison)` table decodes those three
+  descriptors as the right lung's own rows: shorter, broader, greater_volume. Confirmed via
+  discipline #30 that no other table already covers this comparison text as queryable facts. The
+  source states these comparisons only in the direction right-relative-to-left, so `left_lung` is
+  deliberately left unrowed rather than inverted into a guessed opposite claim the source never
+  makes — honest abstention on it. New e2e test file `facts_lungsizecomparison_e2e.rs` (3 tests:
+  3-answer forward recall with citation, backward recall, honest abstention). No manifest
+  objective, matching `lung-lobes.adj`'s own precedent. Seventh slice from the anatomy/ domain
+  sweep — steady at 176 objectives. 102nd content slice overall.
+- `anatomy/joint-formed-by.adj` (new) — a sibling to the already-shipped `joint-types.adj`
+  (`joint_example(joint_type, example)`, hinge/pivot/condyloid/saddle/planar/ball_and_socket →
+  a representative joint the source names for each shape, e.g. pivot → atlantoaxial). That table's
+  own header already quotes, verbatim, three StatPearls sentences that each name a joint type's
+  representative example joint AND, in the same sentence, the specific bones that meet to form
+  that joint — a fact the joint_type/example schema had no room for. New `joint_formed_by
+  (joint_type, bone)` table decodes those named bones as their own rows (6 total, across the three
+  joint types whose quoted span names the forming bones): pivot → atlas, axis; condyloid →
+  distal_metacarpals, proximal_phalanges; saddle → trapezium, first_metacarpal. Hinge, planar, and
+  ball_and_socket are deliberately not rowed here, since their own quoted spans name only an
+  example joint, never the bones that form it. Honest abstention on `hinge`, a real, already-tabled
+  joint type whose own quote names no forming bones. New e2e test file `facts_jointformedby_e2e.rs`
+  (3 tests: 2-answer forward recall with citation, backward recall, honest abstention). No manifest
+  objective, matching `joint-types.adj`'s own precedent. Sixth slice from the anatomy/ domain sweep
+  — steady at 176 objectives. 101st content slice overall.
+- `anatomy/valve-kind.adj` (new) — a sibling to the already-shipped `heart-valves.adj`
+  (`valve_separates(valve, boundary)`, tricuspid/mitral/pulmonary/aortic → their own two-chamber-
+  or-vessel boundary). That table's own header already quotes, verbatim, the NCI SEER sentences
+  that name each valve AND classify it as one of two physiological kinds — "atrioventricular" (the
+  two valves between an atrium and its ventricle) or "semilunar" (the two valves at the base of a
+  great vessel leaving a ventricle) — a fact the valve/boundary schema had no room for. New
+  `valve_kind(valve, kind)` table decodes that classifying adjective as each valve's own row:
+  tricuspid/mitral → atrioventricular, pulmonary/aortic → semilunar. Confirmed via discipline #30
+  that no existing table already maps valve→kind under a different name (only `heart-valves.adj`'s
+  own header prose mentions these classification terms at all). Honest abstention on `eustachian`,
+  a real cardiac valve name but not one of the four valves this table covers. New e2e test file
+  `facts_valvekind_e2e.rs` (3 tests: forward recall with citation, 2-answer backward recall,
+  honest abstention). No manifest objective, matching `heart-valves.adj`'s own precedent. Fifth
+  slice from the anatomy/ domain sweep — steady at 176 objectives. 100th content slice overall.
+- `anatomy/heart-chamber-vessel.adj` (new) — a sibling to the already-shipped `heart-chambers.adj`
+  (`heart_chamber_function(chamber, function)`, right_atrium/right_ventricle/left_atrium/
+  left_ventricle → receives_blood_from_body/pumps_blood_to_lungs/receives_blood_from_lungs/
+  pumps_blood_to_body). That table's own header already quotes, verbatim, four StatPearls
+  sentences that each name a chamber's function AND, in the same breath, the named vessel(s)/
+  valve(s) blood passes through to get there — a fact the chamber/function schema had no room for.
+  New `heart_chamber_vessel(chamber, vessel)` table decodes those named structures as their own
+  rows (6 total): right_atrium → superior_vena_cava, inferior_vena_cava; right_ventricle →
+  pulmonic_valve, pulmonary_artery; left_atrium → pulmonary_veins; left_ventricle → aortic_valve.
+  Confirmed via discipline #30 (schema-duplication check) that this is genuinely distinct from the
+  already-shipped `valve_separates(valve, boundary)` in `heart-valves.adj` — that table is keyed
+  by VALVE and names the two CHAMBERS it separates; this one is keyed by CHAMBER and names the
+  VESSEL(S)/VALVE(S) attached to it, and never mentions the vena cavae or pulmonary veins at all.
+  Honest abstention on `septum`, a real cardiac structure but not one of the four chambers. New
+  e2e test file `facts_heartchambervessel_e2e.rs` (3 tests: forward recall with citation,
+  2-answer backward recall, honest abstention). No manifest objective, matching
+  `heart-chambers.adj`'s own precedent. Fourth slice from the anatomy/ domain sweep — steady at
+  176 objectives. 99th content slice overall.
+- `anatomy/body-counts.adj` (extended) — the anatomy/ domain sweep's third candidate,
+  `hand_bone_group_count(group, count)` off `hand-bones.adj`, turned out to duplicate
+  `body-counts.adj`'s own purpose (`body_count(structure, count)` — "how many of each major
+  structure the human body has") once inspected against the REJECT precedent set for other
+  count-shaped candidates this sweep (kidney-parts.adj). Rather than ship a second table with an
+  identical schema, extended `body_count` with three new rows reusing the SAME already-cited
+  NCBI-Bookshelf sentence `hand-bones.adj` already ships in its own header (no new WebFetch):
+  carpals → 8, metacarpals → 5, phalanges → 14 ("8 carpal bones ... 5 metacarpal bones ... and 14
+  phalanges"). Unlike the table's other six rows (all primary U.S. government sources), this
+  source is a patient-education/teaching summary (IQWiG) hosted on NIH/NCBI Bookshelf, so these
+  three rows are honestly documented as `consensus`-tier in the header prose, one rung below the
+  table's `authoritative` envelope trust — matching `hand-bones.adj`'s own trust tier for the same
+  sentence. Extended the existing `facts_anatomy_e2e.rs` test file with a new test covering all
+  three new rows. Third slice from the anatomy/ domain sweep. 98th content slice overall.
+- `anatomy/eye-part-property.adj` (new) — a sibling to the already-shipped `eye-parts.adj`
+  (`eye_part_function(part, function)`, cornea/pupil/iris/lens/retina/optic_nerve →
+  bends_light/lets_in_light/controls_light/focuses_light/turns_light_into_signals/
+  carries_signals_to_brain). That table's own header already quotes, verbatim, per-row NEI spans
+  naming each part's FUNCTION — but three of those same quoted spans also carry a parenthetical or
+  descriptive clause naming a PROPERTY of the part (what it IS, not what it does), a fact the
+  function schema had no room for: cornea → dome_shaped ("shaped like a dome"), iris →
+  colored_part_of_eye ("the colored part of the eye"), retina → light_sensitive_layer ("a
+  light-sensitive layer of tissue"). New `eye_part_property(part, property)` table decodes each as
+  its own row. Honest abstention on lens, a real already-tabled eye part whose own quote states
+  only a function, no descriptive property (same for pupil/optic_nerve, deliberately left unrowed).
+  New e2e test file `facts_eyepartproperty_e2e.rs` (3 tests: forward recall with citation, backward
+  recall, honest abstention). No manifest objective, matching `eye-parts.adj`'s own precedent.
+  Second slice from the anatomy/ domain sweep. 97th content slice overall.
+- `anatomy/ear-structure-function.adj` (new) — a sibling to the already-shipped `ear-parts.adj`
+  (`ear_structure_region(structure, region)`, ear_canal/malleus/incus/stapes/cochlea →
+  outer_ear/middle_ear/middle_ear/middle_ear/inner_ear). That table's own header already quotes,
+  verbatim, two chained NIDCD sentences that together name the three middle-ear ossicles AND
+  state what they do to the signal — "The bones in the middle ear amplify, or increase, the sound
+  vibrations and send them to the cochlea..." — but the structure/region schema had room only for
+  WHERE each structure sits, not WHAT the ossicles DO. New `ear_structure_function(structure,
+  function)` table decodes that action verb as each ossicle's own row: malleus/incus/stapes → all
+  amplifies_sound. Honest abstention on ear_canal, a real already-tabled ear structure whose own
+  quote states no action-verb function. New e2e test file `facts_earstructurefunction_e2e.rs` (3
+  tests: forward recall with citation, 3-answer backward recall, honest abstention). No manifest
+  objective, matching `ear-parts.adj`'s own precedent. First slice from a fresh anatomy/ domain
+  sweep — the domain's ~20 shipped tables turned out to be only partially mined (the standing
+  "only lung-lobes shipped" note was stale), and a targeted Explore-agent sweep found 9 further
+  STRONG sibling-table candidates across the directory.
+- `language/subordinating-conjunction-relationship-type.adj` (new) — a sibling to the
+  already-shipped `conjunction-type.adj` (`conjunction_type(type, description)`,
+  coordinating_conjunction/correlative_conjunction/subordinating_conjunction → their own defining
+  sentences). That table's own header already reproduces, verbatim, the Grammarly sentence for the
+  subordinating conjunction in full — "Subordinating conjunctions join dependent clauses to the
+  independent clauses of sentences, signaling cause and effect, comparison, contrast, time, or some
+  other kind of relationship between the clauses." — but the type/description schema had room only
+  for the structural fact (joining clauses), not the four named relationship kinds the same
+  sentence lists. New `subordinating_conjunction_relationship_type(relationship_type,
+  conjunction_type)` table decodes those four kinds as their own rows: cause_and_effect/comparison/
+  contrast/time → all subordinating_conjunction. The sentence's own vague trailing "or some other
+  kind of relationship" clause is deliberately excluded — it names no additional category. Honest
+  abstention on `concession` (a real relationship subordinating conjunctions can express in general
+  grammar, but not one this specific quoted sentence names) and on `coordinating_conjunction` (a
+  real, already-tabled conjunction category, but not the one this table covers). New e2e test file
+  `facts_subordinatingconjunctionrelationshiptype_e2e.rs` (4 tests: forward recall with citation,
+  4-answer backward recall, and two honest-abstention cases). No manifest objective, matching
+  `conjunction-type.adj`'s own precedent. SEVENTH AND FINAL slice from the language/ domain cleanup
+  sweep — this closes the sweep.
+- `language/syllable-type-alias.adj` (new) — a sibling to the already-shipped `silent-e-word.adj`
+  (`silent_e_word(word, syllable_type)`, wake/whale/while/yoke/yore/rude/hare → all
+  vce_long_vowel). That table's own `source` field already quotes, verbatim, the Reading Rockets
+  sentence in full — "Also known as \"magic e\" syllable patterns, VCe syllables contain long
+  vowels spelled with a single letter, followed by a single consonant, and a silent e." — but the
+  word/syllable_type schema had room only for WHICH words follow the pattern, not the sentence's
+  own opening alias clause naming the pattern's alternate name. New
+  `syllable_type_alias(syllable_type, alias)` table decodes that clause as its own row:
+  vce_long_vowel → magic_e. Since the parent tables only ONE syllable type across all seven rows,
+  the abstention target instead comes from the parent's own "Six Syllable Types" source article —
+  honest abstention on closed_syllable, a real syllable type that article covers but
+  silent-e-word.adj (and therefore this sibling) does not table. New e2e test file
+  `facts_syllabletypealias_e2e.rs` (3 tests: forward recall with citation, backward recall, honest
+  abstention). No manifest objective, matching `silent-e-word.adj`'s own precedent. Sixth slice
+  from the language/ domain cleanup sweep.
+- `language/determiner-type-alias.adj` (new) — a sibling to the already-shipped
+  `determiner-type.adj` (`determiner_type(type, description)`, article/demonstrative_determiner/
+  distributive_determiner → their own defining sentences). That table's own header already
+  reproduces, verbatim, the Grammarly sentence for the demonstrative determiner in full —
+  "Demonstrative determiners, also known as demonstrative adjectives, communicate the placement of a
+  noun in space or time." — but the type/description schema had room only for WHAT it does, not the
+  parenthetical alias clause naming its alternate name. New `determiner_type_alias(type, alias)`
+  table decodes that clause as its own row: demonstrative_determiner → demonstrative_adjective.
+  Honest abstention on article, a real already-tabled determiner type whose own sentence states no
+  alias. New e2e test file `facts_determinertypealias_e2e.rs` (3 tests: forward recall with citation,
+  backward recall, honest abstention). No manifest objective, matching `determiner-type.adj`'s own
+  precedent. Fifth slice from the language/ domain cleanup sweep.
+- `language/past-tense-ed-sound-effect.adj` (new) — a sibling to the already-shipped
+  `past-tense-ed-sound.adj` (`past_tense_ed_sound(word, sound)`, walked/lived/wanted →
+  t_sound/d_sound/id_sound). That table's own header already reproduces, verbatim, the 7ESL rule for
+  the /id/ sound in full — "Final -ed is pronounced /id/ after 'T', and 'D' sounds. The sound /id/ adds
+  a whole syllable to a word." — but the word/sound schema had room only for the sound itself, not the
+  second sentence's pronunciation-effect claim. New `past_tense_ed_sound_effect(sound, effect)` table
+  decodes that second sentence as its own row: id_sound → adds_a_whole_syllable. Honest abstention on
+  t_sound, a real already-tabled -ed sound whose own rule states no comparable effect. New e2e test file
+  `facts_pasttenseedsoundeffect_e2e.rs` (3 tests: forward recall with citation, backward recall, honest
+  abstention). No manifest objective, matching `past-tense-ed-sound.adj`'s own precedent. Fourth slice
+  from the language/ domain cleanup sweep.
+- `language/greek-alphabet-standardization.adj` (new) — a sibling to the already-shipped
+  `greek-alphabet.adj` (`greek_letter_position(letter, position)`, the 24 letter→position mappings).
+  That table's own `source` field already quotes, verbatim, a Wikipedia sentence naming WHEN the
+  Euclidean alphabet the letter-position table is built from became standard — "by the end of the 4th
+  century BC, the Ionic-based Euclidean alphabet, with 24 letters, ordered from alpha to omega, had
+  become standard" — a fact the letter/position schema had no room for. New
+  `greek_alphabet_standardization(alphabet_name, standardized_by_period)` table decodes that clause as
+  its own row: euclidean_alphabet → fourth_century_bc. (Note: the ADJ atom is spelled `fourth_century_bc`,
+  not `4th_century_bc` — ADJ atoms must lex as identifiers and cannot start with a digit.) Honest
+  abstention on attic_alphabet, a real but distinct Greek alphabet variant the cited span does not name.
+  New e2e test file `facts_greekalphabetstandardization_e2e.rs` (3 tests: forward recall with citation,
+  backward recall, honest abstention). No manifest objective, matching `greek-alphabet.adj`'s own
+  precedent. Third slice from the language/ domain cleanup sweep.
+- `language/morse-code-origin.adj` (new) — a sibling to the already-shipped `morse-code.adj` and
+  `morse-code-standard.adj`. The SAME already-quoted Wikipedia sentence also names who proposed the code
+  International Morse code was derived from, and when — "a much-improved proposal by Friedrich Gerke in
+  1848" — a fact neither sibling's schema had room for. New `morse_code_origin(code_system, originator,
+  year)` table decodes that clause as its own row: international_morse_code → friedrich_gerke, 1848. A
+  THREE-column table, since originator and year belong together as one origin event rather than two
+  separate sibling tables. Honest abstention on american_morse_code, the same target
+  `morse-code-standard.adj` already uses. New e2e test file `facts_morsecodeorigin_e2e.rs` (3 tests:
+  forward recall with citation, backward recall, honest abstention). No manifest objective, matching
+  `morse-code.adj`'s own precedent. Second slice from the language/ domain cleanup sweep.
+- `language/morse-code-standard.adj` (new) — a sibling to the already-shipped `morse-code.adj`
+  (`morse_code(letter, pattern)`, the 26 letter→dot/dash mappings). That table's own `source` field already
+  quotes, verbatim, a Wikipedia sentence naming the international standard that specifies the code — "the
+  current international standard, International Morse Code Recommendation, ITU-R M.1677-1" — a fact the
+  letter/pattern schema had no room for. New `morse_code_standard(code_system, standard_id)` table decodes
+  that clause as its own row: international_morse_code → itu_r_m_1677_1. Honest abstention on
+  american_morse_code, a real but distinct historical Morse variant the cited span does not name. New e2e
+  test file `facts_morsecodestandard_e2e.rs` (3 tests: forward recall with citation, backward recall,
+  honest abstention). No manifest objective, matching `morse-code.adj`'s own precedent. First slice from a
+  targeted sibling-table sweep of the language/ (literacy) domain — this domain had already been swept
+  repeatedly for this pattern, but 7 small untabled leftover facts remained; this is the first of them.
+- `oceanography/ocean-current-strongest-location.adj` (new) — a sibling to the already-shipped
+  `ocean-current-drivers.adj` and `ocean-current-surface-position.adj`. That table's own header already
+  quotes, verbatim, a NOAA sentence stating tidal currents "are strongest near the shore, and in bays and
+  estuaries along the coast" — a location fact the single `driver` atom had no room for. Both prepositional
+  phrases are simultaneously true (the source's "and" joins two coexisting facts, not two competing
+  readings), so they fold into ONE compound atom, matching this stdlib's own established convention. New
+  `ocean_current_strongest_location(current_type, location)` table decodes that clause as its own row:
+  tidal_currents → near_the_shore_and_in_bays_and_estuaries_along_the_coast. Honest abstention on
+  thermohaline_circulation, whose cited span names no location. New e2e test file
+  `facts_oceancurrentstrongestlocation_e2e.rs` (3 tests: forward recall with citation, backward recall,
+  honest abstention). No manifest objective, matching `ocean-current-drivers.adj`'s own precedent. Fourth
+  slice from the oceanography/ domain sweep. (The remaining candidate, `named_current_climate_effect` off
+  the same file's gulf_stream aside — "brings milder winter weather to Bergen, Norway, than to New York" —
+  was re-inspected and confirmed a dead end: the claim is inherently a comparison between two named places,
+  which cannot honestly fit a binary (current, effect) shape without arbitrary compression of a relation
+  the schema was never built to hold. This closes out the oceanography/ domain sweep.)
+- `oceanography/ocean-current-surface-position.adj` (new) — a sibling to the already-shipped
+  `ocean-current-drivers.adj` (`ocean_current_driver(current_type, driver)`, ONE physical driver per
+  current type — wind_driven_currents → wind). That table's own header already quotes, verbatim, a NOAA
+  sentence stating "Winds drive currents that are at or near the ocean's surface." — a positional fact the
+  single `driver` atom had no room for. New `ocean_current_surface_position(current_type, position)` table
+  decodes that clause as its own row: wind_driven_currents → at_or_near_the_oceans_surface. Honest
+  abstention on thermohaline_circulation, whose cited span names no position. New e2e test file
+  `facts_oceancurrentsurfaceposition_e2e.rs` (3 tests: forward recall with citation, backward recall,
+  honest abstention on thermohaline_circulation). No manifest objective, matching
+  `ocean-current-drivers.adj`'s own precedent. Third slice from the oceanography/ domain sweep.
+- `oceanography/ocean-instrument-secondary-quantity.adj` (new) — a sibling to the already-shipped
+  `ocean-observing-instruments.adj` (`ocean_instrument(instrument, quantity)`, ONE quantity per
+  instrument — sonar → distance_to_object). That table's own header already quotes, verbatim, a NOAA
+  sentence stating sonar determines "the range and orientation of the object" — a second, distinct
+  quantity ("orientation") the single `quantity` atom had no room for. New
+  `ocean_instrument_secondary_quantity(instrument, secondary_quantity)` table decodes that clause as its
+  own row: sonar → orientation_of_object. Honest abstention on tide_gauge, whose cited span names no
+  second quantity. New e2e test file `facts_oceaninstrumentsecondaryquantity_e2e.rs` (3 tests: forward
+  recall with citation, backward recall, honest abstention on tide_gauge). No manifest objective, matching
+  `ocean-observing-instruments.adj`'s own precedent. Second slice from the oceanography/ domain sweep.
+- `oceanography/ocean-zone-scientific-name.adj` (new) — a sibling to the already-shipped
+  `ocean-zones.adj` (`ocean_zone(zone, order)`) and `ocean-zone-depth.adj` (`ocean_zone_depth(zone,
+  max_depth_meters)`). The SAME already-quoted WHOI "Ocean Zones" midnight-zone sentence — "The midnight
+  zone, or bathypelagic, extends to about 4,000 meters..." — also names an alternate scientific name for
+  that zone, a fact neither sibling's schema had room for (one tables sequence position, the other tables
+  depth). New `ocean_zone_scientific_name(zone, scientific_name)` table decodes that clause as its own row:
+  midnight_zone → bathypelagic. Honest abstention on sunlight_zone and twilight_zone, whose cited spans
+  name no alternate scientific name. New e2e test file `facts_oceanzonescientificname_e2e.rs` (3 tests:
+  forward recall with citation, backward recall, honest abstention on sunlight_zone). No manifest
+  objective, matching both siblings' own precedent. First slice from the oceanography/ domain sweep.
+- `meteorology/precipitation-freeze-threshold.adj` (new) — a sibling to the already-shipped
+  `precipitation-types.adj` (`precip_form(precip, form)`, ONE defining physical form per precipitation
+  type — freezing_rain → glaze_of_ice). That table's own header already quotes, verbatim, an NWS sentence
+  stating the temperature at or below which freezing rain refreezes on contact (32 degrees F) — a numeric
+  figure the single `form` atom had no room for. New `precipitation_freeze_threshold_f(precip,
+  temperature_f)` table decodes that clause as its own row: freezing_rain → 32. Honest abstention on rain,
+  snow, sleet, and hail, whose cited spans state no numeric freeze threshold. New e2e test file
+  `facts_precipitationfreezethreshold_e2e.rs` (3 tests: forward recall with citation, backward recall,
+  honest abstention on rain). No manifest objective, matching `precipitation-types.adj`'s own precedent.
+  Fourth slice from the meteorology/ domain sweep. (The remaining MODERATE candidate,
+  `hurricane_damaged_component` off `hurricane-categories.adj`/`hurricane-category-home-damage.adj`, was
+  re-inspected and confirmed a dead end: its five structural-effect spans require inconsistent
+  interpretive judgment calls to decompose — some are clean comma/and-joined noun lists, others bundle a
+  severity choice ("damage or removal") or use distinct verb phrases per row rather than a shared list —
+  so no honest single-schema decomposition was possible.)
+- `meteorology/precipitation-source-cloud.adj` (new) — a sibling to the already-shipped
+  `precipitation-types.adj`, `precipitation-minimum-diameter.adj`, and
+  `precipitation-alternate-form.adj`. That SAME already-quoted NWS Glossary hail sentence also names the
+  originating cloud type — a fact none of those three siblings had a column for. New
+  `precipitation_source_cloud(precip, cloud)` table decodes that clause as its own row: hail →
+  cumulonimbus. Honest abstention on rain, snow, sleet, and freezing_rain, whose cited spans name no
+  originating cloud. New e2e test file `facts_precipitationsourcecloud_e2e.rs` (3 tests: forward recall
+  with citation, backward recall, honest abstention on rain). No manifest objective, matching
+  `precipitation-types.adj`'s own precedent. Third slice from the meteorology/ domain sweep.
+- `meteorology/precipitation-alternate-form.adj` (new) — a sibling to the already-shipped
+  `precipitation-types.adj` (`precip_form(precip, form)`, ONE defining physical form per precipitation
+  type — hail → balls_of_ice) and `precipitation-minimum-diameter.adj`. That SAME already-quoted NWS
+  Glossary hail sentence lists TWO descriptive terms joined by "or" — a fact the single `form` atom folded
+  into one label, keeping only the second term. New `precipitation_alternate_form(precip, form)` table
+  decodes the first listed term as its own row: hail → irregular_pellets. Honest abstention on rain, snow,
+  sleet, and freezing_rain, whose cited spans each name only one descriptive term with no listed
+  alternative. New e2e test file `facts_precipitationalternateform_e2e.rs` (3 tests: forward recall with
+  citation, backward recall, honest abstention on rain). No manifest objective, matching
+  `precipitation-types.adj`'s own precedent. Second slice from the meteorology/ domain sweep.
+- `meteorology/cloud-signal.adj` (new) — a sibling to the already-shipped `cloud-type.adj`
+  (`cloud_type(cloud, weather_indication)`, each of three common cloud types and the single combined
+  weather indication its presence signals). Two of that table's own three quoted NWS sentences each list
+  MORE than one signal joined by an exhaustive "or" list — a fact the single `weather_indication` atom
+  folded into one compound label. New `cloud_signal(cloud, signal)` table decodes each listed signal as
+  its own row: cirrus → approaching_warm_front, cirrus → upper_level_jet_streak, stratus →
+  precipitation_free, stratus → light_precipitation, stratus → drizzle. Honest abstention on
+  cumulonimbus, whose cited span names only one signal with no listed alternative. New e2e test file
+  `facts_cloudsignal_e2e.rs` (3 tests: forward multi-answer recall with citation, backward recall, honest
+  abstention on cumulonimbus). No manifest objective, matching `cloud-type.adj`'s own precedent. First
+  slice from a fresh domain sweep of meteorology/ — begins after the geology/ domain was fully exhausted
+  this window.
+- `geology/igneous-rock-type-eruption-location.adj` (new) — a sibling to the already-shipped
+  `igneous-rock-type.adj` (`igneous_rock_type(type, description)`, the two-way intrusive/extrusive split
+  by cooling location). That table's own header already quotes, verbatim, the extrusive row's defining
+  NPS sentence in full, listing TWO locations joined by "or" — a fact the single `description` atom
+  folded into one compound label. New `igneous_rock_type_eruption_location(type, location)` table decodes
+  each listed location as its own row: extrusive → surface, extrusive → atmosphere. Honest abstention on
+  intrusive, whose cited span names only one location with no listed alternative. New e2e test file
+  `facts_igneousrocktyperuptionlocation_e2e.rs` (3 tests: forward multi-answer recall with citation,
+  backward recall, honest abstention on intrusive). No manifest objective, matching `igneous-rock-type.adj`'s
+  own precedent. Second and final slice from the geology/ domain sweep — closes out that sweep entirely.
+- `geology/rock-type-formation-component.adj` (new) — a sibling to the already-shipped `rock-type.adj`
+  (`rock_type(rock, formation_process)`, the process by which each of the three basic rock classes
+  forms — igneous → crystallized_molten_rock, sedimentary → deposited_weathered_material, metamorphic
+  → heat_and_pressure_transformation). Two of that table's own three per-row USGS quotes each list MORE
+  than one material/agent joined by an exhaustive "or" or comma-list — a fact the single
+  `formation_process` atom folded into one compound label. New
+  `rock_type_formation_component(rock, component)` table decodes each listed item as its own row:
+  sedimentary → pre_existing_rocks, sedimentary → pieces_of_once_living_organisms, metamorphic →
+  high_heat, metamorphic → high_pressure, metamorphic → hot_mineral_rich_fluids. Honest abstention on
+  igneous, whose cited span names only one material with no listed alternative. New e2e test file
+  `facts_rocktypeformationcomponent_e2e.rs` (3 tests: forward multi-answer recall with citation,
+  backward recall, honest abstention on igneous). No manifest objective, matching `rock-type.adj`'s own
+  precedent. First slice from a fresh domain sweep of geology/ — begins after the astronomy/ domain was
+  fully exhausted this window.
 - `astronomy/space-rock-alt-name.adj` (new) — a sibling to the already-shipped `space-rock-stage.adj`
   (`space_rock_stage(stage, description)`, the same rocky object's name at three stages of its
   journey — meteoroid → still_a_rock_in_space, meteor →

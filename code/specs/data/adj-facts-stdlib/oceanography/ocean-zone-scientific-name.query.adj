@@ -1,0 +1,17 @@
+% ============================================================================
+% ocean-zone-scientific-name.query.adj — worked recall over the
+% ocean-zone-scientific-name library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what is another name
+% for the midnight zone?" (direct) or "which zone is also called the
+% bathypelagic?" (reverse) — it states no fact of its own — it only
+% `import`s the grounded table and asks binding queries. A zone that is
+% not the one tabled here abstains honestly — the engine never invents a
+% name.
+% ============================================================================
+
+import "ocean-zone-scientific-name.adj"
+
+? ocean_zone_scientific_name(midnight_zone, $ScientificName)  % expect bathypelagic
+? ocean_zone_scientific_name($Zone, bathypelagic)              % reverse bind — expect midnight_zone
+? ocean_zone_scientific_name(sunlight_zone, $ScientificName)   % expect abstain -- the cited sunlight-zone span names no alternate scientific name

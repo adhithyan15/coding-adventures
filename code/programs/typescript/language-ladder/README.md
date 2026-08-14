@@ -898,6 +898,56 @@ entry, rounded shoulder, descending stem, and counterclockwise lower bowl at
 flag-to-stem-to-bowl order while tracing the printed broad top flag, straight
 stem, and closed lower bowl and records the source's entry loop and rounded
 shoulder.
+The five-frame Cyrillic **ы** filmstrip descends the left stem, sweeps right
+along the lower bowl, curves upward around its right side and returns left to
+close it, then lifts once and descends the separate right stem. The
+native-teacher lesson demonstrates its narrow looped entry, joined
+counterclockwise lower bowl, separately descended right stem, and curled exit
+at 10:45–10:56; the Noto Sans Cyrillic fit preserves that one-lift
+body-before-right-stem order while tracing the printed straight uprights and
+wide closed lower bowl and records the source's entry loop and rising exit.
+The four-frame Cyrillic **ь** filmstrip descends the stem, sweeps right along
+the lower bowl, curves upward around its right side, then returns left through
+the upper bowl to close against the stem without lifting. The native-teacher
+lesson demonstrates its narrow descending entry and joined counterclockwise
+lower bowl at 11:16–11:20; the Noto Sans Cyrillic fit preserves that zero-lift
+stem-to-bowl order while tracing the printed straight upright and wide closed
+lower bowl and records the source's slanted entry and rounded handwritten join.
+The four-frame Cyrillic **э** filmstrip sweeps right across the upper curve,
+continues down around the outer right side, sweeps left through the lower
+curve, then lifts once and draws the middle tongue from right to left. The
+native-teacher lesson demonstrates that outer-before-tongue order at
+11:25–11:32; the Noto Sans Cyrillic fit preserves its one-lift evidence while
+tracing the printed broad open-left curve and straight middle bar and records
+the source's narrower rounded curve and gently hooked tongue.
+The five-frame Cyrillic **ю** filmstrip descends the left stem, retraces to the
+middle and sweeps right along the connector, curves across the oval's top,
+continues down its right side, then sweeps through the bottom and rises to
+close without lifting. The native-teacher lesson demonstrates its looped
+entry, diagonal connector, and clockwise cursive oval at 11:44–11:58; the Noto
+Sans Cyrillic fit preserves that zero-lift stem-to-connector-to-oval order
+while tracing the printed straight upright, horizontal middle bar, and wide
+closed oval.
+The four-frame Cyrillic **я** filmstrip climbs the right stem from the baseline,
+curves counterclockwise around the upper bowl, sweeps left through the lower
+join, then descends the diagonal leg without lifting. The native-teacher lesson
+demonstrates its curved entry, upper loop, long diagonal leg, and short exit at
+12:13–12:21; the Noto Sans Cyrillic fit preserves that zero-lift
+rise-to-loop-to-leg order while tracing the printed straight right upright,
+broad upper bowl, and angular lower-left leg.
+The four-frame Gujarati **અ** filmstrip sweeps clockwise around the open left
+curve, continues through the lower body and middle shoulder, retraces into the
+small right arch, then lifts once and descends the separate right stem into its
+foot. t30apps.com's version-1.0 animation demonstrates that body-before-stem
+order as two SVG paths; the Noto Sans Gujarati fit preserves its one-lift
+evidence while tracing the broader printed joins. The source's own warning that
+forms and stroke orders vary remains visible in the canonical evidence note.
+The five-frame Gujarati **આ** filmstrip repeats the joined body and lifted
+right stem of **અ**, then lifts again to descend the added trailing ā stem.
+t30apps.com's next version-1.0 animation exposes those runs as three ordered
+SVG paths; the Noto Sans Gujarati fit preserves the two-lift order while
+tracing the printed glyph's wider stem spacing. The source's variation warning
+continues to qualify the demonstrated school-hand form.
 The canonical script-data group is capped at 250 kB per cacheable batch, so
 these growing source notes stay within the app's enforced 500 kB eager-chunk
 budget without removing learner-facing evidence.

@@ -1,6 +1,6 @@
 use mermaid_parser::{
-    detect_mermaid_type, parse_any_mermaid, parse_gitgraph, parse_journey, parse_quadrant_chart,
-    parse_requirement_diagram, MERMAID_COMPATIBILITY_BASELINE,
+    detect_mermaid_type, parse_any_mermaid, parse_gitgraph, parse_journey, parse_pie,
+    parse_quadrant_chart, parse_requirement_diagram, parse_sankey, MERMAID_COMPATIBILITY_BASELINE,
 };
 use serde_json::Value;
 
@@ -24,6 +24,100 @@ const GITGRAPH_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/gitgraph-11.16.1-corpus.json"
 ));
+const PIE_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/pie-11.16.1-corpus.json"
+));
+const SANKEY_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/sankey-11.16.1-corpus.json"
+));
+
+#[test]
+fn sankey_full_status_is_backed_by_the_pinned_corpus() {
+    let manifest: Value =
+        serde_json::from_str(COMPATIBILITY_MANIFEST).expect("compatibility manifest must be JSON");
+    let sankey = manifest["families"]
+        .as_array()
+        .expect("families array")
+        .iter()
+        .find(|family| family["id"] == "sankey")
+        .expect("sankey family");
+    assert_eq!(sankey["status"].as_str(), Some("full"));
+
+    let corpus: Value = serde_json::from_str(SANKEY_CORPUS).expect("sankey corpus must be JSON");
+    assert!(!corpus["valid"].as_array().expect("valid corpus").is_empty());
+    assert!(!corpus["invalid"]
+        .as_array()
+        .expect("invalid corpus")
+        .is_empty());
+}
+
+#[test]
+fn pinned_sankey_corpus_matches_upstream_acceptance() {
+    let corpus: Value = serde_json::from_str(SANKEY_CORPUS).expect("sankey corpus must be JSON");
+    assert_eq!(
+        corpus["upstream_commit"].as_str(),
+        Some("7ecca0cd7f1658ef74f4e7e91f925724ef403bbf")
+    );
+    for fixture in corpus["valid"].as_array().expect("valid corpus array") {
+        let id = fixture["id"].as_str().expect("fixture id");
+        let source = fixture["source"].as_str().expect("fixture source");
+        parse_sankey(source)
+            .unwrap_or_else(|error| panic!("valid upstream fixture {id} failed: {error}"));
+    }
+    for fixture in corpus["invalid"].as_array().expect("invalid corpus array") {
+        let id = fixture["id"].as_str().expect("fixture id");
+        let source = fixture["source"].as_str().expect("fixture source");
+        assert!(
+            parse_sankey(source).is_err(),
+            "invalid upstream fixture {id} unexpectedly parsed"
+        );
+    }
+}
+
+#[test]
+fn pie_full_status_is_backed_by_the_pinned_corpus() {
+    let manifest: Value =
+        serde_json::from_str(COMPATIBILITY_MANIFEST).expect("compatibility manifest must be JSON");
+    let pie = manifest["families"]
+        .as_array()
+        .expect("families array")
+        .iter()
+        .find(|family| family["id"] == "pie")
+        .expect("pie family");
+    assert_eq!(pie["status"].as_str(), Some("full"));
+
+    let corpus: Value = serde_json::from_str(PIE_CORPUS).expect("pie corpus must be JSON");
+    assert!(!corpus["valid"].as_array().expect("valid corpus").is_empty());
+    assert!(!corpus["invalid"]
+        .as_array()
+        .expect("invalid corpus")
+        .is_empty());
+}
+
+#[test]
+fn pinned_pie_corpus_matches_upstream_acceptance() {
+    let corpus: Value = serde_json::from_str(PIE_CORPUS).expect("pie corpus must be JSON");
+    assert_eq!(
+        corpus["upstream_commit"].as_str(),
+        Some("7ecca0cd7f1658ef74f4e7e91f925724ef403bbf")
+    );
+    for fixture in corpus["valid"].as_array().expect("valid corpus array") {
+        let id = fixture["id"].as_str().expect("fixture id");
+        let source = fixture["source"].as_str().expect("fixture source");
+        parse_pie(source)
+            .unwrap_or_else(|error| panic!("valid upstream fixture {id} failed: {error}"));
+    }
+    for fixture in corpus["invalid"].as_array().expect("invalid corpus array") {
+        let id = fixture["id"].as_str().expect("fixture id");
+        let source = fixture["source"].as_str().expect("fixture source");
+        assert!(
+            parse_pie(source).is_err(),
+            "invalid upstream fixture {id} unexpectedly parsed"
+        );
+    }
+}
 
 #[test]
 fn gitgraph_full_status_is_backed_by_the_pinned_corpus() {

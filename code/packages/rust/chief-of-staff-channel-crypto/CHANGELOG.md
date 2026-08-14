@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Add the portable D18F profile adapter with high-level UUID-v7/MIME
+  validation, canonical lossless JSON, stable error codes, epoch-key
+  resolution, deterministic UUID-v7 source injection, and shared fixture
+  generation.
+- Make authenticated message fields, headers, ciphertexts, tags, and signatures
+  structurally immutable outside the crate, with read-only constructors and
+  accessors for channel-store and endpoint callers.
 - Add versioned, bounded binary codecs for sealed key grants and encrypted
   channel-log messages.
 - Add stable storage keys for messages, key grants, sequence state, and

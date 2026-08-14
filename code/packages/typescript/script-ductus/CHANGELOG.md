@@ -2,6 +2,48 @@
 
 ## Unreleased
 
+### Added — cited Gujarati આ ductus (HL-C09FH)
+
+- Render **આ** as the joined **અ** body followed by separately descended first and trailing stems.
+- Preserve t30apps.com's version-1.0 three-path order and two-lift evidence while fitting Noto Sans Gujarati.
+- Add source, font-routing, on-ink, whole-glyph, and five-frame filmstrip coverage; the focused suite now passes 1,216 tests.
+
+### Added — cited Gujarati અ ductus (HL-C09FG)
+
+- Render **અ** as a joined left curve, lower body, middle shoulder, and small right arch followed by a lifted right stem and foot.
+- Preserve t30apps.com's version-1.0 body-before-stem order and one-lift evidence while fitting Noto Sans Gujarati.
+- Add source, font-routing, on-ink, whole-glyph, and four-frame filmstrip coverage; the focused suite now passes 1,209 tests.
+
+### Added — cited Cyrillic я ductus (HL-C09FF)
+
+- Render **я** as one continuous right-stem rise, counterclockwise upper bowl, lower join, and diagonal-leg descent with zero lifts.
+- Preserve RussianIrina's 12:13–12:21 school-hand order while fitting Noto Sans Cyrillic's straight upright, broad bowl, and angular lower-left leg.
+- Add source, font-routing, on-ink, whole-glyph, and four-frame filmstrip coverage; the focused suite now passes 1,202 tests.
+
+### Added — cited Cyrillic ю ductus (HL-C09FE)
+
+- Render **ю** as one continuous left-stem, middle-connector, and clockwise-oval run with zero lifts.
+- Preserve RussianIrina's 11:44–11:58 school-hand order while fitting Noto Sans Cyrillic's straight upright, horizontal bar, and wide oval.
+- Add source, font-routing, on-ink, whole-glyph, and five-frame filmstrip coverage; the focused suite now passes 1,195 tests.
+
+### Added — cited Cyrillic э ductus (HL-C09FD)
+
+- Render **э** as an outer backwards-C run followed by a lifted right-to-left middle tongue.
+- Preserve RussianIrina's 11:25–11:32 outer-before-tongue order while fitting Noto Sans Cyrillic's broad open-left curve and straight middle bar.
+- Add source, font-routing, on-ink, whole-glyph, and four-frame filmstrip coverage; the focused suite now passes 1,188 tests.
+
+### Added — cited Cyrillic ь ductus (HL-C09FC)
+
+- Render **ь** as one continuous descending stem and counterclockwise lower bowl with zero lifts.
+- Preserve RussianIrina's 11:16–11:20 stem-before-bowl order while fitting Noto Sans Cyrillic's straight upright and closed lower bowl.
+- Add source, font-routing, on-ink, whole-glyph, and four-frame filmstrip coverage; the focused suite now passes 1,181 tests.
+
+### Added — cited Cyrillic ы ductus (HL-C09FB)
+
+- Render **ы** as a joined left-stem-and-bowl run followed by a separately descended right stem with one lift.
+- Preserve RussianIrina's 10:45–10:56 looped entry and curled exit while fitting Noto Sans Cyrillic's straight left upright, closed lower bowl, and separate straight right stem.
+- Add source, font-routing, on-ink, whole-glyph, and five-frame filmstrip coverage; the focused suite now passes 1,174 tests.
+
 ### Added — cited Cyrillic ъ ductus (HL-C09FA)
 
 - Render **ъ** as one joined flag-to-stem-to-bowl run with zero lifts.

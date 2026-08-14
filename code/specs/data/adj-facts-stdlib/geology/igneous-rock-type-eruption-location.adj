@@ -1,0 +1,60 @@
+% ============================================================================
+% igneous-rock-type-eruption-location — for extrusive igneous rock, the
+% INDIVIDUAL location(s) an already-quoted NPS sentence lists as where it
+% erupts, decoded one-per-row (adj-facts-stdlib, GEOLOGY).
+% ============================================================================
+% A sibling to the already-shipped `igneous-rock-type.adj`
+% (`igneous_rock_type(type, description)`, the two-way intrusive/extrusive
+% split by cooling location). That table's own header already quotes,
+% verbatim, the extrusive row's defining NPS sentence in full, and it lists
+% TWO locations joined by "or" — a fact the single `description` atom folded
+% into one compound label, with no room to decode each listed location as
+% its own queryable fact:
+%
+%   extrusive (two alternatives joined by "or"):
+%     "Extrusive igneous rocks are erupted onto the surface or into the
+%      atmosphere."
+%
+% Recall is a binding query:
+%
+%     ? igneous_rock_type_eruption_location(extrusive, $Location)
+%       % surface, AND atmosphere (two answers)
+%
+% This is a native `table` (ADJ-TABLES RS-5, a TWO-column table): each `row`
+% lowers to a ground relation `igneous_rock_type_eruption_location(type,
+% location)` carrying the citation, so the lookup above is the ordinary SLD
+% binding query — the engine returns each location WITH its source, on the
+% CPU, with zero model calls, and abstains on an igneous type whose own
+% cited span names only ONE location with no listed alternative. `intrusive`
+% is deliberately NOT a row here: its own already-quoted span ("Intrusive
+% igneous rocks solidify within Earth.") names exactly one location — no
+% enumerated "or"/list of alternatives to decode — so this sibling is
+% HONESTLY NARROWER than its parent, grounding exactly the one igneous type
+% whose cited span lists more than one location and abstaining on the
+% other, or any other word, rather than inventing one. The query also runs
+% BACKWARD — bind a location and recall which igneous type erupts there:
+%
+%     ? igneous_rock_type_eruption_location($Type, atmosphere)
+%       % extrusive
+%
+% Provenance: reproduces, byte-for-byte, the SAME NPS sentence
+% `igneous-rock-type.adj`'s own header already quotes in full for its
+% extrusive row — no new WebFetch, only a different schema decoding each
+% listed location as its own row instead of folding the whole clause into
+% one compound `description` atom. `trust authoritative` — the same tier
+% `igneous-rock-type.adj` already carries (NPS, a primary U.S. government
+% science resource).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table igneous_rock_type_eruption_location {
+    columns type, location
+
+    row (extrusive, surface)
+    row (extrusive, atmosphere)
+
+    source "Extrusive igneous rocks are erupted onto the surface or into the atmosphere."
+    locator "https://www.nps.gov/subjects/geology/igneous.htm"
+    trust authoritative
+}

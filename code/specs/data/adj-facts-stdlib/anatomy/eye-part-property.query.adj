@@ -1,0 +1,16 @@
+% ============================================================================
+% eye-part-property.query.adj — worked recall over the eye-part-property
+% library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what property does the
+% iris have?" (direct) or "which part is dome-shaped?" (reverse) — it states
+% no fact of its own — it only `import`s the grounded table and asks binding
+% queries. A part not tabled here abstains honestly — the engine never
+% invents a property.
+% ============================================================================
+
+import "eye-part-property.adj"
+
+? eye_part_property(iris, $Property)          % expect colored_part_of_eye
+? eye_part_property($Part, dome_shaped)        % reverse bind — expect cornea
+? eye_part_property(lens, $Property)            % expect abstain -- a real, already-tabled eye part, but its own quote states no descriptive property, only a function

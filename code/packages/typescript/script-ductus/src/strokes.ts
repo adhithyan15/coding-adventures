@@ -11,6 +11,7 @@ import arabic from "../../../../learning/human-languages/data/scripts/arabic.jso
 import chinese from "../../../../learning/human-languages/data/scripts/chinese.json";
 import cyrillic from "../../../../learning/human-languages/data/scripts/cyrillic.json";
 import devanagari from "../../../../learning/human-languages/data/scripts/devanagari.json";
+import gujarati from "../../../../learning/human-languages/data/scripts/gujarati.json";
 import hebrew from "../../../../learning/human-languages/data/scripts/hebrew.json";
 import persoArabic from "../../../../learning/human-languages/data/scripts/perso-arabic.json";
 import urduNastaliq from "../../../../learning/human-languages/data/scripts/urdu-nastaliq.json";
@@ -222,6 +223,14 @@ const devanagariAlphabetSource = (glyph: string): StrokeSource => {
   const letter = devanagari.letters.find((candidate) => candidate.glyph === glyph);
   if (!letter || !("strokeOrderSource" in letter) || !letter.strokeOrderSource) {
     throw new Error(`Devanagari ${glyph} has no verified source`);
+  }
+  return letter.strokeOrderSource;
+};
+
+const gujaratiAlphabetSource = (glyph: string): StrokeSource => {
+  const letter = gujarati.letters.find((candidate) => candidate.glyph === glyph);
+  if (!letter || !("strokeOrderSource" in letter) || !letter.strokeOrderSource) {
+    throw new Error(`Gujarati ${glyph} has no verified source`);
   }
   return letter.strokeOrderSource;
 };
@@ -4310,6 +4319,478 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       },
     ],
     source: cyrillicAlphabetSource("ъ"),
+  },
+  // RussianIrina writes lowercase ы in two runs: the descending left stem
+  // turns directly through a counterclockwise lower bowl, then a lifted right
+  // stem descends into a curled exit. The fitted path keeps that body-first
+  // order while straightening both stems and closing the printed bowl.
+  [ductusKey("cyrillic", "ы")]: {
+    script: "cyrillic",
+    glyph: "ы",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "descend the left stem to the baseline",
+            path: [
+              { x: 129, y: 537 },
+              { x: 129, y: 360 },
+              { x: 129, y: 180 },
+              { x: 129, y: 37 },
+            ],
+          },
+          {
+            label: "sweep right along the lower bowl",
+            path: [
+              { x: 129, y: 37 },
+              { x: 200, y: 37 },
+              { x: 276, y: 37 },
+              { x: 350, y: 45 },
+              { x: 425, y: 88 },
+            ],
+          },
+          {
+            label: "curve upward around the bowl's right side",
+            path: [
+              { x: 425, y: 88 },
+              { x: 451, y: 130 },
+              { x: 451, y: 176 },
+              { x: 435, y: 220 },
+              { x: 395, y: 263 },
+              { x: 335, y: 297 },
+              { x: 276, y: 304 },
+            ],
+          },
+          {
+            label: "return left through the upper bowl to close against the stem",
+            path: [
+              { x: 276, y: 304 },
+              { x: 225, y: 304 },
+              { x: 173, y: 304 },
+              { x: 129, y: 304 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then descend the separate right stem",
+            path: [
+              { x: 630, y: 537 },
+              { x: 630, y: 360 },
+              { x: 630, y: 180 },
+              { x: 630, y: 37 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: cyrillicAlphabetSource("ы"),
+  },
+  // RussianIrina writes lowercase ь in one run: the descending stem turns
+  // directly through a counterclockwise lower bowl and closes against itself.
+  // The fitted path keeps that stem-first order while straightening the
+  // upright and widening the printed bowl.
+  [ductusKey("cyrillic", "ь")]: {
+    script: "cyrillic",
+    glyph: "ь",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "descend the stem to the baseline",
+            path: [
+              { x: 129, y: 536 },
+              { x: 129, y: 360 },
+              { x: 129, y: 180 },
+              { x: 129, y: 36 },
+            ],
+          },
+          {
+            label: "sweep right along the lower bowl",
+            path: [
+              { x: 129, y: 36 },
+              { x: 200, y: 36 },
+              { x: 279, y: 36 },
+              { x: 355, y: 44 },
+              { x: 430, y: 87 },
+            ],
+          },
+          {
+            label: "curve upward around the bowl's right side",
+            path: [
+              { x: 430, y: 87 },
+              { x: 456, y: 128 },
+              { x: 456, y: 173 },
+              { x: 440, y: 217 },
+              { x: 400, y: 258 },
+              { x: 340, y: 291 },
+              { x: 279, y: 301 },
+            ],
+          },
+          {
+            label: "return left through the upper bowl to close against the stem",
+            path: [
+              { x: 279, y: 301 },
+              { x: 225, y: 301 },
+              { x: 173, y: 301 },
+              { x: 129, y: 301 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: cyrillicAlphabetSource("ь"),
+  },
+  // RussianIrina writes lowercase э in two runs: the outer backwards-C curve
+  // travels from upper left around the right side to lower left, then a lifted
+  // tongue travels right-to-left. The fitted path widens the curve and
+  // straightens the printed middle bar without changing that order.
+  [ductusKey("cyrillic", "э")]: {
+    script: "cyrillic",
+    glyph: "э",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "sweep right across the upper curve",
+            path: [
+              { x: 82, y: 472 },
+              { x: 150, y: 500 },
+              { x: 230, y: 505 },
+              { x: 315, y: 480 },
+              { x: 378, y: 420 },
+            ],
+          },
+          {
+            label: "continue down around the outer right side",
+            path: [
+              { x: 378, y: 420 },
+              { x: 420, y: 350 },
+              { x: 425, y: 270 },
+              { x: 415, y: 185 },
+              { x: 378, y: 110 },
+            ],
+          },
+          {
+            label: "sweep left through the lower curve",
+            path: [
+              { x: 378, y: 110 },
+              { x: 315, y: 45 },
+              { x: 230, y: 25 },
+              { x: 150, y: 35 },
+              { x: 82, y: 72 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then draw the middle tongue right-to-left",
+            path: [
+              { x: 356, y: 276 },
+              { x: 290, y: 276 },
+              { x: 225, y: 276 },
+              { x: 160, y: 276 },
+              { x: 95, y: 276 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: cyrillicAlphabetSource("э"),
+  },
+  // RussianIrina writes lowercase ю in one run: the descending left stem
+  // turns through a rising connector and continues clockwise around the oval.
+  // The fitted path retraces to the printed middle bar while preserving that
+  // zero-lift stem-to-connector-to-oval order.
+  [ductusKey("cyrillic", "ю")]: {
+    script: "cyrillic",
+    glyph: "ю",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "descend the left stem to the baseline",
+            path: [
+              { x: 129, y: 536 },
+              { x: 129, y: 360 },
+              { x: 129, y: 180 },
+              { x: 129, y: 0 },
+            ],
+          },
+          {
+            label: "retrace upward and sweep right along the middle bar",
+            path: [
+              { x: 129, y: 0 },
+              { x: 129, y: 140 },
+              { x: 129, y: 276 },
+              { x: 210, y: 276 },
+              { x: 322, y: 276 },
+            ],
+          },
+          {
+            label: "curve upward around the oval and across its top",
+            path: [
+              { x: 322, y: 276 },
+              { x: 330, y: 390 },
+              { x: 395, y: 475 },
+              { x: 514, y: 510 },
+              { x: 625, y: 475 },
+              { x: 695, y: 390 },
+            ],
+          },
+          {
+            label: "continue down around the oval's right side",
+            path: [
+              { x: 695, y: 390 },
+              { x: 715, y: 320 },
+              { x: 715, y: 245 },
+              { x: 695, y: 165 },
+              { x: 650, y: 90 },
+            ],
+          },
+          {
+            label: "sweep left through the bottom and rise to close",
+            path: [
+              { x: 650, y: 90 },
+              { x: 585, y: 30 },
+              { x: 514, y: 27 },
+              { x: 405, y: 55 },
+              { x: 340, y: 145 },
+              { x: 322, y: 276 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: cyrillicAlphabetSource("ю"),
+  },
+  // RussianIrina writes lowercase я in one run: rise from the baseline,
+  // circle the upper loop counterclockwise, then descend the diagonal leg.
+  // The printed fit uses its right upright as that rise and preserves the
+  // source's zero-lift rise-to-loop-to-leg order.
+  [ductusKey("cyrillic", "я")]: {
+    script: "cyrillic",
+    glyph: "я",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "climb the right stem from the baseline to the top",
+            path: [
+              { x: 449, y: 0 },
+              { x: 449, y: 140 },
+              { x: 449, y: 300 },
+              { x: 449, y: 440 },
+              { x: 449, y: 499 },
+            ],
+          },
+          {
+            label: "curve counterclockwise around the upper bowl",
+            path: [
+              { x: 449, y: 499 },
+              { x: 360, y: 499 },
+              { x: 265, y: 499 },
+              { x: 175, y: 475 },
+              { x: 115, y: 425 },
+              { x: 105, y: 370 },
+              { x: 120, y: 325 },
+              { x: 180, y: 290 },
+              { x: 280, y: 243 },
+              { x: 405, y: 243 },
+            ],
+          },
+          {
+            label: "sweep left through the bowl's lower join",
+            path: [
+              { x: 405, y: 243 },
+              { x: 340, y: 243 },
+              { x: 277, y: 225 },
+              { x: 187, y: 218 },
+            ],
+          },
+          {
+            label: "descend the diagonal leg to the lower-left tip",
+            path: [
+              { x: 187, y: 218 },
+              { x: 155, y: 170 },
+              { x: 120, y: 120 },
+              { x: 85, y: 70 },
+              { x: 35, y: 0 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: cyrillicAlphabetSource("я"),
+  },
+  // t30apps animates Gujarati અ as a joined body first, then a separately
+  // descending right stem. The fitted medians preserve that one-lift order
+  // while following the broader joins and foot of the bundled Noto glyph.
+  [ductusKey("gujarati", "અ")]: {
+    script: "gujarati",
+    glyph: "અ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "sweep clockwise around the open left curve",
+            path: [
+              { x: 55, y: 550 },
+              { x: 115, y: 570 },
+              { x: 180, y: 565 },
+              { x: 240, y: 535 },
+              { x: 295, y: 480 },
+              { x: 310, y: 420 },
+              { x: 295, y: 360 },
+              { x: 255, y: 310 },
+              { x: 205, y: 280 },
+              { x: 155, y: 275 },
+              { x: 110, y: 300 },
+              { x: 75, y: 300 },
+            ],
+          },
+          {
+            label: "continue through the lower body and rise into the middle shoulder",
+            path: [
+              { x: 75, y: 300 },
+              { x: 115, y: 245 },
+              { x: 165, y: 180 },
+              { x: 230, y: 130 },
+              { x: 310, y: 100 },
+              { x: 390, y: 110 },
+              { x: 455, y: 155 },
+              { x: 500, y: 225 },
+              { x: 526, y: 310 },
+              { x: 526, y: 410 },
+            ],
+          },
+          {
+            label: "retrace down and sweep through the small right arch",
+            path: [
+              { x: 526, y: 410 },
+              { x: 526, y: 340 },
+              { x: 555, y: 285 },
+              { x: 610, y: 265 },
+              { x: 660, y: 275 },
+              { x: 708, y: 315 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then descend the right stem into its foot",
+            path: [
+              { x: 748, y: 570 },
+              { x: 748, y: 450 },
+              { x: 748, y: 320 },
+              { x: 748, y: 190 },
+              { x: 750, y: 110 },
+              { x: 775, y: 60 },
+              { x: 815, y: 35 },
+              { x: 865, y: 35 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: gujaratiAlphabetSource("અ"),
+  },
+  // t30apps builds Gujarati આ from the joined અ body, lifts for અ's right
+  // stem, then lifts again for the added trailing ā stem. The fitted medians
+  // retain that three-run order across the wider bundled Noto glyph.
+  [ductusKey("gujarati", "આ")]: {
+    script: "gujarati",
+    glyph: "આ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "sweep clockwise around the open left curve",
+            path: [
+              { x: 55, y: 550 },
+              { x: 115, y: 570 },
+              { x: 180, y: 565 },
+              { x: 240, y: 535 },
+              { x: 295, y: 480 },
+              { x: 310, y: 420 },
+              { x: 295, y: 360 },
+              { x: 255, y: 310 },
+              { x: 205, y: 280 },
+              { x: 155, y: 275 },
+              { x: 110, y: 300 },
+              { x: 75, y: 300 },
+            ],
+          },
+          {
+            label: "continue through the lower body and rise into the middle shoulder",
+            path: [
+              { x: 75, y: 300 },
+              { x: 115, y: 245 },
+              { x: 165, y: 180 },
+              { x: 230, y: 130 },
+              { x: 310, y: 100 },
+              { x: 390, y: 110 },
+              { x: 455, y: 155 },
+              { x: 500, y: 225 },
+              { x: 526, y: 310 },
+              { x: 526, y: 410 },
+            ],
+          },
+          {
+            label: "retrace down and sweep through the small right arch",
+            path: [
+              { x: 526, y: 410 },
+              { x: 526, y: 340 },
+              { x: 555, y: 285 },
+              { x: 610, y: 265 },
+              { x: 660, y: 275 },
+              { x: 708, y: 315 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then descend the first right stem into its foot",
+            path: [
+              { x: 748, y: 570 },
+              { x: 748, y: 450 },
+              { x: 748, y: 320 },
+              { x: 748, y: 190 },
+              { x: 750, y: 110 },
+              { x: 775, y: 60 },
+              { x: 815, y: 35 },
+              { x: 865, y: 35 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift again, then descend the trailing ā stem into its foot",
+            path: [
+              { x: 1013, y: 570 },
+              { x: 1013, y: 450 },
+              { x: 1013, y: 320 },
+              { x: 1013, y: 190 },
+              { x: 1015, y: 110 },
+              { x: 1040, y: 60 },
+              { x: 1080, y: 35 },
+              { x: 1130, y: 35 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: gujaratiAlphabetSource("આ"),
   },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner

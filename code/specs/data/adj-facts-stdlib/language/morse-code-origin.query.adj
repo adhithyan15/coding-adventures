@@ -1,0 +1,17 @@
+% ============================================================================
+% morse-code-origin.query.adj — worked recall over the morse-code-origin
+% library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "who proposed the
+% code International Morse code was derived from, and when?" (direct) or
+% "which code system did Friedrich Gerke propose?" (reverse) — it states
+% no fact of its own — it only `import`s the grounded table and asks
+% binding queries. A code system that is not the one tabled here abstains
+% honestly — the engine never invents an originator or year.
+% ============================================================================
+
+import "morse-code-origin.adj"
+
+? morse_code_origin(international_morse_code, $Originator, $Year)   % expect friedrich_gerke, 1848
+? morse_code_origin($CodeSystem, friedrich_gerke, $Year)             % reverse bind — expect international_morse_code, 1848
+? morse_code_origin(american_morse_code, $Originator, $Year)         % expect abstain -- a real, distinct historical Morse variant, but not named in the cited span

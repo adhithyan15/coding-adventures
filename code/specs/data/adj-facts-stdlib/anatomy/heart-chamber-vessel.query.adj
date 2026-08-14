@@ -1,0 +1,17 @@
+% ============================================================================
+% heart-chamber-vessel.query.adj — worked recall over the heart-chamber-vessel
+% library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what vessel connects to
+% the left ventricle?" (direct) or "which chamber connects to the aortic
+% valve?" (reverse) — it states no fact of its own — it only `import`s the
+% grounded table and asks binding queries. A structure not tabled here
+% abstains honestly — the engine never invents a vessel.
+% ============================================================================
+
+import "heart-chamber-vessel.adj"
+
+? heart_chamber_vessel(left_ventricle, $Vessel)          % expect aortic_valve
+? heart_chamber_vessel($Chamber, aortic_valve)             % reverse bind — expect left_ventricle
+? heart_chamber_vessel($Chamber, superior_vena_cava)        % reverse bind — expect right_atrium
+? heart_chamber_vessel(septum, $Vessel)                     % expect abstain -- a real cardiac structure, but not one of the four chambers

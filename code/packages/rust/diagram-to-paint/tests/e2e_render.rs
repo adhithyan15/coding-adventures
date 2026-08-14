@@ -378,7 +378,9 @@ mod apple {
     #[test]
     fn render_mermaid_pie_to_png() {
         let diagram = parse_pie(
-            r#"pie showData
+            r#"pie showData title Native chart pipeline
+                accTitle: Native pie chart
+                accDescr: Pie rendered through Metal
                 "Graph" : 50
                 "Chart" : 30
                 "Temporal" : 20"#,
@@ -412,6 +414,12 @@ mod apple {
         assert!(pixels.width > 0);
         assert!(pixels.height > 0);
         assert!(!scene.instructions.is_empty());
+        let metadata = scene.metadata.as_ref().expect("accessibility metadata");
+        assert_eq!(metadata["accessibility.title"], "Native pie chart");
+        assert_eq!(
+            metadata["accessibility.description"],
+            "Pie rendered through Metal"
+        );
     }
 
     #[test]
@@ -528,7 +536,7 @@ mod apple {
     #[test]
     fn render_mermaid_sankey_to_png() {
         let diagram = parse_sankey(
-            "sankey-beta\nElectricity,Heating,45\nElectricity,Lighting,30\nHeating,Losses,8",
+            "SANKEY-BETA\nElectricity,\"Heating, homes\",\"45\"\nElectricity,Lighting,30\n\"Heating, homes\",Losses,8",
         )
         .expect("Mermaid Sankey parse failed");
         let layout = layout_chart_diagram(&diagram, 700.0, 460.0);

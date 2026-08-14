@@ -16,6 +16,13 @@ delivered in the current session. Callers inject message IDs and timestamps
 through `MessageMetadataSource`, keeping clock and random access outside this
 trust-boundary package.
 
+The public `profile` module exposes the production D18C definition codec,
+bounds, content type, and stable D18P error classifier. The package also owns
+the deterministic generator and Rust consumer for the language-neutral fixture
+at `code/fixtures/chief-of-staff-channel/v1/manifest.json`; the fixture locks
+durable bytes, storage keys, transition traces, role failures, and recovery
+semantics for subsequent language ports.
+
 ## Validation
 
 ```sh

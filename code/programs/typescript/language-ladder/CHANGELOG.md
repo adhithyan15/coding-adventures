@@ -21,6 +21,48 @@ at the package. `scriptdata` stays out of that chunk on purpose — the shell ne
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Gujarati આ ductus (HL-C09FH)
+
+- Render **આ** in five movements across the complete **અ** sequence and added trailing ā stem with two lifts.
+- Preserve t30apps.com's version-1.0 three-path teaching order while retaining the source's explicit variation warning.
+- Show the exact Noto Sans Gujarati glyph behind every filmstrip frame and queue **ઇ** next.
+
+### Added — cited Gujarati અ ductus (HL-C09FG)
+
+- Render **અ** in four movements across its joined body and separately descended right stem with one lift.
+- Preserve t30apps.com's version-1.0 teaching order while retaining the source's explicit variation warning.
+- Show the exact Noto Sans Gujarati glyph behind every filmstrip frame and queue **આ** next.
+
+### Added — cited Cyrillic я ductus (HL-C09FF)
+
+- Render **я** in four joined movements across its rising right stem, counterclockwise upper bowl, lower join, and diagonal leg with zero lifts.
+- Preserve RussianIrina's 12:13–12:21 school-hand order while fitting the bundled printed outline.
+- Show the exact Noto Sans Cyrillic glyph behind every filmstrip frame, complete the lowercase Cyrillic inventory, and queue Gujarati next.
+
+### Added — cited Cyrillic ю ductus (HL-C09FE)
+
+- Render **ю** in five joined movements across its left stem, middle connector, and clockwise oval with zero lifts.
+- Preserve RussianIrina's 11:44–11:58 school-hand order while fitting the bundled printed outline.
+- Show the exact Noto Sans Cyrillic glyph behind every filmstrip frame and queue **я** next.
+
+### Added — cited Cyrillic э ductus (HL-C09FD)
+
+- Render **э** in four movements across its outer backwards-C curve and lifted right-to-left middle tongue.
+- Preserve RussianIrina's 11:25–11:32 outer-before-tongue order while fitting the bundled printed outline.
+- Show the exact Noto Sans Cyrillic glyph behind every filmstrip frame and queue **ю** next.
+
+### Added — cited Cyrillic ь ductus (HL-C09FC)
+
+- Render **ь** in four joined movements across its descending stem and counterclockwise lower bowl with zero lifts.
+- Preserve RussianIrina's 11:16–11:20 stem-before-bowl order while fitting the bundled printed outline.
+- Show the exact Noto Sans Cyrillic glyph behind every filmstrip frame and queue **э** next.
+
+### Added — cited Cyrillic ы ductus (HL-C09FB)
+
+- Render **ы** in five movements across a joined left body and separately descended right stem with one lift.
+- Descend the left stem, circle and close its lower bowl, lift, then descend the right stem.
+- Preserve the native-teacher lesson's narrow entry loop and curled exit while fitting Noto Sans Cyrillic's straight uprights and wide closed lower bowl, and reduce measured HL-C09 debt to 74 entries.
+
 ### Added — cited Cyrillic ъ ductus (HL-C09FA)
 
 - Render **ъ** in five joined movements across one source-aligned stroke with zero lifts.

@@ -1,0 +1,60 @@
+% ============================================================================
+% precipitation-alternate-form — for hail, the SECOND descriptive term an
+% already-cited NWS Glossary sentence lists alongside its primary form,
+% decoded as its own row (adj-facts-stdlib, METEOROLOGY).
+% ============================================================================
+% A sibling to the already-shipped `precipitation-types.adj`
+% (`precip_form(precip, form)`, ONE defining physical form per precipitation
+% type — hail → balls_of_ice) and `precipitation-minimum-diameter.adj`
+% (`precipitation_min_diameter(precip, min_diameter_mm)`, decoding the same
+% hail sentence's numeric threshold). That SAME already-quoted NWS Glossary
+% sentence lists TWO descriptive terms for hail joined by "or" -- a fact the
+% single `form` atom folded into one label, keeping only the second term:
+%
+%   hail (two alternatives joined by "or"):
+%     "Showery precipitation in the form of irregular pellets or balls of
+%      ice more than 5 mm in diameter, falling from a cumulonimbus cloud."
+%
+% `precip_form` already carries `balls_of_ice`; `irregular_pellets` never
+% made it into any table. Recall is a binding query:
+%
+%     ? precipitation_alternate_form(hail, $Form)   % irregular_pellets
+%
+% This is a native `table` (ADJ-TABLES RS-5, a TWO-column table): each `row`
+% lowers to a ground relation `precipitation_alternate_form(precip, form)`
+% carrying the citation, so the lookup above is the ordinary SLD binding
+% query -- the engine returns the alternate form WITH its source, on the
+% CPU, with zero model calls, and abstains on any precipitation type whose
+% own cited span names only one descriptive term with no listed
+% alternative. `rain`, `snow`, `sleet`, and `freezing_rain` are deliberately
+% NOT rows here: none of their own already-quoted spans (in
+% `precipitation-types.adj`'s header) lists a second alternative term for
+% the SAME concept -- so this sibling is HONESTLY NARROWER than either
+% parent, grounding exactly the one precipitation type whose cited span
+% lists more than one descriptive term and abstaining on any other, rather
+% than inventing one. The query also runs BACKWARD -- bind a form and
+% recall which precipitation type it names:
+%
+%     ? precipitation_alternate_form($Precip, irregular_pellets)
+%       % hail
+%
+% Provenance: reproduces, byte-for-byte, the SAME NWS Glossary sentence
+% `precipitation-types.adj`'s own header and `precipitation-minimum-diameter.adj`'s
+% own header already quote in full for hail -- no new WebFetch, only a
+% different schema decoding the second listed term as its own row instead
+% of folding the whole clause into one compound `form` atom. `trust
+% authoritative` -- the same tier both parent tables already carry (NOAA
+% NWS Glossary, a primary U.S. government source).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table precipitation_alternate_form {
+    columns precip, form
+
+    row (hail, irregular_pellets)
+
+    source "Showery precipitation in the form of irregular pellets or balls of ice more than 5 mm in diameter, falling from a cumulonimbus cloud."
+    locator "https://forecast.weather.gov/glossary.php?word=HAIL"
+    trust authoritative
+}

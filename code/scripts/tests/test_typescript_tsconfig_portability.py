@@ -405,12 +405,14 @@ console.log(prose, nested);
         # reach them. A new TypeScript project is a new row here by
         # construction; the count is the contract that says so out loud.
         # +1: path-raster, the scanline rasterizer P2D08 specifies.
-        self.assertEqual(summary.total_projects, 461)
+        # +1: chief-of-staff-channel-crypto, the portable D18F message profile.
+        # +1: chief-of-staff-channel-store, the durable D18P profile.
+        self.assertEqual(summary.total_projects, 463)
         self.assertEqual(summary.shared_projects, 287)
         self.assertEqual(summary.inherited_root_dir, 129)
         self.assertEqual(summary.inherited_out_dir, 132)
-        self.assertEqual(summary.standalone_emit_projects, 144)
-        self.assertEqual(summary.isolated_standalone_projects, 144)
+        self.assertEqual(summary.standalone_emit_projects, 146)
+        self.assertEqual(summary.isolated_standalone_projects, 146)
         self.assertEqual(summary.unbounded_root_projects, 0)
         self.assertEqual(summary.outside_root_inputs, 0)
         # 94: +1 for script-ductus. Nothing the package SHIPS touches a Node
@@ -419,17 +421,21 @@ console.log(prose, nested);
         # pen paths against the real glyph outlines, which is the whole point
         # of the package. Tests are compiler input, so the classification is
         # correct and `@types/node` is owned directly rather than inherited.
-        self.assertEqual(summary.node_api_projects, 94)
+        # +1: chief-of-staff-channel-store reads the shared fixture in tests.
+        self.assertEqual(summary.node_api_projects, 95)
         # +1: script-ductus owns `@types/node` directly, because its tests
         # read the shipped fonts off disk to verify the pen paths.
-        self.assertEqual(summary.node_provider_projects, 94)
+        # +1: chief-of-staff-channel-store owns the test-only Node provider.
+        self.assertEqual(summary.node_provider_projects, 95)
         self.assertEqual(summary.missing_node_provider_projects, 0)
         self.assertEqual(summary.stale_node_provider_locks, 0)
         self.assertEqual(summary.node_lock_exemptions, 1)
         # +1: script-ductus owns `@types/node` directly, because its tests
         # read the shipped fonts off disk to verify the pen paths.
         # +1: path-raster, the scanline rasterizer P2D08 specifies.
-        self.assertEqual(summary.locked_compilers, 452)
+        # +1: chief-of-staff-channel-crypto locks its standalone compiler.
+        # +1: chief-of-staff-channel-store locks its standalone compiler.
+        self.assertEqual(summary.locked_compilers, 454)
 
 
 if __name__ == "__main__":

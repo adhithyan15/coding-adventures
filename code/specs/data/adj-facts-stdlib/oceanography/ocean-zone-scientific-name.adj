@@ -1,0 +1,65 @@
+% ============================================================================
+% ocean-zone-scientific-name — the midnight zone → its alternate scientific
+% name, decoded from a span already sitting unused inside the SAME WHOI
+% source `ocean-zones.adj` and `ocean-zone-depth.adj` already cite
+% (adj-facts-stdlib, OCEANOGRAPHY).
+% ============================================================================
+% A sibling to the already-shipped `ocean-zones.adj` (`ocean_zone(zone,
+% order)`) and `ocean-zone-depth.adj` (`ocean_zone_depth(zone,
+% max_depth_meters)`): a new `ocean_zone_scientific_name(zone,
+% scientific_name)` table names the alternate scientific name the SAME
+% already-cited WHOI "Ocean Zones" page states for the midnight zone,
+% decoded from a clause already sitting unused inside both siblings' own
+% header truth tables -- no new WebFetch. Neither parent table's schema has
+% a column for an alternate NAME (one tables sequence position, the other
+% tables depth); the already-quoted midnight-zone sentence also carries a
+% second, scientific name for that zone that never made it into a row:
+%
+%   midnight_zone → bathypelagic
+%     "The midnight zone, or bathypelagic, extends to about 4,000 meters
+%      (about 13,100 feet)"
+%
+% Recall is a binding query:
+%
+%     ? ocean_zone_scientific_name(midnight_zone, $ScientificName)  % bathypelagic
+%
+% This is a native `table` (ADJ-TABLES RS-5, a TWO-column table like both
+% siblings' own): the single `row` lowers to a ground relation
+% `ocean_zone_scientific_name(zone, scientific_name)` carrying the
+% citation, so the lookup above is the ordinary SLD binding query -- the
+% engine returns the name WITH its source, on the CPU, with zero model
+% calls, and abstains on any zone that is not the one tabled here (it
+% never invents a name). The query also runs BACKWARD -- bind a scientific
+% name and recall which zone it names:
+%
+%     ? ocean_zone_scientific_name($Zone, bathypelagic)   % midnight_zone
+%
+% This is honestly a ONE-ROW table, not a forced three-row one: the
+% sunlight-zone and twilight-zone spans already quoted inside both sibling
+% files' own headers do NOT include an alternate scientific name for
+% either zone (only the midnight-zone span does) -- so this table
+% correctly abstains on sunlight_zone and twilight_zone rather than
+% inventing "epipelagic"/"mesopelagic" names the cited source never
+% states.
+%
+% Provenance: reproduces, byte-for-byte, the SAME midnight-zone span
+% already quoted inside `ocean-zone-depth.adj`'s own header/provenance
+% section, from the SAME Woods Hole Oceanographic Institution (WHOI)
+% "Ocean Zones" page both siblings already cite -- no new WebFetch, only a
+% different schema decoding a part of that already-verified quote. `trust
+% consensus` -- the same tier both siblings already carry (WHOI is a
+% reputable, long-running oceanographic research institution but not a
+% .gov domain).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table ocean_zone_scientific_name {
+    columns zone, scientific_name
+
+    row (midnight_zone, bathypelagic)
+
+    source "The midnight zone, or bathypelagic, extends to about 4,000 meters (about 13,100 feet), which reaches the ocean floor in many places is in perpetual darkness."
+    locator "https://www.whoi.edu/know-your-ocean/ocean-topics/how-the-ocean-works/ocean-zones/"
+    trust consensus
+}

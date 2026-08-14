@@ -10,6 +10,10 @@ coding_adventures_chacha20_poly1305 = { path = "../chacha20-poly1305" }
 coding_adventures_csprng = { path = "../csprng" }
 coding_adventures_ed25519 = { path = "../ed25519" }
 coding_adventures_hkdf = { path = "../hkdf" }
+coding-adventures-json-parser = { path = "../json-parser" }
+coding-adventures-json-serializer = { path = "../json-serializer" }
+coding-adventures-json-value = { path = "../json-value" }
 coding_adventures_sha256 = { path = "../sha256" }
+coding_adventures_uuid = { path = "../uuid" }
 coding_adventures_x25519 = { path = "../x25519" }
 coding_adventures_zeroize = { path = "../zeroize" }

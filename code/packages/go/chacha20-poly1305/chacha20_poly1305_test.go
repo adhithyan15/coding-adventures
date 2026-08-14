@@ -63,6 +63,23 @@ var (
 	aeadTag = mustHex("1ae10b594f09e26a7e902ecbd0600691")
 )
 
+// XChaCha20-Poly1305 (draft-irtf-cfrg-xchacha-03 Appendix A.3.1)
+var (
+	xchachaKey   = mustHex("808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9f")
+	xchachaNonce = mustHex("404142434445464748494a4b4c4d4e4f5051525354555657")
+	xchachaAAD   = mustHex("50515253c0c1c2c3c4c5c6c7")
+	xchachaCT    = mustHex(
+		"bd6d179d3e83d43b9576579493c0e939" +
+			"572a1700252bfaccbed2902c21396cbb" +
+			"731c7f1b0b4aa6440bf3a82f4eda7e39" +
+			"ae64c6708c54c216cb96b72e1213b452" +
+			"2f8c9ba40db5d945b11b69b982c1bb9e" +
+			"3f3fac2bc369488f76b2383565d3fff9" +
+			"21f9664c97637da9768812f615c68b13" +
+			"b52e")
+	xchachaTag = mustHex("c0875924c1c7987947deafd8780acf49")
+)
+
 // ===================================================================
 // Low-level Tests
 // ===================================================================
@@ -508,5 +525,153 @@ func TestAEADLargePlaintext(t *testing.T) {
 	}
 	if !bytes.Equal(pt, plaintext) {
 		t.Error("large plaintext roundtrip failed")
+	}
+}
+
+// ===================================================================
+// SE04 HChaCha20 and XChaCha20-Poly1305 Tests
+// ===================================================================
+
+func TestHChaCha20DraftVector(t *testing.T) {
+	key := mustHex("000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f")
+	nonce := mustHex("000000090000004a0000000031415927")
+	expected := mustHex("82413b4227b27bfed30e42508a877d73a0f9e4d58a74a853c12ec41326d3ecdc")
+
+	subkey, err := HChaCha20Subkey(key, nonce)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !bytes.Equal(subkey, expected) {
+		t.Fatalf("subkey mismatch:\ngot:  %x\nwant: %x", subkey, expected)
+	}
+}
+
+func TestHChaCha20InvalidLengths(t *testing.T) {
+	if _, err := HChaCha20Subkey([]byte("short"), make([]byte, 16)); err == nil {
+		t.Error("expected invalid key length error")
+	}
+	if _, err := HChaCha20Subkey(make([]byte, 32), []byte("short")); err == nil {
+		t.Error("expected invalid nonce length error")
+	}
+}
+
+func TestXChaCha20RoundTrip(t *testing.T) {
+	plaintext := append([]byte("raw XChaCha20 spans multiple blocks: "), bytes.Repeat([]byte{0xa5}, 96)...)
+	for _, counter := range []uint32{0, 1} {
+		ciphertext, err := XChaCha20Encrypt(plaintext, xchachaKey, xchachaNonce, counter)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if bytes.Equal(ciphertext, plaintext) {
+			t.Fatalf("counter %d did not transform plaintext", counter)
+		}
+		decrypted, err := XChaCha20Encrypt(ciphertext, xchachaKey, xchachaNonce, counter)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if !bytes.Equal(decrypted, plaintext) {
+			t.Fatalf("counter %d roundtrip failed", counter)
+		}
+	}
+}
+
+func TestXChaCha20InvalidLengths(t *testing.T) {
+	if _, err := XChaCha20Encrypt(nil, []byte("short"), make([]byte, 24), 0); err == nil {
+		t.Error("expected invalid key length error")
+	}
+	if _, err := XChaCha20Encrypt(nil, make([]byte, 32), []byte("short"), 0); err == nil {
+		t.Error("expected invalid nonce length error")
+	}
+}
+
+func TestXChaCha20Poly1305DraftVector(t *testing.T) {
+	ciphertext, tag, err := XChaCha20Poly1305AEADEncrypt(aeadPT, xchachaKey, xchachaNonce, xchachaAAD)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !bytes.Equal(ciphertext, xchachaCT) {
+		t.Fatalf("ciphertext mismatch:\ngot:  %x\nwant: %x", ciphertext, xchachaCT)
+	}
+	if !bytes.Equal(tag, xchachaTag) {
+		t.Fatalf("tag mismatch:\ngot:  %x\nwant: %x", tag, xchachaTag)
+	}
+
+	plaintext, err := XChaCha20Poly1305AEADDecrypt(ciphertext, xchachaKey, xchachaNonce, xchachaAAD, tag)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !bytes.Equal(plaintext, aeadPT) {
+		t.Fatal("gold ciphertext did not decrypt to the exact plaintext")
+	}
+}
+
+func TestXChaCha20Poly1305AuthenticatesEveryTagByte(t *testing.T) {
+	for i := range xchachaTag {
+		tag := append([]byte(nil), xchachaTag...)
+		tag[i] ^= 0x01
+		plaintext, err := XChaCha20Poly1305AEADDecrypt(xchachaCT, xchachaKey, xchachaNonce, xchachaAAD, tag)
+		if err != ErrAuthFailed {
+			t.Fatalf("tag byte %d: expected ErrAuthFailed, got %v", i, err)
+		}
+		if plaintext != nil {
+			t.Fatalf("tag byte %d: authentication failure returned plaintext", i)
+		}
+	}
+}
+
+func TestXChaCha20Poly1305ChangedInputsFail(t *testing.T) {
+	flip := func(input []byte) []byte {
+		output := append([]byte(nil), input...)
+		output[0] ^= 0x01
+		return output
+	}
+	tests := []struct {
+		name            string
+		ciphertext, key []byte
+		nonce, aad      []byte
+	}{
+		{"ciphertext", flip(xchachaCT), xchachaKey, xchachaNonce, xchachaAAD},
+		{"key", xchachaCT, flip(xchachaKey), xchachaNonce, xchachaAAD},
+		{"nonce", xchachaCT, xchachaKey, flip(xchachaNonce), xchachaAAD},
+		{"aad", xchachaCT, xchachaKey, xchachaNonce, flip(xchachaAAD)},
+	}
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			plaintext, err := XChaCha20Poly1305AEADDecrypt(tc.ciphertext, tc.key, tc.nonce, tc.aad, xchachaTag)
+			if err != ErrAuthFailed {
+				t.Fatalf("expected ErrAuthFailed, got %v", err)
+			}
+			if plaintext != nil {
+				t.Fatal("authentication failure returned plaintext")
+			}
+		})
+	}
+}
+
+func TestXChaCha20Poly1305EmptyAndMultiBlock(t *testing.T) {
+	for _, plaintext := range [][]byte{nil, bytes.Repeat([]byte{0x42}, 4096)} {
+		ciphertext, tag, err := XChaCha20Poly1305AEADEncrypt(plaintext, xchachaKey, xchachaNonce, []byte("context"))
+		if err != nil {
+			t.Fatal(err)
+		}
+		decrypted, err := XChaCha20Poly1305AEADDecrypt(ciphertext, xchachaKey, xchachaNonce, []byte("context"), tag)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if !bytes.Equal(decrypted, plaintext) {
+			t.Fatalf("roundtrip failed for %d-byte plaintext", len(plaintext))
+		}
+	}
+}
+
+func TestXChaCha20Poly1305InvalidLengths(t *testing.T) {
+	if _, _, err := XChaCha20Poly1305AEADEncrypt(nil, []byte("short"), make([]byte, 24), nil); err == nil {
+		t.Error("expected invalid key length error")
+	}
+	if _, _, err := XChaCha20Poly1305AEADEncrypt(nil, make([]byte, 32), []byte("short"), nil); err == nil {
+		t.Error("expected invalid nonce length error")
+	}
+	if _, err := XChaCha20Poly1305AEADDecrypt(nil, make([]byte, 32), make([]byte, 24), nil, []byte("short")); err == nil {
+		t.Error("expected invalid tag length error")
 	}
 }

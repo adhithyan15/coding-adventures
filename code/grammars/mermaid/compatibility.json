@@ -65,7 +65,7 @@
     {
       "id": "pie",
       "headers": ["pie"],
-      "status": "partial",
+      "status": "full",
       "ir": "chart",
       "smoke_source": "pie showData\n\"Dogs\" : 60\n\"Cats\" : 40"
     },
@@ -114,7 +114,7 @@
     {
       "id": "sankey",
       "headers": ["sankey", "sankey-beta"],
-      "status": "partial",
+      "status": "full",
       "ir": "chart",
       "smoke_source": "sankey\nA,B,10"
     },

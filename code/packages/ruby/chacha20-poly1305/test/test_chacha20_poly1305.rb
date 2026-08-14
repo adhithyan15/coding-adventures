@@ -52,6 +52,26 @@ class TestChaCha20Poly1305 < Minitest::Test
   ].pack("H*")
   AEAD_EXPECTED_TAG = ["1ae10b594f09e26a7e902ecbd0600691"].pack("H*")
 
+  HCHACHA20_KEY = ["000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"].pack("H*")
+  HCHACHA20_NONCE = ["000000090000004a0000000031415927"].pack("H*")
+  HCHACHA20_EXPECTED_SUBKEY = ["82413b4227b27bfed30e42508a877d73a0f9e4d58a74a853c12ec41326d3ecdc"].pack("H*")
+
+  XCHACHA20_KEY = ["808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9f"].pack("H*")
+  XCHACHA20_NONCE = ["404142434445464748494a4b4c4d4e4f5051525354555657"].pack("H*")
+  XCHACHA20_AAD = ["50515253c0c1c2c3c4c5c6c7"].pack("H*")
+  XCHACHA20_PLAINTEXT = AEAD_PLAINTEXT
+  XCHACHA20_EXPECTED_CT = [
+    "bd6d179d3e83d43b9576579493c0e939" \
+    "572a1700252bfaccbed2902c21396cbb" \
+    "731c7f1b0b4aa6440bf3a82f4eda7e39" \
+    "ae64c6708c54c216cb96b72e1213b452" \
+    "2f8c9ba40db5d945b11b69b982c1bb9e" \
+    "3f3fac2bc369488f76b2383565d3fff9" \
+    "21f9664c97637da9768812f615c68b13" \
+    "b52e"
+  ].pack("H*")
+  XCHACHA20_EXPECTED_TAG = ["c0875924c1c7987947deafd8780acf49"].pack("H*")
+
   # ===================================================================
   # ChaCha20 Tests
   # ===================================================================
@@ -259,5 +279,119 @@ class TestChaCha20Poly1305 < Minitest::Test
     ct, tag = CC.aead_encrypt(plaintext, key, nonce, "".b)
     pt = CC.aead_decrypt(ct, key, nonce, "".b, tag)
     assert_equal plaintext, pt
+  end
+
+  # ===================================================================
+  # XChaCha20-Poly1305 Tests (SE04)
+  # ===================================================================
+
+  def test_hchacha20_draft_section_2_2_1
+    assert_equal HCHACHA20_EXPECTED_SUBKEY, CC.hchacha20_subkey(HCHACHA20_KEY, HCHACHA20_NONCE)
+  end
+
+  def test_xchacha20_poly1305_draft_appendix_a_3_1
+    ciphertext, tag = CC.xchacha20_poly1305_encrypt(
+      XCHACHA20_PLAINTEXT,
+      XCHACHA20_KEY,
+      XCHACHA20_NONCE,
+      XCHACHA20_AAD
+    )
+
+    assert_equal XCHACHA20_EXPECTED_CT, ciphertext
+    assert_equal XCHACHA20_EXPECTED_TAG, tag
+  end
+
+  def test_xchacha20_poly1305_decrypts_gold_vector
+    plaintext = CC.xchacha20_poly1305_decrypt(
+      XCHACHA20_EXPECTED_CT,
+      XCHACHA20_KEY,
+      XCHACHA20_NONCE,
+      XCHACHA20_AAD,
+      XCHACHA20_EXPECTED_TAG
+    )
+
+    assert_equal XCHACHA20_PLAINTEXT, plaintext
+  end
+
+  def test_xchacha20_poly1305_rejects_change_in_every_tag_byte
+    XCHACHA20_EXPECTED_TAG.bytesize.times do |index|
+      changed_tag = XCHACHA20_EXPECTED_TAG.dup
+      changed_tag.setbyte(index, changed_tag.getbyte(index) ^ 0x01)
+
+      error = assert_raises(RuntimeError) do
+        CC.xchacha20_poly1305_decrypt(
+          XCHACHA20_EXPECTED_CT,
+          XCHACHA20_KEY,
+          XCHACHA20_NONCE,
+          XCHACHA20_AAD,
+          changed_tag
+        )
+      end
+      assert_equal "Authentication failed: tag mismatch", error.message
+    end
+  end
+
+  def test_xchacha20_poly1305_rejects_changed_inputs
+    changes = []
+
+    changed_ciphertext = XCHACHA20_EXPECTED_CT.dup
+    changed_ciphertext.setbyte(0, changed_ciphertext.getbyte(0) ^ 0x01)
+    changes << [changed_ciphertext, XCHACHA20_KEY, XCHACHA20_NONCE, XCHACHA20_AAD]
+
+    changed_key = XCHACHA20_KEY.dup
+    changed_key.setbyte(0, changed_key.getbyte(0) ^ 0x01)
+    changes << [XCHACHA20_EXPECTED_CT, changed_key, XCHACHA20_NONCE, XCHACHA20_AAD]
+
+    changed_nonce = XCHACHA20_NONCE.dup
+    changed_nonce.setbyte(23, changed_nonce.getbyte(23) ^ 0x01)
+    changes << [XCHACHA20_EXPECTED_CT, XCHACHA20_KEY, changed_nonce, XCHACHA20_AAD]
+
+    changed_aad = XCHACHA20_AAD.dup
+    changed_aad.setbyte(0, changed_aad.getbyte(0) ^ 0x01)
+    changes << [XCHACHA20_EXPECTED_CT, XCHACHA20_KEY, XCHACHA20_NONCE, changed_aad]
+
+    changes.each do |ciphertext, key, nonce, aad|
+      error = assert_raises(RuntimeError) do
+        CC.xchacha20_poly1305_decrypt(ciphertext, key, nonce, aad, XCHACHA20_EXPECTED_TAG)
+      end
+      assert_equal "Authentication failed: tag mismatch", error.message
+    end
+  end
+
+  def test_xchacha20_poly1305_roundtrips_empty_and_multi_block_plaintexts
+    key = (0...32).map(&:chr).join.b
+    nonce = (32...56).map(&:chr).join.b
+    aad = "SE04 edge cases".b
+
+    ["".b, ("\xA5" * 4096).b].each do |plaintext|
+      ciphertext, tag = CC.xchacha20_poly1305_encrypt(plaintext, key, nonce, aad)
+      assert_equal plaintext, CC.xchacha20_poly1305_decrypt(ciphertext, key, nonce, aad, tag)
+    end
+  end
+
+  def test_raw_xchacha20_is_xor_symmetric_at_counters_zero_and_one
+    key = (0...32).map(&:chr).join.b
+    nonce = (32...56).map(&:chr).join.b
+    plaintext = (0...200).map { |value| (value % 256).chr }.join.b
+
+    [0, 1].each do |counter|
+      ciphertext = CC.xchacha20_encrypt(plaintext, key, nonce, counter)
+      refute_equal plaintext, ciphertext
+      assert_equal plaintext, CC.xchacha20_encrypt(ciphertext, key, nonce, counter)
+    end
+  end
+
+  def test_xchacha20_rejects_invalid_lengths_before_processing
+    assert_raises(ArgumentError) { CC.hchacha20_subkey("short".b, HCHACHA20_NONCE) }
+    assert_raises(ArgumentError) { CC.hchacha20_subkey(HCHACHA20_KEY, "short".b) }
+    assert_raises(ArgumentError) { CC.xchacha20_encrypt("".b, XCHACHA20_KEY, "short".b) }
+    assert_raises(ArgumentError) do
+      CC.xchacha20_poly1305_encrypt("".b, "short".b, XCHACHA20_NONCE)
+    end
+
+    error = assert_raises(ArgumentError) do
+      CC.xchacha20_poly1305_decrypt("".b, "short".b, "short".b, "".b, "short".b)
+    end
+    assert_match(/Tag must be 16 bytes/, error.message)
   end
 end

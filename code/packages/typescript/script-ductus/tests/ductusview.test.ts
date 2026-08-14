@@ -72,6 +72,11 @@ const cyrillicOutline = (character: string): GlyphOutline => {
   return { path: g.path, bounds: boundsOf(g.contours) };
 };
 
+const gujaratiOutline = (character: string): GlyphOutline => {
+  const g = parseFont(load("NotoSansGujarati-Static.ttf")).glyphFor(character)!;
+  return { path: g.path, bounds: boundsOf(g.contours) };
+};
+
 const MA = DUCTUS["ம"];
 const outline = tamilOutline("ம");
 const A = DUCTUS["அ"];
@@ -254,6 +259,20 @@ const CYRILLIC_SHCHA = ductusFor("щ", "cyrillic")!;
 const cyrillicShchaOutline = cyrillicOutline("щ");
 const CYRILLIC_HARD_SIGN = ductusFor("ъ", "cyrillic")!;
 const cyrillicHardSignOutline = cyrillicOutline("ъ");
+const CYRILLIC_YERY = ductusFor("ы", "cyrillic")!;
+const cyrillicYeryOutline = cyrillicOutline("ы");
+const CYRILLIC_SOFT_SIGN = ductusFor("ь", "cyrillic")!;
+const cyrillicSoftSignOutline = cyrillicOutline("ь");
+const CYRILLIC_E = ductusFor("э", "cyrillic")!;
+const cyrillicEOutline = cyrillicOutline("э");
+const CYRILLIC_YU = ductusFor("ю", "cyrillic")!;
+const cyrillicYuOutline = cyrillicOutline("ю");
+const CYRILLIC_YA = ductusFor("я", "cyrillic")!;
+const cyrillicYaOutline = cyrillicOutline("я");
+const GUJARATI_A = ductusFor("અ", "gujarati")!;
+const gujaratiAOutline = gujaratiOutline("અ");
+const GUJARATI_AA = ductusFor("આ", "gujarati")!;
+const gujaratiAaOutline = gujaratiOutline("આ");
 const HEBREW_ALEF = ductusFor("א", "hebrew")!;
 const hebrewAlefOutline = hebrewOutline("א");
 const HEBREW_BET = ductusFor("ב", "hebrew")!;
@@ -3249,6 +3268,231 @@ describe("Cyrillic ъ — one joined flag-to-stem-to-bowl run", () => {
     );
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(CYRILLIC_HARD_SIGN.strokes[0], 1),
+    );
+  });
+});
+
+describe("Cyrillic ы — joined left body before a lifted right stem", () => {
+  const steps = ductusSteps(CYRILLIC_YERY);
+  const strip = ductusFilmstrip(CYRILLIC_YERY, cyrillicYeryOutline);
+
+  it("keeps the left stem and bowl together before the separate right stem", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "descend the left stem to the baseline",
+      "sweep right along the lower bowl",
+      "curve upward around the bowl's right side",
+      "return left through the upper bowl to close against the stem",
+      "lift, then descend the separate right stem",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([
+      false,
+      false,
+      false,
+      false,
+      true,
+    ]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 0, 1]);
+    expect(strip.frames).toHaveLength(5);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 5 movements");
+  });
+
+  it("draws the exact Noto Sans Cyrillic character behind the final stem", () => {
+    const paths = byTag(strip.frames[4], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      cyrillicYeryOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done").map((path) => path.attrs.d)).toEqual([
+      penPathD(CYRILLIC_YERY.strokes[0], 1),
+    ]);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(CYRILLIC_YERY.strokes[1], 1),
+    );
+  });
+});
+
+describe("Cyrillic ь — one joined stem-and-bowl run", () => {
+  const steps = ductusSteps(CYRILLIC_SOFT_SIGN);
+  const strip = ductusFilmstrip(CYRILLIC_SOFT_SIGN, cyrillicSoftSignOutline);
+
+  it("keeps the descending stem joined to the counterclockwise lower bowl", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "descend the stem to the baseline",
+      "sweep right along the lower bowl",
+      "curve upward around the bowl's right side",
+      "return left through the upper bowl to close against the stem",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 0]);
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 4 movements");
+  });
+
+  it("draws the exact Noto Sans Cyrillic character behind the closed bowl", () => {
+    const paths = byTag(strip.frames[3], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      cyrillicSoftSignOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(CYRILLIC_SOFT_SIGN.strokes[0], 1),
+    );
+  });
+});
+
+describe("Cyrillic э — outer curve before a lifted middle tongue", () => {
+  const steps = ductusSteps(CYRILLIC_E);
+  const strip = ductusFilmstrip(CYRILLIC_E, cyrillicEOutline);
+
+  it("keeps the backwards-C run before the right-to-left tongue", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "sweep right across the upper curve",
+      "continue down around the outer right side",
+      "sweep left through the lower curve",
+      "lift, then draw the middle tongue right-to-left",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 1]);
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 4 movements");
+  });
+
+  it("draws the exact Noto Sans Cyrillic character behind the final tongue", () => {
+    const paths = byTag(strip.frames[3], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      cyrillicEOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done").map((path) => path.attrs.d)).toEqual([
+      penPathD(CYRILLIC_E.strokes[0], 1),
+    ]);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(CYRILLIC_E.strokes[1], 1),
+    );
+  });
+});
+
+describe("Cyrillic ю — one joined stem-to-oval run", () => {
+  const steps = ductusSteps(CYRILLIC_YU);
+  const strip = ductusFilmstrip(CYRILLIC_YU, cyrillicYuOutline);
+
+  it("keeps the left stem and connector joined to the clockwise oval", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "descend the left stem to the baseline",
+      "retrace upward and sweep right along the middle bar",
+      "curve upward around the oval and across its top",
+      "continue down around the oval's right side",
+      "sweep left through the bottom and rise to close",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false, false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 0, 0]);
+    expect(strip.frames).toHaveLength(5);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 5 movements");
+  });
+
+  it("draws the exact Noto Sans Cyrillic character behind the closed oval", () => {
+    const paths = byTag(strip.frames[4], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      cyrillicYuOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(CYRILLIC_YU.strokes[0], 1),
+    );
+  });
+});
+
+describe("Cyrillic я — one joined rise-to-loop-to-leg run", () => {
+  const steps = ductusSteps(CYRILLIC_YA);
+  const strip = ductusFilmstrip(CYRILLIC_YA, cyrillicYaOutline);
+
+  it("keeps the rising stem, counterclockwise bowl, and diagonal leg joined", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "climb the right stem from the baseline to the top",
+      "curve counterclockwise around the upper bowl",
+      "sweep left through the bowl's lower join",
+      "descend the diagonal leg to the lower-left tip",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 0]);
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 4 movements");
+  });
+
+  it("draws the exact Noto Sans Cyrillic character behind the joined run", () => {
+    const paths = byTag(strip.frames[3], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      cyrillicYaOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(CYRILLIC_YA.strokes[0], 1),
+    );
+  });
+});
+
+describe("Gujarati અ — joined body before the lifted right stem", () => {
+  const steps = ductusSteps(GUJARATI_A);
+  const strip = ductusFilmstrip(GUJARATI_A, gujaratiAOutline);
+
+  it("shows the three-part body before the lifted stem and foot", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "sweep clockwise around the open left curve",
+      "continue through the lower body and rise into the middle shoulder",
+      "retrace down and sweep through the small right arch",
+      "lift, then descend the right stem into its foot",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 1]);
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 4 movements");
+  });
+
+  it("draws the exact Noto Sans Gujarati character behind both runs", () => {
+    const paths = byTag(strip.frames[3], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      gujaratiAOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done").map((path) => path.attrs.d)).toEqual([
+      penPathD(GUJARATI_A.strokes[0], 1),
+    ]);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(GUJARATI_A.strokes[1], 1),
+    );
+  });
+});
+
+describe("Gujarati આ — complete અ before the lifted trailing ā stem", () => {
+  const steps = ductusSteps(GUJARATI_AA);
+  const strip = ductusFilmstrip(GUJARATI_AA, gujaratiAaOutline);
+
+  it("shows the joined body before two separately descended stems", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "sweep clockwise around the open left curve",
+      "continue through the lower body and rise into the middle shoulder",
+      "retrace down and sweep through the small right arch",
+      "lift, then descend the first right stem into its foot",
+      "lift again, then descend the trailing ā stem into its foot",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false, true, true]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 1, 2]);
+    expect(strip.frames).toHaveLength(5);
+    expect(strip.penLifts).toBe(2);
+    expect(strip.summary).toBe("3 strokes · 2 pen lifts · 5 movements");
+  });
+
+  it("draws the exact Noto Sans Gujarati character behind all three runs", () => {
+    const paths = byTag(strip.frames[4], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      gujaratiAaOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done").map((path) => path.attrs.d)).toEqual([
+      penPathD(GUJARATI_AA.strokes[0], 1),
+      penPathD(GUJARATI_AA.strokes[1], 1),
+    ]);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(GUJARATI_AA.strokes[2], 1),
     );
   });
 });

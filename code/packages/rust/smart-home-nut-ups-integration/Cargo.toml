@@ -1,0 +1,17 @@
+[package]
+name = "smart-home-nut-ups-integration"
+version = "0.1.0"
+edition = "2021"
+description = "Authorized bounded read-only Network UPS Tools telemetry for Smart Home"
+license = "MIT"
+
+[dependencies]
+nut-protocol = { path = "../nut-protocol" }
+serde_json = "1"
+smart-home-core = { path = "../smart-home-core" }
+smart-home-runtime = { path = "../smart-home-runtime" }
+tcp-client = { path = "../tcp-client" }
+
+[[bin]]
+name = "smart-home-nut-ups-integration"
+path = "src/main.rs"

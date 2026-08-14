@@ -268,6 +268,7 @@ defmodule CodingAdventures.ChaCha20Poly1305Test do
       nonce = rfc_nonce()
       pt = rfc_plaintext()
       {ct, tag} = CC.aead_encrypt(pt, key, nonce, rfc_aad())
+
       assert {:error, :authentication_failed} ==
                CC.aead_decrypt(ct, key, nonce, "wrong aad", tag)
     end
@@ -330,6 +331,7 @@ defmodule CodingAdventures.ChaCha20Poly1305Test do
       aad = rfc_aad()
       {ct, _tag} = CC.aead_encrypt(rfc_plaintext(), key, nonce, aad)
       zero_tag = :binary.copy(<<0>>, 16)
+
       assert {:error, :authentication_failed} ==
                CC.aead_decrypt(ct, key, nonce, aad, zero_tag)
     end
@@ -348,6 +350,162 @@ defmodule CodingAdventures.ChaCha20Poly1305Test do
       pt = :crypto.strong_rand_bytes(65)
       {ct, tag} = CC.aead_encrypt(pt, key, nonce, "")
       assert {:ok, pt} == CC.aead_decrypt(ct, key, nonce, "", tag)
+    end
+  end
+
+  # ─── SE04 HChaCha20 and XChaCha20-Poly1305 ────────────────────────────────
+
+  describe "SE04 XChaCha20-Poly1305" do
+    defp xchacha_key,
+      do: h("808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9f")
+
+    defp xchacha_nonce, do: h("404142434445464748494a4b4c4d4e4f5051525354555657")
+    defp xchacha_aad, do: h("50515253c0c1c2c3c4c5c6c7")
+
+    defp xchacha_plaintext,
+      do:
+        "Ladies and Gentlemen of the class of '99: If I could offer you only one tip for the future, sunscreen would be it."
+
+    defp xchacha_expected_ciphertext,
+      do:
+        h(
+          "bd6d179d3e83d43b9576579493c0e939" <>
+            "572a1700252bfaccbed2902c21396cbb" <>
+            "731c7f1b0b4aa6440bf3a82f4eda7e39" <>
+            "ae64c6708c54c216cb96b72e1213b452" <>
+            "2f8c9ba40db5d945b11b69b982c1bb9e" <>
+            "3f3fac2bc369488f76b2383565d3fff9" <>
+            "21f9664c97637da9768812f615c68b13" <>
+            "b52e"
+        )
+
+    defp xchacha_expected_tag, do: h("c0875924c1c7987947deafd8780acf49")
+
+    test "HChaCha20 draft section 2.2.1 vector" do
+      key = h("000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f")
+      nonce = h("000000090000004a0000000031415927")
+      expected = h("82413b4227b27bfed30e42508a877d73a0f9e4d58a74a853c12ec41326d3ecdc")
+
+      assert CC.hchacha20_subkey(key, nonce) == expected
+    end
+
+    test "draft appendix A.3.1 ciphertext and tag" do
+      assert {xchacha_expected_ciphertext(), xchacha_expected_tag()} ==
+               CC.xchacha20_poly1305_encrypt(
+                 xchacha_plaintext(),
+                 xchacha_key(),
+                 xchacha_nonce(),
+                 xchacha_aad()
+               )
+    end
+
+    test "decrypts the draft appendix A.3.1 gold vector" do
+      assert {:ok, xchacha_plaintext()} ==
+               CC.xchacha20_poly1305_decrypt(
+                 xchacha_expected_ciphertext(),
+                 xchacha_key(),
+                 xchacha_nonce(),
+                 xchacha_aad(),
+                 xchacha_expected_tag()
+               )
+    end
+
+    test "rejects a change in every tag byte with one failure result" do
+      for index <- 0..15 do
+        tag = xchacha_expected_tag()
+        <<prefix::binary-size(index), byte, suffix::binary>> = tag
+        changed_tag = prefix <> <<bxor(byte, 1)>> <> suffix
+
+        assert {:error, :authentication_failed} ==
+                 CC.xchacha20_poly1305_decrypt(
+                   xchacha_expected_ciphertext(),
+                   xchacha_key(),
+                   xchacha_nonce(),
+                   xchacha_aad(),
+                   changed_tag
+                 )
+      end
+    end
+
+    test "rejects changed ciphertext, key, nonce tail, and AAD" do
+      <<ct_byte, ct_rest::binary>> = xchacha_expected_ciphertext()
+      <<key_byte, key_rest::binary>> = xchacha_key()
+      <<nonce_prefix::binary-size(23), nonce_byte>> = xchacha_nonce()
+      <<aad_byte, aad_rest::binary>> = xchacha_aad()
+
+      changes = [
+        {<<bxor(ct_byte, 1)>> <> ct_rest, xchacha_key(), xchacha_nonce(), xchacha_aad()},
+        {xchacha_expected_ciphertext(), <<bxor(key_byte, 1)>> <> key_rest, xchacha_nonce(),
+         xchacha_aad()},
+        {xchacha_expected_ciphertext(), xchacha_key(), nonce_prefix <> <<bxor(nonce_byte, 1)>>,
+         xchacha_aad()},
+        {xchacha_expected_ciphertext(), xchacha_key(), xchacha_nonce(),
+         <<bxor(aad_byte, 1)>> <> aad_rest}
+      ]
+
+      for {ciphertext, key, nonce, aad} <- changes do
+        assert {:error, :authentication_failed} ==
+                 CC.xchacha20_poly1305_decrypt(
+                   ciphertext,
+                   key,
+                   nonce,
+                   aad,
+                   xchacha_expected_tag()
+                 )
+      end
+    end
+
+    test "round-trips empty and multi-block plaintexts" do
+      key = :binary.list_to_bin(Enum.to_list(0..31))
+      nonce = :binary.list_to_bin(Enum.to_list(32..55))
+      aad = "SE04 edge cases"
+
+      for plaintext <- [<<>>, :binary.copy(<<0xA5>>, 4096)] do
+        {ciphertext, tag} = CC.xchacha20_poly1305_encrypt(plaintext, key, nonce, aad)
+
+        assert {:ok, plaintext} ==
+                 CC.xchacha20_poly1305_decrypt(ciphertext, key, nonce, aad, tag)
+      end
+    end
+
+    test "raw XChaCha20 is XOR-symmetric at counters zero and one" do
+      key = :binary.list_to_bin(Enum.to_list(0..31))
+      nonce = :binary.list_to_bin(Enum.to_list(32..55))
+      plaintext = :binary.list_to_bin(Enum.map(0..199, &rem(&1, 256)))
+
+      for counter <- [0, 1] do
+        ciphertext = CC.xchacha20_encrypt(plaintext, key, nonce, counter)
+        refute ciphertext == plaintext
+        assert CC.xchacha20_encrypt(ciphertext, key, nonce, counter) == plaintext
+      end
+    end
+
+    test "rejects malformed sizes and counters before processing" do
+      assert_raise ArgumentError, ~r/Key must be 32 bytes/, fn ->
+        CC.hchacha20_subkey("short", binary_part(xchacha_nonce(), 0, 16))
+      end
+
+      assert_raise ArgumentError, ~r/Nonce must be 16 bytes/, fn ->
+        CC.hchacha20_subkey(xchacha_key(), "short")
+      end
+
+      assert_raise ArgumentError, ~r/Nonce must be 24 bytes/, fn ->
+        CC.xchacha20_encrypt(<<>>, xchacha_key(), "short")
+      end
+
+      assert_raise ArgumentError, ~r/Key must be 32 bytes/, fn ->
+        CC.xchacha20_poly1305_encrypt(<<>>, "short", xchacha_nonce())
+      end
+
+      assert_raise ArgumentError, ~r/Counter must be a 32-bit unsigned integer/, fn ->
+        CC.xchacha20_encrypt(<<>>, xchacha_key(), xchacha_nonce(), 0x1_0000_0000)
+      end
+
+      # A malformed tag wins over malformed key/nonce inputs, proving that the
+      # decrypt path rejects it before deriving any secret material.
+      assert_raise ArgumentError, ~r/Tag must be 16 bytes/, fn ->
+        CC.xchacha20_poly1305_decrypt(<<>>, "short", "short", <<>>, "short")
+      end
     end
   end
 end

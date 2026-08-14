@@ -409,9 +409,9 @@ bounded model loop and executable central smart-home path.
 
 | Tracker | Status | Evidence or residual acceptance |
 | --- | --- | --- |
-| #129 D18 crypto profile | Open | The underlying SHA-256, ChaCha20-Poly1305, Ed25519, X25519, HKDF, and Argon2id specs and six-language packages exist. SE04 now pins the missing XChaCha20-Poly1305 construction and vectors; Rust is complete, while Python, Go, Ruby, TypeScript, Elixir, and cross-language conformance remain. D19 is the Actor spec, not a second crypto identifier. |
-| #130 Message abstraction | Open | The repository has message primitives, but the issue's all-six-language rich-message conformance has not been accepted as a whole. |
-| #131 Channel abstraction | Open | Durable encrypted channels exist, but the issue's all-six-language persistent one-way channel contract still needs a complete conformance audit. |
+| #129 D18 crypto profile | Complete | The underlying SHA-256, ChaCha20-Poly1305, Ed25519, X25519, HKDF, and Argon2id specs and six-language packages exist. SE04 pins the missing XChaCha20-Poly1305 construction and vectors; all six language ports are complete (Python #11591, Go #11593, TypeScript #11594, Ruby #11595, Elixir #11596), and #11623 supplies the versioned fixture consumed by all six. D19 is the Actor spec, not a second crypto identifier. |
+| #130 Message abstraction | Complete | D19's generic Actor message exists in all six languages, while D18F fixes the production signed XChaCha20-Poly1305 envelope as the portable binary and lossless-JSON baseline (#11649). Rust owns the immutable profile and shared positive, negative, rich-payload, stream, UUID, and oversize fixture manifest (#11642, #11652). TypeScript (#11655), Python (#11654), Go (#11653), Ruby (#11658), and Elixir (#11656) reproduce the same bytes, verification order, stable errors, and injected-source behavior with idiomatic immutable values. The central #11657 gate requires all six consumers, executes every package-native build, verifies generator provenance, and regenerates the canonical manifest byte-for-byte before the aggregate CI gate can pass. |
+| #131 Channel abstraction | In progress | The production Rust definition/store/endpoints provide one-way membership, CAS-backed reserve-before-encrypt persistence, immutable encrypted records and grants, crash recovery, ordered reads, independent receiver cursors, irreversible destruction, and structural roles. D18P (#11684) fixes those D18C/D18S/D18H/D18A bytes, keys, atomicity, recovery, acknowledgement, role, and stable-error semantics; its shared manifest and Rust adapter lock the production bytes and transition traces. TypeScript and Python now consume that same corpus with injected atomic backends, D18F delegation, opaque #141 grant boundaries, and separate originator/receiver APIs. Remaining acceptance is Go/Ruby/Elixir ports and one required six-language gate. #141 separately owns portable sealed-key generation and rotation. |
 | #132 Capability Cage | Open | The production Deno deny-all path is executable; the issue also requires replaceable Docker and native cages whose acceptance is not yet proven. |
 | #133 Originator/Receiver | Open | Durable Rust endpoints exist, but the full SKILL, simple-function, full-program, and stdin interface spectrum still needs acceptance. |
 | #134 Vault | Open | Vault storage and leased/direct delivery primitives exist; unlock, store, rotation, and the complete credential-product surface remain broader than the accepted slices. |
@@ -2531,6 +2531,31 @@ without treating community-based SNMPv2c as an authenticated control surface:
 This broadens local infrastructure and equipment telemetry while preserving
 every independent credential, camera-resource, and radio-host prerequisite
 below.
+
+## Current Network UPS Tools Telemetry Breadth Slice
+
+The next breadth slice adds vendor-neutral UPS and PDU telemetry through the
+standard Network UPS Tools server protocol without exposing power-control or
+shutdown commands:
+
+- `nut-protocol` owns strict bounded RFC 9271 `LIST VAR` request and response
+  framing for one exact UPS name, including quoted-value escapes, duplicate
+  rejection, list correlation, and fixed line, value, count, and response
+  limits.
+- `smart-home-nut-ups-integration` polls one explicit private, link-local, or
+  loopback TCP endpoint and projects profile-selected decimal, boolean, and
+  text variables into normalized D23 sensor entities.
+- D23 read authorization runs before TCP connection. Every configured point
+  must be present and valid before bridge, device, or entity state is mutated;
+  no credential is accepted, persisted, logged, or placed in metadata.
+- The runtime exposes no `SET VAR`, instant command, forced shutdown, UPS
+  enumeration, subscription, reconnect loop, public endpoint, authentication,
+  or TLS negotiation. Credentialed or encrypted deployments require a
+  separately supervised session and trust-lifetime owner.
+
+This broadens local battery, load, runtime, line-power, and equipment-health
+telemetry while preserving every independent credential, camera-resource, and
+radio-host prerequisite below.
 
 The protocol- and vendor-specific backlog below remains valid after these
 breadth steps:

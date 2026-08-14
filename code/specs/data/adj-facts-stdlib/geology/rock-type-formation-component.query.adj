@@ -1,0 +1,20 @@
+% ============================================================================
+% rock-type-formation-component.query — worked recall queries against
+% rock-type-formation-component.adj (adj-facts-stdlib, GEOLOGY).
+% ============================================================================
+% Three queries: forward recall (multiple answers) with citation, backward
+% recall (bind a component, find the rock type), and honest abstention on
+% igneous (this table only grounds the two rock types whose cited span
+% lists more than one forming material).
+% ============================================================================
+
+import "rock-type-formation-component.adj"
+
+% Forward: what components does the cited USGS sentence list for metamorphic rock?
+? rock_type_formation_component(metamorphic, $Component)
+
+% Backward: which rock type forms from hot mineral-rich fluids?
+? rock_type_formation_component($Rock, hot_mineral_rich_fluids)
+
+% Honest abstention: igneous's cited span names only one material, no listed alternatives.
+? rock_type_formation_component(igneous, $ComponentIgneous)

@@ -4163,10 +4163,11 @@
     {
       "language": "spanish",
       "chapter": 49,
-      "sourceHash": "fnv1a64:71597fdf32fcb79b",
+      "sourceHash": "fnv1a64:d0eec88ae7a6c9ee",
       "lessonIds": [
         "ES-C10-ir",
         "ES-C10-ir-a-futuro",
+        "ES-C10-futuro-simple",
         "ES-C10-mi-tu-su",
         "ES-C10-practice"
       ],
@@ -4671,8 +4672,9 @@
     {
       "language": "spanish",
       "chapter": 103,
-      "sourceHash": "fnv1a64:b62c5b9351311fa1",
+      "sourceHash": "fnv1a64:d457d8051349d637",
       "lessonIds": [
+        "ES-C14-ayer",
         "ES-C14-ser-ir-preterite",
         "ES-C14-hablar-preterite",
         "ES-C14-practice"

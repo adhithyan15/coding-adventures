@@ -1,0 +1,89 @@
+% ============================================================================
+% heart-chamber-vessel — the named vessel(s)/valve(s) each heart chamber
+% connects to, decoded from spans already sitting unused inside
+% `heart-chambers.adj`'s own already-quoted NIH/NLM StatPearls sentences
+% (adj-facts-stdlib, ANATOMY).
+% ============================================================================
+% A sibling to the already-shipped `heart-chambers.adj`
+% (`heart_chamber_function(chamber, function)`, right_atrium/right_ventricle/
+% left_atrium/left_ventricle → receives_blood_from_body/pumps_blood_to_lungs/
+% receives_blood_from_lungs/pumps_blood_to_body): that table's own header
+% already quotes, verbatim, four StatPearls sentences that each name a
+% chamber's FUNCTION (what it does to blood) AND, in the same breath, the
+% NAMED vessel(s)/valve(s) that blood passes through to get there -- a fact
+% the chamber/function schema had no room for:
+%
+%   right_atrium → superior_vena_cava, inferior_vena_cava
+%     "...via the superior and inferior vena cavae."
+%
+%   right_ventricle → pulmonic_valve, pulmonary_artery
+%     "...across the pulmonic valve, and into the pulmonary artery..."
+%
+%   left_atrium → pulmonary_veins
+%     "...collected by the four pulmonary veins..."
+%
+%   left_ventricle → aortic_valve
+%     "...through the aortic valve."
+%
+% New `heart_chamber_vessel(chamber, vessel)` table decodes those named
+% structures as their own rows -- six in total (right_atrium and
+% right_ventricle each name TWO structures; left_atrium and left_ventricle
+% each name ONE). This is a genuinely different axis from the already-shipped
+% `valve_separates(valve, boundary)` table in `heart-valves.adj`: that table
+% is keyed by VALVE and names the two CHAMBERS it sits between; this table is
+% keyed by CHAMBER and names the VESSEL(S)/VALVE(S) attached to it -- neither
+% schema absorbs the other (`valve_separates` never mentions the vena cavae or
+% the pulmonary veins at all, since those are vessels, not valves). Recall is
+% a binding query:
+%
+%     ? heart_chamber_vessel(left_ventricle, $Vessel)  % aortic_valve
+%
+% This is a native `table` (ADJ-TABLES RS-5, a TWO-column table like the
+% parent's own): each `row` lowers to a ground relation
+% `heart_chamber_vessel(chamber, vessel)` carrying the citation, so the
+% lookup above is the ordinary SLD binding query -- the engine returns the
+% vessel WITH its source, on the CPU, with zero model calls, and abstains on
+% anything that is not one of the four chambers (it never invents a vessel).
+% The query also runs BACKWARD -- bind a vessel and recall the chamber it
+% connects to:
+%
+%     ? heart_chamber_vessel($C, aortic_valve)  % left_ventricle
+%
+% A recall on `septum` -- a real cardiac structure, but not one of the four
+% chambers -- correctly abstains rather than inventing a connected vessel for
+% it (the same honest-abstention example `heart-chambers.adj`'s own header
+% already uses).
+%
+% Terminology note: `heart-chambers.adj`'s StatPearls source calls the
+% right-ventricle-to-lungs valve the "pulmonic valve" and its downstream
+% vessel the "pulmonary artery" -- different wording from `heart-valves.adj`'s
+% NCI SEER source, which calls the SAME valve "pulmonary" and its downstream
+% vessel the "pulmonary trunk". Both are preserved verbatim per-source rather
+% than homogenized, exactly as `heart-valves.adj`'s own header already does
+% for its own "pulmonary trunk" (not "pulmonary artery") wording.
+%
+% Provenance: reproduces, byte-for-byte, the SAME four spans already quoted
+% inside `heart-chambers.adj`'s own header, from the SAME NIH/NLM StatPearls
+% "Anatomy, Thorax, Heart" page that table already cites -- no new WebFetch,
+% only a different schema decoding a different clause of each already-
+% verified quote. `trust authoritative` -- the same tier the parent table
+% already carries (StatPearls is a primary U.S. government NIH/NLM
+% reference).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
+% ============================================================================
+
+table heart_chamber_vessel {
+    columns chamber, vessel
+
+    row (right_atrium, superior_vena_cava)
+    row (right_atrium, inferior_vena_cava)
+    row (right_ventricle, pulmonic_valve)
+    row (right_ventricle, pulmonary_artery)
+    row (left_atrium, pulmonary_veins)
+    row (left_ventricle, aortic_valve)
+
+    source "The right atrium receives deoxygenated blood from the entire body except for the lungs (the systemic circulation) via the superior and inferior vena cavae."
+    locator "https://www.ncbi.nlm.nih.gov/books/NBK470256/"
+    trust authoritative
+}

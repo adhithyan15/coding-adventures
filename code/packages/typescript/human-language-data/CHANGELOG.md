@@ -2,6 +2,48 @@
 
 ## Unreleased
 
+### Added - source-verified Gujarati આ (HL-C09FH)
+
+- Cite t30apps.com's version-1.0 આ animation and record the full અ sequence before the added trailing ā stem.
+- Preserve the source's two-lift evidence while retaining its explicit warning that the demonstrated order is one variant.
+- Reduce measured HL-C09 debt to 68 entries and queue Gujarati ઇ next.
+
+### Added - source-verified Gujarati અ (HL-C09FG)
+
+- Cite t30apps.com's version-1.0 અ animation and record its joined body before the separately descended right stem.
+- Preserve the source's one-lift evidence while retaining its explicit warning that the demonstrated order is one variant.
+- Reduce measured HL-C09 debt to 69 entries and queue Gujarati આ next.
+
+### Added - source-verified Cyrillic я (HL-C09FF)
+
+- Cite RussianIrina's 12:13–12:21 lowercase я school-hand demonstration and record its one-stroke rise-to-loop-to-leg order.
+- Explain how the curved entry, narrow loop, and slanted leg fit Noto Sans Cyrillic's straight right upright, broad upper bowl, and angular lower-left leg.
+- Reduce measured HL-C09 debt to 70 entries, complete the Cyrillic lowercase inventory, and queue Gujarati next.
+
+### Added - source-verified Cyrillic ю (HL-C09FE)
+
+- Cite RussianIrina's 11:44–11:58 lowercase ю school-hand demonstration and record its one-stroke stem-to-connector-to-oval order.
+- Explain how the looped entry, diagonal connector, and cursive oval fit Noto Sans Cyrillic's straight upright, horizontal middle bar, and wide oval.
+- Reduce measured HL-C09 debt to 71 entries and queue Cyrillic я next.
+
+### Added - source-verified Cyrillic э (HL-C09FD)
+
+- Cite RussianIrina's 11:25–11:32 lowercase э school-hand demonstration and record its outer-before-tongue order and one lift.
+- Explain how the narrow rounded curve and hooked right-to-left tongue fit Noto Sans Cyrillic's broad open-left curve and straight middle bar.
+- Reduce measured HL-C09 debt to 72 entries and queue Cyrillic ю next.
+
+### Added - source-verified Cyrillic ь (HL-C09FC)
+
+- Cite RussianIrina's 11:16–11:20 lowercase ь school-hand demonstration and record its one-stroke, zero-lift stem-before-bowl order.
+- Explain how the narrow handwritten entry and rounded bowl fit Noto Sans Cyrillic's straight upright and wide closed lower bowl.
+- Reduce measured HL-C09 debt to 73 entries and queue Cyrillic э next.
+
+### Added - source-verified Cyrillic ы (HL-C09FB)
+
+- Cite RussianIrina's 10:45–10:56 lowercase ы school-hand demonstration and record its two-stroke, one-lift body-before-right-stem order.
+- Explain how the handwritten narrow entry loop and curled exit fit Noto Sans Cyrillic's straight left upright, wide closed lower bowl, and separate right stem.
+- Reduce measured HL-C09 debt to 74 entries and queue Cyrillic ь next.
+
 ### Added - source-verified Cyrillic ъ (HL-C09FA)
 
 - Cite RussianIrina's 10:34–10:38 lowercase ъ school-hand demonstration and record its one-stroke, zero-lift flag-to-stem-to-bowl order.

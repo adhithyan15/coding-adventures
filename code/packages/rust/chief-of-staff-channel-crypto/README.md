@@ -14,7 +14,9 @@ Messages use XChaCha20-Poly1305 with the canonical 16-byte channel identifier
 followed by the globally monotonic 64-bit sequence as the 24-byte nonce. Their
 canonical, length-framed header is both AEAD additional data and the Ed25519
 signature input. The header includes a SHA-256 plaintext digest, so successful
-decryption also verifies the declared plaintext hash.
+decryption also verifies the declared plaintext hash. Authenticated message
+fields, headers, ciphertext, tags, and signatures are private after construction;
+callers receive only read-only borrowed or copied views.
 
 Secret key material is held in `Zeroizing` containers. Receiver epoch state
 accepts a byte-identical retry of the current grant, rejects conflicts and
@@ -24,6 +26,14 @@ The `wire` module provides bounded, versioned binary records for grants and
 encrypted messages. Its stable storage keys sort messages by sequence and hash
 receiver IDs before putting them into path-like keys, so an external identity
 cannot inject storage path segments.
+
+The `profile` module implements the portable D18F contract on top of those
+unchanged bytes: UUID-v7 and MIME validation, stable cross-language errors,
+canonical lossless JSON, epoch-key resolution, and an injectable monotonic
+UUID-v7 generator. The checked-in fixtures under
+`code/fixtures/chief-of-staff-message/v1` lock the authenticated header, D18M
+record, JSON representation, verification order, and failure taxonomy for
+other language implementations.
 
 This crate deliberately does not implement storage or actor routing. The caller
 must persist a sequence advance before calling message encryption; `SequenceCursor`

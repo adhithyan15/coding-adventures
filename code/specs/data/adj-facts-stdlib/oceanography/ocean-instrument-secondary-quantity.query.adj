@@ -1,0 +1,17 @@
+% ============================================================================
+% ocean-instrument-secondary-quantity.query.adj — worked recall over the
+% ocean-instrument-secondary-quantity library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "besides distance,
+% what else does sonar determine?" (direct) or "which instrument
+% determines an object's orientation?" (reverse) — it states no fact of
+% its own — it only `import`s the grounded table and asks binding
+% queries. An instrument that is not the one tabled here abstains
+% honestly — the engine never invents a second quantity.
+% ============================================================================
+
+import "ocean-instrument-secondary-quantity.adj"
+
+? ocean_instrument_secondary_quantity(sonar, $SecondaryQuantity)              % expect orientation_of_object
+? ocean_instrument_secondary_quantity($Instrument, orientation_of_object)     % reverse bind — expect sonar
+? ocean_instrument_secondary_quantity(tide_gauge, $SecondaryQuantity)         % expect abstain -- the cited tide-gauge span names no second quantity

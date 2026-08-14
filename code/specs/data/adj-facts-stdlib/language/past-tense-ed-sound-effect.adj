@@ -1,0 +1,68 @@
+% ============================================================================
+% past-tense-ed-sound-effect — for the /id/ past-tense -ed sound, the extra
+% pronunciation EFFECT the same already-quoted 7ESL rule states, decoded
+% from a span already sitting unused inside `past-tense-ed-sound.adj`'s own
+% header (adj-facts-stdlib, LANGUAGE).
+% ============================================================================
+% A sibling to the already-shipped `past-tense-ed-sound.adj`
+% (`past_tense_ed_sound(word, sound)`, walked/lived/wanted →
+% t_sound/d_sound/id_sound): that table's own header already quotes,
+% verbatim, the 7ESL rule for the /id/ sound in full --
+%
+%     "Final -ed is pronounced /id/ after 'T', and 'D' sounds. The sound
+%      /id/ adds a whole syllable to a word."
+%
+% -- but the table's `word, sound` schema only had room for the SOUND
+% itself (id_sound), not the second sentence's pronunciation-EFFECT claim
+% (that the /id/ sound adds a whole extra syllable to the word). New
+% `past_tense_ed_sound_effect(sound, effect)` table decodes that second
+% sentence as its own row:
+%
+%   id_sound → adds_a_whole_syllable
+%     "The sound /id/ adds a whole syllable to a word."
+%
+% Recall is a binding query:
+%
+%     ? past_tense_ed_sound_effect(id_sound, $Effect)  % adds_a_whole_syllable
+%
+% This is a native `table` (ADJ-TABLES RS-5, a TWO-column table like the
+% parent's own): the single `row` lowers to a ground relation
+% `past_tense_ed_sound_effect(sound, effect)` carrying the citation, so the
+% lookup above is the ordinary SLD binding query -- the engine returns the
+% effect WITH its source, on the CPU, with zero model calls, and abstains
+% on any sound that is not the one tabled here (it never invents an
+% effect). The query also runs BACKWARD -- bind an effect and recall which
+% sound carries it:
+%
+%     ? past_tense_ed_sound_effect($Sound, adds_a_whole_syllable)  % id_sound
+%
+% This is honestly a ONE-ROW table: of the three -ed sounds the parent
+% table names, only the /id/ rule's own sentence states a pronunciation
+% EFFECT beyond the sound value itself -- the /t/ and /d/ rules each state
+% only which voiced/voiceless sounds trigger them, with no comparable
+% effect clause. A recall on either of those two real, already-tabled
+% sounds -- `t_sound` (walked's rule: "Final -ed is pronounced /t/ after
+% all voiceless sounds.", no effect stated) -- correctly abstains rather
+% than inventing an effect for it.
+%
+% Provenance: reproduces, byte-for-byte, the SAME span already quoted
+% inside `past-tense-ed-sound.adj`'s own header (its worked-examples
+% table, "rule (verbatim)" column, wanted/id_sound row), from the SAME
+% 7ESL "Pronunciation of ED" article that table already cites -- no new
+% WebFetch, only a different schema decoding a part of that
+% already-verified quote. `trust consensus` -- the same tier the parent
+% table already carries (a general ESL-learning site, not a primary
+% government or research-institution source).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table past_tense_ed_sound_effect {
+    columns sound, effect
+
+    row (id_sound, adds_a_whole_syllable)
+
+    source "The sound /id/ adds a whole syllable to a word."
+    locator "https://7esl.com/pronunciation-of-ed/"
+    trust consensus
+}

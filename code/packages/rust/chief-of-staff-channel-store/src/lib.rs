@@ -8,6 +8,9 @@
 #![forbid(unsafe_code)]
 #![deny(missing_docs)]
 
+/// Portable D18P state/cursor codecs and stable failure classification.
+pub mod profile;
+
 use chief_of_staff_channel_crypto::wire::{
     decode_key_grant, decode_message, decode_message_header, encode_key_grant, encode_message,
     encode_message_header, key_grant_record_key, message_record_key, message_record_prefix,
@@ -255,15 +258,15 @@ impl<'a> ChannelStore<'a> {
                 .map(Sequence)
                 .ok_or(ChannelCryptoError::SequenceExhausted)?;
             let header = prepare_message_header(
-                MessageFields {
-                    message_id: request.message_id,
-                    timestamp_ns: request.timestamp_ns,
-                    originator_id: request.originator_id.clone(),
-                    channel_id: self.channel_id,
-                    sequence: state.next_sequence,
-                    key_epoch: request.key_epoch,
-                    content_type: request.content_type.clone(),
-                },
+                MessageFields::new(
+                    request.message_id,
+                    request.timestamp_ns,
+                    request.originator_id.clone(),
+                    self.channel_id,
+                    state.next_sequence,
+                    request.key_epoch,
+                    request.content_type.clone(),
+                ),
                 plaintext,
             );
             let updated = ChannelState {
@@ -296,7 +299,7 @@ impl<'a> ChannelStore<'a> {
         cmk: &ChannelMasterKey,
         signing_key: &OriginatorSigningKey,
     ) -> Result<EncryptedMessage, ChannelStoreError> {
-        if header.fields.channel_id != self.channel_id {
+        if header.fields().channel_id() != self.channel_id {
             return Err(ChannelStoreError::PendingHeaderMismatch);
         }
         let state = self.state()?;
@@ -304,13 +307,13 @@ impl<'a> ChannelStore<'a> {
             Some(ref pending) if pending == header => {}
             Some(_) => return Err(ChannelStoreError::PendingHeaderMismatch),
             None => {
-                let key = message_record_key(self.channel_id, header.fields.sequence);
+                let key = message_record_key(self.channel_id, header.fields().sequence());
                 let Some(record) = self.backend.get(CHANNEL_STORAGE_NAMESPACE, &key)? else {
                     return Err(ChannelStoreError::NoPendingAppend);
                 };
                 require_content_type(&record, MESSAGE_CONTENT_TYPE)?;
                 let stored = decode_message(&record.body)?;
-                if stored.header != *header {
+                if stored.header() != header {
                     return Err(ChannelStoreError::ConflictingRecord("message"));
                 }
                 let expected =
@@ -325,7 +328,7 @@ impl<'a> ChannelStore<'a> {
         let message = encrypt_message_with_header(header.clone(), plaintext, cmk, signing_key)?;
         let encoded = encode_message(&message)?;
         self.put_idempotent(
-            message_record_key(self.channel_id, header.fields.sequence),
+            message_record_key(self.channel_id, header.fields().sequence()),
             MESSAGE_CONTENT_TYPE,
             encoded,
             "message",
@@ -408,16 +411,17 @@ impl<'a> ChannelStore<'a> {
         for record in page.records {
             require_content_type(&record, MESSAGE_CONTENT_TYPE)?;
             let message = decode_message(&record.body)?;
-            if message.header.fields.channel_id != self.channel_id
-                || message.header.fields.sequence < start
-                || record.key != message_record_key(self.channel_id, message.header.fields.sequence)
+            if message.header().fields().channel_id() != self.channel_id
+                || message.header().fields().sequence() < start
+                || record.key
+                    != message_record_key(self.channel_id, message.header().fields().sequence())
             {
                 return Err(ChannelStoreError::CorruptRecord(
                     "message body does not match storage key",
                 ));
             }
             if messages.last().is_some_and(|previous: &EncryptedMessage| {
-                previous.header.fields.sequence >= message.header.fields.sequence
+                previous.header().fields().sequence() >= message.header().fields().sequence()
             }) {
                 return Err(ChannelStoreError::CorruptRecord(
                     "message records are not strictly ordered",
@@ -430,7 +434,7 @@ impl<'a> ChannelStore<'a> {
                 "backend returned an empty page with a continuation",
             ))?;
             Some(Sequence(
-                last.header.fields.sequence.0.checked_add(1).ok_or(
+                last.header().fields().sequence().0.checked_add(1).ok_or(
                     ChannelStoreError::CorruptRecord("message continuation exceeds sequence range"),
                 )?,
             ))
@@ -482,9 +486,9 @@ impl<'a> ChannelStore<'a> {
             });
         }
         if let Some(pending) = state.pending_header {
-            if acknowledged >= pending.fields.sequence {
+            if acknowledged >= pending.fields().sequence() {
                 return Err(ChannelStoreError::AcknowledgementPending {
-                    pending: pending.fields.sequence,
+                    pending: pending.fields().sequence(),
                     attempted: acknowledged,
                 });
             }
@@ -737,8 +741,8 @@ fn decode_state(bytes: &[u8], channel_id: ChannelId) -> Result<ChannelState, Cha
         }
     };
     if let Some(header) = &pending_header {
-        if header.fields.channel_id != channel_id
-            || header.fields.sequence.0.checked_add(1).map(Sequence) != Some(next_sequence)
+        if header.fields().channel_id() != channel_id
+            || header.fields().sequence().0.checked_add(1).map(Sequence) != Some(next_sequence)
         {
             return Err(ChannelStoreError::CorruptRecord(
                 "pending header violates channel sequence state",
@@ -820,7 +824,7 @@ mod tests {
         let store = ChannelStore::new(&backend, channel_id());
         assert_eq!(store.initialize().unwrap().next_sequence, Sequence(0));
         let header = store.reserve_append(request(1), b"hello").unwrap();
-        assert_eq!(header.fields.sequence, Sequence(0));
+        assert_eq!(header.fields().sequence(), Sequence(0));
         assert_eq!(store.state().unwrap().pending_header, Some(header.clone()));
         assert!(backend
             .get(
@@ -884,7 +888,7 @@ mod tests {
         backend
             .put(
                 put_input(
-                    message_record_key(channel_id(), header.fields.sequence),
+                    message_record_key(channel_id(), header.fields().sequence()),
                     MESSAGE_CONTENT_TYPE,
                     encode_message(&written).unwrap(),
                 )
@@ -943,7 +947,7 @@ mod tests {
         let committed = store
             .append(request(4), b"kept", &cmk, &signing_key)
             .unwrap();
-        assert_eq!(committed.header.fields.sequence, Sequence(1));
+        assert_eq!(committed.header().fields().sequence(), Sequence(1));
         let page = store.read_messages(Sequence(0), 10).unwrap();
         assert!(page.messages == vec![committed]);
         assert_eq!(page.next_start, None);
@@ -965,7 +969,7 @@ mod tests {
             first
                 .messages
                 .iter()
-                .map(|message| message.header.fields.sequence)
+                .map(|message| message.header().fields().sequence())
                 .collect::<Vec<_>>(),
             vec![Sequence(0), Sequence(1)]
         );
@@ -977,9 +981,9 @@ mod tests {
         assert_eq!(store.receiver_cursor(b"receiver").unwrap(), Sequence(2));
         assert_eq!(
             store.read_for_receiver(b"receiver", 2).unwrap().messages[0]
-                .header
-                .fields
-                .sequence,
+                .header()
+                .fields()
+                .sequence(),
             Sequence(2)
         );
         assert!(matches!(

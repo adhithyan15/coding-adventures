@@ -918,7 +918,8 @@ backend immediately) come before the enabler-dependent items.
   that same bare dependency. One additional bounded dependency level permits
   an unchanged known scalar predicate to select the preserving leaf of such a
   dependency assignment. A second bounded level may follow another stable
-  known selector in the same way; cyclic and deeper proofs fail closed. Computed
+  known selector in the same way, and third through ninth bounded levels
+  follow the same finite rule; cyclic and deeper proofs fail closed. Computed
   selector assignments, differing,
   computed, or otherwise
   unsupported selector-dependency writes, dynamically selected differing selector leaves,

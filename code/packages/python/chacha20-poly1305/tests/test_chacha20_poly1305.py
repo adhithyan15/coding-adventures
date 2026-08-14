@@ -20,7 +20,11 @@ from coding_adventures_chacha20_poly1305 import (
     aead_decrypt,
     aead_encrypt,
     chacha20_encrypt,
+    hchacha20_subkey,
     poly1305_mac,
+    xchacha20_encrypt,
+    xchacha20_poly1305_aead_decrypt,
+    xchacha20_poly1305_aead_encrypt,
 )
 
 # ===================================================================
@@ -90,6 +94,27 @@ AEAD_EXPECTED_CT = hex2bytes(
     "6116"
 )
 AEAD_EXPECTED_TAG = hex2bytes("1ae10b594f09e26a7e902ecbd0600691")
+
+# --- XChaCha20-Poly1305 (draft-irtf-cfrg-xchacha-03) ---
+XCHACHA_KEY = hex2bytes(
+    "808182838485868788898a8b8c8d8e8f"
+    "909192939495969798999a9b9c9d9e9f"
+)
+XCHACHA_NONCE = hex2bytes(
+    "404142434445464748494a4b4c4d4e4f5051525354555657"
+)
+XCHACHA_AAD = hex2bytes("50515253c0c1c2c3c4c5c6c7")
+XCHACHA_EXPECTED_CT = hex2bytes(
+    "bd6d179d3e83d43b9576579493c0e939"
+    "572a1700252bfaccbed2902c21396cbb"
+    "731c7f1b0b4aa6440bf3a82f4eda7e39"
+    "ae64c6708c54c216cb96b72e1213b452"
+    "2f8c9ba40db5d945b11b69b982c1bb9e"
+    "3f3fac2bc369488f76b2383565d3fff9"
+    "21f9664c97637da9768812f615c68b13"
+    "b52e"
+)
+XCHACHA_EXPECTED_TAG = hex2bytes("c0875924c1c7987947deafd8780acf49")
 
 
 # ===================================================================
@@ -429,3 +454,131 @@ class TestAEAD:
         ct, tag = aead_encrypt(plaintext, key, nonce, b"")
         pt = aead_decrypt(ct, key, nonce, b"", tag)
         assert pt == plaintext
+
+
+# ===================================================================
+# SE04 HChaCha20 and XChaCha20-Poly1305 Tests
+# ===================================================================
+
+class TestHChaCha20:
+    """SE04 HChaCha20 subkey derivation tests."""
+
+    def test_draft_section_2_2_1_vector(self) -> None:
+        key = hex2bytes(
+            "000102030405060708090a0b0c0d0e0f"
+            "101112131415161718191a1b1c1d1e1f"
+        )
+        nonce = hex2bytes("000000090000004a0000000031415927")
+        expected = hex2bytes(
+            "82413b4227b27bfed30e42508a877d73"
+            "a0f9e4d58a74a853c12ec41326d3ecdc"
+        )
+
+        assert hchacha20_subkey(key, nonce) == expected
+
+    def test_invalid_lengths(self) -> None:
+        with pytest.raises(ValueError, match="Key must be 32 bytes"):
+            hchacha20_subkey(b"short", bytes(16))
+        with pytest.raises(ValueError, match="nonce must be 16 bytes"):
+            hchacha20_subkey(bytes(32), b"short")
+
+
+class TestXChaCha20:
+    """Raw SE04 stream-cipher tests."""
+
+    @pytest.mark.parametrize("counter", [0, 1])
+    def test_round_trip(self, counter: int) -> None:
+        plaintext = b"raw XChaCha20 spans more than one block: " + bytes(range(96))
+        ciphertext = xchacha20_encrypt(
+            plaintext, XCHACHA_KEY, XCHACHA_NONCE, counter,
+        )
+
+        assert ciphertext != plaintext
+        assert xchacha20_encrypt(
+            ciphertext, XCHACHA_KEY, XCHACHA_NONCE, counter,
+        ) == plaintext
+
+    def test_invalid_lengths(self) -> None:
+        with pytest.raises(ValueError, match="Key must be 32 bytes"):
+            xchacha20_encrypt(b"data", b"short", bytes(24))
+        with pytest.raises(ValueError, match="Nonce must be 24 bytes"):
+            xchacha20_encrypt(b"data", bytes(32), b"short")
+
+
+class TestXChaCha20Poly1305:
+    """SE04 extended-nonce AEAD conformance and failure tests."""
+
+    def test_draft_appendix_a_3_1_encrypt(self) -> None:
+        ciphertext, tag = xchacha20_poly1305_aead_encrypt(
+            AEAD_PLAINTEXT, XCHACHA_KEY, XCHACHA_NONCE, XCHACHA_AAD,
+        )
+
+        assert ciphertext == XCHACHA_EXPECTED_CT
+        assert tag == XCHACHA_EXPECTED_TAG
+
+    def test_draft_appendix_a_3_1_decrypt(self) -> None:
+        plaintext = xchacha20_poly1305_aead_decrypt(
+            XCHACHA_EXPECTED_CT,
+            XCHACHA_KEY,
+            XCHACHA_NONCE,
+            XCHACHA_AAD,
+            XCHACHA_EXPECTED_TAG,
+        )
+
+        assert plaintext == AEAD_PLAINTEXT
+
+    def test_each_tag_byte_is_authenticated(self) -> None:
+        for index in range(16):
+            tampered_tag = bytearray(XCHACHA_EXPECTED_TAG)
+            tampered_tag[index] ^= 0x01
+            with pytest.raises(ValueError, match="Authentication failed"):
+                xchacha20_poly1305_aead_decrypt(
+                    XCHACHA_EXPECTED_CT,
+                    XCHACHA_KEY,
+                    XCHACHA_NONCE,
+                    XCHACHA_AAD,
+                    bytes(tampered_tag),
+                )
+
+    @pytest.mark.parametrize("changed_input", ["ciphertext", "aad", "nonce", "key"])
+    def test_changed_authenticated_inputs_fail(self, changed_input: str) -> None:
+        ciphertext = bytearray(XCHACHA_EXPECTED_CT)
+        key = bytearray(XCHACHA_KEY)
+        nonce = bytearray(XCHACHA_NONCE)
+        aad = bytearray(XCHACHA_AAD)
+        values = {
+            "ciphertext": ciphertext,
+            "aad": aad,
+            "nonce": nonce,
+            "key": key,
+        }
+        values[changed_input][0] ^= 0x01
+
+        with pytest.raises(ValueError, match="Authentication failed"):
+            xchacha20_poly1305_aead_decrypt(
+                bytes(ciphertext),
+                bytes(key),
+                bytes(nonce),
+                bytes(aad),
+                XCHACHA_EXPECTED_TAG,
+            )
+
+    @pytest.mark.parametrize("plaintext", [b"", bytes(range(256)) * 4])
+    def test_empty_and_multi_block_round_trip(self, plaintext: bytes) -> None:
+        ciphertext, tag = xchacha20_poly1305_aead_encrypt(
+            plaintext, XCHACHA_KEY, XCHACHA_NONCE, b"context",
+        )
+
+        assert xchacha20_poly1305_aead_decrypt(
+            ciphertext, XCHACHA_KEY, XCHACHA_NONCE, b"context", tag,
+        ) == plaintext
+
+    def test_invalid_lengths(self) -> None:
+        with pytest.raises(ValueError, match="Key must be 32 bytes"):
+            xchacha20_poly1305_aead_encrypt(b"data", b"short", bytes(24))
+        with pytest.raises(ValueError, match="Nonce must be 24 bytes"):
+            xchacha20_poly1305_aead_encrypt(b"data", bytes(32), b"short")
+        with pytest.raises(ValueError, match="Tag must be 16 bytes"):
+            xchacha20_poly1305_aead_decrypt(
+                b"data", bytes(32), bytes(24), b"", b"short",
+            )

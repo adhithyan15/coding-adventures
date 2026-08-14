@@ -1,0 +1,80 @@
+% ============================================================================
+% rock-type-formation-component — for two of the three basic rock types, the
+% INDIVIDUAL material(s) or agent(s) an already-cited USGS sentence lists as
+% forming it, decoded one-per-row (adj-facts-stdlib, GEOLOGY).
+% ============================================================================
+% A sibling to the already-shipped `rock-type.adj`
+% (`rock_type(rock, formation_process)`, the process by which each of the
+% three basic rock classes forms — igneous → crystallized_molten_rock,
+% sedimentary → deposited_weathered_material, metamorphic →
+% heat_and_pressure_transformation). Two of that table's own three per-row
+% USGS quotes each list MORE than one material/agent, joined by an
+% exhaustive "or" or comma-separated list — a fact the single
+% `formation_process` atom folded into one compound label, with no room to
+% decode each listed item as its own queryable fact:
+%
+%   sedimentary (two alternatives joined by "or"):
+%     "Sedimentary rocks are formed from pre-existing rocks or pieces of
+%      once-living organisms."
+%
+%   metamorphic (three agents, comma-listed then "or"):
+%     "Metamorphic rocks form when rocks are subjected to high heat, high
+%      pressure, hot mineral-rich fluids or, more commonly, some
+%      combination of these factors."
+%     (the trailing "some combination of these factors" is the source's
+%      own meta-commentary about the list, not a fourth named agent, so it
+%      is not carried as a row)
+%
+% Recall is a binding query:
+%
+%     ? rock_type_formation_component(metamorphic, $Component)
+%       % high_heat, high_pressure, AND hot_mineral_rich_fluids (three answers)
+%
+% This is a native `table` (ADJ-TABLES RS-5, a TWO-column table): each `row`
+% lowers to a ground relation `rock_type_formation_component(rock,
+% component)` carrying the citation, so the lookup above is the ordinary
+% SLD binding query — the engine returns each component WITH its source, on
+% the CPU, with zero model calls, and abstains on a rock type whose own
+% cited span names only ONE material with no listed alternative.
+% `igneous` is deliberately NOT a row here: its own already-quoted span
+% ("hot, molten rock crystallizes and solidifies") names exactly one
+% material — no enumerated "or"/list of alternatives to decode — so this
+% sibling is HONESTLY NARROWER than its parent, grounding exactly the two
+% rock types whose cited spans list more than one component and abstaining
+% on the third, or any other word, rather than inventing one. The query
+% also runs BACKWARD — bind a component and recall which rock type(s) it
+% forms:
+%
+%     ? rock_type_formation_component($Rock, hot_mineral_rich_fluids)
+%       % metamorphic
+%
+% Provenance: reproduces, byte-for-byte, the SAME two USGS sentences
+% `rock-type.adj`'s own header already quotes in full for its sedimentary
+% and metamorphic rows — no new WebFetch, only a different schema decoding
+% each listed component as its own row instead of folding the whole clause
+% into one compound `formation_process` atom. An ADJ `table` carries ONE
+% provenance envelope, so `source`/`locator`/`trust` below hold the
+% sedimentary span (matching `rock-type.adj`'s own convention of listing
+% each row's distinct USGS page in prose); the metamorphic row's own span
+% and locator are listed above for independent auditability. `trust
+% authoritative` — the same tier `rock-type.adj` already carries (USGS, a
+% primary U.S. government science resource).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table rock_type_formation_component {
+    columns rock, component
+
+    row (sedimentary, pre_existing_rocks)
+    row (sedimentary, pieces_of_once_living_organisms)
+    row (metamorphic, high_heat)
+    row (metamorphic, high_pressure)
+    row (metamorphic, hot_mineral_rich_fluids)
+
+    source "Sedimentary rocks are formed from pre-existing rocks or pieces of once-living organisms."
+    locator "https://www.usgs.gov/faqs/what-are-sedimentary-rocks"
+    trust authoritative
+
+    cites "Metamorphic rocks form when rocks are subjected to high heat, high pressure, hot mineral-rich fluids or, more commonly, some combination of these factors." locator "https://www.usgs.gov/faqs/what-are-metamorphic-rocks"
+}

@@ -6,3 +6,4 @@ description = "ChaCha20-Poly1305 (RFC 8439) and XChaCha20-Poly1305 (draft-irtf-c
 
 [dev-dependencies]
 hex = "0.4"
+serde_json = "1"

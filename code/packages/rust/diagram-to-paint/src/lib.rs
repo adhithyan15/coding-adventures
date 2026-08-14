@@ -728,23 +728,90 @@ where
                 from_x,
                 from_y,
                 to_x,
+                to_y,
                 width,
                 color,
-                ..
             } => {
-                instructions.push(PaintInstruction::Rect(PaintRect {
+                let control_x = (from_x + to_x) / 2.0;
+                instructions.push(PaintInstruction::Path(PaintPath {
                     base: PaintBase::default(),
-                    x: *from_x,
-                    y: *from_y,
-                    width: to_x - from_x,
-                    height: *width,
+                    commands: vec![
+                        PathCommand::MoveTo {
+                            x: *from_x,
+                            y: *from_y,
+                        },
+                        PathCommand::CubicTo {
+                            cx1: control_x,
+                            cy1: *from_y,
+                            cx2: control_x,
+                            cy2: *to_y,
+                            x: *to_x,
+                            y: *to_y,
+                        },
+                        PathCommand::LineTo {
+                            x: *to_x,
+                            y: to_y + width,
+                        },
+                        PathCommand::CubicTo {
+                            cx1: control_x,
+                            cy1: to_y + width,
+                            cx2: control_x,
+                            cy2: from_y + width,
+                            x: *from_x,
+                            y: from_y + width,
+                        },
+                        PathCommand::Close,
+                    ],
                     fill: Some(color.clone()),
+                    fill_rule: None,
                     stroke: None,
                     stroke_width: None,
-                    corner_radius: None,
+                    stroke_cap: None,
+                    stroke_join: None,
                     stroke_dash: None,
                     stroke_dash_offset: None,
                 }));
+            }
+            LayoutedChartItem::SankeyNode {
+                x,
+                y,
+                width,
+                height,
+                color,
+                label,
+            } => {
+                instructions.push(PaintInstruction::Rect(PaintRect {
+                    base: PaintBase::default(),
+                    x: *x,
+                    y: *y,
+                    width: *width,
+                    height: *height,
+                    fill: Some(color.clone()),
+                    stroke: Some("#ffffff".into()),
+                    stroke_width: Some(1.0),
+                    corner_radius: Some(1.0),
+                    stroke_dash: None,
+                    stroke_dash_offset: None,
+                }));
+                let label_x = if *x > diagram.width / 2.0 {
+                    x - 124.0
+                } else {
+                    x + width + 4.0
+                };
+                text_children.push(text_node(
+                    label,
+                    label_x,
+                    y + height / 2.0 - ls / 2.0,
+                    120.0,
+                    ls * 1.2,
+                    lf.clone(),
+                    Color {
+                        r: 31,
+                        g: 41,
+                        b: 55,
+                        a: 255,
+                    },
+                ));
             }
             LayoutedChartItem::QuadrantRegion {
                 x,

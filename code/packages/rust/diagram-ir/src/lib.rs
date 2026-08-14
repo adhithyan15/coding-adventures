@@ -583,6 +583,7 @@ pub struct ChartDiagram {
     pub accessibility_title: Option<String>,
     pub accessibility_description: Option<String>,
     pub kind: ChartKind,
+    pub show_data: bool,
     pub x_axis: Option<Axis>,
     pub y_axis: Option<Axis>,
     pub series: Vec<ChartSeries>,
@@ -662,6 +663,14 @@ pub enum LayoutedChartItem {
         to_y: f64,
         width: f64,
         color: String,
+    },
+    SankeyNode {
+        x: f64,
+        y: f64,
+        width: f64,
+        height: f64,
+        color: String,
+        label: String,
     },
     QuadrantRegion {
         x: f64,
@@ -1372,6 +1381,7 @@ mod tests {
             accessibility_title: None,
             accessibility_description: None,
             kind: ChartKind::Xy,
+            show_data: false,
             x_axis: None,
             y_axis: None,
             series: vec![ChartSeries {

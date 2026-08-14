@@ -1,0 +1,67 @@
+% ============================================================================
+% morse-code-origin — the code system Morse code's letter/pattern table is
+% built from → who proposed the much-improved code it derives from and when,
+% decoded from a span already sitting unused inside the SAME source
+% `morse-code.adj` already cites (adj-facts-stdlib, LANGUAGE).
+% ============================================================================
+% A sibling to the already-shipped `morse-code.adj` (`morse_code(letter,
+% pattern)`) and `morse-code-standard.adj` (`morse_code_standard(code_system,
+% standard_id)`): a new `morse_code_origin(code_system, originator, year)`
+% table names who proposed the improved code the international standard was
+% derived from, and when, decoded from a clause already sitting unused
+% inside `morse-code.adj`'s own `source` field -- no new WebFetch. That
+% table's schema has room for only a letter and its pattern; the
+% already-quoted sentence also names the originator and year, which never
+% made it into a row:
+%
+%   international_morse_code → friedrich_gerke, 1848
+%     "The Morse code, as specified in the current international standard,
+%      International Morse Code Recommendation, ITU-R M.1677-1, was derived
+%      from a much-improved proposal by Friedrich Gerke in 1848."
+%
+% Recall is a binding query:
+%
+%     ? morse_code_origin(international_morse_code, $Originator, $Year)  % friedrich_gerke, 1848
+%
+% This is a native `table` (ADJ-TABLES RS-5, a THREE-column table -- the
+% quoted sentence names two distinct facts about the origin, originator AND
+% year, that belong together as one event rather than two separate sibling
+% tables): the single `row` lowers to a ground relation
+% `morse_code_origin(code_system, originator, year)` carrying the citation,
+% so the lookup above is the ordinary SLD binding query -- the engine
+% returns the originator and year WITH their source, on the CPU, with zero
+% model calls, and abstains on any code system that is not the one tabled
+% here (it never invents an originator or year). The query also runs
+% BACKWARD -- bind an originator and recall which code system they proposed:
+%
+%     ? morse_code_origin($CodeSystem, friedrich_gerke, $Year)  % international_morse_code, 1848
+%
+% This is honestly a ONE-ROW table: the already-quoted sentence names
+% exactly one code system's origin story. A recall on a different, real
+% code system this quote does NOT name -- `american_morse_code`, a
+% historically distinct Morse variant used on US telegraph lines before the
+% international standard, the same abstention target `morse-code-standard.
+% adj` already uses -- correctly abstains rather than inventing an
+% originator or year for it.
+%
+% Provenance: reproduces, byte-for-byte, the SAME span already quoted inside
+% `morse-code.adj`'s own `source` field (and already reused, verbatim, by
+% the sibling `morse-code-standard.adj`), from the SAME Wikipedia "Morse
+% code" article that table already cites -- no new WebFetch, only a
+% different schema decoding a different part of that already-verified
+% quote. `trust consensus` -- the same tier both siblings already carry (an
+% encyclopedia reproducing the ITU chart is a secondary reference, not the
+% primary ITU document itself).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table morse_code_origin {
+    columns code_system, originator, year
+
+    row (international_morse_code, friedrich_gerke, 1848)
+
+    source "The Morse code, as specified in the current international standard, International Morse Code Recommendation, ITU-R M.1677-1, was derived from a much-improved proposal by Friedrich Gerke in 1848."
+    locator "https://en.wikipedia.org/wiki/Morse_code"
+    trust consensus
+}

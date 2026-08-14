@@ -1,0 +1,17 @@
+% ============================================================================
+% ocean-current-surface-position.query.adj — worked recall over the
+% ocean-current-surface-position library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "where do
+% wind-driven currents occur?" (direct) or "which current type occurs at
+% or near the ocean's surface?" (reverse) — it states no fact of its own
+% — it only `import`s the grounded table and asks binding queries. A
+% current type that is not the one tabled here abstains honestly — the
+% engine never invents a position.
+% ============================================================================
+
+import "ocean-current-surface-position.adj"
+
+? ocean_current_surface_position(wind_driven_currents, $Position)                          % expect at_or_near_the_oceans_surface
+? ocean_current_surface_position($CurrentType, at_or_near_the_oceans_surface)               % reverse bind — expect wind_driven_currents
+? ocean_current_surface_position(thermohaline_circulation, $Position)                       % expect abstain -- the cited thermohaline span names no position

@@ -1,0 +1,8 @@
+[package]
+name = "nut-protocol"
+version = "0.1.0"
+edition = "2021"
+description = "Strict bounded Network UPS Tools LIST VAR framing"
+license = "MIT"
+
+[dependencies]

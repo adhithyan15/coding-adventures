@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "sources": [
+    "packages/mermaid/src/diagrams/pie/pie.spec.ts",
+    "packages/parser/src/language/pie/pie.langium",
+    "packages/mermaid/src/docs/syntax/pie.md"
+  ],
+  "valid": [
+    { "id": "simple", "source": "pie\n\"ash\": 100" },
+    { "id": "multiple-sections", "source": "pie\n\"ash\" : 60\n\"bat\" : 40" },
+    { "id": "show-data", "source": "pie showData\n\"ash\" : 60\n\"bat\" : 40" },
+    { "id": "comments", "source": "pie\n%% comments\n\"ash\" : 60\n\"bat\" : 40" },
+    { "id": "title", "source": "pie title a 60/40 pie\n\"ash\" : 60\n\"bat\" : 40" },
+    { "id": "accessibility", "source": "pie title a neat chart\naccTitle: a neat acc title\naccDescr: a neat description\n\"ash\" : 60\n\"bat\" : 40" },
+    { "id": "multiline-accessibility", "source": "pie title a neat chart\naccDescr {\na neat description\non multiple lines\n}\n\"ash\" : 60\n\"bat\" : 40" },
+    { "id": "positive-decimal", "source": "pie\n\"ash\" : 60.67\n\"bat\" : 40" },
+    { "id": "zero", "source": "pie\n\"dogs\" : 0\n\"rats\" : 40.12" },
+    { "id": "unsafe-properties", "source": "pie title Unsafe props test\n\"__proto__\" : 386\n\"constructor\" : 85\n\"prototype\" : 15" }
+  ],
+  "invalid": [
+    { "id": "missing-header", "source": "\"ash\": 100" },
+    { "id": "unquoted-label", "source": "pie\nash: 100" },
+    { "id": "missing-colon", "source": "pie\n\"ash\" 100" },
+    { "id": "missing-value", "source": "pie\n\"ash\":" },
+    { "id": "negative-integer", "source": "pie\n\"ash\": -60" },
+    { "id": "negative-decimal", "source": "pie\n\"ash\": -60.67" },
+    { "id": "unknown-statement", "source": "pie\nbogus" }
+  ]
+}

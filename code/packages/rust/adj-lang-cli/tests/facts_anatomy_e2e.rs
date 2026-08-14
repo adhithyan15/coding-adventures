@@ -68,3 +68,30 @@ fn anatomy_body_counts_recall_binds_count_with_citation() {
     // fabricated count.
     assert!(out.contains("\"abstained\":true"), "unknown structure abstains: {out}");
 }
+
+#[test]
+fn anatomy_body_counts_hand_bone_group_extension() {
+    // EXTENDED this cycle with the three hand-bone GROUP counts, reusing the
+    // same already-cited NCBI-Bookshelf sentence `hand-bones.adj` already
+    // ships in its own header (no new WebFetch) — a sibling fact decoded
+    // from a different clause of that same quote (HOW MANY bones per
+    // group, not WHERE the group sits).
+    let dir = scratch("handbonecounts");
+    let src = facts_stdlib().join("anatomy/body-counts.adj");
+    std::fs::copy(&src, dir.join("body-counts.adj")).expect("copy shipped body-counts.adj");
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"body-counts.adj\"\n\
+         ? body_count(carpals, $N)\n\
+         ? body_count(metacarpals, $N)\n\
+         ? body_count(phalanges, $N)\n",
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    // 8 carpal bones, 5 metacarpal bones, 14 phalanges.
+    assert!(out.contains("\"N\":\"8\""), "carpals → 8: {out}");
+    assert!(out.contains("\"N\":\"5\""), "metacarpals → 5: {out}");
+    assert!(out.contains("\"N\":\"14\""), "phalanges → 14: {out}");
+}

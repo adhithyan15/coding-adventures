@@ -1,0 +1,17 @@
+% ============================================================================
+% morse-code-standard.query.adj — worked recall over the
+% morse-code-standard library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what standard
+% specifies International Morse code?" (direct) or "which code system
+% does ITU-R M.1677-1 specify?" (reverse) — it states no fact of its own
+% — it only `import`s the grounded table and asks binding queries. A
+% code system that is not the one tabled here abstains honestly — the
+% engine never invents a standard ID.
+% ============================================================================
+
+import "morse-code-standard.adj"
+
+? morse_code_standard(international_morse_code, $StandardId)   % expect itu_r_m_1677_1
+? morse_code_standard($CodeSystem, itu_r_m_1677_1)              % reverse bind — expect international_morse_code
+? morse_code_standard(american_morse_code, $StandardId)         % expect abstain -- a real, distinct historical Morse variant, but not named in the cited span

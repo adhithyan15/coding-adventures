@@ -8,6 +8,9 @@
 #![forbid(unsafe_code)]
 #![deny(missing_docs)]
 
+/// Portable D18P definition codec and stable endpoint failure classification.
+pub mod profile;
+
 use std::collections::BTreeMap;
 
 use chief_of_staff_channel_crypto::wire::{
@@ -587,7 +590,7 @@ impl<'a> DurableOriginator<'a> {
         )?;
         Ok(PublishedMessage {
             message_id: metadata.message_id,
-            sequence: message.header.fields.sequence,
+            sequence: message.header().fields().sequence(),
             timestamp_ns: metadata.timestamp_ns,
         })
     }
@@ -708,37 +711,37 @@ impl<'a> DurableReceiver<'a> {
         let mut delivered = Vec::with_capacity(page.messages.len());
         let store = ChannelStore::new(self.backend, self.definition.channel_id);
         for encrypted in page.messages {
-            let fields = &encrypted.header.fields;
-            if fields.channel_id != self.definition.channel_id
-                || fields.originator_id != self.definition.originator.agent_id.0
-                || fields.key_epoch > self.definition.key_epoch
+            let fields = encrypted.header().fields();
+            if fields.channel_id() != self.definition.channel_id
+                || fields.originator_id() != self.definition.originator.agent_id.as_bytes()
+                || fields.key_epoch() > self.definition.key_epoch
             {
                 return Err(ChannelEndpointError::UnauthorizedMessage);
             }
-            if self.epoch_keys.epoch_key(fields.key_epoch).is_none() {
+            if self.epoch_keys.epoch_key(fields.key_epoch()).is_none() {
                 let grant = store
-                    .key_grant(fields.key_epoch, self.receiver_id.as_bytes())?
-                    .ok_or(ChannelEndpointError::MissingKeyGrant(fields.key_epoch))?;
+                    .key_grant(fields.key_epoch(), self.receiver_id.as_bytes())?
+                    .ok_or(ChannelEndpointError::MissingKeyGrant(fields.key_epoch()))?;
                 self.epoch_keys.install_grant(grant)?;
             }
             let key = self
                 .epoch_keys
-                .epoch_key(fields.key_epoch)
-                .ok_or(ChannelEndpointError::MissingKeyGrant(fields.key_epoch))?;
+                .epoch_key(fields.key_epoch())
+                .ok_or(ChannelEndpointError::MissingKeyGrant(fields.key_epoch()))?;
             let payload = decrypt_message(&encrypted, key, &self.definition.originator.public_key)?;
-            let message_id = MessageId::from_uuid_v7(fields.message_id)?;
+            let message_id = MessageId::from_uuid_v7(fields.message_id())?;
             if self
                 .delivered
-                .insert(message_id, fields.sequence)
-                .is_some_and(|previous| previous != fields.sequence)
+                .insert(message_id, fields.sequence())
+                .is_some_and(|previous| previous != fields.sequence())
             {
                 return Err(ChannelEndpointError::UnauthorizedMessage);
             }
             delivered.push(ReceivedMessage {
                 message_id,
-                sequence: fields.sequence,
-                timestamp_ns: fields.timestamp_ns,
-                content_type: fields.content_type.clone(),
+                sequence: fields.sequence(),
+                timestamp_ns: fields.timestamp_ns(),
+                content_type: fields.content_type().to_owned(),
                 payload,
             });
         }

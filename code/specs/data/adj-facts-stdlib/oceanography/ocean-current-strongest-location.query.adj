@@ -1,0 +1,17 @@
+% ============================================================================
+% ocean-current-strongest-location.query.adj — worked recall over the
+% ocean-current-strongest-location library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "where are tidal
+% currents strongest?" (direct) or "which current type is strongest near
+% the shore and in bays and estuaries?" (reverse) — it states no fact of
+% its own — it only `import`s the grounded table and asks binding
+% queries. A current type that is not the one tabled here abstains
+% honestly — the engine never invents a location.
+% ============================================================================
+
+import "ocean-current-strongest-location.adj"
+
+? ocean_current_strongest_location(tidal_currents, $Location)                                                        % expect near_the_shore_and_in_bays_and_estuaries_along_the_coast
+? ocean_current_strongest_location($CurrentType, near_the_shore_and_in_bays_and_estuaries_along_the_coast)           % reverse bind — expect tidal_currents
+? ocean_current_strongest_location(thermohaline_circulation, $Location)                                              % expect abstain -- the cited thermohaline span names no location

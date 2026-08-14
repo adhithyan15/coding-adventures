@@ -1,0 +1,69 @@
+% ============================================================================
+% determiner-type-alias — for the demonstrative determiner, the alternate
+% name the same already-quoted Grammarly sentence states, decoded from a
+% span already sitting unused inside `determiner-type.adj`'s own header
+% (adj-facts-stdlib, LANGUAGE).
+% ============================================================================
+% A sibling to the already-shipped `determiner-type.adj`
+% (`determiner_type(type, description)`, article/demonstrative_determiner/
+% distributive_determiner → their own defining sentences): that table's
+% own header already reproduces, verbatim, the Grammarly sentence for the
+% demonstrative determiner in full --
+%
+%     "Demonstrative determiners, also known as demonstrative adjectives,
+%      communicate the placement of a noun in space or time."
+%
+% -- but the table's `type, description` schema only had room for WHAT the
+% demonstrative determiner does, not the parenthetical alias clause naming
+% its ALTERNATE name. New `determiner_type_alias(type, alias)` table
+% decodes that clause as its own row:
+%
+%   demonstrative_determiner → demonstrative_adjective
+%     "Demonstrative determiners, also known as demonstrative adjectives,
+%      ..."
+%
+% Recall is a binding query:
+%
+%     ? determiner_type_alias(demonstrative_determiner, $Alias)  % demonstrative_adjective
+%
+% This is a native `table` (ADJ-TABLES RS-5, a TWO-column table like the
+% parent's own): the single `row` lowers to a ground relation
+% `determiner_type_alias(type, alias)` carrying the citation, so the
+% lookup above is the ordinary SLD binding query -- the engine returns the
+% alias WITH its source, on the CPU, with zero model calls, and abstains
+% on any determiner type that is not the one tabled here (it never invents
+% an alias). The query also runs BACKWARD -- bind an alias and recall
+% which determiner type it names:
+%
+%     ? determiner_type_alias($Type, demonstrative_adjective)  % demonstrative_determiner
+%
+% This is honestly a ONE-ROW table: of the three determiner types the
+% parent table names, only the demonstrative_determiner's own sentence
+% states an alternate name -- the article and distributive_determiner
+% sentences each define their type without naming any alias. A recall on
+% either of those two real, already-tabled types -- `article` (whose own
+% sentence: "An article is a determiner that precedes a noun or noun
+% phrase and identifies it as either specific or nonspecific.", no alias
+% stated) -- correctly abstains rather than inventing an alias for it.
+%
+% Provenance: reproduces, byte-for-byte, the SAME span already quoted
+% inside `determiner-type.adj`'s own header (its truth table, "quote
+% (verbatim)" column, demonstrative_determiner row), from the SAME
+% Grammarly "What Are Determiners?" article that table already cites --
+% no new WebFetch, only a different schema decoding a part of that
+% already-verified quote. `trust consensus` -- the same tier the parent
+% table already carries (Grammarly is a reputable secondary reference,
+% not a primary standards body).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table determiner_type_alias {
+    columns type, alias
+
+    row (demonstrative_determiner, demonstrative_adjective)
+
+    source "Demonstrative determiners, also known as demonstrative adjectives, communicate the placement of a noun in space or time."
+    locator "https://www.grammarly.com/blog/grammar/determiners/"
+    trust consensus
+}

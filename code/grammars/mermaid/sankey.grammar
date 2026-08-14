@@ -1,7 +1,7 @@
-# @version 1
+# @version 3
 #
 # Mermaid 11.16.1 Sankey parser grammar.
 
-document = { NEWLINE } HEADER { NEWLINE | row } EOF ;
-row = field COMMA field COMMA NUMBER ;
+document = { NEWLINE } HEADER NEWLINE { NEWLINE } row { NEWLINE { NEWLINE } row } { NEWLINE } EOF ;
+row = [ field ] COMMA [ field ] COMMA field ;
 field = STRING | BARE_FIELD | NUMBER ;

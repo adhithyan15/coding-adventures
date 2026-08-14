@@ -1,0 +1,20 @@
+% ============================================================================
+% precipitation-source-cloud.query — worked recall queries against
+% precipitation-source-cloud.adj (adj-facts-stdlib, METEOROLOGY).
+% ============================================================================
+% Three queries: forward recall with citation, backward recall (bind a
+% cloud, find the precipitation type), and honest abstention on rain (this
+% table only grounds the one precipitation type whose cited span names an
+% originating cloud).
+% ============================================================================
+
+import "precipitation-source-cloud.adj"
+
+% Forward: what cloud does the cited NWS sentence say hail falls from?
+? precipitation_source_cloud(hail, $Cloud)
+
+% Backward: which precipitation type falls from a cumulonimbus cloud?
+? precipitation_source_cloud($Precip, cumulonimbus)
+
+% Honest abstention: rain's cited span names no originating cloud.
+? precipitation_source_cloud(rain, $CloudRain)

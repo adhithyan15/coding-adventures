@@ -737,6 +737,16 @@
       "after": []
     },
     {
+      "id": "ES-PATH-041-SIMPLE-FUTURE",
+      "spine_node": "SPINE-TALK-ABOUT-FUTURE",
+      "lessons": [
+        "ES-C10-futuro-simple"
+      ],
+      "before": [],
+      "inline": [],
+      "after": []
+    },
+    {
       "id": "ES-PATH-003-POSSESSIVE",
       "spine_node": "SPINE-DEFINITE-REFERENCE",
       "lessons": [
@@ -1246,6 +1256,16 @@
       "inline": [
         "ES-EXT-038-SER-IR-PRETERITE-CH14"
       ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-038-AYER",
+      "spine_node": "SPINE-TALK-ABOUT-PAST",
+      "lessons": [
+        "ES-C14-ayer"
+      ],
+      "before": [],
+      "inline": [],
       "after": []
     },
     {
@@ -3272,6 +3292,7 @@
     "SPINE-TALK-ABOUT-PAST": {
       "segments": [
         "ES-PATH-038-SER-IR-PRETERITE-CH14",
+        "ES-PATH-038-AYER",
         "ES-PATH-038-AR-PRETERITE-CH14",
         "ES-PATH-038-CONSOLIDATION-CH14",
         "ES-PATH-039-COMER-PRETERITE-CH15",
@@ -3300,20 +3321,17 @@
         "ES-PATH-B1-REVIEW-PRET",
         "ES-PATH-B1-SYNTH-PRET"
       ],
-      "omits": [
-        "VERB-PAST"
-      ],
+      "omits": [],
       "relocates": {}
     },
     "SPINE-TALK-ABOUT-FUTURE": {
       "segments": [
         "ES-PATH-041-NEAR-FUTURE",
+        "ES-PATH-041-SIMPLE-FUTURE",
         "ES-PATH-041-CONSOLIDATION",
         "ES-PATH-041"
       ],
-      "omits": [
-        "VERB-FUTURE"
-      ],
+      "omits": [],
       "relocates": {}
     },
     "SPINE-NARRATE-EVENTS": {

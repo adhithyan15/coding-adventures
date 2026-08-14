@@ -1,0 +1,6 @@
+{
+  "version": 1,
+  "package": "go/chief-of-staff-channel-store",
+  "capabilities": [],
+  "justification": "Pure durable-channel codecs and transitions over caller-supplied bytes, atomic storage, message crypto, identifiers, clocks, and key providers."
+}

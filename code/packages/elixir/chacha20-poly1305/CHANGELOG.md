@@ -1,5 +1,27 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+- Consume the versioned SE04 cross-language fixture for byte-identical
+  HChaCha20, raw XChaCha20, AEAD, and authentication-failure conformance.
+- Add `Jason` as a test-only dependency; runtime dependencies remain zero.
+
+## [0.2.0] - 2026-08-13
+
+### Added
+
+- `hchacha20_subkey/2` using the shared ChaCha20 20-round permutation without feed-forward.
+- `xchacha20_encrypt/4` for raw SE04 XChaCha20 at a caller-selected 32-bit counter.
+- `xchacha20_poly1305_encrypt/4` and `xchacha20_poly1305_decrypt/5`, delegating to the existing RFC 8439 AEAD core after HChaCha20 derivation.
+- SE04 draft gold vectors, negative authentication cases, boundary tests, exact input-length checks, and counter validation.
+
+### Security
+
+- Documented that the expired XChaCha Internet-Draft is a pinned construction reference and that complete 24-byte nonces must remain unique per key.
+- Documented the BEAM runtime's lack of guaranteed in-place zeroization for immutable derived-subkey binaries.
+
 ## [0.1.0] - 2026-04-12
 
 ### Added
