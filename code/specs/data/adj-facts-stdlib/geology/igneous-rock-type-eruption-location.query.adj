@@ -1,0 +1,20 @@
+% ============================================================================
+% igneous-rock-type-eruption-location.query — worked recall queries against
+% igneous-rock-type-eruption-location.adj (adj-facts-stdlib, GEOLOGY).
+% ============================================================================
+% Three queries: forward recall (multiple answers) with citation, backward
+% recall (bind a location, find the igneous type), and honest abstention on
+% intrusive (this table only grounds the one igneous type whose cited span
+% lists more than one eruption location).
+% ============================================================================
+
+import "igneous-rock-type-eruption-location.adj"
+
+% Forward: what locations does the cited NPS sentence list for extrusive rock?
+? igneous_rock_type_eruption_location(extrusive, $Location)
+
+% Backward: which igneous type erupts into the atmosphere?
+? igneous_rock_type_eruption_location($Type, atmosphere)
+
+% Honest abstention: intrusive's cited span names only one location, no listed alternatives.
+? igneous_rock_type_eruption_location(intrusive, $LocationIntrusive)
