@@ -202,9 +202,9 @@ the selected entry function can seed language-level static initializers.
 22. [x] **Wide reassignment:** allow a word-sized `i64`/`u64` value to widen or
     spill when an in-place wide operation reuses its destination; Brainfuck
     pointer motion now reaches the byte bounds guard from source.
-23. [ ] **Escaped byte-buffer ABI:** carry allocation length with byte-buffer
-    pointers across moves, calls, returns, and globals so checked byte access
-    is not limited to the allocating function.
+23. [x] **Escaped byte-buffer ABI:** byte buffers use the low/high words of
+    their existing `i64`/`u64` representation for address/length, so checked
+    access survives moves, calls, returns, and globals without a separate ABI.
 24. [ ] **Data images:** load initialized byte data alongside code so string and
     array runtimes can address immutable program data.
 25. [ ] **Host character I/O:** add byte-oriented input/output services and
