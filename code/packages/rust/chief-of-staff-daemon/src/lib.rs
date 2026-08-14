@@ -19,7 +19,7 @@ use chief_of_staff_daemon_config::{
 use chief_of_staff_daemon_credential::{load_or_create_credential, CredentialFileError};
 use chief_of_staff_daemon_keyring::{load_package_keyring, KeyringLoadError};
 use chief_of_staff_daemon_policy::{
-    production_wiring_authorizer, LocalAuthError, LocalBearerAuthorizer,
+    production_wiring_authorizer, LocalAuthError, LocalBearerAuthorizer, ProductionPolicyError,
 };
 use chief_of_staff_daemon_runtime::{ChiefDaemonRuntime, DaemonRuntimeError, ReconcileSchedule};
 use chief_of_staff_daemon_secret_file::{read_owner_only_secret, SecretFileError};
@@ -297,6 +297,8 @@ pub enum ChiefDaemonError {
     Credential(CredentialFileError),
     /// Local bearer policy construction failed.
     Authentication(LocalAuthError),
+    /// Interactive approval-provider composition failed.
+    Policy(ProductionPolicyError),
     /// Durable registry storage initialization failed.
     Storage(StorageError),
     /// Host process supervision configuration was invalid.
@@ -441,6 +443,7 @@ impl Display for ChiefDaemonError {
             }
             Self::Credential(_) => "chief daemon: operator credential failed",
             Self::Authentication(_) => "chief daemon: local authentication policy failed",
+            Self::Policy(_) => "chief daemon: approval policy composition failed",
             Self::Storage(_) => "chief daemon: durable storage failed",
             Self::Process(_) => "chief daemon: process supervision failed",
             Self::Reconciliation(_) => "chief daemon: reconciliation configuration failed",
@@ -733,7 +736,7 @@ pub fn run(config: ChiefConfig, home: &Path) -> Result<(), ChiefDaemonError> {
         clock,
         Box::new(UuidV7SessionIdSource),
         reconcile_config,
-        production_wiring_authorizer(config.privilege()),
+        production_wiring_authorizer(config.privilege(), home).map_err(ChiefDaemonError::Policy)?,
     );
     let api = Arc::new(DaemonApi::new(core, bearer));
     let address = BindAddress::Ip(SocketAddr::new(

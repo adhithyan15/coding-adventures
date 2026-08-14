@@ -26,8 +26,12 @@ one reconciliation before serving, and then reconciles at the configured health
 interval. Channel and pipeline mutations resolve every referenced agent,
 channel, package hash, and selected model through exact `[privilege]` tier maps.
 Fully declared Tier 0 mutations can proceed through Trust Checker; missing maps
-and all Tier 1 through Tier 3 requests remain denied until their reviewed
-platform approval providers exist. Host launch bindings come only from the
+remain denied. An optional `[privilege].tier_1_notification_command` resolves
+against the explicit daemon home and launches one operator-reviewed helper
+directly through a bounded, versioned, environment-cleared stdin/stdout protocol.
+It enables notification approval and the canonical five-second timeout only for
+Tier 1; omitted helpers and all Tier 2/3 requests remain fail-closed. Host launch
+bindings come only from the
 shared durable pipeline binding store; absent, stale, destroyed, directionally
 unauthorized, or cross-pipeline records fail before process creation.
 

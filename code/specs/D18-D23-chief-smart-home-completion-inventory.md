@@ -2007,11 +2007,11 @@ smart-home ownership composition completed:
   behind an injected provider; the primitive performs no filesystem, network,
   terminal, environment, or device access.
 
-Production still composes `DenyChannelWiring` until a reviewed provider and
-exact channel/pipeline request adapter are connected. The next bounded slices
-are orchestrator-core composition followed by authenticated daemon API and CLI
-wire/unwire operations; this primitive does not weaken the current fail-closed
-production default.
+Production now composes this checker with exact config-backed agent, channel,
+package-hash, and model-tier authority. Authenticated daemon API and CLI
+wire/unwire operations carry the exact request into that boundary. Fully
+assigned Tier 0 mutations execute; omitted authority fails closed, and an
+optional reviewed notification helper is the only enabled interactive path.
 
 ## Current Chief Trust-Checked Channel Mutation Slice
 
@@ -2034,10 +2034,35 @@ topology boundary without enabling an unreviewed production approval path:
   provider failures all occur before durable channel storage mutation and keep
   nested diagnostics out of display output.
 
-Production continues to compose `DenyChannelWiring`. The next P0 is to expose
-bounded pipeline wire/unwire requests through the authenticated daemon API and
-CLI with an explicit reviewed provider/tier-policy composition; this adapter
-does not treat the loopback bearer token as approval.
+Production composes this adapter and its pipeline counterpart through the exact
+config-backed resolver. The authenticated daemon API derives requester identity
+from its session and the CLI exposes typed wire/unwire requests; neither treats
+the loopback bearer token as approval. Missing tier assignments and unavailable
+interactive providers still fail before durable mutation.
+
+## Current Chief Tier 1 Notification Approval Slice
+
+This slice opens only the reviewed D18 Tier 1 interaction path:
+
+- `chief-of-staff-notification-approval` launches one absolute configured helper
+  directly, without a shell or inherited environment.
+- A versioned bounded standard-input protocol carries the exact non-secret
+  request identity, requester, timeout, effective tier, and every resource.
+  Identifiers are lowercase-hex encoded so platform parsers never infer escaping.
+- After presenting the notification, the helper must acknowledge readiness
+  before it may return a canonical approval or denial line. Early exit,
+  malformed or oversized output, incomplete prompt delivery, launch/I/O failure,
+  and process-control failure all fail closed.
+- Only a helper that accepted the complete prompt, acknowledged notification
+  presentation, remained alive through the canonical five-second decision window,
+  and returned no decision produces the existing Tier 1 timeout auto-approval result.
+- The optional `[privilege].tier_1_notification_command` resolves against the
+  explicit daemon home. Omitting it preserves the previous unavailable-provider
+  behavior, and biometric Tier 2 plus hardware-key Tier 3 remain unavailable.
+- Real-process tests exercise approval, denial, live timeout, maximum-size exact
+  prompts, blocked prompt input, malformed output, early exit, missing helpers,
+  and unsupported higher-tier requests across the same standard process API used
+  in production.
 
 ## Current Chief HTTP Request Clock Slice
 
