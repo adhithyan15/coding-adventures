@@ -1,0 +1,82 @@
+% ============================================================================
+% optic-focal-point-location — for three of the four basic optical
+% elements, WHERE the SAME already-cited OpenStax sentence says the
+% focal point sits relative to the element (adj-facts-stdlib, PHYSICS).
+% ============================================================================
+% A sibling to the already-shipped `lens-types.adj`
+% (`optic_action(optic, action)`, whether each of four basic optical
+% elements converges or diverges parallel light — convex_lens →
+% converges_light, concave_lens → diverges_light, concave_mirror →
+% converges_light, convex_mirror → diverges_light). That table's own
+% header already quotes, verbatim, an OpenStax sentence for THREE of
+% the four rows that states WHERE the focal point sits — a fact the
+% action-only schema had no room for:
+%
+%   convex_lens → opposite_side_of_the_lens
+%     "...intersect (or focus) at a single point on the optical axis on
+%      the opposite side of the lens"
+%
+%   concave_mirror → same_side
+%     "A ray approaching a concave converging mirror parallel to its
+%      axis is reflected through the focal point F of the mirror on
+%      the same side."
+%
+%   convex_mirror → behind_the_mirror
+%     "A ray approaching a convex diverging mirror parallel to its axis
+%      is reflected so that it seems to come from the focal point F
+%      behind the mirror."
+%
+% Recall is a binding query:
+%
+%     ? optic_focal_point_location(convex_lens, $Location)   % opposite_side_of_the_lens
+%
+% This is a native `table` (ADJ-TABLES RS-5, a TWO-column table): each
+% `row` lowers to a ground relation `optic_focal_point_location(optic,
+% location)` carrying the citation, so the lookup above is the ordinary
+% SLD binding query — the engine returns the location WITH its source,
+% on the CPU, with zero model calls, and abstains on anything that is
+% not one of these three elements. `concave_lens` is deliberately NOT a
+% row here: its own already-quoted OpenStax sentence ("all rays that
+% enter it parallel to the optical axis diverge") describes the ray
+% behavior but never states where the (virtual) focal point sits, so
+% this sibling is HONESTLY NARROWER than its parent — it grounds
+% exactly the three elements whose cited span states a location and
+% abstains on the fourth, or any other word, rather than inventing one.
+% This is genuinely new information beyond the parent's converge/
+% diverge action: it distinguishes a REAL focal point (light physically
+% passes through it — convex_lens's opposite side, concave_mirror's
+% same side) from a VIRTUAL one (light only appears to originate from
+% it — convex_mirror's behind_the_mirror), the core distinction needed
+% to reason about real vs. virtual image formation. The query also
+% runs BACKWARD — bind a location and recall which element has it:
+%
+%     ? optic_focal_point_location($Optic, behind_the_mirror)   % convex_mirror
+%
+% Provenance: reproduces, byte-for-byte, three of the four OpenStax
+% sentences already quoted inside `lens-types.adj`'s own header — no
+% new WebFetch, only a different schema decoding the location half of
+% each already-verified quote. An ADJ `table` carries ONE provenance
+% envelope (per `lens-types.adj`'s own convention), so `source`/
+% `locator`/`trust` below hold the convex_lens span; the other two
+% rows' own spans are listed above for independent auditability.
+% `trust consensus` — the same tier `lens-types.adj` already carries
+% (OpenStax via Physics LibreTexts, a widely used teaching resource,
+% not a primary government/standards body).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table optic_focal_point_location {
+    columns optic, location
+
+    row (convex_lens, opposite_side_of_the_lens)   % OpenStax: "...intersect (or focus) at a single point on the optical axis on the opposite side of the lens"
+    row (concave_mirror, same_side)                % OpenStax: "...reflected through the focal point F of the mirror on the same side."
+    row (convex_mirror, behind_the_mirror)         % OpenStax: "...reflected so that it seems to come from the focal point F behind the mirror."
+
+    source "A convex or converging lens is shaped so that all light rays that enter it parallel to its optical axis intersect (or focus) at a single point on the optical axis on the opposite side of the lens"
+    locator "https://phys.libretexts.org/Bookshelves/University_Physics/University_Physics_(OpenStax)/University_Physics_III_-_Optics_and_Modern_Physics_(OpenStax)/02:_Geometric_Optics_and_Image_Formation/2.05:_Thin_Lenses"
+    trust consensus
+
+    cites "A ray approaching a concave converging mirror parallel to its axis is reflected through the focal point F of the mirror on the same side." locator "https://phys.libretexts.org/Bookshelves/College_Physics/College_Physics_1e_(OpenStax)/25:_Geometric_Optics/25.07:_Image_Formation_by_Mirrors"
+    cites "A ray approaching a convex diverging mirror parallel to its axis is reflected so that it seems to come from the focal point F behind the mirror." locator "https://phys.libretexts.org/Bookshelves/College_Physics/College_Physics_1e_(OpenStax)/25:_Geometric_Optics/25.07:_Image_Formation_by_Mirrors"
+}
