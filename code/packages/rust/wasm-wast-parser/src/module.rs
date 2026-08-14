@@ -638,12 +638,32 @@ fn handle_inline_export(
 /// Resolve a `func` import description's signature (`(type $t)`, inline
 /// `(param...) (result...)`, or a mix) to a type-section index, deduping
 /// an inline-only signature the same way a non-import `func` would.
+///
+/// Only scans the LEADING run of `param`/`result`/`type` fields (via
+/// `is_leading_field`, the same boundary `build_func`'s own mismatch
+/// pre-scan uses) after skipping an optional leading `$name` atom, not all
+/// of `desc_rest` unbounded. `build_func` already strips a func's own
+/// `$name` before calling this, but the import call site's `desc[1..]`
+/// does not, so both must be handled here. For an import description
+/// every field after that optional name IS in the leading run anyway, so
+/// the bounding is a no-op there -- but `build_func` calls this with the
+/// WHOLE remaining function body, and a flat (non-folded) `block`/`loop`/
+/// `if`'s own multi-value blocktype (WASM06/WASM04) puts UNNESTED
+/// `(param ...)`/`(result ...)` sibling fields later in that same slice
+/// (folded syntax nests them inside one `(block ...)` list instead, which
+/// is naturally immune). Scanning unbounded picked up a later block's
+/// blocktype fields as if they were part of the FUNC's own signature,
+/// corrupting `param_count` for the mismatch check right below this
+/// function's call site and silently rejecting perfectly valid functions.
 fn resolve_func_signature_ref(desc_rest: &[SExpr], ctx: &mut ModuleCtx) -> Result<u32, WastParseError> {
-    if let Some(type_ref) = desc_rest.iter().find(|e| e.is_keyword_list("type")) {
+    let start = if matches!(desc_rest.first(), Some(SExpr::Atom(s, _)) if s.starts_with('$')) { 1 } else { 0 };
+    let sig_end = start + desc_rest[start..].iter().take_while(|f| is_leading_field(f)).count();
+    let leading = &desc_rest[start..sig_end];
+    if let Some(type_ref) = leading.iter().find(|e| e.is_keyword_list("type")) {
         let items = type_ref.as_list().unwrap();
         return resolve_idx(&ctx.type_names, expect_get(items, 1)?, "type");
     }
-    let sig_fields: Vec<&SExpr> = desc_rest.iter().collect();
+    let sig_fields: Vec<&SExpr> = leading.iter().collect();
     let ty = parse_func_signature(&sig_fields)?;
     Ok(dedup_type(&mut ctx.module, ty))
 }
@@ -1327,13 +1347,8 @@ fn encode_stream_structured_instr(
             i += 1;
         }
     }
-    let blocktype_byte: Vec<u8> = if let Some(r) = following.get(i).filter(|a| a.is_keyword_list("result")) {
-        let items = r.as_list().unwrap();
-        i += 1;
-        if items.len() == 2 { vec![parse_value_type(&items[1])?.byte_tag().unwrap()] } else { vec![0x40] }
-    } else {
-        vec![0x40]
-    };
+    let (blocktype_byte, consumed) = encode_blocktype(&following[i..], icx)?;
+    i += consumed;
 
     out.push(opcode);
     out.extend(&blocktype_byte);
@@ -1566,6 +1581,53 @@ fn is_type_or_param_or_result(e: &SExpr) -> bool {
     e.is_keyword_list("type") || e.is_keyword_list("param") || e.is_keyword_list("result")
 }
 
+/// Parse and encode a `block`/`loop`/`if` header's **blocktype** from the
+/// items starting at `items[0]` (immediately after any optional `$label`,
+/// which the caller has already consumed) — WASM06.
+///
+/// A blocktype is one of, in the order checked:
+/// - No `(type ...)`/`(param ...)`/`(result ...)` present at all: the
+///   empty-blocktype byte `0x40`.
+/// - An explicit `(type $t)` reference: resolved via `type_names`, same
+///   lookup `call_indirect`'s own explicit `(type $t)` form already uses.
+/// - Otherwise, an inline `(param ...)*(result ...)*` signature, parsed
+///   the same way `call_indirect`'s inline signature already is. If it
+///   has no params and at most one result — the overwhelming common
+///   case — encoded as the single value-type byte shorthand (or `0x40`
+///   for zero results), matching the WASM 1.0 encoding exactly. Otherwise
+///   (any params, or more than one result) the binary format has no
+///   "anonymous inline blocktype" encoding at all — it MUST be a real
+///   type-section index — so the signature is `dedup_type`'d the same way
+///   an anonymous `func`/`call_indirect` signature already is, and the
+///   index is emitted as a signed LEB128 (distinguishable from the
+///   negative-valued single-byte shorthands by construction, since a real
+///   type index is always non-negative).
+///
+/// Returns the encoded blocktype bytes and how many leading elements of
+/// `items` were consumed — advancing the caller's cursor correctly past
+/// whatever was consumed here is the actual bug this function fixes: the
+/// old code left an unconsumed `(param ...)` for the body encoder to
+/// mis-read as an instruction named `"param"`.
+fn encode_blocktype(items: &[SExpr], icx: &mut InstrCtx) -> Result<(Vec<u8>, usize), WastParseError> {
+    let sig_end = items.iter().position(|a| !is_type_or_param_or_result(a)).unwrap_or(items.len());
+    let sig_fields = &items[..sig_end];
+    if sig_fields.is_empty() {
+        return Ok((vec![0x40], 0));
+    }
+    if let Some(t) = sig_fields.iter().find(|a| a.is_keyword_list("type")) {
+        let type_idx = resolve_idx(&icx.module.type_names, expect_get(t.as_list().unwrap(), 1)?, "type")?;
+        return Ok((wasm_leb128::encode_signed(type_idx as i64), sig_end));
+    }
+    let refs: Vec<&SExpr> = sig_fields.iter().collect();
+    let ty = parse_func_signature(&refs)?;
+    if ty.params.is_empty() && ty.results.len() <= 1 {
+        let byte = ty.results.first().map(|t| t.byte_tag().unwrap()).unwrap_or(0x40);
+        return Ok((vec![byte], sig_end));
+    }
+    let type_idx = dedup_type(&mut icx.module.module, ty);
+    Ok((wasm_leb128::encode_signed(type_idx as i64), sig_end))
+}
+
 fn is_label_atom(e: &SExpr) -> bool {
     matches!(e, SExpr::Atom(_, _))
 }
@@ -1632,19 +1694,11 @@ fn encode_structured_instr(
             i += 1;
         }
     }
-    // Optional inline result type: `(result i32)` (no params allowed on a
-    // structured block's own header in WASM 1.0's non-multi-value form).
-    let blocktype_byte: Vec<u8> = if let Some(r) = args.get(i).filter(|a| a.is_keyword_list("result")) {
-        let items = r.as_list().unwrap();
-        i += 1;
-        if items.len() == 2 {
-            vec![parse_value_type(&items[1])?.byte_tag().unwrap()]
-        } else {
-            vec![0x40]
-        }
-    } else {
-        vec![0x40]
-    };
+    // Blocktype: `(type $t)` / `(param ...)*(result ...)*` / a single
+    // `(result T)` / nothing at all -- see `encode_blocktype`'s own doc
+    // comment for the full resolution order (WASM06).
+    let (blocktype_byte, consumed) = encode_blocktype(&args[i..], icx)?;
+    i += consumed;
 
     if name == "if" {
         // `if`'s own condition is a folded operand appearing BEFORE the
@@ -1834,6 +1888,117 @@ mod tests {
         let m = parse_module("(module (func (result i32) (i32.add (i32.const 1) (i32.const 2))))").unwrap();
         // i32.const 1; i32.const 2; i32.add; end
         assert_eq!(code_of(&m, 0), &[0x41, 0x01, 0x41, 0x02, 0x6A, 0x0B]);
+    }
+
+    // ── Multi-value blocktype (WASM06/WASM04) ────────────────────────────
+
+    #[test]
+    fn empty_and_single_result_blocktypes_are_unchanged() {
+        // Sanity: the existing single-byte shorthand path must still work
+        // exactly as before once it's routed through `encode_blocktype`.
+        let empty = parse_module("(module (func (block (nop))))").unwrap();
+        // block 0x40; nop; end (block); end (func)
+        assert_eq!(code_of(&empty, 0), &[0x02, 0x40, 0x01, 0x0B, 0x0B]);
+
+        let single_result = parse_module("(module (func (result i32) (block (result i32) (i32.const 1))))").unwrap();
+        // block 0x7F (single i32 result); i32.const 1; end; end
+        assert_eq!(code_of(&single_result, 0), &[0x02, 0x7F, 0x41, 0x01, 0x0B, 0x0B]);
+    }
+
+    #[test]
+    fn param_only_block_encodes_a_deduped_type_index_and_body_position_is_correct() {
+        // The actual regression: before WASM06/WASM04, a leading `(param
+        // i32)` was never consumed, and the block's real body (`i32.add`)
+        // would have been probed as an instruction named "param" -- so the
+        // key assertion here isn't just "it produces bytes," it's that the
+        // body encodes starting at the CORRECT position (drop is right
+        // after the blocktype bytes, not swallowed by them).
+        let m = parse_module(
+            "(module (func (param i32) (result i32) (local.get 0) (block (param i32) (drop))))",
+        )
+        .unwrap();
+        assert_eq!(m.types.len(), 2, "func's own type, plus the deduped (param i32) (result) block type");
+        assert_eq!(m.types[1], FuncType { params: vec![ValueType::I32], results: vec![] });
+        // local.get 0; block <type_idx=1 as SLEB128>; drop; end (block); end (func)
+        assert_eq!(code_of(&m, 0), &[0x20, 0x00, 0x02, 0x01, 0x1A, 0x0B, 0x0B]);
+    }
+
+    #[test]
+    fn param_and_multi_result_block_dedupes_against_an_identical_later_block() {
+        // The func's own signature deliberately does NOT match either
+        // block's signature (an unused trailing f32 param), so this test
+        // isolates block-to-block deduplication specifically, without the
+        // func's own inferred type accidentally colliding with it too.
+        let m = parse_module(
+            "(module (func (param f32) (result i32 i64)
+                 (block (param) (result i32 i64) (i32.const 1) (i64.const 2))
+                 (drop) (drop)
+                 (block (result i32 i64) (i32.const 3) (i64.const 4))))",
+        )
+        .unwrap();
+        // The first block's (param) (result i32 i64) and a later plain
+        // (result i32 i64) block are the SAME signature (an explicit empty
+        // param list yields zero params, same as an implicit one) -- both
+        // should dedupe to ONE shared new type entry, proving `dedup_type`
+        // (not a fresh entry per block) is really being used.
+        assert_eq!(m.types.len(), 2, "func's own (different) type, plus ONE deduped (result i32 i64) type shared by both blocks");
+        assert_eq!(m.types[1], FuncType { params: vec![], results: vec![ValueType::I32, ValueType::I64] });
+    }
+
+    #[test]
+    fn flat_form_multi_value_loop_header_encodes_correctly() {
+        // Flat (non-folded) syntax goes through `encode_stream_structured_instr`,
+        // a separate code path from the folded-form test above -- both must
+        // be fixed, so both get their own test. The func's own signature
+        // has an extra unused i32 param so it can't accidentally dedupe
+        // against the loop's (param i64) (result i64) blocktype.
+        let m = parse_module(
+            "(module (func (param i64 i32) (result i64)
+                 local.get 0
+                 loop (param i64) (result i64)
+                   drop
+                   i64.const 42
+                 end))",
+        )
+        .unwrap();
+        assert_eq!(m.types.len(), 2);
+        assert_eq!(m.types[1], FuncType { params: vec![ValueType::I64], results: vec![ValueType::I64] });
+        // local.get 0; loop <type_idx=1>; drop; i64.const 42; end (loop); end (func)
+        assert_eq!(code_of(&m, 0), &[0x20, 0x00, 0x03, 0x01, 0x1A, 0x42, 0x2A, 0x0B, 0x0B]);
+    }
+
+    #[test]
+    fn if_with_multi_value_blocktype_encodes_correctly() {
+        // The func's own signature has an extra unused i64 param so it
+        // can't accidentally dedupe against the if's own (param i32)
+        // (result i32) blocktype.
+        let m = parse_module(
+            "(module (func (param i32 i64) (result i32)
+                 (i32.const 1)
+                 (if (param i32) (result i32) (local.get 0)
+                   (then (i32.const 2) (i32.add))
+                   (else (i32.const -2) (i32.add)))))",
+        )
+        .unwrap();
+        assert_eq!(m.types.len(), 2, "func's own (different) type, plus the deduped (param i32) (result i32) if-blocktype");
+        assert_eq!(m.types[1], FuncType { params: vec![ValueType::I32], results: vec![ValueType::I32] });
+    }
+
+    #[test]
+    fn explicit_type_reference_blocktype_resolves_via_type_names() {
+        let m = parse_module(
+            "(module
+               (type $t (func (param i32) (result i32)))
+               (func (param i32) (result i32)
+                 (local.get 0)
+                 (block (type $t) (drop) (i32.const 9))))",
+        )
+        .unwrap();
+        // No NEW type should be created -- the explicit reference resolves
+        // to the already-declared $t (index 0), not a deduped/synthesized
+        // second entry.
+        assert_eq!(m.types.len(), 1);
+        assert_eq!(code_of(&m, 0), &[0x20, 0x00, 0x02, 0x00, 0x1A, 0x41, 0x09, 0x0B, 0x0B]);
     }
 
     #[test]
