@@ -5603,10 +5603,9 @@ impl Compiler {
                         && self.simple_variable_name(variable).ok().as_deref() == Some(name)
                 });
             if writes_name
-                && first_direct_node(node, "expression")
-                    .and_then(expr_variable_name)
-                    .as_deref()
-                    != Some(name)
+                && !first_direct_node(node, "expression").is_some_and(|expression| {
+                    expression_intrinsically_preserves_name(expression, name)
+                })
             {
                 return true;
             }
@@ -7778,6 +7777,25 @@ fn expr_variable_name(node: &GrammarASTNode) -> Option<String> {
     None
 }
 
+fn expression_intrinsically_preserves_name(node: &GrammarASTNode, name: &str) -> bool {
+    if expr_variable_name(node).as_deref() == Some(name) {
+        return true;
+    }
+    if !matches!(node.rule_name.as_str(), "expression" | "arith_expr")
+        || !direct_tokens(node).iter().any(|token| token.value == "if")
+    {
+        return false;
+    }
+    let branches: Vec<&GrammarASTNode> = direct_nodes(node)
+        .into_iter()
+        .filter(|child| child.rule_name == node.rule_name)
+        .collect();
+    branches.len() == 2
+        && branches
+            .into_iter()
+            .all(|branch| expression_intrinsically_preserves_name(branch, name))
+}
+
 /// Return the name of a bare scalar variable node. Array elements are kept
 /// intact because their subscripts can contain independently forwarded scalar
 /// formals that need recursive substitution.
@@ -9731,6 +9749,26 @@ mod tests {
             "test",
         )
         .expect("an exact self-assignment leaves a static assignment dependency unchanged");
+    }
+
+    #[test]
+    fn al4_static_assignment_with_conditional_self_assigned_dependency_preserves_while_dependency()
+    {
+        compile_source(
+            "begin integer i, n, limit; boolean choose; n := 3; limit := 3; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose then limit else limit end; print(i + 0.25) end",
+            "test",
+        )
+        .expect("equal conditional leaves leave a static assignment dependency unchanged");
+    }
+
+    #[test]
+    fn al4_static_assignment_with_differing_conditional_dependency_remains_conservative() {
+        let err = compile_source(
+            "begin integer i, n, limit; boolean choose; n := 3; limit := 3; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose then limit else n end; print(i + 0.25) end",
+            "test",
+        )
+        .expect_err("differing conditional dependency leaves require effect inference");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
     #[test]
