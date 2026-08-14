@@ -11,7 +11,7 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": 11494,
   "last_inventory": {
     "revision": "3f3e77ebebeb77cc8458a86a74ab8be11ecf5be8",
     "schema_version": 3,
@@ -3398,14 +3398,17 @@
     {
       "id": "zip-raw-rfc1951-python-lane-parity",
       "title": "Expose ZIP raw RFC 1951 conformance in Python",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["zip-raw-rfc1951-language-neutral-conformance"],
       "branch": "codex/python-zip-raw-rfc1951",
-      "pr_number": null,
+      "pr_number": 11494,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/11494",
+      "opened_at": "2026-08-14T03:42:49Z",
       "selection_revision": "1cf98c1ad74502336c30f21f096967aec2a42a87",
       "selection_notes": "Selected only after PR #11435 merged externally, the collision-clean live inventory classified the new KNXnet/IP protocol, KNXnet/IP integration, and ESPHome discovery roots with five portable/native ownership records, and no live PR or remote branch claimed Python ZIP or the shared RFC 1951 fixture. Python is the smallest effective clean standalone remaining ZIP child because its Python 3.13 quality toolchain and stdlib JSON/zlib oracle are already available, while the nominally smaller Lua lane lacks equivalent installed fixture and raw-zlib tooling and the stale cross-lane residue touches only .NET, Haskell, and JVM paths. Python ZIP already owns stored/fixed framing and exact bit positions but rejects dynamic Huffman and trims declared-size mismatches, so this coherent tranche adds the shared counted, capped, stable-error raw RFC 1951 contract and all 34 neutral fixtures without duplicating DEFLATE.",
       "implementation_revision": "46d954ac53b844c491839174060644f0ee88a262",
       "validation_notes": "Python 3.13.14 passes the exact Windows BUILD front door: Ruff check and format, strict MyPy, and all 76 tests with 93.40% branch-inclusive coverage. Every one of the 34 neutral raw RFC 1951 cases passes, including dynamic trees, HDIST 32, symbol 285, malformed trees, reserved symbols, exact suffix consumption, caller caps, stable payload-blind errors, CRC-32, dynamic ZIP integration, declared-size rejection, compatibility wrappers, and a full 32 KiB foreign stream. Independent review differentially matched output and exact consumption for 800 deterministic stdlib-zlib raw streams. Twenty-six repository fixture/parity/capability tests plus 678 subtests pass; the refreshed collision gate remains 1,315 identities, 4,471 slots, 865 singletons, 12,110 singleton gaps, 666 Rust singletons, zero collisions, and zero unknown buckets. Wheel and sdist builds plus Twine checks pass; pip-audit reports no known vulnerability and skips only the unpublished local LZSS package and editable ZIP distribution. Strict state JSON/DAG, diff, credential, production-authority, runtime-dependency, and downstream scans pass. The global all-Python build-tool validator retains unrelated pre-existing Windows prerequisite findings and stale Starlark grammar-path warnings, while the Python ZIP BUILD itself passes cleanly and no downstream Python package imports ZIP.",
+      "publication_notes": "Opened ready-for-review PR #11494 from validated implementation revision 46d954ac53b844c491839174060644f0ee88a262 and pre-publication branch head b2009a49026a947390dc2dfbd0fd4f84c299cb9a. The loop retains merge authority with external review and will monitor live checks without merging.",
       "notes": "Portable Python child of the ZIP raw-codec completion umbrella. Consume CMP09 and every closed zip-raw-rfc1951-v1 case, expose the ZIP-owned raw primitives without duplicating DEFLATE, preserve pure in-memory operation, and add explicit empty capability metadata."
     },
     {
