@@ -1,5 +1,5 @@
-// Package chacha20poly1305 implements the ChaCha20-Poly1305 AEAD cipher
-// suite (RFC 8439) from scratch, using only ARX (Add, Rotate, XOR) operations.
+// Package chacha20poly1305 implements ChaCha20-Poly1305 (RFC 8439) and
+// XChaCha20-Poly1305 (SE04) from scratch, using only ARX operations.
 //
 // # What is ChaCha20-Poly1305?
 //
@@ -21,7 +21,10 @@
 // ChaCha20 uses only additions, rotations, and XORs -- operations that
 // execute in constant time on all CPUs.
 //
-// Reference: RFC 8439 (https://www.rfc-editor.org/rfc/rfc8439)
+// References:
+//   - RFC 8439 (https://www.rfc-editor.org/rfc/rfc8439)
+//   - draft-irtf-cfrg-xchacha-03
+//     (https://datatracker.ietf.org/doc/html/draft-irtf-cfrg-xchacha-03)
 package chacha20poly1305
 
 import (
@@ -103,6 +106,21 @@ func quarterRound(state *[16]uint32, a, b, c, d int) {
 	state[b] = rotl32(state[b], 7)
 }
 
+// chacha20Rounds applies ChaCha20's 20-round permutation without feed-forward.
+// Both the RFC 8439 block function and SE04 HChaCha20 use this exact schedule.
+func chacha20Rounds(state *[16]uint32) {
+	for i := 0; i < 10; i++ {
+		quarterRound(state, 0, 4, 8, 12)
+		quarterRound(state, 1, 5, 9, 13)
+		quarterRound(state, 2, 6, 10, 14)
+		quarterRound(state, 3, 7, 11, 15)
+		quarterRound(state, 0, 5, 10, 15)
+		quarterRound(state, 1, 6, 11, 12)
+		quarterRound(state, 2, 7, 8, 13)
+		quarterRound(state, 3, 4, 9, 14)
+	}
+}
+
 // ---------------------------------------------------------------------------
 // ChaCha20 Block Function
 // ---------------------------------------------------------------------------
@@ -147,26 +165,7 @@ func chacha20Block(key []byte, counter uint32, nonce []byte) [64]byte {
 	// Save original state for final addition
 	initial := state
 
-	// 20 rounds = 10 double-rounds
-	// Each double-round: 4 column quarter rounds + 4 diagonal quarter rounds
-	//
-	// Column indices:        Diagonal indices:
-	//   (0,4,8,12)            (0,5,10,15)  main diagonal
-	//   (1,5,9,13)            (1,6,11,12)  shifted by 1
-	//   (2,6,10,14)           (2,7,8,13)   shifted by 2
-	//   (3,7,11,15)           (3,4,9,14)   shifted by 3
-	for i := 0; i < 10; i++ {
-		// Column rounds
-		quarterRound(&state, 0, 4, 8, 12)
-		quarterRound(&state, 1, 5, 9, 13)
-		quarterRound(&state, 2, 6, 10, 14)
-		quarterRound(&state, 3, 7, 11, 15)
-		// Diagonal rounds
-		quarterRound(&state, 0, 5, 10, 15)
-		quarterRound(&state, 1, 6, 11, 12)
-		quarterRound(&state, 2, 7, 8, 13)
-		quarterRound(&state, 3, 4, 9, 14)
-	}
+	chacha20Rounds(&state)
 
 	// Add original state back
 	for i := 0; i < 16; i++ {
@@ -456,4 +455,96 @@ func constantTimeCompare(a, b []byte) bool {
 		result |= a[i] ^ b[i]
 	}
 	return result == 0
+}
+
+// ---------------------------------------------------------------------------
+// HChaCha20 and XChaCha20 (SE04)
+// ---------------------------------------------------------------------------
+
+// HChaCha20Subkey derives a 32-byte subkey from a key and 16-byte nonce.
+//
+// HChaCha20 applies the shared ChaCha20 permutation without the block
+// function's feed-forward addition, then serializes post-round state words
+// 0..3 and 12..15. It matches draft-irtf-cfrg-xchacha-03 section 2.2.
+func HChaCha20Subkey(key, nonce []byte) ([]byte, error) {
+	if len(key) != 32 {
+		return nil, errors.New("hchacha20: key must be 32 bytes")
+	}
+	if len(nonce) != 16 {
+		return nil, errors.New("hchacha20: nonce must be 16 bytes")
+	}
+
+	var state [16]uint32
+	copy(state[:4], chacha20Constants[:])
+	for i := 0; i < 8; i++ {
+		state[4+i] = binary.LittleEndian.Uint32(key[i*4:])
+	}
+	for i := 0; i < 4; i++ {
+		state[12+i] = binary.LittleEndian.Uint32(nonce[i*4:])
+	}
+
+	chacha20Rounds(&state)
+
+	subkey := make([]byte, 32)
+	for i := 0; i < 4; i++ {
+		binary.LittleEndian.PutUint32(subkey[i*4:], state[i])
+		binary.LittleEndian.PutUint32(subkey[16+i*4:], state[12+i])
+	}
+	return subkey, nil
+}
+
+// deriveXChaCha20Material validates SE04 inputs and derives the RFC 8439 key
+// and nonce used by both raw XChaCha20 and XChaCha20-Poly1305.
+func deriveXChaCha20Material(key, nonce []byte) (subkey, derivedNonce []byte, err error) {
+	if len(key) != 32 {
+		return nil, nil, errors.New("xchacha20: key must be 32 bytes")
+	}
+	if len(nonce) != 24 {
+		return nil, nil, errors.New("xchacha20: nonce must be 24 bytes")
+	}
+
+	subkey, err = HChaCha20Subkey(key, nonce[:16])
+	if err != nil {
+		return nil, nil, err
+	}
+	derivedNonce = make([]byte, 12)
+	copy(derivedNonce[4:], nonce[16:])
+	return subkey, derivedNonce, nil
+}
+
+// XChaCha20Encrypt encrypts or decrypts with raw, unauthenticated XChaCha20.
+// Prefer XChaCha20Poly1305AEADEncrypt unless the caller separately owns a
+// correct authentication composition.
+func XChaCha20Encrypt(plaintext, key, nonce []byte, counter uint32) ([]byte, error) {
+	subkey, derivedNonce, err := deriveXChaCha20Material(key, nonce)
+	if err != nil {
+		return nil, err
+	}
+	return ChaCha20Encrypt(plaintext, subkey, derivedNonce, counter)
+}
+
+// XChaCha20Poly1305AEADEncrypt encrypts with SE04 and a 24-byte nonce.
+// Complete nonces must remain unique for each key: the larger nonce makes
+// random collisions negligible, but does not make the construction
+// nonce-misuse resistant.
+func XChaCha20Poly1305AEADEncrypt(plaintext, key, nonce, aad []byte) (ciphertext, tag []byte, err error) {
+	subkey, derivedNonce, err := deriveXChaCha20Material(key, nonce)
+	if err != nil {
+		return nil, nil, err
+	}
+	return AEADEncrypt(plaintext, subkey, derivedNonce, aad)
+}
+
+// XChaCha20Poly1305AEADDecrypt authenticates and decrypts SE04 ciphertext.
+// It delegates tag comparison to AEADDecrypt, returns ErrAuthFailed for every
+// authentication failure, and never returns unauthenticated plaintext.
+func XChaCha20Poly1305AEADDecrypt(ciphertext, key, nonce, aad, tag []byte) ([]byte, error) {
+	if len(tag) != 16 {
+		return nil, errors.New("xchacha20poly1305: tag must be 16 bytes")
+	}
+	subkey, derivedNonce, err := deriveXChaCha20Material(key, nonce)
+	if err != nil {
+		return nil, err
+	}
+	return AEADDecrypt(ciphertext, subkey, derivedNonce, aad, tag)
 }

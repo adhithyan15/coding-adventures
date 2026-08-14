@@ -332,13 +332,13 @@ Every implementation must prove:
 | Language | Package | SE03 | SE04 |
 | --- | --- | --- | --- |
 | Python | `code/packages/python/chacha20-poly1305` | Complete | Complete in #11591 |
-| Go | `code/packages/go/chacha20-poly1305` | Complete | Remaining |
+| Go | `code/packages/go/chacha20-poly1305` | Complete | Complete in #11593 |
 | Ruby | `code/packages/ruby/chacha20-poly1305` | Complete | Remaining |
 | TypeScript | `code/packages/typescript/chacha20-poly1305` | Complete | Remaining |
 | Rust | `code/packages/rust/chacha20-poly1305` | Complete | Complete in PR #1029 |
 | Elixir | `code/packages/elixir/chacha20-poly1305` | Complete | Remaining |
 
-Issue #129 remains open until the four remaining language ports and the
+Issue #129 remains open until the three remaining language ports and the
 cross-language conformance fixture pass. D19 is the Actor model specification;
 it is not renamed or duplicated by this crypto profile.
 
