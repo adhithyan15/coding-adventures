@@ -1,0 +1,19 @@
+% ============================================================================
+% subordinating-conjunction-relationship-type.query.adj — worked recall
+% over the subordinating-conjunction-relationship-type library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what kind of
+% relationship does a cause-and-effect subordinating conjunction signal?"
+% (direct) or "which relationship kinds can a subordinating conjunction
+% signal?" (reverse) — it states no fact of its own — it only `import`s
+% the grounded table and asks binding queries. A relationship type or
+% conjunction category not tabled here abstains honestly — the engine
+% never invents a row.
+% ============================================================================
+
+import "subordinating-conjunction-relationship-type.adj"
+
+? subordinating_conjunction_relationship_type(cause_and_effect, $ConjunctionType)            % expect subordinating_conjunction
+? subordinating_conjunction_relationship_type($RelationshipType, subordinating_conjunction)  % reverse bind — expect cause_and_effect, comparison, contrast, time
+? subordinating_conjunction_relationship_type(concession, $ConjunctionType)                  % expect abstain -- a real relationship subordinating conjunctions can express in general grammar, but not one of the four this quoted sentence names
+? subordinating_conjunction_relationship_type($RelationshipType, coordinating_conjunction)   % expect abstain -- a real, already-tabled conjunction category, but not the one this table covers
