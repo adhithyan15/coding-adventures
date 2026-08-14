@@ -920,6 +920,14 @@ native-teacher lesson demonstrates that outer-before-tongue order at
 11:25–11:32; the Noto Sans Cyrillic fit preserves its one-lift evidence while
 tracing the printed broad open-left curve and straight middle bar and records
 the source's narrower rounded curve and gently hooked tongue.
+The five-frame Cyrillic **ю** filmstrip descends the left stem, retraces to the
+middle and sweeps right along the connector, curves across the oval's top,
+continues down its right side, then sweeps through the bottom and rises to
+close without lifting. The native-teacher lesson demonstrates its looped
+entry, diagonal connector, and clockwise cursive oval at 11:44–11:58; the Noto
+Sans Cyrillic fit preserves that zero-lift stem-to-connector-to-oval order
+while tracing the printed straight upright, horizontal middle bar, and wide
+closed oval.
 The canonical script-data group is capped at 250 kB per cacheable batch, so
 these growing source notes stay within the app's enforced 500 kB eager-chunk
 budget without removing learner-facing evidence.
