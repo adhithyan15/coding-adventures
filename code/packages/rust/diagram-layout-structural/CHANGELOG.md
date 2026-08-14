@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.7.0
+
+- Resolve structural node styles into deterministic layout IR.
+
 ## 0.6.0
 
 - Carry structural accessibility metadata into resolved IR.

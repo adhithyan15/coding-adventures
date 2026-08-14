@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.103.0";
+pub const VERSION: &str = "0.104.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -494,15 +494,15 @@ fn token_name(token: &Token) -> &str {
 use diagram_ir::{
     Axis, AxisKind, ChartDiagram, ChartKind, ChartOrientation, ChartSeries, Compartment,
     CompartmentKind, GanttDiagram, GanttSection, GanttTask, GitBranch, GitCommitType, GitDiagram,
-    GitEvent, JourneyConfig, JourneyDiagram, JourneySection, JourneyTask, PieSlice, QuadrantConfig, QuadrantPoint,
-    RelKind, RequirementElementMetadata, RequirementKind, RequirementMetadata, RequirementRisk,
-    RequirementVerifyMethod, SankeyFlow, SankeyNode, SequenceArrowhead, SequenceBlockKind,
-    SequenceCentralConnection, SequenceDiagram, SequenceEvent, SequenceLineStyle, SequenceLink,
-    SequenceNotePlacement, SequenceParticipant, SequenceParticipantGroup, SequenceParticipantKind,
-    SequenceProperty, SequenceTextWrap, SeriesKind, StructuralDiagram, StructuralGroup,
-    StructuralKind, StructuralNode, StructuralNodeKind, StructuralNodeMetadata,
-    StructuralRelationship, TaskStart,
-    TaskStatus, TemporalBody, TemporalDiagram, TemporalKind,
+    GitEvent, JourneyConfig, JourneyDiagram, JourneySection, JourneyTask, PieSlice, QuadrantConfig,
+    QuadrantPoint, RelKind, RequirementElementMetadata, RequirementKind, RequirementMetadata,
+    RequirementRisk, RequirementVerifyMethod, SankeyFlow, SankeyNode, SequenceArrowhead,
+    SequenceBlockKind, SequenceCentralConnection, SequenceDiagram, SequenceEvent,
+    SequenceLineStyle, SequenceLink, SequenceNotePlacement, SequenceParticipant,
+    SequenceParticipantGroup, SequenceParticipantKind, SequenceProperty, SequenceTextWrap,
+    SeriesKind, StructuralDiagram, StructuralGroup, StructuralKind, StructuralNode,
+    StructuralNodeKind, StructuralNodeMetadata, StructuralRelationship, TaskStart, TaskStatus,
+    TemporalBody, TemporalDiagram, TemporalKind,
 };
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -748,6 +748,7 @@ pub fn parse_requirement_diagram(source: &str) -> Result<StructuralDiagram, Pars
     let mut direction = None;
     let mut nodes = Vec::new();
     let mut relationships = Vec::new();
+    let mut styles = Vec::new();
     let mut cursor = TokenCursor::new(tokens);
     cursor.skip_terminators();
     cursor.consume_if("HEADER");
@@ -792,15 +793,29 @@ pub fn parse_requirement_diagram(source: &str) -> Result<StructuralDiagram, Pars
                     Some("BT") => DiagramDirection::Bt,
                     Some("LR") => DiagramDirection::Lr,
                     Some("RL") => DiagramDirection::Rl,
-                    _ => return Err(token_error(cursor.current(), "invalid requirement direction")),
+                    _ => {
+                        return Err(token_error(
+                            cursor.current(),
+                            "invalid requirement direction",
+                        ))
+                    }
                 });
+            }
+            "STYLE" => {
+                styles.push(parse_requirement_style(cursor.advance())?);
             }
             "REQUIREMENT_START" | "ELEMENT_START" => {
                 let is_element = token_name(cursor.current()) == "ELEMENT_START";
-                let declaration = cursor.advance().value.trim_end_matches('{').trim().to_string();
-                let (kind, name) = declaration.split_once(char::is_whitespace).ok_or_else(|| {
-                    token_error(cursor.current(), "invalid requirement definition")
-                })?;
+                let declaration = cursor
+                    .advance()
+                    .value
+                    .trim_end_matches('{')
+                    .trim()
+                    .to_string();
+                let (kind, name) =
+                    declaration.split_once(char::is_whitespace).ok_or_else(|| {
+                        token_error(cursor.current(), "invalid requirement definition")
+                    })?;
                 let name = unquote_requirement_value(name);
                 let mut fields = Vec::new();
                 let mut requirement_metadata = RequirementMetadata::default();
@@ -811,7 +826,10 @@ pub fn parse_requirement_diagram(source: &str) -> Result<StructuralDiagram, Pars
                 cursor.skip_terminators();
                 while token_name(cursor.current()) != "RBRACE" {
                     if cursor.at_eof() {
-                        return Err(token_error(cursor.current(), "unterminated requirement definition"));
+                        return Err(token_error(
+                            cursor.current(),
+                            "unterminated requirement definition",
+                        ));
                     }
                     if matches!(
                         token_name(cursor.current()),
@@ -826,10 +844,13 @@ pub fn parse_requirement_diagram(source: &str) -> Result<StructuralDiagram, Pars
                         if let Some((key, value)) = value.split_once(':') {
                             let field_value = unquote_requirement_value(value);
                             match key.trim().to_ascii_lowercase().as_str() {
-                                "id" => requirement_metadata.external_id = Some(field_value.clone()),
+                                "id" => {
+                                    requirement_metadata.external_id = Some(field_value.clone())
+                                }
                                 "text" => requirement_metadata.text = Some(field_value.clone()),
                                 "risk" => {
-                                    requirement_metadata.risk = Some(parse_requirement_risk(&field_value));
+                                    requirement_metadata.risk =
+                                        Some(parse_requirement_risk(&field_value));
                                 }
                                 "verifymethod" => {
                                     requirement_metadata.verify_method =
@@ -863,6 +884,7 @@ pub fn parse_requirement_diagram(source: &str) -> Result<StructuralDiagram, Pars
                     } else {
                         StructuralNodeMetadata::Requirement(requirement_metadata)
                     }),
+                    style: None,
                     compartments: vec![Compartment {
                         kind: CompartmentKind::Values,
                         entries: fields,
@@ -879,6 +901,17 @@ pub fn parse_requirement_diagram(source: &str) -> Result<StructuralDiagram, Pars
             }
         }
         cursor.skip_terminators();
+    }
+    for (node_ids, style) in styles {
+        for node_id in node_ids {
+            let node = nodes
+                .iter_mut()
+                .find(|node| node.id == node_id)
+                .ok_or_else(|| {
+                    token_error(cursor.current(), format!("unknown styled node {node_id:?}"))
+                })?;
+            merge_requirement_style(node.style.get_or_insert_default(), &style);
+        }
     }
     Ok(StructuralDiagram {
         kind: StructuralKind::Requirement,
@@ -902,6 +935,67 @@ fn parse_requirement_risk(value: &str) -> RequirementRisk {
         "medium" => RequirementRisk::Medium,
         "high" => RequirementRisk::High,
         _ => unreachable!("requirement grammar accepted an unknown risk"),
+    }
+}
+
+fn parse_requirement_style(token: &Token) -> Result<(Vec<String>, DiagramStyle), ParseError> {
+    let value = token.value.trim_start_matches("style").trim();
+    let (targets, declarations) = value
+        .split_once(char::is_whitespace)
+        .ok_or_else(|| token_error(token, "invalid requirement style"))?;
+    let mut style = DiagramStyle::default();
+    for declaration in declarations.split(',') {
+        let (property, value) = declaration
+            .split_once(':')
+            .ok_or_else(|| token_error(token, "invalid requirement style declaration"))?;
+        let value = value.trim();
+        match property.trim().to_ascii_lowercase().as_str() {
+            "fill" => style.fill = Some(value.to_string()),
+            "stroke" => style.stroke = Some(value.to_string()),
+            "color" => style.text_color = Some(value.to_string()),
+            "stroke-width" => {
+                let width = value
+                    .strip_suffix("px")
+                    .unwrap_or(value)
+                    .parse::<f64>()
+                    .map_err(|_| token_error(token, "invalid requirement stroke width"))?;
+                if width <= 0.0 {
+                    return Err(token_error(
+                        token,
+                        "requirement stroke width must be positive",
+                    ));
+                }
+                style.stroke_width = Some(width);
+            }
+            property => {
+                return Err(token_error(
+                    token,
+                    format!("unsupported requirement style property {property:?}"),
+                ));
+            }
+        }
+    }
+    Ok((
+        targets
+            .split(',')
+            .map(|target| target.trim().to_string())
+            .collect(),
+        style,
+    ))
+}
+
+fn merge_requirement_style(target: &mut DiagramStyle, source: &DiagramStyle) {
+    if source.fill.is_some() {
+        target.fill.clone_from(&source.fill);
+    }
+    if source.stroke.is_some() {
+        target.stroke.clone_from(&source.stroke);
+    }
+    if source.stroke_width.is_some() {
+        target.stroke_width = source.stroke_width;
+    }
+    if source.text_color.is_some() {
+        target.text_color.clone_from(&source.text_color);
     }
 }
 
@@ -930,10 +1024,14 @@ fn parse_requirement_verify_method(value: &str) -> RequirementVerifyMethod {
 fn parse_requirement_relationship(token: &Token) -> Result<StructuralRelationship, ParseError> {
     let value = token.value.trim();
     let (from, kind, to) = if let Some((left, to)) = value.split_once("->") {
-        let (from, kind) = left.rsplit_once('-').ok_or_else(|| token_error(token, "invalid relationship"))?;
+        let (from, kind) = left
+            .rsplit_once('-')
+            .ok_or_else(|| token_error(token, "invalid relationship"))?;
         (from, kind, to)
     } else if let Some((to, right)) = value.split_once("<-") {
-        let (kind, from) = right.split_once('-').ok_or_else(|| token_error(token, "invalid relationship"))?;
+        let (kind, from) = right
+            .split_once('-')
+            .ok_or_else(|| token_error(token, "invalid relationship"))?;
         (from, kind, to)
     } else {
         return Err(token_error(token, "invalid requirement relationship"));
@@ -1002,9 +1100,7 @@ pub fn parse_journey(source: &str) -> Result<(Option<String>, JourneyDiagram), P
     for token in tokens {
         match token.type_name.as_deref() {
             Some("TITLE_STATEMENT") => {
-                title = Some(normalize_journey_label(
-                    token.value["title".len()..].trim(),
-                ));
+                title = Some(normalize_journey_label(token.value["title".len()..].trim()));
             }
             Some("ACC_TITLE_STATEMENT") => {
                 accessibility_title = token
@@ -1283,6 +1379,7 @@ pub fn parse_class_diagram(source: &str) -> Result<StructuralDiagram, ParseError
                     stereotype: None,
                     node_kind: StructuralNodeKind::Class,
                     metadata: None,
+                    style: None,
                     compartments,
                     parent_group: None,
                 });
@@ -1297,6 +1394,7 @@ pub fn parse_class_diagram(source: &str) -> Result<StructuralDiagram, ParseError
                         stereotype: None,
                         node_kind: StructuralNodeKind::Class,
                         metadata: None,
+                        style: None,
                         compartments: vec![],
                         parent_group: None,
                     });
@@ -4709,6 +4807,7 @@ fn upsert_er_node(
         stereotype: Some("entity".to_string()),
         node_kind: StructuralNodeKind::Entity,
         metadata: None,
+        style: None,
         compartments: Vec::new(),
         parent_group: None,
     });
@@ -4909,6 +5008,7 @@ fn upsert_c4_node(
         stereotype: Some(stereotype),
         node_kind: StructuralNodeKind::Class,
         metadata: None,
+        style: None,
         compartments: Vec::new(),
         parent_group,
     });
@@ -6908,7 +7008,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.103.0");
+        assert_eq!(crate::VERSION, "0.104.0");
     }
 
     #[test]

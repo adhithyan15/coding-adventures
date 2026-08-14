@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.104.0
+
+- Parse Requirement direct node styles into structural semantic IR.
+
 ## 0.103.0
 
 - Parse Requirement accessibility statements into structural semantic IR.

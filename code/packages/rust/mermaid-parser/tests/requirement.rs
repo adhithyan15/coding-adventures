@@ -161,6 +161,36 @@ fn requirement_preserves_layout_direction() {
 }
 
 #[test]
+fn requirement_preserves_and_merges_direct_styles() {
+    let source = r#"requirementDiagram
+style req,system fill:#fff1a8,stroke:#b45309
+requirement req {}
+element system {}
+style req stroke-width:4px,color:#7c2d12"#;
+    let diagram = parse_requirement_diagram(source).expect("direct requirement styles");
+
+    let requirement_style = diagram.nodes[0].style.as_ref().expect("requirement style");
+    assert_eq!(requirement_style.fill.as_deref(), Some("#fff1a8"));
+    assert_eq!(requirement_style.stroke.as_deref(), Some("#b45309"));
+    assert_eq!(requirement_style.stroke_width, Some(4.0));
+    assert_eq!(requirement_style.text_color.as_deref(), Some("#7c2d12"));
+
+    let element_style = diagram.nodes[1].style.as_ref().expect("element style");
+    assert_eq!(element_style.fill.as_deref(), Some("#fff1a8"));
+    assert_eq!(element_style.stroke.as_deref(), Some("#b45309"));
+    assert_eq!(element_style.stroke_width, None);
+}
+
+#[test]
+fn requirement_rejects_styles_for_unknown_nodes() {
+    let error = parse_requirement_diagram(
+        "requirementDiagram\nstyle missing fill:#fff\nrequirement present {}",
+    )
+    .expect_err("unknown style target");
+    assert!(error.message.contains("unknown styled node"));
+}
+
+#[test]
 fn requirement_relationships_preserve_semantics_and_orientation() {
     let source = r#"requirementDiagram
 requirement a {

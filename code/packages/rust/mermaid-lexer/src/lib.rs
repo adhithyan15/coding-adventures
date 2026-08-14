@@ -1,6 +1,6 @@
 //! Grammar-driven lexers for Mermaid diagram families.
 
-pub const VERSION: &str = "0.55.0";
+pub const VERSION: &str = "0.56.0";
 
 use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
@@ -71,7 +71,11 @@ pub fn create_mermaid_journey_lexer(source: &str) -> GrammarLexer<'_> {
 }
 
 pub fn create_mermaid_requirement_lexer(source: &str) -> GrammarLexer<'_> {
-    create_lexer(source, REQUIREMENT_TOKEN_GRAMMAR_SOURCE, "requirement.tokens")
+    create_lexer(
+        source,
+        REQUIREMENT_TOKEN_GRAMMAR_SOURCE,
+        "requirement.tokens",
+    )
 }
 
 pub fn tokenize_mermaid(source: &str) -> Vec<Token> {
@@ -282,7 +286,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.55.0");
+        assert_eq!(VERSION, "0.56.0");
     }
 
     #[test]

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.56.0
+
+- Tokenize Requirement direct node style statements.
+
 ## 0.55.0
 
 - Tokenize Requirement accessibility title and description statements.
