@@ -1,0 +1,20 @@
+% ============================================================================
+% mirror-focal-length-sign.query — worked recall queries against
+% mirror-focal-length-sign.adj (adj-facts-stdlib, PHYSICS).
+% ============================================================================
+% Three queries: forward recall with citation, backward recall (bind a
+% sign, find the mirror), and honest abstention on convex_lens (this
+% table only grounds the two mirror types -- neither lens type has a
+% sign convention stated in its own already-quoted span).
+% ============================================================================
+
+import "mirror-focal-length-sign.adj"
+
+% Forward: what sign does the cited OpenStax span give for a concave mirror's focal length?
+? mirror_focal_length_sign(concave_mirror, $Sign)
+
+% Backward: which mirror has a negative focal length?
+? mirror_focal_length_sign($Mirror, negative)
+
+% Honest abstention: convex_lens's cited span describes ray behavior, not a sign convention.
+? mirror_focal_length_sign(convex_lens, $SignLens)
