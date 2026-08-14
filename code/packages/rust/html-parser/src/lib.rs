@@ -7218,10 +7218,13 @@ impl HtmlParser {
             && matches!(name, "body" | "html")
             && self.has_open_foreign_integration_point()
         {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-end-tag-in-foreign-content",
-                format!("end tag `</{name}>` did not match the current foreign element"),
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-end-tag-in-foreign-content",
+                    format!("end tag `</{name}>` did not match the current foreign element"),
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             if self.close_open_foreign_element_before_html_boundary(name) {
                 return;
             }
@@ -37960,12 +37963,7 @@ mod tests {
                         .cloned()
                         .collect::<Vec<_>>(),
                     vec![
-                        ParserDiagnostic::new(
-                            "unexpected-end-tag-in-foreign-content",
-                            format!(
-                                "end tag `</{end_tag}>` did not match the current foreign element"
-                            )
-                        ),
+                        generic_foreign_end_tag_mismatch(&source, end_tag),
                         ParserDiagnostic::new(
                             "unexpected-shell-end-tag-outside-scope",
                             format!(
@@ -38003,15 +38001,59 @@ mod tests {
                 assert_eq!(fragment.nodes, vec![Node::text("X")]);
                 assert_eq!(
                     fragment.parser_diagnostics,
-                    vec![ParserDiagnostic::new(
-                        "unexpected-end-tag-in-foreign-content",
-                        format!(
-                            "end tag `</{end_tag}>` did not match the current foreign element"
-                        )
-                    )],
+                    vec![generic_foreign_end_tag_mismatch(&source, end_tag)],
                     "context {context:?}, source {source:?}"
                 );
             }
+        }
+    }
+
+    #[test]
+    fn positions_shell_foreign_end_tag_mismatches_at_token_emission() {
+        for end_tag in ["body", "html"] {
+            let source =
+                format!("<!doctype html><!--é-->\r\n<svg><foreignObject></{end_tag}>");
+            let output = parse_html_with_diagnostics(&source).unwrap();
+            assert_eq!(
+                output.parser_diagnostics[0],
+                generic_foreign_end_tag_mismatch(&source, end_tag)
+            );
+            assert_eq!(output.parser_diagnostics[1].position, None);
+            assert!(source.len() > source.chars().count());
+
+            let eof_source = format!("<!doctype html><svg><foreignObject></{end_tag}");
+            let eof_output = parse_html_with_diagnostics(&eof_source).unwrap();
+            assert!(eof_output
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != "unexpected-end-tag-in-foreign-content"));
+
+            let mut unpositioned =
+                HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+            for token in [
+                Token::StartTag {
+                    name: "svg".to_string(),
+                    attributes: Vec::new(),
+                    self_closing: false,
+                },
+                Token::StartTag {
+                    name: "foreignObject".to_string(),
+                    attributes: Vec::new(),
+                    self_closing: false,
+                },
+                Token::EndTag {
+                    name: end_tag.to_string(),
+                },
+                Token::Eof,
+            ] {
+                unpositioned.process_token(token);
+            }
+            let diagnostic = unpositioned
+                .diagnostics()
+                .iter()
+                .find(|diagnostic| diagnostic.code == "unexpected-end-tag-in-foreign-content")
+                .unwrap();
+            assert_eq!(diagnostic.position, None);
         }
     }
 
