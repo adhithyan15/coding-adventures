@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.112.0";
+pub const VERSION: &str = "0.113.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -4700,7 +4700,7 @@ pub fn parse_gitgraph(source: &str) -> Result<GitDiagram, ParseError> {
                 cursor.advance();
                 let mut id = None;
                 let mut message = None;
-                let mut tag = None;
+                let mut tags = Vec::new();
                 let mut type_ = GitCommitType::Normal;
                 while !gitgraph_statement_ended(&cursor) {
                     match token_name(cursor.current()) {
@@ -4714,7 +4714,7 @@ pub fn parse_gitgraph(source: &str) -> Result<GitDiagram, ParseError> {
                         }
                         "TAG_ATTR" => {
                             cursor.advance();
-                            tag = Some(parse_gitgraph_string(&mut cursor, "commit tag")?);
+                            tags.push(parse_gitgraph_string(&mut cursor, "commit tag")?);
                         }
                         "TYPE_ATTR" => {
                             cursor.advance();
@@ -4729,7 +4729,7 @@ pub fn parse_gitgraph(source: &str) -> Result<GitDiagram, ParseError> {
                 events.push(GitEvent::Commit {
                     id,
                     message,
-                    tag,
+                    tags,
                     branch: current_branch.clone(),
                     type_,
                 });
@@ -4767,7 +4767,7 @@ pub fn parse_gitgraph(source: &str) -> Result<GitDiagram, ParseError> {
                 cursor.advance();
                 let from = parse_gitgraph_reference(&mut cursor)?;
                 let mut id = None;
-                let mut tag = None;
+                let mut tags = Vec::new();
                 let mut type_ = GitCommitType::Normal;
                 while !gitgraph_statement_ended(&cursor) {
                     match token_name(cursor.current()) {
@@ -4777,7 +4777,7 @@ pub fn parse_gitgraph(source: &str) -> Result<GitDiagram, ParseError> {
                         }
                         "TAG_ATTR" => {
                             cursor.advance();
-                            tag = Some(parse_gitgraph_string(&mut cursor, "merge tag")?);
+                            tags.push(parse_gitgraph_string(&mut cursor, "merge tag")?);
                         }
                         "TYPE_ATTR" => {
                             cursor.advance();
@@ -4789,14 +4789,14 @@ pub fn parse_gitgraph(source: &str) -> Result<GitDiagram, ParseError> {
                 events.push(GitEvent::Merge {
                     from,
                     id,
-                    tag,
+                    tags,
                     type_,
                 });
             }
             "cherry-pick" => {
                 cursor.advance();
                 let mut id = None;
-                let mut tag = None;
+                let mut tags = Vec::new();
                 let mut parent = None;
                 while !gitgraph_statement_ended(&cursor) {
                     match token_name(cursor.current()) {
@@ -4806,7 +4806,7 @@ pub fn parse_gitgraph(source: &str) -> Result<GitDiagram, ParseError> {
                         }
                         "TAG_ATTR" => {
                             cursor.advance();
-                            tag = Some(parse_gitgraph_string(&mut cursor, "cherry-pick tag")?);
+                            tags.push(parse_gitgraph_string(&mut cursor, "cherry-pick tag")?);
                         }
                         "PARENT_ATTR" => {
                             cursor.advance();
@@ -4826,7 +4826,7 @@ pub fn parse_gitgraph(source: &str) -> Result<GitDiagram, ParseError> {
                 })?;
                 events.push(GitEvent::CherryPick {
                     id,
-                    tag,
+                    tags,
                     parent,
                     branch: current_branch.clone(),
                 });
@@ -5813,6 +5813,26 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
                 if id == "abc123"
                     && parent.as_deref() == Some("root")
                     && branch == "main"
+        ));
+    }
+
+    #[test]
+    fn gitgraph_preserves_repeated_tags_in_source_order() {
+        let d = parse_gitgraph(
+            "gitGraph\ncommit id: \"root\" tag: \"v1\" tag: \"stable\"\nbranch release\ncheckout release\ncherry-pick id: \"root\" tag: \"picked\" tag: \"backport\"\ncheckout main\nmerge release tag: \"v2\" tag: \"latest\"",
+        )
+        .unwrap();
+        assert!(matches!(
+            &d.events[0],
+            GitEvent::Commit { tags, .. } if tags == &["v1", "stable"]
+        ));
+        assert!(matches!(
+            &d.events[2],
+            GitEvent::CherryPick { tags, .. } if tags == &["picked", "backport"]
+        ));
+        assert!(matches!(
+            &d.events[4],
+            GitEvent::Merge { tags, .. } if tags == &["v2", "latest"]
         ));
     }
 
@@ -7335,7 +7355,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.112.0");
+        assert_eq!(crate::VERSION, "0.113.0");
     }
 
     #[test]

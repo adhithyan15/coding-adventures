@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.54.0";
+pub const VERSION: &str = "0.55.0";
 
 use std::collections::HashMap;
 
@@ -2599,7 +2599,7 @@ where
                 y,
                 id: _,
                 message,
-                tag,
+                tags,
             } => {
                 instructions.push(PaintInstruction::Ellipse(PaintEllipse {
                     base: PaintBase::default(),
@@ -2629,12 +2629,12 @@ where
                         },
                     ));
                 }
-                if let Some(ref t) = tag {
+                if !tags.is_empty() {
                     text_children.push(text_node(
-                        t,
-                        x - 24.0,
+                        &tags.join(" · "),
+                        x - 40.0,
                         y + 12.0,
-                        48.0,
+                        80.0,
                         ls * 1.2,
                         lf.clone(),
                         Color {
@@ -3399,7 +3399,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.54.0");
+        assert_eq!(crate::VERSION, "0.55.0");
     }
 
     #[test]

@@ -18,7 +18,7 @@ use diagram_ir::{
 };
 use std::collections::{BTreeSet, HashMap};
 
-pub const VERSION: &str = "0.11.0";
+pub const VERSION: &str = "0.12.0";
 
 // ── Constants ─────────────────────────────────────────────────────────────
 
@@ -382,7 +382,7 @@ fn layout_git(diagram: &GitDiagram, cw: f64) -> LayoutedTemporalDiagram {
 
     for event in &diagram.events {
         match event {
-            GitEvent::Commit { id, message, tag, branch, .. } => {
+            GitEvent::Commit { id, message, tags, branch, .. } => {
                 let lane = *branch_lanes.entry(branch.clone()).or_insert_with(|| {
                     let l = next_lane; next_lane += 1; l
                 });
@@ -394,7 +394,7 @@ fn layout_git(diagram: &GitDiagram, cw: f64) -> LayoutedTemporalDiagram {
                     x: cx, y: cy,
                     id: commit_id,
                     message: message.clone(),
-                    tag: tag.clone(),
+                    tags: tags.clone(),
                 });
                 x_cursor += COMMIT_SPACING;
             }
@@ -405,7 +405,7 @@ fn layout_git(diagram: &GitDiagram, cw: f64) -> LayoutedTemporalDiagram {
                     let l = next_lane; next_lane += 1; l
                 });
             }
-            GitEvent::Merge { from, id, tag, .. } => {
+            GitEvent::Merge { from, id, tags, .. } => {
                 let from_lane = *branch_lanes.get(from).unwrap_or(&0);
                 let to_lane   = *branch_lanes.get(&current_branch).unwrap_or(&0);
                 let from_y    = lane_y(from_lane);
@@ -420,11 +420,11 @@ fn layout_git(diagram: &GitDiagram, cw: f64) -> LayoutedTemporalDiagram {
                     x: x_cursor, y: to_y,
                     id: commit_id,
                     message: Some(format!("merge {from}")),
-                    tag: tag.clone(),
+                    tags: tags.clone(),
                 });
                 x_cursor += COMMIT_SPACING;
             }
-            GitEvent::CherryPick { id, tag, parent, branch } => {
+            GitEvent::CherryPick { id, tags, parent, branch } => {
                 let lane = *branch_lanes.entry(branch.clone()).or_insert_with(|| {
                     let l = next_lane; next_lane += 1; l
                 });
@@ -437,7 +437,7 @@ fn layout_git(diagram: &GitDiagram, cw: f64) -> LayoutedTemporalDiagram {
                         Some(parent) => format!("cherry-pick {id} from {parent}"),
                         None => format!("cherry-pick {id}"),
                     }),
-                    tag: tag.clone(),
+                    tags: tags.clone(),
                 });
                 x_cursor += COMMIT_SPACING;
             }
@@ -502,11 +502,11 @@ mod tests {
                 events: vec![
                     GitEvent::Commit {
                         id: Some("a1".into()), message: Some("init".into()),
-                        tag: None, branch: "main".into(), type_: GitCommitType::Normal,
+                        tags: vec!["v1".into(), "stable".into()], branch: "main".into(), type_: GitCommitType::Normal,
                     },
                     GitEvent::Commit {
                         id: Some("a2".into()), message: Some("feature".into()),
-                        tag: None, branch: "main".into(), type_: GitCommitType::Normal,
+                        tags: Vec::new(), branch: "main".into(), type_: GitCommitType::Normal,
                     },
                 ],
             }),
@@ -515,7 +515,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.11.0");
+        assert_eq!(crate::VERSION, "0.12.0");
     }
 
     #[test]
@@ -566,6 +566,16 @@ mod tests {
         let d = layout_temporal_diagram(&simple_git(), 800.0);
         let commits = d.items.iter().filter(|i| matches!(i, LayoutedTemporalItem::CommitNode{..})).count();
         assert_eq!(commits, 2);
+    }
+
+    #[test]
+    fn git_layout_preserves_all_commit_tags() {
+        let d = layout_temporal_diagram(&simple_git(), 800.0);
+        assert!(d.items.iter().any(|item| matches!(
+            item,
+            LayoutedTemporalItem::CommitNode { tags, .. }
+                if tags == &["v1", "stable"]
+        )));
     }
 
     #[test]

@@ -1,5 +1,9 @@
 # Changelog — diagram-to-paint
 
+## 0.55.0
+
+- Shape every ordered GitGraph tag into backend-neutral PaintScene text.
+
 ## 0.54.0
 
 - Shape backend-neutral temporal title items and preserve GitGraph accessibility metadata in PaintScene.
