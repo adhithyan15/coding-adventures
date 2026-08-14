@@ -2085,10 +2085,37 @@ This slice opens only the reviewed D18 Tier 2 interaction path:
   biometric auto-approval path.
 - Optional `[privilege].tier_2_biometric_command` composition is independent of
   Tier 1 notification configuration. Omitting either helper closes only its
-  corresponding tier, and Tier 3 hardware-key approval remains unavailable.
+  corresponding tier.
 - Unit and real-process tests cover exact protocol encoding, maximum-size
   prompts, environment clearing, strong approval, denial, weak/malformed output,
   early exit, timeout-as-denial, missing helpers, and unsupported tiers.
+
+## Current Chief Tier 3 Hardware-Key Approval Slice
+
+This slice opens only the reviewed D18 Tier 3 interaction path:
+
+- `chief-of-staff-hardware-key-approval` launches one absolute configured native
+  helper directly, without a shell or inherited environment. The executable is
+  an operator-reviewed physical-authenticator boundary; the daemon never
+  receives or stores hardware-key PINs, credentials, assertions, or key material.
+- A fresh helper process receives the complete bounded, versioned, non-secret
+  exact-resource prompt on its private standard-input pipe. Its response cannot
+  be replayed into a later request because no response channel is reused.
+- After presenting the native physical-authenticator challenge, the helper
+  acknowledges readiness. Only the canonical `approve hardware-key` line from
+  that exact process becomes hardware-key assurance; plain approval, biometric
+  approval, malformed or oversized output, early exit, incomplete input,
+  launch/I/O failure, or process-control failure fails closed.
+- An acknowledged helper that remains pending through the canonical sixty-second
+  window returns timeout, which Trust Checker denies for Tier 3. There is no
+  hardware-key auto-approval path.
+- Optional `[privilege].tier_3_hardware_key_command` composition is independent
+  of Tier 1 notification and Tier 2 biometric configuration. Omitting any helper
+  closes only its corresponding tier.
+- Unit and real-process tests cover exact protocol encoding, maximum-size
+  prompts, environment clearing, strong approval, denial, weak/biometric output,
+  malformed output, early exit, timeout-as-denial, missing helpers, and
+  unsupported lower tiers.
 
 ## Current Chief HTTP Request Clock Slice
 
