@@ -1828,6 +1828,7 @@ pub fn parse_xychart(source: &str) -> Result<ChartDiagram, ParseError> {
         accessibility_title: None,
         accessibility_description: None,
         kind: ChartKind::Xy,
+        show_data: false,
         x_axis,
         y_axis,
         series,
@@ -2099,6 +2100,7 @@ pub fn parse_quadrant_chart(source: &str) -> Result<ChartDiagram, ParseError> {
         accessibility_title,
         accessibility_description,
         kind: ChartKind::Quadrant,
+        show_data: false,
         x_axis: axis(x_labels),
         y_axis: axis(y_labels),
         series: vec![],
@@ -4417,7 +4419,9 @@ pub fn parse_pie(source: &str) -> Result<ChartDiagram, ParseError> {
     cursor.skip_terminators();
     cursor.expect_keyword("pie")?;
 
-    if cursor.current().type_ == TokenType::Keyword && cursor.current().value == "showData" {
+    let show_data =
+        cursor.current().type_ == TokenType::Keyword && cursor.current().value == "showData";
+    if show_data {
         cursor.advance();
     }
     cursor.skip_terminators();
@@ -4513,6 +4517,7 @@ pub fn parse_pie(source: &str) -> Result<ChartDiagram, ParseError> {
         accessibility_title,
         accessibility_description,
         kind: ChartKind::Pie,
+        show_data,
         x_axis: None,
         y_axis: None,
         series: vec![],
@@ -4645,6 +4650,7 @@ pub fn parse_sankey(source: &str) -> Result<ChartDiagram, ParseError> {
         accessibility_title: None,
         accessibility_description: None,
         kind: ChartKind::Sankey,
+        show_data: false,
         x_axis: None,
         y_axis: None,
         series: vec![],
@@ -5931,6 +5937,7 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     fn pie_parses_slices() {
         let d = parse_pie(PIE_SRC).unwrap();
         assert_eq!(d.kind, ChartKind::Pie);
+        assert!(d.show_data);
         assert_eq!(d.slices.len(), 2);
         assert_eq!(d.slices[0].label, "Dogs");
         assert_eq!(d.slices[0].value, 60.0);
@@ -5949,6 +5956,7 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
             Some("Dogs and cats\nby share")
         );
         assert_eq!(d.slices[0].value, 0.0);
+        assert!(!d.show_data);
     }
 
     #[test]

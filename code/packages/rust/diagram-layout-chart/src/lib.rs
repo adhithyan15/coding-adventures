@@ -230,7 +230,7 @@ const PIE_COLORS: &[&str] = &[
 fn layout_pie(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagram {
     let cx = cw / 2.0;
     let cy = ch / 2.0;
-    let r = (cw.min(ch) / 2.0 - MARGIN * 2.0).max(10.0);
+    let r = (cw.min(ch - LEGEND_H) / 2.0 - MARGIN * 2.0).max(10.0);
     let total: f64 = diagram.slices.iter().map(|s| s.value).sum();
     let total = if total == 0.0 { 1.0 } else { total };
     let mut angle = -std::f64::consts::FRAC_PI_2; // start at 12 o'clock
@@ -257,10 +257,29 @@ fn layout_pie(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagram 
             start_angle: angle,
             end_angle: end,
             color,
-            label: slice.label.clone(),
+            label: format!("{:.0}%", slice.value / total * 100.0),
         });
         angle = end;
     }
+
+    let legend_entries = diagram
+        .slices
+        .iter()
+        .enumerate()
+        .map(|(i, slice)| LegendEntry {
+            color: PIE_COLORS[i % PIE_COLORS.len()].to_string(),
+            label: if diagram.show_data {
+                format!("{} [{}]", slice.label, slice.value)
+            } else {
+                slice.label.clone()
+            },
+        })
+        .collect();
+    items.push(LayoutedChartItem::Legend {
+        x: MARGIN,
+        y: ch - MARGIN,
+        entries: legend_entries,
+    });
 
     LayoutedChartDiagram {
         width: cw,
@@ -501,6 +520,7 @@ mod tests {
             accessibility_title: None,
             accessibility_description: None,
             kind: ChartKind::Xy,
+            show_data: false,
             x_axis: Some(Axis {
                 kind: AxisKind::Categorical,
                 title: None,
@@ -568,6 +588,7 @@ mod tests {
             accessibility_title: None,
             accessibility_description: None,
             kind: ChartKind::Pie,
+            show_data: true,
             x_axis: None,
             y_axis: None,
             series: vec![],
@@ -595,6 +616,15 @@ mod tests {
             .filter(|it| matches!(it, LayoutedChartItem::PieArc { .. }))
             .collect();
         assert_eq!(arcs.len(), 2);
+        assert!(d.items.iter().any(|item| matches!(
+            item,
+            LayoutedChartItem::PieArc { label, .. } if label == "60%"
+        )));
+        assert!(d.items.iter().any(|item| matches!(
+            item,
+            LayoutedChartItem::Legend { entries, .. }
+                if entries[0].label == "A [60]" && entries[1].label == "B [40]"
+        )));
     }
 
     #[test]
@@ -604,6 +634,7 @@ mod tests {
             accessibility_title: None,
             accessibility_description: None,
             kind: ChartKind::Sankey,
+            show_data: false,
             x_axis: None,
             y_axis: None,
             series: vec![],
@@ -651,6 +682,7 @@ mod tests {
             accessibility_title: Some("Portfolio matrix".into()),
             accessibility_description: Some("Native renderer priorities".into()),
             kind: ChartKind::Quadrant,
+            show_data: false,
             x_axis: Some(Axis {
                 kind: AxisKind::Numeric,
                 title: None,
