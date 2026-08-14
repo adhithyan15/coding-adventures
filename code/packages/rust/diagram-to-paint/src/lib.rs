@@ -26,12 +26,12 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.55.0";
+pub const VERSION: &str = "0.56.0";
 
 use std::collections::HashMap;
 
 use diagram_ir::{
-    DiagramShape, EdgeKind, GeoElement, LayoutedChartDiagram, LayoutedChartItem,
+    DiagramShape, EdgeKind, GeoElement, GitCommitSymbol, LayoutedChartDiagram, LayoutedChartItem,
     LayoutedGeometricDiagram, LayoutedGraphDiagram, LayoutedGraphEdge, LayoutedGraphNode,
     LayoutedSequenceDiagram, LayoutedSequenceItem, LayoutedStructuralDiagram,
     LayoutedTemporalDiagram, LayoutedTemporalItem, Orientation, Point, RelKind, SequenceArrowhead,
@@ -2312,6 +2312,105 @@ fn sequence_arrowhead(
 // Temporal family (DG04)
 // ============================================================================
 
+fn git_commit_symbol_instructions(
+    x: f64,
+    y: f64,
+    symbol: &GitCommitSymbol,
+) -> Vec<PaintInstruction> {
+    let ellipse = |cx: f64, cy: f64, radius: f64, fill: Option<String>, stroke: String| {
+        PaintInstruction::Ellipse(PaintEllipse {
+            base: PaintBase::default(),
+            cx,
+            cy,
+            rx: radius,
+            ry: radius,
+            fill,
+            stroke: Some(stroke),
+            stroke_width: Some(2.0),
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        })
+    };
+    let normal = || ellipse(x, y, 8.0, Some("#3b82f6".into()), "#1d4ed8".into());
+
+    match symbol {
+        GitCommitSymbol::Normal => vec![normal()],
+        GitCommitSymbol::Reverse => vec![
+            normal(),
+            PaintInstruction::Path(PaintPath {
+                base: PaintBase::default(),
+                commands: vec![
+                    PathCommand::MoveTo { x: x - 4.0, y: y - 4.0 },
+                    PathCommand::LineTo { x: x + 4.0, y: y + 4.0 },
+                    PathCommand::MoveTo { x: x - 4.0, y: y + 4.0 },
+                    PathCommand::LineTo { x: x + 4.0, y: y - 4.0 },
+                ],
+                fill: None,
+                fill_rule: None,
+                stroke: Some("#ffffff".into()),
+                stroke_width: Some(2.0),
+                stroke_cap: Some(StrokeCap::Round),
+                stroke_join: Some(StrokeJoin::Round),
+                stroke_dash: None,
+                stroke_dash_offset: None,
+            }),
+        ],
+        GitCommitSymbol::Highlight => vec![
+            PaintInstruction::Rect(PaintRect {
+                base: PaintBase::default(),
+                x: x - 10.0,
+                y: y - 10.0,
+                width: 20.0,
+                height: 20.0,
+                fill: Some("#1d4ed8".into()),
+                stroke: Some("#1e3a8a".into()),
+                stroke_width: Some(2.0),
+                corner_radius: Some(1.0),
+                stroke_dash: None,
+                stroke_dash_offset: None,
+            }),
+            PaintInstruction::Rect(PaintRect {
+                base: PaintBase::default(),
+                x: x - 6.0,
+                y: y - 6.0,
+                width: 12.0,
+                height: 12.0,
+                fill: Some("#93c5fd".into()),
+                stroke: None,
+                stroke_width: None,
+                corner_radius: Some(0.0),
+                stroke_dash: None,
+                stroke_dash_offset: None,
+            }),
+        ],
+        GitCommitSymbol::Merge => vec![
+            normal(),
+            ellipse(x, y, 5.0, None, "#ffffff".into()),
+        ],
+        GitCommitSymbol::CherryPick => vec![
+            normal(),
+            ellipse(x - 3.0, y + 2.0, 2.0, Some("#ffffff".into()), "#ffffff".into()),
+            ellipse(x + 3.0, y + 2.0, 2.0, Some("#ffffff".into()), "#ffffff".into()),
+            PaintInstruction::Path(PaintPath {
+                base: PaintBase::default(),
+                commands: vec![
+                    PathCommand::MoveTo { x: x - 3.0, y: y + 2.0 },
+                    PathCommand::LineTo { x, y: y - 4.0 },
+                    PathCommand::LineTo { x: x + 3.0, y: y + 2.0 },
+                ],
+                fill: None,
+                fill_rule: None,
+                stroke: Some("#ffffff".into()),
+                stroke_width: Some(1.5),
+                stroke_cap: Some(StrokeCap::Round),
+                stroke_join: Some(StrokeJoin::Round),
+                stroke_dash: None,
+                stroke_dash_offset: None,
+            }),
+        ],
+    }
+}
+
 /// Lower a [`LayoutedTemporalDiagram`] into a [`PaintScene`].
 pub fn diagram_to_paint_temporal<S, M, R>(
     diagram: &LayoutedTemporalDiagram,
@@ -2600,19 +2699,9 @@ where
                 id: _,
                 message,
                 tags,
+                symbol,
             } => {
-                instructions.push(PaintInstruction::Ellipse(PaintEllipse {
-                    base: PaintBase::default(),
-                    cx: *x,
-                    cy: *y,
-                    rx: 8.0,
-                    ry: 8.0,
-                    fill: Some("#3b82f6".into()),
-                    stroke: Some("#1d4ed8".into()),
-                    stroke_width: Some(2.0),
-                    stroke_dash: None,
-                    stroke_dash_offset: None,
-                }));
+                instructions.extend(git_commit_symbol_instructions(*x, *y, symbol));
                 if let Some(ref msg) = message {
                     text_children.push(text_node(
                         msg,
@@ -3399,7 +3488,34 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.55.0");
+        assert_eq!(crate::VERSION, "0.56.0");
+    }
+
+    #[test]
+    fn git_commit_symbols_emit_distinct_backend_neutral_geometry() {
+        let reverse = git_commit_symbol_instructions(20.0, 20.0, &GitCommitSymbol::Reverse);
+        assert!(reverse.iter().any(|item| matches!(item, PaintInstruction::Path(_))));
+
+        let highlight =
+            git_commit_symbol_instructions(20.0, 20.0, &GitCommitSymbol::Highlight);
+        assert_eq!(
+            highlight.iter().filter(|item| matches!(item, PaintInstruction::Rect(_))).count(),
+            2
+        );
+
+        let merge = git_commit_symbol_instructions(20.0, 20.0, &GitCommitSymbol::Merge);
+        assert_eq!(
+            merge.iter().filter(|item| matches!(item, PaintInstruction::Ellipse(_))).count(),
+            2
+        );
+
+        let cherry_pick =
+            git_commit_symbol_instructions(20.0, 20.0, &GitCommitSymbol::CherryPick);
+        assert_eq!(
+            cherry_pick.iter().filter(|item| matches!(item, PaintInstruction::Ellipse(_))).count(),
+            3
+        );
+        assert!(cherry_pick.iter().any(|item| matches!(item, PaintInstruction::Path(_))));
     }
 
     #[test]

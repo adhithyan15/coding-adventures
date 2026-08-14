@@ -5838,6 +5838,26 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     }
 
     #[test]
+    fn gitgraph_parses_all_commit_types() {
+        let d = parse_gitgraph(
+            "gitGraph\ncommit id: \"normal\" type: NORMAL\ncommit id: \"reverse\" type: REVERSE\ncommit id: \"highlight\" type: HIGHLIGHT",
+        )
+        .unwrap();
+        assert!(matches!(
+            &d.events[0],
+            GitEvent::Commit { type_: GitCommitType::Normal, .. }
+        ));
+        assert!(matches!(
+            &d.events[1],
+            GitEvent::Commit { type_: GitCommitType::Reverse, .. }
+        ));
+        assert!(matches!(
+            &d.events[2],
+            GitEvent::Commit { type_: GitCommitType::Highlight, .. }
+        ));
+    }
+
+    #[test]
     fn gitgraph_parses_title_and_accessibility_metadata() {
         let source = "gitGraph TB:\ntitle Release history\naccTitle: Accessible release history\naccDescr {\nTwo branches\nand one merge\n}\ncommit";
         let d = parse_gitgraph(source).unwrap();
