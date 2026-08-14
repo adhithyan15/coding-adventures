@@ -1,0 +1,80 @@
+% ============================================================================
+% ocean-current-strongest-location — tidal currents → where they are
+% strongest, decoded from a span already sitting unused inside the SAME
+% NOAA source `ocean-current-drivers.adj` already cites
+% (adj-facts-stdlib, OCEANOGRAPHY).
+% ============================================================================
+% A sibling to the already-shipped `ocean-current-drivers.adj`
+% (`ocean_current_driver(current_type, driver)`, ONE physical driver per
+% current type — tidal_currents → tides) and `ocean-current-surface-
+% position.adj` (`ocean_current_surface_position(current_type, position)`,
+% wind_driven_currents → at_or_near_the_oceans_surface): a new
+% `ocean_current_strongest_location(current_type, location)` table names
+% WHERE the SAME already-cited NOAA "What is a current?" page states
+% tidal currents are strongest, decoded from a clause already sitting
+% unused inside `ocean-current-drivers.adj`'s own header truth table --
+% no new WebFetch. That table's schema has room for only the DRIVER; the
+% already-quoted tidal-currents sentence also carries a location fact
+% that never made it into a row:
+%
+%   tidal_currents → near_the_shore_and_in_bays_and_estuaries_along_the_coast
+%     "Tides create a current in the oceans, which are strongest near the
+%      shore, and in bays and estuaries along the coast."
+%
+% Both prepositional phrases ("near the shore" and "in bays and
+% estuaries along the coast") are simultaneously true of where tidal
+% currents are strongest — the source's own "and" joins two coexisting
+% location facts, not two competing readings, so folding them into ONE
+% compound atom is a faithful, unambiguous transcription (the same
+% "and"-joined-clause-as-compound-atom convention already used elsewhere
+% in this stdlib, e.g. `hurricane-category-home-damage.adj`).
+%
+% Recall is a binding query:
+%
+%     ? ocean_current_strongest_location(tidal_currents, $Location)  % near_the_shore_and_in_bays_and_estuaries_along_the_coast
+%
+% This is a native `table` (ADJ-TABLES RS-5, a TWO-column table like both
+% siblings' own): the single `row` lowers to a ground relation
+% `ocean_current_strongest_location(current_type, location)` carrying the
+% citation, so the lookup above is the ordinary SLD binding query -- the
+% engine returns the location WITH its source, on the CPU, with zero
+% model calls, and abstains on any current type that is not the one
+% tabled here (it never invents a location). The query also runs
+% BACKWARD -- bind a location and recall which current type is strongest
+% there:
+%
+%     ? ocean_current_strongest_location($CurrentType, near_the_shore_and_in_bays_and_estuaries_along_the_coast)  % tidal_currents
+%
+% This is honestly a ONE-ROW table, not a forced three-row one: neither
+% the wind_driven_currents nor the thermohaline_circulation quote already
+% sitting inside the parent table's own header names a comparably
+% "strongest where" location fact for that current type --
+% wind_driven_currents' cited span names a vertical surface POSITION
+% (already captured by the sibling `ocean-current-surface-position.adj`,
+% a different kind of fact), and thermohaline_circulation's cited span
+% ("...density differences in water due to temperature (thermo) and
+% salinity (haline) variations in different parts of the ocean.") names
+% no location at all -- so this table correctly abstains on both rather
+% than inventing one.
+%
+% Provenance: reproduces, byte-for-byte, the SAME tidal-currents span
+% already quoted inside `ocean-current-drivers.adj`'s own
+% header/provenance section (and already carried, verbatim, as that
+% table's own `source` field for the tidal_currents row) -- no new
+% WebFetch, only a different schema decoding a part of that
+% already-verified quote. `trust authoritative` -- the same tier the
+% parent table already carries for this row (a primary U.S. government
+% .gov source).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table ocean_current_strongest_location {
+    columns current_type, location
+
+    row (tidal_currents, near_the_shore_and_in_bays_and_estuaries_along_the_coast)
+
+    source "Tides create a current in the oceans, which are strongest near the shore, and in bays and estuaries along the coast."
+    locator "https://oceanservice.noaa.gov/facts/current.html"
+    trust authoritative
+}
