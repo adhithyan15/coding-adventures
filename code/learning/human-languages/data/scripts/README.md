@@ -757,10 +757,16 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   same joined body as **и**, lifts once, then draws the breve from left to right
   as one dipped arc. Its four-frame Noto fit preserves that body-before-breve
   order, left-to-right breve direction, and one-lift evidence while tracing the
-  printed backwards-N body and separate curved mark. The remaining **92** prose part
+  printed backwards-N body and separate curved mark. Lowercase **к** follows at
+  04:45–04:51: the pen descends the left stem, rises through a looped upper-right
+  arm and returns to the middle, then continues through the lower-right arm and
+  a small rising exit without lifting. Its three-frame Noto fit preserves that
+  stem-to-upper-arm-to-lower-arm order and zero-lift evidence while tracing the
+  printed vertical and two angular diagonals; it records that the school hand
+  rounds the upper arm and carries entry and exit joins. The remaining **91** prose part
   orders across four scripts
   (`arabic` 3,
-  `cyrillic` 22,
+  `cyrillic` 21,
   `gujarati` 33, `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a
   citation without a count), and Language Ladder's ductus test proves every
