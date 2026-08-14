@@ -506,12 +506,21 @@ mod tests {
     }
 
     #[test]
-    fn assert_invalid_accepted_by_structural_validator_is_not_yet_supported() {
+    fn assert_invalid_rejected_by_the_instruction_level_type_checker_is_a_real_pass() {
+        // Before WASM06 (the instruction-level type checker), a module
+        // like this one -- structurally fine (valid index bounds, etc.)
+        // but semantically ill-typed (declares `(result i32)` with an
+        // empty body, a real stack underflow) -- passed the old
+        // structural-only validator, so this case graded
+        // `NotYetSupported` (this repo couldn't tell it apart from a
+        // genuinely valid module). `wasm-validator` now runs a real
+        // per-instruction type checker (see its `type_check` module), so
+        // this exact case is correctly rejected -- a real `Pass`.
         let results = outcomes(
             r#"(assert_invalid (module (func (result i32))) "type mismatch")"#,
         );
         assert_eq!(results.len(), 1);
-        assert!(matches!(results[0].1, DirectiveOutcome::NotYetSupported(_)));
+        assert_eq!(results[0], (DirectiveKind::AssertInvalid, DirectiveOutcome::Pass));
     }
 
     #[test]

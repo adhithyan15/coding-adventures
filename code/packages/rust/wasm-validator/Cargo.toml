@@ -1,6 +1,6 @@
 [package]
 name = "wasm-validator"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 description = "WebAssembly 1.0 wasm-validator"
 
@@ -10,3 +10,6 @@ wasm-types = { path = "../wasm-types" }
 wasm-opcodes = { path = "../wasm-opcodes" }
 wasm-module-parser = { path = "../wasm-module-parser" }
 virtual-machine = { path = "../virtual-machine" }
+
+[dev-dependencies]
+wasm-wast-parser = { path = "../wasm-wast-parser" }

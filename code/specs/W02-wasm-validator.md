@@ -549,10 +549,11 @@ However, this dead code still appears in the bytecode and must be syntactically
 processed. The WASM spec permits any stack configuration in unreachable code — type
 checking is relaxed.
 
-The way this is modeled: once a frame enters the unreachable state, any pop from
-the type stack that would underflow returns a special `Unknown` type. An `Unknown` type
-is compatible with any expected type. This allows dead code to "type check" regardless
-of what it does.
+The way this is modeled: once a frame enters the unreachable state, EVERY pop from
+the type stack returns a special `Unknown` type — not only ones that would underflow;
+a value a dead-code instruction genuinely pushed is discarded, not type-checked,
+by whatever pops it next. An `Unknown` type is compatible with any expected type.
+This allows dead code to "type check" regardless of what it does.
 
 ```
 Example:
@@ -571,21 +572,48 @@ def pop_type(
     stack: list[ValueType | Unknown],
     frame: ControlFrame,
     expected: ValueType,
-) -> None:
+) -> ValueType | Unknown:
     """Pop a value from the type stack and verify it matches expected.
 
-    If the frame is in unreachable state and the stack is at or below the
-    frame's entry height, the pop succeeds with Unknown (polymorphic).
-    Otherwise, the top of stack must equal expected.
+    While `frame.unreachable`, EVERY pop returns Unknown (polymorphic) and
+    is never compared against `expected` — not only once the stack has
+    drained down to the frame's entry height. If a real value happens to
+    still be above that height (pushed by dead code itself, since the
+    instruction that first entered the unreachable state already
+    truncated the stack down to `frame.stack_height`), it's discarded but
+    its type is never checked.
+
+    This is stricter-sounds-weaker-but-is-actually-necessary than it might
+    first read: gating the Unknown case on `len(stack) <= frame.stack_height`
+    (checking only the height, not the reachability alone) would still
+    require any value ABOVE that height to real-type-check normally even
+    in dead code — which rejects code the WASM spec explicitly permits.
+    Concretely: `unreachable; f32.const 3.14; i64.add` inside a block is
+    valid dead code (this is a real corner case a naive height-only
+    reading of "dead code, anything goes" gets wrong) — `f32.const`
+    pushes a real F32 above the (already-truncated) floor, and `i64.add`'s
+    first pop would see that real F32 and reject it against the expected
+    I64 under the height-only reading, even though the whole point of
+    marking a frame unreachable is that NOTHING in it needs to type-check.
+    Once reachable again, popping at or below `frame.stack_height` is a
+    genuine STACK_UNDERFLOW.
     """
-    if frame.unreachable and len(stack) <= frame.stack_height:
-        return  # Unknown — dead code, accept anything
-    if not stack:
+    if frame.unreachable:
+        if len(stack) > frame.stack_height:
+            stack.pop()
+        return Unknown
+    if len(stack) <= frame.stack_height:
         raise ValidationError(STACK_UNDERFLOW, ...)
     actual = stack.pop()
     if actual != expected and actual is not Unknown:
         raise ValidationError(TYPE_MISMATCH, f"expected {expected}, got {actual}")
+    return actual
 ```
+
+Implemented in `wasm-validator`'s `type_check` module (WASM06) exactly this
+way — the height-only reading above was this doc's own original wording,
+caught and fixed against the `f32.const`/`i64.add` example already used
+here in §2.5's own worked walkthrough.
 
 ### 2.6 Instruction Type Rules
 
