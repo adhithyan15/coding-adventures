@@ -256,6 +256,8 @@ const CYRILLIC_HARD_SIGN = ductusFor("ъ", "cyrillic")!;
 const cyrillicHardSignOutline = cyrillicOutline("ъ");
 const CYRILLIC_YERY = ductusFor("ы", "cyrillic")!;
 const cyrillicYeryOutline = cyrillicOutline("ы");
+const CYRILLIC_SOFT_SIGN = ductusFor("ь", "cyrillic")!;
+const cyrillicSoftSignOutline = cyrillicOutline("ь");
 const HEBREW_ALEF = ductusFor("א", "hebrew")!;
 const hebrewAlefOutline = hebrewOutline("א");
 const HEBREW_BET = ductusFor("ב", "hebrew")!;
@@ -3290,6 +3292,35 @@ describe("Cyrillic ы — joined left body before a lifted right stem", () => {
     ]);
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(CYRILLIC_YERY.strokes[1], 1),
+    );
+  });
+});
+
+describe("Cyrillic ь — one joined stem-and-bowl run", () => {
+  const steps = ductusSteps(CYRILLIC_SOFT_SIGN);
+  const strip = ductusFilmstrip(CYRILLIC_SOFT_SIGN, cyrillicSoftSignOutline);
+
+  it("keeps the descending stem joined to the counterclockwise lower bowl", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "descend the stem to the baseline",
+      "sweep right along the lower bowl",
+      "curve upward around the bowl's right side",
+      "return left through the upper bowl to close against the stem",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 0]);
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 4 movements");
+  });
+
+  it("draws the exact Noto Sans Cyrillic character behind the closed bowl", () => {
+    const paths = byTag(strip.frames[3], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      cyrillicSoftSignOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(CYRILLIC_SOFT_SIGN.strokes[0], 1),
     );
   });
 });
