@@ -34,9 +34,10 @@ cases and it could never parse before:
 - `i32.trunc_f64_s` (0xAA) used an inclusive lower bound (`-2147483649.0..`)
   where the spec requires a STRICT exclusion — `-2147483649.0` itself (one
   past the valid range) was wrongly accepted instead of trapping.
-- `i64.trunc_f32_s`/`i64.trunc_f32_u`/`i64.trunc_f64_s` (0xAE/0xAF/0xB0) had
-  **no overflow check at all**, only a NaN check — `a as i64`/`a as u64 as
-  i64` alone is that same Rust-1.45+ SATURATING cast the new `trunc_sat`
+- All four i64-destination handlers — `i64.trunc_f32_s`/`i64.trunc_f32_u`/
+  `i64.trunc_f64_s`/`i64.trunc_f64_u` (0xAE/0xAF/0xB0/0xB1) — had **no
+  overflow check at all**, only a NaN check — `a as i64`/`a as u64 as i64`
+  alone is that same Rust-1.45+ SATURATING cast the new `trunc_sat`
   handlers correctly rely on above, so these TRAPPING opcodes were silently
   behaving like their non-trapping `trunc_sat` counterparts instead of
   trapping on overflow, the opposite of their contract.
