@@ -5160,6 +5160,30 @@
           "ES-GRAMMAR-MASCULINE-MA-NOUNS"
         ]
       }
+    },
+    {
+      "chapter": 269,
+      "title": "Describing an Experience --- How It Felt, How Long, How It Compared",
+      "label": "ch:experiencia",
+      "canDo": "I can say how something felt, what I hope for, how it compared with something else, and how long it lasted.",
+      "spineNodes": [
+        "SPINE-DESCRIBE-EXPERIENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C269-durante",
+        "kind": "task",
+        "summary": "Complete ES-C269-durante: describe one experience using a feeling adjective, an espero ambition, a mas que comparison, and a durante length.",
+        "assesses": [
+          "ES-LEX-FELIZ",
+          "ES-GRAMMAR-ADJECTIVE-NO-GENDER-Z",
+          "ES-LEX-ESPERAR-HOPE",
+          "ES-SEMANTIC-HOPE-AND-WAIT",
+          "ES-LEX-MAS-QUE",
+          "ES-GRAMMAR-COMPARATIVE",
+          "ES-LEX-DURANTE",
+          "ES-SEMANTIC-DURATION"
+        ]
+      }
     }
   ]
 }

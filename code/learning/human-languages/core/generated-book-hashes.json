@@ -6224,6 +6224,18 @@
       "tex": "spanish/book/chapters/ch268-viajar.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 269,
+      "sourceHash": "fnv1a64:aaa9d6d426346aa1",
+      "lessonIds": [
+        "ES-C269-feliz",
+        "ES-C269-espero",
+        "ES-C269-mas-que",
+        "ES-C269-durante"
+      ],
+      "tex": "spanish/book/chapters/ch269-experiencia.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "sourceHash": "fnv1a64:2dfc8f46bd0b295e",
