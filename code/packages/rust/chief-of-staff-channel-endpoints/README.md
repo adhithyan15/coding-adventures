@@ -21,7 +21,8 @@ bounds, content type, and stable D18P error classifier. The package also owns
 the deterministic generator and Rust consumer for the language-neutral fixture
 at `code/fixtures/chief-of-staff-channel/v1/manifest.json`; the fixture locks
 durable bytes, storage keys, transition traces, role failures, and recovery
-semantics for subsequent language ports.
+semantics shared by the Rust, TypeScript, Python, Go, Ruby, and Elixir
+consumers.
 
 ## Validation
 
