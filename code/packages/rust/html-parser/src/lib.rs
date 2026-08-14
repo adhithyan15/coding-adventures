@@ -4696,10 +4696,13 @@ impl HtmlParser {
                             || self.has_document_element()
                             || self.has_non_comment_document_content()
                         {
-                            self.diagnostics.push(ParserDiagnostic::new(
-                                "unexpected-doctype",
-                                "doctype token outside the initial document position was ignored",
-                            ));
+                            self.diagnostics.push(
+                                ParserDiagnostic::new(
+                                    "unexpected-doctype",
+                                    "doctype token outside the initial document position was ignored",
+                                )
+                                .at_emission(self.current_token_emission_position),
+                            );
                             return;
                         }
                         self.quirks_mode = force_quirks
@@ -35535,6 +35538,115 @@ mod tests {
                 "source {source:?}"
             );
         }
+    }
+
+    #[test]
+    fn positions_non_initial_doctype_diagnostics_at_token_emission() {
+        for source in [
+            "<!doctype html><frameset><!--é-->\r\n<!doctype html>",
+            "<!doctype html><frameset></frameset><!--é-->\r\n<!doctype html>",
+            "<!doctype html><frameset></frameset></html><!--é-->\r\n<!doctype html>",
+            "<!doctype html><body><!--é-->\r\n<!doctype html>",
+            "<!doctype html><svg><!--é-->\r\n<!doctype html>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            let diagnostics = output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-doctype")
+                .collect::<Vec<_>>();
+            let final_delimiter = source.rfind('>').unwrap();
+
+            assert_eq!(diagnostics.len(), 1, "source {source:?}");
+            assert_eq!(
+                diagnostics[0].position,
+                Some(SourcePosition {
+                    byte_offset: final_delimiter,
+                    char_offset: source[..final_delimiter].chars().count(),
+                    line: 2,
+                    column: "<!doctype html>".chars().count(),
+                }),
+                "source {source:?}"
+            );
+            assert!(final_delimiter > source[..final_delimiter].chars().count());
+        }
+
+        let eof_source = "<!doctype html><frameset><!--é-->\r\n<!doctype html";
+        let eof = parse_html_with_diagnostics(eof_source).unwrap();
+        let eof_diagnostics = eof
+            .parser_diagnostics
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "unexpected-doctype")
+            .collect::<Vec<_>>();
+        assert_eq!(eof_diagnostics.len(), 1);
+        assert_eq!(
+            eof_diagnostics[0].position,
+            Some(SourcePosition {
+                byte_offset: eof_source.len(),
+                char_offset: eof_source.chars().count(),
+                line: 2,
+                column: "<!doctype html".chars().count() + 1,
+            })
+        );
+        assert!(eof
+            .lexer_diagnostics
+            .iter()
+            .any(|diagnostic| diagnostic.code == "eof-in-doctype"));
+
+        let fragment_source = "<!--é-->\r\n<!doctype html>";
+        let fragment =
+            parse_html_fragment_for_context_with_diagnostics(fragment_source, "html").unwrap();
+        let fragment_diagnostics = fragment
+            .parser_diagnostics
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "unexpected-doctype")
+            .collect::<Vec<_>>();
+        assert_eq!(fragment_diagnostics.len(), 1);
+        assert_eq!(
+            fragment_diagnostics[0].position,
+            Some(SourcePosition {
+                byte_offset: fragment_source.len() - 1,
+                char_offset: fragment_source.chars().count() - 1,
+                line: 2,
+                column: "<!doctype html>".chars().count(),
+            })
+        );
+
+        let initial = parse_html_with_diagnostics("<!doctype html><frameset></frameset>").unwrap();
+        assert!(initial
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "unexpected-doctype"));
+
+        let mut parser = HtmlParser::new();
+        for token in [
+            Token::StartTag {
+                name: "html".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "frameset".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Doctype {
+                name: Some("html".to_string()),
+                public_identifier: None,
+                system_identifier: None,
+                force_quirks: false,
+            },
+            Token::Eof,
+        ] {
+            parser.process_token(token);
+        }
+        let diagnostics = parser
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "unexpected-doctype")
+            .collect::<Vec<_>>();
+        assert_eq!(diagnostics.len(), 1);
+        assert_eq!(diagnostics[0].position, None);
     }
 
     #[test]
