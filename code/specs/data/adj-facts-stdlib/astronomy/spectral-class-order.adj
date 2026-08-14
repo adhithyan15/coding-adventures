@@ -1,0 +1,67 @@
+% ============================================================================
+% spectral-class-order — each stellar spectral class letter's rank in the
+% hottest-to-coolest sequence, per the SAME already-cited NASA sentence
+% (adj-facts-stdlib, ASTRONOMY).
+% ============================================================================
+% A sibling to the already-shipped `spectral-classes.adj`
+% (`spectral_class_color(spectral_class, color)`, the color NASA assigns each
+% of the seven main-sequence spectral classes — o → blue, b → blue_white,
+% a → white, f → yellow_white, g → yellow, k → orange, m → red). That table's
+% own header already quotes, verbatim, ONE continuous NASA sentence that
+% lists the seven class letters IN ORDER and states the direction of that
+% order — a fact the color-only schema had no room for:
+%
+%   "Astronomers use these characteristics to classify main sequence stars
+%    into categories by color and temperature: O (blue), B (blue-white),
+%    A (white), F (yellow-white), G (yellow), K (orange), and M (red), from
+%    hottest and biggest to coolest and smallest."
+%
+% The letter SEQUENCE (O, B, A, F, G, K, M) fixes each class's rank; the
+% trailing clause ("from hottest and biggest to coolest and smallest") fixes
+% the DIRECTION — rank 1 is the hottest/biggest class, rank 7 the coolest/
+% smallest. This is the SAME "list order → NUMBER column" move already
+% established in this directory by `moon-phases.adj`'s own `moon_phase_order`
+% table. Recall is a binding query:
+%
+%     ? spectral_class_order(g, $Order)   % 5  (our Sun's class, 5th hottest)
+%
+% This is a native `table` (ADJ-TABLES RS-5, a TWO-column table): each `row`
+% lowers to a ground relation `spectral_class_order(spectral_class, order)`
+% carrying the citation, so the lookup above is the ordinary SLD binding
+% query — the engine returns the rank WITH its source, on the CPU, with zero
+% model calls, and abstains on a letter that is not one of these seven
+% classes (it never invents a rank). The `order` value is a NUMBER, so a
+% recalled rank composes into arithmetic (how many classes separate O and M?
+% 7 − 1 = 6 steps apart). Full 7/7 coverage — the single quoted sentence
+% names every class's position, so no abstention is needed among the seven;
+% the table abstains only on non-class atoms (`z`, `x`, a brown-dwarf label),
+% the same abstention set `spectral-classes.adj` already establishes. The
+% query also runs BACKWARD — bind a rank and recall its spectral class:
+%
+%     ? spectral_class_order($Class, 1)   % o  (rank 1 is the hottest class)
+%
+% Provenance: reproduces, byte-for-byte, the SAME NASA sentence
+% `spectral-classes.adj`'s own header already quotes — no new WebFetch, only
+% a different schema decoding the ORDER half of the already-verified quote
+% instead of the color half. `trust authoritative` — the same tier
+% `spectral-classes.adj` already carries (NASA Science, a primary U.S.
+% government resource).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table spectral_class_order {
+    columns spectral_class, order
+
+    row (o, 1)
+    row (b, 2)
+    row (a, 3)
+    row (f, 4)
+    row (g, 5)
+    row (k, 6)
+    row (m, 7)
+
+    source "Astronomers use these characteristics to classify main sequence stars into categories by color and temperature: O (blue), B (blue-white), A (white), F (yellow-white), G (yellow), K (orange), and M (red), from hottest and biggest to coolest and smallest."
+    locator "https://science.nasa.gov/exoplanets/stars/"
+    trust authoritative
+}

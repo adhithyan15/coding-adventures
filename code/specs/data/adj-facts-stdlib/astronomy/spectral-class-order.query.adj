@@ -1,0 +1,19 @@
+% ============================================================================
+% spectral-class-order.query — worked recall queries against
+% spectral-class-order.adj (adj-facts-stdlib, ASTRONOMY).
+% ============================================================================
+% Three queries: forward recall with citation, backward recall (bind a
+% rank, find the class), and honest abstention on a non-class letter (this
+% table only grounds the seven main-sequence spectral classes).
+% ============================================================================
+
+import "spectral-class-order.adj"
+
+% Forward: what rank does the cited NASA sentence give our Sun's spectral class?
+? spectral_class_order(g, $Order)
+
+% Backward: which spectral class ranks 1st (hottest, biggest)?
+? spectral_class_order($Class, 1)
+
+% Honest abstention: "z" is not one of the seven main-sequence classes.
+? spectral_class_order(z, $OrderZ)
