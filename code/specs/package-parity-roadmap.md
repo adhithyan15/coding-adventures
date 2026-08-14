@@ -182,9 +182,10 @@ The D18F shared fixture lock now fixes that channel-crypto contract across all
 six supported implementations. Rust is the production baseline, while
 TypeScript, Python, Go, Ruby, and Elixir are portable consumers: all six
 reproduce the exact authenticated header, `D18M` v1 bytes, canonical JSON, rich
-payload ciphertext, verification order, and stable errors. The only remaining
-D18F portability work is a final six-language conformance gate over the shared
-corpus.
+payload ciphertext, verification order, and stable errors. One central CI gate
+now validates the closed corpus and generator provenance, requires all six
+consumers, runs every package-native build, and rejects a regenerated manifest
+that differs by even one byte.
 
 The `9bb12864` refresh also added `chief-of-staff-channel-store`. It is an
 authority-free orchestration layer over injected storage and cryptography:

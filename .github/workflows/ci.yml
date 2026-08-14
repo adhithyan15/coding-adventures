@@ -7,7 +7,9 @@
 #      --detect-languages to determine which toolchains are needed.
 #   2. phy00-phy01-fixture-consumers: proves external corpus changes against
 #      the Dart packages without granting their tests filesystem authority.
-#   3. build: Installs only the needed toolchains, then runs the build.
+#   3. d18f-message-conformance: runs the one D18F manifest through all six
+#      language packages and rejects stale generated vectors.
+#   4. build: Installs only the needed toolchains, then runs the build.
 #
 # This saves 3-5 minutes on language-specific changes by skipping
 # unneeded toolchain installations (e.g., Rust tarpaulin, Elixir/Erlang).
@@ -101,6 +103,7 @@ jobs:
           python3 -m unittest discover -s code/scripts/tests -p 'test_setup_lua.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_capability_taxonomy.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_phy00_phy01_fixtures.py'
+          python3 -m unittest discover -s code/scripts/tests -p 'test_d18f_message_conformance.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_adj_stdlib_report.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_adj_stdlib_manifest.py'
           ADJ_CGROUP_ORIGINAL=$(awk -F: '$1 == "0" {print $3}' /proc/self/cgroup)
@@ -391,7 +394,58 @@ jobs:
           (cd code/packages/dart/trig && dart pub get && dart test test/conformance_fixture_test.dart)
           (cd code/packages/dart/wave && dart pub get && dart test test/conformance_fixture_test.dart)
 
-  # ── Job 3: Build and test ──────────────────────────────────────
+  # ── Job 3: D18F six-language message conformance ───────────────
+  d18f-message-conformance:
+    name: D18F message conformance
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          allow-prereleases: true
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: "latest"
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.26.1'
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.4'
+          bundler-cache: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Set up Elixir
+        uses: erlef/setup-beam@v1
+        with:
+          elixir-version: '1.18.4'
+          otp-version: '27.3.4.11'
+          version-type: strict
+
+      - name: Run every D18F manifest consumer and verify regeneration
+        run: python3 code/scripts/validate_d18f_message_conformance.py
+
+  # ── Job 4: Build and test ──────────────────────────────────────
   #
   # Installs only the toolchains flagged by the detect job, then
   # compiles the build tool and runs the incremental build.
@@ -1550,7 +1604,7 @@ jobs:
           if [ "$RUNNER_OS" = "Windows" ]; then BT=./build-tool.exe; else BT=./build-tool; fi
           $BT -root . -plan-file build-plan.json -shard-index "${{ matrix.shard_index }}" -force -validate-build-files -clippy -language all
 
-  # ── Job 4: CI gate ─────────────────────────────────────────────
+  # ── Job 5: CI gate ─────────────────────────────────────────────
   #
   # A single, always-present status check that summarizes the result of
   # every real job. The `build` job is a DYNAMIC matrix — its `build (…)`
@@ -1567,7 +1621,7 @@ jobs:
   # dependency failed, so it can report the failure rather than being skipped.
   ci-gate:
     name: ${{ github.event_name == 'pull_request' && 'CI gate' || 'CI push gate' }}
-    needs: [detect, phy00-phy01-fixture-consumers, build]
+    needs: [detect, phy00-phy01-fixture-consumers, d18f-message-conformance, build]
     if: always()
     runs-on: ubuntu-latest
     steps:
@@ -1576,11 +1630,12 @@ jobs:
         env:
           DETECT_RESULT: ${{ needs.detect.result }}
           PHY_RESULT: ${{ needs['phy00-phy01-fixture-consumers'].result }}
+          D18F_RESULT: ${{ needs['d18f-message-conformance'].result }}
           BUILD_RESULT: ${{ needs.build.result }}
         run: |
-          echo "detect=$DETECT_RESULT phy=$PHY_RESULT build=$BUILD_RESULT"
+          echo "detect=$DETECT_RESULT phy=$PHY_RESULT d18f=$D18F_RESULT build=$BUILD_RESULT"
           fail=0
-          for r in "$DETECT_RESULT" "$PHY_RESULT" "$BUILD_RESULT"; do
+          for r in "$DETECT_RESULT" "$PHY_RESULT" "$D18F_RESULT" "$BUILD_RESULT"; do
             case "$r" in
               success|skipped) ;;
               *) echo "::error::a required job did not pass (result: $r)"; fail=1 ;;

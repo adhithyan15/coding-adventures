@@ -15,6 +15,21 @@ It contains:
 Every language adapter must consume this same manifest. It must not regenerate
 expected bytes with its own implementation during a conformance test.
 
+## Central conformance gate
+
+From the repository root, run:
+
+```sh
+python3 code/scripts/validate_d18f_message_conformance.py
+```
+
+The gate validates the closed manifest roster and generator blob identity,
+requires registered consumers for Rust, Python, TypeScript, Go, Ruby, and
+Elixir, executes each package's native `BUILD` front door, and regenerates the
+manifest from the Rust baseline into a temporary file for a byte-for-byte
+comparison. CI publishes this as the stable `D18F message conformance` check
+and includes it in the aggregate CI gate.
+
 ## Regeneration
 
 The manifest records the Git blob hash of the exact generator source. Unlike a
