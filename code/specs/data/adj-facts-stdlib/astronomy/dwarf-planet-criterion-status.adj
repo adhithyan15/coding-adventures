@@ -1,0 +1,61 @@
+% ============================================================================
+% dwarf-planet-criterion-status — for each of the three IAU planet criteria,
+% whether a dwarf planet like Pluto meets it, per the SAME already-cited NASA
+% sentence (adj-facts-stdlib, ASTRONOMY).
+% ============================================================================
+% A sibling to the already-shipped `planet-criterion.adj`
+% (`planet_criterion(criterion, requirement)`, the three IAU requirements a
+% body must meet to count as a full planet — orbit → orbits_its_host_star,
+% roundness → is_mostly_round, cleared_orbit →
+% gravity_cleared_away_other_objects_of_similar_size_near_its_orbit). That
+% table's own header already quotes, verbatim, a NASA sentence that states,
+% for all three criteria at once, whether a dwarf planet satisfies each one —
+% a fact used there only to justify EXCLUDING `dwarf_planet` as a row, never
+% decoded into a table of its own:
+%
+%   "Dwarf planets like Pluto were defined as objects that orbit the Sun,
+%    and are nearly round, but have not been able to clear their orbit of
+%    debris"
+%
+% The sentence's own structure fixes each criterion's status: the leading
+% clauses ("orbit the Sun", "are nearly round") state what dwarf planets DO
+% satisfy; the trailing "but have not been able to..." clause contrasts the
+% third criterion as the one they FAIL. Recall is a binding query:
+%
+%     ? dwarf_planet_criterion_status(cleared_orbit, $Status)   % not_met
+%
+% This is a native `table` (ADJ-TABLES RS-5, a TWO-column table): each `row`
+% lowers to a ground relation `dwarf_planet_criterion_status(criterion,
+% status)` carrying the citation, so the lookup above is the ordinary SLD
+% binding query — the engine returns the status WITH its source, on the CPU,
+% with zero model calls, and abstains on anything that is not one of these
+% three criteria. Full 3/3 coverage — the single quoted sentence states a
+% status for every criterion, so no abstention is needed among the three;
+% the table abstains only on non-criterion atoms, the same abstention set
+% `planet-criterion.adj` already establishes. The query also runs BACKWARD —
+% bind a status and recall which criteria have it:
+%
+%     ? dwarf_planet_criterion_status($C, met)   % orbit AND roundness
+%
+% Provenance: reproduces, byte-for-byte, the SAME NASA sentence
+% `planet-criterion.adj`'s own header already quotes (there, to justify
+% excluding `dwarf_planet` as a row) — no new WebFetch, only a different
+% schema decoding the per-criterion STATUS half of the already-verified
+% quote instead of using it as exclusionary prose. `trust authoritative` —
+% the same tier `planet-criterion.adj` already carries (NASA Science, a
+% primary U.S. government resource).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table dwarf_planet_criterion_status {
+    columns criterion, status
+
+    row (orbit, met)
+    row (roundness, met)
+    row (cleared_orbit, not_met)
+
+    source "Dwarf planets like Pluto were defined as objects that orbit the Sun, and are nearly round, but have not been able to clear their orbit of debris"
+    locator "https://science.nasa.gov/dwarf-planets/"
+    trust authoritative
+}
