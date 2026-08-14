@@ -1,0 +1,68 @@
+% ============================================================================
+% ocean-current-surface-position — wind-driven currents → where in the
+% ocean they occur, decoded from a span already sitting unused inside the
+% SAME NOAA source `ocean-current-drivers.adj` already cites
+% (adj-facts-stdlib, OCEANOGRAPHY).
+% ============================================================================
+% A sibling to the already-shipped `ocean-current-drivers.adj`
+% (`ocean_current_driver(current_type, driver)`, ONE physical driver per
+% current type — wind_driven_currents → wind): a new
+% `ocean_current_surface_position(current_type, position)` table names
+% WHERE the SAME already-cited NOAA "What is a current?" page states
+% wind-driven currents occur, decoded from a clause already sitting
+% unused inside that table's own header truth table -- no new WebFetch.
+% That table's schema has room for only the DRIVER; the already-quoted
+% wind-driven-currents sentence also carries a positional fact that never
+% made it into a row:
+%
+%   wind_driven_currents → at_or_near_the_oceans_surface
+%     "Winds drive currents that are at or near the ocean's surface."
+%
+% Recall is a binding query:
+%
+%     ? ocean_current_surface_position(wind_driven_currents, $Position)  % at_or_near_the_oceans_surface
+%
+% This is a native `table` (ADJ-TABLES RS-5, a TWO-column table like the
+% parent's own): the single `row` lowers to a ground relation
+% `ocean_current_surface_position(current_type, position)` carrying the
+% citation, so the lookup above is the ordinary SLD binding query -- the
+% engine returns the position WITH its source, on the CPU, with zero
+% model calls, and abstains on any current type that is not the one
+% tabled here (it never invents a position). The query also runs
+% BACKWARD -- bind a position and recall which current type occurs there:
+%
+%     ? ocean_current_surface_position($CurrentType, at_or_near_the_oceans_surface)  % wind_driven_currents
+%
+% This is honestly a ONE-ROW table, not a forced three-row one: neither
+% the tidal_currents nor the thermohaline_circulation quote already
+% sitting inside the parent table's own header names a comparably clean
+% SURFACE-vs-DEEP position for that current type -- tidal_currents'
+% cited span names a shore-proximity/strength fact (a DIFFERENT kind of
+% positional claim, requiring its own atomization judgment call, tracked
+% separately), and thermohaline_circulation's cited span
+% ("...density differences in water due to temperature (thermo) and
+% salinity (haline) variations in different parts of the ocean.") names
+% no position at all -- so this table correctly abstains on both rather
+% than inventing one.
+%
+% Provenance: reproduces, byte-for-byte, the SAME wind-driven-currents
+% span already quoted inside `ocean-current-drivers.adj`'s own
+% header/provenance section, from the SAME National Oceanic and
+% Atmospheric Administration (NOAA) "What is a current?" page that table
+% already cites -- no new WebFetch, only a different schema decoding a
+% part of that already-verified quote. `trust authoritative` -- the same
+% tier the parent table already carries for this row (a primary U.S.
+% government .gov source).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table ocean_current_surface_position {
+    columns current_type, position
+
+    row (wind_driven_currents, at_or_near_the_oceans_surface)
+
+    source "Winds drive currents that are at or near the ocean's surface."
+    locator "https://oceanservice.noaa.gov/facts/current.html"
+    trust authoritative
+}
