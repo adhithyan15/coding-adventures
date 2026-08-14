@@ -823,6 +823,42 @@ mod tests {
         }
     }
 
+    #[test]
+    fn validated_config_deadlines_match_exact_production_requirements() {
+        let config = policy_config(0, false);
+        let privilege = config.privilege();
+        assert_eq!(
+            privilege.tier_1_auto_approve_timeout(),
+            chief_of_staff_trust_checker::TIER_1_AUTO_APPROVE_TIMEOUT
+        );
+        assert_eq!(
+            ApprovalRequirement::for_tier(PrivilegeTier::Tier1),
+            ApprovalRequirement::Notification {
+                timeout: privilege.tier_1_auto_approve_timeout()
+            }
+        );
+        assert_eq!(
+            privilege.biometric_timeout(),
+            chief_of_staff_trust_checker::TIER_2_BIOMETRIC_TIMEOUT
+        );
+        assert_eq!(
+            ApprovalRequirement::for_tier(PrivilegeTier::Tier2),
+            ApprovalRequirement::Biometric {
+                timeout: privilege.biometric_timeout()
+            }
+        );
+        assert_eq!(
+            privilege.hardware_key_timeout(),
+            chief_of_staff_trust_checker::TIER_3_HARDWARE_KEY_TIMEOUT
+        );
+        assert_eq!(
+            ApprovalRequirement::for_tier(PrivilegeTier::Tier3),
+            ApprovalRequirement::HardwareKey {
+                timeout: privilege.hardware_key_timeout()
+            }
+        );
+    }
+
     fn channel_definition() -> ChannelDefinition {
         let mut channel_id = [0u8; 16];
         channel_id[6] = 0x70;

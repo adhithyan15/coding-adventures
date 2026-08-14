@@ -14,6 +14,8 @@
   strict exact-request process boundary while Tier 3 remains unavailable.
 - Route an independently optional shell-free Tier 3 hardware-key helper through
   a strict exact-request process boundary without opening lower tiers.
+- Prove validated privilege deadlines equal the exact canonical timeout carried
+  to each production approval provider.
 
 ## 0.1.0
 

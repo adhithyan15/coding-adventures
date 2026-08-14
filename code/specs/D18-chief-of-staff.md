@@ -2277,6 +2277,12 @@ smart_home_tool_grants = [
 ]
 ```
 
+The three privilege deadlines are explicit canonical policy declarations, not
+operator-tunable values. Configuration must match the Trust Checker-owned
+five-second Tier 1, thirty-second Tier 2, and sixty-second Tier 3 constants or
+startup fails closed. This keeps the readable TOML schema aligned with the exact
+timeout carried to each approval provider.
+
 The optional data-plane table is closed and explicit. Each channel-key entry
 names one canonical UUID-v7 pipeline, exact agent identity, canonical UUID-v7
 channel, and direction. Read entries name one raw 32-byte X25519 private-key
