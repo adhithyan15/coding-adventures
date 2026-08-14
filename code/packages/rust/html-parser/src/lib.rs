@@ -6036,10 +6036,13 @@ impl HtmlParser {
 
         let text = if self.in_frameset_text_context() {
             if text.chars().any(|character| !is_html_whitespace(character)) {
-                self.diagnostics.push(ParserDiagnostic::new(
-                    "unexpected-char-in-frameset",
-                    "non-whitespace character data was ignored in the frameset",
-                ));
+                self.diagnostics.push(
+                    ParserDiagnostic::new(
+                        "unexpected-char-in-frameset",
+                        "non-whitespace character data was ignored in the frameset",
+                    )
+                    .at_emission(self.current_token_emission_position),
+                );
             }
             let whitespace = text
                 .chars()
@@ -35507,7 +35510,8 @@ mod tests {
 
     #[test]
     fn ignores_non_whitespace_text_directly_inside_framesets() {
-        let output = parse_html_with_diagnostics("<!DOCTYPE html><frameset>test").unwrap();
+        let source = "<!DOCTYPE html><frameset>test";
+        let output = parse_html_with_diagnostics(source).unwrap();
 
         let html = html(&output.document);
         let frameset = element(&html.children[1]);
@@ -35519,7 +35523,13 @@ mod tests {
                 ParserDiagnostic::new(
                     "unexpected-char-in-frameset",
                     "non-whitespace character data was ignored in the frameset"
-                ),
+                )
+                .at_emission(Some(SourcePosition {
+                    byte_offset: source.len(),
+                    char_offset: source.chars().count(),
+                    line: 1,
+                    column: source.chars().count() + 1,
+                })),
                 ParserDiagnostic::new(
                     "eof-in-frameset",
                     "end of file was reached while parsing a frameset"
@@ -35530,7 +35540,8 @@ mod tests {
 
     #[test]
     fn preserves_only_whitespace_from_mixed_frameset_text() {
-        let output = parse_html_with_diagnostics("<!DOCTYPE html><frameset> te st").unwrap();
+        let source = "<!DOCTYPE html><frameset> te st";
+        let output = parse_html_with_diagnostics(source).unwrap();
 
         let html = html(&output.document);
         let frameset = element(&html.children[1]);
@@ -35541,13 +35552,89 @@ mod tests {
                 ParserDiagnostic::new(
                     "unexpected-char-in-frameset",
                     "non-whitespace character data was ignored in the frameset"
-                ),
+                )
+                .at_emission(Some(SourcePosition {
+                    byte_offset: source.len(),
+                    char_offset: source.chars().count(),
+                    line: 1,
+                    column: source.chars().count() + 1,
+                })),
                 ParserDiagnostic::new(
                     "eof-in-frameset",
                     "end of file was reached while parsing a frameset"
                 ),
             ]
         );
+    }
+
+    #[test]
+    fn positions_in_frameset_character_diagnostics_at_text_emission() {
+        let source = "<!doctype html><frameset><!--é-->\r\n aβ <frame>γ ";
+        let output = parse_html_with_diagnostics(source).unwrap();
+        let diagnostics = output
+            .parser_diagnostics
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "unexpected-char-in-frameset")
+            .collect::<Vec<_>>();
+        let line_start = source.rfind('\n').unwrap() + 1;
+        let first_emission = source.find("<frame>").unwrap();
+        let expected_position = |byte_offset| {
+            Some(SourcePosition {
+                byte_offset,
+                char_offset: source[..byte_offset].chars().count(),
+                line: 2,
+                column: source[line_start..byte_offset].chars().count() + 1,
+            })
+        };
+
+        assert_eq!(diagnostics.len(), 2);
+        assert_eq!(diagnostics[0].position, expected_position(first_emission));
+        assert_eq!(diagnostics[1].position, expected_position(source.len()));
+        assert!(first_emission > source[..first_emission].chars().count());
+
+        let mut parser = HtmlParser::new();
+        for token in [
+            Token::StartTag {
+                name: "html".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "frameset".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("x".to_string()),
+            Token::Eof,
+        ] {
+            parser.process_token(token);
+        }
+        let unpositioned = parser
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "unexpected-char-in-frameset")
+            .collect::<Vec<_>>();
+        assert_eq!(unpositioned.len(), 1);
+        assert_eq!(unpositioned[0].position, None);
+
+        for source in [
+            "<!doctype html><frameset> \r\n\t<frame>",
+            "<!doctype html><frameset><noframes>text</noframes>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output.parser_diagnostics.iter().all(|diagnostic| {
+                diagnostic.code != "unexpected-char-in-frameset"
+            }));
+        }
+
+        let after_frameset =
+            parse_html_with_diagnostics("<!doctype html><frameset></frameset>x").unwrap();
+        let diagnostic = after_frameset
+            .parser_diagnostics
+            .iter()
+            .find(|diagnostic| diagnostic.code == "unexpected-char-after-frameset")
+            .unwrap();
+        assert_eq!(diagnostic.position, None);
     }
 
     #[test]

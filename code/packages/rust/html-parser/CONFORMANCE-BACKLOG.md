@@ -486,8 +486,10 @@ Prioritized work items:
    in the after-frameset insertion mode likewise carry their token emission
    point exactly once across repeated `frameset`, `frame`, and generic starts,
    while after-after-frameset dispatch remains distinct. Direct in-frameset
-   ignored start tags also carry their proven emission point exactly once,
-   without folding character or end-tag diagnostics into the same contract.
+   ignored start tags and non-whitespace character tokens also carry their
+   proven emission point exactly once. Character tokens use the delimiter or
+   EOF point that flushes the tokenizer's coalesced text; after-frameset text
+   and end-tag diagnostics remain separate contracts.
    Continue migrating one evidence-backed diagnostic family at a time;
    synthetic or directly supplied tokens must remain explicitly unpositioned.
 4. **Input boundary review.** Document the Unicode-code-point parser boundary
