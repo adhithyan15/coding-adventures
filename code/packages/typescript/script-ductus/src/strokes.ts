@@ -3454,6 +3454,54 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: cyrillicAlphabetSource("к"),
   },
+  // RussianIrina writes lowercase л in one continuous school-hand motion:
+  // curl around the baseline hook, rise to the apex, then descend the right
+  // leg. The fitted path preserves that order while tracing the bundled
+  // printed glyph's curved left leg, horizontal shoulder, and upright stem.
+  [ductusKey("cyrillic", "л")]: {
+    script: "cyrillic",
+    glyph: "л",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "curve from the baseline hook up the left leg",
+            path: [
+              { x: 25, y: 30 },
+              { x: 55, y: 25 },
+              { x: 85, y: 35 },
+              { x: 110, y: 75 },
+              { x: 125, y: 140 },
+              { x: 135, y: 240 },
+              { x: 145, y: 360 },
+              { x: 160, y: 460 },
+              { x: 175, y: 500 },
+            ],
+          },
+          {
+            label: "sweep right along the top shoulder",
+            path: [
+              { x: 175, y: 500 },
+              { x: 260, y: 500 },
+              { x: 360, y: 500 },
+              { x: 458, y: 500 },
+            ],
+          },
+          {
+            label: "descend the right stem to the baseline",
+            path: [
+              { x: 458, y: 500 },
+              { x: 458, y: 380 },
+              { x: 458, y: 260 },
+              { x: 458, y: 140 },
+              { x: 458, y: 25 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: cyrillicAlphabetSource("л"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the

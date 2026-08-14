@@ -197,6 +197,12 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
   endings fell away and something audible had to take over -- a stressed
   pronoun, a doubled preposition, and a comma.
 
+### Added - source-verified Cyrillic л (HL-C09EL)
+
+- Verify lowercase л as one continuous hooked-left-leg-to-apex-to-right-leg run with zero lifts against RussianIrina's native-teacher all-letter handwriting lesson.
+- Preserve the sourced pointed school-hand order while fitting the bundled curved left leg, horizontal top shoulder, and straight right stem and documenting the printed form's omitted entry and exit joins.
+- Reduce measured HL-C09 debt to 90 entries and queue Cyrillic м next.
+
 ### Added - source-verified Cyrillic к (HL-C09EK)
 
 - Verify lowercase к as one continuous left-stem-to-upper-arm-to-lower-arm run with zero lifts against RussianIrina's native-teacher all-letter handwriting lesson.

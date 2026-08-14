@@ -222,6 +222,8 @@ const CYRILLIC_SHORT_I = ductusFor("й", "cyrillic")!;
 const cyrillicShortIOutline = cyrillicOutline("й");
 const CYRILLIC_KA = ductusFor("к", "cyrillic")!;
 const cyrillicKaOutline = cyrillicOutline("к");
+const CYRILLIC_EL = ductusFor("л", "cyrillic")!;
+const cyrillicElOutline = cyrillicOutline("л");
 const HEBREW_ALEF = ductusFor("א", "hebrew")!;
 const hebrewAlefOutline = hebrewOutline("א");
 const HEBREW_BET = ductusFor("ב", "hebrew")!;
@@ -2735,6 +2737,34 @@ describe("Cyrillic к — one joined stem-and-arms school-hand run", () => {
     );
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(CYRILLIC_KA.strokes[0], 1),
+    );
+  });
+});
+
+describe("Cyrillic л — one joined hook-to-legs school-hand run", () => {
+  const steps = ductusSteps(CYRILLIC_EL);
+  const strip = ductusFilmstrip(CYRILLIC_EL, cyrillicElOutline);
+
+  it("shows the hooked left leg before the top shoulder and right stem", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "curve from the baseline hook up the left leg",
+      "sweep right along the top shoulder",
+      "descend the right stem to the baseline",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0]);
+    expect(strip.frames).toHaveLength(3);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 3 movements");
+  });
+
+  it("draws the exact Noto Sans Cyrillic character behind the joined path", () => {
+    const paths = byTag(strip.frames[2], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      cyrillicElOutline.path,
+    );
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(CYRILLIC_EL.strokes[0], 1),
     );
   });
 });
