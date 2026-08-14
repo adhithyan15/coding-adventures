@@ -318,6 +318,7 @@ pub fn run_binary(binary: &[u8], args: &[Value]) -> Result<RunResult, BackendErr
     }
 
     let mut program = binary.to_vec();
+    program.resize((program.len() + 3) & !3, 0);
     let return_trampoline = program.len();
     // A program may have used a host service immediately before returning.
     // Clear a7 so the runner's terminal ecall keeps its historical halt-only
@@ -477,11 +478,12 @@ struct DynamicByteAllocation {
     size_offset: usize,
 }
 
-/// Static, zero-filled byte buffers appended after module globals.
+/// Zero-filled byte buffers appended after module globals.
 ///
-/// The first supported allocation form is deliberately compile-time only: it
-/// gives tape-style language runtimes real addressable storage without making
-/// a guest heap or a bounds ABI part of the binary contract yet.
+/// A byte-buffer value is an `i64`/`u64` pair whose low word is its address and
+/// whose high word is its allocation length. Keeping the length in the normal
+/// wide-value representation lets checked buffers cross ordinary moves, calls,
+/// returns, and global storage without a second ABI.
 #[derive(Debug, Clone, Default)]
 struct ByteAllocationLayout {
     slots: HashMap<(String, String), ByteAllocation>,
@@ -1213,7 +1215,7 @@ impl Lowerer {
         if let Some(slot) = self.byte_allocation(instr)? {
             self.reserve_data_address(slot.offset);
             self.words.push(encode_addi(lo, SCRATCH_REGISTER, 0));
-            self.words.push(encode_addi(hi, X0_ZERO, 0));
+            self.load_constant(hi, slot.size as u32);
             return Ok(());
         }
         let dynamic = self.dynamic_byte_allocation(instr, "alloc_bytes")?;
@@ -1261,7 +1263,7 @@ impl Lowerer {
         self.words.push(encode_sw(size.low(), SCRATCH_REGISTER, 0));
         self.words
             .push(encode_addi(lo, SECOND_SCRATCH_REGISTER, 0));
-        self.words.push(encode_addi(hi, X0_ZERO, 0));
+        self.words.push(encode_addi(hi, size.low(), 0));
         Ok(())
     }
 
@@ -1273,11 +1275,11 @@ impl Lowerer {
             )));
         }
         self.require_scalar_type(&instr.ty, "load_byte")?;
-        let base = self.var_src(instr, 0, "load_byte")?;
+        let base = self.wide_var_location(instr, 0, "load_byte")?;
         let offset = self.wide_var_location(instr, 1, "load_byte")?;
-        self.guard_byte_access(instr, offset)?;
+        self.guard_byte_access(base, offset, "load_byte")?;
         self.words
-            .push(encode_add(SCRATCH_REGISTER, base, offset.low()));
+            .push(encode_add(SCRATCH_REGISTER, base.low(), offset.low()));
         if matches!(instr.ty.as_str(), "i64" | "u64") {
             let ValueLocation::Pair { lo, hi } = self.dest_pair(instr, "load_byte")? else {
                 unreachable!("load_byte wide destination uses a register pair")
@@ -1304,12 +1306,12 @@ impl Lowerer {
                 instr.srcs.len()
             )));
         }
-        let base = self.var_src(instr, 0, "store_byte")?;
+        let base = self.wide_var_location(instr, 0, "store_byte")?;
         let offset = self.wide_var_location(instr, 1, "store_byte")?;
         let value = self.var_src(instr, 2, "store_byte")?;
-        self.guard_byte_access(instr, offset)?;
+        self.guard_byte_access(base, offset, "store_byte")?;
         self.words
-            .push(encode_add(SCRATCH_REGISTER, base, offset.low()));
+            .push(encode_add(SCRATCH_REGISTER, base.low(), offset.low()));
         self.words.push(encode_sb(value, SCRATCH_REGISTER, 0));
         Ok(())
     }
@@ -2639,32 +2641,6 @@ impl Lowerer {
             })
     }
 
-    fn byte_access_allocation(
-        &self,
-        instr: &CIRInstr,
-        op: &str,
-    ) -> Result<(Option<ByteAllocation>, Option<DynamicByteAllocation>), BackendError> {
-        let Some(layout) = &self.allocation_layout else {
-            return Err(BackendError::UnsupportedOp(format!(
-                "{op} (module linking required)"
-            )));
-        };
-        let Some(CIROperand::Var(base)) = instr.srcs.first() else {
-            return Err(BackendError::InvalidOperand(format!(
-                "{op} srcs[0] must be a locally allocated buffer Var"
-            )));
-        };
-        let key = (self.function_name.clone(), base.clone());
-        let static_allocation = layout.slots.get(&key).cloned();
-        let dynamic_allocation = layout.dynamic_slots.get(&key).cloned();
-        if static_allocation.is_none() && dynamic_allocation.is_none() {
-            return Err(BackendError::UnsupportedOp(format!(
-                "{op} requires a locally allocated buffer; escaped pointers need an explicit length ABI"
-            )));
-        }
-        Ok((static_allocation, dynamic_allocation))
-    }
-
     fn heap_cursor_offset(&self) -> Result<usize, BackendError> {
         self.allocation_layout
             .as_ref()
@@ -2674,28 +2650,20 @@ impl Lowerer {
 
     fn guard_byte_access(
         &mut self,
-        instr: &CIRInstr,
+        base: ValueLocation,
         offset: ValueLocation,
+        op: &str,
     ) -> Result<(), BackendError> {
-        let (static_allocation, dynamic_allocation) =
-            self.byte_access_allocation(instr, &instr.op)?;
+        let ValueLocation::Pair { hi: length, .. } = base else {
+            return Err(BackendError::InvalidOperand(format!(
+                "{op} base must be an alloc_bytes descriptor"
+            )));
+        };
         self.guard_high_word_is_zero(offset);
-        if let Some(allocation) = static_allocation {
-            self.load_constant(DIVISION_BORROW_REGISTER, allocation.size as u32);
-        } else if let Some(allocation) = dynamic_allocation {
-            self.reserve_data_address(allocation.size_offset);
-            self.words.push(encode_lw(
-                DIVISION_BORROW_REGISTER,
-                SCRATCH_REGISTER,
-                0,
-            ));
-        } else {
-            unreachable!("byte allocation lookup returns static or dynamic storage")
-        }
         self.words.push(encode_sltu(
             SCRATCH_REGISTER,
             offset.low(),
-            DIVISION_BORROW_REGISTER,
+            length,
         ));
         let in_bounds = self.internal_label("byte_in_bounds");
         self.record_named_branch(

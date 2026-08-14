@@ -1345,6 +1345,120 @@ fn linked_module_exits_on_a_byte_access_outside_its_allocation() {
 }
 
 #[test]
+fn linked_module_keeps_byte_buffer_bounds_through_escapes() {
+    let buffer_param = vec![("buffer".to_owned(), "i64".to_owned())];
+    let make_buffer = vec![
+        ci("const_i64", Some("size"), vec![CIROperand::Int(3)], "i64"),
+        ci(
+            "alloc_bytes",
+            Some("buffer"),
+            vec![CIROperand::Var("size".into())],
+            "i64",
+        ),
+        ci(
+            "ret_i64",
+            None,
+            vec![CIROperand::Var("buffer".into())],
+            "i64",
+        ),
+    ];
+    let write_and_read = vec![
+        ci(
+            "mov_i64",
+            Some("alias"),
+            vec![CIROperand::Var("buffer".into())],
+            "i64",
+        ),
+        ci("const_i64", Some("offset"), vec![CIROperand::Int(1)], "i64"),
+        ci("const_i64", Some("value"), vec![CIROperand::Int(0x142)], "i64"),
+        ci(
+            "store_byte",
+            None,
+            vec![
+                CIROperand::Var("alias".into()),
+                CIROperand::Var("offset".into()),
+                CIROperand::Var("value".into()),
+            ],
+            "void",
+        ),
+        ci(
+            "load_byte",
+            Some("result"),
+            vec![
+                CIROperand::Var("alias".into()),
+                CIROperand::Var("offset".into()),
+            ],
+            "i64",
+        ),
+        ci(
+            "ret_i64",
+            None,
+            vec![CIROperand::Var("result".into())],
+            "i64",
+        ),
+    ];
+    let main = vec![
+        ci(
+            "call",
+            Some("buffer"),
+            vec![CIROperand::Var("make_buffer".into())],
+            "i64",
+        ),
+        ci(
+            "global_store",
+            None,
+            vec![
+                CIROperand::Var("saved_buffer".into()),
+                CIROperand::Var("buffer".into()),
+            ],
+            "i64",
+        ),
+        ci(
+            "global_load",
+            Some("loaded_buffer"),
+            vec![CIROperand::Var("saved_buffer".into())],
+            "i64",
+        ),
+        ci(
+            "call",
+            Some("result"),
+            vec![
+                CIROperand::Var("write_and_read".into()),
+                CIROperand::Var("loaded_buffer".into()),
+            ],
+            "i64",
+        ),
+        ci(
+            "ret_i64",
+            None,
+            vec![CIROperand::Var("result".into())],
+            "i64",
+        ),
+    ];
+    let functions = [
+        ModuleFunction {
+            context: ctx("make_buffer", &[], "i64"),
+            cir: &make_buffer,
+        },
+        ModuleFunction {
+            context: ctx("write_and_read", &buffer_param, "i64"),
+            cir: &write_and_read,
+        },
+        ModuleFunction {
+            context: ctx("main", &[], "i64"),
+            cir: &main,
+        },
+    ];
+
+    let binary = compile_module(&functions, Some("main")).expect("module linking");
+    let result = run_binary(&binary, &[]).expect("escaped byte-buffer execution");
+    assert!(result.halted);
+    assert_eq!(result.return_value, 0x42);
+    assert_eq!(result.return_value_high, 0);
+    assert_eq!(result.exit_code, None);
+}
+
+#[test]
 fn widens_a_word_sized_i64_when_a_wide_operation_reassigns_it() {
     let cir = vec![
         ci("const_i64", Some("value"), vec![CIROperand::Int(0)], "i64"),
