@@ -488,8 +488,10 @@ Prioritized work items:
    while after-after-frameset dispatch remains distinct. Direct in-frameset
    ignored start tags and non-whitespace character tokens also carry their
    proven emission point exactly once. Character tokens use the delimiter or
-   EOF point that flushes the tokenizer's coalesced text; after-frameset text
-   and end-tag diagnostics remain separate contracts.
+   EOF point that flushes the tokenizer's coalesced text. Direct after-frameset
+   non-whitespace character tokens now follow the same positioned contract,
+   while after-after-frameset text remains on its already-positioned generic
+   tail diagnostic and end-tag diagnostics remain separate contracts.
    Continue migrating one evidence-backed diagnostic family at a time;
    synthetic or directly supplied tokens must remain explicitly unpositioned.
 4. **Input boundary review.** Document the Unicode-code-point parser boundary
