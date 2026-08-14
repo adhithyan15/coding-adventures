@@ -1,0 +1,20 @@
+% ============================================================================
+% cloud-signal.query — worked recall queries against cloud-signal.adj
+% (adj-facts-stdlib, METEOROLOGY).
+% ============================================================================
+% Three queries: forward recall (multiple answers) with citation, backward
+% recall (bind a signal, find the cloud type), and honest abstention on
+% cumulonimbus (this table only grounds the two cloud types whose cited span
+% lists more than one weather signal).
+% ============================================================================
+
+import "cloud-signal.adj"
+
+% Forward: what signals does the cited NWS sentence list for stratus clouds?
+? cloud_signal(stratus, $Signal)
+
+% Backward: which cloud type signals an upper-level jet streak?
+? cloud_signal($Cloud, upper_level_jet_streak)
+
+% Honest abstention: cumulonimbus's cited span names only one signal, no listed alternatives.
+? cloud_signal(cumulonimbus, $SignalCumulonimbus)
