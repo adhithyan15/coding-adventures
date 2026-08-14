@@ -1,9 +1,12 @@
-# @version 1
+# @version 2
+# @case_insensitive true
 #
 # Mermaid 11.16.1 Sankey token grammar.
 #
 # Sankey rows follow an RFC 4180-like three-column CSV dialect. Quoted fields
 # use doubled quotes, while empty lines and Mermaid comments are allowed.
+
+case_sensitive: false
 
 skip:
   WHITESPACE      = /[ \t]+/
