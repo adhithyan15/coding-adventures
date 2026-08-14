@@ -438,7 +438,7 @@ Implementations must not include secret keys or recovered plaintext in errors.
 
 ## Shared conformance fixtures
 
-The follow-up fixture package will live under:
+The fixture package lives under:
 
 ```text
 code/fixtures/chief-of-staff-message/v1/
@@ -478,4 +478,5 @@ plaintext payloads, another AEAD, or a non-canonical JSON-only envelope.
 5. Run one cross-language fixture gate in CI and close #130 only when all six
    languages pass it.
 
-Part of #130 and #128. Tracked by #11649.
+Part of #130 and #128. The normative profile was tracked by #11649; the Rust
+adapter and shared fixture lock are tracked by #11652.
