@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.104.0";
+pub const VERSION: &str = "0.105.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -748,7 +748,7 @@ pub fn parse_requirement_diagram(source: &str) -> Result<StructuralDiagram, Pars
     let mut direction = None;
     let mut nodes = Vec::new();
     let mut relationships = Vec::new();
-    let mut styles = Vec::new();
+    let mut style_events = Vec::new();
     let mut cursor = TokenCursor::new(tokens);
     cursor.skip_terminators();
     cursor.consume_if("HEADER");
@@ -802,7 +802,19 @@ pub fn parse_requirement_diagram(source: &str) -> Result<StructuralDiagram, Pars
                 });
             }
             "STYLE" => {
-                styles.push(parse_requirement_style(cursor.advance())?);
+                let (node_ids, style) = parse_requirement_style(cursor.advance())?;
+                style_events.push(RequirementStyleEvent::Direct { node_ids, style });
+            }
+            "CLASSDEF" => {
+                let (class_names, style) = parse_requirement_class_def(cursor.advance())?;
+                style_events.push(RequirementStyleEvent::DefineClass { class_names, style });
+            }
+            "CLASS" => {
+                let (node_ids, class_names) = parse_requirement_class_assignment(cursor.advance())?;
+                style_events.push(RequirementStyleEvent::AssignClass {
+                    node_ids,
+                    class_names,
+                });
             }
             "REQUIREMENT_START" | "ELEMENT_START" => {
                 let is_element = token_name(cursor.current()) == "ELEMENT_START";
@@ -812,11 +824,11 @@ pub fn parse_requirement_diagram(source: &str) -> Result<StructuralDiagram, Pars
                     .trim_end_matches('{')
                     .trim()
                     .to_string();
-                let (kind, name) =
+                let (kind, node_ref) =
                     declaration.split_once(char::is_whitespace).ok_or_else(|| {
                         token_error(cursor.current(), "invalid requirement definition")
                     })?;
-                let name = unquote_requirement_value(name);
+                let (name, inline_classes) = parse_requirement_node_ref(node_ref);
                 let mut fields = Vec::new();
                 let mut requirement_metadata = RequirementMetadata::default();
                 if !is_element {
@@ -872,7 +884,7 @@ pub fn parse_requirement_diagram(source: &str) -> Result<StructuralDiagram, Pars
                 cursor.advance();
                 nodes.push(StructuralNode {
                     id: name.clone(),
-                    label: name,
+                    label: name.clone(),
                     stereotype: Some(kind.to_string()),
                     node_kind: if is_element {
                         StructuralNodeKind::Element
@@ -891,6 +903,12 @@ pub fn parse_requirement_diagram(source: &str) -> Result<StructuralDiagram, Pars
                     }],
                     parent_group: None,
                 });
+                if !inline_classes.is_empty() {
+                    style_events.push(RequirementStyleEvent::AssignClass {
+                        node_ids: vec![name],
+                        class_names: inline_classes,
+                    });
+                }
             }
             "RELATIONSHIP" => {
                 let token = cursor.advance().clone();
@@ -902,17 +920,7 @@ pub fn parse_requirement_diagram(source: &str) -> Result<StructuralDiagram, Pars
         }
         cursor.skip_terminators();
     }
-    for (node_ids, style) in styles {
-        for node_id in node_ids {
-            let node = nodes
-                .iter_mut()
-                .find(|node| node.id == node_id)
-                .ok_or_else(|| {
-                    token_error(cursor.current(), format!("unknown styled node {node_id:?}"))
-                })?;
-            merge_requirement_style(node.style.get_or_insert_default(), &style);
-        }
-    }
+    resolve_requirement_styles(&mut nodes, style_events, cursor.current())?;
     Ok(StructuralDiagram {
         kind: StructuralKind::Requirement,
         title,
@@ -939,7 +947,22 @@ fn parse_requirement_risk(value: &str) -> RequirementRisk {
 }
 
 fn parse_requirement_style(token: &Token) -> Result<(Vec<String>, DiagramStyle), ParseError> {
-    let value = token.value.trim_start_matches("style").trim();
+    parse_requirement_target_style(token, "style")
+}
+
+fn parse_requirement_class_def(token: &Token) -> Result<(Vec<String>, DiagramStyle), ParseError> {
+    parse_requirement_target_style(token, "classDef")
+}
+
+fn parse_requirement_target_style(
+    token: &Token,
+    keyword: &str,
+) -> Result<(Vec<String>, DiagramStyle), ParseError> {
+    let value = token
+        .value
+        .trim_end_matches(';')
+        .trim_start_matches(keyword)
+        .trim();
     let (targets, declarations) = value
         .split_once(char::is_whitespace)
         .ok_or_else(|| token_error(token, "invalid requirement style"))?;
@@ -982,6 +1005,117 @@ fn parse_requirement_style(token: &Token) -> Result<(Vec<String>, DiagramStyle),
             .collect(),
         style,
     ))
+}
+
+fn parse_requirement_class_assignment(
+    token: &Token,
+) -> Result<(Vec<String>, Vec<String>), ParseError> {
+    let value = token
+        .value
+        .trim_end_matches(';')
+        .trim_start_matches("class")
+        .trim();
+    let (node_ids, class_names) = value
+        .split_once(char::is_whitespace)
+        .ok_or_else(|| token_error(token, "invalid requirement class assignment"))?;
+    Ok((
+        split_requirement_list(node_ids),
+        split_requirement_list(class_names),
+    ))
+}
+
+fn parse_requirement_node_ref(value: &str) -> (String, Vec<String>) {
+    let (name, classes) = value
+        .split_once(":::")
+        .map(|(name, classes)| (name, split_requirement_list(classes)))
+        .unwrap_or((value, Vec::new()));
+    (unquote_requirement_value(name), classes)
+}
+
+fn split_requirement_list(value: &str) -> Vec<String> {
+    value
+        .split(',')
+        .map(unquote_requirement_value)
+        .filter(|value| !value.is_empty())
+        .collect()
+}
+
+enum RequirementStyleEvent {
+    DefineClass {
+        class_names: Vec<String>,
+        style: DiagramStyle,
+    },
+    AssignClass {
+        node_ids: Vec<String>,
+        class_names: Vec<String>,
+    },
+    Direct {
+        node_ids: Vec<String>,
+        style: DiagramStyle,
+    },
+}
+
+fn resolve_requirement_styles(
+    nodes: &mut [StructuralNode],
+    events: Vec<RequirementStyleEvent>,
+    error_token: &Token,
+) -> Result<(), ParseError> {
+    let mut classes = HashMap::<String, DiagramStyle>::new();
+    let mut memberships = nodes
+        .iter()
+        .map(|node| (node.id.clone(), vec!["default".to_string()]))
+        .collect::<HashMap<_, _>>();
+
+    for event in events {
+        match event {
+            RequirementStyleEvent::DefineClass { class_names, style } => {
+                for class_name in class_names {
+                    merge_requirement_style(classes.entry(class_name.clone()).or_default(), &style);
+                    for node in nodes
+                        .iter_mut()
+                        .filter(|node| memberships[&node.id].iter().any(|name| name == &class_name))
+                    {
+                        merge_requirement_style(node.style.get_or_insert_default(), &style);
+                    }
+                }
+            }
+            RequirementStyleEvent::AssignClass {
+                node_ids,
+                class_names,
+            } => {
+                for node_id in node_ids {
+                    let node = requirement_style_node(nodes, &node_id, error_token)?;
+                    let node_memberships = memberships
+                        .get_mut(&node_id)
+                        .expect("styled requirement node has memberships");
+                    for class_name in &class_names {
+                        node_memberships.push(class_name.clone());
+                        if let Some(style) = classes.get(class_name) {
+                            merge_requirement_style(node.style.get_or_insert_default(), style);
+                        }
+                    }
+                }
+            }
+            RequirementStyleEvent::Direct { node_ids, style } => {
+                for node_id in node_ids {
+                    let node = requirement_style_node(nodes, &node_id, error_token)?;
+                    merge_requirement_style(node.style.get_or_insert_default(), &style);
+                }
+            }
+        }
+    }
+    Ok(())
+}
+
+fn requirement_style_node<'a>(
+    nodes: &'a mut [StructuralNode],
+    node_id: &str,
+    token: &Token,
+) -> Result<&'a mut StructuralNode, ParseError> {
+    nodes
+        .iter_mut()
+        .find(|node| node.id == node_id)
+        .ok_or_else(|| token_error(token, format!("unknown styled node {node_id:?}")))
 }
 
 fn merge_requirement_style(target: &mut DiagramStyle, source: &DiagramStyle) {
@@ -7008,7 +7142,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.104.0");
+        assert_eq!(crate::VERSION, "0.105.0");
     }
 
     #[test]

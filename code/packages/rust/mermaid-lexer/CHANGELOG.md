@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.57.0
+
+- Tokenize Requirement class definitions, assignments, and inline shorthand.
+
 ## 0.56.0
 
 - Tokenize Requirement direct node style statements.
