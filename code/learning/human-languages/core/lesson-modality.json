@@ -7,17 +7,17 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:9bba82b54e10b1d6",
+  "sourceHash": "fnv1a64:e0119218fc13d820",
   "summary": {
-    "totalLessons": 2237,
-    "voice": 1467,
+    "totalLessons": 2238,
+    "voice": 1468,
     "sight": 569,
     "pen": 201,
-    "drivableLessons": 1467,
+    "drivableLessons": 1468,
     "drivablePercent": 66,
     "trackCount": 22,
     "chapterCount": 781,
-    "drivablePrefixTotal": 1265,
+    "drivablePrefixTotal": 1266,
     "fullyDrivableChapters": 481,
     "unstartableChapters": 180,
     "overriddenLessons": 0,
@@ -7334,12 +7334,12 @@
     },
     {
       "language": "spanish",
-      "lessonCount": 427,
-      "voice": 377,
+      "lessonCount": 428,
+      "voice": 378,
       "sight": 43,
       "pen": 7,
       "drivablePercent": 88,
-      "drivablePrefixTotal": 362,
+      "drivablePrefixTotal": 363,
       "modalities": [
         "voice",
         "sight",
@@ -10770,18 +10770,19 @@
         },
         {
           "chapter": 210,
-          "lessonCount": 1,
-          "voice": 1,
+          "lessonCount": 2,
+          "voice": 2,
           "sight": 0,
           "pen": 0,
           "modalities": [
             "voice"
           ],
-          "drivablePrefix": 1,
+          "drivablePrefix": 2,
           "firstNonVoiceLesson": null,
           "drivable": true,
           "drivableLessonIds": [
-            "ES-C56-sintesis-condiciones"
+            "ES-C56-sintesis-condiciones",
+            "ES-C56-depende"
           ]
         },
         {
@@ -47962,6 +47963,24 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:a9df0087fddfbab7"
+    },
+    {
+      "id": "ES-C56-depende",
+      "language": "spanish",
+      "chapter": 210,
+      "sequence": 2287,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:c1a5d4fcb1659a11"
     },
     {
       "id": "ES-C57-dice-que",

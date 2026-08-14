@@ -3,8 +3,8 @@
   "language": "spanish",
   "chapter": 210,
   "title": "Synthesis --- Supposing Out Loud",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:c9a47b1a7916bfa3",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:f26f69e4f50f30d9",
   "lessons": [
     {
       "id": "ES-C56-sintesis-condiciones",
@@ -211,6 +211,150 @@
             {
               "kind": "speech",
               "text": "What can you now say that you could not before? (Something about a world that is not the case.) And what had to be built first? (The preterite plural — and nobody would have guessed it.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C56-depende",
+      "sequence": 2287,
+      "title": "depende — the condition you do not have to finish",
+      "headword": "depende",
+      "romanization": "depende",
+      "gloss": "it depends",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c1a5d4fcb1659a11",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have spent two chapters building conditions with both halves: si plus a situation, then what follows. This is the word for when you want the condition without saying what it is."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "supposing out loud — the real and unreal conditions this word stands in for."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three syllables, stress in the middle: de-PEN-de. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "depende — \"it depends.\" Latin de- (\"down from\") plus pendere (\"to hang\"). To depend on something is to hang from it, and the metaphor is still doing work: the answer is suspended from a condition, and until the condition settles the answer swings."
+            },
+            {
+              "kind": "speech",
+              "text": "That pendere is a generous root. It gave English pendant (a thing that hangs), pending (still hanging), suspend, and — by way of a hanging scale pan — pensive and even pound, because things were weighed by hanging them."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Every condition you have built so far names its own si. Depende is the one that does not: it asserts that a condition exists and declines to state it, which is why it is such a useful answer to a question you are not ready to answer."
+            },
+            {
+              "kind": "speech",
+              "text": "Add de and you can name it after all — depende de ti, \"it depends on you.\" The condition stops being a mystery and becomes a thing you point at."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "depende — stress the middle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *depende* — stress the middle]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "name the condition — depende de ti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: name the condition — *depende de ti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same answer the long way, with a full si sentence",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same answer the long way, with a full *si* sentence]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does pendere mean, and what is hanging? (To hang — the answer hangs from the condition.) Which English words share the root? (Pendant, pending, suspend.) What do you add to name the condition? (De.)"
             }
           ]
         }
