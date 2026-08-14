@@ -158,6 +158,21 @@ describe("D18F shared fixture", () => {
     expect(new TextDecoder().decode(restored)).toBe(canonical);
   });
 
+  it("rejects JSON strings that cannot represent lossless UTF-8", () => {
+    const canonical = new TextDecoder().decode(
+      fromBase64(fixture.positive_cases[0].canonical_json_b64),
+    );
+    const malformed = canonical.replace(
+      '"content_type":"application/octet-stream"',
+      '"content_type":"\\ud800"',
+    );
+    expectProfileError(
+      () => messageFromJson(new TextEncoder().encode(malformed)),
+      "invalid_field",
+      "unpaired-surrogate",
+    );
+  });
+
   it("materializes compact oversize recipes without checked-in large blobs", () => {
     const baseline = fromBase64(fixture.positive_cases[0].d18m_b64);
     for (const recipe of fixture.oversize_recipes) {

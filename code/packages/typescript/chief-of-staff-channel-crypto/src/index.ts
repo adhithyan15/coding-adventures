@@ -123,6 +123,7 @@ export class D18Message {
     requireLength(parts.channelId, 16);
     requireU64(parts.sequence);
     requireU64(parts.keyEpoch);
+    if (!isWellFormedUnicode(parts.contentType)) fail("invalid_field");
     const contentTypeLength = utf8(parts.contentType).length;
     if (contentTypeLength > MAX_CONTENT_TYPE_BYTES) {
       fail("length_limit_exceeded");
@@ -303,7 +304,13 @@ function verifyCryptography(
 ): Uint8Array {
   requireLength(originatorPublicKey, 32);
   const header = messageAuthenticatedHeader(message);
-  if (!verify(header, message.originatorSignature, originatorPublicKey)) {
+  let signatureValid = false;
+  try {
+    signatureValid = verify(header, message.originatorSignature, originatorPublicKey);
+  } catch {
+    // Invalid encoded points remain one portable signature failure.
+  }
+  if (!signatureValid) {
     fail("invalid_signature");
   }
   let plaintext: Uint8Array;
@@ -756,6 +763,21 @@ function skipWhitespace(text: string, index: number): number {
 
 function utf8(value: string): Uint8Array {
   return new TextEncoder().encode(value);
+}
+
+function isWellFormedUnicode(value: string): boolean {
+  for (let index = 0; index < value.length; index += 1) {
+    const unit = value.charCodeAt(index);
+    if (unit >= 0xd800 && unit <= 0xdbff) {
+      if (index + 1 >= value.length) return false;
+      const next = value.charCodeAt(index + 1);
+      if (next < 0xdc00 || next > 0xdfff) return false;
+      index += 1;
+    } else if (unit >= 0xdc00 && unit <= 0xdfff) {
+      return false;
+    }
+  }
+  return true;
 }
 
 function concat(parts: readonly Uint8Array[]): Uint8Array {
