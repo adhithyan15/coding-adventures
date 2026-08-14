@@ -747,10 +747,16 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   the larger lower lobe into a rising exit without lifting. Its two-frame Noto
   fit preserves that upper-lobe-to-lower-lobe order and zero-lift evidence
   while tracing the compact printed double-lobe glyph; it records that the
-  printed form omits the school hand's exit join. The remaining **94** prose part
+  printed form omits the school hand's exit join. Lowercase **и** follows at
+  03:56–04:02: the pen descends the left stem, turns directly into a rising
+  diagonal, descends the right stem, and finishes through a small rising exit
+  without lifting. Its three-frame Noto fit preserves that stem-to-diagonal-to-
+  stem order and zero-lift evidence while tracing the printed backwards-N
+  glyph; it records that the printed form omits the school hand's rounded entry
+  and exit joins. The remaining **93** prose part
   orders across four scripts
   (`arabic` 3,
-  `cyrillic` 24,
+  `cyrillic` 23,
   `gujarati` 33, `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a
   citation without a count), and Language Ladder's ductus test proves every
