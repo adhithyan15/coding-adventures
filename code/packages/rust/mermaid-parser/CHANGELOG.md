@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.109.0
+
+- Parse quoted and unquoted multiword Requirement identifiers across definitions, relationships, and shorthand classes.
+
 ## 0.108.0
 
 - Parse Requirement headers, statements, fields, enum values, and relationships case-insensitively.

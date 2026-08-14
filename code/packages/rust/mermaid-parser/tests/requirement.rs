@@ -156,6 +156,7 @@ TeXt: "Mixed case"
 RiSk: HIGH
 VeRiFyMeThOd: InSpEcTiOn
 }
+
 ElEmEnT system {
 TyPe: service
 DoCrEf: docs/system
@@ -175,6 +176,28 @@ system - SaTiSfIeS -> req"#;
         parse_any_mermaid(source).expect("case-insensitive requirement dispatch"),
         MermaidDiagram::Structural(_)
     ));
+}
+
+#[test]
+fn requirement_preserves_quoted_and_unquoted_multiword_identifiers() {
+    let source = r#"requirementDiagram
+requirement Checkout payment requirement:::important {
+id: PAY-1
+}
+element "Checkout service" {
+type: service
+}
+classDef important fill:#fff1a8
+"Checkout service" - satisfies -> Checkout payment requirement"#;
+    let diagram = parse_requirement_diagram(source).expect("multiword requirement identifiers");
+    assert_eq!(diagram.nodes[0].id, "Checkout payment requirement");
+    assert_eq!(diagram.nodes[1].id, "Checkout service");
+    assert_eq!(diagram.relationships[0].from, "Checkout service");
+    assert_eq!(diagram.relationships[0].to, "Checkout payment requirement");
+    assert_eq!(
+        diagram.nodes[0].style.as_ref().unwrap().fill.as_deref(),
+        Some("#fff1a8")
+    );
 }
 
 #[test]

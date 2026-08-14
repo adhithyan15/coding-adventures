@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.61.0
+
+- Tokenize Requirement definitions, relationships, and shorthand classes with quoted or unquoted multiword identifiers.
+
 ## 0.60.0
 
 - Match Requirement keywords and enum values case-insensitively, following the pinned upstream lexer.
