@@ -4434,6 +4434,65 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: cyrillicAlphabetSource("ь"),
   },
+  // RussianIrina writes lowercase э in two runs: the outer backwards-C curve
+  // travels from upper left around the right side to lower left, then a lifted
+  // tongue travels right-to-left. The fitted path widens the curve and
+  // straightens the printed middle bar without changing that order.
+  [ductusKey("cyrillic", "э")]: {
+    script: "cyrillic",
+    glyph: "э",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "sweep right across the upper curve",
+            path: [
+              { x: 82, y: 472 },
+              { x: 150, y: 500 },
+              { x: 230, y: 505 },
+              { x: 315, y: 480 },
+              { x: 378, y: 420 },
+            ],
+          },
+          {
+            label: "continue down around the outer right side",
+            path: [
+              { x: 378, y: 420 },
+              { x: 420, y: 350 },
+              { x: 425, y: 270 },
+              { x: 415, y: 185 },
+              { x: 378, y: 110 },
+            ],
+          },
+          {
+            label: "sweep left through the lower curve",
+            path: [
+              { x: 378, y: 110 },
+              { x: 315, y: 45 },
+              { x: 230, y: 25 },
+              { x: 150, y: 35 },
+              { x: 82, y: 72 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then draw the middle tongue right-to-left",
+            path: [
+              { x: 356, y: 276 },
+              { x: 290, y: 276 },
+              { x: 225, y: 276 },
+              { x: 160, y: 276 },
+              { x: 95, y: 276 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: cyrillicAlphabetSource("э"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the

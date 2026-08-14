@@ -106,6 +106,7 @@ const CYRILLIC_SHCHA = DUCTUS[ductusKey("cyrillic", "щ")];
 const CYRILLIC_HARD_SIGN = DUCTUS[ductusKey("cyrillic", "ъ")];
 const CYRILLIC_YERY = DUCTUS[ductusKey("cyrillic", "ы")];
 const CYRILLIC_SOFT_SIGN = DUCTUS[ductusKey("cyrillic", "ь")];
+const CYRILLIC_E = DUCTUS[ductusKey("cyrillic", "э")];
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
@@ -1687,6 +1688,23 @@ describe("handwriting ductus", () => {
     expect(lower[0].x).toBeLessThan(lower.at(-1)!.x);
     expect(right.at(-1)!.y).toBeGreaterThan(right[0].y);
     expect(upper.at(-1)!.x).toBeLessThan(upper[0].x);
+  });
+
+  it("Cyrillic э draws the outer curve before the lifted right-to-left tongue", () => {
+    expect(CYRILLIC_E.script).toBe("cyrillic");
+    expect(penLifts(CYRILLIC_E)).toBe(1);
+    expect(CYRILLIC_E.strokes).toHaveLength(2);
+    expect(CYRILLIC_E.strokes.map((stroke) => stroke.segments.length)).toEqual([3, 1]);
+    const [upper, right, lower] = CYRILLIC_E.strokes[0].segments.map(
+      (segment) => segment.path,
+    );
+    const tongue = CYRILLIC_E.strokes[1].segments[0].path;
+    expect(upper.at(-1)).toEqual(right[0]);
+    expect(right.at(-1)).toEqual(lower[0]);
+    expect(upper[0].x).toBeLessThan(upper.at(-1)!.x);
+    expect(right[0].y).toBeGreaterThan(right.at(-1)!.y);
+    expect(lower.at(-1)!.x).toBeLessThan(lower[0].x);
+    expect(tongue[0].x).toBeGreaterThan(tongue.at(-1)!.x);
   });
 
   it("Hebrew א uses two crossed pen-down runs with one lift", () => {
@@ -3835,6 +3853,17 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /all 33 Russian letters.*classic handwritten form taught at school.*11:16–11:20.*upper left.*narrow entry stroke.*baseline.*circles the joined lower bowl counterclockwise.*closes it against the stem.*without lifting.*one continuous pen-down run.*zero intervening lifts.*stem down.*joined lower bowl.*bundled Noto Sans Cyrillic.*printed ь-like form.*straight full-height upright.*wide closed lower bowl.*slightly slanted entry.*rounded handwritten join.*stem-to-bowl order.*counterclockwise direction.*zero-lift evidence.*descend the stem.*circle the lower bowl counterclockwise.*close it against the stem.*connected cursive may restore/i,
+    );
+  });
+
+  it("Cyrillic э traces its outer-before-tongue order to the native lesson", () => {
+    const src = CYRILLIC_E.source;
+    expect(src.url).toBe("https://www.youtube.com/watch?v=tqDLDfYoO2o");
+    expect(src.citation).toMatch(
+      /RussianIrina.*Learning Russian - Alphabet letters, handwriting.*lowercase э.*11:25–11:32.*5 February 2013/i,
+    );
+    expect(src.variation).toMatch(
+      /all 33 Russian letters.*classic handwritten form taught at school.*11:25–11:32.*upper-left opening.*curves right across the top.*descends around the outer right side.*sweeps left through the lower curve.*lower-left opening.*lifts once.*middle right.*middle tongue right-to-left.*gentle hook.*two pen-down runs.*one intervening lift.*outer backwards-C curve first.*bundled Noto Sans Cyrillic.*printed э-like form.*broad open-left outer curve.*straight horizontal middle bar.*narrower rounded curve.*hooked tongue.*outer-before-tongue order.*clockwise outer direction.*right-to-left tongue direction.*one-lift evidence.*upper left to lower left.*lift once.*middle bar from right to left.*connected cursive may narrow/i,
     );
   });
 

@@ -913,6 +913,13 @@ lesson demonstrates its narrow descending entry and joined counterclockwise
 lower bowl at 11:16–11:20; the Noto Sans Cyrillic fit preserves that zero-lift
 stem-to-bowl order while tracing the printed straight upright and wide closed
 lower bowl and records the source's slanted entry and rounded handwritten join.
+The four-frame Cyrillic **э** filmstrip sweeps right across the upper curve,
+continues down around the outer right side, sweeps left through the lower
+curve, then lifts once and draws the middle tongue from right to left. The
+native-teacher lesson demonstrates that outer-before-tongue order at
+11:25–11:32; the Noto Sans Cyrillic fit preserves its one-lift evidence while
+tracing the printed broad open-left curve and straight middle bar and records
+the source's narrower rounded curve and gently hooked tongue.
 The canonical script-data group is capped at 250 kB per cacheable batch, so
 these growing source notes stay within the app's enforced 500 kB eager-chunk
 budget without removing learner-facing evidence.
