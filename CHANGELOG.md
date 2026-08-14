@@ -19,10 +19,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   य/व/क and Sanskrit on अ/त/क, which is a rhyme rather than a match, and the
   page says so rather than flattening it.
 - **The whole wave is `voice`.** `pen` and `sight` do not move at all: not one of
-  the 42 needs eyes. Six entire new chapters are fully drivable and
-  `drivablePercent` goes **up**, 66 → 67, for the first time since the script
-  segments began landing. That is the drive order's own prediction — the meaning
-  ramp costs the driving edition nothing; only the decoding ramp does.
+  the 42 needs eyes. All six new chapters are fully drivable end to end —
+  `fullyDrivableChapters` 504 → 510, `drivablePrefixTotal` 1175 → 1217 — and
+  `drivablePercent` **holds at 67** rather than falling. That is the drive
+  order's own prediction: 42 eyes-free lessons enter numerator and denominator
+  together, so a meaning ramp costs the driving edition nothing; only a decoding
+  ramp moves this number. (An earlier draft of this entry claimed 66 → 67. That
+  was true against the base this wave was authored on and stopped being true
+  while it sat behind 152 commits: main reached 67 first, on HL-C128 step 4. The
+  claim is corrected rather than kept, because the number is a measurement.)
 - Headwords are **authored, not cited** — this repo has no dictionary, and the
   corpus's other 400-odd word lessons stand the same way. What is checked
   mechanically: every character is a real letter *of the right script* (a Telugu
