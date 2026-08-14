@@ -18,7 +18,7 @@ use diagram_ir::{
 };
 use std::collections::{BTreeSet, HashMap};
 
-pub const VERSION: &str = "0.15.0";
+pub const VERSION: &str = "0.16.0";
 
 // ── Constants ─────────────────────────────────────────────────────────────
 
@@ -356,6 +356,7 @@ fn layout_git(diagram: &GitDiagram, cw: f64) -> LayoutedTemporalDiagram {
         0.0
     };
     let mut branch_lanes: HashMap<String, usize> = HashMap::new();
+    let mut commit_positions: HashMap<String, (f64, f64)> = HashMap::new();
     let mut current_branch = "main".to_string();
 
     // Mermaid gives unordered branches stable fractional keys (0.0, 0.1, ...)
@@ -431,12 +432,13 @@ fn layout_git(diagram: &GitDiagram, cw: f64) -> LayoutedTemporalDiagram {
     let mut progress_index = 0_usize;
     for event in &diagram.events {
         match event {
-            GitEvent::Commit { id, message, tags, branch, type_ } => {
+            GitEvent::Commit { id, resolved_id, message, tags, branch, type_, .. } => {
                 let lane = *branch_lanes.entry(branch.clone()).or_insert_with(|| {
                     let l = next_lane; next_lane += 1; l
                 });
                 let (x, y) = point(lane, progress_index);
-                let commit_id = id.clone().unwrap_or_else(|| format!("c{progress_index}"));
+                let commit_id = id.clone().unwrap_or_else(|| resolved_id.clone());
+                commit_positions.insert(resolved_id.clone(), (x, y));
                 items.push(LayoutedTemporalItem::CommitNode {
                     x, y,
                     id: commit_id,
@@ -453,16 +455,21 @@ fn layout_git(diagram: &GitDiagram, cw: f64) -> LayoutedTemporalDiagram {
                     let l = next_lane; next_lane += 1; l
                 });
             }
-            GitEvent::Merge { from, id, tags, type_ } => {
+            GitEvent::Merge { from, id, resolved_id, parents, tags, type_ } => {
                 let from_lane = *branch_lanes.get(from).unwrap_or(&0);
                 let to_lane   = *branch_lanes.get(&current_branch).unwrap_or(&0);
-                let (from_x, from_y) = point(from_lane, progress_index.saturating_sub(1));
+                let (from_x, from_y) = parents
+                    .get(1)
+                    .and_then(|parent| commit_positions.get(parent))
+                    .copied()
+                    .unwrap_or_else(|| point(from_lane, progress_index.saturating_sub(1)));
                 let (to_x, to_y) = point(to_lane, progress_index);
-                items.push(LayoutedTemporalItem::MergeArc {
+                items.push(LayoutedTemporalItem::GitHistoryArc {
                     from_x, from_y, to_x, to_y,
                 });
                 // The merge itself is a commit on the target branch.
-                let commit_id = id.clone().unwrap_or_else(|| format!("m{progress_index}"));
+                let commit_id = id.clone().unwrap_or_else(|| resolved_id.clone());
+                commit_positions.insert(resolved_id.clone(), (to_x, to_y));
                 items.push(LayoutedTemporalItem::CommitNode {
                     x: to_x, y: to_y,
                     id: commit_id,
@@ -476,14 +483,24 @@ fn layout_git(diagram: &GitDiagram, cw: f64) -> LayoutedTemporalDiagram {
                 });
                 progress_index += 1;
             }
-            GitEvent::CherryPick { id, tags, parent, branch } => {
+            GitEvent::CherryPick { id, resolved_id, parents, tags, parent, branch } => {
                 let lane = *branch_lanes.entry(branch.clone()).or_insert_with(|| {
                     let l = next_lane; next_lane += 1; l
                 });
                 let (x, y) = point(lane, progress_index);
+                if let Some((from_x, from_y)) = parents
+                    .get(1)
+                    .and_then(|source| commit_positions.get(source))
+                    .copied()
+                {
+                    items.push(LayoutedTemporalItem::GitHistoryArc {
+                        from_x, from_y, to_x: x, to_y: y,
+                    });
+                }
+                commit_positions.insert(resolved_id.clone(), (x, y));
                 items.push(LayoutedTemporalItem::CommitNode {
                     x, y,
-                    id: id.clone(),
+                    id: resolved_id.clone(),
                     message: Some(match parent {
                         Some(parent) => format!("cherry-pick {id} from {parent}"),
                         None => format!("cherry-pick {id}"),
@@ -568,11 +585,13 @@ mod tests {
                 branches: vec![GitBranch { name: "main".into(), order: None }],
                 events: vec![
                     GitEvent::Commit {
-                        id: Some("a1".into()), message: Some("init".into()),
+                        id: Some("a1".into()), resolved_id: "a1".into(), parents: Vec::new(),
+                        message: Some("init".into()),
                         tags: vec!["v1".into(), "stable".into()], branch: "main".into(), type_: GitCommitType::Normal,
                     },
                     GitEvent::Commit {
-                        id: Some("a2".into()), message: Some("feature".into()),
+                        id: Some("a2".into()), resolved_id: "a2".into(), parents: vec!["a1".into()],
+                        message: Some("feature".into()),
                         tags: Vec::new(), branch: "main".into(), type_: GitCommitType::Normal,
                     },
                 ],
@@ -582,7 +601,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.15.0");
+        assert_eq!(crate::VERSION, "0.16.0");
     }
 
     #[test]
@@ -653,23 +672,29 @@ mod tests {
         };
         git.events = vec![
             GitEvent::Commit {
-                id: Some("normal".into()), message: None, tags: Vec::new(),
+                id: Some("normal".into()), resolved_id: "normal".into(), parents: Vec::new(),
+                message: None, tags: Vec::new(),
                 branch: "main".into(), type_: GitCommitType::Normal,
             },
             GitEvent::Commit {
-                id: Some("reverse".into()), message: None, tags: Vec::new(),
+                id: Some("reverse".into()), resolved_id: "reverse".into(), parents: vec!["normal".into()],
+                message: None, tags: Vec::new(),
                 branch: "main".into(), type_: GitCommitType::Reverse,
             },
             GitEvent::Commit {
-                id: Some("highlight".into()), message: None, tags: Vec::new(),
+                id: Some("highlight".into()), resolved_id: "highlight".into(), parents: vec!["reverse".into()],
+                message: None, tags: Vec::new(),
                 branch: "main".into(), type_: GitCommitType::Highlight,
             },
             GitEvent::Merge {
-                from: "main".into(), id: Some("merge".into()), tags: Vec::new(),
+                from: "main".into(), id: Some("merge".into()), resolved_id: "merge".into(),
+                parents: vec!["highlight".into(), "normal".into()], tags: Vec::new(),
                 type_: GitCommitType::Normal,
             },
             GitEvent::CherryPick {
-                id: "pick".into(), tags: Vec::new(), parent: None, branch: "main".into(),
+                id: "pick".into(), resolved_id: "picked".into(),
+                parents: vec!["merge".into(), "pick".into()], tags: Vec::new(),
+                parent: None, branch: "main".into(),
             },
         ];
 

@@ -1,5 +1,9 @@
 # Changelog — diagram-to-paint
 
+## 0.58.0
+
+- Lower generalized GitGraph history arcs for merge and cherry-pick parent topology.
+
 ## 0.57.0
 
 - Lower resolved horizontal and vertical GitGraph lane endpoints and labels into PaintInstructions.

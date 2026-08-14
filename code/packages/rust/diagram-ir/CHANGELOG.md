@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.63.0
+
+- Preserve resolved GitGraph commit IDs and parent topology and generalize cross-branch history arcs.
+
 ## 0.62.0
 
 - Resolve temporal branch lanes to backend-neutral endpoints and label bounds for directional GitGraph layout.
