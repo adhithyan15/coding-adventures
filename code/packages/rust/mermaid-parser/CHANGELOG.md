@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.115.0
+
+- Resolve GitGraph commit history and validate merge and cherry-pick operations against Mermaid 11.16.1 semantics.
+
 ## 0.114.0
 
 - Match Mermaid 11.16.1 branch creation semantics by checking out new GitGraph branches and rejecting duplicates.

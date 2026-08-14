@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.16.0
+
+- Route GitGraph merge and cherry-pick arcs from resolved source commits instead of event-order guesses.
+
 ## 0.15.0
 
 - Lay out GitGraph lanes, commits, and merge arcs in LR, TB, and BT directions.

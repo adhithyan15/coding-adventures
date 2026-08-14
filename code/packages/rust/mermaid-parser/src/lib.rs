@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.114.0";
+pub const VERSION: &str = "0.115.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -4640,6 +4640,11 @@ pub fn parse_gitgraph(source: &str) -> Result<GitDiagram, ParseError> {
     }];
     let mut events = Vec::new();
     let mut current_branch = "main".to_string();
+    let mut branch_heads = HashMap::from([("main".to_string(), None::<String>)]);
+    let mut commit_parents: HashMap<String, Vec<String>> = HashMap::new();
+    let mut commit_branches: HashMap<String, String> = HashMap::new();
+    let mut merge_commits: HashMap<String, bool> = HashMap::new();
+    let mut sequence = 0_usize;
     let mut title = None;
     let mut accessibility_title = None;
     let mut accessibility_description = None;
@@ -4726,8 +4731,21 @@ pub fn parse_gitgraph(source: &str) -> Result<GitDiagram, ParseError> {
                         _ => return Err(token_error(cursor.current(), "invalid commit attribute")),
                     }
                 }
+                let resolved_id = id.clone().unwrap_or_else(|| format!("{sequence}-generated"));
+                sequence += 1;
+                let parents = branch_heads
+                    .get(&current_branch)
+                    .and_then(Clone::clone)
+                    .into_iter()
+                    .collect::<Vec<_>>();
+                commit_parents.insert(resolved_id.clone(), parents.clone());
+                commit_branches.insert(resolved_id.clone(), current_branch.clone());
+                merge_commits.insert(resolved_id.clone(), false);
+                branch_heads.insert(current_branch.clone(), Some(resolved_id.clone()));
                 events.push(GitEvent::Commit {
                     id,
+                    resolved_id,
+                    parents,
                     message,
                     tags,
                     branch: current_branch.clone(),
@@ -4754,6 +4772,10 @@ pub fn parse_gitgraph(source: &str) -> Result<GitDiagram, ParseError> {
                     name: branch.clone(),
                     order,
                 });
+                let head = branch_heads
+                    .get(&current_branch)
+                    .and_then(Clone::clone);
+                branch_heads.insert(branch.clone(), head);
                 current_branch = branch.clone();
                 events.push(GitEvent::Checkout { branch });
             }
@@ -4792,9 +4814,36 @@ pub fn parse_gitgraph(source: &str) -> Result<GitDiagram, ParseError> {
                         _ => return Err(token_error(cursor.current(), "invalid merge attribute")),
                     }
                 }
+                if from == current_branch {
+                    return Err(token_error(&command, "cannot merge a GitGraph branch into itself"));
+                }
+                let current_head = branch_heads
+                    .get(&current_branch)
+                    .and_then(Clone::clone)
+                    .ok_or_else(|| token_error(&command, "current GitGraph branch has no commits"))?;
+                let from_head = branch_heads
+                    .get(&from)
+                    .ok_or_else(|| token_error(&command, format!("unknown GitGraph branch {from:?}")))?
+                    .clone()
+                    .ok_or_else(|| token_error(&command, "merged GitGraph branch has no commits"))?;
+                if current_head == from_head {
+                    return Err(token_error(&command, "GitGraph branches have the same head"));
+                }
+                if id.as_ref().is_some_and(|id| commit_parents.contains_key(id)) {
+                    return Err(token_error(&command, "GitGraph merge commit id already exists"));
+                }
+                let resolved_id = id.clone().unwrap_or_else(|| format!("{sequence}-generated"));
+                sequence += 1;
+                let parents = vec![current_head, from_head];
+                commit_parents.insert(resolved_id.clone(), parents.clone());
+                commit_branches.insert(resolved_id.clone(), current_branch.clone());
+                merge_commits.insert(resolved_id.clone(), true);
+                branch_heads.insert(current_branch.clone(), Some(resolved_id.clone()));
                 events.push(GitEvent::Merge {
                     from,
                     id,
+                    resolved_id,
+                    parents,
                     tags,
                     type_,
                 });
@@ -4830,8 +4879,49 @@ pub fn parse_gitgraph(source: &str) -> Result<GitDiagram, ParseError> {
                 let id = id.ok_or_else(|| {
                     token_error(&command, "GitGraph cherry-pick requires an id attribute")
                 })?;
+                let source_parents = commit_parents.get(&id).ok_or_else(|| {
+                    token_error(&command, "GitGraph cherry-pick source commit does not exist")
+                })?;
+                if let Some(parent) = &parent {
+                    if !source_parents.contains(parent) {
+                        return Err(token_error(
+                            &command,
+                            "GitGraph cherry-pick parent is not an immediate parent",
+                        ));
+                    }
+                } else if merge_commits.get(&id).copied().unwrap_or(false) {
+                    return Err(token_error(
+                        &command,
+                        "GitGraph merge cherry-pick requires a parent",
+                    ));
+                }
+                if commit_branches.get(&id) == Some(&current_branch) {
+                    return Err(token_error(
+                        &command,
+                        "GitGraph cherry-pick source is already on the current branch",
+                    ));
+                }
+                let current_head = branch_heads
+                    .get(&current_branch)
+                    .and_then(Clone::clone)
+                    .ok_or_else(|| token_error(&command, "current GitGraph branch has no commits"))?;
+                let resolved_id = format!("{sequence}-generated");
+                sequence += 1;
+                let parents = vec![current_head, id.clone()];
+                if tags.is_empty() {
+                    tags.push(format!(
+                        "cherry-pick:{id}{}",
+                        parent.as_ref().map(|parent| format!("|parent:{parent}")).unwrap_or_default()
+                    ));
+                }
+                commit_parents.insert(resolved_id.clone(), parents.clone());
+                commit_branches.insert(resolved_id.clone(), current_branch.clone());
+                merge_commits.insert(resolved_id.clone(), false);
+                branch_heads.insert(current_branch.clone(), Some(resolved_id.clone()));
                 events.push(GitEvent::CherryPick {
                     id,
+                    resolved_id,
+                    parents,
                     tags,
                     parent,
                     branch: current_branch.clone(),
@@ -5802,8 +5892,11 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         ));
         assert!(matches!(
             &d.events[4],
-            GitEvent::Merge { from, id, .. }
-                if from == "develop" && id.as_deref() == Some("merge-1")
+            GitEvent::Merge { from, id, resolved_id, parents, .. }
+                if from == "develop"
+                    && id.as_deref() == Some("merge-1")
+                    && resolved_id == "merge-1"
+                    && parents == &["root", "feature"]
         ));
     }
 
@@ -5842,17 +5935,27 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     }
 
     #[test]
+    fn gitgraph_validates_merge_and_cherry_pick_history() {
+        assert!(parse_gitgraph("gitGraph\ncommit\nmerge main").is_err());
+        assert!(parse_gitgraph("gitGraph\ncommit\ncherry-pick id: \"missing\"").is_err());
+
+        let source = "gitGraph\ncommit id: \"root\"\nbranch feature\ncommit id: \"work\"\ncheckout main\nmerge feature id: \"merged\"\nbranch release\ncherry-pick id: \"merged\"";
+        let error = parse_gitgraph(source).unwrap_err();
+        assert!(error.message.contains("requires a parent"));
+    }
+
+    #[test]
     fn gitgraph_parses_cherry_pick_metadata() {
         let d = parse_gitgraph(
-            "gitGraph\ncommit id: \"abc123\"\ncherry-pick id: \"abc123\" parent: \"root\"",
+            "gitGraph\ncommit id: \"root\"\ncommit id: \"abc123\"\nbranch release\ncherry-pick id: \"abc123\" parent: \"root\"",
         )
         .unwrap();
         assert!(matches!(
-            &d.events[1],
+            &d.events[3],
             GitEvent::CherryPick { id, parent, branch, .. }
                 if id == "abc123"
                     && parent.as_deref() == Some("root")
-                    && branch == "main"
+                    && branch == "release"
         ));
     }
 
@@ -7415,7 +7518,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.114.0");
+        assert_eq!(crate::VERSION, "0.115.0");
     }
 
     #[test]

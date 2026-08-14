@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.57.0";
+pub const VERSION: &str = "0.58.0";
 
 use std::collections::HashMap;
 
@@ -2743,7 +2743,7 @@ where
                     ));
                 }
             }
-            LayoutedTemporalItem::MergeArc {
+            LayoutedTemporalItem::GitHistoryArc {
                 from_x,
                 from_y,
                 to_x,
@@ -3496,7 +3496,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.57.0");
+        assert_eq!(crate::VERSION, "0.58.0");
     }
 
     #[test]
