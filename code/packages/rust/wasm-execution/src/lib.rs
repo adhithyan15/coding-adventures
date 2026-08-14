@@ -1481,8 +1481,48 @@ fn execute_branch(
         push_wasm(vm, v);
     }
 
-    // Pop labels down to target.
-    ctx.label_stack.truncate(label_stack_index);
+    // Pop labels down to (and including, or not, depending on kind — see
+    // below) the target. A WASM11 security-review-shaped bug: a BLOCK's
+    // own `target_pc` IS the literal position of that block's own `end`
+    // opcode (see the `block` handler and `build_control_flow_map`), and
+    // the `end` handler unconditionally pops one label whenever it runs,
+    // whether reached by falling through normally or landed on by a
+    // branch. The original `ctx.label_stack.truncate(label_stack_index)`
+    // (no `+ 1`) removed the target block's label a second time before
+    // that same `end` byte ever ran — a genuine double-pop that silently
+    // corrupted `label_stack` for any branch NOT targeting the innermost
+    // currently-open label (i.e. any branch that unwinds past one or more
+    // already-open outer blocks), popping ONE EXTRA label belonging to
+    // whatever the *next* enclosing block happened to be. This was
+    // invisible for the extremely common "the branched-into block is
+    // effectively the last thing in the function" shape (the accidental
+    // extra pop just triggered the function-end path a little early, with
+    // no observable difference), but produced a real `StackUnderflow` (or
+    // a silently wrong later branch) for anything with real code still to
+    // run after the target block closes — e.g. the official testsuite's
+    // own `switch.wast` dispatch pattern (10 levels of nested named
+    // blocks, `br_table` jumping straight from the innermost out to a
+    // middle level), where this was found. For a BLOCK, `+ 1` (keep the
+    // target label in place) fixes this: landing on its own `end` byte
+    // then pops it EXACTLY ONCE, identical to ordinary fall-through.
+    //
+    // A LOOP needs the OPPOSITE fix, not `+ 1` too — its `target_pc` is
+    // the position of the `loop` OPCODE ITSELF (`loop_pc = vm.pc`,
+    // captured BEFORE `vm.advance_pc()` in the `loop` handler), not an
+    // `end` byte. Branching back to a loop re-executes that `loop` opcode,
+    // which unconditionally PUSHES A FRESH LABEL. Keeping the old label
+    // in place (`+ 1`) here as well — the first version of this fix,
+    // caught by manually reproducing a simple `loop`+`br_if`-break before
+    // pushing, not by the testsuite (no vendored `.wast` file with a
+    // simple bounded loop currently parses) — left BOTH the retained old
+    // label and the freshly re-pushed one on the stack every iteration:
+    // an unbounded per-iteration duplicate, corrupting every later depth
+    // calculation and hanging (an effectively infinite loop, not a clean
+    // trap) rather than terminating. Loops keep the ORIGINAL (no `+ 1`)
+    // behavior instead: remove the old instance now, so the re-push on
+    // the next iteration nets back to exactly one.
+    let keep_target = !label.is_loop;
+    ctx.label_stack.truncate(label_stack_index + usize::from(keep_target));
 
     // Jump.
     vm.jump_to(label.target_pc);
@@ -2896,7 +2936,6 @@ fn register_control(vm: &mut GenericVM) {
             stack_height: vm.typed_stack.len(),
             is_loop: false,
         });
-
         if condition != 0 {
             vm.advance_pc();
         } else {

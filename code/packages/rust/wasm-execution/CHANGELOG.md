@@ -2,6 +2,68 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.6.4] — 2026-08-13 (WASM11 — a real branch double-pop bug)
+
+`execute_branch` (the shared handler behind `br`/`br_if`/`br_table`) used
+to `ctx.label_stack.truncate(label_stack_index)` — removing the TARGET
+label — and then jump to `label.target_pc`. For a `block`/`if` label,
+`target_pc` is the literal position of that block's own `end` opcode (not
+one past it — see `block`'s handler and `build_control_flow_map`), and
+the `end` handler unconditionally pops one label whenever it runs,
+whether reached by ordinary fall-through or landed on by a branch.
+Removing the target via `truncate` and THEN landing on its own `end`
+byte popped it a SECOND time — a genuine double-pop that silently
+removed one extra label (belonging to whatever the next enclosing block
+happened to be) on any branch that unwound past one or more already-open
+outer blocks. This was invisible for the extremely common "the
+branched-into block is effectively the last thing in the function"
+shape (the accidental extra pop just triggered the function-end path a
+little early, with no observable difference), but produced a real
+`StackUnderflow` trap for anything with real code still to run after the
+target block closes — found running the official WebAssembly spec
+testsuite's own `switch.wast` (a `br_table` dispatching through 10
+levels of nested named blocks — some targets land in the MIDDLE of the
+nesting, not just the innermost or outermost), not by inspection.
+
+Fixed by keeping a `block`/`if` target's label ON `label_stack` when
+branching to it (`truncate(label_stack_index + 1)` instead of
+`truncate(label_stack_index)`), so landing on its own `end` byte pops it
+EXACTLY once — identical to what ordinary, non-branching fall-through to
+that same `end` already does. A `loop` target keeps the ORIGINAL
+behavior (`truncate(label_stack_index)`, no `+ 1`): a loop's
+`target_pc` is the position of the `loop` OPCODE ITSELF (not an `end`
+byte), so branching back to it re-executes that opcode, which
+unconditionally re-pushes a fresh label — keeping the old one too, as an
+early draft of this fix did uniformly for both kinds, left both the
+retained old label and the freshly re-pushed one on the stack every
+iteration: an unbounded per-iteration duplicate that hung (an
+effectively infinite loop, not a clean trap) instead of terminating,
+caught by hand-testing a simple bounded `loop`+`br_if`-break before ever
+reaching the testsuite (no vendored `.wast` file with a simple bounded
+loop currently parses).
+
+This ALSO surfaced a real, since-fixed bug in `iir-to-wasm`'s own
+"dispatch-loop" codegen strategy (used for any IIR function with
+control flow — COND/if-chains lower to labels/jumps, compiled to one
+outer exit `block` wrapping a `loop` wrapping N nested per-block
+`block`s + a `br_table`): its branch-depth formulas for "re-enter the
+LOOP to redispatch" were empirically tuned against THIS crate's old
+double-pop bug, not real WASM semantics — so fixing `execute_branch`
+alone made every such branch land one label too shallow, silently
+falling into the wrong basic block (confirmed via `lang-aot`'s
+`mccarthy_is_uniform_across_every_backend`: the WASM backend computed
+`0` instead of `22` for a 2-clause COND). See `iir-to-wasm`'s own
+CHANGELOG for that fix's detail; both fixes are needed together for this
+PR to be safe to ship.
+
+4 new regression tests (`tests/wasm11_regression.rs`): the exact
+`switch.wast` "stmt" shape reproduced in isolation (all 9 real
+assert_return cases), a minimal out-of-depth-order `br_table` case, a
+bounded `loop`+`br_if`-break that must terminate (not hang), and two
+sequential loops on the same call confirming a loop's own label count
+stays stable across iterations. Baseline: `assert_return` 12171/12238
+(99.4%) → 12215/12238 (99.8%).
+
 ## [0.6.3] — 2026-08-13 (WASM07 — two real assert_return correctness bugs + a security-review fix)
 
 Investigating why `wasm-conformance`'s `assert_return` pass rate sat at
