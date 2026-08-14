@@ -327,6 +327,10 @@ Every implementation must prove:
 10. Cross-language fixtures encrypt in one implementation and decrypt in every
     other implementation with byte-identical results.
 
+The versioned `se04-xchacha20-poly1305-v1` corpus added in #11623 closes item
+10. All six package suites consume the same HChaCha20, raw XChaCha20, AEAD,
+empty, multi-block, and mutation records.
+
 ## D18 Six-Language Matrix
 
 | Language | Package | SE03 | SE04 |
@@ -338,9 +342,9 @@ Every implementation must prove:
 | Rust | `code/packages/rust/chacha20-poly1305` | Complete | Complete in PR #1029 |
 | Elixir | `code/packages/elixir/chacha20-poly1305` | Complete | Complete in #11596 |
 
-Issue #129 remains open until the cross-language conformance fixture passes.
-D19 is the Actor model specification; it is not renamed or duplicated by this
-crypto profile.
+Issue #129 is complete with the six shared-fixture consumers in #11623. D19 is
+the Actor model specification; it is not renamed or duplicated by this crypto
+profile.
 
 ## Dependencies
 

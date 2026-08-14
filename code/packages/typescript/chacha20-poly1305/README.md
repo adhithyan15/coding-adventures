@@ -67,5 +67,14 @@ Part of the coding-adventures cryptography stack. Self-contained -- no dependenc
 - Derived subkeys are overwritten on a best-effort basis. JavaScript runtimes
   do not guarantee that optimized or copied buffers are erased from memory.
 
+## Portable Conformance
+
+The test suite consumes the versioned
+[`se04-xchacha20-poly1305-v1`](../../../specs/fixtures/se04-xchacha20-poly1305-v1/README.md)
+fixture shared by all six D18 implementations. It proves byte-identical
+HChaCha20, raw XChaCha20, and AEAD outputs plus the common authentication
+failure contract. Fixture parsing is confined to Vitest and adds no runtime
+dependency.
+
 This package is educational, hand-written cryptographic code. Prefer a mature,
 audited cryptography library for production secrets.

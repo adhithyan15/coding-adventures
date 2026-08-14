@@ -2,6 +2,13 @@
 
 All notable changes to this package will be documented in this file.
 
+## [Unreleased]
+
+### Added
+
+- Consume the versioned SE04 cross-language fixture for byte-identical
+  HChaCha20, raw XChaCha20, AEAD, and authentication-failure conformance.
+
 ## [0.2.0] - 2026-08-14
 
 ### Added

@@ -104,6 +104,11 @@ mix test --cover
 Tests cover RFC 8439 and SE04 gold, negative, and edge vectors, including the
 HChaCha20 draft vector and XChaCha20-Poly1305 Appendix A.3.1 vector.
 
+The suite also consumes the versioned
+[`se04-xchacha20-poly1305-v1`](../../../specs/fixtures/se04-xchacha20-poly1305-v1/README.md)
+fixture shared by all six D18 implementations. `Jason` is scoped to tests; the
+application retains zero runtime dependencies.
+
 ## References
 
 - [RFC 8439](https://www.rfc-editor.org/rfc/rfc8439) — ChaCha20 and Poly1305 for IETF Protocols

@@ -56,6 +56,14 @@ bundle install
 bundle exec rake test
 ```
 
+## Portable Conformance
+
+The test suite consumes the versioned
+[`se04-xchacha20-poly1305-v1`](../../../specs/fixtures/se04-xchacha20-poly1305-v1/README.md)
+fixture shared by all six D18 implementations. It proves byte-identical
+HChaCha20, raw XChaCha20, and AEAD outputs plus the common authentication
+failure contract. Fixture parsing uses Ruby's standard-library JSON parser.
+
 ## Part Of
 
 [coding-adventures](https://github.com/adhithyan15/coding-adventures) -- a
