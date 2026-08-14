@@ -125,7 +125,8 @@ standard `a0` / `a1` registers:
 | f64 add/sub/mul/div | `5`-`8` | lhs bits: `a1:a0`; rhs bits: `a3:a2` | Returns IEEE-754 f64 result bits in `a1:a0` |
 | f64 comparison | `9` | lhs bits: `a1:a0`; rhs bits: `a3:a2` | Returns signed `-1`, `0`, or `1` in `a1:a0` |
 | i64 to f64 | `10` | signed i64: `a1:a0` | Returns IEEE-754 f64 bits in `a1:a0` |
-| f64 to i64 truncation | `11` | f64 bits: `a1:a0` | Returns truncated signed i64 in `a1:a0` |
+| f64 to i64 truncation | `11` | f64 bits: `a1:a0` | Returns truncated signed i64 in `a1:a0`; halts with exit status `3` for NaN, infinity, or an out-of-range result |
+| f64 floor | `12` | f64 bits: `a1:a0` | Returns IEEE-754 f64 floor bits in `a1:a0` |
 
 Installing an M-mode trap vector leaves architectural `ecall` trap behavior
 unchanged. `riscv_backend::run_binary` exposes `WriteI64` values through
@@ -253,7 +254,7 @@ the selected entry function can seed language-level static initializers.
    comparisons, and finite in-range signed i64 truncating conversions through
    the simulator host ABI while preserving live caller values across each host
    call.
-34. [ ] **Soft-float floor and conversion-fault ABI:** add an IEEE-754 f64
+34. [x] **Soft-float floor and conversion-fault ABI:** add an IEEE-754 f64
    floor service plus fail-closed NaN/infinity/out-of-range signaling for
    real-to-integer conversion. This must replace the host language's
    saturating cast and lower `real_to_int_floor` without substituting
