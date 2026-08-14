@@ -1,0 +1,15 @@
+% ============================================================================
+% joint-formed-by.query.adj — worked recall over the joint-formed-by library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what bones form the
+% pivot joint?" (direct) or "which joint type does the trapezium help form?"
+% (reverse) — it states no fact of its own — it only `import`s the grounded
+% table and asks binding queries. A joint type not tabled here abstains
+% honestly — the engine never invents a forming bone.
+% ============================================================================
+
+import "joint-formed-by.adj"
+
+? joint_formed_by(pivot, $Bone)          % expect atlas, then axis
+? joint_formed_by($Type, trapezium)       % reverse bind — expect saddle
+? joint_formed_by(hinge, $Bone)            % expect abstain -- a real, already-tabled joint type, but its own quote names only an example joint, never the specific forming bones
