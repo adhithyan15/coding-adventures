@@ -27,8 +27,8 @@
 -- DEFLATE inside ZIP
 -- ──────────────────
 -- ZIP method 8 stores raw RFC 1951 DEFLATE — no zlib wrapper.  This
--- implementation uses fixed Huffman blocks (BTYPE=01) with the LZSS module
--- for LZ77 match-finding (32 KB window, max match 255, min match 3).
+-- The encoder uses fixed Huffman blocks (BTYPE=01) with the LZSS module for
+-- LZ77 match-finding. The decoder accepts stored, fixed, and dynamic blocks.
 --
 -- Series
 -- ──────
@@ -40,7 +40,25 @@ local lzss = require("coding_adventures.lzss")
 
 local M = {}
 
-M.VERSION = "0.1.0"
+M.VERSION = "0.2.0"
+
+M.RAW_INFLATE_MAX_OUTPUT = 256 * 1024 * 1024
+M.RAW_INFLATE_ERROR_CODES = {
+    "invalid-output-limit",
+    "unexpected-eof",
+    "reserved-block-type",
+    "stored-length-mismatch",
+    "huffman-oversubscribed",
+    "incomplete-code-length-tree",
+    "incomplete-literal-length-tree",
+    "incomplete-distance-tree",
+    "repeat-without-previous",
+    "repeat-overrun",
+    "invalid-literal-length-symbol",
+    "reserved-distance-symbol",
+    "invalid-back-reference",
+    "output-limit-exceeded",
+}
 
 local _add_entry  -- forward declaration; defined below add_file/add_directory
 
@@ -203,17 +221,6 @@ local function br_read_lsb(br, nbits)
     return val
 end
 
-local function br_read_msb(br, nbits)
-    local v = br_read_lsb(br, nbits)
-    if v == nil then return nil end
-    local rev = 0
-    for _ = 1, nbits do
-        rev = (rev << 1) | (v & 1)
-        v   = v >> 1
-    end
-    return rev
-end
-
 local function br_align(br)
     local discard = br.bits % 8
     if discard > 0 then
@@ -247,31 +254,6 @@ local function fixed_ll_encode(sym)
         return sym - 256, 7
     else  -- 280-287
         return 0xC0 + (sym - 280), 8
-    end
-end
-
--- fixed_ll_decode decodes one LL symbol from the BitReader.
-local function fixed_ll_decode(br)
-    local v7 = br_read_msb(br, 7)
-    if v7 == nil then return nil end
-    if v7 <= 23 then
-        return v7 + 256  -- 7-bit codes: symbols 256-279
-    end
-    local b1 = br_read_lsb(br, 1)
-    if b1 == nil then return nil end
-    local v8 = (v7 << 1) | b1
-    if v8 >= 48 and v8 <= 191 then
-        return v8 - 48   -- literals 0-143
-    elseif v8 >= 192 and v8 <= 199 then
-        return v8 + 88   -- symbols 280-287 (192+88=280)
-    else
-        local b2 = br_read_lsb(br, 1)
-        if b2 == nil then return nil end
-        local v9 = (v8 << 1) | b2
-        if v9 >= 400 and v9 <= 511 then
-            return v9 - 256  -- literals 144-255 (400-256=144)
-        end
-        return nil
     end
 end
 
@@ -330,8 +312,6 @@ end
 -- RFC 1951 DEFLATE — Compress (fixed Huffman, BTYPE=01)
 -- ============================================================================
 
-local MAX_OUTPUT = 256 * 1024 * 1024  -- 256 MiB zip-bomb guard
-
 -- deflate_compress compresses a byte string to raw RFC 1951 DEFLATE.
 -- Returns a binary string (no zlib wrapper).
 local function deflate_compress(data)
@@ -384,126 +364,319 @@ local function deflate_compress(data)
     return bw_finish(bw)
 end
 
+function M.raw_deflate(data)
+    return deflate_compress(data)
+end
+
 -- ============================================================================
 -- RFC 1951 DEFLATE — Decompress
 -- ============================================================================
 --
--- Handles BTYPE=00 (stored) and BTYPE=01 (fixed Huffman).
+-- Handles stored, fixed-Huffman, and dynamic-Huffman blocks. Huffman decoding
+-- consumes one physical bit at a time, so counted decoding never reads into an
+-- untouched suffix after the final block.
 
--- deflate_decompress decompresses a raw RFC 1951 DEFLATE byte string.
--- Returns decompressed bytes as a string, or nil + error message.
---
--- Output is accumulated as an integer byte array (out_bytes[]) for O(1)
--- back-reference lookups — avoids the O(n²) cost of rebuilding a string
--- on every copy byte.
-local function deflate_decompress(data)
-    local br       = new_bit_reader(data)
-    local out_bytes = {}  -- integer byte array for O(1) indexing during back-refs
-    local total    = 0
+local CODE_LENGTH_ORDER = {
+    16, 17, 18, 0, 8, 7, 9, 6, 10,
+    5, 11, 4, 12, 3, 13, 2, 14, 1, 15,
+}
+
+local function build_huffman(lengths)
+    local counts = {[0] = 0}
+    for bits = 1, 15 do counts[bits] = 0 end
+    for _, length in ipairs(lengths) do
+        if length > 0 then counts[length] = counts[length] + 1 end
+    end
+
+    local left = 1
+    for bits = 1, 15 do
+        left = left * 2 - counts[bits]
+        if left < 0 then return nil, "huffman-oversubscribed" end
+    end
+
+    local next_code = {}
+    local code = 0
+    for bits = 1, 15 do
+        code = (code + counts[bits - 1]) << 1
+        next_code[bits] = code
+    end
+
+    local by_length = {}
+    local symbol_count = 0
+    for symbol = 0, #lengths - 1 do
+        local length = lengths[symbol + 1]
+        if length > 0 then
+            by_length[length] = by_length[length] or {}
+            by_length[length][next_code[length]] = symbol
+            next_code[length] = next_code[length] + 1
+            symbol_count = symbol_count + 1
+        end
+    end
+
+    return {
+        by_length = by_length,
+        complete = left == 0,
+        symbol_count = symbol_count,
+        one_bit_count = counts[1],
+    }
+end
+
+local function decode_symbol(br, tree, invalid_error)
+    local code = 0
+    for length = 1, 15 do
+        local bit = br_read_lsb(br, 1)
+        if bit == nil then return nil, "unexpected-eof" end
+        code = (code << 1) | bit
+        local symbols = tree.by_length[length]
+        if symbols ~= nil and symbols[code] ~= nil then
+            return symbols[code]
+        end
+    end
+    return nil, invalid_error
+end
+
+local function fixed_trees()
+    local literal_lengths = {}
+    for symbol = 0, 287 do
+        local length
+        if symbol <= 143 then
+            length = 8
+        elseif symbol <= 255 then
+            length = 9
+        elseif symbol <= 279 then
+            length = 7
+        else
+            length = 8
+        end
+        literal_lengths[symbol + 1] = length
+    end
+
+    local distance_lengths = {}
+    for symbol = 0, 31 do distance_lengths[symbol + 1] = 5 end
+    return assert(build_huffman(literal_lengths)), assert(build_huffman(distance_lengths))
+end
+
+local FIXED_LITERAL_TREE, FIXED_DISTANCE_TREE = fixed_trees()
+
+local function read_dynamic_trees(br)
+    local raw_hlit = br_read_lsb(br, 5)
+    local raw_hdist = br_read_lsb(br, 5)
+    local raw_hclen = br_read_lsb(br, 4)
+    if raw_hlit == nil or raw_hdist == nil or raw_hclen == nil then
+        return nil, nil, "unexpected-eof"
+    end
+
+    local hlit = raw_hlit + 257
+    local hdist = raw_hdist + 1
+    local hclen = raw_hclen + 4
+    if hlit > 286 then return nil, nil, "invalid-literal-length-symbol" end
+
+    local code_lengths = {}
+    for _ = 0, 18 do code_lengths[#code_lengths + 1] = 0 end
+    for index = 1, hclen do
+        local length = br_read_lsb(br, 3)
+        if length == nil then return nil, nil, "unexpected-eof" end
+        code_lengths[CODE_LENGTH_ORDER[index] + 1] = length
+    end
+
+    local code_length_tree, tree_error = build_huffman(code_lengths)
+    if code_length_tree == nil then return nil, nil, tree_error end
+    if not code_length_tree.complete then
+        return nil, nil, "incomplete-code-length-tree"
+    end
+
+    local lengths = {}
+    local target = hlit + hdist
+    while #lengths < target do
+        local symbol, symbol_error = decode_symbol(
+            br, code_length_tree, "invalid-literal-length-symbol")
+        if symbol == nil then return nil, nil, symbol_error end
+
+        if symbol <= 15 then
+            lengths[#lengths + 1] = symbol
+        else
+            local repeat_count
+            local repeated_length = 0
+            if symbol == 16 then
+                if #lengths == 0 then
+                    return nil, nil, "repeat-without-previous"
+                end
+                local extra = br_read_lsb(br, 2)
+                if extra == nil then return nil, nil, "unexpected-eof" end
+                repeat_count = extra + 3
+                repeated_length = lengths[#lengths]
+            elseif symbol == 17 then
+                local extra = br_read_lsb(br, 3)
+                if extra == nil then return nil, nil, "unexpected-eof" end
+                repeat_count = extra + 3
+            else
+                local extra = br_read_lsb(br, 7)
+                if extra == nil then return nil, nil, "unexpected-eof" end
+                repeat_count = extra + 11
+            end
+            if #lengths + repeat_count > target then
+                return nil, nil, "repeat-overrun"
+            end
+            for _ = 1, repeat_count do
+                lengths[#lengths + 1] = repeated_length
+            end
+        end
+    end
+
+    local literal_lengths = {}
+    for index = 1, hlit do literal_lengths[index] = lengths[index] end
+    local distance_lengths = {}
+    for index = 1, hdist do
+        distance_lengths[index] = lengths[hlit + index]
+    end
+
+    local literal_tree, literal_error = build_huffman(literal_lengths)
+    if literal_tree == nil then return nil, nil, literal_error end
+    if not literal_tree.complete then
+        return nil, nil, "incomplete-literal-length-tree"
+    end
+
+    local distance_tree, distance_error = build_huffman(distance_lengths)
+    if distance_tree == nil then return nil, nil, distance_error end
+    local distance_is_valid = distance_tree.complete
+        or (distance_tree.symbol_count == 1 and distance_tree.one_bit_count == 1)
+        or distance_tree.symbol_count == 0
+    if not distance_is_valid then
+        return nil, nil, "incomplete-distance-tree"
+    end
+    return literal_tree, distance_tree
+end
+
+local function bytes_to_string(bytes, total)
+    local chunks = {}
+    for first = 1, total, 4096 do
+        local last = math.min(first + 4095, total)
+        chunks[#chunks + 1] = string.char(table.unpack(bytes, first, last))
+    end
+    return table.concat(chunks)
+end
+
+local function decode_compressed_block(br, literal_tree, distance_tree,
+                                       out_bytes, total, max_output)
+    while true do
+        local symbol, symbol_error = decode_symbol(
+            br, literal_tree, "invalid-literal-length-symbol")
+        if symbol == nil then return nil, symbol_error end
+
+        if symbol < 256 then
+            if total >= max_output then return nil, "output-limit-exceeded" end
+            total = total + 1
+            out_bytes[total] = symbol
+        elseif symbol == 256 then
+            return total
+        elseif symbol <= 285 then
+            local length_spec = LENGTH_TABLE[symbol - 256]
+            local extra_length = br_read_lsb(br, length_spec[2])
+            if extra_length == nil then return nil, "unexpected-eof" end
+            local length = length_spec[1] + extra_length
+
+            local distance_symbol, distance_error = decode_symbol(
+                br, distance_tree, "reserved-distance-symbol")
+            if distance_symbol == nil then return nil, distance_error end
+            if distance_symbol >= 30 then return nil, "reserved-distance-symbol" end
+            local distance_spec = DIST_TABLE[distance_symbol + 1]
+            local extra_distance = br_read_lsb(br, distance_spec[2])
+            if extra_distance == nil then return nil, "unexpected-eof" end
+            local distance = distance_spec[1] + extra_distance
+            if distance < 1 or distance > total then
+                return nil, "invalid-back-reference"
+            end
+            if total + length > max_output then
+                return nil, "output-limit-exceeded"
+            end
+
+            for _ = 1, length do
+                if total >= max_output then
+                    return nil, "output-limit-exceeded"
+                end
+                local source = total - distance + 1
+                total = total + 1
+                out_bytes[total] = out_bytes[source]
+            end
+        else
+            return nil, "invalid-literal-length-symbol"
+        end
+    end
+end
+
+local function inflate_counted(data, max_output)
+    max_output = max_output == nil and M.RAW_INFLATE_MAX_OUTPUT or max_output
+    if type(max_output) ~= "number"
+        or max_output ~= math.floor(max_output)
+        or max_output < 0
+        or max_output > M.RAW_INFLATE_MAX_OUTPUT then
+        return nil, "invalid-output-limit"
+    end
+
+    local br = new_bit_reader(data)
+    local out_bytes = {}
+    local total = 0
 
     while true do
         local bfinal = br_read_lsb(br, 1)
-        if bfinal == nil then return nil, "deflate: unexpected EOF reading BFINAL" end
         local btype = br_read_lsb(br, 2)
-        if btype == nil then return nil, "deflate: unexpected EOF reading BTYPE" end
+        if bfinal == nil or btype == nil then return nil, "unexpected-eof" end
 
         if btype == 0 then
-            -- Stored block
             br_align(br)
-            local len16  = br_read_lsb(br, 16)
-            local nlen16 = br_read_lsb(br, 16)
-            if len16 == nil or nlen16 == nil then
-                return nil, "deflate: EOF reading stored LEN/NLEN"
+            local stored_length = br_read_lsb(br, 16)
+            local stored_inverse = br_read_lsb(br, 16)
+            if stored_length == nil or stored_inverse == nil then
+                return nil, "unexpected-eof"
             end
-            local len = len16
-            if (nlen16 ~ 0xFFFF) ~= len16 then
-                return nil, "deflate: stored block LEN/NLEN mismatch"
+            if (stored_inverse ~ 0xffff) ~= stored_length then
+                return nil, "stored-length-mismatch"
             end
-            if total + len > MAX_OUTPUT then
-                return nil, "deflate: output size limit exceeded"
+            if total + stored_length > max_output then
+                return nil, "output-limit-exceeded"
             end
-            for _ = 1, len do
-                local b = br_read_lsb(br, 8)
-                if b == nil then return nil, "deflate: EOF inside stored block data" end
+            for _ = 1, stored_length do
+                if total >= max_output then
+                    return nil, "output-limit-exceeded"
+                end
+                local byte = br_read_lsb(br, 8)
+                if byte == nil then return nil, "unexpected-eof" end
                 total = total + 1
-                out_bytes[total] = b
+                out_bytes[total] = byte
             end
-
-        elseif btype == 1 then
-            -- Fixed Huffman block
-            while true do
-                local sym = fixed_ll_decode(br)
-                if sym == nil then
-                    return nil, "deflate: EOF decoding fixed Huffman symbol"
-                end
-                if sym < 256 then
-                    if total >= MAX_OUTPUT then
-                        return nil, "deflate: output size limit exceeded"
-                    end
-                    total = total + 1
-                    out_bytes[total] = sym
-                elseif sym == 256 then
-                    break  -- end-of-block
-                elseif sym >= 257 and sym <= 285 then
-                    local idx = sym - 257 + 1
-                    if idx > #LENGTH_TABLE then
-                        return nil, "deflate: invalid length sym " .. sym
-                    end
-                    local base_len, extra_len_bits = LENGTH_TABLE[idx][1], LENGTH_TABLE[idx][2]
-                    local extra_len = br_read_lsb(br, extra_len_bits)
-                    if extra_len == nil then
-                        return nil, "deflate: EOF reading length extra bits"
-                    end
-                    local length = base_len + extra_len
-
-                    local dist_code = br_read_msb(br, 5)
-                    if dist_code == nil then
-                        return nil, "deflate: EOF reading distance code"
-                    end
-                    local dc = dist_code + 1  -- 1-indexed into DIST_TABLE
-                    if dc > #DIST_TABLE then
-                        return nil, "deflate: invalid distance code " .. dist_code
-                    end
-                    local base_dist, extra_dist_bits = DIST_TABLE[dc][1], DIST_TABLE[dc][2]
-                    local extra_dist = br_read_lsb(br, extra_dist_bits)
-                    if extra_dist == nil then
-                        return nil, "deflate: EOF reading distance extra bits"
-                    end
-                    local offset = base_dist + extra_dist
-
-                    if total + length > MAX_OUTPUT then
-                        return nil, "deflate: output size limit exceeded"
-                    end
-                    if offset > total then
-                        return nil, string.format(
-                            "deflate: back-reference offset %d > output len %d", offset, total)
-                    end
-                    -- Copy byte-by-byte using integer array for O(1) indexing.
-                    -- This correctly handles overlapping matches (e.g. offset=1,
-                    -- length=10 on [65] produces ten copies of 65).
-                    for _ = 1, length do
-                        local src = total - offset + 1
-                        total = total + 1
-                        out_bytes[total] = out_bytes[src]
-                    end
-                else
-                    return nil, "deflate: invalid LL symbol " .. sym
-                end
+        elseif btype == 1 or btype == 2 then
+            local literal_tree = FIXED_LITERAL_TREE
+            local distance_tree = FIXED_DISTANCE_TREE
+            if btype == 2 then
+                local tree_error
+                literal_tree, distance_tree, tree_error = read_dynamic_trees(br)
+                if literal_tree == nil then return nil, tree_error end
             end
-
-        elseif btype == 2 then
-            return nil, "deflate: dynamic Huffman blocks (BTYPE=10) not supported"
+            local block_total, block_error = decode_compressed_block(
+                br, literal_tree, distance_tree, out_bytes, total, max_output)
+            if block_total == nil then return nil, block_error end
+            total = block_total
         else
-            return nil, "deflate: reserved BTYPE=11"
+            return nil, "reserved-block-type"
         end
 
-        if bfinal == 1 then break end
+        if bfinal == 1 then
+            return {
+                output = bytes_to_string(out_bytes, total),
+                bytes_consumed = br.pos - 1,
+            }
+        end
     end
+end
 
-    -- Convert integer byte array to string.
-    local chars = {}
-    for i = 1, total do chars[i] = string.char(out_bytes[i]) end
-    return table.concat(chars)
+function M.raw_inflate_counted(data, max_output)
+    return inflate_counted(data, max_output)
+end
+
+function M.raw_inflate(data, max_output)
+    local result, inflate_error = inflate_counted(data, max_output)
+    if result == nil then return nil, inflate_error end
+    return result.output
 end
 
 -- ============================================================================
@@ -852,18 +1025,20 @@ function M.reader_read(reader, entry)
     if entry.method == 0 then
         decompressed = compressed
     elseif entry.method == 8 then
-        local result, err = deflate_decompress(compressed)
+        local result, err = M.raw_inflate_counted(compressed, entry.size)
         if result == nil then
             return nil, "zip: entry '" .. entry.name .. "': " .. err
         end
-        decompressed = result
+        if result.bytes_consumed ~= #compressed then
+            return nil, "zip: compressed payload contains trailing bytes"
+        end
+        decompressed = result.output
     else
         return nil, "zip: unsupported compression method " .. entry.method
     end
 
-    -- Trim to declared uncompressed size.
-    if #decompressed > entry.size then
-        decompressed = decompressed:sub(1, entry.size)
+    if #decompressed ~= entry.size then
+        return nil, "zip: uncompressed size does not match the directory"
     end
 
     -- Verify CRC-32.

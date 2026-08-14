@@ -18,7 +18,7 @@ CMP09 (ZIP,     1989) — DEFLATE container      ← this package
 
 ```lua
 -- via LuaRocks (local path install):
--- luarocks make --local coding-adventures-zip-0.1.0-1.rockspec
+-- luarocks make --local coding-adventures-zip-0.2.0-1.rockspec
 ```
 
 ## Usage
@@ -63,6 +63,19 @@ local data = zip.read_by_name(reader, "hello.txt")
 zip.crc32("hello world")  -- => 0x0D4A1185
 ```
 
+### Raw RFC 1951
+
+```lua
+local encoded = zip.raw_deflate("hello hello")
+local decoded = assert(zip.raw_inflate(encoded))
+local counted = assert(zip.raw_inflate_counted(encoded, 1024))
+print(counted.output, counted.bytes_consumed)
+```
+
+The decoder accepts stored, fixed-Huffman, dynamic-Huffman, and multi-block
+streams. `raw_inflate_counted` reports the exact number of compressed bytes
+consumed, allowing ZIP readers to reject hidden suffix cavities.
+
 ## API
 
 | Function | Description |
@@ -78,12 +91,27 @@ zip.crc32("hello world")  -- => 0x0D4A1185
 | `zip(entries, compress)` | One-shot compress. |
 | `unzip(data)` | One-shot decompress → table of name → data. |
 | `crc32(data, initial)` | CRC-32 (polynomial 0xEDB88320). |
+| `raw_deflate(data)` | Encode a raw RFC 1951 stream. |
+| `raw_inflate(data, max_output)` | Decode a raw stream with a caller-lowerable output cap. |
+| `raw_inflate_counted(data, max_output)` | Decode and return `output` plus exact `bytes_consumed`. |
+| `RAW_INFLATE_MAX_OUTPUT` | Hard and default 256 MiB inflate ceiling. |
+| `RAW_INFLATE_ERROR_CODES` | Stable payload-blind decoder error identifiers. |
 | `dos_datetime(y,m,d,h,min,s)` | MS-DOS timestamp encoder. |
 | `DOS_EPOCH` | `0x00210000` — 1980-01-01 00:00:00. |
+
+## Security boundary
+
+The package is a pure in-memory codec. It has no filesystem, network, process,
+environment, clock, entropy, console, or credential authority. DEFLATE output
+is capped at 256 MiB and ZIP method-8 reads lower that cap to the declared entry
+size. Every stored byte, literal, and back-reference is checked before append;
+errors expose no partial output or attacker-controlled values. Counted decoding
+and exact declared-size checks fail closed before CRC validation. CRC-32 detects
+accidental corruption only; it is not authentication.
 
 ## Running tests
 
 ```bash
-luarocks make --local coding-adventures-zip-0.1.0-1.rockspec
+luarocks make --local coding-adventures-zip-0.2.0-1.rockspec
 cd tests && LUA_PATH="../src/?.lua;../src/?/init.lua;../../lzss/src/?.lua;../../lzss/src/?/init.lua;;" busted . --verbose --pattern=test_
 ```
