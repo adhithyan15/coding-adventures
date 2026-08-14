@@ -901,8 +901,9 @@ backend immediately) come before the enabler-dependent items.
   its value and predicate reference only the control and statically known
   ordinary local scalars that
   the body does not change. Read-only body uses, exact scalar
-  self-assignments, checked self-only numeric or boolean expressions that equal
-  the tracked scalar, and conditional assignments whose leaves are all that
+  self-assignments, checked numeric or boolean expressions that equal the
+  tracked scalar and otherwise reference only known ordinary locals that are
+  never body targets, and conditional assignments whose leaves are all that
   same bare scalar are permitted. A variable-free statically known conditional
   assignment scans only its selected leaf, as may a statically known predicate
   over unchanged ordinary local boolean, integer, and real scalars, so an
