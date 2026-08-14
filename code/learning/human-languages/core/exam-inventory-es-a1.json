@@ -10,8 +10,10 @@
       "id": "A1-N-01",
       "category": "El sustantivo",
       "label": "proper nouns: personal names, forms of address, place names",
-      "probe": null,
-      "note": "Forms of address are taught (tu/usted, ch5) but as pronouns, not as the noun class."
+      "probe": [
+        "ES-GRAMMAR-PROPER-NOUN-NO-ARTICLE",
+        "ES-GRAMMAR-TITLE-TAKES-ARTICLE"
+      ]
     },
     {
       "id": "A1-N-02",
@@ -215,8 +217,10 @@
       "id": "A1-Q-03",
       "category": "Los cuantificadores",
       "label": "poco and mucho, with gender and number variation",
-      "probe": null,
-      "note": "Both words are taught (ch6, ch220) but their agreement is not."
+      "probe": [
+        "ES-GRAMMAR-QUANTIFIER-AGREES-WITH-NOUN",
+        "ES-GRAMMAR-QUANTIFIER-FROZEN-AFTER-VERB"
+      ]
     },
     {
       "id": "A1-Q-04",
@@ -399,8 +403,9 @@
       "id": "A1-V-03",
       "category": "El verbo",
       "label": "present indicative: actual and durative values",
-      "probe": null,
-      "note": "Chapter 238 teaches the PROGRESSIVE (estar + gerund) and contrasts it with the plain present, which is adjacent to this point but is not it: the inventory asks for the present indicative's own actual and durative readings -- that `hablo` alone can mean both `I speak` and `I am speaking`. Probing this with the progressive atoms would close it with a different construction, so it stays open."
+      "probe": [
+        "ES-GRAMMAR-PRESENT-ACTUAL-AND-DURATIVE"
+      ]
     },
     {
       "id": "A1-V-04",
@@ -524,7 +529,9 @@
       "id": "A1-SN-03",
       "category": "El sintagma nominal",
       "label": "subject-verb agreement as a stated rule",
-      "probe": null
+      "probe": [
+        "ES-GRAMMAR-SUBJECT-VERB-AGREEMENT-RULE"
+      ]
     },
     {
       "id": "A1-SN-04",

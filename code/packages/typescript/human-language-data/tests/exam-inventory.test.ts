@@ -141,21 +141,26 @@ describe("the committed A1 inventory", () => {
     }
   });
 
-  it("gives every unmapped point a reason where one is worth having", () => {
-    // Not every null needs prose — "the gerund is not taught" is self-evident.
-    // But the ones that are PARTLY there are the misleading ones, so they carry
-    // a note saying which half exists.
-    // A1-V-04 and A1-V-06 were on this list and have since been CLOSED (chapters
-    // 241-245 taught the vosotros preterite and the imperfect plural), so they are
-    // no longer partly-true nulls. Removing them from the list is the point of the
-    // list rather than an erosion of it: it names nulls whose note has to explain
-    // which half exists, and these two no longer have a missing half.
-    const partiallyTrue = ["A1-N-01", "A1-Q-03", "A1-V-03"];
-    for (const id of partiallyTrue) {
-      const point = inventory.points.find((candidate) => candidate.id === id);
-      expect(point, id).toBeDefined();
-      expect(point!.probe).toBeNull();
-      expect(point!.note, id).toBeTruthy();
+  it("classifies every unmapped point, so a new null cannot slip in unnoticed", () => {
+    // This test used to hold a hand-written list of nulls that were PARTLY true
+    // and therefore needed a note saying which half existed. Chapters 257-261
+    // closed the last of those, and emptying the list left `for (const id of
+    // [])` behind — a loop that never runs, in a test with no other assertion,
+    // passing unconditionally. The invariant it existed for was enforced by
+    // nothing, and a future null probe with no note would have sailed through.
+    //
+    // So it is derived now instead of listed. Pinning the exact set of nulls
+    // means any NEW one fails here and has to be classified deliberately —
+    // which is the whole job this test was meant to do.
+    const unmapped = inventory.points.filter((point) => point.probe === null).map((point) => point.id);
+    expect(unmapped.sort()).toEqual(["A1-CO-05", "A1-Q-02", "A1-SUB-01", "A1-SV-06"]);
+
+    // None of the four is partly true: each is absent outright, so none needs a
+    // note explaining which half exists. If a partly-true null is ever added,
+    // the assertion above fails first and forces that decision into the open.
+    for (const id of unmapped) {
+      const point = inventory.points.find((candidate) => candidate.id === id)!;
+      expect(point.probe, `${id} must stay null or gain a probe deliberately`).toBeNull();
     }
   });
 });
@@ -320,9 +325,15 @@ describe("what the corpus actually covers", () => {
     // move because a probe was loosened or a point deleted — if this assertion
     // fails alongside an edit to exam-inventory-es-a1.json, read that edit
     // before re-pinning.
+    //
+    // Chapters 257-261 then closed the last four of the "demonstrated but never
+    // stated" points, which is why `partiallyTrue` is now empty: no null probe
+    // remains that is PARTLY true. The four that are still null are absent
+    // outright -- the ordinals, `uno...otro`, word-order flexibility, and the
+    // infinitive as subject -- and need no note to say which half exists.
     expect(coverage.enumerated).toBe(85);
-    expect(coverage.covered).toBe(77); // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245 // +3 ch246-250 // +6 ch251-255: the half-taught sets finished, plus bastante which was already taught and merely unwired // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245 // +3 ch246-250: the stressed pronouns, the exclamative and the vocative // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245: the vosotros preterite and the imperfect plural, both promised in chapter 204 // +3: ch221-225 demonstratives // +4: ch226-229 degree words // +4: ch230-235 joining words // +2: ch236-240 the gerund and the personal a // +3: chapters 221-225 teach the demonstratives // +4: chapters 226-229 teach muy, bastante and mal // +4: chapters 230-235 teach al/del, quien, o and ni
-    expect(coverage.percent).toBe(91); // 53/85 -> 56 -> 60 -> 64/85
+    expect(coverage.covered).toBe(81); // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245 // +3 ch246-250 // +6 ch251-256 // +4 ch257-261: the four rules the book had always demonstrated and never stated // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245 // +3 ch246-250 // +6 ch251-255: the half-taught sets finished, plus bastante which was already taught and merely unwired // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245 // +3 ch246-250: the stressed pronouns, the exclamative and the vocative // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245: the vosotros preterite and the imperfect plural, both promised in chapter 204 // +3: ch221-225 demonstratives // +4: ch226-229 degree words // +4: ch230-235 joining words // +2: ch236-240 the gerund and the personal a // +3: chapters 221-225 teach the demonstratives // +4: chapters 226-229 teach muy, bastante and mal // +4: chapters 230-235 teach al/del, quien, o and ni
+    expect(coverage.percent).toBe(95); // 53/85 -> 56 -> 60 -> 64/85
 
     // Whole categories missing is a different failure from thin coverage, and
     // the report has to keep them distinguishable.
@@ -336,12 +347,12 @@ describe("what the corpus actually covers", () => {
     const report = formatExamCoverage(
       measureExamCoverage(loadExamInventory("spanish", "A1"), lessons),
     );
-    expect(report).toContain("spanish A1: 77/85 points covered (91%)");
+    expect(report).toContain("spanish A1: 81/85 points covered (95%)");
     // Worst category first: the line after the summary should be the emptiest
     // category, not the alphabetically first one. It USED to be
     // `El sintagma adjetival` at 0/1; chapters 226-229 closed that, and the
     // ordering moved on its own to the next-worst — which is the whole point of
     // sorting by shortfall rather than by name.
-    expect(report.split("\n")[2]).toContain("2/4  Los cuantificadores");
+    expect(report.split("\n")[2]).toContain("3/4  Los cuantificadores");
   });
 });

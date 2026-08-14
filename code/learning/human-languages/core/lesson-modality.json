@@ -7,18 +7,18 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:4322ed65d0103bbd",
+  "sourceHash": "fnv1a64:7b1b3498c965da5b",
   "summary": {
-    "totalLessons": 2049,
-    "voice": 1365,
+    "totalLessons": 2054,
+    "voice": 1370,
     "sight": 568,
     "pen": 116,
-    "drivableLessons": 1365,
+    "drivableLessons": 1370,
     "drivablePercent": 67,
     "trackCount": 22,
-    "chapterCount": 756,
-    "drivablePrefixTotal": 1165,
-    "fullyDrivableChapters": 494,
+    "chapterCount": 761,
+    "drivablePrefixTotal": 1170,
+    "fullyDrivableChapters": 499,
     "unstartableChapters": 180,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
@@ -7114,12 +7114,12 @@
     },
     {
       "language": "spanish",
-      "lessonCount": 402,
-      "voice": 353,
+      "lessonCount": 407,
+      "voice": 358,
       "sight": 42,
       "pen": 7,
       "drivablePercent": 88,
-      "drivablePrefixTotal": 340,
+      "drivablePrefixTotal": 345,
       "modalities": [
         "voice",
         "sight",
@@ -11280,6 +11280,86 @@
           "drivable": true,
           "drivableLessonIds": [
             "ES-C65-repaso-parejas"
+          ]
+        },
+        {
+          "chapter": 257,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C66-hablo-dos-lecturas"
+          ]
+        },
+        {
+          "chapter": 258,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C66-la-terminacion-dice-quien"
+          ]
+        },
+        {
+          "chapter": 259,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C66-mucha-agua"
+          ]
+        },
+        {
+          "chapter": 260,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C66-nombres-propios"
+          ]
+        },
+        {
+          "chapter": 261,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C66-repaso-lo-implicito"
           ]
         }
       ]
@@ -45914,6 +45994,96 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:1ea9c3ba5e7fdd0b"
+    },
+    {
+      "id": "ES-C66-hablo-dos-lecturas",
+      "language": "spanish",
+      "chapter": 257,
+      "sequence": 2520,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:41702b06a356b71b"
+    },
+    {
+      "id": "ES-C66-la-terminacion-dice-quien",
+      "language": "spanish",
+      "chapter": 258,
+      "sequence": 2525,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:1ee023b359bd924b"
+    },
+    {
+      "id": "ES-C66-mucha-agua",
+      "language": "spanish",
+      "chapter": 259,
+      "sequence": 2530,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:237b9aa19bbf7ace"
+    },
+    {
+      "id": "ES-C66-nombres-propios",
+      "language": "spanish",
+      "chapter": 260,
+      "sequence": 2535,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:dafdba0ece34adb6"
+    },
+    {
+      "id": "ES-C66-repaso-lo-implicito",
+      "language": "spanish",
+      "chapter": 261,
+      "sequence": 2540,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:1c4296fbd4f9c106"
     },
     {
       "id": "TA-C01-vanakkam",

@@ -3723,6 +3723,31 @@
       "output": "spanish/book/chapters/ch256-review-parejas.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 257,
+      "output": "spanish/book/chapters/ch257-hablo-dos.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 258,
+      "output": "spanish/book/chapters/ch258-terminacion.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 259,
+      "output": "spanish/book/chapters/ch259-mucha-agua.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 260,
+      "output": "spanish/book/chapters/ch260-nombres-propios.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 261,
+      "output": "spanish/book/chapters/ch261-review-implicito.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "output": "tamil/book/chapters/ch06-dative-case.tex",

@@ -2845,6 +2845,66 @@
         "ES-EXT-A1-REVIEW-PAREJAS"
       ],
       "after": []
+    },
+    {
+      "id": "ES-PATH-A1-PRESENTE-DOS",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C66-hablo-dos-lecturas"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-PRESENTE-DOS"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-A1-CONCORDANCIA",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C66-la-terminacion-dice-quien"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-CONCORDANCIA"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-A1-CUANTIF-ACUERDO",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C66-mucha-agua"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-CUANTIF-ACUERDO"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-A1-PROPIOS",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C66-nombres-propios"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-PROPIOS"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-A1-REVIEW-IMPL",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "ES-C66-repaso-lo-implicito"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-A1-REVIEW-IMPL"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -3029,7 +3089,12 @@
         "ES-PATH-A1-UNOS",
         "ES-PATH-A1-VUESTRO",
         "ES-PATH-A1-VI-DI",
-        "ES-PATH-A1-REVIEW-PAREJAS"
+        "ES-PATH-A1-REVIEW-PAREJAS",
+        "ES-PATH-A1-PRESENTE-DOS",
+        "ES-PATH-A1-CONCORDANCIA",
+        "ES-PATH-A1-CUANTIF-ACUERDO",
+        "ES-PATH-A1-PROPIOS",
+        "ES-PATH-A1-REVIEW-IMPL"
       ],
       "omits": [],
       "relocates": {}
@@ -6168,6 +6233,61 @@
       "prerequisites": [],
       "lessons": [
         "ES-C65-repaso-parejas"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-PRESENTE-DOS",
+      "stage": "A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C66-hablo-dos-lecturas"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-CONCORDANCIA",
+      "stage": "A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C66-la-terminacion-dice-quien"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-CUANTIF-ACUERDO",
+      "stage": "A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C66-mucha-agua"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-PROPIOS",
+      "stage": "A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C66-nombres-propios"
+      ]
+    },
+    {
+      "id": "ES-EXT-A1-REVIEW-IMPL",
+      "stage": "A1",
+      "kind": "required",
+      "category": "grammar",
+      "canDo": "I can use the additional Spanish material required at this point in the path.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C66-repaso-lo-implicito"
       ]
     }
   ]

@@ -4945,6 +4945,91 @@
           "ES-GRAMMAR-POSSESSIVE-COMPLETE"
         ]
       }
+    },
+    {
+      "chapter": 257,
+      "title": "Hablo --- One Form, Two Readings",
+      "label": "ch:hablo-dos",
+      "canDo": "I can use the plain present for both a habit and this moment.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C66-hablo-dos-lecturas",
+        "kind": "task",
+        "summary": "I can use the plain present for both a habit and this moment.",
+        "assesses": [
+          "ES-GRAMMAR-PRESENT-ACTUAL-AND-DURATIVE"
+        ]
+      }
+    },
+    {
+      "chapter": 258,
+      "title": "Hablo, Hablas, Habla --- The Ending Says Who",
+      "label": "ch:terminacion",
+      "canDo": "I can state why Spanish verbs change their endings, and why the pronoun can go.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C66-la-terminacion-dice-quien",
+        "kind": "task",
+        "summary": "I can state why Spanish verbs change their endings, and why the pronoun can go.",
+        "assesses": [
+          "ES-GRAMMAR-SUBJECT-VERB-AGREEMENT-RULE"
+        ]
+      }
+    },
+    {
+      "chapter": 259,
+      "title": "Mucha Agua --- When the Quantity Word Agrees",
+      "label": "ch:mucha-agua",
+      "canDo": "I can decide whether a quantity word agrees or freezes.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C66-mucha-agua",
+        "kind": "task",
+        "summary": "I can decide whether a quantity word agrees or freezes.",
+        "assesses": [
+          "ES-GRAMMAR-QUANTIFIER-AGREES-WITH-NOUN"
+        ]
+      }
+    },
+    {
+      "chapter": 260,
+      "title": "María, España --- The Nouns That Need No Article",
+      "label": "ch:nombres-propios",
+      "canDo": "I can use names and titles with the right article, or none.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C66-nombres-propios",
+        "kind": "task",
+        "summary": "I can use names and titles with the right article, or none.",
+        "assesses": [
+          "ES-GRAMMAR-PROPER-NOUN-NO-ARTICLE"
+        ]
+      }
+    },
+    {
+      "chapter": 261,
+      "title": "Review --- Four Rules You Already Obeyed",
+      "label": "ch:repaso-implicito",
+      "canDo": "I can state four rules I had been following without knowing.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C66-repaso-lo-implicito",
+        "kind": "task",
+        "summary": "I can state four rules I had been following without knowing.",
+        "assesses": [
+          "ES-GRAMMAR-SUBJECT-VERB-AGREEMENT-RULE"
+        ]
+      }
     }
   ]
 }
