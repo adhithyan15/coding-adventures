@@ -1,0 +1,93 @@
+% ============================================================================
+% simple-machine-function — for each of the six classical simple machines,
+% the FUNCTION clause the SAME already-cited NASA sentence states before its
+% example (adj-facts-stdlib, PHYSICS).
+% ============================================================================
+% A sibling to the already-shipped `simple-machines.adj`
+% (`simple_machine_example(machine, example)`, ONE everyday example per
+% simple machine — lever → seesaw, wedge → door_stop, etc.) and its own
+% already-shipped sibling `simple-machine-alt-example.adj` (the SECOND
+% everyday example for five of the six). Both of those tables decode only
+% the trailing `(examples: ...)` parenthetical of each NASA definition
+% sentence. The SAME six sentences open with a leading clause that states
+% what the machine actually DOES — a fact neither example-only schema had
+% room for:
+%
+%   lever → moves_object_over_fulcrum
+%     "Lever: uses a surface situated on a fulcrum (pivoting point) to move
+%      an object (examples: seesaw, scissors)"
+%
+%   inclined_plane → moves_objects_up_angled_surface
+%     "Inclined Plane: uses an angled plane, or surface, to move objects
+%      more easily (examples: ramp, stairs)"
+%
+%   wedge → splits_or_separates_objects
+%     "Wedge: uses two inclined converging planes in order to split, or
+%      separate, objects (examples: door stop, knife)"
+%
+%   screw → fastens_objects_together
+%     "Screw: helps to fasten two objects together (examples: screw,
+%      bottle caps)"
+%
+%   wheel_and_axle → turns_or_moves_load
+%     "Wheel and axle: a wheel attached to an axle used to turn or move a
+%      load (examples: bicycle, clock)"
+%
+%   pulley → changes_direction_of_object
+%     "Pulley: uses a wheel and axle to change the direction of an object
+%      (examples: elevator, water well)"
+%
+% Recall is a binding query:
+%
+%     ? simple_machine_function(lever, $Function)   % moves_object_over_fulcrum
+%
+% This is a native `table` (ADJ-TABLES RS-5, a TWO-column table like
+% `simple-machines.adj`'s own `simple_machine_example`): each `row` lowers to
+% a ground relation `simple_machine_function(machine, function)` carrying the
+% citation, so the lookup above is the ordinary SLD binding query — the
+% engine returns the function WITH its source, on the CPU, with zero model
+% calls, and abstains on anything that is not one of the six simple
+% machines. All six machines have a function clause in this SAME cited
+% span, so this sibling covers the full six-machine domain with NO
+% abstention — unlike `simple-machine-alt-example.adj`, which is narrower
+% (screw has no distinct second example), the function clause is present
+% for every one of the six sentences, including screw's. The query also
+% runs BACKWARD — bind a function and recall which machine performs it:
+%
+%     ? simple_machine_function($M, fastens_objects_together)   % screw
+%
+% Provenance: reproduces, byte-for-byte, the SAME six NASA sentences already
+% quoted inside `simple-machines.adj`'s own provenance block, from the SAME
+% NASA Next Gen STEM "Simple Machines" classroom-connection educator notes
+% that table (and its sibling `simple-machine-alt-example.adj`) already
+% cite — no new WebFetch, only a different schema decoding the leading
+% function clause of each already-verified quote. An ADJ `table` carries
+% ONE provenance envelope (per `simple-machines.adj`'s own convention), so
+% `source`/`locator`/`trust` below hold the lever span; the other five
+% rows' own spans are listed above for independent auditability. `trust
+% authoritative` — the same tier `simple-machines.adj` already carries (a
+% primary U.S. government NASA education page).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table simple_machine_function {
+    columns machine, function
+
+    row (lever, moves_object_over_fulcrum)              % NASA: "Lever: uses a surface situated on a fulcrum (pivoting point) to move an object (examples: seesaw, scissors)"
+    row (inclined_plane, moves_objects_up_angled_surface) % NASA: "Inclined Plane: uses an angled plane, or surface, to move objects more easily (examples: ramp, stairs)"
+    row (wedge, splits_or_separates_objects)              % NASA: "Wedge: uses two inclined converging planes in order to split, or separate, objects (examples: door stop, knife)"
+    row (screw, fastens_objects_together)                 % NASA: "Screw: helps to fasten two objects together (examples: screw, bottle caps)"
+    row (wheel_and_axle, turns_or_moves_load)             % NASA: "Wheel and axle: a wheel attached to an axle used to turn or move a load (examples: bicycle, clock)"
+    row (pulley, changes_direction_of_object)             % NASA: "Pulley: uses a wheel and axle to change the direction of an object (examples: elevator, water well)"
+
+    source "Lever: uses a surface situated on a fulcrum (pivoting point) to move an object (examples: seesaw, scissors)"
+    locator "https://www.nasa.gov/wp-content/uploads/2022/06/simple_machines_classroom_connection_508.pdf"
+    trust authoritative
+
+    cites "Inclined Plane: uses an angled plane, or surface, to move objects more easily (examples: ramp, stairs)" locator "https://www.nasa.gov/wp-content/uploads/2022/06/simple_machines_classroom_connection_508.pdf"
+    cites "Wedge: uses two inclined converging planes in order to split, or separate, objects (examples: door stop, knife)" locator "https://www.nasa.gov/wp-content/uploads/2022/06/simple_machines_classroom_connection_508.pdf"
+    cites "Screw: helps to fasten two objects together (examples: screw, bottle caps)" locator "https://www.nasa.gov/wp-content/uploads/2022/06/simple_machines_classroom_connection_508.pdf"
+    cites "Wheel and axle: a wheel attached to an axle used to turn or move a load (examples: bicycle, clock)" locator "https://www.nasa.gov/wp-content/uploads/2022/06/simple_machines_classroom_connection_508.pdf"
+    cites "Pulley: uses a wheel and axle to change the direction of an object (examples: elevator, water well)" locator "https://www.nasa.gov/wp-content/uploads/2022/06/simple_machines_classroom_connection_508.pdf"
+}
