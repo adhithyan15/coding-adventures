@@ -5030,6 +5030,91 @@
           "ES-GRAMMAR-SUBJECT-VERB-AGREEMENT-RULE"
         ]
       }
+    },
+    {
+      "chapter": 262,
+      "title": "Primero, Segundo, Tercero --- Counting in Order",
+      "label": "ch:primero",
+      "canDo": "I can say which one in a line something is.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C67-primero",
+        "kind": "task",
+        "summary": "I can say which one in a line something is.",
+        "assesses": [
+          "ES-LEX-ORDINALS"
+        ]
+      }
+    },
+    {
+      "chapter": 263,
+      "title": "Uno... Otro --- Splitting a Pair",
+      "label": "ch:uno-otro",
+      "canDo": "I can say something different about each of two things.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C67-uno-otro",
+        "kind": "task",
+        "summary": "I can say something different about each of two things.",
+        "assesses": [
+          "ES-GRAMMAR-DISTRIBUTIVE-UNO-OTRO"
+        ]
+      }
+    },
+    {
+      "chapter": 264,
+      "title": "Comer Es Bueno --- The Infinitive as Subject",
+      "label": "ch:comer-es-bueno",
+      "canDo": "I can name an activity and say something about it.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C67-comer-es-bueno",
+        "kind": "task",
+        "summary": "I can name an activity and say something about it.",
+        "assesses": [
+          "ES-GRAMMAR-INFINITIVE-AS-SUBJECT"
+        ]
+      }
+    },
+    {
+      "chapter": 265,
+      "title": "Hoy Como en Casa --- The Pieces That Move",
+      "label": "ch:hoy-como",
+      "canDo": "I can move when and where around a sentence, and use the front for emphasis.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C67-hoy-como-en-casa",
+        "kind": "task",
+        "summary": "I can move when and where around a sentence, and use the front for emphasis.",
+        "assesses": [
+          "ES-GRAMMAR-CIRCUMSTANTIAL-MOVES"
+        ]
+      }
+    },
+    {
+      "chapter": 266,
+      "title": "Review --- Four Last Pieces, and the Thread",
+      "label": "ch:repaso-a1",
+      "canDo": "I can use the last of the A1 structures, and name the thread that runs through them.",
+      "spineNodes": [
+        "SPINE-DEFINITE-REFERENCE"
+      ],
+      "payoff": {
+        "lesson": "ES-C67-repaso-a1",
+        "kind": "task",
+        "summary": "I can use the last of the A1 structures, and name the thread that runs through them.",
+        "assesses": [
+          "ES-GRAMMAR-WORD-ORDER-EMPHASIS"
+        ]
+      }
     }
   ]
 }

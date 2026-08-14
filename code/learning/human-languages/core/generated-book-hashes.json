@@ -5982,6 +5982,51 @@
       "tex": "spanish/book/chapters/ch261-review-implicito.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 262,
+      "sourceHash": "fnv1a64:225d0bd3d65a403b",
+      "lessonIds": [
+        "ES-C67-primero"
+      ],
+      "tex": "spanish/book/chapters/ch262-primero.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 263,
+      "sourceHash": "fnv1a64:3a4cdb8796df5590",
+      "lessonIds": [
+        "ES-C67-uno-otro"
+      ],
+      "tex": "spanish/book/chapters/ch263-uno-otro.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 264,
+      "sourceHash": "fnv1a64:1e50fc17280f8b31",
+      "lessonIds": [
+        "ES-C67-comer-es-bueno"
+      ],
+      "tex": "spanish/book/chapters/ch264-comer-es-bueno.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 265,
+      "sourceHash": "fnv1a64:a461728139f76390",
+      "lessonIds": [
+        "ES-C67-hoy-como-en-casa"
+      ],
+      "tex": "spanish/book/chapters/ch265-hoy-como.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 266,
+      "sourceHash": "fnv1a64:2a3765863e94ccf5",
+      "lessonIds": [
+        "ES-C67-repaso-a1"
+      ],
+      "tex": "spanish/book/chapters/ch266-review-a1.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "sourceHash": "fnv1a64:5f56402811418e13",
