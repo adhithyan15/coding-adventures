@@ -5802,7 +5802,10 @@ impl Compiler {
                                 && binding.array.is_none()
                                 && self.active_by_name_binding(dependency).is_none()
                         })
-                        && !body_writes_name(effect_root, dependency)
+                        && !body_changes_bare_self_assignment_dependency(
+                            effect_root,
+                            dependency,
+                        )
                 })
         });
         if condition_is_variable_free || stable_scalar_condition {
@@ -7582,21 +7585,24 @@ fn recursive_tokens(node: &GrammarASTNode) -> Vec<&Token> {
     out
 }
 
-fn body_writes_name(node: &GrammarASTNode, name: &str) -> bool {
+fn body_changes_bare_self_assignment_dependency(node: &GrammarASTNode, name: &str) -> bool {
     let targets_name = |variable: &GrammarASTNode| {
         array_subscripts(variable).is_none()
             && direct_tokens(variable).into_iter().any(|token| {
                 token.effective_type_name() == "NAME" && token.value == name
             })
     };
-    if node.rule_name == "assign_stmt"
-        && direct_nodes(node)
+    if node.rule_name == "assign_stmt" {
+        let writes_name = direct_nodes(node)
             .into_iter()
             .filter(|child| child.rule_name == "left_part")
             .filter_map(|left| first_direct_node(left, "variable"))
-            .any(&targets_name)
-    {
-        return true;
+            .any(&targets_name);
+        if writes_name {
+            return first_direct_node(node, "expression").is_none_or(|expression| {
+                exact_bare_variable_expression_name(expression).as_deref() != Some(name)
+            });
+        }
     }
     if node.rule_name == "for_stmt"
         && first_direct_node(node, "variable").is_some_and(&targets_name)
@@ -7605,7 +7611,7 @@ fn body_writes_name(node: &GrammarASTNode, name: &str) -> bool {
     }
     direct_nodes(node)
         .into_iter()
-        .any(|child| body_writes_name(child, name))
+        .any(|child| body_changes_bare_self_assignment_dependency(child, name))
 }
 
 fn collect_expression_dependency_names(
@@ -8008,6 +8014,19 @@ fn expr_variable_name(node: &GrammarASTNode) -> Option<String> {
     }
 
     None
+}
+
+fn exact_bare_variable_expression_name(node: &GrammarASTNode) -> Option<String> {
+    if node.rule_name == "variable" {
+        return bare_scalar_variable_name(node);
+    }
+    if !direct_tokens(node).is_empty() {
+        return None;
+    }
+    let child_nodes = direct_nodes(node);
+    (child_nodes.len() == 1)
+        .then(|| exact_bare_variable_expression_name(child_nodes[0]))
+        .flatten()
 }
 
 /// Return the name of a bare scalar variable node. Array elements are kept
@@ -10036,6 +10055,25 @@ mod tests {
             "test",
         )
         .expect_err("a written conditional selector dependency may change the selected leaf");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_self_assigned_conditional_selector_dependency_stays_stable() {
+        compile_source(
+            "begin integer i, n, limit, choose; boolean other; n := 3; limit := 3; choose := 1; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := other end; print(i + 0.25) end",
+            "test",
+        )
+        .expect("an exact self-assignment leaves a conditional selector dependency stable");
+    }
+
+    #[test]
+    fn al4_computed_conditional_selector_dependency_remains_conservative() {
+        let err = compile_source(
+            "begin integer i, n, limit, choose; boolean other; n := 3; limit := 3; choose := 1; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := not other end; print(i + 0.25) end",
+            "test",
+        )
+        .expect_err("a computed dependency assignment may change the selected leaf later");
         assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 

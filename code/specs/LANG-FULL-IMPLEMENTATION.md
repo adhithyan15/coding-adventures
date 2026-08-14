@@ -913,8 +913,9 @@ backend immediately) come before the enabler-dependent items.
   bare selector. A variable-free statically known conditional selector
   assignment may instead scan only its selected leaf, as may a statically
   known predicate over unchanged ordinary local boolean, integer, and real
-  scalars. Computed selector assignments, written or otherwise unsupported
-  selector dependencies, dynamically selected differing selector leaves,
+  scalars. An exact bare self-assignment does not make such a predicate
+  dependency unstable. Computed selector assignments, computed or otherwise
+  unsupported selector-dependency writes, dynamically selected differing selector leaves,
   dynamically selected differing dependency leaves, loop controls, and
   cross-assigned dependency writes remain conservative without recursive
   effect inference. Conditional
