@@ -3805,6 +3805,53 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: cyrillicAlphabetSource("с"),
   },
+  // RussianIrina writes lowercase т as one joined, rounded m-like school-hand
+  // run: descend the first stem, pass through two arches, then descend and exit.
+  // The fitted path preserves the initial descent and zero lifts while routing
+  // that continuous motion through the bundled printed central stem and top bar.
+  [ductusKey("cyrillic", "т")]: {
+    script: "cyrillic",
+    glyph: "т",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "descend the central stem to the baseline",
+            path: [
+              { x: 231, y: 499 },
+              { x: 231, y: 380 },
+              { x: 231, y: 260 },
+              { x: 231, y: 140 },
+              { x: 231, y: 25 },
+            ],
+          },
+          {
+            label: "retrace to the top junction and sweep left",
+            path: [
+              { x: 231, y: 25 },
+              { x: 231, y: 140 },
+              { x: 231, y: 260 },
+              { x: 231, y: 380 },
+              { x: 231, y: 499 },
+              { x: 150, y: 499 },
+              { x: 52, y: 499 },
+            ],
+          },
+          {
+            label: "retrace through the junction and sweep to the right tip",
+            path: [
+              { x: 52, y: 499 },
+              { x: 150, y: 499 },
+              { x: 231, y: 499 },
+              { x: 320, y: 499 },
+              { x: 413, y: 499 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: cyrillicAlphabetSource("т"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the

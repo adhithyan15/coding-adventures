@@ -807,10 +807,17 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   small lower-right exit without lifting. Its two-frame Noto fit preserves that
   counterclockwise open-curve order and zero-lift evidence while tracing the
   printed wider upright C-like outline; it records the school hand's tall,
-  slightly slanted proportions and rising exit. The remaining **84** prose part
+  slightly slanted proportions and rising exit. Lowercase **т** follows at
+  07:29–07:36: the pen descends the left stem, rises through a rounded first
+  arch, descends the middle stem, rises through a rounded second arch, descends
+  the right stem, and finishes through a small rising exit without lifting. Its
+  three-frame Noto fit preserves that initial-descent-before-joined-top-
+  movements order and zero-lift evidence while tracing the printed central stem
+  and horizontal top bar; it records the school hand's two-arch Latin-m-like
+  shape and rising exit. The remaining **83** prose part
   orders across four scripts
   (`arabic` 3,
-  `cyrillic` 14,
+  `cyrillic` 13,
   `gujarati` 33, `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a
   citation without a count), and Language Ladder's ductus test proves every
