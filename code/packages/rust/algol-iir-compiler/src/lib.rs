@@ -5604,7 +5604,7 @@ impl Compiler {
                 });
             if writes_name
                 && !first_direct_node(node, "expression").is_some_and(|expression| {
-                    expression_intrinsically_preserves_name(expression, name)
+                    self.expression_intrinsically_preserves_name(expression, name)
                 })
             {
                 return true;
@@ -5620,6 +5620,48 @@ impl Compiler {
         direct_nodes(node)
             .into_iter()
             .any(|child| self.for_body_changes_dependency(child, name))
+    }
+
+    fn expression_intrinsically_preserves_name(
+        &self,
+        node: &GrammarASTNode,
+        name: &str,
+    ) -> bool {
+        if expr_variable_name(node).as_deref() == Some(name) {
+            return true;
+        }
+        if !matches!(node.rule_name.as_str(), "expression" | "arith_expr")
+            || !direct_tokens(node).iter().any(|token| token.value == "if")
+        {
+            return false;
+        }
+        let branches: Vec<&GrammarASTNode> = direct_nodes(node)
+            .into_iter()
+            .filter(|child| child.rule_name == node.rule_name)
+            .collect();
+        if branches.len() != 2 {
+            return false;
+        }
+        let condition = first_direct_node(node, "bool_expr");
+        let condition_is_variable_free = condition.is_some_and(|condition| {
+            !recursive_tokens(condition)
+                .iter()
+                .any(|token| token.effective_type_name() == "NAME")
+        });
+        if condition_is_variable_free {
+            match condition.and_then(|condition| self.static_boolean_value(condition)) {
+                Some(true) => {
+                    return self.expression_intrinsically_preserves_name(branches[0], name)
+                }
+                Some(false) => {
+                    return self.expression_intrinsically_preserves_name(branches[1], name)
+                }
+                None => {}
+            }
+        }
+        branches
+            .into_iter()
+            .all(|branch| self.expression_intrinsically_preserves_name(branch, name))
     }
 
     fn collect_static_predicate_dependencies(
@@ -7777,25 +7819,6 @@ fn expr_variable_name(node: &GrammarASTNode) -> Option<String> {
     None
 }
 
-fn expression_intrinsically_preserves_name(node: &GrammarASTNode, name: &str) -> bool {
-    if expr_variable_name(node).as_deref() == Some(name) {
-        return true;
-    }
-    if !matches!(node.rule_name.as_str(), "expression" | "arith_expr")
-        || !direct_tokens(node).iter().any(|token| token.value == "if")
-    {
-        return false;
-    }
-    let branches: Vec<&GrammarASTNode> = direct_nodes(node)
-        .into_iter()
-        .filter(|child| child.rule_name == node.rule_name)
-        .collect();
-    branches.len() == 2
-        && branches
-            .into_iter()
-            .all(|branch| expression_intrinsically_preserves_name(branch, name))
-}
-
 /// Return the name of a bare scalar variable node. Array elements are kept
 /// intact because their subscripts can contain independently forwarded scalar
 /// formals that need recursive substitution.
@@ -9759,6 +9782,15 @@ mod tests {
             "test",
         )
         .expect("equal conditional leaves leave a static assignment dependency unchanged");
+    }
+
+    #[test]
+    fn al4_static_assignment_selects_preserving_transitive_dependency_branch() {
+        compile_source(
+            "begin integer i, n, limit; n := 3; limit := 3; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if true then limit else n end; print(i + 0.25) end",
+            "test",
+        )
+        .expect("a static selector may choose a preserving transitive dependency leaf");
     }
 
     #[test]
