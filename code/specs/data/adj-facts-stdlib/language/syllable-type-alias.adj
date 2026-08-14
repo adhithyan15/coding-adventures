@@ -1,0 +1,69 @@
+% ============================================================================
+% syllable-type-alias — the alternate name for the VCe syllable pattern,
+% decoded from a span already sitting unused inside `silent-e-word.adj`'s
+% own already-quoted source sentence (adj-facts-stdlib, LANGUAGE).
+% ============================================================================
+% A sibling to the already-shipped `silent-e-word.adj`
+% (`silent_e_word(word, syllable_type)`, wake/whale/while/yoke/yore/rude/
+% hare → all vce_long_vowel): that table's own `source` field already
+% quotes, verbatim, the Reading Rockets sentence in full --
+%
+%     "Also known as \"magic e\" syllable patterns, VCe syllables contain
+%      long vowels spelled with a single letter, followed by a single
+%      consonant, and a silent e."
+%
+% -- but the table's `word, syllable_type` schema only had room for WHICH
+% words follow the pattern, not the sentence's OWN opening alias clause
+% naming the pattern's alternate name. New `syllable_type_alias
+% (syllable_type, alias)` table decodes that clause as its own row:
+%
+%   vce_long_vowel → magic_e
+%     "Also known as \"magic e\" syllable patterns, ..."
+%
+% Recall is a binding query:
+%
+%     ? syllable_type_alias(vce_long_vowel, $Alias)  % magic_e
+%
+% This is a native `table` (ADJ-TABLES RS-5, a TWO-column table like the
+% parent's own): the single `row` lowers to a ground relation
+% `syllable_type_alias(syllable_type, alias)` carrying the citation, so
+% the lookup above is the ordinary SLD binding query -- the engine returns
+% the alias WITH its source, on the CPU, with zero model calls, and
+% abstains on any syllable type that is not the one tabled here (it never
+% invents an alias). The query also runs BACKWARD -- bind an alias and
+% recall which syllable type it names:
+%
+%     ? syllable_type_alias($SyllableType, magic_e)  % vce_long_vowel
+%
+% This is honestly a ONE-ROW table: the parent `silent-e-word.adj` tables
+% only ONE syllable type (vce_long_vowel, shared across all seven of its
+% rows), so there is no second already-tabled syllable type within that
+% parent to use as a within-table abstention target. Instead, the parent's
+% own header names the source article as Reading Rockets' "Six Syllable
+% Types" -- meaning the SAME article covers six distinct syllable types in
+% total, of which silent-e-word.adj tables only the one (VCe/magic e). A
+% recall on `closed_syllable` -- a real syllable type the same article's
+% own title implies it covers, but not one silent-e-word.adj (and
+% therefore not one this sibling) tables -- correctly abstains rather than
+% inventing an alias for it.
+%
+% Provenance: reproduces, byte-for-byte, the SAME span already quoted
+% inside `silent-e-word.adj`'s own `source` field, from the SAME Reading
+% Rockets "Six Syllable Types" article that table already cites -- no new
+% WebFetch, only a different schema decoding a part of that
+% already-verified quote. `trust consensus` -- the same tier the parent
+% table already carries (Reading Rockets is a reputable literacy-education
+% secondary reference, not a primary standards body).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table syllable_type_alias {
+    columns syllable_type, alias
+
+    row (vce_long_vowel, magic_e)
+
+    source "Also known as \"magic e\" syllable patterns, VCe syllables contain long vowels spelled with a single letter, followed by a single consonant, and a silent e."
+    locator "https://www.readingrockets.org/topics/spelling-and-word-study/articles/six-syllable-types"
+    trust consensus
+}
