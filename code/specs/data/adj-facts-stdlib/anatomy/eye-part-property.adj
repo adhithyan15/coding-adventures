@@ -1,0 +1,79 @@
+% ============================================================================
+% eye-part-property — a descriptive PROPERTY of three eye parts, decoded from
+% parenthetical spans already sitting unused inside `eye-parts.adj`'s own
+% already-quoted NEI source sentences (adj-facts-stdlib, ANATOMY).
+% ============================================================================
+% A sibling to the already-shipped `eye-parts.adj`
+% (`eye_part_function(part, function)`, cornea/pupil/iris/lens/retina/
+% optic_nerve → bends_light/lets_in_light/controls_light/focuses_light/
+% turns_light_into_signals/carries_signals_to_brain): that table's own header
+% already quotes, verbatim, per-row NEI spans that each name a part's FUNCTION
+% (what it DOES to light) -- but three of those very same quoted spans also
+% carry a parenthetical or descriptive clause naming a PROPERTY of the part
+% (what it IS or looks like), a fact the function/description schema had no
+% column for:
+%
+%   cornea → dome_shaped
+%     "The cornea is shaped like a dome and bends light to help the eye
+%      focus."
+%
+%   iris → colored_part_of_eye
+%     "The iris (the colored part of the eye) controls how much light the
+%      pupil lets in."
+%
+%   retina → light_sensitive_layer
+%     "When light hits the retina (a light-sensitive layer of tissue at the
+%      back of the eye), special cells called photoreceptors turn the light
+%      into electrical signals."
+%
+% "Property" (a static descriptive fact about the part itself) is categorically
+% distinct from the parent table's "function" (an action the part performs on
+% light) -- the cornea's function is bends_light, but its property is that it
+% IS dome-shaped; the two facts do not collapse into one column. New
+% `eye_part_property(part, property)` table decodes each part's own row:
+%
+%   cornea, iris, retina → their own single property atom, one row each.
+%
+% Recall is a binding query:
+%
+%     ? eye_part_property(iris, $Property)  % colored_part_of_eye
+%
+% This is a native `table` (ADJ-TABLES RS-5, a TWO-column table like the
+% parent's own): each `row` lowers to a ground relation
+% `eye_part_property(part, property)` carrying the citation, so the lookup
+% above is the ordinary SLD binding query -- the engine returns the property
+% WITH its source, on the CPU, with zero model calls, and abstains on any part
+% that is not one of these three (it never invents a property). The query also
+% runs BACKWARD -- bind a property and recall the part that has it:
+%
+%     ? eye_part_property($P, dome_shaped)  % cornea
+%
+% A recall on `lens` -- a real, already-tabled eye part in `eye-parts.adj`, but
+% whose own quoted span ("The lens works together with the cornea to focus
+% light correctly on the retina.") states only its function, never a
+% descriptive property comparable to "dome-shaped" or "colored" -- correctly
+% abstains rather than inventing a property for it. The same holds for `pupil`
+% (only "an opening" — a role, not a property) and `optic_nerve` (only that it
+% carries signals) — deliberately left unrowed here.
+%
+% Provenance: reproduces, byte-for-byte, the SAME three parenthetical/
+% descriptive spans already quoted inside `eye-parts.adj`'s own header, from
+% the SAME NEI "How the Eyes Work" page that table already cites -- no new
+% WebFetch, only a different schema decoding a different clause of each
+% already-verified quote. `trust authoritative` -- the same tier the parent
+% table already carries (NEI is a primary U.S. government NIH institute).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
+% ============================================================================
+
+table eye_part_property {
+    columns part, property
+
+    row (cornea, dome_shaped)
+    row (iris, colored_part_of_eye)
+    row (retina, light_sensitive_layer)
+
+    source "The iris (the colored part of the eye) controls how much light the pupil lets in."
+    locator "https://www.nei.nih.gov/learn-about-eye-health/healthy-vision/how-eyes-work"
+    trust authoritative
+}
