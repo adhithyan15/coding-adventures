@@ -74,6 +74,85 @@ fn canonical_twig_42_bytes_are_preserved_and_execute() {
 }
 
 #[test]
+fn f64_constants_and_moves_preserve_raw_bits() {
+    let cir = vec![
+        ci(
+            "const_f64",
+            Some("value"),
+            vec![CIROperand::Float(-13.25)],
+            "f64",
+        ),
+        ci(
+            "mov_f64",
+            Some("copy"),
+            vec![CIROperand::Var("value".into())],
+            "f64",
+        ),
+        ci(
+            "ret_f64",
+            None,
+            vec![CIROperand::Var("copy".into())],
+            "f64",
+        ),
+    ];
+    let binary = compile(&ctx("f64_bits", &[], "f64"), &cir).expect("f64 lowering");
+    let run = run_binary(&binary, &[]).expect("f64 execution");
+    assert!(run.halted);
+    let bits = ((run.return_value_high as u64) << 32) | (run.return_value as u32 as u64);
+    assert_eq!(bits, (-13.25_f64).to_bits());
+}
+
+#[test]
+fn linked_module_passes_and_returns_f64_bit_pairs() {
+    let round_trip = vec![ci(
+        "ret_f64",
+        None,
+        vec![CIROperand::Var("value".into())],
+        "f64",
+    )];
+    let main = vec![
+        ci(
+            "const_f64",
+            Some("input"),
+            vec![CIROperand::Float(2.25)],
+            "f64",
+        ),
+        ci(
+            "call",
+            Some("result"),
+            vec![
+                CIROperand::Var("round_trip".into()),
+                CIROperand::Var("input".into()),
+            ],
+            "f64",
+        ),
+        ci(
+            "ret_f64",
+            None,
+            vec![CIROperand::Var("result".into())],
+            "f64",
+        ),
+    ];
+    let params = [("value".to_string(), "f64".to_string())];
+    let functions = [
+        ModuleFunction {
+            context: ctx("round_trip", &params, "f64"),
+            cir: &round_trip,
+        },
+        ModuleFunction {
+            context: ctx("main", &[], "f64"),
+            cir: &main,
+        },
+    ];
+
+    let binary = compile_module(&functions, Some("main")).expect("f64 module linking");
+    let run = run_binary(&binary, &[]).expect("f64 module execution");
+    assert!(run.halted);
+    let bits = ((run.return_value_high as u64) << 32) | (run.return_value as u32 as u64);
+    assert_eq!(bits, 2.25_f64.to_bits());
+}
+
+#[test]
 fn character_builtins_round_trip_host_bytes_and_preserve_eof() {
     let echo = vec![
         ci(
@@ -1704,34 +1783,34 @@ fn moves_scalar_and_wide_values() {
 }
 
 // ---------------------------------------------------------------------------
-// Floating point: a refusal with a reason, never bytes.
+// Floating point: f64 transport is a raw pair ABI; unsupported float work
+// still gets a specific refusal rather than silently changing the program.
 //
 // RV32I is the RISC-V *base integer* ISA — 32 integer registers, no `f0`..`f31`
 // bank, no `fadd.d`.  Single/double precision live in the optional `F`/`D`
 // extensions (RV32F/RV32D).  So a float here is not "a lowering nobody wrote
-// yet"; it is a value the target cannot hold, and the two have opposite fixes
-// (implement an op vs. retarget or soft-float).  `UnsupportedFloat` says which
-// one the reader is looking at, and names the site so a multi-function module
-// (Dartmouth BASIC drags in its whole `__basic_print_*` runtime) points at the
-// exact instruction.  Truncating the double to an integer to "make it work"
-// would be a silent wrong answer — never acceptable.
+// yet"; f64 is only supported after being decomposed into a raw integer pair.
+// `UnsupportedFloat` says which unsupported form the reader is looking at and
+// names the site so a multi-function module points at the exact instruction.
+// Truncating the double to an integer to "make it work" would be a silent
+// wrong answer — never acceptable.
 // ---------------------------------------------------------------------------
 
 #[test]
-fn rejects_a_float_constant_with_a_reason_not_bytes() {
+fn rejects_an_f32_constant_with_a_reason_not_bytes() {
     let cir = vec![ci(
-        "const_f64",
+        "const_f32",
         Some("x"),
         vec![CIROperand::Float(42.0)],
-        "f64",
+        "f32",
     )];
     let err = compile(&ctx("main", &[], "i32"), &cir)
         .expect_err("RV32I has no floating-point registers");
     assert_eq!(
         err,
         BackendError::UnsupportedFloat {
-            site: "op \"const_f64\"".to_owned(),
-            ty: "f64".to_owned(),
+            site: "op \"const_f32\"".to_owned(),
+            ty: "f32".to_owned(),
         }
     );
     let msg = err.to_string();
@@ -1786,15 +1865,15 @@ fn rejects_float_arithmetic_comparison_return_and_parameters() {
         }
     );
 
-    // Parameter: the refusal happens before a single word is emitted, and it
-    // names the parameter (this is the `__basic_print_real(x : f64)` shape).
-    let params = vec![("mag".to_owned(), "f64".to_owned())];
+    // Parameters outside the f64 pair ABI remain rejected before a single
+    // word is emitted and name the offending parameter.
+    let params = vec![("mag".to_owned(), "f32".to_owned())];
     assert_eq!(
         compile(&ctx("__basic_print_real", &params, "i64"), &[])
-            .expect_err("an f64 argument has no RV32I register to arrive in"),
+            .expect_err("an f32 argument has no RV32I register to arrive in"),
         BackendError::UnsupportedFloat {
             site: "parameter \"mag\"".to_owned(),
-            ty: "f64".to_owned(),
+            ty: "f32".to_owned(),
         }
     );
 }
