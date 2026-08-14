@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.13.0
+
+- Resolve GitGraph branch lanes with Mermaid 11.16.1 explicit and implicit ordering semantics.
+- Emit branch labels in deterministic lane order for backend-neutral paint lowering.
+
 ## 0.12.0
 
 - Preserve ordered GitGraph tag lists on temporal commit nodes.
