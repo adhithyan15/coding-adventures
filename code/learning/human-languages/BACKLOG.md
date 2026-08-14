@@ -562,7 +562,7 @@ Riding alongside, not blocking the rungs:
 | HL-C118 | Not started | Cited ductus for Telugu, Kannada, Malayalam and the rest of Devanagari. **No citation → no pen path → no figure**; the gap is reported, never filled by invention. | Every authored pen path font-verified and carrying a `strokeOrderSource`. |
 | HL-C134 | **Half done.** Prose carried (91 blocks, parity 0 for all six); the FLIP is blocked on HL-C148 | Rewrite the handwritten chapters 1-5 into the generated pipeline for all six. The carry is complete and verified. The flip is not: `generate:books` refuses a schema-v1 lesson, and chapters 1-5 hold **188** of them. | Parity 0 per chapter *(done)*; then chapters move out of `handwritten` and every book still builds *(blocked)*. |
 | HL-C151 | Not started | **Split the two lessons the carried prose pushed over five minutes** — `KA-C01-namaskara` at 333s and `TE-C01-namaskaram` at 314s. Nothing about these lessons changed; a reader of the book always read every one of those words. What changed is that the markdown now knows, so the gate can see them. Newly visible debt, not new debt — and the rule is that a lesson too big splits, never compresses. | `durationViolations` back to 0 without any threshold being moved. |
-| HL-C148 | **NEXT — now the critical path.** HL-C134's flip cannot happen without it | **Migrate the six tracks' schema-v1 lessons** (233) and give every lesson a `sequence`. Until then those lessons are invisible to every gate, so the measurements understate the debt. | `measurablePercent` rises; 0 lessons without `sequence` in the six. |
+| HL-C148 | **NEXT — the critical path**, and bigger than a frontmatter rewrite | **Migrate the six tracks' 188 schema-v1 lessons.** `migrate_schema_v2.py` does the frontmatter: `spine_node` from `curriculum.json` (163 of 188 derivable), `duration` from `est_minutes`, coverage fields by lesson type, and one knowledge atom per lesson with its `hl-knowledge` directives. What it CANNOT do is the part that blocks it: v2 rejects any `##` heading `parse.ts` does not classify, and these lessons use the owner's own headings — *The word*, *The phrase, assembled*, *Across the family*, *Using them*, *The engine*. Teach the parser those headings, per the precedent it already sets for *letters in this word*; do not rewrite the author's prose to fit a parser. | All 188 are schema v2; `generate:books` accepts chapters 1-5; HL-C134's flip proceeds. |
 | HL-C149 | **Done** | **Derive the corpus-count pins instead of hard-coding them.** Twenty snapshot assertions across six test files hard-coded counts that every content tranche moves — so every tranche conflicted with every other PR that moved any of them, and this repo lands a PR every few minutes. Converted to the shape each number actually has: **floors** for content volume, **ceilings** for inherited debt (stricter than the pin was — a ratchet that cannot slip back), **ratios** for debt that grows with honest content. The running annotations stay; only the digits churned. | Mutation-tested both ways: deleting one lesson still fails the floors, and adding 42 lessons passes without touching a test file. |
 | HL-C150 | **NEXT** | **The six tracks teach core words about thirty chapters after they first use them.** Measured on merged main, before any new content: **46 forward references** across the six. Tamil's chapter 1 practice uses வா, taught in chapter 32. Chapter 3 uses இரு, taught in chapter 32. Malayalam's chapter 1 uses ഉണ്ട്, taught in chapter 32. Kannada's chapter 4 uses ಬಾ, taught in chapter 32. This is the corpus's shape, not one wave's mistake — and wave I was about to add six more of it by appending its chapter at the end. Move the words that the opening chapters already lean on to where they are used. | `forwardReferences` in the six falls toward zero; no core word is taught more than a few chapters after its first use; every book still builds. |
 
@@ -644,6 +644,29 @@ assumed a leading `t` passed `\ml{}` and `\kn{}` through untouched; and — the
 worst — the carry matched a full heading while the parity check matched a
 fragment, so a lesson that already had "The *phrase*, taken apart" was given a
 second etymology block while parity reported the chapter safe.
+
+**HL-C148 is not a frontmatter rewrite.** The frontmatter half is done and
+committed as `migrate_schema_v2.py`: 29 of Tamil's 33 migrate cleanly, the other
+4 are chapter practice lessons with no path node and are reported rather than
+guessed. Running it surfaced the real blocker.
+
+Schema v2 rejects any level-two heading that `parse.ts` cannot classify, and
+these lessons are full of the owner's own headings — *The word* (5 lessons),
+*The phrase, assembled*, *Across the family*, *Where the word fits*, *Using
+them*, *The reply*, *The engine*, *Build the sentences*. In Tamil alone that is
+17 headings across 11 lessons; across six tracks it will be several times that.
+
+The fix is to teach the parser, not to rewrite the prose, and the file already
+sets that precedent for itself. Its comment on *letters in this word* says the
+heading appears in "240 lessons across 12 tracks", that classifying it honestly
+"costs drivability and buys a migration path", and that "the driving edition is a
+filter over the modality flag, not a quality bar, so the honest label is the
+right one." Same reasoning applies here: *The word* is an `input` block, *Across
+the family* is `etymology`, *Build the sentences* is `guided-production`.
+
+Order for the next session: classify the headings in `parse.ts` first, with a
+test per heading; then run the migrator per track; then HL-C134's flip; then the
+chapters 1-5 placement that everything else has been waiting on.
 
 ### The loop this order is executed by
 
