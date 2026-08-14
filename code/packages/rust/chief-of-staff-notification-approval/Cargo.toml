@@ -1,0 +1,15 @@
+[package]
+name = "chief-of-staff-notification-approval"
+version = "0.1.0"
+edition = "2021"
+description = "Shell-free Tier 1 notification approval adapter for the D18 Chief daemon"
+license = "MIT"
+
+[dependencies]
+chief-of-staff-trust-checker = { path = "../chief-of-staff-trust-checker" }
+chief-of-staff-tool-api = { path = "../chief-of-staff-tool-api" }
+
+[[test]]
+name = "command_provider"
+path = "tests/command_provider.rs"
+harness = false

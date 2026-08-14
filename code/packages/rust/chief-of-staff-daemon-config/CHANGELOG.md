@@ -10,6 +10,8 @@
   composition settings.
 - Add bounded, canonical, duplicate-free agent, channel, package, and model tier
   assignments to the closed privilege schema.
+- Accept an optional normalized Tier 1 notification-helper path for shell-free
+  production approval composition.
 - Bound secure-bootstrap and graceful-stop deadlines to five minutes.
 - Add optional, closed, typed data-plane declarations for exact directional
   channel-key files and exact Ollama model endpoints.

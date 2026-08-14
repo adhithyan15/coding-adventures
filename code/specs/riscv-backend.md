@@ -229,13 +229,16 @@ the selected entry function can seed language-level static initializers.
 29. [x] **Incoming parameter call preservation:** save values live across a
    direct call before argument marshalling overwrites incoming `a0` through
    `a7` ABI registers. Recursive integer formatting keeps its caller state.
-30. [ ] **BASIC integral expressions:** give BASIC a target-specific checked
-   integer representation for variables, arithmetic, control flow, and `LET`,
-   so non-literal whole-number programs do not depend on the `f64` frontend
-   representation.
+30. [x] **BASIC integral expressions:** give BASIC a target-specific checked
+   integer representation for variables, `+`/`-`/`*` arithmetic, control flow,
+   and `LET`, so non-literal whole-number programs do not depend on the `f64`
+   frontend representation.
 31. [ ] **BASIC fractional REAL ABI:** choose and implement either soft-float
    or an RV32 floating-point target and preserve Dartmouth BASIC's fractional
    arithmetic and formatting semantics end to end.
+32. [ ] **BASIC exact division:** prove or preserve a whole-number result for
+   `/` in the integer subset without silently changing Dartmouth BASIC's REAL
+   division semantics when a quotient is fractional.
 
 Each item should land as a focused PR with an end-to-end fixture from the
 highest-level language it enables. New constraints discovered while carrying

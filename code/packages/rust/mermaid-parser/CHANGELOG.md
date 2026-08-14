@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.110.0
+
+- Resolve quoted Requirement node and class identifiers in style and class statements without splitting on spaces or quoted commas.
+
 ## 0.109.0
 
 - Parse quoted and unquoted multiword Requirement identifiers across definitions, relationships, and shorthand classes.

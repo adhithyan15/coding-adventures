@@ -3608,6 +3608,102 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: cyrillicAlphabetSource("н"),
   },
+  // RussianIrina writes lowercase о as one continuous counterclockwise oval:
+  // begin on the upper-right shoulder, pass over the top and down the left,
+  // sweep through the bottom, then rise on the right and close. The fitted
+  // path preserves that order in the bundled printed oval.
+  [ductusKey("cyrillic", "о")]: {
+    script: "cyrillic",
+    glyph: "о",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "curve left over the top and descend the left side",
+            path: [
+              { x: 430, y: 450 },
+              { x: 380, y: 490 },
+              { x: 300, y: 510 },
+              { x: 220, y: 500 },
+              { x: 145, y: 450 },
+              { x: 105, y: 380 },
+              { x: 95, y: 270 },
+              { x: 105, y: 170 },
+              { x: 150, y: 90 },
+              { x: 220, y: 40 },
+              { x: 300, y: 25 },
+            ],
+          },
+          {
+            label: "sweep through the bottom and rise to close the oval",
+            path: [
+              { x: 300, y: 25 },
+              { x: 380, y: 40 },
+              { x: 450, y: 90 },
+              { x: 490, y: 170 },
+              { x: 500, y: 268 },
+              { x: 490, y: 360 },
+              { x: 450, y: 440 },
+              { x: 380, y: 490 },
+              { x: 300, y: 510 },
+              { x: 380, y: 490 },
+              { x: 430, y: 450 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: cyrillicAlphabetSource("о"),
+  },
+  // RussianIrina writes lowercase п in one continuous school-hand motion:
+  // descend the left stem, turn upward into the rounded top shoulder, then
+  // descend the right stem. The fitted path preserves that order across the
+  // bundled printed stems and horizontal top bar.
+  [ductusKey("cyrillic", "п")]: {
+    script: "cyrillic",
+    glyph: "п",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "descend the left stem to the baseline",
+            path: [
+              { x: 129, y: 500 },
+              { x: 129, y: 380 },
+              { x: 129, y: 260 },
+              { x: 129, y: 140 },
+              { x: 129, y: 25 },
+            ],
+          },
+          {
+            label: "retrace to the top shoulder and sweep right",
+            path: [
+              { x: 129, y: 25 },
+              { x: 129, y: 140 },
+              { x: 129, y: 260 },
+              { x: 129, y: 380 },
+              { x: 129, y: 500 },
+              { x: 220, y: 500 },
+              { x: 310, y: 500 },
+              { x: 400, y: 500 },
+              { x: 477, y: 500 },
+            ],
+          },
+          {
+            label: "descend the right stem to the baseline",
+            path: [
+              { x: 477, y: 500 },
+              { x: 477, y: 380 },
+              { x: 477, y: 260 },
+              { x: 477, y: 140 },
+              { x: 477, y: 25 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: cyrillicAlphabetSource("п"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the

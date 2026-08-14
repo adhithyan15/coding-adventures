@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+### Added — cited Cyrillic п ductus (HL-C09EP)
+
+- Render **п** as one joined left-stem-to-top-shoulder-to-right-stem run with zero lifts.
+- Preserve RussianIrina's 06:26–06:31 rounded school-hand shoulder while fitting Noto Sans Cyrillic's squared arch, straight uprights, and horizontal top bar.
+- Add source, font-routing, on-ink, whole-glyph, and three-frame filmstrip coverage; the focused suite now passes 1,090 tests.
+
+### Added — cited Cyrillic о ductus (HL-C09EO)
+
+- Render **о** as one joined upper-right-to-left-side-to-bottom-to-right-side counterclockwise oval with zero lifts.
+- Preserve RussianIrina's 05:59–06:03 tall, slightly slanted school-hand closure while fitting Noto Sans Cyrillic's wider upright printed oval.
+- Add source, font-routing, on-ink, whole-glyph, and two-frame filmstrip coverage; the focused suite now passes 1,083 tests.
+
 ### Added — cited Cyrillic н ductus (HL-C09EN)
 
 - Render **н** as one joined left-stem-to-middle-bridge-to-right-stem run with zero lifts.

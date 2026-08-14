@@ -500,6 +500,9 @@ Prioritized work items:
    now carry the tokenizer's delimiter or EOF emission point through the shared
    tree-construction rejection path, including frameset tails, while tokenizer
    doctype errors and unpositioned token streams retain separate ownership.
+   Complete-document missing-doctype diagnostics now carry the first token's
+   delimiter or EOF emission point, while fragments and directly supplied
+   tokens retain their separate contracts.
    Continue migrating one evidence-backed diagnostic family at a time;
    synthetic or directly supplied tokens must remain explicitly unpositioned.
 4. **Input boundary review.** Document the Unicode-code-point parser boundary

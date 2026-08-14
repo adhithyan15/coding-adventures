@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.62.0
+
+- Preserve quoted Requirement identifiers in style and class statement tokens for semantic parsing.
+
 ## 0.61.0
 
 - Tokenize Requirement definitions, relationships, and shorthand classes with quoted or unquoted multiword identifiers.

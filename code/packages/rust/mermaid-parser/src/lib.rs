@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.109.0";
+pub const VERSION: &str = "0.110.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -985,11 +985,10 @@ fn parse_requirement_target_style(
         .get(keyword.len()..)
         .expect("requirement grammar emitted the expected style keyword")
         .trim();
-    let (targets, declarations) = value
-        .split_once(char::is_whitespace)
+    let (targets, declarations) = split_requirement_head(value)
         .ok_or_else(|| token_error(token, "invalid requirement style"))?;
     let mut style = DiagramStyle::default();
-    for declaration in declarations.split(',') {
+    for declaration in split_requirement_segments(declarations, ',') {
         let (property, value) = declaration
             .split_once(':')
             .ok_or_else(|| token_error(token, "invalid requirement style declaration"))?;
@@ -1069,13 +1068,7 @@ fn parse_requirement_target_style(
             }
         }
     }
-    Ok((
-        targets
-            .split(',')
-            .map(|target| target.trim().to_string())
-            .collect(),
-        style,
-    ))
+    Ok((split_requirement_list(targets), style))
 }
 
 fn parse_requirement_class_assignment(
@@ -1087,8 +1080,7 @@ fn parse_requirement_class_assignment(
         .get("class".len()..)
         .expect("requirement grammar emitted the class keyword")
         .trim();
-    let (node_ids, class_names) = value
-        .split_once(char::is_whitespace)
+    let (node_ids, class_names) = split_requirement_head(value)
         .ok_or_else(|| token_error(token, "invalid requirement class assignment"))?;
     Ok((
         split_requirement_list(node_ids),
@@ -1116,11 +1108,46 @@ fn parse_requirement_inline_class(token: &Token) -> Result<(String, Vec<String>)
 }
 
 fn split_requirement_list(value: &str) -> Vec<String> {
-    value
-        .split(',')
+    split_requirement_segments(value, ',')
+        .into_iter()
         .map(unquote_requirement_value)
         .filter(|value| !value.is_empty())
         .collect()
+}
+
+fn split_requirement_head(value: &str) -> Option<(&str, &str)> {
+    let mut quoted = false;
+    for (index, character) in value.char_indices() {
+        match character {
+            '"' => quoted = !quoted,
+            character if character.is_whitespace() && !quoted => {
+                let tail = value[index..].trim_start();
+                if !tail.is_empty() {
+                    return Some((&value[..index], tail));
+                }
+            }
+            _ => {}
+        }
+    }
+    None
+}
+
+fn split_requirement_segments(value: &str, separator: char) -> Vec<&str> {
+    let mut segments = Vec::new();
+    let mut start = 0;
+    let mut quoted = false;
+    for (index, character) in value.char_indices() {
+        match character {
+            '"' => quoted = !quoted,
+            character if character == separator && !quoted => {
+                segments.push(value[start..index].trim());
+                start = index + character.len_utf8();
+            }
+            _ => {}
+        }
+    }
+    segments.push(value[start..].trim());
+    segments
 }
 
 enum RequirementStyleEvent {
@@ -7237,7 +7264,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.109.0");
+        assert_eq!(crate::VERSION, "0.110.0");
     }
 
     #[test]

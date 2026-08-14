@@ -197,6 +197,18 @@ All notable changes to `@coding-adventures/human-language-data` are documented h
   endings fell away and something audible had to take over -- a stressed
   pronoun, a doubled preposition, and a comma.
 
+### Added - source-verified Cyrillic п (HL-C09EP)
+
+- Verify lowercase п as one continuous left-stem-to-top-shoulder-to-right-stem run with zero lifts against RussianIrina's native-teacher all-letter handwriting lesson.
+- Preserve the sourced rounded Latin-n-like school hand while fitting the bundled squared arch, straight uprights, and horizontal top bar and documenting its entry and exit joins.
+- Reduce measured HL-C09 debt to 86 entries and queue Cyrillic р next.
+
+### Added - source-verified Cyrillic о (HL-C09EO)
+
+- Verify lowercase о as one continuous upper-right-to-left-side-to-bottom-to-right-side counterclockwise closure with zero lifts against RussianIrina's native-teacher all-letter handwriting lesson.
+- Preserve the sourced tall, slightly slanted school-hand oval while fitting the bundled wider upright printed outline.
+- Reduce measured HL-C09 debt to 87 entries and queue Cyrillic п next.
+
 ### Added - source-verified Cyrillic н (HL-C09EN)
 
 - Verify lowercase н as one continuous left-stem-to-middle-bridge-to-right-stem run with zero lifts against RussianIrina's native-teacher all-letter handwriting lesson.
