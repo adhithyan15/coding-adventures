@@ -536,7 +536,7 @@ mod apple {
     #[test]
     fn render_mermaid_sankey_to_png() {
         let diagram = parse_sankey(
-            "sankey-beta\nElectricity,Heating,45\nElectricity,Lighting,30\nHeating,Losses,8",
+            "SANKEY-BETA\nElectricity,\"Heating, homes\",\"45\"\nElectricity,Lighting,30\n\"Heating, homes\",Losses,8",
         )
         .expect("Mermaid Sankey parse failed");
         let layout = layout_chart_diagram(&diagram, 700.0, 460.0);

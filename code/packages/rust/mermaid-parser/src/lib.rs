@@ -4619,13 +4619,12 @@ pub fn parse_sankey(source: &str) -> Result<ChartDiagram, ParseError> {
         cursor
             .consume_if("COMMA")
             .ok_or_else(|| token_error(cursor.current(), "expected ',' after Sankey target"))?;
-        let weight_token = cursor
-            .consume_if("NUMBER")
-            .ok_or_else(|| token_error(cursor.current(), "expected Sankey flow weight"))?;
-        let weight = weight_token.value.parse::<f64>().map_err(|_| {
+        let weight_token = cursor.current().clone();
+        let weight_value = parse_sankey_field(&mut cursor)?;
+        let weight = weight_value.parse::<f64>().map_err(|_| {
             token_error(
                 &weight_token,
-                format!("invalid Sankey flow weight {:?}", weight_token.value),
+                format!("invalid Sankey flow weight {weight_value:?}"),
             )
         })?;
 
@@ -5973,6 +5972,20 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
         assert_eq!(d.sankey_nodes.len(), 3);
         assert_eq!(d.flows[0].target, "Heating, homes");
         assert_eq!(d.flows[0].weight, 113.726);
+    }
+
+    #[test]
+    fn sankey_parses_case_insensitive_headers_and_quoted_weights() {
+        let d = parse_sankey("SANKEY-BETA\nGrid,\"Heating, homes\",\"113.726\"").unwrap();
+        assert_eq!(d.flows[0].source, "Grid");
+        assert_eq!(d.flows[0].target, "Heating, homes");
+        assert_eq!(d.flows[0].weight, 113.726);
+    }
+
+    #[test]
+    fn sankey_requires_csv_rows_and_header_newline() {
+        assert!(parse_sankey("sankey").is_err());
+        assert!(parse_sankey("sankey A,B,1").is_err());
     }
 
     #[test]
