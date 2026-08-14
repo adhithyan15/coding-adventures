@@ -4032,6 +4032,55 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: cyrillicAlphabetSource("х"),
   },
+  // RussianIrina writes lowercase ц in one run: left stem down, joined rise
+  // and descent through the right stem, then the tail. The fitted path squares
+  // those joins and keeps the printed descender connected by retracing.
+  [ductusKey("cyrillic", "ц")]: {
+    script: "cyrillic",
+    glyph: "ц",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "descend the left stem to the baseline",
+            path: [
+              { x: 130, y: 536 },
+              { x: 130, y: 280 },
+              { x: 130, y: 37 },
+            ],
+          },
+          {
+            label: "sweep along the base and rise through the right stem",
+            path: [
+              { x: 130, y: 37 },
+              { x: 300, y: 37 },
+              { x: 477, y: 37 },
+              { x: 477, y: 280 },
+              { x: 477, y: 536 },
+            ],
+          },
+          {
+            label: "retrace the right stem and cross the tail shoulder",
+            path: [
+              { x: 477, y: 536 },
+              { x: 477, y: 280 },
+              { x: 477, y: 37 },
+              { x: 560, y: 37 },
+            ],
+          },
+          {
+            label: "descend the short tail below the baseline",
+            path: [
+              { x: 560, y: 37 },
+              { x: 560, y: -50 },
+              { x: 560, y: -140 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: cyrillicAlphabetSource("ц"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the

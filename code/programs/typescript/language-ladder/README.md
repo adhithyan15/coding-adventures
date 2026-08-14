@@ -859,6 +859,13 @@ followed by a left-bulging right curve at 08:42–08:49; the Noto Sans Cyrillic
 fit preserves that top-to-bottom left-run-before-right-run order and one-lift
 evidence while straightening both curves into the printed glyph's four diagonal
 arms and records the source's rounded curves and rising exit.
+The four-frame Cyrillic **ц** filmstrip descends the left stem, sweeps along the
+bottom bar and rises through the right stem, retraces down to the tail shoulder,
+then descends the short tail without lifting. The native-teacher lesson
+demonstrates its rounded left-stem-to-right-stem-to-looped-tail school-hand
+order at 09:05–09:10; the Noto Sans Cyrillic fit preserves that zero-lift
+evidence while tracing the printed squared U-like body and short right
+descender and records the source's diagonal join, lower loop, and rising exit.
 The runtime resolves each cited path back to the owning script and lazily loads that
 script's font, while Tamil continues to use Noto Sans Tamil. Unverified letters
 still fall back to the numbered prose list, unchanged. Extending the coverage is HL-C09,
