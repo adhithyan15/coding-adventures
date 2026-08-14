@@ -777,7 +777,7 @@ fn parse_element_section(p: &mut Parser, module: &mut WasmModule) -> Result<(), 
         let table_index = p.read_u32leb()?;
         let offset_expr = p.read_expr()?;
         let func_count = p.read_u32leb()? as usize;
-        let mut function_indices = Vec::with_capacity(func_count);
+        let mut function_indices = Vec::with_capacity(func_count.min(MAX_PREALLOC));
         for _ in 0..func_count {
             function_indices.push(p.read_u32leb()?);
         }
@@ -1425,6 +1425,26 @@ mod tests {
         assert_eq!(m.elements[0].table_index, 0);
         assert_eq!(m.elements[0].offset_expr, vec![0x41, 0x00, 0x0B]);
         assert_eq!(m.elements[0].function_indices, vec![0, 1]);
+    }
+
+    #[test]
+    fn element_section_func_count_does_not_preallocate_beyond_max_prealloc() {
+        // A crafted func_count of u32::MAX, with no actual func indices
+        // following (a truncated/adversarial stream) -- if this allocated
+        // `Vec::with_capacity(func_count.min(MAX_PREALLOC))` directly (the old behavior),
+        // that's a ~16 GiB up-front allocation from four attacker-controlled
+        // bytes, before the loop ever reaches the first (failing) read. The
+        // fix caps pre-allocation at MAX_PREALLOC, so this must error
+        // cleanly (a missing byte on the first func-index read) rather than
+        // hang or abort the process trying to allocate.
+        let mut payload = vec![0x01]; // count = 1
+        payload.push(0x00); // table_idx = 0
+        payload.extend_from_slice(&[0x41, 0x00, 0x0B]); // offset_expr
+        payload.extend_from_slice(&encode_u32leb(u32::MAX)); // func_count
+        // No func indices follow -- the stream is truncated.
+        let data = wasm_with_sections(&[make_section(9, &payload)]);
+        let result = WasmModuleParser::parse(&data);
+        assert!(result.is_err(), "a truncated stream with a huge func_count must error, not allocate/panic");
     }
 
     // ── Test 12: Start section ────────────────────────────────────────────────
