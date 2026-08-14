@@ -1,0 +1,63 @@
+% ============================================================================
+% valve-alternate-name — the everyday ALTERNATE name a source gives for a
+% heart valve, decoded from a clause already sitting unused inside
+% `heart-valves.adj`'s and `valve-kind.adj`'s own already-quoted NCI SEER
+% source sentence (adj-facts-stdlib, ANATOMY).
+% ============================================================================
+% A sibling to the already-shipped `heart-valves.adj`
+% (`valve_separates(valve, boundary)`, mitral → left_atrium_and_left_ventricle)
+% and `valve-kind.adj` (`valve_kind(valve, kind)`, mitral → atrioventricular):
+% both of those tables' own already-quoted NCI SEER span ALSO names an
+% everyday alternate name for the mitral valve -- a fact neither the boundary
+% nor the kind schema had room for:
+%
+%     "The left atrioventricular valve is the bicuspid, or mitral, valve."
+%
+% New `valve_alternate_name(valve, alt_name)` table decodes that span as its
+% own row: mitral → bicuspid. "Alt_name" (an everyday synonym for the valve)
+% is categorically distinct from "boundary" (the two chambers/vessels it
+% separates) and "kind" (its physiological classification) -- the mitral
+% valve's boundary is left_atrium_and_left_ventricle and its kind is
+% atrioventricular, but its alternate name is a separate fact neither column
+% has room for. Recall is a binding query:
+%
+%     ? valve_alternate_name(mitral, $AltName)   % bicuspid
+%
+% This is a native `table` (ADJ-TABLES RS-5, a TWO-column table like its
+% siblings' own): each `row` lowers to a ground relation
+% `valve_alternate_name(valve, alt_name)` carrying the citation, so the
+% lookup above is the ordinary SLD binding query -- the engine returns the
+% alternate name WITH its source, on the CPU, with zero model calls, and
+% abstains on anything that is not the mitral valve (it never invents an
+% alternate name). The query also runs BACKWARD -- bind an alternate name
+% and recall the valve it names:
+%
+%     ? valve_alternate_name($Valve, bicuspid)   % mitral
+%
+% A recall on `tricuspid` -- a real, already-tabled valve in
+% `heart-valves.adj`, but whose own quoted span ("The right atrioventricular
+% valve is the tricuspid valve.") never supplies a second, everyday name for
+% the valve itself -- correctly abstains rather than inventing one for it.
+% Likewise `pulmonary` and `aortic` are deliberately left unrowed: their own
+% quoted spans never supply an alternate name either.
+%
+% Provenance: reproduces, byte-for-byte, the SAME sentence already quoted
+% inside both `heart-valves.adj`'s and `valve-kind.adj`'s own headers, from
+% the SAME NCI SEER Training Modules "Structure of the Heart" page those
+% tables already cite -- no new WebFetch, only a different schema decoding a
+% different clause of that already-verified quote. `trust authoritative` --
+% the same tier the sibling tables already carry (NCI SEER Training is a
+% primary U.S. government reference).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
+% ============================================================================
+
+table valve_alternate_name {
+    columns valve, alt_name
+
+    row (mitral, bicuspid)
+
+    source "The left atrioventricular valve is the bicuspid, or mitral, valve."
+    locator "https://training.seer.cancer.gov/anatomy/cardiovascular/heart/structure.html"
+    trust authoritative
+}
