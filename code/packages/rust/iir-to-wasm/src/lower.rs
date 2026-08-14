@@ -4128,6 +4128,14 @@ fn lower_function(
         // End the loop and the outer exit block.
         code.push(END); // end loop
         code.push(END); // end exit block
+        // The dispatch-loop fallback can only reach this point when the IIR
+        // falls off the end of a basic block. A value-returning function has
+        // no valid result on that path, so make it explicitly unreachable.
+        // This keeps the module valid under WASM's structured stack rules
+        // while preserving normal void-function fallthrough.
+        if fn_.return_type != "void" {
+            code.push(UNREACHABLE);
+        }
     } else {
         // ── Linear emission (no control flow) ────────────────────────────────
         //

@@ -73,3 +73,41 @@ fn dispatch_loop_function_ending_in_a_bare_conditional_jump_terminates() {
         let _ = rt.load_and_run(&bytes, "main", &[]);
     });
 }
+
+#[test]
+fn unreachable_value_dispatch_fallthrough_validates() {
+    // The entry block returns normally. The final labeled block is not
+    // dispatched to, but its bare conditional jump triggers the sentinel
+    // block shape whose synthetic fallthrough previously left a value-returning
+    // function with no result at its final `end`.
+    let instrs = vec![
+        IIRInstr::new("const", Some("cond".into()), vec![Operand::Int(1)], "i32"),
+        IIRInstr::new("const", Some("value".into()), vec![Operand::Int(42)], "i64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("value".into())], "i64"),
+        IIRInstr::new("label", None, vec![Operand::Var("L1".into())], "void"),
+        IIRInstr::new(
+            "jmp_if_false",
+            None,
+            vec![Operand::Var("cond".into()), Operand::Var("L1".into())],
+            "void",
+        ),
+    ];
+    let fn_ = IIRFunction::new("main", vec![], "i64", instrs);
+    let module = IIRModule {
+        name: "test_module".into(),
+        functions: vec![fn_],
+        entry_point: Some("main".into()),
+        language: "test".into(),
+        exports: vec![],
+        imports: vec![],
+    };
+
+    let wasm_module = lower_iir_to_wasm(&module, &IIRWasmConfig::default())
+        .expect("lowering should succeed");
+    let bytes = encode_module(&wasm_module).expect("encoding should succeed");
+    let rt = wasm_runtime::WasmRuntime::new();
+    let result = rt
+        .load_and_run(&bytes, "main", &[])
+        .expect("the strict validator must accept the unreachable fallback");
+    assert_eq!(result, vec![42]);
+}

@@ -683,6 +683,12 @@ If no memory exists, these instructions are invalid.
 | `i64.store8`, `i64.store16`, `i64.store32` | I32 I64 | — |
 | `memory.size` | — | I32 |
 | `memory.grow` | I32 | I32 |
+| `memory.copy` | I32 I32 I32 (destination, source, length) | — |
+| `memory.fill` | I32 I32 I32 (destination, byte, length) | — |
+
+The bulk-memory instructions encode memory indices as unsigned LEB128 values.
+This validator supports the single-memory form, so every encoded memory index
+must be zero; a nonzero index is rejected.
 
 The `memarg` immediate (alignment + offset) is read but only the alignment is
 validated — it must not exceed the natural alignment of the access width:

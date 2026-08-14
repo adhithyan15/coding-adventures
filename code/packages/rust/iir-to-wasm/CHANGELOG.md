@@ -1,5 +1,15 @@
 # Changelog — iir-to-wasm
 
+## [0.48.2] — 2026-08-13 (valid value-returning dispatch fallthrough)
+
+Value-returning functions that use the dispatch-loop lowering now mark the
+synthetic outer-exit fallthrough `unreachable`. The fallback has no IIR return
+value and is only reached when control falls off a basic block, but leaving it
+as an ordinary path made the newly strict WASM validator reject otherwise
+executable modules with `StackUnderflow` at the function end. Void functions
+retain their normal fallthrough. A regression validates and runs the sentinel
+block shape through `wasm-runtime`.
+
 ## [0.48.1] — 2026-08-13 (security review: the "last block" fallback was still wrong)
 
 A security review of 0.48.0's fix found the general-formula `+1` correction

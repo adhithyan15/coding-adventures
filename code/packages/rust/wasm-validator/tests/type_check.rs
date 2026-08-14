@@ -90,6 +90,26 @@ fn valid_narrow_memory_access_family() {
 }
 
 #[test]
+fn valid_bulk_memory_copy_and_fill() {
+    let memory = wasm_types::MemoryType {
+        limits: wasm_types::Limits { min: 1, max: None },
+    };
+    let mut copy = module_with_body(
+        wasm_types::FuncType { params: vec![], results: vec![] },
+        vec![0x41, 0, 0x41, 4, 0x41, 8, 0xFC, 0x0A, 0, 0, 0x0B],
+    );
+    copy.memories.push(memory.clone());
+    wasm_validator::validate(&copy).expect("memory.copy should validate");
+
+    let mut fill = module_with_body(
+        wasm_types::FuncType { params: vec![], results: vec![] },
+        vec![0x41, 0, 0x41, 42, 0x41, 8, 0xFC, 0x0B, 0, 0x0B],
+    );
+    fill.memories.push(memory);
+    wasm_validator::validate(&fill).expect("memory.fill should validate");
+}
+
+#[test]
 fn valid_conversion_family_including_sign_extension_and_trunc_sat() {
     assert_valid(
         "(module

@@ -5684,7 +5684,11 @@ impl Compiler {
                                 && binding.array.is_none()
                                 && self.active_by_name_binding(dependency).is_none()
                         })
-                        && !self.body_changes_stable_selector(effect_root, dependency)
+                        && !self.body_changes_stable_selector(
+                            effect_root,
+                            dependency,
+                            effect_root,
+                        )
                 })
         });
         if condition_is_variable_free || stable_scalar_condition {
@@ -5718,7 +5722,12 @@ impl Compiler {
         })
     }
 
-    fn body_changes_stable_selector(&self, node: &GrammarASTNode, name: &str) -> bool {
+    fn body_changes_stable_selector(
+        &self,
+        node: &GrammarASTNode,
+        name: &str,
+        effect_root: &GrammarASTNode,
+    ) -> bool {
         let targets_name = |variable: &GrammarASTNode| {
             array_subscripts(variable).is_none()
                 && direct_tokens(variable).into_iter().any(|token| {
@@ -5733,7 +5742,11 @@ impl Compiler {
                 .any(&targets_name);
             if writes_name {
                 return first_direct_node(node, "expression").is_none_or(|expression| {
-                    !self.selector_expression_intrinsically_preserves_name(expression, name)
+                    !self.selector_expression_intrinsically_preserves_name(
+                        expression,
+                        name,
+                        effect_root,
+                    )
                 });
             }
         }
@@ -5744,13 +5757,14 @@ impl Compiler {
         }
         direct_nodes(node)
             .into_iter()
-            .any(|child| self.body_changes_stable_selector(child, name))
+            .any(|child| self.body_changes_stable_selector(child, name, effect_root))
     }
 
     fn selector_expression_intrinsically_preserves_name(
         &self,
         node: &GrammarASTNode,
         name: &str,
+        effect_root: &GrammarASTNode,
     ) -> bool {
         if expr_variable_name(node).as_deref() == Some(name) {
             return true;
@@ -5773,21 +5787,45 @@ impl Compiler {
                 .iter()
                 .any(|token| token.effective_type_name() == "NAME")
         });
-        if condition_is_variable_free {
+        let stable_scalar_condition = condition.is_some_and(|condition| {
+            let Some(dependencies) = self.static_predicate_dependencies(condition) else {
+                return false;
+            };
+            !dependencies.is_empty()
+                && dependencies.iter().all(|dependency| {
+                    dependency != name
+                        && self.require_var(dependency).is_ok_and(|binding| {
+                            matches!(
+                                binding.ty,
+                                ScalarType::Boolean | ScalarType::Integer | ScalarType::Real
+                            ) && !binding.is_global
+                                && binding.array.is_none()
+                                && self.active_by_name_binding(dependency).is_none()
+                        })
+                        && !body_writes_name(effect_root, dependency)
+                })
+        });
+        if condition_is_variable_free || stable_scalar_condition {
             match condition.and_then(|condition| self.static_boolean_value(condition)) {
                 Some(true) => {
-                    return self
-                        .selector_expression_intrinsically_preserves_name(branches[0], name)
+                    return self.selector_expression_intrinsically_preserves_name(
+                        branches[0],
+                        name,
+                        effect_root,
+                    )
                 }
                 Some(false) => {
-                    return self
-                        .selector_expression_intrinsically_preserves_name(branches[1], name)
+                    return self.selector_expression_intrinsically_preserves_name(
+                        branches[1],
+                        name,
+                        effect_root,
+                    )
                 }
                 None => {}
             }
         }
         branches.into_iter().all(|branch| {
-            self.selector_expression_intrinsically_preserves_name(branch, name)
+            self.selector_expression_intrinsically_preserves_name(branch, name, effect_root)
         })
     }
 
@@ -7542,6 +7580,32 @@ fn recursive_tokens(node: &GrammarASTNode) -> Vec<&Token> {
     let mut out = Vec::new();
     collect_tokens(node, &mut out);
     out
+}
+
+fn body_writes_name(node: &GrammarASTNode, name: &str) -> bool {
+    let targets_name = |variable: &GrammarASTNode| {
+        array_subscripts(variable).is_none()
+            && direct_tokens(variable).into_iter().any(|token| {
+                token.effective_type_name() == "NAME" && token.value == name
+            })
+    };
+    if node.rule_name == "assign_stmt"
+        && direct_nodes(node)
+            .into_iter()
+            .filter(|child| child.rule_name == "left_part")
+            .filter_map(|left| first_direct_node(left, "variable"))
+            .any(&targets_name)
+    {
+        return true;
+    }
+    if node.rule_name == "for_stmt"
+        && first_direct_node(node, "variable").is_some_and(&targets_name)
+    {
+        return true;
+    }
+    direct_nodes(node)
+        .into_iter()
+        .any(|child| body_writes_name(child, name))
 }
 
 fn collect_expression_dependency_names(
@@ -9954,6 +10018,25 @@ mod tests {
             "test",
         )
         .expect("a static selector may discard a changing selector-assignment leaf");
+    }
+
+    #[test]
+    fn al4_stable_conditional_selector_assignment_selects_preserving_leaf() {
+        compile_source(
+            "begin integer i, n, limit, choose; boolean other; n := 3; limit := 3; choose := 1; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0 end; print(i + 0.25) end",
+            "test",
+        )
+        .expect("an unchanged known scalar may select the preserving selector-assignment leaf");
+    }
+
+    #[test]
+    fn al4_written_conditional_selector_dependency_remains_conservative() {
+        let err = compile_source(
+            "begin integer i, n, limit, choose; boolean other; n := 3; limit := 3; choose := 1; other := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := false end; print(i + 0.25) end",
+            "test",
+        )
+        .expect_err("a written conditional selector dependency may change the selected leaf");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
     #[test]

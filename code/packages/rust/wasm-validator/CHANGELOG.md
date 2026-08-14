@@ -2,6 +2,13 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.1] - 2026-08-13 (bulk-memory type checking)
+
+The instruction-level validator now decodes and type-checks `memory.copy` and
+`memory.fill`, including their memory indices and three `i32` operands. This
+closes a false rejection exposed when strict validation reached an existing
+runtime string-concatenation module that uses `memory.copy`.
+
 ## [0.2.0] - 2026-08-14 (WASM06 -- instruction-level type checking, W02 Phase 2)
 
 ### Added -- a real per-instruction type checker
