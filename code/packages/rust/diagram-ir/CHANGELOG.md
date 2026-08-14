@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.60.0
+
+- Preserve every ordered GitGraph tag on commits, merges, cherry-picks, and temporal commit nodes.
+
 ## 0.59.0
 
 - Preserve GitGraph titles and accessibility metadata and add a backend-neutral temporal title layout item.

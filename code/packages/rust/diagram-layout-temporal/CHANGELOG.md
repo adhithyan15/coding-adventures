@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.12.0
+
+- Preserve ordered GitGraph tag lists on temporal commit nodes.
+
 ## 0.11.0
 
 - Reserve a backend-neutral GitGraph title row and carry accessibility metadata into temporal layout IR.

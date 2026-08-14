@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.113.0
+
+- Preserve repeated GitGraph commit, merge, and cherry-pick tags in source order.
+
 ## 0.112.0
 
 - Parse GitGraph titles and accessibility metadata into temporal semantic IR.
