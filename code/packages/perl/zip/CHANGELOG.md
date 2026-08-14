@@ -1,5 +1,29 @@
 # Changelog
 
+## [0.2.0] - 2026-08-13
+
+### Added
+
+- Public `raw_deflate`, `raw_inflate`, and `raw_inflate_counted` APIs for the
+  ZIP-owned, unframed RFC 1951 codec.
+- Dynamic Huffman decoding, exact final-byte consumption, the full 32 KiB
+  distance window, symbol 285, and strict stored/fixed/dynamic multi-block
+  behavior.
+- Caller-lowerable output bounds under a hard 256 MiB ceiling, typed
+  payload-blind errors with the shared 14-code contract, and no partial output.
+- All 34 language-neutral `zip-raw-rfc1951-v1` cases, independent zlib encoder
+  interoperability, dynamic ZIP integration, suffix/size rejection, and a
+  full-window foreign stream.
+- Explicit empty capability metadata for the pure in-memory production package.
+
+### Changed
+
+- Method-8 ZIP reads now require exact compressed-payload consumption and exact
+  declared uncompressed size before CRC-32 validation; excess output is no
+  longer silently trimmed.
+- Package version is now 0.2.0. CRC-32 remains accidental-corruption detection,
+  not authentication.
+
 ## [0.1.0] - 2026-04-23
 
 ### Added
