@@ -1200,9 +1200,6 @@ pub fn compile_file_to_riscv32_bin(
     let source = std::fs::read_to_string(src)?;
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
     let module = compile_source_to_iir(language, &source, stem)?;
-    if language == Language::DartmouthBasic {
-        validate_basic_division_for_riscv(&module)?;
-    }
 
     // Route through aot_core::infer + aot_core::specialise, then let the
     // RISC-V backend lay out the whole module. This keeps the selected entry
@@ -1231,29 +1228,6 @@ pub fn compile_file_to_riscv32_bin(
     )?;
 
     std::fs::write(out, &bytes)?;
-    Ok(())
-}
-
-/// BASIC REAL values now use the RISC-V backend's f64 bit-pair ABI and its
-/// soft-float host services. `/` remains a separately tracked language-level
-/// item until its exact Dartmouth BASIC semantics are covered end to end.
-fn validate_basic_division_for_riscv(module: &IIRModule) -> Result<(), LangAotError> {
-    let module_name = module.name.clone();
-    let Some(main) = module.get_function("main") else {
-        return Err(LangAotError::RiscvBackendError(format!(
-            "module {:?}: Dartmouth BASIC entry function \"main\" is missing",
-            module_name
-        )));
-    };
-
-    for instr in &main.instructions {
-        if instr.op == "div" && instr.type_hint == "f64" {
-            return Err(LangAotError::RiscvBackendError(format!(
-                "module {:?}: Dartmouth BASIC RV32I exact division is not yet implemented",
-                module_name
-            )));
-        }
-    }
     Ok(())
 }
 

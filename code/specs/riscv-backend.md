@@ -268,9 +268,9 @@ the selected entry function can seed language-level static initializers.
    backward-branch functions stable frame homes, retaining them across dynamic
    loop iterations and control-flow joins. The BASIC formatter's mutable trim
    and digit-count loops are covered by the REAL source-to-simulator fixture.
-38. [ ] **BASIC exact division:** prove or preserve a whole-number result for
-   `/` in the integer subset without silently changing Dartmouth BASIC's REAL
-   division semantics when a quotient is fractional.
+38. [x] **BASIC REAL division:** lower `/` through the f64 soft-float ABI and
+   execute a fractional `3 / 2` BASIC source-to-simulator fixture, preserving
+   Dartmouth BASIC's REAL division semantics.
 
 Each item should land as a focused PR with an end-to-end fixture from the
 highest-level language it enables. New constraints discovered while carrying
