@@ -1184,10 +1184,29 @@ pub fn build_control_flow_map(
 // ══════════════════════════════════════════════════════════════════════════════
 
 /// A label on the label stack — tracks one level of structured control flow.
+///
+/// Carries BOTH of the blocktype's two arities (WASM06/WASM04), because a
+/// branch targeting this label needs a different one depending on which
+/// direction it goes:
+/// - A branch to a `block`/`if`'s END (falls out) needs `arity` (its
+///   RESULT values) on the stack.
+/// - A branch to a `loop`'s START (re-enters it) needs `param_arity` (its
+///   PARAM values, since re-entering the loop re-consumes them) on the
+///   stack instead.
+///
+/// In WASM 1.0's MVP (single-byte blocktype only), a loop could never
+/// declare params, so this distinction never mattered — `param_arity` is
+/// always 0 outside a multi-value blocktype. See `execute_branch`.
 #[derive(Debug, Clone)]
 pub struct Label {
-    /// How many result values this block produces.
+    /// How many result values this block produces (what a branch to a
+    /// block/if's END, or a loop's own fall-through, needs on the stack).
     pub arity: usize,
+    /// How many param values this block's blocktype declares (what a
+    /// branch to a LOOP's START needs on the stack, re-consumed on
+    /// re-entry). Always 0 for `block`/`if` labels and for any label
+    /// whose blocktype isn't a multi-value type-section index.
+    pub param_arity: usize,
     /// Where to jump when branching to this label.
     pub target_pc: usize,
     /// The typed stack height when this block started.
@@ -1462,12 +1481,29 @@ fn get_table<'a>(ctx: &mut WasmExecutionContext, idx: usize) -> Result<&'a mut T
 }
 
 // ── Helper: block arity resolution ────────────────────────────────────────
-fn block_arity(block_type: i64, func_types: &[FuncType]) -> usize {
+//
+// Returns `(param_arity, result_arity)` for a `block`/`loop`/`if` header's
+// blocktype (WASM06/WASM04): how many values a branch to this label's
+// START needs (loop re-entry) and how many its END/fall-through needs
+// (block/if exit, and a loop's own fall-through) -- see `Label`'s own doc
+// comment for how the two get used differently by `execute_branch`.
+//
+// `types` MUST be the module's real TYPE SECTION (`ctx.types`), never
+// `ctx.func_types` (indexed by FUNCTION index -- one entry per function,
+// resolved to whichever type THAT function happens to declare, a
+// completely different index space). `call_indirect`'s handler already
+// had this exact wrong-table bug fixed once; `block_arity` had the same
+// bug, just never reachable before this crate could parse a multi-value
+// blocktype (a type-index blocktype) at all.
+fn block_arity(block_type: i64, types: &[FuncType]) -> (usize, usize) {
     match block_type {
-        0x40 => 0,                      // empty
-        0x7C..=0x7F => 1, // single value type
-        n if n >= 0 && (n as usize) < func_types.len() => func_types[n as usize].results.len(),
-        _ => 0,
+        0x40 => (0, 0),                        // empty
+        0x7C..=0x7F => (0, 1),                 // single value type, no params
+        n if n >= 0 && (n as usize) < types.len() => {
+            let t = &types[n as usize];
+            (t.params.len(), t.results.len())
+        }
+        _ => (0, 0),
     }
 }
 
@@ -1487,8 +1523,16 @@ fn execute_branch(
 
     let label = ctx.label_stack[label_stack_index].clone();
 
-    // For loops, arity is 0 (MVP). For blocks, it's the block's result arity.
-    let arity = if label.is_loop { 0 } else { label.arity };
+    // A branch to a LOOP's label re-enters its START, so it needs the
+    // loop's declared PARAM arity preserved (re-entry re-consumes them,
+    // same as the initial entry did). A branch to a block/`if` label
+    // exits at its END, so it needs the block's RESULT arity instead. See
+    // `Label`'s own doc comment for the full asymmetry.
+    let arity = if label.is_loop {
+        label.param_arity
+    } else {
+        label.arity
+    };
 
     // Save result values.
     let mut results = Vec::new();
@@ -3071,7 +3115,7 @@ fn register_control(vm: &mut GenericVM) {
     vm.register_context_opcode(0x02, |vm, instr, _code, ctx| {
         let ctx = get_ctx(ctx);
         let block_type = operand_int(instr);
-        let arity = block_arity(block_type, &ctx.func_types);
+        let (param_arity, arity) = block_arity(block_type, &ctx.types);
         let end_pc = ctx
             .control_flow_map
             .get(&vm.pc)
@@ -3079,6 +3123,7 @@ fn register_control(vm: &mut GenericVM) {
             .unwrap_or(vm.pc + 1);
         ctx.label_stack.push(Label {
             arity,
+            param_arity,
             target_pc: end_pc,
             stack_height: vm.typed_stack.len(),
             is_loop: false,
@@ -3091,10 +3136,11 @@ fn register_control(vm: &mut GenericVM) {
     vm.register_context_opcode(0x03, |vm, instr, _code, ctx| {
         let ctx = get_ctx(ctx);
         let block_type = operand_int(instr);
-        let arity = block_arity(block_type, &ctx.func_types);
+        let (param_arity, arity) = block_arity(block_type, &ctx.types);
         let loop_pc = vm.pc;
         ctx.label_stack.push(Label {
             arity,
+            param_arity,
             target_pc: loop_pc, // loops branch backward
             stack_height: vm.typed_stack.len(),
             is_loop: true,
@@ -3107,7 +3153,7 @@ fn register_control(vm: &mut GenericVM) {
     vm.register_context_opcode(0x04, |vm, instr, _code, ctx| {
         let ctx = get_ctx(ctx);
         let block_type = operand_int(instr);
-        let arity = block_arity(block_type, &ctx.func_types);
+        let (param_arity, arity) = block_arity(block_type, &ctx.types);
         let condition = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
         let target = ctx.control_flow_map.get(&vm.pc).cloned();
         let end_pc = target.as_ref().map(|t| t.end_pc).unwrap_or(vm.pc + 1);
@@ -3115,6 +3161,7 @@ fn register_control(vm: &mut GenericVM) {
 
         ctx.label_stack.push(Label {
             arity,
+            param_arity,
             target_pc: end_pc,
             stack_height: vm.typed_stack.len(),
             is_loop: false,
@@ -3391,6 +3438,7 @@ fn call_function_inner(
     // below exits the same way it would on an ordinary fall-through return.
     ctx.label_stack.push(Label {
         arity: func_type.results.len(),
+        param_arity: func_type.params.len(),
         target_pc: vm_instructions.len(),
         stack_height: vm.typed_stack.len(),
         is_loop: false,
@@ -3694,6 +3742,7 @@ impl WasmExecutionEngine {
         // go through `call_function_inner`), so it needs this pushed too.
         let implicit_function_label = Label {
             arity: result_count,
+            param_arity: func_type.params.len(),
             target_pc: vm_instructions.len(),
             stack_height: 0,
             is_loop: false,
