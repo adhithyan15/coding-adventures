@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.114.0
+
+- Match Mermaid 11.16.1 branch creation semantics by checking out new GitGraph branches and rejecting duplicates.
+
 ## 0.113.0
 
 - Preserve repeated GitGraph commit, merge, and cherry-pick tags in source order.

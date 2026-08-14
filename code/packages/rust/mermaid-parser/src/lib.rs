@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.113.0";
+pub const VERSION: &str = "0.114.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::HashMap;
@@ -4744,12 +4744,18 @@ pub fn parse_gitgraph(source: &str) -> Result<GitDiagram, ParseError> {
                         token_error(&token, format!("invalid branch order {:?}", token.value))
                     })?);
                 }
-                if !branches.iter().any(|candidate| candidate.name == branch) {
-                    branches.push(GitBranch {
-                        name: branch,
-                        order,
-                    });
+                if branches.iter().any(|candidate| candidate.name == branch) {
+                    return Err(token_error(
+                        &command,
+                        format!("cannot create existing GitGraph branch {branch:?}"),
+                    ));
                 }
+                branches.push(GitBranch {
+                    name: branch.clone(),
+                    order,
+                });
+                current_branch = branch.clone();
+                events.push(GitEvent::Checkout { branch });
             }
             "checkout" | "switch" => {
                 cursor.advance();
@@ -5502,7 +5508,6 @@ Grid,Losses,56";
     const GITGRAPH_SRC: &str = "gitGraph LR:
 commit id: \"root\" msg: \"Initial commit\"
 branch develop order: 1
-checkout develop
 commit id: \"feature\" tag: \"v1\"
 checkout main
 merge develop id: \"merge-1\"";
@@ -5803,6 +5808,28 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     }
 
     #[test]
+    fn gitgraph_branch_creation_checks_out_the_new_branch() {
+        let d = parse_gitgraph(
+            "gitGraph\ncommit id: \"root\"\nbranch feature\ncommit id: \"work\"",
+        )
+        .unwrap();
+        assert!(matches!(
+            &d.events[1],
+            GitEvent::Checkout { branch } if branch == "feature"
+        ));
+        assert!(matches!(
+            &d.events[2],
+            GitEvent::Commit { branch, .. } if branch == "feature"
+        ));
+    }
+
+    #[test]
+    fn gitgraph_rejects_duplicate_branch_creation() {
+        let error = parse_gitgraph("gitGraph\nbranch feature\nbranch feature").unwrap_err();
+        assert!(error.message.contains("existing GitGraph branch"));
+    }
+
+    #[test]
     fn gitgraph_parses_cherry_pick_metadata() {
         let d = parse_gitgraph(
             "gitGraph\ncommit id: \"abc123\"\ncherry-pick id: \"abc123\" parent: \"root\"",
@@ -5820,7 +5847,7 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     #[test]
     fn gitgraph_preserves_repeated_tags_in_source_order() {
         let d = parse_gitgraph(
-            "gitGraph\ncommit id: \"root\" tag: \"v1\" tag: \"stable\"\nbranch release\ncheckout release\ncherry-pick id: \"root\" tag: \"picked\" tag: \"backport\"\ncheckout main\nmerge release tag: \"v2\" tag: \"latest\"",
+            "gitGraph\ncommit id: \"root\" tag: \"v1\" tag: \"stable\"\nbranch release\ncherry-pick id: \"root\" tag: \"picked\" tag: \"backport\"\ncheckout main\nmerge release tag: \"v2\" tag: \"latest\"",
         )
         .unwrap();
         assert!(matches!(
@@ -7376,7 +7403,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.113.0");
+        assert_eq!(crate::VERSION, "0.114.0");
     }
 
     #[test]

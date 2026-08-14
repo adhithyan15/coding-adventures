@@ -564,7 +564,7 @@ mod apple {
     #[test]
     fn render_mermaid_gitgraph_to_png() {
         let git = parse_gitgraph(
-            "gitGraph LR:\ntitle GitGraph pipeline\naccTitle: Native GitGraph\naccDescr: GitGraph rendered through Metal\ncommit id: \"root\" tag: \"base\" tag: \"stable\" type: HIGHLIGHT\nbranch feature order: 2\nbranch hotfix order: 1\ncheckout feature\ncommit id: \"work\" msg: \"Build parser\" type: REVERSE\ncherry-pick id: \"root\" parent: \"work\" tag: \"picked\" tag: \"backport\"\ncheckout hotfix\ncommit id: \"fix\" msg: \"Patch release\"\ncheckout main\nmerge feature tag: \"v1\" tag: \"latest\"",
+            "gitGraph LR:\ntitle GitGraph pipeline\naccTitle: Native GitGraph\naccDescr: GitGraph rendered through Metal\ncommit id: \"root\" tag: \"base\" tag: \"stable\" type: HIGHLIGHT\nbranch feature order: 2\ncommit id: \"work\" msg: \"Build parser\" type: REVERSE\ncherry-pick id: \"root\" parent: \"work\" tag: \"picked\" tag: \"backport\"\nbranch hotfix order: 1\ncommit id: \"fix\" msg: \"Patch release\"\ncheckout main\nmerge feature tag: \"v1\" tag: \"latest\"",
         )
         .expect("Mermaid GitGraph parse failed");
         let temporal = diagram_ir::TemporalDiagram {
