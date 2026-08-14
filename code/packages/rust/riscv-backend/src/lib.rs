@@ -20,12 +20,13 @@ use riscv_encoder::{
     X0_ZERO, X1_RA,
 };
 use riscv_simulator::{
-    HostEvent, RiscVSimulator, HOST_ECALL_SERVICE_REGISTER, HOST_ECALL_WRITE_I64,
+    HostEvent, RiscVSimulator, HOST_ECALL_EXIT, HOST_ECALL_SERVICE_REGISTER, HOST_ECALL_WRITE_I64,
 };
 use vm_core::value::Value;
 
 const DEFAULT_MEMORY_SIZE: usize = 64 * 1024;
 const DEFAULT_STEP_LIMIT: usize = 100_000;
+const MEMORY_BOUNDS_EXIT_CODE: i32 = 2;
 const ARG_REGISTERS: [u32; 8] = [10, 11, 12, 13, 14, 15, 16, 17];
 const A1: u32 = 11;
 const SCRATCH_REGISTER: u32 = 31;
@@ -290,6 +291,15 @@ pub fn compile_module(
         function_offset += lowerer.words.len() * 4;
     }
     bytes.resize(bytes.len() + allocation_layout.byte_len, 0);
+    if let Some(cursor_offset) = allocation_layout.heap_cursor_offset {
+        let heap_start = offset
+            .checked_add(allocation_layout.byte_len)
+            .ok_or(BackendError::ImmediateOutOfRange(i64::MAX))?;
+        let heap_start = u32::try_from(heap_start)
+            .map_err(|_| BackendError::ImmediateOutOfRange(heap_start as i64))?;
+        bytes[offset + cursor_offset..offset + cursor_offset + 4]
+            .copy_from_slice(&heap_start.to_le_bytes());
+    }
     if bytes.is_empty() {
         bytes.extend_from_slice(&RET_WORD.to_le_bytes());
     }
@@ -450,6 +460,12 @@ struct GlobalLayout {
 #[derive(Debug, Clone)]
 struct ByteAllocation {
     offset: usize,
+    size: usize,
+}
+
+#[derive(Debug, Clone)]
+struct DynamicByteAllocation {
+    size_offset: usize,
 }
 
 /// Static, zero-filled byte buffers appended after module globals.
@@ -460,6 +476,8 @@ struct ByteAllocation {
 #[derive(Debug, Clone, Default)]
 struct ByteAllocationLayout {
     slots: HashMap<(String, String), ByteAllocation>,
+    dynamic_slots: HashMap<(String, String), DynamicByteAllocation>,
+    heap_cursor_offset: Option<usize>,
     byte_len: usize,
 }
 
@@ -470,6 +488,8 @@ impl ByteAllocationLayout {
     ) -> Result<Self, BackendError> {
         let mut layout = Self {
             slots: HashMap::new(),
+            dynamic_slots: HashMap::new(),
+            heap_cursor_offset: None,
             byte_len: initial_offset,
         };
         for function in functions {
@@ -505,20 +525,8 @@ impl ByteAllocationLayout {
                         )),
                     });
                 };
-                let size = constants.get(size_name).copied().ok_or_else(|| BackendError::InFunction {
-                    function: function.context.name.to_owned(),
-                    error: Box::new(BackendError::InvalidOperand(format!(
-                        "alloc_bytes size {size_name:?} must be a prior integer const"
-                    ))),
-                })?;
-                let size = usize::try_from(size).map_err(|_| BackendError::InFunction {
-                    function: function.context.name.to_owned(),
-                    error: Box::new(BackendError::InvalidOperand(
-                        "alloc_bytes size must be non-negative".to_owned(),
-                    )),
-                })?;
                 let key = (function.context.name.to_owned(), destination.clone());
-                if layout.slots.contains_key(&key) {
+                if layout.slots.contains_key(&key) || layout.dynamic_slots.contains_key(&key) {
                     return Err(BackendError::InFunction {
                         function: function.context.name.to_owned(),
                         error: Box::new(BackendError::InvalidOperand(format!(
@@ -526,13 +534,37 @@ impl ByteAllocationLayout {
                         ))),
                     });
                 }
-                let offset = layout.byte_len;
-                layout.byte_len = layout
-                    .byte_len
-                    .checked_add(size)
-                    .ok_or(BackendError::ImmediateOutOfRange(i64::MAX))?;
-                layout.slots.insert(key, ByteAllocation { offset });
+                if let Some(size) = constants.get(size_name).copied() {
+                    let size = usize::try_from(size).map_err(|_| BackendError::InFunction {
+                        function: function.context.name.to_owned(),
+                        error: Box::new(BackendError::InvalidOperand(
+                            "alloc_bytes size must be non-negative".to_owned(),
+                        )),
+                    })?;
+                    let offset = layout.byte_len;
+                    layout.byte_len = layout
+                        .byte_len
+                        .checked_add(size)
+                        .ok_or(BackendError::ImmediateOutOfRange(i64::MAX))?;
+                    layout.slots.insert(key, ByteAllocation { offset, size });
+                } else {
+                    let size_offset = layout.byte_len;
+                    layout.byte_len = layout
+                        .byte_len
+                        .checked_add(4)
+                        .ok_or(BackendError::ImmediateOutOfRange(i64::MAX))?;
+                    layout
+                        .dynamic_slots
+                        .insert(key, DynamicByteAllocation { size_offset });
+                }
             }
+        }
+        if !layout.dynamic_slots.is_empty() {
+            layout.heap_cursor_offset = Some(layout.byte_len);
+            layout.byte_len = layout
+                .byte_len
+                .checked_add(4)
+                .ok_or(BackendError::ImmediateOutOfRange(i64::MAX))?;
         }
         Ok(layout)
     }
@@ -1165,12 +1197,60 @@ impl Lowerer {
                 instr.srcs.len()
             )));
         }
-        let slot = self.byte_allocation(instr, "alloc_bytes")?;
         let ValueLocation::Pair { lo, hi } = self.dest_pair(instr, "alloc_bytes")? else {
             unreachable!("alloc_bytes requires an i64/u64 destination")
         };
-        self.reserve_global_address(slot.offset);
-        self.words.push(encode_addi(lo, SCRATCH_REGISTER, 0));
+        if let Some(slot) = self.byte_allocation(instr)? {
+            self.reserve_data_address(slot.offset);
+            self.words.push(encode_addi(lo, SCRATCH_REGISTER, 0));
+            self.words.push(encode_addi(hi, X0_ZERO, 0));
+            return Ok(());
+        }
+        let dynamic = self.dynamic_byte_allocation(instr, "alloc_bytes")?;
+        let size = self.wide_var_location(instr, 0, "alloc_bytes")?;
+        self.guard_high_word_is_zero(size);
+        let cursor_offset = self.heap_cursor_offset()?;
+        self.reserve_data_address(cursor_offset);
+        self.words
+            .push(encode_lw(SECOND_SCRATCH_REGISTER, SCRATCH_REGISTER, 0));
+        self.words
+            .push(encode_add(DIVISION_TEMP_REGISTER, SECOND_SCRATCH_REGISTER, size.low()));
+        self.words.push(encode_sltu(
+            DIVISION_BORROW_REGISTER,
+            DIVISION_TEMP_REGISTER,
+            SECOND_SCRATCH_REGISTER,
+        ));
+        let no_overflow = self.internal_label("alloc_no_overflow");
+        self.record_named_branch(
+            no_overflow.clone(),
+            BranchKind::EqZero {
+                rs1: DIVISION_BORROW_REGISTER,
+            },
+        );
+        self.emit_memory_exit();
+        self.mark_label(no_overflow);
+        self.load_constant(DIVISION_BORROW_REGISTER, (DEFAULT_MEMORY_SIZE - 15) as u32);
+        self.words.push(encode_sltu(
+            SCRATCH_REGISTER,
+            DIVISION_TEMP_REGISTER,
+            DIVISION_BORROW_REGISTER,
+        ));
+        let fits_memory = self.internal_label("alloc_fits_memory");
+        self.record_named_branch(
+            fits_memory.clone(),
+            BranchKind::NeZero {
+                rs1: SCRATCH_REGISTER,
+            },
+        );
+        self.emit_memory_exit();
+        self.mark_label(fits_memory);
+        self.reserve_data_address(cursor_offset);
+        self.words
+            .push(encode_sw(DIVISION_TEMP_REGISTER, SCRATCH_REGISTER, 0));
+        self.reserve_data_address(dynamic.size_offset);
+        self.words.push(encode_sw(size.low(), SCRATCH_REGISTER, 0));
+        self.words
+            .push(encode_addi(lo, SECOND_SCRATCH_REGISTER, 0));
         self.words.push(encode_addi(hi, X0_ZERO, 0));
         Ok(())
     }
@@ -1184,8 +1264,10 @@ impl Lowerer {
         }
         self.require_scalar_type(&instr.ty, "load_byte")?;
         let base = self.var_src(instr, 0, "load_byte")?;
-        let offset = self.var_src(instr, 1, "load_byte")?;
-        self.words.push(encode_add(SCRATCH_REGISTER, base, offset));
+        let offset = self.wide_var_location(instr, 1, "load_byte")?;
+        self.guard_byte_access(instr, offset)?;
+        self.words
+            .push(encode_add(SCRATCH_REGISTER, base, offset.low()));
         if matches!(instr.ty.as_str(), "i64" | "u64") {
             let ValueLocation::Pair { lo, hi } = self.dest_pair(instr, "load_byte")? else {
                 unreachable!("load_byte wide destination uses a register pair")
@@ -1213,9 +1295,11 @@ impl Lowerer {
             )));
         }
         let base = self.var_src(instr, 0, "store_byte")?;
-        let offset = self.var_src(instr, 1, "store_byte")?;
+        let offset = self.wide_var_location(instr, 1, "store_byte")?;
         let value = self.var_src(instr, 2, "store_byte")?;
-        self.words.push(encode_add(SCRATCH_REGISTER, base, offset));
+        self.guard_byte_access(instr, offset)?;
+        self.words
+            .push(encode_add(SCRATCH_REGISTER, base, offset.low()));
         self.words.push(encode_sb(value, SCRATCH_REGISTER, 0));
         Ok(())
     }
@@ -2465,11 +2549,26 @@ impl Lowerer {
         Ok(slot)
     }
 
-    fn byte_allocation(
+    fn byte_allocation(&self, instr: &CIRInstr) -> Result<Option<ByteAllocation>, BackendError> {
+        let Some(layout) = &self.allocation_layout else {
+            return Err(BackendError::UnsupportedOp(
+                "alloc_bytes (module linking required)".to_owned(),
+            ));
+        };
+        let destination = instr.dest.as_ref().ok_or_else(|| {
+            BackendError::InvalidOperand("alloc_bytes requires a dest".to_owned())
+        })?;
+        Ok(layout
+            .slots
+            .get(&(self.function_name.clone(), destination.clone()))
+            .cloned())
+    }
+
+    fn dynamic_byte_allocation(
         &self,
         instr: &CIRInstr,
         op: &str,
-    ) -> Result<ByteAllocation, BackendError> {
+    ) -> Result<DynamicByteAllocation, BackendError> {
         let Some(layout) = &self.allocation_layout else {
             return Err(BackendError::UnsupportedOp(format!(
                 "{op} (module linking required)"
@@ -2479,20 +2578,110 @@ impl Lowerer {
             BackendError::InvalidOperand(format!("{op} requires a dest"))
         })?;
         layout
-            .slots
+            .dynamic_slots
             .get(&(self.function_name.clone(), destination.clone()))
             .cloned()
             .ok_or_else(|| {
                 BackendError::InvalidOperand(format!(
-                    "{op}: destination {destination:?} has no static allocation"
+                    "{op}: destination {destination:?} has no dynamic allocation"
                 ))
             })
     }
 
+    fn byte_access_allocation(
+        &self,
+        instr: &CIRInstr,
+        op: &str,
+    ) -> Result<(Option<ByteAllocation>, Option<DynamicByteAllocation>), BackendError> {
+        let Some(layout) = &self.allocation_layout else {
+            return Err(BackendError::UnsupportedOp(format!(
+                "{op} (module linking required)"
+            )));
+        };
+        let Some(CIROperand::Var(base)) = instr.srcs.first() else {
+            return Err(BackendError::InvalidOperand(format!(
+                "{op} srcs[0] must be a locally allocated buffer Var"
+            )));
+        };
+        let key = (self.function_name.clone(), base.clone());
+        let static_allocation = layout.slots.get(&key).cloned();
+        let dynamic_allocation = layout.dynamic_slots.get(&key).cloned();
+        if static_allocation.is_none() && dynamic_allocation.is_none() {
+            return Err(BackendError::UnsupportedOp(format!(
+                "{op} requires a locally allocated buffer; escaped pointers need an explicit length ABI"
+            )));
+        }
+        Ok((static_allocation, dynamic_allocation))
+    }
+
+    fn heap_cursor_offset(&self) -> Result<usize, BackendError> {
+        self.allocation_layout
+            .as_ref()
+            .and_then(|layout| layout.heap_cursor_offset)
+            .ok_or_else(|| BackendError::InvalidOperand("dynamic alloc_bytes has no heap cursor".to_owned()))
+    }
+
+    fn guard_byte_access(
+        &mut self,
+        instr: &CIRInstr,
+        offset: ValueLocation,
+    ) -> Result<(), BackendError> {
+        let (static_allocation, dynamic_allocation) =
+            self.byte_access_allocation(instr, &instr.op)?;
+        self.guard_high_word_is_zero(offset);
+        if let Some(allocation) = static_allocation {
+            self.load_constant(DIVISION_BORROW_REGISTER, allocation.size as u32);
+        } else if let Some(allocation) = dynamic_allocation {
+            self.reserve_data_address(allocation.size_offset);
+            self.words.push(encode_lw(
+                DIVISION_BORROW_REGISTER,
+                SCRATCH_REGISTER,
+                0,
+            ));
+        } else {
+            unreachable!("byte allocation lookup returns static or dynamic storage")
+        }
+        self.words.push(encode_sltu(
+            SCRATCH_REGISTER,
+            offset.low(),
+            DIVISION_BORROW_REGISTER,
+        ));
+        let in_bounds = self.internal_label("byte_in_bounds");
+        self.record_named_branch(
+            in_bounds.clone(),
+            BranchKind::NeZero {
+                rs1: SCRATCH_REGISTER,
+            },
+        );
+        self.emit_memory_exit();
+        self.mark_label(in_bounds);
+        Ok(())
+    }
+
+    fn guard_high_word_is_zero(&mut self, value: ValueLocation) {
+        let ValueLocation::Pair { hi, .. } = value else {
+            return;
+        };
+        let low_word_only = self.internal_label("byte_offset_low_word");
+        self.record_named_branch(low_word_only.clone(), BranchKind::EqZero { rs1: hi });
+        self.emit_memory_exit();
+        self.mark_label(low_word_only);
+    }
+
+    fn emit_memory_exit(&mut self) {
+        self.load_constant(A0, MEMORY_BOUNDS_EXIT_CODE as u32);
+        self.load_constant(HOST_ECALL_SERVICE_REGISTER as u32, HOST_ECALL_EXIT);
+        self.words.push(encode_ecall());
+    }
+
     fn reserve_global_address(&mut self, slot_offset: usize) {
+        self.reserve_data_address(slot_offset);
+    }
+
+    fn reserve_data_address(&mut self, slot_offset: usize) {
         let word_index = self.words.len();
-        // Keep this pair fixed-width so global-data placement can be resolved
-        // after every module function has been lowered.
+        // Keep this pair fixed-width so module-data placement can be resolved
+        // after every function has been lowered.
         self.words.extend([0, 0]);
         self.pending_globals.push(PendingGlobal {
             word_index,

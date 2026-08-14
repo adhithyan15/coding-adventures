@@ -1254,6 +1254,97 @@ fn linked_module_executes_static_byte_buffer_loads_and_stores() {
 }
 
 #[test]
+fn linked_module_allocates_a_runtime_sized_byte_buffer() {
+    let params = vec![("size".to_owned(), "i64".to_owned())];
+    let main = vec![
+        ci(
+            "alloc_bytes",
+            Some("buffer"),
+            vec![CIROperand::Var("size".into())],
+            "i64",
+        ),
+        ci("const_i64", Some("offset"), vec![CIROperand::Int(1)], "i64"),
+        ci(
+            "const_i64",
+            Some("value"),
+            vec![CIROperand::Int(0x142)],
+            "i64",
+        ),
+        ci(
+            "store_byte",
+            None,
+            vec![
+                CIROperand::Var("buffer".into()),
+                CIROperand::Var("offset".into()),
+                CIROperand::Var("value".into()),
+            ],
+            "void",
+        ),
+        ci(
+            "load_byte",
+            Some("result"),
+            vec![
+                CIROperand::Var("buffer".into()),
+                CIROperand::Var("offset".into()),
+            ],
+            "i64",
+        ),
+        ci(
+            "ret_i64",
+            None,
+            vec![CIROperand::Var("result".into())],
+            "i64",
+        ),
+    ];
+    let functions = [ModuleFunction {
+        context: ctx("main", &params, "i64"),
+        cir: &main,
+    }];
+
+    let binary = compile_module(&functions, Some("main")).expect("module linking");
+    let result = run_binary(&binary, &[Value::Int(2)]).expect("dynamic byte-buffer execution");
+    assert!(result.halted);
+    assert_eq!(result.return_value, 0x42);
+    assert_eq!(result.return_value_high, 0);
+    assert_eq!(result.exit_code, None);
+}
+
+#[test]
+fn linked_module_exits_on_a_byte_access_outside_its_allocation() {
+    let params = vec![("size".to_owned(), "i64".to_owned())];
+    let main = vec![
+        ci(
+            "alloc_bytes",
+            Some("buffer"),
+            vec![CIROperand::Var("size".into())],
+            "i64",
+        ),
+        ci("const_i64", Some("offset"), vec![CIROperand::Int(2)], "i64"),
+        ci("const_i64", Some("value"), vec![CIROperand::Int(42)], "i64"),
+        ci(
+            "store_byte",
+            None,
+            vec![
+                CIROperand::Var("buffer".into()),
+                CIROperand::Var("offset".into()),
+                CIROperand::Var("value".into()),
+            ],
+            "void",
+        ),
+        ci("ret_void", None, vec![], "void"),
+    ];
+    let functions = [ModuleFunction {
+        context: ctx("main", &params, "void"),
+        cir: &main,
+    }];
+
+    let binary = compile_module(&functions, Some("main")).expect("module linking");
+    let result = run_binary(&binary, &[Value::Int(2)]).expect("bounds-checked execution");
+    assert!(result.halted);
+    assert_eq!(result.exit_code, Some(2));
+}
+
+#[test]
 fn moves_scalar_and_wide_values() {
     let scalar = vec![
         ci("const_i32", Some("source"), vec![CIROperand::Int(42)], "i32"),
