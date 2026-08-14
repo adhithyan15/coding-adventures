@@ -122,6 +122,10 @@ standard `a0` / `a1` registers:
 | Write signed integer | `2` | `a1:a0`: signed `i64` | Records `WriteI64(value)` and continues |
 | Write byte | `3` | `a0`: low byte | Records `WriteByte(value)` and continues |
 | Read byte | `4` | none | Returns the next input byte in `a1:a0`, or signed `-1` at EOF |
+| f64 add/sub/mul/div | `5`-`8` | lhs bits: `a1:a0`; rhs bits: `a3:a2` | Returns IEEE-754 f64 result bits in `a1:a0` |
+| f64 comparison | `9` | lhs bits: `a1:a0`; rhs bits: `a3:a2` | Returns signed `-1`, `0`, or `1` in `a1:a0` |
+| i64 to f64 | `10` | signed i64: `a1:a0` | Returns IEEE-754 f64 bits in `a1:a0` |
+| f64 to i64 truncation | `11` | f64 bits: `a1:a0` | Returns truncated signed i64 in `a1:a0` |
 
 Installing an M-mode trap vector leaves architectural `ecall` trap behavior
 unchanged. `riscv_backend::run_binary` exposes `WriteI64` values through
@@ -135,6 +139,12 @@ external runtime image.
 `call_builtin "putchar", value` and `call_builtin "getchar"` lower to the
 byte services. `run_binary_with_input` supplies deterministic input bytes and
 `RunResult::byte_output` exposes produced bytes for source-level tests.
+
+The f64 services are a simulator-host soft-float ABI for RV32I binaries, not
+the RISC-V F/D instruction-set extensions. They use raw IEEE-754 bits split
+low/high across consecutive integer argument registers so a later backend
+lowering can execute floating-point IIR on the in-tree simulator while keeping
+the emitted instruction stream RV32I.
 
 ## Module globals
 
@@ -233,10 +243,16 @@ the selected entry function can seed language-level static initializers.
    integer representation for variables, `+`/`-`/`*` arithmetic, control flow,
    and `LET`, so non-literal whole-number programs do not depend on the `f64`
    frontend representation.
-31. [ ] **BASIC fractional REAL ABI:** choose and implement either soft-float
-   or an RV32 floating-point target and preserve Dartmouth BASIC's fractional
-   arithmetic and formatting semantics end to end.
-32. [ ] **BASIC exact division:** prove or preserve a whole-number result for
+31. [x] **Simulator soft-float host ABI:** IEEE-754 f64 bit pairs use a
+   deterministic `ecall` service family for arithmetic, comparison, and i64
+   conversions; this is the substrate for executable RV32I soft-float code.
+32. [ ] **RISC-V soft-float lowering:** represent f64 CIR values as bit pairs
+   and lower arithmetic, comparisons, and conversions through the simulator
+   host ABI without changing integer-only RV32I output.
+33. [ ] **BASIC fractional REAL execution:** route the Dartmouth BASIC real
+   formatter and fractional arithmetic through the RISC-V soft-float lowering
+   and add a source-to-simulator fixture.
+34. [ ] **BASIC exact division:** prove or preserve a whole-number result for
    `/` in the integer subset without silently changing Dartmouth BASIC's REAL
    division semantics when a quotient is fractional.
 
