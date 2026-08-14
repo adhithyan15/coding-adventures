@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.61.0
+
+- Add backend-neutral GitGraph commit symbols for normal, reverse, highlight, merge, and cherry-pick nodes.
+
 ## 0.60.0
 
 - Preserve every ordered GitGraph tag on commits, merges, cherry-picks, and temporal commit nodes.

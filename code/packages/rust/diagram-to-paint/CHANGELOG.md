@@ -1,5 +1,9 @@
 # Changelog — diagram-to-paint
 
+## 0.56.0
+
+- Lower GitGraph normal, reverse, highlight, merge, and cherry-pick symbols into backend-neutral geometry.
+
 ## 0.55.0
 
 - Shape every ordered GitGraph tag into backend-neutral PaintScene text.

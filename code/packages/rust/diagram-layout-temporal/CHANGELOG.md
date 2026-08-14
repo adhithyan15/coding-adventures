@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.14.0
+
+- Resolve GitGraph commit types and event kinds into backend-neutral commit symbols.
+
 ## 0.13.0
 
 - Resolve GitGraph branch lanes with Mermaid 11.16.1 explicit and implicit ordering semantics.

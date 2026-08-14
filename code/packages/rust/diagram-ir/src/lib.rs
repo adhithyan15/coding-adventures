@@ -1,6 +1,6 @@
 //! diagram-ir v0.42.0 - DG00/DG04 semantic IR
 
-pub const VERSION: &str = "0.60.0";
+pub const VERSION: &str = "0.61.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramDirection {
@@ -1010,6 +1010,15 @@ pub enum GitCommitType {
 }
 
 #[derive(Clone, Debug, PartialEq)]
+pub enum GitCommitSymbol {
+    Normal,
+    Reverse,
+    Highlight,
+    Merge,
+    CherryPick,
+}
+
+#[derive(Clone, Debug, PartialEq)]
 pub enum GitEvent {
     Commit {
         id: Option<String>,
@@ -1134,6 +1143,7 @@ pub enum LayoutedTemporalItem {
         id: String,
         message: Option<String>,
         tags: Vec<String>,
+        symbol: GitCommitSymbol,
     },
     MergeArc {
         from_x: f64,
@@ -1265,7 +1275,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.60.0");
+        assert_eq!(VERSION, "0.61.0");
     }
     #[test]
     fn default_direction_is_tb() {

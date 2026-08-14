@@ -12,13 +12,13 @@
 //! place commit nodes and merge arcs.
 
 use diagram_ir::{
-    GitDiagram, GitEvent, JourneyDiagram,
+    GitCommitSymbol, GitCommitType, GitDiagram, GitEvent, JourneyDiagram,
     LayoutedTemporalDiagram, LayoutedTemporalItem, TaskStart, TaskStatus,
     TemporalBody, TemporalDiagram,
 };
 use std::collections::{BTreeSet, HashMap};
 
-pub const VERSION: &str = "0.13.0";
+pub const VERSION: &str = "0.14.0";
 
 // ── Constants ─────────────────────────────────────────────────────────────
 
@@ -390,7 +390,7 @@ fn layout_git(diagram: &GitDiagram, cw: f64) -> LayoutedTemporalDiagram {
 
     for event in &diagram.events {
         match event {
-            GitEvent::Commit { id, message, tags, branch, .. } => {
+            GitEvent::Commit { id, message, tags, branch, type_ } => {
                 let lane = *branch_lanes.entry(branch.clone()).or_insert_with(|| {
                     let l = next_lane; next_lane += 1; l
                 });
@@ -403,6 +403,7 @@ fn layout_git(diagram: &GitDiagram, cw: f64) -> LayoutedTemporalDiagram {
                     id: commit_id,
                     message: message.clone(),
                     tags: tags.clone(),
+                    symbol: git_commit_symbol(type_),
                 });
                 x_cursor += COMMIT_SPACING;
             }
@@ -413,7 +414,7 @@ fn layout_git(diagram: &GitDiagram, cw: f64) -> LayoutedTemporalDiagram {
                     let l = next_lane; next_lane += 1; l
                 });
             }
-            GitEvent::Merge { from, id, tags, .. } => {
+            GitEvent::Merge { from, id, tags, type_ } => {
                 let from_lane = *branch_lanes.get(from).unwrap_or(&0);
                 let to_lane   = *branch_lanes.get(&current_branch).unwrap_or(&0);
                 let from_y    = lane_y(from_lane);
@@ -429,6 +430,11 @@ fn layout_git(diagram: &GitDiagram, cw: f64) -> LayoutedTemporalDiagram {
                     id: commit_id,
                     message: Some(format!("merge {from}")),
                     tags: tags.clone(),
+                    symbol: if *type_ == GitCommitType::Normal {
+                        GitCommitSymbol::Merge
+                    } else {
+                        git_commit_symbol(type_)
+                    },
                 });
                 x_cursor += COMMIT_SPACING;
             }
@@ -446,6 +452,7 @@ fn layout_git(diagram: &GitDiagram, cw: f64) -> LayoutedTemporalDiagram {
                         None => format!("cherry-pick {id}"),
                     }),
                     tags: tags.clone(),
+                    symbol: GitCommitSymbol::CherryPick,
                 });
                 x_cursor += COMMIT_SPACING;
             }
@@ -458,6 +465,14 @@ fn layout_git(diagram: &GitDiagram, cw: f64) -> LayoutedTemporalDiagram {
         accessibility_title: diagram.accessibility_title.clone(),
         accessibility_description: diagram.accessibility_description.clone(),
         items,
+    }
+}
+
+fn git_commit_symbol(type_: &GitCommitType) -> GitCommitSymbol {
+    match type_ {
+        GitCommitType::Normal => GitCommitSymbol::Normal,
+        GitCommitType::Reverse => GitCommitSymbol::Reverse,
+        GitCommitType::Highlight => GitCommitSymbol::Highlight,
     }
 }
 
@@ -531,7 +546,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.13.0");
+        assert_eq!(crate::VERSION, "0.14.0");
     }
 
     #[test]
@@ -592,6 +607,51 @@ mod tests {
             LayoutedTemporalItem::CommitNode { tags, .. }
                 if tags == &["v1", "stable"]
         )));
+    }
+
+    #[test]
+    fn git_layout_resolves_distinct_commit_symbols() {
+        let mut diagram = simple_git();
+        let TemporalBody::Git(git) = &mut diagram.body else {
+            unreachable!();
+        };
+        git.events = vec![
+            GitEvent::Commit {
+                id: Some("normal".into()), message: None, tags: Vec::new(),
+                branch: "main".into(), type_: GitCommitType::Normal,
+            },
+            GitEvent::Commit {
+                id: Some("reverse".into()), message: None, tags: Vec::new(),
+                branch: "main".into(), type_: GitCommitType::Reverse,
+            },
+            GitEvent::Commit {
+                id: Some("highlight".into()), message: None, tags: Vec::new(),
+                branch: "main".into(), type_: GitCommitType::Highlight,
+            },
+            GitEvent::Merge {
+                from: "main".into(), id: Some("merge".into()), tags: Vec::new(),
+                type_: GitCommitType::Normal,
+            },
+            GitEvent::CherryPick {
+                id: "pick".into(), tags: Vec::new(), parent: None, branch: "main".into(),
+            },
+        ];
+
+        let layout = layout_temporal_diagram(&diagram, 800.0);
+        let symbols = layout.items.iter().filter_map(|item| {
+            if let LayoutedTemporalItem::CommitNode { symbol, .. } = item {
+                Some(symbol.clone())
+            } else {
+                None
+            }
+        }).collect::<Vec<_>>();
+        assert_eq!(symbols, [
+            GitCommitSymbol::Normal,
+            GitCommitSymbol::Reverse,
+            GitCommitSymbol::Highlight,
+            GitCommitSymbol::Merge,
+            GitCommitSymbol::CherryPick,
+        ]);
     }
 
     #[test]
