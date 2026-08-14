@@ -261,6 +261,10 @@ verification algorithm above.
 JSON is for diagnostics, APIs, and fixtures. It is never the signature input,
 AEAD input, or append-log storage representation.
 
+An implementation MUST reject a JSON input larger than 94,371,840 bytes (90
+MiB) before parsing. This bound holds the maximum base64 ciphertext plus the
+bounded envelope while preventing an unbounded parser allocation.
+
 The version 1 object has exactly these fields:
 
 ```json
