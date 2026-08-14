@@ -506,6 +506,11 @@ Prioritized work items:
    Nonconforming initial doctypes now carry their own delimiter or EOF emission
    point without absorbing malformed-doctype tokenizer diagnostics or later
    doctype rejection paths.
+   Source-driven EOF diagnostics in the text insertion mode now carry the
+   tokenizer's proven EOF emission point exactly once across RCDATA, RAWTEXT,
+   script data, and scripting-enabled fallback elements. Properly closed and
+   plaintext elements, seeded text fragment contexts, tokenizer-owned script
+   EOF errors, and directly supplied token streams retain separate contracts.
    Continue migrating one evidence-backed diagnostic family at a time;
    synthetic or directly supplied tokens must remain explicitly unpositioned.
 4. **Input boundary review.** Document the Unicode-code-point parser boundary
