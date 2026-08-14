@@ -1,0 +1,60 @@
+% ============================================================================
+% cell-division-genetic-outcome — for mitosis and meiosis, the genetic
+% property of the daughter cells each process yields, as the SAME NHGRI
+% sentences also state (adj-facts-stdlib, BIOLOGY).
+% ============================================================================
+% A sibling to the already-shipped `cell-division-daughter-cells.adj`
+% (`cell_division_daughter_cells(process, count)`, HOW MANY daughter cells
+% each process yields — mitosis → 2, meiosis → 4). That table's own header
+% deliberately quotes, verbatim, the OTHER clause of each defining sentence
+% "for honesty" while explicitly stating it is NOT what the count-only
+% schema extracts — a second fact sitting unused in plain sight:
+%
+%   mitosis → genetically_identical
+%     "Mitosis is generally followed by equal division of the cell's content
+%      into two daughter cells that HAVE IDENTICAL GENOMES."
+%
+%   meiosis → haploid
+%     "During meiosis, each diploid cell undergoes two rounds of division to
+%      yield four HAPLOID daughter cells — the gametes."
+%
+% Recall is a binding query:
+%
+%     ? cell_division_genetic_outcome(mitosis, $Outcome)   % genetically_identical
+%
+% This is a native `table` (ADJ-TABLES RS-5, an ordinary two-column EXACT
+% lookup): each `row` lowers to a ground relation
+% `cell_division_genetic_outcome(process, outcome)` carrying the citation,
+% so the lookup above is the ordinary SLD binding query — the engine returns
+% the outcome WITH its source, on the CPU, with zero model calls, and
+% abstains on any process that is not one of these two (it never invents an
+% outcome — `binary_fission`, the prokaryotic process, is deliberately NOT a
+% row here either, matching the parent table's own abstention boundary).
+% The query also runs BACKWARD — bind an outcome and recall its process:
+%
+%     ? cell_division_genetic_outcome($Process, haploid)
+%       % meiosis
+%
+% Provenance: reproduces, byte-for-byte, the SAME two NIH National Human
+% Genome Research Institute (NHGRI) "Genetics Glossary" sentences already
+% quoted inside `cell-division-daughter-cells.adj`'s own header — no new
+% WebFetch, only a different schema decoding the genetic-outcome half of
+% each already-verified quote. `trust authoritative` — the same tier
+% `cell-division-daughter-cells.adj` already carries (a primary U.S.
+% government reference).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table cell_division_genetic_outcome {
+    columns process, outcome
+
+    row (mitosis, genetically_identical)   % NHGRI: "Mitosis is generally followed by equal division of the cell's content into two daughter cells that have identical genomes."
+    row (meiosis, haploid)                 % NHGRI: "During meiosis, each diploid cell undergoes two rounds of division to yield four haploid daughter cells -- the gametes."
+
+    source "Mitosis is generally followed by equal division of the cell's content into two daughter cells that have identical genomes."
+    locator "https://www.genome.gov/genetics-glossary/Mitosis"
+    trust authoritative
+
+    cites "During meiosis, each diploid cell undergoes two rounds of division to yield four haploid daughter cells -- the gametes." locator "https://www.genome.gov/genetics-glossary/Meiosis"
+}
