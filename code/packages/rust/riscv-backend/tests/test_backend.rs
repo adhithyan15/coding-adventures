@@ -2,7 +2,7 @@
 
 use jit_core::backend::{Backend, FunctionContext};
 use jit_core::cir::{CIRInstr, CIROperand};
-use riscv_backend::{compile, compile_module, run_binary, BackendError, ModuleFunction, Riscv32Backend};
+use riscv_backend::{compile, compile_module, run_binary, run_binary_with_input, BackendError, ModuleFunction, Riscv32Backend};
 use vm_core::value::Value;
 
 fn ctx<'a>(name: &'a str, params: &'a [(String, String)], ret_ty: &'a str) -> FunctionContext<'a> {
@@ -71,6 +71,46 @@ fn canonical_twig_42_bytes_are_preserved_and_execute() {
         vec![0x93, 0x02, 0xA0, 0x02, 0x13, 0x85, 0x02, 0x00, 0x67, 0x80, 0x00, 0x00,]
     );
     assert_eq!(run_binary(&bytes, &[]).unwrap().return_value, 42);
+}
+
+#[test]
+fn character_builtins_round_trip_host_bytes_and_preserve_eof() {
+    let echo = vec![
+        ci(
+            "call_builtin",
+            Some("value"),
+            vec![CIROperand::Var("getchar".into())],
+            "i64",
+        ),
+        ci(
+            "call_builtin",
+            None,
+            vec![
+                CIROperand::Var("putchar".into()),
+                CIROperand::Var("value".into()),
+            ],
+            "void",
+        ),
+        ci("ret_void", None, vec![], "void"),
+    ];
+    let echo_binary = compile(&ctx("echo", &[], "void"), &echo).expect("character lowering");
+    let echo_run = run_binary_with_input(&echo_binary, &[], b"Z").expect("character execution");
+    assert!(echo_run.halted);
+    assert_eq!(echo_run.byte_output, b"Z");
+
+    let eof = vec![
+        ci(
+            "call_builtin",
+            Some("value"),
+            vec![CIROperand::Var("getchar".into())],
+            "i64",
+        ),
+        ci("ret_i64", None, vec![CIROperand::Var("value".into())], "i64"),
+    ];
+    let eof_binary = compile(&ctx("eof", &[], "i64"), &eof).expect("getchar lowering");
+    let eof_run = run_binary_with_input(&eof_binary, &[], b"").expect("EOF execution");
+    assert_eq!(eof_run.return_value, -1);
+    assert_eq!(eof_run.return_value_high, u32::MAX);
 }
 
 #[test]

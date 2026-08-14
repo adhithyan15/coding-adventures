@@ -17,6 +17,10 @@ pub const HOST_ECALL_ARGUMENT_HIGH_REGISTER: usize = 11; // a1
 pub const HOST_ECALL_EXIT: u32 = 1;
 /// Append the signed 64-bit value in `a1:a0` to the host output stream.
 pub const HOST_ECALL_WRITE_I64: u32 = 2;
+/// Append the low byte of `a0` to the host output stream.
+pub const HOST_ECALL_WRITE_BYTE: u32 = 3;
+/// Read one host input byte into `a1:a0`, or return `-1` on end of input.
+pub const HOST_ECALL_READ_BYTE: u32 = 4;
 
 /// Observable services performed by a guest through the simulator host ABI.
 ///
@@ -25,6 +29,8 @@ pub const HOST_ECALL_WRITE_I64: u32 = 2;
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum HostEvent {
     WriteI64(i64),
+    WriteByte(u8),
+    ReadByte(i32),
     Exit(i32),
 }
 
@@ -37,6 +43,8 @@ pub struct RiscVSimulator {
     pub halted: bool,
     pub host_events: Vec<HostEvent>,
     pub exit_code: Option<i32>,
+    host_input: Vec<u8>,
+    host_input_offset: usize,
 }
 
 /// Observable outcome of a bounded simulator run.
@@ -62,7 +70,15 @@ impl RiscVSimulator {
             halted: false,
             host_events: Vec::new(),
             exit_code: None,
+            host_input: Vec::new(),
+            host_input_offset: 0,
         }
+    }
+
+    /// Replace the byte stream consumed by the host read service.
+    pub fn set_host_input(&mut self, input: &[u8]) {
+        self.host_input = input.to_vec();
+        self.host_input_offset = 0;
     }
 
     /// Load a program (as raw bytes) into memory at address 0.
@@ -125,6 +141,33 @@ impl RiscVSimulator {
                     let high = self.regs.read(HOST_ECALL_ARGUMENT_HIGH_REGISTER) as u64;
                     self.host_events
                         .push(HostEvent::WriteI64(((high << 32) | low) as i64));
+                    self.pc += 4;
+                    return mnemonic;
+                }
+                HOST_ECALL_WRITE_BYTE => {
+                    self.host_events.push(HostEvent::WriteByte(
+                        self.regs.read(HOST_ECALL_ARGUMENT_LOW_REGISTER) as u8,
+                    ));
+                    self.pc += 4;
+                    return mnemonic;
+                }
+                HOST_ECALL_READ_BYTE => {
+                    let value = self
+                        .host_input
+                        .get(self.host_input_offset)
+                        .copied()
+                        .map(i32::from)
+                        .unwrap_or(-1);
+                    if value >= 0 {
+                        self.host_input_offset += 1;
+                    }
+                    self.regs
+                        .write(HOST_ECALL_ARGUMENT_LOW_REGISTER, value as u32);
+                    self.regs.write(
+                        HOST_ECALL_ARGUMENT_HIGH_REGISTER,
+                        u32::from(value < 0).wrapping_neg(),
+                    );
+                    self.host_events.push(HostEvent::ReadByte(value));
                     self.pc += 4;
                     return mnemonic;
                 }
@@ -293,6 +336,28 @@ mod tests {
         assert_eq!(sim.host_events, vec![HostEvent::WriteI64(-42)]);
         assert_eq!(sim.regs.read(3), 7);
         assert_eq!(sim.exit_code, None);
+    }
+
+    #[test]
+    fn host_ecall_reads_and_writes_bytes() {
+        let mut sim = RiscVSimulator::new(65_536);
+        sim.set_host_input(b"A");
+        sim.run_instructions(&[
+            encode_addi(HOST_ECALL_SERVICE_REGISTER as u32, 0, HOST_ECALL_READ_BYTE as i32),
+            encode_ecall(),
+            encode_addi(HOST_ECALL_SERVICE_REGISTER as u32, 0, HOST_ECALL_WRITE_BYTE as i32),
+            encode_ecall(),
+            encode_addi(HOST_ECALL_SERVICE_REGISTER as u32, 0, HOST_ECALL_READ_BYTE as i32),
+            encode_ecall(),
+            encode_addi(HOST_ECALL_SERVICE_REGISTER as u32, 0, 0),
+            encode_ecall(),
+        ]);
+        assert_eq!(
+            sim.host_events,
+            vec![HostEvent::ReadByte(i32::from(b'A')), HostEvent::WriteByte(b'A'), HostEvent::ReadByte(-1)]
+        );
+        assert_eq!(sim.regs.read(HOST_ECALL_ARGUMENT_LOW_REGISTER), u32::MAX);
+        assert_eq!(sim.regs.read(HOST_ECALL_ARGUMENT_HIGH_REGISTER), u32::MAX);
     }
 
     #[test]

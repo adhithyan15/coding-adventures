@@ -21,6 +21,7 @@ use riscv_encoder::{
 };
 use riscv_simulator::{
     HostEvent, RiscVSimulator, HOST_ECALL_EXIT, HOST_ECALL_SERVICE_REGISTER, HOST_ECALL_WRITE_I64,
+    HOST_ECALL_READ_BYTE, HOST_ECALL_WRITE_BYTE,
 };
 use vm_core::value::Value;
 
@@ -77,6 +78,8 @@ pub struct RunResult {
     pub steps: usize,
     /// Signed integer values written through the simulator host ABI.
     pub output: Vec<i64>,
+    /// Bytes written through the simulator character-output service.
+    pub byte_output: Vec<u8>,
     /// Guest status supplied to the host exit service, if one was used.
     pub exit_code: Option<i32>,
 }
@@ -317,6 +320,15 @@ pub fn compile_module(
 /// address zero.  This preserves normal function code while giving a flat
 /// binary a deterministic simulator exit point.
 pub fn run_binary(binary: &[u8], args: &[Value]) -> Result<RunResult, BackendError> {
+    run_binary_with_input(binary, args, &[])
+}
+
+/// Run a function binary with bytes supplied to the simulator character-input service.
+pub fn run_binary_with_input(
+    binary: &[u8],
+    args: &[Value],
+    input: &[u8],
+) -> Result<RunResult, BackendError> {
     if args.len() > ARG_REGISTERS.len() {
         return Err(BackendError::TooManyArguments(args.len()));
     }
@@ -333,6 +345,7 @@ pub fn run_binary(binary: &[u8], args: &[Value]) -> Result<RunResult, BackendErr
     program.extend_from_slice(&encode_ecall().to_le_bytes());
 
     let mut simulator = RiscVSimulator::new(DEFAULT_MEMORY_SIZE);
+    simulator.set_host_input(input);
     simulator.load_program(&program);
     simulator
         .regs
@@ -360,7 +373,15 @@ pub fn run_binary(binary: &[u8], args: &[Value]) -> Result<RunResult, BackendErr
             .iter()
             .filter_map(|event| match event {
                 HostEvent::WriteI64(value) => Some(*value),
-                HostEvent::Exit(_) => None,
+                HostEvent::WriteByte(_) | HostEvent::ReadByte(_) | HostEvent::Exit(_) => None,
+            })
+            .collect(),
+        byte_output: simulator
+            .host_events
+            .iter()
+            .filter_map(|event| match event {
+                HostEvent::WriteByte(value) => Some(*value),
+                HostEvent::WriteI64(_) | HostEvent::ReadByte(_) | HostEvent::Exit(_) => None,
             })
             .collect(),
         exit_code: simulator.exit_code,
@@ -1174,25 +1195,45 @@ impl Lowerer {
                 "call_builtin srcs[0] must be Var(builtin_name)".to_owned(),
             ));
         };
-        if name != "print_i64" {
-            return Err(BackendError::UnsupportedOp(format!("call_builtin {name}")));
+        match name.as_str() {
+            "print_i64" => {
+                if instr.dest.is_some() || instr.ty != "void" || instr.srcs.len() != 2 {
+                    return Err(BackendError::InvalidOperand(
+                        "call_builtin print_i64 requires one argument and returns void".to_owned(),
+                    ));
+                }
+                let value = self.wide_var_location(instr, 1, "call_builtin print_i64")?;
+                self.words.push(encode_addi(A0, value.low(), 0));
+                self.copy_or_extend_high(A1, value, true);
+                self.load_constant(HOST_ECALL_SERVICE_REGISTER as u32, HOST_ECALL_WRITE_I64);
+            }
+            "putchar" => {
+                if instr.dest.is_some() || instr.ty != "void" || instr.srcs.len() != 2 {
+                    return Err(BackendError::InvalidOperand(
+                        "call_builtin putchar requires one argument and returns void".to_owned(),
+                    ));
+                }
+                let value = self.var_src(instr, 1, "call_builtin putchar")?;
+                self.words.push(encode_addi(A0, value, 0));
+                self.load_constant(HOST_ECALL_SERVICE_REGISTER as u32, HOST_ECALL_WRITE_BYTE);
+            }
+            "getchar" => {
+                if instr.dest.is_none() || instr.ty != "i64" || instr.srcs.len() != 1 {
+                    return Err(BackendError::InvalidOperand(
+                        "call_builtin getchar takes no arguments and returns i64".to_owned(),
+                    ));
+                }
+                self.load_constant(HOST_ECALL_SERVICE_REGISTER as u32, HOST_ECALL_READ_BYTE);
+                self.words.push(encode_ecall());
+                let ValueLocation::Pair { lo, hi } = self.dest_pair(instr, "call_builtin getchar")? else {
+                    unreachable!("getchar returns an i64 pair")
+                };
+                self.words.push(encode_addi(lo, A0, 0));
+                self.words.push(encode_addi(hi, A1, 0));
+                return Ok(());
+            }
+            _ => return Err(BackendError::UnsupportedOp(format!("call_builtin {name}"))),
         }
-        if instr.dest.is_some() || instr.ty != "void" {
-            return Err(BackendError::InvalidOperand(
-                "call_builtin print_i64 returns void and must not have a destination".to_owned(),
-            ));
-        }
-        if instr.srcs.len() != 2 {
-            return Err(BackendError::InvalidOperand(format!(
-                "call_builtin print_i64 requires exactly one argument, got {}",
-                instr.srcs.len().saturating_sub(1)
-            )));
-        }
-
-        let value = self.wide_var_location(instr, 1, "call_builtin print_i64")?;
-        self.words.push(encode_addi(A0, value.low(), 0));
-        self.copy_or_extend_high(A1, value, true);
-        self.load_constant(HOST_ECALL_SERVICE_REGISTER as u32, HOST_ECALL_WRITE_I64);
         self.words.push(encode_ecall());
         Ok(())
     }

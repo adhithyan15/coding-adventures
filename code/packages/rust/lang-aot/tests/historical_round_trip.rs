@@ -213,6 +213,21 @@ fn brainfuck_mutation_compiles_to_rv32i_and_runs_in_the_simulator() {
 }
 
 #[test]
+fn brainfuck_output_compiles_to_rv32i_and_writes_a_host_byte() {
+    let dir = tempfile::tempdir().expect("tempdir");
+    let source = dir.path().join("output.bf");
+    let binary = dir.path().join("output.bin");
+    std::fs::write(&source, "+.").expect("write Brainfuck source");
+
+    compile_file_to_riscv32_bin(&source, &binary, Language::Brainfuck)
+        .expect("compile Brainfuck output to RV32I");
+    let result = run_binary(&std::fs::read(binary).expect("read RV32I binary"), &[])
+        .expect("run Brainfuck RV32I binary");
+    assert!(result.halted);
+    assert_eq!(result.byte_output, vec![1]);
+}
+
+#[test]
 fn brainfuck_tape_underflow_reaches_the_rv32i_bounds_guard() {
     let dir = tempfile::tempdir().expect("tempdir");
     let source = dir.path().join("underflow.bf");
