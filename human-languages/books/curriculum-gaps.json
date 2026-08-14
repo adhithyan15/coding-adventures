@@ -14,7 +14,7 @@
     "registeredTracks": 22,
     "totalLessons": 2101,
     "authoredBooks": 22,
-    "durationViolations": 0,
+    "durationViolations": 2,
     "unknownPrerequisites": 0,
     "laterChapterLessonsWithoutPrerequisites": 46,
     "tracksWithoutBooks": 0,
@@ -24,9 +24,9 @@
     "version2SchemaTracks": 4,
     "lessonsWithoutLevel": 86,
     "rampOverBudgetLessons": 46,
-    "scriptRampOverBudgetLessons": 61,
+    "scriptRampOverBudgetLessons": 62,
     "lessonsOpeningMultipleScripts": 5,
-    "scriptClosureViolations": 831,
+    "scriptClosureViolations": 834,
     "scriptExposureExemptedGlyphs": 2225,
     "tracksTeachingNoScript": 8,
     "headwordsWithoutRomanization": 305,
@@ -43,7 +43,42 @@
     "unexplainedModalityOverrides": 0
   },
   "duration": {
-    "violations": []
+    "violations": [
+      {
+        "lessonId": "KA-C01-namaskara",
+        "language": "kannada",
+        "chapter": 1,
+        "declaredSeconds": 240,
+        "computedSeconds": 333,
+        "effectiveSeconds": 333,
+        "wordCount": 533,
+        "promptCount": 2,
+        "repeatCueCount": 0,
+        "explicitPauseSeconds": 6,
+        "authoredAudioSeconds": 0,
+        "activityResponseSeconds": 0,
+        "reasons": [
+          "computed"
+        ]
+      },
+      {
+        "lessonId": "TE-C01-namaskaram",
+        "language": "telugu",
+        "chapter": 1,
+        "declaredSeconds": 240,
+        "computedSeconds": 314,
+        "effectiveSeconds": 314,
+        "wordCount": 486,
+        "promptCount": 3,
+        "repeatCueCount": 0,
+        "explicitPauseSeconds": 6,
+        "authoredAudioSeconds": 0,
+        "activityResponseSeconds": 0,
+        "reasons": [
+          "computed"
+        ]
+      }
+    ]
   },
   "prerequisites": {
     "unknown": [],
@@ -4389,6 +4424,28 @@
           "budget": 3
         },
         {
+          "lessonId": "TA-C01-nandri",
+          "language": "tamil",
+          "chapter": 1,
+          "glyphs": 7,
+          "sample": "நனரறளழி",
+          "systems": [
+            "Tamil"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "TA-C01-vanakkam",
+          "language": "tamil",
+          "chapter": 1,
+          "glyphs": 7,
+          "sample": "கஙணமவு்",
+          "systems": [
+            "Tamil"
+          ],
+          "budget": 3
+        },
+        {
           "lessonId": "TE-C07-numbers-6-10",
           "language": "telugu",
           "chapter": 7,
@@ -4620,22 +4677,11 @@
           "budget": 3
         },
         {
-          "lessonId": "TA-C01-practice",
+          "lessonId": "TA-C01-illai",
           "language": "tamil",
           "chapter": 1,
           "glyphs": 5,
-          "sample": "பயுேோ",
-          "systems": [
-            "Tamil"
-          ],
-          "budget": 3
-        },
-        {
-          "lessonId": "TA-C01-vanakkam",
-          "language": "tamil",
-          "chapter": 1,
-          "glyphs": 5,
-          "sample": "கணமவ்",
+          "sample": "இஉடலை",
           "systems": [
             "Tamil"
           ],
@@ -4829,11 +4875,11 @@
           "budget": 3
         },
         {
-          "lessonId": "TA-C01-nandri",
+          "lessonId": "TA-C01-practice",
           "language": "tamil",
           "chapter": 1,
           "glyphs": 4,
-          "sample": "நனறி",
+          "sample": "பயேோ",
           "systems": [
             "Tamil"
           ],
@@ -4994,7 +5040,7 @@
           "totalGlyphs": 56,
           "lessonViolations": 3,
           "systemViolations": 0,
-          "lessonsWithForeignScript": 13
+          "lessonsWithForeignScript": 15
         },
         {
           "language": "italian",
@@ -5024,7 +5070,7 @@
           "totalGlyphs": 66,
           "lessonViolations": 7,
           "systemViolations": 0,
-          "lessonsWithForeignScript": 34
+          "lessonsWithForeignScript": 36
         },
         {
           "language": "latin",
@@ -5044,7 +5090,7 @@
           "totalGlyphs": 66,
           "lessonViolations": 6,
           "systemViolations": 0,
-          "lessonsWithForeignScript": 42
+          "lessonsWithForeignScript": 45
         },
         {
           "language": "marathi",
@@ -5104,7 +5150,7 @@
           "totalGlyphs": 48,
           "lessonViolations": 6,
           "systemViolations": 0,
-          "lessonsWithForeignScript": 1
+          "lessonsWithForeignScript": 2
         },
         {
           "language": "spanish",
@@ -5122,9 +5168,9 @@
           "latinScript": false,
           "lessonCount": 148,
           "totalGlyphs": 51,
-          "lessonViolations": 5,
+          "lessonViolations": 6,
           "systemViolations": 0,
-          "lessonsWithForeignScript": 35
+          "lessonsWithForeignScript": 37
         },
         {
           "language": "telugu",
@@ -5134,7 +5180,7 @@
           "totalGlyphs": 62,
           "lessonViolations": 6,
           "systemViolations": 0,
-          "lessonsWithForeignScript": 34
+          "lessonsWithForeignScript": 36
         },
         {
           "language": "urdu",
@@ -5148,9 +5194,9 @@
         }
       ],
       "summary": {
-        "lessonViolations": 61,
+        "lessonViolations": 62,
         "systemViolations": 5,
-        "lessonsWithForeignScript": 184,
+        "lessonsWithForeignScript": 196,
         "maxForeignGlyphsInALesson": 27,
         "steepestLesson": {
           "lessonId": "MR-C01-dhanyavad",
@@ -45646,8 +45692,8 @@
         "taughtGlyphs": 40,
         "shownGlyphs": 51,
         "neverTaughtGlyphs": 11,
-        "violations": 48,
-        "exposureOnly": 21,
+        "violations": 51,
+        "exposureOnly": 18,
         "exposureExemptedGlyphs": 165,
         "headwordsWithoutRomanization": 22
       },
@@ -48704,6 +48750,13 @@
         "count": 5
       },
       {
+        "lessonId": "TA-C01-nandri",
+        "language": "tamil",
+        "chapter": 1,
+        "glyphs": "ணரலளழ",
+        "count": 5
+      },
+      {
         "lessonId": "TA-C01-nandri-family-register",
         "language": "tamil",
         "chapter": 1,
@@ -49079,6 +49132,13 @@
         "language": "tamil",
         "chapter": 1,
         "glyphs": "ஆமா்",
+        "count": 4
+      },
+      {
+        "lessonId": "TA-C01-illai",
+        "language": "tamil",
+        "chapter": 1,
+        "glyphs": "உடணு",
         "count": 4
       },
       {
@@ -50220,6 +50280,13 @@
         "language": "sanskrit",
         "chapter": 14,
         "glyphs": "एु",
+        "count": 2
+      },
+      {
+        "lessonId": "TA-C01-vanakkam",
+        "language": "tamil",
+        "chapter": 1,
+        "glyphs": "ஙு",
         "count": 2
       },
       {
@@ -51500,8 +51567,8 @@
     "summary": {
       "tracksWithScript": 16,
       "tracksTeachingNothing": 8,
-      "violations": 831,
-      "exposureOnly": 131,
+      "violations": 834,
+      "exposureOnly": 128,
       "exposureExemptedGlyphs": 2225,
       "headwordsWithoutRomanization": 305,
       "tracksWithUnknownScript": 0
@@ -63809,17 +63876,17 @@
     "terms": 54,
     "termsUsed": 50,
     "lessonsUsingTerms": 2085,
-    "usesBeforeIntroduction": 9419,
-    "technicalUsesBeforeIntroduction": 2824,
+    "usesBeforeIntroduction": 9493,
+    "technicalUsesBeforeIntroduction": 2826,
     "technicalLessons": 1392,
     "worstTerms": [
       {
         "term": "verb",
-        "lessons": 935
+        "lessons": 936
       },
       {
         "term": "noun",
-        "lessons": 469
+        "lessons": 470
       },
       {
         "term": "tense",
