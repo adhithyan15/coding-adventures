@@ -7748,7 +7748,7 @@ const MAX_STATIC_REAL_FOR_ITERATIONS: usize = 4_096;
 const MAX_STATIC_WHILE_ITERATIONS: usize = 4_096;
 
 /// Bound nested selector-dependency proofs so cyclic assignments fail closed.
-const MAX_STATIC_SELECTOR_DEPENDENCY_DEPTH: usize = 6;
+const MAX_STATIC_SELECTOR_DEPENDENCY_DEPTH: usize = 7;
 
 /// Hard cap for the number of switch-list arms emitted while lowering one IIR
 /// function. Nested switch designators form a graph; without this cap an
@@ -10216,12 +10216,21 @@ mod tests {
     }
 
     #[test]
-    fn al4_seventh_nested_selector_dependency_remains_conservative() {
-        let err = compile_source(
+    fn al4_seventh_nested_selector_dependency_stays_stable() {
+        compile_source(
             "begin integer i, n, limit, choose; boolean other, flag, gate, key, last, final, ultimate, terminal; n := 3; limit := 3; choose := 1; other := true; flag := true; gate := true; key := true; last := true; final := true; ultimate := true; terminal := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := if flag then other else false; flag := if gate then flag else false; gate := if key then gate else false; key := if last then key else false; last := if final then last else false; final := if ultimate then final else false; ultimate := if terminal then ultimate else false; terminal := terminal end; print(i + 0.25) end",
             "test",
         )
-        .expect_err("selector dependency proofs beyond the six-level cap must fail closed");
+        .expect("the seventh bounded selector dependency may choose its preserving leaf");
+    }
+
+    #[test]
+    fn al4_eighth_nested_selector_dependency_remains_conservative() {
+        let err = compile_source(
+            "begin integer i, n, limit, choose; boolean other, flag, gate, key, last, final, ultimate, terminal, horizon; n := 3; limit := 3; choose := 1; other := true; flag := true; gate := true; key := true; last := true; final := true; ultimate := true; terminal := true; horizon := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := if flag then other else false; flag := if gate then flag else false; gate := if key then gate else false; key := if last then key else false; last := if final then last else false; final := if ultimate then final else false; ultimate := if terminal then ultimate else false; terminal := if horizon then terminal else false; horizon := horizon end; print(i + 0.25) end",
+            "test",
+        )
+        .expect_err("selector dependency proofs beyond the seven-level cap must fail closed");
         assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
