@@ -906,6 +906,13 @@ counterclockwise lower bowl, separately descended right stem, and curled exit
 at 10:45–10:56; the Noto Sans Cyrillic fit preserves that one-lift
 body-before-right-stem order while tracing the printed straight uprights and
 wide closed lower bowl and records the source's entry loop and rising exit.
+The four-frame Cyrillic **ь** filmstrip descends the stem, sweeps right along
+the lower bowl, curves upward around its right side, then returns left through
+the upper bowl to close against the stem without lifting. The native-teacher
+lesson demonstrates its narrow descending entry and joined counterclockwise
+lower bowl at 11:16–11:20; the Noto Sans Cyrillic fit preserves that zero-lift
+stem-to-bowl order while tracing the printed straight upright and wide closed
+lower bowl and records the source's slanted entry and rounded handwritten join.
 The canonical script-data group is capped at 250 kB per cacheable batch, so
 these growing source notes stay within the app's enforced 500 kB eager-chunk
 budget without removing learner-facing evidence.

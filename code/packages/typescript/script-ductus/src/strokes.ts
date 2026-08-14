@@ -4379,6 +4379,61 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: cyrillicAlphabetSource("ы"),
   },
+  // RussianIrina writes lowercase ь in one run: the descending stem turns
+  // directly through a counterclockwise lower bowl and closes against itself.
+  // The fitted path keeps that stem-first order while straightening the
+  // upright and widening the printed bowl.
+  [ductusKey("cyrillic", "ь")]: {
+    script: "cyrillic",
+    glyph: "ь",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "descend the stem to the baseline",
+            path: [
+              { x: 129, y: 536 },
+              { x: 129, y: 360 },
+              { x: 129, y: 180 },
+              { x: 129, y: 36 },
+            ],
+          },
+          {
+            label: "sweep right along the lower bowl",
+            path: [
+              { x: 129, y: 36 },
+              { x: 200, y: 36 },
+              { x: 279, y: 36 },
+              { x: 355, y: 44 },
+              { x: 430, y: 87 },
+            ],
+          },
+          {
+            label: "curve upward around the bowl's right side",
+            path: [
+              { x: 430, y: 87 },
+              { x: 456, y: 128 },
+              { x: 456, y: 173 },
+              { x: 440, y: 217 },
+              { x: 400, y: 258 },
+              { x: 340, y: 291 },
+              { x: 279, y: 301 },
+            ],
+          },
+          {
+            label: "return left through the upper bowl to close against the stem",
+            path: [
+              { x: 279, y: 301 },
+              { x: 225, y: 301 },
+              { x: 173, y: 301 },
+              { x: 129, y: 301 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: cyrillicAlphabetSource("ь"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the
