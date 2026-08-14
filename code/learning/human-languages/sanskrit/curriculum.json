@@ -304,6 +304,39 @@
         "SA-EXT-202-PLACE"
       ],
       "after": []
+    },
+    {
+      "id": "SA-PATH-203",
+      "spine_node": "SPINE-DEFINITE-REFERENCE",
+      "lessons": [
+        "SA-C17-day",
+        "SA-C17-night",
+        "SA-C17-today",
+        "SA-C17-yesterday",
+        "SA-C17-always",
+        "SA-C17-time-words"
+      ],
+      "before": [],
+      "inline": [
+        "SA-EXT-203-TIME"
+      ],
+      "after": []
+    },
+    {
+      "id": "SA-PATH-204",
+      "spine_node": "SPINE-NEGATE-AND-ASK",
+      "lessons": [
+        "SA-C18-when",
+        "SA-C18-why",
+        "SA-C18-how-many",
+        "SA-C18-from-where",
+        "SA-C18-k-words"
+      ],
+      "before": [],
+      "inline": [
+        "SA-EXT-204-ASK"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -408,7 +441,8 @@
       "segments": [
         "SA-PATH-200",
         "SA-PATH-201",
-        "SA-PATH-202"
+        "SA-PATH-202",
+        "SA-PATH-203"
       ],
       "omits": [
         "GRAMMAR-THE"
@@ -464,7 +498,9 @@
       "relocates": {}
     },
     "SPINE-NEGATE-AND-ASK": {
-      "segments": [],
+      "segments": [
+        "SA-PATH-204"
+      ],
       "omits": [
         "VERB-NEGATE",
         "QUESTION-POLAR"
@@ -847,6 +883,37 @@
         "SA-C16-forest",
         "SA-C16-city",
         "SA-C16-noun-families"
+      ]
+    },
+    {
+      "id": "SA-EXT-203-TIME",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can say when something happens in Sanskrit, and I know why the word order is free.",
+      "prerequisites": [],
+      "lessons": [
+        "SA-C17-day",
+        "SA-C17-night",
+        "SA-C17-today",
+        "SA-C17-yesterday",
+        "SA-C17-always",
+        "SA-C17-time-words"
+      ]
+    },
+    {
+      "id": "SA-EXT-204-ASK",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can ask the seven basic questions in Sanskrit and recognise the k- stem they share.",
+      "prerequisites": [],
+      "lessons": [
+        "SA-C18-when",
+        "SA-C18-why",
+        "SA-C18-how-many",
+        "SA-C18-from-where",
+        "SA-C18-k-words"
       ]
     }
   ]

@@ -230,7 +230,7 @@ describe("corpus snapshot", () => {
     // Chapter 10 adds singular ir and possessives at A1. Chapter 11 adds one more
     // definite-reference lesson there; its other work is A2. Chapter 12 adds its
     // newly mapped terminal checkpoints at A2 on SPINE-SAY-WHAT-I-DO.
-    expect(summary.byLevel.A1).toBe(491); // +1: ES-C02-concordancia sits on SPINE-TIME-OF-DAY // +42: HL-C136 wave I. The whole wave lands at A1, not pre-A1, and that is DERIVED rather than chosen: all six chapters realize asking-and-pointing nodes the shared spine declares at A1, so `pre-A1` (1038) does not move at all. The wave is a *pre-A1 lexicon* drive by selection order, which is a statement about which words are worth teaching first, not a claim about which spine node they realize. // HL-C137 wave II: +36 adjective lessons, +6 chapters, all six Indic tracks // HL-C163: +6 -- Sanskrit chapter 16
+    expect(summary.byLevel.A1).toBe(497); // +1: ES-C02-concordancia sits on SPINE-TIME-OF-DAY // +42: HL-C136 wave I. The whole wave lands at A1, not pre-A1, and that is DERIVED rather than chosen: all six chapters realize asking-and-pointing nodes the shared spine declares at A1, so `pre-A1` (1038) does not move at all. The wave is a *pre-A1 lexicon* drive by selection order, which is a statement about which words are worth teaching first, not a claim about which spine node they realize. // HL-C137 wave II: +36 adjective lessons, +6 chapters, all six Indic tracks // HL-C163: +6 -- Sanskrit chapter 16 // HL-C165: +11 -- Sanskrit chapters 17 and 18
     // Chapter 15's split adds three more mapped A2 lessons without changing its node.
     // Chapter 16's split adds five more mapped A2 lessons on the same node.
     // Chapter 17's split adds four more mapped A2 lessons on the same node.
@@ -238,7 +238,7 @@ describe("corpus snapshot", () => {
     // +3: TA-C39-vendum, TA-C39-evvalavu and TA-C39-oru. Tamil's curriculum.json had
     // already declared SPINE-SAY-WHAT-I-WANT with an empty segment list and VERB-WANT
     // in `omits`; chapter 39 realizes the node, so the omission is removed with it.
-    expect(summary.byLevel.A2).toBe(494); // +39: Spanish chapters 11-18 plus prerequisite closure // +3: HL-C88 slice 8 // +1: HL-C88 slice 9 (falsos amigos) // +3 — the plural rung sits on SPINE-TALK-ABOUT-PAST, which is A2: HL-C113 preterite plural // HL-C113 preterite close // HL-C152: +5 lessons, +1 chapter — Spanish realizes SPINE-NEGATE-AND-ASK, completing A2 at 5/5 // HL-C157: ayer + hablare close A2
+    expect(summary.byLevel.A2).toBe(499); // +39: Spanish chapters 11-18 plus prerequisite closure // +3: HL-C88 slice 8 // +1: HL-C88 slice 9 (falsos amigos) // +3 — the plural rung sits on SPINE-TALK-ABOUT-PAST, which is A2: HL-C113 preterite plural // HL-C113 preterite close // HL-C152: +5 lessons, +1 chapter — Spanish realizes SPINE-NEGATE-AND-ASK, completing A2 at 5/5 // HL-C157: ayer + hablare close A2 // HL-C165: +11 -- Sanskrit chapters 17 and 18
     // 8, not 0: Spanish chapters 38 and 41 realize SPINE-NARRATE-EVENTS and
     // SPINE-GIVE-REASONS, four lessons each.
     // HL-C113 makes SPINE-EXPRESS-CONDITION the THIRD realized B1 node -- the

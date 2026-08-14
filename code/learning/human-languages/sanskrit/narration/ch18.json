@@ -1,0 +1,645 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 18,
+  "title": "Asking --- Every Question Begins with K",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c34324b4e7d3ac5d",
+  "lessons": [
+    {
+      "id": "SA-C18-when",
+      "sequence": 850,
+      "title": "कदा (kadā) — when?",
+      "headword": "कदा",
+      "romanization": "kadā",
+      "gloss": "when?",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:112cf6f37e8910e3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can say when. This chapter is for asking when."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कदा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कदा (kadā) — \"when?\""
+            },
+            {
+              "kind": "speech",
+              "text": "Set it beside the word you just learned and something jumps out:"
+            },
+            {
+              "kind": "speech",
+              "text": "सदा — always. कदा (kadā) — when?"
+            },
+            {
+              "kind": "speech",
+              "text": "One letter apart, and the difference is the whole of this chapter. Sanskrit builds its question words on क् (k-), and it builds several of its answering words on स् (s-) or त् (t-). Ask with k-, answer with t-."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Your first k- word met deliberately. There are four more in this chapter, and by the end the pattern will be doing the remembering for you."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kadā — \"when?\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kadā* — \"when?\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it against its answer — kadā, sadā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it against its answer — *kadā*, *sadā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"when does he read?\" — kadā paṭhati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"when does he read?\" — *kadā paṭhati*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What single letter separates कदा (kadā) from सदा? (K- against s-.) Which letter opens a Sanskrit question word? (K-.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C18-why",
+      "sequence": 860,
+      "title": "किमर्थम् (kimartham) — why?",
+      "headword": "किमर्थम्",
+      "romanization": "kimartham",
+      "gloss": "why?",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:74b05ff64afc500b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The hardest question in any language, and Sanskrit builds it out of two words you can almost read."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: किमर्थम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "किमर्थम् (kimartham) — \"why?\""
+            },
+            {
+              "kind": "speech",
+              "text": "It is transparently two pieces:"
+            },
+            {
+              "kind": "speech",
+              "text": "किम् (\"what\") + अर्थम् (\"for the purpose of, for the sake of\")."
+            },
+            {
+              "kind": "speech",
+              "text": "— literally \"for what purpose?\" Sanskrit does not have a single opaque word for why; it asks what the aim was, and lets the shape of the question show."
+            },
+            {
+              "kind": "speech",
+              "text": "अर्थ (artha) is worth keeping on its own. It means purpose, aim, meaning, and wealth all at once, and it is one of the four goals of life in the classical scheme. A word for \"why\" built on it is asking, quite seriously, what is this for?"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A compound you can take apart on sight — and k- again at the front, exactly as promised."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kimartham — \"why?\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kimartham* — \"why?\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "its two pieces — kim and artham",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: its two pieces — *kim* and *artham*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what अर्थ means on its own (purpose, aim, meaning, wealth)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what अर्थ means on its own (purpose, aim, meaning, wealth)]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What are the two pieces of किमर्थम् (kimartham)? (Kim, \"what,\" and artham, \"for the purpose of.\") What does अर्थ mean by itself? (Purpose, aim, meaning, wealth.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C18-how-many",
+      "sequence": 870,
+      "title": "कति (kati) — how many?",
+      "headword": "कति",
+      "romanization": "kati",
+      "gloss": "how many?",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:32274ebf1f6dc3bf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can count to five. This asks how many there are."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कति (kati) — \"how many?\""
+            },
+            {
+              "kind": "speech",
+              "text": "K- at the front again, and this time the relatives are visible outside Sanskrit too: Latin quot, \"how many,\" is the same word, and it survives in English quota and quotient — both of them, at root, answers to how many."
+            },
+            {
+              "kind": "speech",
+              "text": "Pair it with the numbers you already have and it is immediately useful: कति (kati) गृहाणि, \"how many houses?\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three k- words now, and one of them has handed you two English words as a souvenir."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kati — \"how many?\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kati* — \"how many?\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "its Latin cousin — quot",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: its Latin cousin — *quot*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two English words built on it (quota, quotient)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two English words built on it (*quota*, *quotient*)]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which Latin word is कति (kati) related to? (Quot.) Which English words carry it? (Quota, quotient.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C18-from-where",
+      "sequence": 880,
+      "title": "कुतः (kutaḥ) — from where?",
+      "headword": "कुतः",
+      "romanization": "kutaḥ",
+      "gloss": "from where?",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:55c16ee16eb9e092",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can ask where something is. This asks where it came from."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कुतः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कुतः (kutaḥ) — \"from where? whence?\""
+            },
+            {
+              "kind": "speech",
+              "text": "You already have कुत्र (kutra), \"where?\" Now compare the two endings:"
+            },
+            {
+              "kind": "speech",
+              "text": "कुत्र — where, at what place. कुतः (kutaḥ) — from where, out of what place."
+            },
+            {
+              "kind": "speech",
+              "text": "The -tas ending means \"from,\" and Sanskrit uses it far beyond question words. English once had this distinction too and has mostly lost it: where against whence, there against thence. Sanskrit keeps them working."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four k- words, and a distinction English has let go of. When a language keeps a difference yours has dropped, that is worth noticing rather than flattening."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kutaḥ — \"from where?\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kutaḥ* — \"from where?\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it against kutra, \"where?\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it against *kutra*, \"where?\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the English pair that used to make the same distinction (where, whence)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the English pair that used to make the same distinction (*where*, *whence*)]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does the -tas ending add? (\"From.\") Which English word matches कुतः (kutaḥ)? (Whence.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C18-k-words",
+      "sequence": 890,
+      "title": "क-शब्दाः (ka-śabdāḥ) — every question begins with k-",
+      "headword": "क-शब्दाः",
+      "romanization": "ka-śabdāḥ",
+      "gloss": "every question begins with k-",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5c6b991fa7be6267",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Every question word you have met, gathered in one place, so you can see they are one word wearing different endings."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: क-शब्दाः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Line them up:"
+            },
+            {
+              "kind": "speech",
+              "text": "कः — who?, किम् — what?, कुत्र — where?, कुतः (kutaḥ) — from where?, कथम् — how?, कदा (kadā) — when?, कति (kati) — how many?"
+            },
+            {
+              "kind": "speech",
+              "text": "Seven questions, one opening consonant. Sanskrit builds them all on a single interrogative stem क- and distinguishes them entirely by what follows."
+            },
+            {
+              "kind": "speech",
+              "text": "The family reaches much further than Sanskrit. That k- is the ancestral kʷ-, which became Latin qu- — quis, quid, quando, quot — and, by a regular sound change, Germanic hw-, which English writes wh-: who, what, where, when, how."
+            },
+            {
+              "kind": "speech",
+              "text": "So कः and who, किम् and what, कदा (kadā) and when are not lookalikes. They are the same words, separated by five thousand years."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You now hold every basic question in Sanskrit, and one fact that makes them nearly impossible to forget: if it opens with क्, it is asking you something."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all seven, in a row",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all seven, in a row]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the English wh- word for each",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the English *wh-* word for each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what the k- became in Latin (qu-)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what the *k-* became in Latin (*qu-*)]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What do all seven share? (An opening क्.) What did that consonant become in Latin, and in English? (Qu-, and wh-.) Are कः and who related? (Yes — the same word, five thousand years apart.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
