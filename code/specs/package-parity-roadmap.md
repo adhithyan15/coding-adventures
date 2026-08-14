@@ -3534,10 +3534,11 @@ The collision-checked report remains exactly 1,315 identities, 4,471 slots,
 865 singletons, 12,110 singleton gaps, 666 Rust singletons, zero collisions,
 and zero unknown buckets, so no new owner preceded continued Python work.
 
-Final validation rebased again onto
-`51b238b50dc9d23ed3940b70da32a9e0e55ca11f` after the RISC-V and HTML-parser
-merges. Those two commits also modify only existing, disjoint roots; the same
-collision-free inventory counts remain current and no new owner was required.
+Final publication refreshes advanced through
+`3f3e77ebebeb77cc8458a86a74ab8be11ecf5be8` after later RISC-V, HTML-parser,
+ALGOL, ADJ, WebAssembly-spec, and Mermaid merges. Those commits also modify
+only existing, disjoint roots; the same collision-free inventory counts remain
+current and no new owner was required.
 
 ## Autonomous Loop Protocol
 
