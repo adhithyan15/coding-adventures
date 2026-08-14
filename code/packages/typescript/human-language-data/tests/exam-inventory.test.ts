@@ -153,7 +153,10 @@ describe("the committed A1 inventory", () => {
     // means any NEW one fails here and has to be classified deliberately —
     // which is the whole job this test was meant to do.
     const unmapped = inventory.points.filter((point) => point.probe === null).map((point) => point.id);
-    expect(unmapped.sort()).toEqual(["A1-CO-05", "A1-Q-02", "A1-SUB-01", "A1-SV-06"]);
+    // A1 is complete, so this is now the empty set -- and it stays an assertion
+    // rather than a vacuous loop: adding ANY new null probe fails here and has
+    // to be justified, which is exactly what this test is for.
+    expect(unmapped.sort()).toEqual([]);
 
     // None of the four is partly true: each is absent outright, so none needs a
     // note explaining which half exists. If a partly-true null is ever added,
@@ -332,8 +335,8 @@ describe("what the corpus actually covers", () => {
     // outright -- the ordinals, `uno...otro`, word-order flexibility, and the
     // infinitive as subject -- and need no note to say which half exists.
     expect(coverage.enumerated).toBe(85);
-    expect(coverage.covered).toBe(81); // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245 // +3 ch246-250 // +6 ch251-256 // +4 ch257-261: the four rules the book had always demonstrated and never stated // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245 // +3 ch246-250 // +6 ch251-255: the half-taught sets finished, plus bastante which was already taught and merely unwired // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245 // +3 ch246-250: the stressed pronouns, the exclamative and the vocative // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245: the vosotros preterite and the imperfect plural, both promised in chapter 204 // +3: ch221-225 demonstratives // +4: ch226-229 degree words // +4: ch230-235 joining words // +2: ch236-240 the gerund and the personal a // +3: chapters 221-225 teach the demonstratives // +4: chapters 226-229 teach muy, bastante and mal // +4: chapters 230-235 teach al/del, quien, o and ni
-    expect(coverage.percent).toBe(95); // 53/85 -> 56 -> 60 -> 64/85
+    expect(coverage.covered).toBe(85); // ...and 262-266 close the last four. A1 is COMPLETE: every point the inventory enumerates is taught. // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245 // +3 ch246-250 // +6 ch251-256 // +4 ch257-261: the four rules the book had always demonstrated and never stated // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245 // +3 ch246-250 // +6 ch251-255: the half-taught sets finished, plus bastante which was already taught and merely unwired // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245 // +3 ch246-250: the stressed pronouns, the exclamative and the vocative // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245: the vosotros preterite and the imperfect plural, both promised in chapter 204 // +3: ch221-225 demonstratives // +4: ch226-229 degree words // +4: ch230-235 joining words // +2: ch236-240 the gerund and the personal a // +3: chapters 221-225 teach the demonstratives // +4: chapters 226-229 teach muy, bastante and mal // +4: chapters 230-235 teach al/del, quien, o and ni
+    expect(coverage.percent).toBe(100); // 53 -> 56 -> 60 -> 64 -> 66 -> 68 -> 71 -> 77 -> 81 -> 85/85 // 53/85 -> 56 -> 60 -> 64/85
 
     // Whole categories missing is a different failure from thin coverage, and
     // the report has to keep them distinguishable.
@@ -347,12 +350,37 @@ describe("what the corpus actually covers", () => {
     const report = formatExamCoverage(
       measureExamCoverage(loadExamInventory("spanish", "A1"), lessons),
     );
-    expect(report).toContain("spanish A1: 81/85 points covered (95%)");
-    // Worst category first: the line after the summary should be the emptiest
-    // category, not the alphabetically first one. It USED to be
-    // `El sintagma adjetival` at 0/1; chapters 226-229 closed that, and the
-    // ordering moved on its own to the next-worst — which is the whole point of
-    // sorting by shortfall rather than by name.
-    expect(report.split("\n")[2]).toContain("3/4  Los cuantificadores");
+    expect(report).toContain("spanish A1: 85/85 points covered (100%)");
+    // Worst category first, not alphabetical. This USED to be checkable against
+    // the real corpus, whose emptiest category kept changing as the campaign
+    // closed points — `El sintagma adjetival` at 0/1, then `Los cuantificadores`
+    // at 1/4, then 2/4, then 3/4. A1 is now COMPLETE: every category is at
+    // 100%, so the ordering falls back to the alphabetical tie-break, and
+    // asserting the real report's first line would pin that tie-break while
+    // claiming to pin the sort.
+    //
+    // The property therefore moves to data that can still falsify it. This is
+    // not a weakening — the real report simply stopped being a test case for
+    // ordering the moment there was nothing left to order.
+    const uneven = measureExamCoverage(
+      {
+        ...FIXTURE,
+        points: [
+          // The names matter. "Poor"/"Rich" would order the same way
+          // alphabetically as by shortfall, so the assertion could not tell the
+          // sort from the tie-break — a security review proved that by deleting
+          // the shortfall comparator and watching this test still pass. These
+          // names make the two orderings CONTRADICT: alphabetically Alpha comes
+          // first, by shortfall Zeta does.
+          { id: "F-1", category: "Alpha", label: "covered", probe: ["ES-A"] },
+          { id: "F-2", category: "Alpha", label: "covered", probe: ["ES-B"] },
+          { id: "F-3", category: "Zeta", label: "uncovered", probe: null },
+        ],
+      },
+      [lesson("ES-1", ["ES-A"]), lesson("ES-2", ["ES-B"])],
+    );
+    const unevenReport = formatExamCoverage(uneven).split("\n");
+    expect(unevenReport[2]).toContain("0/1  Zeta");
+    expect(unevenReport[3]).toContain("2/2  Alpha");
   });
 });

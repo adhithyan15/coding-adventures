@@ -211,7 +211,9 @@
       "id": "A1-Q-02",
       "category": "Los cuantificadores",
       "label": "ordinal numerals to tenth",
-      "probe": null
+      "probe": [
+        "ES-LEX-ORDINALS"
+      ]
     },
     {
       "id": "A1-Q-03",
@@ -597,7 +599,10 @@
       "id": "A1-SV-06",
       "category": "El sintagma verbal",
       "label": "circumstantial complements and word-order flexibility",
-      "probe": null
+      "probe": [
+        "ES-GRAMMAR-CIRCUMSTANTIAL-MOVES",
+        "ES-GRAMMAR-WORD-ORDER-EMPHASIS"
+      ]
     },
     {
       "id": "A1-OS-01",
@@ -685,13 +690,17 @@
       "id": "A1-CO-05",
       "category": "Coordinacion",
       "label": "distributive coordination: uno... otro",
-      "probe": null
+      "probe": [
+        "ES-GRAMMAR-DISTRIBUTIVE-UNO-OTRO"
+      ]
     },
     {
       "id": "A1-SUB-01",
       "category": "Subordinacion",
       "label": "infinitive clause as subject",
-      "probe": null
+      "probe": [
+        "ES-GRAMMAR-INFINITIVE-AS-SUBJECT"
+      ]
     },
     {
       "id": "A1-SUB-02",

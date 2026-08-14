@@ -7,18 +7,18 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:7b1b3498c965da5b",
+  "sourceHash": "fnv1a64:5eddf469e40eba41",
   "summary": {
-    "totalLessons": 2054,
-    "voice": 1370,
+    "totalLessons": 2059,
+    "voice": 1375,
     "sight": 568,
     "pen": 116,
-    "drivableLessons": 1370,
+    "drivableLessons": 1375,
     "drivablePercent": 67,
     "trackCount": 22,
-    "chapterCount": 761,
-    "drivablePrefixTotal": 1170,
-    "fullyDrivableChapters": 499,
+    "chapterCount": 766,
+    "drivablePrefixTotal": 1175,
+    "fullyDrivableChapters": 504,
     "unstartableChapters": 180,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
@@ -7114,12 +7114,12 @@
     },
     {
       "language": "spanish",
-      "lessonCount": 407,
-      "voice": 358,
+      "lessonCount": 412,
+      "voice": 363,
       "sight": 42,
       "pen": 7,
       "drivablePercent": 88,
-      "drivablePrefixTotal": 345,
+      "drivablePrefixTotal": 350,
       "modalities": [
         "voice",
         "sight",
@@ -11360,6 +11360,86 @@
           "drivable": true,
           "drivableLessonIds": [
             "ES-C66-repaso-lo-implicito"
+          ]
+        },
+        {
+          "chapter": 262,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C67-primero"
+          ]
+        },
+        {
+          "chapter": 263,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C67-uno-otro"
+          ]
+        },
+        {
+          "chapter": 264,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C67-comer-es-bueno"
+          ]
+        },
+        {
+          "chapter": 265,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C67-hoy-como-en-casa"
+          ]
+        },
+        {
+          "chapter": 266,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ES-C67-repaso-a1"
           ]
         }
       ]
@@ -46084,6 +46164,96 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:1c4296fbd4f9c106"
+    },
+    {
+      "id": "ES-C67-primero",
+      "language": "spanish",
+      "chapter": 262,
+      "sequence": 2545,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:45d7c07d1bb534bb"
+    },
+    {
+      "id": "ES-C67-uno-otro",
+      "language": "spanish",
+      "chapter": 263,
+      "sequence": 2550,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:1e0b42aa6179f135"
+    },
+    {
+      "id": "ES-C67-comer-es-bueno",
+      "language": "spanish",
+      "chapter": 264,
+      "sequence": 2555,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:3174604d9600cf75"
+    },
+    {
+      "id": "ES-C67-hoy-como-en-casa",
+      "language": "spanish",
+      "chapter": 265,
+      "sequence": 2560,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:a55f0bc0c69c93c9"
+    },
+    {
+      "id": "ES-C67-repaso-a1",
+      "language": "spanish",
+      "chapter": 266,
+      "sequence": 2565,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:772d151d4845d417"
     },
     {
       "id": "TA-C01-vanakkam",

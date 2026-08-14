@@ -104,7 +104,7 @@ describe("real curriculum", () => {
     // 40 (esperar, contestar, comprar). Two sessions authored a chapter 38 in parallel;
     // the collision surfaced as a merge conflict on chapters.json rather than silently,
     // because both sides must edit it.
-    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(261); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis // +3: HL-C88 slice 8 // +1: HL-C88 slice 9 (falsos amigos) // +3: HL-C113 (B1 si-condition rung) // +3: HL-C113 preterite plural // HL-C113: HL-C113 imperfect subjunctive
+    expect(books.books.find((book) => book.language === "spanish")?.chapters.length).toBe(266); // +4: HL-C98 // +5: HL-C99 splits the four mind-verbs into a chapter each, plus review and synthesis // +3: HL-C88 slice 8 // +1: HL-C88 slice 9 (falsos amigos) // +3: HL-C113 (B1 si-condition rung) // +3: HL-C113 preterite plural // HL-C113: HL-C113 imperfect subjunctive
     expect(
       books.books
         .find((book) => book.language === "persian")
@@ -1008,6 +1008,21 @@ describe("real curriculum", () => {
       "ES-C66-repaso-lo-implicito-drop",
       "ES-C66-repaso-lo-implicito-prog",
       "ES-C66-repaso-lo-implicito-quant",
+      "ES-C67-comer-es-bueno-long",
+      "ES-C67-comer-es-bueno-say",
+      "ES-C67-comer-es-bueno-trap",
+      "ES-C67-hoy-como-en-casa-front",
+      "ES-C67-hoy-como-en-casa-three",
+      "ES-C67-hoy-como-en-casa-why",
+      "ES-C67-primero-fem",
+      "ES-C67-primero-first",
+      "ES-C67-primero-second",
+      "ES-C67-repaso-a1-apocope",
+      "ES-C67-repaso-a1-inf",
+      "ES-C67-repaso-a1-otro",
+      "ES-C67-uno-otro-article",
+      "ES-C67-uno-otro-latin",
+      "ES-C67-uno-otro-split",
       "ES-W03-question-span-roberto-outside",
       "FA-C02-esm-e-man-sara",
       "FA-C03-chist-fusion",

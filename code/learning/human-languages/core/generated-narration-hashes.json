@@ -10434,6 +10434,76 @@
       "jsonHash": "fnv1a64:3afddcf2debfbb3e"
     },
     {
+      "language": "spanish",
+      "chapter": 262,
+      "sourceHash": "fnv1a64:004c3be7e3f556fd",
+      "lessonIds": [
+        "ES-C67-primero"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch262.txt",
+      "json": "spanish/narration/ch262.json",
+      "textHash": "fnv1a64:f2dab00327438185",
+      "jsonHash": "fnv1a64:2c78ed6ea82a06b5"
+    },
+    {
+      "language": "spanish",
+      "chapter": 263,
+      "sourceHash": "fnv1a64:b972b520d907b317",
+      "lessonIds": [
+        "ES-C67-uno-otro"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch263.txt",
+      "json": "spanish/narration/ch263.json",
+      "textHash": "fnv1a64:84eb7e1b74d25df7",
+      "jsonHash": "fnv1a64:5dd7ab14d071c9dd"
+    },
+    {
+      "language": "spanish",
+      "chapter": 264,
+      "sourceHash": "fnv1a64:1ab652191f2cc175",
+      "lessonIds": [
+        "ES-C67-comer-es-bueno"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch264.txt",
+      "json": "spanish/narration/ch264.json",
+      "textHash": "fnv1a64:19625a45a9ff38f0",
+      "jsonHash": "fnv1a64:ab54629661000f25"
+    },
+    {
+      "language": "spanish",
+      "chapter": 265,
+      "sourceHash": "fnv1a64:a73b530fcd41d858",
+      "lessonIds": [
+        "ES-C67-hoy-como-en-casa"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch265.txt",
+      "json": "spanish/narration/ch265.json",
+      "textHash": "fnv1a64:6dd10ef7bcc30cf3",
+      "jsonHash": "fnv1a64:a62ab5a6db741b63"
+    },
+    {
+      "language": "spanish",
+      "chapter": 266,
+      "sourceHash": "fnv1a64:3a3195e1d9d5fd7d",
+      "lessonIds": [
+        "ES-C67-repaso-a1"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "spanish/narration/ch266.txt",
+      "json": "spanish/narration/ch266.json",
+      "textHash": "fnv1a64:0a20b17946796ee7",
+      "jsonHash": "fnv1a64:7bb930e838d0e670"
+    },
+    {
       "language": "tamil",
       "chapter": 1,
       "sourceHash": "fnv1a64:3c0d5e6c060b7723",
