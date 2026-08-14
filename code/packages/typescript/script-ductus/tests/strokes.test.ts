@@ -110,6 +110,7 @@ const CYRILLIC_E = DUCTUS[ductusKey("cyrillic", "э")];
 const CYRILLIC_YU = DUCTUS[ductusKey("cyrillic", "ю")];
 const CYRILLIC_YA = DUCTUS[ductusKey("cyrillic", "я")];
 const GUJARATI_A = DUCTUS[ductusKey("gujarati", "અ")];
+const GUJARATI_AA = DUCTUS[ductusKey("gujarati", "આ")];
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
@@ -1758,6 +1759,23 @@ describe("handwriting ductus", () => {
     expect(lower.at(-1)).toEqual(arch[0]);
     expect(stem[0].y).toBeGreaterThan(stem.at(-1)!.y);
     expect(stem.at(-1)!.x).toBeGreaterThan(stem[0].x);
+  });
+
+  it("Gujarati આ adds a second lifted stem after the complete અ body", () => {
+    expect(GUJARATI_AA.script).toBe("gujarati");
+    expect(penLifts(GUJARATI_AA)).toBe(2);
+    expect(GUJARATI_AA.strokes).toHaveLength(3);
+    expect(GUJARATI_AA.strokes.map((stroke) => stroke.segments.length)).toEqual([3, 1, 1]);
+    const [left, lower, arch] = GUJARATI_AA.strokes[0].segments.map(
+      (segment) => segment.path,
+    );
+    const firstStem = GUJARATI_AA.strokes[1].segments[0].path;
+    const trailingStem = GUJARATI_AA.strokes[2].segments[0].path;
+    expect(left.at(-1)).toEqual(lower[0]);
+    expect(lower.at(-1)).toEqual(arch[0]);
+    expect(firstStem[0].y).toBeGreaterThan(firstStem.at(-1)!.y);
+    expect(trailingStem[0].y).toBeGreaterThan(trailingStem.at(-1)!.y);
+    expect(trailingStem[0].x).toBeGreaterThan(firstStem[0].x);
   });
 
   it("Hebrew א uses two crossed pen-down runs with one lift", () => {
@@ -3950,6 +3968,17 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /two ordered pen-down runs.*first SVG path.*upper-left tip.*clockwise.*open left curve.*broad lower body.*middle shoulder.*small right arch.*lifts once.*second SVG path.*separate right stem.*lower-right foot.*one variant.*not a universal standard.*bundled Noto Sans Gujarati.*body-before-right-stem order.*one-lift evidence/i,
+    );
+  });
+
+  it("Gujarati આ traces its two lifted stems to the next teaching animation", () => {
+    const src = GUJARATI_AA.source;
+    expect(src.url).toBe("https://www.t30apps.com/gujarati-alphabet-writing/");
+    expect(src.citation).toMatch(
+      /t30apps\.com.*Gujarati Alphabet Writing Practice.*version 1\.0.*આ animation.*first through third SVG paths/i,
+    );
+    expect(src.variation).toMatch(
+      /three ordered pen-down runs.*first SVG path.*joined અ body.*open curve.*clockwise.*broad lower body.*middle shoulder.*small right arch.*lifts once.*second SVG path.*separate right stem.*lifts again.*third SVG path.*trailing ā stem.*matching foot.*one variant.*not a universal standard.*bundled Noto Sans Gujarati.*body-before-first-stem-before-trailing-stem order.*two-lift evidence/i,
     );
   });
 

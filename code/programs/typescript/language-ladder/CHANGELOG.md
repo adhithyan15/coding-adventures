@@ -21,6 +21,12 @@ at the package. `scriptdata` stays out of that chunk on purpose — the shell ne
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Gujarati આ ductus (HL-C09FH)
+
+- Render **આ** in five movements across the complete **અ** sequence and added trailing ā stem with two lifts.
+- Preserve t30apps.com's version-1.0 three-path teaching order while retaining the source's explicit variation warning.
+- Show the exact Noto Sans Gujarati glyph behind every filmstrip frame and queue **ઇ** next.
+
 ### Added — cited Gujarati અ ductus (HL-C09FG)
 
 - Render **અ** in four movements across its joined body and separately descended right stem with one lift.

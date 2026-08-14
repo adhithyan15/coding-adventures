@@ -905,10 +905,15 @@ queue: **و**, not ه, follows ن. Its 02:43–02:45 demonstration loops the sma
   order and one-lift evidence while fitting the font's broader printed
   proportions. The source and learner notes retain the app's explicit warning
   that its depicted form and order are one variant, not a universal standard.
-  The remaining **69**
+  Source-adjacent Gujarati **આ** repeats that full sequence, then lifts a
+  second time to descend the added trailing ā stem. Its five-frame Noto Sans
+  Gujarati path preserves the animation's body-before-first-stem-before-
+  trailing-stem order and two-lift evidence while fitting the printed glyph's
+  wider stem spacing. The same variation warning remains explicit. The
+  remaining **68**
   prose part orders across three scripts
   (`arabic` 3,
-  `gujarati` 32, `japanese` 34) are explicitly **unverified for pen lifts**.
+  `gujarati` 31, `japanese` 34) are explicitly **unverified for pen lifts**.
   The data validator rejects a lift count without a citation (or a
   citation without a count), and Language Ladder's ductus test proves every
   verified claim has the same cited, font-checked path. That closes `HL-C19`;
