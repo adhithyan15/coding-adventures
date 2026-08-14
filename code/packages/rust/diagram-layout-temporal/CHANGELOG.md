@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.15.0
+
+- Lay out GitGraph lanes, commits, and merge arcs in LR, TB, and BT directions.
+
 ## 0.14.0
 
 - Resolve GitGraph commit types and event kinds into backend-neutral commit symbols.

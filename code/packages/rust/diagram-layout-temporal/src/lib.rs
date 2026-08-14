@@ -12,13 +12,13 @@
 //! place commit nodes and merge arcs.
 
 use diagram_ir::{
-    GitCommitSymbol, GitCommitType, GitDiagram, GitEvent, JourneyDiagram,
+    DiagramDirection, GitCommitSymbol, GitCommitType, GitDiagram, GitEvent, JourneyDiagram,
     LayoutedTemporalDiagram, LayoutedTemporalItem, TaskStart, TaskStatus,
     TemporalBody, TemporalDiagram,
 };
 use std::collections::{BTreeSet, HashMap};
 
-pub const VERSION: &str = "0.14.0";
+pub const VERSION: &str = "0.15.0";
 
 // ── Constants ─────────────────────────────────────────────────────────────
 
@@ -356,8 +356,6 @@ fn layout_git(diagram: &GitDiagram, cw: f64) -> LayoutedTemporalDiagram {
         0.0
     };
     let mut branch_lanes: HashMap<String, usize> = HashMap::new();
-    let mut commit_x: HashMap<String, (f64, f64)> = HashMap::new(); // id -> (x,y)
-    let mut x_cursor = 60.0_f64;
     let mut current_branch = "main".to_string();
 
     // Mermaid gives unordered branches stable fractional keys (0.0, 0.1, ...)
@@ -376,36 +374,77 @@ fn layout_git(diagram: &GitDiagram, cw: f64) -> LayoutedTemporalDiagram {
     }
     let mut next_lane = ordered_branches.len().max(1);
 
-    let lane_y = |lane: usize| -> f64 { title_offset + 30.0 + lane as f64 * LANE_H };
+    let commit_count = diagram.events.iter().filter(|event| matches!(
+        event,
+        GitEvent::Commit { .. } | GitEvent::Merge { .. } | GitEvent::CherryPick { .. }
+    )).count().max(1);
+    let vertical = matches!(diagram.direction, DiagramDirection::Tb | DiagramDirection::Bt);
+    let lane_position = |lane: usize| -> f64 {
+        if vertical {
+            60.0 + lane as f64 * LANE_H
+        } else {
+            title_offset + 30.0 + lane as f64 * LANE_H
+        }
+    };
+    let progress_extent = 60.0 + (commit_count - 1) as f64 * COMMIT_SPACING + 60.0;
+    let width = if vertical {
+        cw.max(lane_position(next_lane - 1) + LANE_H)
+    } else {
+        cw.max(progress_extent)
+    };
+    let height = if vertical {
+        title_offset + progress_extent
+    } else {
+        lane_position(next_lane - 1) + LANE_H
+    };
+    let point = |lane: usize, progress_index: usize| -> (f64, f64) {
+        let progress = 60.0 + progress_index as f64 * COMMIT_SPACING;
+        match diagram.direction {
+            DiagramDirection::Tb => (lane_position(lane), title_offset + progress),
+            DiagramDirection::Bt => (lane_position(lane), height - progress),
+            DiagramDirection::Rl => (width - progress, lane_position(lane)),
+            DiagramDirection::Lr => (progress, lane_position(lane)),
+        }
+    };
 
     // Emit labels in lane order so PaintScene instruction order is deterministic.
     let mut labeled_lanes = branch_lanes.iter().collect::<Vec<_>>();
     labeled_lanes.sort_by_key(|(_, lane)| **lane);
     for (name, &lane) in labeled_lanes {
         let color = BRANCH_COLORS[lane % BRANCH_COLORS.len()].to_string();
+        let position = lane_position(lane);
+        let (x1, y1, x2, y2, label_x, label_y) = if vertical {
+            (position, title_offset, position, height, position - 28.0, title_offset + 4.0)
+        } else {
+            (0.0, position, width, position, 4.0, position - 7.0)
+        };
         items.push(LayoutedTemporalItem::BranchLane {
-            y: lane_y(lane), color, label: name.clone(),
+            x1, y1, x2, y2,
+            label_x, label_y,
+            label_width: 56.0,
+            label_height: 16.0,
+            color,
+            label: name.clone(),
         });
     }
 
+    let mut progress_index = 0_usize;
     for event in &diagram.events {
         match event {
             GitEvent::Commit { id, message, tags, branch, type_ } => {
                 let lane = *branch_lanes.entry(branch.clone()).or_insert_with(|| {
                     let l = next_lane; next_lane += 1; l
                 });
-                let cy = lane_y(lane);
-                let cx = x_cursor;
-                let commit_id = id.clone().unwrap_or_else(|| format!("c{:.0}", cx));
-                commit_x.insert(commit_id.clone(), (cx, cy));
+                let (x, y) = point(lane, progress_index);
+                let commit_id = id.clone().unwrap_or_else(|| format!("c{progress_index}"));
                 items.push(LayoutedTemporalItem::CommitNode {
-                    x: cx, y: cy,
+                    x, y,
                     id: commit_id,
                     message: message.clone(),
                     tags: tags.clone(),
                     symbol: git_commit_symbol(type_),
                 });
-                x_cursor += COMMIT_SPACING;
+                progress_index += 1;
             }
             GitEvent::Checkout { branch } => {
                 current_branch = branch.clone();
@@ -417,16 +456,15 @@ fn layout_git(diagram: &GitDiagram, cw: f64) -> LayoutedTemporalDiagram {
             GitEvent::Merge { from, id, tags, type_ } => {
                 let from_lane = *branch_lanes.get(from).unwrap_or(&0);
                 let to_lane   = *branch_lanes.get(&current_branch).unwrap_or(&0);
-                let from_y    = lane_y(from_lane);
-                let to_y      = lane_y(to_lane);
+                let (from_x, from_y) = point(from_lane, progress_index.saturating_sub(1));
+                let (to_x, to_y) = point(to_lane, progress_index);
                 items.push(LayoutedTemporalItem::MergeArc {
-                    from_x: x_cursor - COMMIT_SPACING, from_y,
-                    to_x:   x_cursor, to_y,
+                    from_x, from_y, to_x, to_y,
                 });
                 // The merge itself is a commit on the target branch.
-                let commit_id = id.clone().unwrap_or_else(|| format!("m{:.0}", x_cursor));
+                let commit_id = id.clone().unwrap_or_else(|| format!("m{progress_index}"));
                 items.push(LayoutedTemporalItem::CommitNode {
-                    x: x_cursor, y: to_y,
+                    x: to_x, y: to_y,
                     id: commit_id,
                     message: Some(format!("merge {from}")),
                     tags: tags.clone(),
@@ -436,16 +474,15 @@ fn layout_git(diagram: &GitDiagram, cw: f64) -> LayoutedTemporalDiagram {
                         git_commit_symbol(type_)
                     },
                 });
-                x_cursor += COMMIT_SPACING;
+                progress_index += 1;
             }
             GitEvent::CherryPick { id, tags, parent, branch } => {
                 let lane = *branch_lanes.entry(branch.clone()).or_insert_with(|| {
                     let l = next_lane; next_lane += 1; l
                 });
-                let cy = lane_y(lane);
-                commit_x.insert(id.clone(), (x_cursor, cy));
+                let (x, y) = point(lane, progress_index);
                 items.push(LayoutedTemporalItem::CommitNode {
-                    x: x_cursor, y: cy,
+                    x, y,
                     id: id.clone(),
                     message: Some(match parent {
                         Some(parent) => format!("cherry-pick {id} from {parent}"),
@@ -454,14 +491,13 @@ fn layout_git(diagram: &GitDiagram, cw: f64) -> LayoutedTemporalDiagram {
                     tags: tags.clone(),
                     symbol: GitCommitSymbol::CherryPick,
                 });
-                x_cursor += COMMIT_SPACING;
+                progress_index += 1;
             }
         }
     }
 
-    let ch = lane_y(next_lane - 1) + LANE_H;
     LayoutedTemporalDiagram {
-        width: cw.max(x_cursor + 60.0), height: ch,
+        width, height,
         accessibility_title: diagram.accessibility_title.clone(),
         accessibility_description: diagram.accessibility_description.clone(),
         items,
@@ -546,7 +582,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.14.0");
+        assert_eq!(crate::VERSION, "0.15.0");
     }
 
     #[test]
@@ -706,6 +742,50 @@ mod tests {
     fn git_canvas_width_covers_commits() {
         let d = layout_temporal_diagram(&simple_git(), 800.0);
         assert!(d.width >= 2.0 * COMMIT_SPACING);
+    }
+
+    #[test]
+    fn git_tb_layout_uses_vertical_lanes_and_downward_commits() {
+        let mut diagram = simple_git();
+        let TemporalBody::Git(git) = &mut diagram.body else {
+            unreachable!();
+        };
+        git.direction = DiagramDirection::Tb;
+
+        let layout = layout_temporal_diagram(&diagram, 320.0);
+        let commits = layout.items.iter().filter_map(|item| {
+            if let LayoutedTemporalItem::CommitNode { x, y, .. } = item {
+                Some((*x, *y))
+            } else {
+                None
+            }
+        }).collect::<Vec<_>>();
+        assert_eq!(commits[0].0, commits[1].0);
+        assert!(commits[0].1 < commits[1].1);
+        assert!(layout.items.iter().any(|item| matches!(
+            item,
+            LayoutedTemporalItem::BranchLane { x1, x2, y1, y2, .. }
+                if x1 == x2 && y1 < y2
+        )));
+    }
+
+    #[test]
+    fn git_bt_layout_places_commits_bottom_to_top() {
+        let mut diagram = simple_git();
+        let TemporalBody::Git(git) = &mut diagram.body else {
+            unreachable!();
+        };
+        git.direction = DiagramDirection::Bt;
+
+        let layout = layout_temporal_diagram(&diagram, 320.0);
+        let commits = layout.items.iter().filter_map(|item| {
+            if let LayoutedTemporalItem::CommitNode { y, .. } = item {
+                Some(*y)
+            } else {
+                None
+            }
+        }).collect::<Vec<_>>();
+        assert!(commits[0] > commits[1]);
     }
 
     #[test]

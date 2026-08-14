@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.62.0
+
+- Resolve temporal branch lanes to backend-neutral endpoints and label bounds for directional GitGraph layout.
+
 ## 0.61.0
 
 - Add backend-neutral GitGraph commit symbols for normal, reverse, highlight, merge, and cherry-pick nodes.

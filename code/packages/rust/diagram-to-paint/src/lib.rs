@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.56.0";
+pub const VERSION: &str = "0.57.0";
 
 use std::collections::HashMap;
 
@@ -2666,24 +2666,32 @@ where
                     stroke_dash_offset: None,
                 }));
             }
-            LayoutedTemporalItem::BranchLane { y, color, label } => {
+            LayoutedTemporalItem::BranchLane {
+                x1,
+                y1,
+                x2,
+                y2,
+                label_x,
+                label_y,
+                label_width,
+                label_height,
+                color,
+                label,
+            } => {
                 instructions.push(PaintInstruction::Path(line_path(
                     &[
-                        Point { x: 0.0, y: *y },
-                        Point {
-                            x: diagram.width,
-                            y: *y,
-                        },
+                        Point { x: *x1, y: *y1 },
+                        Point { x: *x2, y: *y2 },
                     ],
                     color,
                     1.0,
                 )));
                 text_children.push(text_node(
                     label,
-                    4.0,
-                    y - ls / 2.0,
-                    56.0,
-                    ls * 1.2,
+                    *label_x,
+                    *label_y,
+                    *label_width,
+                    *label_height,
                     lf.clone(),
                     Color {
                         r: 55,
@@ -3488,7 +3496,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.56.0");
+        assert_eq!(crate::VERSION, "0.57.0");
     }
 
     #[test]

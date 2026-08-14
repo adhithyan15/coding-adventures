@@ -1,6 +1,6 @@
 //! diagram-ir v0.42.0 - DG00/DG04 semantic IR
 
-pub const VERSION: &str = "0.61.0";
+pub const VERSION: &str = "0.62.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramDirection {
@@ -1133,7 +1133,14 @@ pub enum LayoutedTemporalItem {
         y2: f64,
     },
     BranchLane {
-        y: f64,
+        x1: f64,
+        y1: f64,
+        x2: f64,
+        y2: f64,
+        label_x: f64,
+        label_y: f64,
+        label_width: f64,
+        label_height: f64,
         color: String,
         label: String,
     },
@@ -1275,7 +1282,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.61.0");
+        assert_eq!(VERSION, "0.62.0");
     }
     #[test]
     fn default_direction_is_tb() {
