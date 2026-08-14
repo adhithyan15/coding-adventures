@@ -1,5 +1,10 @@
 # Changelog — `lang-aot`
 
+## 0.226.6 - 2026-08-13 (ALGOL stable idempotent assignment dependencies)
+
+The seven-backend ALGOL matrix now proves that an unwritten known local may
+establish a checked assignment as idempotent for capped while analysis.
+
 ## 0.226.5 - 2026-08-13 (ALGOL checked static idempotent assignments)
 
 The seven-backend ALGOL matrix now proves that a checked self-only expression

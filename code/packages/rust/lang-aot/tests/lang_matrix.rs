@@ -2333,6 +2333,15 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — an unwritten local dependency may prove that a static
+    // assignment exactly preserves the tracked while dependency.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, n, limit; n := 3; limit := 3; i := 0; for i := i + 1 while i < n do n := limit; print(i + 0.25) end",
+        expect: Expect::Stdout("3.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a variable-free false body condition makes its dependency
     // write unreachable, so capped while analysis keeps the stable local.
     Prog {

@@ -5464,7 +5464,7 @@ impl Compiler {
         if expr_variable_name(node).as_deref() == Some(name) {
             return true;
         }
-        if self.static_expression_matches_name(node, name) {
+        if self.static_expression_matches_name(node, name, target_name, effect_root) {
             return true;
         }
         if !matches!(node.rule_name.as_str(), "expression" | "arith_expr")
@@ -5535,7 +5535,13 @@ impl Compiler {
         })
     }
 
-    fn static_expression_matches_name(&self, node: &GrammarASTNode, name: &str) -> bool {
+    fn static_expression_matches_name(
+        &self,
+        node: &GrammarASTNode,
+        name: &str,
+        target_name: &str,
+        effect_root: &GrammarASTNode,
+    ) -> bool {
         let Ok(binding) = self.require_var(name) else {
             return false;
         };
@@ -5547,7 +5553,19 @@ impl Compiler {
         }
         let mut dependencies = HashSet::new();
         collect_expression_dependency_names(node, name, &mut dependencies);
-        if !dependencies.is_empty() {
+        if dependencies.iter().any(|dependency| {
+            dependency == target_name
+                || self.require_var(dependency).is_err()
+                || self.require_var(dependency).is_ok_and(|binding| {
+                    !matches!(
+                        binding.ty,
+                        ScalarType::Boolean | ScalarType::Integer | ScalarType::Real
+                    ) || binding.is_global
+                        || binding.array.is_some()
+                        || self.active_by_name_binding(dependency).is_some()
+                })
+                || self.for_body_targets_name(effect_root, dependency)
+        }) {
             return false;
         }
         match binding.ty {
@@ -5570,6 +5588,31 @@ impl Compiler {
                 .is_some_and(|(assigned, current)| assigned == current),
             ScalarType::String => false,
         }
+    }
+
+    fn for_body_targets_name(&self, node: &GrammarASTNode, name: &str) -> bool {
+        if node.rule_name == "assign_stmt"
+            && direct_nodes(node)
+                .into_iter()
+                .filter(|child| child.rule_name == "left_part")
+                .filter_map(|left| first_direct_node(left, "variable"))
+                .any(|variable| {
+                    array_subscripts(variable).is_none()
+                        && self.simple_variable_name(variable).ok().as_deref() == Some(name)
+                })
+        {
+            return true;
+        }
+        if node.rule_name == "for_stmt"
+            && first_direct_node(node, "variable").is_some_and(|variable| {
+                self.simple_variable_name(variable).ok().as_deref() == Some(name)
+            })
+        {
+            return true;
+        }
+        direct_nodes(node)
+            .into_iter()
+            .any(|child| self.for_body_targets_name(child, name))
     }
 
     fn collect_static_predicate_dependencies(
@@ -9662,6 +9705,25 @@ mod tests {
             "test",
         )
         .expect("a checked static self-only expression may preserve its current value");
+    }
+
+    #[test]
+    fn al4_static_assignment_with_unwritten_dependency_preserves_while_dependency() {
+        compile_source(
+            "begin integer i, n, limit; n := 3; limit := 3; i := 0; for i := i + 1 while i < n do n := limit; print(i + 0.25) end",
+            "test",
+        )
+        .expect("an unwritten local may prove an assignment preserves the tracked value");
+    }
+
+    #[test]
+    fn al4_static_assignment_with_written_dependency_remains_conservative() {
+        let err = compile_source(
+            "begin integer i, n, limit; n := 3; limit := 3; i := 0; for i := i + 1 while i < n do begin n := limit; limit := limit + 1 end; print(i + 0.25) end",
+            "test",
+        )
+        .expect_err("a written assignment dependency may change the value on a later iteration");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
     #[test]
