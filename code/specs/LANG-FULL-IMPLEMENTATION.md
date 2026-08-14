@@ -909,9 +909,11 @@ backend immediately) come before the enabler-dependent items.
   variable-free statically known selector, or a known predicate over unchanged
   ordinary local boolean, integer, and real scalars, may instead choose one
   preserving leaf; an exact bare self-assignment does not make such a selector
-  unstable. Computed selector assignments, dynamically selected differing
-  leaves, loop controls, and cross-assigned dependency writes remain
-  conservative without recursive effect inference. Conditional
+  unstable, nor does a conditional assignment whose leaves are all that same
+  bare selector. Computed selector assignments, differing selector leaves,
+  dynamically selected differing dependency leaves, loop controls, and
+  cross-assigned dependency writes remain conservative without recursive
+  effect inference. Conditional
   assignments whose leaves are all that same bare scalar are permitted. A
   variable-free statically known
   conditional assignment scans only its selected leaf, as may a statically
