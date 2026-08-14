@@ -21,6 +21,13 @@ at the package. `scriptdata` stays out of that chunk on purpose — the shell ne
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Cyrillic ч ductus (HL-C09EX)
+
+- Render **ч** in three joined movements across one source-aligned stroke with zero lifts.
+- Descend the short left stem, sweep through the shallow bowl and rise along the right stem, then descend the full right stem.
+- Preserve the native-teacher lesson's narrow rounded bridge and rising exit while fitting Noto Sans Cyrillic's shorter left stem, shallow bowl, and full-height right stem, and reduce measured HL-C09 debt to 78 entries.
+- Cap canonical script-data batches at 250 kB so the growing cited metadata remains below the enforced 500 kB eager-chunk budget.
+
 ### Added — cited Cyrillic ц ductus (HL-C09EW)
 
 - Render **ц** in four joined movements across one source-aligned stroke with zero lifts.

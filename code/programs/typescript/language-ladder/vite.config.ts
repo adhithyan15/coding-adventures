@@ -37,6 +37,11 @@ export default defineConfig({
             {
               name: "script-data",
               test: /learning[\\/]human-languages[\\/]data[\\/]scripts[\\/]/,
+              // Source-verified stroke metadata grows with every HL-C09
+              // tranche. Keep the eager canonical corpus in a few cacheable
+              // batches instead of allowing one chunk to cross the 500 kB
+              // budget as soon as the next citation lands.
+              maxSize: 250_000,
             },
             {
               name: "curriculum-plans",
