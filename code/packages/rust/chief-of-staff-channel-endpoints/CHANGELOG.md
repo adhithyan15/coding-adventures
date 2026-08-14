@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add the D18P compatibility adapter plus a deterministic shared durable-channel
+  fixture generator and byte-identical Rust conformance consumer.
 - Consume authenticated channel messages through the channel-crypto package's
   structurally immutable read-only API.
 

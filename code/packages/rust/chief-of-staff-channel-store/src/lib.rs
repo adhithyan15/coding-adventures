@@ -8,6 +8,9 @@
 #![forbid(unsafe_code)]
 #![deny(missing_docs)]
 
+/// Portable D18P state/cursor codecs and stable failure classification.
+pub mod profile;
+
 use chief_of_staff_channel_crypto::wire::{
     decode_key_grant, decode_message, decode_message_header, encode_key_grant, encode_message,
     encode_message_header, key_grant_record_key, message_record_key, message_record_prefix,

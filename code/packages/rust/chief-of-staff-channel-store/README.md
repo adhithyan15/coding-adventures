@@ -19,6 +19,12 @@ per-receiver acknowledgements, and idempotent sealed key-grant persistence.
 The package never stores plaintexts, CMKs, receiver private keys, or unwrapped
 grants. Backend choice remains injected by the caller.
 
+The public `profile` module exposes the production D18S state and D18A cursor
+codecs, content types, bounds, and stable D18P error classifier used by the
+shared fixture at `code/fixtures/chief-of-staff-channel/v1/manifest.json`.
+It delegates to these same store internals rather than maintaining a second
+compatibility implementation.
+
 ## Validation
 
 ```sh

@@ -195,7 +195,9 @@ and stable record errors are portable fixture candidates. Backend I/O,
 filesystem durability, key custody, entropy, and actor routing remain injected
 or native. D18P now specifies the exact portable record, key, atomicity,
 recovery, paging, acknowledgement, and error behavior. Its shared fixture/Rust
-compatibility lock is the next dependency before non-Rust ports.
+compatibility lock now consumes the production D18C/D18S/D18H/D18A codecs and
+transition paths byte-for-byte. TypeScript, Python, Go, Ruby, and Elixir ports,
+followed by the closed six-language gate, are the remaining D18P work.
 
 The `b3a6616a` refresh added `chief-of-staff-channel-endpoints`, another
 zero-capability deterministic layer. Bounded identities, durable membership,
