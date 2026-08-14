@@ -1040,6 +1040,88 @@ fn build_register_map(fn_: &IIRFunction) -> HashMap<String, u32> {
     map
 }
 
+/// Is `op` an IIR comparison?  Both spellings the cmp lowering below accepts:
+/// the `cmp_`-prefixed names BASIC / Nib / Oct / ALGOL emit, and the bare
+/// names Twig historically emitted.
+fn is_comparison_op(op: &str) -> bool {
+    interpreter_ir::opcodes::is_cmp(op)
+        || matches!(op, "eq" | "ne" | "lt" | "le" | "gt" | "ge")
+}
+
+/// The type hint that describes an instruction's **destination**.
+///
+/// For nearly every op these are the same thing, so `type_hint` is the
+/// answer.  Comparisons are the exception, and the distinction matters:
+///
+/// | instruction                        | `type_hint` describes | dest really holds |
+/// |------------------------------------|-----------------------|-------------------|
+/// | `add   t = a, b      (f64)`        | operands **and** dest | an `f64`          |
+/// | `cmp_ge t = a, b     (f64)`        | the **operands**      | a **bool**        |
+///
+/// A comparison's `type_hint` has to name the operand type — that is what
+/// picks `f64.ge` over `i64.ge_s` — but WASM comparisons *always* push an
+/// `i32` 0/1, whatever their operands were.  Handing the raw hint back for
+/// the destination declared the local `f64`, and the emitted body then did:
+///
+/// ```text
+///   local.get $a   ;; f64
+///   local.get $b   ;; f64
+///   f64.ge         ;; → i32
+///   local.set $t   ;; ← declared f64.  Ill-typed module.
+/// ```
+///
+/// Dartmouth BASIC made this unmissable: its only numeric type is REAL, so
+/// *every* BASIC comparison hit it.  The module was rejected outright by
+/// wasm-validator's instruction-level type checker with
+/// `TypeMismatch: expected F64, found I32`.
+///
+/// **Why `i64` is left alone.**  An `i64`-declared comparison destination is
+/// legitimate and already handled: `concretize_scalar_any_for_wasm` retypes a
+/// scalar `any` to `i64`, and the cmp lowering answers that by widening its
+/// `i32` result with `i64.extend_i32_u` before the `local.set`, which is
+/// well-typed.  `i32` is of course the boolean's own width.  Every *other*
+/// declaration — `f32`, `f64`, `anyref`, an array handle — is unreachable for
+/// a boolean, so those are the ones corrected here.  Narrowing the rule this
+/// way keeps the widened-`i64` register model (Brainfuck, the tagged Twig
+/// path) byte-for-byte unchanged.
+fn dest_type_hint(instr: &IIRInstr) -> String {
+    if is_comparison_op(&instr.op)
+        && !matches!(
+            hint_to_value_type(&instr.type_hint),
+            Some(ValueType::I32) | Some(ValueType::I64)
+        )
+    {
+        return "bool".to_string();
+    }
+    instr.type_hint.clone()
+}
+
+/// Widen an `i32` boolean sitting on top of the stack to `i64` when the local
+/// it is about to be stored into is declared `i64`.
+///
+/// Every WASM instruction that yields a boolean — `i32.eq`, `f64.ge`,
+/// `ref.test`, `i32.eqz` — pushes an **`i32`** 0/1, whatever the operands
+/// were.  The destination local, however, is declared from the IIR type hint,
+/// and a hint of `i64` (or a narrow unsigned type / `any` concretised to
+/// `i64`) declares an `i64` slot.  Storing the raw `i32` there is an ill-typed
+/// module: `local.set` demands exactly the declared type.
+///
+/// `i64.extend_i32_u` is the right widening — a boolean is 0 or 1, so zero-
+/// and sign-extension agree, and the unsigned form keeps the value in
+/// `{0, 1}` by construction.
+///
+/// The `cmp_*` arm has carried this widening since the Brainfuck i64 value
+/// model landed; this function is that same rule, named, so the lisp
+/// predicate builtins (`pair?`, `not`, `equal?`) can apply it too. Those three
+/// stored their `i32` result blind, which the wasm-validator's new
+/// instruction-level type checker correctly rejected with
+/// `TypeMismatch: expected I64, found I32` on every Twig symbol/record cell.
+fn widen_bool_to_slot(code: &mut Vec<u8>, slot: u32, slot_is_i64: &dyn Fn(u32) -> bool) {
+    if slot_is_i64(slot) {
+        code.extend(encode_i64_extend_i32_u());
+    }
+}
+
 /// Infer IIR type hints for each WASM local index.
 ///
 /// We scan parameters and instruction destinations for type hints associated
@@ -1064,7 +1146,7 @@ fn infer_local_type_hints(
         if let Some(dest) = &instr.dest {
             if let Some(&idx) = reg_map.get(dest) {
                 // Only update if we don't already have a type (first definition wins).
-                var_type.entry(idx).or_insert_with(|| instr.type_hint.clone());
+                var_type.entry(idx).or_insert_with(|| dest_type_hint(instr));
             }
         }
     }
@@ -1288,10 +1370,21 @@ fn emit_instr(
     // that wasm linear-memory addresses / `i32.store8` values / the libc
     // `putchar`/`getchar` imports use. Looking the width up (rather than
     // assuming i64) keeps the lowering correct for an un-widened i32 caller too.
+    //
+    // The answer must be the *declared* width of the local, so this asks
+    // `hint_to_value_type` — the single function that decides what goes in the
+    // locals section — rather than pattern-matching hint spellings itself.
+    // Matching on `"i64" | "u64"` alone silently disagreed with the
+    // declaration for every hint that `hint_to_value_type` also widens:
+    // the narrow unsigned types `u4`/`u8`/`u16`/`u32` (the E2 i64 register
+    // model) and `array<T>` handles.  A `u8` local is declared `I64` but was
+    // reported `i32` here, so e.g. Nib's `12 & 10` computed `i64.and`, then
+    // "corrected" its own result with `i32.wrap_i64` before storing it into
+    // the `i64` local — an ill-typed module (`expected I64, found I32`).
     let slot_is_i64 = |slot: u32| -> bool {
         local_type_hints
             .get(&slot)
-            .map(|h| matches!(h.as_str(), "i64" | "u64"))
+            .map(|h| matches!(hint_to_value_type(h), Some(ValueType::I64)))
             .unwrap_or(false)
     };
 
@@ -3808,6 +3901,9 @@ fn emit_instr(
                     })?;
                     code.extend(encode_local_get(arg));
                     encode_gc_instruction(code, &GcInstruction::RefTest(type_idx));
+                    // A predicate's result is an i32 0/1, but its destination
+                    // local may be declared i64 (see `widen_bool_to_slot`).
+                    widen_bool_to_slot(code, rd, &slot_is_i64);
                     code.extend(encode_local_set(rd));
                 }
                 // The lisp `not` (LANG77 L3b-3a-4): boolean negation of a
@@ -3826,6 +3922,7 @@ fn emit_instr(
                     let arg = get_src_reg(&instr.srcs, 1, reg_map, fn_name)?;
                     code.extend(encode_local_get(arg));
                     code.push(0x45); // i32.eqz
+                    widen_bool_to_slot(code, rd, &slot_is_i64);
                     code.extend(encode_local_set(rd));
                 }
                 // McCarthy `EQ` (frontend builtin `equal?`) on atoms (LANG77
@@ -3853,6 +3950,7 @@ fn emit_instr(
                     code.extend(encode_local_get(b));
                     encode_gc_instruction(code, &GcInstruction::I31GetS);
                     code.push(0x46); // i32.eq
+                    widen_bool_to_slot(code, rd, &slot_is_i64);
                     code.extend(encode_local_set(rd));
                 }
                 _ => {
