@@ -1,5 +1,69 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.4 — 2026-08-13 — func/table/memory/global inline-import shorthand (WASM02)
+
+`(func $f (import "m" "n") (type $t))` and its `table`/`memory`/`global`
+equivalents — the WAT text format's **inline-import shorthand**, exactly
+equivalent to `(import "m" "n" (func $f (type $t)))` per the spec — weren't
+recognized: `script.rs`'s "module" directive parsing (and `module.rs`'s
+`parse_module_expr`) called straight into the plain-definition builder,
+which doesn't know about a `(import ...)` sub-form appearing where a
+function body would start. The `import`/`quote`/`type` fields it found
+there weren't recognized module-field or instruction shapes either, so the
+official testsuite's `func_ptrs.wast` and `global.wast` — the two files
+this shape blocks — failed to even parse: `func_ptrs.wast` with "unknown
+instruction \"import\"" (the shorthand's fields fed straight into the
+function-body instruction encoder), `global.wast` with "expected a value
+type, found \"list\"" (fed into the global-type parser instead).
+
+Fixed with a **pure syntactic desugaring pass** (`desugar_inline_imports`
+in `module.rs`), run before `collect_symbols`/`build` ever see a module's
+fields: any `func`/`table`/`memory`/`global` field whose first substantive
+item (after an optional `$name`) is `(import "m" "n")` gets rewritten into
+the equivalent explicit `(import "m" "n" (kind ...))` form. Every
+downstream pass then only ever has to understand ONE import shape.
+
+### A deeper, previously-unreachable bug this exposed
+
+Actually exercising an import together with a same-kind real definition —
+something no vendored file did until this desugaring made it possible —
+crashed with `index out of bounds` (a `func` import followed by any real
+`func`) or a clean-but-wrong `wasm-validator` rejection ("code section has
+N entries but function section has N+1 entries"). Root cause:
+`ctx.module.functions`/`tables`/`memories`/`globals` are supposed to mirror
+the real WASM **binary** format's function/table/memory/global sections,
+which never include imports (`wasm-module-parser`'s own section parsers
+confirm this: an import's type info lives solely in the import section,
+tracked here via `ctx.module.imports`). But `collect_symbols`'s import loop
+was ALSO pushing a placeholder entry into these same arrays for every
+import, and `build`'s per-kind arms indexed them with the COMBINED
+import+real ("func-space") index — both silently correct only because,
+until now, no module ever had a nonzero import count for a kind that also
+had real definitions. Fixed by making imports stop touching these arrays
+entirely (tracked via dedicated per-kind counters instead, which also
+fixes a latent double-counting bug in the old `table`/`memory`/`global`
+import-index formula that mixed a *named-imports-of-any-kind* count into a
+*this-kind* position), and splitting every "func-space index" (still
+needed for name resolution, exports, and element/data segment references)
+from the separate "storage index" (real-definitions-only, used to actually
+index into these arrays) everywhere `build`/`build_func`/
+`build_table_limits_and_elements` touch them.
+
+New tests: inline-import shorthand desugaring for `func` (with a
+`(type $t)` reference, matching `func_ptrs.wast`'s `$print`) and `global`
+(unnamed, matching `global.wast`'s two `spectest` imports); a `func` import
+followed by a real `func` with a `call` between them, asserting both the
+encoded call-site bytecode and the real func's export index; the same
+combination for `global` and `table`. Baseline: `func_ptrs.wast` goes from
+a full parse failure to 100% passing every directive kind it has
+(`assert_return` 12219/12238 → 12235/12254, +16); verified via a full
+per-file diff against the previous baseline that `func_ptrs.wast` is the
+ONLY file whose tally changed anywhere in the corpus. `global.wast` still
+doesn't parse — blocked by an unrelated, legitimate gap (`externref`, a
+reference-types feature explicitly out of scope for this phase) further
+down the file, past the two inline-import globals this fix does correctly
+handle.
+
 ## 0.1.3 — 2026-08-13 — `(module quote/binary ...)` DIRECTIVES silently built an empty module (WASM12)
 
 Started as the small fix the task description named: the tokenizer's `;;`

@@ -952,6 +952,62 @@
         "not_yet_supported": 0
       }
     },
+    "func_ptrs.wast": {
+      "action": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 1
+      },
+      "assert_exhaustion": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_invalid": {
+        "pass": 4,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 3
+      },
+      "assert_malformed": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_return": {
+        "pass": 16,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 3
+      },
+      "assert_trap": {
+        "pass": 6,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "assert_unlinkable": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "module": {
+        "pass": 3,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      },
+      "register": {
+        "pass": 0,
+        "fail": 0,
+        "trap": 0,
+        "not_yet_supported": 0
+      }
+    },
     "int_exprs.wast": {
       "action": {
         "pass": 0,
@@ -1798,7 +1854,7 @@
       "pass": 0,
       "fail": 0,
       "trap": 0,
-      "not_yet_supported": 0
+      "not_yet_supported": 1
     },
     "assert_exhaustion": {
       "pass": 2,
@@ -1807,10 +1863,10 @@
       "not_yet_supported": 0
     },
     "assert_invalid": {
-      "pass": 11,
+      "pass": 15,
       "fail": 0,
       "trap": 0,
-      "not_yet_supported": 412
+      "not_yet_supported": 415
     },
     "assert_malformed": {
       "pass": 33,
@@ -1819,13 +1875,13 @@
       "not_yet_supported": 158
     },
     "assert_return": {
-      "pass": 12219,
+      "pass": 12235,
       "fail": 19,
       "trap": 0,
-      "not_yet_supported": 0
+      "not_yet_supported": 3
     },
     "assert_trap": {
-      "pass": 325,
+      "pass": 331,
       "fail": 0,
       "trap": 0,
       "not_yet_supported": 0
@@ -1837,7 +1893,7 @@
       "not_yet_supported": 0
     },
     "module": {
-      "pass": 92,
+      "pass": 95,
       "fail": 0,
       "trap": 0,
       "not_yet_supported": 0
@@ -1857,8 +1913,7 @@
     "conversions.wast": "at byte 1140: unknown instruction \"i32.trunc_sat_f32_s\"",
     "fac.wast": "at byte 2411: unknown instruction \"param\"",
     "float_exprs.wast": "at byte 0: expected 1 or 2 limit numbers, found \"\"",
-    "func_ptrs.wast": "at byte 467: unknown instruction \"import\"",
-    "global.wast": "at byte 35: expected a value type, found \"list\"",
+    "global.wast": "at byte 840: expected a value type, found \"externref\"",
     "i32.wast": "at byte 1952: unknown instruction \"i32.extend8_s\"",
     "i64.wast": "at byte 1952: unknown instruction \"i64.extend8_s\"",
     "if.wast": "at byte 11791: unknown instruction \"param\"",
