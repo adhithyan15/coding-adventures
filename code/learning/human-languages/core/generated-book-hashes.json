@@ -891,151 +891,166 @@
     {
       "language": "hindi",
       "chapter": 6,
-      "sourceHash": "fnv1a64:f582ec4007632d2a",
+      "sourceHash": "fnv1a64:06cd03dcec0f8c10",
       "lessonIds": [
         "HI-C06-numbers-1-5",
         "HI-C06-tin-char-history",
         "HI-C06-paanch-nasal",
-        "HI-S01-letter-ma"
+        "HI-S01-letter-ma",
+        "HI-S110-letter-ra"
       ],
       "tex": "hindi/book/chapters/ch06-numbers-1-5.tex"
     },
     {
       "language": "hindi",
       "chapter": 7,
-      "sourceHash": "fnv1a64:af52f7430abe828b",
+      "sourceHash": "fnv1a64:efac221cee66d5c5",
       "lessonIds": [
         "HI-C07-haan",
         "HI-C07-nahin",
-        "HI-S02-letter-na"
+        "HI-S02-letter-na",
+        "HI-S111-letter-ka"
       ],
       "tex": "hindi/book/chapters/ch07-yes-and-no.tex"
     },
     {
       "language": "hindi",
       "chapter": 8,
-      "sourceHash": "fnv1a64:9b9ce35e63779d16",
+      "sourceHash": "fnv1a64:7b7fddd4b83353ae",
       "lessonIds": [
         "HI-C08-kripaya",
-        "HI-S03-letter-a"
+        "HI-S03-letter-a",
+        "HI-S112-vowel-sign-e"
       ],
       "tex": "hindi/book/chapters/ch08-please.tex"
     },
     {
       "language": "hindi",
       "chapter": 9,
-      "sourceHash": "fnv1a64:3e4fca1f77e027f8",
+      "sourceHash": "fnv1a64:36b50bc3eb44a3ac",
       "lessonIds": [
         "HI-C09-maaf-kijiye",
-        "HI-S04-letter-aa"
+        "HI-S04-letter-aa",
+        "HI-S113-letter-pa"
       ],
       "tex": "hindi/book/chapters/ch09-sorry.tex"
     },
     {
       "language": "hindi",
       "chapter": 10,
-      "sourceHash": "fnv1a64:7a21e68b6194735c",
+      "sourceHash": "fnv1a64:92bb31fca6e891f3",
       "lessonIds": [
         "HI-C10-somavaar-shukravaar",
         "HI-C10-shanivaar-ravivaar",
-        "HI-S05-sign-virama"
+        "HI-S05-sign-virama",
+        "HI-S114-letter-ha"
       ],
       "tex": "hindi/book/chapters/ch10-days.tex"
     },
     {
       "language": "hindi",
       "chapter": 11,
-      "sourceHash": "fnv1a64:ffe1c67032d2a867",
+      "sourceHash": "fnv1a64:0e3519579c0de56e",
       "lessonIds": [
         "HI-C11-kaalaa-safed",
         "HI-C11-laal-niila",
-        "HI-S06-vowel-sign-aa"
+        "HI-S06-vowel-sign-aa",
+        "HI-S115-letter-ya"
       ],
       "tex": "hindi/book/chapters/ch11-colours.tex"
     },
     {
       "language": "hindi",
       "chapter": 12,
-      "sourceHash": "fnv1a64:36fda5f8d6f59a46",
+      "sourceHash": "fnv1a64:400238e370971755",
       "lessonIds": [
         "HI-C12-pitaa-maataa",
         "HI-C12-bhaai-bahin",
-        "HI-S07-letter-ta"
+        "HI-S07-letter-ta",
+        "HI-S116-vowel-sign-ii"
       ],
       "tex": "hindi/book/chapters/ch12-family.tex"
     },
     {
       "language": "hindi",
       "chapter": 13,
-      "sourceHash": "fnv1a64:89ead522176b245d",
+      "sourceHash": "fnv1a64:38f01cd6347a8875",
       "lessonIds": [
         "HI-C13-sir",
         "HI-C13-haath",
-        "HI-S08-letter-sa"
+        "HI-S08-letter-sa",
+        "HI-S117-letter-ca"
       ],
       "tex": "hindi/book/chapters/ch13-head-and-hand.tex"
     },
     {
       "language": "hindi",
       "chapter": 14,
-      "sourceHash": "fnv1a64:439a8a98cf12e2e1",
+      "sourceHash": "fnv1a64:bca563918e241823",
       "lessonIds": [
-        "HI-C14-ritu"
+        "HI-C14-ritu",
+        "HI-S118-sign-candrabindu"
       ],
       "tex": "hindi/book/chapters/ch14-seasons.tex"
     },
     {
       "language": "hindi",
       "chapter": 15,
-      "sourceHash": "fnv1a64:99ac71bcd473112f",
+      "sourceHash": "fnv1a64:1b1beaaf9ad141ad",
       "lessonIds": [
-        "HI-C15-paani-roti"
+        "HI-C15-paani-roti",
+        "HI-S119-letter-ssa"
       ],
       "tex": "hindi/book/chapters/ch15-water-and-bread.tex"
     },
     {
       "language": "hindi",
       "chapter": 16,
-      "sourceHash": "fnv1a64:60167210645c0230",
+      "sourceHash": "fnv1a64:53a183f1c23a7830",
       "lessonIds": [
-        "HI-C16-mahine"
+        "HI-C16-mahine",
+        "HI-S120-vowel-sign-u"
       ],
       "tex": "hindi/book/chapters/ch16-months.tex"
     },
     {
       "language": "hindi",
       "chapter": 17,
-      "sourceHash": "fnv1a64:3b07788df6f64a50",
+      "sourceHash": "fnv1a64:3e2929eecf235129",
       "lessonIds": [
-        "HI-C17-dopahar-aadhi-raat"
+        "HI-C17-dopahar-aadhi-raat",
+        "HI-S121-letter-la"
       ],
       "tex": "hindi/book/chapters/ch17-noon-and-midnight.tex"
     },
     {
       "language": "hindi",
       "chapter": 18,
-      "sourceHash": "fnv1a64:b09336312cfd42d2",
+      "sourceHash": "fnv1a64:f138e126d0284ebb",
       "lessonIds": [
-        "HI-C18-ghanta"
+        "HI-C18-ghanta",
+        "HI-S122-letter-kha"
       ],
       "tex": "hindi/book/chapters/ch18-telling-time.tex"
     },
     {
       "language": "hindi",
       "chapter": 19,
-      "sourceHash": "fnv1a64:ed4d63a4e27a1bb8",
+      "sourceHash": "fnv1a64:f7ecde7c33871521",
       "lessonIds": [
         "HI-C19-umr",
-        "HI-C19-age-grammar"
+        "HI-C19-age-grammar",
+        "HI-S123-letter-da"
       ],
       "tex": "hindi/book/chapters/ch19-age.tex"
     },
     {
       "language": "hindi",
       "chapter": 20,
-      "sourceHash": "fnv1a64:417e8fcb4928d724",
+      "sourceHash": "fnv1a64:27f977d89ee9af98",
       "lessonIds": [
-        "HI-C20-mausam"
+        "HI-C20-mausam",
+        "HI-S124-letter-dha"
       ],
       "tex": "hindi/book/chapters/ch20-weather.tex"
     },
@@ -1551,147 +1566,162 @@
     {
       "language": "kannada",
       "chapter": 6,
-      "sourceHash": "fnv1a64:4a0efb7ffba82066",
+      "sourceHash": "fnv1a64:0dd0018832133f4e",
       "lessonIds": [
         "KA-C06-dative-ge",
         "KA-C06-dative-stacking",
         "KA-C06-dative-subject",
-        "KA-S01-letter-na"
+        "KA-S01-letter-na",
+        "KA-S110-letter-ba"
       ],
       "tex": "kannada/book/chapters/ch06-dative-case.tex"
     },
     {
       "language": "kannada",
       "chapter": 7,
-      "sourceHash": "fnv1a64:23db659f108d2407",
+      "sourceHash": "fnv1a64:e9dd151087404887",
       "lessonIds": [
         "KA-C07-numbers-1-5",
         "KA-C07-numbers-6-10",
-        "KA-S02-vowel-sign-u"
+        "KA-S02-vowel-sign-u",
+        "KA-S111-vowel-sign-e"
       ],
       "tex": "kannada/book/chapters/ch07-numbers-1-10.tex"
     },
     {
       "language": "kannada",
       "chapter": 8,
-      "sourceHash": "fnv1a64:44c9c04de29dd708",
+      "sourceHash": "fnv1a64:77b970094650c5a1",
       "lessonIds": [
         "KA-C08-dayavittu",
-        "KA-S03-sign-virama"
+        "KA-S03-sign-virama",
+        "KA-S112-letter-ga"
       ],
       "tex": "kannada/book/chapters/ch08-please.tex"
     },
     {
       "language": "kannada",
       "chapter": 9,
-      "sourceHash": "fnv1a64:ee8cb05929054042",
+      "sourceHash": "fnv1a64:32858450485fd597",
       "lessonIds": [
         "KA-C09-kshamisi",
-        "KA-S04-vowel-sign-i"
+        "KA-S04-vowel-sign-i",
+        "KA-S113-letter-lla"
       ],
       "tex": "kannada/book/chapters/ch09-sorry.tex"
     },
     {
       "language": "kannada",
       "chapter": 10,
-      "sourceHash": "fnv1a64:e1a97d5e04c3c507",
+      "sourceHash": "fnv1a64:4a2c4ab23c5dd302",
       "lessonIds": [
         "KA-C10-vaara",
-        "KA-S05-letter-ta"
+        "KA-S05-letter-ta",
+        "KA-S114-vowel-sign-o"
       ],
       "tex": "kannada/book/chapters/ch10-days.tex"
     },
     {
       "language": "kannada",
       "chapter": 11,
-      "sourceHash": "fnv1a64:2f981a6477722aad",
+      "sourceHash": "fnv1a64:93def0a04664a09e",
       "lessonIds": [
         "KA-C11-bannagalu",
-        "KA-S06-letter-da"
+        "KA-S06-letter-da",
+        "KA-S115-letter-i"
       ],
       "tex": "kannada/book/chapters/ch11-colours.tex"
     },
     {
       "language": "kannada",
       "chapter": 12,
-      "sourceHash": "fnv1a64:2a0238f84ee9a730",
+      "sourceHash": "fnv1a64:2c67a80ccfeddfe5",
       "lessonIds": [
         "KA-C12-kutumba",
-        "KA-S07-letter-ra"
+        "KA-S07-letter-ra",
+        "KA-S116-letter-ka"
       ],
       "tex": "kannada/book/chapters/ch12-family.tex"
     },
     {
       "language": "kannada",
       "chapter": 13,
-      "sourceHash": "fnv1a64:6f018102b03efc6b",
+      "sourceHash": "fnv1a64:53b9bfd00638892c",
       "lessonIds": [
         "KA-C13-dehada-bhagagalu",
-        "KA-S08-vowel-sign-aa"
+        "KA-S08-vowel-sign-aa",
+        "KA-S117-letter-ya"
       ],
       "tex": "kannada/book/chapters/ch13-head-and-hand.tex"
     },
     {
       "language": "kannada",
       "chapter": 14,
-      "sourceHash": "fnv1a64:6670d6099fe8566d",
+      "sourceHash": "fnv1a64:e09d7cfe310320b5",
       "lessonIds": [
-        "KA-C14-kaalagalu"
+        "KA-C14-kaalagalu",
+        "KA-S118-letter-dda"
       ],
       "tex": "kannada/book/chapters/ch14-seasons.tex"
     },
     {
       "language": "kannada",
       "chapter": 15,
-      "sourceHash": "fnv1a64:3264f58bc1464619",
+      "sourceHash": "fnv1a64:6c302943b73829f3",
       "lessonIds": [
-        "KA-C15-niiru-akki"
+        "KA-C15-niiru-akki",
+        "KA-S119-vowel-sign-oo"
       ],
       "tex": "kannada/book/chapters/ch15-water-and-rice.tex"
     },
     {
       "language": "kannada",
       "chapter": 16,
-      "sourceHash": "fnv1a64:87d140cefcea34a1",
+      "sourceHash": "fnv1a64:636e88cd515f353f",
       "lessonIds": [
-        "KA-C16-tingalugalu"
+        "KA-C16-tingalugalu",
+        "KA-S120-letter-ha"
       ],
       "tex": "kannada/book/chapters/ch16-months.tex"
     },
     {
       "language": "kannada",
       "chapter": 17,
-      "sourceHash": "fnv1a64:dbc139e32198cd15",
+      "sourceHash": "fnv1a64:c2391200d4315147",
       "lessonIds": [
-        "KA-C17-madhyaahna-madhyaraatri"
+        "KA-C17-madhyaahna-madhyaraatri",
+        "KA-S121-letter-sa"
       ],
       "tex": "kannada/book/chapters/ch17-noon-and-midnight.tex"
     },
     {
       "language": "kannada",
       "chapter": 18,
-      "sourceHash": "fnv1a64:64594fad579acb37",
+      "sourceHash": "fnv1a64:cd2c2292e36f87ad",
       "lessonIds": [
-        "KA-C18-gante"
+        "KA-C18-gante",
+        "KA-S122-letter-ca"
       ],
       "tex": "kannada/book/chapters/ch18-telling-time.tex"
     },
     {
       "language": "kannada",
       "chapter": 19,
-      "sourceHash": "fnv1a64:282c54bcd1a435fa",
+      "sourceHash": "fnv1a64:9c0fa5fef1ff119c",
       "lessonIds": [
-        "KA-C19-vayassu"
+        "KA-C19-vayassu",
+        "KA-S123-sign-anusvara"
       ],
       "tex": "kannada/book/chapters/ch19-age.tex"
     },
     {
       "language": "kannada",
       "chapter": 20,
-      "sourceHash": "fnv1a64:14474768864083cc",
+      "sourceHash": "fnv1a64:3fed2593f88c8541",
       "lessonIds": [
         "KA-C20-hannondu-ippattu",
-        "KA-C20-havamana"
+        "KA-C20-havamana",
+        "KA-S124-letter-pa"
       ],
       "tex": "kannada/book/chapters/ch20-numbers-and-weather.tex"
     },
@@ -2344,156 +2374,172 @@
     {
       "language": "malayalam",
       "chapter": 6,
-      "sourceHash": "fnv1a64:0ac2c60ca33e65c6",
+      "sourceHash": "fnv1a64:a5c7993a76ca67ef",
       "lessonIds": [
         "ML-C06-dative-ikku",
         "ML-C06-dative-subject",
-        "ML-S01-letter-ka"
+        "ML-S01-letter-ka",
+        "ML-S109-letter-ra"
       ],
       "tex": "malayalam/book/chapters/ch06-dative-case.tex"
     },
     {
       "language": "malayalam",
       "chapter": 7,
-      "sourceHash": "fnv1a64:6b017b75910cd011",
+      "sourceHash": "fnv1a64:62992edd112218c3",
       "lessonIds": [
         "ML-C07-numbers-1-5",
         "ML-C07-numbers-6-10",
-        "ML-S02-sign-virama"
+        "ML-S02-sign-virama",
+        "ML-S110-letter-va"
       ],
       "tex": "malayalam/book/chapters/ch07-numbers-1-10.tex"
     },
     {
       "language": "malayalam",
       "chapter": 8,
-      "sourceHash": "fnv1a64:e3936eb22c9b6a2a",
+      "sourceHash": "fnv1a64:fa75b340d42103b2",
       "lessonIds": [
         "ML-C08-dayavayi",
-        "ML-S03-vowel-sign-i"
+        "ML-S03-vowel-sign-i",
+        "ML-S111-letter-ca"
       ],
       "tex": "malayalam/book/chapters/ch08-please.tex"
     },
     {
       "language": "malayalam",
       "chapter": 9,
-      "sourceHash": "fnv1a64:eeef953fd0d42d86",
+      "sourceHash": "fnv1a64:b1fd55b26e8634f0",
       "lessonIds": [
         "ML-C09-kshamikkanam",
-        "ML-S04-vowel-sign-aa"
+        "ML-S04-vowel-sign-aa",
+        "ML-S112-letter-pa"
       ],
       "tex": "malayalam/book/chapters/ch09-sorry.tex"
     },
     {
       "language": "malayalam",
       "chapter": 10,
-      "sourceHash": "fnv1a64:5b7097f081dcb3fb",
+      "sourceHash": "fnv1a64:b49fea4b4c3b7056",
       "lessonIds": [
         "ML-C10-azhcha",
-        "ML-S05-letter-na"
+        "ML-S05-letter-na",
+        "ML-S113-letter-nna"
       ],
       "tex": "malayalam/book/chapters/ch10-days.tex"
     },
     {
       "language": "malayalam",
       "chapter": 11,
-      "sourceHash": "fnv1a64:f98299180b37d677",
+      "sourceHash": "fnv1a64:56fa8e6f72147a78",
       "lessonIds": [
         "ML-C11-nirangal",
-        "ML-S06-letter-chillu-ll"
+        "ML-S06-letter-chillu-ll",
+        "ML-S114-letter-ma"
       ],
       "tex": "malayalam/book/chapters/ch11-colours.tex"
     },
     {
       "language": "malayalam",
       "chapter": 12,
-      "sourceHash": "fnv1a64:451da4ff9efb8308",
+      "sourceHash": "fnv1a64:23b73c5c7f594170",
       "lessonIds": [
         "ML-C12-kudumbam",
-        "ML-S07-vowel-sign-u"
+        "ML-S07-vowel-sign-u",
+        "ML-S115-letter-nya"
       ],
       "tex": "malayalam/book/chapters/ch12-family.tex"
     },
     {
       "language": "malayalam",
       "chapter": 13,
-      "sourceHash": "fnv1a64:93a8daf3bd2b14a2",
+      "sourceHash": "fnv1a64:edf5b8d38df72897",
       "lessonIds": [
         "ML-C13-shareera-bhaagangal",
-        "ML-S08-letter-ta"
+        "ML-S08-letter-ta",
+        "ML-S117-letter-tta"
       ],
       "tex": "malayalam/book/chapters/ch13-head-and-hand.tex"
     },
     {
       "language": "malayalam",
       "chapter": 14,
-      "sourceHash": "fnv1a64:1b75723de5b9745e",
+      "sourceHash": "fnv1a64:cd32d83148c996d7",
       "lessonIds": [
-        "ML-C14-kaalangal"
+        "ML-C14-kaalangal",
+        "ML-S118-letter-llla"
       ],
       "tex": "malayalam/book/chapters/ch14-seasons.tex"
     },
     {
       "language": "malayalam",
       "chapter": 15,
-      "sourceHash": "fnv1a64:36a5b4a2ebe0ea03",
+      "sourceHash": "fnv1a64:9e181a6dfe227ad6",
       "lessonIds": [
-        "ML-C15-vellam-ari"
+        "ML-C15-vellam-ari",
+        "ML-S119-vowel-sign-oo"
       ],
       "tex": "malayalam/book/chapters/ch15-water-and-rice.tex"
     },
     {
       "language": "malayalam",
       "chapter": 16,
-      "sourceHash": "fnv1a64:abab6cfbc6530ebf",
+      "sourceHash": "fnv1a64:133f12ff0dfd4aa1",
       "lessonIds": [
-        "ML-C16-kollavarsham-maasangal"
+        "ML-C16-kollavarsham-maasangal",
+        "ML-S120-sign-anusvara"
       ],
       "tex": "malayalam/book/chapters/ch16-months.tex"
     },
     {
       "language": "malayalam",
       "chapter": 17,
-      "sourceHash": "fnv1a64:28f97387bdb8a1e1",
+      "sourceHash": "fnv1a64:fd01cd124320768d",
       "lessonIds": [
         "ML-C17-ucha-paathira",
-        "ML-C17-paathira"
+        "ML-C17-paathira",
+        "ML-S116-letter-u"
       ],
       "tex": "malayalam/book/chapters/ch17-noon-and-midnight.tex"
     },
     {
       "language": "malayalam",
       "chapter": 18,
-      "sourceHash": "fnv1a64:9226a9e2ed059671",
+      "sourceHash": "fnv1a64:de1a1e055482e261",
       "lessonIds": [
-        "ML-C18-mani"
+        "ML-C18-mani",
+        "ML-S121-letter-ssa"
       ],
       "tex": "malayalam/book/chapters/ch18-telling-time.tex"
     },
     {
       "language": "malayalam",
       "chapter": 19,
-      "sourceHash": "fnv1a64:915ff640dceaaaca",
+      "sourceHash": "fnv1a64:0d535c59520aeefb",
       "lessonIds": [
-        "ML-C19-vayassu"
+        "ML-C19-vayassu",
+        "ML-S122-letter-ya"
       ],
       "tex": "malayalam/book/chapters/ch19-age.tex"
     },
     {
       "language": "malayalam",
       "chapter": 20,
-      "sourceHash": "fnv1a64:21922138f16ad4aa",
+      "sourceHash": "fnv1a64:3d8dcb7d02635244",
       "lessonIds": [
         "ML-C20-pathinonnu-irupathu",
-        "ML-C20-kalavastha"
+        "ML-C20-kalavastha",
+        "ML-S123-letter-da"
       ],
       "tex": "malayalam/book/chapters/ch20-numbers-and-weather.tex"
     },
     {
       "language": "malayalam",
       "chapter": 21,
-      "sourceHash": "fnv1a64:415d3176ddb9f5b7",
+      "sourceHash": "fnv1a64:611c169b7f3b65d4",
       "lessonIds": [
-        "ML-C21-naaya-poocha"
+        "ML-C21-naaya-poocha",
+        "ML-S124-letter-sa"
       ],
       "tex": "malayalam/book/chapters/ch21-dog-and-cat.tex"
     },
@@ -3502,81 +3548,87 @@
     {
       "language": "sanskrit",
       "chapter": 8,
-      "sourceHash": "fnv1a64:95306573f00ce8a1",
+      "sourceHash": "fnv1a64:8a2bdd2f7c347634",
       "lessonIds": [
         "SA-C08-cintayati",
         "SA-C08-avagacchati",
         "SA-C08-pathati",
         "SA-C08-likhati",
-        "SA-S01-letter-ma"
+        "SA-S01-letter-ma",
+        "SA-S107-letter-ta"
       ],
       "tex": "sanskrit/book/chapters/ch08-mind-verbs.tex"
     },
     {
       "language": "sanskrit",
       "chapter": 9,
-      "sourceHash": "fnv1a64:6ab57c407d72a1ba",
+      "sourceHash": "fnv1a64:b4334b0b657e8817",
       "lessonIds": [
         "SA-C09-grhnati",
         "SA-C09-prcchati",
         "SA-C09-sahayyam-karoti",
         "SA-C09-snihyati",
-        "SA-S02-letter-na"
+        "SA-S02-letter-na",
+        "SA-S108-letter-sa"
       ],
       "tex": "sanskrit/book/chapters/ch09-doing-verbs.tex"
     },
     {
       "language": "sanskrit",
       "chapter": 10,
-      "sourceHash": "fnv1a64:43a9dffef6b583ea",
+      "sourceHash": "fnv1a64:3509e37ce12d94c1",
       "lessonIds": [
         "SA-C10-paniyam",
         "SA-C10-kshiram",
         "SA-C10-annam",
-        "SA-S03-letter-a"
+        "SA-S03-letter-a",
+        "SA-S109-vowel-sign-i"
       ],
       "tex": "sanskrit/book/chapters/ch10-request-nouns.tex"
     },
     {
       "language": "sanskrit",
       "chapter": 11,
-      "sourceHash": "fnv1a64:c8fd48232b87739d",
+      "sourceHash": "fnv1a64:a4070cf5ab96f31b",
       "lessonIds": [
         "SA-C11-mitram",
         "SA-C11-kutumbam",
         "SA-C11-bhrata",
         "SA-C11-bhagini",
-        "SA-S04-letter-aa"
+        "SA-S04-letter-aa",
+        "SA-S110-letter-ra"
       ],
       "tex": "sanskrit/book/chapters/ch11-people-nouns.tex"
     },
     {
       "language": "sanskrit",
       "chapter": 12,
-      "sourceHash": "fnv1a64:e32af0ce704610c9",
+      "sourceHash": "fnv1a64:96a077f1b0ce86eb",
       "lessonIds": [
         "SA-C12-akshi",
         "SA-C12-karnah",
         "SA-C12-mukham",
-        "SA-S05-sign-virama"
+        "SA-S05-sign-virama",
+        "SA-S111-letter-ka"
       ],
       "tex": "sanskrit/book/chapters/ch12-face-nouns-1.tex"
     },
     {
       "language": "sanskrit",
       "chapter": 13,
-      "sourceHash": "fnv1a64:86e50e2bb52fa46b",
+      "sourceHash": "fnv1a64:31d6543ceb8ed599",
       "lessonIds": [
         "SA-C13-nasika",
         "SA-C13-hridayam",
-        "SA-S06-vowel-sign-aa"
+        "SA-S06-vowel-sign-aa",
+        "SA-S112-vowel-sign-e"
       ],
       "tex": "sanskrit/book/chapters/ch13-face-nouns-2.tex"
     },
     {
       "language": "sanskrit",
       "chapter": 14,
-      "sourceHash": "fnv1a64:84d3d7b6e8e24f5e",
+      "sourceHash": "fnv1a64:822f4a007006df63",
       "lessonIds": [
         "SA-C14-this",
         "SA-C14-that",
@@ -3584,21 +3636,23 @@
         "SA-C14-there",
         "SA-C14-who",
         "SA-C14-where",
-        "SA-C14-deixis-system"
+        "SA-C14-deixis-system",
+        "SA-S113-letter-pa"
       ],
       "tex": "sanskrit/book/chapters/ch14-pointing-and-asking.tex"
     },
     {
       "language": "sanskrit",
       "chapter": 15,
-      "sourceHash": "fnv1a64:a487f77349e595c8",
+      "sourceHash": "fnv1a64:5a6500ab57a18a8d",
       "lessonIds": [
         "SA-C15-big",
         "SA-C15-small",
         "SA-C15-good",
         "SA-C15-new",
         "SA-C15-old",
-        "SA-C15-adjective-system"
+        "SA-C15-adjective-system",
+        "SA-S114-letter-ha"
       ],
       "tex": "sanskrit/book/chapters/ch15-describing-things.tex"
     },
@@ -6580,155 +6634,171 @@
     {
       "language": "telugu",
       "chapter": 6,
-      "sourceHash": "fnv1a64:bc4de0324f627ca2",
+      "sourceHash": "fnv1a64:c7f3ae952173dcba",
       "lessonIds": [
         "TE-C06-dative-ku",
         "TE-C06-dative-subject",
-        "TE-S01-letter-ta"
+        "TE-S01-letter-ta",
+        "TE-S109-letter-na"
       ],
       "tex": "telugu/book/chapters/ch06-dative-case.tex"
     },
     {
       "language": "telugu",
       "chapter": 7,
-      "sourceHash": "fnv1a64:e8187bc4c2de6c35",
+      "sourceHash": "fnv1a64:736d0aa0dc0f3fd2",
       "lessonIds": [
         "TE-C07-numbers-1-5",
         "TE-C07-numbers-6-10",
-        "TE-S02-vowel-sign-u"
+        "TE-S02-vowel-sign-u",
+        "TE-S110-letter-ya"
       ],
       "tex": "telugu/book/chapters/ch07-numbers-1-10.tex"
     },
     {
       "language": "telugu",
       "chapter": 8,
-      "sourceHash": "fnv1a64:0b5362a0055fbc85",
+      "sourceHash": "fnv1a64:4c42333414361352",
       "lessonIds": [
         "TE-C08-dayachesi",
-        "TE-S03-letter-ka"
+        "TE-S03-letter-ka",
+        "TE-S111-letter-sa"
       ],
       "tex": "telugu/book/chapters/ch08-please.tex"
     },
     {
       "language": "telugu",
       "chapter": 9,
-      "sourceHash": "fnv1a64:f4fbc5c9a76f9ebd",
+      "sourceHash": "fnv1a64:c05e3495515f4120",
       "lessonIds": [
         "TE-C09-kshaminchandi",
-        "TE-S04-sign-anusvara"
+        "TE-S04-sign-anusvara",
+        "TE-S112-letter-ca"
       ],
       "tex": "telugu/book/chapters/ch09-sorry.tex"
     },
     {
       "language": "telugu",
       "chapter": 10,
-      "sourceHash": "fnv1a64:c55a5f6493ef158b",
+      "sourceHash": "fnv1a64:2231b9cbf0ea42a2",
       "lessonIds": [
         "TE-C10-vaaram",
-        "TE-S05-sign-virama"
+        "TE-S05-sign-virama",
+        "TE-S113-letter-pa"
       ],
       "tex": "telugu/book/chapters/ch10-days.tex"
     },
     {
       "language": "telugu",
       "chapter": 11,
-      "sourceHash": "fnv1a64:2ff622b22215867b",
+      "sourceHash": "fnv1a64:c78965f0bfb88e1a",
       "lessonIds": [
         "TE-C11-rangulu",
-        "TE-S06-letter-ra"
+        "TE-S06-letter-ra",
+        "TE-S114-letter-la"
       ],
       "tex": "telugu/book/chapters/ch11-colours.tex"
     },
     {
       "language": "telugu",
       "chapter": 12,
-      "sourceHash": "fnv1a64:9912a24f86c99c0c",
+      "sourceHash": "fnv1a64:4b2b7c7bc1e3287b",
       "lessonIds": [
         "TE-C12-kutumbam",
-        "TE-S07-vowel-sign-aa"
+        "TE-S07-vowel-sign-aa",
+        "TE-S115-vowel-sign-e"
       ],
       "tex": "telugu/book/chapters/ch12-family.tex"
     },
     {
       "language": "telugu",
       "chapter": 13,
-      "sourceHash": "fnv1a64:a7ed210ae7912dca",
+      "sourceHash": "fnv1a64:646072a682c448e2",
       "lessonIds": [
         "TE-C13-sharira-bhagalu",
-        "TE-S08-vowel-sign-i"
+        "TE-S08-vowel-sign-i",
+        "TE-S116-letter-da"
       ],
       "tex": "telugu/book/chapters/ch13-head-and-hand.tex"
     },
     {
       "language": "telugu",
       "chapter": 14,
-      "sourceHash": "fnv1a64:183d7e1c9349a117",
+      "sourceHash": "fnv1a64:f701380e92d9ec89",
       "lessonIds": [
-        "TE-C14-rutuvulu"
+        "TE-C14-rutuvulu",
+        "TE-S117-letter-va"
       ],
       "tex": "telugu/book/chapters/ch14-seasons.tex"
     },
     {
       "language": "telugu",
       "chapter": 15,
-      "sourceHash": "fnv1a64:aabdc5f61c5edd0b",
+      "sourceHash": "fnv1a64:c8fd2561bcbebbd6",
       "lessonIds": [
-        "TE-C15-neellu-biyyam"
+        "TE-C15-neellu-biyyam",
+        "TE-S118-letter-ga"
       ],
       "tex": "telugu/book/chapters/ch15-water-and-rice.tex"
     },
     {
       "language": "telugu",
       "chapter": 16,
-      "sourceHash": "fnv1a64:4db8baae82425d96",
+      "sourceHash": "fnv1a64:cf4904b4b69cb90d",
       "lessonIds": [
-        "TE-C16-nelalu"
+        "TE-C16-nelalu",
+        "TE-S119-vowel-sign-ii"
       ],
       "tex": "telugu/book/chapters/ch16-months.tex"
     },
     {
       "language": "telugu",
       "chapter": 17,
-      "sourceHash": "fnv1a64:27a3f400f1003c92",
+      "sourceHash": "fnv1a64:6247048c64201e45",
       "lessonIds": [
-        "TE-C17-madhyaahnam-ardharaatri"
+        "TE-C17-madhyaahnam-ardharaatri",
+        "TE-S120-vowel-sign-ee"
       ],
       "tex": "telugu/book/chapters/ch17-noon-and-midnight.tex"
     },
     {
       "language": "telugu",
       "chapter": 18,
-      "sourceHash": "fnv1a64:ed57f6b9a71d0a23",
+      "sourceHash": "fnv1a64:200ea9146c0c55bf",
       "lessonIds": [
-        "TE-C18-ganta"
+        "TE-C18-ganta",
+        "TE-S121-letter-lla"
       ],
       "tex": "telugu/book/chapters/ch18-telling-time.tex"
     },
     {
       "language": "telugu",
       "chapter": 19,
-      "sourceHash": "fnv1a64:723fbfe630b020fc",
+      "sourceHash": "fnv1a64:913d2eda89d1f762",
       "lessonIds": [
-        "TE-C19-vayasu"
+        "TE-C19-vayasu",
+        "TE-S122-letter-u"
       ],
       "tex": "telugu/book/chapters/ch19-age.tex"
     },
     {
       "language": "telugu",
       "chapter": 20,
-      "sourceHash": "fnv1a64:daaa69af0a5f6b44",
+      "sourceHash": "fnv1a64:56c3ed22f55d01eb",
       "lessonIds": [
         "TE-C20-padakondu-iravai",
-        "TE-C20-vatavaranam"
+        "TE-C20-vatavaranam",
+        "TE-S123-letter-dda"
       ],
       "tex": "telugu/book/chapters/ch20-numbers-and-weather.tex"
     },
     {
       "language": "telugu",
       "chapter": 21,
-      "sourceHash": "fnv1a64:6b9ce3de9457528d",
+      "sourceHash": "fnv1a64:23571c8a6b6168d8",
       "lessonIds": [
-        "TE-C21-kukka-pilli"
+        "TE-C21-kukka-pilli",
+        "TE-S124-letter-e"
       ],
       "tex": "telugu/book/chapters/ch21-dog-and-cat.tex"
     },

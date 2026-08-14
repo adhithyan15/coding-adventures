@@ -1,8 +1,8 @@
 Hindi, chapter 7: Yes and No.
-3 lessons. You can do the first 2 of them in the car; after that you will want to have stopped.
+4 lessons. You can do the first 2 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 3.
+Lesson 1 of 4.
 हाँ (hāṃ) — yes.
 
 Warm-up.
@@ -32,7 +32,7 @@ Wrap-up Recall.
 How do you say yes in Hindi? (hāṃ, हाँ.) What does the chandrabindu ँ do to the vowel? (Nasalises it — sends it through the nose.) How do you make hāṃ polite? (Add जी — jī hāṃ.) Next: नहीं, no.
 
 
-Lesson 2 of 3.
+Lesson 2 of 4.
 नहीं (nahīṃ) — no / not.
 
 Warm-up.
@@ -70,7 +70,7 @@ Wrap-up Recall.
 How do you say no in Hindi? (nahīṃ, नहीं.) What Sanskrit word is its core, and what ancient sound is that from? (na, from PIE ne.) Which other course words share that root? (Latin nōn, German nein, English no/not — and Spanish/French no/non.) Besides "no," what else does nahīṃ do? (It negates a sentence — maĩ nahīṃ jāntā, "I don't know.")
 
 
-Lesson 3 of 3.
+Lesson 3 of 4.
 न (na) — one character, met inside words you already say.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: न and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -110,3 +110,51 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Which character is this — न? What sound does it carry? (na.) Name one word you already say that contains it.
+
+
+Lesson 4 of 4.
+क (ka) — one character, met inside words you already say.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: क and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 1 second]
+Before the new one: र — what does it do?
+[pause 2 seconds]
+One character this time. Just one — and you have been saying it for pages without knowing which mark on the page it was.
+
+Script you'll notice: क.
+क — ka.
+It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not k, it is ka.
+What it is made of:
+a counterclockwise left bowl.
+a top-to-bottom central stem.
+a separate right-hand arch.
+the top shirorekhā.
+You already say these, and every one of them has क (ka) somewhere inside it:
+नमस्कार — hello (namaskār — more formal).
+क, त ka, ta — write ka and ta.
+क्या kyā — what.
+कैसे kaise — how (also कैसा/कैसी, agreeing).
+
+Writing: क.
+1. start at the bowl's upper-right junction and sweep left over the top, down around the left side, and back to the lower-right junction.
+2. lift and draw the central stem top-to-bottom.
+3. lift at the upper junction and sweep the right-hand arch clockwise down to its open lower tip.
+4. lift and draw the top shirorekhā left-to-right.
+Pen lifts: 3. The pen comes up 3 times and no more.
+Verified four-stroke teaching form; everyday handwriting may join or simplify the body differently.
+This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-क (ka)-order.gif’, strokes 1–4, Wikimedia Commons, 8 May 2009.
+
+Guided Practice.
+[pause 1 second]
+[your turn — look: at these words, and find क (ka) in the ones that have it]
+[pause 8 seconds for the answer]
+नमस्कार, नमस्ते.
+[once you have stopped driving — trace: क three times, saying ka as you finish each one]
+[your turn — look: back at any page of this chapter and find क (ka) once more]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which character is this — क? What sound does it carry? (ka.) Name one word you already say that contains it.

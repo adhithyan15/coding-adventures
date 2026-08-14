@@ -47,7 +47,22 @@
         "KA-S05-letter-ta",
         "KA-S06-letter-da",
         "KA-S07-letter-ra",
-        "KA-S08-vowel-sign-aa"
+        "KA-S08-vowel-sign-aa",
+        "KA-S110-letter-ba",
+        "KA-S111-vowel-sign-e",
+        "KA-S112-letter-ga",
+        "KA-S113-letter-lla",
+        "KA-S114-vowel-sign-o",
+        "KA-S115-letter-i",
+        "KA-S116-letter-ka",
+        "KA-S117-letter-ya",
+        "KA-S118-letter-dda",
+        "KA-S119-vowel-sign-oo",
+        "KA-S120-letter-ha",
+        "KA-S121-letter-sa",
+        "KA-S122-letter-ca",
+        "KA-S123-sign-anusvara",
+        "KA-S124-letter-pa"
       ],
       "before": [],
       "inline": [
@@ -859,7 +874,22 @@
         "KA-S05-letter-ta",
         "KA-S06-letter-da",
         "KA-S07-letter-ra",
-        "KA-S08-vowel-sign-aa"
+        "KA-S08-vowel-sign-aa",
+        "KA-S110-letter-ba",
+        "KA-S111-vowel-sign-e",
+        "KA-S112-letter-ga",
+        "KA-S113-letter-lla",
+        "KA-S114-vowel-sign-o",
+        "KA-S115-letter-i",
+        "KA-S116-letter-ka",
+        "KA-S117-letter-ya",
+        "KA-S118-letter-dda",
+        "KA-S119-vowel-sign-oo",
+        "KA-S120-letter-ha",
+        "KA-S121-letter-sa",
+        "KA-S122-letter-ca",
+        "KA-S123-sign-anusvara",
+        "KA-S124-letter-pa"
       ]
     },
     {

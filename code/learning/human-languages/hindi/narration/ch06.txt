@@ -1,8 +1,8 @@
 Hindi, chapter 6: Numbers One to Five.
-4 lessons. You can do the first 3 of them in the car; after that you will want to have stopped.
+5 lessons. You can do the first 3 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 4.
+Lesson 1 of 5.
 एक, दो, तीन, चार, पाँच (pāṁch) — the five forms.
 
 Warm-up.
@@ -24,7 +24,7 @@ Guided Practice.
 [pause 1 second]
 [your turn — say: "ek, do, tīn, chār, pāṁch"]
 [pause 8 seconds for the answer]
-[once you have stopped driving — point: the familiar क, त, न, र and ा inside the five words]
+[once you have stopped driving — point: the familiar क, त, न, र (ra) and ा inside the five words]
 [once you have stopped driving — trace: the ँ moon-dot over pāṁch]
 
 Wrap-up Recall.
@@ -32,7 +32,7 @@ Wrap-up Recall.
 Count to five in Hindi. (Ek, do, tīn, chār, pāṁch.) Which mark nasalises the vowel in पाँच? (The chandrabindu, "moon-dot.") Do you need to draw every unfamiliar letter today? (No — read them now and draw them when their stroke lessons arrive.) Next: watch the Sanskrit forms wear smooth.
 
 
-Lesson 2 of 4.
+Lesson 2 of 5.
 तीन and चार — weight moves from consonants to vowels.
 
 Warm-up.
@@ -72,7 +72,7 @@ Wrap-up Recall.
 Which Sanskrit forms underlie tīn and chār? (Neuter trī́ṇi and catvā́ri.) What sits between Sanskrit and Hindi? (The Prakrits.) In trī́ṇi becomes tiṇṇi becomes tīn, what trades places? (The lost r is paid for by a double consonant, then the simplified double by a long vowel.) Next: follow the nasal that stayed inside pāṁch.
 
 
-Lesson 3 of 4.
+Lesson 3 of 5.
 पाँच (pāṁch) — the nasal moved into the vowel.
 
 Warm-up.
@@ -96,7 +96,7 @@ Wrap-up Recall.
 Did the nasal in pañca disappear? (No — it moved into the vowel.) What records it in पाँच? (The chandrabindu.) Count one to five once more. (Ek, do, tīn, chār, pāṁch.)
 
 
-Lesson 4 of 4.
+Lesson 4 of 5.
 म (ma) — one character, met inside words you already say.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: म and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -137,3 +137,49 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Which character is this — म? What sound does it carry? (ma.) Name one word you already say that contains it.
+
+
+Lesson 5 of 5.
+र — one character, met inside words you already say.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: र and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 1 second]
+A horizontal head-line (shirorekha) runs across the top; letters hang beneath it like laundry on a line.
+[pause 2 seconds]
+One character this time. Just one — and you have been saying it for pages without knowing which mark on the page it was.
+
+Script you'll notice: र.
+र — ra.
+It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not r, it is ra.
+What it is made of:
+a top-to-bottom stem curling clockwise around the lower loop.
+a diagonal tail.
+the top shirorekhā.
+You already say these, and every one of them has र (ra) somewhere inside it:
+शिरोरेखा shirorekhā — the head-line that Devanagari letters hang from.
+मेरा merā — my.
+र, स ra, sa — र (ra) and स (sa).
+मेरा नाम merā nām — assemble my name from known letters and show word spacing as two head-lines.
+
+Writing: र.
+1. start at the headline junction, descend the stem, and curl left and clockwise around the lower loop to the tail junction.
+2. lift at that junction and draw the diagonal tail down-right.
+3. lift and draw the top shirorekhā left-to-right.
+Pen lifts: 2. The pen comes up 2 times and no more.
+Verified three-stroke teaching form; another animated learner source joins the loop and diagonal tail.
+This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-र (ra)-order.gif’, strokes 1–3, Wikimedia Commons, 10 May 2009.
+
+Guided Practice.
+[pause 1 second]
+[your turn — look: at these words, and find र (ra) in the ones that have it]
+[pause 8 seconds for the answer]
+शिरोरेखा, मेरा, नमस्ते.
+[once you have stopped driving — trace: र three times, saying ra as you finish each one]
+[your turn — look: back at any page of this chapter and find र (ra) once more]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which character is this — र? What sound does it carry? (ra.) Name one word you already say that contains it.

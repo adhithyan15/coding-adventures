@@ -1,8 +1,8 @@
 Hindi, chapter 20: Weather.
-1 lesson. All 1 can be done entirely by ear.
+2 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 1.
+Lesson 1 of 2.
 मौसम — another Perso-Arabic loan, and a false-friend trap.
 
 Warm-up.
@@ -34,3 +34,50 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 What English word shares मौसम's exact root, and how did it reach English? (Monsoon — from Arabic mawsim via Persian, carried into English in the 1580s by Portuguese/Dutch traders, well before the British Raj.) Are बारिश and वर्षा related words? (Probably not — despite sounding similar, baarish is a Persian loan and varṣā is native Sanskrit; dictionaries flag them as likely unrelated.) What PIE root does वर्षा trace to, and what's its Greek cousin? (h₁wers-, "to rain" — cousin of Greek hérsē, "dew.")
+
+
+Lesson 2 of 2.
+ध (dha) — one character, met inside words you already say.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ध and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 1 second]
+Before the new one: द — what does it do?
+[pause 2 seconds]
+One character this time. Just one — and you have been saying it for pages without knowing which mark on the page it was.
+
+Script you'll notice: ध.
+ध — dha.
+It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not dh, it is dha.
+What it is made of:
+an upper spiral ending in a rightward shoulder.
+a separate lower bowl.
+a top-to-bottom right stem.
+the top shirorekhā.
+You already say these, and every one of them has ध (dha) somewhere inside it:
+धन्यवाद — thank you (dhanyavād — formal, Sanskritic).
+सोमवार मंगलवार बुधवार गुरुवार शुक्रवार — Monday–Friday.
+दोपहर आधी रात — noon (literally "two pahars," a traditional 3-hour time unit) and midnight ("half night," fully transparent).
+
+Writing: ध.
+1. start at the upper spiral's inner crossing, curl around the small opening, widen left and down around the outer loop, then sweep right through the shoulder without lifting.
+2. lift at the left waist and sweep down and around the lower bowl to its right junction.
+3. lift and draw the right stem top-to-bottom.
+4. lift and draw the top shirorekhā left-to-right.
+Pen lifts: 3. The pen comes up 3 times and no more.
+Verified four-stroke teaching form; everyday handwriting may join or simplify the loops differently.
+This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-ध (dha)-order.gif’, strokes 1–4, Wikimedia Commons, 10 May 2009.
+
+Guided Practice.
+[pause 1 second]
+[your turn — look: at these words, and find ध (dha) in the ones that have it]
+[pause 8 seconds for the answer]
+धन्यवाद, नमस्ते.
+[once you have stopped driving — trace: ध three times, saying dha as you finish each one]
+[your turn — look: back at any page of this chapter and find ध (dha) once more]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which character is this — ध? What sound does it carry? (dha.) Name one word you already say that contains it.

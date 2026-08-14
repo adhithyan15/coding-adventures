@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "Taking, Asking, Helping, Loving",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:044c1f02a1f489e1",
+  "sourceHash": "fnv1a64:f1b1bc0c5f5ad1c7",
   "lessons": [
     {
       "id": "SA-C09-grhnati",
@@ -815,6 +815,215 @@
             {
               "kind": "speech",
               "text": "Which character is this — न? What sound does it carry? (na.) Name one word you already say that contains it."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-S108-letter-sa",
+      "sequence": 476,
+      "title": "स — one character, met inside words you already say",
+      "headword": "स",
+      "romanization": "sa",
+      "gloss": "the single character स — recognised inside words you already say",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:c82d6bfae0e2444c",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: स",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: स and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: त — what does it do?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One character this time. Just one — and you have been saying it for pages without knowing which mark on the page it was."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: स",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "स — sa."
+            },
+            {
+              "kind": "speech",
+              "text": "It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not s, it is sa."
+            },
+            {
+              "kind": "speech",
+              "text": "What it is made of:"
+            },
+            {
+              "kind": "speech",
+              "text": "a descending left stem curling through the central hook and diagonal tail."
+            },
+            {
+              "kind": "speech",
+              "text": "a left-to-right middle crossbar."
+            },
+            {
+              "kind": "speech",
+              "text": "a top-to-bottom right stem."
+            },
+            {
+              "kind": "speech",
+              "text": "the top shirorekhā."
+            },
+            {
+              "kind": "speech",
+              "text": "You already say these, and every one of them has स somewhere inside it:"
+            },
+            {
+              "kind": "speech",
+              "text": "नमस्ते namaste — hello (lit. \"a bow to you\") (namaste)."
+            },
+            {
+              "kind": "speech",
+              "text": "नमस्कारः namaskāraḥ — hello (lit. \"the making of a bow\") (namaskāraḥ)."
+            },
+            {
+              "kind": "speech",
+              "text": "स्वागतम् svāgatam — welcome (lit. \"well come\") (svāgatam)."
+            },
+            {
+              "kind": "speech",
+              "text": "अस्ति asti — is."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: स",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "1. start just below the headline, descend the left stem, curve left around the central hook, and continue diagonally down-right through the tail without lifting."
+            },
+            {
+              "kind": "speech",
+              "text": "2. lift at the central junction and draw the middle crossbar left-to-right."
+            },
+            {
+              "kind": "speech",
+              "text": "3. lift and draw the right stem top-to-bottom."
+            },
+            {
+              "kind": "speech",
+              "text": "4. lift and draw the top shirorekhā left-to-right."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 3. The pen comes up 3 times and no more."
+            },
+            {
+              "kind": "speech",
+              "text": "Verified four-stroke teaching form; the corroborating deskbook stages the left curve and diagonal tail separately."
+            },
+            {
+              "kind": "speech",
+              "text": "This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: JackPotte, ‘Devanagari s स (sa).gif’, strokes 1–4, Wikimedia Commons, 29 March 2009."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at these words, and find स (sa) in the ones that have it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at these words, and find स in the ones that have it]"
+            },
+            {
+              "kind": "speech",
+              "text": "नमस्ते, नमस्कारः."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "स three times, saying sa as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: स three times, saying *sa* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "back at any page of this chapter and find स (sa) once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: back at any page of this chapter and find स once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — स? What sound does it carry? (sa.) Name one word you already say that contains it."
             }
           ]
         }
