@@ -193,16 +193,19 @@ two-phase CAS reservation, crash recovery, nonce-safe abandoned gaps,
 idempotent encrypted records and grants, ordered paging, acknowledgements,
 and stable record errors are portable fixture candidates. Backend I/O,
 filesystem durability, key custody, entropy, and actor routing remain injected
-or native. A dedicated backlog owner depends on the channel-crypto vectors, so
-the new singleton is classified but is not eligible to preempt that dependency.
+or native. D18P now specifies the exact portable record, key, atomicity,
+recovery, paging, acknowledgement, and error behavior. Its shared fixture/Rust
+compatibility lock is the next dependency before non-Rust ports.
 
 The `b3a6616a` refresh added `chief-of-staff-channel-endpoints`, another
 zero-capability deterministic layer. Bounded identities, durable membership,
 role/key authorization, lifecycle, injected message metadata, delivery-session
 receipts, and publish/grant/read/acknowledge orchestration are portable fixture
 candidates. Storage I/O, durability, clocks, randomness, key custody, and actor
-routing stay injected or native. Its dedicated backlog owner depends on the
-channel-store contract and therefore cannot bypass the crypto/store sequence.
+routing stay injected or native. D18P fixes the structural role and lifecycle
+contract while leaving sealed-key generation and rotation to #141. The endpoint
+ports follow the D18P store fixture lock rather than inventing parallel storage
+semantics.
 
 The `bce05ed6` refresh added `chief-of-staff-service-registry`, a zero-
 capability deterministic registry over an injected `StorageBackend`. Its
