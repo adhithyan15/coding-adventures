@@ -4717,10 +4717,13 @@ impl HtmlParser {
                     }
                     Token::Eof => {
                         if !self.is_fragment && self.has_open_element("frameset") {
-                            self.diagnostics.push(ParserDiagnostic::new(
-                                "eof-in-frameset",
-                                "end of file was reached while parsing a frameset",
-                            ));
+                            self.diagnostics.push(
+                                ParserDiagnostic::new(
+                                    "eof-in-frameset",
+                                    "end of file was reached while parsing a frameset",
+                                )
+                                .at_emission(self.current_token_emission_position),
+                            );
                         }
                         if self.current_element_is_authored_text_mode_element() {
                             self.diagnostics.push(ParserDiagnostic::new(
@@ -35536,7 +35539,13 @@ mod tests {
                 ParserDiagnostic::new(
                     "eof-in-frameset",
                     "end of file was reached while parsing a frameset"
-                ),
+                )
+                .at_emission(Some(SourcePosition {
+                    byte_offset: source.len(),
+                    char_offset: source.chars().count(),
+                    line: 1,
+                    column: source.chars().count() + 1,
+                })),
             ]
         );
     }
@@ -35565,7 +35574,13 @@ mod tests {
                 ParserDiagnostic::new(
                     "eof-in-frameset",
                     "end of file was reached while parsing a frameset"
-                ),
+                )
+                .at_emission(Some(SourcePosition {
+                    byte_offset: source.len(),
+                    char_offset: source.chars().count(),
+                    line: 1,
+                    column: source.chars().count() + 1,
+                })),
             ]
         );
     }
@@ -35759,10 +35774,94 @@ mod tests {
                 vec![ParserDiagnostic::new(
                     "eof-in-frameset",
                     "end of file was reached while parsing a frameset"
-                )],
+                )
+                .at_emission(Some(SourcePosition {
+                    byte_offset: source.len(),
+                    char_offset: source.chars().count(),
+                    line: 1,
+                    column: source.chars().count() + 1,
+                }))],
                 "source {source:?}"
             );
         }
+    }
+
+    #[test]
+    fn positions_frameset_eof_diagnostics_at_eof_emission() {
+        let source = "<!doctype html><!--é-->\r\n<frameset><frameset> ";
+        let output = parse_html_with_diagnostics(source).unwrap();
+        let diagnostic = output
+            .parser_diagnostics
+            .iter()
+            .find(|diagnostic| diagnostic.code == "eof-in-frameset")
+            .unwrap();
+        let line_start = source.rfind('\n').unwrap() + 1;
+        assert_eq!(
+            diagnostic.position,
+            Some(SourcePosition {
+                byte_offset: source.len(),
+                char_offset: source.chars().count(),
+                line: 2,
+                column: source[line_start..].chars().count() + 1,
+            })
+        );
+        assert!(source.len() > source.chars().count());
+
+        let mut parser = HtmlParser::new();
+        for token in [
+            Token::StartTag {
+                name: "html".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "frameset".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Eof,
+        ] {
+            parser.process_token(token);
+        }
+        assert_eq!(
+            parser
+                .diagnostics()
+                .iter()
+                .find(|diagnostic| diagnostic.code == "eof-in-frameset")
+                .unwrap()
+                .position,
+            None
+        );
+
+        for source in [
+            "<!doctype html><frameset></frameset>",
+            "<!doctype html><frameset></frameset></html>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != "eof-in-frameset"));
+        }
+
+        let noframes_source = "<!doctype html><frameset><noframes>text";
+        let noframes = parse_html_with_diagnostics(noframes_source).unwrap();
+        assert!(noframes.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic.code == "eof-in-frameset"
+                && diagnostic.position.is_some_and(|position| {
+                    position.byte_offset == noframes_source.len()
+                })
+        }));
+        assert!(noframes.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic.code == "eof-in-text-mode" && diagnostic.position.is_none()
+        }));
+
+        let fragment =
+            parse_html_fragment_for_context_with_diagnostics("<frameset>", "html").unwrap();
+        assert!(fragment
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "eof-in-frameset"));
     }
 
     #[test]
