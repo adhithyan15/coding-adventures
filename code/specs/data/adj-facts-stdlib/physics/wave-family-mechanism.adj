@@ -1,0 +1,65 @@
+% ============================================================================
+% wave-family-mechanism — for the two wave families, the underlying physical
+% MECHANISM the SAME already-cited NASA sentence contrasts them by
+% (adj-facts-stdlib, PHYSICS).
+% ============================================================================
+% A sibling to the already-shipped `wave-types.adj`
+% (`wave_family(wave, family)`, 10 rows, which of the two families —
+% mechanical or electromagnetic — a NAMED wave belongs to: water →
+% mechanical, radio → electromagnetic, etc.). That table's own header
+% already quotes, verbatim, a THIRD NASA sentence (beyond the two per-wave
+% classification sentences already fully used to build all 10 rows) that
+% states, in one continuous contrast, the defining MECHANISM of both
+% families at once — a fact the per-WAVE key set had no room for:
+%
+%   "Light waves, also called electromagnetic waves, involve oscillations
+%    of electric and magnetic fields rather than oscillations of matter."
+%
+% Recall is a binding query:
+%
+%     ? wave_family_mechanism(electromagnetic, $Mechanism)
+%       % oscillations_of_electric_and_magnetic_fields
+%
+% This is a native `table` (ADJ-TABLES RS-5, an ordinary two-column EXACT
+% lookup): each `row` lowers to a ground relation
+% `wave_family_mechanism(family, mechanism)` carrying the citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the
+% mechanism WITH its source, on the CPU, with zero model calls. Unlike its
+% parent, this sibling is keyed by FAMILY (2 rows), not by individual WAVE
+% (10 rows) — a coarser grain than `wave-types.adj`'s own key set, since
+% the underlying fact (what a family's oscillation involves) is itself a
+% per-family property, not a per-wave one. The query also runs BACKWARD —
+% bind a mechanism and recall which family has it:
+%
+%     ? wave_family_mechanism($Family, oscillations_of_matter)
+%       % mechanical
+%
+% A word that is NOT one of the two families — `radio`, `sound`, or any
+% individual wave name — is deliberately NOT a row here (those belong to
+% the parent's own per-wave key set), so a recall on one ABSTAINS rather
+% than inventing a mechanism.
+%
+% Provenance: reproduces, byte-for-byte, the SAME NASA sentence already
+% quoted inside `wave-types.adj`'s own header, from the SAME NASA Science
+% James Webb Space Telescope education asset "Electromagnetic Wave (Light
+% Wave) vs. Mechanical Wave" that table already cites — no new WebFetch,
+% only a different schema decoding the mechanism half of the
+% already-verified quote (the sentence states BOTH mechanisms at once, by
+% contrast: electromagnetic waves involve oscillations of electric and
+% magnetic fields "rather than" the oscillations of matter that mechanical
+% waves involve). `trust authoritative` — the same tier `wave-types.adj`
+% already carries (a primary U.S. government NASA education page).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+table wave_family_mechanism {
+    columns family, mechanism
+
+    row (electromagnetic, oscillations_of_electric_and_magnetic_fields)   % NASA: "Light waves, also called electromagnetic waves, involve oscillations of electric and magnetic fields rather than oscillations of matter."
+    row (mechanical, oscillations_of_matter)                              % NASA: same sentence, contrasted mechanism — "...rather than oscillations of matter."
+
+    source "Light waves, also called electromagnetic waves, involve oscillations of electric and magnetic fields rather than oscillations of matter."
+    locator "https://science.nasa.gov/asset/webb/electromagnetic-wave-light-wave-vs-mechanical-wave/"
+    trust authoritative
+}

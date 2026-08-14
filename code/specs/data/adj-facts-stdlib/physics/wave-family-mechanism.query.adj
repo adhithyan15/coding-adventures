@@ -1,0 +1,20 @@
+% ============================================================================
+% wave-family-mechanism.query — worked recall queries against
+% wave-family-mechanism.adj (adj-facts-stdlib, PHYSICS).
+% ============================================================================
+% Three queries: forward recall with citation, backward recall (bind a
+% mechanism, find the family), and honest abstention on an individual
+% wave name (this table is keyed by FAMILY, not by wave -- individual
+% wave names belong to the parent wave-types.adj's own key set).
+% ============================================================================
+
+import "wave-family-mechanism.adj"
+
+% Forward: what mechanism does the cited NASA span give for electromagnetic waves?
+? wave_family_mechanism(electromagnetic, $Mechanism)
+
+% Backward: which family involves oscillations of matter?
+? wave_family_mechanism($Family, oscillations_of_matter)
+
+% Honest abstention: "radio" is a wave name, not a family -- belongs to wave-types.adj's key set, not this one.
+? wave_family_mechanism(radio, $MechanismRadio)
