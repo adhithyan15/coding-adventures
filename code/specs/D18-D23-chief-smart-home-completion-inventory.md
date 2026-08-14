@@ -397,6 +397,16 @@ completed composition path is not mistaken for completion of those products.
 
 ## D18 Child-Tracker Reconciliation
 
+The accepted runtime calls the signed, supervised agent deployment unit a
+`host`; `register_host`, `deregister_host`, `list_hosts`, and `health_check`
+therefore implement the original agent-lifecycle API semantics without a
+second alias layer. PRs #9655, #9696, and #9719 provide the durable registry,
+orchestrator core, authenticated protocol, and typed client. PRs #9730 and
+#9841 expose the lifecycle through the operator CLI. PRs #11379, #11403,
+#11425, and #11453 complete Trust-Checker-backed pipeline mutation through the
+core, daemon, production policy, and CLI. PRs #10998 and #11003 supply the
+bounded model loop and executable central smart-home path.
+
 | Tracker | Status | Evidence or residual acceptance |
 | --- | --- | --- |
 | #129 D19 crypto specification | Open | A dedicated audit must still reconcile the specification, RFC vectors, and all-six-language acceptance. |
@@ -406,11 +416,11 @@ completed composition path is not mistaken for completion of those products.
 | #133 Originator/Receiver | Open | Durable Rust endpoints exist, but the full SKILL, simple-function, full-program, and stdin interface spectrum still needs acceptance. |
 | #134 Vault | Open | Vault storage and leased/direct delivery primitives exist; unlock, store, rotation, and the complete credential-product surface remain broader than the accepted slices. |
 | #135 Trust Checker | Complete | Canonical Tier 0 through Tier 3 policy and production notification, biometric, and hardware-key providers are shipped, including the canonical 5/30/60-second deadlines. |
-| #136 Service Registry | Open | Durable host and service registries exist, but the original combined agent, channel, and pipeline registry API needs an explicit contract reconciliation. |
+| #136 Service Registry | Complete | The durable CAS-backed host registry owns immutable package identity, lifecycle intent, bounded observations, stable listing, restart recovery, and safe deregistration. Channel topology and pipeline bindings deliberately remain in their own authoritative stores instead of a duplicate registry cache. |
 | #137 WebSocket | Complete | The checked-in cross-language WebSocket implementation and accepted tracker are complete. |
-| #138 Orchestrator daemon | Open; central composition complete | The central owner, supervision, authenticated host dispatch, bounded model loop, durable audit/state, and Home Assistant readback are executable. Public agent registration, deregistration, listing, and lifecycle/health acceptance remain. |
+| #138 Orchestrator daemon | Complete | Authenticated `register_host`, `reload_host`, `list_hosts`, desired-state, reconciliation, `health_check`, safe deregistration, and Trust-Checker-backed pipeline wire/unwire operations implement the original agent lifecycle semantics. The typed client and operator CLI expose that surface, while the central owner, supervision, bounded model loop, durable audit/state, and Home Assistant readback are executable. |
 | #139 Agent SDK and SKILL parser | Open | Level One parsing and execution exist; the Level Two function, Level Three direct-channel, Level Four any-language/stdin, discovery, and hot-reload surfaces remain. |
-| #140 CLI | Open | Doctor, install, wire, and unwire exist; the request/response channel UX, Tier 1 prompt, Tier 2 passphrase fallback, Vault unlock, agent listing, and pipeline commands remain. |
+| #140 CLI | Open | Agents, doctor, install-daemon, register, start, stop, reconcile, deregister, wire, and unwire exist; the request/response channel UX, Tier 1 prompt, Tier 2 passphrase fallback, Vault unlock, and pipeline-listing command remain. |
 | #141 Channel encryption | Open | The production Rust protocol exists; cross-language protocol interoperability, conformance, and key-rotation acceptance remain. |
 | #142 Reference agents | Open | The Weather Agent is executable; the email reader, email responder, and finance reference agents remain. |
 
