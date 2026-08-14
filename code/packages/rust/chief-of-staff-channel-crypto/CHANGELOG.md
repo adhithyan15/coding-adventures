@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Make authenticated message fields, headers, ciphertexts, tags, and signatures
+  structurally immutable outside the crate, with read-only constructors and
+  accessors for channel-store and endpoint callers.
 - Add versioned, bounded binary codecs for sealed key grants and encrypted
   channel-log messages.
 - Add stable storage keys for messages, key grants, sequence state, and

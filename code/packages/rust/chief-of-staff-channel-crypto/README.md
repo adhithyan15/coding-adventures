@@ -14,7 +14,9 @@ Messages use XChaCha20-Poly1305 with the canonical 16-byte channel identifier
 followed by the globally monotonic 64-bit sequence as the 24-byte nonce. Their
 canonical, length-framed header is both AEAD additional data and the Ed25519
 signature input. The header includes a SHA-256 plaintext digest, so successful
-decryption also verifies the declared plaintext hash.
+decryption also verifies the declared plaintext hash. Authenticated message
+fields, headers, ciphertext, tags, and signatures are private after construction;
+callers receive only read-only borrowed or copied views.
 
 Secret key material is held in `Zeroizing` containers. Receiver epoch state
 accepts a byte-identical retry of the current grant, rejects conflicts and

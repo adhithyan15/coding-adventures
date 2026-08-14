@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Consume the channel-crypto package's structurally immutable message envelope
+  through its read-only accessors.
+
 ## 0.1.0
 
 - Add CAS-protected durable next-sequence and pending-header state.
