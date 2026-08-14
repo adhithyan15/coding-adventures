@@ -6863,6 +6863,43 @@
       "jsonHash": "fnv1a64:bc2ec0dd1ac615ce"
     },
     {
+      "language": "sanskrit",
+      "chapter": 17,
+      "sourceHash": "fnv1a64:0074b178ebc6d4c1",
+      "lessonIds": [
+        "SA-C17-day",
+        "SA-C17-night",
+        "SA-C17-today",
+        "SA-C17-yesterday",
+        "SA-C17-always",
+        "SA-C17-time-words"
+      ],
+      "voiceLessons": 6,
+      "drivablePrefix": 6,
+      "text": "sanskrit/narration/ch17.txt",
+      "json": "sanskrit/narration/ch17.json",
+      "textHash": "fnv1a64:7b8ba6a1cc045fc9",
+      "jsonHash": "fnv1a64:2e63a7f7d9bebbd5"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 18,
+      "sourceHash": "fnv1a64:c34324b4e7d3ac5d",
+      "lessonIds": [
+        "SA-C18-when",
+        "SA-C18-why",
+        "SA-C18-how-many",
+        "SA-C18-from-where",
+        "SA-C18-k-words"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "sanskrit/narration/ch18.txt",
+      "json": "sanskrit/narration/ch18.json",
+      "textHash": "fnv1a64:5997a514c0d67731",
+      "jsonHash": "fnv1a64:665b7a5a7a058ec8"
+    },
+    {
       "language": "spanish",
       "chapter": 1,
       "sourceHash": "fnv1a64:7f767862168ad0bf",

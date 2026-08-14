@@ -3671,6 +3671,33 @@
       "tex": "sanskrit/book/chapters/ch16-places.tex"
     },
     {
+      "language": "sanskrit",
+      "chapter": 17,
+      "sourceHash": "fnv1a64:35e49d2759339b1d",
+      "lessonIds": [
+        "SA-C17-day",
+        "SA-C17-night",
+        "SA-C17-today",
+        "SA-C17-yesterday",
+        "SA-C17-always",
+        "SA-C17-time-words"
+      ],
+      "tex": "sanskrit/book/chapters/ch17-time.tex"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 18,
+      "sourceHash": "fnv1a64:f79b5fe69e9e4d3e",
+      "lessonIds": [
+        "SA-C18-when",
+        "SA-C18-why",
+        "SA-C18-how-many",
+        "SA-C18-from-where",
+        "SA-C18-k-words"
+      ],
+      "tex": "sanskrit/book/chapters/ch18-asking.tex"
+    },
+    {
       "language": "spanish",
       "chapter": 1,
       "sourceHash": "fnv1a64:55f690de8a10e9cb",
