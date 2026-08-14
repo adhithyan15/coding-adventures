@@ -526,6 +526,10 @@ Prioritized work items:
    remains logically open at the marked table, section, or row context;
    transitions into authored table descendants retain their existing EOF
    ownership.
+   Generic source-driven end tags mismatched at SVG or MathML integration
+   boundaries now attach `unexpected-end-tag-in-foreign-content` to the
+   tokenizer's proven end-tag emission point, while specialized companion
+   diagnostics and directly supplied token streams remain unpositioned.
    Continue migrating one evidence-backed diagnostic family at a time;
    synthetic or directly supplied tokens must remain explicitly unpositioned.
 4. **Input boundary review.** Document the Unicode-code-point parser boundary
