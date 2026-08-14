@@ -7536,19 +7536,20 @@
     {
       "language": "spanish",
       "chapter": 49,
-      "sourceHash": "fnv1a64:04ce280e85a3757f",
+      "sourceHash": "fnv1a64:5a190be94be96d0d",
       "lessonIds": [
         "ES-C10-ir",
         "ES-C10-ir-a-futuro",
+        "ES-C10-futuro-simple",
         "ES-C10-mi-tu-su",
         "ES-C10-practice"
       ],
       "voiceLessons": 4,
-      "drivablePrefix": 4,
+      "drivablePrefix": 2,
       "text": "spanish/narration/ch49.txt",
       "json": "spanish/narration/ch49.json",
-      "textHash": "fnv1a64:ca9e54f40483c04c",
-      "jsonHash": "fnv1a64:9d3284f622cb798b"
+      "textHash": "fnv1a64:7bd10fcddc278c4c",
+      "jsonHash": "fnv1a64:f0316212798d5b50"
     },
     {
       "language": "spanish",
@@ -8314,18 +8315,19 @@
     {
       "language": "spanish",
       "chapter": 103,
-      "sourceHash": "fnv1a64:de73f504bba0ec66",
+      "sourceHash": "fnv1a64:b67f4b4c54e06e79",
       "lessonIds": [
+        "ES-C14-ayer",
         "ES-C14-ser-ir-preterite",
         "ES-C14-hablar-preterite",
         "ES-C14-practice"
       ],
-      "voiceLessons": 3,
-      "drivablePrefix": 3,
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
       "text": "spanish/narration/ch103.txt",
       "json": "spanish/narration/ch103.json",
-      "textHash": "fnv1a64:75f627be117e8c58",
-      "jsonHash": "fnv1a64:0c5c848e4d330227"
+      "textHash": "fnv1a64:bd7dbfe64b16c3fe",
+      "jsonHash": "fnv1a64:1544662addf8719f"
     },
     {
       "language": "spanish",
