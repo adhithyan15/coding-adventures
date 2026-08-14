@@ -108,6 +108,18 @@ defmodule CodingAdventures.ChiefOfStaffChannelStore.D18PFixturesTest do
     assert Map.new(@fixture["operation_negative_cases"], &{&1["name"], &1["expected_error"]}) ==
              expected
 
+    recipes =
+      @fixture["oversize_recipes"]
+      |> Enum.map(&{&1["field"], &1["declared_length"], &1["expected_error"]})
+      |> MapSet.new()
+
+    assert recipes ==
+             MapSet.new([
+               {"agent-id", "4097", "invalid_definition"},
+               {"receiver-count", "1025", "invalid_definition"},
+               {"pending-header", "16385", "corrupt_record"}
+             ])
+
     assert function_exported?(DurableOriginator, :publish!, 3)
     refute function_exported?(DurableOriginator, :receive!, 2)
     assert function_exported?(DurableReceiver, :receive!, 2)
