@@ -3982,6 +3982,56 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: cyrillicAlphabetSource("ф"),
   },
+  // RussianIrina writes lowercase х as two facing top-to-bottom curves: the
+  // left run first, then the right run after one lift. The fitted path keeps
+  // that run order while straightening the curves into the printed X arms.
+  [ductusKey("cyrillic", "х")]: {
+    script: "cyrillic",
+    glyph: "х",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "descend from the upper-left tip to the central crossing",
+            path: [
+              { x: 68, y: 536 },
+              { x: 160, y: 408 },
+              { x: 256, y: 274 },
+            ],
+          },
+          {
+            label: "sweep down-left from the crossing to the lower-left tip",
+            path: [
+              { x: 256, y: 274 },
+              { x: 158, y: 138 },
+              { x: 58, y: 0 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift and descend from the upper-right tip to the crossing",
+            path: [
+              { x: 442, y: 536 },
+              { x: 350, y: 408 },
+              { x: 256, y: 274 },
+            ],
+          },
+          {
+            label: "sweep down-right from the crossing to the lower-right tip",
+            path: [
+              { x: 256, y: 274 },
+              { x: 354, y: 138 },
+              { x: 452, y: 0 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: cyrillicAlphabetSource("х"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the

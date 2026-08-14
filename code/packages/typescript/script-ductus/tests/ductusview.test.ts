@@ -242,6 +242,8 @@ const CYRILLIC_U = ductusFor("у", "cyrillic")!;
 const cyrillicUOutline = cyrillicOutline("у");
 const CYRILLIC_EF = ductusFor("ф", "cyrillic")!;
 const cyrillicEfOutline = cyrillicOutline("ф");
+const CYRILLIC_HA = ductusFor("х", "cyrillic")!;
+const cyrillicHaOutline = cyrillicOutline("х");
 const HEBREW_ALEF = ductusFor("א", "hebrew")!;
 const hebrewAlefOutline = hebrewOutline("א");
 const HEBREW_BET = ductusFor("ב", "hebrew")!;
@@ -3040,6 +3042,37 @@ describe("Cyrillic ф — stem first, then one joined two-bowl run", () => {
     expect(done).toHaveLength(1);
     expect(done[0].attrs.d).toBe(penPathD(CYRILLIC_EF.strokes[0], 1));
     expect(pen.attrs.d).toBe(penPathD(CYRILLIC_EF.strokes[1], 1));
+  });
+});
+
+describe("Cyrillic х — two facing curves fitted through one printed crossing", () => {
+  const steps = ductusSteps(CYRILLIC_HA);
+  const strip = ductusFilmstrip(CYRILLIC_HA, cyrillicHaOutline);
+
+  it("shows the complete left run before the lifted right run", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "descend from the upper-left tip to the central crossing",
+      "sweep down-left from the crossing to the lower-left tip",
+      "lift and descend from the upper-right tip to the crossing",
+      "sweep down-right from the crossing to the lower-right tip",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, true, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 1, 1]);
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 4 movements");
+  });
+
+  it("draws the exact Noto Sans Cyrillic character behind both runs", () => {
+    const paths = byTag(strip.frames[3], "path");
+    const done = paths.filter((path) => path.attrs.class === "ductus__done");
+    const pen = paths.find((path) => path.attrs.class === "ductus__pen")!;
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      cyrillicHaOutline.path,
+    );
+    expect(done).toHaveLength(1);
+    expect(done[0].attrs.d).toBe(penPathD(CYRILLIC_HA.strokes[0], 1));
+    expect(pen.attrs.d).toBe(penPathD(CYRILLIC_HA.strokes[1], 1));
   });
 });
 

@@ -21,6 +21,12 @@ at the package. `scriptdata` stays out of that chunk on purpose — the shell ne
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Cyrillic х ductus (HL-C09EV)
+
+- Render **х** in four movements across two source-aligned strokes with one lift.
+- Draw the left pair of arms through the centre crossing, lift, then draw the right pair through that same crossing.
+- Preserve the native-teacher lesson's two-facing-curve school-hand order while fitting Noto Sans Cyrillic's printed X-like form, and reduce measured HL-C09 debt to 80 entries.
+
 ### Added — cited Cyrillic ф ductus (HL-C09EU)
 
 - Render **ф** in five movements across two source-aligned strokes with one lift.
