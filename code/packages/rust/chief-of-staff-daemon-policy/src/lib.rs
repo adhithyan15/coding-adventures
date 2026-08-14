@@ -5,6 +5,9 @@
 
 use chief_of_staff_daemon_api::{Operation, SessionAuthorizer};
 use chief_of_staff_daemon_config::{ConfiguredPrivilegeTier, PrivilegeConfig};
+use chief_of_staff_notification_approval::{
+    NotificationApprovalError, NotificationCommandProvider,
+};
 use chief_of_staff_orchestrator_core::{
     ChannelPrivilegeResolver, ChannelWiringAuthorizer, ChannelWiringRequest,
     PipelinePrivilegeResolver, PipelineWiringAuthorizer, PipelineWiringRequest,
@@ -19,6 +22,7 @@ use coding_adventures_ct_compare::ct_eq_fixed;
 use coding_adventures_zeroize::Zeroizing;
 use core::fmt::{self, Display, Formatter};
 use std::collections::BTreeMap;
+use std::path::Path;
 
 const SECRET_BYTES: usize = 32;
 const ENCODED_BYTES: usize = SECRET_BYTES * 2;
@@ -357,16 +361,94 @@ impl ApprovalProvider for UnavailableApprovalProvider {
     }
 }
 
+/// Payload-blind production approval-provider failure.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum ProductionApprovalError {
+    /// No interactive provider was configured.
+    Unavailable,
+    /// The configured Tier 1 notification helper failed closed.
+    Notification(NotificationApprovalError),
+}
+
+impl Display for ProductionApprovalError {
+    fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
+        formatter.write_str(match self {
+            Self::Unavailable => "chief daemon policy: approval provider unavailable",
+            Self::Notification(_) => "chief daemon policy: notification approval failed",
+        })
+    }
+}
+
+impl std::error::Error for ProductionApprovalError {}
+
+/// Production provider selected from the closed daemon configuration.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum ProductionApprovalProvider {
+    /// Preserve fail-closed behavior when no helper is configured.
+    Unavailable,
+    /// Delegate Tier 1 notification approval to one reviewed shell-free helper.
+    Notification(NotificationCommandProvider),
+}
+
+impl ApprovalProvider for ProductionApprovalProvider {
+    type Error = ProductionApprovalError;
+
+    fn request_approval(
+        &mut self,
+        prompt: ApprovalPrompt<'_>,
+    ) -> Result<ApprovalOutcome, Self::Error> {
+        match self {
+            Self::Unavailable => Err(ProductionApprovalError::Unavailable),
+            Self::Notification(provider) => provider
+                .request_approval(prompt)
+                .map_err(ProductionApprovalError::Notification),
+        }
+    }
+}
+
+/// Stable production-composition failure before the daemon starts serving.
+#[derive(Debug)]
+pub enum ProductionPolicyError {
+    /// The configured helper path could not be resolved against the explicit home.
+    Config(chief_of_staff_daemon_config::ConfigError),
+    /// The resolved helper path was not acceptable to the notification provider.
+    Notification(NotificationApprovalError),
+}
+
+impl Display for ProductionPolicyError {
+    fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
+        formatter.write_str(match self {
+            Self::Config(_) => "chief daemon policy: approval path resolution failed",
+            Self::Notification(_) => "chief daemon policy: approval provider configuration failed",
+        })
+    }
+}
+
+impl std::error::Error for ProductionPolicyError {}
+
 /// Current production Trust Checker composition.
 pub type ProductionWiringAuthorizer =
-    TrustCheckingChannelWiring<UnavailableApprovalProvider, ExplicitPrivilegeResolver>;
+    TrustCheckingChannelWiring<ProductionApprovalProvider, ExplicitPrivilegeResolver>;
 
-/// Compose exact configured tiers with a provider that keeps interactive tiers closed.
-pub fn production_wiring_authorizer(config: &PrivilegeConfig) -> ProductionWiringAuthorizer {
-    TrustCheckingChannelWiring::new(
-        UnavailableApprovalProvider,
+/// Compose exact configured tiers with the optional Tier 1 notification helper.
+pub fn production_wiring_authorizer(
+    config: &PrivilegeConfig,
+    home: &Path,
+) -> Result<ProductionWiringAuthorizer, ProductionPolicyError> {
+    let provider = match config.tier_1_notification_command() {
+        None => ProductionApprovalProvider::Unavailable,
+        Some(path) => {
+            let executable = path.resolve(home).map_err(ProductionPolicyError::Config)?;
+            ProductionApprovalProvider::Notification(
+                NotificationCommandProvider::new(executable)
+                    .map_err(ProductionPolicyError::Notification)?,
+            )
+        }
+    };
+    Ok(TrustCheckingChannelWiring::new(
+        provider,
         ExplicitPrivilegeResolver::from_config(config),
-    )
+    ))
 }
 
 #[cfg(test)]
@@ -382,6 +464,7 @@ mod tests {
     };
     use chief_of_staff_pipeline_bindings::{HostPipelineBinding, PipelineId};
     use chief_of_staff_service_registry::{HostName, HostRegistration, PackagePath, RestartPolicy};
+    use std::path::Path;
 
     const CREDENTIAL: &str = "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f";
 
@@ -481,7 +564,7 @@ mod tests {
     #[test]
     fn production_authorizer_allows_only_fully_assigned_tier_zero_pipeline() {
         let config = policy_config(0, true);
-        let mut authorizer = production_wiring_authorizer(config.privilege());
+        let mut authorizer = production_wiring_authorizer(config.privilege(), test_home()).unwrap();
         let binding = pipeline_binding();
         let context = TrustRequestContext::new("request", "operator:local").unwrap();
         assert!(authorizer
@@ -489,14 +572,14 @@ mod tests {
             .is_ok());
 
         let config = policy_config(1, true);
-        let mut authorizer = production_wiring_authorizer(config.privilege());
+        let mut authorizer = production_wiring_authorizer(config.privilege(), test_home()).unwrap();
         assert!(matches!(
             authorizer.authorize_pipeline(&context, PipelineWiringRequest::Wire(&binding)),
             Err(chief_of_staff_orchestrator_core::TrustPipelineWiringError::Approval(_))
         ));
 
         let config = policy_config(0, false);
-        let mut authorizer = production_wiring_authorizer(config.privilege());
+        let mut authorizer = production_wiring_authorizer(config.privilege(), test_home()).unwrap();
         assert!(matches!(
             authorizer.authorize_pipeline(&context, PipelineWiringRequest::Wire(&binding)),
             Err(
@@ -512,13 +595,13 @@ mod tests {
         let config = policy_config(0, true);
         let context = TrustRequestContext::new("request", "operator:local").unwrap();
         let definition = channel_definition();
-        let mut authorizer = production_wiring_authorizer(config.privilege());
+        let mut authorizer = production_wiring_authorizer(config.privilege(), test_home()).unwrap();
         assert!(authorizer
             .authorize(&context, ChannelWiringRequest::Create(&definition))
             .is_ok());
 
         let empty = parse_config(&base_config("")).unwrap();
-        let mut authorizer = production_wiring_authorizer(empty.privilege());
+        let mut authorizer = production_wiring_authorizer(empty.privilege(), test_home()).unwrap();
         assert!(matches!(
             authorizer.authorize(&context, ChannelWiringRequest::Create(&definition)),
             Err(
@@ -547,6 +630,47 @@ mod tests {
             ChannelWiringDenied.to_string(),
             "chief daemon policy: channel wiring denied"
         );
+        assert_eq!(
+            ProductionApprovalError::Notification(NotificationApprovalError::SpawnFailed)
+                .to_string(),
+            "chief daemon policy: notification approval failed"
+        );
+    }
+
+    #[test]
+    fn configured_tier_one_helper_is_selected_without_opening_higher_tiers() {
+        let config = policy_config_with_notification(1);
+        let context = TrustRequestContext::new("request", "operator:local").unwrap();
+        let binding = pipeline_binding();
+        let mut authorizer = production_wiring_authorizer(config.privilege(), test_home()).unwrap();
+        assert!(matches!(
+            authorizer.authorize_pipeline(&context, PipelineWiringRequest::Wire(&binding)),
+            Err(
+                chief_of_staff_orchestrator_core::TrustPipelineWiringError::Approval(
+                    chief_of_staff_trust_checker::TrustCheckerError::Provider(
+                        ProductionApprovalError::Notification(
+                            NotificationApprovalError::SpawnFailed
+                        )
+                    )
+                )
+            )
+        ));
+
+        let tier_two = policy_config_with_notification(2);
+        let mut authorizer =
+            production_wiring_authorizer(tier_two.privilege(), test_home()).unwrap();
+        assert!(matches!(
+            authorizer.authorize_pipeline(&context, PipelineWiringRequest::Wire(&binding)),
+            Err(
+                chief_of_staff_orchestrator_core::TrustPipelineWiringError::Approval(
+                    chief_of_staff_trust_checker::TrustCheckerError::Provider(
+                        ProductionApprovalError::Notification(
+                            NotificationApprovalError::UnsupportedRequirement
+                        )
+                    )
+                )
+            )
+        ));
     }
 
     fn channel_definition() -> ChannelDefinition {
@@ -619,6 +743,34 @@ package_tiers = [{{ package_hash = "{}", tier = {package_tier} }}]
             "ab".repeat(32)
         )))
         .unwrap()
+    }
+
+    fn policy_config_with_notification(
+        package_tier: u8,
+    ) -> chief_of_staff_daemon_config::ChiefConfig {
+        let source = base_config(&format!(
+            r#"agent_tiers = [{{ agent_id = "77656174686572", tier = 0 }}]
+channel_tiers = [{{ channel_id = "00000000-0000-7000-8000-000000000000", tier = 0 }}]
+package_tiers = [{{ package_hash = "{}", tier = {package_tier} }}]
+model_tiers = [{{ model = "qwen2.5:0.5b", tier = 0 }}]"#,
+            "ab".repeat(32)
+        ))
+        .replace(
+            "tier_1_auto_approve_timeout = 5",
+            "tier_1_auto_approve_timeout = 5\ntier_1_notification_command = \"~/missing-notification-helper\"",
+        );
+        parse_config(&source).unwrap()
+    }
+
+    fn test_home() -> &'static Path {
+        #[cfg(unix)]
+        {
+            Path::new("/home/operator")
+        }
+        #[cfg(windows)]
+        {
+            Path::new(r"C:\Users\operator")
+        }
     }
 
     fn base_config(privilege_assignments: &str) -> String {

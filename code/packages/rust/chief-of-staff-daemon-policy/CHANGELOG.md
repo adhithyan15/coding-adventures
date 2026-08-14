@@ -8,6 +8,8 @@
 - Add an exact config-backed resource-tier resolver and production Trust Checker
   composition: fully declared Tier 0 requests can proceed, while missing mappings
   and every interactive tier fail closed through an unavailable provider.
+- Select an optional shell-free Tier 1 notification command from validated
+  configuration while preserving fail-closed Tier 2/3 behavior.
 
 ## 0.1.0
 

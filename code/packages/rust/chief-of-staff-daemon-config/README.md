@@ -20,6 +20,10 @@ hex agent identities, canonical UUID-v7 channel identities, SHA-256 package
 hashes, and model selectors. Every inline record is closed and identities are
 unique within their resource class. Omitting a declaration never implies Tier
 0; the production resolver treats an unmapped referenced resource as denial.
+An optional `tier_1_notification_command` selects one absolute or `~/`-relative
+operator-reviewed helper executable. The config package only validates and
+resolves the path; the production policy owns its shell-free protocol and keeps
+interactive requests closed when the field is absent.
 
 An optional closed `[smart_home]` table enables a second, Home
 Assistant-compatible loopback listener owned by the Chief process. It requires a

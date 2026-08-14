@@ -1642,8 +1642,14 @@ public keys, creation time, key epoch, and lifecycle. Any resolution or approval
 failure occurs before channel storage mutation. The production daemon resolves
 explicit agent, channel, package-hash, and model assignments from its closed
 configuration. A fully assigned Tier 0 mutation can proceed without interaction;
-an omitted assignment and every Tier 1 through Tier 3 request fail closed until
-the corresponding reviewed platform approval provider is composed.
+an omitted assignment fails closed. An optional absolute or home-relative Tier 1
+notification helper is launched without a shell or inherited environment and
+receives a bounded versioned exact-resource protocol. Only `approve` and `deny`
+responses are accepted after an explicit post-presentation readiness acknowledgement;
+only an acknowledged helper that remains live through the complete canonical window
+produces the sole timeout auto-approval path. An absent or unacknowledged helper,
+early exit, malformed output, I/O or process failure, and every Tier 2/3 request
+fail closed until the corresponding reviewed provider is composed.
 
 ```
 Pipeline: "Check bank balance and email it to accountant"
@@ -2234,6 +2240,7 @@ container = true               # run vault in OS container
 
 [privilege]
 tier_1_auto_approve_timeout = 5  # seconds
+tier_1_notification_command = "~/.chief-of-staff/bin/chief-notify" # optional
 biometric_timeout = 30           # seconds
 hardware_key_timeout = 60        # seconds
 agent_tiers = [

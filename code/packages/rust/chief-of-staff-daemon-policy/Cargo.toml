@@ -10,6 +10,7 @@ chief-of-staff-daemon-api = { path = "../chief-of-staff-daemon-api" }
 chief-of-staff-daemon-config = { path = "../chief-of-staff-daemon-config" }
 chief-of-staff-channel-endpoints = { path = "../chief-of-staff-channel-endpoints" }
 chief-of-staff-orchestrator-core = { path = "../chief-of-staff-orchestrator-core" }
+chief-of-staff-notification-approval = { path = "../chief-of-staff-notification-approval" }
 chief-of-staff-trust-checker = { path = "../chief-of-staff-trust-checker" }
 chief-of-staff-tool-api = { path = "../chief-of-staff-tool-api" }
 coding_adventures_csprng = { path = "../csprng" }
