@@ -1,8 +1,8 @@
 [package]
 name = "iir-to-wasm"
-version = "0.48.2"
+version = "0.48.3"
 edition = "2021"
-description = "IIR → WASM backend — lowers IIRModule to WasmModule. v0.48.2 marks an impossible value-returning dispatch-loop fallthrough unreachable so strict WASM validation sees a complete result path; v0.48.1 fixed the last-block fallback branch depth; v0.48.0 corrected dispatch-loop branch-depth formulas after the WASM11 interpreter fix."
+description = "IIR → WASM backend — lowers IIRModule to WasmModule. v0.48.3 fixes three places where a value's declared local type disagreed with the type actually stored into it (a comparison's dest declared from its OPERAND hint; `slot_is_i64` disagreeing with `hint_to_value_type` for u4/u8/u16/u32 and array handles; the lisp predicate builtins storing an i32 boolean into an i64 slot) — 42 ill-typed modules the new instruction-level WASM type checker correctly rejected; v0.48.2 marks an impossible value-returning dispatch-loop fallthrough unreachable so strict WASM validation sees a complete result path; v0.48.1 fixed the last-block fallback branch depth; v0.48.0 corrected dispatch-loop branch-depth formulas after the WASM11 interpreter fix."
 
 [lib]
 name = "iir_to_wasm"
