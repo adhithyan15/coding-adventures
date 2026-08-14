@@ -1,0 +1,66 @@
+% ============================================================================
+% skin-layer-alt-name — the everyday ALTERNATE name a source gives for a
+% layer of human skin, decoded from a clause already sitting unused inside
+% `skin-layers.adj`'s own already-quoted NCI SEER source sentence
+% (adj-facts-stdlib, ANATOMY).
+% ============================================================================
+% A sibling to the already-shipped `skin-layers.adj`
+% (`skin_layer_property(layer, property)`, epidermis → outermost,
+% dermis → thickest, subcutaneous → fat) and `skin-layer-function.adj`
+% (`skin_layer_function(layer, function)`, epidermis → protects_body,
+% subcutaneous → insulator/shock_absorber): one of those tables' own already-
+% quoted NCI SEER spans ALSO names an everyday alternate name for a layer --
+% a fact neither the property nor the function schema had room for:
+%
+%     "The subcutis is also known as the hypodermis or subcutaneous layer,
+%      and functions as both an insulator, conserving the body's heat, and
+%      as a shock-absorber, protecting the inner organs."
+%
+% New `skin_layer_alt_name(layer, alt_name)` table decodes that span as its
+% own row: subcutaneous → hypodermis. "Alt_name" (an everyday synonym for the
+% layer) is categorically distinct from "property" (a positional/
+% compositional descriptor) and "function" (what the layer does) -- the
+% subcutaneous layer's property is fat and its function is insulator/
+% shock_absorber, but its alternate name is a separate fact neither column
+% has room for. Recall is a binding query:
+%
+%     ? skin_layer_alt_name(subcutaneous, $AltName)   % hypodermis
+%
+% This is a native `table` (ADJ-TABLES RS-5, a TWO-column table like its
+% siblings' own): each `row` lowers to a ground relation
+% `skin_layer_alt_name(layer, alt_name)` carrying the citation, so the lookup
+% above is the ordinary SLD binding query -- the engine returns the alternate
+% name WITH its source, on the CPU, with zero model calls, and abstains on
+% anything that is not the subcutaneous layer (it never invents an alternate
+% name). The query also runs BACKWARD -- bind an alternate name and recall
+% the layer it names:
+%
+%     ? skin_layer_alt_name($Layer, hypodermis)   % subcutaneous
+%
+% A recall on `epidermis` -- a real, already-tabled skin layer in
+% `skin-layers.adj`, but whose own quoted span ("The epidermis is the
+% outermost layer of the skin, and protects the body from the environment.")
+% never supplies a second, everyday name for the layer itself -- correctly
+% abstains rather than inventing one for it. Likewise `dermis` is
+% deliberately left unrowed: its own quoted span never supplies an alternate
+% name either.
+%
+% Provenance: reproduces, byte-for-byte, the SAME sentence already quoted
+% inside `skin-layers.adj`'s own header, from the SAME NCI SEER Training
+% "Layers of the Skin" page that table already cites -- no new WebFetch, only
+% a different schema decoding a different clause of that already-verified
+% quote. `trust authoritative` -- the same tier the sibling tables already
+% carry (NCI SEER Training is a primary U.S. government / NIH reference).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
+% ============================================================================
+
+table skin_layer_alt_name {
+    columns layer, alt_name
+
+    row (subcutaneous, hypodermis)
+
+    source "The subcutis is also known as the hypodermis or subcutaneous layer, and functions as both an insulator, conserving the body's heat, and as a shock-absorber, protecting the inner organs."
+    locator "https://training.seer.cancer.gov/melanoma/anatomy/layers.html"
+    trust authoritative
+}
