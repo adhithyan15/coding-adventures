@@ -11,18 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": 11525,
+  "active_pr": null,
   "last_inventory": {
-    "revision": "c6bdc3694a85711a213340ac5f12370703051ff6",
+    "revision": "97094db1b26beb22b506bdf8432919bea1dca873",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1318,
-    "implementation_package_slots": 4474,
+    "implementation_identities": 1321,
+    "implementation_package_slots": 4477,
     "high_consensus_packages": 173,
     "high_consensus_missing_slots": 269,
-    "singleton_packages": 868,
-    "singleton_missing_slots": 12152,
-    "rust_singletons": 669,
+    "singleton_packages": 871,
+    "singleton_missing_slots": 12194,
+    "rust_singletons": 672,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
   },
@@ -3268,6 +3268,53 @@
       "notes": "Excluded from autonomous portable selection. Review absolute-path helper provenance and integrity, including replacement, symlink, reparse-point, and TOCTOU risks; direct no-shell spawn; environment clearing; per-request pipe isolation and replay claims; worker threads and monotonic deadlines; kill, reap, and descendant-pipe retention; redaction; platform UI and authenticator success semantics; and external-helper credential custody. Add a truthful nonempty hardware-key-reviewed capability profile covering proc:exec for the configured absolute helper, proc:signal for its owned child, env:write for CHIEF_APPROVAL_PROTOCOL, time:read for the monotonic deadline, and time:sleep for bounded receive waits. Preserve Tier-2-only fail-closed behavior and do not manufacture all-language process or biometric adapters."
     },
     {
+      "id": "chief-hardware-key-approval-protocol-portable-conformance",
+      "title": "Fixture and port the bounded Chief Tier 3 hardware-key protocol",
+      "status": "pending",
+      "depends_on": ["chief-biometric-approval-protocol-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered after external PR #11528 added the mixed Rust-only chief-of-staff-hardware-key-approval singleton. Define a neutral corpus for CHIEF-TIER3-HARDWARE-KEY/1: exact lowercase-hex request, requester, and resource identifiers; Tier 3, 60000ms timeout, resource count, ordering, and end framing; the 32-byte response-line ceiling; mandatory ready acknowledgement; exact deny; and the rule that only approve hardware-key establishes HardwareKey assurance. Reject plain or biometric approvals, malformed or oversized responses, and early EOF; require a fresh private transcript for every request; preserve stable payload-blind failures; and map only an acknowledged live timeout to TimedOut with Trust Checker denial. Keep executable paths, processes, pipes, threads, clocks, native UI, authenticator behavior, and credential custody injected outside this pure core, and require explicit empty core capability metadata."
+    },
+    {
+      "id": "chief-hardware-key-approval-native-authority-review",
+      "title": "Review Chief hardware-key helper process and authenticator authority",
+      "status": "pending",
+      "depends_on": ["chief-hardware-key-approval-protocol-portable-conformance", "chief-process-supervisor-native-authority-review"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Excluded from autonomous portable selection. Review absolute helper provenance and integrity, including replacement, symlink, reparse-point, and TOCTOU risks; direct no-shell and environment-cleared spawn; per-request pipe isolation and replay claims; worker threads, deadlines, kill, reap, and descendant retention; redaction; and FIDO2, WebAuthn, YubiKey, native UI, PIN, credential, assertion, and key custody. The daemon receives only the canonical strength label over a private pipe, not a cryptographically bound hardware assertion, so the reviewed helper and OS process identity are the actual attestation boundary. Require independent hardware-key-signed Layer-5 capability evidence; do not let this unreviewed adapter self-approve and do not manufacture all-language process or authenticator adapters. Add a truthful nonempty hardware-key-reviewed capability profile covering proc:exec for the configured absolute helper, proc:signal for its owned child, env:write for CHIEF_APPROVAL_PROTOCOL, time:read for the monotonic deadline, and time:sleep for bounded receive waits. Do not claim fs, net, ffi, entropy, or credential authority in the Rust crate when those effects remain in the external reviewed helper."
+    },
+    {
+      "id": "coap-protocol-portable-conformance",
+      "title": "Fixture and port the bounded CoAP GET codec",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered after external PR #11517 added the pure Rust-only coap-protocol singleton. Define closed neutral fixtures and established-lane ports for CoAP v1 Confirmable GET; 1 through 8-byte tokens and u16 message IDs; absolute paths with 1 through 16 nonempty URI-Path segments, at most 255 bytes each and 512 bytes total; canonical option delta, length, and unsigned encodings; Accept; the 8192-byte datagram cap; piggybacked versus empty-ACK and separate responses; exact token and message-ID correlation; response classes; unique Content-Format; ignored elective versus rejected unknown critical options; Observe and Block2 rejection; empty ACK encoding; and stable payload-blind reset, payload-marker, truncation, overflow, and malformed-message errors. Add explicit empty capability metadata. Keep UDP, clocks, retransmission, discovery, writes, Observe, blockwise transfer, proxying, DTLS, and OSCORE outside this pure zero-dependency codec."
+    },
+    {
+      "id": "smart-home-coap-portable-core-conformance",
+      "title": "Extract and port the injected CoAP telemetry core",
+      "status": "pending",
+      "depends_on": ["coap-protocol-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered after external PR #11517 added the mixed Rust-only smart-home-coap-integration singleton. Define a closed corpus over caller-injected transport and configuration for explicit private, link-local, or loopback endpoint validation; 1 through 32 uniquely normalized points; bounded names, units, device identity, timeout, and 1 through 4096-byte payload caps; deterministic message-ID and token sequencing and exact exchange plans; 2.05 Content with exact text/plain or JSON formats; finite numbers, configured booleans, bounded control-free text, and exact top-level JSON-key decoding; complete snapshot/profile validation before mutation; stable identities and D23 bridge, device, and sensor projection; authorization-before-transport ordering; and typed redacted failures. Keep sockets, peer trust, timeouts, runtime effects, and argv/stdout/stderr outside the portable core. Do not add PUT, POST, DELETE, Observe, multicast, blockwise, proxy, DTLS, or OSCORE authority."
+    },
+    {
+      "id": "smart-home-coap-native-authority-review",
+      "title": "Review CoAP UDP and CLI native authority",
+      "status": "pending",
+      "depends_on": ["smart-home-coap-portable-core-conformance", "rust-network-substrate-capability-truthfulness"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Excluded from autonomous portable selection. Review unspecified ephemeral UDP bind; connected send and receive; local-unicast scope; exact-peer and kernel filtering; plaintext spoof and replay risk; predictable wrapping message IDs and tokens; one bounded separate response and Confirmable-response ACK; 8192-byte datagrams; socket read and write timeouts; redaction; authorization before sockets in the runtime path; the direct CLI inspect path that bypasses runtime authorization; argv/stdout/stderr; and sequential bridge, device, and entity upsert partial-mutation risk. Require a truthful nonempty runtime profile with at least net:listen for the ephemeral UDP bind, net:connect for the explicit private/link-local/loopback endpoint, stdout:write for CLI results and diagnostics, and a loopback UDP test profile, coordinated with rust-network-substrate-capability-truthfulness. Preserve read-only local behavior and record the hardened Rust-native exception; do not manufacture all-language sockets or authenticated, discovery, subscription, or control features."
+    },
+    {
       "id": "smart-home-google-cast-discovery-portable-core-conformance",
       "title": "Extract and port the injected Google Cast discovery core",
       "status": "pending",
@@ -3427,7 +3474,7 @@
     {
       "id": "zip-raw-rfc1951-lua-lane-parity",
       "title": "Expose ZIP raw RFC 1951 conformance in Lua",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["zip-raw-rfc1951-language-neutral-conformance"],
       "branch": "codex/lua-zip-raw-rfc1951",
       "pr_number": 11525,
@@ -3436,8 +3483,11 @@
       "selection_revision": "a74ce9183f5986cbc80ae0c94d72da4042416b7a",
       "selection_notes": "Selected only after PR #11494 merged externally, the collision-clean live inventory classified the new Chief notification approval and Google Cast discovery roots with four portable/native ownership records, and no live PR or remote branch claimed Lua ZIP or the shared RFC 1951 fixture. Lua is the smallest clean standalone remaining ZIP child: Lua 5.4 and LuaRocks are installed, the package already owns exact bit positions, stored/fixed and multi-block framing, symbol 285, and overlapping back-references, and the test toolchain has a pure-Lua independent raw-DEFLATE oracle. Swift is the only other remaining child without stale overlap but has a costlier cross-platform raw-zlib boundary; the historical catch-up residue touches only .NET, Haskell, and JVM. This coherent tranche adds dynamic Huffman, counted consumption, caller caps, stable payload-blind errors, strict ZIP boundaries, all 34 neutral fixtures, and empty capability metadata without duplicating DEFLATE.",
       "implementation_revision": "4016f3cce7dfe9bed72a5c1dd0e2bdc1add6cb96",
+      "final_review_revision": "f1b5f88692456abc7e8b52f8016c43e18bb30eb8",
+      "merged_at": "2026-08-14T06:27:41Z",
+      "merge_revision": "14f15adda03c69074b1178fe124efc0907630821",
       "validation_notes": "Lua 5.4 and the exact Windows BUILD front door pass syntax, Luacheck with zero findings, 68 full Busted tests, 40 focused portable-conformance coverage tests, and 91.08% production line coverage. All 34 neutral raw RFC 1951 cases pass, including dynamic Huffman, HDIST 32 zero reserved slots, stable payload-blind errors, exact suffix consumption, caller caps, symbol 285, full 32 KiB overlap, and strict ZIP suffix-cavity and declared-size rejection. A test-only pure-Lua LibDeflate oracle and 128-stream deterministic differential corpus agree on output and exact counted consumption. LuaRocks make/install/pack pass. Twenty-six fixture/parity/capability tests plus 678 subtests pass; the collision gate reports 1,318 identities, 4,474 slots, 868 singletons, 12,152 singleton gaps, 669 Rust singletons, zero collisions, and zero unknown buckets. Strict state JSON/DAG, diff, credential, dependency, capability, and pure-production authority scans pass. The repository-wide Lua build-tool validator discovers 258 packages and emits no Lua ZIP BUILD diagnostic; its full run retains the unrelated pre-existing lua/programs/conduit-hello undeclared lua/conduit dependency finding. No downstream Lua package imports ZIP, so reader_read is the direct hardened integration boundary.",
-      "publication_notes": "Opened ready-for-review PR #11525 from validated implementation revision 4016f3cce7dfe9bed72a5c1dd0e2bdc1add6cb96. The loop retains external-review-only merge authority and will monitor the live checks without selecting another tranche.",
+      "publication_notes": "Opened ready-for-review PR #11525 from validated implementation revision 4016f3cce7dfe9bed72a5c1dd0e2bdc1add6cb96. External review merged final reviewed head f1b5f88692456abc7e8b52f8016c43e18bb30eb8 as 14f15adda03c69074b1178fe124efc0907630821 at 2026-08-14T06:27:41Z after 13 checks succeeded and 6 non-applicable checks skipped. GitHub deleted the remote source branch. The loop did not exercise merge authority.",
       "notes": "Portable Lua child of the ZIP raw-codec completion umbrella. Consume CMP09 and every closed zip-raw-rfc1951-v1 case, expose the ZIP-owned raw primitives without duplicating DEFLATE, preserve pure in-memory operation, and add explicit empty capability metadata."
     },
     {
