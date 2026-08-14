@@ -589,6 +589,7 @@ pub struct PrivilegeConfig {
     tier_1_auto_approve_timeout: Duration,
     tier_1_notification_command: Option<ConfigPath>,
     tier_2_biometric_command: Option<ConfigPath>,
+    tier_3_hardware_key_command: Option<ConfigPath>,
     biometric_timeout: Duration,
     hardware_key_timeout: Duration,
     agent_tiers: Vec<AgentPrivilegeTierConfig>,
@@ -870,6 +871,11 @@ impl PrivilegeConfig {
         self.tier_2_biometric_command.as_ref()
     }
 
+    /// Return the optional operator-reviewed Tier 3 hardware-key helper.
+    pub fn tier_3_hardware_key_command(&self) -> Option<&ConfigPath> {
+        self.tier_3_hardware_key_command.as_ref()
+    }
+
     /// Return the non-zero biometric interaction timeout.
     pub fn biometric_timeout(&self) -> Duration {
         self.biometric_timeout
@@ -995,6 +1001,12 @@ pub fn parse_config(source: &str) -> Result<ChiefConfig, ConfigError> {
         .transpose()?;
     let tier_2_biometric_command = document
         .take_optional(PRIVILEGE, "tier_2_biometric_command")
+        .map(expect_string)
+        .transpose()?
+        .map(ConfigPath::parse)
+        .transpose()?;
+    let tier_3_hardware_key_command = document
+        .take_optional(PRIVILEGE, "tier_3_hardware_key_command")
         .map(expect_string)
         .transpose()?
         .map(ConfigPath::parse)
@@ -1446,6 +1458,7 @@ pub fn parse_config(source: &str) -> Result<ChiefConfig, ConfigError> {
             tier_1_auto_approve_timeout,
             tier_1_notification_command,
             tier_2_biometric_command,
+            tier_3_hardware_key_command,
             biometric_timeout,
             hardware_key_timeout,
             agent_tiers,
@@ -2224,6 +2237,7 @@ hardware_key_timeout = 60
         );
         assert!(config.privilege().tier_1_notification_command().is_none());
         assert!(config.privilege().tier_2_biometric_command().is_none());
+        assert!(config.privilege().tier_3_hardware_key_command().is_none());
         assert!(config.data_plane().channel_keys().is_empty());
         assert!(config.data_plane().ollama_models().is_empty());
         assert!(config.data_plane().smart_home_tool_grants().is_empty());
@@ -2267,6 +2281,27 @@ hardware_key_timeout = 60
         for invalid in ["biometric", "~/../biometric", "", "~/"] {
             assert_eq!(
                 parse_config(&source.replace("~/.chief-of-staff/bin/biometric", invalid)),
+                Err(ConfigError::UnsafePath)
+            );
+        }
+    }
+
+    #[test]
+    fn tier_three_hardware_key_command_is_optional_typed_and_normalized() {
+        let source = VALID.replace(
+            "hardware_key_timeout = 60",
+            "hardware_key_timeout = 60\ntier_3_hardware_key_command = \"~/.chief-of-staff/bin/hardware-key\"",
+        );
+        let config = parse_config(&source).unwrap();
+        let command = config.privilege().tier_3_hardware_key_command().unwrap();
+        assert_eq!(command.as_str(), "~/.chief-of-staff/bin/hardware-key");
+        assert_eq!(
+            command.resolve(Path::new("/home/operator")).unwrap(),
+            PathBuf::from("/home/operator/.chief-of-staff/bin/hardware-key")
+        );
+        for invalid in ["hardware-key", "~/../hardware-key", "", "~/"] {
+            assert_eq!(
+                parse_config(&source.replace("~/.chief-of-staff/bin/hardware-key", invalid)),
                 Err(ConfigError::UnsafePath)
             );
         }

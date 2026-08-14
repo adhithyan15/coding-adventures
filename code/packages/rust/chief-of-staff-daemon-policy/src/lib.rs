@@ -6,6 +6,7 @@
 use chief_of_staff_biometric_approval::{BiometricApprovalError, BiometricCommandProvider};
 use chief_of_staff_daemon_api::{Operation, SessionAuthorizer};
 use chief_of_staff_daemon_config::{ConfiguredPrivilegeTier, PrivilegeConfig};
+use chief_of_staff_hardware_key_approval::{HardwareKeyApprovalError, HardwareKeyCommandProvider};
 use chief_of_staff_notification_approval::{
     NotificationApprovalError, NotificationCommandProvider,
 };
@@ -371,6 +372,8 @@ pub enum ProductionApprovalError {
     Notification(NotificationApprovalError),
     /// The configured Tier 2 biometric helper failed closed.
     Biometric(BiometricApprovalError),
+    /// The configured Tier 3 hardware-key helper failed closed.
+    HardwareKey(HardwareKeyApprovalError),
 }
 
 impl Display for ProductionApprovalError {
@@ -379,6 +382,7 @@ impl Display for ProductionApprovalError {
             Self::Unavailable => "chief daemon policy: approval provider unavailable",
             Self::Notification(_) => "chief daemon policy: notification approval failed",
             Self::Biometric(_) => "chief daemon policy: biometric approval failed",
+            Self::HardwareKey(_) => "chief daemon policy: hardware-key approval failed",
         })
     }
 }
@@ -390,17 +394,20 @@ impl std::error::Error for ProductionApprovalError {}
 pub struct ProductionApprovalProvider {
     notification: Option<NotificationCommandProvider>,
     biometric: Option<BiometricCommandProvider>,
+    hardware_key: Option<HardwareKeyCommandProvider>,
 }
 
 impl ProductionApprovalProvider {
-    /// Compose the independently optional reviewed Tier 1 and Tier 2 helpers.
+    /// Compose the independently optional reviewed Tier 1, Tier 2, and Tier 3 helpers.
     pub fn new(
         notification: Option<NotificationCommandProvider>,
         biometric: Option<BiometricCommandProvider>,
+        hardware_key: Option<HardwareKeyCommandProvider>,
     ) -> Self {
         Self {
             notification,
             biometric,
+            hardware_key,
         }
     }
 }
@@ -425,9 +432,13 @@ impl ApprovalProvider for ProductionApprovalProvider {
                 .ok_or(ProductionApprovalError::Unavailable)?
                 .request_approval(prompt)
                 .map_err(ProductionApprovalError::Biometric),
-            ApprovalRequirement::None | ApprovalRequirement::HardwareKey { .. } => {
-                Err(ProductionApprovalError::Unavailable)
-            }
+            ApprovalRequirement::HardwareKey { .. } => self
+                .hardware_key
+                .as_mut()
+                .ok_or(ProductionApprovalError::Unavailable)?
+                .request_approval(prompt)
+                .map_err(ProductionApprovalError::HardwareKey),
+            ApprovalRequirement::None => Err(ProductionApprovalError::Unavailable),
         }
     }
 }
@@ -441,6 +452,8 @@ pub enum ProductionPolicyError {
     Notification(NotificationApprovalError),
     /// The resolved helper path was not acceptable to the biometric provider.
     Biometric(BiometricApprovalError),
+    /// The resolved helper path was not acceptable to the hardware-key provider.
+    HardwareKey(HardwareKeyApprovalError),
 }
 
 impl Display for ProductionPolicyError {
@@ -449,6 +462,7 @@ impl Display for ProductionPolicyError {
             Self::Config(_) => "chief daemon policy: approval path resolution failed",
             Self::Notification(_) => "chief daemon policy: approval provider configuration failed",
             Self::Biometric(_) => "chief daemon policy: approval provider configuration failed",
+            Self::HardwareKey(_) => "chief daemon policy: approval provider configuration failed",
         })
     }
 }
@@ -459,7 +473,7 @@ impl std::error::Error for ProductionPolicyError {}
 pub type ProductionWiringAuthorizer =
     TrustCheckingChannelWiring<ProductionApprovalProvider, ExplicitPrivilegeResolver>;
 
-/// Compose exact configured tiers with optional reviewed Tier 1 and Tier 2 helpers.
+/// Compose exact configured tiers with optional reviewed Tier 1, Tier 2, and Tier 3 helpers.
 pub fn production_wiring_authorizer(
     config: &PrivilegeConfig,
     home: &Path,
@@ -484,7 +498,17 @@ pub fn production_wiring_authorizer(
             )
         }
     };
-    let provider = ProductionApprovalProvider::new(notification, biometric);
+    let hardware_key = match config.tier_3_hardware_key_command() {
+        None => None,
+        Some(path) => {
+            let executable = path.resolve(home).map_err(ProductionPolicyError::Config)?;
+            Some(
+                HardwareKeyCommandProvider::new(executable)
+                    .map_err(ProductionPolicyError::HardwareKey)?,
+            )
+        }
+    };
+    let provider = ProductionApprovalProvider::new(notification, biometric, hardware_key);
     Ok(TrustCheckingChannelWiring::new(
         provider,
         ExplicitPrivilegeResolver::from_config(config),
@@ -679,6 +703,10 @@ mod tests {
             ProductionApprovalError::Biometric(BiometricApprovalError::SpawnFailed).to_string(),
             "chief daemon policy: biometric approval failed"
         );
+        assert_eq!(
+            ProductionApprovalError::HardwareKey(HardwareKeyApprovalError::SpawnFailed).to_string(),
+            "chief daemon policy: hardware-key approval failed"
+        );
     }
 
     #[test]
@@ -759,6 +787,40 @@ mod tests {
                 )
             )
         ));
+    }
+
+    #[test]
+    fn configured_tier_three_helper_is_selected_without_opening_lower_tiers() {
+        let config = policy_config_with_hardware_key(3);
+        let context = TrustRequestContext::new("request", "operator:local").unwrap();
+        let binding = pipeline_binding();
+        let mut authorizer = production_wiring_authorizer(config.privilege(), test_home()).unwrap();
+        assert!(matches!(
+            authorizer.authorize_pipeline(&context, PipelineWiringRequest::Wire(&binding)),
+            Err(
+                chief_of_staff_orchestrator_core::TrustPipelineWiringError::Approval(
+                    chief_of_staff_trust_checker::TrustCheckerError::Provider(
+                        ProductionApprovalError::HardwareKey(HardwareKeyApprovalError::SpawnFailed)
+                    )
+                )
+            )
+        ));
+
+        for tier in [1, 2] {
+            let lower = policy_config_with_hardware_key(tier);
+            let mut authorizer =
+                production_wiring_authorizer(lower.privilege(), test_home()).unwrap();
+            assert!(matches!(
+                authorizer.authorize_pipeline(&context, PipelineWiringRequest::Wire(&binding)),
+                Err(
+                    chief_of_staff_orchestrator_core::TrustPipelineWiringError::Approval(
+                        chief_of_staff_trust_checker::TrustCheckerError::Provider(
+                            ProductionApprovalError::Unavailable
+                        )
+                    )
+                )
+            ));
+        }
     }
 
     fn channel_definition() -> ChannelDefinition {
@@ -861,6 +923,23 @@ model_tiers = [{{ model = "qwen2.5:0.5b", tier = 0 }}]"#,
         .replace(
             "biometric_timeout = 30",
             "biometric_timeout = 30\ntier_2_biometric_command = \"~/missing-biometric-helper\"",
+        );
+        parse_config(&source).unwrap()
+    }
+
+    fn policy_config_with_hardware_key(
+        package_tier: u8,
+    ) -> chief_of_staff_daemon_config::ChiefConfig {
+        let source = base_config(&format!(
+            r#"agent_tiers = [{{ agent_id = "77656174686572", tier = 0 }}]
+channel_tiers = [{{ channel_id = "00000000-0000-7000-8000-000000000000", tier = 0 }}]
+package_tiers = [{{ package_hash = "{}", tier = {package_tier} }}]
+model_tiers = [{{ model = "qwen2.5:0.5b", tier = 0 }}]"#,
+            "ab".repeat(32)
+        ))
+        .replace(
+            "hardware_key_timeout = 60",
+            "hardware_key_timeout = 60\ntier_3_hardware_key_command = \"~/missing-hardware-key-helper\"",
         );
         parse_config(&source).unwrap()
     }

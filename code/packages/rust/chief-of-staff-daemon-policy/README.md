@@ -17,8 +17,10 @@ the environment-cleared, bounded protocol in `chief-of-staff-notification-approv
 An independently optional Tier 2 command uses the same shell-free process
 isolation with the stricter exact-request protocol in
 `chief-of-staff-biometric-approval`; only its operator-reviewed native helper may
-return biometric assurance. Each missing helper keeps its tier unavailable, and
-hardware-key Tier 3 remains fail-closed.
+return biometric assurance. A third independently optional command uses
+`chief-of-staff-hardware-key-approval`; only its reviewed physical-authenticator
+helper may return hardware-key assurance. Each missing helper keeps only its tier
+unavailable.
 The local bearer authenticates the requester but never acts as privilege approval.
 
 The package generates credential material but performs no terminal or network

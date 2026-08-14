@@ -9,6 +9,8 @@
   while preserving unavailable Tier 1 defaults and closed Tier 2/3 gates.
 - Compose an independently optional shell-free native biometric helper for exact
   Tier 2 approval while preserving timeout-as-denial and a closed Tier 3 gate.
+- Compose an independently optional shell-free native hardware-key helper for
+  exact Tier 3 approval while preserving timeout-as-denial.
 
 - Add optional Chief-owned Reolink pairing over the shared durable controller.
   One complete owner-only configuration tuple binds credentials and a pinned

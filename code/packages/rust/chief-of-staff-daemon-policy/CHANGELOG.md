@@ -12,6 +12,8 @@
   configuration while preserving fail-closed Tier 2/3 behavior.
 - Route an independently optional shell-free Tier 2 biometric helper through a
   strict exact-request process boundary while Tier 3 remains unavailable.
+- Route an independently optional shell-free Tier 3 hardware-key helper through
+  a strict exact-request process boundary without opening lower tiers.
 
 ## 0.1.0
 

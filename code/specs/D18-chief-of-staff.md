@@ -1651,9 +1651,11 @@ produces the sole timeout auto-approval path. Tier 2 may independently select an
 operator-reviewed native biometric helper through another fresh, shell-free,
 environment-cleared process. Its private pipe carries the same exact request and
 accepts only `approve biometric` after readiness; its canonical timeout is denial.
-An absent or unacknowledged helper, early exit, weak or malformed output, I/O or
-process failure, and every Tier 3 request fail closed until the corresponding
-reviewed provider is composed.
+Tier 3 may likewise select a reviewed native hardware-key helper. Its fresh
+private process pipe accepts only `approve hardware-key` after readiness and its
+canonical timeout is denial. An absent or unacknowledged helper, early exit, weak
+or malformed output, I/O or process failure fail closed for the corresponding
+tier.
 
 ```
 Pipeline: "Check bank balance and email it to accountant"
@@ -2248,6 +2250,7 @@ tier_1_notification_command = "~/.chief-of-staff/bin/chief-notify" # optional
 biometric_timeout = 30           # seconds
 tier_2_biometric_command = "~/.chief-of-staff/bin/chief-biometric" # optional
 hardware_key_timeout = 60        # seconds
+tier_3_hardware_key_command = "~/.chief-of-staff/bin/chief-hardware-key" # optional
 agent_tiers = [
   { agent_id = "77656174686572", tier = 0 }, # lowercase-hex "weather"
 ]

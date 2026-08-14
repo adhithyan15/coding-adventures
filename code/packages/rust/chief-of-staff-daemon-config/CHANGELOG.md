@@ -14,6 +14,8 @@
   production approval composition.
 - Accept an independently optional normalized Tier 2 biometric-helper path for
   reviewed native-authenticator composition.
+- Accept an independently optional normalized Tier 3 hardware-key-helper path
+  for reviewed physical-authenticator composition.
 - Bound secure-bootstrap and graceful-stop deadlines to five minutes.
 - Add optional, closed, typed data-plane declarations for exact directional
   channel-key files and exact Ollama model endpoints.
