@@ -770,6 +770,12 @@ teacher lesson demonstrates its rounded left-stem-to-diagonal-to-right-stem
 school-hand order at 03:56–04:02; the Noto Sans Cyrillic fit preserves that
 zero-lift evidence while tracing the printed backwards-N glyph and records that
 the printed form omits the school hand's entry and exit joins.
+The four-frame Cyrillic **й** filmstrip completes the same joined body as **и**,
+then lifts once and draws the breve above from left to right as one dipped arc.
+The native-teacher lesson demonstrates that body-before-breve order at
+04:17–04:24; the Noto Sans Cyrillic fit preserves the one-lift evidence and
+left-to-right breve direction while tracing the printed backwards-N body and
+separate curved mark.
 The runtime resolves each cited path back to the owning script and lazily loads that
 script's font, while Tamil continues to use Noto Sans Tamil. Unverified letters
 still fall back to the numbered prose list, unchanged. Extending the coverage is HL-C09,
