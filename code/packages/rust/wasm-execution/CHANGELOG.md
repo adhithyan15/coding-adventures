@@ -2,6 +2,65 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.6.6] — 2026-08-13 (WASM13 — f32 NaN payloads silently canonicalized on every stack push/pop)
+
+### Fixed — `WasmValue::to_typed`/`from_typed` destroyed f32 NaN bit patterns
+
+`GenericVM`'s typed operand stack has exactly ONE float slot
+(`Value::Float(f64)`), shared by both WASM float widths — so every `f32`
+value that's merely pushed or popped (locals, params, results, operands;
+not just values an opcode actually computed on) round-trips through this
+f64 box via `to_typed`/`from_typed`. Those conversions used an ARITHMETIC
+`as f64` widen on the way in and `as f32` narrow on the way back out.
+Confirmed empirically that Rust's `as` cast between float widths does
+**not** guarantee NaN payload preservation on the narrowing leg: `f32::
+from_bits(0x7fa00000) as f64 as f32` produces `0x7fc00000` — LLVM's
+`fpext`/`fptrunc` canonicalize the payload to the target type's generic
+quiet NaN. So ANY f32 NaN merely sitting on the stack silently lost its
+exact bit pattern by the time it came back off, independent of which
+opcode touched it.
+
+This was invisible for most NaN-producing operations because the WASM
+spec itself only requires them to produce a value in the `nan:arithmetic`
+CLASS (any quiet NaN, exact payload unspecified) — `wasm-conformance`'s
+grading already accepts that loosely, so canonicalization to `0x7fc00000`
+still graded `Pass`. It was NOT invisible for `f32.reinterpret_i32`/
+`i32.reinterpret_f32` (pure bit reinterpretation, where the testsuite
+asserts an EXACT value, not a class) and for any case that round-trips a
+NaN through a `local.tee`/param/result boundary without touching it
+arithmetically at all — both are supposed to preserve the bits exactly by
+construction, and both went through `to_typed`/`from_typed` regardless.
+
+Fixed by making both conversions bit-preserving reinterpretations
+(`f64::from_bits(v.to_bits() as u64)` / `f32::from_bits(v.to_bits() as
+u32)`) instead of arithmetic casts — lossless for every case (NaN,
+normal, ±0.0, ±inf), not just NaN, since it does no rounding at all.
+Confirmed `virtual-machine`'s own `GenericVM` never interprets
+`Value::Float` numerically outside a `Display` impl (used for debug
+printing only), so re-purposing that f64 slot as an opaque bit-carrier
+for f32 values has no effect on anything else built on `GenericVM`.
+
+Verified via TEMP-REVERT-CHECK: reverting the fix (restoring the
+arithmetic casts) makes all 3 new regression tests fail with exactly the
+`0x7fc00000` canonicalization this changelog describes; restoring the fix
+makes them pass again.
+
+Baseline: `assert_return` 13495/13518 (99.8%) → 13512/13518 (100.0%,
++17) — closes 4 files' worth of previously-tracked NaN-payload gaps in
+one fix: `conversions.wast` (the 4 `reinterpret` cases WASM03 surfaced),
+`float_literals.wast`, `float_misc.wast`, and `local_tee.wast`'s
+"as-unary-operand" case — this WASM13 backlog item's own two originally-
+named repro cases. Verified via a full per-file diff against the previous
+baseline that these 4 files are the ONLY ones whose tally changed, and
+every one of their fails went to exactly 0 (not just down).
+
+New tests: a direct `to_typed`/`from_typed` round-trip over 6 real NaN bit
+patterns (distinct payloads, both signs, quiet and would-be-signaling,
+plus the canonical NaN itself as a sanity check that the fix doesn't
+break the ALREADY-canonical case); end-to-end `f32.reinterpret_i32`/
+`i32.reinterpret_f32` tests through the actual interpreter using the
+exact bit patterns the real testsuite asserts against.
+
 ## [0.6.5] — 2026-08-13 (WASM03 — sign-extension, trunc_sat, and a real trapping-trunc boundary bug)
 
 ### Added

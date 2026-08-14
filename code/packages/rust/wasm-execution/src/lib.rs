@@ -140,7 +140,25 @@ impl WasmValue {
             },
             WasmValue::F32(v) => TypedVMValue {
                 value_type: 0x7D, // F32
-                value: Value::Float(v as f64),
+                // Reinterpret the f32's raw BITS into an f64 (zero-extend the
+                // u32 pattern, then read it back as f64 bits) -- NOT an
+                // arithmetic `as f64` widen. `GenericVM`'s typed stack only
+                // has one float slot (`Value::Float(f64)`), shared by both
+                // WASM float widths, so every f32 that's merely pushed/popped
+                // (which is EVERY f32 in a running program -- locals, params,
+                // results, operands) round-trips through this f64 box. Rust's
+                // `as` cast between float widths does not guarantee NaN
+                // payload preservation on the narrowing leg back to f32 --
+                // confirmed empirically: `f32::from_bits(0x7fa00000) as f64
+                // as f32` produces `0x7fc00000` (LLVM's fpext/fptrunc
+                // canonicalize the payload to the target's generic quiet
+                // NaN) -- so the old arithmetic cast silently destroyed the
+                // exact NaN bit pattern of ANY f32 value merely passing
+                // through the stack, not just ones an opcode computed on.
+                // Reinterpreting the bits directly is lossless and exactly
+                // reversible by `from_typed` below for every case (NaN,
+                // normal, ±0.0, ±inf) since it does no rounding at all.
+                value: Value::Float(f64::from_bits(v.to_bits() as u64)),
             },
             WasmValue::F64(v) => TypedVMValue {
                 value_type: 0x7C, // F64
@@ -170,7 +188,11 @@ impl WasmValue {
                 _ => Err(TrapError::new("type mismatch: expected i64")),
             },
             0x7D => match &tv.value { // F32
-                Value::Float(v) => Ok(WasmValue::F32(*v as f32)),
+                // Reverse of `to_typed`'s bit-reinterpret above -- truncate
+                // back to the low 32 bits and read them as f32 bits, not an
+                // arithmetic narrowing cast. See that match arm's doc
+                // comment for why this must be a bit reinterpretation.
+                Value::Float(v) => Ok(WasmValue::F32(f32::from_bits(v.to_bits() as u32))),
                 _ => Err(TrapError::new("type mismatch: expected f32")),
             },
             0x7C => match &tv.value { // F64
@@ -3796,6 +3818,42 @@ mod tests {
     }
 
     #[test]
+    fn test_f32_nan_bit_pattern_survives_the_typed_stack_round_trip() {
+        // WASM13: `to_typed`/`from_typed` box every f32 through the
+        // GenericVM's single f64 float slot -- EVERY f32 that's merely
+        // pushed/popped (locals, params, results, operands) round-trips
+        // through here, not just ones an opcode computed on. `assert_eq!`
+        // can't check this (NaN != NaN under IEEE754, the derived
+        // `PartialEq`), so this compares raw bits directly. Covers a range
+        // of real testsuite bit patterns this bug actually lost: distinct
+        // payloads, both signs, both quiet and would-be-signaling patterns
+        // (the top mantissa bit set vs. clear).
+        let patterns: [u32; 6] = [
+            0x7fa00000, // quiet NaN, one payload
+            0xffa00000, // quiet NaN, negative, same payload magnitude
+            0x7fc00000, // the canonical quiet NaN itself (must still round-trip exactly)
+            0x7f800001, // signaling NaN, minimal payload
+            0xff800001, // signaling NaN, negative, minimal payload
+            0x7fffffff, // quiet NaN, all payload bits set
+        ];
+        for bits in patterns {
+            let original = f32::from_bits(bits);
+            assert!(original.is_nan(), "test fixture bug: {bits:#010x} is not actually a NaN");
+            let typed = WasmValue::F32(original).to_typed();
+            let back = WasmValue::from_typed(&typed).unwrap();
+            match back {
+                WasmValue::F32(v) => assert_eq!(
+                    v.to_bits(),
+                    bits,
+                    "NaN payload lost round-tripping {bits:#010x}: got {:#010x}",
+                    v.to_bits()
+                ),
+                other => panic!("expected F32 back, got {other:?}"),
+            }
+        }
+    }
+
+    #[test]
     fn test_linear_memory_basic() {
         let mut mem = LinearMemory::new(1, None);
         assert_eq!(mem.size(), 1);
@@ -6229,6 +6287,44 @@ mod tests {
             eng.call_function(0, &[WasmValue::F64(-9223372036854775808.0)]).unwrap(),
             vec![WasmValue::I64(i64::MIN)]
         );
+    }
+
+    #[test]
+    fn test_f32_reinterpret_i32_preserves_the_exact_nan_bit_pattern_end_to_end() {
+        // The real WASM13 regression, exercised through the actual
+        // interpreter (not just `to_typed`/`from_typed` directly): a pure
+        // bit-reinterpretation instruction must return EXACTLY the bits it
+        // was given, never a canonicalized NaN -- these are the literal
+        // values `conversions.wast`'s `f32.reinterpret_i32` cases assert
+        // against. Before the fix, this returned `f32::from_bits`'s input
+        // correctly at the OPCODE level, but the surrounding push/pop
+        // through the typed operand stack silently canonicalized the NaN
+        // payload to `0x7fc00000` on its way back out.
+        let mut eng = make_conversion_engine(0xBE, ValueType::I32, ValueType::F32);
+        let cases: [i32; 2] = [0x7fa00000u32 as i32, 0xffa00000u32 as i32];
+        for bits in cases {
+            let result = eng.call_function(0, &[WasmValue::I32(bits)]).unwrap();
+            match result[0] {
+                WasmValue::F32(v) => assert_eq!(
+                    v.to_bits(),
+                    bits as u32,
+                    "expected f32.reinterpret_i32({bits:#010x}) to preserve the exact bit pattern, got {:#010x}",
+                    v.to_bits()
+                ),
+                other => panic!("expected F32, got {other:?}"),
+            }
+        }
+    }
+
+    #[test]
+    fn test_i32_reinterpret_f32_preserves_the_exact_nan_bit_pattern_end_to_end() {
+        // The reverse direction of the same real regression.
+        let mut eng = make_conversion_engine(0xBC, ValueType::F32, ValueType::I32);
+        let cases: [u32; 2] = [0x7fa00000, 0xffa00000];
+        for bits in cases {
+            let result = eng.call_function(0, &[WasmValue::F32(f32::from_bits(bits))]).unwrap();
+            assert_eq!(result[0], WasmValue::I32(bits as i32), "expected i32.reinterpret_f32({bits:#010x}) to preserve the exact bit pattern");
+        }
     }
 
     // ══════════════════════════════════════════════════════════════════════
