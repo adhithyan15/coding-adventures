@@ -53,6 +53,12 @@ speakers more often use *namaste* again, or the English "bye," or *phir
 milenge* ("we'll meet again"). But *alvidā* is the word when the parting
 matters — and, like *shukriyā*, it quietly carries centuries of Persian in it.
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+New: the independent vowel अ (“a,” for a word that *starts* with a
+vowel) and ल la. अ·ल·वि·दा → *alvidā*.
+
 ## Guided Practice
 
 [PAUSE 1s]

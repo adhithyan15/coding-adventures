@@ -312,7 +312,7 @@ describe("the script ramp against the real corpus", () => {
     // rule for a track that teaches script alongside speech and the wrong one for a
     // track that deliberately shows before it teaches. The exposure is intended; the
     // count is honest; what it measures is no longer quite what Tamil is doing.
-    expect(report.summary.lessonViolations).toBe(61);
+    expect(report.summary.lessonViolations).toBe(62); // HL-C134: the hand-written prose carried back into the lessons is now visible to this measurement — the words were always on the page, only the markdown had not seen them
 
     // All five are Japanese Chapter 1, which opens kanji beside hiragana in its very
     // first lesson and adds katakana in its fifth.
@@ -325,7 +325,7 @@ describe("the script ramp against the real corpus", () => {
     // cousin forms the same way earlier waves did.
     // 173 -> 184: vocabulary wave 5's telugu/malayalam lessons cite Dravidian cousin
     // forms in cousin scripts the same way.
-    expect(report.summary.lessonsWithForeignScript).toBe(184);
+    expect(report.summary.lessonsWithForeignScript).toBe(196); // HL-C134: the hand-written prose carried back into the lessons is now visible to this measurement — the words were always on the page, only the markdown had not seen them
     expect(report.summary.maxForeignGlyphsInALesson).toBe(27); // HL11: +1. Reordering moved which lesson is the FIRST to show a given cousin-script glyph, so one cousin table now carries one more first-sighting. Cousin glyphs are counted and never charged to the budget (HL08)
   });
 

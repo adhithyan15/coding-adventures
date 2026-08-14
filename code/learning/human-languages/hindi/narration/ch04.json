@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:a66aaf8cd8aac20c",
+  "sourceHash": "fnv1a64:e046f3d85f75b26e",
   "lessons": [
     {
       "id": "HI-C04-phir",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:32c724acfff1840f",
+      "sourceHash": "fnv1a64:5c1ec4388a7aa9dc",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -72,6 +72,17 @@
         },
         {
           "index": 3,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फ (pha, an aspirated p) + ि (the i-mātrā, written before but read after) + र (ra) becomes फिर."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -102,7 +113,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -133,7 +144,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e42e10d13c4e5c65",
+      "sourceHash": "fnv1a64:e0eb74cfe65cb16a",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -197,6 +208,17 @@
         },
         {
           "index": 4,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मि (mi) + ले (le) + the anusvāra + गे (ge) becomes मिलेंगे (milenge)."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -236,7 +258,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -385,7 +407,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:43e3bf0c3fb91599",
+      "sourceHash": "fnv1a64:f67b49e60666c204",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -453,6 +475,17 @@
         },
         {
           "index": 4,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "क (ka) + ल (la) becomes कल (kal). Two simple letters, one tricky word."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -492,7 +525,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -523,7 +556,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e11b43de65274417",
+      "sourceHash": "fnv1a64:8ef6eee504ce48a6",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -595,6 +628,17 @@
         },
         {
           "index": 4,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "च (ca) + ल (la) + long ā becomes चलता (caltā), with हूँ (hūṃ)."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -629,7 +673,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -560,8 +560,9 @@ Riding alongside, not blocking the rungs:
 |---|---|---|---|
 | HL-C115 | Not started | `letter-ductus` filmstrip figures. **Both blockers merged**: `script-ductus` exposes the filmstrip to the book generator and `path-raster` renders it to PNG. | Declared in `core/figure-generation.json`, byte-gated, proved on Tamil's cited letters and Devanagari's अ and आ. |
 | HL-C118 | Not started | Cited ductus for Telugu, Kannada, Malayalam and the rest of Devanagari. **No citation → no pen path → no figure**; the gap is reported, never filled by invention. | Every authored pen path font-verified and carrying a `strokeOrderSource`. |
-| HL-C134 | **In progress** — owner has authorised rewriting the drafts (2026-08-13); parity measured, migration not started | Rewrite the handwritten chapters 1-5 into the generated pipeline for all six. **Not a config change**: the `.tex` says more than the lesson markdown does, and `data/scripts/handwritten_parity.py` measures how much — **88 prose blocks** across the six that generating as-is would delete, almost all of them `sounds`. Carry the prose back into the lessons chapter by chapter, then flip that chapter. | Parity is 0 for a chapter before it moves out of `handwritten`; no protected chapter remains; Hindi's 11 writing lessons reach the page. |
-| HL-C148 | Not started | **Migrate the six tracks' schema-v1 lessons** (233) and give every lesson a `sequence`. Until then those lessons are invisible to every gate, so the measurements understate the debt. | `measurablePercent` rises; 0 lessons without `sequence` in the six. |
+| HL-C134 | **Half done.** Prose carried (91 blocks, parity 0 for all six); the FLIP is blocked on HL-C148 | Rewrite the handwritten chapters 1-5 into the generated pipeline for all six. The carry is complete and verified. The flip is not: `generate:books` refuses a schema-v1 lesson, and chapters 1-5 hold **188** of them. | Parity 0 per chapter *(done)*; then chapters move out of `handwritten` and every book still builds *(blocked)*. |
+| HL-C151 | Not started | **Split the two lessons the carried prose pushed over five minutes** — `KA-C01-namaskara` at 333s and `TE-C01-namaskaram` at 314s. Nothing about these lessons changed; a reader of the book always read every one of those words. What changed is that the markdown now knows, so the gate can see them. Newly visible debt, not new debt — and the rule is that a lesson too big splits, never compresses. | `durationViolations` back to 0 without any threshold being moved. |
+| HL-C148 | **NEXT — now the critical path.** HL-C134's flip cannot happen without it | **Migrate the six tracks' schema-v1 lessons** (233) and give every lesson a `sequence`. Until then those lessons are invisible to every gate, so the measurements understate the debt. | `measurablePercent` rises; 0 lessons without `sequence` in the six. |
 | HL-C149 | **Done** | **Derive the corpus-count pins instead of hard-coding them.** Twenty snapshot assertions across six test files hard-coded counts that every content tranche moves — so every tranche conflicted with every other PR that moved any of them, and this repo lands a PR every few minutes. Converted to the shape each number actually has: **floors** for content volume, **ceilings** for inherited debt (stricter than the pin was — a ratchet that cannot slip back), **ratios** for debt that grows with honest content. The running annotations stay; only the digits churned. | Mutation-tested both ways: deleting one lesson still fails the floors, and adding 42 lessons passes without touching a test file. |
 | HL-C150 | **NEXT** | **The six tracks teach core words about thirty chapters after they first use them.** Measured on merged main, before any new content: **46 forward references** across the six. Tamil's chapter 1 practice uses வா, taught in chapter 32. Chapter 3 uses இரு, taught in chapter 32. Malayalam's chapter 1 uses ഉണ്ട്, taught in chapter 32. Kannada's chapter 4 uses ಬಾ, taught in chapter 32. This is the corpus's shape, not one wave's mistake — and wave I was about to add six more of it by appending its chapter at the end. Move the words that the opening chapters already lean on to where they are used. | `forwardReferences` in the six falls toward zero; no core word is taught more than a few chapters after its first use; every book still builds. |
 
@@ -623,6 +624,26 @@ compared the two representations. `handwritten_parity.py` now does, report-only
 per the HL05/HL08 precedent, and it is the precondition for the migration rather
 than part of it: a chapter may be flipped when its parity is zero, and not
 before.
+
+**HL-C134 split in half, and the second half moved behind HL-C148.** The prose
+carry is done: 91 blocks out of the hand-written LaTeX and into the lessons, with
+`handwritten_parity.py` reading 0 for every chapter of all six tracks. Generating
+those chapters would now delete nothing.
+
+The flip itself does not work yet, and the reason was not in the plan:
+`generate:books` refuses a schema-v1 lesson outright, and chapters 1-5 hold
+**188** of them — 33 in Tamil, 34 in Hindi, ~30 in each of the rest. So HL-C148,
+which had been sitting in the "riding alongside" list as bookkeeping, is actually
+the critical path for the entire opening of all six books. It is promoted.
+
+Four conversion bugs were caught during the carry, each of which would have
+quietly corrupted the owner's writing rather than failing: `\section[short]{long}`
+merged two lessons and gave one's prose to the other; nested braces in
+`\emph{va-\d{n}ak-kam}` left raw LaTeX on the page; a script-font pattern that
+assumed a leading `t` passed `\ml{}` and `\kn{}` through untouched; and — the
+worst — the carry matched a full heading while the parity check matched a
+fragment, so a lesson that already had "The *phrase*, taken apart" was given a
+second etymology block while parity reported the chapter safe.
 
 ### The loop this order is executed by
 

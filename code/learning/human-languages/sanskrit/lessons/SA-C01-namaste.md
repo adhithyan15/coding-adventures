@@ -44,6 +44,15 @@ say the same thing. *Namaste* greets the person before you as worthy of a bow �
 hello, and on parting, goodbye. It is the greeting Sanskrit gave to half of South
 Asia.
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Devanagari runs **left to right** under a top line; every consonant carries
+a built-in “a.” न *na*, म *ma*, ते *te* (त
++ the *e*-sign े). A *hasanta* under स् strips its vowel so
+it joins the next: स् + त → स्त. Read नमस्ते as
+*na\,·\,ma\,·\,s\,·\,te*.
+
 ## Guided Practice
 
 [PAUSE 1s]

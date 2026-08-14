@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:e5a458d4c853825c",
+  "sourceHash": "fnv1a64:ad2edddfabf3d7a8",
   "lessons": [
     {
       "id": "KA-C05-maatanaadu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6445191d6e83cc03",
+      "sourceHash": "fnv1a64:bbb27b107deab7c0",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -91,6 +91,17 @@
         },
         {
           "index": 4,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮಾ (mā) + ತ (ta) + ನಾ (nā) + ಡು (ḍu) becomes ಮಾತನಾಡು (mātanāḍu)."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -130,7 +141,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -42,6 +42,12 @@ Hindi is **subject–object–verb**: "my name Arun **is**." *hai* sits at the
 *end* of the sentence, where English puts "is" in the middle. Bank the shape —
 in Hindi the verb waits until the end.
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+ह (*ha*) + ै (the *ai*-mātrā) → है
+(*hai*). One syllable.
+
 ## Guided Practice
 
 [PAUSE 1s]

@@ -43,6 +43,13 @@ The adjective form **कैसा** (*kaisā*) changes to match what it describe
 respectful "you" (*āp*) takes a plural verb, "how are **you**?" uses the plural
 **कैसे** — that is the form you will use next.
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+क (*ka*) + ै (the *ai*-mātrā) → कै (*kai*);
+स (*sa*) + े (the *e*-mātrā) → से (*se*).
+Read कै·से → *kaise*.
+
 ## Guided Practice
 
 [PAUSE 1s]

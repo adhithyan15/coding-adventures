@@ -59,6 +59,16 @@ polite/respectful without being stiff — safe with almost anyone. (Hindi also
 has warmer and more casual options you'll meet, and a whole second, Persian-
 flavored set of words — coming in a few lessons.)
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Hindi reads **left to right**, and every consonant carries a built-in
+“a.” न na, म ma, स sa, त ta. A vowel sign changes the
+vowel: े makes “e” (ते = te). A *halant* (the stroke under
+स्) *removes* the vowel, and the bare consonant leans onto the next
+as a **conjunct**: स् + ते → स्ते. Read left to right:
+न·म·स्·ते → *namaste*.
+
 ## Guided Practice
 
 [PAUSE 1s]

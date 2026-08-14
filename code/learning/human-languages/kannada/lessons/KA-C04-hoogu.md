@@ -32,6 +32,12 @@ As commands they are whole words: *hōgu!* ("go!"), *bā!* ("come!"). You need
 both, because Kannada — like every Dravidian language — does not say a plain
 "goodbye." It says "I go, and I **come back**."
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+ಹೋ (*hō*) + ಗು (*gu*) → ಹೋಗು. Its partner
+ಬಾ (*bā*, “come”).
+
 ## Guided Practice
 
 [PAUSE 1s]

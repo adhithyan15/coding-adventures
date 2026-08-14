@@ -56,6 +56,13 @@ it once as "the act of ___."
 official, or ceremonial settings, and as a courteous greeting to elders or in
 writing. Both are "hello"; *namaskār* wears a tie.
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+New: क ka, र ra, and the sign ा for long “ā” (का =
+kā). You already read नमस् (*namas*). न·म·स्·का·र →
+*namaskār*.
+
 ## Guided Practice
 
 [PAUSE 1s]

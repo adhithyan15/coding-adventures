@@ -37,6 +37,13 @@ So Hindi *nām* and English *name* are cousins from before either language
 existed — one of the clearest bridges between the Indian and European branches
 of one family.
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Three letters, left to right: न (*na*), ा the long-ā
+*mātrā* (ना = nā), म (*ma*). Read ना·म →
+*nām*.
+
 ## Guided Practice
 
 [PAUSE 1s]

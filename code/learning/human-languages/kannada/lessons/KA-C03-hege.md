@@ -34,6 +34,11 @@ you met in *ēnu*. Kannada gathers its questions here: *ēnu* (what), *hēge* (h
 Dravidian question-root heading Tamil's *eppaḍi* and Telugu's *elā* — a family
 far older than the Sanskrit words Kannada, like its sisters, borrows so readily.
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+ಹೇ (*hē*) + ಗೆ (*ge*) → ಹೇಗೆ (*hēge*).
+
 ## Guided Practice
 
 [PAUSE 1s]

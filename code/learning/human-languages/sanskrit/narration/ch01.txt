@@ -20,6 +20,10 @@ The word, taken apart.
 Why it's said this way.
 Palms pressed together (the gesture is añjali), a slight bow: hands and word say the same thing. Namaste greets the person before you as worthy of a bow — hello, and on parting, goodbye. It is the greeting Sanskrit gave to half of South Asia.
 
+Sounds you'll need.
+Devanagari runs left to right under a top line; every consonant carries a built-in “a.” न na, म ma, ते te (त.
+the e-sign े). A hasanta under स् strips its vowel so it joins the next: स् + त becomes स्त. Read नमस्ते (namaste) as na,,,ma,,,s,,,te.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: read it — na, ma, s, te]
@@ -51,6 +55,9 @@ The word, taken apart.
 
 Grammar Lens.
 Namaste and namaskāra share the same first half, namas, but end differently because they do different grammatical jobs — one takes a pronoun (te "to you"), the other builds a noun (-kāra "the making of"). Sanskrit words are transparently assembled from roots and endings; once you see the seams, long words stop being frightening.
+
+Sounds you'll need.
+New: का kā (क + the ā-sign ा), र ra, and the visarga ः — a soft breathed “ḥ” at a word's end, written as two dots. नमस्कारः (namaskāraḥ) = namas-kā-raḥ.
 
 Guided Practice.
 [pause 1 second]
@@ -84,6 +91,9 @@ The word, taken apart.
 
 Why it's said this way.
 Classical Sanskrit thanks are more often shown in deed and honorific than said with a set formula; dhanyavāda is the plain, dignified "thank you," and its survival across every modern northern language shows how durable a good word can be. Note you already knew all its pieces — only the ending (-aḥ) is new.
+
+Sounds you'll need.
+New: ध dha (breathy d), व va, द da, and the conjunct न्य (न + य ya). With the visarga again, read धन्यवादः as dha,,,nya,,,vā,,,daḥ.
 
 Guided Practice.
 [pause 1 second]
@@ -120,6 +130,9 @@ So svāgatam and welcome are not just parallel ideas but partly cognate ones.
 Why it's said this way.
 Su + āgata fuses into svāgata by sandhi — Sanskrit's rule that u before a vowel becomes the glide v. You will see sandhi everywhere; it is why Sanskrit words seem to melt into one another. The neuter ending -am makes it "a welcome / it is welcomed."
 
+Sounds you'll need.
+New: the conjunct स्व (स् + व va) = sva, ग ga, and the halant म् m closing the word with no vowel. Read स्वागतम् (svāgatam) as svā,,,ga,,,tam.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: read it — svā, ga, tam]
@@ -153,6 +166,9 @@ The word, taken apart.
 
 Why it's said this way.
 Classical Sanskrit, like Latin, leans on more than a bare "yes": one answers by echoing the verb, or with ām, evam ("so it is"), or bāḍham ("certainly"). The blunt yes/no habit of English is not universal — these old languages preferred to say what they meant.
+
+Sounds you'll need.
+New: आ — the independent vowel ā (the shape for a word-initial vowel) — closed by the halant म् m: आम् ām. And न na, a single consonant with its built-in “a.”
 
 Guided Practice.
 [pause 1 second]

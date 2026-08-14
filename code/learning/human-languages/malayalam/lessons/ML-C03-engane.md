@@ -34,6 +34,12 @@ you met in *entŭ*. Malayalam gathers its questions here: *entŭ* (what), *eṅ�
 same Dravidian question-root heading Tamil's *eppaḍi* — the deepest, most native
 layer of a language otherwise rich in Sanskrit.
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+എ (*e*) + ങ്ങ (*ṅṅa*, a doubled velar nasal) +
+നെ (*ne*) → എങ്ങനെ.
+
 ## Guided Practice
 
 [PAUSE 1s]

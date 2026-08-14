@@ -51,6 +51,14 @@ but not its sense is the fastest way to feel the whole Dravidian family at once
 — and the reason
 the four are worth seeing side by side.
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+ശ is “śa” (a *sh*-sound). Having borrowed so much Sanskrit,
+Malayalam keeps the full set of Sanskrit sibilants (*ś, ṣ, s*) as separate
+letters — more than Tamil, which uses one. രി is *ri*. Read
+ശ·രി → *śari*.
+
 ## Guided Practice
 
 [PAUSE 1s]

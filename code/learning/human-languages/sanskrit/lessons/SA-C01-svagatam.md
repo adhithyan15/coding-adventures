@@ -46,6 +46,13 @@ before a vowel becomes the glide *v*. You will see sandhi everywhere; it is why
 Sanskrit words seem to melt into one another. The neuter ending *-am* makes it
 "a welcome / it is welcomed."
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+New: the conjunct स्व (स् + व *va*) = *sva*, ग
+*ga*, and the *halant* म् *m* closing the word with no vowel.
+Read स्वागतम् as *svā\,·\,ga\,·\,tam*.
+
 ## Guided Practice
 
 [PAUSE 1s]

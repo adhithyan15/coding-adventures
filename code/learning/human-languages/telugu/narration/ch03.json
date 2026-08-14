@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:7264ded7dd768ccf",
+  "sourceHash": "fnv1a64:f9bcb1dd350456aa",
   "lessons": [
     {
       "id": "TE-C03-elaa",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:783f9f06a68c2f4c",
+      "sourceHash": "fnv1a64:ebf42526447fc257",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -72,6 +72,17 @@
         },
         {
           "index": 3,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఎ (independent short e) + లా (lā) becomes ఎలా (elā)."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -102,7 +113,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -267,7 +278,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:356fabe710b9194f",
+      "sourceHash": "fnv1a64:d8385a84b986be76",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -331,6 +342,17 @@
         },
         {
           "index": 4,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నే (nē) + ను (nu) becomes నేను (nēnu) (nēnu)."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -370,7 +392,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -401,7 +423,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7fb7222145f2e0fb",
+      "sourceHash": "fnv1a64:20732f1fd21978a4",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -466,6 +488,17 @@
         },
         {
           "index": 3,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "బా (bā) + గా (gā) becomes బాగా (bāgā) (bāgā)."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -505,7 +538,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

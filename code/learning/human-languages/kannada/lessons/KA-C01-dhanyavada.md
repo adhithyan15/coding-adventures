@@ -63,6 +63,13 @@ nandi*. Kannada sits on the Sanskrit-borrowing side of its own family.
 people often reach for the English *thanks*, or simply show gratitude in tone
 and gesture; the full *dhanyavāda* carries weight, for when you mean to mark it.
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+New: ಧ *dha* (an **aspirated** *d* — a puff of breath),
+and the conjunct ನ್ಯ (*na* stacked with *ya* → “nya”).
+ವಾ is *vā*. Read ಧ·ನ್ಯ·ವಾ·ದ → *dhanyavāda*.
+
 ## Guided Practice
 
 [PAUSE 1s]

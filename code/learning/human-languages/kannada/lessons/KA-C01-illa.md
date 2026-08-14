@@ -66,6 +66,13 @@ Malayalam *illa* — one family, one way of saying a thing is not.
 Three of the four Dravidian languages share *il-*; only Telugu picked a
 different native root. Hindi, from the other family entirely, is unrelated.
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+ಇ is the **independent vowel** “i” (word-initial, so a full
+letter). ಲ್ಲ is “lla” — ಲ *la* vowel-stripped and stacked
+under another *la*, a held “ll.” Read ಇ·ಲ್ಲ → *illa*.
+
 ## Guided Practice
 
 [PAUSE 1s]

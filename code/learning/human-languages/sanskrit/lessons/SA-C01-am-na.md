@@ -43,6 +43,13 @@ echoing the verb, or with *ām*, *evam* ("so it is"), or *bāḍham* ("certainly
 The blunt yes/no habit of English is not universal — these old languages
 preferred to *say what they meant*.
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+New: आ — the **independent** vowel ā (the shape for a word-initial
+vowel) — closed by the halant म् *m*: आम् *ām*. And न
+*na*, a single consonant with its built-in “a.”
+
 ## Guided Practice
 
 [PAUSE 1s]

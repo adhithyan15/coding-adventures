@@ -39,6 +39,11 @@ Kannada verbs carry the person in their ending — *iddēne* already means "**I*
 — so *nānu* is often left out. You still learn it first, because the answer to
 *hēgiddīrā?* begins with it.
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+ನಾ (*nā*) + ನು (*nu*) → ನಾನು (*nānu*).
+
 ## Guided Practice
 
 [PAUSE 1s]

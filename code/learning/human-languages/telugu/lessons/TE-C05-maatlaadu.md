@@ -45,6 +45,12 @@ stacked and glued. Learn the pattern once and every verb follows it. (Telugu, li
 Tamil, marks no gender in the first person: *māṭlāḍatānu* is the same for a man or
 a woman.)
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+మా (*mā*) + ట్లా (*ṭlā*) + డు (*ḍu*)
+→ మాట్లాడు.
+
 ## Guided Practice
 
 [PAUSE 1s]

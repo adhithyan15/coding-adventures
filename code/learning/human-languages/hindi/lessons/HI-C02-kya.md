@@ -33,6 +33,13 @@ PIE **\*kʷo-** — the same question-root behind English **wh-** words (**what*
 **who**, **which**) and Latin **qu-**. Hindi's question-words nearly all start
 with this **k-**: *kyā* (what), *kaun* (who), *kab* (when), *kyūn* (why).
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+A **conjunct**: क (*ka*) loses its vowel (*halant*) and
+joins य (*ya*) → क्य (*kya*); add the long-ā mātrā
+→ क्या (*kyā*).
+
 ## Guided Practice
 
 [PAUSE 1s]

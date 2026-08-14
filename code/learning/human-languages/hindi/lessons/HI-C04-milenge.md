@@ -39,6 +39,12 @@ Hindi marks the future with an ending on the verb stem: *mil-* ("meet") +
 *-enge* ("we/they will") → *milenge*. No helper-word like English "will" — the
 tense lives in the ending, the way Hindi's person lives in *hūṁ/hai/haiṁ*.
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+मि (*mi*) + ले (*le*) + the *anusvāra* + गे
+(*ge*) → मिलेंगे (*milenge*).
+
 ## Guided Practice
 
 [PAUSE 1s]

@@ -45,6 +45,12 @@ person by person: **हूँ** *am*, **है** *is*, **हैं** *are*.
 The verb **होना** (*honā*, "to be") is the frame every sentence hangs on; you now
 have three of its faces.
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+ह (*ha*) + ू (long *u*) → हू (*hū*); the
+*chandrabindu* ँ nasalises → हूँ (*hūṃ*).
+
 ## Guided Practice
 
 [PAUSE 1s]

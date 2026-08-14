@@ -42,6 +42,12 @@ never a blunt "I'm leaving."
 The *-tā / -tī* ending marks the speaker's gender — a feature English has no trace
 of, and one you will meet again and again. (Compare Marathi *yeto* m. / *yete* f.)
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+च (*ca*) + ल (*la*) + long *ā* → चलता
+(*caltā*), with हूँ (*hūṃ*).
+
 ## Guided Practice
 
 [PAUSE 1s]

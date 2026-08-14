@@ -64,6 +64,13 @@ feel oddly stiff, as if you were thanking a stranger; warmth is usually assumed
 and shown in tone. The explicit word is for when you want to *mark* the
 gratitude. (In casual speech you'll also hear the English *thanks*.)
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+ന is *na*; ന്ദി is “ndi” — a **conjunct** of ന
+(na) + ദ (da) into “nd,” with the “i” sign. Read ന·ന്ദി →
+*nandi*.
+
 ## Guided Practice
 
 [PAUSE 1s]

@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:f72166a18cc70fd4",
+  "sourceHash": "fnv1a64:a47a2367c35ccfc2",
   "lessons": [
     {
       "id": "ML-C04-pokuka",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0012d2ae635fd280",
+      "sourceHash": "fnv1a64:d8375e5f38fd9d85",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -72,6 +72,17 @@
         },
         {
           "index": 3,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പോ (pō) + കുക (kuka, the -uka infinitive) becomes പോകുക. Its partner വരിക (varika, “to come”)."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -102,7 +113,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -267,7 +278,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7a2b95609a927cb2",
+      "sourceHash": "fnv1a64:2883097aeb07abd7",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -320,6 +331,17 @@
         },
         {
           "index": 3,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നാളെ (nāḷe): നാ (nā) + ളെ (ḷe, retroflex ള ḷ). കാണാം (kāṇāṃ) = kāṇ (“see”) + -āṃ (“let's”)."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -359,7 +381,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

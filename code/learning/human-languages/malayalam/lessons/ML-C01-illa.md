@@ -65,6 +65,13 @@ say a thing is not. (Recall Telugu was the outlier here, using *lēdu*.)
 | Telugu | *lēdu* (లేదు) | native, a **different** root |
 | Hindi | *nahīṁ* (नहीं) | Indo-European (unrelated) |
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+ഇ is the independent vowel “i” (word-initial). ല്ല is “lla” — a
+conjunct of ല (la) + ല (la), a held “ll.” Read ഇ·ല്ല →
+*illa*.
+
 ## Guided Practice
 
 [PAUSE 1s]

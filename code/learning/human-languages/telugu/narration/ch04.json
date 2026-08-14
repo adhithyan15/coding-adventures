@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:dcbe8f5bc2ee9dd2",
+  "sourceHash": "fnv1a64:eec23ac55024fea5",
   "lessons": [
     {
       "id": "TE-C04-vellu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d21cae610706da7a",
+      "sourceHash": "fnv1a64:6c63f201e6eeb859",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -72,6 +72,17 @@
         },
         {
           "index": 3,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వె (ve) + ళ్ళు (ḷḷu, doubled retroflex ళ ḷ) becomes వెళ్ళు (veḷḷu). Its partner వచ్చు (vaccu, “come”)."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -102,7 +113,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -267,7 +278,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e87a1d66abbd6c27",
+      "sourceHash": "fnv1a64:009dedce2de234fa",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -320,6 +331,17 @@
         },
         {
           "index": 3,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "రే (rē) + పు (pu) becomes రేపు. కలుద్దాం (kaludḍām) = kalu (“meet”) + -dḍām (“let's”)."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -359,7 +381,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

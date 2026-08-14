@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:17ddc6c3489e3d15",
+  "sourceHash": "fnv1a64:f03224f356d2cf54",
   "lessons": [
     {
       "id": "KA-C04-hoogu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:026084a6c21d7d8c",
+      "sourceHash": "fnv1a64:f76bb08b0f28ebbd",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -72,6 +72,17 @@
         },
         {
           "index": 3,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹೋ (hō) + ಗು (gu) becomes ಹೋಗು (hōgu). Its partner ಬಾ (bā, “come”)."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -102,7 +113,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -267,7 +278,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c8f2005de4040f93",
+      "sourceHash": "fnv1a64:28dd45cb7030f4c6",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -320,6 +331,17 @@
         },
         {
           "index": 3,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನಾಳೆ (nāḷe): ನಾ (nā) + ಳೆ (ḷe, retroflex ಳ ḷ). ಸಿಗೋಣ (sigōṇa) = sigu (“meet”) + -ōṇa (“let's”)."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -359,7 +381,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

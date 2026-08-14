@@ -32,6 +32,12 @@ reviews_of: [ML-C01-namaskaram]
 (*p*→*h*). Being Tamil's closest sister, Malayalam keeps the native word, *not*
 Sanskrit *nāma* (Hindi *nām*, English *name*).
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+പ (*pa*) + േ (the *ē*-sign) → പേ (pē); ര്
+(bare *r*, with the chandrakkala). Read പേ·ര് → *pēru*.
+
 ## Guided Practice
 
 [PAUSE 1s]

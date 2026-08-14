@@ -75,6 +75,16 @@ on the Sanskrit *namas-*. Same gesture, different loyalties.
 day, to almost anyone, and it is respectful without being stiff. (The even more
 respectful *namaskāragaḷu* adds a plural-of-honour ending you'll meet later.)
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Kannada reads **left to right**, and every consonant carries a built-in
+“a.” ನ na, ಮ ma, ರ ra. A **vowel sign** changes that
+vowel: ಕ ka + the long-“ā” sign → ಕಾ kā. And a vowel-less
+consonant **stacks under** the next as a conjunct (*ottakṣara*):
+ಸ loses its vowel and tucks under *ka* → ಸ್ಕ “ska.” Read
+ನ·ಮ·ಸ್·ಕಾ·ರ → *namaskāra*.
+
 ## Guided Practice
 
 [PAUSE 1s]

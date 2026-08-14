@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 9,
-  "sourceHash": "fnv1a64:3c0d5e6c060b7723",
+  "sourceHash": "fnv1a64:6df1383fd4404bac",
   "lessons": [
     {
       "id": "TA-C01-vanakkam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:90fd1fa8024e6c4b",
+      "sourceHash": "fnv1a64:6277ee309e891075",
       "notice": null,
       "blocks": [
         {
@@ -64,6 +64,39 @@
         },
         {
           "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say it va-ṇak-kam. The ṇ is a retroflex n — curl the tongue back to the roof of the mouth, further back than an English n. The kk is held, a beat longer than a single k, and that length is doing real work: Tamil distinguishes words by it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வணக்கம் (vaṇakkam) comes from the verb வணங்கு (vaṇaṅku), “to bow, to pay homage.” Turned into a noun of the action, it means “a bowing, an act of reverence” — the idea of namaste, but from a native Tamil root, not a Sanskrit one. That is Tamil's whole personality: an old language that keeps its home-grown words where its neighbours borrowed."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Said with the palms pressed together and a small bow — the gesture is the word. It serves as both hello and goodbye, any time, to almost anyone, respectful without being stiff."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -103,7 +136,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -266,7 +299,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ce84e297bd916c0f",
+      "sourceHash": "fnv1a64:9d57ca2cbb43325a",
       "notice": null,
       "blocks": [
         {
@@ -311,6 +344,39 @@
         },
         {
           "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say it ām — a long a, held about twice as long as the short one, closing on a plain m. Vowel length is meaningful in Tamil, so the length is not decoration."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஆம் (ām) is the plain “yes.” Doubled for emphasis it becomes ஆமாம் (āmām), “yes, indeed.”"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "grammar",
+          "title": "Grammar lens",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Tamil often says “yes” by echoing the verb: asked vandāyā? (“did you come?”), a natural yes is vandēṉ (“I came”). Bank ām as the simple word, but expect a “yes” to come back as a whole verb."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -350,7 +416,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -381,7 +447,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8b1c26dfb61a81fe",
+      "sourceHash": "fnv1a64:9a94793df014883b",
       "notice": null,
       "blocks": [
         {
@@ -426,6 +492,39 @@
         },
         {
           "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say it il-lai, with the l held across the join — the same doubling you met in vaṇak-kam. The ending is the diphthong ai, as in English “eye,” not two separate vowels."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இல்லை (illai) is built on இல் (il), “not-being, absence” — so it is not really the adjective “no” but the statement “[it] is not, [there] is not.” Its positive twin is உண்டு (uṇḍu), “there is.”"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "grammar",
+          "title": "Grammar lens",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Tamil negates by being, not with a “not”-word. Where English inserts not/no, Tamil swaps in the negative verb of existence: puttakam uṇḍu (“there is a book”) becomes puttakam illai (“there is not a book”). So illai is both the everyday “no” and the word that makes a whole sentence negative — a deeply Dravidian habit, unlike English or Hindi."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -465,7 +564,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -496,7 +595,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:484e8cdb94d9ff95",
+      "sourceHash": "fnv1a64:6865a826571e7c10",
       "notice": null,
       "blocks": [
         {
@@ -541,6 +640,39 @@
         },
         {
           "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say it naṇ-ṛi. Tamil hears three different n sounds and this word uses two of them: a dental n (tongue on the teeth) to open, then an alveolar one (on the ridge just behind them). The ṛ is its own sound again, not the English r. English ears flatten all of this to “nandri,” which is close enough to be understood."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நன்றி (naṉṟi) grows from the root நல் (nal), “good” — so it literally means “goodness.” To thank, in Tamil, is to name the good someone did you."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "grammar",
+          "title": "Grammar lens",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Tamil hears three of every n, l, and r. You have now met ந (dental n), ன (alveolar ṉ), and ண (retroflex ṇ) — three letters for three tongue positions (on the teeth / on the ridge / curled back). Tamil does the same for l (ல ள ழ) and r (ர ற). English fuses each set into one letter; Tamil keeps them apart, and the differences change meaning. Learn them word by word, not as a chart."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -580,7 +712,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -746,7 +878,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3050294875351187",
+      "sourceHash": "fnv1a64:db956268e9eac39c",
       "notice": null,
       "blocks": [
         {
@@ -791,6 +923,39 @@
         },
         {
           "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say it sari, two light syllables, stress even. The opening sound sits between English s and ch, and Tamil treats that whole range as one sound chosen by position in the word rather than by a separate spelling — the same economy that lets one k-sound also be heard as g or a soft h."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சரி (sari) is native Tamil for “correct, even, level,” and so “okay, agreed.” It is the verbal nod of the language: propose a plan, hear a warm sari; doubled, sari sari = “alright, alright.”"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "grammar",
+          "title": "Grammar lens",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One letter, several sounds. For its stop-consonants Tamil writes one letter per mouth-position and lets rules of position fill in the voicing (k/g, s/ch). The payoff is a strikingly small alphabet; the price is that the exact sound isn't always predictable from the letter alone — you pick it up by ear, word by word."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -830,7 +995,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1003,7 +1168,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c81d31ec864320b8",
+      "sourceHash": "fnv1a64:eaca356117a007ca",
       "notice": null,
       "blocks": [
         {
@@ -1076,6 +1241,17 @@
         },
         {
           "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Why Tamil won't just say “I'm leaving.” The everyday goodbye is போய் வருகிறேன் (pōy varugiṟēṉ) — literally “I'll go and come [back],” and the reply is போய் வா (pōy vā), “go, and come back.” A bare “I go” sounds like a final parting, so you always promise a return. A whole worldview folded into a farewell. (Or simply say vaṇakkam again — it parts as well as it meets.)"
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1115,7 +1291,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

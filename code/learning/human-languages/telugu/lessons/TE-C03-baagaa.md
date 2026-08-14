@@ -41,6 +41,11 @@ The whole exchange:
 > — *mīru elā unnāru?* ("How are you?")
 > — *nēnu bāgunnānu, dhanyavādamulu.* ("I'm well, thank you.")
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+బా (*bā*) + గా (*gā*) → బాగా (*bāgā*).
+
 ## Guided Practice
 
 [PAUSE 1s]

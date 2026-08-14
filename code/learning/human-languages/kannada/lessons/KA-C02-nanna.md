@@ -32,6 +32,12 @@ Dravidian, on the pronoun stem **\*nān**, the same one behind Tamil *nāṉ / e
 It has no Indo-European cousin: the Dravidian "I/my" is a different word from
 the European *I/my*.
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+ನ (*na*) + the conjunct ನ್ನ (*nna*) → *nanna* —
+a doubled, held *nn*.
+
 ## Guided Practice
 
 [PAUSE 1s]

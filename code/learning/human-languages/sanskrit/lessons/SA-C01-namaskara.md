@@ -42,6 +42,13 @@ the other builds a noun (*-kāra* "the making of"). Sanskrit words are
 transparently assembled from roots and endings; once you see the seams, long
 words stop being frightening.
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+New: का *kā* (क + the ā-sign ा), र *ra*, and
+the **visarga** ः — a soft breathed “ḥ” at a word's end,
+written as two dots. नमस्कारः = *namas-kā-raḥ*.
+
 ## Guided Practice
 
 [PAUSE 1s]

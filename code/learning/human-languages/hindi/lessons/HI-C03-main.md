@@ -40,6 +40,12 @@ Hindi verbs carry the person in their ending, so *maiṁ* is frequently left out
 once context is clear — much like Spanish or Latin. You will still learn it
 first, because the answer to *āp kaise haiṁ?* begins with it: *maiṁ …*
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+म (*ma*) + ै (*ai*) + the *anusvāra* ं →
+मैं (*maiṃ*). One nasal syllable.
+
 ## Guided Practice
 
 [PAUSE 1s]

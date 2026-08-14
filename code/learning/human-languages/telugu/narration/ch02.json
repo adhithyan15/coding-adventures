@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:a0d835215e394c54",
+  "sourceHash": "fnv1a64:51db2902b3e6b5f0",
   "lessons": [
     {
       "id": "TE-C02-peru",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:86f63c9dfd7b83c6",
+      "sourceHash": "fnv1a64:2799e3e4d20f8597",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -76,6 +76,17 @@
         },
         {
           "index": 3,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ప (pa) + ే (the ē-sign) becomes పే (pē); రు (ru). Read పే, రు becomes pēru."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -106,7 +117,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -137,7 +148,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:72e6efc58ce83149",
+      "sourceHash": "fnv1a64:7d91f0d59b61c29c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -190,6 +201,17 @@
         },
         {
           "index": 3,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "న (na) + ా (long ā) becomes నా (nā) (nā)."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -220,7 +242,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -364,7 +386,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:cb4d4d321ab7e74c",
+      "sourceHash": "fnv1a64:a2fe9264ff4f648b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -432,6 +454,17 @@
         },
         {
           "index": 4,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నువ్వు (nuvvu); మీరు (m=i ru, మీ m=i + రు ru)."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -453,7 +486,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -484,7 +517,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0925085da1c2fbc2",
+      "sourceHash": "fnv1a64:196b7b98a3b2a6f3",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -537,6 +570,17 @@
         },
         {
           "index": 3,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఏ (independent long ē) + మి (mi) + టి (ṭi, retroflex) becomes ēmiṭi."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -567,7 +611,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

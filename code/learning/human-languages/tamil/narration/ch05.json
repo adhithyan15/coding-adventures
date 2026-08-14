@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:3a943d7be495e9ac",
+  "sourceHash": "fnv1a64:597d17b2e7927ba5",
   "lessons": [
     {
       "id": "TA-C05-pesu",
@@ -260,7 +260,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e60a2cf8db255147",
+      "sourceHash": "fnv1a64:e5aa86b1748302a8",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -363,6 +363,17 @@
         },
         {
           "index": 5,
+          "type": "grammar",
+          "title": "Grammar lens",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One letter, three sounds — now on the page. Chapter1 said Tamil picks this sound by position rather than by spelling; here is the letter that does it. Devanagari spells ka, kha, ga and gha with four separate letters. Tamil writes க for all of them: k at the start of a word and when doubled (க்க), g after a nasal (ங்க), and a softer h-like sound between vowels. That is why Tamil needs only 18 consonant letters where Devanagari needs 33 — its native words do not depend on those written distinctions."
+            }
+          ]
+        },
+        {
+          "index": 6,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -411,7 +422,7 @@
           ]
         },
         {
-          "index": 6,
+          "index": 7,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

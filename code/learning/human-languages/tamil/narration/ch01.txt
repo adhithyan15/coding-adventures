@@ -15,6 +15,15 @@ Say it va-ṇak-kam, with the kk held a beat longer than a single k.
 It is what you say walking into a room, answering a phone, or meeting anyone at all. It does not change for morning or evening, and it does not change for one person or many.
 Its root is the verb vaṇaṅku, "to bow." Vaṇakkam is the act of bowing, turned into a word — and it is native Tamil, not borrowed from Sanskrit.
 
+Sounds you'll need.
+Say it va-ṇak-kam. The ṇ is a retroflex n — curl the tongue back to the roof of the mouth, further back than an English n. The kk is held, a beat longer than a single k, and that length is doing real work: Tamil distinguishes words by it.
+
+The word, taken apart.
+வணக்கம் (vaṇakkam) comes from the verb வணங்கு (vaṇaṅku), “to bow, to pay homage.” Turned into a noun of the action, it means “a bowing, an act of reverence” — the idea of namaste, but from a native Tamil root, not a Sanskrit one. That is Tamil's whole personality: an old language that keeps its home-grown words where its neighbours borrowed.
+
+Why it's said this way.
+Said with the palms pressed together and a small bow — the gesture is the word. It serves as both hello and goodbye, any time, to almost anyone, respectful without being stiff.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: "vaṇakkam" — hold the kk]
@@ -76,6 +85,15 @@ One beat, with a long opening aa.
 Stretch it and you get ஆமாம் (āmām) — "yes, indeed; that's right." Tamil doubles words for warmth and certainty, the way sari sari does.
 Ām is a worn-down form of āgum, "it becomes, it will be" — a yes that started life as a verb, which is a very Tamil way to agree.
 
+Sounds you'll need.
+Say it ām — a long a, held about twice as long as the short one, closing on a plain m. Vowel length is meaningful in Tamil, so the length is not decoration.
+
+The word, taken apart.
+ஆம் (ām) is the plain “yes.” Doubled for emphasis it becomes ஆமாம் (āmām), “yes, indeed.”
+
+Grammar lens.
+Tamil often says “yes” by echoing the verb: asked vandāyā? (“did you come?”), a natural yes is vandēṉ (“I came”). Bank ām as the simple word, but expect a “yes” to come back as a whole verb.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: "ām" — one long aa, closed on the m]
@@ -103,6 +121,15 @@ Two beats: il-lai, with the l held across the join.
 On its own it is the everyday no. But it is not really the adjective "no" — it is a small statement meaning "is not." That will matter when we put the five words together.
 Its root is il, the idea of not-being. Its positive twin is uṇḍu, "there is."
 
+Sounds you'll need.
+Say it il-lai, with the l held across the join — the same doubling you met in vaṇak-kam. The ending is the diphthong ai, as in English “eye,” not two separate vowels.
+
+The word, taken apart.
+இல்லை (illai) is built on இல் (il), “not-being, absence” — so it is not really the adjective “no” but the statement “[it] is not, [there] is not.” Its positive twin is உண்டு (uṇḍu), “there is.”
+
+Grammar lens.
+Tamil negates by being, not with a “not”-word. Where English inserts not/no, Tamil swaps in the negative verb of existence: puttakam uṇḍu (“there is a book”) becomes puttakam illai (“there is not a book”). So illai is both the everyday “no” and the word that makes a whole sentence negative — a deeply Dravidian habit, unlike English or Hindi.
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: "illai" — two beats, the l held across the join]
@@ -129,6 +156,15 @@ The word.
 Two beats: naṉ-ṟi. The ṉ and the ṟ are both made further back than English n and r; copy the sound rather than the spelling.
 It works on its own, with no verb around it. Someone hands you something; you say naṉṟi, and that is a whole sentence.
 Its root is nal, "good" — the same nal- inside nalla ("good") and nanmai ("a good deed"). Saying naṉṟi names the good someone did you.
+
+Sounds you'll need.
+Say it naṇ-ṛi. Tamil hears three different n sounds and this word uses two of them: a dental n (tongue on the teeth) to open, then an alveolar one (on the ridge just behind them). The ṛ is its own sound again, not the English r. English ears flatten all of this to “nandri,” which is close enough to be understood.
+
+The word, taken apart.
+நன்றி (naṉṟi) grows from the root நல் (nal), “good” — so it literally means “goodness.” To thank, in Tamil, is to name the good someone did you.
+
+Grammar lens.
+Tamil hears three of every n, l, and r. You have now met ந (dental n), ன (alveolar ṉ), and ண (retroflex ṇ) — three letters for three tongue positions (on the teeth / on the ridge / curled back). Tamil does the same for l (ல ள ழ) and r (ர ற). English fuses each set into one letter; Tamil keeps them apart, and the differences change meaning. Learn them word by word, not as a chart.
 
 Guided Practice.
 [pause 1 second]
@@ -190,6 +226,15 @@ The word.
 Two beats: sa-ri.
 It is the verbal nod of Tamil. Someone proposes a plan and the whole reply is one warm sari. Doubled — sari, sari — it means "yes yes, fine, go on."
 It began as "correct, even, level," and slid from that is right to alright the way English right did.
+
+Sounds you'll need.
+Say it sari, two light syllables, stress even. The opening sound sits between English s and ch, and Tamil treats that whole range as one sound chosen by position in the word rather than by a separate spelling — the same economy that lets one k-sound also be heard as g or a soft h.
+
+The word, taken apart.
+சரி (sari) is native Tamil for “correct, even, level,” and so “okay, agreed.” It is the verbal nod of the language: propose a plan, hear a warm sari; doubled, sari sari = “alright, alright.”
+
+Grammar lens.
+One letter, several sounds. For its stop-consonants Tamil writes one letter per mouth-position and lets rules of position fill in the voicing (k/g, s/ch). The payoff is a strikingly small alphabet; the price is that the exact sound isn't always predictable from the letter alone — you pick it up by ear, word by word.
 
 Guided Practice.
 [pause 1 second]
@@ -260,6 +305,9 @@ The farewell — why Tamil won't just say "I'm leaving".
 Tamil has no casual "bye." The everyday goodbye is:
 போய் வருகிறேன் (pōy varugiṟēṉ) — literally "I'll go and come [back]."
 And the reply is போய் வா (pōy vā) — "go, and come [back]." You never sign off with a bare "I am going": saying only "I go" sounds ominous, like a final departure. So you promise a return — go and come back — every single time. It's a whole worldview folded into a goodbye. (You can also simply repeat வணக்கம் (vaṇakkam), which works to part as well as to meet.)
+
+Why it's said this way.
+Why Tamil won't just say “I'm leaving.” The everyday goodbye is போய் வருகிறேன் (pōy varugiṟēṉ) — literally “I'll go and come [back],” and the reply is போய் வா (pōy vā), “go, and come back.” A bare “I go” sounds like a final parting, so you always promise a return. A whole worldview folded into a farewell. (Or simply say vaṇakkam again — it parts as well as it meets.)
 
 Guided Practice.
 [pause 1 second]

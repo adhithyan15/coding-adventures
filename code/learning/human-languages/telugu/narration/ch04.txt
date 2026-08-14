@@ -17,6 +17,9 @@ The letters in this word.
 The word, taken apart.
 వెళ్ళు (veḷḷu, "to go") and వచ్చు (vaccu, "to come") are native Dravidian verbs. As commands they are whole words: veḷḷu! ("go!"), rā! ("come!"). You need both, because Telugu — like every Dravidian language — does not say a plain "goodbye." It says "I go, and I come back."
 
+Sounds you'll need.
+వె (ve) + ళ్ళు (ḷḷu, doubled retroflex ళ ḷ) becomes వెళ్ళు (veḷḷu). Its partner వచ్చు (vaccu, “come”).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: "veḷḷu" (go) and "vaccu" (come)]
@@ -75,6 +78,9 @@ The letters in this word.
 
 The word, taken apart.
 రేపు (rēpu, "tomorrow") is native Dravidian. కలుద్దాం (kaluddām, "let's meet") is from కలు (kalu, "to meet, to join") — so the phrase is "tomorrow, let's meet," the Telugu "see you tomorrow." The -దాం (-ddām) ending is Telugu's "let's ___" — a first-person-plural invitation: veḷḷddām ("let's go"), tindām ("let's eat").
+
+Sounds you'll need.
+రే (rē) + పు (pu) becomes రేపు. కలుద్దాం (kaludḍām) = kalu (“meet”) + -dḍām (“let's”).
 
 Guided Practice.
 [pause 1 second]

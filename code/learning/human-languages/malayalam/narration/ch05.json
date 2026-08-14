@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:7b4d2288a2a06032",
+  "sourceHash": "fnv1a64:af211b9a67a63a6f",
   "lessons": [
     {
       "id": "ML-C05-samsaarikkuka",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:81dd9805ac87386a",
+      "sourceHash": "fnv1a64:7a7e1387959fa097",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -107,6 +107,17 @@
         },
         {
           "index": 4,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സം (saṃ) + സാ (sā) + രി (ri) + ക്കുക (kkuka) becomes സംസാരിക്കുക."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -146,7 +157,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

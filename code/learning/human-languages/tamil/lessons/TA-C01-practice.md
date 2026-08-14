@@ -49,6 +49,16 @@ final departure. So you promise a return — *go and come back* — every single
 time. It's a whole worldview folded into a goodbye. (You can also simply repeat
 **வணக்கம்**, which works to part as well as to meet.)
 
+## Why it's said this way
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Why Tamil won't just say “I'm leaving.”** The everyday goodbye is
+போய் வருகிறேன் (*pōy varugiṟēṉ*) — literally “I'll *go and
+come [back]*,” and the reply is போய் வா (*pōy vā*), “go, and come
+back.” A bare “I go” sounds like a final parting, so you always promise a
+return. A whole worldview folded into a farewell. (Or simply say *vaṇakkam*
+again — it parts as well as it meets.)
+
 ## Guided Practice
 
 [PAUSE 1s]

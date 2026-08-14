@@ -66,6 +66,12 @@ draws the line most sharply — and with a different root-word from its sisters.
 Three sisters share *il-*; Telugu alone picked *lē-* / *kā-*. Same family, not
 a uniform one — a reminder that Dravidian has real internal branches.
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+లే is *lē* (ల *la* with the long-“ē” sign); దు is
+*du*. Read లే·దు → *lēdu*.
+
 ## Guided Practice
 
 [PAUSE 1s]

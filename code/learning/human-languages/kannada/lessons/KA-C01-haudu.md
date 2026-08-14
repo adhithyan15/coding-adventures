@@ -47,6 +47,13 @@ come?"), a natural yes is *"bandiddēne"* ("I have come"). Keep *haudu* as the
 simple all-purpose "yes," but expect a "yes" to come back as a whole verb —
 a habit shared right across the Dravidian family.
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+ಹೌ is *hau* (ಹ *ha* with the “au” vowel sign hugging it);
+ದು is *du* (ದ *da* with the “u” sign beneath). Read
+ಹೌ·ದು → *haudu*.
+
 ## Guided Practice
 
 [PAUSE 1s]

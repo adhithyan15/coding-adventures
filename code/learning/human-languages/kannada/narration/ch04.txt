@@ -17,6 +17,9 @@ The letters in this word.
 The word, taken apart.
 ಹೋಗು (hōgu, "to go") and ಬಾ (bā, "come") are native Dravidian verbs. As commands they are whole words: hōgu! ("go!"), bā! ("come!"). You need both, because Kannada — like every Dravidian language — does not say a plain "goodbye." It says "I go, and I come back."
 
+Sounds you'll need.
+ಹೋ (hō) + ಗು (gu) becomes ಹೋಗು (hōgu). Its partner ಬಾ (bā, “come”).
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: "hōgu" (go) and "bā" (come)]
@@ -75,6 +78,9 @@ The letters in this word.
 
 The word, taken apart.
 ನಾಳೆ (nāḷe, "tomorrow") is native Dravidian, from ನಾಳ್ (nāḷ, "day") — the very same nāḷ behind Tamil's nāḷai. ಸಿಗೋಣ (sigōṇa, "let's meet") is from ಸಿಗು (sigu, "to meet, to be found") — so the phrase is "tomorrow, let's meet." The -ಓಣ (-ōṇa) ending is Kannada's warm "let's ___": hōgōṇa ("let's go"), tinnōṇa ("let's eat").
+
+Sounds you'll need.
+ನಾಳೆ (nāḷe): ನಾ (nā) + ಳೆ (ḷe, retroflex ಳ ḷ). ಸಿಗೋಣ (sigōṇa) = sigu (“meet”) + -ōṇa (“let's”).
 
 Guided Practice.
 [pause 1 second]

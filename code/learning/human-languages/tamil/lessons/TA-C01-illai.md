@@ -34,6 +34,31 @@ five words together.
 > Its root is *il*, the idea of *not-being*. Its positive twin is *uṇḍu*,
 > "there is."
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Say it *il-lai*, with the *l* **held** across the join — the
+same doubling you met in *vaṇak-kam*. The ending is the diphthong
+*ai*, as in English “eye,” not two separate vowels.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+இல்லை (*illai*) is built on இல் (*il*), “not-being,
+absence” — so it is not really the adjective “no” but the statement
+**“[it] is not, [there] is not.”** Its positive twin is உண்டு
+(*uṇḍu*), “there is.”
+
+## Grammar lens
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**Tamil negates by *being*, not with a “not”-word.** Where English
+inserts *not*/*no*, Tamil swaps in the negative verb of existence:
+*puttakam **uṇḍu*** (“there *is* a book”) → *puttakam
+**illai*** (“there *is not* a book”). So *illai* is both the
+everyday “no” and the word that makes a whole sentence negative — a deeply
+Dravidian habit, unlike English or Hindi.
+
 ## Guided Practice
 
 [PAUSE 1s]

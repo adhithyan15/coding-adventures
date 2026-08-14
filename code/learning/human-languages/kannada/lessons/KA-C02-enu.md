@@ -31,6 +31,12 @@ reviews_of: [KA-C02-niinu-niivu, KA-C02-nanna-hesaru]
 \*e-** — the same Dravidian question-root as Tamil *eṉṉa*, heading Kannada's
 question family: *ēnu* (what), *yāru* (who), *elli* (where), *yāke* (why).
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+ಏ (independent long ē, word-initial) + ನು (*nu*) →
+*ēnu*.
+
 ## Guided Practice
 
 [PAUSE 1s]

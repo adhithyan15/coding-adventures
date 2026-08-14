@@ -33,6 +33,13 @@ from **ಸಿಗು** (*sigu*, "to meet, to be found") — so the phrase is "**t
 let's meet**." The **-ಓಣ** (*-ōṇa*) ending is Kannada's warm "let's ___":
 *hōgōṇa* ("let's go"), *tinnōṇa* ("let's eat").
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+ನಾಳೆ (*nāḷe*): ನಾ (*nā*) + ಳೆ (*ḷe*,
+retroflex ಳ *ḷ*). ಸಿಗೋಣ (*sigōṇa*) = *sigu*
+(“meet”) + *-ōṇa* (“let's”).
+
 ## Guided Practice
 
 [PAUSE 1s]

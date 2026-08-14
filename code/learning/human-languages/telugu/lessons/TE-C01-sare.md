@@ -49,6 +49,12 @@ As you learn to read each, spotting a shared word shift its shape but not its
 sense is the quickest way to feel the relationship (and the whole reason to
 learn these four side by side).
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+స is *sa*; రే is *rē* (ర *ra* with the long-“ē”
+sign you just met on *lē*). Read స·రే → *sarē*.
+
 ## Guided Practice
 
 [PAUSE 1s]

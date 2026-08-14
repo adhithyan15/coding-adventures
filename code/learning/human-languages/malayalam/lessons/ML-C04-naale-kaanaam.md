@@ -33,6 +33,13 @@ the very same *nāḷ* behind Tamil's *nāḷai* and Kannada's *nāḷe*. **ക�
 phrase is "**tomorrow, let's see [each other]**." One family, one word for "day,"
 one habit of parting until the next.
 
+## Sounds you'll need
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+നാളെ (*nāḷe*): നാ (*nā*) + ളെ (*ḷe*,
+retroflex ള *ḷ*). കാണാം (*kāṇāṃ*) =
+*kāṇ* (“see”) + *-āṃ* (“let's”).
+
 ## Guided Practice
 
 [PAUSE 1s]
