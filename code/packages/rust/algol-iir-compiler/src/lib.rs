@@ -7486,7 +7486,7 @@ fn body_changes_stable_selector(node: &GrammarASTNode, name: &str) -> bool {
             .any(&targets_name);
         if writes_name {
             return first_direct_node(node, "expression")
-                .is_none_or(|expression| expr_variable_name(expression).as_deref() != Some(name));
+                .is_none_or(|expression| !expression_has_only_bare_name_leaves(expression, name));
         }
     }
     if node.rule_name == "for_stmt"
@@ -7497,6 +7497,25 @@ fn body_changes_stable_selector(node: &GrammarASTNode, name: &str) -> bool {
     direct_nodes(node)
         .into_iter()
         .any(|child| body_changes_stable_selector(child, name))
+}
+
+fn expression_has_only_bare_name_leaves(node: &GrammarASTNode, name: &str) -> bool {
+    if expr_variable_name(node).as_deref() == Some(name) {
+        return true;
+    }
+    if !matches!(node.rule_name.as_str(), "expression" | "arith_expr")
+        || !direct_tokens(node).iter().any(|token| token.value == "if")
+    {
+        return false;
+    }
+    let branches: Vec<&GrammarASTNode> = direct_nodes(node)
+        .into_iter()
+        .filter(|child| child.rule_name == node.rule_name)
+        .collect();
+    branches.len() == 2
+        && branches
+            .into_iter()
+            .all(|branch| expression_has_only_bare_name_leaves(branch, name))
 }
 
 fn collect_expression_dependency_names(
@@ -9891,6 +9910,25 @@ mod tests {
             "test",
         )
         .expect("an exact self-assignment leaves a known transitive selector unchanged");
+    }
+
+    #[test]
+    fn al4_conditional_self_assigned_selector_preserves_transitive_dependency() {
+        compile_source(
+            "begin integer i, n, limit; boolean choose, other; n := 3; limit := 3; choose := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose then limit else limit + 1; choose := if other then choose else choose end; print(i + 0.25) end",
+            "test",
+        )
+        .expect("equal bare-self leaves leave a known transitive selector unchanged");
+    }
+
+    #[test]
+    fn al4_differing_conditional_selector_assignment_remains_conservative() {
+        let err = compile_source(
+            "begin integer i, n, limit; boolean choose, other; n := 3; limit := 3; choose := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose then limit else limit + 1; choose := if other then choose else false end; print(i + 0.25) end",
+            "test",
+        )
+        .expect_err("a differing conditional selector leaf may change the chosen branch later");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
     #[test]
