@@ -668,6 +668,12 @@ For `end`, the behavior depends on context:
 
 `global.set` on an immutable global raises `IMMUTABLE_GLOBAL_WRITE`.
 
+#### Supported Reference Instructions
+
+The repository's WasmGC subset uses `ref.null` and `ref.is_null`. Until full
+reference subtyping is implemented, `ref.null` pushes the polymorphic unknown
+reference type; `ref.is_null` pops one reference value and pushes I32.
+
 #### Memory Instructions
 
 Memory instructions require the module to have at least one memory (imported or local).

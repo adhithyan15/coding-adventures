@@ -9,6 +9,10 @@ The instruction-level validator now decodes and type-checks `memory.copy` and
 closes a false rejection exposed when strict validation reached an existing
 runtime string-concatenation module that uses `memory.copy`.
 
+It also type-checks `ref.is_null` as consuming a reference and producing an
+`i32`, closing the corresponding false rejection in existing WasmGC-backed
+McCarthy Lisp output.
+
 ## [0.2.0] - 2026-08-14 (WASM06 -- instruction-level type checking, W02 Phase 2)
 
 ### Added -- a real per-instruction type checker

@@ -458,3 +458,12 @@ fn invalid_truncated_ref_null_heap_type_immediate() {
     let result = wasm_validator::validate(&module);
     assert!(result.is_err(), "a truncated ref.null immediate must be rejected");
 }
+
+#[test]
+fn valid_ref_null_is_null() {
+    let module = module_with_body(
+        wasm_types::FuncType { params: vec![], results: vec![wasm_types::ValueType::I32] },
+        vec![0xD0, 0x0F, 0xD1, 0x0B],
+    );
+    wasm_validator::validate(&module).expect("ref.is_null must consume a reference and produce i32");
+}

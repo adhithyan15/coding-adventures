@@ -645,6 +645,13 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                 offset += 1;
                 stack.push(StackType::Unknown);
             }
+            0xD1 => {
+                // ref.is_null: accepts any reference and produces an i32.
+                // Reference subtyping remains outside this validator phase,
+                // so ref-producing instructions use Unknown on the stack.
+                pop_val(&mut stack, frame!())?;
+                push_val(&mut stack, ValueType::I32);
+            }
 
             // ── Control ──────────────────────────────────────────────────────
             0x00 => mark_unreachable(&mut stack, frame_mut!()), // unreachable
