@@ -2504,6 +2504,15 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — a ninth unchanged known selector may preserve the next
+    // dependency while the analysis remains explicitly depth-bounded.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, n, limit, choose; boolean other, flag, gate, key, last, final, ultimate, terminal, horizon, frontier; n := 3; limit := 3; choose := 1; other := true; flag := true; gate := true; key := true; last := true; final := true; ultimate := true; terminal := true; horizon := true; frontier := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := if flag then other else false; flag := if gate then flag else false; gate := if key then gate else false; key := if last then key else false; last := if final then last else false; final := if ultimate then final else false; ultimate := if terminal then ultimate else false; terminal := if horizon then terminal else false; horizon := if frontier then horizon else false; frontier := frontier end; print(i + 0.25) end",
+        expect: Expect::Stdout("3.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a variable-free false body condition makes its dependency
     // write unreachable, so capped while analysis keeps the stable local.
     Prog {
@@ -10095,6 +10104,31 @@ fn algol_eight_level_selector_dependencies_run_on_every_available_standard_backe
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the eight-level selector dependencies did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_nine_level_selector_dependencies_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "horizon := if frontier then horizon else false; frontier := frontier end",
+                )
+        })
+        .expect("the ALGOL nine-level selector dependencies must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jit, Jvm, Clr, Vm] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the nine-level selector dependencies did not run"
             );
             continue;
         };
