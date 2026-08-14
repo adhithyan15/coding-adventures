@@ -184,6 +184,7 @@ fn requirement_preserves_quoted_and_unquoted_multiword_identifiers() {
 requirement Checkout payment requirement:::important {
 id: PAY-1
 }
+
 element "Checkout service" {
 type: service
 }
@@ -198,6 +199,24 @@ classDef important fill:#fff1a8
         diagram.nodes[0].style.as_ref().unwrap().fill.as_deref(),
         Some("#fff1a8")
     );
+}
+
+#[test]
+fn requirement_styles_quoted_node_and_class_identifiers() {
+    let source = r##"requirementDiagram
+requirement "Checkout service" {}
+classDef "critical,class" fill:#fff1a8,stroke:#b45309
+class "Checkout service" "critical,class"
+style "Checkout service" color:#7c2d12,font-family:"Avenir, Next""##;
+    let diagram = parse_requirement_diagram(source).expect("quoted requirement styles");
+    let style = diagram.nodes[0]
+        .style
+        .as_ref()
+        .expect("quoted style target");
+    assert_eq!(style.fill.as_deref(), Some("#fff1a8"));
+    assert_eq!(style.stroke.as_deref(), Some("#b45309"));
+    assert_eq!(style.text_color.as_deref(), Some("#7c2d12"));
+    assert_eq!(style.font_family.as_deref(), Some("Avenir, Next"));
 }
 
 #[test]

@@ -739,7 +739,7 @@ mod apple {
     #[test]
     fn render_mermaid_requirement_to_png() {
         let diagram = parse_requirement_diagram(
-            "ReQuIrEmEnTdIaGrAm\nAcCtItLe: Native requirement graph\nAcCdEsCr: Requirement graph rendered through Metal\nDiReCtIoN lr\nClAsSdEf important fill:#fff1a8,stroke:#b45309,stroke-width:4px,color:#7c2d12,font-size:22px,font-weight:bold,font-style:italic,font-family:Helvetica\nReQuIrEmEnT Test requirement {\nID: 1\nTeXt: Test\nRiSk: LOW\nVeRiFyMeThOd: TeSt\n}\nTest requirement:::important\nElEmEnT \"System element\" {\nTyPe: service\n}\n\"System element\" - SaTiSfIeS -> Test requirement",
+            "ReQuIrEmEnTdIaGrAm\nAcCtItLe: Native requirement graph\nAcCdEsCr: Requirement graph rendered through Metal\nDiReCtIoN lr\nClAsSdEf \"important class\" fill:#fff1a8,stroke:#b45309,stroke-width:4px,color:#7c2d12,font-size:22px,font-weight:bold,font-style:italic,font-family:Helvetica\nReQuIrEmEnT \"Test requirement\" {\nID: 1\nTeXt: Test\nRiSk: LOW\nVeRiFyMeThOd: TeSt\n}\nClAsS \"Test requirement\" \"important class\"\nElEmEnT \"System element\" {\nTyPe: service\n}\n\"System element\" - SaTiSfIeS -> \"Test requirement\"",
         )
         .expect("Mermaid requirement parse failed");
         let layout = layout_structural_diagram(&diagram);
