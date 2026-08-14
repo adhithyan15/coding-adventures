@@ -120,6 +120,8 @@ standard `a0` / `a1` registers:
 |---------|------|-----------|--------|
 | Exit | `1` | `a0`: signed status | Halts the guest and records `Exit(status)` |
 | Write signed integer | `2` | `a1:a0`: signed `i64` | Records `WriteI64(value)` and continues |
+| Write byte | `3` | `a0`: low byte | Records `WriteByte(value)` and continues |
+| Read byte | `4` | none | Returns the next input byte in `a1:a0`, or signed `-1` at EOF |
 
 Installing an M-mode trap vector leaves architectural `ecall` trap behavior
 unchanged. `riscv_backend::run_binary` exposes `WriteI64` values through
@@ -129,6 +131,10 @@ a program's last host service cannot be replayed as the terminal halt.
 `call_builtin "print_i64", value` lowers to the write service. This gives Nib
 programs a source-to-RV32I-to-simulator printing path without requiring an
 external runtime image.
+
+`call_builtin "putchar", value` and `call_builtin "getchar"` lower to the
+byte services. `run_binary_with_input` supplies deterministic input bytes and
+`RunResult::byte_output` exposes produced bytes for source-level tests.
 
 ## Module globals
 
@@ -208,8 +214,8 @@ the selected entry function can seed language-level static initializers.
 24. [x] **Data images:** append deduplicated initialized UTF-8 byte images to
     the module alongside code. `str_const` produces their address/length pair,
     giving string and array runtimes addressable initialized program data.
-25. [ ] **Host character I/O:** add byte-oriented input/output services and
-    lower `getchar` / `putchar`, enabling observable Brainfuck execution.
+25. [x] **Host character I/O:** byte-oriented input/output services back
+    `getchar` / `putchar`; Brainfuck `.` now emits observable simulator output.
 26. [ ] **BASIC real values:** Dartmouth BASIC currently lowers numeric values
    such as `PRINT 42` through `f64`; direct RISC-V execution needs either a
    floating-point ABI or an integer-only lowering path before those programs
