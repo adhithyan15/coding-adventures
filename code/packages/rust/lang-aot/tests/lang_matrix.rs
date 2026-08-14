@@ -2441,6 +2441,15 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("3.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — a second unchanged known selector may preserve the next
+    // dependency in the bounded conditional-selector chain.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, n, limit, choose; boolean other, flag, gate; n := 3; limit := 3; choose := 1; other := true; flag := true; gate := true; i := 0; for i := i + 1 while i < n do begin n := limit; limit := if choose = 1 then limit else limit + 1; choose := if other then choose else 0; other := if flag then other else false; flag := if gate then flag else false; gate := gate end; print(i + 0.25) end",
+        expect: Expect::Stdout("3.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a variable-free false body condition makes its dependency
     // write unreachable, so capped while analysis keeps the stable local.
     Prog {
@@ -9857,6 +9866,31 @@ fn algol_stable_nested_selector_dependency_runs_on_every_available_standard_back
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the stable nested selector dependency did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_two_level_selector_dependencies_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "flag := if gate then flag else false; gate := gate end",
+                )
+        })
+        .expect("the ALGOL two-level selector dependencies must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jit, Jvm, Clr, Vm] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the two-level selector dependencies did not run"
             );
             continue;
         };
