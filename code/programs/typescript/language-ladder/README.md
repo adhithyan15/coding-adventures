@@ -866,6 +866,16 @@ demonstrates its rounded left-stem-to-right-stem-to-looped-tail school-hand
 order at 09:05–09:10; the Noto Sans Cyrillic fit preserves that zero-lift
 evidence while tracing the printed squared U-like body and short right
 descender and records the source's diagonal join, lower loop, and rising exit.
+The three-frame Cyrillic **ч** filmstrip descends the short left stem, sweeps
+through the shallow bowl and rises along the right stem, then descends the full
+right stem without lifting. The native-teacher lesson demonstrates its narrow
+rounded short-stem-to-long-stem bridge and rising exit at 09:24–09:28; the Noto
+Sans Cyrillic fit preserves that zero-lift order while tracing the printed
+shorter left stem, shallow bowl, and full-height right stem and records the
+source's narrower bridge, curled baseline, and rising exit.
+The canonical script-data group is capped at 250 kB per cacheable batch, so
+these growing source notes stay within the app's enforced 500 kB eager-chunk
+budget without removing learner-facing evidence.
 The runtime resolves each cited path back to the owning script and lazily loads that
 script's font, while Tamil continues to use Noto Sans Tamil. Unverified letters
 still fall back to the numbered prose list, unchanged. Extending the coverage is HL-C09,
