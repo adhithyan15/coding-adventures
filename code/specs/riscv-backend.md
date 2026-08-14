@@ -62,7 +62,7 @@ the RISC-V spec. Per-function byte streams can be concatenated directly;
 | Twig `42` | `const_i64 v=42; ret_i64 v` | `[0x93, 0x02, 0xA0, 0x02, 0x13, 0x85, 0x02, 0x00, 0x67, 0x80, 0x00, 0x00]` |
 | `ret_void` only | `ret_void` | `[0x67, 0x80, 0x00, 0x00]` |
 | Empty CIR | (none) | `[0x67, 0x80, 0x00, 0x00]` |
-| BASIC `PRINT 42` | target-only `const_i64 42; call __basic_print_int; ...` | host byte output `42\\n` |
+| BASIC `PRINT 1.5` | f64 bit-pair `const; call_builtin print_f64; ...` | host byte output `1.5\\n` |
 
 ## Backend trait surface
 
@@ -127,6 +127,7 @@ standard `a0` / `a1` registers:
 | i64 to f64 | `10` | signed i64: `a1:a0` | Returns IEEE-754 f64 bits in `a1:a0` |
 | f64 to i64 truncation | `11` | f64 bits: `a1:a0` | Returns truncated signed i64 in `a1:a0`; halts with exit status `3` for NaN, infinity, or an out-of-range result |
 | f64 floor | `12` | f64 bits: `a1:a0` | Returns IEEE-754 f64 floor bits in `a1:a0` |
+| f64 byte output | `13` | f64 bits: `a1:a0` | Appends the host's decimal rendering as UTF-8 bytes |
 
 Installing an M-mode trap vector leaves architectural `ecall` trap behavior
 unchanged. `riscv_backend::run_binary` exposes `WriteI64` values through
@@ -227,10 +228,8 @@ the selected entry function can seed language-level static initializers.
     giving string and array runtimes addressable initialized program data.
 25. [x] **Host character I/O:** byte-oriented input/output services back
     `getchar` / `putchar`; Brainfuck `.` now emits observable simulator output.
-26. [x] **BASIC integral literal output:** target-only lowering rewrites a
-   finite whole-number literal passed directly to `PRINT` from the frontend's
-   `f64` representation to the integer print ABI, allowing it to execute in
-   the simulator without pretending fractional REAL values are supported.
+26. [x] **BASIC integral literal output:** initial target-only lowering made a
+   finite whole-number `PRINT` literal executable before the f64 ABI existed.
 27. [x] **Call argument ABI:** marshal scalar and pair-value arguments into
    `a0` through `a7`, including word-sized wide values, and preserve the narrow
    CIR view of ABI-normalized wide parameters.
@@ -240,10 +239,8 @@ the selected entry function can seed language-level static initializers.
 29. [x] **Incoming parameter call preservation:** save values live across a
    direct call before argument marshalling overwrites incoming `a0` through
    `a7` ABI registers. Recursive integer formatting keeps its caller state.
-30. [x] **BASIC integral expressions:** give BASIC a target-specific checked
-   integer representation for variables, `+`/`-`/`*` arithmetic, control flow,
-   and `LET`, so non-literal whole-number programs do not depend on the `f64`
-   frontend representation.
+30. [x] **BASIC integral expressions:** make BASIC variables, `+`/`-`/`*`
+   arithmetic, control flow, and `LET` executable from source through RV32I.
 31. [x] **Simulator soft-float host ABI:** IEEE-754 f64 bit pairs use a
    deterministic `ecall` service family for arithmetic, comparison, and i64
    conversions; this is the substrate for executable RV32I soft-float code.
@@ -259,10 +256,14 @@ the selected entry function can seed language-level static initializers.
    real-to-integer conversion. This must replace the host language's
    saturating cast and lower `real_to_int_floor` without substituting
    truncation for negative values.
-35. [ ] **BASIC fractional REAL execution:** route the Dartmouth BASIC real
-   formatter and fractional arithmetic through the RISC-V soft-float lowering
-   and add a source-to-simulator fixture.
-36. [ ] **BASIC exact division:** prove or preserve a whole-number result for
+35. [x] **BASIC fractional REAL execution:** run Dartmouth BASIC fractional
+   arithmetic through the RISC-V soft-float lowering and render the final f64
+   through a host byte-output ABI, with a source-to-simulator
+   `LET A = 1.25; PRINT A + .5` fixture.
+36. [ ] **Guest-side BASIC REAL formatter:** support mutable f64 values across
+   control-flow joins so the existing BASIC formatter can execute in RV32I
+   guest code instead of using the host rendering ABI.
+37. [ ] **BASIC exact division:** prove or preserve a whole-number result for
    `/` in the integer subset without silently changing Dartmouth BASIC's REAL
    division semantics when a quotient is fractional.
 

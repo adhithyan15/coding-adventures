@@ -990,28 +990,24 @@ fn basic_integral_division_remains_rejected_on_riscv32() {
 }
 
 #[test]
-fn basic_fractional_literal_remains_rejected_on_riscv32() {
+fn basic_fractional_real_arithmetic_executes_in_the_riscv_simulator() {
     let dir = tempfile::tempdir().expect("tempdir");
     let src = dir.path().join("fraction.bas");
     let bin = dir.path().join("fraction.bin");
-    std::fs::write(&src, b"10 PRINT 1.5\n20 END\n").unwrap();
+    std::fs::write(
+        &src,
+        b"10 LET A = 1.25\n20 LET B = A + .5\n30 PRINT B\n40 END\n",
+    )
+    .unwrap();
 
-    let err = lang_aot::compile_file_to_riscv32_bin(&src, &bin, lang_aot::Language::DartmouthBasic)
-        .expect_err("fractional BASIC REAL values need a future RISC-V numeric ABI");
-    let msg = format!("{err}");
+    lang_aot::compile_file_to_riscv32_bin(&src, &bin, lang_aot::Language::DartmouthBasic)
+        .expect("fractional BASIC REAL arithmetic must lower to RV32I");
 
-    assert!(
-        msg.starts_with("riscv32:"),
-        "the target must name its refusal; got: {msg}"
-    );
-    assert!(
-        msg.contains("whole-number literals"),
-        "the refusal must describe the supported BASIC RV32I subset; got: {msg}"
-    );
-    assert!(
-        !bin.exists(),
-        "a refused compilation must not leave a partial/garbage .bin behind"
-    );
+    let bytes = std::fs::read(&bin).expect("read .bin");
+    let run = riscv_backend::run_binary(&bytes, &[])
+        .expect("the fractional BASIC RV32I binary must execute in the simulator");
+    assert!(run.halted);
+    assert_eq!(run.byte_output, b"1.75\n");
 }
 
 // Phase 7 of the historical-arch backend migration: a Twig `42`

@@ -104,6 +104,31 @@ fn f64_constants_and_moves_preserve_raw_bits() {
 }
 
 #[test]
+fn print_f64_writes_host_decimal_bytes() {
+    let cir = vec![
+        ci(
+            "const_f64",
+            Some("value"),
+            vec![CIROperand::Float(1.75)],
+            "f64",
+        ),
+        ci(
+            "call_builtin",
+            None,
+            vec![
+                CIROperand::Var("print_f64".into()),
+                CIROperand::Var("value".into()),
+            ],
+            "void",
+        ),
+        ci("ret_void", None, vec![], "void"),
+    ];
+    let binary = compile(&ctx("print_f64", &[], "void"), &cir).expect("f64 print lowering");
+    let run = run_binary(&binary, &[]).expect("f64 print execution");
+    assert_eq!(run.byte_output, b"1.75");
+}
+
+#[test]
 fn linked_module_passes_and_returns_f64_bit_pairs() {
     let round_trip = vec![ci(
         "ret_f64",

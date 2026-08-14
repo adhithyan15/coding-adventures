@@ -23,7 +23,8 @@ use riscv_simulator::{
     HostEvent, RiscVSimulator, HOST_ECALL_EXIT, HOST_ECALL_F64_ADD, HOST_ECALL_F64_CMP,
     HOST_ECALL_F64_DIV, HOST_ECALL_F64_FLOOR, HOST_ECALL_F64_MUL, HOST_ECALL_F64_SUB,
     HOST_ECALL_F64_TO_I64_TRUNC, HOST_ECALL_I64_TO_F64, HOST_ECALL_READ_BYTE,
-    HOST_ECALL_SERVICE_REGISTER, HOST_ECALL_WRITE_BYTE, HOST_ECALL_WRITE_I64,
+    HOST_ECALL_SERVICE_REGISTER, HOST_ECALL_WRITE_BYTE, HOST_ECALL_WRITE_F64,
+    HOST_ECALL_WRITE_I64,
 };
 use vm_core::value::Value;
 
@@ -1270,6 +1271,17 @@ impl Lowerer {
                 self.words.push(encode_addi(A0, value, 0));
                 self.load_constant(HOST_ECALL_SERVICE_REGISTER as u32, HOST_ECALL_WRITE_BYTE);
             }
+            "print_f64" => {
+                if instr.dest.is_some() || instr.ty != "void" || instr.srcs.len() != 2 {
+                    return Err(BackendError::InvalidOperand(
+                        "call_builtin print_f64 requires one f64 argument and returns void"
+                            .to_owned(),
+                    ));
+                }
+                self.stage_f64_argument(instr, 1, "call_builtin print_f64", 0)?;
+                self.load_host_argument_pair(A0, A1, 0);
+                self.load_constant(HOST_ECALL_SERVICE_REGISTER as u32, HOST_ECALL_WRITE_F64);
+            }
             "getchar" => {
                 if instr.dest.is_none() || instr.ty != "i64" || instr.srcs.len() != 1 {
                     return Err(BackendError::InvalidOperand(
@@ -1304,16 +1316,17 @@ impl Lowerer {
         self.load_host_argument_pair(A2, A3, 2);
         self.load_constant(HOST_ECALL_SERVICE_REGISTER as u32, service);
         self.words.push(encode_ecall());
-        let result = (|| {
+        self.words.push(encode_sw(A0, STACK_POINTER, 0));
+        self.words.push(encode_sw(A1, STACK_POINTER, 4));
+        self.restore_live_values_after_call(&saved_values);
+        (|| {
             let ValueLocation::Pair { lo, hi } = self.dest_pair(instr, op)? else {
                 unreachable!("f64 results always use a pair")
             };
-            self.words.push(encode_addi(lo, A0, 0));
-            self.words.push(encode_addi(hi, A1, 0));
+            self.words.push(encode_lw(lo, STACK_POINTER, 0));
+            self.words.push(encode_lw(hi, STACK_POINTER, 4));
             Ok(())
-        })();
-        self.restore_live_values_after_call(&saved_values);
-        result
+        })()
     }
 
     fn lower_f64_comparison(
@@ -1329,27 +1342,28 @@ impl Lowerer {
         self.load_host_argument_pair(A2, A3, 2);
         self.load_constant(HOST_ECALL_SERVICE_REGISTER as u32, HOST_ECALL_F64_CMP);
         self.words.push(encode_ecall());
-        let result = (|| {
+        self.words.push(encode_sw(A0, STACK_POINTER, 0));
+        self.restore_live_values_after_call(&saved_values);
+        (|| {
             let destination = self.dest(instr, op)?;
+            self.words.push(encode_lw(destination, STACK_POINTER, 0));
             match relation {
-                "eq" => self.words.push(riscv_encoder::encode_sltiu(destination, A0, 1)),
-                "ne" => self.words.push(encode_sltu(destination, X0_ZERO, A0)),
-                "lt" => self.words.push(encode_slt(destination, A0, X0_ZERO)),
-                "gt" => self.words.push(encode_slt(destination, X0_ZERO, A0)),
+                "eq" => self.words.push(riscv_encoder::encode_sltiu(destination, destination, 1)),
+                "ne" => self.words.push(encode_sltu(destination, X0_ZERO, destination)),
+                "lt" => self.words.push(encode_slt(destination, destination, X0_ZERO)),
+                "gt" => self.words.push(encode_slt(destination, X0_ZERO, destination)),
                 "le" => {
-                    self.words.push(encode_slt(destination, X0_ZERO, A0));
+                    self.words.push(encode_slt(destination, X0_ZERO, destination));
                     self.words.push(encode_xori(destination, destination, 1));
                 }
                 "ge" => {
-                    self.words.push(encode_slt(destination, A0, X0_ZERO));
+                    self.words.push(encode_slt(destination, destination, X0_ZERO));
                     self.words.push(encode_xori(destination, destination, 1));
                 }
                 _ => return Err(BackendError::UnsupportedOp(op.to_owned())),
             }
             Ok(())
-        })();
-        self.restore_live_values_after_call(&saved_values);
-        result
+        })()
     }
 
     fn lower_i64_to_f64(&mut self, instr: &CIRInstr) -> Result<(), BackendError> {
@@ -1367,16 +1381,17 @@ impl Lowerer {
         self.load_host_argument_pair(A0, A1, 0);
         self.load_constant(HOST_ECALL_SERVICE_REGISTER as u32, HOST_ECALL_I64_TO_F64);
         self.words.push(encode_ecall());
-        let result = (|| {
+        self.words.push(encode_sw(A0, STACK_POINTER, 0));
+        self.words.push(encode_sw(A1, STACK_POINTER, 4));
+        self.restore_live_values_after_call(&saved_values);
+        (|| {
             let ValueLocation::Pair { lo, hi } = self.dest_pair(instr, "int_to_real")? else {
                 unreachable!("f64 results always use a pair")
             };
-            self.words.push(encode_addi(lo, A0, 0));
-            self.words.push(encode_addi(hi, A1, 0));
+            self.words.push(encode_lw(lo, STACK_POINTER, 0));
+            self.words.push(encode_lw(hi, STACK_POINTER, 4));
             Ok(())
-        })();
-        self.restore_live_values_after_call(&saved_values);
-        result
+        })()
     }
 
     fn lower_f64_to_i64_trunc(&mut self, instr: &CIRInstr) -> Result<(), BackendError> {
@@ -1393,17 +1408,18 @@ impl Lowerer {
             HOST_ECALL_F64_TO_I64_TRUNC,
         );
         self.words.push(encode_ecall());
-        let result = (|| {
+        self.words.push(encode_sw(A0, STACK_POINTER, 0));
+        self.words.push(encode_sw(A1, STACK_POINTER, 4));
+        self.restore_live_values_after_call(&saved_values);
+        (|| {
             let ValueLocation::Pair { lo, hi } = self.dest_pair(instr, "real_to_int_trunc")?
             else {
                 unreachable!("i64 results always use a pair")
             };
-            self.words.push(encode_addi(lo, A0, 0));
-            self.words.push(encode_addi(hi, A1, 0));
+            self.words.push(encode_lw(lo, STACK_POINTER, 0));
+            self.words.push(encode_lw(hi, STACK_POINTER, 4));
             Ok(())
-        })();
-        self.restore_live_values_after_call(&saved_values);
-        result
+        })()
     }
 
     fn lower_f64_to_i64_floor(&mut self, instr: &CIRInstr) -> Result<(), BackendError> {
@@ -1429,17 +1445,18 @@ impl Lowerer {
             HOST_ECALL_F64_TO_I64_TRUNC,
         );
         self.words.push(encode_ecall());
-        let result = (|| {
+        self.words.push(encode_sw(A0, STACK_POINTER, 0));
+        self.words.push(encode_sw(A1, STACK_POINTER, 4));
+        self.restore_live_values_after_call(&conversion_saved_values);
+        (|| {
             let ValueLocation::Pair { lo, hi } = self.dest_pair(instr, "real_to_int_floor")?
             else {
                 unreachable!("i64 results always use a pair")
             };
-            self.words.push(encode_addi(lo, A0, 0));
-            self.words.push(encode_addi(hi, A1, 0));
+            self.words.push(encode_lw(lo, STACK_POINTER, 0));
+            self.words.push(encode_lw(hi, STACK_POINTER, 4));
             Ok(())
-        })();
-        self.restore_live_values_after_call(&conversion_saved_values);
-        result
+        })()
     }
 
     fn stage_f64_argument(
@@ -3228,6 +3245,11 @@ fn max_host_argument_words(cir: &[CIRInstr]) -> usize {
     cir.iter()
         .filter_map(|instr| match instr.op.as_str() {
             "int_to_real" | "real_to_int_trunc" | "real_to_int_floor" => Some(2),
+            "call_builtin"
+                if instr.srcs.first().and_then(CIROperand::as_var) == Some("print_f64") =>
+            {
+                Some(2)
+            }
             op if op.ends_with("_f64")
                 && (op.starts_with("add_")
                     || op.starts_with("sub_")
