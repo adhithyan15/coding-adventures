@@ -291,6 +291,10 @@ pub fn compile_module(
         function_offset += lowerer.words.len() * 4;
     }
     bytes.resize(bytes.len() + allocation_layout.byte_len, 0);
+    for image in allocation_layout.images.values() {
+        let start = offset + image.offset;
+        bytes[start..start + image.bytes.len()].copy_from_slice(&image.bytes);
+    }
     if let Some(cursor_offset) = allocation_layout.heap_cursor_offset {
         let heap_start = offset
             .checked_add(allocation_layout.byte_len)
@@ -478,6 +482,12 @@ struct DynamicByteAllocation {
     size_offset: usize,
 }
 
+#[derive(Debug, Clone)]
+struct DataImage {
+    offset: usize,
+    bytes: Vec<u8>,
+}
+
 /// Zero-filled byte buffers appended after module globals.
 ///
 /// A byte-buffer value is an `i64`/`u64` pair whose low word is its address and
@@ -488,6 +498,7 @@ struct DynamicByteAllocation {
 struct ByteAllocationLayout {
     slots: HashMap<(String, String), ByteAllocation>,
     dynamic_slots: HashMap<(String, String), DynamicByteAllocation>,
+    images: HashMap<String, DataImage>,
     heap_cursor_offset: Option<usize>,
     byte_len: usize,
 }
@@ -500,6 +511,7 @@ impl ByteAllocationLayout {
         let mut layout = Self {
             slots: HashMap::new(),
             dynamic_slots: HashMap::new(),
+            images: HashMap::new(),
             heap_cursor_offset: None,
             byte_len: initial_offset,
         };
@@ -511,6 +523,35 @@ impl ByteAllocationLayout {
                 {
                     if instr.op.starts_with("const_") {
                         constants.insert(destination.clone(), *value);
+                    }
+                }
+                if instr.op == "str_const" {
+                    let Some(CIROperand::Var(literal)) = instr.srcs.first() else {
+                        return Err(BackendError::InFunction {
+                            function: function.context.name.to_owned(),
+                            error: Box::new(BackendError::InvalidOperand(
+                                "str_const srcs[0] must be Var(literal)".to_owned(),
+                            )),
+                        });
+                    };
+                    if instr.dest.is_none() || instr.ty != "str" {
+                        return Err(BackendError::InFunction {
+                            function: function.context.name.to_owned(),
+                            error: Box::new(BackendError::InvalidOperand(
+                                "str_const requires a str destination".to_owned(),
+                            )),
+                        });
+                    }
+                    if !layout.images.contains_key(literal) {
+                        let bytes = literal.as_bytes().to_vec();
+                        let offset = layout.byte_len;
+                        layout.byte_len = layout
+                            .byte_len
+                            .checked_add(bytes.len())
+                            .ok_or(BackendError::ImmediateOutOfRange(i64::MAX))?;
+                        layout
+                            .images
+                            .insert(literal.clone(), DataImage { offset, bytes });
                     }
                 }
                 if instr.op != "alloc_bytes" {
@@ -559,6 +600,7 @@ impl ByteAllocationLayout {
                         .ok_or(BackendError::ImmediateOutOfRange(i64::MAX))?;
                     layout.slots.insert(key, ByteAllocation { offset, size });
                 } else {
+                    layout.byte_len = align_data_word(layout.byte_len)?;
                     let size_offset = layout.byte_len;
                     layout.byte_len = layout
                         .byte_len
@@ -571,6 +613,7 @@ impl ByteAllocationLayout {
             }
         }
         if !layout.dynamic_slots.is_empty() {
+            layout.byte_len = align_data_word(layout.byte_len)?;
             layout.heap_cursor_offset = Some(layout.byte_len);
             layout.byte_len = layout
                 .byte_len
@@ -653,7 +696,7 @@ impl Lowerer {
             if !is_rv32_value_type(ty) {
                 return Err(unsupported_type_error(ty, &format!("parameter {name:?}")));
             }
-            let location = if matches!(ty.as_str(), "i64" | "u64") {
+            let location = if matches!(ty.as_str(), "i64" | "u64" | "str") {
                 if next_argument + 1 >= ARG_REGISTERS.len() {
                     return Err(BackendError::TooManyArguments(next_argument + 2));
                 }
@@ -677,7 +720,7 @@ impl Lowerer {
             .iter()
             .filter(|instr| instr.dest.is_some())
             .map(|instr| {
-                if matches!(instr.ty.as_str(), "i64" | "u64") {
+                if matches!(instr.ty.as_str(), "i64" | "u64" | "str") {
                     2
                 } else {
                     1
@@ -798,6 +841,10 @@ impl Lowerer {
                 );
             }
             return Ok(());
+        }
+
+        if op == "str_const" {
+            return self.lower_str_const(instr);
         }
 
         if op == "label" {
@@ -1101,7 +1148,7 @@ impl Lowerer {
             (Some(_), "void") => Err(BackendError::InvalidOperand(
                 "void call must not have a destination".to_owned(),
             )),
-            (Some(_), "i64" | "u64") => {
+            (Some(_), "i64" | "u64" | "str") => {
                 let ValueLocation::Pair { lo, hi } = self.dest_pair(instr, "call")? else {
                     unreachable!("dest_pair always returns a pair")
                 };
@@ -1158,7 +1205,7 @@ impl Lowerer {
             )));
         }
         let slot = self.global_slot(instr, "global_load")?;
-        if matches!(slot.ty.as_str(), "i64" | "u64") {
+        if matches!(slot.ty.as_str(), "i64" | "u64" | "str") {
             let ValueLocation::Pair { lo, hi } = self.dest_pair(instr, "global_load")? else {
                 unreachable!("dest_pair always returns a pair")
             };
@@ -1187,7 +1234,7 @@ impl Lowerer {
             )));
         }
         let slot = self.global_slot(instr, "global_store")?;
-        if matches!(slot.ty.as_str(), "i64" | "u64") {
+        if matches!(slot.ty.as_str(), "i64" | "u64" | "str") {
             let source = self.wide_var_location(instr, 1, "global_store")?;
             self.reserve_global_address(slot.offset);
             self.words.push(encode_sw(source.low(), SCRATCH_REGISTER, 0));
@@ -1267,12 +1314,31 @@ impl Lowerer {
         Ok(())
     }
 
+    fn lower_str_const(&mut self, instr: &CIRInstr) -> Result<(), BackendError> {
+        if instr.ty != "str" || instr.srcs.len() != 1 {
+            return Err(BackendError::InvalidOperand(
+                "str_const requires one literal operand and a str destination".to_owned(),
+            ));
+        }
+        let ValueLocation::Pair { lo, hi } = self.dest_pair(instr, "str_const")? else {
+            unreachable!("str_const uses an address/length pair")
+        };
+        let image = self.data_image(instr)?;
+        self.reserve_data_address(image.offset);
+        self.words.push(encode_addi(lo, SCRATCH_REGISTER, 0));
+        self.load_constant(hi, image.bytes.len() as u32);
+        Ok(())
+    }
+
     fn lower_load_byte(&mut self, instr: &CIRInstr) -> Result<(), BackendError> {
         if instr.srcs.len() != 2 {
             return Err(BackendError::InvalidOperand(format!(
                 "load_byte requires base and offset operands, got {}",
                 instr.srcs.len()
             )));
+        }
+        if instr.ty == "str" {
+            return Err(BackendError::UnsupportedType("str".to_owned()));
         }
         self.require_scalar_type(&instr.ty, "load_byte")?;
         let base = self.wide_var_location(instr, 0, "load_byte")?;
@@ -1325,7 +1391,7 @@ impl Lowerer {
                 )))
             }
         };
-        if !matches!(ty, "i64" | "u64") {
+        if !matches!(ty, "i64" | "u64" | "str") {
             let source = self.var_src(instr, 0, op)?;
             let destination = self.dest(instr, op)?;
             self.words.push(encode_addi(destination, source, 0));
@@ -2641,6 +2707,22 @@ impl Lowerer {
             })
     }
 
+    fn data_image(&self, instr: &CIRInstr) -> Result<DataImage, BackendError> {
+        let Some(layout) = &self.allocation_layout else {
+            return Err(BackendError::UnsupportedOp(
+                "str_const (module linking required)".to_owned(),
+            ));
+        };
+        let Some(CIROperand::Var(literal)) = instr.srcs.first() else {
+            return Err(BackendError::InvalidOperand(
+                "str_const srcs[0] must be Var(literal)".to_owned(),
+            ));
+        };
+        layout.images.get(literal).cloned().ok_or_else(|| {
+            BackendError::InvalidOperand(format!("str_const literal {literal:?} has no data image"))
+        })
+    }
+
     fn heap_cursor_offset(&self) -> Result<usize, BackendError> {
         self.allocation_layout
             .as_ref()
@@ -2841,7 +2923,7 @@ fn count_value_uses(cir: &[CIRInstr]) -> HashMap<String, usize> {
 }
 
 fn abi_word_count(ty: &str) -> usize {
-    usize::from(matches!(ty, "i64" | "u64")) + 1
+    usize::from(matches!(ty, "i64" | "u64" | "str")) + 1
 }
 
 fn max_call_argument_words(
@@ -2909,11 +2991,18 @@ fn max_call_save_words(ctx: &FunctionContext<'_>, cir: &[CIRInstr]) -> usize {
 }
 
 fn storage_word_count(ty: &str) -> usize {
-    if matches!(ty, "i64" | "u64" | "any") {
+    if matches!(ty, "i64" | "u64" | "str" | "any") {
         2
     } else {
         1
     }
+}
+
+fn align_data_word(offset: usize) -> Result<usize, BackendError> {
+    offset
+        .checked_add(3)
+        .map(|aligned| aligned & !3)
+        .ok_or(BackendError::ImmediateOutOfRange(i64::MAX))
 }
 
 fn value_source_occurrences(instr: &CIRInstr, name: &str) -> usize {
@@ -2930,7 +3019,7 @@ fn value_source_occurrences(instr: &CIRInstr, name: &str) -> usize {
 
 fn is_value_source(instr: &CIRInstr, index: usize) -> bool {
     match instr.op.as_str() {
-        "label" | "jmp" => false,
+        "label" | "jmp" | "str_const" => false,
         "call" | "call_builtin" => index != 0,
         "global_load" => false,
         "global_store" => index == 1,
@@ -2997,7 +3086,7 @@ fn unsupported_type_error(ty: &str, site: &str) -> BackendError {
 fn is_rv32_value_type(ty: &str) -> bool {
     matches!(
         ty,
-        "u4" | "u8" | "u16" | "u32" | "u64" | "i8" | "i16" | "i32" | "i64" | "bool"
+        "u4" | "u8" | "u16" | "u32" | "u64" | "i8" | "i16" | "i32" | "i64" | "bool" | "str"
     )
 }
 

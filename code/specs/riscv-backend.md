@@ -205,8 +205,9 @@ the selected entry function can seed language-level static initializers.
 23. [x] **Escaped byte-buffer ABI:** byte buffers use the low/high words of
     their existing `i64`/`u64` representation for address/length, so checked
     access survives moves, calls, returns, and globals without a separate ABI.
-24. [ ] **Data images:** load initialized byte data alongside code so string and
-    array runtimes can address immutable program data.
+24. [x] **Data images:** append deduplicated initialized UTF-8 byte images to
+    the module alongside code. `str_const` produces their address/length pair,
+    giving string and array runtimes addressable initialized program data.
 25. [ ] **Host character I/O:** add byte-oriented input/output services and
     lower `getchar` / `putchar`, enabling observable Brainfuck execution.
 26. [ ] **BASIC real values:** Dartmouth BASIC currently lowers numeric values
