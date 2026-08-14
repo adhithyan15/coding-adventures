@@ -764,6 +764,12 @@ demonstrates its joined upper-lobe-to-lower-lobe school-hand order at
 03:34–03:39; the Noto Sans Cyrillic fit preserves that zero-lift evidence while
 tracing the compact printed double-lobe glyph and records that the printed form
 omits the school hand's rising exit join.
+The three-frame Cyrillic **и** filmstrip descends the left stem, rises through
+the joined diagonal, then descends the right stem without lifting. The native-
+teacher lesson demonstrates its rounded left-stem-to-diagonal-to-right-stem
+school-hand order at 03:56–04:02; the Noto Sans Cyrillic fit preserves that
+zero-lift evidence while tracing the printed backwards-N glyph and records that
+the printed form omits the school hand's entry and exit joins.
 The runtime resolves each cited path back to the owning script and lazily loads that
 script's font, while Tamil continues to use Noto Sans Tamil. Unverified letters
 still fall back to the numbered prose list, unchanged. Extending the coverage is HL-C09,

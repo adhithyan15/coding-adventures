@@ -3312,6 +3312,44 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: cyrillicAlphabetSource("з"),
   },
+  // RussianIrina writes lowercase и as one continuous left-stem, rising-
+  // diagonal, right-stem run with cursive entry and exit joins. The bundled
+  // printed glyph omits those joins, so the sourced zero-lift order is fitted
+  // directly through its two stems and backwards-N diagonal.
+  [ductusKey("cyrillic", "и")]: {
+    script: "cyrillic",
+    glyph: "и",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "descend the left stem to the baseline",
+            path: [
+              { x: 125, y: 510 }, { x: 125, y: 390 }, { x: 125, y: 270 },
+              { x: 125, y: 150 }, { x: 125, y: 25 }, { x: 160, y: 25 },
+              { x: 190, y: 40 },
+            ],
+          },
+          {
+            label: "rise diagonally to the upper right",
+            path: [
+              { x: 190, y: 40 }, { x: 225, y: 100 }, { x: 270, y: 180 },
+              { x: 315, y: 255 }, { x: 360, y: 335 }, { x: 405, y: 410 },
+              { x: 450, y: 485 }, { x: 475, y: 510 },
+            ],
+          },
+          {
+            label: "descend the right stem and finish at the baseline",
+            path: [
+              { x: 475, y: 510 }, { x: 475, y: 390 }, { x: 475, y: 270 },
+              { x: 475, y: 150 }, { x: 475, y: 25 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: cyrillicAlphabetSource("и"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the
