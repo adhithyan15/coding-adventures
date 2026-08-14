@@ -1276,11 +1276,11 @@ it is because the orchestrator authorized you to receive on that channel. These 
 not two separate checks — they are the same thing.
 
 **Algorithm choices** (implemented by the repository crypto crates described in
-MSG-CRYPTO-FOUNDATION and the Vault specifications):
+MSG-CRYPTO-FOUNDATION, SE04, and the Vault specifications):
 
 | Purpose              | Algorithm            | Why                                       |
 |----------------------|----------------------|-------------------------------------------|
-| Message encryption   | XChaCha20-Poly1305   | AEAD, 24-byte nonce eliminates reuse risk |
+| Message encryption   | XChaCha20-Poly1305   | AEAD; 24-byte nonces make random collisions negligible, while uniqueness remains required |
 | Key derivation       | HKDF-SHA256          | Standard, deterministic key derivation     |
 | Key exchange         | X25519               | Diffie-Hellman for initial key exchange    |
 | Signatures           | Ed25519              | Fast, compact, widely analyzed             |
