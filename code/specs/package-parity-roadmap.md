@@ -3473,6 +3473,72 @@ output caps, stable payload-blind errors, all 34 neutral fixtures, compressed
 suffix-cavity and declared-size rejection, and explicit empty capability
 metadata without duplicating DEFLATE.
 
+## Post-#11435 Refresh and Python ZIP Raw-Conformance Selection
+
+External review merged ready-for-review PR #11435 as
+`1cf98c1ad74502336c30f21f096967aec2a42a87` at
+2026-08-14T02:57:08Z from final reviewed head
+`e604023a121b35b558a01e5041df7a1ca78579f4`. All 19 reported checks reached
+terminal success or an expected skip, the remote branch was deleted, and this
+loop did not exercise merge authority. The Perl ZIP merge modifies only the
+existing Perl `zip` identity and is topology-neutral.
+
+A fresh collision-checked report at exact live main
+`1cf98c1ad74502336c30f21f096967aec2a42a87` covers 15 established lanes,
+1,315 normalized identities, and 4,471 slots. It reports 173 high-consensus
+identities with 269 gaps, 865 singletons with 12,110 singleton gaps, 666 Rust
+singletons, zero canonical collisions, and zero unknown buckets. Compared with
+the stored `60fb1384864579944a70229e7ac71fd917e35cee` snapshot, the exact delta
+is three identities, three slots, three singletons, and 42 singleton gaps;
+every other stored metric is unchanged.
+
+External PR #11429 added the pure Rust `knxnet-ip-protocol` singleton and the
+mixed `smart-home-knxnet-ip-integration` singleton. External PR #11460 added
+the mixed `smart-home-esphome-discovery-integration` singleton. The backlog now
+owns the bounded KNXnet/IP Search Request/Response codec through a portable
+fixture-and-port owner. KNXnet/IP discovery is split between an injected
+portable core for configuration, deterministic request planning, isolated
+response parsing, deduplication, projection, and authorization ordering and a
+blocked native-authority review for UDP bind, multicast, origin policy,
+timeouts, CLI I/O, capability truthfulness, and partial-mutation risk. ESPHome
+discovery has the same portable/native split around injected mDNS results,
+bounded TXT and Noise metadata validation, deterministic projection, the
+shared multicast transport, CLI I/O, and runtime authority. All three new roots
+lack capability manifests; the two native reviews depend on
+`rust-network-substrate-capability-truthfulness`. No tunneling, routing,
+configuration, KNX Secure, ESPHome protobuf session, key provisioning, entity
+read, subscription, or action authority will be manufactured by parity work.
+
+With Perl merged, six ZIP raw-profile children remained: .NET, Haskell, JVM,
+Lua, Python, and Swift. No live PR or remote parity branch owns the neutral
+fixture or any of those paths. The stale historical catch-up branch still
+touches only .NET, Haskell, and JVM ZIP paths and remains unowned residue that
+must not be reused or cherry-picked.
+
+The dependency/leverage pass selected
+`zip-raw-rfc1951-python-lane-parity`. Python is the smallest effective clean
+standalone tranche: its Python 3.13 test, coverage, Ruff, MyPy, JSON, and raw
+zlib oracle tooling is already available, while Lua lacks equivalent installed
+fixture/oracle tooling and Swift has a costlier foreign-stream boundary. The
+Python ZIP-owned codec still rejects dynamic Huffman streams and trims declared
+size mismatches, making this a genuine contract port: strict dynamic trees,
+exact counted consumption, caller output caps, stable payload-blind errors, all
+34 neutral fixtures, compressed suffix-cavity and declared-size rejection, and
+explicit empty capability metadata without duplicating DEFLATE.
+
+Before implementation publication, the branch was refreshed onto live main
+`7b82442d0e37ec87477846e1dae89c8f72c362d6`. The five intervening Mermaid,
+ADJ, WebAssembly, and human-language commits modify only existing roots and do
+not intersect the parity state, roadmap, neutral fixture, or Python ZIP path.
+The collision-checked report remains exactly 1,315 identities, 4,471 slots,
+865 singletons, 12,110 singleton gaps, 666 Rust singletons, zero collisions,
+and zero unknown buckets, so no new owner preceded continued Python work.
+
+Final validation rebased again onto
+`51b238b50dc9d23ed3940b70da32a9e0e55ca11f` after the RISC-V and HTML-parser
+merges. Those two commits also modify only existing, disjoint roots; the same
+collision-free inventory counts remain current and no new owner was required.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

@@ -1,5 +1,26 @@
 # Changelog — coding-adventures-zip
 
+## [0.2.0] — 2026-08-13
+
+### Added
+
+- Public `raw_deflate`, `raw_inflate`, and `raw_inflate_counted` APIs for the
+  portable raw RFC 1951 profile, including exact compressed-byte consumption.
+- Stored, fixed-Huffman, dynamic-Huffman, multi-block, symbol-285, and full
+  32 KiB overlapping back-reference decode support.
+- Typed `RawInflateError` failures with 14 stable, payload-blind error IDs and
+  a caller-lowerable 256 MiB output ceiling.
+- All 34 language-neutral conformance vectors plus dynamic ZIP, suffix-cavity,
+  declared-size, compatibility-wrapper, and full-window integration coverage.
+- Explicit empty capability metadata for the pure in-memory production library.
+
+### Changed
+
+- ZIP method 8 reads now enforce exact compressed consumption and declared
+  uncompressed size before CRC verification instead of trimming excess output.
+- Package BUILD entry points now run Ruff, strict MyPy, branch coverage, and
+  the complete pytest suite on Unix and Windows.
+
 ## [0.1.0] — 2026-04-23
 
 ### Added

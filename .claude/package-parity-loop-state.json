@@ -11,18 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": 11435,
+  "active_pr": null,
   "last_inventory": {
-    "revision": "60fb1384864579944a70229e7ac71fd917e35cee",
+    "revision": "51b238b50dc9d23ed3940b70da32a9e0e55ca11f",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1312,
-    "implementation_package_slots": 4468,
+    "implementation_identities": 1315,
+    "implementation_package_slots": 4471,
     "high_consensus_packages": 173,
     "high_consensus_missing_slots": 269,
-    "singleton_packages": 862,
-    "singleton_missing_slots": 12068,
-    "rust_singletons": 663,
+    "singleton_packages": 865,
+    "singleton_missing_slots": 12110,
+    "rust_singletons": 666,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
   },
@@ -3174,6 +3174,53 @@
       "notes": "Excluded from autonomous portable selection. Review concrete UDP bind, broadcast enable, send, receive, and timeouts; explicit, broadcast, and private IPv4 origin policy; response-source and forwarded-origin spoofing; authorization before sockets; 64-reply and 1,497-byte ceilings; redacted diagnostics; truthful nonempty runtime/test capability profiles; and sequential discovery upserts and partial-mutation risk. Review CLI argv/stdout/stderr and its direct discover path that bypasses D23 authorization. Preserve discovery-only behavior and record the hardened Rust native-runtime exception rather than manufacturing BACnet control, writes, BBMD, foreign-device registration, BACnet/SC, or all-language sockets."
     },
     {
+      "id": "knxnet-ip-protocol-portable-conformance",
+      "title": "Fixture and port the bounded KNXnet/IP discovery codec",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered after external PR #11429 added the Rust-only knxnet-ip-protocol singleton. Define closed neutral fixtures and established-lane ports for bounded Search Request and Search Response framing, explicit IPv4 HPAI endpoints, strict KNXnet/IP headers, Device Information Blocks, Supported Service Families, exact/trailing lengths, the 1,024-byte datagram ceiling, deterministic payload-blind errors, and explicit empty capability metadata. Keep ETS import, group-address interpretation, tunneling, routing telegrams, device management, configuration, control, and KNX IP Secure sessions outside this pure in-memory codec."
+    },
+    {
+      "id": "smart-home-knxnet-ip-portable-core-conformance",
+      "title": "Extract and port the injected KNXnet/IP discovery core",
+      "status": "pending",
+      "depends_on": ["knxnet-ip-protocol-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered after external PR #11429 added the mixed Rust-only smart-home-knxnet-ip-integration singleton. Define a closed corpus over caller-injected transport for bounded explicit IPv4 configuration, exact request-endpoint correlation, the 64-response budget, per-datagram isolation, malformed and conflicting response partial failures, deterministic serial/MAC identity deduplication, stable discovery metadata, caller-supplied time and TTL, authorization-before-transport ordering, D23 discovery projection and upsert summaries, and typed redacted failures. Keep UDP sockets, multicast membership, timeouts, runtime mutation, and CLI I/O outside this portable core."
+    },
+    {
+      "id": "smart-home-knxnet-ip-native-authority-review",
+      "title": "Review KNXnet/IP UDP and CLI native authority",
+      "status": "pending",
+      "depends_on": ["smart-home-knxnet-ip-portable-core-conformance", "rust-network-substrate-capability-truthfulness"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Excluded from autonomous portable selection. Review explicit IPv4 UDP bind, multicast destination, send, receive, and timeout policy; response-endpoint and peer-origin trust; authorization before sockets; the 64-response and 1,024-byte ceilings; redacted diagnostics; truthful nonempty runtime/test capability profiles; and sequential discovery upserts and partial-mutation risk. Review CLI argv/stdout/stderr and its direct discover path. Preserve discovery-only behavior and record the hardened Rust native-runtime exception rather than manufacturing ETS import, group-address semantics, tunneling, routing, configuration, control, KNX IP Secure, or all-language sockets."
+    },
+    {
+      "id": "smart-home-esphome-discovery-portable-core-conformance",
+      "title": "Extract and port the injected ESPHome discovery core",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered after external PR #11460 added the mixed Rust-only smart-home-esphome-discovery-integration singleton. Define a closed corpus over caller-injected mDNS results for exact _esphomelib._tcp.local matching; bounded required and optional TXT fields; stable MAC identity; host, port, configuration hash, firmware, board, and platform validation; explicit Noise NNpsk0 and zero-PSK security classification; the 64-response budget; deterministic deduplication and partial failures; caller-supplied time and TTL; authorization-before-transport ordering; D23 discovery projection and upsert summaries; and typed redacted failures. Keep multicast sockets, clocks, runtime mutation, and CLI I/O outside this portable core. Native-API TCP/protobuf sessions, key provisioning, entity reads, subscriptions, and actions require a separate supervised owner and Vault-backed 32-byte key custody."
+    },
+    {
+      "id": "smart-home-esphome-discovery-native-authority-review",
+      "title": "Review ESPHome mDNS and CLI native authority",
+      "status": "pending",
+      "depends_on": ["smart-home-esphome-discovery-portable-core-conformance", "rust-network-substrate-capability-truthfulness"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Excluded from autonomous portable selection. Review the shared mDNS IPv4 multicast socket, bind, send, receive, response-origin, timeout, and bounded-datagram behavior; authorization before transport; redacted diagnostics; truthful nonempty runtime/test capability profiles; CLI argv/stdout/stderr; and sequential discovery upserts and partial-mutation risk. Preserve discovery-only behavior and do not extend this review into ESPHome native-API TCP/protobuf, Noise key provisioning, entity/state access, subscriptions, or actions."
+    },
+    {
       "id": "chief-trust-checker-portable-conformance",
       "title": "Fixture and port the injected Chief trust-checker policy core",
       "status": "pending",
@@ -3332,7 +3379,7 @@
     {
       "id": "zip-raw-rfc1951-perl-lane-parity",
       "title": "Expose ZIP raw RFC 1951 conformance in Perl",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["zip-raw-rfc1951-language-neutral-conformance"],
       "branch": "codex/perl-zip-raw-rfc1951",
       "pr_number": 11435,
@@ -3341,17 +3388,22 @@
       "selection_revision": "2fb32016e437d5edb847ba70b023381dd04c8c0b",
       "selection_notes": "Selected only after PR #11405 merged externally and the collision-clean live inventory classified both new BACnet roots with portable codec/core owners plus a blocked native UDP/CLI authority review. Perl is the smallest clean standalone remaining ZIP child with no live or historical branch overlap; the stale cross-lane ZIP residue touches only .NET, Haskell, and JVM paths. Perl ZIP already owns stored/fixed framing, exact bit positions, complete length/distance tables, and array back-references, but rejects dynamic Huffman blocks and trims declared-size mismatches, so this coherent tranche adds the shared counted, capped, stable-error raw RFC 1951 contract and all 34 neutral fixtures without duplicating DEFLATE.",
       "implementation_revision": "b40cb4945cedfc96052faccb5e5c53e3d0bccd2a",
+      "final_review_revision": "e604023a121b35b558a01e5041df7a1ca78579f4",
+      "merged_at": "2026-08-14T02:57:08Z",
+      "merge_revision": "1cf98c1ad74502336c30f21f096967aec2a42a87",
       "validation_notes": "The hash-verified Strawberry Perl 5.42.2.1 toolchain passes all 74 package tests, the Windows BUILD front door, syntax, MakeMaker test and disttest, and all 34 neutral raw RFC 1951 cases. Independent test-only zlib decoding, dynamic ZIP read, suffix-cavity and declared-size rejection, caller caps, typed payload-blind errors, full 32 KiB overlap, and incremental CRC-32 pass. Production coverage is 97.7% statements, 77.7% branches, 51.1% conditions, 98.3% subroutines, and 87.1% total. Twenty-six repository fixture/parity/capability tests plus 678 subtests pass; the collision gate remains 1,312 identities, 4,468 slots, 862 singletons, 12,068 singleton gaps, 663 Rust singletons, zero collisions, and zero unknown buckets. Strict state DAG/JSON, diff, credential, pure-production authority, and runtime-dependency scans pass. The all-Perl build-tool dry run discovers 256 packages; its BUILD metadata validator retains two unrelated pre-existing Windows dependency findings in ir-to-wasm-validator and nib-wasm-compiler. Advisory CPAN audit findings are confined to the local Perl/test toolchain and test-only zlib rather than the pure production boundary. No Perl downstream imports ZIP, so reader_read is the direct hardened integration boundary.",
-      "publication_notes": "Opened ready-for-review PR #11435 from validated implementation revision b40cb4945cedfc96052faccb5e5c53e3d0bccd2a. Initial live checks are queued, so subsequent parity-loop runs must monitor this PR only unless an actual failure or main conflict appears.",
+      "publication_notes": "Opened ready-for-review PR #11435 from validated implementation revision b40cb4945cedfc96052faccb5e5c53e3d0bccd2a. External review merged final head e604023a121b35b558a01e5041df7a1ca78579f4 as 1cf98c1ad74502336c30f21f096967aec2a42a87 at 2026-08-14T02:57:08Z after all reported checks reached terminal success or an expected skip. The loop did not exercise merge authority.",
       "notes": "Portable Perl child of the ZIP raw-codec completion umbrella. Consume CMP09 and every closed zip-raw-rfc1951-v1 case, expose the ZIP-owned raw primitives without duplicating DEFLATE, preserve pure in-memory operation, and add explicit empty capability metadata."
     },
     {
       "id": "zip-raw-rfc1951-python-lane-parity",
       "title": "Expose ZIP raw RFC 1951 conformance in Python",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["zip-raw-rfc1951-language-neutral-conformance"],
-      "branch": null,
+      "branch": "codex/python-zip-raw-rfc1951",
       "pr_number": null,
+      "selection_revision": "1cf98c1ad74502336c30f21f096967aec2a42a87",
+      "selection_notes": "Selected only after PR #11435 merged externally, the collision-clean live inventory classified the new KNXnet/IP protocol, KNXnet/IP integration, and ESPHome discovery roots with five portable/native ownership records, and no live PR or remote branch claimed Python ZIP or the shared RFC 1951 fixture. Python is the smallest effective clean standalone remaining ZIP child because its Python 3.13 quality toolchain and stdlib JSON/zlib oracle are already available, while the nominally smaller Lua lane lacks equivalent installed fixture and raw-zlib tooling and the stale cross-lane residue touches only .NET, Haskell, and JVM paths. Python ZIP already owns stored/fixed framing and exact bit positions but rejects dynamic Huffman and trims declared-size mismatches, so this coherent tranche adds the shared counted, capped, stable-error raw RFC 1951 contract and all 34 neutral fixtures without duplicating DEFLATE.",
       "notes": "Portable Python child of the ZIP raw-codec completion umbrella. Consume CMP09 and every closed zip-raw-rfc1951-v1 case, expose the ZIP-owned raw primitives without duplicating DEFLATE, preserve pure in-memory operation, and add explicit empty capability metadata."
     },
     {
