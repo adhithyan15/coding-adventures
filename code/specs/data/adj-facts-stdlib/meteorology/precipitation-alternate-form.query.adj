@@ -1,0 +1,20 @@
+% ============================================================================
+% precipitation-alternate-form.query — worked recall queries against
+% precipitation-alternate-form.adj (adj-facts-stdlib, METEOROLOGY).
+% ============================================================================
+% Three queries: forward recall with citation, backward recall (bind a
+% form, find the precipitation type), and honest abstention on rain (this
+% table only grounds the one precipitation type whose cited span lists
+% more than one descriptive term).
+% ============================================================================
+
+import "precipitation-alternate-form.adj"
+
+% Forward: what alternate form does the cited NWS sentence list for hail?
+? precipitation_alternate_form(hail, $Form)
+
+% Backward: which precipitation type is described as irregular pellets?
+? precipitation_alternate_form($Precip, irregular_pellets)
+
+% Honest abstention: rain's cited span names only one descriptive term, no listed alternatives.
+? precipitation_alternate_form(rain, $FormRain)
