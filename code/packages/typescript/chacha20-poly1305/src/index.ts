@@ -145,6 +145,23 @@ function quarterRound(
   state[b] = rotl32(state[b]! ^ state[c]!, 7);
 }
 
+/** Apply the shared ChaCha20 20-round permutation in place. */
+function chacha20Rounds(state: Uint32Array): void {
+  for (let i = 0; i < 10; i++) {
+    // Column rounds
+    quarterRound(state, 0, 4, 8, 12);
+    quarterRound(state, 1, 5, 9, 13);
+    quarterRound(state, 2, 6, 10, 14);
+    quarterRound(state, 3, 7, 11, 15);
+
+    // Diagonal rounds
+    quarterRound(state, 0, 5, 10, 15);
+    quarterRound(state, 1, 6, 11, 12);
+    quarterRound(state, 2, 7, 8, 13);
+    quarterRound(state, 3, 4, 9, 14);
+  }
+}
+
 /**
  * Generate one 64-byte ChaCha20 keystream block.
  *
@@ -186,19 +203,7 @@ function chacha20Block(key: Uint8Array, nonce: Uint8Array, counter: number): Uin
   const original = new Uint32Array(state);
 
   // --- 20 rounds (10 double-rounds) ---
-  for (let i = 0; i < 10; i++) {
-    // Column rounds
-    quarterRound(state, 0, 4, 8, 12);
-    quarterRound(state, 1, 5, 9, 13);
-    quarterRound(state, 2, 6, 10, 14);
-    quarterRound(state, 3, 7, 11, 15);
-
-    // Diagonal rounds
-    quarterRound(state, 0, 5, 10, 15);
-    quarterRound(state, 1, 6, 11, 12);
-    quarterRound(state, 2, 7, 8, 13);
-    quarterRound(state, 3, 4, 9, 14);
-  }
+  chacha20Rounds(state);
 
   // --- Add original state back ---
   for (let i = 0; i < 16; i++) {
@@ -212,6 +217,78 @@ function chacha20Block(key: Uint8Array, nonce: Uint8Array, counter: number): Uin
   }
 
   return output;
+}
+
+// ============================================================================
+// Section 1a: HChaCha20 and XChaCha20
+// ============================================================================
+
+/**
+ * Derive an HChaCha20 subkey using the construction pinned by SE04.
+ *
+ * HChaCha20 runs the normal ChaCha permutation, but does not apply the final
+ * feed-forward addition. The first and last state rows form the 32-byte key.
+ */
+export function hchacha20Subkey(
+  key: Uint8Array,
+  nonce: Uint8Array,
+): Uint8Array {
+  if (key.length !== 32) throw new Error("Key must be 32 bytes");
+  if (nonce.length !== 16) throw new Error("Nonce must be 16 bytes");
+
+  const state = new Uint32Array(16);
+  state.set(CONSTANTS, 0);
+  for (let i = 0; i < 8; i++) {
+    state[4 + i] = readU32LE(key, i * 4);
+  }
+  for (let i = 0; i < 4; i++) {
+    state[12 + i] = readU32LE(nonce, i * 4);
+  }
+
+  chacha20Rounds(state);
+
+  const output = new Uint8Array(32);
+  const words = [0, 1, 2, 3, 12, 13, 14, 15] as const;
+  for (let i = 0; i < words.length; i++) {
+    writeU32LE(output, i * 4, state[words[i]]!);
+  }
+  return output;
+}
+
+/** Derive the subkey and RFC 8439 nonce shared by all XChaCha operations. */
+function deriveXChaCha20Material(
+  key: Uint8Array,
+  nonce: Uint8Array,
+): [Uint8Array, Uint8Array] {
+  if (key.length !== 32) throw new Error("Key must be 32 bytes");
+  if (nonce.length !== 24) throw new Error("Nonce must be 24 bytes");
+
+  const subkey = hchacha20Subkey(key, nonce.slice(0, 16));
+  const derivedNonce = new Uint8Array(12);
+  derivedNonce.set(nonce.slice(16), 4);
+  return [subkey, derivedNonce];
+}
+
+/**
+ * Encrypt or decrypt bytes with raw XChaCha20.
+ *
+ * Raw XChaCha20 provides confidentiality only. Prefer the authenticated
+ * XChaCha20-Poly1305 functions for messages and stored records.
+ */
+export function xchacha20Encrypt(
+  input: Uint8Array,
+  key: Uint8Array,
+  nonce: Uint8Array,
+  counter: number,
+): Uint8Array {
+  const [subkey, derivedNonce] = deriveXChaCha20Material(key, nonce);
+  try {
+    return chacha20Encrypt(input, subkey, derivedNonce, counter);
+  } finally {
+    // Best-effort clearing; JavaScript runtimes do not guarantee that copies
+    // or optimized-away buffers are erased from process memory.
+    subkey.fill(0);
+  }
 }
 
 /**
@@ -568,4 +645,54 @@ export function aeadDecrypt(
 
   // Step 4: Decrypt (ChaCha20 is symmetric — encryption = decryption)
   return chacha20Encrypt(ciphertext, key, nonce, 1);
+}
+
+// ============================================================================
+// Section 4: XChaCha20-Poly1305 AEAD (SE04)
+// ============================================================================
+
+/**
+ * Encrypt with XChaCha20-Poly1305 using a 24-byte public nonce.
+ *
+ * Random 24-byte nonces have negligible accidental-collision risk at realistic
+ * volumes, but every complete nonce must still be unique for a given key.
+ */
+export function xchacha20Poly1305Encrypt(
+  plaintext: Uint8Array,
+  key: Uint8Array,
+  nonce: Uint8Array,
+  aad: Uint8Array,
+): [Uint8Array, Uint8Array] {
+  const [subkey, derivedNonce] = deriveXChaCha20Material(key, nonce);
+  try {
+    return aeadEncrypt(plaintext, subkey, derivedNonce, aad);
+  } finally {
+    // Best-effort only; JavaScript does not provide guaranteed memory erasure.
+    subkey.fill(0);
+  }
+}
+
+/**
+ * Authenticate and decrypt an XChaCha20-Poly1305 ciphertext.
+ *
+ * Authentication failure is deliberately inherited from `aeadDecrypt`, which
+ * compares every tag byte before releasing any plaintext.
+ */
+export function xchacha20Poly1305Decrypt(
+  ciphertext: Uint8Array,
+  key: Uint8Array,
+  nonce: Uint8Array,
+  aad: Uint8Array,
+  tag: Uint8Array,
+): Uint8Array {
+  // Reject a malformed tag before subkey derivation.
+  if (tag.length !== 16) throw new Error("Tag must be 16 bytes");
+
+  const [subkey, derivedNonce] = deriveXChaCha20Material(key, nonce);
+  try {
+    return aeadDecrypt(ciphertext, subkey, derivedNonce, aad, tag);
+  } finally {
+    // Best-effort only; JavaScript does not provide guaranteed memory erasure.
+    subkey.fill(0);
+  }
 }
