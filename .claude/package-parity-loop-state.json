@@ -11,7 +11,7 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": 11553,
   "last_inventory": {
     "revision": "09877072d243dcadc76f1ea6b7afeaff7124768e",
     "schema_version": 3,
@@ -3569,14 +3569,17 @@
     {
       "id": "zip-raw-rfc1951-swift-lane-parity",
       "title": "Expose ZIP raw RFC 1951 conformance in Swift",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["zip-raw-rfc1951-language-neutral-conformance"],
       "branch": "codex/swift-zip-raw-rfc1951",
-      "pr_number": null,
+      "pr_number": 11553,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/11553",
+      "opened_at": "2026-08-14T07:15:25Z",
       "selection_revision": "97094db1b26beb22b506bdf8432919bea1dca873",
       "selection_notes": "Selected only after PR #11525 merged externally, the collision-clean live inventory classified the new Chief hardware-key approval and CoAP protocol/integration roots with five portable/native ownership records, and no live PR or remote branch claimed Swift ZIP or the shared RFC 1951 fixture. Swift is the only remaining ZIP child with no historical branch overlap; the ancient unmerged catch-up residue touches the full .NET, Haskell, and JVM ZIP trees and must not be reused or cherry-picked. Swift 6.3.3 is installed, the standalone pure in-memory package depends only on the local LZSS library, no downstream Swift package imports ZIP, and its existing codec already implements stored/fixed and multi-block framing with a 256 MiB guard but rejects dynamic blocks, exposes only generic errors, and trims declared-size mismatches. This coherent tranche adds strict dynamic Huffman, exact counted consumption, caller caps, stable payload-blind errors, all 34 neutral fixtures, strict ZIP suffix and size boundaries, coverage-aware build gates, and explicit empty capability metadata without duplicating DEFLATE or adding production authority.",
       "implementation_revision": "0911c7e129f3c9cf0d60836654f4bf7f7a68dd7d",
       "validation_notes": "Swift 6.3.3 passes both exact BUILD front doors, 36 debug tests with coverage, the warnings-as-errors release build, and package-manifest resolution against the local LZSS dependency. LLVM coverage reports 93.76% of production lines and 92.31% of functions. The portable suite consumes all 34 neutral RFC 1951/CRC-32 cases, independently decodes rawDeflate output with test-only Python/zlib, validates a foreign dynamic 32 KiB-window stream, preserves the historical wrapper, and exercises strict ZIP suffix-cavity and declared-size rejection. Repository fixture, capability, and parity tests pass 26 tests plus 678 subtests; the refreshed 1,321-identity/4,477-slot report has zero collisions and zero unknown buckets. State JSON, dependency DAG, BUILD-file dry-run, credential scan, dependency scan, authority scan, package dump, and diff checks pass. Production imports only local LZSS and the explicit empty capability profile is truthful; Foundation, fixture I/O, Process, and zlib remain test-only. The clean rebase onto 09877072d2 added six path-disjoint existing-root commits and no package root, so the inventory counts remain unchanged.",
+      "publication_notes": "Ready-for-review PR #11553 opened from validated head e400dba986 after a clean rebase onto origin/main 09877072d2. The PR initially queued CI, CodeQL-language detection, and human-language detection checks; the loop retains no merge authority and will monitor only while checks are pending.",
       "notes": "Portable Swift child of the ZIP raw-codec completion umbrella. Consume CMP09 and every closed zip-raw-rfc1951-v1 case, expose the ZIP-owned raw primitives without duplicating DEFLATE, preserve pure in-memory operation, and add explicit empty capability metadata."
     },
     {
