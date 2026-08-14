@@ -1,0 +1,16 @@
+% ============================================================================
+% lung-size-comparison.query.adj — worked recall over the
+% lung-size-comparison library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "how does the right lung
+% compare to the left?" (direct) or "which lung is broader?" (reverse) — it
+% states no fact of its own — it only `import`s the grounded table and asks
+% binding queries. A lung not tabled here abstains honestly — the engine
+% never invents a comparison.
+% ============================================================================
+
+import "lung-size-comparison.adj"
+
+? lung_size_comparison(right_lung, $Comparison)   % expect shorter, broader, greater_volume
+? lung_size_comparison($Lung, broader)              % reverse bind — expect right_lung
+? lung_size_comparison(left_lung, $Comparison)       % expect abstain -- a real, already-tabled lung, but its own quote states only a lobe count, never a comparative size descriptor

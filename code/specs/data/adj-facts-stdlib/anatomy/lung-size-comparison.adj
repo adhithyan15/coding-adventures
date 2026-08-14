@@ -1,0 +1,69 @@
+% ============================================================================
+% lung-size-comparison — how the right lung compares in SIZE/SHAPE to the
+% left lung, decoded from a clause already sitting unused inside
+% `lung-lobes.adj`'s own already-quoted NCI SEER source sentence
+% (adj-facts-stdlib, ANATOMY).
+% ============================================================================
+% A sibling to the already-shipped `lung-lobes.adj`
+% (`lung_lobe_count(lung, count)`, right_lung → 3, left_lung → 2): that
+% table's own header already quotes, verbatim, the NCI SEER sentence that
+% fixes the right lung's lobe count AND, in the same breath, names three
+% comparative descriptors for the right lung relative to the left -- a fact
+% the lung/count schema had no room for:
+%
+%     "The right lung is shorter, broader, and has a greater volume than the
+%      left lung. It is divided into three lobes and each lobe is supplied by
+%      one of the secondary bronchi."
+%
+% New `lung_size_comparison(lung, comparison)` table decodes those three
+% comparative descriptors as the right lung's own rows: shorter, broader,
+% greater_volume. "Comparison" (a size/shape descriptor relative to the OTHER
+% lung) is categorically distinct from the parent table's "count" (a plain
+% lobe number) -- the right lung's count is 3, but its size comparisons are
+% three separate qualitative facts the count column has no room for. Recall
+% is a binding query:
+%
+%     ? lung_size_comparison(right_lung, $Comparison)  % shorter, broader, greater_volume
+%
+% This is a native `table` (ADJ-TABLES RS-5, a TWO-column table like the
+% parent's own): each `row` lowers to a ground relation
+% `lung_size_comparison(lung, comparison)` carrying the citation, so the
+% lookup above is the ordinary SLD binding query -- the engine returns the
+% comparison WITH its source, on the CPU, with zero model calls, and abstains
+% on anything that is not the right lung (it never invents a comparison). The
+% query also runs BACKWARD -- bind a comparison and recall the lung it
+% describes:
+%
+%     ? lung_size_comparison($L, broader)  % right_lung
+%
+% A recall on `left_lung` -- a real, already-tabled lung in `lung-lobes.adj`,
+% but whose own quoted span ("The left lung has two lobes.") states only its
+% lobe count, never a comparative size descriptor -- correctly abstains
+% rather than inventing a comparison for it. The source states these three
+% comparisons only in the DIRECTION right-lung-relative-to-left-lung, never
+% the reverse, so `left_lung` is deliberately left unrowed rather than
+% inverted into a guessed "longer/narrower/lesser_volume" claim the source
+% never makes.
+%
+% Provenance: reproduces, byte-for-byte, the SAME sentence already quoted
+% inside `lung-lobes.adj`'s own header, from the SAME NCI SEER Training
+% "Bronchi, Bronchial Tree, & Lungs" page that table already cites -- no new
+% WebFetch, only a different schema decoding a different clause of that
+% already-verified quote. `trust authoritative` -- the same tier the parent
+% table already carries (NCI SEER Training is a primary U.S. government
+% reference).
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
+% ============================================================================
+
+table lung_size_comparison {
+    columns lung, comparison
+
+    row (right_lung, shorter)
+    row (right_lung, broader)
+    row (right_lung, greater_volume)
+
+    source "The right lung is shorter, broader, and has a greater volume than the left lung. It is divided into three lobes and each lobe is supplied by one of the secondary bronchi."
+    locator "https://training.seer.cancer.gov/anatomy/respiratory/passages/bronchi.html"
+    trust authoritative
+}
